@@ -2,20 +2,22 @@
 
 namespace Vanguard\Core\Concerns;
 
+use Closure;
+
 /**
  * Set whether a class is the default
  */
 trait IsDefault
 {
-    /** Always default to false */
-    protected bool $default = false;
+    protected bool|Closure $default = false;
 
     /**
      * Set the class as default, chainable
      * 
+     * @param bool|Closure $default
      * @return static
      */
-    public function default(bool $default = true): static
+    public function default(bool|Closure $default = true): static
     {
         $this->setDefault($default);
         return $this;
@@ -24,15 +26,16 @@ trait IsDefault
     /**
      * Set the default quietly
      * 
-     * @param bool $default
+     * @param bool|Closure $default
      */
-    protected function setDefault(bool $default): void
+    protected function setDefault(bool|Closure $default): void
     {
+        if (is_null($default)) return;
         $this->default = $default;
     }
 
     /**
-     * Get if the class is default (alias)
+     * Alias for getDefault
      * 
      * @return bool
      */

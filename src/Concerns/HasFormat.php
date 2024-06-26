@@ -4,33 +4,53 @@ namespace Vanguard\Core\Columns\Concerns;
 
 use Closure;
 
+/**
+ * Set a format for a class.
+ */
 trait HasFormat
 {
     protected string|Closure $format = null;
 
+    /**
+     * Set the format, chainable.
+     * 
+     * @param string|Closure $format
+     * @return static
+     */
     public function format(string|Closure $format): static
     {
         $this->setFormat($format);
         return $this;
     }
 
-    public function formatUsing(string|Closure $format): static
-    {
-        return $this->format($format);
-    }
-
-    protected function setFormat(string|Closure|null $format): void
+    /**
+     * Set the format quietly.
+     * 
+     * @param string|Closure $format
+     * @return void
+     */
+    protected function setFormat(string|Closure $format): void
     {
         if (is_null($format)) return;
         $this->format = $format;
     }
 
+    /**
+     * Check if the class has a format
+     * 
+     * @return bool
+     */
     public function hasFormat(): bool
     {
         return !is_null($this->format);
     }
 
-    public function getFormat(): string
+    /**
+     * Get the format
+     * 
+     * @return string|null
+     */
+    public function getFormat(): ?string
     {
         return $this->evaluate($this->format);
     }

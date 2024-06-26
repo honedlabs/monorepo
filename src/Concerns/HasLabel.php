@@ -9,7 +9,7 @@ use Closure;
  */
 trait HasLabel
 {
-    protected string|Closure $label;
+    protected string|Closure $label = null;
 
     /**
      * Set the label, chainable.
@@ -31,6 +31,7 @@ trait HasLabel
      */
     protected function setLabel(string|Closure $label): void
     {
+        if (is_null($label)) return;
         $this->label = $label;
     }
 
@@ -39,11 +40,17 @@ trait HasLabel
      * 
      * @return string
      */
-    public function getLabel(): string
+    public function getLabel(): ?string
     {
         return $this->evaluate($this->label);
     }
 
+    /**
+     * Convert a string to the label format.
+     * 
+     * @param string|Closure $name
+     * @return string
+     */
     public function toLabel(string|Closure $name): string
     {
         return str($this->evaluate($name))->headline()->lower()->ucfirst();

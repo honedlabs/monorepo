@@ -15,7 +15,7 @@ trait HasMetadata
     /** 
      * Set the metadata, chainable.
      * 
-     * @param array|\Closure $metadata
+     * @param array|Closure $metadata
      * @return static
      */
     public function metadata(array|Closure $metadata): static
@@ -32,6 +32,7 @@ trait HasMetadata
      */
     protected function setMetadata(array|Closure $metadata): void
     {
+        if (is_null($metadata)) return;
         $this->metadata = $metadata;
     }
 
@@ -43,5 +44,15 @@ trait HasMetadata
     public function getMetadata(): array
     {
         return $this->evaluate($this->metadata);
+    }
+
+    /**
+     * Check if the class has metadata.
+     * 
+     * @return bool
+     */
+    public function hasMetadata(): bool
+    {
+        return is_array($this->getMetadata()) && !empty($this->getMetadata());
     }
 }

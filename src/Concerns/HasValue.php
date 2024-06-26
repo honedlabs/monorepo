@@ -11,7 +11,7 @@ trait HasValue
     protected mixed $value = null;
 
     /**
-     * Set the value to be used.
+     * Set the value to be used, chainable.
      * 
      * @param mixed $value
      * @return static

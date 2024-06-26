@@ -12,7 +12,7 @@ trait HasType
     protected string|Closure $type = null;
 
     /**
-     * Set the type property
+     * Set the type property, chainable
      * 
      * @param string|Closure $type
      * @return static
@@ -31,6 +31,7 @@ trait HasType
      */
     protected function setType(string|Closure $type): void
     {
+        if (is_null($type)) return;
         $this->type = $type;
     }
 
@@ -39,11 +40,16 @@ trait HasType
      * 
      * @return string
      */
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->evaluate($this->type);
     }
 
+    /**
+     * Check if the class has a type
+     * 
+     * @return bool
+     */
     public function hasType(): bool
     {
         return !is_null($this->type);

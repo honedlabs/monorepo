@@ -3,19 +3,23 @@
 namespace Vanguard\Core;
 
 use ArrayAccess;
+use Vanguard\Core\Contracts\Makeable;
 
 /**
- * Class Record
- * 
- * Wraps the data in a record object, to normalize accessors
+ * Access objects or arrays interchangeably.
  */
-class Accessor implements ArrayAccess
+class Accessor implements ArrayAccess, Makeable
 {
     private mixed $data;
 
     public function __construct(array $data)
     {
         $this->data = $data;
+    }
+
+    public static function make(array $data): static
+    {
+        return new static($data);
     }
 
     public function offsetExists($offset): bool

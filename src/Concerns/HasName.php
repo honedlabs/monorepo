@@ -4,9 +4,12 @@ namespace Vanguard\Core\Concerns;
 
 use Closure;
 
+/**
+ * Set a name property on a class
+ */
 trait HasName
 {
-    protected string|Closure $name;
+    protected string|Closure $name = null;
 
     /**
      * Set the name, chainable.
@@ -28,6 +31,7 @@ trait HasName
      */
     protected function setName(string|Closure $name): void
     {
+        if (is_null($name)) return;
         $this->name = $name;
     }
 
@@ -36,13 +40,29 @@ trait HasName
      * 
      * @return string|Closure
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->evaluate($this->name);
     }
 
+    /**
+     * Convert a string to the name format
+     * 
+     * @param string|Closure $label
+     * @return string
+     */
     public function toName(string|Closure $label): string
     {
         return str($this->evaluate($label))->snake()->lower();
+    }
+
+    /**
+     * Check if the class has a name
+     * 
+     * @return bool
+     */
+    public function hasName(): bool
+    {
+        return !is_null($this->getName());
     }
 }

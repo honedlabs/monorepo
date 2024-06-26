@@ -2,21 +2,22 @@
 
 namespace Vanguard\Core\Concerns;
 
+use Closure;
+
 /**
  * Set an active property on a class
  */
 trait IsActive
 {
-    /** Defaults to being false */
-    protected bool $active = false;
+    protected bool|Closure $active = false;
 
     /**
      * Set the active property, chainable.
      * 
-     * @param bool $active
+     * @param bool|Closure $active
      * @return static
      */
-    public function active(bool $active): static
+    public function active(bool|Closure $active): static
     {
         $this->setActive($active);
         return $this;
@@ -25,16 +26,17 @@ trait IsActive
     /**
      * Set the active property quietly.
      * 
-     * @param bool $active
+     * @param bool|Closure $active
+     * @return void
      */
-    protected function setActive(bool|null $active): void
+    protected function setActive(bool|Closure $active): void
     {
         if (is_null($active)) return;
         $this->active = $active;
     }
 
     /**
-     * Check if the class is active (alias)
+     * Alias for getActive
      * 
      * @return bool
      */

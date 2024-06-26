@@ -6,7 +6,7 @@ use Closure;
 
 trait HasDescription
 {
-    protected string|Closure $description;
+    protected string|Closure $description = null;
 
     /**
      * Set the description, chainable.
@@ -28,16 +28,22 @@ trait HasDescription
      */
     protected function setDescription(string|Closure $description): void
     {
+        if (is_null($description)) return;
         $this->description = $description;
     }
 
     /**
      * Get the description
      * 
-     * @return string|Closure
+     * @return string
      */
-    public function getdescription(): string
+    public function getdescription(): ?string
     {
         return $this->evaluate($this->description);
+    }
+
+    public function hasDescription(): bool
+    {
+        return !is_null($this->getdescription());
     }
 }

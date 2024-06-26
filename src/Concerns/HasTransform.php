@@ -5,15 +5,17 @@ namespace Vanguard\Core\Concerns;
 use Closure;
 
 /**
- * Set a transform property on a class
+ * Set a transform function on a class
  */
 trait HasTransform
 {
-    /** Closure to perform transform */
     protected Closure $transform = null;
 
     /**
-     * Set the transformation function for a given value, chainable
+     * Set the transformation function for a given value, chainable.
+     * 
+     * @param Closure $callback
+     * @return static
      */
     public function transform(Closure $callback): static
     {
@@ -21,12 +23,13 @@ trait HasTransform
         return $this;
     }
 
+    /**
+     * Alias for transform
+     * 
+     * @param Closure $callback
+     * @return static
+     */
     public function cast(Closure $callback): static
-    {
-        return $this->transform($callback);
-    }
-
-    public function as(Closure $callback): static
     {
         return $this->transform($callback);
     }
@@ -37,14 +40,14 @@ trait HasTransform
      * @param Closure $callback
      * @return void
      */
-    protected function setTransform(Closure|null $callback): void
+    protected function setTransform(Closure $callback): void
     {
-        if (is_null($callback)) return;
+        if (!$this->hasTransform()) return;
         $this->transform = $callback;
     }
 
     /**
-     * Determine if the column has a transform.
+     * Determine if the class has a transform.
      * 
      * @return bool
      */
@@ -54,7 +57,7 @@ trait HasTransform
     }
 
     /**
-     * Transform the value using the given callback.
+     * Apply the transformation to the given value.
      * 
      * @param mixed $value
      * @return mixed
@@ -66,12 +69,34 @@ trait HasTransform
     }
 
     /**
+     * Alias for transformUsing
+     * 
+     * @param mixed $value
+     * @return mixed
+     */
+    public function castUsing(mixed $value): mixed
+    {
+        return $this->transformUsing($value);
+    }
+
+    /**
+     * Alias for transformUsing
+     * 
+     * @param mixed $value
+     * @return mixed
+     */
+    public function applyTransform(mixed $value): mixed
+    {
+        return $this->transformUsing($value);
+    }
+
+    /**
      * Get the transformed value.
      * 
      * @param mixed $value
      * @return mixed
      */
-    public function performTransform(mixed $value): mixed
+    protected function performTransform(mixed $value): mixed
     {
         return ($this->transform)($value);
     }
