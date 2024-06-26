@@ -5,20 +5,20 @@ namespace Conquest\Core\Concerns;
 /**
  * Set the visibility of the class
  */
-trait HasDisplay
+trait IsHidden
 {
-    /** Classes by default are shown */
-    protected bool $show = true;
+    /** Classes by default are not hidden */
+    protected bool $hidden = false;
 
     /**
      * Set the visibility of the class quietly.
      * 
-     * @param bool $show
+     * @param bool $hidden
      * @return void
      */
-    protected function setShow(bool $show): void
+    protected function setHidden(bool $hidden): void
     {
-        $this->show = $show;
+        $this->hidden = $hidden;
     }
 
     /**
@@ -28,7 +28,7 @@ trait HasDisplay
      */
     public function hide(): static
     {
-        $this->setShow(false);    
+        $this->setHidden(true);    
         return $this;
     }
 
@@ -59,7 +59,7 @@ trait HasDisplay
      */
     public function show(): static
     {
-        $this->setShow(true);
+        $this->setShow(false);
         return $this;
     }
 
@@ -70,7 +70,7 @@ trait HasDisplay
      */
     public function shown(): static
     {
-        return $this->show(true);
+        return $this->show();
     }
 
     /**
@@ -79,19 +79,9 @@ trait HasDisplay
      * @param bool $condition
      * @return static
      */
-    public function display(bool $condition = true): static
+    public function display(): static
     {
-        return $this->show($condition);
-    }
-
-    /**
-     * Check if the class is shown.
-     * 
-     * @return bool
-     */
-    public function isShown(): bool
-    {
-        return $this->show;
+        return $this->show();
     }
 
     /**
@@ -101,6 +91,17 @@ trait HasDisplay
      */
     public function isHidden(): bool
     {
-        return !$this->isShown();
+        return $this->isShown();
     }
+
+    /**
+     * Check if the class is shown.
+     * 
+     * @return bool
+     */
+    public function isShown(): bool
+    {
+        return !$this->isHidden();
+    }
+
 }
