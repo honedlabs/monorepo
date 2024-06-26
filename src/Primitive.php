@@ -2,6 +2,7 @@
 
 namespace Vanguard\Core;
 
+use ArrayAccess;
 use Illuminate\Contracts\Support\Arrayable;
 use JsonSerializable;
 use Illuminate\Support\Traits\Tappable;
