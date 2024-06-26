@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Core\Concerns;
+namespace Conquest\Core\Concerns;
 
 /**
  * Set the visibility of the class

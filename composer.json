@@ -1,10 +1,11 @@
 {
-    "name": "vanguard/core",
-    "description": "Shared utilities for developing the Vanguard PHP ecosystem.",
+    "name": "conquest/core",
+    "description": "Shared utilities for developing the Conquest Laravel ecosystem.",
     "keywords": [
-        "vanguard"
+        "conquest",
+        "primitive"
     ],
-    "homepage": "https://github.com/jdw5/vanguard-core",
+    "homepage": "https://github.com/jdw5/conquest-core",
     "license": "MIT",
     "authors": [
         {
@@ -32,14 +33,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Vanguard\\Core\\": "src/",
-            "Vanguard\\Core\\Database\\Factories\\": "database/factories/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Vanguard\\Core\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/"
+            "Conquest\\Core\\": "src/"
         }
     },
     "scripts": {

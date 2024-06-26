@@ -1,14 +1,14 @@
 <?php
 
-namespace Vanguard\Core\Options;
+namespace Conquest\Core\Options;
 
 use Closure;
-use Vanguard\Core\Concerns\HasLabel;
-use Vanguard\Core\Concerns\HasMetadata;
-use Vanguard\Core\Concerns\HasValue;
-use Vanguard\Core\Concerns\IsActive;
-use Vanguard\Core\Options\Contracts\Options;
-use Vanguard\Core\Primitive;
+use Conquest\Core\Concerns\HasLabel;
+use Conquest\Core\Concerns\HasMetadata;
+use Conquest\Core\Concerns\HasValue;
+use Conquest\Core\Concerns\IsActive;
+use Conquest\Core\Options\Contracts\Options;
+use Conquest\Core\Primitive;
 
 /**
  * Class for a single option.

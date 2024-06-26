@@ -1,11 +1,11 @@
 <?php
 
-namespace Vanguard\Core\Options\Concerns;
+namespace Conquest\Core\Options\Concerns;
 
 use BackedEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Vanguard\Core\Options\Option;
+use Conquest\Core\Options\Option;
 
 /**
  * Specify whether this class contains options

@@ -1,18 +1,18 @@
-# Shared utilities for developing the Vanguard PHP ecosystem.
+# Shared utilities for developing the Conquest PHP ecosystem.
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/vanguard/core.svg?style=flat-square)](https://packagist.org/packages/vanguard/core)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/vanguard/core/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/vanguard/core/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/vanguard/core/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/vanguard/core/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/vanguard/core.svg?style=flat-square)](https://packagist.org/packages/vanguard/core)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/conquest/core.svg?style=flat-square)](https://packagist.org/packages/conquest/core)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/conquest/core/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/conquest/core/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/conquest/core/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/conquest/core/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/conquest/core.svg?style=flat-square)](https://packagist.org/packages/conquest/core)
 
-Core is a package from shareable traits and the Primitive object used across all Vanguard packages.
+Conquest Core is a package from shareable traits and the Primitive object used across all Conquest packages.
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require vanguard/core
+composer require conquest/core
 ```
 
 ## Changelog

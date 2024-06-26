@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Core\Columns\Concerns;
+namespace Conquest\Core\Columns\Concerns;
 
 use Closure;
 

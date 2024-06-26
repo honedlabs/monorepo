@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Core\Options\Contracts;
+namespace Conquest\Core\Options\Contracts;
 
 /**
  * Describe and create options.

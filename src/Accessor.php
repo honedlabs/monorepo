@@ -1,9 +1,9 @@
 <?php
 
-namespace Vanguard\Core;
+namespace Conquest\Core;
 
 use ArrayAccess;
-use Vanguard\Core\Contracts\Makeable;
+use Conquest\Core\Contracts\Makeable;
 
 /**
  * Access objects or arrays interchangeably.

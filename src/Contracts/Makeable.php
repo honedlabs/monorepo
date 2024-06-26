@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Core\Contracts;
+namespace Conquest\Core\Contracts;
 
 /**
  * Must implement a static make method, duck typed.

@@ -16,7 +16,7 @@
     backupStaticProperties="false"
 >
     <testsuites>
-        <testsuite name="Vanguard Test Suite">
+        <testsuite name="Conquest Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
