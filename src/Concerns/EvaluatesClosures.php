@@ -9,7 +9,7 @@ use ReflectionNamedType;
 use ReflectionParameter;
 
 /**
- * Code belongs to Filament PHP:
+ * Taken from FilamentPHP
  * https://github.com/filamentphp/filament/blob/3.x/packages/support/src/Concerns/EvaluatesClosures.php
  */
 trait EvaluatesClosures
