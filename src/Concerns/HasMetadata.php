@@ -30,7 +30,7 @@ trait HasMetadata
      * @param array|\Closure $metadata
      * @return void
      */
-    protected function setMetadata(array|Closure $metadata): void
+    protected function setMetadata(array|Closure|null $metadata): void
     {
         if (is_null($metadata)) return;
         $this->metadata = $metadata;

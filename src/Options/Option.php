@@ -42,7 +42,7 @@ class Option extends Primitive implements Options
         string $label = null,
         array|Closure $metadata = null
     ): static {
-        return new static($value, $label, $metadata);
+        return resolve(static::class, compact('value', 'label', 'metadata'));
     }
 
     public function toArray(): array

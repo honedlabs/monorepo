@@ -9,7 +9,7 @@ use Closure;
  */
 trait HasLabel
 {
-    protected string|Closure $label = null;
+    protected string|Closure|null $label = null;
 
     /**
      * Set the label, chainable.
@@ -29,7 +29,7 @@ trait HasLabel
      * @param string|Closure $label
      * @return void
      */
-    protected function setLabel(string|Closure $label): void
+    protected function setLabel(string|Closure|null $label): void
     {
         if (is_null($label)) return;
         $this->label = $label;
