@@ -7,7 +7,7 @@ use Closure;
 /**
  * Set a transform function on a class
  */
-trait HasTransform
+trait CanTransform
 {
     protected Closure $transform = null;
 
@@ -23,16 +23,6 @@ trait HasTransform
         return $this;
     }
 
-    /**
-     * Alias for transform
-     * 
-     * @param Closure $callback
-     * @return static
-     */
-    public function cast(Closure $callback): static
-    {
-        return $this->transform($callback);
-    }
 
     /**
      * Set the transformation function for a given value quietly.
@@ -51,7 +41,7 @@ trait HasTransform
      * 
      * @return bool
      */
-    public function hasTransform(): bool
+    public function canTransform(): bool
     {
         return !is_null($this->transform);
     }
@@ -66,17 +56,6 @@ trait HasTransform
     {
         if (!$this->hasTransform()) return $value;
         return $this->performTransform($value);
-    }
-
-    /**
-     * Alias for transformUsing
-     * 
-     * @param mixed $value
-     * @return mixed
-     */
-    public function castUsing(mixed $value): mixed
-    {
-        return $this->transformUsing($value);
     }
 
     /**

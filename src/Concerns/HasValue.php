@@ -7,7 +7,6 @@ namespace Conquest\Core\Concerns;
  */
 trait HasValue
 {
-    /** Null indicates no value */
     protected mixed $value = null;
 
     /**

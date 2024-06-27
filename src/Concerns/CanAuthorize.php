@@ -7,7 +7,7 @@ use Closure;
 /**
  * Adds the ability to provide conditions to include classes
  */
-trait HasAuthorization
+trait CanAuthorize
 {
     protected bool|Closure $authorized = true;
 
