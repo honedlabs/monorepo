@@ -43,16 +43,6 @@ trait IsHidden
     }
 
     /**
-     * Alias for hide
-     * 
-     * @return static
-     */
-    public function dontDisplay(): static
-    {
-        return $this->hide();
-    }
-
-    /**
      * Set the visibility of the column to shown, chainable.
      * 
      * @return static
@@ -74,24 +64,13 @@ trait IsHidden
     }
 
     /**
-     * Set the visibility of the column to shown, chainable.
-     * 
-     * @param bool $condition
-     * @return static
-     */
-    public function display(): static
-    {
-        return $this->show();
-    }
-
-    /**
      * Check if the class is hidden.
      * 
      * @return bool
      */
     public function isHidden(): bool
     {
-        return $this->isShown();
+        return $this->hidden;
     }
 
     /**

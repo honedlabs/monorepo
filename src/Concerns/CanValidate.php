@@ -6,7 +6,7 @@ use Closure;
 
 trait CanValidate
 {
-    protected Closure $validator = null;
+    protected ?Closure $validator = null;
 
     public function validate(Closure $callback): static
     {
@@ -26,8 +26,9 @@ trait CanValidate
         return $this->peformValidation($value);
     }
 
-    protected function setValidator(Closure $callback): void
+    protected function setValidator(Closure|null $callback): void
     {
+        if (is_null($callback)) return;
         $this->validator = $callback;
     }
 

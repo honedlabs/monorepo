@@ -9,31 +9,30 @@ use Closure;
  */
 trait CanTransform
 {
-    protected Closure $transform = null;
+    protected Closure|null $transform = null;
 
     /**
      * Set the transformation function for a given value, chainable.
      * 
-     * @param Closure $callback
+     * @param Closure $transform
      * @return static
      */
-    public function transform(Closure $callback): static
+    public function transform(Closure $transform): static
     {
-        $this->setTransform($callback);
+        $this->setTransform($transform);
         return $this;
     }
-
 
     /**
      * Set the transformation function for a given value quietly.
      * 
-     * @param Closure $callback
+     * @param Closure $transform
      * @return void
      */
-    protected function setTransform(Closure $callback): void
+    protected function setTransform(Closure|null $transform): void
     {
-        if (!$this->hasTransform()) return;
-        $this->transform = $callback;
+        if (is_null($transform)) return;
+        $this->transform = $transform;
     }
 
     /**
@@ -44,6 +43,21 @@ trait CanTransform
     public function canTransform(): bool
     {
         return !is_null($this->transform);
+    }
+
+    public function cannotTransform(): bool
+    {
+        return !$this->canTransform();
+    }
+
+    /**
+     * Alias for canTransform
+     * 
+     * @return bool
+     */
+    public function hasTransform(): bool
+    {
+        return $this->canTransform();
     }
 
     /**

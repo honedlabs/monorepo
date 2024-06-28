@@ -9,7 +9,7 @@ use Closure;
  */
 trait HasType
 {
-    protected string|Closure $type = null;
+    protected string|Closure|null $type = null;
 
     /**
      * Set the type property, chainable

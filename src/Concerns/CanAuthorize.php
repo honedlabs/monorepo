@@ -29,7 +29,7 @@ trait CanAuthorize
      * @param bool|Closure $condition
      * @return void
      */
-    protected function setAuthorize(bool|Closure $condition): void
+    protected function setAuthorize(bool|Closure|null $condition): void
     {
         if (is_null($condition)) return;
         $this->authorized = $condition;
@@ -101,17 +101,6 @@ trait CanAuthorize
      * @return static
      */
     public function authorise(bool|Closure $condition = true): static
-    {
-        return $this->authorize($condition);
-    }
-
-    /**
-     * Alias for authorize
-     * 
-     * @param bool|Closure $condition
-     * @return static
-     */
-    public function when(bool|Closure $condition = true): static
     {
         return $this->authorize($condition);
     }

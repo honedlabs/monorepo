@@ -9,7 +9,7 @@ use Closure;
  */
 trait HasName
 {
-    protected string|Closure $name = null;
+    protected string|Closure|null $name = null;
 
     /**
      * Set the name, chainable.
