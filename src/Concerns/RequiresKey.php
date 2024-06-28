@@ -1,6 +1,6 @@
 <?php
 
-namespace Jdw5\Vanguard\Table\Concerns;
+namespace Conquest\Core\Table\Concerns;
 
 use Conquest\Core\Exceptions\KeyDoesntExist;
 
