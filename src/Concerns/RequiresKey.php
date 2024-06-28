@@ -1,6 +1,6 @@
 <?php
 
-namespace Conquest\Core\Table\Concerns;
+namespace Conquest\Core\Concerns;
 
 use Conquest\Core\Exceptions\KeyDoesntExist;
 
