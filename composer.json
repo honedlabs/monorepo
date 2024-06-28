@@ -3,7 +3,8 @@
     "description": "Shared utilities for developing the Conquest Laravel ecosystem.",
     "keywords": [
         "conquest",
-        "primitive"
+        "primitive",
+        "traits"
     ],
     "homepage": "https://github.com/jdw5/conquest-core",
     "license": "MIT",
@@ -17,8 +18,9 @@
     ],
     "require": {
         "php": "^8.1",
+        "illuminate/support": "^10.0||^11.0",
         "spatie/laravel-package-tools": "^1.16",
-        "illuminate/support": "^10.0||^11.0"
+        "symfony/http-foundation": "^7.1"
     },
     "require-dev": {
         "laravel/pint": "dev-main",
