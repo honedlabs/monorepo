@@ -30,7 +30,7 @@ trait HasProperty
      * @param mixed $property
      * @return void
      */
-    protected function setProperty(mixed $property): void
+    public function setProperty(mixed $property): void
     {
         if (is_null($property)) return;
         $this->property = $property;

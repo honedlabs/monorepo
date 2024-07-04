@@ -2,6 +2,8 @@
 
 namespace Conquest\Core\Concerns;
 
+use Closure;
+
 trait Configurable
 {
     protected static array $configurations = [];
@@ -9,11 +11,12 @@ trait Configurable
     /**
      * Configures this primitive.
      */
-    protected function setUp(): void
+    public function setUp(): void
     {
+        //
     }
 
-    public static function configureUsing(\Closure $callback)
+    public static function configureUsing(Closure $callback)
     {
         static::$configurations[static::class] ??= [];
         static::$configurations[static::class][] = $callback;

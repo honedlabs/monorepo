@@ -29,7 +29,7 @@ trait CanTransform
      * @param Closure $transform
      * @return void
      */
-    protected function setTransform(Closure|null $transform): void
+    public function setTransform(Closure|null $transform): void
     {
         if (is_null($transform)) return;
         $this->transform = $transform;

@@ -97,7 +97,7 @@ trait HasOptions
      * @param array<Option>|null $options
      * @return void
      */
-    protected function setOptions(array|null $options): void
+    public function setOptions(array|null $options): void
     {
         if (is_null($options)) return;
 

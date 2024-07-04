@@ -24,7 +24,7 @@ trait HasHttpMethod
         return $this;
     }
 
-    protected function setMethod(string|null $method): void
+    public function setMethod(string|null $method): void
     {
         if (is_null($method)) return;
 
@@ -84,37 +84,37 @@ trait HasHttpMethod
         return $this->method($method);
     }
 
-    protected function isGet(): bool
+    public function isGet(): bool
     {
         return $this->getMethod() === Request::METHOD_GET;
     }
 
-    protected function isPost(): bool
+    public function isPost(): bool
     {
         return $this->getMethod() === Request::METHOD_POST;
     }
 
-    protected function isPut(): bool
+    public function isPut(): bool
     {
         return $this->getMethod() === Request::METHOD_PUT;
     }
 
-    protected function isPatch(): bool
+    public function isPatch(): bool
     {
         return $this->getMethod() === Request::METHOD_PATCH;
     }
 
-    protected function isDelete(): bool
+    public function isDelete(): bool
     {
         return $this->getMethod() === Request::METHOD_DELETE;
     }
 
-    protected function isHead(): bool
+    public function isHead(): bool
     {
         return $this->getMethod() === Request::METHOD_HEAD;
     }
 
-    protected function isOptions(): bool
+    public function isOptions(): bool
     {
         return $this->getMethod() === Request::METHOD_OPTIONS;
     }

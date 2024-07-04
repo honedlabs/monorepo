@@ -26,7 +26,7 @@ trait HasValue
      * 
      * @param mixed $value
      */
-    protected function setValue(mixed $value): void
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }

@@ -28,7 +28,7 @@ trait IsDefault
      * 
      * @param bool|Closure $default
      */
-    protected function setDefault(bool|Closure $default): void
+    public function setDefault(bool|Closure $default): void
     {
         if (is_null($default)) return;
         $this->default = $default;

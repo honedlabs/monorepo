@@ -29,7 +29,7 @@ trait IsActive
      * @param bool|Closure $active
      * @return void
      */
-    protected function setActive(bool|Closure|null $active): void
+    public function setActive(bool|Closure|null $active): void
     {
         if (is_null($active)) return;
         $this->active = $active;

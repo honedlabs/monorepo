@@ -2,9 +2,11 @@
 
 namespace Conquest\Core\Concerns;
 
+use Closure;
+
 trait IsKey
 {
-    protected bool $key = false;
+    protected bool|Closure $key = false;
 
     /**
      * Check if the class is the key
@@ -13,7 +15,7 @@ trait IsKey
      */
     public function isKey(): bool
     {
-        return $this->key;
+        return $this->evaluate($this->key);
     }
 
     /**
@@ -65,7 +67,7 @@ trait IsKey
      * @param bool $key
      * @return void
      */
-    protected function setKey(bool $key): void
+    public function setKey(bool $key): void
     {
         $this->key = $key;
     }

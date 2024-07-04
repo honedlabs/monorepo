@@ -2,13 +2,15 @@
 
 namespace Conquest\Core\Concerns;
 
+use Closure;
+
 /**
  * Set the visibility of the class
  */
 trait IsHidden
 {
     /** Classes by default are not hidden */
-    protected bool $hidden = false;
+    protected bool|Closure $hidden = false;
 
     /**
      * Set the visibility of the class quietly.
@@ -16,7 +18,7 @@ trait IsHidden
      * @param bool $hidden
      * @return void
      */
-    protected function setHidden(bool $hidden): void
+    public function setHidden(bool|Closure $hidden): void
     {
         $this->hidden = $hidden;
     }
@@ -70,7 +72,7 @@ trait IsHidden
      */
     public function isHidden(): bool
     {
-        return $this->hidden;
+        return $this->evaluate($this->hidden);
     }
 
     /**

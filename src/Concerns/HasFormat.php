@@ -29,7 +29,7 @@ trait HasFormat
      * @param string|Closure $format
      * @return void
      */
-    protected function setFormat(string|Closure $format): void
+    public function setFormat(string|Closure $format): void
     {
         if (is_null($format)) return;
         $this->format = $format;

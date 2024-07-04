@@ -26,7 +26,7 @@ trait CanValidate
         return $this->peformValidation($value);
     }
 
-    protected function setValidator(Closure|null $callback): void
+    public function setValidator(Closure|null $callback): void
     {
         if (is_null($callback)) return;
         $this->validator = $callback;

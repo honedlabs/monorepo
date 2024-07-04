@@ -26,7 +26,7 @@ trait HasDescription
      * @param string|Closure $description
      * @return void
      */
-    protected function setDescription(string|Closure $description): void
+    public function setDescription(string|Closure $description): void
     {
         if (is_null($description)) return;
         $this->description = $description;

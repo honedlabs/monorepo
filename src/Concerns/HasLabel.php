@@ -29,7 +29,7 @@ trait HasLabel
      * @param string|Closure $label
      * @return void
      */
-    protected function setLabel(string|Closure|null $label): void
+    public function setLabel(string|Closure|null $label): void
     {
         if (is_null($label)) return;
         $this->label = $label;

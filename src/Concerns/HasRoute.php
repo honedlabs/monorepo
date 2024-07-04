@@ -16,7 +16,7 @@ trait HasRoute
         return $this;
     }
 
-    protected function setRoute(string|Closure|null $route): void
+    public function setRoute(string|Closure|null $route): void
     {
         if (is_null($route)) return;
         $this->route = $route;
@@ -63,7 +63,7 @@ trait HasRoute
         return $this->resolvedRoute;
     }
 
-    protected function setResolvedRoute(string $route): void
+    public function setResolvedRoute(string $route): void
     {
         $this->resolvedRoute = $route;
     }
