@@ -22,7 +22,7 @@ trait IsHidden
     }
 
     /**
-     * Set the visibility of the column to hidden, chainable.
+     * Set the visibility of to hidden, chainable.
      * 
      * @return static
      */
@@ -43,7 +43,7 @@ trait IsHidden
     }
 
     /**
-     * Set the visibility of the column to shown, chainable.
+     * Set the visibility to shown, chainable.
      * 
      * @return static
      */

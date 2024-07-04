@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 trait HasHttpMethod
 {
-    protected string|null $method = null;
+    protected string|null $method = Request::METHOD_GET;
 
     public const METHODS = [
         Request::METHOD_GET,
@@ -26,9 +26,8 @@ trait HasHttpMethod
 
     protected function setMethod(string|null $method): void
     {
-        if (!is_null($this->method)) {
-            return;
-        }
+        if (is_null($method)) return;
+
         if (!in_array($method, self::METHODS)) {
             throw new \InvalidArgumentException("Provide HTTP method [$method] is not valid.");
         }

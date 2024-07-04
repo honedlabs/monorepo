@@ -7,7 +7,7 @@ trait IsKey
     protected bool $key = false;
 
     /**
-     * Check if the column is the key
+     * Check if the class is the key
      * 
      * @return bool
      */

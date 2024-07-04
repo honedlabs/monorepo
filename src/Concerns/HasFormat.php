@@ -1,6 +1,6 @@
 <?php
 
-namespace Conquest\Core\Columns\Concerns;
+namespace Conquest\Core\Concerns;
 
 use Closure;
 
