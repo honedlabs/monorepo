@@ -29,7 +29,7 @@ trait HasName
      * @param string|Closure $name
      * @return void
      */
-    public function setName(string|Closure $name): void
+    public function setName(string|Closure|null $name): void
     {
         if (is_null($name)) return;
         $this->name = $name;

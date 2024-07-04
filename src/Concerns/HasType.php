@@ -29,7 +29,7 @@ trait HasType
      * @param string|Closure $type
      * @return void
      */
-    public function setType(string|Closure $type): void
+    public function setType(string|Closure|null $type): void
     {
         if (is_null($type)) return;
         $this->type = $type;
