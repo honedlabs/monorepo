@@ -6,7 +6,7 @@ use Closure;
 
 trait HasDescription
 {
-    protected string|Closure $description = null;
+    protected string|Closure|null $description = null;
 
     /**
      * Set the description, chainable.

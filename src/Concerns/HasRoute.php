@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 trait HasRoute
 {
     protected string|Closure|null $route = null;
-    protected string|null $resolvedRoute = null;
+    protected ?string $resolvedRoute = null;
 
     public function route(string|Closure $route): static
     {

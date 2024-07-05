@@ -9,7 +9,7 @@ use Closure;
  */
 trait CanTransform
 {
-    protected Closure|null $transform = null;
+    protected ?Closure $transform = null;
 
     /**
      * Set the transformation function for a given value, chainable.

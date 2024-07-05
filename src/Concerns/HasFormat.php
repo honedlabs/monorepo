@@ -9,7 +9,7 @@ use Closure;
  */
 trait HasFormat
 {
-    protected string|Closure $format = null;
+    protected string|Closure|null $format = null;
 
     /**
      * Set the format, chainable.
