@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 trait HasHttpMethod
 {
-    protected ?string $method = Request::METHOD_GET;
+    protected ?string $method = null;
 
     public const METHODS = [
         Request::METHOD_GET,
