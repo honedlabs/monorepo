@@ -57,11 +57,21 @@ trait HasProperty
     }
 
     /**
+     * Check if the class does not have a property
+     * 
+     * @return bool
+     */
+    public function lacksProperty(): bool
+    {
+        return !$this->hasProperty();
+    }
+
+    /**
      * Check if the class has an array of properties
      * 
      * @return bool
      */
-    public function hasArrayOfProperties(): bool
+    public function isPropertyArray(): bool
     {
         return is_array($this->getProperty());
     }

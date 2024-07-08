@@ -65,4 +65,14 @@ trait HasName
     {
         return !is_null($this->getName());
     }
+
+    /**
+     * Check if the class lacks a name
+     * 
+     * @return bool
+     */
+    public function lacksName(): bool
+    {
+        return !$this->hasName();
+    }
 }

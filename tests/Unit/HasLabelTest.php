@@ -35,6 +35,6 @@ it('checks for no label', function () {
 });
 
 it('converts text to a label', function () {
-    $label = (new Component())->toLabel('new-LABEL');
+    $label = (new Component())->toLabel('new-Label');
     expect($label)->toBe('New label');
 });
