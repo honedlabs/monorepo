@@ -34,14 +34,14 @@ trait HasHttpMethod
         $this->method = $method;
     }
 
-    public function getMethod(): string
+    public function getMethod(): ?string
     {
-        return $this->method;
+        return $this->evaluate($this->method);
     }
 
     public function hasMethod(): bool
     {
-        return !is_null($this->method);
+        return !is_null($this->getMethod());
     }
 
     public function useGet(): static
