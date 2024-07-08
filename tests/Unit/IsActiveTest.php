@@ -2,34 +2,39 @@
 
 use Workbench\App\Component;
 
-it('can set a string name', function () {
+it('can set active', function () {
     $component = new Component();
-    $component->setName($n = 'Name');
-    expect($component->getName())->toBe($n);
+    $component->setActive(true);
+    expect($component->isActive())->toBeTrue();
 });
 
-it('can set a closure name', function () {
+it('can set closure active', function () {
     $component = new Component();
-    $component->setName(fn () => 'Name');
-    expect($component->getName())->toBe('Name');
+    $component->setActive(fn () => true);
+    expect($component->isActive())->toBeTrue();
 });
 
-it('can chain name', function () {
+it('defaults to false', function () {
     $component = new Component();
-    expect($component->name($n = 'Name'))->toBeInstanceOf(Component::class);
-    expect($component->getName())->toBe($n);
+    expect($component->isActive())->toBeFalse();
 });
 
-it('checks for name', function () {
+it('can chain active', function () {
     $component = new Component();
-    expect($component->hasName())->toBeFalse();
-    $component->setName('Name');
-    expect($component->hasName())->toBeTrue();
+    expect($component->active(true))->toBeInstanceOf(Component::class);
+    expect($component->isActive())->toBeTrue();
 });
 
-it('checks for no name', function () {
+it('checks if active', function () {
     $component = new Component();
-    expect($component->lacksName())->toBeTrue();
-    $component->setName('Name');
-    expect($component->lacksName())->toBeFalse();
+    expect($component->isActive())->toBeFalse();
+    $component->setActive('Active');
+    expect($component->isActive())->toBeTrue();
+});
+
+it('checks if not active', function () {
+    $component = new Component();
+    expect($component->isNotActive())->toBeTrue();
+    $component->setActive('Active');
+    expect($component->isNotActive())->toBeFalse();
 });

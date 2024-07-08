@@ -34,7 +34,7 @@ trait IsActive
         if (is_null($active)) return;
         $this->active = $active;
     }
-
+    
     /**
      * Alias for getActive
      * 
@@ -42,21 +42,16 @@ trait IsActive
      */
     public function isActive(): bool
     {
-        return $this->getActive();
-    }
-
-    public function isNotActive(): bool
-    {
-        return !$this->getActive();
+        return $this->evaluate($this->active);
     }
 
     /**
-     * Check if the class is active
+     * Check if the class is not active
      * 
      * @return bool
      */
-    public function getActive(): bool
+    public function isNotActive(): bool
     {
-        return $this->evaluate($this->active);
+        return !$this->isActive();
     }
 }

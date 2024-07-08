@@ -35,22 +35,22 @@ trait IsDefault
     }
 
     /**
-     * Alias for getDefault
+     * Check if the class is default
      * 
      * @return bool
      */
     public function isDefault(): bool
     {
-        return $this->getDefault();
+        return $this->evaluate($this->default);
     }
 
     /**
-     * Get if the class is default
+     * Check if the class is not default
      * 
      * @return bool
      */
-    public function getDefault(): bool
+    public function isNotDefault(): bool
     {
-        return $this->evaluate($this->default);
+        return !$this->isDefault();
     }
 }

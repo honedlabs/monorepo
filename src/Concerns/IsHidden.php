@@ -13,6 +13,17 @@ trait IsHidden
     protected bool|Closure $hidden = false;
 
     /**
+     * Alias for hide
+     * 
+     * @return static
+     */
+    public function hidden(bool|Closure $hidden = true): static
+    {
+        $this->setHidden($hidden);    
+        return $this;
+    }
+
+    /**
      * Set the visibility of the class quietly.
      * 
      * @param bool $hidden
@@ -30,19 +41,9 @@ trait IsHidden
      */
     public function hide(): static
     {
-        $this->setHidden(true);    
-        return $this;
+        return $this->hidden(true);
     }
 
-    /**
-     * Alias for hide
-     * 
-     * @return static
-     */
-    public function hidden(): static
-    {
-        return $this->hide();
-    }
 
     /**
      * Set the visibility to shown, chainable.
@@ -51,18 +52,7 @@ trait IsHidden
      */
     public function show(): static
     {
-        $this->setShow(false);
-        return $this;
-    }
-
-    /**
-     * Alias for show
-     * 
-     * @return static
-     */
-    public function shown(): static
-    {
-        return $this->show();
+        return $this->hidden(false);
     }
 
     /**

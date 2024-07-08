@@ -9,6 +9,28 @@ trait IsKey
     protected bool|Closure $key = false;
 
     /**
+     * Set the column as the key, chainable
+     * 
+     * @return static
+     */
+    public function key(bool|Closure $key = true): static
+    {
+        $this->setKey($key);
+        return $this;
+    }
+
+    /**
+     * Set the key value quietly
+     * 
+     * @param bool $key
+     * @return void
+     */
+    public function setKey(bool|Closure $key): void
+    {
+        $this->key = $key;
+    }
+
+    /**
      * Check if the class is the key
      * 
      * @return bool
@@ -19,56 +41,12 @@ trait IsKey
     }
 
     /**
-     * Set the column as the key, chainable
+     * Check if the class is not the key
      * 
-     * @return static
+     * @return bool
      */
-    public function key(): static
+    public function isNotKey(): bool
     {
-        $this->setKey(true);
-        return $this;
-    }
-
-    /**
-     * Alias for key
-     * 
-     * @return static
-     */
-    public function asKey(): static
-    {
-        return $this->key();
-    }
-
-    /**
-     * Set the column as not the key, chainable
-     * 
-     * @return static
-     */
-    public function notKey(): static
-    {
-        $this->setKey(false);
-        return $this;
-    }
-
-
-    /**
-     * Alias for notKey
-     * 
-     * @return static
-     */
-    public function notAsKey(): static
-    {
-        return $this->notKey();
-    }
-
-    /**
-     * Set the key value quietly
-     * 
-     * @param bool $key
-     * @return void
-     */
-    public function setKey(bool $key): void
-    {
-        $this->key = $key;
+        return !$this->isKey();
     }
 }

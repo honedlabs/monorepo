@@ -17,6 +17,7 @@ use Conquest\Core\Concerns\HasType;
 use Conquest\Core\Concerns\HasValue;
 use Conquest\Core\Concerns\IsActive;
 use Conquest\Core\Concerns\IsDefault;
+use Conquest\Core\Concerns\IsHidden;
 use Conquest\Core\Concerns\IsKey;
 use Conquest\Core\Concerns\RequiresKey;
 use Conquest\Core\Primitive;
@@ -39,7 +40,8 @@ class Component extends Primitive
     use IsActive;
     use IsDefault;
     use IsKey;
-    
+    use IsHidden;    
+
     public function toArray()
     {
         return [
