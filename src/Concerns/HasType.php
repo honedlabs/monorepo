@@ -54,4 +54,14 @@ trait HasType
     {
         return !is_null($this->type);
     }
+
+    /**
+     * Check if the class does not have a type
+     * 
+     * @return bool
+     */
+    public function lacksType(): bool
+    {
+        return !$this->hasType();
+    }
 }

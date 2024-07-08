@@ -16,7 +16,7 @@ it('can set a closure property', function () {
 
 it('can set an array of properties', function () {
     $component = new Component();
-    $component->setProperties($p = ['property', 'slug']);
+    $component->setProperty($p = ['property', 'slug']);
     expect($component->getProperty())->toBe($p);
 });
 
