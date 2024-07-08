@@ -1,5 +1,7 @@
 <?php
 
+namespace Workbench\App\Enums;
+
 enum Lang: string
 {
     case ENGLISH = 'en';
