@@ -55,4 +55,25 @@ trait HasLabel
     {
         return str($this->evaluate($name))->headline()->lower()->ucfirst();
     }
+
+    /**
+     * Determine if the class has a label.
+     * 
+     * @return bool
+     
+     */
+    public function hasLabel(): bool
+    {
+        return !is_null($this->label);
+    }
+
+    /**
+     * Determine if the class does not have a label.
+     * 
+     * @return bool
+     */
+    public function lacksLabel(): bool
+    {
+        return !$this->hasLabel();
+    }
 }

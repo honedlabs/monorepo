@@ -10,7 +10,7 @@ it('can set a string description', function () {
 
 it('can set a closure description', function () {
     $component = new Component();
-    $component->setDescription($d = fn () => 'Description');
+    $component->setDescription(fn () => 'Description');
     expect($component->getDescription())->toBe('Description');
 });
 
