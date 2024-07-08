@@ -45,6 +45,11 @@ trait CanTransform
         return !is_null($this->transform);
     }
 
+    /**
+     * Determine if the class does not have a transform.
+     * 
+     * @return bool
+     */
     public function cannotTransform(): bool
     {
         return !$this->canTransform();

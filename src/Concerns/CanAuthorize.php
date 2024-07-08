@@ -24,6 +24,17 @@ trait CanAuthorize
     }
 
     /**
+     * Alias for authorize
+     * 
+     * @param bool|Closure $condition
+     * @return static
+     */
+    public function authorise(bool|Closure $condition = true): static
+    {
+        return $this->authorize($condition);
+    }
+
+    /**
      * Set the condition for authorization quietly.
      * 
      * @param bool|Closure $condition
@@ -49,27 +60,7 @@ trait CanAuthorize
      * 
      * @return bool
      */
-    public function allowed(): bool
-    {
-        return $this->authorized();
-    }
-
-    /**
-     * Alias for authorized
-     * 
-     * @return bool
-     */
     public function isAuthorized(): bool
-    {
-        return $this->authorized();
-    }
-
-    /**
-     * Alias for authorized
-     * 
-     * @return bool
-     */
-    public function isAllowed(): bool
     {
         return $this->authorized();
     }
@@ -95,17 +86,6 @@ trait CanAuthorize
     }
 
     /**
-     * Alias for authorize
-     * 
-     * @param bool|Closure $condition
-     * @return static
-     */
-    public function authorise(bool|Closure $condition = true): static
-    {
-        return $this->authorize($condition);
-    }
-
-    /**
      * Assess whether the class is not authorized
      * 
      * @return bool
@@ -116,31 +96,11 @@ trait CanAuthorize
     }
 
     /**
-     * Aias for notAuthorized
-     * 
-     * @return bool
-     */
-    public function notAllowed(): bool
-    {
-        return $this->notAuthorized();
-    }
-
-    /**
      * Alias for notAuthorized
      * 
      * @return bool
      */
     public function isNotAuthorized(): bool
-    {
-        return $this->notAuthorized();
-    }
-
-    /**
-     * Alias for notAuthorized
-     * 
-     * @return bool
-     */
-    public function isNotAllowed(): bool
     {
         return $this->notAuthorized();
     }

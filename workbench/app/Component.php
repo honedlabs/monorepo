@@ -39,10 +39,7 @@ class Component extends Primitive
     use IsActive;
     use IsDefault;
     use IsKey;
-    use RequiresKey;
-
-    protected string $key = 'component';
-
+    
     public function toArray()
     {
         return [
