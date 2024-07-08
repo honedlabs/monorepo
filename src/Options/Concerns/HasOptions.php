@@ -88,7 +88,7 @@ trait HasOptions
      */
     public function parseOption(string $value, string $label = null): Option
     {
-        return Option::make($value, $label ?? $value);
+        return Option::make($value, $label);
     }
 
     /**

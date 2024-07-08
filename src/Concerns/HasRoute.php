@@ -22,7 +22,7 @@ trait HasRoute
         $this->route = $route;
     }
 
-    public function getRoute(): ?string
+    public function getRoute(): string|Closure|null
     {
         return $this->route;
     }
@@ -30,6 +30,11 @@ trait HasRoute
     public function hasRoute(): bool
     {
         return !is_null($this->route);
+    }
+
+    public function lacksRoute(): bool
+    {
+        return !$this->hasRoute();
     }
 
     public function resolveRoute(mixed $parameters = []): void
@@ -55,16 +60,11 @@ trait HasRoute
         }
 
         $route = preg_replace('/\{[^\}]*\}/', '', $route);
-        $this->setResolvedRoute(rtrim($route, '/'));
+        $this->resolvedRoute = rtrim($route, '/');
     }
 
     public function getResolvedRoute(): string
     {
         return $this->resolvedRoute;
-    }
-
-    public function setResolvedRoute(string $route): void
-    {
-        $this->resolvedRoute = $route;
     }
 }

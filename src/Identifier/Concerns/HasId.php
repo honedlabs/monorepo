@@ -7,7 +7,7 @@ use Conquest\Core\Identifier\Identifier;
 
 trait HasId
 {
-    protected $id = null;
+    protected mixed $id = null;
 
     public function id(int|string|Closure $id): static
     {
@@ -30,6 +30,11 @@ trait HasId
     public function hasId(): bool
     {
         return !is_null($this->id);
+    }
+
+    public function lacksId(): bool
+    {
+        return !$this->hasId();
     }
 
     public function generateId(): string

@@ -23,7 +23,7 @@ class Option extends Primitive implements Options
     public function __construct(
         mixed $value,
         string $label = null,
-        array $metadata = null
+        array|Closure $metadata = null
     ) {
         $this->setValue($value);
         $this->setLabel($label ?? $this->toLabel($value));

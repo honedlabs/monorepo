@@ -27,7 +27,7 @@ class Identifier
         return static::$id++;
     }
 
-    public static function generate(): int
+    public static function generate(): string
     {
         return static::getPrefix() . static::getId();
     }
