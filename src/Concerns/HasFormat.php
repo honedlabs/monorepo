@@ -36,6 +36,16 @@ trait HasFormat
     }
 
     /**
+     * Get the format
+     * 
+     * @return string|null
+     */
+    public function getFormat(): ?string
+    {
+        return $this->evaluate($this->format);
+    }
+
+    /**
      * Check if the class has a format
      * 
      * @return bool
@@ -45,13 +55,8 @@ trait HasFormat
         return !is_null($this->format);
     }
 
-    /**
-     * Get the format
-     * 
-     * @return string|null
-     */
-    public function getFormat(): ?string
+    public function lacksFormat(): bool
     {
-        return $this->evaluate($this->format);
+        return !$this->hasFormat();
     }
 }

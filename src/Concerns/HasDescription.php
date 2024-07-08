@@ -37,13 +37,28 @@ trait HasDescription
      * 
      * @return string
      */
-    public function getdescription(): ?string
+    public function getDescription(): ?string
     {
         return $this->evaluate($this->description);
     }
 
+    /**
+     * Determine if the class has a description.
+     * 
+     * @return bool
+     */
     public function hasDescription(): bool
     {
-        return !is_null($this->getdescription());
+        return !is_null($this->description);
+    }
+
+    /**
+     * Determine if the class does not have a description.
+     * 
+     * @return bool
+     */
+    public function lacksDescription(): bool
+    {
+        return !$this->hasDescription();
     }
 }
