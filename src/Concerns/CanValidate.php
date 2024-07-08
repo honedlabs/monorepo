@@ -19,6 +19,12 @@ trait CanValidate
         return $this->validate($callback);
     }
 
+    public function setValidator(Closure|null $callback): void
+    {
+        if (is_null($callback)) return;
+        $this->validator = $callback;
+    }
+
     /** If nothing is returned, validation has failed */
     public function validateUsing(mixed $value): bool
     {
@@ -26,24 +32,38 @@ trait CanValidate
         return $this->peformValidation($value);
     }
 
-    public function setValidator(Closure|null $callback): void
+    public function isValid(mixed $value): bool
     {
-        if (is_null($callback)) return;
-        $this->validator = $callback;
+        return $this->validateUsing($value);
+    }
+
+    public function applyValidation(mixed $value): bool
+    {
+        return $this->validateUsing($value);
+    }
+
+    /**
+     * Determine if the class has a validator
+     * 
+     * @return bool
+     */
+    public function canValidate(): bool
+    {
+        return !is_null($this->validator);
+    }
+
+    public function cannotValidate(): bool
+    {
+        return !$this->canValidate();
     }
 
     public function hasValidator(): bool
     {
-        return !is_null($this->validator);
+        return $this->canValidate();
     }
 
     protected function peformValidation(mixed $value): bool
     {
         return ($this->validator)($value);
-    }
-
-    public function isValid(mixed $value): bool
-    {
-        return $this->validateUsing($value);
     }
 }

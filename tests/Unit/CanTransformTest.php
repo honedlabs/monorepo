@@ -49,3 +49,8 @@ it('applies transformation with alias', function () {
     $component->setTransform(fn (string $record) => mb_strtoupper($record));
     expect($component->applyTransform('a'))->toBe('A');
 });
+
+it('returns original value if no transformation', function () {
+    $component = new Component();
+    expect($component->transformUsing(2))->toBe(2);
+});
