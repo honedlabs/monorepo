@@ -28,6 +28,7 @@ trait HasHttpMethod
     {
         if (is_null($method)) return;
 
+        $method = mb_strtoupper($method);
         if (!in_array($method, self::METHODS)) {
             throw new \InvalidArgumentException("Provide HTTP method [$method] is not valid.");
         }
@@ -42,6 +43,11 @@ trait HasHttpMethod
     public function hasMethod(): bool
     {
         return !is_null($this->getMethod());
+    }
+
+    public function lacksMethod(): bool
+    {
+        return !$this->hasMethod();
     }
 
     public function useGet(): static

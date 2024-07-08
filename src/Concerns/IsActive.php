@@ -45,6 +45,11 @@ trait IsActive
         return $this->getActive();
     }
 
+    public function isNotActive(): bool
+    {
+        return !$this->getActive();
+    }
+
     /**
      * Check if the class is active
      * 

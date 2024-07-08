@@ -55,4 +55,14 @@ trait HasMetadata
     {
         return is_array($this->getMetadata()) && !empty($this->getMetadata());
     }
+
+    /**
+     * Check if the class does not have metadata.
+     * 
+     * @return bool
+     */
+    public function lacksMetadata(): bool
+    {
+        return !$this->hasMetadata();
+    }
 }
