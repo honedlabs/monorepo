@@ -13,9 +13,6 @@ use JsonSerializable;
 
 /**
  * Describe and create primitive objects.
- *
- * @method make
- * @method toArray
  */
 abstract class Primitive implements Arrayable, JsonSerializable, Makeable
 {

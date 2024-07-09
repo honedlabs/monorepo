@@ -19,7 +19,7 @@ trait EvaluatesClosures
     public function evaluate(mixed $value, array $named = [], array $typed = []): mixed
     {
         if (\is_object($value) && method_exists($value, '__invoke')) {
-            $value = $value->__invoke(...);
+            $value = $value->__invoke(...); // @phpstan-ignore-line
         }
 
         if (! $value instanceof Closure) {
