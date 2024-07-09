@@ -13,6 +13,6 @@ class Category extends Model
 
     public function url()
     {
-        return $this->slug . '/' . $this->id;
+        return $this->slug.'/'.$this->id;
     }
 }

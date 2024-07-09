@@ -13,21 +13,16 @@ trait CanAuthorize
 
     /**
      * Set the condition for authorization, chainable.
-     * 
-     * @param bool|\Closure $condition
-     * @return static
      */
     public function authorize(bool|Closure $condition = true): static
     {
         $this->setAuthorize($condition);
+
         return $this;
     }
 
     /**
      * Alias for authorize
-     * 
-     * @param bool|Closure $condition
-     * @return static
      */
     public function authorise(bool|Closure $condition = true): static
     {
@@ -36,19 +31,17 @@ trait CanAuthorize
 
     /**
      * Set the condition for authorization quietly.
-     * 
-     * @param bool|Closure $condition
-     * @return void
      */
     public function setAuthorize(bool|Closure|null $condition): void
     {
-        if (is_null($condition)) return;
+        if (is_null($condition)) {
+            return;
+        }
         $this->authorized = $condition;
     }
+
     /**
      * Assess whether the class is authorized.
-     * 
-     * @return bool
      */
     public function authorized(): bool
     {
@@ -57,8 +50,6 @@ trait CanAuthorize
 
     /**
      * Alias for authorized
-     * 
-     * @return bool
      */
     public function isAuthorized(): bool
     {
@@ -67,8 +58,6 @@ trait CanAuthorize
 
     /**
      * Alias for authorized
-     * 
-     * @return bool
      */
     public function authorised(): bool
     {
@@ -77,8 +66,6 @@ trait CanAuthorize
 
     /**
      * Alias for authorized
-     * 
-     * @return bool
      */
     public function isAuthorised(): bool
     {
@@ -87,18 +74,14 @@ trait CanAuthorize
 
     /**
      * Assess whether the class is not authorized
-     * 
-     * @return bool
      */
     public function notAuthorized(): bool
     {
-        return !$this->authorized();
+        return ! $this->authorized();
     }
 
     /**
      * Alias for notAuthorized
-     * 
-     * @return bool
      */
     public function isNotAuthorized(): bool
     {
@@ -107,8 +90,6 @@ trait CanAuthorize
 
     /**
      * Alias for notAuthorized
-     * 
-     * @return bool
      */
     public function notAuthorised(): bool
     {
@@ -117,8 +98,6 @@ trait CanAuthorize
 
     /**
      * Alias for notAuthorized
-     * 
-     * @return bool
      */
     public function isNotAuthorised(): bool
     {

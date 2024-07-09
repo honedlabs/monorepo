@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 Route::get('/lang/{lang}', function ($lang) {
     session()->put('lang', $lang);
+
     return back();
 })->name('lang');
 

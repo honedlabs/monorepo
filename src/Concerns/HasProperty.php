@@ -14,32 +14,29 @@ trait HasProperty
 
     /**
      * Set the property to be used, chainable.
-     * 
-     * @param string|\Closure $property
-     * @return static
+     *
+     * @param  string|\Closure  $property
      */
     public function property(string|array|Closure $property): static
     {
         $this->setProperty($property);
+
         return $this;
     }
 
     /**
      * Set the property to be used quietly.
-     * 
-     * @param mixed $property
-     * @return void
      */
     public function setProperty(mixed $property): void
     {
-        if (is_null($property)) return;
+        if (is_null($property)) {
+            return;
+        }
         $this->property = $property;
     }
 
     /**
      * Get the property to be used.
-     * 
-     * @return string|array
      */
     public function getProperty(): string|array|null
     {
@@ -48,28 +45,22 @@ trait HasProperty
 
     /**
      * Check if the class has a property
-     * 
-     * @return bool
      */
     public function hasProperty(): bool
     {
-        return !is_null($this->property);
+        return ! is_null($this->property);
     }
 
     /**
      * Check if the class does not have a property
-     * 
-     * @return bool
      */
     public function lacksProperty(): bool
     {
-        return !$this->hasProperty();
+        return ! $this->hasProperty();
     }
 
     /**
      * Check if the class has an array of properties
-     * 
-     * @return bool
      */
     public function isPropertyArray(): bool
     {

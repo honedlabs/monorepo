@@ -13,32 +13,27 @@ trait HasFormat
 
     /**
      * Set the format, chainable.
-     * 
-     * @param string|Closure $format
-     * @return static
      */
     public function format(string|Closure $format): static
     {
         $this->setFormat($format);
+
         return $this;
     }
 
     /**
      * Set the format quietly.
-     * 
-     * @param string|Closure $format
-     * @return void
      */
     public function setFormat(string|Closure|null $format): void
     {
-        if (is_null($format)) return;
+        if (is_null($format)) {
+            return;
+        }
         $this->format = $format;
     }
 
     /**
      * Get the format
-     * 
-     * @return string|null
      */
     public function getFormat(): ?string
     {
@@ -47,16 +42,14 @@ trait HasFormat
 
     /**
      * Check if the class has a format
-     * 
-     * @return bool
      */
     public function hasFormat(): bool
     {
-        return !is_null($this->format);
+        return ! is_null($this->format);
     }
 
     public function lacksFormat(): bool
     {
-        return !$this->hasFormat();
+        return ! $this->hasFormat();
     }
 }

@@ -8,18 +8,19 @@ use Conquest\Core\Primitive;
 
 class ConfigurableComponent extends Primitive
 {
-    use RequiresKey;
     use HasType;
+    use RequiresKey;
 
     public const SETUP = 'configurable';
+
     public $key = 'component';
-    
-    public function setUp() 
+
+    public function setUp()
     {
         $this->setType(self::SETUP);
     }
 
-    public function make(): static
+    public static function make(): static
     {
         return resolve(static::class);
     }
@@ -27,10 +28,8 @@ class ConfigurableComponent extends Primitive
     public function toArray()
     {
         return [
-            'id' => $this->getId(),
-            'value' => $this->getValue(),
-            'label' => $this->getLabel(),
-            'metadata' => $this->getMetadata(),            
+            'key' => $this->getKey(),
+            'type' => $this->getType(),
         ];
     }
 }

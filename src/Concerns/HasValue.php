@@ -11,20 +11,16 @@ trait HasValue
 
     /**
      * Set the value to be used, chainable.
-     * 
-     * @param mixed $value
-     * @return static
      */
     public function value(mixed $value): static
     {
         $this->setValue($value);
+
         return $this;
     }
 
     /**
      * Set the value to be used quietly.
-     * 
-     * @param mixed $value
      */
     public function setValue(mixed $value): void
     {
@@ -33,8 +29,6 @@ trait HasValue
 
     /**
      * Get the value to be used.
-     * 
-     * @return mixed
      */
     public function getValue(): mixed
     {

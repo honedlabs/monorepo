@@ -2,12 +2,13 @@
 
 namespace Workbench\Database\Factories;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class CategoryFactory extends Factory
 {
     protected $model = \Workbench\App\Models\Category::class;
+
     /**
      * Define the model's default state.
      *

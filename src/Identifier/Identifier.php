@@ -5,6 +5,7 @@ namespace Conquest\Core\Identifier;
 class Identifier
 {
     protected static string $prefix = 'id_';
+
     protected static int $id = 0;
 
     public static function setGlobalPrefix(string $prefix): void
@@ -29,6 +30,6 @@ class Identifier
 
     public static function generate(): string
     {
-        return static::getPrefix() . static::getId();
+        return static::getPrefix().static::getId();
     }
 }

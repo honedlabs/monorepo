@@ -10,20 +10,18 @@ trait IsKey
 
     /**
      * Set the column as the key, chainable
-     * 
-     * @return static
      */
     public function key(bool|Closure $key = true): static
     {
         $this->setKey($key);
+
         return $this;
     }
 
     /**
      * Set the key value quietly
-     * 
-     * @param bool $key
-     * @return void
+     *
+     * @param  bool  $key
      */
     public function setKey(bool|Closure $key): void
     {
@@ -32,8 +30,6 @@ trait IsKey
 
     /**
      * Check if the class is the key
-     * 
-     * @return bool
      */
     public function isKey(): bool
     {
@@ -42,11 +38,9 @@ trait IsKey
 
     /**
      * Check if the class is not the key
-     * 
-     * @return bool
      */
     public function isNotKey(): bool
     {
-        return !$this->isKey();
+        return ! $this->isKey();
     }
 }

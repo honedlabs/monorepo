@@ -1,8 +1,7 @@
 <?php
 
-use Workbench\App\ConfigurableComponent;
 use Conquest\Core\Exceptions\KeyDoesntExist;
-use Workbench\App\Component;
+use Workbench\App\ConfigurableComponent;
 
 it('returns key if defined', function () {
     $component = new ConfigurableComponent();

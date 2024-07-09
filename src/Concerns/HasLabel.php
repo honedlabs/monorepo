@@ -13,32 +13,27 @@ trait HasLabel
 
     /**
      * Set the label, chainable.
-     * 
-     * @param string|Closure $label
-     * @return static
      */
     public function label(string|Closure $label): static
     {
         $this->setLabel($label);
+
         return $this;
     }
 
     /**
      * Set the label quietly.
-     * 
-     * @param string|Closure $label
-     * @return void
      */
     public function setLabel(string|Closure|null $label): void
     {
-        if (is_null($label)) return;
+        if (is_null($label)) {
+            return;
+        }
         $this->label = $label;
     }
 
     /**
      * Get the label.
-     * 
-     * @return string
      */
     public function getLabel(): ?string
     {
@@ -47,9 +42,6 @@ trait HasLabel
 
     /**
      * Convert a string to the label format.
-     * 
-     * @param string|Closure $name
-     * @return string
      */
     public function toLabel(string|Closure $name): string
     {
@@ -58,22 +50,17 @@ trait HasLabel
 
     /**
      * Determine if the class has a label.
-     * 
-     * @return bool
-     
      */
     public function hasLabel(): bool
     {
-        return !is_null($this->label);
+        return ! is_null($this->label);
     }
 
     /**
      * Determine if the class does not have a label.
-     * 
-     * @return bool
      */
     public function lacksLabel(): bool
     {
-        return !$this->hasLabel();
+        return ! $this->hasLabel();
     }
 }

@@ -11,6 +11,7 @@ trait CanValidate
     public function validate(Closure $callback): static
     {
         $this->setValidator($callback);
+
         return $this;
     }
 
@@ -19,16 +20,21 @@ trait CanValidate
         return $this->validate($callback);
     }
 
-    public function setValidator(Closure|null $callback): void
+    public function setValidator(?Closure $callback): void
     {
-        if (is_null($callback)) return;
+        if (is_null($callback)) {
+            return;
+        }
         $this->validator = $callback;
     }
 
     /** If nothing is returned, validation has failed */
     public function validateUsing(mixed $value): bool
     {
-        if (!$this->hasValidator()) return true;
+        if (! $this->hasValidator()) {
+            return true;
+        }
+
         return $this->peformValidation($value);
     }
 
@@ -44,17 +50,15 @@ trait CanValidate
 
     /**
      * Determine if the class has a validator
-     * 
-     * @return bool
      */
     public function canValidate(): bool
     {
-        return !is_null($this->validator);
+        return ! is_null($this->validator);
     }
 
     public function cannotValidate(): bool
     {
-        return !$this->canValidate();
+        return ! $this->canValidate();
     }
 
     public function hasValidator(): bool

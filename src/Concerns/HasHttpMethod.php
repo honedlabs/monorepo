@@ -21,15 +21,18 @@ trait HasHttpMethod
     public function method(string $method): static
     {
         $this->setMethod($method);
+
         return $this;
     }
 
-    public function setMethod(string|null $method): void
+    public function setMethod(?string $method): void
     {
-        if (is_null($method)) return;
+        if (is_null($method)) {
+            return;
+        }
 
         $method = mb_strtoupper($method);
-        if (!in_array($method, self::METHODS)) {
+        if (! in_array($method, self::METHODS)) {
             throw new \InvalidArgumentException("Provide HTTP method [$method] is not valid.");
         }
         $this->method = $method;
@@ -42,12 +45,12 @@ trait HasHttpMethod
 
     public function hasMethod(): bool
     {
-        return !is_null($this->getMethod());
+        return ! is_null($this->getMethod());
     }
 
     public function lacksMethod(): bool
     {
-        return !$this->hasMethod();
+        return ! $this->hasMethod();
     }
 
     public function useGet(): static
@@ -85,7 +88,7 @@ trait HasHttpMethod
         return $this->method(Request::METHOD_OPTIONS);
     }
 
-    public function useMethod(string|null $method): static
+    public function useMethod(?string $method): static
     {
         return $this->method($method);
     }

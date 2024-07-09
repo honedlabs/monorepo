@@ -11,8 +11,7 @@ trait RequiresKey
 {
     /**
      * Retrieve the key property
-     * 
-     * @return string
+     *
      * @throws KeyDoesntExist
      */
     public function getKey(): string
@@ -24,7 +23,7 @@ trait RequiresKey
         if (method_exists($this, 'key')) {
             return $this->key();
         }
-        
+
         throw new KeyDoesntExist();
     }
 }

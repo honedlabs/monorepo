@@ -2,25 +2,26 @@
 
 namespace Conquest\Core;
 
-use JsonSerializable;
 use Conquest\Core\Concerns\Configurable;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Traits\Tappable;
-use Illuminate\Support\Traits\Macroable;
-use Illuminate\Support\Traits\Conditionable;
 use Conquest\Core\Concerns\EvaluatesClosures;
 use Conquest\Core\Contracts\Makeable;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
+use JsonSerializable;
 
 /**
  * Describe and create primitive objects.
+ *
  * @method make
  * @method toArray
  */
-abstract class Primitive implements JsonSerializable, Arrayable, Makeable
+abstract class Primitive implements Arrayable, JsonSerializable, Makeable
 {
+    use Conditionable;
     use Configurable;
     use EvaluatesClosures;
-    use Conditionable;
     use Macroable;
     use Tappable;
 

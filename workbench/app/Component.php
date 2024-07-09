@@ -19,7 +19,6 @@ use Conquest\Core\Concerns\IsActive;
 use Conquest\Core\Concerns\IsDefault;
 use Conquest\Core\Concerns\IsHidden;
 use Conquest\Core\Concerns\IsKey;
-use Conquest\Core\Concerns\RequiresKey;
 use Conquest\Core\Identifier\Concerns\HasId;
 use Conquest\Core\Options\Concerns\HasOptions;
 use Conquest\Core\Primitive;
@@ -32,19 +31,19 @@ class Component extends Primitive
     use HasDescription;
     use HasFormat;
     use HasHttpMethod;
+    use HasId;
     use HasLabel;
     use HasMetadata;
     use HasName;
+    use HasOptions;
     use HasProperty;
     use HasRoute;
     use HasType;
     use HasValue;
     use IsActive;
     use IsDefault;
-    use IsKey;
     use IsHidden;
-    use HasOptions;
-    use HasId;    
+    use IsKey;
 
     public function toArray()
     {
@@ -52,8 +51,7 @@ class Component extends Primitive
             'id' => $this->getId(),
             'value' => $this->getValue(),
             'label' => $this->getLabel(),
-            'metadata' => $this->getMetadata(),            
+            'metadata' => $this->getMetadata(),
         ];
     }
-
 }

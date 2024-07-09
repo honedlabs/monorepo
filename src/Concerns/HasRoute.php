@@ -8,17 +8,21 @@ use Illuminate\Support\Facades\Route;
 trait HasRoute
 {
     protected string|Closure|null $route = null;
+
     protected ?string $resolvedRoute = null;
 
     public function route(string|Closure $route): static
     {
         $this->setRoute($route);
+
         return $this;
     }
 
     public function setRoute(string|Closure|null $route): void
     {
-        if (is_null($route)) return;
+        if (is_null($route)) {
+            return;
+        }
         $this->route = $route;
     }
 
@@ -29,28 +33,32 @@ trait HasRoute
 
     public function hasRoute(): bool
     {
-        return !is_null($this->route);
+        return ! is_null($this->route);
     }
 
     public function lacksRoute(): bool
     {
-        return !$this->hasRoute();
+        return ! $this->hasRoute();
     }
 
     public function resolveRoute(mixed $parameters = []): void
     {
-        if (!$this->hasRoute()) return;
+        if (! $this->hasRoute()) {
+            return;
+        }
 
         $route = $this->getRoute();
 
         if (is_callable($route)) {
             $this->setResolvedRoute(call_user_func($route, $parameters));
+
             return;
         }
 
         // Check if it's a named route
         if (Route::has($route)) {
             $this->setResolvedRoute(route($this->route, $parameters));
+
             return;
         }
 

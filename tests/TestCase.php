@@ -2,13 +2,13 @@
 
 namespace Conquest\Core\Tests;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Workbench\Database\Seeders\DatabaseSeeder;
-use function Orchestra\Testbench\workbench_path;
-
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Workbench\App\Providers\WorkbenchServiceProvider;
+use Workbench\Database\Seeders\DatabaseSeeder;
+
+use function Orchestra\Testbench\workbench_path;
 
 class TestCase extends Orchestra
 {

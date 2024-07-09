@@ -13,52 +13,43 @@ trait CanTransform
 
     /**
      * Set the transformation function for a given value, chainable.
-     * 
-     * @param Closure $transform
-     * @return static
      */
     public function transform(Closure $transform): static
     {
         $this->setTransform($transform);
+
         return $this;
     }
 
     /**
      * Set the transformation function for a given value quietly.
-     * 
-     * @param Closure $transform
-     * @return void
      */
-    public function setTransform(Closure|null $transform): void
+    public function setTransform(?Closure $transform): void
     {
-        if (is_null($transform)) return;
+        if (is_null($transform)) {
+            return;
+        }
         $this->transform = $transform;
     }
 
     /**
      * Determine if the class has a transform.
-     * 
-     * @return bool
      */
     public function canTransform(): bool
     {
-        return !is_null($this->transform);
+        return ! is_null($this->transform);
     }
 
     /**
      * Determine if the class does not have a transform.
-     * 
-     * @return bool
      */
     public function cannotTransform(): bool
     {
-        return !$this->canTransform();
+        return ! $this->canTransform();
     }
 
     /**
      * Alias for canTransform
-     * 
-     * @return bool
      */
     public function hasTransform(): bool
     {
@@ -67,21 +58,18 @@ trait CanTransform
 
     /**
      * Apply the transformation to the given value.
-     * 
-     * @param mixed $value
-     * @return mixed
      */
     public function transformUsing(mixed $value): mixed
     {
-        if (!$this->hasTransform()) return $value;
+        if (! $this->hasTransform()) {
+            return $value;
+        }
+
         return $this->performTransform($value);
     }
 
     /**
      * Alias for transformUsing
-     * 
-     * @param mixed $value
-     * @return mixed
      */
     public function applyTransform(mixed $value): mixed
     {
@@ -90,9 +78,6 @@ trait CanTransform
 
     /**
      * Get the transformed value.
-     * 
-     * @param mixed $value
-     * @return mixed
      */
     protected function performTransform(mixed $value): mixed
     {

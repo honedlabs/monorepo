@@ -16,14 +16,14 @@ use Conquest\Core\Primitive;
 class Option extends Primitive implements Options
 {
     use HasLabel;
-    use HasValue;
     use HasMetadata;
+    use HasValue;
     use IsActive;
 
     public function __construct(
         mixed $value,
-        string $label = null,
-        array|Closure $metadata = null
+        ?string $label = null,
+        array|Closure|null $metadata = null
     ) {
         $this->setValue($value);
         $this->setLabel($label ?? $this->toLabel($value));
@@ -32,15 +32,11 @@ class Option extends Primitive implements Options
 
     /**
      * Make a new option.
-     * 
-     * @param mixed $value
-     * @param string|null $label
-     * @param array|Closure|null $metadata
      */
     public static function make(
         mixed $value,
-        string $label = null,
-        array|Closure $metadata = null
+        ?string $label = null,
+        array|Closure|null $metadata = null
     ): static {
         return resolve(static::class, compact('value', 'label', 'metadata'));
     }

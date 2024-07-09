@@ -1,7 +1,6 @@
 <?php
 
 use Conquest\Core\Options\Option;
-use Illuminate\Support\Facades\DB;
 use Workbench\App\Component;
 use Workbench\App\Enums\Lang;
 use Workbench\App\Models\Category;
@@ -88,7 +87,7 @@ it('checks if it lacks options', function () {
 it('can set option as single value', function () {
     $component = new Component();
     $component->setOptions([
-        'value'
+        'value',
     ]);
     expect($component->getOptions())->toHaveCount(1);
     expect($component->getOptions()[0])->toBeInstanceOf(Option::class);
@@ -130,7 +129,7 @@ it('can chain options from enum using defaults', function () {
     expect($component->optionsFromEnum(Lang::class))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount(count(Lang::cases()));
     expect($component->getOptions())->each(function ($option) {
-        
+
         expect($enum = Lang::tryFrom($option->value->getValue()))
             ->toBeInstanceOf(Lang::class)
             ->and($option->value->getValue())->toBe($enum->value)
@@ -143,7 +142,7 @@ it('can chain options from enum using methods', function () {
     expect($component->optionsFromEnum(Lang::class, null, 'label'))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount(count(Lang::cases()));
     expect($component->getOptions())->each(function ($option) {
-        
+
         expect($enum = Lang::tryFrom($option->value->getValue()))
             ->toBeInstanceOf(Lang::class)
             ->and($option->value->getValue())->toBe($enum->value)
@@ -159,7 +158,7 @@ it('can chain options from model, defaulting to key', function () {
         expect($model = Category::find($option->value->getValue()))
             ->toBeInstanceOf(Category::class)
             ->and($option->value->getValue())->toBe($model->getKey())
-            ->and($option->value->getLabel())->toBe((string)$model->getKey());
+            ->and($option->value->getLabel())->toBe((string) $model->getKey());
     });
 });
 
@@ -171,7 +170,7 @@ it('can chain options from model using properties', function () {
         expect($model = Category::where('slug', $option->value->getValue())->first())
             ->toBeInstanceOf(Category::class)
             ->and($option->value->getValue())->toBe($model->slug)
-            ->and($option->value->getLabel())->toBe((string)$model->name);
+            ->and($option->value->getLabel())->toBe((string) $model->name);
     });
 });
 
@@ -202,6 +201,6 @@ it('can chain options from collection using properties', function () {
         expect($model = $c->where('slug', $option->value->getValue())->first())
             ->toBeInstanceOf(Category::class)
             ->and($option->value->getValue())->toBe($model->slug)
-            ->and($option->value->getLabel())->toBe((string)$model->name);
+            ->and($option->value->getLabel())->toBe((string) $model->name);
     });
 });
