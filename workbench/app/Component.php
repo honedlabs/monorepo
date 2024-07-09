@@ -49,7 +49,10 @@ class Component extends Primitive
     public function toArray()
     {
         return [
-            
+            'id' => $this->getId(),
+            'value' => $this->getValue(),
+            'label' => $this->getLabel(),
+            'metadata' => $this->getMetadata(),            
         ];
     }
 

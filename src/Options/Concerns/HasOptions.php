@@ -31,7 +31,7 @@ trait HasOptions
     /**
      * Set the options from an enum, chainable. It will default to using the backing value and enum name.
      * 
-     * @param BackedEnum $enum
+     * @param BackedEnum-string $enum
      * @param string|null $value
      * @param string|null $label
      */
@@ -72,8 +72,8 @@ trait HasOptions
     public function optionsFromCollection(Collection $collection, string $value = null, string $label = null): static
     {
         $collection->each(function($item) use ($value, $label) {
-            $optionValue = property_exists($item, $value) ? $item->{$value} : (method_exists($item, $value) ? $item->{$value}() : $item);
-            $optionLabel = $label !== null ? (property_exists($item, $label) ? $item->{$label} : (method_exists($item, $label) ? $item->{$label}() : null)) : null;
+            $optionValue = $item->hasAttribute($value) ? $item->{$value} : (method_exists($item, $value) ? $item->{$value}() : $item);
+            $optionLabel = $label !== null ? ($item->hasAttribute($label) ? $item->{$label} : (method_exists($item, $label) ? $item->{$label}() : null)) : null;
             $this->addOption($this->parseOption($optionValue, $optionLabel));
         });
         return $this;
@@ -86,7 +86,7 @@ trait HasOptions
      * @param string|null $label
      * @return Option
      */
-    public function parseOption(string $value, string $label = null): Option
+    public function parseOption(mixed $value, string $label = null): Option
     {
         return Option::make($value, $label);
     }

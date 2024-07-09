@@ -133,8 +133,8 @@ it('can chain options from enum using defaults', function () {
         
         expect($enum = Lang::tryFrom($option->value->getValue()))
             ->toBeInstanceOf(Lang::class)
-            ->and($enum->value)->toBe($option->value->getValue())
-            ->and($enum->name)->toBe($option->value->getLabel());
+            ->and($option->value->getValue())->toBe($enum->value)
+            ->and($option->value->getLabel())->toBe($enum->name);
     });
 });
 
@@ -146,8 +146,8 @@ it('can chain options from enum using methods', function () {
         
         expect($enum = Lang::tryFrom($option->value->getValue()))
             ->toBeInstanceOf(Lang::class)
-            ->and($enum->value)->toBe($option->value->getValue())
-            ->and($enum->label())->toBe($option->value->getLabel());
+            ->and($option->value->getValue())->toBe($enum->value)
+            ->and($option->value->getLabel())->toBe($enum->label());
     });
 });
 
@@ -158,8 +158,8 @@ it('can chain options from model, defaulting to key', function () {
     expect($component->getOptions())->each(function ($option) {
         expect($model = Category::find($option->value->getValue()))
             ->toBeInstanceOf(Category::class)
-            ->and($model->getKey())->toBe($option->value->getValue())
-            ->and(str($model->getKey()))->toBe($option->value->getLabel());
+            ->and($option->value->getValue())->toBe($model->getKey())
+            ->and($option->value->getLabel())->toBe((string)$model->getKey());
     });
 });
 
@@ -168,10 +168,10 @@ it('can chain options from model using properties', function () {
     expect($component->optionsFromModel(Category::class, 'slug', 'name'))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount(Category::count());
     expect($component->getOptions())->each(function ($option) {
-        expect($model = Category::find($option->value->getValue()))
+        expect($model = Category::where('slug', $option->value->getValue())->first())
             ->toBeInstanceOf(Category::class)
-            ->and($model->slug)->toBe($option->value->getValue())
-            ->and(str($model->name))->toBe($option->value->getLabel());
+            ->and($option->value->getValue())->toBe($model->slug)
+            ->and($option->value->getLabel())->toBe((string)$model->name);
     });
 });
 
@@ -180,10 +180,28 @@ it('can chain options from model using method', function () {
     expect($component->optionsFromModel(Category::class, 'url', 'name'))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount(Category::count());
     expect($component->getOptions())->each(function ($option) {
-        expect($model = Category::find($option->value->getValue()))
+        expect($model = Category::where('name', $option->value->getLabel())->first())
             ->toBeInstanceOf(Category::class)
             ->and($model->url())->toBe($option->value->getValue())
-            ->and(str($model->name))->toBe($option->value->getLabel());
+            ->and($model->name)->toBe($option->value->getLabel());
     });
+});
 
+it('can chain options from collection, defaulting to the item itself', function () {
+    $component = new Component();
+    expect($component->optionsFromCollection($c = Category::select('name', 'slug')->get()))->toBeInstanceOf(Component::class);
+    expect($component->getOptions())->toHaveCount($c->count());
+    expect($component->getOptions())->toHaveCount($c->count());
+});
+
+it('can chain options from collection using properties', function () {
+    $component = new Component();
+    expect($component->optionsFromCollection($c = Category::select('name', 'slug')->get(), 'slug', 'name'))->toBeInstanceOf(Component::class);
+    expect($component->getOptions())->toHaveCount($c->count());
+    expect($component->getOptions())->each(function ($option) use ($c) {
+        expect($model = $c->where('slug', $option->value->getValue())->first())
+            ->toBeInstanceOf(Category::class)
+            ->and($option->value->getValue())->toBe($model->slug)
+            ->and($option->value->getLabel())->toBe((string)$model->name);
+    });
 });
