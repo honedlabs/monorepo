@@ -35,7 +35,7 @@ trait HasOptions
      * @param string|null $value
      * @param string|null $label
      */
-    public function optionsFromEnum(BackedEnum $enum, string $value = null, string $label = null): static
+    public function optionsFromEnum(string $enum, string $value = null, string $label = null): static
     {
         foreach ($enum::cases() as $case) {
             $optionValue = ($value && method_exists($case, $value)) ? $case->{$value}() : $case->value;
@@ -48,15 +48,15 @@ trait HasOptions
     /**
      * Set the options from a model, chainable. It will default to using the Model key.
      * 
-     * @param Model $model
+     * @param class-string $model
      * @param string|null $value
      * @param string|null $label
      */
-    public function optionsFromModel(Model $model, string $value = null, string $label = null): static
+    public function optionsFromModel(string $model, string $value = null, string $label = null): static
     {
         foreach ($model::all() as $modelInstance) {
-            $optionValue = property_exists($modelInstance, $value) ? $modelInstance->{$value} : (method_exists($modelInstance, $value) ? $modelInstance->{$value}() : $modelInstance->getKey());
-            $optionLabel = $label !== null ? (property_exists($modelInstance, $label) ? $modelInstance->{$label} : (method_exists($modelInstance, $label) ? $modelInstance->{$label}() : null)) : null;
+            $optionValue = $modelInstance->hasAttribute($value) ? $modelInstance->{$value} : (method_exists($modelInstance, $value) ? $modelInstance->{$value}() : $modelInstance->getKey());
+            $optionLabel = $label !== null ? ($modelInstance->hasAttribute($label) ? $modelInstance->{$label} : (method_exists($modelInstance, $label) ? $modelInstance->{$label}() : null)) : null;
             $this->addOption($this->parseOption($optionValue, $optionLabel));
         }
         return $this;
@@ -104,7 +104,7 @@ trait HasOptions
         foreach ($options as $value => $label) {
             if ($label instanceof Option) {
                 $option = $label;
-            } else if (!is_int($value)) {
+            } else if (is_int($value)) {
                 $option = $this->parseOption($label);
             } else {
                 $option = $this->parseOption($value, $label);
@@ -119,7 +119,7 @@ trait HasOptions
      * @param Option $option
      * @return void
      */
-    protected function addOption(Option $option): void
+    public function addOption(Option $option): void
     {
         $this->options[] = $option;
     }
@@ -149,7 +149,7 @@ trait HasOptions
      * 
      * @return bool
      */
-    public function doesntHaveOptions(): bool
+    public function lacksOptions(): bool
     {
         return !$this->hasOptions();
     }

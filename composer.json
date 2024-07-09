@@ -40,7 +40,10 @@
     "autoload-dev": {
         "psr-4": {
             "Conquest\\Core\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/"
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/",
+            "Workbench\\App\\Models\\": "workbench/app/models/"
         }
     },
     "scripts": {

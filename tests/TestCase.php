@@ -2,10 +2,13 @@
 
 namespace Conquest\Core\Tests;
 
+use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Workbench\Database\Seeders\DatabaseSeeder;
-use Workbench\App\Providers\WorkbenchServiceProvider;
 use function Orchestra\Testbench\workbench_path;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Workbench\App\Providers\WorkbenchServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -13,8 +16,15 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
-        // $this->artisan('migrate:fresh');
-        // $this->seed(DatabaseSeeder::class);
+        Factory::guessFactoryNamesUsing(
+            fn (string $modelName) => 'Workbench\\Database\\Factories\\'.class_basename($modelName).'Factory'
+        );
+
+        $migrator = app('migrator');
+        $migrator->run(workbench_path('database/migrations'));
+        $this->assertTrue(Schema::hasTable('categories'), 'Categories table does not exist');
+
+        $this->seed(DatabaseSeeder::class);
     }
 
     protected function getPackageProviders($app)
@@ -33,7 +43,6 @@ class TestCase extends Orchestra
     {
         $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
 
-        // Set up the testing database connection
         $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing', [
             'driver' => 'sqlite',
@@ -41,10 +50,6 @@ class TestCase extends Orchestra
             'prefix' => '',
         ]);
 
-        // Set APP_DEBUG to true
-        $app['config']->set('app.debug', true);
-
-        // Set up the workbench configuration
         $app['config']->set('workbench', [
             'start' => '/',
             'install' => true,
@@ -58,7 +63,7 @@ class TestCase extends Orchestra
             ],
             'build' => [
                 'create-sqlite-db',
-                'migrate:fresh',
+                'migrate:fresh --seed',
             ],
             'assets' => [],
             'sync' => [],
@@ -67,6 +72,6 @@ class TestCase extends Orchestra
 
     protected function defineRoutes($router)
     {
-        require workbench_path('routes/web.php');
+        return require workbench_path('routes/web.php');
     }
 }
