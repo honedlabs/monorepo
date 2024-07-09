@@ -11,7 +11,7 @@ trait Configurable
     /**
      * Configures this primitive.
      */
-    public function setUp(): void
+    public function setUp()
     {
         //
     }
