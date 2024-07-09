@@ -5,9 +5,6 @@ use Workbench\App\Component;
 use Workbench\App\Enums\Lang;
 use Workbench\App\Models\Category;
 
-// use Workbench\App\Models\Category;
-// use Workbench\Database\Factories\CategoryFactory;
-
 it('can create an option', function () {
     $option = new Option(1);
     expect($option->getValue())->toBe(1);

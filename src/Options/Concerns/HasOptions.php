@@ -52,11 +52,10 @@ trait HasOptions
     public function optionsFromModel(string $model, ?string $value = null, ?string $label = null): static
     {
         foreach ($model::all() as $modelInstance) {
-            $optionValue = $modelInstance->hasAttribute($value) ? $modelInstance->{$value} : (method_exists($modelInstance, $value) ? $modelInstance->{$value}() : $modelInstance->getKey());
-            $optionLabel = $label !== null ? ($modelInstance->hasAttribute($label) ? $modelInstance->{$label} : (method_exists($modelInstance, $label) ? $modelInstance->{$label}() : null)) : null;
+            $optionValue = $this->getOptionField($modelInstance, $value) ?? $modelInstance->getKey();
+            $optionLabel = $label !== null ? $this->getOptionField($modelInstance, $label) : null;
             $this->addOption($this->parseOption($optionValue, $optionLabel));
         }
-
         return $this;
     }
 
@@ -66,12 +65,40 @@ trait HasOptions
     public function optionsFromCollection(Collection $collection, ?string $value = null, ?string $label = null): static
     {
         $collection->each(function ($item) use ($value, $label) {
-            $optionValue = $item->hasAttribute($value) ? $item->{$value} : (method_exists($item, $value) ? $item->{$value}() : $item);
-            $optionLabel = $label !== null ? ($item->hasAttribute($label) ? $item->{$label} : (method_exists($item, $label) ? $item->{$label}() : null)) : null;
+            $optionValue = $this->getOptionField($item, $value) ?? $item;
+            $optionLabel = $label !== null ? $this->getOptionField($item, $label) : null;
             $this->addOption($this->parseOption($optionValue, $optionLabel));
         });
-
         return $this;
+    }
+
+
+
+    private function getOptionField($item, ?string $key): mixed
+    {
+        if ($key === null) {
+            return null;
+        }
+    
+        if (is_array($item)) {
+            return $item[$key] ?? null;
+        }
+    
+        if (is_object($item)) {
+            if (method_exists($item, $key)) {
+                return $item->{$key}();
+            }
+    
+            if (property_exists($item, $key)) {
+                return $item->{$key};
+            }
+    
+            if (method_exists($item, 'getAttribute')) {
+                return $item->getAttribute($key);
+            }
+        }
+    
+        return null;
     }
 
     /**
