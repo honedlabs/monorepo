@@ -13,6 +13,7 @@ use Conquest\Core\Concerns\HasMetadata;
 use Conquest\Core\Concerns\HasName;
 use Conquest\Core\Concerns\HasProperty;
 use Conquest\Core\Concerns\HasRoute;
+use Conquest\Core\Concerns\HasTitle;
 use Conquest\Core\Concerns\HasType;
 use Conquest\Core\Concerns\HasValue;
 use Conquest\Core\Concerns\IsActive;
@@ -38,6 +39,7 @@ class Component extends Primitive
     use HasOptions;
     use HasProperty;
     use HasRoute;
+    use HasTitle;
     use HasType;
     use HasValue;
     use IsActive;

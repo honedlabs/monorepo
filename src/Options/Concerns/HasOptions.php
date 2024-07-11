@@ -56,6 +56,7 @@ trait HasOptions
             $optionLabel = $label !== null ? $this->getOptionField($modelInstance, $label) : null;
             $this->addOption($this->parseOption($optionValue, $optionLabel));
         }
+
         return $this;
     }
 
@@ -69,35 +70,34 @@ trait HasOptions
             $optionLabel = $label !== null ? $this->getOptionField($item, $label) : null;
             $this->addOption($this->parseOption($optionValue, $optionLabel));
         });
+
         return $this;
     }
-
-
 
     private function getOptionField($item, ?string $key): mixed
     {
         if ($key === null) {
             return null;
         }
-    
+
         if (is_array($item)) {
             return $item[$key] ?? null;
         }
-    
+
         if (is_object($item)) {
             if (method_exists($item, $key)) {
                 return $item->{$key}();
             }
-    
+
             if (property_exists($item, $key)) {
                 return $item->{$key};
             }
-    
+
             if (method_exists($item, 'getAttribute')) {
                 return $item->getAttribute($key);
             }
         }
-    
+
         return null;
     }
 
