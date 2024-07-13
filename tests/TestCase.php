@@ -2,19 +2,19 @@
 
 namespace Conquest\Chart\Tests;
 
-use Inertia\ServiceProvider;
-use Illuminate\Support\Facades\View;
-use Orchestra\Testbench\TestCase as Orchestra;
-use Orchestra\Testbench\Concerns\WithWorkbench;
-use function Orchestra\Testbench\workbench_path;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\View;
+use Inertia\ServiceProvider;
+use Orchestra\Testbench\Concerns\WithWorkbench;
+use Orchestra\Testbench\TestCase as Orchestra;
 use Workbench\App\Providers\WorkbenchServiceProvider;
 
+use function Orchestra\Testbench\workbench_path;
 
 class TestCase extends Orchestra
 {
     use WithWorkbench;
-    
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -46,11 +46,11 @@ class TestCase extends Orchestra
             workbench_path('resources/js/Pages'),
         ]);
 
-        View::addLocation(__DIR__ . '/../workbench/resources/views');
-        
+        View::addLocation(__DIR__.'/../workbench/resources/views');
+
         $app->usePublicPath(workbench_path('public'));
         $app->useStoragePath(workbench_path('storage'));
-    
+
         $app['config']->set('vite.manifest_path', __DIR__.'../workbench/build/manifest.json');
     }
 

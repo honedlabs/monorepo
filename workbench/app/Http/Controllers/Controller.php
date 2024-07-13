@@ -9,7 +9,7 @@ class Controller
     public function __invoke(Request $request)
     {
         return view('app');
+
         return inertia()->render('Home');
     }
-
 }

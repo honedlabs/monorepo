@@ -2,7 +2,4 @@
 
 namespace Conquest\Chart\Axis;
 
-class Axis
-{
-    
-}
+class Axis {}
