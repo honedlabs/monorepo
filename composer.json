@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "conquest/chart",
+    "description": "Create backend-driven charts with a fluent interface.",
     "keywords": [
-        ":vendor_name",
+        "Conquest",
         "laravel",
-        ":package_slug"
+        "chart"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/conquest/chart",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Joshua Wallace",
+            "email": "josh@joshua-wallace.com",
             "role": "Developer"
         }
     ],
@@ -31,29 +31,28 @@
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan-deprecation-rules": "^1.1",
         "phpstan/phpstan-phpunit": "^1.3",
-        "spatie/laravel-ray": "^1.35"
+        "inertiajs/inertia-laravel": "^1.0"
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "Conquest\\Chart\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "Conquest\\Chart\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "clear": "@php vendor/bin/testbench package:purge-chart --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": [
             "@composer run prepare",
             "@php vendor/bin/testbench workbench:build --ansi"
         ],
-        "start": [
+        "serve": [
             "Composer\\Config::disableProcessTimeout",
             "@composer run build",
             "@php vendor/bin/testbench serve"
@@ -61,7 +60,13 @@
         "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
-        "format": "vendor/bin/pint"
+        "format": "vendor/bin/pint",
+        "artisan": "@php ./vendor/bin/testbench",
+        "check": [
+            "@composer run analyse",
+            "@composer run test",
+            "@composer run format"
+        ]
     },
     "config": {
         "sort-packages": true,
@@ -72,12 +77,6 @@
     },
     "extra": {
         "laravel": {
-            "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
-            ],
-            "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
-            }
         }
     },
     "minimum-stability": "dev",

@@ -9,10 +9,7 @@ export default defineConfig({
             input: ['resources/js/app.js'],
             refresh: true,
             buildDirectory: 'build',
-            // Change this to point to your workbench public directory
-            publicDirectory: path.resolve(__dirname, 'workbench/public'),
-            // Specify the manifest path
-            manifest: true,
+            publicDirectory: 'public',
         }),
         vue({
             template: {
@@ -24,10 +21,14 @@ export default defineConfig({
         }),
     ],
     build: {
-        // Specify the outDir to ensure the manifest is created in the correct location
-        outDir: path.resolve(__dirname, 'workbench/public/build'),
-        // Ensure the manifest is generated
+        outDir: path.resolve(__dirname, 'public/build'),
+        emptyOutDir: true,
         manifest: true,
+        rollupOptions: {
+            output: {
+                manualChunks: undefined,
+            },
+        },
     },
     resolve: {
         alias: {

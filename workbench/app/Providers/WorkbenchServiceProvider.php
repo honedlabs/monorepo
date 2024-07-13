@@ -24,8 +24,11 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->publishes([
+            __DIR__.'/../public' => public_path('vendor/workbench'),
+        ], 'workbench-assets');
+    
         Vite::useHotFile(workbench_path('public/hot'))
-            ->useBuildDirectory('build')
-            ->useManifestFilename('workbench/public/build/manifest.json');
-    }
+            ->useBuildDirectory('vendor/workbench/build')
+            ->useManifestFilename('vendor/workbench/build/manifest.json');    }
 }
