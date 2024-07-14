@@ -3,12 +3,18 @@
 namespace Conquest\Chart\Series\Line;
 
 use Conquest\Chart\Enums\ChartType;
+use Conquest\Chart\Series\Concerns\HasStack;
+use Conquest\Chart\Series\Concerns\HasStackStrategy;
+use Conquest\Chart\Series\Line\Concerns\IsSmooth;
 use Conquest\Chart\Series\Series;
 use Conquest\Chart\Shared\AreaStyle\Concerns\HasAreaStyle;
 
 class Line extends Series
 {
     use HasAreaStyle;
+    use IsSmooth;
+    use HasStack;
+    use HasStackStrategy;
     
     public function setUp(): void
     {
@@ -26,6 +32,17 @@ class Line extends Series
             
     ): static {
         return resolve(static::class, func_get_args());
+    }
+
+    public function toArray(): array
+    {
+        return array_merge(
+            parent::toArray(),
+            $this->getAreaStyleOptions(),
+            $this->isSmoothOption(),
+            $this->getStackOption(),
+            $this->getStackStrategyOption()
+        );
     }
     
 }

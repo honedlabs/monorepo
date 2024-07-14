@@ -3,13 +3,13 @@
 namespace Conquest\Chart\Shared\AreaStyle;
 
 use Conquest\Core\Primitive;
-use Conquest\Chart\Shared\Concerns\HasColor;
-use Conquest\Chart\Shared\Concerns\HasOrigin;
-use Conquest\Chart\Shared\Concerns\HasOpacity;
-use Conquest\Chart\Shared\Concerns\HasShadowBlur;
-use Conquest\Chart\Shared\Concerns\HasShadowColor;
-use Conquest\Chart\Shared\Concerns\HasShadowOffsetX;
-use Conquest\Chart\Shared\Concerns\HasShadowOffsetY;
+use Conquest\Chart\Shared\Concerns\Styling\HasColor;
+use Conquest\Chart\Shared\Concerns\Styling\HasOrigin;
+use Conquest\Chart\Shared\Concerns\Styling\HasOpacity;
+use Conquest\Chart\Shared\Concerns\Styling\HasShadowBlur;
+use Conquest\Chart\Shared\Concerns\Styling\HasShadowColor;
+use Conquest\Chart\Shared\Concerns\Styling\HasShadowOffsetX;
+use Conquest\Chart\Shared\Concerns\Styling\HasShadowOffsetY;
 
 class AreaStyle extends Primitive
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Conquest\Chart\Shared\Concerns;
+namespace Conquest\Chart\Shared\Concerns\Styling;
 
 trait HasColor
 {

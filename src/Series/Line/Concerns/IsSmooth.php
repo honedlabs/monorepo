@@ -28,4 +28,9 @@ trait IsSmooth
     {
         return !$this->isSmooth();
     }
+
+    public function isSmoothOption(): array
+    {
+        return $this->isSmooth() ? ['smooth' => true] : [];
+    }
 }
