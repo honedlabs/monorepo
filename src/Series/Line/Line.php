@@ -8,6 +8,7 @@ use Conquest\Chart\Series\Concerns\HasStackStrategy;
 use Conquest\Chart\Series\Line\Concerns\IsSmooth;
 use Conquest\Chart\Series\Series;
 use Conquest\Chart\Shared\AreaStyle\Concerns\HasAreaStyle;
+use Conquest\Chart\Shared\Emphasis\Concerns\HasEmphasis;
 
 class Line extends Series
 {
@@ -15,6 +16,7 @@ class Line extends Series
     use IsSmooth;
     use HasStack;
     use HasStackStrategy;
+    use HasEmphasis;
     
     public function setUp(): void
     {
@@ -41,7 +43,8 @@ class Line extends Series
             $this->getAreaStyleOptions(),
             $this->isSmoothOption(),
             $this->getStackOption(),
-            $this->getStackStrategyOption()
+            $this->getStackStrategyOption(),
+            $this->getEmphasisOptions(),
         );
     }
     
