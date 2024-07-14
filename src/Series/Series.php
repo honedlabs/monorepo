@@ -3,8 +3,9 @@
 namespace Conquest\Chart\Series;
 
 use Conquest\Chart\Series\Concerns\HasChartType;
+use Conquest\Core\Primitive;
 
-class Series
+class Series extends Primitive
 {
     use HasChartType;
 
@@ -13,5 +14,10 @@ class Series
         return [
             'type' => $this->type?->value,
         ];
+    }
+
+    public function infersType()
+    {
+        
     }
 }
