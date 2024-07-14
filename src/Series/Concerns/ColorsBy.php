@@ -9,13 +9,16 @@ trait ColorsBy
     public function colorBy(string $colorBy): self
     {
         $this->setColorBy($colorBy);
+
         return $this;
     }
 
-    public function setColorBy(string|null $colorBy): void
+    public function setColorBy(?string $colorBy): void
     {
-        if (is_null($colorBy) || !in_array($colorBy, ['series', 'data']) ) return;
-        
+        if (is_null($colorBy) || ! in_array($colorBy, ['series', 'data'])) {
+            return;
+        }
+
         $this->colorBy = $colorBy;
     }
 
@@ -28,7 +31,7 @@ trait ColorsBy
     {
         // Empty array if series, otherwise return data
         return $this->getColorBy() === 'data' ? [
-            'colorBy' => $this->getColorBy()
+            'colorBy' => $this->getColorBy(),
         ] : [];
     }
 }

@@ -9,13 +9,18 @@ trait HasOpacity
     public function opacity(float $opacity): self
     {
         $this->setOpacity($opacity);
+
         return $this;
     }
 
-    public function setOpacity(float|null $opacity): void
+    public function setOpacity(?float $opacity): void
     {
-        if (is_null($opacity)) return;
-        if ($opacity < 0 || $opacity > 1) return;
+        if (is_null($opacity)) {
+            return;
+        }
+        if ($opacity < 0 || $opacity > 1) {
+            return;
+        }
         $this->opacity = $opacity;
     }
 
@@ -23,7 +28,7 @@ trait HasOpacity
     {
         return $this->opacity;
     }
-    
+
     public function lacksOpacity(): bool
     {
         return is_null($this->opacity);
@@ -31,15 +36,14 @@ trait HasOpacity
 
     public function hasOpacity(): bool
     {
-        return !$this->lacksOpacity();
+        return ! $this->lacksOpacity();
     }
 
     public function getOpacityOption(): array
     {
         return $this->hasOpacity() ? [
-            'opacity' => $this->getOpacity()
+            'opacity' => $this->getOpacity(),
         ] : [];
-    
+
     }
-    
 }

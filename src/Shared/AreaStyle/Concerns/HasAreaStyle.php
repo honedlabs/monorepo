@@ -10,13 +10,13 @@ trait HasAreaStyle
 
     // Enabler
     public function shaded(
-        string $color = null,
-        string $origin = null
-    ): static
-    {
+        ?string $color = null,
+        ?string $origin = null
+    ): static {
         $this->enableAreaStyle();
         $this->areaStyle->setColor($color);
         $this->areaStyle->setOrigin($origin);
+
         return $this;
     }
 
@@ -28,7 +28,7 @@ trait HasAreaStyle
     public function getAreaStyleOptions(): array
     {
         return $this->hasAreaStyle() ? [
-            'areaStyle' => $this->getAreaStyle()?->toArray() 
+            'areaStyle' => $this->getAreaStyle()?->toArray(),
         ] : [];
     }
 
@@ -39,12 +39,14 @@ trait HasAreaStyle
 
     public function hasAreaStyle()
     {
-        return !$this->lacksAreaStyle();
+        return ! $this->lacksAreaStyle();
     }
 
     protected function enableAreaStyle()
     {
-        if ($this->lacksAreaStyle()) $this->areaStyle = new AreaStyle();
+        if ($this->lacksAreaStyle()) {
+            $this->areaStyle = new AreaStyle();
+        }
     }
 
     /** Access properties of area style */

@@ -9,13 +9,16 @@ trait HasShadowOffsetY
     public function shadowOffsetY(int $shadowOffsetY): self
     {
         $this->setShadowOffsetY($shadowOffsetY);
+
         return $this;
     }
 
-    public function setShadowOffsetY(int|null $shadowOffsetY): void
+    public function setShadowOffsetY(?int $shadowOffsetY): void
     {
-        if (is_null($shadowOffsetY)) return;
-        
+        if (is_null($shadowOffsetY)) {
+            return;
+        }
+
         $this->shadowOffsetY = $shadowOffsetY;
     }
 
@@ -23,7 +26,7 @@ trait HasShadowOffsetY
     {
         return $this->shadowOffsetY;
     }
-    
+
     public function lacksShadowOffsetY(): bool
     {
         return is_null($this->shadowOffsetY);
@@ -31,15 +34,14 @@ trait HasShadowOffsetY
 
     public function hasShadowOffsetY(): bool
     {
-        return !$this->lacksShadowOffsetY();
+        return ! $this->lacksShadowOffsetY();
     }
 
     public function getShadowOffsetYOption(): array
     {
         return $this->hasShadowOffsetY() ? [
-            'shadowOffsetY' => $this->getShadowOffsetY()
+            'shadowOffsetY' => $this->getShadowOffsetY(),
         ] : [];
-    
+
     }
-    
 }

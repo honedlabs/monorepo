@@ -9,13 +9,16 @@ trait HasColor
     public function color(string $color): self
     {
         $this->setColor($color);
+
         return $this;
     }
 
-    public function setColor(string|null $color): void
+    public function setColor(?string $color): void
     {
-        if (is_null($color)) return;
-        
+        if (is_null($color)) {
+            return;
+        }
+
         $this->color = $color;
     }
 
@@ -23,7 +26,7 @@ trait HasColor
     {
         return $this->color;
     }
-    
+
     public function lacksColor(): bool
     {
         return is_null($this->color);
@@ -31,15 +34,14 @@ trait HasColor
 
     public function hasColor(): bool
     {
-        return !$this->lacksColor();
+        return ! $this->lacksColor();
     }
 
     public function getColorOption(): array
     {
         return $this->hasColor() ? [
-            'color' => $this->getColor()
+            'color' => $this->getColor(),
         ] : [];
-    
+
     }
-    
 }

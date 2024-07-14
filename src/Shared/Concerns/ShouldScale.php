@@ -9,12 +9,15 @@ trait ShouldScale
     public function scale(bool $scale = true): self
     {
         $this->setScale($scale);
+
         return $this;
     }
 
-    public function setScale(bool|null $scale): void
+    public function setScale(?bool $scale): void
     {
-        if (is_null($scale)) return;
+        if (is_null($scale)) {
+            return;
+        }
         $this->scale = $scale;
     }
 
@@ -22,10 +25,10 @@ trait ShouldScale
     {
         return $this->scale;
     }
-    
+
     public function isNotScale(): bool
     {
-        return !$this->isScale();
+        return ! $this->isScale();
     }
 
     public function isScaleOption(): array

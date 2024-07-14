@@ -15,16 +15,19 @@ trait HasFocus
     public function focus(string $focus): self
     {
         $this->setFocus($focus);
+
         return $this;
     }
 
-    public function setFocus(string|null $focus): void
+    public function setFocus(?string $focus): void
     {
-        if (is_null($focus)) return;
-        if (!in_array($focus, self::FOCUSES)) {
+        if (is_null($focus)) {
+            return;
+        }
+        if (! in_array($focus, self::FOCUSES)) {
             throw new \Exception("Invalid focus given {$focus} does not match valid focuss.");
         }
-        
+
         $this->focus = $focus;
     }
 
@@ -40,15 +43,14 @@ trait HasFocus
 
     public function hasFocus(): bool
     {
-        return !$this->lacksFocus();
+        return ! $this->lacksFocus();
     }
 
     public function getFocusOption(): array
     {
         return $this->hasFocus() ? [
-            'focus' => $this->getFocus()
+            'focus' => $this->getFocus(),
         ] : [];
-    
+
     }
-    
 }

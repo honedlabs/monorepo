@@ -9,13 +9,16 @@ trait IsDisabled
     public function disabled(bool $disabled = true): self
     {
         $this->setDisabled($disabled);
+
         return $this;
     }
 
-    public function setDisabled(bool|null $disabled): void
+    public function setDisabled(?bool $disabled): void
     {
-        if (is_null($disabled)) return;
-        
+        if (is_null($disabled)) {
+            return;
+        }
+
         $this->disabled = $disabled;
     }
 
@@ -23,10 +26,10 @@ trait IsDisabled
     {
         return $this->disabled;
     }
-    
+
     public function isNotDisabled(): bool
     {
-        return !$this->isDisabled();
+        return ! $this->isDisabled();
     }
 
     public function isDisabledOption(): array

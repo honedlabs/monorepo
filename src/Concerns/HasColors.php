@@ -12,13 +12,18 @@ trait HasColors
     public function colors(string|array $color): self
     {
         $this->setColors($color);
+
         return $this;
     }
 
     public function setColor(string|array|null $colors): void
     {
-        if (is_null($colors)) return;
-        if (is_string($colors)) $colors = [$colors];
+        if (is_null($colors)) {
+            return;
+        }
+        if (is_string($colors)) {
+            $colors = [$colors];
+        }
         $this->colors = array_merge($this->colors, $colors);
     }
 
@@ -26,11 +31,11 @@ trait HasColors
     {
         return $this->colors;
     }
-    
+
     public function getColorsOption(): array
     {
         return count($this->getColors()) ? [
-            'color' => $this->getColors()
+            'color' => $this->getColors(),
         ] : [];
     }
 }

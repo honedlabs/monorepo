@@ -9,13 +9,16 @@ trait HasBorderWidth
     public function borderWidth(int $borderWidth): self
     {
         $this->setBorderWidth($borderWidth);
+
         return $this;
     }
 
-    public function setBorderWidth(int|null $borderWidth): void
+    public function setBorderWidth(?int $borderWidth): void
     {
-        if (is_null($borderWidth)) return;
-        
+        if (is_null($borderWidth)) {
+            return;
+        }
+
         $this->borderWidth = $borderWidth;
     }
 
@@ -23,7 +26,7 @@ trait HasBorderWidth
     {
         return $this->borderWidth;
     }
-    
+
     public function lacksBorderWidth(): bool
     {
         return is_null($this->borderWidth);
@@ -31,15 +34,14 @@ trait HasBorderWidth
 
     public function hasBorderWidth(): bool
     {
-        return !$this->lacksBorderWidth();
+        return ! $this->lacksBorderWidth();
     }
 
     public function getBorderWidthOption(): array
     {
         return $this->hasBorderWidth() ? [
-            'borderWidth' => $this->getBorderWidth()
+            'borderWidth' => $this->getBorderWidth(),
         ] : [];
-    
+
     }
-    
 }

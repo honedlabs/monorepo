@@ -13,11 +13,11 @@ use Conquest\Chart\Shared\Emphasis\Concerns\HasEmphasis;
 class Line extends Series
 {
     use HasAreaStyle;
-    use IsSmooth;
+    use HasEmphasis;
     use HasStack;
     use HasStackStrategy;
-    use HasEmphasis;
-    
+    use IsSmooth;
+
     public function setUp(): void
     {
         $this->setType(ChartType::LINE);
@@ -31,7 +31,7 @@ class Line extends Series
     }
 
     public static function make(
-            
+
     ): static {
         return resolve(static::class, func_get_args());
     }
@@ -47,5 +47,4 @@ class Line extends Series
             $this->getEmphasisOptions(),
         );
     }
-    
 }

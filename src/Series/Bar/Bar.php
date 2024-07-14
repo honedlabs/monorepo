@@ -4,7 +4,4 @@ namespace Conquest\Chart\Series\Bar;
 
 use Conquest\Chart\Series\Series;
 
-class Bar extends Series
-{
-    
-}
+class Bar extends Series {}

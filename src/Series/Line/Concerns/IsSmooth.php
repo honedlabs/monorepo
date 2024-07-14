@@ -9,13 +9,16 @@ trait IsSmooth
     public function smooth(bool $smooth = true): self
     {
         $this->setSmooth($smooth);
+
         return $this;
     }
 
-    public function setSmooth(bool|null $smooth): void
+    public function setSmooth(?bool $smooth): void
     {
-        if (is_null($smooth)) return;
-        
+        if (is_null($smooth)) {
+            return;
+        }
+
         $this->smooth = $smooth;
     }
 
@@ -23,10 +26,10 @@ trait IsSmooth
     {
         return $this->smooth;
     }
-    
+
     public function isNotSmooth(): bool
     {
-        return !$this->isSmooth();
+        return ! $this->isSmooth();
     }
 
     public function isSmoothOption(): array

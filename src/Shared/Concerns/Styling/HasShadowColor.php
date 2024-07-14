@@ -9,13 +9,16 @@ trait HasShadowColor
     public function shadowColor(string $shadowColor): self
     {
         $this->setShadowColor($shadowColor);
+
         return $this;
     }
 
-    public function setShadowColor(string|null $shadowColor): void
+    public function setShadowColor(?string $shadowColor): void
     {
-        if (is_null($shadowColor)) return;
-        
+        if (is_null($shadowColor)) {
+            return;
+        }
+
         $this->shadowColor = $shadowColor;
     }
 
@@ -23,7 +26,7 @@ trait HasShadowColor
     {
         return $this->shadowColor;
     }
-    
+
     public function lacksShadowColor(): bool
     {
         return is_null($this->shadowColor);
@@ -31,15 +34,14 @@ trait HasShadowColor
 
     public function hasShadowColor(): bool
     {
-        return !$this->lacksShadowColor();
+        return ! $this->lacksShadowColor();
     }
 
     public function getShadowColorOption(): array
     {
         return $this->hasShadowColor() ? [
-            'shadowColor' => $this->getShadowColor()
+            'shadowColor' => $this->getShadowColor(),
         ] : [];
-    
+
     }
-    
 }

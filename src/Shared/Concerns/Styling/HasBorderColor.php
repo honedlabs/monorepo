@@ -9,13 +9,16 @@ trait HasBorderColor
     public function borderColor(string $borderColor): self
     {
         $this->setBorderColor($borderColor);
+
         return $this;
     }
 
-    public function setBorderColor(string|null $borderColor): void
+    public function setBorderColor(?string $borderColor): void
     {
-        if (is_null($borderColor)) return;
-        
+        if (is_null($borderColor)) {
+            return;
+        }
+
         $this->borderColor = $borderColor;
     }
 
@@ -23,7 +26,7 @@ trait HasBorderColor
     {
         return $this->borderColor;
     }
-    
+
     public function lacksBorderColor(): bool
     {
         return is_null($this->borderColor);
@@ -31,15 +34,14 @@ trait HasBorderColor
 
     public function hasBorderColor(): bool
     {
-        return !$this->lacksBorderColor();
+        return ! $this->lacksBorderColor();
     }
 
     public function getBorderColorOption(): array
     {
         return $this->hasBorderColor() ? [
-            'borderColor' => $this->getBorderColor()
+            'borderColor' => $this->getBorderColor(),
         ] : [];
-    
+
     }
-    
 }

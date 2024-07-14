@@ -12,19 +12,24 @@ trait HasStackStrategy
         'samesign',
         'all',
         'positive',
-        'negative'
+        'negative',
     ];
 
     public function stackStrategy(string $stackStrategy): self
     {
         $this->setStackStrategy($stackStrategy);
+
         return $this;
     }
 
-    public function setStackStrategy(string|null $stackStrategy): void
+    public function setStackStrategy(?string $stackStrategy): void
     {
-        if (is_null($stackStrategy)) return;
-        if (!in_array($stackStrategy, self::STACK_STRATEGIES)) throw new Exception("Invalid stack strategy provided {$stackStrategy}");
+        if (is_null($stackStrategy)) {
+            return;
+        }
+        if (! in_array($stackStrategy, self::STACK_STRATEGIES)) {
+            throw new Exception("Invalid stack strategy provided {$stackStrategy}");
+        }
         $this->stackStrategy = $stackStrategy;
     }
 
@@ -32,7 +37,7 @@ trait HasStackStrategy
     {
         return $this->stackStrategy;
     }
-    
+
     public function lacksStackStrategy(): bool
     {
         return is_null($this->stackStrategy);
@@ -40,15 +45,14 @@ trait HasStackStrategy
 
     public function hasStackStrategy(): bool
     {
-        return !$this->lacksStackStrategy();
+        return ! $this->lacksStackStrategy();
     }
 
     public function getStackStrategyOption(): array
     {
         return $this->hasStackStrategy() ? [
-            'stackStrategy' => $this->getStackStrategy()
+            'stackStrategy' => $this->getStackStrategy(),
         ] : [];
-    
+
     }
-    
 }

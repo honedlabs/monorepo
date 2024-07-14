@@ -9,13 +9,16 @@ trait HasBorderRadius
     public function borderRadius(int|array $borderRadius): self
     {
         $this->setBorderRadius($borderRadius);
+
         return $this;
     }
 
     public function setBorderRadius(int|array|null $borderRadius): void
     {
-        if (is_null($borderRadius)) return;
-        
+        if (is_null($borderRadius)) {
+            return;
+        }
+
         $this->borderRadius = $borderRadius;
     }
 
@@ -23,7 +26,7 @@ trait HasBorderRadius
     {
         return $this->borderRadius;
     }
-    
+
     public function lacksBorderRadius(): bool
     {
         return is_null($this->borderRadius);
@@ -31,15 +34,14 @@ trait HasBorderRadius
 
     public function hasBorderRadius(): bool
     {
-        return !$this->lacksBorderRadius();
+        return ! $this->lacksBorderRadius();
     }
 
     public function getBorderRadiusOption(): array
     {
         return $this->hasBorderRadius() ? [
-            'borderRadius' => $this->getBorderRadius()
+            'borderRadius' => $this->getBorderRadius(),
         ] : [];
-    
+
     }
-    
 }

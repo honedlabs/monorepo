@@ -18,7 +18,6 @@ class Chart extends Primitive
      *  animation:
      * )
      */
-
     public function __construct()
     {
         parent::__construct();
@@ -49,6 +48,5 @@ class Chart extends Primitive
      * Data can be of form
      * [name => [values]]
      * [values]
-     * 
      */
 }

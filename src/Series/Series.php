@@ -3,22 +3,21 @@
 namespace Conquest\Chart\Series;
 
 use Conquest\Chart\Series\Concerns\ColorsBy;
-use Conquest\Core\Primitive;
-use Conquest\Core\Concerns\HasName;
 use Conquest\Chart\Series\Concerns\HasChartType;
 use Conquest\Chart\Series\Concerns\HasData;
+use Conquest\Core\Concerns\HasName;
+use Conquest\Core\Primitive;
 
 class Series extends Primitive
 {
-    use HasChartType;
     use ColorsBy;
-    use HasName;
+    use HasChartType;
     use HasData;
+    use HasName;
 
     public function __construct(
         mixed $data = null,
-    )
-    {
+    ) {
         parent::__construct();
         $this->setData([5, 6, 7]);
 
@@ -39,8 +38,5 @@ class Series extends Primitive
         ]);
     }
 
-    public function infersType()
-    {
-
-    }
+    public function infersType() {}
 }

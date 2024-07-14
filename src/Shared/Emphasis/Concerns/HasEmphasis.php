@@ -10,9 +10,9 @@ trait HasEmphasis
 
     // Enabler
     public function emphasis(
-    ): static
-    {
+    ): static {
         $this->enableEmphasis();
+
         return $this;
     }
 
@@ -24,7 +24,7 @@ trait HasEmphasis
     public function getEmphasisOptions(): array
     {
         return $this->hasEmphasis() ? [
-            'emphasis' => $this->getEmphasis()?->toArray() 
+            'emphasis' => $this->getEmphasis()?->toArray(),
         ] : [];
     }
 
@@ -35,12 +35,14 @@ trait HasEmphasis
 
     public function hasEmphasis()
     {
-        return !$this->lacksEmphasis();
+        return ! $this->lacksEmphasis();
     }
 
     protected function enableEmphasis()
     {
-        if ($this->lacksEmphasis()) $this->emphasis = new Emphasis();
+        if ($this->lacksEmphasis()) {
+            $this->emphasis = new Emphasis();
+        }
     }
 
     /** Access properties of emphasis */
