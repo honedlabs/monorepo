@@ -1,6 +1,6 @@
 <?php
 
-namespace Conquest\Axis\Axis\Concerns;
+namespace Conquest\Chart\Axis\Concerns;
 
 use Conquest\Chart\Axis\Enums\AxisType;
 

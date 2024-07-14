@@ -2,7 +2,7 @@
 
 namespace Conquest\Chart\Axis;
 
-use Conquest\Axis\Axis\Concerns\HasAxisType;
+use Conquest\Chart\Axis\Concerns\HasAxisType;
 use Conquest\Chart\Axis\Enums\AxisType;
 
 class Axis 

@@ -1,12 +1,14 @@
 {
     "name": "conquest/chart",
-    "description": "Create backend-driven charts with a fluent interface.",
+    "description": "Create backend-driven charts with a fluent interface for Apache eCharts.",
     "keywords": [
-        "Conquest",
+        "conquest",
         "laravel",
-        "chart"
+        "chart",
+        "echarts",
+        "apache"
     ],
-    "homepage": "https://github.com/conquest/chart",
+    "homepage": "https://github.com/jdw5/conquest-chart",
     "license": "MIT",
     "authors": [
         {

@@ -40,7 +40,15 @@ class Chart extends Primitive
             'series' => '',
             'tooltip' => '',
             'toolbox' => '',
+            'visualMap' => '',
 
         ];
     }
+
+    /**
+     * Data can be of form
+     * [name => [values]]
+     * [values]
+     * 
+     */
 }
