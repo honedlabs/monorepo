@@ -14,10 +14,11 @@ class Series extends Primitive
     use HasName;
 
     public function __construct(
-        mixed $data = null,
+        protected mixed $data = null,
     )
     {
         parent::__construct();
+
     }
 
     public static function make(

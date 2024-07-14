@@ -13,6 +13,7 @@ class Axis
         AxisType|string $type = null
     )
     {
+        $this->setType($type);
         
     }
 
