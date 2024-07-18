@@ -23,7 +23,6 @@ class TestCase extends Orchestra
         $migrator = app('migrator');
         $migrator->run(workbench_path('database/migrations'));
         $this->assertTrue(Schema::hasTable('categories'), 'Categories table does not exist');
-
         $this->seed(DatabaseSeeder::class);
     }
 

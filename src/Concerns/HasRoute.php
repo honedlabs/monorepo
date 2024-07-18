@@ -41,38 +41,32 @@ trait HasRoute
         return ! $this->hasRoute();
     }
 
-    public function resolveRoute(mixed $parameters = []): void
+    public function resolveRoute(mixed $parameters = []): ?string
     {
         if (! $this->hasRoute()) {
-            return;
+            return null;
         }
 
         $route = $this->getRoute();
 
         if (is_callable($route)) {
-            $this->setResolvedRoute(call_user_func($route, $parameters));
-
-            return;
+            $route = call_user_func($route, $parameters);
         }
 
-        // Check if it's a named route
         if (Route::has($route)) {
-            $this->setResolvedRoute(route($this->route, $parameters));
-
-            return;
+            return route($route, $parameters);
         }
 
-        // Replace parameters in the URL
         foreach ($parameters as $key => $value) {
             $route = str_replace(":$key", $value, $route);
         }
 
         $route = preg_replace('/\{[^\}]*\}/', '', $route);
-        $this->resolvedRoute = rtrim($route, '/');
+        return url(rtrim($route, '/'));
     }
 
-    public function getResolvedRoute(): string
+    public function getResolvedRoute(mixed $parameters = []): ?string
     {
-        return $this->resolvedRoute;
+        return $this->resolvedRoute ??= $this->resolveRoute($parameters);
     }
 }

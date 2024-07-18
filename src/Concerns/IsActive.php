@@ -14,7 +14,7 @@ trait IsActive
     /**
      * Set the active property, chainable.
      */
-    public function active(bool|Closure $active): static
+    public function active(bool|Closure $active = true): static
     {
         $this->setActive($active);
 
