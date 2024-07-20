@@ -23,8 +23,9 @@ trait IsKey
      *
      * @param  bool  $key
      */
-    public function setKey(bool|Closure $key): void
+    public function setKey(bool|Closure|null $key): void
     {
+        if (is_null($key)) return;
         $this->key = $key;
     }
 

@@ -24,11 +24,9 @@ trait IsDefault
     /**
      * Set the default quietly
      */
-    public function setDefault(bool|Closure $default): void
+    public function setDefault(bool|Closure|null $default): void
     {
-        if (is_null($default)) {
-            return;
-        }
+        if (is_null($default)) return;
         $this->default = $default;
     }
 
