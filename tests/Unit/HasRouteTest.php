@@ -32,7 +32,7 @@ it('can resolve a route', function () {
     $component = new Component();
     $component->setRoute($r = '/home');
     $component->resolveRoute();
-    expect($component->getResolvedRoute())->toBe($r);
+    expect($component->getResolvedRoute())->toBe(url($r));
 });
 
 // it('can resolve a named route', function () {
