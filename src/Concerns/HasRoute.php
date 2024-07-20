@@ -62,6 +62,7 @@ trait HasRoute
         }
 
         $route = preg_replace('/\{[^\}]*\}/', '', $route);
+
         return url(rtrim($route, '/'));
     }
 

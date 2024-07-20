@@ -25,7 +25,9 @@ trait IsKey
      */
     public function setKey(bool|Closure|null $key): void
     {
-        if (is_null($key)) return;
+        if (is_null($key)) {
+            return;
+        }
         $this->key = $key;
     }
 
