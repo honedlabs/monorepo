@@ -2,7 +2,7 @@
 
 namespace Conquest\Core\Concerns;
 
-use Conquest\Core\Exceptions\KeyDoesntExist;
+use Conquest\Core\Exceptions\MissingRequiredAttributeException;
 
 /**
  * Set a required key property.
@@ -12,7 +12,7 @@ trait RequiresKey
     /**
      * Retrieve the key property
      *
-     * @throws KeyDoesntExist
+     * @throws MissingRequiredAttributeException
      */
     public function getKey(): string
     {
@@ -24,6 +24,6 @@ trait RequiresKey
             return $this->key();
         }
 
-        throw new KeyDoesntExist();
+        throw new MissingRequiredAttributeException('key', $this);
     }
 }

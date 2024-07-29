@@ -1,6 +1,6 @@
 <?php
 
-use Conquest\Core\Exceptions\KeyDoesntExist;
+use Conquest\Core\Exceptions\MissingRequiredAttributeException;
 use Workbench\App\ConfigurableComponent;
 
 it('returns key if defined', function () {
@@ -12,4 +12,4 @@ it('throws exception if key not defined', function () {
     $component = new ConfigurableComponent();
     unset($component->key);
     $component->getKey();
-})->throws(KeyDoesntExist::class);
+})->throws(MissingRequiredAttributeException::class);
