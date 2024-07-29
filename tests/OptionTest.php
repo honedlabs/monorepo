@@ -12,7 +12,7 @@ it('can create an option', function () {
     expect($option->toArray())->toBe([
         'value' => 1,
         'label' => '1',
-        'metadata' => [],
+        'meta' => [],
         'active' => false,
     ]);
 });
@@ -24,7 +24,7 @@ it('can make an option', function () {
     expect($option->toArray())->toBe([
         'value' => $v,
         'label' => $l,
-        'metadata' => [],
+        'meta' => [],
         'active' => false,
     ]);
 });
@@ -39,9 +39,9 @@ it('can set a label', function () {
     expect($option->getLabel())->toBe('New Value');
 });
 
-it('can set metadata', function () {
-    expect($option = Option::make('value')->metadata($m = ['key' => 'value']))->toBeInstanceOf(Option::class);
-    expect($option->getMetadata())->toBe($m);
+it('can set meta', function () {
+    expect($option = Option::make('value')->meta($m = ['key' => 'value']))->toBeInstanceOf(Option::class);
+    expect($option->getMeta())->toBe($m);
 });
 
 it('can set active', function () {

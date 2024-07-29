@@ -49,6 +49,6 @@ trait HasDescription
      */
     public function hasDescription(): bool
     {
-        return ! $this->hasDescription();
+        return ! $this->lacksDescription();
     }
 }

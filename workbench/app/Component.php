@@ -9,7 +9,7 @@ use Conquest\Core\Concerns\HasDescription;
 use Conquest\Core\Concerns\HasFormat;
 use Conquest\Core\Concerns\HasHttpMethod;
 use Conquest\Core\Concerns\HasLabel;
-use Conquest\Core\Concerns\HasMetadata;
+use Conquest\Core\Concerns\HasMeta;
 use Conquest\Core\Concerns\HasName;
 use Conquest\Core\Concerns\HasProperty;
 use Conquest\Core\Concerns\HasRoute;
@@ -34,7 +34,7 @@ class Component extends Primitive
     use HasHttpMethod;
     use HasId;
     use HasLabel;
-    use HasMetadata;
+    use HasMeta;
     use HasName;
     use HasOptions;
     use HasProperty;
@@ -53,7 +53,7 @@ class Component extends Primitive
             'id' => $this->getId(),
             'value' => $this->getValue(),
             'label' => $this->getLabel(),
-            'metadata' => $this->getMetadata(),
+            'meta' => $this->getMeta(),
         ];
     }
 }
