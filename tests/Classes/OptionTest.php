@@ -51,7 +51,7 @@ it('can set active', function () {
 });
 
 it('can parse an option', function () {
-    $component = new Component();
+    $component = new Component;
     $option = $component->parseOption($v = 'value', $l = 'Label');
     expect($option)->toBeInstanceOf(Option::class);
     expect($option->getValue())->toBe($v);
@@ -62,27 +62,27 @@ it('can parse an option', function () {
 });
 
 it('can add an option', function () {
-    $component = new Component();
+    $component = new Component;
     $component->addOption($option = Option::make('value'));
     expect($component->getOptions())->toBe([$option]);
 });
 
 it('checks if it has options', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->hasOptions())->toBeFalse();
     $component->addOption(Option::make('value'));
     expect($component->hasOptions())->toBeTrue();
 });
 
 it('checks if it lacks options', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->lacksOptions())->toBeTrue();
     $component->addOption(Option::make('value'));
     expect($component->lacksOptions())->toBeFalse();
 });
 
 it('can set option as single value', function () {
-    $component = new Component();
+    $component = new Component;
     $component->setOptions([
         'value',
     ]);
@@ -93,7 +93,7 @@ it('can set option as single value', function () {
 });
 
 it('can set option as key value pair', function () {
-    $component = new Component();
+    $component = new Component;
     $component->setOptions([
         'value' => 'Label',
     ]);
@@ -104,7 +104,7 @@ it('can set option as key value pair', function () {
 });
 
 it('can set option as Option instance', function () {
-    $component = new Component();
+    $component = new Component;
     $component->setOptions([
         Option::make('value'),
     ]);
@@ -115,14 +115,14 @@ it('can set option as Option instance', function () {
 });
 
 it('can chain options', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->options(['key' => 'value']))->toBeInstanceOf(Component::class);
     expect($component->hasOptions())->toBeTrue();
     expect($component->getOptions())->toHaveCount(1);
 });
 
 it('can chain options from enum using defaults', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->optionsFromEnum(Lang::class))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount(count(Lang::cases()));
     expect($component->getOptions())->each(function ($option) {
@@ -135,7 +135,7 @@ it('can chain options from enum using defaults', function () {
 });
 
 it('can chain options from enum using methods', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->optionsFromEnum(Lang::class, null, 'label'))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount(count(Lang::cases()));
     expect($component->getOptions())->each(function ($option) {
@@ -148,7 +148,7 @@ it('can chain options from enum using methods', function () {
 });
 
 it('can chain options from model, defaulting to key', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->optionsFromModel(Category::class))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount(Category::count());
     expect($component->getOptions())->each(function ($option) {
@@ -160,7 +160,7 @@ it('can chain options from model, defaulting to key', function () {
 });
 
 it('can chain options from model using properties', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->optionsFromModel(Category::class, 'slug', 'name'))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount(Category::count());
     expect($component->getOptions())->each(function ($option) {
@@ -172,7 +172,7 @@ it('can chain options from model using properties', function () {
 });
 
 it('can chain options from model using method', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->optionsFromModel(Category::class, 'url', 'name'))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount(Category::count());
     expect($component->getOptions())->each(function ($option) {
@@ -184,14 +184,14 @@ it('can chain options from model using method', function () {
 });
 
 it('can chain options from collection, defaulting to the item itself', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->optionsFromCollection($c = Category::select('name', 'slug')->get()))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount($c->count());
     expect($component->getOptions())->toHaveCount($c->count());
 });
 
 it('can chain options from collection using properties', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->optionsFromCollection($c = Category::select('name', 'slug')->get(), 'slug', 'name'))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount($c->count());
     expect($component->getOptions())->each(function ($option) use ($c) {

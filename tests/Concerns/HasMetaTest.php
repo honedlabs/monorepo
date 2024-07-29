@@ -3,7 +3,7 @@
 use Workbench\App\Component;
 
 it('can set meta', function () {
-    $component = new Component();
+    $component = new Component;
     $component->setMeta($m = [
         'key' => 'value',
     ]);
@@ -11,7 +11,7 @@ it('can set meta', function () {
 });
 
 it('can set closure meta', function () {
-    $component = new Component();
+    $component = new Component;
     $component->setMeta(fn () => ['key' => 'value']);
     expect($component->getMeta())->toBe([
         'key' => 'value',
@@ -19,13 +19,13 @@ it('can set closure meta', function () {
 });
 
 it('prevents null values', function () {
-    $component = new Component();
+    $component = new Component;
     $component->setMeta(null);
     expect($component->lacksMeta())->toBeTrue();
 });
 
 it('can chain meta', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->meta($m = [
         'key' => 'value',
     ]))->toBeInstanceOf(Component::class);
@@ -33,7 +33,7 @@ it('can chain meta', function () {
 });
 
 it('checks for meta', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->hasMeta())->toBeFalse();
     $component->setMeta([]);
     expect($component->hasMeta())->toBeFalse();
@@ -42,7 +42,7 @@ it('checks for meta', function () {
 });
 
 it('checks for no meta', function () {
-    $component = new Component();
+    $component = new Component;
     expect($component->lacksMeta())->toBeTrue();
     $component->setMeta([]);
     expect($component->lacksMeta())->toBeTrue();
