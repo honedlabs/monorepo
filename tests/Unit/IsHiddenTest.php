@@ -46,7 +46,7 @@ it('checks if hidden', function () {
 
 it('checks if not hidden', function () {
     $component = new Component();
-    expect($component->isShown())->toBeTrue();
+    expect($component->IsNotHidden())->toBeTrue();
     $component->setHidden('Hidden');
-    expect($component->isShown())->toBeFalse();
+    expect($component->IsNotHidden())->toBeFalse();
 });

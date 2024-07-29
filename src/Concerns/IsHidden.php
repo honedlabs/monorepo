@@ -4,17 +4,10 @@ namespace Conquest\Core\Concerns;
 
 use Closure;
 
-/**
- * Set the visibility of the class
- */
 trait IsHidden
 {
-    /** Classes by default are not hidden */
     protected bool|Closure $hidden = false;
 
-    /**
-     * Alias for hide
-     */
     public function hidden(bool|Closure $hidden = true): static
     {
         $this->setHidden($hidden);
@@ -22,44 +15,28 @@ trait IsHidden
         return $this;
     }
 
-    /**
-     * Set the visibility of the class quietly.
-     *
-     * @param  bool  $hidden
-     */
-    public function setHidden(bool|Closure $hidden): void
+    public function hide(bool|Closure $hidden = true): static
     {
+        return $this->hidden($hidden);
+    }
+
+    public function show(bool|Closure $hidden = false): static
+    {
+        return $this->hidden($hidden);
+    }
+
+    public function setHidden(bool|Closure|null $hidden): void
+    {
+        if (is_null($hidden)) return;
         $this->hidden = $hidden;
     }
 
-    /**
-     * Set the visibility of to hidden, chainable.
-     */
-    public function hide(): static
-    {
-        return $this->hidden(true);
-    }
-
-    /**
-     * Set the visibility to shown, chainable.
-     */
-    public function show(): static
-    {
-        return $this->hidden(false);
-    }
-
-    /**
-     * Check if the class is hidden.
-     */
     public function isHidden(): bool
     {
         return $this->evaluate($this->hidden);
     }
 
-    /**
-     * Check if the class is shown.
-     */
-    public function isShown(): bool
+    public function IsNotHidden(): bool
     {
         return ! $this->isHidden();
     }

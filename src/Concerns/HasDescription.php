@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Conquest\Core\Concerns;
 
@@ -23,9 +24,7 @@ trait HasDescription
      */
     public function setDescription(string|Closure|null $description): void
     {
-        if (is_null($description)) {
-            return;
-        }
+        if (is_null($description)) return;
         $this->description = $description;
     }
 
@@ -38,17 +37,17 @@ trait HasDescription
     }
 
     /**
-     * Determine if the class has a description.
-     */
-    public function hasDescription(): bool
-    {
-        return ! is_null($this->description);
-    }
-
-    /**
      * Determine if the class does not have a description.
      */
     public function lacksDescription(): bool
+    {
+        return is_null($this->description);
+    }
+    
+    /**
+     * Determine if the class has a description.
+     */
+    public function hasDescription(): bool
     {
         return ! $this->hasDescription();
     }
