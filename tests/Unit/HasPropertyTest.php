@@ -20,7 +20,6 @@ it('prevents null values', function () {
     expect($component->lacksProperty())->toBeTrue();
 });
 
-
 it('can set an array of properties', function () {
     $component = new Component();
     $component->setProperty($p = ['property', 'slug']);

@@ -29,7 +29,9 @@ trait HasHttpMethod
 
     public function setMethod(?string $method): void
     {
-        if (is_null($method)) return;
+        if (is_null($method)) {
+            return;
+        }
 
         $method = mb_strtoupper($method);
         if (! in_array($method, self::METHODS)) {

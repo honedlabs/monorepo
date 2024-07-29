@@ -29,7 +29,9 @@ trait HasMeta
      */
     public function setMeta(array|Closure|null $meta): void
     {
-        if (is_null($meta)) return;
+        if (is_null($meta)) {
+            return;
+        }
         $this->meta = $meta;
     }
 

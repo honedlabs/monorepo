@@ -24,7 +24,6 @@ it('prevents null values', function () {
     expect($component->lacksMeta())->toBeTrue();
 });
 
-
 it('can chain meta', function () {
     $component = new Component();
     expect($component->meta($m = [

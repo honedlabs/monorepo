@@ -20,7 +20,9 @@ trait HasId
 
     public function setId(int|string|Closure|null $id): void
     {
-        if (is_null($id)) return;
+        if (is_null($id)) {
+            return;
+        }
         $this->id = $id;
     }
 

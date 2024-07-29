@@ -25,7 +25,9 @@ trait HasDescription
      */
     public function setDescription(string|Closure|null $description): void
     {
-        if (is_null($description)) return;
+        if (is_null($description)) {
+            return;
+        }
         $this->description = $description;
     }
 

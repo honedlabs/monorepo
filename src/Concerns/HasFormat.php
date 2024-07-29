@@ -28,7 +28,9 @@ trait HasFormat
      */
     public function setFormat(string|Closure|null $format): void
     {
-        if (is_null($format)) return;
+        if (is_null($format)) {
+            return;
+        }
         $this->format = $format;
     }
 

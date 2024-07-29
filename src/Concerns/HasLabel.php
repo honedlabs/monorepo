@@ -28,7 +28,9 @@ trait HasLabel
      */
     public function setLabel(string|Closure|null $label): void
     {
-        if (is_null($label)) return;
+        if (is_null($label)) {
+            return;
+        }
         $this->label = $label;
     }
 

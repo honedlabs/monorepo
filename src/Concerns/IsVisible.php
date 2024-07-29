@@ -13,12 +13,14 @@ trait IsVisible
     public function visible(bool|Closure $visible = true): static
     {
         $this->setVisible($visible);
+
         return $this;
     }
 
     public function invisible(bool|Closure $visible = false): static
     {
         $this->setVisible($visible);
+
         return $this;
     }
 

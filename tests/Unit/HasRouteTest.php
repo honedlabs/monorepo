@@ -20,7 +20,6 @@ it('prevents null values', function () {
     expect($component->lacksRoute())->toBeTrue();
 });
 
-
 it('checks for route', function () {
     $component = new Component();
     expect($component->hasRoute())->toBeFalse();

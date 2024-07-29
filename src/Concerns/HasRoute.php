@@ -22,7 +22,9 @@ trait HasRoute
 
     public function setRoute(string|Closure|null $route): void
     {
-        if (is_null($route)) return;
+        if (is_null($route)) {
+            return;
+        }
         $this->route = $route;
     }
 

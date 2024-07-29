@@ -20,7 +20,6 @@ it('prevents null values', function () {
     expect($component->lacksPlaceholder())->toBeTrue();
 });
 
-
 it('can chain placeholder', function () {
     $component = new Component();
     expect($component->placeholder($p = 'Placeholder'))->toBeInstanceOf(Component::class);

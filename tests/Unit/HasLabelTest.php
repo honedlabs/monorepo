@@ -20,7 +20,6 @@ it('prevents null values', function () {
     expect($component->lacksLabel())->toBeTrue();
 });
 
-
 it('can chain label', function () {
     $component = new Component();
     expect($component->label($l = 'Label'))->toBeInstanceOf(Component::class);

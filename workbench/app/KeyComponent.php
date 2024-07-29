@@ -3,7 +3,6 @@
 namespace Workbench\App;
 
 use Conquest\Core\Concerns\RequiresKey;
-
 use Conquest\Core\Primitive;
 
 class KeyComponent extends Primitive

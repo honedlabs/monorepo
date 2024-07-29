@@ -20,7 +20,6 @@ it('prevents null values', function () {
     expect($component->lacksTitle())->toBeTrue();
 });
 
-
 it('can chain title', function () {
     $component = new Component();
     expect($component->title($t = 'Title'))->toBeInstanceOf(Component::class);

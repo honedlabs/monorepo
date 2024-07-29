@@ -28,7 +28,9 @@ trait HasTitle
      */
     public function setTitle(string|Closure|null $title): void
     {
-        if (is_null($title)) return;
+        if (is_null($title)) {
+            return;
+        }
         $this->title = $title;
     }
 
