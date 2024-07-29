@@ -10,7 +10,7 @@ it('can set active', function () {
 
 it('prevents null values', function () {
     $component = new Component();
-    $component->setVisible(null);
+    $component->setActive(null);
     expect($component->isActive())->toBeFalse();
 });
 

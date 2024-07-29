@@ -2,7 +2,6 @@
 
 namespace Workbench\App;
 
-use Conquest\Core\Concerns\CanAuthorize;
 use Conquest\Core\Concerns\CanTransform;
 use Conquest\Core\Concerns\CanValidate;
 use Conquest\Core\Concerns\HasDescription;
@@ -18,6 +17,7 @@ use Conquest\Core\Concerns\HasTitle;
 use Conquest\Core\Concerns\HasType;
 use Conquest\Core\Concerns\HasValue;
 use Conquest\Core\Concerns\IsActive;
+use Conquest\Core\Concerns\IsAuthorized;
 use Conquest\Core\Concerns\IsBlank;
 use Conquest\Core\Concerns\IsDefault;
 use Conquest\Core\Concerns\IsHidden;
@@ -29,7 +29,6 @@ use Conquest\Core\Primitive;
 
 class Component extends Primitive
 {
-    use CanAuthorize;
     use CanTransform;
     use CanValidate;
     use HasDescription;
@@ -47,6 +46,7 @@ class Component extends Primitive
     use HasType;
     use HasValue;
     use IsActive;
+    use IsAuthorized;
     use IsBlank;
     use IsDefault;
     use IsHidden;

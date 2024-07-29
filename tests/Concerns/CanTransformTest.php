@@ -14,6 +14,18 @@ it('can chain transformation', function () {
     expect($component->canTransform())->toBeTrue();
 });
 
+it('can chain transformation with alias', function () {
+    $component = new Component();
+    expect($component->transformUsing(fn (int $record) => $record * 2))->toBeInstanceOf(Component::class);
+    expect($component->canTransform())->toBeTrue();
+});
+
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setTransform(null);
+    expect($component->canTransform())->toBeFalse();
+});
+
 it('defaults to no transformation', function () {
     $component = new Component();
     expect($component->canTransform())->toBeFalse();
@@ -35,13 +47,6 @@ it('has alias for checking transformation', function () {
     $component->setTransform(fn (int $record) => $record * 2);
     expect($component->cannotTransform())->toBeFalse();
     expect($component->canTransform())->toBeTrue();
-    expect($component->hasTransform())->toBeTrue();
-});
-
-it('applies transformation', function () {
-    $component = new Component();
-    $component->setTransform(fn (int $record) => $record * 2);
-    expect($component->transformUsing(2))->toBe(4);
 });
 
 it('applies transformation with alias', function () {
@@ -52,5 +57,5 @@ it('applies transformation with alias', function () {
 
 it('returns original value if no transformation', function () {
     $component = new Component();
-    expect($component->transformUsing(2))->toBe(2);
+    expect($component->applyTransform(2))->toBe(2);
 });

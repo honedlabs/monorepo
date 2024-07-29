@@ -24,6 +24,14 @@ trait CanTransform
     }
 
     /**
+     * Alias for transform
+     */
+    public function transformUsing(Closure $transform): static
+    {
+        return $this->transform($transform);
+    }
+
+    /**
      * Set the transformation function for a given value quietly.
      */
     public function setTransform(?Closure $transform): void
@@ -50,39 +58,22 @@ trait CanTransform
         return ! $this->canTransform();
     }
 
-    /**
-     * Alias for canTransform
-     */
-    public function hasTransform(): bool
+    public function getTransform(): ?Closure
     {
-        return $this->canTransform();
+        return $this->transform;
     }
 
-    /**
-     * Apply the transformation to the given value.
-     */
-    public function transformUsing(mixed $value): mixed
+    public function applyTransform(mixed $value): mixed
     {
-        if (! $this->hasTransform()) {
+        if ($this->cannotTransform()) {
             return $value;
         }
 
         return $this->performTransform($value);
     }
 
-    /**
-     * Alias for transformUsing
-     */
-    public function applyTransform(mixed $value): mixed
-    {
-        return $this->transformUsing($value);
-    }
-
-    /**
-     * Get the transformed value.
-     */
     protected function performTransform(mixed $value): mixed
     {
-        return ($this->transform)($value);
+        return ($this->getTransform())($value);
     }
 }
