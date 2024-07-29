@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -26,9 +28,7 @@ trait HasLabel
      */
     public function setLabel(string|Closure|null $label): void
     {
-        if (is_null($label)) {
-            return;
-        }
+        if (is_null($label)) return;
         $this->label = $label;
     }
 
@@ -45,7 +45,7 @@ trait HasLabel
      */
     public function toLabel(string|Closure $name): string
     {
-        return str($this->evaluate($name))->headline()->lower()->ucfirst();
+        return str($this->evaluate($name))->headline()->lower()->ucfirst()->toString();
     }
 
     /**

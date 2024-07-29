@@ -14,6 +14,12 @@ it('can set a closure id', function () {
     expect($component->getId())->toBe('id');
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setId(null);
+    expect($component->lacksId())->toBeTrue();
+});
+
 it('can chain id', function () {
     $component = new Component();
     expect($component->id($i = 'id'))->toBeInstanceOf(Component::class);

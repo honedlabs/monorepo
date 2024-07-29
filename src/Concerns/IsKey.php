@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -25,9 +27,7 @@ trait IsKey
      */
     public function setKey(bool|Closure|null $key): void
     {
-        if (is_null($key)) {
-            return;
-        }
+        if (is_null($key)) return;
         $this->key = $key;
     }
 
@@ -36,7 +36,7 @@ trait IsKey
      */
     public function isKey(): bool
     {
-        return $this->evaluate($this->key);
+        return (bool) $this->evaluate($this->key);
     }
 
     /**

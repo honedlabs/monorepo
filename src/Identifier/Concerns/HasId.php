@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Identifier\Concerns;
 
 use Closure;
@@ -18,9 +20,7 @@ trait HasId
 
     public function setId(int|string|Closure|null $id): void
     {
-        if (is_null($id)) {
-            return;
-        }
+        if (is_null($id)) return;
         $this->id = $id;
     }
 

@@ -18,6 +18,13 @@ it('can set closure meta', function () {
     ]);
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setMeta(null);
+    expect($component->lacksMeta())->toBeTrue();
+});
+
+
 it('can chain meta', function () {
     $component = new Component();
     expect($component->meta($m = [

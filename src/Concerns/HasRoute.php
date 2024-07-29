@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -20,9 +22,7 @@ trait HasRoute
 
     public function setRoute(string|Closure|null $route): void
     {
-        if (is_null($route)) {
-            return;
-        }
+        if (is_null($route)) return;
         $this->route = $route;
     }
 

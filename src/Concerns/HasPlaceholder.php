@@ -19,9 +19,7 @@ trait HasPlaceholder
 
     public function setPlaceholder(string|Closure|null $placeholder): void
     {
-        if (is_null($placeholder)) {
-            return;
-        }
+        if (is_null($placeholder)) return;
         $this->placeholder = $placeholder;
     }
 

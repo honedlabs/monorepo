@@ -8,6 +8,12 @@ it('can set active', function () {
     expect($component->isActive())->toBeTrue();
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setVisible(null);
+    expect($component->isActive())->toBeFalse();
+});
+
 it('can set closure active', function () {
     $component = new Component();
     $component->setActive(fn () => true);

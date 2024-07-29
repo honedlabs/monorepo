@@ -14,6 +14,13 @@ it('can set a closure property', function () {
     expect($component->getProperty())->toBe('Property');
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setProperty(null);
+    expect($component->lacksProperty())->toBeTrue();
+});
+
+
 it('can set an array of properties', function () {
     $component = new Component();
     $component->setProperty($p = ['property', 'slug']);

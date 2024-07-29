@@ -8,6 +8,12 @@ it('can set key', function () {
     expect($component->isKey())->toBeTrue();
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setKey(null);
+    expect($component->isKey())->toBeFalse();
+});
+
 it('can set closure key', function () {
     $component = new Component();
     $component->setKey(fn () => true);

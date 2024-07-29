@@ -8,6 +8,12 @@ it('can set hidden', function () {
     expect($component->isHidden())->toBeTrue();
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setHidden(null);
+    expect($component->isHidden())->toBeFalse();
+});
+
 it('can set closure hidden', function () {
     $component = new Component();
     $component->setHidden(fn () => true);

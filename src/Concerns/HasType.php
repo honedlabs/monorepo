@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -26,9 +28,7 @@ trait HasType
      */
     public function setType(string|Closure|null $type): void
     {
-        if (is_null($type)) {
-            return;
-        }
+        if (is_null($type)) return;
         $this->type = $type;
     }
 

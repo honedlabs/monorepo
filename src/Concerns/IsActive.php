@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -37,7 +39,7 @@ trait IsActive
      */
     public function isActive(): bool
     {
-        return $this->evaluate($this->active);
+        return (bool) $this->evaluate($this->active);
     }
 
     /**

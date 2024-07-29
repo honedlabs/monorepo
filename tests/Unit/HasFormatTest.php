@@ -8,6 +8,12 @@ it('can set a string format', function () {
     expect($component->getFormat())->toBe($f);
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setFormat(null);
+    expect($component->lacksFormat())->toBeTrue();
+});
+
 it('can set a closure format', function () {
     $component = new Component();
     $component->setFormat(fn () => 'd M Y');

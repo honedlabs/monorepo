@@ -14,6 +14,12 @@ it('can set a closure name', function () {
     expect($component->getName())->toBe('Name');
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setName(null);
+    expect($component->lacksName())->toBeTrue();
+});
+
 it('can chain name', function () {
     $component = new Component();
     expect($component->name($n = 'Name'))->toBeInstanceOf(Component::class);

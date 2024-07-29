@@ -9,6 +9,12 @@ it('can set a method', function () {
     expect($component->getMethod())->toBe(Request::METHOD_GET);
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setMethod(null);
+    expect($component->lacksMethod())->toBeTrue();
+});
+
 it('can chain method', function () {
     $component = new Component();
     expect($component->method(Request::METHOD_GET))->toBeInstanceOf(Component::class);

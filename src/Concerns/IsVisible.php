@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -11,7 +13,12 @@ trait IsVisible
     public function visible(bool|Closure $visible = true): static
     {
         $this->setVisible($visible);
+        return $this;
+    }
 
+    public function invisible(bool|Closure $visible = false): static
+    {
+        $this->setVisible($visible);
         return $this;
     }
 
@@ -25,7 +32,7 @@ trait IsVisible
 
     public function isVisible(): bool
     {
-        return $this->evaluate($this->visible);
+        return (bool) $this->evaluate($this->visible);
     }
 
     public function isNotVisible(): bool

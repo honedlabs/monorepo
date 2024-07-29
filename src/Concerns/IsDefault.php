@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -26,9 +28,7 @@ trait IsDefault
      */
     public function setDefault(bool|Closure|null $default): void
     {
-        if (is_null($default)) {
-            return;
-        }
+        if (is_null($default)) return;
         $this->default = $default;
     }
 
@@ -37,7 +37,7 @@ trait IsDefault
      */
     public function isDefault(): bool
     {
-        return $this->evaluate($this->default);
+        return (bool) $this->evaluate($this->default);
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -29,9 +31,7 @@ trait HasProperty
      */
     public function setProperty(mixed $property): void
     {
-        if (is_null($property)) {
-            return;
-        }
+        if (is_null($property)) return;
         $this->property = $property;
     }
 

@@ -2,6 +2,7 @@
 
 use Conquest\Core\Exceptions\MissingRequiredAttributeException;
 use Workbench\App\ConfigurableComponent;
+use Workbench\App\KeyComponent;
 
 it('returns key if defined', function () {
     $component = new ConfigurableComponent();
@@ -13,3 +14,8 @@ it('throws exception if key not defined', function () {
     unset($component->key);
     $component->getKey();
 })->throws(MissingRequiredAttributeException::class);
+
+it('returns key if method defined', function () {
+    $component = new KeyComponent();
+    expect($component->getKey())->toBe('id');
+});

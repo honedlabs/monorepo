@@ -14,6 +14,13 @@ it('can set a closure label', function () {
     expect($component->getLabel())->toBe('Label');
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setLabel(null);
+    expect($component->lacksLabel())->toBeTrue();
+});
+
+
 it('can chain label', function () {
     $component = new Component();
     expect($component->label($l = 'Label'))->toBeInstanceOf(Component::class);

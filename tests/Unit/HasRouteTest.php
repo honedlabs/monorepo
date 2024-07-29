@@ -14,6 +14,13 @@ it('can chain route', function () {
     expect($component->getRoute())->toBe($r);
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setRoute(null);
+    expect($component->lacksRoute())->toBeTrue();
+});
+
+
 it('checks for route', function () {
     $component = new Component();
     expect($component->hasRoute())->toBeFalse();

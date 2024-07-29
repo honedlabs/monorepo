@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -37,7 +39,7 @@ trait IsBlank
      */
     public function isBlank(): bool
     {
-        return $this->evaluate($this->blank);
+        return (bool) $this->evaluate($this->blank);
     }
 
     /**

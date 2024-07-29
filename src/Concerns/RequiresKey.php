@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Conquest\Core\Exceptions\MissingRequiredAttributeException;

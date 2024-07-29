@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -35,7 +37,7 @@ trait IsHidden
 
     public function isHidden(): bool
     {
-        return $this->evaluate($this->hidden);
+        return (bool) $this->evaluate($this->hidden);
     }
 
     public function IsNotHidden(): bool

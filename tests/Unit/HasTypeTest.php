@@ -14,6 +14,12 @@ it('can set a closure type', function () {
     expect($component->getType())->toBe('Type');
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setType(null);
+    expect($component->lacksType())->toBeTrue();
+});
+
 it('can chain type', function () {
     $component = new Component();
     expect($component->type($t = 'Type'))->toBeInstanceOf(Component::class);

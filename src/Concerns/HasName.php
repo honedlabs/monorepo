@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -26,9 +28,7 @@ trait HasName
      */
     public function setName(string|Closure|null $name): void
     {
-        if (is_null($name)) {
-            return;
-        }
+        if (is_null($name)) return;
         $this->name = $name;
     }
 
@@ -47,7 +47,7 @@ trait HasName
      */
     public function toName(string|Closure $label): string
     {
-        return str($this->evaluate($label))->snake()->lower();
+        return str($this->evaluate($label))->snake()->lower()->toString();
     }
 
     /**

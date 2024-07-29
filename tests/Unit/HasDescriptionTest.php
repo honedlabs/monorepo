@@ -8,6 +8,12 @@ it('can set a string description', function () {
     expect($component->getDescription())->toBe($d);
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setDescription(null);
+    expect($component->lacksDescription())->toBeTrue();
+});
+
 it('can set a closure description', function () {
     $component = new Component();
     $component->setDescription(fn () => 'Description');

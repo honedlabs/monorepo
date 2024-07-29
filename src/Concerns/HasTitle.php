@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Closure;
@@ -26,9 +28,7 @@ trait HasTitle
      */
     public function setTitle(string|Closure|null $title): void
     {
-        if (is_null($title)) {
-            return;
-        }
+        if (is_null($title)) return;
         $this->title = $title;
     }
 

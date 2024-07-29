@@ -8,6 +8,12 @@ it('can set default', function () {
     expect($component->isDefault())->toBeTrue();
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setDefault(null);
+    expect($component->isDefault())->toBeFalse();
+});
+
 it('can set closure default', function () {
     $component = new Component();
     $component->setDefault(fn () => true);
@@ -28,13 +34,13 @@ it('can chain default', function () {
 it('checks if default', function () {
     $component = new Component();
     expect($component->isDefault())->toBeFalse();
-    $component->setDefault('Default');
+    $component->setDefault(true);
     expect($component->isDefault())->toBeTrue();
 });
 
 it('checks if not default', function () {
     $component = new Component();
     expect($component->isNotDefault())->toBeTrue();
-    $component->setDefault('Default');
+    $component->setDefault(true);
     expect($component->isNotDefault())->toBeFalse();
 });

@@ -14,6 +14,13 @@ it('can set a closure title', function () {
     expect($component->getTitle())->toBe('Title');
 });
 
+it('prevents null values', function () {
+    $component = new Component();
+    $component->setTitle(null);
+    expect($component->lacksTitle())->toBeTrue();
+});
+
+
 it('can chain title', function () {
     $component = new Component();
     expect($component->title($t = 'Title'))->toBeInstanceOf(Component::class);

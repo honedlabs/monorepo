@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Concerns;
 
 use Illuminate\Http\Request;
@@ -27,9 +29,7 @@ trait HasHttpMethod
 
     public function setMethod(?string $method): void
     {
-        if (is_null($method)) {
-            return;
-        }
+        if (is_null($method)) return;
 
         $method = mb_strtoupper($method);
         if (! in_array($method, self::METHODS)) {
