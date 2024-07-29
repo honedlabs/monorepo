@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Conquest\Core\Concerns;
@@ -12,18 +13,21 @@ trait HasPlaceholder
     public function placeholder(string|Closure $placeholder): static
     {
         $this->setPlaceholder($placeholder);
+
         return $this;
     }
 
     public function setPlaceholder(string|Closure|null $placeholder): void
     {
-        if (is_null($placeholder)) return;
+        if (is_null($placeholder)) {
+            return;
+        }
         $this->placeholder = $placeholder;
     }
 
     public function hasPlaceholder(): bool
     {
-        return !$this->lacksPlaceholder();
+        return ! $this->lacksPlaceholder();
     }
 
     public function lacksPlaceholder(): bool

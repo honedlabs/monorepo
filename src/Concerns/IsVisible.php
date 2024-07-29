@@ -11,12 +11,15 @@ trait IsVisible
     public function visible(bool|Closure $visible = true): static
     {
         $this->setVisible($visible);
+
         return $this;
     }
 
     public function setVisible(bool|Closure|null $visible): void
     {
-        if (is_null($visible)) return;
+        if (is_null($visible)) {
+            return;
+        }
         $this->visible = $visible;
     }
 
@@ -27,6 +30,6 @@ trait IsVisible
 
     public function isNotVisible(): bool
     {
-        return !$this->isVisible();
+        return ! $this->isVisible();
     }
 }

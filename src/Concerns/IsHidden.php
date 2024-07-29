@@ -27,7 +27,9 @@ trait IsHidden
 
     public function setHidden(bool|Closure|null $hidden): void
     {
-        if (is_null($hidden)) return;
+        if (is_null($hidden)) {
+            return;
+        }
         $this->hidden = $hidden;
     }
 
