@@ -6,6 +6,9 @@ namespace Conquest\Core\Concerns;
 
 use Closure;
 
+/**
+ * @deprecated Use Validates trait instead
+ */
 trait CanValidate
 {
     protected ?Closure $validate = null;

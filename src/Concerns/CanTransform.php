@@ -7,7 +7,7 @@ namespace Conquest\Core\Concerns;
 use Closure;
 
 /**
- * Set a transform function on a class
+ * @deprecated Use Transforms trait instead
  */
 trait CanTransform
 {
