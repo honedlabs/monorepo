@@ -228,4 +228,3 @@ it('has types', function () {
     expect(Field::Name->type())->toBe('string');
     expect(Field::Undefined->type())->toBe('string');
 });
-
