@@ -2,16 +2,20 @@
 
 namespace Workbench\App;
 
-use Conquest\Core\Concerns\HasType;
-use Conquest\Core\Concerns\RequiresKey;
 use Conquest\Core\Primitive;
+use Conquest\Core\Concerns\HasType;
+use Conquest\Core\Concerns\IsAnonymous;
+use Conquest\Core\Concerns\RequiresKey;
 
 class ConfigurableComponent extends Primitive
 {
     use HasType;
     use RequiresKey;
+    use IsAnonymous;
 
-    public const SETUP = 'configurable';
+    protected $anonymous = Primitive::class;
+
+    const SETUP = 'configurable';
 
     public $key = 'component';
 

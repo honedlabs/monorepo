@@ -2,8 +2,6 @@
 
 namespace Workbench\App;
 
-use Conquest\Core\Concerns\CanTransform;
-use Conquest\Core\Concerns\CanValidate;
 use Conquest\Core\Concerns\HasDescription;
 use Conquest\Core\Concerns\HasFormat;
 use Conquest\Core\Concerns\HasHttpMethod;
@@ -17,20 +15,23 @@ use Conquest\Core\Concerns\HasTitle;
 use Conquest\Core\Concerns\HasType;
 use Conquest\Core\Concerns\HasValue;
 use Conquest\Core\Concerns\IsActive;
+use Conquest\Core\Concerns\IsAnonymous;
 use Conquest\Core\Concerns\IsAuthorized;
 use Conquest\Core\Concerns\IsBlank;
 use Conquest\Core\Concerns\IsDefault;
 use Conquest\Core\Concerns\IsHidden;
 use Conquest\Core\Concerns\IsKey;
 use Conquest\Core\Concerns\IsVisible;
+use Conquest\Core\Concerns\Transforms;
+use Conquest\Core\Concerns\Validates;
 use Conquest\Core\Identifier\Concerns\HasId;
 use Conquest\Core\Options\Concerns\HasOptions;
 use Conquest\Core\Primitive;
 
 class Component extends Primitive
 {
-    use CanTransform;
-    use CanValidate;
+    use Transforms;
+    use Validates;
     use HasDescription;
     use HasFormat;
     use HasHttpMethod;
@@ -52,6 +53,14 @@ class Component extends Primitive
     use IsHidden;
     use IsKey;
     use IsVisible;
+    use IsAnonymous;
+
+    protected $anonymous = Component::class;
+
+    public static function make(array $attributes = []): static
+    {
+        return new static($attributes);
+    }
 
     public function toArray()
     {
