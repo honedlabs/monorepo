@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core;
 
 use Conquest\Core\Concerns\Configurable;
@@ -11,9 +13,6 @@ use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 use JsonSerializable;
 
-/**
- * Describe and create primitive objects.
- */
 abstract class Primitive implements Arrayable, JsonSerializable, Makeable
 {
     use Conditionable;

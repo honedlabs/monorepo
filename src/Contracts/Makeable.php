@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Conquest\Core\Contracts;
 
 /**
- * Must implement a static make method, duck typed.
+ * @method static make(mixed ...$parameters)
  */
 interface Makeable {}
