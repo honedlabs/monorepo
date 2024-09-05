@@ -131,9 +131,8 @@ enum Field: string
             self::Country,
             self::Image,
             self::Icon, self::IpAddress => 255,
-
+            self::Url,
             self::Description => 512,
-
             self::Order, self::Priority,
             self::Version,
             self::Details,
@@ -154,12 +153,12 @@ enum Field: string
     {
         return match ($this) {
             self::Email => sprintf('[\'required\', \'email\', %s]', sprintf('max:%s', $this->length())),
-            self::Slug => sprintf('[\'required\', \'string\', \'lowercase\', %s, %s]', sprintf('unique:%s,slug', $table), sprintf('max:%s', $this->length())),
+            self::Slug => sprintf('[\'required\', \'string\', \'lowercase\', %s, %s]', sprintf('unique:%s,slug', str($table)->plural()->value()), sprintf('max:%s', $this->length())),
             self::Password => sprintf('[\'required\', \'string\', \'min:8\', %s]', sprintf('max:%s', $this->length())),
             self::Description => sprintf('[\'nullable\', \'string\', %s]', sprintf('max:%s', $this->length())),
             self::Status => sprintf('[\'required\', \'integer\', \'min:0\', %s]', sprintf('max:%s', $this->length())),
             self::Color, self::Colour => sprintf('[\'nullable\', \'hex_color\', %s]', sprintf('max:%s', $this->length())),
-            self::ForeignId => sprintf('[\'required\', \'integer\', %s]', sprintf('exists:%s,id', str($name)->replaceLast('_id', ''))),
+            self::ForeignId => sprintf('[\'required\', \'integer\', %s]', sprintf('exists:%s,id', str($name)->plural()->replaceLast('_id', ''))),
             self::StartsAt => sprintf('[\'required\', \'date\', \'after_or_equal:now\']'),
             self::EndsAt => sprintf('[\'nullable\', \'date\', \'after_or_equal:now\']'),
             self::IsBoolean => sprintf('[\'required\', \'boolean\']'),
@@ -295,29 +294,35 @@ enum Field: string
         };
     }
 
-    public function relationship(string $name, ?string $table = null): ?string
+    public function relationship(string $field, ?string $table = null): ?string
     {
         if (! $this->hasRelationship()) {
             return null;
         }
 
-        $model = str($name)->replace('*_id', '')->lower()->value();
+        /** user_id */
+        $name = str($field)->replace('_id', '')->replace('*', '')->lower()->value();
 
         $signature = match (true) {
             (bool) $table => str($table)->plural()->camel()->value(),
-            $model === Field::CreatedBy->value => 'creator',
-            $model === Field::UpdatedBy->value => 'updater',
-            default => str($model)->singular()->camel()->value()
+            $name === Field::CreatedBy->value => 'creator',
+            $name === Field::UpdatedBy->value => 'updater',
+            default => str($name)->singular()->camel()->value()
         };
 
-        $method = (bool) $table ? 'hasMany' : 'belongsTo';
+        $model = str(match (true) {
+            (bool) $table => $table,
+            $name === Field::CreatedBy->value => 'user',
+            $name === Field::UpdatedBy->value => 'user',
+            default => $name
+        })->singular()->studly()->value();
 
         return sprintf(
             'public function %s()
             {
                 return $this->%s(%s::class);
             }
-            ', $signature, $method, str($model)->studly()->value()
+            ', $signature, (bool) $table ? 'hasMany' : 'belongsTo', $model
         );
     }
 
