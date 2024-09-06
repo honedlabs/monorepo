@@ -3,7 +3,7 @@
 use Workbench\App\Commands\CoreGenerator;
 
 beforeEach(function () {
-    $this->command = new CoreGenerator();
+    $this->command = new CoreGenerator;
 });
 
 it('can check for collisions', function () {
