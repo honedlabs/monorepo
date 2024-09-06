@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Conquest\Core\Commands;
 
-use ReflectionClass;
-use Illuminate\Console\Command;
 use Conquest\Core\Concerns\ManipulatesFiles;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
+use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use ReflectionClass;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 abstract class GeneratorCommand extends Command implements PromptsForMissingInput
 {

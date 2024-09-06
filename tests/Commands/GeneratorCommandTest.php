@@ -22,4 +22,3 @@ it('has a force option', function () {
 it('has a default stub path', function () {
     expect($this->command->proxyGetDefaultStubPath())->toBeString();
 });
-

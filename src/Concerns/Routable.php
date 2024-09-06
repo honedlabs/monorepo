@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Closure;
+use Illuminate\Support\Facades\Route;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
-use Illuminate\Support\Facades\Route;
 
 trait Routable
 {
@@ -32,13 +32,13 @@ trait Routable
     protected $isSignedRoute = false;
 
     /**
-     * @var bool|integer
+     * @var bool|int
      */
     protected $isTemporaryRoute = false;
 
     /**
      * Null is _self
-     * 
+     *
      * @var string|Closure|null
      */
     protected $routeTarget = null;
@@ -55,7 +55,7 @@ trait Routable
 
     /**
      * Check if the class is routable
-     * 
+     *
      * @return bool
      */
     public function isRoutable()
@@ -65,7 +65,7 @@ trait Routable
 
     /**
      * Check if the class is not routable
-     * 
+     *
      * @return bool
      */
     public function isNotRoutable()
@@ -75,7 +75,7 @@ trait Routable
 
     /**
      * Check if the route should download the endpoint resource
-     * 
+     *
      * @return bool
      */
     public function isDownloadRoute()
@@ -85,7 +85,7 @@ trait Routable
 
     /**
      * Check if the route should not download the endpoint resource
-     * 
+     *
      * @return bool
      */
     public function isNotDownloadRoute()
@@ -95,7 +95,7 @@ trait Routable
 
     /**
      * Check if the route is a signed route
-     * 
+     *
      * @return bool
      */
     public function isSignedRoute()
@@ -105,7 +105,7 @@ trait Routable
 
     /**
      * Check if the route should not be a signed route
-     * 
+     *
      * @return bool
      */
     public function isNotSignedRoute()
@@ -115,7 +115,7 @@ trait Routable
 
     /**
      * Check if the route is temporary
-     * 
+     *
      * @return bool
      */
     public function isTemporaryRoute()
@@ -125,7 +125,7 @@ trait Routable
 
     /**
      * Check if the route should not be temporary
-     * 
+     *
      * @return bool
      */
     public function isNotTemporaryRoute()
@@ -135,21 +135,21 @@ trait Routable
 
     /**
      * Set the route
-     * 
-     * @param string|Closure|null $route
+     *
      * @return void
      */
     public function setRoute(string|Closure|null $route)
     {
-        if (is_null($route)) return;
+        if (is_null($route)) {
+            return;
+        }
 
         $this->route = $route;
     }
 
     /**
      * Set the route parameters
-     * 
-     * @param mixed $routeParameters
+     *
      * @return void
      */
     public function setRouteParameters(mixed $routeParameters)
@@ -159,44 +159,50 @@ trait Routable
 
     /**
      * Set the route as downloadable
-     * 
-     * @param bool|Closure|null $download
+     *
+     * @param  bool|Closure|null  $download
      * @return void
      */
     public function setDownload($download)
     {
-        if (is_null($download)) return;
+        if (is_null($download)) {
+            return;
+        }
         $this->isDownloadRoute = $download;
     }
 
     /**
      * Set the route to be signed
-     * 
-     * @param bool|Closure|null $signed
+     *
+     * @param  bool|Closure|null  $signed
      * @return void
      */
     public function setSigned($signed)
     {
-        if (is_null($signed)) return;
+        if (is_null($signed)) {
+            return;
+        }
         $this->isSignedRoute = $signed;
     }
 
     /**
      * Set the route to be temporary
-     * 
-     * @param bool|Closure|null $temporary
+     *
+     * @param  bool|Closure|null  $temporary
      * @return void
      */
     public function setTemporary($temporary)
     {
-        if (is_null($temporary)) return;
+        if (is_null($temporary)) {
+            return;
+        }
         $this->isTemporaryRoute = $temporary;
     }
 
     /**
      * Set the route target
-     * 
-     * @param string|Closure|null $target
+     *
+     * @param  string|Closure|null  $target
      * @return void
      */
     public function setTarget($target)
@@ -210,10 +216,11 @@ trait Routable
 
     /**
      * Set the route method
-     * 
-     * @param string|Closure|null $method
-     * @throws InvalidArgumentException
+     *
+     * @param  string|Closure|null  $method
      * @return void
+     *
+     * @throws InvalidArgumentException
      */
     public function setMethod($method)
     {
@@ -229,8 +236,8 @@ trait Routable
 
     /**
      * Get the resolved route
-     * 
-     * @param mixed $parameters
+     *
+     * @param  mixed  $parameters
      * @return string|null
      */
     public function getRoute($parameters = null)
@@ -239,12 +246,12 @@ trait Routable
             return null;
         }
 
-        return $this->resolvedRoute ??= $this->resolveRoute($parameters);        
+        return $this->resolvedRoute ??= $this->resolveRoute($parameters);
     }
 
     /**
      * Get the route parameters
-     * 
+     *
      * @return mixed
      */
     protected function getRouteParameters()
@@ -254,7 +261,7 @@ trait Routable
 
     /**
      * Get the route HTTP method
-     * 
+     *
      * @return string
      */
     public function getMethod()
@@ -264,7 +271,7 @@ trait Routable
 
     /**
      * Get the route target
-     * 
+     *
      * @return string|null
      */
     public function getTarget()
@@ -274,57 +281,57 @@ trait Routable
 
     /**
      * Set the route with overriding parameters
-     * 
-     * @param string|Closure $route
-     * @param mixed $parameters
+     *
+     * @param  mixed  $parameters
      * @return static
      */
     public function route(string|Closure $route, $parameters = null)
     {
         $this->setRoute($route);
         $this->setRouteParameters($parameters);
+
         return $this;
     }
 
     /**
      * Set the route to download the resource
-     * 
-     * @param bool|Closure $download
+     *
      * @return static
      */
     public function download(bool|Closure $download = true)
     {
         $this->setDownload($download);
+
         return $this;
     }
 
     /**
      * Set the route to be signed
-     * 
-     * @param bool|Closure $signed
+     *
      * @return static
      */
     public function signed(bool|Closure $signed = true)
     {
         $this->setSigned($signed);
+
         return $this;
     }
 
     /**
      * Set the route to be temporary
-     * 
-     * @param bool|Closure|int $temporary
+     *
      * @return static
      */
     public function temporary(bool|Closure|int $temporary = true)
     {
         $this->setTemporary($temporary);
+
         return $this;
     }
 
     /**
      * Set the route target to in a new tab
-     * 
+     *
      * @return static
      */
     public function newTab()
@@ -334,31 +341,31 @@ trait Routable
 
     /**
      * Set the route target
-     * 
-     * @param string|Closure|null $target
+     *
      * @return static
      */
     public function target(string|Closure|null $target = '_blank')
     {
         $this->setTarget($target);
+
         return $this;
     }
 
     /**
      * Set the route method
-     * 
-     * @param string|Closure $method
+     *
      * @return static
      */
     public function method(string|Closure $method = Request::METHOD_GET)
     {
         $this->setMethod($method);
+
         return $this;
     }
 
     /**
      * Set the route method to GET
-     * 
+     *
      * @return static
      */
     public function get()
@@ -368,7 +375,7 @@ trait Routable
 
     /**
      * Set the route method to POST
-     * 
+     *
      * @return static
      */
     public function post()
@@ -378,7 +385,7 @@ trait Routable
 
     /**
      * Set the route method to PUT
-     * 
+     *
      * @return static
      */
     public function put()
@@ -388,7 +395,7 @@ trait Routable
 
     /**
      * Set the route method to PATCH
-     * 
+     *
      * @return static
      */
     public function patch()
@@ -398,7 +405,7 @@ trait Routable
 
     /**
      * Set the route method to DELETE
-     * 
+     *
      * @return static
      */
     public function delete()
@@ -408,19 +415,18 @@ trait Routable
 
     /**
      * Check if the route is a named route
-     * 
+     *
      * @return bool
      */
     public function isNamedRoute()
     {
-        return !str($this->route)->startsWith('/');
+        return ! str($this->route)->startsWith('/');
     }
 
     /**
      * Resolve the route using the provided parameters
-     * 
-     * @param mixed $parameters
-     * @return string
+     *
+     * @param  mixed  $parameters
      */
     protected function resolveRoute($parameters = null): string
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Illuminate\Filesystem\Filesystem;
+
 use function Laravel\Prompts\confirm;
 
 trait ManipulatesFiles

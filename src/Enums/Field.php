@@ -333,7 +333,7 @@ enum Field: string
     {
         return [
             $name,
-            static::tryWithPatterns($name),
+            self::tryWithPatterns($name),
         ];
     }
 

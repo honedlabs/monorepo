@@ -14,5 +14,3 @@ it('determines if a class is anonymous', function () {
     expect($this->base->isAnonymous())->toBeTrue();
     expect($this->base->isNotAnonymous())->toBeFalse();
 });
-
-

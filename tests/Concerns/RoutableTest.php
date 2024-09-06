@@ -1,8 +1,7 @@
 <?php
 
-use Workbench\App\Component;
 use Illuminate\Http\Request;
-
+use Workbench\App\Component;
 
 beforeEach(function () {
     $this->component = new Component;
@@ -106,7 +105,6 @@ it('uses delete method', function () {
     expect($this->component->delete())->toBeInstanceOf(Component::class);
     expect($this->component->getMethod())->toBe(Request::METHOD_DELETE);
 });
-
 
 it('uses method', function () {
     expect($this->component->method(Request::METHOD_GET))->toBeInstanceOf(Component::class);
