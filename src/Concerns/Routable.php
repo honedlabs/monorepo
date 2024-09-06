@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Closure;
-use Illuminate\Routing\Route;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Support\Facades\Route;
 
 trait Routable
 {
@@ -17,9 +17,9 @@ trait Routable
     protected $route;
 
     /**
-     * @var array<string, string|int|array<string, string|int>>
+     * @var mixed
      */
-    protected $routeParameters = [];
+    protected $routeParameters = null;
 
     /**
      * @var bool|Closure
@@ -149,10 +149,10 @@ trait Routable
     /**
      * Set the route parameters
      * 
-     * @param array<string, string|int|array<string, string|int>> $routeParameters
+     * @param mixed $routeParameters
      * @return void
      */
-    public function setRouteParameters(array $routeParameters)
+    public function setRouteParameters(mixed $routeParameters)
     {
         $this->routeParameters = $routeParameters;
     }
@@ -230,16 +230,26 @@ trait Routable
     /**
      * Get the resolved route
      * 
-     * @param array<string, string|int|array<string, string|int>> $parameters
+     * @param mixed $parameters
      * @return string|null
      */
-    public function getRoute($parameters = [])
+    public function getRoute($parameters = null)
     {
         if (! $this->isRoutable()) {
             return null;
         }
 
         return $this->resolvedRoute ??= $this->resolveRoute($parameters);        
+    }
+
+    /**
+     * Get the route parameters
+     * 
+     * @return mixed
+     */
+    protected function getRouteParameters()
+    {
+        return $this->evaluate($this->routeParameters);
     }
 
     /**
@@ -263,13 +273,13 @@ trait Routable
     }
 
     /**
-     * Set the route
+     * Set the route with overriding parameters
      * 
      * @param string|Closure $route
-     * @param array<string, string|int|array<string, string|int>> $parameters
+     * @param mixed $parameters
      * @return static
      */
-    public function route(string|Closure $route, ...$parameters)
+    public function route(string|Closure $route, $parameters = null)
     {
         $this->setRoute($route);
         $this->setRouteParameters($parameters);
@@ -313,14 +323,13 @@ trait Routable
     }
 
     /**
-     * Set the route target to blank
+     * Set the route target to in a new tab
      * 
      * @return static
      */
-    public function blank()
+    public function newTab()
     {
-        $this->setTarget('_blank');
-        return $this;
+        return $this->target('_blank');
     }
 
     /**
@@ -332,6 +341,7 @@ trait Routable
     public function target(string|Closure|null $target = '_blank')
     {
         $this->setTarget($target);
+        return $this;
     }
 
     /**
@@ -403,33 +413,32 @@ trait Routable
      */
     public function isNamedRoute()
     {
-        return Route::has($this->route);
+        return !str($this->route)->startsWith('/');
     }
 
     /**
      * Resolve the route using the provided parameters
      * 
-     * @param array<string, string|int|array<string, string|int>> $parameters
+     * @param mixed $parameters
      * @return string
      */
-    protected function resolveRoute(array $parameters = []): string
+    protected function resolveRoute($parameters = null): string
     {
-        $merged = array_merge($parameters, $this->routeParameters);
 
         if (is_callable($route = $this->route)) {
-            return call_user_func($route, $merged);
+            return url(str(call_user_func($route, $parameters))->replaceFirst(url('/'), ''));
         }
+
+        $use = (is_null($parameters) ? $this->getRouteParameters() : $parameters) ?? [];
 
         if ($this->isNamedRoute()) {
-            return route($route, $merged);
+            return route($route, $use);
         }
 
-        foreach ($merged as $key => $value) {
+        foreach ($use as $key => $value) {
             $route = str_replace(":$key", $value, $route);
         }
 
-        $route = preg_replace('/\{[^\}]*\}/', '', $route);
-
-        return url(rtrim($route, '/'));
+        return url(rtrim(preg_replace('/\{[^\}]*\}/', '', $route), '/'));
     }
 }
