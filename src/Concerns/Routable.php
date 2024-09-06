@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Concerns;
 
 use Closure;
+use Illuminate\Routing\Route;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -46,6 +47,11 @@ trait Routable
      * @var string|Closure
      */
     protected $routeMethod = Request::METHOD_GET;
+
+    /**
+     * @var string|null
+     */
+    protected $resolvedRoute = null;
 
     /**
      * Check if the class is routable
@@ -214,15 +220,215 @@ trait Routable
         if (is_null($method)) {
             return;
         }
-        if (! in_array(mb_strtoupper($method), [Request::METHOD_GET, Request::METHOD_POST, Request::METHOD_PUT, Request::METHOD_PATCH, Request::METHOD_DELETE])) {
+        if (! in_array($method = mb_strtoupper($method), [Request::METHOD_GET, Request::METHOD_POST, Request::METHOD_PUT, Request::METHOD_PATCH, Request::METHOD_DELETE])) {
             throw new InvalidArgumentException("The provided method [{$method}] is not supported.");
         }
 
         $this->routeMethod = $method;
     }
 
-    
+    /**
+     * Get the resolved route
+     * 
+     * @param array<string, string|int|array<string, string|int>> $parameters
+     * @return string|null
+     */
+    public function getRoute($parameters = [])
+    {
+        if (! $this->isRoutable()) {
+            return null;
+        }
 
+        return $this->resolvedRoute ??= $this->resolveRoute($parameters);        
+    }
 
-    // public function route(string|Closure|null $route, ...$parameters)
+    /**
+     * Get the route HTTP method
+     * 
+     * @return string
+     */
+    public function getMethod()
+    {
+        return $this->evaluate($this->routeMethod);
+    }
+
+    /**
+     * Get the route target
+     * 
+     * @return string|null
+     */
+    public function getTarget()
+    {
+        return $this->evaluate($this->routeTarget);
+    }
+
+    /**
+     * Set the route
+     * 
+     * @param string|Closure $route
+     * @param array<string, string|int|array<string, string|int>> $parameters
+     * @return void
+     */
+    public function route(string|Closure $route, ...$parameters)
+    {
+        $this->setRoute($route);
+        $this->setRouteParameters($parameters);
+    }
+
+    /**
+     * Set the route to download the resource
+     * 
+     * @param bool|Closure $download
+     * @return static
+     */
+    public function download(bool|Closure $download = true)
+    {
+        $this->setDownload($download);
+        return $this;
+    }
+
+    /**
+     * Set the route to be signed
+     * 
+     * @param bool|Closure $signed
+     * @return static
+     */
+    public function signed(bool|Closure $signed = true)
+    {
+        $this->setSigned($signed);
+        return $this;
+    }
+
+    /**
+     * Set the route to be temporary
+     * 
+     * @param bool|Closure|int $temporary
+     * @return static
+     */
+    public function temporary(bool|Closure|int $temporary = true)
+    {
+        $this->setTemporary($temporary);
+        return $this;
+    }
+
+    /**
+     * Set the route target to blank
+     * 
+     * @return static
+     */
+    public function blank()
+    {
+        $this->setTarget('_blank');
+        return $this;
+    }
+
+    /**
+     * Set the route target
+     * 
+     * @param string|Closure|null $target
+     * @return static
+     */
+    public function target(string|Closure|null $target = '_blank')
+    {
+        $this->setTarget($target);
+    }
+
+    /**
+     * Set the route method
+     * 
+     * @param string|Closure $method
+     * @return static
+     */
+    public function method(string|Closure $method = Request::METHOD_GET)
+    {
+        $this->setMethod($method);
+        return $this;
+    }
+
+    /**
+     * Set the route method to GET
+     * 
+     * @return static
+     */
+    public function get()
+    {
+        return $this->method(Request::METHOD_GET);
+    }
+
+    /**
+     * Set the route method to POST
+     * 
+     * @return static
+     */
+    public function post()
+    {
+        return $this->method(Request::METHOD_POST);
+    }
+
+    /**
+     * Set the route method to PUT
+     * 
+     * @return static
+     */
+    public function put()
+    {
+        return $this->method(Request::METHOD_PUT);
+    }
+
+    /**
+     * Set the route method to PATCH
+     * 
+     * @return static
+     */
+    public function patch()
+    {
+        return $this->method(Request::METHOD_PATCH);
+    }
+
+    /**
+     * Set the route method to DELETE
+     * 
+     * @return static
+     */
+    public function delete()
+    {
+        return $this->method(Request::METHOD_DELETE);
+    }
+
+    /**
+     * Check if the route is a named route
+     * 
+     * @return bool
+     */
+    public function isNamedRoute()
+    {
+        return Route::has($this->route);
+    }
+
+    /**
+     * Resolve the route using the provided parameters
+     * 
+     * @param array<string, string|int|array<string, string|int>> $parameters
+     * @return string
+     */
+    protected function resolveRoute(array $parameters = []): string
+    {
+        $merged = array_merge($parameters, $this->routeParameters);
+
+        if (is_callable($route = $this->route)) {
+            return call_user_func($route, $merged);
+        }
+
+        if ($this->isNamedRoute()) {
+            return route($route, $merged);
+        }
+
+        foreach ($merged as $key => $value) {
+            $route = str_replace(":$key", $value, $route);
+        }
+
+        $route = preg_replace('/\{[^\}]*\}/', '', $route);
+
+        return url(rtrim($route, '/'));
+    }
 }
