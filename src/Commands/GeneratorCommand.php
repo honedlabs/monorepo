@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conquest\Command\Commands;
+namespace Conquest\Core\Commands;
 
 use ReflectionClass;
 use Illuminate\Console\Command;
