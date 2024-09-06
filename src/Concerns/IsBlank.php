@@ -7,7 +7,7 @@ namespace Conquest\Core\Concerns;
 use Closure;
 
 /**
- * Set whether a class is the blank
+ * @deprecated Use Routable instead
  */
 trait IsBlank
 {

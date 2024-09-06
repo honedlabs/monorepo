@@ -7,6 +7,9 @@ namespace Conquest\Core\Concerns;
 use Closure;
 use Illuminate\Support\Facades\Route;
 
+/**
+ * @deprecated Use Routable instead
+ */
 trait HasRoute
 {
     protected string|Closure|null $route = null;

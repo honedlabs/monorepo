@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Concerns;
+namespace Conquest\Core\Concerns;
 
 use Closure;
 use Illuminate\Routing\Route;
@@ -267,12 +267,13 @@ trait Routable
      * 
      * @param string|Closure $route
      * @param array<string, string|int|array<string, string|int>> $parameters
-     * @return void
+     * @return static
      */
     public function route(string|Closure $route, ...$parameters)
     {
         $this->setRoute($route);
         $this->setRouteParameters($parameters);
+        return $this;
     }
 
     /**

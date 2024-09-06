@@ -6,6 +6,9 @@ namespace Conquest\Core\Concerns;
 
 use Illuminate\Http\Request;
 
+/**
+ * @deprecated Use Routable instead
+ */
 trait HasHttpMethod
 {
     protected ?string $method = null;
