@@ -9,8 +9,7 @@ class Description
 {
     public function __construct(
         protected readonly ?string $description = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the description.

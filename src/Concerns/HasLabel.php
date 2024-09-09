@@ -68,17 +68,17 @@ trait HasLabel
         return ! $this->hasLabel();
     }
 
-   /**
+    /**
      * Evaluate the label attribute if present
      */
     protected function evaluateLabelAttribute(): ?string
     {
         $attributes = (new ReflectionClass($this))->getAttributes(Label::class);
 
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             return $attributes[0]->newInstance()->getLabel();
         }
+
         return null;
     }
-        
 }

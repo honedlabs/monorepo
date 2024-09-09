@@ -64,7 +64,6 @@ trait HasName
 
     /**
      * Convert a string to the name format
-     * 
      */
     public function toName(string|Closure $label): string
     {
@@ -78,9 +77,10 @@ trait HasName
     {
         $attributes = (new ReflectionClass($this))->getAttributes(Name::class);
 
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             return $attributes[0]->newInstance()->getName();
         }
+
         return null;
     }
 }

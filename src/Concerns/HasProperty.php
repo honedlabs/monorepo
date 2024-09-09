@@ -78,11 +78,10 @@ trait HasProperty
     {
         $attributes = (new ReflectionClass($this))->getAttributes(Property::class);
 
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             return $attributes[0]->newInstance()->getProperty();
         }
+
         return null;
     }
-
-
 }

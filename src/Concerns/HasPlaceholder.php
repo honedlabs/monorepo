@@ -49,9 +49,10 @@ trait HasPlaceholder
     {
         $attributes = (new ReflectionClass($this))->getAttributes(Placeholder::class);
 
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             return $attributes[0]->newInstance()->getPlaceholder();
         }
+
         return null;
     }
 }

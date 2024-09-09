@@ -9,8 +9,7 @@ class Placeholder
 {
     public function __construct(
         protected readonly string $placeholder,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the placeholder.

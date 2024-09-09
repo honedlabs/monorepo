@@ -64,9 +64,10 @@ trait HasDescription
     {
         $attributes = (new ReflectionClass($this))->getAttributes(Description::class);
 
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             return $attributes[0]->newInstance()->getDescription();
         }
+
         return null;
     }
 }

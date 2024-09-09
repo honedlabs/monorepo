@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Closure;
-use ReflectionClass;
 use Conquest\Core\Attributes\Title;
+use ReflectionClass;
 
 /**
  * Set a title property on a class
@@ -69,9 +69,10 @@ trait HasTitle
     {
         $attributes = (new ReflectionClass($this))->getAttributes(Title::class);
 
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             return $attributes[0]->newInstance()->getTitle();
         }
+
         return null;
     }
 }

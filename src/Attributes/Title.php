@@ -9,8 +9,7 @@ class Title
 {
     public function __construct(
         protected readonly string $title,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the title.

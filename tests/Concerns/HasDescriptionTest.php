@@ -1,5 +1,6 @@
 <?php
 
+use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string description', function () {
@@ -38,4 +39,15 @@ it('checks for no description', function () {
     expect($component->lacksDescription())->toBeTrue();
     $component->setDescription('Description');
     expect($component->lacksDescription())->toBeFalse();
+});
+
+it('evaluates the description attribute', function () {
+    $component = new Attributable;
+    expect($component->getDescription())->toBe('Description');
+});
+
+it('evaluates the description attribute only as fallback', function () {
+    $component = new Attributable;
+    $component->setDescription(fn () => 'Setter');
+    expect($component->getDescription())->toBe('Setter');
 });

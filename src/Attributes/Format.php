@@ -9,8 +9,7 @@ class Format
 {
     public function __construct(
         protected readonly ?string $format = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the format.

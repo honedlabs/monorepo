@@ -9,8 +9,7 @@ class Type
 {
     public function __construct(
         protected readonly string $type,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the type.

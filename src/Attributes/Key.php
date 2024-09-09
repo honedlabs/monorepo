@@ -9,8 +9,7 @@ class Key
 {
     public function __construct(
         protected readonly string $key,
-    ) {
-    }
+    ) {}
 
     /**
      * Get whether the class is key.

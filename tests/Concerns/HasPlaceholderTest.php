@@ -1,5 +1,6 @@
 <?php
 
+use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string placeholder', function () {
@@ -38,4 +39,15 @@ it('checks for no placeholder', function () {
     expect($component->lacksPlaceholder())->toBeTrue();
     $component->setPlaceholder('Placeholder');
     expect($component->lacksPlaceholder())->toBeFalse();
+});
+
+it('evaluates the placeholder attribute', function () {
+    $component = new Attributable;
+    expect($component->getPlaceholder())->toBe('Placeholder');
+});
+
+it('evaluates the placeholder attribute only as fallback', function () {
+    $component = new Attributable;
+    $component->setPlaceholder(fn () => 'Setter');
+    expect($component->getPlaceholder())->toBe('Setter');
 });

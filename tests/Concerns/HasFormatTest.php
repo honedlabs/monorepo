@@ -1,5 +1,6 @@
 <?php
 
+use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string format', function () {
@@ -38,4 +39,15 @@ it('checks for no format', function () {
     expect($component->lacksFormat())->toBeTrue();
     $component->setFormat('d M Y');
     expect($component->lacksFormat())->toBeFalse();
+});
+
+it('evaluates the format attribute', function () {
+    $component = new Attributable;
+    expect($component->getFormat())->toBe('d M y');
+});
+
+it('evaluates the format attribute only as fallback', function () {
+    $component = new Attributable;
+    $component->setFormat(fn () => 'Setter');
+    expect($component->getFormat())->toBe('Setter');
 });

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Conquest\Core\Concerns;
 
-use ReflectionClass;
 use Conquest\Core\Attributes\Value;
+use ReflectionClass;
 
 /**
  * Sets a value on a class
@@ -47,9 +47,10 @@ trait HasValue
     {
         $attributes = (new ReflectionClass($this))->getAttributes(Value::class);
 
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             return $attributes[0]->newInstance()->getValue();
         }
+
         return null;
     }
 }

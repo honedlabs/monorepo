@@ -9,8 +9,7 @@ class Value
 {
     public function __construct(
         protected readonly mixed $value,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the value.

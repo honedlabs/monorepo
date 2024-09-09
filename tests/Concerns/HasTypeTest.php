@@ -1,5 +1,6 @@
 <?php
 
+use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string type', function () {
@@ -38,4 +39,15 @@ it('checks for no type', function () {
     expect($component->lacksType())->toBeTrue();
     $component->setType('Type');
     expect($component->lacksType())->toBeFalse();
+});
+
+it('evaluates the type attribute', function () {
+    $component = new Attributable;
+    expect($component->getType())->toBe('type');
+});
+
+it('evaluates the type attribute only as fallback', function () {
+    $component = new Attributable;
+    $component->setType(fn () => 'Setter');
+    expect($component->getType())->toBe('Setter');
 });

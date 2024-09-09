@@ -1,5 +1,6 @@
 <?php
 
+use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string label', function () {
@@ -43,4 +44,15 @@ it('checks for no label', function () {
 it('converts text to a label', function () {
     $label = (new Component)->toLabel('new-Label');
     expect($label)->toBe('New label');
+});
+
+it('evaluates the label attribute', function () {
+    $component = new Attributable;
+    expect($component->getLabel())->toBe('Label');
+});
+
+it('evaluates the label attribute only as fallback', function () {
+    $component = new Attributable;
+    $component->setLabel(fn () => 'Setter');
+    expect($component->getLabel())->toBe('Setter');
 });

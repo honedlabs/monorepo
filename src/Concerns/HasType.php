@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Closure;
-use ReflectionClass;
 use Conquest\Core\Attributes\Type;
+use ReflectionClass;
 
 /**
  * Set a type property on a class
@@ -67,9 +67,10 @@ trait HasType
     {
         $attributes = (new ReflectionClass($this))->getAttributes(Type::class);
 
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             return $attributes[0]->newInstance()->getType();
         }
+
         return null;
     }
 }

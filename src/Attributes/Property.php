@@ -9,8 +9,7 @@ class Property
 {
     public function __construct(
         protected readonly string $property,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the property.

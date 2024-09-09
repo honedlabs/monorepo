@@ -1,5 +1,6 @@
 <?php
 
+use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string property', function () {
@@ -50,4 +51,15 @@ it('checks if property is array', function () {
     $component = new Component;
     $component->setProperty(['property', 'slug']);
     expect($component->isPropertyArray())->toBeTrue();
+});
+
+it('evaluates the property attribute', function () {
+    $component = new Attributable;
+    expect($component->getProperty())->toBe('property');
+});
+
+it('evaluates the property attribute only as fallback', function () {
+    $component = new Attributable;
+    $component->setProperty(fn () => 'Setter');
+    expect($component->getProperty())->toBe('Setter');
 });
