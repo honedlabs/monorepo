@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Closure;
+use Conquest\Table\Actions\Attributes\Name;
+use ReflectionClass;
 
 /**
  * Set a name property on a class
@@ -45,14 +47,6 @@ trait HasName
     }
 
     /**
-     * Convert a string to the name format
-     */
-    public function toName(string|Closure $label): string
-    {
-        return str($this->evaluate($label))->snake()->lower()->toString();
-    }
-
-    /**
      * Check if the class has a name
      */
     public function hasName(): bool
@@ -66,5 +60,22 @@ trait HasName
     public function lacksName(): bool
     {
         return ! $this->hasName();
+    }
+
+    /**
+     * Convert a string to the name format
+     */
+    public function toName(string|Closure $label): string
+    {
+        return str($this->evaluate($label))->snake()->lower()->toString();
+    }
+
+    protected function evaluateNameAttribute(): string
+    {
+        $reflection = new ReflectionClass($this);
+        $attributes = $reflection->getAttributes(Name::class);
+
+        dd($attributes);
+        return '';
     }
 }
