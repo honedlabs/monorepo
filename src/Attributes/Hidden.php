@@ -9,8 +9,7 @@ class Hidden
 {
     public function __construct(
         protected readonly bool $hidden = true,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the hidden.

@@ -9,8 +9,7 @@ class AsKey
 {
     public function __construct(
         protected readonly bool $asKey = true,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the key.

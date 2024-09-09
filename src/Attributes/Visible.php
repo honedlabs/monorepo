@@ -9,8 +9,7 @@ class Visible
 {
     public function __construct(
         protected readonly bool $visible = true,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the visible.

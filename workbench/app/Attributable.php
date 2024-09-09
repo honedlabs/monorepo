@@ -2,8 +2,4 @@
 
 namespace Workbench\App;
 
-
-class Attributable extends Component
-{
-
-}
+class Attributable extends Component {}

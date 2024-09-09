@@ -76,6 +76,7 @@ trait HasName
         $attributes = $reflection->getAttributes(Name::class);
 
         dd($attributes);
+
         return '';
     }
 }

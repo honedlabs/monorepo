@@ -9,8 +9,7 @@ class Name
 {
     public function __construct(
         protected readonly ?string $name = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the name.

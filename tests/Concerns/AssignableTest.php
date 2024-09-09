@@ -26,4 +26,3 @@ it('skips properties that do not exist', function () {
     expect($this->component->getName())->toBe('Test');
     expect($this->component->getDescription())->toBe('This is a test');
 });
-

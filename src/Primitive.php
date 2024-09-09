@@ -16,12 +16,12 @@ use JsonSerializable;
 
 abstract class Primitive implements Arrayable, JsonSerializable, Makeable
 {
+    use Assignable;
     use Conditionable;
     use Configurable;
     use EvaluatesClosures;
     use Macroable;
     use Tappable;
-    use Assignable;
 
     public function __construct()
     {

@@ -9,8 +9,7 @@ class Value
 {
     public function __construct(
         protected readonly ?string $value = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the value.

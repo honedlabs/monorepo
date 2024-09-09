@@ -9,8 +9,7 @@ class Label
 {
     public function __construct(
         protected readonly ?string $label = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the label.
