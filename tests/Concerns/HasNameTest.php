@@ -50,3 +50,9 @@ it('evaluates the name attribute', function () {
     $component = new Attributable;
     expect($component->getName())->toBe('Name');
 });
+
+it('evaluates the name attribute only as fallback', function () {
+    $component = new Attributable;
+    $component->setName(fn () => 'Setter');
+    expect($component->getName())->toBe('Setter');
+});

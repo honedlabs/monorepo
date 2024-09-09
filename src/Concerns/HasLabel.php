@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Closure;
+use Conquest\Core\Attributes\Label;
+use ReflectionClass;
 
 /**
  * Set a label for a class.
@@ -39,7 +41,7 @@ trait HasLabel
      */
     public function getLabel(): ?string
     {
-        return $this->evaluate($this->label);
+        return $this->evaluate($this->label) ?? $this->evaluateLabelAttribute();
     }
 
     /**
@@ -65,4 +67,18 @@ trait HasLabel
     {
         return ! $this->hasLabel();
     }
+
+   /**
+     * Evaluate the label attribute if present
+     */
+    protected function evaluateLabelAttribute(): ?string
+    {
+        $attributes = (new ReflectionClass($this))->getAttributes(Label::class);
+
+        if (!empty($attributes)) {
+            return $attributes[0]->newInstance()->getLabel();
+        }
+        return null;
+    }
+        
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Conquest\Table\Actions\Attributes;
+namespace Conquest\Core\Attributes;
 
 use Attribute;
 

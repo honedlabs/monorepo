@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Closure;
+use Conquest\Core\Attributes\Description;
+use ReflectionClass;
 
 trait HasDescription
 {
@@ -36,7 +38,7 @@ trait HasDescription
      */
     public function getDescription(): ?string
     {
-        return $this->evaluate($this->description);
+        return $this->evaluate($this->description) ?? $this->evaluateDescriptionAttribute();
     }
 
     /**
@@ -53,5 +55,18 @@ trait HasDescription
     public function hasDescription(): bool
     {
         return ! $this->lacksDescription();
+    }
+
+    /**
+     * Evaluate the description attribute if present
+     */
+    protected function evaluateDescriptionAttribute(): ?string
+    {
+        $attributes = (new ReflectionClass($this))->getAttributes(Description::class);
+
+        if (!empty($attributes)) {
+            return $attributes[0]->newInstance()->getDescription();
+        }
+        return null;
     }
 }

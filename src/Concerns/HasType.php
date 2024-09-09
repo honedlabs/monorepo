@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Closure;
+use ReflectionClass;
+use Conquest\Core\Attributes\Type;
 
 /**
  * Set a type property on a class
@@ -39,7 +41,7 @@ trait HasType
      */
     public function getType(): ?string
     {
-        return $this->evaluate($this->type);
+        return $this->evaluate($this->type) ?? $this->evaluateTypeAttribute();
     }
 
     /**
@@ -56,5 +58,18 @@ trait HasType
     public function lacksType(): bool
     {
         return ! $this->hasType();
+    }
+
+    /**
+     * Evaluate the type attribute if present
+     */
+    protected function evaluateTypeAttribute(): ?string
+    {
+        $attributes = (new ReflectionClass($this))->getAttributes(Type::class);
+
+        if (!empty($attributes)) {
+            return $attributes[0]->newInstance()->getType();
+        }
+        return null;
     }
 }

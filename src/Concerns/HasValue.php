@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Conquest\Core\Concerns;
 
+use ReflectionClass;
+use Conquest\Core\Attributes\Value;
+
 /**
  * Sets a value on a class
  */
@@ -34,6 +37,19 @@ trait HasValue
      */
     public function getValue(): mixed
     {
-        return $this->evaluate($this->value);
+        return $this->evaluate($this->value) ?? $this->evaluateValueAttribute();
+    }
+
+    /**
+     * Evaluate the value attribute if present
+     */
+    protected function evaluateValueAttribute(): ?string
+    {
+        $attributes = (new ReflectionClass($this))->getAttributes(Value::class);
+
+        if (!empty($attributes)) {
+            return $attributes[0]->newInstance()->getValue();
+        }
+        return null;
     }
 }

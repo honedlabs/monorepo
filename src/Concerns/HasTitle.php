@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Closure;
+use ReflectionClass;
+use Conquest\Core\Attributes\Title;
 
 /**
  * Set a title property on a class
@@ -41,7 +43,7 @@ trait HasTitle
      */
     public function getTitle(): ?string
     {
-        return $this->evaluate($this->title);
+        return $this->evaluate($this->title) ?? $this->evaluateTitleAttribute();
     }
 
     /**
@@ -58,5 +60,18 @@ trait HasTitle
     public function lacksTitle(): bool
     {
         return ! $this->hasTitle();
+    }
+
+    /**
+     * Evaluate the title attribute if present
+     */
+    protected function evaluateTitleAttribute(): ?string
+    {
+        $attributes = (new ReflectionClass($this))->getAttributes(Title::class);
+
+        if (!empty($attributes)) {
+            return $attributes[0]->newInstance()->getTitle();
+        }
+        return null;
     }
 }

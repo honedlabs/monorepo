@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Closure;
+use Conquest\Core\Attributes\Property;
+use ReflectionClass;
 
 /**
  * Set a property on a class
@@ -42,7 +44,7 @@ trait HasProperty
      */
     public function getProperty(): string|array|null
     {
-        return $this->evaluate($this->property);
+        return $this->evaluate($this->property) ?? $this->evaluatePropertyAttribute();
     }
 
     /**
@@ -68,4 +70,19 @@ trait HasProperty
     {
         return is_array($this->getProperty());
     }
+
+    /**
+     * Evaluate the property attribute if present
+     */
+    protected function evaluatePropertyAttribute(): ?string
+    {
+        $attributes = (new ReflectionClass($this))->getAttributes(Property::class);
+
+        if (!empty($attributes)) {
+            return $attributes[0]->newInstance()->getProperty();
+        }
+        return null;
+    }
+
+
 }

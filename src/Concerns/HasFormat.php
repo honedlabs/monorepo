@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Conquest\Core\Concerns;
 
 use Closure;
+use ReflectionClass;
+use Conquest\Core\Attributes\Format;
 
 /**
  * Set a format for a class.
@@ -39,7 +41,7 @@ trait HasFormat
      */
     public function getFormat(): ?string
     {
-        return $this->evaluate($this->format);
+        return $this->evaluate($this->format) ?? $this->evaluateFormatAttribute();
     }
 
     /**
@@ -53,5 +55,18 @@ trait HasFormat
     public function lacksFormat(): bool
     {
         return ! $this->hasFormat();
+    }
+
+    /**
+     * Evaluate the format attribute if present
+     */
+    protected function evaluateFormatAttribute(): ?string
+    {
+        $attributes = (new ReflectionClass($this))->getAttributes(Format::class);
+
+        if (!empty($attributes)) {
+            return $attributes[0]->newInstance()->getFormat();
+        }
+        return null;
     }
 }
