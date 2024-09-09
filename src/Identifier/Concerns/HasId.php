@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Conquest\Core\Identifier\Concerns;
 
 use Closure;
+use Conquest\Core\Attributes\Id;
 use Conquest\Core\Identifier\Identifier;
+use ReflectionClass;
 
 trait HasId
 {
@@ -28,7 +30,7 @@ trait HasId
 
     public function getId(): mixed
     {
-        $this->setId($this->evaluate($this->id));
+        $this->setId($this->evaluate($this->id) ?? $this->evaluateIdAttribute());
 
         return $this->id ??= $this->generateId();
     }
@@ -46,5 +48,19 @@ trait HasId
     public function generateId(): string
     {
         return $this->id = Identifier::generate();
+    }
+
+    /**
+     * Evaluate the ID attribute if present
+     */
+    protected function evaluateIdAttribute(): ?string
+    {
+        $attributes = (new ReflectionClass($this))->getAttributes(Id::class);
+
+        if (! empty($attributes)) {
+            return $attributes[0]->newInstance()->getId();
+        }
+
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set an id', function () {
@@ -49,4 +50,15 @@ it('can generate an id', function () {
 it('generates an id if none provided', function () {
     $component = new Component;
     expect($component->getId())->toBeString();
+});
+
+it('evaluates the id attribute', function () {
+    $component = new Attributable;
+    expect($component->getId())->toBe('unique');
+});
+
+it('evaluates the id attribute only as fallback', function () {
+    $component = new Attributable;
+    $component->setId(fn () => 'Setter');
+    expect($component->getId())->toBe('Setter');
 });
