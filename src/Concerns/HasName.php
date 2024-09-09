@@ -74,7 +74,6 @@ trait HasName
     {
         $reflection = new ReflectionClass($this);
         $attributes = $reflection->getAttributes(Name::class);
-
         dd($attributes);
         return '';
     }

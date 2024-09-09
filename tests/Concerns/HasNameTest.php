@@ -1,5 +1,6 @@
 <?php
 
+use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string name', function () {
@@ -43,4 +44,9 @@ it('checks for no name', function () {
 it('converts text to a name', function () {
     $name = (new Component)->toName('A name goes here');
     expect($name)->toBe('a_name_goes_here');
+});
+
+it('evaluates the name attribute', function () {
+    $component = new Attributable;
+    expect($component->getName())->toBe('Name');
 });
