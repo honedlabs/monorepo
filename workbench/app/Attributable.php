@@ -2,6 +2,7 @@
 
 namespace Workbench\App;
 
+<<<<<<< HEAD
 use Conquest\Core\Attributes\Description;
 use Conquest\Core\Attributes\Format;
 use Conquest\Core\Attributes\Key;
@@ -23,4 +24,6 @@ use Conquest\Core\Attributes\Value;
 #[Title('Title')]
 #[Type('type')]
 #[Value('value')]
+=======
+>>>>>>> 5f4133516790a6f01f2eff429cba268f0b6c0341
 class Attributable extends Component {}
