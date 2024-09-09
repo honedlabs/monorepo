@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Conquest\Core;
 
+use Conquest\Core\Concerns\Assignable;
 use Conquest\Core\Concerns\Configurable;
 use Conquest\Core\Concerns\EvaluatesClosures;
 use Conquest\Core\Contracts\Makeable;
@@ -20,6 +21,7 @@ abstract class Primitive implements Arrayable, JsonSerializable, Makeable
     use EvaluatesClosures;
     use Macroable;
     use Tappable;
+    use Assignable;
 
     public function __construct()
     {
