@@ -227,7 +227,13 @@ trait Routable
         if (is_null($method)) {
             return;
         }
-        if (! in_array($method = mb_strtoupper($method), [Request::METHOD_GET, Request::METHOD_POST, Request::METHOD_PUT, Request::METHOD_PATCH, Request::METHOD_DELETE])) {
+        if (! in_array($method = mb_strtoupper($method), [
+            Request::METHOD_GET,
+            Request::METHOD_POST,
+            Request::METHOD_PUT,
+            Request::METHOD_PATCH,
+            Request::METHOD_DELETE,
+        ])) {
             throw new InvalidArgumentException("The provided method [{$method}] is not supported.");
         }
 

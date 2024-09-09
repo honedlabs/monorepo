@@ -8,14 +8,14 @@ use Attribute;
 class Label
 {
     public function __construct(
-        protected readonly ?string $label = null,
+        protected readonly string $label,
     ) {
     }
 
     /**
      * Get the label.
      */
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return $this->label;
     }

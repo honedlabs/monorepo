@@ -8,14 +8,14 @@ use Attribute;
 class Property
 {
     public function __construct(
-        protected readonly ?string $property = null,
+        protected readonly string $property,
     ) {
     }
 
     /**
      * Get the property.
      */
-    public function getProperty(): ?string
+    public function getProperty(): string
     {
         return $this->property;
     }

@@ -2,21 +2,22 @@
 
 namespace Conquest\Table\Actions\Attributes;
 
+use Closure;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Placeholder
+class Transform
 {
     public function __construct(
-        protected readonly string $placeholder,
+        protected readonly Closure $transform,
     ) {
     }
 
     /**
-     * Get the placeholder.
+     * Get the transformer.
      */
-    public function getPlaceholder(): string
+    public function getTransform(): Closure
     {
-        return $this->placeholder;
+        return $this->transform;
     }
 }

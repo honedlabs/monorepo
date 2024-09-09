@@ -5,18 +5,18 @@ namespace Conquest\Table\Actions\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Placeholder
+class AsDefault
 {
     public function __construct(
-        protected readonly string $placeholder,
+        protected readonly bool $default = true,
     ) {
     }
 
     /**
-     * Get the placeholder.
+     * Get whether the class is default.
      */
-    public function getPlaceholder(): string
+    public function getDefault(): bool
     {
-        return $this->placeholder;
+        return $this->default;
     }
 }

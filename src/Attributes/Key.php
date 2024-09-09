@@ -5,18 +5,18 @@ namespace Conquest\Table\Actions\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Placeholder
+class Key
 {
     public function __construct(
-        protected readonly string $placeholder,
+        protected readonly string $key,
     ) {
     }
 
     /**
-     * Get the placeholder.
+     * Get whether the class is key.
      */
-    public function getPlaceholder(): string
+    public function getKey(): string
     {
-        return $this->placeholder;
+        return $this->key;
     }
 }

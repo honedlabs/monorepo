@@ -5,18 +5,18 @@ namespace Conquest\Table\Actions\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Placeholder
+class Active
 {
     public function __construct(
-        protected readonly string $placeholder,
+        protected readonly bool $active = true,
     ) {
     }
 
     /**
-     * Get the placeholder.
+     * Get whether the class is active.
      */
-    public function getPlaceholder(): string
+    public function getActive(): bool
     {
-        return $this->placeholder;
+        return $this->active;
     }
 }

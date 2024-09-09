@@ -8,14 +8,14 @@ use Attribute;
 class Type
 {
     public function __construct(
-        protected readonly ?string $type = null,
+        protected readonly string $type,
     ) {
     }
 
     /**
      * Get the type.
      */
-    public function getType(): ?string
+    public function getType(): string
     {
         return $this->type;
     }

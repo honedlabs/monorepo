@@ -13,7 +13,7 @@ class Visible
     }
 
     /**
-     * Get the visible.
+     * Get the visibility.
      */
     public function getVisible(): bool
     {

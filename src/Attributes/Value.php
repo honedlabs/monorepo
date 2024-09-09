@@ -8,14 +8,14 @@ use Attribute;
 class Value
 {
     public function __construct(
-        protected readonly ?string $value = null,
+        protected readonly mixed $value,
     ) {
     }
 
     /**
      * Get the value.
      */
-    public function getValue(): ?string
+    public function getValue(): mixed
     {
         return $this->value;
     }

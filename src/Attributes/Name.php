@@ -8,14 +8,14 @@ use Attribute;
 class Name
 {
     public function __construct(
-        protected readonly ?string $name = null,
+        protected readonly string $name,
     ) {
     }
 
     /**
      * Get the name.
      */
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }

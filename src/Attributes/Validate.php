@@ -2,21 +2,22 @@
 
 namespace Conquest\Table\Actions\Attributes;
 
+use Closure;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Placeholder
+class Validate
 {
     public function __construct(
-        protected readonly string $placeholder,
+        protected readonly Closure $validate,
     ) {
     }
 
     /**
-     * Get the placeholder.
+     * Get the validator.
      */
-    public function getPlaceholder(): string
+    public function getValidate(): Closure
     {
-        return $this->placeholder;
+        return $this->validate;
     }
 }
