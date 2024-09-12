@@ -18,6 +18,7 @@ use Conquest\Core\Concerns\IsAuthorized;
 use Conquest\Core\Concerns\IsDefault;
 use Conquest\Core\Concerns\IsHidden;
 use Conquest\Core\Concerns\IsKey;
+use Conquest\Core\Concerns\IsStrict;
 use Conquest\Core\Concerns\IsVisible;
 use Conquest\Core\Concerns\Routable;
 use Conquest\Core\Concerns\Transforms;
@@ -46,6 +47,7 @@ class Component extends Primitive
     use IsDefault;
     use IsHidden;
     use IsKey;
+    use IsStrict;
     use IsVisible;
     use Routable;
     use Transforms;
