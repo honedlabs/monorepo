@@ -1,6 +1,6 @@
 <?php
 
-namespace Conquest\Core\Concerns;
+namespace Honed\Core\Concerns;
 
 use Closure;
 use Illuminate\Contracts\Container\BindingResolutionException;

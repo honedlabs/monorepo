@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conquest\Core\Commands;
+namespace Honed\Core\Commands;
 
-use Conquest\Core\Concerns\ManipulatesFiles;
+use Honed\Core\Concerns\ManipulatesFiles;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use ReflectionClass;

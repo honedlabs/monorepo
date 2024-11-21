@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conquest\Core\Concerns;
+namespace Honed\Core\Concerns;
 
 use Illuminate\Http\Request;
 

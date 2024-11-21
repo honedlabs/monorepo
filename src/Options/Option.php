@@ -1,14 +1,14 @@
 <?php
 
-namespace Conquest\Core\Options;
+namespace Honed\Core\Options;
 
 use Closure;
-use Conquest\Core\Concerns\HasLabel;
-use Conquest\Core\Concerns\HasMeta;
-use Conquest\Core\Concerns\HasValue;
-use Conquest\Core\Concerns\IsActive;
-use Conquest\Core\Options\Contracts\Options;
-use Conquest\Core\Primitive;
+use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasMeta;
+use Honed\Core\Concerns\HasValue;
+use Honed\Core\Concerns\IsActive;
+use Honed\Core\Options\Contracts\Options;
+use Honed\Core\Primitive;
 
 /**
  * Class for a single option.

@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Commands;
 
-use Conquest\Core\Commands\GeneratorCommand;
+use Honed\Core\Commands\GeneratorCommand;
 
 class CoreGenerator extends GeneratorCommand
 {

@@ -1,6 +1,6 @@
 <?php
 
-use Conquest\Core\Identifier\Identifier;
+use Honed\Core\Identifier\Identifier;
 
 beforeEach(function () {
     Identifier::reset();

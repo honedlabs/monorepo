@@ -1,6 +1,6 @@
 <?php
 
-namespace Conquest\Core\Options\Contracts;
+namespace Honed\Core\Options\Contracts;
 
 /**
  * Describe and create options.

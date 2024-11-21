@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Conquest\Core\Identifier\Concerns;
+namespace Honed\Core\Identifier\Concerns;
 
 use Closure;
-use Conquest\Core\Attributes\Id;
-use Conquest\Core\Identifier\Identifier;
+use Honed\Core\Attributes\Id;
+use Honed\Core\Identifier\Identifier;
 use ReflectionClass;
 
 trait HasId

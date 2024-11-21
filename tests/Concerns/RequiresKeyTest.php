@@ -1,6 +1,6 @@
 <?php
 
-use Conquest\Core\Exceptions\MissingRequiredAttributeException;
+use Honed\Core\Exceptions\MissingRequiredAttributeException;
 use Workbench\App\ConfigurableComponent;
 use Workbench\App\KeyComponent;
 

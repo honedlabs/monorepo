@@ -1,6 +1,6 @@
 <?php
 
-namespace Conquest\Core\Attributes;
+namespace Honed\Core\Attributes;
 
 use Attribute;
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Conquest\Core\Concerns;
+namespace Honed\Core\Concerns;
 
 use Closure;
-use Conquest\Core\Attributes\Type;
+use Honed\Core\Attributes\Type;
 use ReflectionClass;
 
 /**

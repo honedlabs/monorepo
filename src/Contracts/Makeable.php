@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conquest\Core\Contracts;
+namespace Honed\Core\Contracts;
 
 /**
  * @method static make(mixed ...$parameters)

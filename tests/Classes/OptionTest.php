@@ -1,6 +1,6 @@
 <?php
 
-use Conquest\Core\Options\Option;
+use Honed\Core\Options\Option;
 use Workbench\App\Component;
 use Workbench\App\Enums\Lang;
 use Workbench\App\Models\Category;

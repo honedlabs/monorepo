@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conquest\Core\Concerns;
+namespace Honed\Core\Concerns;
 
 use Closure;
 use Illuminate\Support\Facades\Route;

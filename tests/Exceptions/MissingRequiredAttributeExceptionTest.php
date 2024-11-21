@@ -1,6 +1,6 @@
 <?php
 
-use Conquest\Core\Exceptions\MissingRequiredAttributeException;
+use Honed\Core\Exceptions\MissingRequiredAttributeException;
 
 it('can create a missing require attrbiute exception without class', function () {
     $exception = new MissingRequiredAttributeException('key');

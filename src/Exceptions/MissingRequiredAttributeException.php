@@ -1,6 +1,6 @@
 <?php
 
-namespace Conquest\Core\Exceptions;
+namespace Honed\Core\Exceptions;
 
 use Exception;
 

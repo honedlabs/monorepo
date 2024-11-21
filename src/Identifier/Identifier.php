@@ -1,6 +1,6 @@
 <?php
 
-namespace Conquest\Core\Identifier;
+namespace Honed\Core\Identifier;
 
 class Identifier
 {

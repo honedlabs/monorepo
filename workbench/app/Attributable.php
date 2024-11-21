@@ -2,17 +2,17 @@
 
 namespace Workbench\App;
 
-use Conquest\Core\Attributes\Description;
-use Conquest\Core\Attributes\Format;
-use Conquest\Core\Attributes\Id;
-use Conquest\Core\Attributes\Key;
-use Conquest\Core\Attributes\Label;
-use Conquest\Core\Attributes\Name;
-use Conquest\Core\Attributes\Placeholder;
-use Conquest\Core\Attributes\Property;
-use Conquest\Core\Attributes\Title;
-use Conquest\Core\Attributes\Type;
-use Conquest\Core\Attributes\Value;
+use Honed\Core\Attributes\Description;
+use Honed\Core\Attributes\Format;
+use Honed\Core\Attributes\Id;
+use Honed\Core\Attributes\Key;
+use Honed\Core\Attributes\Label;
+use Honed\Core\Attributes\Name;
+use Honed\Core\Attributes\Placeholder;
+use Honed\Core\Attributes\Property;
+use Honed\Core\Attributes\Title;
+use Honed\Core\Attributes\Type;
+use Honed\Core\Attributes\Value;
 
 #[Id('unique')]
 #[Description('Description')]

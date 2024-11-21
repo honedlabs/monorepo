@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Conquest\Core\Concerns;
+namespace Honed\Core\Concerns;
 
-use Conquest\Core\Exceptions\MissingRequiredAttributeException;
+use Honed\Core\Exceptions\MissingRequiredAttributeException;
 
 /**
  * Set a required key property.

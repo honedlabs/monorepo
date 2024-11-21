@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conquest\Core\Enums;
+namespace Honed\Core\Enums;
 
 enum Field: string
 {

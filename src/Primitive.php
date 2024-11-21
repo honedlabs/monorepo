@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Conquest\Core;
+namespace Honed\Core;
 
-use Conquest\Core\Concerns\Assignable;
-use Conquest\Core\Concerns\Configurable;
-use Conquest\Core\Concerns\EvaluatesClosures;
-use Conquest\Core\Contracts\Makeable;
+use Honed\Core\Concerns\Assignable;
+use Honed\Core\Concerns\Configurable;
+use Honed\Core\Concerns\EvaluatesClosures;
+use Honed\Core\Contracts\Makeable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;

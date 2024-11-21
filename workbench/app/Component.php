@@ -2,30 +2,30 @@
 
 namespace Workbench\App;
 
-use Conquest\Core\Concerns\HasDescription;
-use Conquest\Core\Concerns\HasFormat;
-use Conquest\Core\Concerns\HasLabel;
-use Conquest\Core\Concerns\HasMeta;
-use Conquest\Core\Concerns\HasName;
-use Conquest\Core\Concerns\HasPlaceholder;
-use Conquest\Core\Concerns\HasProperty;
-use Conquest\Core\Concerns\HasTitle;
-use Conquest\Core\Concerns\HasType;
-use Conquest\Core\Concerns\HasValue;
-use Conquest\Core\Concerns\IsActive;
-use Conquest\Core\Concerns\IsAnonymous;
-use Conquest\Core\Concerns\IsAuthorized;
-use Conquest\Core\Concerns\IsDefault;
-use Conquest\Core\Concerns\IsHidden;
-use Conquest\Core\Concerns\IsKey;
-use Conquest\Core\Concerns\IsStrict;
-use Conquest\Core\Concerns\IsVisible;
-use Conquest\Core\Concerns\Routable;
-use Conquest\Core\Concerns\Transforms;
-use Conquest\Core\Concerns\Validates;
-use Conquest\Core\Identifier\Concerns\HasId;
-use Conquest\Core\Options\Concerns\HasOptions;
-use Conquest\Core\Primitive;
+use Honed\Core\Concerns\HasDescription;
+use Honed\Core\Concerns\HasFormat;
+use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasMeta;
+use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasPlaceholder;
+use Honed\Core\Concerns\HasProperty;
+use Honed\Core\Concerns\HasTitle;
+use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\HasValue;
+use Honed\Core\Concerns\IsActive;
+use Honed\Core\Concerns\IsAnonymous;
+use Honed\Core\Concerns\IsAuthorized;
+use Honed\Core\Concerns\IsDefault;
+use Honed\Core\Concerns\IsHidden;
+use Honed\Core\Concerns\IsKey;
+use Honed\Core\Concerns\IsStrict;
+use Honed\Core\Concerns\IsVisible;
+use Honed\Core\Concerns\Routable;
+use Honed\Core\Concerns\Transforms;
+use Honed\Core\Concerns\Validates;
+use Honed\Core\Identifier\Concerns\HasId;
+use Honed\Core\Options\Concerns\HasOptions;
+use Honed\Core\Primitive;
 
 class Component extends Primitive
 {

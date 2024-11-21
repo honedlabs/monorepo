@@ -1,12 +1,12 @@
 {
-    "name": "conquest/core",
-    "description": "Shared utilities for developing the Conquest Laravel ecosystem.",
+    "name": "honed/core",
+    "description": "Shared utilities for developing the Honed Laravel ecosystem.",
     "keywords": [
-        "conquest",
+        "honed",
         "primitive",
         "traits"
     ],
-    "homepage": "https://github.com/conquestphp/core",
+    "homepage": "https://github.com/honedlabs/core",
     "license": "MIT",
     "authors": [
         {
@@ -34,12 +34,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Conquest\\Core\\": "src/"
+            "Honed\\Core\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Conquest\\Core\\Tests\\": "tests/",
+            "Honed\\Core\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/",
             "Workbench\\Database\\Factories\\": "workbench/database/factories/",
             "Workbench\\Database\\Seeders\\": "workbench/database/seeders/",

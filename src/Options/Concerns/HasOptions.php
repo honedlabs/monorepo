@@ -1,9 +1,9 @@
 <?php
 
-namespace Conquest\Core\Options\Concerns;
+namespace Honed\Core\Options\Concerns;
 
 use BackedEnum;
-use Conquest\Core\Options\Option;
+use Honed\Core\Options\Option;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
