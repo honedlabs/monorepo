@@ -190,3 +190,9 @@ it('can chain options from collection using properties', function () {
             ->and($option->value->getLabel())->toBe((string) $model->name);
     });
 });
+
+it('does not allow for nulls to be set', function () {
+    $component = new Component;
+    $component->setOptions(null);
+    expect($component->getOptions())->toBeEmpty();
+});
