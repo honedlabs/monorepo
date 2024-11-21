@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-
-trait Transforms
+trait Transformable
 {
-    protected ?Closure $transform = null;
+    /**
+     * @var (\Closure(mixed):mixed)|null
+     */
+    protected $transform = null;
 
     /**
      * Set the transformation function for a given value, chainable.
+     * 
+     * @template T
+     * @param \Closure(T):mixed $transform
+     * @return $this
      */
-    public function transform(Closure $transform): static
+    public function transform(\Closure $transform): static
     {
         $this->setTransform($transform);
 
@@ -22,16 +27,23 @@ trait Transforms
 
     /**
      * Alias for transform
+     * 
+     * @template T
+     * @param \Closure(T):mixed $transform
+     * @return $this
      */
-    public function transformUsing(Closure $transform): static
+    public function transformUsing(\Closure $transform): static
     {
         return $this->transform($transform);
     }
 
     /**
      * Set the transformation function for a given value quietly.
+     * 
+     * @template T
+     * @param \Closure(T):mixed|null $transform
      */
-    public function setTransform(?Closure $transform): void
+    public function setTransform(?\Closure $transform): void
     {
         if (is_null($transform)) {
             return;
@@ -40,37 +52,46 @@ trait Transforms
     }
 
     /**
-     * Determine if the class has a transform.
+     * Get the transformation function.
+     * 
+     * @template T
+     * @return (\Closure(T):mixed)|null
      */
-    public function canTransform(): bool
-    {
-        return ! is_null($this->transform);
-    }
-
-    /**
-     * Determine if the class does not have a transform.
-     */
-    public function cannotTransform(): bool
-    {
-        return ! $this->canTransform();
-    }
-
-    public function getTransform(): ?Closure
+    public function getTransform(): ?\Closure
     {
         return $this->transform;
     }
 
-    public function applyTransform(mixed $value): mixed
+    /**
+     * Determine if the class cannot transform a value.
+     */
+    public function cannotTransform(): bool
+    {
+        return \is_null($this->transform);
+    }
+
+    /**
+     * Determine if the class can transform a value.
+     */
+    public function canTransform(): bool
+    {
+        return ! $this->cannotTransform();
+    }
+
+
+    /**
+     * Apply the transformation function to a value.
+     * 
+     * @template T
+     * @param T $value
+     * @return mixed|T
+     */
+    public function applyTransform(mixed $value)
     {
         if ($this->cannotTransform()) {
             return $value;
         }
 
-        return $this->performTransform($value);
-    }
-
-    protected function performTransform(mixed $value): mixed
-    {
         return ($this->getTransform())($value);
     }
 }

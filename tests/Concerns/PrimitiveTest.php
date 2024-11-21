@@ -2,11 +2,6 @@
 
 use Workbench\App\ConfigurableComponent;
 
-// Configurable
-
-// ToArray and JsonSerializable
-
-// EvaluatesClosures
 it('configures primitive', function () {
     $component = new ConfigurableComponent;
     $component->configure();

@@ -1,6 +1,5 @@
 <?php
 
-use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set an id', function () {
@@ -18,7 +17,7 @@ it('can set a closure id', function () {
 it('prevents null values', function () {
     $component = new Component;
     $component->setId(null);
-    expect($component->lacksId())->toBeTrue();
+    expect($component->missingId())->toBeTrue();
 });
 
 it('can chain id', function () {
@@ -36,9 +35,9 @@ it('checks for id', function () {
 
 it('checks for no id', function () {
     $component = new Component;
-    expect($component->lacksId())->toBeTrue();
+    expect($component->missingId())->toBeTrue();
     $component->setId('Id');
-    expect($component->lacksId())->toBeFalse();
+    expect($component->missingId())->toBeFalse();
 });
 
 it('can generate an id', function () {
@@ -50,15 +49,4 @@ it('can generate an id', function () {
 it('generates an id if none provided', function () {
     $component = new Component;
     expect($component->getId())->toBeString();
-});
-
-it('evaluates the id attribute', function () {
-    $component = new Attributable;
-    expect($component->getId())->toBe('unique');
-});
-
-it('evaluates the id attribute only as fallback', function () {
-    $component = new Attributable;
-    $component->setId(fn () => 'Setter');
-    expect($component->getId())->toBe('Setter');
 });

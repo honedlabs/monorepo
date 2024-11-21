@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App;
 
+use Honed\Core\Concerns\Authorizable;
 use Honed\Core\Concerns\HasDescription;
 use Honed\Core\Concerns\HasFormat;
 use Honed\Core\Concerns\HasLabel;
@@ -14,21 +17,21 @@ use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\IsActive;
 use Honed\Core\Concerns\IsAnonymous;
-use Honed\Core\Concerns\IsAuthorized;
 use Honed\Core\Concerns\IsDefault;
 use Honed\Core\Concerns\IsHidden;
 use Honed\Core\Concerns\IsKey;
 use Honed\Core\Concerns\IsStrict;
 use Honed\Core\Concerns\IsVisible;
 use Honed\Core\Concerns\Routable;
-use Honed\Core\Concerns\Transforms;
-use Honed\Core\Concerns\Validates;
+use Honed\Core\Concerns\Transformable;
+use Honed\Core\Concerns\Validatable;
 use Honed\Core\Identifier\Concerns\HasId;
 use Honed\Core\Options\Concerns\HasOptions;
 use Honed\Core\Primitive;
 
 class Component extends Primitive
 {
+    use Authorizable;
     use HasDescription;
     use HasFormat;
     use HasId;
@@ -43,15 +46,14 @@ class Component extends Primitive
     use HasValue;
     use IsActive;
     use IsAnonymous;
-    use IsAuthorized;
     use IsDefault;
     use IsHidden;
     use IsKey;
     use IsStrict;
     use IsVisible;
-    use Routable;
-    use Transforms;
-    use Validates;
+    // use Routable;
+    use Transformable;
+    use Validatable;
 
     protected $anonymous = Component::class;
 

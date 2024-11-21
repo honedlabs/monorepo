@@ -1,6 +1,5 @@
 <?php
 
-use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string label', function () {
@@ -18,7 +17,7 @@ it('can set a closure label', function () {
 it('prevents null values', function () {
     $component = new Component;
     $component->setLabel(null);
-    expect($component->lacksLabel())->toBeTrue();
+    expect($component->missingLabel())->toBeTrue();
 });
 
 it('can chain label', function () {
@@ -36,23 +35,12 @@ it('checks for label', function () {
 
 it('checks for no label', function () {
     $component = new Component;
-    expect($component->lacksLabel())->toBeTrue();
+    expect($component->missingLabel())->toBeTrue();
     $component->setLabel('Label');
-    expect($component->lacksLabel())->toBeFalse();
+    expect($component->missingLabel())->toBeFalse();
 });
 
 it('converts text to a label', function () {
-    $label = (new Component)->toLabel('new-Label');
+    $label = (new Component)->makeLabel('new-Label');
     expect($label)->toBe('New label');
-});
-
-it('evaluates the label attribute', function () {
-    $component = new Attributable;
-    expect($component->getLabel())->toBe('Label');
-});
-
-it('evaluates the label attribute only as fallback', function () {
-    $component = new Attributable;
-    $component->setLabel(fn () => 'Setter');
-    expect($component->getLabel())->toBe('Setter');
 });

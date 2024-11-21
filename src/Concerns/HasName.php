@@ -53,7 +53,7 @@ trait HasName
      */
     public function missingName(): bool
     {
-        return ! $this->hasName();
+        return \is_null($this->name);
     }
 
     /**

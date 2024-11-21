@@ -9,12 +9,18 @@ namespace Honed\Core\Concerns;
  */
 trait Authorizable
 {
-    protected bool|Closure $authorized = true;
+    /**
+     * @var bool|(\Closure():bool)
+     */
+    protected bool|\Closure $authorized = true;
 
     /**
      * Set the condition for authorization, chainable.
+     * 
+     * @param bool|\Closure():bool $condition
+     * @return $this
      */
-    public function authorize(bool|Closure $condition = true): static
+    public function authorize(bool|\Closure $condition = true): static
     {
         $this->setAuthorize($condition);
 
@@ -22,9 +28,22 @@ trait Authorizable
     }
 
     /**
-     * Set the condition for authorization quietly.
+     * Alias for authorize
+     * 
+     * @param bool|\Closure():bool $condition
+     * @return $this
      */
-    public function setAuthorize(bool|Closure|null $condition): void
+    public function authorise(bool|\Closure $condition = true): static
+    {
+        return $this->authorize($condition);
+    }
+
+    /**
+     * Set the condition for authorization quietly.
+     * 
+     * @param bool|\Closure():bool|null $condition
+     */
+    public function setAuthorize(bool|\Closure|null $condition): void
     {
         if (is_null($condition)) {
             return;
@@ -33,7 +52,17 @@ trait Authorizable
     }
 
     /**
-     * Assess whether the class is authorized.
+     * Alias for setAuthorize
+     * 
+     * @param bool|\Closure():bool|null $condition
+     */
+    public function setAuthorise(bool|\Closure|null $condition): void
+    {
+        $this->setAuthorize($condition);
+    }
+
+    /**
+     * Determine if the class is authorized.
      */
     public function isAuthorized(): bool
     {
@@ -41,33 +70,15 @@ trait Authorizable
     }
 
     /**
-     * Assess whether the class is authorized.
+     * Determine if the class is not authorized.
      */
     public function isNotAuthorized(): bool
     {
         return ! $this->isAuthorized();
     }
 
-    // RoW spelling alias
-
     /**
-     * Alias for authorize
-     */
-    public function authorise(bool|Closure $condition = true): static
-    {
-        return $this->authorize($condition);
-    }
-
-    /**
-     * Alias for authorize
-     */
-    public function setAuthorise(bool|Closure|null $condition = true): void
-    {
-        $this->setAuthorize($condition);
-    }
-
-    /**
-     * Alias for authorized
+     * Alias for isAuthorized
      */
     public function isAuthorised(): bool
     {
@@ -80,5 +91,5 @@ trait Authorizable
     public function isNotAuthorised(): bool
     {
         return ! $this->isAuthorised();
-    }
+    }    
 }

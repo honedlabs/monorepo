@@ -21,7 +21,7 @@ it('can set closure meta', function () {
 it('prevents null values', function () {
     $component = new Component;
     $component->setMeta(null);
-    expect($component->lacksMeta())->toBeTrue();
+    expect($component->missingMeta())->toBeTrue();
 });
 
 it('can chain meta', function () {
@@ -43,9 +43,9 @@ it('checks for meta', function () {
 
 it('checks for no meta', function () {
     $component = new Component;
-    expect($component->lacksMeta())->toBeTrue();
+    expect($component->missingMeta())->toBeTrue();
     $component->setMeta([]);
-    expect($component->lacksMeta())->toBeTrue();
+    expect($component->missingMeta())->toBeTrue();
     $component->setMeta(['key' => 'value']);
-    expect($component->lacksMeta())->toBeFalse();
+    expect($component->missingMeta())->toBeFalse();
 });

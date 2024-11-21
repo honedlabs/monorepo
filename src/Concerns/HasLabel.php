@@ -67,10 +67,10 @@ trait HasLabel
     /**
      * Convert a string to the label format.
      * 
-     * @param string|\Stringable|(\Closure():string|\Stringable) $name
+     * @param mixed $name
      */
-    public function makeLabel(string|\Closure|\Stringable $name): string
+    public function makeLabel(mixed $name): string
     {
-        return str($this->evaluate($name))->headline()->lower()->ucfirst()->toString();
+        return str((string) $this->evaluate($name))->headline()->lower()->ucfirst()->toString();
     }
 }

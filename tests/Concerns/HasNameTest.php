@@ -1,6 +1,5 @@
 <?php
 
-use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string name', function () {
@@ -18,7 +17,7 @@ it('can set a closure name', function () {
 it('prevents null values', function () {
     $component = new Component;
     $component->setName(null);
-    expect($component->lacksName())->toBeTrue();
+    expect($component->missingName())->toBeTrue();
 });
 
 it('can chain name', function () {
@@ -36,23 +35,12 @@ it('checks for name', function () {
 
 it('checks for no name', function () {
     $component = new Component;
-    expect($component->lacksName())->toBeTrue();
+    expect($component->missingName())->toBeTrue();
     $component->setName('Name');
-    expect($component->lacksName())->toBeFalse();
+    expect($component->missingName())->toBeFalse();
 });
 
 it('converts text to a name', function () {
-    $name = (new Component)->toName('A name goes here');
+    $name = (new Component)->makeName('A name goes here');
     expect($name)->toBe('a_name_goes_here');
-});
-
-it('evaluates the name attribute', function () {
-    $component = new Attributable;
-    expect($component->getName())->toBe('Name');
-});
-
-it('evaluates the name attribute only as fallback', function () {
-    $component = new Attributable;
-    $component->setName(fn () => 'Setter');
-    expect($component->getName())->toBe('Setter');
 });

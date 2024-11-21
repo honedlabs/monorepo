@@ -1,6 +1,5 @@
 <?php
 
-use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string title', function () {
@@ -18,7 +17,7 @@ it('can set a closure title', function () {
 it('prevents null values', function () {
     $component = new Component;
     $component->setTitle(null);
-    expect($component->lacksTitle())->toBeTrue();
+    expect($component->missingTitle())->toBeTrue();
 });
 
 it('can chain title', function () {
@@ -36,18 +35,7 @@ it('checks for title', function () {
 
 it('checks for no title', function () {
     $component = new Component;
-    expect($component->lacksTitle())->toBeTrue();
+    expect($component->missingTitle())->toBeTrue();
     $component->setTitle('Title');
-    expect($component->lacksTitle())->toBeFalse();
-});
-
-it('evaluates the title attribute', function () {
-    $component = new Attributable;
-    expect($component->getTitle())->toBe('Title');
-});
-
-it('evaluates the title attribute only as fallback', function () {
-    $component = new Attributable;
-    $component->setTitle(fn () => 'Setter');
-    expect($component->getTitle())->toBe('Setter');
+    expect($component->missingTitle())->toBeFalse();
 });

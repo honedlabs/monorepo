@@ -1,6 +1,5 @@
 <?php
 
-use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string type', function () {
@@ -18,7 +17,7 @@ it('can set a closure type', function () {
 it('prevents null values', function () {
     $component = new Component;
     $component->setType(null);
-    expect($component->lacksType())->toBeTrue();
+    expect($component->missingType())->toBeTrue();
 });
 
 it('can chain type', function () {
@@ -36,18 +35,7 @@ it('checks for type', function () {
 
 it('checks for no type', function () {
     $component = new Component;
-    expect($component->lacksType())->toBeTrue();
+    expect($component->missingType())->toBeTrue();
     $component->setType('Type');
-    expect($component->lacksType())->toBeFalse();
-});
-
-it('evaluates the type attribute', function () {
-    $component = new Attributable;
-    expect($component->getType())->toBe('type');
-});
-
-it('evaluates the type attribute only as fallback', function () {
-    $component = new Attributable;
-    $component->setType(fn () => 'Setter');
-    expect($component->getType())->toBe('Setter');
+    expect($component->missingType())->toBeFalse();
 });

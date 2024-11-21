@@ -1,6 +1,5 @@
 <?php
 
-use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string property', function () {
@@ -18,7 +17,7 @@ it('can set a closure property', function () {
 it('prevents null values', function () {
     $component = new Component;
     $component->setProperty(null);
-    expect($component->lacksProperty())->toBeTrue();
+    expect($component->missingProperty())->toBeTrue();
 });
 
 it('can set an array of properties', function () {
@@ -42,24 +41,14 @@ it('checks for property', function () {
 
 it('checks for no property', function () {
     $component = new Component;
-    expect($component->lacksProperty())->toBeTrue();
+    expect($component->missingProperty())->toBeTrue();
     $component->setProperty('Property');
-    expect($component->lacksProperty())->toBeFalse();
+    expect($component->missingProperty())->toBeFalse();
 });
 
 it('checks if property is array', function () {
     $component = new Component;
+    expect($component->hasMultipleProperties())->toBeFalse();
     $component->setProperty(['property', 'slug']);
-    expect($component->isPropertyArray())->toBeTrue();
-});
-
-it('evaluates the property attribute', function () {
-    $component = new Attributable;
-    expect($component->getProperty())->toBe('property');
-});
-
-it('evaluates the property attribute only as fallback', function () {
-    $component = new Attributable;
-    $component->setProperty(fn () => 'Setter');
-    expect($component->getProperty())->toBe('Setter');
+    expect($component->hasMultipleProperties())->toBeTrue();
 });

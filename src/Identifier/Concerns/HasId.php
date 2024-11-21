@@ -4,23 +4,34 @@ declare(strict_types=1);
 
 namespace Honed\Core\Identifier\Concerns;
 
-use Closure;
-use Honed\Core\Attributes\Id;
 use Honed\Core\Identifier\Identifier;
-use ReflectionClass;
 
 trait HasId
 {
-    protected mixed $id = null;
+    /**
+     * @var int|string|(\Closure():int|string)|null
+     */
+    protected $id = null;
 
-    public function id(int|string|Closure $id): static
+    /**
+     * Set the ID, chainable.
+     * 
+     * @param int|string|(\Closure():int|string) $id
+     * @return $this
+     */
+    public function id(mixed $id): static
     {
         $this->setId($id);
 
         return $this;
     }
 
-    public function setId(int|string|Closure|null $id): void
+    /**
+     * Set the ID quietly.
+     * 
+     * @param int|string|(\Closure():int|string)|null $id
+     */
+    public function setId(mixed $id): void
     {
         if (is_null($id)) {
             return;
@@ -28,39 +39,41 @@ trait HasId
         $this->id = $id;
     }
 
+    /**
+     * Get the ID.
+     * 
+     * @return int|string|null
+     */
     public function getId(): mixed
     {
-        $this->setId($this->evaluate($this->id) ?? $this->evaluateIdAttribute());
+        $this->setId($this->evaluate($this->id));
 
         return $this->id ??= $this->generateId();
     }
 
-    public function hasId(): bool
+    /**
+     * Determine if the class does not have an ID.
+     */
+    public function missingId(): bool
     {
-        return ! is_null($this->id);
-    }
-
-    public function lacksId(): bool
-    {
-        return ! $this->hasId();
-    }
-
-    public function generateId(): string
-    {
-        return $this->id = Identifier::generate();
+        return \is_null($this->id);
     }
 
     /**
-     * Evaluate the ID attribute if present
+     * Determine if the class has an ID.
      */
-    protected function evaluateIdAttribute(): ?string
+    public function hasId(): bool
     {
-        $attributes = (new ReflectionClass($this))->getAttributes(Id::class);
+        return ! $this->missingId();
+    }
 
-        if (! empty($attributes)) {
-            return $attributes[0]->newInstance()->getId();
-        }
-
-        return null;
+    /**
+     * Generate a new ID.
+     * 
+     * @return string
+     */
+    public function generateId(): string
+    {
+        return $this->id = Identifier::generate();
     }
 }

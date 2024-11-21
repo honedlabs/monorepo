@@ -1,6 +1,5 @@
 <?php
 
-use Workbench\App\Attributable;
 use Workbench\App\Component;
 
 it('can set a string placeholder', function () {
@@ -18,7 +17,7 @@ it('can set a closure placeholder', function () {
 it('prevents null values', function () {
     $component = new Component;
     $component->setPlaceholder(null);
-    expect($component->lacksPlaceholder())->toBeTrue();
+    expect($component->missingPlaceholder())->toBeTrue();
 });
 
 it('can chain placeholder', function () {
@@ -36,18 +35,7 @@ it('checks for placeholder', function () {
 
 it('checks for no placeholder', function () {
     $component = new Component;
-    expect($component->lacksPlaceholder())->toBeTrue();
+    expect($component->missingPlaceholder())->toBeTrue();
     $component->setPlaceholder('Placeholder');
-    expect($component->lacksPlaceholder())->toBeFalse();
-});
-
-it('evaluates the placeholder attribute', function () {
-    $component = new Attributable;
-    expect($component->getPlaceholder())->toBe('Placeholder');
-});
-
-it('evaluates the placeholder attribute only as fallback', function () {
-    $component = new Attributable;
-    $component->setPlaceholder(fn () => 'Setter');
-    expect($component->getPlaceholder())->toBe('Setter');
+    expect($component->missingPlaceholder())->toBeFalse();
 });

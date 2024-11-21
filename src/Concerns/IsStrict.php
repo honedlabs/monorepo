@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+/**
+ * @mixin \Honed\Core\Concerns\Evaluable
+ */
 trait IsStrict
 {
     /**

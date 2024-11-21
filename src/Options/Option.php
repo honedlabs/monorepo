@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Core\Options;
 
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\IsActive;
-use Honed\Core\Options\Contracts\Options;
 use Honed\Core\Primitive;
 
-class Option extends Primitive implements Options
+class Option extends Primitive
 {
     use HasLabel;
     use HasMeta;

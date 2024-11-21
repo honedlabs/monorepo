@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Core\Options\Concerns;
 
-use BackedEnum;
 use Honed\Core\Options\Option;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
@@ -14,12 +14,16 @@ use Illuminate\Support\Collection;
  */
 trait HasOptions
 {
-    protected array $options = [];
+    /**
+     * @var array<int, Option>
+     */
+    protected $options = [];
 
     /**
      * Set the options, chainable
      *
-     * @param  array<Option>  $options
+     * @param  array<int, Option>  $options
+     * @return $this
      */
     public function options(array $options): static
     {
@@ -29,11 +33,15 @@ trait HasOptions
     }
 
     /**
-     * Set the options from an enum, chainable. It will default to using the backing value and enum name.
+     * Set the options from an enum, chainable. 
+     * Defaults to using the backing value and enum name.
      *
      * @param  BackedEnum-string  $enum
+     * @param string|null $value
+     * @param string|null $label
+     * @return $this
      */
-    public function optionsFromEnum(string $enum, ?string $value = null, ?string $label = null): static
+    public function makeOptionsFromEnum(string $enum, ?string $value = null, ?string $label = null): static
     {
         foreach ($enum::cases() as $case) {
             $optionValue = ($value && method_exists($case, $value)) ? $case->{$value}() : $case->value;
@@ -45,11 +53,15 @@ trait HasOptions
     }
 
     /**
-     * Set the options from a model, chainable. It will default to using the Model key.
+     * Set the options from a model, chainable. 
+     * Defaults to using the Model key.
      *
-     * @param  class-string  $model
+     * @param class-string $model
+     * @param string|null $value
+     * @param string|null $label
+     * @return $this
      */
-    public function optionsFromModel(string $model, ?string $value = null, ?string $label = null): static
+    public function makeOptionsFromModel(string $model, ?string $value = null, ?string $label = null): static
     {
         foreach ($model::all() as $modelInstance) {
             $optionValue = $this->getOptionField($modelInstance, $value) ?? $modelInstance->getKey();
@@ -61,9 +73,15 @@ trait HasOptions
     }
 
     /**
-     * Set the options from a collection, chainable. It will default to using the collection item.
+     * Set the options from a collection, chainable. 
+     * Defaults to using the collection item for the value.
+     * 
+     * @param Collection $collection
+     * @param string|null $value
+     * @param string|null $label
+     * @return $this
      */
-    public function optionsFromCollection(Collection $collection, ?string $value = null, ?string $label = null): static
+    public function makeOptionsFromCollection(Collection $collection, ?string $value = null, ?string $label = null): static
     {
         $collection->each(function ($item) use ($value, $label) {
             $optionValue = $this->getOptionField($item, $value) ?? $item;
@@ -72,43 +90,6 @@ trait HasOptions
         });
 
         return $this;
-    }
-
-    private function getOptionField($item, ?string $key): mixed
-    {
-        if ($key === null) {
-            return null;
-        }
-
-        if (is_array($item)) {
-            return $item[$key] ?? null;
-        }
-
-        if (is_object($item)) {
-            if (method_exists($item, $key)) {
-                return $item->{$key}();
-            }
-
-            if (property_exists($item, $key)) {
-                return $item->{$key};
-            }
-
-            if (method_exists($item, 'getAttribute')) {
-                return $item->getAttribute($key);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Parse a value and label as an Option class.
-     *
-     * @param  string  $value
-     */
-    public function parseOption(mixed $value, ?string $label = null): Option
-    {
-        return Option::make($value, $label);
     }
 
     /**
@@ -153,18 +134,62 @@ trait HasOptions
     }
 
     /**
-     * Check if the class has options
+     * Determine if the class is missing options.
      */
-    public function hasOptions(): bool
+    public function missingOptions(): bool
     {
-        return ! empty($this->options);
+        return empty($this->options);
     }
 
     /**
-     * Check if the class doesn't have options
+     * Determine if the class has options.
      */
-    public function lacksOptions(): bool
+    public function hasOptions(): bool
     {
-        return ! $this->hasOptions();
+        return ! $this->missingOptions();
+    }
+
+    /**
+     * Get an option field from an item.
+     * 
+     * @param array|object $item
+     * @param string|null $key
+     */
+    protected function getOptionField(mixed $item, ?string $key): mixed
+    {
+        if ($key === null) {
+            return null;
+        }
+
+        if (is_array($item)) {
+            return $item[$key] ?? null;
+        }
+
+        if (is_object($item)) {
+            if (method_exists($item, $key)) {
+                return $item->{$key}();
+            }
+
+            if (property_exists($item, $key)) {
+                return $item->{$key};
+            }
+
+            if (method_exists($item, 'getAttribute')) {
+                return $item->getAttribute($key);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Parse a value and label as an Option class.
+     *
+     * @param int|string|array|(\Closure():int|string|array)|null $value
+     * @param string|null $label
+     */
+    protected function parseOption(mixed $value, ?string $label = null): Option
+    {
+        return Option::make($value, $label);
     }
 }

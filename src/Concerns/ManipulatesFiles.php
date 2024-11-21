@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Illuminate\Filesystem\Filesystem;
-
 use function Laravel\Prompts\confirm;
 
 trait ManipulatesFiles

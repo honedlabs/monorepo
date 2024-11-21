@@ -4,7 +4,7 @@ use Honed\Core\Identifier\Identifier;
 
 beforeEach(function () {
     Identifier::reset();
-    Identifier::setGlobalPrefix('id_');
+    Identifier::setDefaultPrefix('id_');
 });
 
 it('can generate an incrementing', function () {
@@ -18,7 +18,7 @@ it('has a prefix', function () {
 });
 
 it('can change the prefix globally', function () {
-    Identifier::setGlobalPrefix($p = 'prefix_');
+    Identifier::setDefaultPrefix($p = 'prefix_');
     expect(Identifier::getPrefix())->toBe($p);
 });
 
