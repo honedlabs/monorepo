@@ -13,9 +13,10 @@ trait Transformable
 
     /**
      * Set the transformation function for a given value, chainable.
-     * 
+     *
      * @template T
-     * @param \Closure(T):mixed $transform
+     *
+     * @param  \Closure(T):mixed  $transform
      * @return $this
      */
     public function transform(\Closure $transform): static
@@ -27,9 +28,10 @@ trait Transformable
 
     /**
      * Alias for transform
-     * 
+     *
      * @template T
-     * @param \Closure(T):mixed $transform
+     *
+     * @param  \Closure(T):mixed  $transform
      * @return $this
      */
     public function transformUsing(\Closure $transform): static
@@ -39,9 +41,10 @@ trait Transformable
 
     /**
      * Set the transformation function for a given value quietly.
-     * 
+     *
      * @template T
-     * @param \Closure(T):mixed|null $transform
+     *
+     * @param  \Closure(T):mixed|null  $transform
      */
     public function setTransform(?\Closure $transform): void
     {
@@ -53,8 +56,9 @@ trait Transformable
 
     /**
      * Get the transformation function.
-     * 
+     *
      * @template T
+     *
      * @return (\Closure(T):mixed)|null
      */
     public function getTransform(): ?\Closure
@@ -78,12 +82,12 @@ trait Transformable
         return ! $this->cannotTransform();
     }
 
-
     /**
      * Apply the transformation function to a value.
-     * 
+     *
      * @template T
-     * @param T $value
+     *
+     * @param  T  $value
      * @return mixed|T
      */
     public function applyTransform(mixed $value)

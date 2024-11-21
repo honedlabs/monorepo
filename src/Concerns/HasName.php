@@ -16,8 +16,8 @@ trait HasName
 
     /**
      * Set the name, chainable.
-     * 
-     * @param string|\Closure():string $name
+     *
+     * @param  string|\Closure():string  $name
      * @return $this
      */
     public function name(string|\Closure $name): static
@@ -29,8 +29,8 @@ trait HasName
 
     /**
      * Set the name quietly.
-     * 
-     * @param string|\Closure():string|null $name
+     *
+     * @param  string|\Closure():string|null  $name
      */
     public function setName(string|\Closure|null $name): void
     {
@@ -64,11 +64,10 @@ trait HasName
         return ! $this->missingName();
     }
 
-
     /**
      * Convert a string to the name format
-     * 
-     * @param string|\Stringable|(\Closure():string|\Stringable) $label
+     *
+     * @param  string|\Stringable|(\Closure():string|\Stringable)  $label
      */
     public function makeName(string|\Stringable|\Closure $label): string
     {

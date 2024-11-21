@@ -16,8 +16,8 @@ trait IsVisible
 
     /**
      * Set as visible, chainable.
-     * 
-     * @param bool|\Closure():bool $visible
+     *
+     * @param  bool|\Closure():bool  $visible
      * @return $this
      */
     public function visible(bool|\Closure $visible = true): static
@@ -29,8 +29,8 @@ trait IsVisible
 
     /**
      * Set as invisible, chainable.
-     * 
-     * @param bool|\Closure():bool $visible
+     *
+     * @param  bool|\Closure():bool  $visible
      * @return $this
      */
     public function invisible(bool|\Closure $visible = false): static
@@ -42,8 +42,8 @@ trait IsVisible
 
     /**
      * Set the visibility property quietly.
-     * 
-     * @param bool|(\Closure():bool)|null $visible
+     *
+     * @param  bool|(\Closure():bool)|null  $visible
      */
     public function setVisible(bool|\Closure|null $visible): void
     {

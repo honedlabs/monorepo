@@ -9,14 +9,14 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 
-abstract class Primitive implements Arrayable, \JsonSerializable, Contracts\Makeable
+abstract class Primitive implements \JsonSerializable, Arrayable, Contracts\Makeable
 {
-    use Conditionable;
-    use Macroable;
-    use Tappable;
     use Concerns\Assignable;
     use Concerns\Configurable;
     use Concerns\Evaluable;
+    use Conditionable;
+    use Macroable;
+    use Tappable;
 
     public function __construct()
     {

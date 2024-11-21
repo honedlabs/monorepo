@@ -15,8 +15,8 @@ trait HasId
 
     /**
      * Set the ID, chainable.
-     * 
-     * @param int|string|(\Closure():int|string) $id
+     *
+     * @param  int|string|(\Closure():int|string)  $id
      * @return $this
      */
     public function id(mixed $id): static
@@ -28,8 +28,8 @@ trait HasId
 
     /**
      * Set the ID quietly.
-     * 
-     * @param int|string|(\Closure():int|string)|null $id
+     *
+     * @param  int|string|(\Closure():int|string)|null  $id
      */
     public function setId(mixed $id): void
     {
@@ -41,7 +41,7 @@ trait HasId
 
     /**
      * Get the ID.
-     * 
+     *
      * @return int|string|null
      */
     public function getId(): mixed
@@ -69,8 +69,6 @@ trait HasId
 
     /**
      * Generate a new ID.
-     * 
-     * @return string
      */
     public function generateId(): string
     {

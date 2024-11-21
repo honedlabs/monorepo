@@ -16,8 +16,8 @@ trait HasType
 
     /**
      * Set the type property, chainable
-     * 
-     * @param string|(\Closure():string) $type
+     *
+     * @param  string|(\Closure():string)  $type
      * @return $this
      */
     public function type(string|\Closure $type): static
@@ -29,8 +29,8 @@ trait HasType
 
     /**
      * Set the type property quietly.
-     * 
-     * @param string|(\Closure():string)|null $type
+     *
+     * @param  string|(\Closure():string)|null  $type
      */
     public function setType(string|\Closure|null $type): void
     {

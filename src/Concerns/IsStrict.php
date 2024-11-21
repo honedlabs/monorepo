@@ -17,7 +17,7 @@ trait IsStrict
     /**
      * Set whether the class is strict matching, chainable.
      *
-     * @param bool|\Closure():bool $strict
+     * @param  bool|\Closure():bool  $strict
      * @return $this
      */
     public function strict(bool|\Closure $strict = true): static
@@ -29,8 +29,8 @@ trait IsStrict
 
     /**
      * Set whether the class is strict matching quietly.
-     * 
-     * @param bool|(\Closure():bool)|null $strict
+     *
+     * @param  bool|(\Closure():bool)|null  $strict
      */
     public function setStrict(bool|\Closure|null $strict): void
     {

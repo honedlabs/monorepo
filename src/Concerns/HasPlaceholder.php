@@ -13,8 +13,8 @@ trait HasPlaceholder
 
     /**
      * Set the placeholder, chainable.
-     * 
-     * @param string|\Closure():string $placeholder
+     *
+     * @param  string|\Closure():string  $placeholder
      * @return $this
      */
     public function placeholder(string|\Closure $placeholder): static
@@ -26,8 +26,8 @@ trait HasPlaceholder
 
     /**
      * Set the placeholder quietly.
-     * 
-     * @param string|(\Closure():string)|null $placeholder
+     *
+     * @param  string|(\Closure():string)|null  $placeholder
      */
     public function setPlaceholder(string|\Closure|null $placeholder): void
     {

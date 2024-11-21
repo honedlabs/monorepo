@@ -16,8 +16,8 @@ trait IsKey
 
     /**
      * Set the column as the key, chainable
-     * 
-     * @param bool|(\Closure():bool) $key
+     *
+     * @param  bool|(\Closure():bool)  $key
      * @return $this
      */
     public function key(bool|\Closure $key = true): static
@@ -29,8 +29,8 @@ trait IsKey
 
     /**
      * Set the key value quietly
-     * 
-     * @param bool|(\Closure():bool)|null $key
+     *
+     * @param  bool|(\Closure():bool)|null  $key
      */
     public function setKey(bool|\Closure|null $key): void
     {

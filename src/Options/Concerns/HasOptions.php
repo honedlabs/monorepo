@@ -33,12 +33,10 @@ trait HasOptions
     }
 
     /**
-     * Set the options from an enum, chainable. 
+     * Set the options from an enum, chainable.
      * Defaults to using the backing value and enum name.
      *
      * @param  BackedEnum-string  $enum
-     * @param string|null $value
-     * @param string|null $label
      * @return $this
      */
     public function makeOptionsFromEnum(string $enum, ?string $value = null, ?string $label = null): static
@@ -53,12 +51,10 @@ trait HasOptions
     }
 
     /**
-     * Set the options from a model, chainable. 
+     * Set the options from a model, chainable.
      * Defaults to using the Model key.
      *
-     * @param class-string $model
-     * @param string|null $value
-     * @param string|null $label
+     * @param  class-string  $model
      * @return $this
      */
     public function makeOptionsFromModel(string $model, ?string $value = null, ?string $label = null): static
@@ -73,12 +69,9 @@ trait HasOptions
     }
 
     /**
-     * Set the options from a collection, chainable. 
+     * Set the options from a collection, chainable.
      * Defaults to using the collection item for the value.
-     * 
-     * @param Collection $collection
-     * @param string|null $value
-     * @param string|null $label
+     *
      * @return $this
      */
     public function makeOptionsFromCollection(Collection $collection, ?string $value = null, ?string $label = null): static
@@ -151,9 +144,8 @@ trait HasOptions
 
     /**
      * Get an option field from an item.
-     * 
-     * @param array|object $item
-     * @param string|null $key
+     *
+     * @param  array|object  $item
      */
     protected function getOptionField(mixed $item, ?string $key): mixed
     {
@@ -185,8 +177,7 @@ trait HasOptions
     /**
      * Parse a value and label as an Option class.
      *
-     * @param int|string|array|(\Closure():int|string|array)|null $value
-     * @param string|null $label
+     * @param  int|string|array|(\Closure():int|string|array)|null  $value
      */
     protected function parseOption(mixed $value, ?string $label = null): Option
     {
