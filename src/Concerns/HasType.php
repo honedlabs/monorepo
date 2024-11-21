@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-use Honed\Core\Attributes\Type;
-use ReflectionClass;
-
 /**
- * Set a type property on a class
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasType
 {
-    protected string|Closure|null $type = null;
+    /**
+     * @var string|(\Closure():string)|null
+     */
+    protected $type = null;
 
     /**
      * Set the type property, chainable
+     * 
+     * @param string|(\Closure():string) $type
+     * @return $this
      */
-    public function type(string|Closure $type): static
+    public function type(string|\Closure $type): static
     {
         $this->setType($type);
 
@@ -27,8 +29,10 @@ trait HasType
 
     /**
      * Set the type property quietly.
+     * 
+     * @param string|(\Closure():string)|null $type
      */
-    public function setType(string|Closure|null $type): void
+    public function setType(string|\Closure|null $type): void
     {
         if (is_null($type)) {
             return;
@@ -37,40 +41,26 @@ trait HasType
     }
 
     /**
-     * Get the class type
+     * Get the type
      */
     public function getType(): ?string
     {
-        return $this->evaluate($this->type) ?? $this->evaluateTypeAttribute();
+        return $this->evaluate($this->type);
     }
 
     /**
-     * Check if the class has a type
+     * Determine if the class does not have a type.
+     */
+    public function missingType(): bool
+    {
+        return \is_null($this->type);
+    }
+
+    /**
+     * Determine if the class has a type.
      */
     public function hasType(): bool
     {
-        return ! is_null($this->type);
-    }
-
-    /**
-     * Check if the class does not have a type
-     */
-    public function lacksType(): bool
-    {
-        return ! $this->hasType();
-    }
-
-    /**
-     * Evaluate the type attribute if present
-     */
-    protected function evaluateTypeAttribute(): ?string
-    {
-        $attributes = (new ReflectionClass($this))->getAttributes(Type::class);
-
-        if (! empty($attributes)) {
-            return $attributes[0]->newInstance()->getType();
-        }
-
-        return null;
+        return ! $this->missingType();
     }
 }

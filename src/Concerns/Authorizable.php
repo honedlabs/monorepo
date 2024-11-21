@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-
 /**
- * Adds the ability to provide conditions to include classes
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
-trait IsAuthorized
+trait Authorizable
 {
     protected bool|Closure $authorized = true;
 

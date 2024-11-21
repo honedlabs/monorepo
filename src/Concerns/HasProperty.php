@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-use Honed\Core\Attributes\Property;
-use ReflectionClass;
-
 /**
- * Set a property on a class
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasProperty
 {
-    /** Should resolve to a string or array */
-    protected mixed $property = null;
+    /**
+     * @var string|array<int, string>|(\Closure():string|array<int, string>)|null
+     */
+    protected $property = null;
 
     /**
      * Set the property to be used, chainable.
      *
-     * @param  string|\Closure  $property
+     * @param  string|array<int, string>|(\Closure():string|array<int, string>)  $property
+     * @return $this
      */
-    public function property(string|array|Closure $property): static
+    public function property(string|array|\Closure $property): static
     {
         $this->setProperty($property);
 
@@ -30,8 +29,10 @@ trait HasProperty
 
     /**
      * Set the property to be used quietly.
+     * 
+     * @param string|array<int, string>|(\Closure():string|array<int, string>)|null $property
      */
-    public function setProperty(mixed $property): void
+    public function setProperty(string|array|\Closure|null $property): void
     {
         if (is_null($property)) {
             return;
@@ -40,48 +41,36 @@ trait HasProperty
     }
 
     /**
-     * Get the property to be used.
+     * Get the property.
+     * 
+     * @return string|array<int, string>|null
      */
     public function getProperty(): string|array|null
     {
-        return $this->evaluate($this->property) ?? $this->evaluatePropertyAttribute();
+        return $this->evaluate($this->property);
     }
 
     /**
-     * Check if the class has a property
+     * Determine if the class does not have a property.
+     */
+    public function missingProperty(): bool
+    {
+        return \is_null($this->property);
+    }
+
+    /**
+     * Determine if the class has a property.
      */
     public function hasProperty(): bool
     {
-        return ! is_null($this->property);
+        return ! $this->missingProperty();
     }
 
     /**
-     * Check if the class does not have a property
+     * Determine if the class has multiple properties.
      */
-    public function lacksProperty(): bool
-    {
-        return ! $this->hasProperty();
-    }
-
-    /**
-     * Check if the class has an array of properties
-     */
-    public function isPropertyArray(): bool
+    public function hasMultipleProperties(): bool
     {
         return is_array($this->getProperty());
-    }
-
-    /**
-     * Evaluate the property attribute if present
-     */
-    protected function evaluatePropertyAttribute(): ?string
-    {
-        $attributes = (new ReflectionClass($this))->getAttributes(Property::class);
-
-        if (! empty($attributes)) {
-            return $attributes[0]->newInstance()->getProperty();
-        }
-
-        return null;
     }
 }

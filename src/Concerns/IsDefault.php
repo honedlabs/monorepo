@@ -7,16 +7,22 @@ namespace Honed\Core\Concerns;
 use Closure;
 
 /**
- * Set whether a class is the default
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait IsDefault
 {
-    protected bool|Closure $default = false;
+    /**
+     * @var bool|(\Closure():bool)
+     */
+    protected $default = false;
 
     /**
      * Set the class as default, chainable
+     * 
+     * @param bool|(\Closure():bool) $default
+     * @return $this
      */
-    public function default(bool|Closure $default = true): static
+    public function default(bool|\Closure $default = true): static
     {
         $this->setDefault($default);
 
@@ -25,8 +31,10 @@ trait IsDefault
 
     /**
      * Set the default quietly
+     * 
+     * @param bool|(\Closure():bool)|null $default
      */
-    public function setDefault(bool|Closure|null $default): void
+    public function setDefault(bool|\Closure|null $default): void
     {
         if (is_null($default)) {
             return;
@@ -35,7 +43,7 @@ trait IsDefault
     }
 
     /**
-     * Check if the class is default
+     * Determine if the class is default.
      */
     public function isDefault(): bool
     {
@@ -43,7 +51,7 @@ trait IsDefault
     }
 
     /**
-     * Check if the class is not default
+     * Determine if the class is not default.
      */
     public function isNotDefault(): bool
     {

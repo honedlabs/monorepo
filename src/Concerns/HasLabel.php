@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-use Honed\Core\Attributes\Label;
-use ReflectionClass;
-
 /**
- * Set a label for a class.
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasLabel
 {
-    protected string|Closure|null $label = null;
+    /**
+     * @var string|(\Closure():string)|null
+     */
+    protected $label = null;
 
     /**
      * Set the label, chainable.
+     * 
+     * @param string|\Closure():string $label
+     * @return $this
      */
-    public function label(string|Closure $label): static
+    public function label(string|\Closure $label): static
     {
         $this->setLabel($label);
 
@@ -27,8 +29,10 @@ trait HasLabel
 
     /**
      * Set the label quietly.
+     * 
+     * @param string|(\Closure():string)|null $label
      */
-    public function setLabel(string|Closure|null $label): void
+    public function setLabel(string|\Closure|null $label): void
     {
         if (is_null($label)) {
             return;
@@ -41,44 +45,32 @@ trait HasLabel
      */
     public function getLabel(): ?string
     {
-        return $this->evaluate($this->label) ?? $this->evaluateLabelAttribute();
-    }
-
-    /**
-     * Convert a string to the label format.
-     */
-    public function toLabel(string|Closure $name): string
-    {
-        return str($this->evaluate($name))->headline()->lower()->ucfirst()->toString();
-    }
-
-    /**
-     * Determine if the class has a label.
-     */
-    public function hasLabel(): bool
-    {
-        return ! is_null($this->label);
+        return $this->evaluate($this->label);
     }
 
     /**
      * Determine if the class does not have a label.
      */
-    public function lacksLabel(): bool
+    public function missingLabel(): bool
     {
-        return ! $this->hasLabel();
+        return \is_null($this->label);
+    }
+    
+    /**
+     * Determine if the class has a label.
+     */
+    public function hasLabel(): bool
+    {
+        return ! $this->missingLabel();
     }
 
     /**
-     * Evaluate the label attribute if present
+     * Convert a string to the label format.
+     * 
+     * @param string|\Stringable|(\Closure():string|\Stringable) $name
      */
-    protected function evaluateLabelAttribute(): ?string
+    public function makeLabel(string|\Closure|\Stringable $name): string
     {
-        $attributes = (new ReflectionClass($this))->getAttributes(Label::class);
-
-        if (! empty($attributes)) {
-            return $attributes[0]->newInstance()->getLabel();
-        }
-
-        return null;
+        return str($this->evaluate($name))->headline()->lower()->ucfirst()->toString();
     }
 }

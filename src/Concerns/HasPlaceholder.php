@@ -4,22 +4,32 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-use Honed\Core\Attributes\Placeholder;
-use ReflectionClass;
-
 trait HasPlaceholder
 {
-    protected string|Closure|null $placeholder = null;
+    /**
+     * @var string|(\Closure():string)|null
+     */
+    protected $placeholder = null;
 
-    public function placeholder(string|Closure $placeholder): static
+    /**
+     * Set the placeholder, chainable.
+     * 
+     * @param string|\Closure():string $placeholder
+     * @return $this
+     */
+    public function placeholder(string|\Closure $placeholder): static
     {
         $this->setPlaceholder($placeholder);
 
         return $this;
     }
 
-    public function setPlaceholder(string|Closure|null $placeholder): void
+    /**
+     * Set the placeholder quietly.
+     * 
+     * @param string|(\Closure():string)|null $placeholder
+     */
+    public function setPlaceholder(string|\Closure|null $placeholder): void
     {
         if (is_null($placeholder)) {
             return;
@@ -27,32 +37,27 @@ trait HasPlaceholder
         $this->placeholder = $placeholder;
     }
 
-    public function hasPlaceholder(): bool
+    /**
+     * Get the placeholder.
+     */
+    public function getPlaceholder(): ?string
     {
-        return ! $this->lacksPlaceholder();
+        return $this->evaluate($this->placeholder);
     }
 
-    public function lacksPlaceholder(): bool
+    /**
+     * Determine if the class does not have a placeholder.
+     */
+    public function missingPlaceholder(): bool
     {
         return is_null($this->placeholder);
     }
 
-    public function getPlaceholder(): ?string
-    {
-        return $this->evaluate($this->placeholder) ?? $this->evaluatePlaceholderAttribute();
-    }
-
     /**
-     * Evaluate the placeholder attribute if present
+     * Determine if the class has a placeholder.
      */
-    protected function evaluatePlaceholderAttribute(): ?string
+    public function hasPlaceholder(): bool
     {
-        $attributes = (new ReflectionClass($this))->getAttributes(Placeholder::class);
-
-        if (! empty($attributes)) {
-            return $attributes[0]->newInstance()->getPlaceholder();
-        }
-
-        return null;
+        return ! $this->missingPlaceholder();
     }
 }

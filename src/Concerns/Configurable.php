@@ -4,26 +4,32 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-
 trait Configurable
 {
     protected static array $configurations = [];
 
     /**
-     * Configures this primitive.
+     * Provide the class with any necessary setup.
      */
     public function setUp()
     {
-        //
+        
     }
 
-    public static function configureUsing(Closure $callback)
+    /**
+     * Configure the class using a callback.
+     */
+    public static function configureUsing(\Closure $callback): void
     {
         static::$configurations[static::class] ??= [];
         static::$configurations[static::class][] = $callback;
     }
 
+    /**
+     * Configure the class.
+     * 
+     * @return $this
+     */
     public function configure(): static
     {
         $this->setUp();

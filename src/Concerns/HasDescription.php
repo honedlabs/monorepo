@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-use Honed\Core\Attributes\Description;
-use ReflectionClass;
-
+/**
+ * @mixin Honed\Core\Concerns\Evaluable
+ */
 trait HasDescription
 {
-    protected string|Closure|null $description = null;
+    /**
+     * @var string|\Closure():string|null
+     */
+    protected $description = null;
 
     /**
      * Set the description, chainable.
+     * 
+     * @param string|\Closure():string $description
+     * @return $this
      */
-    public function description(string|Closure $description): static
+    public function description(string|\Closure $description): static
     {
         $this->setDescription($description);
 
@@ -24,8 +29,10 @@ trait HasDescription
 
     /**
      * Set the description quietly.
+     * 
+     * @param string|(\Closure():string)|null $description
      */
-    public function setDescription(string|Closure|null $description): void
+    public function setDescription(string|\Closure|null $description): void
     {
         if (is_null($description)) {
             return;
@@ -38,15 +45,15 @@ trait HasDescription
      */
     public function getDescription(): ?string
     {
-        return $this->evaluate($this->description) ?? $this->evaluateDescriptionAttribute();
+        return $this->evaluate($this->description);
     }
 
     /**
      * Determine if the class does not have a description.
      */
-    public function lacksDescription(): bool
+    public function missingDescription(): bool
     {
-        return is_null($this->description);
+        return \is_null($this->description);
     }
 
     /**
@@ -54,20 +61,6 @@ trait HasDescription
      */
     public function hasDescription(): bool
     {
-        return ! $this->lacksDescription();
-    }
-
-    /**
-     * Evaluate the description attribute if present
-     */
-    protected function evaluateDescriptionAttribute(): ?string
-    {
-        $attributes = (new ReflectionClass($this))->getAttributes(Description::class);
-
-        if (! empty($attributes)) {
-            return $attributes[0]->newInstance()->getDescription();
-        }
-
-        return null;
+        return ! $this->missingDescription();
     }
 }

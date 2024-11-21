@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-use Honed\Core\Attributes\Title;
-use ReflectionClass;
-
 /**
- * Set a title property on a class
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasTitle
 {
-    protected string|Closure|null $title = null;
+    /**
+     * @var string|(\Closure():string)|null
+     */
+    protected $title = null;
 
     /**
      * Set the title, chainable.
+     * 
+     * @param string|\Closure():string $title
+     * @return $this
      */
-    public function title(string|Closure $title): static
+    public function title(string|\Closure $title): static
     {
         $this->setTitle($title);
 
@@ -27,8 +29,10 @@ trait HasTitle
 
     /**
      * Set the title quietly.
+     * 
+     * @param string|(\Closure():string)|null $title
      */
-    public function setTitle(string|Closure|null $title): void
+    public function setTitle(string|\Closure|null $title): void
     {
         if (is_null($title)) {
             return;
@@ -38,41 +42,25 @@ trait HasTitle
 
     /**
      * Get the title
-     *
-     * @return string|Closure
      */
     public function getTitle(): ?string
     {
-        return $this->evaluate($this->title) ?? $this->evaluateTitleAttribute();
+        return $this->evaluate($this->title);
     }
 
     /**
-     * Check if the class has a title
+     * Determine if the class does not have a title.
+     */
+    public function missingTitle(): bool
+    {
+        return \is_null($this->title);
+    }
+
+    /**
+     * Determine if the class has a title.
      */
     public function hasTitle(): bool
     {
-        return ! is_null($this->getTitle());
-    }
-
-    /**
-     * Check if the class lacks a title
-     */
-    public function lacksTitle(): bool
-    {
-        return ! $this->hasTitle();
-    }
-
-    /**
-     * Evaluate the title attribute if present
-     */
-    protected function evaluateTitleAttribute(): ?string
-    {
-        $attributes = (new ReflectionClass($this))->getAttributes(Title::class);
-
-        if (! empty($attributes)) {
-            return $attributes[0]->newInstance()->getTitle();
-        }
-
-        return null;
+        return ! $this->missingTitle();
     }
 }

@@ -12,7 +12,7 @@ use ReflectionParameter;
  * Taken from FilamentPHP
  * https://github.com/filamentphp/filament/blob/3.x/packages/support/src/Concerns/EvaluatesClosures.php
  */
-trait EvaluatesClosures
+trait Evaluable
 {
     protected string $evaluationIdentifier;
 

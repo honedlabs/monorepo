@@ -6,24 +6,22 @@ namespace Honed\Core\Concerns;
 
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
 
-/**
- * Set a required key property.
- */
 trait RequiresKey
 {
     /**
      * Retrieve the key property
      *
+     * @return string
      * @throws MissingRequiredAttributeException
      */
     public function getKey(): string
     {
-        if (isset($this->key)) {
-            return $this->key;
-        }
-
         if (method_exists($this, 'key')) {
             return $this->key();
+        }
+
+        if (property_exists($this, 'key') && isset($this->key)) {
+            return $this->key;
         }
 
         throw new MissingRequiredAttributeException('key', $this);

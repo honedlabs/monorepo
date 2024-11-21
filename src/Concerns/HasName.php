@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-use Honed\Core\Attributes\Name;
-use ReflectionClass;
-
 /**
- * Set a name property on a class
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasName
 {
-    protected string|Closure|null $name = null;
+    /**
+     * @var string|\Closure():string|null
+     */
+    protected $name = null;
 
     /**
      * Set the name, chainable.
+     * 
+     * @param string|\Closure():string $name
+     * @return $this
      */
-    public function name(string|Closure $name): static
+    public function name(string|\Closure $name): static
     {
         $this->setName($name);
 
@@ -27,8 +29,10 @@ trait HasName
 
     /**
      * Set the name quietly.
+     * 
+     * @param string|\Closure():string|null $name
      */
-    public function setName(string|Closure|null $name): void
+    public function setName(string|\Closure|null $name): void
     {
         if (is_null($name)) {
             return;
@@ -38,49 +42,36 @@ trait HasName
 
     /**
      * Get the name
-     *
-     * @return string|Closure
      */
     public function getName(): ?string
     {
-        return $this->evaluate($this->name) ?? $this->evaluateNameAttribute();
+        return $this->evaluate($this->name);
     }
 
     /**
-     * Check if the class has a name
+     * Determine if the class does not have a name.
      */
-    public function hasName(): bool
-    {
-        return ! is_null($this->getName());
-    }
-
-    /**
-     * Check if the class lacks a name
-     */
-    public function lacksName(): bool
+    public function missingName(): bool
     {
         return ! $this->hasName();
     }
 
     /**
-     * Convert a string to the name format
+     * Determine if the class has a name.
      */
-    public function toName(string|Closure $label): string
+    public function hasName(): bool
     {
-        return str($this->evaluate($label))->snake()->lower()->toString();
+        return ! $this->missingName();
     }
 
+
     /**
-     * Evaluate the name attribute if present
+     * Convert a string to the name format
+     * 
+     * @param string|\Stringable|(\Closure():string|\Stringable) $label
      */
-    protected function evaluateNameAttribute(): ?string
+    public function makeName(string|\Stringable|\Closure $label): string
     {
-        $attributes = (new ReflectionClass($this))->getAttributes(Name::class);
-
-        if (! empty($attributes)) {
-            return $attributes[0]->newInstance()->getName();
-        }
-
-        return null;
+        return str($this->evaluate($label))->snake()->lower()->toString();
     }
 }

@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-
 /**
- * Set an active property on a class
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait IsActive
 {
-    protected bool|Closure $active = false;
+    /**
+     * @var bool|(\Closure():bool)
+     */
+    protected $active = false;
 
     /**
      * Set the active property, chainable.
+     * 
+     * @param bool|(\Closure():bool) $active
+     * @return $this
      */
-    public function active(bool|Closure $active = true): static
+    public function active(bool|\Closure $active = true): static
     {
         $this->setActive($active);
 
@@ -25,8 +29,10 @@ trait IsActive
 
     /**
      * Set the active property quietly.
+     * 
+     * @param bool|(\Closure():bool)|null $active
      */
-    public function setActive(bool|Closure|null $active): void
+    public function setActive(bool|\Closure|null $active): void
     {
         if (is_null($active)) {
             return;
@@ -35,7 +41,7 @@ trait IsActive
     }
 
     /**
-     * Alias for getActive
+     * Determine if the class is active.
      */
     public function isActive(): bool
     {
@@ -43,7 +49,7 @@ trait IsActive
     }
 
     /**
-     * Check if the class is not active
+     * Determine if the class is not active.
      */
     public function isNotActive(): bool
     {

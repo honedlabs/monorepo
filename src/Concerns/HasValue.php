@@ -8,14 +8,20 @@ use Honed\Core\Attributes\Value;
 use ReflectionClass;
 
 /**
- * Sets a value on a class
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasValue
 {
-    protected mixed $value = null;
+    /**
+     * @var int|string|array|(\Closure():int|string|array)|null
+     */
+    protected $value = null;
 
     /**
      * Set the value to be used, chainable.
+     * 
+     * @param int|string|array|(\Closure():int|string|array)|null $value
+     * @return $this
      */
     public function value(mixed $value): static
     {
@@ -26,6 +32,8 @@ trait HasValue
 
     /**
      * Set the value to be used quietly.
+     * 
+     * @param int|string|array|(\Closure():int|string|array)|null $value
      */
     public function setValue(mixed $value): void
     {
@@ -33,24 +41,12 @@ trait HasValue
     }
 
     /**
-     * Get the value to be used.
+     * Get the value.
+     * 
+     * @return int|string|array|(\Closure():int|string|array)|null
      */
     public function getValue(): mixed
     {
-        return $this->evaluate($this->value) ?? $this->evaluateValueAttribute();
-    }
-
-    /**
-     * Evaluate the value attribute if present
-     */
-    protected function evaluateValueAttribute(): ?string
-    {
-        $attributes = (new ReflectionClass($this))->getAttributes(Value::class);
-
-        if (! empty($attributes)) {
-            return $attributes[0]->newInstance()->getValue();
-        }
-
-        return null;
+        return $this->evaluate($this->value);
     }
 }

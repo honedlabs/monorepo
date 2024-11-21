@@ -7,4 +7,7 @@ namespace Honed\Core\Contracts;
 /**
  * @method static make(mixed ...$parameters)
  */
-interface Makeable {}
+interface Makeable 
+{
+    
+}

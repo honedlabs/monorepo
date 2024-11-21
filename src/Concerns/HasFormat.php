@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-use Honed\Core\Attributes\Format;
-use ReflectionClass;
-
 /**
- * Set a format for a class.
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasFormat
 {
-    protected string|Closure|null $format = null;
+    /**
+     * @var string|(\Closure():string)|null
+     */
+    protected $format = null;
 
     /**
      * Set the format, chainable.
+     * 
+     * @param string|\Closure():string $format
+     * @return $this
      */
-    public function format(string|Closure $format): static
+    public function format(string|\Closure $format): static
     {
         $this->setFormat($format);
 
@@ -27,8 +29,10 @@ trait HasFormat
 
     /**
      * Set the format quietly.
+     * 
+     * @param string|(\Closure():string)|null $format
      */
-    public function setFormat(string|Closure|null $format): void
+    public function setFormat(string|\Closure|null $format): void
     {
         if (is_null($format)) {
             return;
@@ -37,7 +41,7 @@ trait HasFormat
     }
 
     /**
-     * Get the format
+     * Get the format.
      */
     public function getFormat(): ?string
     {
@@ -45,29 +49,18 @@ trait HasFormat
     }
 
     /**
-     * Check if the class has a format
+     * Determine if the class does not have a format.
      */
-    public function hasFormat(): bool
+    public function missingFormat(): bool
     {
-        return ! is_null($this->format);
-    }
-
-    public function lacksFormat(): bool
-    {
-        return ! $this->hasFormat();
+        return \is_null($this->format);
     }
 
     /**
-     * Evaluate the format attribute if present
+     * Determine if the class has a format.
      */
-    protected function evaluateFormatAttribute(): ?string
+    public function hasFormat(): bool
     {
-        $attributes = (new ReflectionClass($this))->getAttributes(Format::class);
-
-        if (! empty($attributes)) {
-            return $attributes[0]->newInstance()->getFormat();
-        }
-
-        return null;
+        return ! $this->missingFormat();
     }
 }

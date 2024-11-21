@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-
+/**
+ * @mixin \Honed\Core\Concerns\Evaluable
+ */
 trait IsKey
 {
-    protected bool|Closure $key = false;
+    /**
+     * @var bool|(\Closure():bool)
+     */
+    protected $key = false;
 
     /**
      * Set the column as the key, chainable
+     * 
+     * @param bool|(\Closure():bool) $key
+     * @return $this
      */
-    public function key(bool|Closure $key = true): static
+    public function key(bool|\Closure $key = true): static
     {
         $this->setKey($key);
 
@@ -22,10 +29,10 @@ trait IsKey
 
     /**
      * Set the key value quietly
-     *
-     * @param  bool  $key
+     * 
+     * @param bool|(\Closure():bool)|null $key
      */
-    public function setKey(bool|Closure|null $key): void
+    public function setKey(bool|\Closure|null $key): void
     {
         if (is_null($key)) {
             return;
@@ -34,7 +41,7 @@ trait IsKey
     }
 
     /**
-     * Check if the class is the key
+     * Determine if the class is the key.
      */
     public function isKey(): bool
     {
@@ -42,7 +49,7 @@ trait IsKey
     }
 
     /**
-     * Check if the class is not the key
+     * Determine if the class is not the key.
      */
     public function isNotKey(): bool
     {

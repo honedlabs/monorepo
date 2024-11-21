@@ -4,24 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Core;
 
-use Honed\Core\Concerns\Assignable;
-use Honed\Core\Concerns\Configurable;
-use Honed\Core\Concerns\EvaluatesClosures;
-use Honed\Core\Contracts\Makeable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
-use JsonSerializable;
 
-abstract class Primitive implements Arrayable, JsonSerializable, Makeable
+abstract class Primitive implements Arrayable, \JsonSerializable, Contracts\Makeable
 {
-    use Assignable;
     use Conditionable;
-    use Configurable;
-    use EvaluatesClosures;
     use Macroable;
     use Tappable;
+    use Concerns\Assignable;
+    use Concerns\Configurable;
+    use Concerns\Evaluable;
 
     public function __construct()
     {

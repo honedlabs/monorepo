@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-
 trait IsStrict
 {
     /**
-     * @var bool|Closure
+     * @var bool|(\Closure():bool)
      */
     protected $strict = false;
 
     /**
-     * Set whether the class is strict.
+     * Set whether the class is strict matching, chainable.
      *
-     * @param  bool|Closure  $strict
+     * @param bool|\Closure():bool $strict
      * @return $this
      */
-    public function strict($strict = true)
+    public function strict(bool|\Closure $strict = true): static
     {
         $this->setStrict($strict);
 
@@ -27,9 +25,11 @@ trait IsStrict
     }
 
     /**
-     * Set whether the class is strict quietly.
+     * Set whether the class is strict matching quietly.
+     * 
+     * @param bool|(\Closure():bool)|null $strict
      */
-    public function setStrict(bool|Closure|null $strict)
+    public function setStrict(bool|\Closure|null $strict): void
     {
         if (is_null($strict)) {
             return;
@@ -38,21 +38,17 @@ trait IsStrict
     }
 
     /**
-     * Check if the class is strict
-     *
-     * @return bool
+     * Determine if the class is strict matching.
      */
-    public function isStrict()
+    public function isStrict(): bool
     {
         return (bool) $this->evaluate($this->strict);
     }
 
     /**
-     * Check if the class is not strict
-     *
-     * @return bool
+     * Determine if the class is not strict matching.
      */
-    public function isNotStrict()
+    public function isNotStrict(): bool
     {
         return ! $this->isStrict();
     }

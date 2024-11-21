@@ -2,7 +2,6 @@
 
 namespace Honed\Core\Options;
 
-use Closure;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasValue;
@@ -10,9 +9,6 @@ use Honed\Core\Concerns\IsActive;
 use Honed\Core\Options\Contracts\Options;
 use Honed\Core\Primitive;
 
-/**
- * Class for a single option.
- */
 class Option extends Primitive implements Options
 {
     use HasLabel;
@@ -20,28 +16,28 @@ class Option extends Primitive implements Options
     use HasValue;
     use IsActive;
 
-    public function __construct(
-        mixed $value,
-        ?string $label = null,
-        array|Closure|null $meta = null
-    ) {
+    /**
+     * @param int|string|array|\Closure():int|string|array $value
+     * @param string|(\Closure():string)|null $label
+     */
+    final public function __construct(mixed $value, $label = null)
+    {
         $this->setValue($value);
-        $this->setLabel($label ?? $this->toLabel($value));
-        $this->setMeta($meta);
+        $this->setLabel($label ?? $this->makeLabel($value));
     }
 
     /**
-     * Make a new option.
+     * Create an option class
+     * 
+     * @param int|string|array|\Closure():int|string|array $value
+     * @param string|(\Closure():string)|null $label
      */
-    public static function make(
-        mixed $value,
-        ?string $label = null,
-        array|Closure|null $meta = null
-    ): static {
-        return resolve(static::class, compact('value', 'label', 'meta'));
+    public static function make($value, $label = null): static
+    {
+        return resolve(static::class, compact('value', 'label'));
     }
 
-    public function toArray(): array
+    public function toArray()
     {
         return [
             'value' => $this->getValue(),
