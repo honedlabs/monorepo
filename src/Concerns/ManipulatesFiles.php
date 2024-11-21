@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Illuminate\Filesystem\Filesystem;
+
 use function Laravel\Prompts\confirm;
 
 trait ManipulatesFiles
 {
     /**
      * Check for file collisions.
-     * 
+     *
      * @param  array<string>|string  $paths
      */
     protected function checkForCollision(array|string $paths): bool
@@ -36,11 +37,8 @@ trait ManipulatesFiles
 
     /**
      * Copy a file stub to the application filesystem.
-     * 
-     * @param string $stub
-     * @param string $targetPath
-     * @param string $before
-     * @param array<string, string> $replacements
+     *
+     * @param  array<string, string>  $replacements
      */
     protected function copyStubToApp(string $stub, string $targetPath, string $before, array $replacements = []): void
     {
@@ -63,8 +61,6 @@ trait ManipulatesFiles
 
     /**
      * Determine if a file exists.
-     * 
-     * @param string $path
      */
     protected function fileExists(string $path): bool
     {
@@ -75,9 +71,6 @@ trait ManipulatesFiles
 
     /**
      * Write a file to the application filesystem.
-     * 
-     * @param string $path
-     * @param string $contents
      */
     protected function writeFile(string $path, string $contents): void
     {

@@ -16,8 +16,8 @@ trait IsActive
 
     /**
      * Set the active property, chainable.
-     * 
-     * @param bool|(\Closure():bool) $active
+     *
+     * @param  bool|(\Closure():bool)  $active
      * @return $this
      */
     public function active(bool|\Closure $active = true): static
@@ -29,8 +29,8 @@ trait IsActive
 
     /**
      * Set the active property quietly.
-     * 
-     * @param bool|(\Closure():bool)|null $active
+     *
+     * @param  bool|(\Closure():bool)|null  $active
      */
     public function setActive(bool|\Closure|null $active): void
     {

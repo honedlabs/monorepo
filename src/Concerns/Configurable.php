@@ -11,10 +11,7 @@ trait Configurable
     /**
      * Provide the class with any necessary setup.
      */
-    public function setUp()
-    {
-        
-    }
+    public function setUp() {}
 
     /**
      * Configure the class using a callback.
@@ -27,7 +24,7 @@ trait Configurable
 
     /**
      * Configure the class.
-     * 
+     *
      * @return $this
      */
     public function configure(): static

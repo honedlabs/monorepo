@@ -16,8 +16,8 @@ trait Authorizable
 
     /**
      * Set the condition for authorization, chainable.
-     * 
-     * @param bool|\Closure():bool $condition
+     *
+     * @param  bool|\Closure():bool  $condition
      * @return $this
      */
     public function authorize(bool|\Closure $condition = true): static
@@ -29,8 +29,8 @@ trait Authorizable
 
     /**
      * Alias for authorize
-     * 
-     * @param bool|\Closure():bool $condition
+     *
+     * @param  bool|\Closure():bool  $condition
      * @return $this
      */
     public function authorise(bool|\Closure $condition = true): static
@@ -40,8 +40,8 @@ trait Authorizable
 
     /**
      * Set the condition for authorization quietly.
-     * 
-     * @param bool|\Closure():bool|null $condition
+     *
+     * @param  bool|\Closure():bool|null  $condition
      */
     public function setAuthorize(bool|\Closure|null $condition): void
     {
@@ -53,8 +53,8 @@ trait Authorizable
 
     /**
      * Alias for setAuthorize
-     * 
-     * @param bool|\Closure():bool|null $condition
+     *
+     * @param  bool|\Closure():bool|null  $condition
      */
     public function setAuthorise(bool|\Closure|null $condition): void
     {
@@ -91,5 +91,5 @@ trait Authorizable
     public function isNotAuthorised(): bool
     {
         return ! $this->isAuthorised();
-    }    
+    }
 }

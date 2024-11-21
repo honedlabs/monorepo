@@ -11,7 +11,6 @@ trait RequiresKey
     /**
      * Retrieve the key property
      *
-     * @return string
      * @throws MissingRequiredAttributeException
      */
     public function getKey(): string

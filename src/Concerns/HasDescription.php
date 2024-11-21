@@ -16,8 +16,8 @@ trait HasDescription
 
     /**
      * Set the description, chainable.
-     * 
-     * @param string|\Closure():string $description
+     *
+     * @param  string|\Closure():string  $description
      * @return $this
      */
     public function description(string|\Closure $description): static
@@ -29,8 +29,8 @@ trait HasDescription
 
     /**
      * Set the description quietly.
-     * 
-     * @param string|(\Closure():string)|null $description
+     *
+     * @param  string|(\Closure():string)|null  $description
      */
     public function setDescription(string|\Closure|null $description): void
     {

@@ -29,8 +29,8 @@ trait HasProperty
 
     /**
      * Set the property to be used quietly.
-     * 
-     * @param string|array<int, string>|(\Closure():string|array<int, string>)|null $property
+     *
+     * @param  string|array<int, string>|(\Closure():string|array<int, string>)|null  $property
      */
     public function setProperty(string|array|\Closure|null $property): void
     {
@@ -42,7 +42,7 @@ trait HasProperty
 
     /**
      * Get the property.
-     * 
+     *
      * @return string|array<int, string>|null
      */
     public function getProperty(): string|array|null

@@ -16,8 +16,8 @@ trait IsDefault
 
     /**
      * Set the class as default, chainable
-     * 
-     * @param bool|(\Closure():bool) $default
+     *
+     * @param  bool|(\Closure():bool)  $default
      * @return $this
      */
     public function default(bool|\Closure $default = true): static
@@ -29,8 +29,8 @@ trait IsDefault
 
     /**
      * Set the default quietly
-     * 
-     * @param bool|(\Closure():bool)|null $default
+     *
+     * @param  bool|(\Closure():bool)|null  $default
      */
     public function setDefault(bool|\Closure|null $default): void
     {

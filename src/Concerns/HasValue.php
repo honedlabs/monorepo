@@ -16,8 +16,8 @@ trait HasValue
 
     /**
      * Set the value to be used, chainable.
-     * 
-     * @param int|string|array|(\Closure():int|string|array)|null $value
+     *
+     * @param  int|string|array|(\Closure():int|string|array)|null  $value
      * @return $this
      */
     public function value(mixed $value): static
@@ -29,8 +29,8 @@ trait HasValue
 
     /**
      * Set the value to be used quietly.
-     * 
-     * @param int|string|array|(\Closure():int|string|array)|null $value
+     *
+     * @param  int|string|array|(\Closure():int|string|array)|null  $value
      */
     public function setValue(mixed $value): void
     {
@@ -39,7 +39,7 @@ trait HasValue
 
     /**
      * Get the value.
-     * 
+     *
      * @return int|string|array|(\Closure():int|string|array)|null
      */
     public function getValue(): mixed

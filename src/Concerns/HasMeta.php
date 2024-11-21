@@ -16,8 +16,8 @@ trait HasMeta
 
     /**
      * Set the meta, chainable.
-     * 
-     * @param  array<array-key, mixed>|\Closure():array<array-key, mixed> $meta
+     *
+     * @param  array<array-key, mixed>|\Closure():array<array-key, mixed>  $meta
      * @return $this
      */
     public function meta(array|\Closure $meta): static
@@ -29,8 +29,8 @@ trait HasMeta
 
     /**
      * Set the meta quietly.
-     * 
-     * @param  array<array-key, mixed>|\Closure():array<array-key, mixed>|null $meta
+     *
+     * @param  array<array-key, mixed>|\Closure():array<array-key, mixed>|null  $meta
      */
     public function setMeta(array|\Closure|null $meta): void
     {
@@ -42,7 +42,7 @@ trait HasMeta
 
     /**
      * Get the meta.
-     * 
+     *
      * @return array<array-key, mixed>
      */
     public function getMeta()

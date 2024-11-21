@@ -16,8 +16,8 @@ trait HasLabel
 
     /**
      * Set the label, chainable.
-     * 
-     * @param string|\Closure():string $label
+     *
+     * @param  string|\Closure():string  $label
      * @return $this
      */
     public function label(string|\Closure $label): static
@@ -29,8 +29,8 @@ trait HasLabel
 
     /**
      * Set the label quietly.
-     * 
-     * @param string|(\Closure():string)|null $label
+     *
+     * @param  string|(\Closure():string)|null  $label
      */
     public function setLabel(string|\Closure|null $label): void
     {
@@ -55,7 +55,7 @@ trait HasLabel
     {
         return \is_null($this->label);
     }
-    
+
     /**
      * Determine if the class has a label.
      */
@@ -66,8 +66,6 @@ trait HasLabel
 
     /**
      * Convert a string to the label format.
-     * 
-     * @param mixed $name
      */
     public function makeLabel(mixed $name): string
     {

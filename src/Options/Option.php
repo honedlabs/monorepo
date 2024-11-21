@@ -18,8 +18,8 @@ class Option extends Primitive
     use IsActive;
 
     /**
-     * @param int|string|array|\Closure():int|string|array $value
-     * @param string|(\Closure():string)|null $label
+     * @param  int|string|array|\Closure():int|string|array  $value
+     * @param  string|(\Closure():string)|null  $label
      */
     final public function __construct(mixed $value, $label = null)
     {
@@ -29,9 +29,9 @@ class Option extends Primitive
 
     /**
      * Create an option class
-     * 
-     * @param int|string|array|\Closure():int|string|array $value
-     * @param string|(\Closure():string)|null $label
+     *
+     * @param  int|string|array|\Closure():int|string|array  $value
+     * @param  string|(\Closure():string)|null  $label
      */
     public static function make($value, $label = null): static
     {

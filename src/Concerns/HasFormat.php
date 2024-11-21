@@ -16,8 +16,8 @@ trait HasFormat
 
     /**
      * Set the format, chainable.
-     * 
-     * @param string|\Closure():string $format
+     *
+     * @param  string|\Closure():string  $format
      * @return $this
      */
     public function format(string|\Closure $format): static
@@ -29,8 +29,8 @@ trait HasFormat
 
     /**
      * Set the format quietly.
-     * 
-     * @param string|(\Closure():string)|null $format
+     *
+     * @param  string|(\Closure():string)|null  $format
      */
     public function setFormat(string|\Closure|null $format): void
     {

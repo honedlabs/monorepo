@@ -16,8 +16,8 @@ trait IsHidden
 
     /**
      * Set the hidden property, chainable.
-     * 
-     * @param bool|(\Closure():bool) $hidden
+     *
+     * @param  bool|(\Closure():bool)  $hidden
      * @return $this
      */
     public function hidden(bool|\Closure $hidden = true): static
@@ -29,8 +29,8 @@ trait IsHidden
 
     /**
      * Set as hidden, chainable.
-     * 
-     * @param bool|(\Closure():bool) $hidden
+     *
+     * @param  bool|(\Closure():bool)  $hidden
      * @return $this
      */
     public function hide(bool|\Closure $hidden = true): static
@@ -40,8 +40,8 @@ trait IsHidden
 
     /**
      * Set as not hidden, chainable.
-     * 
-     * @param bool|(\Closure():bool) $hidden
+     *
+     * @param  bool|(\Closure():bool)  $hidden
      * @return $this
      */
     public function show(bool|\Closure $hidden = false): static
@@ -51,8 +51,8 @@ trait IsHidden
 
     /**
      * Set the hidden property quietly.
-     * 
-     * @param bool|(\Closure():bool)|null $hidden
+     *
+     * @param  bool|(\Closure():bool)|null  $hidden
      */
     public function setHidden(bool|\Closure|null $hidden): void
     {

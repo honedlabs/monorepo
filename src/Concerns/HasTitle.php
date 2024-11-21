@@ -16,8 +16,8 @@ trait HasTitle
 
     /**
      * Set the title, chainable.
-     * 
-     * @param string|\Closure():string $title
+     *
+     * @param  string|\Closure():string  $title
      * @return $this
      */
     public function title(string|\Closure $title): static
@@ -29,8 +29,8 @@ trait HasTitle
 
     /**
      * Set the title quietly.
-     * 
-     * @param string|(\Closure():string)|null $title
+     *
+     * @param  string|(\Closure():string)|null  $title
      */
     public function setTitle(string|\Closure|null $title): void
     {

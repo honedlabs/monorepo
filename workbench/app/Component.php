@@ -51,6 +51,7 @@ class Component extends Primitive
     use IsKey;
     use IsStrict;
     use IsVisible;
+
     // use Routable;
     use Transformable;
     use Validatable;

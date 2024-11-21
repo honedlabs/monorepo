@@ -13,8 +13,8 @@ trait Validatable
 
     /**
      * Set the validation function, chainable.
-     * 
-     * @param (\Closure(mixed):bool) $validate
+     *
+     * @param  (\Closure(mixed):bool)  $validate
      * @return $this
      */
     public function validate(\Closure $validate): static
@@ -26,8 +26,8 @@ trait Validatable
 
     /**
      * Alias for validate
-     * 
-     * @param (\Closure(mixed):bool) $validate
+     *
+     * @param  (\Closure(mixed):bool)  $validate
      * @return $this
      */
     public function validateUsing(\Closure $validate): static
@@ -37,8 +37,8 @@ trait Validatable
 
     /**
      * Set the validation function quietly.
-     * 
-     * @param (\Closure(mixed):bool)|null $validate
+     *
+     * @param  (\Closure(mixed):bool)|null  $validate
      */
     public function setValidate(?\Closure $validate): void
     {
@@ -66,7 +66,7 @@ trait Validatable
 
     /**
      * Get the validation function.
-     * 
+     *
      * @return (\Closure(mixed):bool)
      */
     public function getValidate(): \Closure
