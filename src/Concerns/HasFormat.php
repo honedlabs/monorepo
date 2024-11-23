@@ -45,7 +45,7 @@ trait HasFormat
      */
     public function getFormat(): ?string
     {
-        return $this->evaluate($this->format) ?? $this->evaluateFormatAttribute();
+        return $this->evaluate($this->format);
     }
 
     /**

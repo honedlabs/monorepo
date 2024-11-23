@@ -34,7 +34,7 @@ trait IsActive
      */
     public function setActive(bool|\Closure|null $active): void
     {
-        if (is_null($active)) {
+        if (\is_null($active)) {
             return;
         }
         $this->active = $active;

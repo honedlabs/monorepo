@@ -67,9 +67,9 @@ trait Validatable
     /**
      * Get the validation function.
      *
-     * @return (\Closure(mixed):bool)
+     * @return (\Closure(mixed):bool)|null
      */
-    public function getValidate(): \Closure
+    public function getValidate(): ?\Closure
     {
         return $this->validate;
     }
