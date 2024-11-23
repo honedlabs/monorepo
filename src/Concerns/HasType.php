@@ -10,14 +10,14 @@ namespace Honed\Core\Concerns;
 trait HasType
 {
     /**
-     * @var string|(\Closure():string)|null
+     * @var string|(\Closure(mixed...):string)|null
      */
     protected $type = null;
 
     /**
      * Set the type property, chainable
      *
-     * @param  string|(\Closure():string)  $type
+     * @param  string|\Closure(mixed...)  $type
      * @return $this
      */
     public function type(string|\Closure $type): static
@@ -30,7 +30,7 @@ trait HasType
     /**
      * Set the type property quietly.
      *
-     * @param  string|(\Closure():string)|null  $type
+     * @param  string|(\Closure(mixed...):string)|null  $type
      */
     public function setType(string|\Closure|null $type): void
     {
@@ -41,15 +41,35 @@ trait HasType
     }
 
     /**
-     * Get the type
+     * Get the type using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
      */
-    public function getType(): ?string
+    public function getType(array $named = [], array $typed = []): ?string
     {
-        return $this->evaluate($this->type);
+        return $this->evaluate($this->type, $named, $typed);
+    }
+
+    /**
+     * Resolve the type using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
+     */
+    public function resolveType(array $named = [], array $typed = []): ?string
+    {
+        $this->setType($this->getType($named, $typed));
+
+        return $this->type;
     }
 
     /**
      * Determine if the class does not have a type.
+     *
+     * @return bool
      */
     public function missingType(): bool
     {
@@ -58,6 +78,8 @@ trait HasType
 
     /**
      * Determine if the class has a type.
+     *
+     * @return bool
      */
     public function hasType(): bool
     {

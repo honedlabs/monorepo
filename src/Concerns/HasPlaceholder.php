@@ -7,14 +7,14 @@ namespace Honed\Core\Concerns;
 trait HasPlaceholder
 {
     /**
-     * @var string|(\Closure():string)|null
+     * @var string|(\Closure(mixed...):string)|null
      */
     protected $placeholder = null;
 
     /**
      * Set the placeholder, chainable.
      *
-     * @param  string|\Closure():string  $placeholder
+     * @param  string|(\Closure(mixed...):string)  $placeholder
      * @return $this
      */
     public function placeholder(string|\Closure $placeholder): static
@@ -27,7 +27,7 @@ trait HasPlaceholder
     /**
      * Set the placeholder quietly.
      *
-     * @param  string|(\Closure():string)|null  $placeholder
+     * @param  string|(\Closure(mixed...):string)|null $placeholder
      */
     public function setPlaceholder(string|\Closure|null $placeholder): void
     {
@@ -38,15 +38,35 @@ trait HasPlaceholder
     }
 
     /**
-     * Get the placeholder.
+     * Get the placeholder using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
      */
-    public function getPlaceholder(): ?string
+    public function getPlaceholder(array $named = [], array $typed = []): ?string
     {
-        return $this->evaluate($this->placeholder);
+        return $this->evaluate($this->placeholder, $named, $typed);
+    }
+
+    /**
+     * Resolve the placeholder using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
+     */
+    public function resolvePlaceholder(array $named = [], array $typed = []): ?string
+    {
+        $this->setPlaceholder($this->getPlaceholder($named, $typed));
+
+        return $this->placeholder;
     }
 
     /**
      * Determine if the class does not have a placeholder.
+     *
+     * @return bool
      */
     public function missingPlaceholder(): bool
     {
@@ -55,6 +75,8 @@ trait HasPlaceholder
 
     /**
      * Determine if the class has a placeholder.
+     *
+     * @return bool
      */
     public function hasPlaceholder(): bool
     {

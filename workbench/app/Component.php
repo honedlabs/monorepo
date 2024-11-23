@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Workbench\App;
 
 use Honed\Core\Concerns\Authorizable;
+use Honed\Core\Concerns\HasAttribute;
 use Honed\Core\Concerns\HasDescription;
 use Honed\Core\Concerns\HasFormat;
 use Honed\Core\Concerns\HasLabel;
@@ -40,7 +41,7 @@ class Component extends Primitive
     use HasName;
     use HasOptions;
     use HasPlaceholder;
-    use HasProperty;
+    use HasAttribute;
     use HasTitle;
     use HasType;
     use HasValue;
@@ -51,8 +52,6 @@ class Component extends Primitive
     use IsKey;
     use IsStrict;
     use IsVisible;
-
-    // use Routable;
     use Transformable;
     use Validatable;
 

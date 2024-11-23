@@ -10,14 +10,14 @@ namespace Honed\Core\Concerns;
 trait HasFormat
 {
     /**
-     * @var string|(\Closure():string)|null
+     * @var string|(\Closure(mixed...):string)|null
      */
     protected $format = null;
 
     /**
      * Set the format, chainable.
      *
-     * @param  string|\Closure():string  $format
+     * @param  string|(\Closure(mixed...):string)  $format
      * @return $this
      */
     public function format(string|\Closure $format): static
@@ -30,7 +30,7 @@ trait HasFormat
     /**
      * Set the format quietly.
      *
-     * @param  string|(\Closure():string)|null  $format
+     * @param  string|(\Closure(mixed...):string)|null  $format
      */
     public function setFormat(string|\Closure|null $format): void
     {
@@ -41,15 +41,35 @@ trait HasFormat
     }
 
     /**
-     * Get the format.
+     * Get the format using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
      */
-    public function getFormat(): ?string
+    public function getFormat(array $named = [], array $typed = []): ?string
     {
-        return $this->evaluate($this->format);
+        return $this->evaluate($this->format, $named, $typed);
+    }
+
+    /**
+     * Resolve the format using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
+     */
+    public function resolveFormat(array $named = [], array $typed = []): ?string
+    {
+        $this->setFormat($this->getFormat($named, $typed));
+
+        return $this->format;
     }
 
     /**
      * Determine if the class does not have a format.
+     *
+     * @return bool
      */
     public function missingFormat(): bool
     {
@@ -58,6 +78,8 @@ trait HasFormat
 
     /**
      * Determine if the class has a format.
+     *
+     * @return bool
      */
     public function hasFormat(): bool
     {

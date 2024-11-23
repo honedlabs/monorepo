@@ -10,14 +10,14 @@ namespace Honed\Core\Concerns;
 trait HasScope
 {
     /**
-     * @var string|(\Closure():string)|null
+     * @var string|(\Closure(mixed...):string)|null
      */
     protected $scope = null;
 
     /**
      * Set the scope, chainable.
      *
-     * @param  string|\Closure():string  $scope
+     * @param  string|\Closure(mixed...)  $scope
      * @return $this
      */
     public function scope(string|\Closure $scope): static
@@ -30,7 +30,7 @@ trait HasScope
     /**
      * Set the scope quietly.
      *
-     * @param  string|(\Closure():string)|null  $scope
+     * @param  string|(\Closure(mixed...):string)  $scope
      */
     public function setScope(string|\Closure|null $scope): void
     {
@@ -41,15 +41,35 @@ trait HasScope
     }
 
     /**
-     * Get the scope.
+     * Get the scope using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
      */
-    public function getScope(): ?string
+    public function getScope(array $named = [], array $typed = []): ?string
     {
-        return $this->evaluate($this->scope);
+        return $this->evaluate($this->scope, $named, $typed);
+    }
+
+    /**
+     * Resolve the scope using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
+     */
+    public function resolveScope(array $named = [], array $typed = []): ?string
+    {
+        $this->setScope($this->getScope($named, $typed));
+
+        return $this->scope;
     }
 
     /**
      * Determine if the class does not have a scope.
+     *
+     * @return bool
      */
     public function missingScope(): bool
     {
@@ -58,6 +78,8 @@ trait HasScope
 
     /**
      * Determine if the class has a scope.
+     *
+     * @return bool
      */
     public function hasScope(): bool
     {

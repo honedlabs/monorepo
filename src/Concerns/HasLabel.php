@@ -10,14 +10,14 @@ namespace Honed\Core\Concerns;
 trait HasLabel
 {
     /**
-     * @var string|(\Closure():string)|null
+     * @var string|(\Closure(mixed...):string)|null
      */
     protected $label = null;
 
     /**
      * Set the label, chainable.
      *
-     * @param  string|\Closure():string  $label
+     * @param  string|(\Closure(mixed...):string) $label
      * @return $this
      */
     public function label(string|\Closure $label): static
@@ -30,7 +30,7 @@ trait HasLabel
     /**
      * Set the label quietly.
      *
-     * @param  string|(\Closure():string)|null  $label
+     * @param  string|(\Closure(mixed...):string)|null $label
      */
     public function setLabel(string|\Closure|null $label): void
     {
@@ -41,15 +41,35 @@ trait HasLabel
     }
 
     /**
-     * Get the label.
+     * Get the label using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
      */
-    public function getLabel(): ?string
+    public function getLabel(array $named = [], array $typed = []): ?string
     {
-        return $this->evaluate($this->label);
+        return $this->evaluate($this->label, $named, $typed);
+    }
+
+    /**
+     * Resolve the label using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
+     */
+    public function resolveLabel(array $named = [], array $typed = []): ?string
+    {
+        $this->setLabel($this->getLabel($named, $typed));
+
+        return $this->label;
     }
 
     /**
      * Determine if the class does not have a label.
+     *
+     * @return bool
      */
     public function missingLabel(): bool
     {
@@ -58,6 +78,8 @@ trait HasLabel
 
     /**
      * Determine if the class has a label.
+     *
+     * @return bool
      */
     public function hasLabel(): bool
     {
@@ -66,6 +88,9 @@ trait HasLabel
 
     /**
      * Convert a string to the label format.
+     *
+     * @param mixed $name
+     * @return string
      */
     public function makeLabel(mixed $name): string
     {

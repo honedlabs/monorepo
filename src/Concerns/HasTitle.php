@@ -10,14 +10,14 @@ namespace Honed\Core\Concerns;
 trait HasTitle
 {
     /**
-     * @var string|(\Closure():string)|null
+     * @var string|(\Closure(mixed...):string)|null
      */
     protected $title = null;
 
     /**
      * Set the title, chainable.
      *
-     * @param  string|\Closure():string  $title
+     * @param  string|\Closure(mixed...)  $title
      * @return $this
      */
     public function title(string|\Closure $title): static
@@ -30,7 +30,7 @@ trait HasTitle
     /**
      * Set the title quietly.
      *
-     * @param  string|(\Closure():string)|null  $title
+     * @param string|(\Closure(mixed...):string)|null $title
      */
     public function setTitle(string|\Closure|null $title): void
     {
@@ -41,15 +41,35 @@ trait HasTitle
     }
 
     /**
-     * Get the title
+     * Get the title using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
      */
-    public function getTitle(): ?string
+    public function getTitle(array $named = [], array $typed = []): ?string
     {
-        return $this->evaluate($this->title);
+        return $this->evaluate($this->title, $named, $typed);
+    }
+
+    /**
+     * Resolve the title using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
+     */
+    public function resolveTitle(array $named = [], array $typed = []): ?string
+    {
+        $this->setTitle($this->getTitle($named, $typed));
+
+        return $this->title;
     }
 
     /**
      * Determine if the class does not have a title.
+     *
+     * @return bool
      */
     public function missingTitle(): bool
     {
@@ -58,6 +78,8 @@ trait HasTitle
 
     /**
      * Determine if the class has a title.
+     *
+     * @return bool
      */
     public function hasTitle(): bool
     {

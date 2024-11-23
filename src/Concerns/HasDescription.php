@@ -10,14 +10,14 @@ namespace Honed\Core\Concerns;
 trait HasDescription
 {
     /**
-     * @var string|\Closure():string|null
+     * @var string|\Closure(mixed...):string|null
      */
     protected $description = null;
 
     /**
      * Set the description, chainable.
      *
-     * @param  string|\Closure():string  $description
+     * @param  string|\Closure(mixed...):string  $description
      * @return $this
      */
     public function description(string|\Closure $description): static
@@ -30,26 +30,47 @@ trait HasDescription
     /**
      * Set the description quietly.
      *
-     * @param  string|(\Closure():string)|null  $description
+     * @param  string|(\Closure(mixed...):string)|null $description
      */
     public function setDescription(string|\Closure|null $description): void
     {
         if (is_null($description)) {
             return;
         }
+
         $this->description = $description;
     }
 
     /**
-     * Get the description
+     * Get the description using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
      */
-    public function getDescription(): ?string
+    public function getDescription(array $named = [], array $typed = []): ?string
     {
-        return $this->evaluate($this->description);
+        return $this->evaluate($this->description, $named, $typed);
+    }
+
+    /**
+     * Resolve the description using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
+     */
+    public function resolveDescription(array $named = [], array $typed = []): ?string
+    {
+        $this->setDescription($this->getDescription($named, $typed));
+
+        return $this->description;
     }
 
     /**
      * Determine if the class does not have a description.
+     * 
+     * @return bool
      */
     public function missingDescription(): bool
     {
@@ -58,6 +79,8 @@ trait HasDescription
 
     /**
      * Determine if the class has a description.
+     *
+     * @return bool
      */
     public function hasDescription(): bool
     {

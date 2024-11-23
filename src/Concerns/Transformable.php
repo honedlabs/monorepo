@@ -17,7 +17,7 @@ trait Transformable
      * @template TArgs
      * @template TValue
      *
-     * @param  \Closure(TArgs):TValue  $transform
+     * @param  \Closure(TArgs):TValue $transform
      * @return $this
      */
     public function transform(\Closure $transform): static
@@ -33,7 +33,7 @@ trait Transformable
      * @template TArgs
      * @template TValue
      *
-     * @param  \Closure(TArgs):TValue  $transform
+     * @param  \Closure(TArgs):TValue $transform
      * @return $this
      */
     public function transformUsing(\Closure $transform): static

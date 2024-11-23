@@ -10,14 +10,14 @@ namespace Honed\Core\Concerns;
 trait HasName
 {
     /**
-     * @var string|\Closure():string|null
+     * @var string|\Closure(mixed...):string|null
      */
     protected $name = null;
 
     /**
      * Set the name, chainable.
      *
-     * @param  string|\Closure():string  $name
+     * @param  string|(\Closure(mixed...):string)  $name
      * @return $this
      */
     public function name(string|\Closure $name): static
@@ -30,7 +30,7 @@ trait HasName
     /**
      * Set the name quietly.
      *
-     * @param  string|\Closure():string|null  $name
+     * @param  string|(\Closure(mixed...):string)|null  $name
      */
     public function setName(string|\Closure|null $name): void
     {
@@ -41,15 +41,35 @@ trait HasName
     }
 
     /**
-     * Get the name
+     * Get the name using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
      */
-    public function getName(): ?string
+    public function getName(array $named = [], array $typed = []): ?string
     {
-        return $this->evaluate($this->name);
+        return $this->evaluate($this->name, $named, $typed);
+    }
+
+    /**
+     * Resolve the name using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return string|null
+     */
+    public function resolveName(array $named = [], array $typed = []): ?string
+    {
+        $this->setName($this->getName($named, $typed));
+
+        return $this->name;
     }
 
     /**
      * Determine if the class does not have a name.
+     *
+     * @return bool
      */
     public function missingName(): bool
     {
@@ -58,6 +78,8 @@ trait HasName
 
     /**
      * Determine if the class has a name.
+     *
+     * @return bool
      */
     public function hasName(): bool
     {
@@ -68,6 +90,7 @@ trait HasName
      * Convert a string to the name format
      *
      * @param  string|\Stringable|(\Closure():string|\Stringable)  $label
+     * @return string
      */
     public function makeName(string|\Stringable|\Closure $label): string
     {

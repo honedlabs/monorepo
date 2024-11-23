@@ -10,14 +10,14 @@ namespace Honed\Core\Concerns;
 trait HasMeta
 {
     /**
-     * @var array<array-key, mixed>|\Closure():array<array-key, mixed>
+     * @var array<array-key, mixed>|\Closure(mixed...):array<array-key, mixed>
      */
     protected $meta = [];
 
     /**
      * Set the meta, chainable.
      *
-     * @param  array<array-key, mixed>|\Closure():array<array-key, mixed>  $meta
+     * @param  array<array-key, mixed>|\Closure(mixed...):array<array-key, mixed>  $meta
      * @return $this
      */
     public function meta(array|\Closure $meta): static
@@ -30,7 +30,7 @@ trait HasMeta
     /**
      * Set the meta quietly.
      *
-     * @param  array<array-key, mixed>|\Closure():array<array-key, mixed>|null  $meta
+     * @param  array<array-key, mixed>|\Closure(mixed...):array<array-key, mixed>|null $meta
      */
     public function setMeta(array|\Closure|null $meta): void
     {
@@ -41,17 +41,35 @@ trait HasMeta
     }
 
     /**
-     * Get the meta.
+     * Get the meta using the given closure dependencies.
      *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
      * @return array<array-key, mixed>
      */
-    public function getMeta()
+    public function getMeta(array $named = [], array $typed = []): array
     {
-        return $this->evaluate($this->meta);
+        return $this->evaluate($this->meta, $named, $typed);
+    }
+
+    /**
+     * Resolve the meta using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return array<array-key, mixed>
+     */
+    public function resolveMeta(array $named = [], array $typed = []): array
+    {
+        $this->setMeta($this->getMeta($named, $typed));
+
+        return $this->meta;
     }
 
     /**
      * Determine if the class does not have metadata.
+     *
+     * @return bool
      */
     public function missingMeta(): bool
     {
@@ -60,6 +78,8 @@ trait HasMeta
 
     /**
      * Determine if the class has metadata.
+     *
+     * @return bool
      */
     public function hasMeta(): bool
     {

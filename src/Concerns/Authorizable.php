@@ -10,14 +10,14 @@ namespace Honed\Core\Concerns;
 trait Authorizable
 {
     /**
-     * @var bool|(\Closure():bool)
+     * @var bool|(\Closure(mixed...):bool)
      */
-    protected bool|\Closure $authorized = true;
+    protected $authorized = true;
 
     /**
      * Set the condition for authorization, chainable.
      *
-     * @param  bool|\Closure():bool  $condition
+     * @param  bool|\Closure(mixed...):bool  $condition
      * @return $this
      */
     public function authorize(bool|\Closure $condition = true): static
@@ -30,7 +30,7 @@ trait Authorizable
     /**
      * Alias for authorize
      *
-     * @param  bool|\Closure():bool  $condition
+     * @param  bool|\Closure(mixed...):bool  $condition
      * @return $this
      */
     public function authorise(bool|\Closure $condition = true): static
@@ -41,7 +41,7 @@ trait Authorizable
     /**
      * Set the condition for authorization quietly.
      *
-     * @param  bool|\Closure():bool|null  $condition
+     * @param  bool|\Closure(mixed...):bool|null  $condition
      */
     public function setAuthorize(bool|\Closure|null $condition): void
     {
@@ -54,7 +54,7 @@ trait Authorizable
     /**
      * Alias for setAuthorize
      *
-     * @param  bool|\Closure():bool|null  $condition
+     * @param  bool|\Closure(mixed...):bool|null  $condition
      */
     public function setAuthorise(bool|\Closure|null $condition): void
     {
@@ -62,34 +62,50 @@ trait Authorizable
     }
 
     /**
-     * Determine if the class is authorized.
+     * Determine if the class is authorized using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return bool
      */
-    public function isAuthorized(): bool
+    public function isAuthorized(array $named = [], array $typed = []): bool
     {
-        return (bool) $this->evaluate($this->authorized);
+        return (bool) $this->evaluate($this->authorized, $named, $typed);
     }
 
     /**
-     * Determine if the class is not authorized.
+     * Determine if the class is not authorized using the given closure dependencies.
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return bool
      */
-    public function isNotAuthorized(): bool
+    public function isNotAuthorized(array $named = [], array $typed = []): bool
     {
-        return ! $this->isAuthorized();
+        return ! $this->isAuthorized($named, $typed);
     }
 
     /**
      * Alias for isAuthorized
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return bool
      */
-    public function isAuthorised(): bool
+    public function isAuthorised(array $named = [], array $typed = []): bool
     {
-        return $this->isAuthorized();
+        return $this->isAuthorized($named, $typed);
     }
 
     /**
      * Alias for isNotAuthorized
+     *
+     * @param array<string, mixed> $named
+     * @param array<string, mixed> $typed
+     * @return bool
      */
-    public function isNotAuthorised(): bool
+    public function isNotAuthorised(array $named = [], array $typed = []): bool
     {
-        return ! $this->isAuthorised();
+        return $this->isNotAuthorized($named, $typed);
     }
 }
