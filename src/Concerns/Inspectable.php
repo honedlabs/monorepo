@@ -28,4 +28,3 @@ trait Inspectable
         return value($default);
     }
 }
-
