@@ -2,40 +2,47 @@
 
 use Workbench\App\Component;
 
+
+beforeEach(function () {
+    $this->component = new Component;
+});
+
 it('can set a string attribute', function () {
-    $component = new Component;
-    $component->setAttribute($n = 'Attribute');
-    expect($component->getAttribute())->toBe($n);
+    $this->component->setAttribute($n = 'Attribute');
+    expect($this->component->getAttribute())->toBe($n);
 });
 
 it('can set a closure attribute', function () {
-    $component = new Component;
-    $component->setAttribute(fn () => 'Attribute');
-    expect($component->getAttribute())->toBe('Attribute');
+    $this->component->setAttribute(fn () => 'Attribute');
+    expect($this->component->getAttribute())->toBe('Attribute');
 });
 
 it('prevents null values', function () {
-    $component = new Component;
-    $component->setAttribute(null);
-    expect($component->missingAttribute())->toBeTrue();
+    $this->component->setAttribute(null);
+    expect($this->component->missingAttribute())->toBeTrue();
 });
 
 it('can chain attribute', function () {
-    $component = new Component;
-    expect($component->attribute($n = 'Attribute'))->toBeInstanceOf(Component::class);
-    expect($component->getAttribute())->toBe($n);
+    expect($this->component->attribute($n = 'Attribute'))->toBeInstanceOf(Component::class);
+    expect($this->component->getAttribute())->toBe($n);
 });
 
 it('checks for attribute', function () {
-    $component = new Component;
-    expect($component->hasAttribute())->toBeFalse();
-    $component->setAttribute('Attribute');
-    expect($component->hasAttribute())->toBeTrue();
+    expect($this->component->hasAttribute())->toBeFalse();
+    $this->component->setAttribute('Attribute');
+    expect($this->component->hasAttribute())->toBeTrue();
 });
 
 it('checks for no attribute', function () {
-    $component = new Component;
-    expect($component->missingAttribute())->toBeTrue();
-    $component->setAttribute('Attribute');
-    expect($component->missingAttribute())->toBeFalse();
+    expect($this->component->missingAttribute())->toBeTrue();
+    $this->component->setAttribute('Attribute');
+    expect($this->component->missingAttribute())->toBeFalse();
+});
+
+it('resolves an attribute', function () {
+    expect($this->component->attribute(fn ($record) => $record.'.'))
+        ->toBeInstanceOf(Component::class)
+        ->resolveAttribute(['record' => 'Attribute'])->toBe('Attribute.');
+
+    expect($this->component->getAttribute())->toBe('Attribute.');
 });

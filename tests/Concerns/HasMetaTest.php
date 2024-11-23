@@ -2,50 +2,54 @@
 
 use Workbench\App\Component;
 
+beforeEach(function () {
+    $this->component = new Component;
+});
+
 it('can set meta', function () {
-    $component = new Component;
-    $component->setMeta($m = [
+    $this->component->setMeta($m = [
         'key' => 'value',
     ]);
-    expect($component->getMeta())->toBe($m);
+    expect($this->component->getMeta())->toBe($m);
 });
 
 it('can set closure meta', function () {
-    $component = new Component;
-    $component->setMeta(fn () => ['key' => 'value']);
-    expect($component->getMeta())->toBe([
+    $this->component->setMeta(fn () => ['key' => 'value']);
+    expect($this->component->getMeta())->toBe([
         'key' => 'value',
     ]);
 });
 
 it('prevents null values', function () {
-    $component = new Component;
-    $component->setMeta(null);
-    expect($component->missingMeta())->toBeTrue();
+    $this->component->setMeta(null);
+    expect($this->component->missingMeta())->toBeTrue();
 });
 
 it('can chain meta', function () {
-    $component = new Component;
-    expect($component->meta($m = [
+    expect($this->component->meta($m = [
         'key' => 'value',
     ]))->toBeInstanceOf(Component::class);
-    expect($component->getMeta())->toBe($m);
+    expect($this->component->getMeta())->toBe($m);
 });
 
 it('checks for meta', function () {
-    $component = new Component;
-    expect($component->hasMeta())->toBeFalse();
-    $component->setMeta([]);
-    expect($component->hasMeta())->toBeFalse();
-    $component->setMeta(['key' => 'value']);
-    expect($component->hasMeta())->toBeTrue();
+    expect($this->component->hasMeta())->toBeFalse();
+    $this->component->setMeta([]);
+    expect($this->component->hasMeta())->toBeFalse();
+    $this->component->setMeta(['key' => 'value']);
+    expect($this->component->hasMeta())->toBeTrue();
 });
 
 it('checks for no meta', function () {
-    $component = new Component;
-    expect($component->missingMeta())->toBeTrue();
-    $component->setMeta([]);
-    expect($component->missingMeta())->toBeTrue();
-    $component->setMeta(['key' => 'value']);
-    expect($component->missingMeta())->toBeFalse();
+    expect($this->component->missingMeta())->toBeTrue();
+    $this->component->setMeta([]);
+    expect($this->component->missingMeta())->toBeTrue();
+    $this->component->setMeta(['key' => 'value']);
+    expect($this->component->missingMeta())->toBeFalse();
+});
+
+it('resolves meta', function () {
+    expect($this->component->meta(fn ($record) => ['key' => $record.'.']))
+        ->toBeInstanceOf(Component::class)
+        ->resolveMeta(['record' => 'Meta'])->toEqual(['key' => 'Meta.']);
 });

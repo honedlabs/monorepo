@@ -2,45 +2,49 @@
 
 use Workbench\App\Component;
 
+beforeEach(function () {
+    $this->component = new Component;
+});
+
 it('can set a string label', function () {
-    $component = new Component;
-    $component->setLabel($l = 'Label');
-    expect($component->getLabel())->toBe($l);
+    $this->component->setLabel($l = 'Label');
+    expect($this->component->getLabel())->toBe($l);
 });
 
 it('can set a closure label', function () {
-    $component = new Component;
-    $component->setLabel(fn () => 'Label');
-    expect($component->getLabel())->toBe('Label');
+    $this->component->setLabel(fn () => 'Label');
+    expect($this->component->getLabel())->toBe('Label');
 });
 
 it('prevents null values', function () {
-    $component = new Component;
-    $component->setLabel(null);
-    expect($component->missingLabel())->toBeTrue();
+    $this->component->setLabel(null);
+    expect($this->component->missingLabel())->toBeTrue();
 });
 
 it('can chain label', function () {
-    $component = new Component;
-    expect($component->label($l = 'Label'))->toBeInstanceOf(Component::class);
-    expect($component->getLabel())->toBe($l);
+    expect($this->component->label($l = 'Label'))->toBeInstanceOf(Component::class);
+    expect($this->component->getLabel())->toBe($l);
 });
 
 it('checks for label', function () {
-    $component = new Component;
-    expect($component->hasLabel())->toBeFalse();
-    $component->setLabel('Label');
-    expect($component->hasLabel())->toBeTrue();
+    expect($this->component->hasLabel())->toBeFalse();
+    $this->component->setLabel('Label');
+    expect($this->component->hasLabel())->toBeTrue();
 });
 
 it('checks for no label', function () {
-    $component = new Component;
-    expect($component->missingLabel())->toBeTrue();
-    $component->setLabel('Label');
-    expect($component->missingLabel())->toBeFalse();
+    expect($this->component->missingLabel())->toBeTrue();
+    $this->component->setLabel('Label');
+    expect($this->component->missingLabel())->toBeFalse();
 });
 
 it('converts text to a label', function () {
-    $label = (new Component)->makeLabel('new-Label');
+    $label = $this->component->makeLabel('new-Label');
     expect($label)->toBe('New label');
+});
+
+it('resolves a label', function () {
+    expect($this->component->label(fn ($record) => $record.'.'))
+        ->toBeInstanceOf(Component::class)
+        ->resolveLabel(['record' => 'Label'])->toBe('Label.');
 });

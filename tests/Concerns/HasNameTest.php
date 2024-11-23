@@ -2,45 +2,49 @@
 
 use Workbench\App\Component;
 
+beforeEach(function () {
+    $this->component = new Component;
+});
+
 it('can set a string name', function () {
-    $component = new Component;
-    $component->setName($n = 'Name');
-    expect($component->getName())->toBe($n);
+    $this->component->setName($n = 'Name');
+    expect($this->component->getName())->toBe($n);
 });
 
 it('can set a closure name', function () {
-    $component = new Component;
-    $component->setName(fn () => 'Name');
-    expect($component->getName())->toBe('Name');
+    $this->component->setName(fn () => 'Name');
+    expect($this->component->getName())->toBe('Name');
 });
 
 it('prevents null values', function () {
-    $component = new Component;
-    $component->setName(null);
-    expect($component->missingName())->toBeTrue();
+    $this->component->setName(null);
+    expect($this->component->missingName())->toBeTrue();
 });
 
 it('can chain name', function () {
-    $component = new Component;
-    expect($component->name($n = 'Name'))->toBeInstanceOf(Component::class);
-    expect($component->getName())->toBe($n);
+    expect($this->component->name($n = 'Name'))->toBeInstanceOf(Component::class);
+    expect($this->component->getName())->toBe($n);
 });
 
 it('checks for name', function () {
-    $component = new Component;
-    expect($component->hasName())->toBeFalse();
-    $component->setName('Name');
-    expect($component->hasName())->toBeTrue();
+    expect($this->component->hasName())->toBeFalse();
+    $this->component->setName('Name');
+    expect($this->component->hasName())->toBeTrue();
 });
 
 it('checks for no name', function () {
-    $component = new Component;
-    expect($component->missingName())->toBeTrue();
-    $component->setName('Name');
-    expect($component->missingName())->toBeFalse();
+    expect($this->component->missingName())->toBeTrue();
+    $this->component->setName('Name');
+    expect($this->component->missingName())->toBeFalse();
 });
 
 it('converts text to a name', function () {
-    $name = (new Component)->makeName('A name goes here');
+    $name = $this->component->makeName('A name goes here');
     expect($name)->toBe('a_name_goes_here');
+});
+
+it('resolves a name', function () {
+    expect($this->component->name(fn ($record) => $record.'.'))
+        ->toBeInstanceOf(Component::class)
+        ->resolveName(['record' => 'Name'])->toBe('Name.');
 });

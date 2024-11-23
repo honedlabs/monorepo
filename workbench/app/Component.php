@@ -13,6 +13,7 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasPlaceholder;
+use Honed\Core\Concerns\HasScope;
 use Honed\Core\Concerns\HasTitle;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasValue;
@@ -54,6 +55,7 @@ class Component extends Primitive
     use IsVisible;
     use Transformable;
     use Validatable;
+    use HasScope;
 
     protected $anonymous = Component::class;
 

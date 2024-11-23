@@ -2,40 +2,44 @@
 
 use Workbench\App\Component;
 
+beforeEach(function () {
+    $this->component = new Component;
+});
+
 it('can set a string placeholder', function () {
-    $component = new Component;
-    $component->setPlaceholder($p = 'Placeholder');
-    expect($component->getPlaceholder())->toBe($p);
+    $this->component->setPlaceholder($p = 'Placeholder');
+    expect($this->component->getPlaceholder())->toBe($p);
 });
 
 it('can set a closure placeholder', function () {
-    $component = new Component;
-    $component->setPlaceholder(fn () => 'Placeholder');
-    expect($component->getPlaceholder())->toBe('Placeholder');
+    $this->component->setPlaceholder(fn () => 'Placeholder');
+    expect($this->component->getPlaceholder())->toBe('Placeholder');
 });
 
 it('prevents null values', function () {
-    $component = new Component;
-    $component->setPlaceholder(null);
-    expect($component->missingPlaceholder())->toBeTrue();
+    $this->component->setPlaceholder(null);
+    expect($this->component->missingPlaceholder())->toBeTrue();
 });
 
 it('can chain placeholder', function () {
-    $component = new Component;
-    expect($component->placeholder($p = 'Placeholder'))->toBeInstanceOf(Component::class);
-    expect($component->getPlaceholder())->toBe($p);
+    expect($this->component->placeholder($p = 'Placeholder'))->toBeInstanceOf(Component::class);
+    expect($this->component->getPlaceholder())->toBe($p);
 });
 
 it('checks for placeholder', function () {
-    $component = new Component;
-    expect($component->hasPlaceholder())->toBeFalse();
-    $component->setPlaceholder('Placeholder');
-    expect($component->hasPlaceholder())->toBeTrue();
+    expect($this->component->hasPlaceholder())->toBeFalse();
+    $this->component->setPlaceholder('Placeholder');
+    expect($this->component->hasPlaceholder())->toBeTrue();
 });
 
 it('checks for no placeholder', function () {
-    $component = new Component;
-    expect($component->missingPlaceholder())->toBeTrue();
-    $component->setPlaceholder('Placeholder');
-    expect($component->missingPlaceholder())->toBeFalse();
+    expect($this->component->missingPlaceholder())->toBeTrue();
+    $this->component->setPlaceholder('Placeholder');
+    expect($this->component->missingPlaceholder())->toBeFalse();
+});
+
+it('resolves a placeholder', function () {
+    expect($this->component->placeholder(fn ($record) => $record.'.'))
+        ->toBeInstanceOf(Component::class)
+        ->resolvePlaceholder(['record' => 'Placeholder'])->toBe('Placeholder.');
 });

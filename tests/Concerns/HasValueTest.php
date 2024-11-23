@@ -2,20 +2,27 @@
 
 use Workbench\App\Component;
 
+beforeEach(function () {
+    $this->component = new Component;
+});
+
 it('can set a value', function () {
-    $component = new Component;
-    $component->setValue($v = 'Value');
-    expect($component->getValue())->toBe($v);
+    $this->component->setValue($v = 'Value');
+    expect($this->component->getValue())->toBe($v);
 });
 
 it('can set a closure value', function () {
-    $component = new Component;
-    $component->setValue(fn () => false);
-    expect($component->getValue())->toBeFalse();
+    $this->component->setValue(fn () => false);
+    expect($this->component->getValue())->toBeFalse();
 });
 
 it('can chain value', function () {
-    $component = new Component;
-    expect($component->value($v = 100))->toBeInstanceOf(Component::class);
-    expect($component->getValue())->toBe($v);
+    expect($this->component->value($v = 100))->toBeInstanceOf(Component::class);
+    expect($this->component->getValue())->toBe($v);
+});
+
+it('resolves a value', function () {
+    expect($this->component->value(fn ($record) => $record.'.'))
+        ->toBeInstanceOf(Component::class)
+        ->resolveValue(['record' => 'Value'])->toBe('Value.');
 });
