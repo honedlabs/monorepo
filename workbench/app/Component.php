@@ -43,6 +43,7 @@ class Component extends Primitive
     use HasName;
     use HasOptions;
     use HasPlaceholder;
+    use HasScope;
     use HasTitle;
     use HasType;
     use HasValue;
@@ -55,7 +56,6 @@ class Component extends Primitive
     use IsVisible;
     use Transformable;
     use Validatable;
-    use HasScope;
 
     protected $anonymous = Component::class;
 

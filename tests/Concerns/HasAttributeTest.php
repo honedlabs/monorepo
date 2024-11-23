@@ -2,7 +2,6 @@
 
 use Workbench\App\Component;
 
-
 beforeEach(function () {
     $this->component = new Component;
 });
