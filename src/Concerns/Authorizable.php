@@ -64,9 +64,8 @@ trait Authorizable
     /**
      * Determine if the class is authorized using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return bool
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function isAuthorized(array $named = [], array $typed = []): bool
     {
@@ -76,9 +75,8 @@ trait Authorizable
     /**
      * Determine if the class is not authorized using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return bool
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function isNotAuthorized(array $named = [], array $typed = []): bool
     {
@@ -88,9 +86,8 @@ trait Authorizable
     /**
      * Alias for isAuthorized
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return bool
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function isAuthorised(array $named = [], array $typed = []): bool
     {
@@ -100,9 +97,8 @@ trait Authorizable
     /**
      * Alias for isNotAuthorized
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return bool
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function isNotAuthorised(array $named = [], array $typed = []): bool
     {

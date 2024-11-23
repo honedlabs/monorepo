@@ -40,8 +40,8 @@ trait HasValue
     /**
      * Get the value using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      * @return int|string|array|null
      */
     public function getValue(array $named = [], array $typed = []): mixed
@@ -52,8 +52,8 @@ trait HasValue
     /**
      * Resolve the value using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      * @return int|string|array|null
      */
     public function resolveValue(array $named = [], array $typed = []): mixed

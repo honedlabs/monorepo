@@ -30,7 +30,7 @@ trait HasDescription
     /**
      * Set the description quietly.
      *
-     * @param  string|(\Closure(mixed...):string)|null $description
+     * @param  string|(\Closure(mixed...):string)|null  $description
      */
     public function setDescription(string|\Closure|null $description): void
     {
@@ -44,9 +44,8 @@ trait HasDescription
     /**
      * Get the description using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function getDescription(array $named = [], array $typed = []): ?string
     {
@@ -56,9 +55,8 @@ trait HasDescription
     /**
      * Resolve the description using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function resolveDescription(array $named = [], array $typed = []): ?string
     {
@@ -69,8 +67,6 @@ trait HasDescription
 
     /**
      * Determine if the class does not have a description.
-     * 
-     * @return bool
      */
     public function missingDescription(): bool
     {
@@ -79,8 +75,6 @@ trait HasDescription
 
     /**
      * Determine if the class has a description.
-     *
-     * @return bool
      */
     public function hasDescription(): bool
     {

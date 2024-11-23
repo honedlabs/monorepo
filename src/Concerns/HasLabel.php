@@ -17,7 +17,7 @@ trait HasLabel
     /**
      * Set the label, chainable.
      *
-     * @param  string|(\Closure(mixed...):string) $label
+     * @param  string|(\Closure(mixed...):string)  $label
      * @return $this
      */
     public function label(string|\Closure $label): static
@@ -30,7 +30,7 @@ trait HasLabel
     /**
      * Set the label quietly.
      *
-     * @param  string|(\Closure(mixed...):string)|null $label
+     * @param  string|(\Closure(mixed...):string)|null  $label
      */
     public function setLabel(string|\Closure|null $label): void
     {
@@ -43,9 +43,8 @@ trait HasLabel
     /**
      * Get the label using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function getLabel(array $named = [], array $typed = []): ?string
     {
@@ -55,9 +54,8 @@ trait HasLabel
     /**
      * Resolve the label using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function resolveLabel(array $named = [], array $typed = []): ?string
     {
@@ -68,8 +66,6 @@ trait HasLabel
 
     /**
      * Determine if the class does not have a label.
-     *
-     * @return bool
      */
     public function missingLabel(): bool
     {
@@ -78,8 +74,6 @@ trait HasLabel
 
     /**
      * Determine if the class has a label.
-     *
-     * @return bool
      */
     public function hasLabel(): bool
     {
@@ -88,9 +82,6 @@ trait HasLabel
 
     /**
      * Convert a string to the label format.
-     *
-     * @param mixed $name
-     * @return string
      */
     public function makeLabel(mixed $name): string
     {

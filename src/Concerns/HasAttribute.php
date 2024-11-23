@@ -43,9 +43,8 @@ trait HasAttribute
     /**
      * Get the attribute using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function getAttribute(array $named = [], array $typed = []): ?string
     {
@@ -55,9 +54,8 @@ trait HasAttribute
     /**
      * Resolve the attribute using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function resolveAttribute(array $named = [], array $typed = []): ?string
     {
@@ -68,8 +66,6 @@ trait HasAttribute
 
     /**
      * Determine if the class does not have a attribute.
-     *
-     * @return bool
      */
     public function missingAttribute(): bool
     {
@@ -78,8 +74,6 @@ trait HasAttribute
 
     /**
      * Determine if the class has a attribute.
-     *
-     * @return bool
      */
     public function hasAttribute(): bool
     {

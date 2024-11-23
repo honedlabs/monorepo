@@ -38,8 +38,8 @@ trait Evaluable
     }
 
     /**
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     protected function resolveClosureDependencyForEvaluation(ReflectionParameter $parameter, array $named, array $typed): mixed
     {
