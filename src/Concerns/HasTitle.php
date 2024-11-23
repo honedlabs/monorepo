@@ -30,7 +30,7 @@ trait HasTitle
     /**
      * Set the title quietly.
      *
-     * @param string|(\Closure(mixed...):string)|null $title
+     * @param  string|(\Closure(mixed...):string)|null  $title
      */
     public function setTitle(string|\Closure|null $title): void
     {
@@ -43,9 +43,8 @@ trait HasTitle
     /**
      * Get the title using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function getTitle(array $named = [], array $typed = []): ?string
     {
@@ -55,9 +54,8 @@ trait HasTitle
     /**
      * Resolve the title using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function resolveTitle(array $named = [], array $typed = []): ?string
     {
@@ -68,8 +66,6 @@ trait HasTitle
 
     /**
      * Determine if the class does not have a title.
-     *
-     * @return bool
      */
     public function missingTitle(): bool
     {
@@ -78,8 +74,6 @@ trait HasTitle
 
     /**
      * Determine if the class has a title.
-     *
-     * @return bool
      */
     public function hasTitle(): bool
     {

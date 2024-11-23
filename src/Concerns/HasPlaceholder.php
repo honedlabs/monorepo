@@ -27,7 +27,7 @@ trait HasPlaceholder
     /**
      * Set the placeholder quietly.
      *
-     * @param  string|(\Closure(mixed...):string)|null $placeholder
+     * @param  string|(\Closure(mixed...):string)|null  $placeholder
      */
     public function setPlaceholder(string|\Closure|null $placeholder): void
     {
@@ -40,9 +40,8 @@ trait HasPlaceholder
     /**
      * Get the placeholder using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function getPlaceholder(array $named = [], array $typed = []): ?string
     {
@@ -52,9 +51,8 @@ trait HasPlaceholder
     /**
      * Resolve the placeholder using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function resolvePlaceholder(array $named = [], array $typed = []): ?string
     {
@@ -65,8 +63,6 @@ trait HasPlaceholder
 
     /**
      * Determine if the class does not have a placeholder.
-     *
-     * @return bool
      */
     public function missingPlaceholder(): bool
     {
@@ -75,8 +71,6 @@ trait HasPlaceholder
 
     /**
      * Determine if the class has a placeholder.
-     *
-     * @return bool
      */
     public function hasPlaceholder(): bool
     {

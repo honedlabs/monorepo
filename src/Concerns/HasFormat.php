@@ -43,9 +43,8 @@ trait HasFormat
     /**
      * Get the format using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function getFormat(array $named = [], array $typed = []): ?string
     {
@@ -55,9 +54,8 @@ trait HasFormat
     /**
      * Resolve the format using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function resolveFormat(array $named = [], array $typed = []): ?string
     {
@@ -68,8 +66,6 @@ trait HasFormat
 
     /**
      * Determine if the class does not have a format.
-     *
-     * @return bool
      */
     public function missingFormat(): bool
     {
@@ -78,8 +74,6 @@ trait HasFormat
 
     /**
      * Determine if the class has a format.
-     *
-     * @return bool
      */
     public function hasFormat(): bool
     {

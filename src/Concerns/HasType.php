@@ -43,9 +43,8 @@ trait HasType
     /**
      * Get the type using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function getType(array $named = [], array $typed = []): ?string
     {
@@ -55,9 +54,8 @@ trait HasType
     /**
      * Resolve the type using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function resolveType(array $named = [], array $typed = []): ?string
     {
@@ -68,8 +66,6 @@ trait HasType
 
     /**
      * Determine if the class does not have a type.
-     *
-     * @return bool
      */
     public function missingType(): bool
     {
@@ -78,8 +74,6 @@ trait HasType
 
     /**
      * Determine if the class has a type.
-     *
-     * @return bool
      */
     public function hasType(): bool
     {

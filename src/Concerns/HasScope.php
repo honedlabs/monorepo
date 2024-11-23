@@ -43,9 +43,8 @@ trait HasScope
     /**
      * Get the scope using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function getScope(array $named = [], array $typed = []): ?string
     {
@@ -55,9 +54,8 @@ trait HasScope
     /**
      * Resolve the scope using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function resolveScope(array $named = [], array $typed = []): ?string
     {
@@ -68,8 +66,6 @@ trait HasScope
 
     /**
      * Determine if the class does not have a scope.
-     *
-     * @return bool
      */
     public function missingScope(): bool
     {
@@ -78,8 +74,6 @@ trait HasScope
 
     /**
      * Determine if the class has a scope.
-     *
-     * @return bool
      */
     public function hasScope(): bool
     {

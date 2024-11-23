@@ -10,8 +10,7 @@ namespace Honed\Core\Contracts;
 interface HigherOrder
 {
     /**
-     * @param string $method
-     * @param array<mixed> $parameters
+     * @param  array<mixed>  $parameters
      * @return T
      */
     public function __call(string $method, array $parameters);

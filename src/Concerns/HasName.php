@@ -43,9 +43,8 @@ trait HasName
     /**
      * Get the name using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function getName(array $named = [], array $typed = []): ?string
     {
@@ -55,9 +54,8 @@ trait HasName
     /**
      * Resolve the name using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
-     * @return string|null
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
     public function resolveName(array $named = [], array $typed = []): ?string
     {
@@ -68,8 +66,6 @@ trait HasName
 
     /**
      * Determine if the class does not have a name.
-     *
-     * @return bool
      */
     public function missingName(): bool
     {
@@ -78,8 +74,6 @@ trait HasName
 
     /**
      * Determine if the class has a name.
-     *
-     * @return bool
      */
     public function hasName(): bool
     {
@@ -90,7 +84,6 @@ trait HasName
      * Convert a string to the name format
      *
      * @param  string|\Stringable|(\Closure():string|\Stringable)  $label
-     * @return string
      */
     public function makeName(string|\Stringable|\Closure $label): string
     {

@@ -12,7 +12,6 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasPlaceholder;
-use Honed\Core\Concerns\HasProperty;
 use Honed\Core\Concerns\HasTitle;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasValue;
@@ -23,7 +22,6 @@ use Honed\Core\Concerns\IsHidden;
 use Honed\Core\Concerns\IsKey;
 use Honed\Core\Concerns\IsStrict;
 use Honed\Core\Concerns\IsVisible;
-use Honed\Core\Concerns\Routable;
 use Honed\Core\Concerns\Transformable;
 use Honed\Core\Concerns\Validatable;
 use Honed\Core\Identifier\Concerns\HasId;
@@ -33,6 +31,7 @@ use Honed\Core\Primitive;
 class Component extends Primitive
 {
     use Authorizable;
+    use HasAttribute;
     use HasDescription;
     use HasFormat;
     use HasId;
@@ -41,7 +40,6 @@ class Component extends Primitive
     use HasName;
     use HasOptions;
     use HasPlaceholder;
-    use HasAttribute;
     use HasTitle;
     use HasType;
     use HasValue;

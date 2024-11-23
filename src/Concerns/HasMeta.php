@@ -30,7 +30,7 @@ trait HasMeta
     /**
      * Set the meta quietly.
      *
-     * @param  array<array-key, mixed>|\Closure(mixed...):array<array-key, mixed>|null $meta
+     * @param  array<array-key, mixed>|\Closure(mixed...):array<array-key, mixed>|null  $meta
      */
     public function setMeta(array|\Closure|null $meta): void
     {
@@ -43,8 +43,8 @@ trait HasMeta
     /**
      * Get the meta using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      * @return array<array-key, mixed>
      */
     public function getMeta(array $named = [], array $typed = []): array
@@ -55,8 +55,8 @@ trait HasMeta
     /**
      * Resolve the meta using the given closure dependencies.
      *
-     * @param array<string, mixed> $named
-     * @param array<string, mixed> $typed
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      * @return array<array-key, mixed>
      */
     public function resolveMeta(array $named = [], array $typed = []): array
@@ -68,8 +68,6 @@ trait HasMeta
 
     /**
      * Determine if the class does not have metadata.
-     *
-     * @return bool
      */
     public function missingMeta(): bool
     {
@@ -78,8 +76,6 @@ trait HasMeta
 
     /**
      * Determine if the class has metadata.
-     *
-     * @return bool
      */
     public function hasMeta(): bool
     {
