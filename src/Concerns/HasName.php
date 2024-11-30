@@ -17,7 +17,7 @@ trait HasName
     /**
      * Set the name, chainable.
      *
-     * @param  string|(\Closure(mixed...):string)  $name
+     * @param  string|(\Closure(mixed...):string) $name
      * @return $this
      */
     public function name(string|\Closure $name): static
@@ -66,6 +66,8 @@ trait HasName
 
     /**
      * Determine if the class does not have a name.
+     *
+     * @return bool
      */
     public function missingName(): bool
     {
@@ -74,6 +76,8 @@ trait HasName
 
     /**
      * Determine if the class has a name.
+     *
+     * @return bool
      */
     public function hasName(): bool
     {
