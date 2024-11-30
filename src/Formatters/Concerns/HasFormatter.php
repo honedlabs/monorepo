@@ -13,20 +13,6 @@ trait HasFormatter
      */
     protected $formatter = null;
 
-    /**
-     * @template T
-     * @param T $value
-     * @return T|mixed
-     */
-    public function format(mixed $value)
-    {
-        if ($this->missingFormatter()) {
-            return $value;
-        }
-
-        return $this->formatter->format($value);
-    }
-
     public function setFormatter(Formatter $formatter): void
     {
         $this->formatter = $formatter;
@@ -58,5 +44,19 @@ trait HasFormatter
     // public function asNumeric()
 
     // public function asCurrency()
+
+        /**
+     * @template T
+     * @param T $value
+     * @return T|mixed
+     */
+    public function format(mixed $value)
+    {
+        if ($this->missingFormatter()) {
+            return $value;
+        }
+
+        return $this->formatter->format($value);
+    }
 }
 
