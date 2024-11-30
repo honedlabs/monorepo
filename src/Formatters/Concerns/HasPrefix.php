@@ -14,7 +14,7 @@ trait HasPrefix
     /**
      * Set the prefix, chainable.
      *
-     * @param string|(\Closure(mixed...):string) $prefix
+     * @param  string|(\Closure(mixed...):string)  $prefix
      * @return $this
      */
     public function prefix(string|\Closure $prefix): static
@@ -27,7 +27,7 @@ trait HasPrefix
     /**
      * Set the prefix quietly.
      *
-     * @param string|(\Closure(mixed...):string)|null $prefix
+     * @param  string|(\Closure(mixed...):string)|null  $prefix
      */
     public function setPrefix(string|\Closure|null $prefix): void
     {
@@ -40,9 +40,8 @@ trait HasPrefix
 
     /**
      * Get the prefix.
-     * 
-     * @param mixed $parameter
-     * @return string|null
+     *
+     * @param  mixed  $parameter
      */
     public function getPrefix($parameter = null): ?string
     {
@@ -51,8 +50,6 @@ trait HasPrefix
 
     /**
      * Determine if the class does not have a prefix.
-     * 
-     * @return bool
      */
     public function missingPrefix(): bool
     {
@@ -61,8 +58,6 @@ trait HasPrefix
 
     /**
      * Determine if the class has a prefix.
-     *
-     * @return bool
      */
     public function hasPrefix(): bool
     {

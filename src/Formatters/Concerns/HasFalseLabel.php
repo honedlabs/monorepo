@@ -23,19 +23,16 @@ trait HasFalseLabel
 
     /**
      * Configure the default false label.
-     * 
-     * @param string|null $falseLabel
+     *
      * @return void
      */
-    public static function setDefaultFalseLabel(string|null $falseLabel = null)
+    public static function setDefaultFalseLabel(?string $falseLabel = null)
     {
         static::$defaultFalseLabel = $falseLabel ?: self::DefaultFalseLabel;
     }
 
     /**
      * Get the default false label.
-     * 
-     * @return string
      */
     public static function getDefaultFalseLabel(): string
     {
@@ -45,7 +42,6 @@ trait HasFalseLabel
     /**
      * Set the false label, chainable.
      *
-     * @param  string $falseLabel
      * @return $this
      */
     public function falseLabel(string $falseLabel): static
@@ -57,10 +53,8 @@ trait HasFalseLabel
 
     /**
      * Set the false label quietly.
-     *
-     * @param  string|null  $falseLabel
      */
-    public function setFalseLabel(string|null $falseLabel): void
+    public function setFalseLabel(?string $falseLabel): void
     {
         if (is_null($falseLabel)) {
             return;
@@ -70,8 +64,6 @@ trait HasFalseLabel
 
     /**
      * Get the false label.
-     * 
-     * @return string|null
      */
     public function getFalseLabel(): ?string
     {
@@ -80,8 +72,7 @@ trait HasFalseLabel
 
     /**
      * Alias for falseLabel
-     * 
-     * @param string $falseLabel
+     *
      * @return $this
      */
     public function ifFalse(string $falseLabel): static

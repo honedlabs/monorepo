@@ -10,17 +10,17 @@ namespace Honed\Core\Formatters\Concerns;
 trait HasTimezone
 {
     /**
-     * @var DateTimeZone|string|int|null
+     * @var \DateTimeZone|string|int|null|(\Closure(): \DateTimeZone|string|int|null)
      */
     protected $timezone = null;
 
     /**
      * Set the timezone, chainable.
      *
-     * @param \DateTimeZone|string|int $timezone
+     * @param  \DateTimeZone|string|int|(\Closure(): \DateTimeZone|string|int)  $timezone
      * @return $this
      */
-    public function timezone(\DateTimeZone|string|int $timezone): static
+    public function timezone(mixed $timezone): static
     {
         $this->setTimezone($timezone);
 
@@ -30,9 +30,9 @@ trait HasTimezone
     /**
      * Set the timezone quietly.
      *
-     * @param DateTimeZone|string|int|null $timezone
+     * @param  \DateTimeZone|string|int|null|(\Closure(): \DateTimeZone|string|int)  $timezone
      */
-    public function setTimezone(\DateTimeZone|string|int|null $timezone): void
+    public function setTimezone(mixed $timezone): void
     {
         if (is_null($timezone)) {
             return;
@@ -42,19 +42,16 @@ trait HasTimezone
 
     /**
      * Get the timezone.
-     * 
-     * @param mixed $parameter
-     * @return \DateTimeZone|string|int|null
+     *
+     * @return \DateTimeZone|string|int|null|(\Closure(): \DateTimeZone|string|int)
      */
-    public function getTimezone($parameter = null): mixed
+    public function getTimezone(mixed $parameter = null): mixed
     {
         return value($this->timezone, $parameter);
     }
 
     /**
      * Determine if the class does not have a timezone.
-     * 
-     * @return bool
      */
     public function missingTimezone(): bool
     {
@@ -63,8 +60,6 @@ trait HasTimezone
 
     /**
      * Determine if the class has a timezone.
-     *
-     * @return bool
      */
     public function hasTimezone(): bool
     {

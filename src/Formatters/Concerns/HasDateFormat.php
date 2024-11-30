@@ -16,7 +16,7 @@ trait HasDateFormat
     /**
      * Set the dateFormat, chainable.
      *
-     * @param string|(\Closure():string) $dateFormat
+     * @param  string|(\Closure():string)  $dateFormat
      * @return $this
      */
     public function dateFormat(string|\Closure $dateFormat): static
@@ -29,7 +29,7 @@ trait HasDateFormat
     /**
      * Set the dateFormat quietly.
      *
-     * @param string|(\Closure():string)|null $dateFormat
+     * @param  string|(\Closure():string)|null  $dateFormat
      */
     public function setDateFormat(string|\Closure|null $dateFormat): void
     {
@@ -42,20 +42,17 @@ trait HasDateFormat
 
     /**
      * Get the dateFormat.
-     * 
-     * @param mixed $parameter
-     * @return string
+     *
+     * @param  mixed  $parameter
      */
     public function getDateFormat($parameter = null): string
     {
         return value($this->dateFormat, $parameter);
     }
 
-    
     /**
      * Set the date format to d M Y
-     * 
-     * @param string $separator
+     *
      * @return $this
      */
     public function dMY(string $separator = '/'): static
@@ -65,8 +62,7 @@ trait HasDateFormat
 
     /**
      * Set the date format to Y-m-d
-     * 
-     * @param string $separator
+     *
      * @return $this
      */
     public function Ymd(string $separator = '-'): static

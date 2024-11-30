@@ -14,7 +14,7 @@ trait HasCurrency
     /**
      * Set the currency, chainable.
      *
-     * @param string|(\Closure(mixed...):string) $currency
+     * @param  string|(\Closure(mixed...):string)  $currency
      * @return $this
      */
     public function currency(string|\Closure $currency): static
@@ -27,7 +27,7 @@ trait HasCurrency
     /**
      * Set the currency quietly.
      *
-     * @param string|(\Closure(mixed...):string)|null $currency
+     * @param  string|(\Closure(mixed...):string)|null  $currency
      */
     public function setCurrency(string|\Closure|null $currency): void
     {
@@ -40,9 +40,8 @@ trait HasCurrency
 
     /**
      * Get the currency.
-     * 
-     * @param mixed $parameter
-     * @return string|null
+     *
+     * @param  mixed  $parameter
      */
     public function getCurrency($parameter = null): ?string
     {
@@ -51,8 +50,6 @@ trait HasCurrency
 
     /**
      * Determine if the class does not have a currency.
-     * 
-     * @return bool
      */
     public function missingCurrency(): bool
     {
@@ -61,8 +58,6 @@ trait HasCurrency
 
     /**
      * Determine if the class has a currency.
-     *
-     * @return bool
      */
     public function hasCurrency(): bool
     {

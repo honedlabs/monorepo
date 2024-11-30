@@ -26,4 +26,3 @@ it('does not accept null values', function () {
     $this->formatter->setPrefix(null);
     expect($this->formatter->getPrefix())->toBe('#');
 });
-

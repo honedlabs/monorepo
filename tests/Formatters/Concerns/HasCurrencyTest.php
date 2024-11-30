@@ -26,4 +26,3 @@ it('does not accept null values', function () {
     $this->formatter->setcurrency(null);
     expect($this->formatter->getcurrency())->toBe('USD');
 });
-

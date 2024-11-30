@@ -26,4 +26,3 @@ it('does not accept null values', function () {
     $this->formatter->setPrecision(null);
     expect($this->formatter->getPrecision())->toBe(100);
 });
-

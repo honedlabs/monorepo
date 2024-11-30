@@ -40,8 +40,6 @@ trait IsKey
 
     /**
      * Determine if the class is the key.
-     * 
-     * @return bool
      */
     public function isKey(): bool
     {
@@ -50,8 +48,6 @@ trait IsKey
 
     /**
      * Determine if the class is not the key.
-     * 
-     * @return bool
      */
     public function isNotKey(): bool
     {

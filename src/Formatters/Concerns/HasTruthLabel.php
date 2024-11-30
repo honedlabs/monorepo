@@ -10,6 +10,7 @@ namespace Honed\Core\Formatters\Concerns;
 trait HasTruthLabel
 {
     public const DefaultTruthLabel = 'True';
+
     /**
      * @var string|null
      */
@@ -22,19 +23,16 @@ trait HasTruthLabel
 
     /**
      * Configure the default truth label.
-     * 
-     * @param string|null $truthLabel
+     *
      * @return void
      */
-    public static function setDefaultTruthLabel(string|null $truthLabel = null)
+    public static function setDefaultTruthLabel(?string $truthLabel = null)
     {
         static::$defaultTruthLabel = $truthLabel ?: self::DefaultTruthLabel;
     }
 
     /**
      * Get the default truth label.
-     * 
-     * @return string
      */
     public static function getDefaultTruthLabel(): string
     {
@@ -44,7 +42,6 @@ trait HasTruthLabel
     /**
      * Set the truth label, chainable.
      *
-     * @param string $truthLabel
      * @return $this
      */
     public function truthLabel(string $truthLabel): static
@@ -56,22 +53,18 @@ trait HasTruthLabel
 
     /**
      * Set the truth label quietly.
-     *
-     * @param string|null $truthLabel
      */
-    public function setTruthLabel(string|null $truthLabel): void
+    public function setTruthLabel(?string $truthLabel): void
     {
         if (is_null($truthLabel)) {
             return;
         }
-        
+
         $this->truthLabel = $truthLabel;
     }
 
     /**
      * Get the truth label.
-     * 
-     * @return string|null
      */
     public function getTruthLabel(): ?string
     {
@@ -80,8 +73,7 @@ trait HasTruthLabel
 
     /**
      * Alias for truthLabel
-     * 
-     * @param string $truthLabel
+     *
      * @return $this
      */
     public function ifTrue(string $truthLabel): static

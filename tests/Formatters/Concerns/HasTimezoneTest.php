@@ -26,4 +26,3 @@ it('does not accept null values', function () {
     $this->formatter->setTimezone(null);
     expect($this->formatter->getTimezone())->toBe('.');
 });
-

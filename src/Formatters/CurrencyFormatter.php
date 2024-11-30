@@ -13,10 +13,10 @@ class CurrencyFormatter implements Contracts\Formatter
 
     /**
      * Create a new currency formatter instance with the currency, precision, divide by, and locale.
-     * 
-     * @param string|(\Closure():string)|null $currency
-     * @param int|(\Closure():int)|null $divideBy
-     * @param string|(\Closure():string)|null $locale
+     *
+     * @param  string|(\Closure():string)|null  $currency
+     * @param  int|(\Closure():int)|null  $divideBy
+     * @param  string|(\Closure():string)|null  $locale
      */
     public function __construct(string|\Closure|null $currency = null, int|\Closure|null $divideBy = 100, string|\Closure|null $locale = null)
     {
@@ -27,10 +27,10 @@ class CurrencyFormatter implements Contracts\Formatter
 
     /**
      * Make a currency formatter with the currency,precision, divide by, and locale.
-     * 
-     * @param string|(\Closure():string)|null $currency
-     * @param int|(\Closure():int)|null $divideBy
-     * @param string|(\Closure():string)|null $locale
+     *
+     * @param  string|(\Closure():string)|null  $currency
+     * @param  int|(\Closure():int)|null  $divideBy
+     * @param  string|(\Closure():string)|null  $locale
      * @return $this
      */
     public static function make(string|\Closure|null $currency = null, int|\Closure|null $divideBy = 100, string|\Closure|null $locale = null): static
@@ -40,24 +40,22 @@ class CurrencyFormatter implements Contracts\Formatter
 
     /**
      * Format the value as a currency
-     * 
-     * @param mixed $value
-     * @return string|null
      */
-    public function format(mixed $value): string|null
+    public function format(mixed $value): ?string
     {
-        if (\is_null($value) || !\is_numeric($value)) {
+        if (\is_null($value) || ! \is_numeric($value)) {
             return null;
         }
 
         $value = (float) $value;
         $value = $this->hasDivideBy() ? $value / $this->getDivideBy() : $value;
+
         return Number::currency($value, $this->getCurrency() ?? Number::defaultCurrency(), $this->getLocale());
     }
 
     /**
      * Shorthand to specify that the currency is stored in cents
-     * 
+     *
      * @return $this
      */
     public function cents(): static
@@ -67,7 +65,7 @@ class CurrencyFormatter implements Contracts\Formatter
 
     /**
      * Shorthand to specify that the currency is stored in dollars
-     * 
+     *
      * @return $this
      */
     public function dollars(): static

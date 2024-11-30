@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Number;
 use Honed\Core\Formatters\CurrencyFormatter;
+use Illuminate\Support\Number;
 
 beforeEach(function () {
     $this->formatter = CurrencyFormatter::make();
@@ -42,4 +42,3 @@ it('has a shorthand for dollars', function () {
     $this->formatter->dollars();
     expect($this->formatter->getDivideBy())->toBe(1);
 });
-

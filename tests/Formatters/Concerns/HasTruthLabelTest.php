@@ -35,4 +35,3 @@ it('has alias ifTrue', function () {
     expect($this->formatter->ifTrue('No'))->toBeInstanceOf(BooleanFormatter::class)
         ->getTruthLabel()->toBe('No');
 });
-

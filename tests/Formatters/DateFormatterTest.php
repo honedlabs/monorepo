@@ -31,4 +31,3 @@ it('can parse and format using difference', function () {
 it('hides values which could not be parsed', function () {
     expect($this->formatter->format('invalid date'))->toBeNull();
 });
-

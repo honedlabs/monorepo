@@ -26,4 +26,3 @@ it('does not accept null values', function () {
     $this->formatter->setDivideBy(null);
     expect($this->formatter->getDivideBy())->toBe(100);
 });
-

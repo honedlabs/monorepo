@@ -1,9 +1,9 @@
 <?php
 
-use Honed\Core\Formatters\DateFormatter;
-use Honed\Core\Formatters\StringFormatter;
 use Honed\Core\Formatters\BooleanFormatter;
 use Honed\Core\Formatters\Concerns\Formattable;
+use Honed\Core\Formatters\DateFormatter;
+use Honed\Core\Formatters\StringFormatter;
 
 class FormattableComponent
 {
@@ -11,7 +11,7 @@ class FormattableComponent
 }
 
 beforeEach(function () {
-    $this->component = new FormattableComponent();
+    $this->component = new FormattableComponent;
 });
 
 it('has no formatter by default', function () {

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Number;
 use Honed\Core\Formatters\NumberFormatter;
+use Illuminate\Support\Number;
 
 beforeEach(function () {
     $this->formatter = NumberFormatter::make();
