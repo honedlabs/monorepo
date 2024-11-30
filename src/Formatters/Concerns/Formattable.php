@@ -6,7 +6,9 @@ namespace Honed\Core\Formatters\Concerns;
 
 use Honed\Core\Formatters\BooleanFormatter;
 use Honed\Core\Formatters\Contracts\Formatter;
+use Honed\Core\Formatters\CurrencyFormatter;
 use Honed\Core\Formatters\DateFormatter;
+use Honed\Core\Formatters\NumberFormatter;
 use Honed\Core\Formatters\StringFormatter;
 
 trait Formattable
@@ -67,6 +69,8 @@ trait Formattable
     /**
      * Set the class to use a boolean formatter.
      *
+     * @param  string|(\Closure():string)|null  $truthLabel
+     * @param  string|(\Closure():string)|null  $falseLabel
      * @return $this
      */
     public function asBoolean(string|\Closure|null $truthLabel = null, string|\Closure|null $falseLabel = null): static
@@ -77,6 +81,8 @@ trait Formattable
     /**
      * Set the class to use a string formatter.
      *
+     * @param  string|(\Closure():string)|null  $prefix
+     * @param  string|(\Closure():string)|null  $suffix
      * @return $this
      */
     public function asString(string|\Closure|null $prefix = null, string|\Closure|null $suffix = null): static
@@ -87,6 +93,9 @@ trait Formattable
     /**
      * Set the class to use a date formatter.
      *
+     * @param  string|(\Closure():string)|null  $format
+     * @param  bool|(\Closure():bool)  $diff
+     * @param  string|(\Closure():string)|null  $timezone
      * @return $this
      */
     public function asDate(string|\Closure|null $format = null, bool|\Closure $diff = false, string|\Closure|null $timezone = null): static
@@ -94,9 +103,31 @@ trait Formattable
         return $this->formatter(DateFormatter::make($format, $diff, $timezone));
     }
 
-    // public function asNumeric()
+    /**
+     * Set the class to use a number formatter.
+     *
+     * @param  int|(\Closure():int)|null  $precision
+     * @param  int|(\Closure():int)|null  $divideBy
+     * @param  string|(\Closure():string)|null  $locale
+     * @return $this
+     */
+    public function asNumeric(int|\Closure|null $precision = null, int|\Closure|null $divideBy = null, string|\Closure|null $locale = null): static
+    {
+        return $this->formatter(NumberFormatter::make($precision, $divideBy, $locale));
+    }
 
-    // public function asCurrency()
+    /**
+     * Set the class to use a currency formatter.
+     *
+     * @param  string|(\Closure():string)|null  $currency
+     * @param  int|(\Closure():int)|null  $precision
+     * @param  string|(\Closure():string)|null  $locale
+     * @return $this
+     */
+    public function asCurrency(string|\Closure|null $currency = null, int|\Closure|null $precision = null, string|\Closure|null $locale = null): static
+    {
+        return $this->formatter(CurrencyFormatter::make($currency, $precision, $locale));
+    }
 
     /**
      * Apply the formatter to the given value.

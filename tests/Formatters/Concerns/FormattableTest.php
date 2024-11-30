@@ -2,7 +2,9 @@
 
 use Honed\Core\Formatters\BooleanFormatter;
 use Honed\Core\Formatters\Concerns\Formattable;
+use Honed\Core\Formatters\CurrencyFormatter;
 use Honed\Core\Formatters\DateFormatter;
+use Honed\Core\Formatters\NumberFormatter;
 use Honed\Core\Formatters\StringFormatter;
 
 class FormattableComponent
@@ -64,4 +66,18 @@ it('has a shorthand for setting a date formatter', function () {
         ->hasFormatter()->toBeTrue()
         ->missingFormatter()->toBeFalse()
         ->getFormatter()->toBeInstanceOf(DateFormatter::class);
+});
+
+it('has a shorthand for setting a number formatter', function () {
+    expect($this->component->asNumeric())->toBeInstanceOf(FormattableComponent::class)
+        ->hasFormatter()->toBeTrue()
+        ->missingFormatter()->toBeFalse()
+        ->getFormatter()->toBeInstanceOf(NumberFormatter::class);
+});
+
+it('has a shorthand for setting a currency formatter', function () {
+    expect($this->component->asCurrency())->toBeInstanceOf(FormattableComponent::class)
+        ->hasFormatter()->toBeTrue()
+        ->missingFormatter()->toBeFalse()
+        ->getFormatter()->toBeInstanceOf(CurrencyFormatter::class);
 });
