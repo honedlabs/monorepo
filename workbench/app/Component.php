@@ -44,6 +44,7 @@ class Component extends Primitive
     use HasName;
     use HasOptions;
     use HasPlaceholder;
+    use HasScope;
     use HasTitle;
     use HasType;
     use HasValue;
