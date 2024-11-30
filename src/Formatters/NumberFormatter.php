@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Core\Formatters;
 
+use Honed\Core\Concerns\HasLocale;
 use Illuminate\Support\Number;
 
 class NumberFormatter implements Contracts\Formatter
 {
     use Concerns\HasPrecision;
     use Concerns\HasDivideBy;
+    use HasLocale;
 
     /**
      * Create a new number formatter instance with a precision, divide by, and rounding.

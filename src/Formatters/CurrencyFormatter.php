@@ -2,12 +2,14 @@
 
 namespace Honed\Core\Formatters;
 
+use Honed\Core\Concerns\HasLocale;
 use Illuminate\Support\Number;
 
 class CurrencyFormatter implements Contracts\Formatter
 {
     use Concerns\HasCurrency;
     use Concerns\HasDivideBy;
+    use HasLocale;
 
     /**
      * Create a new currency formatter instance with the currency, precision, divide by, and locale.
