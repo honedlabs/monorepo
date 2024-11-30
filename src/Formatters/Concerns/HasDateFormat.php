@@ -6,10 +6,12 @@ namespace Honed\Core\Formatters\Concerns;
 
 trait HasDateFormat
 {
+    public const DefaultDateFormat = 'd/m/y';
+
     /**
      * @var string|(\Closure():string)
      */
-    protected $dateFormat = 'd/m/y';
+    protected $dateFormat = self::DefaultDateFormat;
 
     /**
      * Set the dateFormat, chainable.
@@ -34,7 +36,7 @@ trait HasDateFormat
         if (\is_null($dateFormat)) {
             return;
         }
-        
+
         $this->dateFormat = $dateFormat;
     }
 
@@ -47,5 +49,28 @@ trait HasDateFormat
     public function getDateFormat($parameter = null): string
     {
         return value($this->dateFormat, $parameter);
+    }
+
+    
+    /**
+     * Set the date format to d M Y
+     * 
+     * @param string $separator
+     * @return $this
+     */
+    public function dMY(string $separator = '/'): static
+    {
+        return $this->dateFormat("d{$separator}M{$separator}Y");
+    }
+
+    /**
+     * Set the date format to Y-m-d
+     * 
+     * @param string $separator
+     * @return $this
+     */
+    public function Ymd(string $separator = '-'): static
+    {
+        return $this->dateFormat("Y{$separator}m{$separator}d");
     }
 }

@@ -2,45 +2,38 @@
 
 use Workbench\App\Component;
 
+beforeEach(function () {
+    $this->component = new Component;
+});
+
 it('can set active', function () {
-    $component = new Component;
-    $component->setActive(true);
-    expect($component->isActive())->toBeTrue();
+    $this->component->setActive(true);
+    expect($this->component->isActive())->toBeTrue();
 });
 
 it('prevents null values', function () {
-    $component = new Component;
-    $component->setActive(null);
-    expect($component->isActive())->toBeFalse();
+    $this->component->setActive(null);
+    expect($this->component->isActive())->toBeFalse();
 });
 
 it('can set closure active', function () {
-    $component = new Component;
-    $component->setActive(fn () => true);
-    expect($component->isActive())->toBeTrue();
+    $this->component->setActive(fn () => true);
+    expect($this->component->isActive())->toBeTrue();
 });
 
 it('defaults to false', function () {
-    $component = new Component;
-    expect($component->isActive())->toBeFalse();
+    expect($this->component->isActive())->toBeFalse();
 });
 
 it('can chain active', function () {
-    $component = new Component;
-    expect($component->active(true))->toBeInstanceOf(Component::class);
-    expect($component->isActive())->toBeTrue();
+    expect($this->component->active(true))->toBeInstanceOf(Component::class);
+    expect($this->component->isActive())->toBeTrue();
 });
 
 it('checks if active', function () {
-    $component = new Component;
-    expect($component->isActive())->toBeFalse();
-    $component->setActive('Active');
-    expect($component->isActive())->toBeTrue();
-});
-
-it('checks if not active', function () {
-    $component = new Component;
-    expect($component->isNotActive())->toBeTrue();
-    $component->setActive('Active');
-    expect($component->isNotActive())->toBeFalse();
+    expect($this->component->isActive())->toBeFalse();
+    expect($this->component->isNotActive())->toBeTrue();
+    $this->component->setActive('Active');
+    expect($this->component->isActive())->toBeTrue();
+    expect($this->component->isNotActive())->toBeFalse();
 });

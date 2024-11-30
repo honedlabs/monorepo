@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Core\Formatters;
 
 use Carbon\Carbon;
-use Honed\Core\Concerns\HasFormat;
 
 class DateFormatter implements Contracts\Formatter
 {
@@ -47,37 +46,14 @@ class DateFormatter implements Contracts\Formatter
      * @param T|mixed $value
      * @return T|string
      */
-    public function format(mixed $value): string
+    public function format(mixed $value): ?string
     {
         try {
             return $this->isDifference() 
                 ? Carbon::parse($value, $this->getTimezone())->diffForHumans()
                 : Carbon::parse($value, $this->getTimezone())->format($this->getDateFormat());
         } catch (\Throwable $th) {
-            dd($th);
-            return $value;
+            return null; // Hide the error-causing value
         }
-    }
-
-    /**
-     * Format the value as d M Y
-     * 
-     * @param string $separator
-     * @return $this
-     */
-    public function dMY(string $separator = '/'): static
-    {
-        return $this->dateFormat("d{$separator}M{$separator}Y");
-    }
-
-    /**
-     * Format the value as Y-m-d
-     * 
-     * @param string $separator
-     * @return $this
-     */
-    public function Ymd(string $separator = '-'): static
-    {
-        return $this->dateFormat("Y{$separator}m{$separator}d");
     }
 }

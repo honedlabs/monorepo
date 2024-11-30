@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-/**
- * @mixin \Honed\Core\Concerns\Evaluable
- */
 trait IsKey
 {
     /**
@@ -34,22 +31,27 @@ trait IsKey
      */
     public function setKey(bool|\Closure|null $key): void
     {
-        if (is_null($key)) {
+        if (\is_null($key)) {
             return;
         }
+
         $this->key = $key;
     }
 
     /**
      * Determine if the class is the key.
+     * 
+     * @return bool
      */
     public function isKey(): bool
     {
-        return (bool) $this->evaluate($this->key);
+        return (bool) value($this->key);
     }
 
     /**
      * Determine if the class is not the key.
+     * 
+     * @return bool
      */
     public function isNotKey(): bool
     {
