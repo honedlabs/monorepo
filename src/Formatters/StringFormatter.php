@@ -39,8 +39,12 @@ class StringFormatter implements Contracts\Formatter
      * @param mixed $value
      * @return string
      */
-    public function format(mixed $value): string
+    public function format(mixed $value): string|null
     {
+        if (\is_null($value)) {
+            return null;
+        }
+        
         return $this->getPrefix() . $value . $this->getSuffix();
     }
 }

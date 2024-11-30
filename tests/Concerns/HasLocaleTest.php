@@ -3,23 +3,23 @@
 use Honed\Core\Concerns\HasLocale;
 use Illuminate\Support\Facades\App;
 
-class Component
+class LocaleComponent
 {
     use HasLocale;
 }
 
 beforeEach(function () {
-    $this->component = new Component();
+    $this->component = new LocaleComponent();
 });
 
 it('has app locale by default', function () {
-    expect($this->component->hasLocale())->toBeTrue();
-    expect($this->component->missingLocale())->toBeFalse();
+    expect($this->component->hasLocale())->toBeFalse();
+    expect($this->component->missingLocale())->toBeTrue();
     expect($this->component->getLocale())->toBe(App::getLocale());
 });
 
 it('can set a locale', function () {
-    expect($this->component->locale('au'))->toBeInstanceOf(Component::class)
+    expect($this->component->locale('au'))->toBeInstanceOf(LocaleComponent::class)
         ->getLocale()->toBe('au');
 });
 

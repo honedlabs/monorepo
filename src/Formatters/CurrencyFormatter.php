@@ -44,14 +44,34 @@ class CurrencyFormatter implements Contracts\Formatter
      * @param mixed $value
      * @return string|null
      */
-    public function format(mixed $value): string|null|false
+    public function format(mixed $value): string|null
     {
-        if (!\is_numeric($value)) {
+        if (\is_null($value) || !\is_numeric($value)) {
             return null;
         }
 
+        $value = (float) $value;
         $value = $this->hasDivideBy() ? $value / $this->getDivideBy() : $value;
+        return Number::currency($value, $this->getCurrency() ?? Number::defaultCurrency(), $this->getLocale());
+    }
 
-        return Number::currency($value, $this->getCurrency(), $this->getLocale());
+    /**
+     * Shorthand to specify that the currency is stored in cents
+     * 
+     * @return $this
+     */
+    public function cents(): static
+    {
+        return $this->divideBy(100);
+    }
+
+    /**
+     * Shorthand to specify that the currency is stored in dollars
+     * 
+     * @return $this
+     */
+    public function dollars(): static
+    {
+        return $this->divideBy(1);
     }
 }

@@ -46,14 +46,18 @@ class DateFormatter implements Contracts\Formatter
      * @param mixed $value
      * @return string
      */
-    public function format(mixed $value): string
+    public function format(mixed $value): string|null
     {
+        if (\is_null($value)) {
+            return null;
+        }
+
         try {
             return $this->isDifference() 
                 ? Carbon::parse($value, $this->getTimezone())->diffForHumans()
                 : Carbon::parse($value, $this->getTimezone())->format($this->getDateFormat());
         } catch (InvalidFormatException $th) {
-            return ''; // Hide the error-causing value
+            return null; // Hide the error-causing value
         }
     }
 }

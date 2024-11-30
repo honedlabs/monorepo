@@ -5,13 +5,13 @@ use Honed\Core\Formatters\StringFormatter;
 use Honed\Core\Formatters\BooleanFormatter;
 use Honed\Core\Formatters\Concerns\Formattable;
 
-class Component
+class FormattableComponent
 {
     use Formattable;
 }
 
 beforeEach(function () {
-    $this->component = new Component();
+    $this->component = new FormattableComponent();
 });
 
 it('has no formatter by default', function () {
@@ -20,7 +20,7 @@ it('has no formatter by default', function () {
 });
 
 it('can set a formatter', function () {
-    expect($this->component->formatter(DateFormatter::make()))->toBeInstanceOf(Component::class)
+    expect($this->component->formatter(DateFormatter::make()))->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->missingFormatter()->toBeFalse()
         ->getFormatter()->toBeInstanceOf(DateFormatter::class);
@@ -46,21 +46,21 @@ it('does not format a value if there is no formatter', function () {
 });
 
 it('has a shorthand for setting a boolean formatter', function () {
-    expect($this->component->asBoolean())->toBeInstanceOf(Component::class)
+    expect($this->component->asBoolean())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->missingFormatter()->toBeFalse()
         ->getFormatter()->toBeInstanceOf(BooleanFormatter::class);
 });
 
 it('has a shorthand for setting a string formatter', function () {
-    expect($this->component->asString())->toBeInstanceOf(Component::class)
+    expect($this->component->asString())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->missingFormatter()->toBeFalse()
         ->getFormatter()->toBeInstanceOf(StringFormatter::class);
 });
 
 it('has a shorthand for setting a date formatter', function () {
-    expect($this->component->asDate())->toBeInstanceOf(Component::class)
+    expect($this->component->asDate())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->missingFormatter()->toBeFalse()
         ->getFormatter()->toBeInstanceOf(DateFormatter::class);

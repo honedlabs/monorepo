@@ -20,10 +20,11 @@ class NumberFormatter implements Contracts\Formatter
      * @param int|(\Closure():int)|null $divideBy
      * @param string|(\Closure():string)|null $locale
      */
-    public function __construct(int|\Closure|null $precision = null, int|\Closure|null $divideBy = null)
+    public function __construct(int|\Closure|null $precision = null, int|\Closure|null $divideBy = null, string|\Closure|null $locale = null)
     {
         $this->setPrecision($precision);
         $this->setDivideBy($divideBy);
+        $this->setLocale($locale);
     }
     
     /**
@@ -47,11 +48,11 @@ class NumberFormatter implements Contracts\Formatter
      */
     public function format(mixed $value): string|null|false
     {
-        // If it isn't a number, return null
-        if (!\is_numeric($value)) {
+        if (\is_null($value) || !\is_numeric($value)) {
             return null;
         }
 
+        $value = (float) $value;
         $value = $this->hasDivideBy() ? $value / $this->getDivideBy() : $value;
         return Number::format($value, precision: $this->getPrecision(), locale: $this->getLocale());
     }
