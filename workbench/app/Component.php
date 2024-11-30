@@ -6,6 +6,7 @@ namespace Workbench\App;
 
 use Honed\Core\Concerns\Authorizable;
 use Honed\Core\Concerns\Encodable;
+use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasAttribute;
 use Honed\Core\Concerns\HasDescription;
 use Honed\Core\Concerns\HasFormat;
@@ -56,6 +57,7 @@ class Component extends Primitive
     use Transformable;
     use Validatable;
     use HasScope;
+    use HasAlias;
 
     protected $anonymous = Component::class;
 

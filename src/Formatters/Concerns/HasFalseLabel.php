@@ -9,6 +9,8 @@ namespace Honed\Core\Formatters\Concerns;
  */
 trait HasFalseLabel
 {
+    public const DefaultFalseLabel = 'False';
+
     /**
      * @var string|(\Closure():string)|null
      */
@@ -17,17 +19,17 @@ trait HasFalseLabel
     /**
      * @var string
      */
-    protected static $defaultFalseLabel = 'False';
+    protected static $defaultFalseLabel = self::DefaultFalseLabel;
 
     /**
      * Configure the default false label.
      * 
-     * @param string $falseLabel
+     * @param string|null $falseLabel
      * @return void
      */
-    public static function setDefaultFalseLabel(string $falseLabel)
+    public static function setDefaultFalseLabel(string|null $falseLabel = null)
     {
-        static::$defaultFalseLabel = $falseLabel;
+        static::$defaultFalseLabel = $falseLabel ?: self::DefaultFalseLabel;
     }
 
     /**
@@ -43,10 +45,10 @@ trait HasFalseLabel
     /**
      * Set the false label, chainable.
      *
-     * @param  string|\Closure():string  $falseLabel
+     * @param  string $falseLabel
      * @return $this
      */
-    public function falseLabel(string|\Closure $falseLabel): static
+    public function falseLabel(string $falseLabel): static
     {
         $this->setFalseLabel($falseLabel);
 
@@ -56,9 +58,9 @@ trait HasFalseLabel
     /**
      * Set the false label quietly.
      *
-     * @param  string|(\Closure():string)|null  $falseLabel
+     * @param  string|null  $falseLabel
      */
-    public function setFalseLabel(string|\Closure|null $falseLabel): void
+    public function setFalseLabel(string|null $falseLabel): void
     {
         if (is_null($falseLabel)) {
             return;
@@ -73,16 +75,16 @@ trait HasFalseLabel
      */
     public function getFalseLabel(): ?string
     {
-        return $this->evaluate($this->falseLabel) ?? static::getDefaultFalseLabel();
+        return $this->falseLabel ?? static::getDefaultFalseLabel();
     }
 
     /**
      * Alias for falseLabel
      * 
-     * @param string|\Closure $falseLabel
+     * @param string $falseLabel
      * @return $this
      */
-    public function ifFalse(string|\Closure $falseLabel): static
+    public function ifFalse(string $falseLabel): static
     {
         return $this->falseLabel($falseLabel);
     }

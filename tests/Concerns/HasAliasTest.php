@@ -1,6 +1,8 @@
 <?php
 
 use Workbench\App\Component;
+use Honed\Core\Concerns\HasAlias;
+
 
 beforeEach(function () {
     $this->component = new Component;

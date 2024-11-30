@@ -9,25 +9,26 @@ namespace Honed\Core\Formatters\Concerns;
  */
 trait HasTruthLabel
 {
+    public const DefaultTruthLabel = 'True';
     /**
-     * @var string|(\Closure():string)|null
+     * @var string|null
      */
     protected $truthLabel = null;
 
     /**
      * @var string
      */
-    protected static $defaultTruthLabel = 'True';
+    protected static $defaultTruthLabel = self::DefaultTruthLabel;
 
     /**
      * Configure the default truth label.
      * 
-     * @param string $truthLabel
+     * @param string|null $truthLabel
      * @return void
      */
-    public static function setDefaultTruthLabel(string $truthLabel)
+    public static function setDefaultTruthLabel(string|null $truthLabel = null)
     {
-        static::$defaultTruthLabel = $truthLabel;
+        static::$defaultTruthLabel = $truthLabel ?: self::DefaultTruthLabel;
     }
 
     /**
@@ -43,10 +44,10 @@ trait HasTruthLabel
     /**
      * Set the truth label, chainable.
      *
-     * @param  string|\Closure():string  $truthLabel
+     * @param string $truthLabel
      * @return $this
      */
-    public function truthLabel(string|\Closure $truthLabel): static
+    public function truthLabel(string $truthLabel): static
     {
         $this->setTruthLabel($truthLabel);
 
@@ -56,9 +57,9 @@ trait HasTruthLabel
     /**
      * Set the truth label quietly.
      *
-     * @param  string|(\Closure():string)|null  $truthLabel
+     * @param string|null $truthLabel
      */
-    public function setTruthLabel(string|\Closure|null $truthLabel): void
+    public function setTruthLabel(string|null $truthLabel): void
     {
         if (is_null($truthLabel)) {
             return;
@@ -73,16 +74,16 @@ trait HasTruthLabel
      */
     public function getTruthLabel(): ?string
     {
-        return $this->evaluate($this->truthLabel) ?? static::getDefaultTruthLabel();
+        return $this->truthLabel ?? static::getDefaultTruthLabel();
     }
 
     /**
      * Alias for truthLabel
      * 
-     * @param string|\Closure $truthLabel
+     * @param string $truthLabel
      * @return $this
      */
-    public function ifTrue(string|\Closure $truthLabel): static
+    public function ifTrue(string $truthLabel): static
     {
         return $this->truthLabel($truthLabel);
     }
