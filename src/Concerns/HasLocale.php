@@ -16,7 +16,7 @@ trait HasLocale
     /**
      * Set the locale, chainable.
      *
-     * @param string|(\Closure():string) $locale
+     * @param  string|(\Closure():string)  $locale
      * @return $this
      */
     public function locale(string|\Closure $locale): static
@@ -29,7 +29,7 @@ trait HasLocale
     /**
      * Set the locale quietly.
      *
-     * @param string|(\Closure():string)|null $locale
+     * @param  string|(\Closure():string)|null  $locale
      */
     public function setLocale(string|\Closure|null $locale): void
     {
@@ -42,9 +42,8 @@ trait HasLocale
 
     /**
      * Get the locale.
-     * 
-     * @param mixed $parameter
-     * @return string
+     *
+     * @param  mixed  $parameter
      */
     public function getLocale($parameter = null): string
     {
@@ -53,8 +52,6 @@ trait HasLocale
 
     /**
      * Determine if the class does not have a locale.
-     * 
-     * @return bool
      */
     public function missingLocale(): bool
     {
@@ -63,8 +60,6 @@ trait HasLocale
 
     /**
      * Determine if the class has a locale.
-     *
-     * @return bool
      */
     public function hasLocale(): bool
     {

@@ -63,8 +63,6 @@ trait HasPlaceholder
 
     /**
      * Determine if the class does not have a placeholder.
-     * 
-     * @return bool
      */
     public function missingPlaceholder(): bool
     {
@@ -73,8 +71,6 @@ trait HasPlaceholder
 
     /**
      * Determine if the class has a placeholder.
-     *
-     * @return bool
      */
     public function hasPlaceholder(): bool
     {

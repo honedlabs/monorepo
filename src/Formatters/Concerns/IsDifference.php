@@ -40,8 +40,6 @@ trait IsDifference
 
     /**
      * Determine if the class is the difference.
-     * 
-     * @return bool
      */
     public function isDifference(): bool
     {
@@ -50,8 +48,6 @@ trait IsDifference
 
     /**
      * Determine if the class is not the difference.
-     * 
-     * @return bool
      */
     public function isNotDifference(): bool
     {
@@ -60,7 +56,7 @@ trait IsDifference
 
     /**
      * Alias for difference
-     * 
+     *
      * @return $this
      */
     public function since(): static
@@ -70,7 +66,7 @@ trait IsDifference
 
     /**
      * Alias for difference
-     * 
+     *
      * @return $this
      */
     public function diff(): static

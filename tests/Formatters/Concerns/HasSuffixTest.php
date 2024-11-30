@@ -26,4 +26,3 @@ it('does not accept null values', function () {
     $this->formatter->setSuffix(null);
     expect($this->formatter->getSuffix())->toBe('.');
 });
-

@@ -17,7 +17,6 @@ trait HasTimezone
     /**
      * Set the timezone, chainable.
      *
-     * @param \DateTimeZone|string|int $timezone
      * @return $this
      */
     public function timezone(\DateTimeZone|string|int $timezone): static
@@ -30,7 +29,7 @@ trait HasTimezone
     /**
      * Set the timezone quietly.
      *
-     * @param DateTimeZone|string|int|null $timezone
+     * @param  DateTimeZone|string|int|null  $timezone
      */
     public function setTimezone(\DateTimeZone|string|int|null $timezone): void
     {
@@ -42,8 +41,8 @@ trait HasTimezone
 
     /**
      * Get the timezone.
-     * 
-     * @param mixed $parameter
+     *
+     * @param  mixed  $parameter
      * @return \DateTimeZone|string|int|null
      */
     public function getTimezone($parameter = null): mixed
@@ -53,8 +52,6 @@ trait HasTimezone
 
     /**
      * Determine if the class does not have a timezone.
-     * 
-     * @return bool
      */
     public function missingTimezone(): bool
     {
@@ -63,8 +60,6 @@ trait HasTimezone
 
     /**
      * Determine if the class has a timezone.
-     *
-     * @return bool
      */
     public function hasTimezone(): bool
     {

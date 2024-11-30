@@ -9,7 +9,7 @@ class LocaleComponent
 }
 
 beforeEach(function () {
-    $this->component = new LocaleComponent();
+    $this->component = new LocaleComponent;
 });
 
 it('has app locale by default', function () {
@@ -33,4 +33,3 @@ it('does not accept null values', function () {
     $this->component->setLocale(null);
     expect($this->component->getLocale())->toBe('au');
 });
-

@@ -14,7 +14,7 @@ trait HasDivideBy
     /**
      * Set the divide by value, chainable.
      *
-     * @param int|(\Closure():int) $divideBy
+     * @param  int|(\Closure():int)  $divideBy
      * @return $this
      */
     public function divideBy(int|\Closure $divideBy): static
@@ -27,7 +27,7 @@ trait HasDivideBy
     /**
      * Set the divide by value quietly.
      *
-     * @param int|(\Closure():int)|null $divideBy
+     * @param  int|(\Closure():int)|null  $divideBy
      */
     public function setDivideBy(int|\Closure|null $divideBy): void
     {
@@ -40,8 +40,6 @@ trait HasDivideBy
 
     /**
      * Get the divide by value.
-     * 
-     * @return int|null
      */
     public function getDivideBy(): ?int
     {
@@ -50,8 +48,6 @@ trait HasDivideBy
 
     /**
      * Determine if the class does not have a divide by value.
-     * 
-     * @return bool
      */
     public function missingDivideBy(): bool
     {
@@ -60,8 +56,6 @@ trait HasDivideBy
 
     /**
      * Determine if the class has a divide by value.
-     *
-     * @return bool
      */
     public function hasDivideBy(): bool
     {

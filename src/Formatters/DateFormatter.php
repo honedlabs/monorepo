@@ -15,10 +15,8 @@ class DateFormatter implements Contracts\Formatter
 
     /**
      * Create a new date formatter instance with a format, difference, and timezone.
-     * 
-     * @param string|(\Closure():string)|null $format
-     * @param bool|\Closure $diff
-     * @param string|\Closure|null $timezone
+     *
+     * @param  string|(\Closure():string)|null  $format
      */
     public function __construct(string|\Closure|null $format = null, bool|\Closure $diff = false, string|\Closure|null $timezone = null)
     {
@@ -29,10 +27,8 @@ class DateFormatter implements Contracts\Formatter
 
     /**
      * Make a date formatter with a format, difference, and timezone.
-     * 
-     * @param string|(\Closure():string)|null $format
-     * @param bool|\Closure $diff
-     * @param string|\Closure|null $timezone
+     *
+     * @param  string|(\Closure():string)|null  $format
      * @return $this
      */
     public static function make(string|\Closure|null $format = null, bool|\Closure $diff = false, string|\Closure|null $timezone = null): self
@@ -42,18 +38,15 @@ class DateFormatter implements Contracts\Formatter
 
     /**
      * Format the value as a string
-     * 
-     * @param mixed $value
-     * @return string
      */
-    public function format(mixed $value): string|null
+    public function format(mixed $value): ?string
     {
         if (\is_null($value)) {
             return null;
         }
 
         try {
-            return $this->isDifference() 
+            return $this->isDifference()
                 ? Carbon::parse($value, $this->getTimezone())->diffForHumans()
                 : Carbon::parse($value, $this->getTimezone())->format($this->getDateFormat());
         } catch (InvalidFormatException $th) {

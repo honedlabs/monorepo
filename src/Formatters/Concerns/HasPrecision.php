@@ -14,7 +14,7 @@ trait HasPrecision
     /**
      * Set the divide by value, chainable.
      *
-     * @param int|(\Closure():int) $precision
+     * @param  int|(\Closure():int)  $precision
      * @return $this
      */
     public function precision(int|\Closure $precision): static
@@ -27,7 +27,7 @@ trait HasPrecision
     /**
      * Set the divide by value quietly.
      *
-     * @param int|(\Closure():int)|null $precision
+     * @param  int|(\Closure():int)|null  $precision
      */
     public function setPrecision(int|\Closure|null $precision): void
     {
@@ -40,8 +40,6 @@ trait HasPrecision
 
     /**
      * Get the divide by value.
-     * 
-     * @return int|null
      */
     public function getPrecision(): ?int
     {
@@ -50,8 +48,6 @@ trait HasPrecision
 
     /**
      * Determine if the class does not have a divide by value.
-     * 
-     * @return bool
      */
     public function missingPrecision(): bool
     {
@@ -60,8 +56,6 @@ trait HasPrecision
 
     /**
      * Determine if the class has a divide by value.
-     *
-     * @return bool
      */
     public function hasPrecision(): bool
     {

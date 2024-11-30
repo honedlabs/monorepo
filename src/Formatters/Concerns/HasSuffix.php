@@ -17,7 +17,7 @@ trait HasSuffix
     /**
      * Set the suffix, chainable.
      *
-     * @param string|(\Closure(mixed...):string) $suffix
+     * @param  string|(\Closure(mixed...):string)  $suffix
      * @return $this
      */
     public function suffix(string|\Closure $suffix): static
@@ -30,7 +30,7 @@ trait HasSuffix
     /**
      * Set the suffix quietly.
      *
-     * @param string|(\Closure(mixed...):string)|null $suffix
+     * @param  string|(\Closure(mixed...):string)|null  $suffix
      */
     public function setSuffix(string|\Closure|null $suffix): void
     {
@@ -43,9 +43,8 @@ trait HasSuffix
 
     /**
      * Get the suffix.
-     * 
-     * @param mixed $parameter
-     * @return string|null
+     *
+     * @param  mixed  $parameter
      */
     public function getSuffix($parameter = null): ?string
     {
@@ -54,8 +53,6 @@ trait HasSuffix
 
     /**
      * Determine if the class does not have a suffix.
-     * 
-     * @return bool
      */
     public function missingSuffix(): bool
     {
@@ -64,8 +61,6 @@ trait HasSuffix
 
     /**
      * Determine if the class has a suffix.
-     *
-     * @return bool
      */
     public function hasSuffix(): bool
     {
