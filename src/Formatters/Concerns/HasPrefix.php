@@ -31,9 +31,10 @@ trait HasPrefix
      */
     public function setPrefix(string|\Closure|null $prefix): void
     {
-        if (is_null($prefix)) {
+        if (\is_null($prefix)) {
             return;
         }
+
         $this->prefix = $prefix;
     }
 

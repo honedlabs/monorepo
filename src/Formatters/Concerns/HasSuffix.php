@@ -34,9 +34,10 @@ trait HasSuffix
      */
     public function setSuffix(string|\Closure|null $suffix): void
     {
-        if (is_null($suffix)) {
+        if (\is_null($suffix)) {
             return;
         }
+
         $this->suffix = $suffix;
     }
 

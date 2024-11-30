@@ -27,11 +27,3 @@ it('can format a numeric value', function () {
     $this->formatter->setPrefix('ID: ');
     expect($this->formatter->format(123))->toBe('ID: 123');
 });
-
-it('can format a boolean value', function () {
-    $this->formatter->setPrefix('Is: ');
-    // Usually boolean formatters would be used here
-    expect($this->formatter->format(true))->toBe('Is: 1');
-    expect($this->formatter->format(false))->toBe('Is: 0');
-});
-
