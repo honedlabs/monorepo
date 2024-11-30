@@ -63,14 +63,18 @@ trait HasPlaceholder
 
     /**
      * Determine if the class does not have a placeholder.
+     * 
+     * @return bool
      */
     public function missingPlaceholder(): bool
     {
-        return is_null($this->placeholder);
+        return \is_null($this->placeholder);
     }
 
     /**
      * Determine if the class has a placeholder.
+     *
+     * @return bool
      */
     public function hasPlaceholder(): bool
     {

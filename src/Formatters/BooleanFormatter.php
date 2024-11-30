@@ -33,6 +33,12 @@ class BooleanFormatter implements Contracts\Formatter
         return resolve(static::class, compact('truthLabel', 'falseLabel'));
     }
 
+    /**
+     * Format the value as a boolean
+     * 
+     * @param mixed $value
+     * @return string
+     */
     public function format(mixed $value): string
     {
         return (bool) $value ? $this->getTruthLabel() : $this->getFalseLabel();

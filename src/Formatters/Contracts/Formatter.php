@@ -10,5 +10,12 @@ use Illuminate\Support\Traits\Tappable;
 
 interface Formatter extends Makeable
 {
-    public function format(mixed $value): string;
+    /**
+     * Format the value.
+     * 
+     * @template T
+     * @param T $value
+     * @return T|mixed
+     */
+    public function format(mixed $value): mixed;
 }
