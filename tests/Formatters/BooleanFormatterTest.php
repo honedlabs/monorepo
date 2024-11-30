@@ -7,6 +7,10 @@ beforeAll(function () {
     BooleanFormatter::setDefaultFalseLabel();
 });
 
+beforeEach(function () {
+    $this->formatter = BooleanFormatter::make();
+});
+
 it('can be made', function () {
     $formatter = BooleanFormatter::make();
     expect($formatter)->toBeInstanceOf(BooleanFormatter::class);
@@ -19,19 +23,16 @@ it('accepts a truth and false label', function () {
 });
 
 it('can format a boolean value', function () {
-    $formatter = BooleanFormatter::make();
-    expect($formatter->format(true))->toBe(BooleanFormatter::DefaultTruthLabel);
-    expect($formatter->format(false))->toBe(BooleanFormatter::DefaultFalseLabel);
+    expect($this->formatter->format(true))->toBe(BooleanFormatter::DefaultTruthLabel);
+    expect($this->formatter->format(false))->toBe(BooleanFormatter::DefaultFalseLabel);
 });
 
 it('can format a string value', function () {
-    $formatter = BooleanFormatter::make();
-    expect($formatter->format('a'))->toBe(BooleanFormatter::DefaultTruthLabel);
-    expect($formatter->format(''))->toBe(BooleanFormatter::DefaultFalseLabel);
+    expect($this->formatter->format('a'))->toBe(BooleanFormatter::DefaultTruthLabel);
+    expect($this->formatter->format(''))->toBe(BooleanFormatter::DefaultFalseLabel);
 });
 
 it('can format a numeric value', function () {
-    $formatter = BooleanFormatter::make();
-    expect($formatter->format(1))->toBe(BooleanFormatter::DefaultTruthLabel);
-    expect($formatter->format(0))->toBe(BooleanFormatter::DefaultFalseLabel);
+    expect($this->formatter->format(1))->toBe(BooleanFormatter::DefaultTruthLabel);
+    expect($this->formatter->format(0))->toBe(BooleanFormatter::DefaultFalseLabel);
 });

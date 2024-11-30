@@ -64,6 +64,7 @@ trait HasTruthLabel
         if (is_null($truthLabel)) {
             return;
         }
+        
         $this->truthLabel = $truthLabel;
     }
 
