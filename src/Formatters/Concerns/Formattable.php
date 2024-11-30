@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Core\Formatters\Concerns;
 
+use Honed\Core\Formatters\DateFormatter;
 use Honed\Core\Formatters\StringFormatter;
 use Honed\Core\Formatters\BooleanFormatter;
 use Honed\Core\Formatters\Contracts\Formatter;
 
-trait HasFormatter
+trait Formattable
 {
     /**
      * @var \Honed\Core\Formatters\Contracts\Formatter|null
@@ -79,7 +80,7 @@ trait HasFormatter
      * @param string|\Closure|null $falseLabel
      * @return $this
      */
-    public function asBoolean(string|\Closure|null $truthLabel = null, string|\Closure|null $falseLabel = null): bool
+    public function asBoolean(string|\Closure|null $truthLabel = null, string|\Closure|null $falseLabel = null): static
     {
         return $this->formatter(BooleanFormatter::make($truthLabel, $falseLabel));
     }
@@ -87,14 +88,27 @@ trait HasFormatter
     /**
      * Set the class to use a string formatter.
      * 
+     * @param string|\Closure|null $prefix
+     * @param string|\Closure|null $suffix
      * @return $this
      */
-    public function asString(): static
+    public function asString(string|\Closure|null $prefix = null, string|\Closure|null $suffix = null): static
     {
-        return $this->formatter(StringFormatter::make());
+        return $this->formatter(StringFormatter::make($prefix, $suffix));
     }
 
-    // public function asDate()
+    /**
+     * Set the class to use a date formatter.
+     * 
+     * @param string|\Closure|null $format
+     * @param bool|\Closure $diff
+     * @param string|\Closure|null $timezone
+     * @return $this
+     */
+    public function asDate(string|\Closure|null $format = null, bool|\Closure $diff = false, string|\Closure|null $timezone = null): static
+    {
+        return $this->formatter(DateFormatter::make($format, $diff, $timezone));
+    }
 
     // public function asNumeric()
 
