@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core\Formatters;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 
 class DateFormatter implements Contracts\Formatter
 {
@@ -42,18 +43,17 @@ class DateFormatter implements Contracts\Formatter
     /**
      * Format the value as a string
      * 
-     * @template T
-     * @param T|mixed $value
-     * @return T|string
+     * @param mixed $value
+     * @return string
      */
-    public function format(mixed $value): ?string
+    public function format(mixed $value): string
     {
         try {
             return $this->isDifference() 
                 ? Carbon::parse($value, $this->getTimezone())->diffForHumans()
                 : Carbon::parse($value, $this->getTimezone())->format($this->getDateFormat());
-        } catch (\Throwable $th) {
-            return null; // Hide the error-causing value
+        } catch (InvalidFormatException $th) {
+            return ''; // Hide the error-causing value
         }
     }
 }

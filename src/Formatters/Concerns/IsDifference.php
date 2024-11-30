@@ -57,4 +57,24 @@ trait IsDifference
     {
         return ! $this->isDifference();
     }
+
+    /**
+     * Alias for difference
+     * 
+     * @return $this
+     */
+    public function since(): static
+    {
+        return $this->difference(true);
+    }
+
+    /**
+     * Alias for difference
+     * 
+     * @return $this
+     */
+    public function diff(): static
+    {
+        return $this->difference(false);
+    }
 }

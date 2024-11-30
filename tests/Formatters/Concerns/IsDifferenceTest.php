@@ -37,3 +37,13 @@ it('checks if difference', function () {
     expect($this->formatter->isDifference())->toBeTrue();
     expect($this->formatter->isNotDifference())->toBeFalse();
 });
+
+it('has alias since', function () {
+    expect($this->formatter->since())->toBeInstanceOf(DateFormatter::class);
+    expect($this->formatter->isDifference())->toBeTrue();
+});
+
+it('has alias diff', function () {
+    expect($this->formatter->diff())->toBeInstanceOf(DateFormatter::class);
+    expect($this->formatter->isNotDifference())->toBeTrue();
+});

@@ -6,7 +6,7 @@ namespace Honed\Core\Formatters\Concerns;
 
 trait HasDateFormat
 {
-    public const DefaultDateFormat = 'd/m/y';
+    public const DefaultDateFormat = 'd/m/Y';
 
     /**
      * @var string|(\Closure():string)
