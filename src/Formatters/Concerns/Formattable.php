@@ -133,8 +133,7 @@ trait Formattable
      * Apply the formatter to the given value.
      *
      * @template T
-     *
-     * @param  T  $value
+     * @param T $value
      * @return T|mixed
      */
     public function format(mixed $value)
