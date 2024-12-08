@@ -20,7 +20,8 @@ it('accepts a prefix and suffix', function () {
 it('can format a string value', function () {
     $this->formatter->setPrefix('#');
     $this->formatter->setSuffix('.');
-    expect($this->formatter->format('value'))->toBe('#value.');
+    $this->formatter->setTruncate(3);
+    expect($this->formatter->format('value'))->toBe('#val....');
 });
 
 it('can format a numeric value', function () {

@@ -14,9 +14,9 @@ use Honed\Core\Formatters\StringFormatter;
 trait Formattable
 {
     /**
-     * @var \Honed\Core\Formatters\Contracts\Formatter|null
+     * @var \Honed\Core\Formatters\Contracts\Formatter
      */
-    protected $formatter = null;
+    protected $formatter;
 
     /**
      * Set the formatter, chainable.
@@ -73,7 +73,7 @@ trait Formattable
      * @param  string|(\Closure():string)|null  $falseLabel
      * @return $this
      */
-    public function asBoolean(string|\Closure|null $truthLabel = null, string|\Closure|null $falseLabel = null): static
+    public function boolean(string|\Closure|null $truthLabel = null, string|\Closure|null $falseLabel = null): static
     {
         return $this->formatter(BooleanFormatter::make($truthLabel, $falseLabel));
     }
@@ -85,7 +85,7 @@ trait Formattable
      * @param  string|(\Closure():string)|null  $suffix
      * @return $this
      */
-    public function asString(string|\Closure|null $prefix = null, string|\Closure|null $suffix = null): static
+    public function string(string|\Closure|null $prefix = null, string|\Closure|null $suffix = null): static
     {
         return $this->formatter(StringFormatter::make($prefix, $suffix));
     }
@@ -98,7 +98,7 @@ trait Formattable
      * @param  string|(\Closure():string)|null  $timezone
      * @return $this
      */
-    public function asDate(string|\Closure|null $format = null, bool|\Closure $diff = false, string|\Closure|null $timezone = null): static
+    public function date(string|\Closure|null $format = null, bool|\Closure $diff = false, string|\Closure|null $timezone = null): static
     {
         return $this->formatter(DateFormatter::make($format, $diff, $timezone));
     }
@@ -111,7 +111,7 @@ trait Formattable
      * @param  string|(\Closure():string)|null  $locale
      * @return $this
      */
-    public function asNumeric(int|\Closure|null $precision = null, int|\Closure|null $divideBy = null, string|\Closure|null $locale = null): static
+    public function number(int|\Closure|null $precision = null, int|\Closure|null $divideBy = null, string|\Closure|null $locale = null): static
     {
         return $this->formatter(NumberFormatter::make($precision, $divideBy, $locale));
     }
@@ -124,7 +124,7 @@ trait Formattable
      * @param  string|(\Closure():string)|null  $locale
      * @return $this
      */
-    public function asCurrency(string|\Closure|null $currency = null, int|\Closure|null $precision = null, string|\Closure|null $locale = null): static
+    public function currency(string|\Closure|null $currency = null, int|\Closure|null $precision = null, string|\Closure|null $locale = null): static
     {
         return $this->formatter(CurrencyFormatter::make($currency, $precision, $locale));
     }

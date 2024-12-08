@@ -6,6 +6,7 @@ namespace Honed\Core\Options\Concerns;
 
 use Honed\Core\Options\Option;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Specify whether this class contains options
@@ -22,12 +23,17 @@ trait HasOptions
     /**
      * Set the options, chainable
      *
-     * @param  array<int, Option>  $options
+     * @param  array<int,mixed>|\Illuminate\Support\Collection|class-string<\BackedEnum>|class-string<\Illuminate\Database\Eloquent\Model>  $options
      * @return $this
      */
-    public function options(array $options): static
+    public function options(array|Collection|string $options): static
     {
-        $this->setOptions($options);
+        match (true) {
+            $options instanceof Collection => $this->fromCollection($options),
+            \is_string($options) && \enum_exists($options) => $this->fromEnum($options),
+            \is_string($options) => $this->fromModel($options), // if string, assume model
+            default => $this->setOptions($options), // array
+        };
 
         return $this;
     }
@@ -36,10 +42,10 @@ trait HasOptions
      * Set the options from an enum, chainable.
      * Defaults to using the backing value and enum name.
      *
-     * @param  BackedEnum-string  $enum
+     * @param  class-string<\BackedEnum>  $enum
      * @return $this
      */
-    public function makeOptionsFromEnum(string $enum, ?string $value = null, ?string $label = null): static
+    public function fromEnum(string $enum, ?string $value = null, ?string $label = null): static
     {
         foreach ($enum::cases() as $case) {
             $optionValue = ($value && method_exists($case, $value)) ? $case->{$value}() : $case->value;
@@ -54,10 +60,10 @@ trait HasOptions
      * Set the options from a model, chainable.
      * Defaults to using the Model key.
      *
-     * @param  class-string  $model
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $model
      * @return $this
      */
-    public function makeOptionsFromModel(string $model, ?string $value = null, ?string $label = null): static
+    public function fromModel(string $model, ?string $value = null, ?string $label = null): static
     {
         foreach ($model::all() as $modelInstance) {
             $optionValue = $this->getOptionField($modelInstance, $value) ?? $modelInstance->getKey();
@@ -74,7 +80,7 @@ trait HasOptions
      *
      * @return $this
      */
-    public function makeOptionsFromCollection(Collection $collection, ?string $value = null, ?string $label = null): static
+    public function fromCollection(Collection $collection, ?string $value = null, ?string $label = null): static
     {
         $collection->each(function ($item) use ($value, $label) {
             $optionValue = $this->getOptionField($item, $value) ?? $item;

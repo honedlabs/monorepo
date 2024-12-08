@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Core\Formatter\Proxies;
+namespace Honed\Core\Formatters\Proxies;
 
 use Honed\Core\Primitive;
 use Honed\Core\Contracts\HigherOrder;
@@ -13,7 +13,7 @@ use Honed\Core\Contracts\HigherOrder;
  * @template T of \Honed\Core\Primitive
  * @implements \Honed\Core\Contracts\HigherOrder<T>
  */
-class HigherOrderUrl implements HigherOrder
+class HigherOrderFormatter implements HigherOrder
 {
     /**
      * @param T $primitive
@@ -39,7 +39,7 @@ class HigherOrderUrl implements HigherOrder
          * @var \Honed\Core\Formatters\Contracts\Formatter
          */
         $formatter = $primitive->getFormatter(); // @phpstan-ignore-line
-        if ($formatter && method_exists($formatter, $name)) {
+        if ($formatter && \method_exists($formatter, $name)) {
             $formatter->{$name}(...$arguments);
         }
 

@@ -2,45 +2,42 @@
 
 use Workbench\App\Component;
 
+beforeEach(function () {
+    $this->component = new Component;
+});
+
 it('can set strict', function () {
-    $component = new Component;
-    $component->setStrict(true);
-    expect($component->isStrict())->toBeTrue();
+    $this->component->setStrict(true);
+    expect($this->component->isStrict())->toBeTrue();
 });
 
 it('prevents null values', function () {
-    $component = new Component;
-    $component->setStrict(null);
-    expect($component->isStrict())->toBeFalse();
+    $this->component->setStrict(null);
+    expect($this->component->isStrict())->toBeFalse();
 });
 
 it('can set closure strict', function () {
-    $component = new Component;
-    $component->setStrict(fn () => true);
-    expect($component->isStrict())->toBeTrue();
+    $this->component->setStrict(fn () => true);
+    expect($this->component->isStrict())->toBeTrue();
 });
 
 it('stricts to false', function () {
-    $component = new Component;
-    expect($component->isStrict())->toBeFalse();
+    expect($this->component->isStrict())->toBeFalse();
 });
 
 it('can chain strict', function () {
-    $component = new Component;
-    expect($component->strict(true))->toBeInstanceOf(Component::class);
-    expect($component->isStrict())->toBeTrue();
+    expect($this->component->strict(true))->toBeInstanceOf(Component::class);
+    expect($this->component->isStrict())->toBeTrue();
 });
 
 it('checks if strict', function () {
-    $component = new Component;
-    expect($component->isStrict())->toBeFalse();
-    $component->setStrict(true);
-    expect($component->isStrict())->toBeTrue();
+    expect($this->component->isStrict())->toBeFalse();
+    $this->component->setStrict(true);
+    expect($this->component->isStrict())->toBeTrue();
 });
 
 it('checks if not strict', function () {
-    $component = new Component;
-    expect($component->isNotStrict())->toBeTrue();
-    $component->setStrict(true);
-    expect($component->isNotStrict())->toBeFalse();
+    expect($this->component->isNotStrict())->toBeTrue();
+    $this->component->setStrict(true);
+    expect($this->component->isNotStrict())->toBeFalse();
 });

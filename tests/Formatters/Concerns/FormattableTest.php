@@ -48,35 +48,35 @@ it('does not format a value if there is no formatter', function () {
 });
 
 it('has a shorthand for setting a boolean formatter', function () {
-    expect($this->component->asBoolean())->toBeInstanceOf(FormattableComponent::class)
+    expect($this->component->boolean())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->missingFormatter()->toBeFalse()
         ->getFormatter()->toBeInstanceOf(BooleanFormatter::class);
 });
 
 it('has a shorthand for setting a string formatter', function () {
-    expect($this->component->asString())->toBeInstanceOf(FormattableComponent::class)
+    expect($this->component->string())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->missingFormatter()->toBeFalse()
         ->getFormatter()->toBeInstanceOf(StringFormatter::class);
 });
 
 it('has a shorthand for setting a date formatter', function () {
-    expect($this->component->asDate())->toBeInstanceOf(FormattableComponent::class)
+    expect($this->component->date())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->missingFormatter()->toBeFalse()
         ->getFormatter()->toBeInstanceOf(DateFormatter::class);
 });
 
 it('has a shorthand for setting a number formatter', function () {
-    expect($this->component->asNumeric())->toBeInstanceOf(FormattableComponent::class)
+    expect($this->component->number())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->missingFormatter()->toBeFalse()
         ->getFormatter()->toBeInstanceOf(NumberFormatter::class);
 });
 
 it('has a shorthand for setting a currency formatter', function () {
-    expect($this->component->asCurrency())->toBeInstanceOf(FormattableComponent::class)
+    expect($this->component->currency())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->missingFormatter()->toBeFalse()
         ->getFormatter()->toBeInstanceOf(CurrencyFormatter::class);

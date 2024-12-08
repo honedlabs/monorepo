@@ -72,7 +72,7 @@ trait HasTruthLabel
     }
 
     /**
-     * Alias for truthLabel
+     * Alias for `truthLabel`.
      *
      * @return $this
      */

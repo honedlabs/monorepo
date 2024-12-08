@@ -34,6 +34,21 @@ class BooleanFormatter implements Contracts\Formatter
     }
 
     /**
+     * Set the truth and false labels, chainable.
+     *
+     * @param  string|(\Closure():string)|null  $truthLabel
+     * @param  string|(\Closure():string)|null  $falseLabel
+     * @return $this
+     */
+    public function labels(string|\Closure|null $truthLabel = null, string|\Closure|null $falseLabel = null): static
+    {
+        $this->setTruthLabel($truthLabel);
+        $this->setFalseLabel($falseLabel);
+
+        return $this;
+    }
+
+    /**
      * Format the value as a boolean
      */
     public function format(mixed $value): string
