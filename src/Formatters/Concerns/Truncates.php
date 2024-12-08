@@ -40,8 +40,6 @@ trait Truncates
 
     /**
      * Get the truncate amount.
-     *
-     * @return int|null
      */
     public function getTruncate(): ?int
     {
@@ -50,8 +48,6 @@ trait Truncates
 
     /**
      * Determine if the class does not have a truncate amount.
-     *
-     * @return bool
      */
     public function missingTruncate(): bool
     {
@@ -60,8 +56,6 @@ trait Truncates
 
     /**
      * Determine if the class has a truncate amount.
-     *
-     * @return bool
      */
     public function hasTruncate(): bool
     {

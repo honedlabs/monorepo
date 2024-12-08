@@ -1,11 +1,11 @@
 <?php
 
-use Honed\Core\Primitive;
 use Honed\Core\Contracts\HigherOrder;
 use Honed\Core\Formatters\Concerns\Formattable;
 use Honed\Core\Formatters\Proxies\HigherOrderFormatter;
+use Honed\Core\Primitive;
 
-class HigherOrderFormatterComponent extends Primitive implements HigherOrder 
+class HigherOrderFormatterComponent extends Primitive implements HigherOrder
 {
     public static function make()
     {
@@ -46,4 +46,3 @@ it('handles case where primitive does not have formatter set', function () {
         ->toBeInstanceOf(HigherOrderFormatterTraitComponent::class)
         ->hasFormatter()->toBeFalse();
 });
-
