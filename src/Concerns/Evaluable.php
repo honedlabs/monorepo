@@ -16,8 +16,21 @@ use ReflectionParameter;
  */
 trait Evaluable
 {
-    protected string $evaluationIdentifier;
+    /**
+     * @var string|null
+     */
+    protected $evaluationIdentifier;
 
+    /**
+     * Evaluate an expression with correct dependencies.
+     *
+     * @template T
+     *
+     * @param  T|\Closure(mixed...):T|object  $value
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
+     * @return T
+     */
     public function evaluate(mixed $value, array $named = [], array $typed = []): mixed
     {
         if (\is_object($value) && method_exists($value, '__invoke')) {
@@ -38,8 +51,10 @@ trait Evaluable
     }
 
     /**
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
+     * Resolve a closure dependency for evaluation.
+     *
+     * @param  array<string,mixed>  $named
+     * @param  array<string,mixed>  $typed
      */
     protected function resolveClosureDependencyForEvaluation(ReflectionParameter $parameter, array $named, array $typed): mixed
     {

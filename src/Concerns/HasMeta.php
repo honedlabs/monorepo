@@ -10,14 +10,14 @@ namespace Honed\Core\Concerns;
 trait HasMeta
 {
     /**
-     * @var array<array-key, mixed>|\Closure(mixed...):array<array-key, mixed>
+     * @var array<array-key, mixed>|(\Closure(mixed...):array<array-key,mixed>)
      */
     protected $meta = [];
 
     /**
      * Set the meta, chainable.
      *
-     * @param  array<array-key, mixed>|\Closure(mixed...):array<array-key, mixed>  $meta
+     * @param  array<array-key, mixed>|\Closure(mixed...):array<array-key,mixed>  $meta
      * @return $this
      */
     public function meta(array|\Closure $meta): static

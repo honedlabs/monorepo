@@ -43,7 +43,7 @@ trait HasTimezone
     /**
      * Get the timezone.
      *
-     * @return \DateTimeZone|string|int|null|(\Closure(): \DateTimeZone|string|int)
+     * @return \DateTimeZone|string|int|null
      */
     public function getTimezone(mixed $parameter = null): mixed
     {

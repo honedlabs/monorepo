@@ -50,7 +50,9 @@ class CurrencyFormatter implements Contracts\Formatter
         $value = (float) $value;
         $value = $this->hasDivideBy() ? $value / $this->getDivideBy() : $value;
 
-        return Number::currency($value, $this->getCurrency() ?? Number::defaultCurrency(), $this->getLocale());
+        $result = Number::currency($value, $this->getCurrency() ?? Number::defaultCurrency(), $this->getLocale());
+
+        return (bool) $result ? $result : null;
     }
 
     /**
