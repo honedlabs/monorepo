@@ -24,6 +24,7 @@ class TestCase extends Orchestra
         Inertia::setRootView('app');
         config()->set('inertia.testing.ensure_pages_exist', false);
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
+        config()->set('crumb.files', __DIR__.'/crumbs.php');
     }
 
     protected function getPackageProviders($app)
