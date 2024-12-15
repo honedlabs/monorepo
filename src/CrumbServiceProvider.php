@@ -1,17 +1,17 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace Honed\Crumb;
 
 use Illuminate\Support\ServiceProvider;
 
-class SkeletonServiceProvider extends ServiceProvider
+class CrumbServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/skeleton.php', 'skeleton');
+        $this->mergeConfigFrom(__DIR__.'/../config/crumb.php', 'crumb');
     }
 
     /**

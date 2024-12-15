@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "honed/crumb",
+    "description": "Generate and share breadcrumbs to your Inertia applications",
     "keywords": [
-        ":vendor_name",
+        "Honed",
         "laravel",
-        ":package_slug"
+        "crumb"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/honed/crumb",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "jdw5",
+            "email": "josh@joshua-wallace.com",
             "role": "Developer"
         }
     ],
@@ -33,24 +33,23 @@
         "phpstan/phpstan-phpunit": "^2.0.3",
         "inertiajs/inertia-laravel": "^1.2||^2.0",
         "worksome/request-factories": "^3.3",
-        "pestphp/pest-plugin-laravel": "^3.0",
-        "spatie/laravel-ray": "^1.35"
+        "pestphp/pest-plugin-laravel": "^3.0"
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "Honed\\Crumb\\": "src/",
+            "Honed\\Crumb\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "Honed\\Crumb\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "clear": "@php vendor/bin/testbench package:purge-crumb --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": [
             "@composer run prepare",
@@ -81,10 +80,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Honed\\Crumb\\CrumbServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "Crumb": "Honed\\Crumb\\Facades\\Crumb"
             }
         }
     },
