@@ -1,13 +1,13 @@
 <?php
 
+use Honed\Crumb\Crumb;
 use function Pest\Laravel\get;
+use Honed\Crumb\Tests\Stubs\Product;
 
 it('dummy', function () {
     $product = product();
     $response = get(route('product.show', $product));
     
-    dd([
-        'bound_model' => request()->route()->parameter('product'),
-        'type' => get_class(request()->route()->parameter('product')),
-    ]);
+    $crumb = Crumb::make(fn ($product) => $product->name)->route('product.show', $product);
+    dd($crumb->toArray());
 });

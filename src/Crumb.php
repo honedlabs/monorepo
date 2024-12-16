@@ -3,6 +3,10 @@
 namespace Honed\Crumb;
 
 use Honed\Core\Primitive;
+use Illuminate\Routing\Route;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Request as FacadesRequest;
+use Illuminate\Support\Facades\Route as FacadesRoute;
 
 class Crumb extends Primitive
 {
@@ -52,21 +56,43 @@ class Crumb extends Primitive
      */
     public function toArray(): array
     {
+        [$named, $typed] = $this->getClosureParameters();
+        
         return [
-            'name' => $this->getName([
-                // ...$product
-                // 'record'
-                // 'page'
-                // 'id'
-            ], [
-                // class-name
-            ]),
-            'url' => $this->getLink([
-
-            ], [
-
-            ]),
+            'name' => $this->getName($named, $typed),
+            'url' => $this->getLink($named, $typed),
             ...($this->hasIcon() ? ['icon' => $this->getIcon()] : []),
+        ];
+    }
+
+    /**
+     * Get the binding parameters to pass to a closure.
+     * 
+     * @return non-empty-array{array<string,mixed>,array<string,mixed>}
+     */
+    private function getClosureParameters(): array
+    {
+        $parameters = FacadesRoute::current()->parameters();
+        $request = FacadesRequest::capture();
+        $route = FacadesRoute::current();
+        $values = array_values($parameters);
+
+        $mapped = \array_combine(
+            \array_map('get_class', $values),
+            $values
+        );
+
+        return [
+            [
+                'request' => $request,
+                'route' => $route,
+                ...$parameters,
+            ],
+            [
+                Request::class => $request,
+                Route::class => $route,
+                ...$mapped,
+            ],
         ];
     }
 }
