@@ -9,6 +9,7 @@ use Honed\Crumb\Tests\Stubs\Status;
 use Illuminate\Support\Facades\View;
 use Honed\Crumb\CrumbServiceProvider;
 use Honed\Crumb\Tests\Stubs\Product;
+use Honed\Modal\Tests\Stubs\ProductController;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\Middleware\SubstituteBindings;
@@ -53,9 +54,11 @@ class TestCase extends Orchestra
     {
         $router->middleware(SubstituteBindings::class)->group(function ($router) {
             $router->get('/', fn () => inertia('Home'));
-            $router->get('/products', fn () => inertia('Product/Index'))->name('product.index');
-            $router->get('/products/{product:public_id}', fn (Product $product) => inertia('Product/Show', ['product' => $product]))->name('product.show');
-            $router->get('/products/{product}/edit', fn (Product $product) => inertia('Product/Edit', ['product' => $product]))->name('product.edit');
+            
+            $router->get('/products', [ProductController::class, 'index'])->name('product.index');
+            $router->get('/products/{product:public_id}', [ProductController::class, 'show'])->name('product.show');
+            $router->get('/products/{product}/edit', [ProductController::class, 'edit'])->name('product.edit');
+
             $router->get('/products/{product}/status/{status}', fn (Product $product, Status $status) => inertia('Product/Status', ['product' => $product, 'status' => $status]))->name('product.status');
             $router->get('/status/{status}', fn (Status $status) => inertia('Status/Show', ['status' => $status]))->name('status.show');
             $router->get('/testing/{word}', fn (string $word) => inertia('Word/Show', ['word' => $word]))->name('word.show');
