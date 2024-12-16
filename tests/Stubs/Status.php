@@ -2,18 +2,9 @@
 
 namespace Honed\Crumb\Tests\Stubs;
 
-enum Status: int
+enum Status: string
 {
-    case AVAILABLE = 0;
-    case UNAVAILABLE = 1;
-    case COMING_SOON = 2;
-
-    public function label(): string
-    {
-        return match ($this) {
-            self::AVAILABLE => 'Available',
-            self::UNAVAILABLE => 'Unavailable',
-            self::COMING_SOON => 'Coming soon',
-        };
-    }
+    case AVAILABLE = 'available';
+    case UNAVAILABLE = 'unavailable';
+    case COMING_SOON = 'coming-soon';
 }

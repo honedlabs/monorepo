@@ -41,7 +41,7 @@ class TestCase extends Orchestra
             $table->uuid('public_id')->unique();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->unsignedTinyInteger('status')->default(Status::AVAILABLE->value);
+            $table->string('status')->default(Status::AVAILABLE->value);
             $table->unsignedInteger('price')->default(0);
             $table->boolean('best_seller')->default(false);
             $table->timestamps();
@@ -57,7 +57,7 @@ class TestCase extends Orchestra
             $router->get('/products/{product}/edit', fn (Product $product) => inertia('Product/Edit', ['product' => $product]))->name('product.edit');
             $router->get('/products/{product}/status/{status}', fn (Product $product, Status $status) => inertia('Product/Status', ['product' => $product, 'status' => $status]))->name('product.status');
             $router->get('/status/{status}', fn (Status $status) => inertia('Status/Show', ['status' => $status]))->name('status.show');
-            $router->get('/status/{word}', fn (string $word) => inertia('Status/Show', ['word' => $word]))->name('word.show');
+            $router->get('/testing/{word}', fn (string $word) => inertia('Word/Show', ['word' => $word]))->name('word.show');
         });
     }
 }

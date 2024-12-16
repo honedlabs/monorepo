@@ -60,7 +60,8 @@ it('can resolve route enum binding when retrieving array form', function () {
 it('can resolve other binding when retrieving array form', function () {
     $s = 'test';
     get(route('word.show', $s));
-    $crumb = Crumb::make(fn ($word) => sprintf('Given %s', $word), fn (string $typed) => route('word.show', $typed));
+
+    $crumb = Crumb::make(fn ($word) => sprintf('Given %s', $word), fn ($word) => route('word.show', $word));
 
     expect($crumb->toArray())->toBe([
         'name' => sprintf('Given %s', $s),
