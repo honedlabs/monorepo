@@ -3,7 +3,7 @@
 namespace Honed\Crumb\Exceptions;
 
 
-class CrumbsNotFoundException extends \Exception
+class DuplicateCrumbsException extends \Exception
 {
     public function __construct(string $name)
     {

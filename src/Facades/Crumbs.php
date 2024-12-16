@@ -5,12 +5,12 @@ namespace Honed\Crumb\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Honed\Crumb\Crumb
+ * @see \Honed\Crumb\Manager
  */
-class Crumb extends Facade
+class Crumbs extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Honed\Crumb\Crumb::class;
+        return \Honed\Crumb\Manager::class;
     }
 }

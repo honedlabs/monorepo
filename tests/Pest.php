@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Crumb\Tests\TestCase;
 use Honed\Crumb\Tests\Stubs\Product;
 use Illuminate\Support\Str;
 use Honed\Crumb\Tests\Stubs\Status;
-
-
 
 uses(TestCase::class)->in(__DIR__);
 

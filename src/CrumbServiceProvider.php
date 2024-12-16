@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Crumb;
 
 use Illuminate\Support\ServiceProvider;
@@ -12,8 +14,6 @@ class CrumbServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/crumb.php', 'crumb');
-
-        $this->app->singleton(Crumbs::class);
     }
 
     /**
@@ -28,6 +28,9 @@ class CrumbServiceProvider extends ServiceProvider
         $this->registerCrumbs();
     }
 
+    /**
+     * Register the crumbs.
+     */
     protected function registerCrumbs(): void
     {
         $files = config('crumb.files');

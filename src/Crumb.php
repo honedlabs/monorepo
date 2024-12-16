@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Crumb;
 
 use Honed\Core\Primitive;
@@ -14,11 +16,6 @@ class Crumb extends Primitive
     use \Honed\Core\Concerns\HasMeta;
     use Concerns\HasIcon;
     use Concerns\HasLink;
-
-    /**
-     * @var string|(\Closure(mixed...):string)|null
-     */
-    protected $link;
 
     /**
      * Create a new crumb instance.
@@ -38,13 +35,14 @@ class Crumb extends Primitive
     }
 
     /**
-     * Create a new crumb instance.
+     * Make a new crumb instance.
      * 
      * @param string|(\Closure(mixed...):string) $name
      * @param string|(\Closure(mixed...):string)|null $link
      * @param string|null $icon
+     * @return $this
      */
-    public static function make(string|\Closure $name, string|\Closure $link = null, string $icon = null)
+    public static function make(string|\Closure $name, string|\Closure $link = null, string $icon = null): static
     {
         return resolve(static::class, compact('name', 'link', 'icon'));
     }
