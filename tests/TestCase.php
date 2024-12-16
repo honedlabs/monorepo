@@ -25,7 +25,6 @@ class TestCase extends Orchestra
         Inertia::setRootView('app');
         config()->set('inertia.testing.ensure_pages_exist', false);
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
-        config()->set('crumb.files', realpath(__DIR__).'/Stubs/crumb.php');
     }
 
     protected function getPackageProviders($app)
@@ -61,5 +60,10 @@ class TestCase extends Orchestra
             $router->get('/status/{status}', fn (Status $status) => inertia('Status/Show', ['status' => $status]))->name('status.show');
             $router->get('/testing/{word}', fn (string $word) => inertia('Word/Show', ['word' => $word]))->name('word.show');
         });
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']->set('crumb.files', realpath(__DIR__).'/Stubs/crumb.php');
     }
 }

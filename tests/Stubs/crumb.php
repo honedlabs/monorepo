@@ -2,16 +2,12 @@
 
 use Honed\Crumb\Crumb;
 use Honed\Crumb\Trail;
-use Honed\Crumb\Crumbs;
+use Honed\Crumb\Facades\Crumbs;
 use Honed\Crumb\Tests\Stubs\Status;
 use Honed\Crumb\Tests\Stubs\Product;
 
-Crumbs::for('nav', function (Trail $trail) {
+Crumbs::for('basic', function (Trail $trail) {
     $trail->add('Home', '/');
-    $trail->oneOf(
-        Crumb::make('Products')->route('product.index'),
-        Crumb::make('Statuses')->route('status.index')
-    );
 });
 
 Crumbs::for('product', function (Trail $trail) {

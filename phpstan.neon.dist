@@ -9,3 +9,5 @@ parameters:
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
+    ignoreErrors:
+        - '#Trait Honed\\Crumb\\Concerns\\Crumbs is used zero times#'

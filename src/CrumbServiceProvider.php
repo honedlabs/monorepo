@@ -39,6 +39,7 @@ class CrumbServiceProvider extends ServiceProvider
             return;
         }
 
+
         foreach ((array)$files as $file) {
             require $file;
         }

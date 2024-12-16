@@ -21,7 +21,7 @@ class Trail extends Primitive
      */
     public function __construct(...$crumbs) 
     {
-        $this->add(...$crumbs);
+        $this->crumbs = $crumbs;
     }
 
     /**
@@ -48,31 +48,19 @@ class Trail extends Primitive
     /**
      * Append crumbs to the end of the crumb trail.
      * 
-     * @param array<int,\Honed\Crumb\Crumb|array{string|\Closure,string|\Closure|null,string|null}> $crumbs
+     * @param string|\Honed\Crumb\Crumb|(\Closure(mixed...):string) $crumb
+     * @param string|(\Closure(mixed...):string)|null $link
+     * @param string|null $icon
      * @return $this
      */
-    public function add(...$crumbs): static
+    public function add(string|\Closure|Crumb $crumb, string|\Closure|null $link = null, string|null $icon = null): static
     {
-        foreach ($crumbs as $crumb) {
-            $this->addCrumb(...$crumb);
-        }
+        $this->crumbs[] = match (true) {
+            $crumb instanceof Crumb => $crumb,
+            default => Crumb::make($crumb, $link, $icon),
+        };
 
         return $this;
-    }
-
-    /**
-     * Add a single crumb to the trail.
-     * 
-     * @param \Honed\Crumb\Crumb|string $crumb
-     * @param string|null $link
-     * @param string|null $icon
-     */
-    private function addCrumb(Crumb|string $crumb, string $link = null, string $icon = null): void
-    {
-        match (true) {
-            $crumb instanceof Crumb => $this->crumbs[] = $crumb,
-            default => $this->crumbs[] = Crumb::make($crumb, $link, $icon),
-        };
     }
 
     /**
@@ -103,9 +91,13 @@ class Trail extends Primitive
 
     /**
      * Share the crumbs with Inertia.
+     * 
+     * @return $this
      */
-    public function share(): void
+    public function share(): static
     {
         Inertia::share('crumbs', $this->crumbs());
+
+        return $this;
     }
 }

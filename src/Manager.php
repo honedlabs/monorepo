@@ -11,9 +11,19 @@ use Honed\Crumb\Exceptions\DuplicateCrumbsException;
 class Manager
 {
     /**
+     * Trails paired to a key.
+     * 
      * @var array<string,\Honed\Crumb\Trail>
      */
     protected $trails = [];
+
+    /**
+     * Crumbs to be added before the trail.
+     * Useful for adding a home crumb to all trails.
+     * 
+     * @var array<string,\Honed\Crumb\Crumb>
+     */
+    protected $all = [];
 
     /** 
      * @var \Illuminate\Routing\Router
@@ -44,6 +54,7 @@ class Manager
 
     public function get(string $name)
     {
+        // dd($this->trails[$name]);
         if (!$this->exists($name)) {
             throw new CrumbsNotFoundException($name);
         }

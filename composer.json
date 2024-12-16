@@ -36,11 +36,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Honed\\Crumb\\": "src/",
-            "files": [
-                "./helpers.php"
-            ]
-        }
+            "Honed\\Crumb\\": "src/"
+        },
+        "files": [
+            "./helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
