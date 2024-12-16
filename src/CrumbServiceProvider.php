@@ -12,6 +12,8 @@ class CrumbServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/crumb.php', 'crumb');
+
+        $this->app->singleton(Crumbs::class);
     }
 
     /**
@@ -19,10 +21,23 @@ class CrumbServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                //
-            ]);
+        $this->publishes([
+            __DIR__ . '/../config/crumb.php' => config_path('crumb.php'),
+        ], 'crumbs-config');
+
+        $this->registerCrumbs();
+    }
+
+    protected function registerCrumbs(): void
+    {
+        $files = config('crumb.files');
+
+        if (!$files || !is_file($files)) {
+            return;
+        }
+
+        foreach ((array)$files as $file) {
+            require $file;
         }
     }
 }
