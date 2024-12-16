@@ -26,10 +26,6 @@ trait HasIcon
      */
     public function setIcon(?string $icon): void
     {
-        if (is_null($icon)) {
-            return;
-        }
-
         $this->icon = $icon;
     }
 
