@@ -9,7 +9,7 @@ use Honed\Crumb\Tests\Stubs\Status;
 use Illuminate\Support\Facades\View;
 use Honed\Crumb\CrumbServiceProvider;
 use Honed\Crumb\Tests\Stubs\Product;
-use Honed\Modal\Tests\Stubs\ProductController;
+use Honed\Crumb\Tests\Stubs\ProductController;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\Middleware\SubstituteBindings;
@@ -52,7 +52,7 @@ class TestCase extends Orchestra
 
     protected function defineRoutes($router)
     {
-        $router->middleware(SubstituteBindings::class)->group(function ($router) {
+        $router->middleware([SubstituteBindings::class])->group(function ($router) {
             $router->get('/', fn () => inertia('Home'));
             
             $router->get('/products', [ProductController::class, 'index'])->name('product.index');

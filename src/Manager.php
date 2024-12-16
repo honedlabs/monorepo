@@ -7,6 +7,7 @@ namespace Honed\Crumb;
 use Illuminate\Routing\Router;
 use Honed\Crumb\Exceptions\CrumbsNotFoundException;
 use Honed\Crumb\Exceptions\DuplicateCrumbsException;
+use Illuminate\Support\Collection;
 
 class Manager
 {
@@ -21,20 +22,55 @@ class Manager
      * Crumbs to be added before the trail.
      * Useful for adding a home crumb to all trails.
      * 
+     * @var (\Closure(\Honed\Crumb\Trail $trail):void)|null
+     */
+    protected $before = null;
+
+    /**
+     * Crumbs to be added after the trail.
+     * 
+     * @var (\Closure(\Honed\Crumb\Trail $trail):void)|null
+     */
+    protected $after = null;
+
+    /**
+     * The resolved breadcrumbs to use.
+     * 
      * @var array<string,\Honed\Crumb\Crumb>
      */
-    protected $all = [];
+    protected $crumbs = [];
 
-    /** 
-     * @var \Illuminate\Routing\Router
-     */
-    protected $router;
-
-    public function __construct(Router $router)
+    public function __construct()
     {
-        $this->router = $router;
+        //
     }
 
+    /**
+     * Set crumbs to be added globally, before all other crumbs.
+     * 
+     * @param (\Closure(\Honed\Crumb\Trail $trail):void) $trail
+     */
+    public function before(\Closure $trail)
+    {
+        $this->before = $trail;
+    }
+
+    /**
+     * Set crumbs to be added globally, after all other crumbs.
+     * 
+     * @param (\Closure(\Honed\Crumb\Trail $trail):void) $trail
+     */
+    public function after(\Closure $trail)
+    {
+        $this->after = $trail;
+    }
+
+    /**
+     * Set a crumb trail for a given name.
+     * 
+     * @param string $name
+     * @param (\Closure(\Honed\Crumb\Trail $trail):void) $trail
+     */
     public function for(string $name, \Closure $trail)
     {
         if ($this->exists($name)) {
@@ -52,15 +88,32 @@ class Manager
         return isset($this->trails[$name]);
     }
 
-    public function get(string $name)
+    /**
+     * Retrieve a crumb trail by name.
+     * 
+     * @param string $name
+     * @return \Honed\Crumb\Trail
+     * 
+     * @throws \Honed\Crumb\Exceptions\CrumbsNotFoundException
+     */
+    public function get(string $name): Trail
     {
-        // dd($this->trails[$name]);
         if (!$this->exists($name)) {
             throw new CrumbsNotFoundException($name);
         }
 
-        return ($this->trails[$name]);
-        // return ($this->trails[$name])->usingRoute();
-    }
+        $trail = Trail::make();
 
+        if ($this->before) {
+            ($this->before)($trail);
+        }
+
+        ($this->trails[$name])($trail);
+
+        if ($this->after) {
+            ($this->after)($trail);
+        }
+
+        return $trail;
+    }
 }

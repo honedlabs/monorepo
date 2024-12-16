@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Modal\Tests\Stubs;
+namespace Honed\Crumb\Tests\Stubs;
 
 use Honed\Crumb\Tests\Stubs\Product;
 use Illuminate\Http\Request;
