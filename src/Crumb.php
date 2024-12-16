@@ -25,16 +25,16 @@ class Crumb extends Primitive
      * 
      * @param string|(\Closure(mixed...):string) $name
      * @param string|(\Closure(mixed...):string)|null $link
-     * @param array<array-key, mixed> $meta
+     * @param string|null $icon
      */
     public function __construct(
         string|\Closure $name,
         string|\Closure $link = null,
-        array $meta = [],
+        string $icon = null,
     ) {
         $this->setName($name);
         $this->setLink($link);
-        $this->setMeta($meta);
+        $this->setIcon($icon);
     }
 
     /**
@@ -42,11 +42,11 @@ class Crumb extends Primitive
      * 
      * @param string|(\Closure(mixed...):string) $name
      * @param string|(\Closure(mixed...):string)|null $link
-     * @param array<array-key, mixed> $meta
+     * @param string|null $icon
      */
-    public static function make(string|\Closure $name, string|\Closure $link = null, array $meta = [])
+    public static function make(string|\Closure $name, string|\Closure $link = null, string $icon = null)
     {
-        return resolve(static::class, compact('name', 'link', 'meta'));
+        return resolve(static::class, compact('name', 'link', 'icon'));
     }
 
     /**
@@ -72,13 +72,13 @@ class Crumb extends Primitive
      */
     private function getClosureParameters(): array
     {
-        $parameters = FacadesRoute::current()->parameters();
+        $parameters = FacadesRoute::current()?->parameters() ?? [];
         $request = FacadesRequest::capture();
         $route = FacadesRoute::current();
-        $values = array_values($parameters);
+        $values = \array_values($parameters);
 
         $mapped = \array_combine(
-            \array_map('get_class', $values),
+            \array_map(static fn ($value) => \is_object($value) ? \get_class($value) : \gettype($value), $values),
             $values
         );
 

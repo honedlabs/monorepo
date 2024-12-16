@@ -44,7 +44,8 @@ class Trail extends Primitive
 
     public function add(...$crumbs): static
     {
-        dd($crumbs);
+        // dd($crumbs);
+        return $this;
     }
 
     public function root(...$crumbs): static
