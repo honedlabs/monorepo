@@ -67,6 +67,6 @@ class TestCase extends Orchestra
 
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('crumb.files', realpath(__DIR__).'/Stubs/crumb.php');
+        $app['config']->set('crumb.files', realpath(__DIR__).'/Stubs/crumbs.php');
     }
 }

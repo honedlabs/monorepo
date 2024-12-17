@@ -13,7 +13,7 @@ Crumbs::for('basic', function (Trail $trail) {
 Crumbs::for('product', function (Trail $trail) {
     $trail->add('Home', '/');
     $trail->add('Products', '/products');
-    $trail->oneOf(
+    $trail->select(
         Crumb::make(fn (Product $product) => $product->name, fn (Product $product) => route('product.show', $product)),
         Crumb::make(fn (Product $product) => sprintf('Edit %s', $product->name), fn (Product $product) => route('product.edit', $product))
     );

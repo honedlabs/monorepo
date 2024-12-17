@@ -7,23 +7,31 @@ use Illuminate\Support\Facades\Request;
 
 trait ClosureParameters
 {
+    /**
+     * @var non-empty-array<'named'|'typed',array<string,mixed>>|null
+     */
     protected $parameters;
     
     /**
      * Get the binding parameters to pass to a closure.
      * 
-     * @return non-empty-array{array<string,mixed>,array<string,mixed>}
+     * @return non-empty-array<'named'|'typed',array<string,mixed>>
      */
     private function getClosureParameters(): array
     {
         return $this->parameters ??= $this->makeClosureParameters();
     }
 
+    /**
+     * Get the binding parameters from the current route actions.
+     * 
+     * @return non-empty-array<'named'|'typed',array<string,mixed>>
+     */
     private function makeClosureParameters(): array
     {
         $parameters = Route::current()?->parameters() ?? [];
         $request = Request::capture();
-        $route = Request::current();
+        $route = Route::current();
         $values = \array_values($parameters);
 
         $mapped = \array_combine(
