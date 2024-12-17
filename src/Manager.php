@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Crumb;
 
-use Illuminate\Routing\Router;
 use Honed\Crumb\Exceptions\CrumbsNotFoundException;
 use Honed\Crumb\Exceptions\DuplicateCrumbsException;
-use Illuminate\Support\Collection;
 
 class Manager
 {
@@ -25,13 +23,6 @@ class Manager
      * @var (\Closure(\Honed\Crumb\Trail $trail):void)|null
      */
     protected $before = null;
-
-    /**
-     * Crumbs to be added after the trail.
-     * 
-     * @var (\Closure(\Honed\Crumb\Trail $trail):void)|null
-     */
-    protected $after = null;
 
     /**
      * The resolved breadcrumbs to use.
@@ -53,16 +44,6 @@ class Manager
     public function before(\Closure $trail)
     {
         $this->before = $trail;
-    }
-
-    /**
-     * Set crumbs to be added globally, after all other crumbs.
-     * 
-     * @param (\Closure(\Honed\Crumb\Trail $trail):void) $trail
-     */
-    public function after(\Closure $trail)
-    {
-        $this->after = $trail;
     }
 
     /**
@@ -109,10 +90,6 @@ class Manager
         }
 
         ($this->trails[$name])($trail);
-
-        if ($this->after) {
-            ($this->after)($trail);
-        }
 
         return $trail;
     }

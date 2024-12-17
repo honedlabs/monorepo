@@ -10,7 +10,7 @@ use Honed\Crumb\Concerns\Crumbs;
 use Honed\Crumb\Tests\Stubs\Product;
 use Illuminate\Support\Facades\Route;
 
-#[Crumb('Products')]
+#[Crumb('products')]
 class ProductController
 {
     use Crumbs;
@@ -20,7 +20,7 @@ class ProductController
         return inertia('Product/Index');
     }
 
-    #[Crumb('Products')]
+    #[Crumb('products')]
     public function show(Request $request, Product $product)
     {
         return inertia('Product/Show', ['product' => $product]);

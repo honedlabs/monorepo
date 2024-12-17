@@ -10,10 +10,8 @@ use Honed\Crumb\Exceptions\CrumbUnlockedException;
 
 class Trail extends Primitive
 {
-    use Concerns\ClosureParameters;
-
     /**
-     * @var array<int,\Honed\Crumb\Crumb|non-empty-array{array<string,mixed>,array<string,mixed>}>
+     * @var array<int,\Honed\Crumb\Crumb>
      */
     protected $crumbs;
 
@@ -139,16 +137,6 @@ class Trail extends Primitive
     public function isNotLocked(): bool
     {
         return ! $this->isLocked();
-    }
-
-    /**
-     * Retrieve the route parameters.
-     * 
-     * @return non-empty-array{array<string,mixed>,array<string,mixed>}
-     */
-    private function routeParameters(): array
-    {
-        return $this->parameters ??= $this->getClosureParameters();
     }
 
     /**
