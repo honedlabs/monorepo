@@ -31,11 +31,6 @@ class Manager
      */
     protected $crumbs = [];
 
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * Set crumbs to be added globally, before all other crumbs.
      * 
@@ -82,7 +77,7 @@ class Manager
         if (!$this->exists($name)) {
             throw new CrumbsNotFoundException($name);
         }
-
+        
         $trail = Trail::make()->locking();
 
         if ($this->before) {

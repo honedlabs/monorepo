@@ -71,6 +71,6 @@ class Crumb extends Primitive
 
         $this->link = $this->getLink($named, $typed);
 
-        return (bool) $this->link ? Request::is($this->link) : false;
+        return (bool) $this->link ? Request::url() === url($this->link) : false;
     }
 }

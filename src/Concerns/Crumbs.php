@@ -31,10 +31,13 @@ trait Crumbs
             (bool) ($c = collect((new \ReflectionMethod($this, Route::getCurrentRoute()->getActionMethod()))
             ->getAttributes(Crumb::class)
             )->first()?->newInstance()->getCrumb()) => $c,
+
             (bool) ($c = collect((new \ReflectionClass($this))
                 ->getAttributes(Crumb::class)
             )->first()?->newInstance()->getCrumb()) => $c,
+
             \property_exists($this, 'crumb') => $this->crumb,
+
             \method_exists($this, 'crumb') => $this->crumb,
             default => null,
         };

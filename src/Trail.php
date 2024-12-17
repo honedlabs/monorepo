@@ -7,6 +7,7 @@ namespace Honed\Crumb;
 use Inertia\Inertia;
 use Honed\Core\Primitive;
 use Honed\Crumb\Exceptions\CrumbUnlockedException;
+use Illuminate\Support\Facades\Request;
 
 class Trail extends Primitive
 {

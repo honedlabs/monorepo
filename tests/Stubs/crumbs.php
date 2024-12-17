@@ -10,7 +10,7 @@ Crumbs::for('basic', function (Trail $trail) {
     $trail->add('Home', '/');
 });
 
-Crumbs::for('product', function (Trail $trail) {
+Crumbs::for('products', function (Trail $trail) {
     $trail->add('Home', '/');
     $trail->add('Products', '/products');
     $trail->select(
