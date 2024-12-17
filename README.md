@@ -1,19 +1,10 @@
 # Generate and share breadcrumbs to your Inertia applications
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/honed/crumb.svg?style=flat-square)](https://packagist.org/packages/honed/crumb)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/honed/crumb/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/honed/crumb/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/honed/crumb/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/honed/crumb/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/honedlabs/crumb/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/honedlabs/crumb/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/honedlabs/crumb/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/honedlabs/crumb/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/honed/crumb.svg?style=flat-square)](https://packagist.org/packages/honed/crumb)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/crumb.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/crumb)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## Installation
 
@@ -21,13 +12,6 @@ You can install the package via composer:
 
 ```bash
 composer require honed/crumb
-```
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="crumb-migrations"
-php artisan migrate
 ```
 
 You can publish the config file with:
@@ -40,21 +24,30 @@ This is the contents of the published config file:
 
 ```php
 return [
+    'files' => base_path('routes/crumbs.php'),
 ];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="crumb-views"
 ```
 
 ## Usage
 
+Within a controller, you can define a set of crumbs and pass them to your frontend application
+
 ```php
-$crumb = new Honed\Crumb();
-echo $crumb->echoPhrase('Hello, Honed!');
+Trail::make(
+    Crumb::make('Home', '/'),
+    Crumb::make('About', '/about'),
+);
 ```
+
+You can also define a global set of crumbs, and then set them for a specific route
+
+```php
+Trail::for('home', function (Trail $trail) {
+    $trail->push(Crumb::make('Home', '/'));
+});
+```
+
+These can be automatically resolved on a controller by using the `Crumbs` trait, and then defining the crumb name as an attribute, property of method on the Controller class.
 
 ## Testing
 
@@ -76,7 +69,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [jdw5](https://github.com/honedlabs)
+- [Joshua Wallace](https://github.com/jdw5)
 - [All Contributors](../../contributors)
 
 ## License

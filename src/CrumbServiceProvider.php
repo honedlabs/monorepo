@@ -23,7 +23,7 @@ class CrumbServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/crumb.php' => config_path('crumb.php'),
-        ], 'crumbs-config');
+        ], 'crumb-config');
 
         $this->registerCrumbs();
     }
