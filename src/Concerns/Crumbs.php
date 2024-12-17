@@ -2,50 +2,41 @@
 
 namespace Honed\Crumb\Concerns;
 
+use ReflectionMethod;
 use Honed\Crumb\Attributes\Crumb;
+use Honed\Crumb\Crumbs as CrumbCrumbs;
+use Illuminate\Support\Facades\Route;
+use Honed\Crumb\Facades\Crumbs as CrumbsFacade;
 use Honed\Crumb\Exceptions\CrumbsNotFoundException;
-use ReflectionClass;
 
 trait Crumbs
 {
-    protected function getCrumb(): string
+    final public function __construct()
     {
-        if (\property_exists($this, 'crumb')) {
-            return $this->crumb;
-        }
-
-        if (\method_exists($this, 'crumb')) {
-            return $this->crumb();
-        }
-
-        // throw new CrumbNameMissingException($this);
-
-        $reflection = new ReflectionClass($this);
-        
-        // $currentMethod = $reflection->getMethods()
-        //     ->first(fn ($method) => $method->isConstructor() === false && $method->getCaller());
-
-        // if ($currentMethod !== null) {
-        //     $methodAttributes = $currentMethod->getAttributes(Crumb::class);
-
-        //     if (! empty($methodAttributes)) {
-        //         return $methodAttributes[0]->newInstance()->crumb();
-        //     }
-        // }
-
-        // $classAttributes = $reflection->getAttributes(Crumb::class);
-
-        // if (empty($classAttributes)) {
-        //     throw new CrumbsNotFoundException(
-        //         sprintf('No crumb found for %s', $reflection->getName())
-        //     );
-        // }
-
-        // return $classAttributes[0]->newInstance()->crumb();
+        $this->configureCrumbs();
     }
 
-    public function __destruct()
+    public function configureCrumbs(): void
     {
-        // Find the crumbs -> run share
+        $name = $this->getCrumbName();
+
+        if ($name) {
+            CrumbsFacade::get($name)->share();
+        }
+    }
+
+    public function getCrumbName(): ?string
+    {
+        return match (true) {
+            \property_exists($this, 'cru mb') => $this->crumb,
+            (bool) ($c = collect((new \ReflectionMethod($this, Route::getCurrentRoute()->getActionMethod()))
+                ->getAttributes(Crumb::class)
+            )->first()?->newInstance()->getCrumb()) => $c,
+            (bool) ($c = collect((new \ReflectionClass($this))
+                ->getAttributes(Crumb::class)
+            )->first()?->newInstance()->getCrumb()) => $c,
+            \method_exists($this, 'crumb') => $this->crumb,
+            default => null,
+        };
     }
 }

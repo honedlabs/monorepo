@@ -9,9 +9,9 @@ class Crumb
 {
     public function __construct(
         protected readonly string $crumb,
-    ) {}
+    ) { }
 
-    public function crumb(): string
+    public function getCrumb(): ?string
     {
         return $this->crumb;
     }

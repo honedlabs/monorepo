@@ -4,17 +4,25 @@ declare(strict_types=1);
 
 namespace Honed\Crumb\Tests\Stubs;
 
-use Honed\Crumb\Tests\Stubs\Product;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
+use Honed\Crumb\Attributes\Crumb;
+use Honed\Crumb\Concerns\Crumbs;
+use Honed\Crumb\Tests\Stubs\Product;
+use Illuminate\Support\Facades\Route;
 
+#[Crumb('Basic')]
 class ProductController
 {
-    public function index(Request $request,)
+    use Crumbs;
+
+    #[Crumb('Products')]
+    public function index(Request $request)
     {
+
         return inertia('Product/Index');
     }
 
+    #[Crumb('Products')]
     public function show(Request $request, Product $product)
     {
         return inertia('Product/Show', ['product' => $product]);
