@@ -8,6 +8,6 @@ class CrumbUnlockedException extends \Exception
 {
     public function __construct()
     {
-        parent::__construct("The crumb is unlocked and optional adding is disallowed.");
+        parent::__construct('The crumb is unlocked and optional adding is disallowed.');
     }
 }

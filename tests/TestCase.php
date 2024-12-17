@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Honed\Crumb\Tests;
 
-use Inertia\Inertia;
-use Honed\Crumb\Tests\Stubs\Status;
-use Illuminate\Support\Facades\View;
 use Honed\Crumb\CrumbServiceProvider;
 use Honed\Crumb\Tests\Stubs\MethodController;
-use Honed\Crumb\Tests\Stubs\Product;
 use Honed\Crumb\Tests\Stubs\ProductController;
 use Honed\Crumb\Tests\Stubs\PropertyController;
-use Illuminate\Support\Facades\Schema;
+use Honed\Crumb\Tests\Stubs\Status;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\Middleware\SubstituteBindings;
-use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 use Inertia\ServiceProvider as InertiaServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
@@ -56,7 +55,7 @@ class TestCase extends Orchestra
     {
         $router->middleware([SubstituteBindings::class])->group(function ($router) {
             $router->get('/', fn () => inertia('Home'));
-            
+
             $router->get('/products', [ProductController::class, 'index'])->name('product.index');
             $router->get('/products/{product:public_id}', [ProductController::class, 'show'])->name('product.show');
             $router->get('/products/{product}/edit', [ProductController::class, 'edit'])->name('product.edit');

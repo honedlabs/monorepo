@@ -2,12 +2,9 @@
 
 namespace Honed\Crumb\Concerns;
 
-use ReflectionMethod;
 use Honed\Crumb\Attributes\Crumb;
-use Honed\Crumb\Crumbs as CrumbCrumbs;
-use Illuminate\Support\Facades\Route;
 use Honed\Crumb\Facades\Crumbs as CrumbsFacade;
-use Honed\Crumb\Exceptions\CrumbsNotFoundException;
+use Illuminate\Support\Facades\Route;
 
 trait Crumbs
 {
@@ -29,7 +26,7 @@ trait Crumbs
     {
         return match (true) {
             (bool) ($c = collect((new \ReflectionMethod($this, Route::getCurrentRoute()->getActionMethod()))
-            ->getAttributes(Crumb::class)
+                ->getAttributes(Crumb::class)
             )->first()?->newInstance()->getCrumb()) => $c,
 
             (bool) ($c = collect((new \ReflectionClass($this))

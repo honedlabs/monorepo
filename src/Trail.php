@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Crumb;
 
-use Inertia\Inertia;
 use Honed\Core\Primitive;
 use Honed\Crumb\Exceptions\CrumbUnlockedException;
-use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class Trail extends Primitive
 {
@@ -28,28 +27,23 @@ class Trail extends Primitive
 
     /**
      * Create a new trail instance.
-     * 
-     * @param array<int,\Honed\Crumb\Crumb> $crumbs
      */
-    public function __construct(...$crumbs) 
+    public function __construct(Crumb ...$crumbs)
     {
-        $this->crumbs = $crumbs;
+        $this->crumbs = \array_values($crumbs);
     }
 
     /**
      * Make a new trail instance.
-     * 
-     * @param array<int,\Honed\Crumb\Crumb> $crumbs
-     * @return $this
      */
-    public static function make(...$crumbs): static
+    public static function make(Crumb ...$crumbs): self
     {
-        return new static(...$crumbs);
+        return new self(...$crumbs);
     }
 
     /**
      * Get the trail as an array.
-     * 
+     *
      * @return array<int,\Honed\Crumb\Crumb>
      */
     public function toArray(): array
@@ -69,13 +63,12 @@ class Trail extends Primitive
 
     /**
      * Append crumbs to the end of the crumb trail.
-     * 
-     * @param string|\Honed\Crumb\Crumb|(\Closure(mixed...):string) $crumb
-     * @param string|(\Closure(mixed...):string)|null $link
-     * @param string|null $icon
+     *
+     * @param  string|\Honed\Crumb\Crumb|(\Closure(mixed...):string)  $crumb
+     * @param  string|(\Closure(mixed...):string)|null  $link
      * @return $this
      */
-    public function add(string|\Closure|Crumb $crumb, string|\Closure|null $link = null, string|null $icon = null): static
+    public function add(string|\Closure|Crumb $crumb, string|\Closure|null $link = null, ?string $icon = null): static
     {
         if ($this->isNotLocked()) {
             $crumb = $crumb instanceof Crumb ? $crumb : Crumb::make($crumb, $link, $icon);
@@ -86,13 +79,24 @@ class Trail extends Primitive
         return $this;
     }
 
-    public function select(...$crumbs)
+    /**
+     * Select and add the first matching crumb to the trail.
+     *
+     * @return $this
+     *
+     * @throws CrumbUnlockedException
+     */
+    public function select(Crumb ...$crumbs): static
     {
-        if ($this->isNotLocking()) {
-            throw new CrumbUnlockedException();
+        if ($this->isLocked()) {
+            return $this;
         }
 
-        $crumb = collect($crumbs)->first(static fn (Crumb $crumb) => $crumb->isCurrent());
+        if ($this->isNotLocking()) {
+            throw new CrumbUnlockedException;
+        }
+
+        $crumb = collect($crumbs)->first(fn (Crumb $crumb): bool => $crumb->isCurrent());
 
         if ($crumb) {
             $this->crumbs[] = $crumb;
@@ -104,8 +108,8 @@ class Trail extends Primitive
 
     /**
      * Determine if the trail is locking.
-     * 
-     * @return bool
+     *
+     * @internal
      */
     public function isLocking(): bool
     {
@@ -114,6 +118,8 @@ class Trail extends Primitive
 
     /**
      * Determine if the trail is not locking
+     *
+     * @internal
      */
     public function isNotLocking(): bool
     {
@@ -122,8 +128,8 @@ class Trail extends Primitive
 
     /**
      * Determine if the trail is locked.
-     * 
-     * @return bool
+     *
+     * @internal
      */
     public function isLocked(): bool
     {
@@ -132,8 +138,8 @@ class Trail extends Primitive
 
     /**
      * Determine if the trail is not locked.
-     * 
-     * @return bool
+     *
+     * @internal
      */
     public function isNotLocked(): bool
     {
@@ -142,7 +148,7 @@ class Trail extends Primitive
 
     /**
      * Retrieve the crumbs in the crumb trail.
-     * 
+     *
      * @return array<int,\Honed\Crumb\Crumb>
      */
     public function crumbs(): array
@@ -155,7 +161,7 @@ class Trail extends Primitive
      */
     public function hasCrumbs(): bool
     {
-        return \sizeof($this->crumbs()) > 0;
+        return \count($this->crumbs()) > 0;
     }
 
     /**
@@ -168,7 +174,7 @@ class Trail extends Primitive
 
     /**
      * Share the crumbs with Inertia.
-     * 
+     *
      * @return $this
      */
     public function share(): static

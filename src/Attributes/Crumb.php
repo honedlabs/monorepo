@@ -9,7 +9,7 @@ class Crumb
 {
     public function __construct(
         protected readonly string $crumb,
-    ) { }
+    ) {}
 
     public function getCrumb(): ?string
     {

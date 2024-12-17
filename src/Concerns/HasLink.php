@@ -3,7 +3,7 @@
 namespace Honed\Crumb\Concerns;
 
 /**
- * @method evaluate(mixed $value, array $named = [], array $typed = [])
+ * @method evaluate(mixed $value, array<string,mixed> $named = [], array<string,mixed> $typed = [])
  */
 trait HasLink
 {
@@ -35,8 +35,8 @@ trait HasLink
 
     /**
      * Set the url quietly.
-     * 
-     * @param string|(\Closure(mixed...):string) $url
+     *
+     * @param  string|(\Closure(mixed...):string)  $url
      */
     public function setUrl(string|\Closure $url): void
     {
@@ -46,7 +46,7 @@ trait HasLink
     /**
      * Set the url, chainable
      *
-     * @param string|(\Closure(mixed...):string) $url
+     * @param  string|(\Closure(mixed...):string)  $url
      * @return $this
      */
     public function url(string|\Closure $url): static
@@ -58,10 +58,9 @@ trait HasLink
 
     /**
      * Set the link quietly
-     * 
-     * @param string|(\Closure(mixed...):string)|null $link
-     * @param array<array-key, mixed> $parameters
-     * @param bool $absolute
+     *
+     * @param  string|(\Closure(mixed...):string)|null  $link
+     * @param  array<array-key, mixed>  $parameters
      */
     public function setLink(string|\Closure|null $link, mixed $parameters = [], bool $absolute = true): void
     {
@@ -79,20 +78,20 @@ trait HasLink
     /**
      * Set the link, chainable
      *
-     * @param string|(\Closure(mixed...):string) $link
-     * @param array<array-key, mixed> $parameters
-     * @param bool $absolute
+     * @param  string|(\Closure(mixed...):string)  $link
+     * @param  array<array-key, mixed>  $parameters
      * @return $this
      */
     public function link(string|\Closure $link, mixed $parameters = [], bool $absolute = true): static
     {
         $this->setLink($link, $parameters, $absolute);
+
         return $this;
     }
 
     /**
      * Determine if the link is a url, or a named route.
-     * 
+     *
      * @internal
      */
     private function isUrl(string $link): bool
@@ -102,10 +101,9 @@ trait HasLink
 
     /**
      * Retrieve the link, evaluating it if it is a closure.
-     * 
+     *
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
-     * @return string|null
      */
     public function getLink(array $named = [], array $typed = []): ?string
     {

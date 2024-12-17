@@ -22,7 +22,7 @@ class CrumbServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/crumb.php' => config_path('crumb.php'),
+            __DIR__.'/../config/crumb.php' => config_path('crumb.php'),
         ], 'crumbs-config');
 
         $this->registerCrumbs();
@@ -38,15 +38,15 @@ class CrumbServiceProvider extends ServiceProvider
          */
         $files = config('crumb.files');
 
-        if (!$files) {
+        if (! $files) {
             return;
         }
 
-        if (\is_string($files) && !\is_file($files)) {
+        if (\is_string($files) && ! \is_file($files)) {
             return;
         }
 
-        foreach ((array)$files as $file) {
+        foreach ((array) $files as $file) {
             require $file;
         }
     }

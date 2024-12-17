@@ -1,10 +1,10 @@
 <?php
 
 use Honed\Crumb\Crumb;
-use Honed\Crumb\Trail;
 use Honed\Crumb\Facades\Crumbs;
-use Honed\Crumb\Tests\Stubs\Status;
 use Honed\Crumb\Tests\Stubs\Product;
+use Honed\Crumb\Tests\Stubs\Status;
+use Honed\Crumb\Trail;
 
 Crumbs::for('basic', function (Trail $trail) {
     $trail->add('Home', '/');

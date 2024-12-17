@@ -11,43 +11,35 @@ class Manager
 {
     /**
      * Trails paired to a key.
-     * 
-     * @var array<string,\Honed\Crumb\Trail>
+     *
+     * @var array<string,(\Closure(\Honed\Crumb\Trail):void)>
      */
     protected $trails = [];
 
     /**
      * Crumbs to be added before the trail.
      * Useful for adding a home crumb to all trails.
-     * 
-     * @var (\Closure(\Honed\Crumb\Trail $trail):void)|null
+     *
+     * @var (\Closure(\Honed\Crumb\Trail):void)|null
      */
     protected $before = null;
 
     /**
-     * The resolved breadcrumbs to use.
-     * 
-     * @var array<string,\Honed\Crumb\Crumb>
-     */
-    protected $crumbs = [];
-
-    /**
      * Set crumbs to be added globally, before all other crumbs.
-     * 
-     * @param (\Closure(\Honed\Crumb\Trail $trail):void) $trail
+     *
+     * @param  (\Closure(\Honed\Crumb\Trail $trail):void)  $trail
      */
-    public function before(\Closure $trail)
+    public function before(\Closure $trail): void
     {
         $this->before = $trail;
     }
 
     /**
      * Set a crumb trail for a given name.
-     * 
-     * @param string $name
-     * @param (\Closure(\Honed\Crumb\Trail $trail):void) $trail
+     *
+     * @param  (\Closure(\Honed\Crumb\Trail $trail):void)  $trail
      */
-    public function for(string $name, \Closure $trail)
+    public function for(string $name, \Closure $trail): void
     {
         if ($this->exists($name)) {
             throw new DuplicateCrumbsException($name);
@@ -57,7 +49,7 @@ class Manager
     }
 
     /**
-     * Determine if a crumb with the given name exists. 
+     * Determine if a crumb with the given name exists.
      */
     public function exists(string $name): bool
     {
@@ -66,18 +58,16 @@ class Manager
 
     /**
      * Retrieve a crumb trail by name.
-     * 
-     * @param string $name
-     * @return \Honed\Crumb\Trail
-     * 
+     *
+     *
      * @throws \Honed\Crumb\Exceptions\CrumbsNotFoundException
      */
     public function get(string $name): Trail
     {
-        if (!$this->exists($name)) {
+        if (! $this->exists($name)) {
             throw new CrumbsNotFoundException($name);
         }
-        
+
         $trail = Trail::make()->locking();
 
         if ($this->before) {

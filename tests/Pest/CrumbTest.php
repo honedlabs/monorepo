@@ -1,9 +1,10 @@
 <?php
 
 use Honed\Crumb\Crumb;
-use function Pest\Laravel\get;
 use Honed\Crumb\Tests\Stubs\Product;
 use Honed\Crumb\Tests\Stubs\Status;
+
+use function Pest\Laravel\get;
 
 it('can be instantiated', function () {
     expect(new Crumb('Home', '/'))->toBeInstanceOf(Crumb::class)
