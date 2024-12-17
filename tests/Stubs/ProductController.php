@@ -10,15 +10,13 @@ use Honed\Crumb\Concerns\Crumbs;
 use Honed\Crumb\Tests\Stubs\Product;
 use Illuminate\Support\Facades\Route;
 
-#[Crumb('Basic')]
+#[Crumb('Products')]
 class ProductController
 {
     use Crumbs;
 
-    #[Crumb('Products')]
     public function index(Request $request)
     {
-
         return inertia('Product/Index');
     }
 

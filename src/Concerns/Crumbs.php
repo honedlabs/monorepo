@@ -28,13 +28,13 @@ trait Crumbs
     public function getCrumbName(): ?string
     {
         return match (true) {
-            \property_exists($this, 'cru mb') => $this->crumb,
             (bool) ($c = collect((new \ReflectionMethod($this, Route::getCurrentRoute()->getActionMethod()))
-                ->getAttributes(Crumb::class)
+            ->getAttributes(Crumb::class)
             )->first()?->newInstance()->getCrumb()) => $c,
             (bool) ($c = collect((new \ReflectionClass($this))
                 ->getAttributes(Crumb::class)
             )->first()?->newInstance()->getCrumb()) => $c,
+            \property_exists($this, 'crumb') => $this->crumb,
             \method_exists($this, 'crumb') => $this->crumb,
             default => null,
         };

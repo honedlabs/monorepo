@@ -1,12 +1,17 @@
 <?php
 
+use Honed\Crumb\Attributes\Crumb;
+
 use Honed\Crumb\Tests\Stubs\ProductController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Request as FacadesRequest;
-use Illuminate\Support\Facades\Route;
 
-use function Pest\Laravel\get;
+it('can be set on a class', function () {
+    expect(collect((new \ReflectionClass(ProductController::class))
+        ->getAttributes(Crumb::class)
+    )->first()->newInstance()->getCrumb())->toBe('Products');
+});
 
-it('dummy', function () {
-    get(route('product.index'));
+it('can be set on a method', function () {
+    expect(collect((new \ReflectionMethod(ProductController::class, 'show'))
+        ->getAttributes(Crumb::class)
+    )->first()->newInstance()->getCrumb())->toBe('Products');
 });
