@@ -22,6 +22,7 @@ it('can retrieve the crumb from the method', function () {
     $product = product();
 
     $response = get(route('product.show', $product));
+
     expect($response->assertInertia(fn (Assert $page) => $page->has('crumbs')
         ->count('crumbs', 3)
         ->where('crumbs.0', [

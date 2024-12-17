@@ -10,6 +10,9 @@ use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Facades\Route as FacadesRoute;
 
+/**
+ * @method array toArray(array $named = [], array $typed = [])
+ */
 class Crumb extends Primitive
 {
     use \Honed\Core\Concerns\HasName;
@@ -49,7 +52,7 @@ class Crumb extends Primitive
 
     /**
      * Get the crumb as an array
-     *
+     * 
      * @return non-empty-array<'name'|'url'|'icon',string|null>
      */
     public function toArray(): array

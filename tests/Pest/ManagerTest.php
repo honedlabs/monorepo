@@ -8,6 +8,9 @@ use Honed\Crumb\Manager;
 use Honed\Crumb\Facades\Crumbs;
 use Honed\Crumb\Exceptions\CrumbsNotFoundException;
 use Honed\Crumb\Exceptions\DuplicateCrumbsException;
+use Illuminate\Support\Facades\Route;
+
+use function Pest\Laravel\get;
 
 /** Must be accessed statically via facade */
 
@@ -55,3 +58,7 @@ it('throws error if the key already exists', function () {
         $trail->add(Crumb::make('Home', '/'));
     });
 })->throws(DuplicateCrumbsException::class);
+
+it('dummy', function () {
+    get(route('product.index'));
+});

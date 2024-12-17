@@ -33,12 +33,18 @@ class CrumbServiceProvider extends ServiceProvider
      */
     protected function registerCrumbs(): void
     {
+        /**
+         * @var string|array<int,string>
+         */
         $files = config('crumb.files');
 
-        if (!$files || !is_file($files)) {
+        if (!$files) {
             return;
         }
 
+        if (\is_string($files) && !\is_file($files)) {
+            return;
+        }
 
         foreach ((array)$files as $file) {
             require $file;
