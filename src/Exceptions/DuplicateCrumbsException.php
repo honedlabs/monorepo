@@ -1,7 +1,8 @@
 <?php
 
-namespace Honed\Crumb\Exceptions;
+declare(strict_types=1);
 
+namespace Honed\Crumb\Exceptions;
 
 class DuplicateCrumbsException extends \Exception
 {

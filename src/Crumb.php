@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Honed\Crumb;
 
 use Honed\Core\Primitive;
-use Illuminate\Routing\Route;
-use Illuminate\Http\Client\Request;
-use Illuminate\Support\Facades\Request as FacadesRequest;
-use Illuminate\Support\Facades\Route as FacadesRoute;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
 
 /**
  * @method array toArray(array $named = [], array $typed = [])
@@ -19,6 +17,7 @@ class Crumb extends Primitive
     use \Honed\Core\Concerns\HasMeta;
     use Concerns\HasIcon;
     use Concerns\HasLink;
+    use Concerns\ClosureParameters;
 
     /**
      * Create a new crumb instance.
@@ -66,34 +65,12 @@ class Crumb extends Primitive
         ];
     }
 
-    /**
-     * Get the binding parameters to pass to a closure.
-     * 
-     * @return non-empty-array{array<string,mixed>,array<string,mixed>}
-     */
-    private function getClosureParameters(): array
+    public function isCurrent(): bool
     {
-        $parameters = FacadesRoute::current()?->parameters() ?? [];
-        $request = FacadesRequest::capture();
-        $route = FacadesRoute::current();
-        $values = \array_values($parameters);
+        [$named, $typed] = $this->getClosureParameters();
 
-        $mapped = \array_combine(
-            \array_map(static fn ($value) => \is_object($value) ? \get_class($value) : \gettype($value), $values),
-            $values
-        );
+        $this->link = $this->getLink($named, $typed);
 
-        return [
-            [
-                'request' => $request,
-                'route' => $route,
-                ...$parameters,
-            ],
-            [
-                Request::class => $request,
-                Route::class => $route,
-                ...$mapped,
-            ],
-        ];
+        return (bool) $this->link ? Request::is($this->link) : false;
     }
 }

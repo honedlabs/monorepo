@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Crumb;
 
-use Honed\Core\Primitive;
 use Inertia\Inertia;
+use Honed\Core\Primitive;
+use Honed\Crumb\Exceptions\CrumbUnlockedException;
 
 class Trail extends Primitive
 {
@@ -17,11 +18,6 @@ class Trail extends Primitive
     protected $crumbs;
 
     /**
-     * @var array<int,\Honed\Crumb\Crumb|non-empty-array{array<string,mixed>,array<string,mixed>}>
-     */
-    protected $optionals;
-
-    /**
      * @var bool
      */
     protected $locking = false;
@@ -30,11 +26,6 @@ class Trail extends Primitive
      * @var bool
      */
     protected $locked = false;
-
-    /**
-     * @var array{array<string,mixed>,array<string,mixed>}
-     */
-    protected $parameters = [];
 
     /**
      * Create a new trail instance.
@@ -87,26 +78,29 @@ class Trail extends Primitive
      */
     public function add(string|\Closure|Crumb $crumb, string|\Closure|null $link = null, string|null $icon = null): static
     {
-        match (true) {
-            $this->locked => null,
-            // $this->locking =>
-            default => $this->crumbs[] = match (true) {
-                $crumb instanceof Crumb => $crumb,
-                default => Crumb::make($crumb, $link, $icon),
-            },
-        };
+        if ($this->isNotLocked()) {
+            $crumb = $crumb instanceof Crumb ? $crumb : Crumb::make($crumb, $link, $icon);
+            $this->crumbs[] = $crumb;
+            $this->locked = $this->isLocking() && $crumb->isCurrent();
+        }
 
         return $this;
     }
 
-    public function oneOf(...$crumbs)
+    public function select(...$crumbs)
     {
-        if (! $this->isLocking()) {
-            throw new \Exception('Cannot add crumbs when the trail is not locked.');
+        if ($this->isNotLocking()) {
+            throw new CrumbUnlockedException();
         }
 
-        // ->oneOf(Crumb::make('Home', '/', 'home'))
-        // ->optional('Home', '/')
+        $crumb = collect($crumbs)->first(static fn (Crumb $crumb) => $crumb->isCurrent());
+
+        if ($crumb) {
+            $this->crumbs[] = $crumb;
+            $this->locked = true;
+        }
+
+        return $this;
     }
 
     /**

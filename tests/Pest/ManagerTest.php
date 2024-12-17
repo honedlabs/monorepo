@@ -8,6 +8,7 @@ use Honed\Crumb\Manager;
 use Honed\Crumb\Facades\Crumbs;
 use Honed\Crumb\Exceptions\CrumbsNotFoundException;
 use Honed\Crumb\Exceptions\DuplicateCrumbsException;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 use function Pest\Laravel\get;
@@ -61,4 +62,10 @@ it('throws error if the key already exists', function () {
 
 it('dummy', function () {
     get(route('product.index'));
+    dd(
+        Request::url(),
+        url(route('product.index')),
+        url('/products'),
+        url(route('product.index', ['id' => 1])),
+    );
 });
