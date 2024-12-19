@@ -14,7 +14,7 @@ trait HasIcon
     /**
      * Set the icon, chainable.
      *
-     * @param string|\Closure():string|null $icon
+     * @param  string|\Closure():string|null  $icon
      * @return $this
      */
     public function icon(string|\Closure $icon): static
@@ -27,7 +27,7 @@ trait HasIcon
     /**
      * Set the icon, quietly.
      *
-     * @param string|\Closure():string|null $icon
+     * @param  string|\Closure():string|null  $icon
      */
     public function setIcon(string|\Closure|null $icon): void
     {
