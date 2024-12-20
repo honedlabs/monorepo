@@ -156,8 +156,6 @@ class Crumb extends Primitive
 
     /**
      * Determine if the crumb has a link.
-     *
-     * @return bool
      */
     public function hasLink(): bool
     {

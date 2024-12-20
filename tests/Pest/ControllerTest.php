@@ -1,10 +1,10 @@
 <?php
 
-use function Pest\Laravel\get;
 use Honed\Crumb\Concerns\HasCrumbs;
-
-use Inertia\Testing\AssertableInertia as Assert;
 use Honed\Crumb\Exceptions\ClassDoesNotExtendControllerException;
+use Inertia\Testing\AssertableInertia as Assert;
+
+use function Pest\Laravel\get;
 
 it('can retrieve the crumb from the class', function () {
     $response = get(route('product.index'));
@@ -52,5 +52,5 @@ class ControllerTestClass
 }
 
 it('throws an exception if the class does not extend the controller on construction', function () {
-    new ControllerTestClass();
+    new ControllerTestClass;
 })->throws(ClassDoesNotExtendControllerException::class);
