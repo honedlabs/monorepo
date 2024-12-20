@@ -14,4 +14,9 @@ final class FirstClass
     {
         return $this->name;
     }
+
+    public function getFullName(): string
+    {
+        return $this->name . ' ' . $this->name;
+    }
 }
