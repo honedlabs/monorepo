@@ -1,0 +1,49 @@
+name: client-test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/**/*.ts'
+      - 'packages/**/*.js'
+      - 'packages/**/*.vue'
+      - 'packages/**/package.json'
+      - 'packages/**/tsconfig.json'
+      - 'packages/**/vite.config.ts'
+      - 'packages/**/vitest.config.js'
+
+
+jobs:
+  test:
+    if: ${{ false }}
+    
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        node: [18.x, 20.x, 22.x]
+        # package:
+        #   - 
+
+    defaults:
+      run:
+        working-directory: packages/ts/${{ matrix.package }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: "npm"
+          cache-dependency-path: packages/ts/${{ matrix.package }}/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Execute Unit tests
+        run: npm run test
