@@ -13,7 +13,8 @@
         "symfony/http-kernel": "^5.4.48"
     },
     "require-dev": {
-        "symplify/monorepo-builder": "^11.2.22"
+        "symplify/monorepo-builder": "^11.2.22",
+        "laravel/prompts": "^0.3.2"
     },
     "autoload": {
         "psr-4": {
@@ -30,7 +31,7 @@
         "repo:release": "vendor/bin/monorepo-builder release"
     },
     "replace": {
-        "honed/first-package": "0.2.8",
-        "honed/second-package": "0.2.8"
+        "honed/first-package": "0.2.9",
+        "honed/second-package": "0.2.9"
     }
 }
