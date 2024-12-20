@@ -155,6 +155,16 @@ class Crumb extends Primitive
     }
 
     /**
+     * Determine if the crumb has a link.
+     *
+     * @return bool
+     */
+    public function hasLink(): bool
+    {
+        return ! \is_null($this->link);
+    }
+
+    /**
      * Retrieve the link, evaluating it if it is a closure.
      *
      * @param  array<string, mixed>  $named
@@ -162,7 +172,6 @@ class Crumb extends Primitive
      */
     public function getLink(array $named = [], array $typed = []): ?string
     {
-        // dd(request()->route()->parameters());
         return $this->evaluate($this->link, $named, $typed);
     }
 
