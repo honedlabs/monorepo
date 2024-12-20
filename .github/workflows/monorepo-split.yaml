@@ -27,7 +27,7 @@ jobs:
       - name: Split package ${{ matrix.package }}
         uses: symplify/github-action-monorepo-split@v2.3.0
         env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SPLIT_REPO }}
         with:
           package_directory: 'packages/laravel/${{ matrix.package }}'
           repository_organization: 'honedlabs'
