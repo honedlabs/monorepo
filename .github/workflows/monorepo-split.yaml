@@ -19,21 +19,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      # Create repository if it doesn't exist
-      - name: Create repository
-        run: |
-          curl -X POST \
-            -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/orgs/honedlabs/repos \
-            -d '{
-              "name": "${{ matrix.package }}",
-              "private": false,
-              "auto_init": true,
-              "description": "Split from monorepo"
-            }'
-
+      
       - name: Split for ${{ matrix.package }}
         uses: symplify/github-action-monorepo-split@v2.3.0
         env:
