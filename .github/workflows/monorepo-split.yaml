@@ -32,6 +32,6 @@ jobs:
           package_directory: 'packages/laravel/${{ matrix.package }}'
           repository_organization: 'honedlabs'
           repository_name: '${{ matrix.package }}'
-          user_name: "jdw5"
-          user_email: "josh@joshua-wallace.com"
+          user_name: ${{ vars.REPO_USER }}
+          user_email: ${{ vars.REPO_EMAIL }}
           branch: "main"
