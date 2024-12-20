@@ -6,5 +6,5 @@ require __DIR__ . '/../vendor/autoload.php';
 use Honed\Honed\PackageMake;
 
 $command = new PackageMake();
-$command->run();
+$command->handle();
 
