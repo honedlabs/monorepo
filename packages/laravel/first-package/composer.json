@@ -1,0 +1,11 @@
+{
+    "name": "honed/first-package",
+    "require": {
+        "php": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "YourMonorepo\\FirstPackage\\": "src"
+        }
+    }
+}

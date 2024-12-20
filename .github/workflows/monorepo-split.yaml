@@ -1,0 +1,37 @@
+name: monorepo-split
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+jobs:
+  split-monorepo:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - first-package
+          - second-package
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Split package ${{ matrix.package }}
+        uses: symplify/github-action-monorepo-split@v2.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.SPLIT_REPO }}
+        with:
+          package_directory: 'packages/laravel/${{ matrix.package }}'
+          repository_organization: 'honedlabs'
+          repository_name: '${{ matrix.package }}'
+          user_name: ${{ vars.REPO_USER }}
+          user_email: ${{ vars.REPO_EMAIL }}
+          branch: "main"
