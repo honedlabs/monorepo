@@ -1,6 +1,5 @@
 {
     "name": "honed/first-package",
-    "version": "0.1.0",
     "require": {
         "php": "^8.2"
     },
