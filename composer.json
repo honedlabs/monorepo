@@ -6,16 +6,16 @@
         "symfony/http-kernel": "^5.0"
     },
     "require-dev": {
-        "symplify/monorepo-builder": "^11.2"
+        "symplify/monorepo-builder": "^11.2.22"
+    },
+    "replace": {
+        "honed/first-package": "self.version",
+        "honed/second-package": "self.version"
     },
     "autoload": {
         "psr-4": {
             "YourMonorepo\\FirstPackage\\": "packages/laravel/first-package/src",
             "YourMonorepo\\SecondPackage\\": "packages/laravel/second-package/src"
         }
-    },
-    "replace": {
-        "honed/first-package": "self.version",
-        "honed/second-package": "self.version"
     }
 }
