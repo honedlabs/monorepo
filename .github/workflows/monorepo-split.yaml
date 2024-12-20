@@ -25,9 +25,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
-          package-directory: 'packages/laravel/${{ matrix.package }}'
-          repository-organization: 'honedlabs'
-          repository-name: '${{ matrix.package }}'
+          package_directory: 'packages/laravel/${{ matrix.package }}'
+          repository_organization: 'honedlabs'
+          repository_name: '${{ matrix.package }}'
 
-          user-name: "jdw5"
-          user-email: "josh@joshua-wallace.com"
+          user_name: "jdw5"
+          user_email: "josh@joshua-wallace.com"
