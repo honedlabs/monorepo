@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main
+    tags:
+      - '*'
 
 jobs:
   split-monorepo:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -18,9 +19,12 @@ jobs:
           - second-package
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
-      - name: Split for ${{ matrix.package }}
+      - name: Split package ${{ matrix.package }}
         uses: symplify/github-action-monorepo-split@v2.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
