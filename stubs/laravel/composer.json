@@ -13,7 +13,7 @@
         {
             "name": ":author_name",
             "homepage": ":author_homepage",
-            "email": "author_email",
+            "email": ":author_email",
             "role": "Developer"
         }
     ],
@@ -38,7 +38,7 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\PackageName\\": "src/",
+            "VendorName\\PackageName\\": "src/"
         },
         "files": [
             "./helpers.php"
@@ -46,7 +46,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\PackageName\\Tests\\": "tests/",
+            "VendorName\\PackageName\\Tests\\": "tests/"
         }
     },
     "scripts": {

@@ -184,24 +184,88 @@ class PackageMake
 
     protected function replaceInDirectory(string $directory): bool
     {
-        $files = (\str_starts_with(\strtoupper(PHP_OS), 'WIN') ? $this->replaceForWindows() : $this->replaceForAllOtherOSes());
+        $replacements = $this->replacements();
+        $files = (\str_starts_with(\strtoupper(PHP_OS), 'WIN') ? $this->replaceForWindows($directory, $replacements) : $this->replaceForAllOtherOSes($directory, $replacements));
 
         foreach($files as $file) {
-            $this->replaceInFile($file, [
-                'author_name' => self::AuthorName,
-                'author_email' => self::AuthorEmail,
-                'author_homepage' => self::AuthorHomepage,
-                'vendor' => self::VendorName,
-                'vendor_slug' => self::VendorSlug,
-                'package' => $this->name,
-                'package_slug' => $this->slug,
-                ''
-            ]);
+            $this->replaceInFile($file, $this->replacements());
+        }
+
+        // Then handle file renames
+        $files = (\str_starts_with(\strtoupper(PHP_OS), 'WIN') ? $this->replaceNamesForWindows($directory, $this->fileNames()) : $this->replaceNamesForAllOtherOSes($directory, $this->fileNames()));
+        
+        foreach($files as $file) {
+            $this->renameFile($file);
         }
 
         return true;
     }
 
+    protected function replaceNamesForWindows(string $directory, array $replacements): array
+    {
+        // Get all files recursively
+        $command = sprintf(
+            'dir /S /B "%s" | findstr /v /i .git\ | findstr /v /i vendor | findstr /v /i %s',
+            $directory,
+            basename(__FILE__)
+        );
+        
+        $files = preg_split('/\\r\\n|\\r|\\n/', $this->run($command));
+        
+        // Filter files whose names contain any of the replacement keys
+        return array_filter($files, function($file) use ($replacements) {
+            $filename = basename($file);
+            foreach (array_keys($replacements) as $search) {
+                if (stripos($filename, $search) !== false) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
+    protected function replaceNamesForAllOtherOSes(string $directory, array $replacements): array
+    {
+        // Get all files recursively, excluding .git and vendor
+        $command = sprintf(
+            'find "%s" -type f ! -path "*/\.git/*" ! -path "*/vendor/*" ! -name "%s"',
+            $directory,
+            basename(__FILE__)
+        );
+        
+        $files = explode(PHP_EOL, $this->run($command));
+        
+        // Filter files whose names contain any of the replacement keys
+        return array_filter($files, function($file) use ($replacements) {
+            $filename = basename($file);
+            foreach (array_keys($replacements) as $search) {
+                if (stripos($filename, $search) !== false) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
+    protected function renameFile(string $file): void
+    {
+        rename($file, $this->getNewFilename($file));
+    }
+
+    protected function getNewFilename(string $file): string
+    {
+        return str_replace(
+            \array_keys($this->fileNames()),
+            \array_values($this->fileNames()),
+            $file
+        );
+    }
+    /**
+     * Replace the placeholders in the file with the actual values.
+     * @param string $file
+     * @param array<string,string> $replacements
+     * @return void
+     */
     protected function replaceInFile(string $file, array $replacements): void
     {
         $contents = \file_get_contents($file);
@@ -216,6 +280,12 @@ class PackageMake
         );
     }
 
+    /**
+     * Hash the directory contents to determine if it has changed as a checksum.
+     * 
+     * @param string $directory
+     * @return string
+     */
     protected function hashDirectory(string $directory): string
     {
         if (! \is_dir($directory)) { 
@@ -237,26 +307,72 @@ class PackageMake
         return \md5(\implode('', $files));
     }
 
+    /**
+     * Separate the paths based on the OS.
+     * 
+     * @param string $path
+     * @return string
+     */
     protected function separatePath(string $path): string
     {
         return \str_replace('/', DIRECTORY_SEPARATOR, $path);
     }
 
+    /**
+     * Execute a command and return the output via the shell.
+     * 
+     * @param string $command
+     * @return string
+     */
     protected function run(string $command): string
     {
         return \trim((string) \shell_exec($command));
     }
 
-    protected function replaceForWindows(): array
+    /**
+     * Select the files which need to have replacements made using Windows command. Only the replacement keys will be used, not their mapping value.
+     * 
+     * @param string $directory
+     * @param array<string,string> $replacements
+     * @return array<int,string>
+     */
+    protected function replaceForWindows(string $directory, array $replacements): array
     {
-        return \preg_split('/\\r\\n|\\r|\\n/', $this->run('dir /S /B * | findstr /v /i .git\ | findstr /v /i vendor | findstr /v /i '.basename(__FILE__).' | findstr /r /i /M /F:/ ":author :vendor :package VendorName skeleton migration_table_name vendor_name vendor_slug author@domain.com"'));
+        $command = sprintf(
+            'dir /S /B "%s" | findstr /v /i .git\ | findstr /v /i vendor | findstr /v /i %s | findstr /r /i /M /F:/ "%s"',
+            $directory,
+            basename(__FILE__),
+            implode(' ', \array_keys($replacements))
+        );
+        
+        return preg_split('/\\r\\n|\\r|\\n/', $this->run($command));
     }
 
-    protected function replaceForAllOtherOSes(): array
+    /**
+     * Select the files which need to have replacements made. Only the replacement keys will be used, not their mapping value.
+     * 
+     * @param string $directory
+     * @param array<string,string> $replacements
+     * @return array<int,string>
+     */
+    protected function replaceForAllOtherOSes(string $directory, array $replacements): array
     {
-        return \explode(PHP_EOL, $this->run('grep -E -r -l -i ":author|:vendor|:package|VendorName|skeleton|migration_table_name|vendor_name|vendor_slug|author@domain.com" --exclude-dir=vendor ./* ./.github/* | grep -v '.basename(__FILE__)));
+        $command = sprintf(
+            'grep -E -r -l -i "%s" --exclude-dir=vendor "%s" | grep -v %s',
+            \implode('|', \array_keys($replacements)),
+            $directory,
+            basename(__FILE__)
+        );
+
+        return explode(PHP_EOL, $this->run($command));
     }
 
+
+    /**
+     * The available package types which can be created.
+     * 
+     * @return array<string,string>
+     */
     protected function packageTypes(): array
     {
         return [
@@ -266,17 +382,63 @@ class PackageMake
         ];
     }
 
+    /**
+     * The directory where the package will be created.
+     * 
+     * @param string $type
+     * @return string
+     */
     protected function packageDirectory(string $type): string
     {
-        return __DIR__ . '/../packages/' . $type . '/' . $this->slug;
+        return __DIR__ . sprintf('/../packages/%s/%s', $type, $this->slug);
     }
 
+    /**
+     * Complete match for each type to the location of the project stub
+     * 
+     * @param string $type
+     * @return string
+     */
     protected function stubPath(string $type): string
     {
         return match($type) {
-            'laravel' => __DIR__ . '/../stubs/laravel',
-            'vue' => __DIR__ . '/../stubs/vue',
-            'typescript' => __DIR__ . '/../stubs/typescript',
+            // Any special cases
+            default => __DIR__ . sprintf('/../stubs/%s', $type),
         };
+    }
+
+    /**
+     * The list of placeholder values used in the stubs, to be replaced.
+     * 
+     * @return array<string,string>
+     */
+    protected function replacements(): array
+    {
+        return [
+            ':author_name' => self::AuthorName,
+            ':author_email' => self::AuthorEmail,
+            ':author_homepage' => self::AuthorHomepage,
+            ':vendor_slug' => self::VendorSlug,
+            ':package_slug' => $this->slug,
+            ':package_description' => $this->description,
+            'VendorName' => self::VendorName,
+            'PackageName' => $this->name,
+            ':github_organisation' => self::GithubOrganisation,
+        ];
+    }
+
+    /**
+     * The list of placeholder values which may be used in file names, to be replaced.
+     * 
+     * @return array<string,string>
+     */
+    protected function fileNames(): array
+    {
+        return [
+            'PackageName' => $this->name,
+            'VendorName' => self::VendorName,
+            'vendor_slug' => self::VendorSlug,
+            'package_slug' => $this->slug,
+        ];
     }
 }
