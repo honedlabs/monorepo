@@ -40,10 +40,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
           package_directory: 'packages/laravel/${{ matrix.package }}'
-
           repository_organization: 'honedlabs'
           repository_name: '${{ matrix.package }}'
-
           user_name: "jdw5"
           user_email: "josh@joshua-wallace.com"
-          repository_host: "https://${{ secrets.ACCESS_TOKEN }}@github.com"
+          repository_host: "github.com"
+          repository_username: "${{ github.actor }}"
+          repository_password: "${{ secrets.ACCESS_TOKEN }}"
