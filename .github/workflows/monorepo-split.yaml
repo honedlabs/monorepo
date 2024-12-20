@@ -15,8 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - first-package
-          - second-package
+          - third-package
 
     steps:
       - name: Checkout
