@@ -37,6 +37,11 @@ class PackageMake
      */
     protected $description;
 
+    /**
+     * @var array<int,string>
+     */
+    protected $npmPackages;
+
     public function run()
     {
         $this->types = multiselect(
@@ -61,6 +66,17 @@ class PackageMake
             placeholder: 'Create server-driven...',
             required: false,
         );
+
+        // $this->npmPackages = match (\in_array(['vue', 'typescript'], $this->types)) {
+        //     true => multiselect(
+        //         label: 'Select the npm packages you want to install.',
+        //         options: $this->npmPackages(),
+        //         default: ['vue', '@inertiajs/vue3', 'axios'],
+        //         hint: 'You can select multiple packages.',
+        //         required: true,
+        //     ),
+        //     false => [],
+        // };
 
         foreach($this->types as $type) {
             $this->buildPackage($type);
