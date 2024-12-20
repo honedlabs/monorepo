@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Crumb\Tests\Stubs;
 
-use Honed\Crumb\Attributes\Crumb;
-use Honed\Crumb\Concerns\Crumbs;
 use Illuminate\Http\Request;
+use Honed\Crumb\Concerns\Crumbs;
+use Honed\Crumb\Attributes\Crumb;
+use Illuminate\Routing\Controller;
 
 #[Crumb('products')]
-class ProductController
+class ProductController extends Controller
 {
     use Crumbs;
 

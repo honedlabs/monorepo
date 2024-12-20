@@ -6,8 +6,9 @@ namespace Honed\Crumb\Tests\Stubs;
 
 use Honed\Crumb\Concerns\Crumbs;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
-class PropertyController
+class PropertyController extends Controller
 {
     use Crumbs;
 
