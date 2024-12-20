@@ -24,6 +24,34 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Check if repository exists
+        id: check_repo
+        run: |
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: token ${{ secrets.SPLIT_REPO }}" \
+            https://api.github.com/repos/honedlabs/${{ matrix.package }})
+          if [ "$HTTP_STATUS" -eq "404" ]; then
+            echo "exists=false" >> $GITHUB_OUTPUT
+          else
+            echo "exists=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create repository if it doesn't exist
+        if: steps.check_repo.outputs.exists == 'false'
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.SPLIT_REPO }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/orgs/honedlabs/repos \
+            -d '{
+              "name": "${{ matrix.package }}",
+              "description": "[READ ONLY] Subtree split of the ${{ matrix.package }} from the Honed repository",
+              "private": false,
+              "has_issues": false,
+              "has_projects": false,
+              "has_wiki": false,
+              "auto_init": false
+            }'
+      
       - name: Split package ${{ matrix.package }}
         uses: symplify/github-action-monorepo-split@v2.3.0
         env:
