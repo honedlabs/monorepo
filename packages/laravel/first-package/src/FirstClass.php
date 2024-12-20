@@ -6,4 +6,12 @@ namespace YourMonorepo\FirstPackage;
 
 final class FirstClass
 {
+    public function __construct(private string $name)
+    {
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }
