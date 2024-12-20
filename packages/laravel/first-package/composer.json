@@ -1,8 +1,7 @@
 {
     "name": "honed/first-package",
     "require": {
-        "php": "^8.2",
-        "symfony/http-kernel": "^5.0"
+        "php": "^8.2"
     },
     "autoload": {
         "psr-4": {
