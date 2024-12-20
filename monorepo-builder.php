@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Honed\Honed\Release\ReleaseWorker\SetRootComposerVersion;
+use Honed\Honed\Release\ReleaseWorker\SetPackageComposerVersions;
 use Symplify\MonorepoBuilder\Config\MBConfig;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\AddTagToChangelogReleaseWorker;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\PushNextDevReleaseWorker;
@@ -17,6 +19,8 @@ return static function (MBConfig $config): void {
     $config->packageAliasFormat('<major>.<minor>.x-dev');
 
     $config->workers([
+        // SetRootComposerVersion::class,
+        // SetPackageComposerVersions::class,
         UpdateReplaceReleaseWorker::class,
         SetCurrentMutualDependenciesReleaseWorker::class,
         TagVersionReleaseWorker::class,

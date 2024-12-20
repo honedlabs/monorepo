@@ -17,6 +17,7 @@
     },
     "autoload": {
         "psr-4": {
+            "Honed\\Honed\\": "src",
             "YourMonorepo\\FirstPackage\\": "packages/laravel/first-package/src",
             "YourMonorepo\\SecondPackage\\": "packages/laravel/second-package/src"
         }
@@ -29,7 +30,7 @@
         "repo:release": "vendor/bin/monorepo-builder release"
     },
     "replace": {
-        "honed/first-package": "0.2.7",
-        "honed/second-package": "0.2.7"
+        "honed/first-package": "0.2.8",
+        "honed/second-package": "0.2.8"
     }
 }
