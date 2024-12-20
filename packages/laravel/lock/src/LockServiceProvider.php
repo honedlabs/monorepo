@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace VendorName\PackageName;
+namespace Honed\Lock;
 
 use Illuminate\Support\ServiceProvider;
 
-class PackageNameServiceProvider extends ServiceProvider
+class LockServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/:package_slug.php', ':package_slug');
+        $this->mergeConfigFrom(__DIR__.'/../config/lock.php', 'lock');
     }
 
     /**
@@ -22,8 +22,8 @@ class PackageNameServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__.'/../config/:package_slug.php' => config_path(':package_slug.php'),
-        ], ':package_slug-config');
+            __DIR__.'/../config/lock.php' => config_path('lock.php'),
+        ], 'lock-config');
 
         if ($this->app->runningInConsole()) {
             $this->commands([

@@ -29,7 +29,9 @@
         "repo:merge": "vendor/bin/monorepo-builder merge",
         "repo:validate": "vendor/bin/monorepo-builder validate",
         "repo:release": "vendor/bin/monorepo-builder release",
-        "make:package": "php src/package_make.php"
+        "make:package": "php src/package_make.php",
+        "test": "cd packages/ts/$1 && composer test",
+        "test-coverage": "cd packages/ts/$1 && composer test-coverage"
     },
     "replace": {
         "honed/first-package": "0.2.9",
