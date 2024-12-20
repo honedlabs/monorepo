@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Crumb\Tests\Pest;
 
 use Honed\Crumb\Crumb;
-use Honed\Crumb\Exceptions\CrumbUnlockedException;
+use Honed\Crumb\Exceptions\NonTerminatingCrumbException;
 use Honed\Crumb\Trail;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -51,16 +51,14 @@ it('can add crumbs being created', function () {
         ]);
 });
 
-it('is not locking by default', function () {
+it('is not terminating by default', function () {
     expect(Trail::make())
-        ->isLocking()->toBeFalse()
-        ->isNotLocking()->toBeTrue();
+        ->isTerminating()->toBeFalse();
 });
 
-it('is not locked by default', function () {
+it('is not terminated by default', function () {
     expect(Trail::make())
-        ->isLocked()->toBeFalse()
-        ->isNotLocked()->toBeTrue();
+        ->isTerminating()->toBeFalse();
 });
 
 it('can share crumbs', function () {
@@ -76,6 +74,6 @@ it('can share crumbs', function () {
         ]));
 });
 
-it('throws error if trying to access non-locking trail', function () {
+it('throws error if trying to access non-terminating trail', function () {
     Trail::make(Crumb::make('Home', '/'))->select(Crumb::make('Products', '/products'));
-})->throws(CrumbUnlockedException::class);
+})->throws(NonTerminatingCrumbException::class);

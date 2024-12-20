@@ -14,6 +14,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
+use Inertia\Middleware as HandlesInertiaRequests;
 use Inertia\ServiceProvider as InertiaServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -53,7 +54,7 @@ class TestCase extends Orchestra
 
     protected function defineRoutes($router)
     {
-        $router->middleware([SubstituteBindings::class])->group(function ($router) {
+        $router->middleware([HandlesInertiaRequests::class, SubstituteBindings::class])->group(function ($router) {
             $router->get('/', fn () => inertia('Home'));
 
             $router->get('/products', [ProductController::class, 'index'])->name('product.index');

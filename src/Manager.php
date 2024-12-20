@@ -68,7 +68,7 @@ class Manager
             throw new CrumbsNotFoundException($name);
         }
 
-        $trail = Trail::make()->locking();
+        $trail = Trail::make()->terminating();
 
         if ($this->before) {
             ($this->before)($trail);

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Crumb\Tests\Stubs;
 
-use Honed\Crumb\Concerns\Crumbs;
+use Honed\Crumb\Concerns\HasCrumbs;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 
 class PropertyController extends Controller
 {
-    use Crumbs;
+    use HasCrumbs;
 
     public $crumb = 'basic';
 

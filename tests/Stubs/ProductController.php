@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Crumb\Tests\Stubs;
 
-use Illuminate\Http\Request;
-use Honed\Crumb\Concerns\Crumbs;
 use Honed\Crumb\Attributes\Crumb;
-use Illuminate\Routing\Controller;
+use Honed\Crumb\Concerns\HasCrumbs;
+use Illuminate\Http\Request;
 
 #[Crumb('products')]
 class ProductController extends Controller
 {
-    use Crumbs;
+    use HasCrumbs;
 
     public function index(Request $request)
     {

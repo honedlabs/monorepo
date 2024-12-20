@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Crumb;
 
 use Honed\Core\Primitive;
-use Honed\Crumb\Exceptions\CrumbUnlockedException;
+use Honed\Crumb\Exceptions\NonTerminatingCrumbException;
 use Inertia\Inertia;
 
 class Trail extends Primitive
@@ -18,12 +18,12 @@ class Trail extends Primitive
     /**
      * @var bool
      */
-    protected $locking = false;
+    protected $terminating = false;
 
     /**
      * @var bool
      */
-    protected $locked = false;
+    protected $terminated = false;
 
     /**
      * Create a new trail instance.
@@ -54,9 +54,9 @@ class Trail extends Primitive
     /**
      * Set the trail to lock when a crumb in the trail is found.
      */
-    public function locking(bool $locking = true): static
+    public function terminating(bool $terminating = true): static
     {
-        $this->locking = $locking;
+        $this->terminating = $terminating;
 
         return $this;
     }
@@ -70,10 +70,10 @@ class Trail extends Primitive
      */
     public function add(string|\Closure|Crumb $crumb, string|\Closure|null $link = null, ?string $icon = null): static
     {
-        if ($this->isNotLocked()) {
+        if (! $this->isTerminated()) {
             $crumb = $crumb instanceof Crumb ? $crumb : Crumb::make($crumb, $link, $icon);
             $this->crumbs[] = $crumb;
-            $this->locked = $this->isLocking() && $crumb->isCurrent();
+            $this->terminated = $this->isTerminating() && $crumb->isCurrent();
         }
 
         return $this;
@@ -84,66 +84,46 @@ class Trail extends Primitive
      *
      * @return $this
      *
-     * @throws CrumbUnlockedException
+     * @throws NonTerminatingCrumbException
      */
     public function select(Crumb ...$crumbs): static
     {
-        if ($this->isLocked()) {
+        if ($this->isTerminated()) {
             return $this;
         }
 
-        if ($this->isNotLocking()) {
-            throw new CrumbUnlockedException;
+        if (! $this->isTerminating()) {
+            throw new NonTerminatingCrumbException;
         }
 
         $crumb = collect($crumbs)->first(fn (Crumb $crumb): bool => $crumb->isCurrent());
 
         if ($crumb) {
             $this->crumbs[] = $crumb;
-            $this->locked = true;
+            $this->terminated = true;
         }
 
         return $this;
     }
 
     /**
-     * Determine if the trail is locking.
+     * Determine if the trail is terminating.
      *
      * @internal
      */
-    public function isLocking(): bool
+    public function isTerminating(): bool
     {
-        return $this->locking;
+        return $this->terminating;
     }
 
     /**
-     * Determine if the trail is not locking
+     * Determine if the trail is terminated.
      *
      * @internal
      */
-    public function isNotLocking(): bool
+    public function isTerminated(): bool
     {
-        return ! $this->isLocking();
-    }
-
-    /**
-     * Determine if the trail is locked.
-     *
-     * @internal
-     */
-    public function isLocked(): bool
-    {
-        return $this->locked;
-    }
-
-    /**
-     * Determine if the trail is not locked.
-     *
-     * @internal
-     */
-    public function isNotLocked(): bool
-    {
-        return ! $this->isLocked();
+        return $this->terminated;
     }
 
     /**

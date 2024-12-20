@@ -38,6 +38,7 @@ it('can be made with icon', function () {
 it('can resolve route model binding when retrieving array form', function () {
     $p = product();
     get(route('product.show', $p));
+
     $crumb = Crumb::make(fn ($product) => $product->name, fn (Product $typed) => route('product.show', $typed));
 
     expect($crumb->toArray())->toBe([

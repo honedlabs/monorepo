@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Crumb;
 
-use Honed\Core\Primitive;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
-use Illuminate\Support\Facades\Route;
+use Honed\Core\Primitive;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
 
 class Crumb extends Primitive
 {
@@ -19,7 +19,7 @@ class Crumb extends Primitive
 
     /**
      * Parameters used to resolve the link from.
-     * 
+     *
      * @var non-empty-array<int,array<string,mixed>>|null
      */
     protected $parameters;
@@ -77,10 +77,8 @@ class Crumb extends Primitive
 
     /**
      * Set the link as a route, quietly.
-     * 
-     * @param  string  $name
+     *
      * @param  array<array-key, mixed>  $parameters
-     * @param  bool  $absolute
      */
     public function setRoute(string $name, mixed $parameters = [], bool $absolute = true): void
     {
@@ -90,9 +88,7 @@ class Crumb extends Primitive
     /**
      * Set the route as a route, chainable.
      *
-     * @param  string  $name
      * @param  array<array-key, mixed>  $parameters
-     * @param  bool  $absolute
      * @return $this
      */
     public function route(string $name, mixed $parameters = [], bool $absolute = true): static
@@ -166,6 +162,7 @@ class Crumb extends Primitive
      */
     public function getLink(array $named = [], array $typed = []): ?string
     {
+        // dd(request()->route()->parameters());
         return $this->evaluate($this->link, $named, $typed);
     }
 
