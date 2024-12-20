@@ -1,6 +1,5 @@
 {
     "name": "honed/honed",
-    "version": "0.1.0",
     "authors": [
         {
             "name": "Joshua Wallace",
@@ -16,10 +15,6 @@
     "require-dev": {
         "symplify/monorepo-builder": "^11.2.22"
     },
-    "replace": {
-        "honed/first-package": "self.version",
-        "honed/second-package": "self.version"
-    },
     "autoload": {
         "psr-4": {
             "YourMonorepo\\FirstPackage\\": "packages/laravel/first-package/src",
@@ -32,5 +27,10 @@
         "monorepo:merge": "vendor/bin/monorepo-builder merge",
         "monorepo:validate": "vendor/bin/monorepo-builder validate",
         "monorepo:release": "vendor/bin/monorepo-builder release"
-    }
+    },
+    "replace": {
+        "honed/first-package": "0.2.3",
+        "honed/second-package": "0.2.3"
+    },
+    "version": "0.1.0"
 }
