@@ -29,7 +29,7 @@
         "repo:release": "vendor/bin/monorepo-builder release"
     },
     "replace": {
-        "honed/first-package": "0.2.6",
-        "honed/second-package": "0.2.6"
+        "honed/first-package": "0.2.7",
+        "honed/second-package": "0.2.7"
     }
 }
