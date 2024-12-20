@@ -31,6 +31,3 @@ jobs:
           user_name: "jdw5"
           user_email: "josh@joshua-wallace.com"
           branch: "main"
-          repository_host: "github.com"
-          repository_username: "${{ github.actor }}"
-          repository_password: "${{ secrets.ACCESS_TOKEN }}"
