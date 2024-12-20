@@ -1,14 +1,14 @@
 {
-  "name": "@honed/crumb",
+  "name": "@:vendor_slug/:package_slug",
   "private": false,
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "MIT",
   "description": "-",
   "keywords": [
-    "honed",
+    ":vendor_slug",
+    ":package_slug",
     "vue",
-    "inertia",
-    "crumb"
+    "inertia"
   ],
   "scripts": {
     "dev": "vite",
@@ -22,17 +22,21 @@
     "major": "npm version major --no-git-tag-version",
     "release": "npm run build && npm publish --access public"
   },
-  "author": "Joshua Wallace",
+  "author": {
+    "name": ":author_name",
+    "email": ":author_email",
+    "url": ":author_homepage"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/honedlabs/crumb.git"
+    "url": "https://github.com/:github_organisation/:package_slug.git"
   },
-  "homepage": "https://github.com/honedlabs/crumb#readme",
+  "homepage": "https://github.com/:github_organisation/:package_slug#readme",
   "files": [
     "dist"
   ],
   "type": "module",
-  "main": "./dist/index.umd.cjs",
+  "main": "./dist/index.umd.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "typings": "./dist/index.d.ts",
@@ -45,7 +49,8 @@
     }
   },
   "peerDependencies": {
-    "vue": "^3.x.0",
+    "vue": "^3.4.0",
+    "@vueuse/core": "^12.0.0",
     "@inertiajs/vue3": "^1.2.0||^2.0.0",
     "axios": "^1.2.0"
   },
