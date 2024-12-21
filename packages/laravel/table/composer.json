@@ -1,0 +1,96 @@
+{
+    "name": "honed/table",
+    "description": "Create server-driven tables for your Laravel applications.",
+    "keywords": [
+        "laravel",
+        "honed",
+        "inertia-table"
+    ],
+    "homepage": "https://github.com/honedlabs/table",
+    "license": "MIT",
+    "authors": [
+        {   
+            "name": "Joshua Wallace",
+            "email": "josh@joshua-wallace.com",
+            "homepage": "https://joshua-wallace.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Honed\\Table\\": "src/",
+            "Honed\\Table\\Tests\\": "tests/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Honed\\Table\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.28",
+        "illuminate/console": "^11.0",
+        "illuminate/database": "^11.0",
+        "illuminate/contracts": "^11.0",
+        "honed/core": "^0.2.0@alpha"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "nunomaduro/collision": "^8.1",
+        "orchestra/testbench": "^9.0.0",
+        "pestphp/pest": "^3.5.1",
+        "pestphp/pest-plugin-arch": "^3.0.0",
+        "phpstan/extension-installer": "^1.4.3",
+        "phpstan/phpstan-deprecation-rules": "^2.0.1",
+        "phpstan/phpstan-phpunit": "^2.0.3",
+        "inertiajs/inertia-laravel": "^1.2||^2.0",
+        "worksome/request-factories": "^3.3",
+        "pestphp/pest-plugin-laravel": "^3.0"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": [
+            "@composer run prepare",
+            "@php vendor/bin/testbench workbench:build --ansi"
+        ],        
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@composer run build",
+            "@php vendor/bin/testbench serve"
+        ],
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint",
+        "artisan": "php ./vendor/bin/testbench",
+        "check": [
+            "@composer run analyse",
+            "@composer run test",
+            "@composer run format"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Honed\\Table\\TableServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
