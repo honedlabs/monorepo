@@ -3,25 +3,64 @@
     "authors": [
         {
             "name": "Joshua Wallace",
+            "homepage": "https://joshua-wallace.com",
             "email": "josh@joshua-wallace.com",
-            "homepage": "https://joshua-wallace.com"
+            "role": "Developer"
         }
     ],
     "require": {
+        "honed/core": "^0.1.0",
+        "illuminate/contracts": "^11.0",
+        "illuminate/support": "^11.0",
         "php": "^8.2",
         "symfony/dependency-injection": "^5.4.48",
         "symfony/http-kernel": "^5.4.48"
     },
     "require-dev": {
-        "symplify/monorepo-builder": "^11.2.22",
-        "laravel/prompts": "^0.3.2"
+        "inertiajs/inertia-laravel": "^1.2||^2.0",
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "laravel/prompts": "^0.3.2",
+        "nunomaduro/collision": "^8.1",
+        "orchestra/testbench": "^9.0.0",
+        "pestphp/pest": "^3.5.1",
+        "pestphp/pest-plugin-arch": "^3.0.0",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "phpstan/extension-installer": "^1.4.3",
+        "phpstan/phpstan-deprecation-rules": "^2.0.1",
+        "phpstan/phpstan-phpunit": "^2.0.3",
+        "symplify/monorepo-builder": "^11.2.22"
     },
     "autoload": {
         "psr-4": {
             "Honed\\Honed\\": "src",
+            "Honed\\Lock\\": "packages/laravel/lock/src/",
             "YourMonorepo\\FirstPackage\\": "packages/laravel/first-package/src",
             "YourMonorepo\\SecondPackage\\": "packages/laravel/second-package/src"
+        },
+        "files": [
+            "packages/laravel/lock/./helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Honed\\Lock\\Tests\\": "packages/laravel/lock/tests/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "aliases": {
+                "Lock": "Honed\\Lock\\Facades\\Lock"
+            },
+            "providers": [
+                "Honed\\Lock\\LockServiceProvider"
+            ]
+        }
+    },
+    "replace": {
+        "honed/first-package": "0.2.9",
+        "honed/lock": "self.version",
+        "honed/second-package": "0.2.9"
     },
     "scripts": {
         "repo:bump": "vendor/bin/monorepo-builder bump-interdependency",
@@ -33,8 +72,6 @@
         "test": "cd packages/ts/$1 && composer test",
         "test-coverage": "cd packages/ts/$1 && composer test-coverage"
     },
-    "replace": {
-        "honed/first-package": "0.2.9",
-        "honed/second-package": "0.2.9"
-    }
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

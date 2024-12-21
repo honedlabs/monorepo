@@ -20,7 +20,7 @@ return static function (MBConfig $config): void {
     $config->packageAliasFormat('<major>.<minor>.x-dev');
 
     $config->workers([
-        SetRootComposerVersion::class,
+        // SetRootComposerVersion::class,
         UpdateReplaceReleaseWorker::class,
         SetCurrentMutualDependenciesReleaseWorker::class,
         TagVersionReleaseWorker::class,
