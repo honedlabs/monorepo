@@ -45,6 +45,7 @@ jobs:
             -d '{
               "name": "${{ matrix.package }}",
               "description": "[READ ONLY] Subtree split of the '${{ matrix.package }}' package from the Honed repository.",
+              "homepage": "https://honed.dev/${{ matrix.package }}",
               "private": false,
               "has_issues": false,
               "has_projects": false,
