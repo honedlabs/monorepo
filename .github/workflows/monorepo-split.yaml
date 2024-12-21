@@ -44,7 +44,7 @@ jobs:
             https://api.github.com/orgs/honedlabs/repos \
             -d '{
               "name": "${{ matrix.package }}",
-              "description": "[READ ONLY] Subtree split of the ${{ matrix.package }} from the Honed repository",
+              "description": "[READ ONLY] Subtree split of the '${{ matrix.package }}' package from the Honed repository.",
               "private": false,
               "has_issues": false,
               "has_projects": false,
