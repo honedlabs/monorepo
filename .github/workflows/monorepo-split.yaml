@@ -15,7 +15,11 @@ jobs:
       fail-fast: false
       matrix:
         package:
+          - chart
+          - core
+          - crumb
           - lock
+          - nav
           - table
 
     steps:
