@@ -16,6 +16,7 @@ jobs:
       matrix:
         package:
           - lock
+          - trial
 
     steps:
       - name: Checkout
