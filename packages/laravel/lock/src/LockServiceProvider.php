@@ -24,11 +24,5 @@ class LockServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/lock.php' => config_path('lock.php'),
         ], 'lock-config');
-
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                //
-            ]);
-        }
     }
 }

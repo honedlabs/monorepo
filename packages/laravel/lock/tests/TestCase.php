@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Inertia\ServiceProvider as InertiaServiceProvider;
 use Honed\Lock\Tests\Stubs\Status;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 
 class TestCase extends Orchestra
 {
@@ -50,7 +51,9 @@ class TestCase extends Orchestra
 
     protected function defineRoutes($router)
     {
-        // $router->get('/', fn () => 'Hello World');
+        $router->middleware([SubstituteBindings::class])->group(function () use ($router) {
+            // $router->get('/', fn () => 'Hello World');
+        });
     }
 
     public function getEnvironmentSetUp($app)
