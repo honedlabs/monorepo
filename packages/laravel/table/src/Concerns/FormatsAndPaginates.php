@@ -13,51 +13,6 @@ use Illuminate\Database\Eloquent\Collection;
 trait FormatsAndPaginates
 {
     /**
-     * @var int|array<int,int>
-     */
-    protected $perPage;
-
-    /**
-     * @var int|array<int,int>
-     */
-    protected static $usePerPage = 10;
-
-    /**
-     * @var string
-     */
-    protected $paginatorType;
-
-    /**
-     * @var string
-     */
-    protected static $usePaginatorType = LengthAwarePaginator::class;
-
-    /**
-     * @var string
-     */
-    protected $page;
-
-    /**
-     * @var string
-     */
-    protected static $pageName = 'page';
-
-    /**
-     * @var string
-     */
-    protected $show;
-
-    /**
-     * @var string
-     */
-    protected static $showName = 'show';
-
-    /**
-     * @var \Illuminate\Support\Collection<array-key, array<array-key, mixed>>|null
-     */
-    protected $records = null;
-
-    /**
      * Configure the options for the number of items to show per page.
      *
      * @param  int|array<int,int>  $perPage

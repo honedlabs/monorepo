@@ -6,24 +6,29 @@ namespace Honed\Table;
 
 use Closure;
 use Exception;
+use Honed\Core\Primitive;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Honed\Core\Concerns\Encodable;
+use Illuminate\Support\Collection;
+use Honed\Table\Actions\BulkAction;
+use Honed\Table\Columns\BaseColumn;
 use Honed\Core\Concerns\Inspectable;
 use Honed\Core\Concerns\IsAnonymous;
 use Honed\Core\Concerns\RequiresKey;
-use Honed\Core\Exceptions\MissingRequiredAttributeException;
-use Honed\Core\Primitive;
-use Honed\Table\Actions\BulkAction;
 use Honed\Table\Actions\InlineAction;
-use Honed\Table\Columns\BaseColumn;
+use Illuminate\Database\Eloquent\Model;
 use Honed\Table\Http\DTOs\BulkActionData;
+use Illuminate\Database\Eloquent\Builder;
 use Honed\Table\Http\DTOs\InlineActionData;
 use Honed\Table\Http\Requests\TableActionRequest;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Honed\Core\Exceptions\MissingRequiredAttributeException;
 
+/**
+ * @method static static build((\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)|null) $resource = null) Build the table records and metadata using the current request.
+ * @method $this build() Build the table records and metadata using the current request.
+ */
 class Table extends Primitive
 {
     use Concerns\Extractable;
@@ -50,11 +55,82 @@ class Table extends Primitive
     protected $anonymous = self::class;
 
     /**
+     * The records of the table retrieved from the resource.
+     * 
+     * @var \Illuminate\Support\Collection<array-key,array<array-key,mixed>>|null
+     */
+    protected $records = null;
+
+    /**
      * Modify the resource query before it is used on a per controller basis.
      * 
-     * @var \Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)|null
+     * @var (\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)|null)|null
      */
     protected $resourceModifier = null;
+
+    /**
+     * The request instance to use for the table.
+     * Defaults to the current request object.
+     * 
+     * @var \Illuminate\Http\Request|null
+     */
+    protected $request = null;
+
+    /**
+     * The number of records to show per page. 
+     * An array provides options allowing users to change the number of records shown to themper page.
+     * 
+     * @var int|array<int,int>
+     */
+    protected $perPage;
+
+    /**
+     * The number of records to use per page for all tables.
+     * 
+     * @var int|array<int,int>
+     */
+    protected static $usePerPage = 10;
+
+    /**
+     * The paginator instance to use for the table.
+     * 
+     * @var class-string
+     */
+    protected $paginator;
+
+    /**
+     * The paginator type to use for all tables.
+     * 
+     * @var class-string
+     */
+    protected static $usePaginator = LengthAwarePaginator::class;
+
+    /**
+     * The name to use for the page query parameter.
+     * @var string
+     */
+    protected $page;
+
+    /**
+     * The name to use for the page query parameter for all tables.
+     * 
+     * @var string|null
+     */
+    protected static $pageName = null;
+
+    /**
+     * The name to use for changing the number of records per page.
+     * 
+     * @var string
+     */
+    protected $count;
+
+    /**
+     * The name to use for changing the number of records per page for all tables.
+     * 
+     * @var string
+     */
+    protected static $countName = 'show';
 
     /**
      * Build the table with the given assignments.
@@ -63,11 +139,11 @@ class Table extends Primitive
      */
     public function __construct(Model|Builder|Closure|string $resource = null)
     {
-        if ($resource instanceof Closure) {
-            $this->setResourceModifier($resource);
-        } else {
-            $this->setResource($resource);
-        }
+        match (true) {
+            \is_null($resource) => null,
+            $resource instanceof Closure => $this->setResourceModifier($resource),
+            default => $this->setResource($resource),
+        };
     }
 
     /**
@@ -79,10 +155,11 @@ class Table extends Primitive
      *
      * @throws \BadMethodCallException
      */
-    public function __call(string $method, array $parameters)
+    public function __call($method, $parameters)
     {
         match ($method) {
             'actions' => $this->setActions(...$parameters),
+            'build' => $this->configureTableForCurrentRequest(),
             'columns' => $this->setColumns(...$parameters),
             'filters' => $this->setFilters(...$parameters),
             'sorts' => $this->setSorts(...$parameters),
@@ -96,6 +173,23 @@ class Table extends Primitive
     }
 
     /**
+     * Dynamically handle calls to the class for enabling static methods.
+     *
+     * @param  string  $method
+     * @param  array<mixed>  $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public static function __callStatic($method, $parameters)
+    {
+        return match ($method) {
+            'build' => static::make(...$parameters)->build(),
+            default => parent::__callStatic($method, $parameters)
+        };
+    }
+
+    /**
      * Create a new table instance.
      *
      * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|class-string|\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)  $resource
@@ -103,18 +197,6 @@ class Table extends Primitive
      */
     public static function make(Model|Builder|Closure|string $resource = null) {
         return resolve(static::class, compact('resource'));
-    }
-
-    /**
-     * Build the table records and metadata using the current request.
-     *
-     * @return $this
-     */
-    public function build(): static
-    {
-        $this->configureTableForCurrentRequest();
-
-        return $this;
     }
 
     /**
