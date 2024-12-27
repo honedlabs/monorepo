@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
+use Closure;
 use Exception;
 use Honed\Core\Concerns\Encodable;
 use Honed\Core\Concerns\Inspectable;
@@ -38,53 +39,82 @@ class Table extends Primitive
     use Concerns\Toggleable;
     use Encodable;
     use Inspectable;
-    use IsAnonymous; // Anonymize
+    use IsAnonymous;
     use RequiresKey;
 
     /**
+     * The parent class-string of the table.
+     * 
      * @var class-string<\Honed\Table\Table>
      */
     protected $anonymous = self::class;
 
     /**
+     * Modify the resource query before it is used on a per controller basis.
+     * 
+     * @var \Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)|null
+     */
+    protected $resourceModifier = null;
+
+    /**
      * Build the table with the given assignments.
      *
-     * @param  array<string, mixed>  $assignments
+     * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|class-string|\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)  $resource
      */
-    public function __construct($assignments = [])
+    public function __construct(Model|Builder|Closure|string $resource = null)
     {
-        $this->setAssignments($assignments);
+        if ($resource instanceof Closure) {
+            $this->setResourceModifier($resource);
+        } else {
+            $this->setResource($resource);
+        }
+    }
+
+    /**
+     * Dynamically handle calls to the class for enabling anonymous table methods.
+     *
+     * @param  string  $method
+     * @param  array<mixed>  $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call(string $method, array $parameters)
+    {
+        match ($method) {
+            'actions' => $this->setActions(...$parameters),
+            'columns' => $this->setColumns(...$parameters),
+            'filters' => $this->setFilters(...$parameters),
+            'sorts' => $this->setSorts(...$parameters),
+            // 'pages'
+            // 'optimize'
+            // 'reduce'
+            default => parent::__call($method, $parameters)
+        };
+
+        return $this;
     }
 
     /**
      * Create a new table instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|class-string  $resource
-     * @param  array<\Honed\Table\Columns\BaseColumn>  $columns
-     * @param  array<\Honed\Table\Actions\BaseAction>  $actions
-     * @param  array<\Honed\Table\Filters\BaseFilter>  $filters
-     * @param  array<\Honed\Table\Sorts\BaseSort>  $sorts
-     * @param  string|null  $search
-     * @param  array|int|null  $pagination
+     * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|class-string|\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)  $resource
      * @return static
      */
-    public static function make($resource = null,
-        $columns = null,
-        $actions = null,
-        $filters = null,
-        $sorts = null,
-        $search = null,
-        $pagination = null,
-    ) {
-        return resolve(static::class, compact(
-            'resource',
-            'columns',
-            'actions',
-            'filters',
-            'sorts',
-            'search',
-            'pagination',
-        ));
+    public static function make(Model|Builder|Closure|string $resource = null) {
+        return resolve(static::class, compact('resource'));
+    }
+
+    /**
+     * Build the table records and metadata using the current request.
+     *
+     * @return $this
+     */
+    public function build(): static
+    {
+        $this->configureTableForCurrentRequest();
+
+        return $this;
     }
 
     /**
@@ -103,17 +133,48 @@ class Table extends Primitive
         }
     }
 
+    /**
+     * Retrieve the resource modifier.
+     */
+    public function getResourceModifier(): ?Closure
+    {
+        return $this->resourceModifier;
+    }
+
+    /**
+     * Set the resource modifier.
+     * 
+     * @param  \Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)  $resourceModifier
+     */
+    public function setResourceModifier(Closure $resourceModifier): void
+    {
+        $this->resourceModifier = $resourceModifier;
+    }
+
+    /**
+     * Get the records of the table.
+     *
+     * @return \Illuminate\Support\Collection<int,array<string,mixed>>|null
+     */
     public function getRecords(): ?Collection
     {
         return $this->records;
     }
 
+    /**
+     * Determine if the table has records.
+     */
     public function hasRecords(): bool
     {
         return ! \is_null($this->records);
     }
 
-    public function toArray()
+    /**
+     * Get the table as an array.
+     * 
+     * @return array<string,mixed>
+     */
+    public function toArray(): array
     {
         $this->configureTableForCurrentRequest();
 
@@ -202,29 +263,6 @@ class Table extends Primitive
                 $column->setActive(false);
             }
         });
-    }
-
-    /**
-     * Dynamically handle calls to the class for enabling anonymous table methods.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        match ($method) {
-            'actions' => $this->setActions(...$parameters),
-            'columns' => $this->setColumns(...$parameters),
-            'filters' => $this->setFilters(...$parameters),
-            'sorts' => $this->setSorts(...$parameters),
-            'resource' => $this->setResource(...$parameters),
-            default => parent::__call($method, $parameters)
-        };
-
-        return $this;
     }
 
     /**
