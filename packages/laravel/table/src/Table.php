@@ -24,6 +24,7 @@ use Honed\Table\Http\DTOs\InlineActionData;
 use Honed\Table\Http\Requests\TableActionRequest;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
+use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 
 /**
  * @method static static build((\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)|null) $resource = null) Build the table records and metadata using the current request.
@@ -55,11 +56,9 @@ class Table extends Primitive
     protected $anonymous = self::class;
 
     /**
-     * The records of the table retrieved from the resource.
-     * 
-     * @var \Illuminate\Support\Collection<array-key,array<array-key,mixed>>|null
+     * @var \Illuminate\Contracts\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>|string
      */
-    protected $records = null;
+    protected $resource;
 
     /**
      * Modify the resource query before it is used on a per controller basis.
@@ -67,6 +66,13 @@ class Table extends Primitive
      * @var (\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)|null)|null
      */
     protected $resourceModifier = null;
+
+    /**
+     * The records of the table retrieved from the resource.
+     * 
+     * @var \Illuminate\Support\Collection<array-key,array<array-key,mixed>>|null
+     */
+    protected $records = null;
 
     /**
      * The request instance to use for the table.
@@ -83,6 +89,15 @@ class Table extends Primitive
      * @var int|array<int,int>
      */
     protected $perPage;
+
+    /**
+     * The default number of records to show per page.
+     * If $perPage is an array, this should be one of the values.
+     * If not supplied, the lowest value in $perPage will be used.
+     * 
+     * @var int
+     */
+    protected $defaultPerPage;
 
     /**
      * The number of records to use per page for all tables.
@@ -162,6 +177,7 @@ class Table extends Primitive
             'build' => $this->configureTableForCurrentRequest(),
             'columns' => $this->setColumns(...$parameters),
             'filters' => $this->setFilters(...$parameters),
+            'resource' => $this->setResource(...$parameters),
             'sorts' => $this->setSorts(...$parameters),
             // 'pages'
             // 'optimize'
@@ -193,20 +209,18 @@ class Table extends Primitive
      * Create a new table instance.
      *
      * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|class-string|\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)  $resource
-     * @return static
      */
-    public static function make(Model|Builder|Closure|string $resource = null) {
+    public static function make(Model|Builder|Closure|string $resource = null): static
+    {
         return resolve(static::class, compact('resource'));
     }
 
     /**
      * Get the key name for the table records.
      *
-     * @return string
-     *
-     * @throws MissingRequiredAttributeException
+     * @throws \Honed\Core\Exceptions\MissingRequiredAttributeException
      */
-    public function getKeyName()
+    public function getKeyName(): string
     {
         try {
             return $this->getKey();
@@ -217,10 +231,20 @@ class Table extends Primitive
 
     /**
      * Retrieve the resource modifier.
+     * 
+     * @return (\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder|null))|null
      */
     public function getResourceModifier(): ?Closure
     {
         return $this->resourceModifier;
+    }
+
+    /**
+     * Determine if the table has a resource modifier.
+     */
+    public function hasResourceModifier(): bool
+    {
+        return ! \is_null($this->resourceModifier);
     }
 
     /**
@@ -252,6 +276,16 @@ class Table extends Primitive
     }
 
     /**
+     * Set the records of the table.
+     * 
+     * @param  \Illuminate\Support\Collection<int,array<string,mixed>>  $records
+     */
+    public function setRecords(Collection $records): void
+    {
+        $this->records = $records;
+    }
+
+    /**
      * Get the table as an array.
      * 
      * @return array<string,mixed>
@@ -264,7 +298,7 @@ class Table extends Primitive
             /* The ID of this table, used to deserialize it for actions */
             'id' => $this->encodeClass(),
             /* The column attribute used to identify a record */
-            'keyName' => $this->getKeyName(),
+            'key' => $this->getKeyName(),
             /* The records of the table */
             'records' => $this->getRecords(),
             /* The available column options */
@@ -282,15 +316,15 @@ class Table extends Primitive
             /* Whether the table has toggling enabled */
             'toggleable' => $this->isToggleable(),
             /* The query parameter term for sorting */
-            'sortName' => $this->getSortName(),
+            'sort' => $this->getSortKey(),
             /* The query parameter term for ordering */
-            'orderName' => $this->getOrderName(),
+            'order' => $this->getOrderKey(),
             /* The query parameter term for changing the number of records per page */
-            'countName' => $this->getCountName(),
+            'count' => $this->getCountKey(),
             /* The query parameter term for searching */
-            'searchName' => $this->getSearchName(),
+            'search' => $this->getSearchKey(),
             /* The query parameter term for toggling column visibility */
-            'toggleName' => $this->getToggleName(),
+            'toggle' => $this->getToggleKey(),
             /* The route used to handle actions, it is required to be a 'post' route */
             'endpoint' => $this->getEndpoint(),
         ];
@@ -298,8 +332,6 @@ class Table extends Primitive
 
     /**
      * Build the table records and metadata using the current request.
-     *
-     * @internal
      */
     protected function configureTableForCurrentRequest(): void
     {
@@ -307,14 +339,39 @@ class Table extends Primitive
             return;
         }
 
+        $this->applyResourceModifier();
         $this->configureSearchColumns();
         $this->configureToggleableColumns();
         $this->filterQuery($this->getQuery());
         $this->sortQuery($this->getQuery());
         $this->searchQuery($this->getQuery());
         // $this->selectQuery($this->getQuery());
+        $this->applyBeforeRetrieval();
         // $this->beforeRetrievingRecords($this->getQuery());
         // $this->formatAndPaginateRecords();
+    }
+
+    protected function applyResourceModifier(): void
+    {
+        if ($this->hasResourceModifier()) {
+
+            // Do not assign it to a variable, as the modifications are in-place
+            $$this->evaluate($this->getResourceModifier(), [
+                'query' => $this->resource,
+                'builder' => $this->resource,
+                'resource' => $this->resource,
+            ], [
+                EloquentBuilder::class => $this->resource,
+                Builder::class => $this->resource,
+            ]);
+        }
+    }
+
+    protected function applyBeforeRetrieval(): void
+    {
+        if (\method_exists($this, 'before')) {
+            $this->before($this->resource);
+        }
     }
 
     protected function configureSearchColumns(): void

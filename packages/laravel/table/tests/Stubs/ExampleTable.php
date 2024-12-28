@@ -90,4 +90,9 @@ class ExampleTable extends Table
 
         ];
     }
+
+    public function count()
+    {
+        dd('Instance');
+    }
 }
