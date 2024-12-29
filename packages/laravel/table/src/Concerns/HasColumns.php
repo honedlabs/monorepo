@@ -5,9 +5,6 @@ namespace Honed\Table\Concerns;
 use Honed\Table\Columns\BaseColumn;
 use Illuminate\Support\Collection;
 
-/**
- * @mixin Honed\Core\Concerns\Inspectable
- */
 trait HasColumns
 {
     /**
@@ -52,13 +49,15 @@ trait HasColumns
 
     /**
      * Get the columns for the table.
+     * Authorization is applied at this level.
      *
      * @return Collection<\Honed\Table\Columns\BaseColumn>
      */
     public function getColumns(): Collection
     {
-        return $this->cachedColumns ??= collect($this->inspect('columns', []))
-            ->filter(static fn (BaseColumn $column): bool => $column->isAuthorized());
+        return $this->cachedColumns ??= collect(\property_exists($this, 'columns')
+            ? $this->columns
+            : [])->filter(static fn (BaseColumn $column): bool => $column->isAuthorized());
     }
 
     /**
@@ -88,7 +87,7 @@ trait HasColumns
     /**
      * Get the key column for the table.
      */
-    public function getKeyColumn(): ?BaseColumn
+    public function getKeyColumn(): BaseColumn|null
     {
         return $this->getColumns()
             ->first(static fn (BaseColumn $column): bool => $column->isKey());
@@ -97,7 +96,7 @@ trait HasColumns
     /**
      * Retrieve the column attributes.
      *
-     * @return array<string, mixed>
+     * @return array<string,mixed>
      */
     public function getAttributedColumns(): array
     {
@@ -109,7 +108,7 @@ trait HasColumns
     /**
      * Get the columns that are active.
      *
-     * @return Collection<BaseColumn>
+     * @return Collection<\Honed\Table\Columns\BaseColumn>
      */
     public function getActiveColumns(): Collection
     {

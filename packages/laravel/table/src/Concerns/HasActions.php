@@ -8,9 +8,6 @@ use Honed\Table\Actions\InlineAction;
 use Honed\Table\Actions\PageAction;
 use Illuminate\Support\Collection;
 
-/**
- * @mixin \Honed\Core\Concerns\Inspectable
- */
 trait HasActions
 {
     /**
@@ -55,7 +52,9 @@ trait HasActions
      */
     public function getActions(): Collection
     {
-        return collect($this->inspect('actions', []));
+        return collect(\property_exists($this, 'actions')
+            ? $this->actions
+            : []);
     }
 
     /**
@@ -84,6 +83,7 @@ trait HasActions
 
     /**
      * Get the page actions.
+     * Authorization is applied at this level.
      *
      * @return Collection<int,\Honed\Table\Actions\PageAction>
      */

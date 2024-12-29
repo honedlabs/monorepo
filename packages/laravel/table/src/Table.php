@@ -32,7 +32,6 @@ use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
  */
 class Table extends Primitive
 {
-    use Concerns\Extractable;
     use Concerns\Filterable;
     use Concerns\FormatsAndPaginates;
     use Concerns\HasActions;

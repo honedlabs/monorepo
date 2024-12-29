@@ -6,9 +6,11 @@ namespace Honed\Table\Concerns;
 
 trait HasEndpoint
 {
-    public const Endpoint = '/actions';
+    const Endpoint = '/actions';
 
     /**
+     * The endpoint to use for this table.
+     * 
      * @var string
      */
     protected $endpoint;
@@ -21,7 +23,7 @@ trait HasEndpoint
     /**
      * Set the endpoint to be used for all tables.
      */
-    public static function useEndpoint(?string $endpoint = null): void
+    public static function useEndpoint(string $endpoint = null): void
     {
         static::$useEndpoint = $endpoint ?? self::Endpoint;
     }
