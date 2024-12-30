@@ -16,7 +16,7 @@ trait HasResource
      * 
      * @var \Illuminate\Contracts\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>|string
      */
-    protected $resource;
+    // protected $resource;
 
     /**
      * Modify the resource query before it is used on a per controller basis.
@@ -43,7 +43,7 @@ trait HasResource
         }
 
         $this->setResource(match (true) {
-            $this->resource instanceof Builder => null,
+            $this->resource instanceof Builder => null, // do nothing
             $this->resource instanceof Model => $this->resource->newQuery(),
             \is_string($this->resource) => $this->resource::query(),
             default => throw new MissingResourceException(static::class)

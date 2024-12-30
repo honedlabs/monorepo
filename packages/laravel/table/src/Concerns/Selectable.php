@@ -14,7 +14,7 @@ trait Selectable
      * 
      * @var bool|(\Closure():bool)
      */
-    protected $selectable;
+    // protected $selectable;
 
     /**
      * @var bool|(\Closure():bool)

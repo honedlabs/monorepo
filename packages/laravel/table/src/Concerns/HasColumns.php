@@ -8,14 +8,18 @@ use Illuminate\Support\Collection;
 trait HasColumns
 {
     /**
+     * Retrieved columns with authorization applied.
+     * 
      * @var Collection<\Honed\Table\Columns\BaseColumn>
      */
     protected $cachedColumns;
 
     /**
+     * The columns to be used for the table.
+     * 
      * @var array<int,\Honed\Table\Columns\BaseColumn>
      */
-    protected $columns;
+    // protected $columns;
 
     /**
      * Set the columns for the table.
@@ -55,9 +59,11 @@ trait HasColumns
      */
     public function getColumns(): Collection
     {
-        return $this->cachedColumns ??= collect(\method_exists($this, 'columns')
-            ? $this->columns
-            : [])->filter(static fn (BaseColumn $column): bool => $column->isAuthorized());
+        return $this->cachedColumns ??= collect(match(true) {
+            \method_exists($this, 'columns') => $this->columns(),
+            \property_exists($this, 'columns') => $this->columns,
+            default => [],
+        })->filter(static fn (BaseColumn $column): bool => $column->isAuthorized());
     }
 
     /**

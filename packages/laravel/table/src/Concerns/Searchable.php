@@ -14,14 +14,14 @@ trait Searchable
      * 
      * @var string|array<int,string>
      */
-    protected $search;
+    // protected $search;
 
     /**
      * The name of the query parameter to use for searching.
      * 
      * @var string
      */
-    protected $term;
+    // protected $term;
 
     /**
      * The name of the query parameter to use for searching for all tables.
@@ -35,7 +35,7 @@ trait Searchable
      * 
      * @var bool
      */
-    protected $scout;
+    // protected $scout;
 
     /**
      * Whether the table should use Laravel Scout for searching for all tables.

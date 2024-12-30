@@ -15,7 +15,6 @@ use Honed\Core\Concerns\Encodable;
 use Illuminate\Support\Collection;
 use Honed\Table\Actions\BulkAction;
 use Honed\Table\Columns\BaseColumn;
-use Honed\Core\Concerns\Inspectable;
 use Honed\Core\Concerns\IsAnonymous;
 use Honed\Core\Concerns\RequiresKey;
 use Honed\Table\Actions\InlineAction;
@@ -45,8 +44,8 @@ class Table extends Primitive
     use Concerns\Sortable;
     use Concerns\HasResource;
     use Concerns\Toggleable;
+    use Concerns\IsOptimizable;
     use Encodable;
-    use Inspectable;
     use IsAnonymous;
     use RequiresKey;
 
@@ -204,9 +203,9 @@ class Table extends Primitive
         $this->modifyResource();
         $this->setSearchColumns();
         $this->toggleColumns();
-        $this->filterQuery($this->getQuery());
-        $this->sortQuery($this->getQuery());
-        $this->searchQuery($this->getQuery());
+        $this->filterQuery($this->getResource());
+        $this->sortQuery($this->getResource());
+        $this->searchQuery($this->getResource());
         // $this->selectQuery($this->getQuery());
         $this->beforeRetrieval();
         // $this->formatRecords();

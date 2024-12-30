@@ -36,7 +36,7 @@ class TableServiceProvider extends ServiceProvider
         ]);
 
         Route::macro('table', function () {
-            Route::post(config('table.endpoint', '/actions'), [Table::class, 'actionHandler']);
+            Route::post(config('table.endpoint', '/actions'), [Table::class, 'handleAction']);
         });
 
         Route::bind('table', function (string $value) {

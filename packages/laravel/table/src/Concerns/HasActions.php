@@ -13,7 +13,7 @@ trait HasActions
     /**
      * @var array<int,\Honed\Table\Actions\BaseAction>
      */
-    protected $actions;
+    // protected $actions;
 
     /**
      * Set the actions for the table.
@@ -52,9 +52,11 @@ trait HasActions
      */
     public function getActions(): Collection
     {
-        return collect(\property_exists($this, 'actions')
-            ? $this->actions
-            : []);
+        return collect(match(true) {
+            \property_exists($this, 'actions') => $this->actions,
+            \method_exists($this, 'actions') => $this->actions(),
+            default => [],
+        });
     }
 
     /**

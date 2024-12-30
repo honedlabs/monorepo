@@ -14,14 +14,14 @@ trait Toggleable
      * The name of this table's cookie for remembering column visibility
      * @var string
      */
-    protected $cookie;
+    // protected $cookie;
 
     /**
      * The duration that this table's cookie should be remembered for
      * 
      * @var int|null
      */
-    protected $duration;
+    // protected $duration;
 
     /**
      * The duration of the cookie to use for all tables.
@@ -34,7 +34,7 @@ trait Toggleable
      * 
      * @var string
      */
-    protected $remember;
+    // protected $remember;
 
     /**
      * The name to use for the query parameter to toggle visibility for all tables.
@@ -48,7 +48,7 @@ trait Toggleable
      * 
      * @var bool
      */
-    protected $toggle;
+    // protected $toggle;
 
     /**
      * Whether to enable toggling of column visibility for all tables.
