@@ -10,7 +10,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-trait FormatsAndPaginates
+trait HasRecords
 {
     /**
      * Configure the options for the number of items to show per page.

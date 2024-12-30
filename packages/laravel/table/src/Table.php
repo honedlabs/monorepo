@@ -6,7 +6,9 @@ namespace Honed\Table;
 
 use Closure;
 use Exception;
+use RuntimeException;
 use Honed\Core\Primitive;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Honed\Core\Concerns\Encodable;
@@ -25,6 +27,7 @@ use Honed\Table\Http\Requests\TableActionRequest;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
 use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Support\Stringable;
 
 /**
  * @method static static build((\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)|null) $resource = null) Build the table records and metadata using the current request.
@@ -33,14 +36,14 @@ use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 class Table extends Primitive
 {
     use Concerns\Filterable;
-    use Concerns\FormatsAndPaginates;
+    use Concerns\HasRecords;
     use Concerns\HasActions;
     use Concerns\HasColumns;
     use Concerns\HasEndpoint;
-    use Concerns\Resourceful;
     use Concerns\Searchable;
     use Concerns\Selectable;
     use Concerns\Sortable;
+    use Concerns\HasResource;
     use Concerns\Toggleable;
     use Encodable;
     use Inspectable;
@@ -53,18 +56,6 @@ class Table extends Primitive
      * @var class-string<\Honed\Table\Table>
      */
     protected $anonymous = self::class;
-
-    /**
-     * @var \Illuminate\Contracts\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>|string
-     */
-    protected $resource;
-
-    /**
-     * Modify the resource query before it is used on a per controller basis.
-     * 
-     * @var (\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)|null)|null
-     */
-    protected $resourceModifier = null;
 
     /**
      * The records of the table retrieved from the resource.
@@ -103,12 +94,12 @@ class Table extends Primitive
      * 
      * @var int|array<int,int>
      */
-    protected static $usePerPage = 10;
+    protected static $defaultPerPageAmount = 10;
 
     /**
      * The paginator instance to use for the table.
      * 
-     * @var class-string
+     * @var class-string|null
      */
     protected $paginator;
 
@@ -117,7 +108,7 @@ class Table extends Primitive
      * 
      * @var class-string
      */
-    protected static $usePaginator = LengthAwarePaginator::class;
+    protected static $defaultPaginator = LengthAwarePaginator::class;
 
     /**
      * The name to use for the page query parameter.
@@ -130,7 +121,7 @@ class Table extends Primitive
      * 
      * @var string|null
      */
-    protected static $pageName = null;
+    protected static $pageKey = null;
 
     /**
      * The name to use for changing the number of records per page.
@@ -144,7 +135,7 @@ class Table extends Primitive
      * 
      * @var string
      */
-    protected static $countName = 'show';
+    protected static $countKey = 'show';
 
     /**
      * Build the table with the given assignments.
@@ -228,35 +219,7 @@ class Table extends Primitive
         }
     }
 
-    /**
-     * Retrieve the resource modifier.
-     * 
-     * @return (\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder|null))|null
-     */
-    public function getResourceModifier(): ?Closure
-    {
-        return $this->resourceModifier;
-    }
-
-    /**
-     * Determine if the table has a resource modifier.
-     */
-    public function hasResourceModifier(): bool
-    {
-        return ! \is_null($this->resourceModifier);
-    }
-
-    /**
-     * Set the resource modifier.
-     * 
-     * @param  \Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)  $resourceModifier
-     */
-    public function setResourceModifier(Closure $resourceModifier): void
-    {
-        $this->resourceModifier = $resourceModifier;
-    }
-
-    /**
+        /**
      * Get the records of the table.
      *
      * @return \Illuminate\Support\Collection<int,array<string,mixed>>|null
@@ -282,7 +245,7 @@ class Table extends Primitive
     public function setRecords(Collection $records): void
     {
         $this->records = $records;
-    }
+    } 
 
     /**
      * Get the table as an array.

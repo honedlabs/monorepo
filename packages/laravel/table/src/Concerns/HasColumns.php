@@ -55,7 +55,7 @@ trait HasColumns
      */
     public function getColumns(): Collection
     {
-        return $this->cachedColumns ??= collect(\property_exists($this, 'columns')
+        return $this->cachedColumns ??= collect(\method_exists($this, 'columns')
             ? $this->columns
             : [])->filter(static fn (BaseColumn $column): bool => $column->isAuthorized());
     }
