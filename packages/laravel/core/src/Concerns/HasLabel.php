@@ -39,6 +39,7 @@ trait HasLabel
         if (\is_null($label)) {
             return;
         }
+        
         $this->label = $label;
     }
 
@@ -82,6 +83,7 @@ trait HasLabel
         return (new Stringable((string) $this->evaluate($name)))
             ->headline()
             ->lower()
-            ->ucfirst()->value();
+            ->ucfirst()
+            ->value();
     }
 }
