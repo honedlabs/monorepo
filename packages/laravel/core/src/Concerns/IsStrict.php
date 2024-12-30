@@ -10,17 +10,16 @@ namespace Honed\Core\Concerns;
 trait IsStrict
 {
     /**
-     * @var bool|(\Closure():bool)
+     * @var bool
      */
     protected $strict = false;
 
     /**
      * Set whether the class is strict matching, chainable.
      *
-     * @param  bool|\Closure():bool  $strict
      * @return $this
      */
-    public function strict(bool|\Closure $strict = true): static
+    public function strict(bool $strict = true): static
     {
         $this->setStrict($strict);
 
@@ -29,14 +28,13 @@ trait IsStrict
 
     /**
      * Set whether the class is strict matching quietly.
-     *
-     * @param  bool|(\Closure():bool)|null  $strict
      */
-    public function setStrict(bool|\Closure|null $strict): void
+    public function setStrict(bool|null $strict): void
     {
-        if (is_null($strict)) {
+        if (\is_null($strict)) {
             return;
         }
+
         $this->strict = $strict;
     }
 
@@ -45,14 +43,6 @@ trait IsStrict
      */
     public function isStrict(): bool
     {
-        return (bool) $this->evaluate($this->strict);
-    }
-
-    /**
-     * Determine if the class is not strict matching.
-     */
-    public function isNotStrict(): bool
-    {
-        return ! $this->isStrict();
+        return $this->strict;
     }
 }

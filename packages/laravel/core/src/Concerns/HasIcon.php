@@ -7,17 +7,16 @@ namespace Honed\Core\Concerns;
 trait HasIcon
 {
     /**
-     * @var string|\Closure():string|null
+     * @var string|null
      */
     protected $icon;
 
     /**
      * Set the icon, chainable.
      *
-     * @param  string|\Closure():string|null  $icon
      * @return $this
      */
-    public function icon(string|\Closure $icon): static
+    public function icon(string $icon): static
     {
         $this->setIcon($icon);
 
@@ -26,10 +25,8 @@ trait HasIcon
 
     /**
      * Set the icon, quietly.
-     *
-     * @param  string|\Closure():string|null  $icon
      */
-    public function setIcon(string|\Closure|null $icon): void
+    public function setIcon(string|null $icon): void
     {
         $this->icon = $icon;
     }
@@ -45,8 +42,8 @@ trait HasIcon
     /**
      * Get the icon.
      */
-    public function getIcon(): ?string
+    public function getIcon(): string|null
     {
-        return value($this->icon);
+        return $this->icon;
     }
 }

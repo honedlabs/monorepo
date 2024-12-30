@@ -10,17 +10,16 @@ namespace Honed\Core\Concerns;
 trait IsHidden
 {
     /**
-     * @var bool|(\Closure():bool)
+     * @var bool
      */
     protected $hidden = false;
 
     /**
      * Set the hidden property, chainable.
      *
-     * @param  bool|(\Closure():bool)  $hidden
      * @return $this
      */
-    public function hidden(bool|\Closure $hidden = true): static
+    public function hidden(bool $hidden = true): static
     {
         $this->setHidden($hidden);
 
@@ -30,10 +29,9 @@ trait IsHidden
     /**
      * Set as hidden, chainable.
      *
-     * @param  bool|(\Closure():bool)  $hidden
      * @return $this
      */
-    public function hide(bool|\Closure $hidden = true): static
+    public function hide(bool $hidden = true): static
     {
         return $this->hidden($hidden);
     }
@@ -41,22 +39,19 @@ trait IsHidden
     /**
      * Set as not hidden, chainable.
      *
-     * @param  bool|(\Closure():bool)  $hidden
      * @return $this
      */
-    public function show(bool|\Closure $hidden = false): static
+    public function show(bool $hidden = false): static
     {
         return $this->hidden($hidden);
     }
 
     /**
      * Set the hidden property quietly.
-     *
-     * @param  bool|(\Closure():bool)|null  $hidden
      */
-    public function setHidden(bool|\Closure|null $hidden): void
+    public function setHidden(bool|null $hidden): void
     {
-        if (is_null($hidden)) {
+        if (\is_null($hidden)) {
             return;
         }
         $this->hidden = $hidden;
@@ -67,14 +62,6 @@ trait IsHidden
      */
     public function isHidden(): bool
     {
-        return (bool) $this->evaluate($this->hidden);
-    }
-
-    /**
-     * Determine if the class is not hidden.
-     */
-    public function isNotHidden(): bool
-    {
-        return ! $this->isHidden();
+        return $this->hidden;
     }
 }

@@ -53,15 +53,7 @@ trait Validatable
      */
     public function canValidate(): bool
     {
-        return ! is_null($this->validate);
-    }
-
-    /**
-     * Determine if the class cannot validate.
-     */
-    public function cannotValidate(): bool
-    {
-        return ! $this->canValidate();
+        return ! \is_null($this->validate);
     }
 
     /**
@@ -69,7 +61,7 @@ trait Validatable
      *
      * @return (\Closure(mixed):bool)|null
      */
-    public function getValidate(): ?\Closure
+    public function getValidator(): ?\Closure
     {
         return $this->validate;
     }
@@ -80,7 +72,7 @@ trait Validatable
      */
     public function applyValidation(mixed $value): bool
     {
-        if ($this->cannotValidate()) {
+        if (! $this->canValidate()) {
             return true;
         }
 
@@ -92,6 +84,6 @@ trait Validatable
      */
     public function isValid(mixed $value): bool
     {
-        return (bool) ($this->getValidate())($value);
+        return (bool) ($this->getValidator())($value);
     }
 }

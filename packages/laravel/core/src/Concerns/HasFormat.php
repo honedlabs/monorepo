@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 /**
- * @mixin \Honed\Core\Concerns\Evaluable
+ * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
  */
 trait HasFormat
 {
@@ -65,18 +65,10 @@ trait HasFormat
     }
 
     /**
-     * Determine if the class does not have a format.
-     */
-    public function missingFormat(): bool
-    {
-        return \is_null($this->format);
-    }
-
-    /**
      * Determine if the class has a format.
      */
     public function hasFormat(): bool
     {
-        return ! $this->missingFormat();
+        return ! \is_null($this->format);
     }
 }

@@ -9,17 +9,16 @@ use Illuminate\Support\Facades\App;
 trait HasLocale
 {
     /**
-     * @var string|(\Closure():string)|null
+     * @var string|null
      */
     protected $locale = null;
 
     /**
      * Set the locale, chainable.
      *
-     * @param  string|(\Closure():string)  $locale
      * @return $this
      */
-    public function locale(string|\Closure $locale): static
+    public function locale(string $locale): static
     {
         $this->setLocale($locale);
 
@@ -28,10 +27,8 @@ trait HasLocale
 
     /**
      * Set the locale quietly.
-     *
-     * @param  string|(\Closure():string)|null  $locale
      */
-    public function setLocale(string|\Closure|null $locale): void
+    public function setLocale(string|null $locale): void
     {
         if (\is_null($locale)) {
             return;
@@ -42,20 +39,10 @@ trait HasLocale
 
     /**
      * Get the locale.
-     *
-     * @param  mixed  $parameter
      */
-    public function getLocale($parameter = null): string
+    public function getLocale(): string
     {
-        return value($this->locale, $parameter) ?? App::getLocale();
-    }
-
-    /**
-     * Determine if the class does not have a locale.
-     */
-    public function missingLocale(): bool
-    {
-        return \is_null($this->locale);
+        return $this->locale ?? App::getLocale();
     }
 
     /**
@@ -63,6 +50,6 @@ trait HasLocale
      */
     public function hasLocale(): bool
     {
-        return ! $this->missingLocale();
+        return ! \is_null($this->locale);
     }
 }

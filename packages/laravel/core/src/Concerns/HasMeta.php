@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 /**
- * @mixin \Honed\Core\Concerns\Evaluable
+ * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
  */
 trait HasMeta
 {
     /**
-     * @var array<array-key, mixed>|(\Closure(mixed...):array<array-key,mixed>)
+     * @var array<array-key,mixed>|(\Closure(mixed...):array<array-key,mixed>)
      */
     protected $meta = [];
 
@@ -34,7 +34,7 @@ trait HasMeta
      */
     public function setMeta(array|\Closure|null $meta): void
     {
-        if (is_null($meta)) {
+        if (\is_null($meta)) {
             return;
         }
         $this->meta = $meta;
@@ -67,18 +67,10 @@ trait HasMeta
     }
 
     /**
-     * Determine if the class does not have metadata.
-     */
-    public function missingMeta(): bool
-    {
-        return empty($this->getMeta());
-    }
-
-    /**
      * Determine if the class has metadata.
      */
     public function hasMeta(): bool
     {
-        return ! $this->missingMeta();
+        return \count($this->meta) > 0;
     }
 }

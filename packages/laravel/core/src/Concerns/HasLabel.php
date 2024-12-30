@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Illuminate\Support\Stringable;
+
 /**
- * @mixin \Honed\Core\Concerns\Evaluable
+ * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
  */
 trait HasLabel
 {
@@ -34,7 +36,7 @@ trait HasLabel
      */
     public function setLabel(string|\Closure|null $label): void
     {
-        if (is_null($label)) {
+        if (\is_null($label)) {
             return;
         }
         $this->label = $label;
@@ -65,19 +67,11 @@ trait HasLabel
     }
 
     /**
-     * Determine if the class does not have a label.
-     */
-    public function missingLabel(): bool
-    {
-        return \is_null($this->label);
-    }
-
-    /**
      * Determine if the class has a label.
      */
     public function hasLabel(): bool
     {
-        return ! $this->missingLabel();
+        return ! \is_null($this->label);
     }
 
     /**
@@ -85,6 +79,9 @@ trait HasLabel
      */
     public function makeLabel(mixed $name): string
     {
-        return str((string) $this->evaluate($name))->headline()->lower()->ucfirst()->toString();
+        return (new Stringable((string) $this->evaluate($name)))
+            ->headline()
+            ->lower()
+            ->ucfirst()->value();
     }
 }

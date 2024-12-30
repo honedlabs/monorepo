@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 /**
- * @mixin \Honed\Core\Concerns\Evaluable
+ * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
  */
 trait HasAttribute
 {
@@ -34,7 +34,7 @@ trait HasAttribute
      */
     public function setAttribute(string|\Closure|null $attribute): void
     {
-        if (is_null($attribute)) {
+        if (\is_null($attribute)) {
             return;
         }
         $this->attribute = $attribute;
@@ -46,7 +46,7 @@ trait HasAttribute
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
-    public function getAttribute(array $named = [], array $typed = []): ?string
+    public function getAttribute(array $named = [], array $typed = []): string|null
     {
         return $this->evaluate($this->attribute, $named, $typed);
     }
@@ -57,7 +57,7 @@ trait HasAttribute
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
-    public function resolveAttribute(array $named = [], array $typed = []): ?string
+    public function resolveAttribute(array $named = [], array $typed = []): string|null
     {
         $this->setAttribute($this->getAttribute($named, $typed));
 
@@ -65,18 +65,10 @@ trait HasAttribute
     }
 
     /**
-     * Determine if the class does not have a attribute.
-     */
-    public function missingAttribute(): bool
-    {
-        return \is_null($this->attribute);
-    }
-
-    /**
      * Determine if the class has a attribute.
      */
     public function hasAttribute(): bool
     {
-        return ! $this->missingAttribute();
+        return ! \is_null($this->attribute);
     }
 }

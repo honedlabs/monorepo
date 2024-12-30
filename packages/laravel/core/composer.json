@@ -2,9 +2,9 @@
     "name": "honed/core",
     "description": "Shared utilities for developing the Honed Laravel ecosystem.",
     "keywords": [
+        "laravel",
         "honed",
-        "primitive",
-        "traits"
+        "core"
     ],
     "homepage": "https://github.com/honedlabs/core",
     "license": "MIT",
@@ -12,7 +12,6 @@
         {
             "name": "Joshua Wallace",
             "email": "josh@joshua-wallace.com",
-            "role": "Developer",
             "homepage": "https://joshua-wallace.com"
         }
     ],
@@ -29,7 +28,8 @@
         "pestphp/pest-plugin-arch": "^3.0.0",
         "phpstan/extension-installer": "^1.4.3",
         "phpstan/phpstan-deprecation-rules": "^2.0.1",
-        "phpstan/phpstan-phpunit": "^2.0.3"
+        "phpstan/phpstan-phpunit": "^2.0.3",
+        "pestphp/pest-plugin-laravel": "^3.0.0"
     },
     "autoload": {
         "psr-4": {
@@ -38,11 +38,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Honed\\Core\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/",
-            "Workbench\\App\\Models\\": "workbench/app/models/"
+            "Honed\\Core\\Tests\\": "tests/"
         }
     },
     "scripts": {

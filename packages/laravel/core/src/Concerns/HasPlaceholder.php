@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+/**
+ * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
+ */
 trait HasPlaceholder
 {
     /**
@@ -62,18 +65,10 @@ trait HasPlaceholder
     }
 
     /**
-     * Determine if the class does not have a placeholder.
-     */
-    public function missingPlaceholder(): bool
-    {
-        return \is_null($this->placeholder);
-    }
-
-    /**
      * Determine if the class has a placeholder.
      */
     public function hasPlaceholder(): bool
     {
-        return ! $this->missingPlaceholder();
+        return ! \is_null($this->placeholder);
     }
 }

@@ -73,17 +73,6 @@ trait Authorizable
     }
 
     /**
-     * Determine if the class is not authorized using the given closure dependencies.
-     *
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
-     */
-    public function isNotAuthorized(array $named = [], array $typed = []): bool
-    {
-        return ! $this->isAuthorized($named, $typed);
-    }
-
-    /**
      * Alias for isAuthorized
      *
      * @param  array<string, mixed>  $named
@@ -92,16 +81,5 @@ trait Authorizable
     public function isAuthorised(array $named = [], array $typed = []): bool
     {
         return $this->isAuthorized($named, $typed);
-    }
-
-    /**
-     * Alias for isNotAuthorized
-     *
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
-     */
-    public function isNotAuthorised(array $named = [], array $typed = []): bool
-    {
-        return $this->isNotAuthorized($named, $typed);
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 /**
- * @mixin Honed\Core\Concerns\Evaluable
+ * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
  */
 trait HasDescription
 {
@@ -44,10 +44,10 @@ trait HasDescription
     /**
      * Get the description using the given closure dependencies.
      *
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
+     * @param  array<string,mixed>  $named
+     * @param  array<string,mixed>  $typed
      */
-    public function getDescription(array $named = [], array $typed = []): ?string
+    public function getDescription(array $named = [], array $typed = []): string|null
     {
         return $this->evaluate($this->description, $named, $typed);
     }
@@ -55,10 +55,10 @@ trait HasDescription
     /**
      * Resolve the description using the given closure dependencies.
      *
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
+     * @param  array<string,mixed>  $named
+     * @param  array<string,mixed>  $typed
      */
-    public function resolveDescription(array $named = [], array $typed = []): ?string
+    public function resolveDescription(array $named = [], array $typed = []): string|null
     {
         $this->setDescription($this->getDescription($named, $typed));
 
@@ -66,18 +66,10 @@ trait HasDescription
     }
 
     /**
-     * Determine if the class does not have a description.
-     */
-    public function missingDescription(): bool
-    {
-        return \is_null($this->description);
-    }
-
-    /**
      * Determine if the class has a description.
      */
     public function hasDescription(): bool
     {
-        return ! $this->missingDescription();
+        return ! \is_null($this->description);
     }
 }

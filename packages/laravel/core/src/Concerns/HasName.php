@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Illuminate\Support\Stringable;
+
 /**
- * @mixin \Honed\Core\Concerns\Evaluable
+ * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
  */
 trait HasName
 {
@@ -65,19 +67,11 @@ trait HasName
     }
 
     /**
-     * Determine if the class does not have a name.
-     */
-    public function missingName(): bool
-    {
-        return \is_null($this->name);
-    }
-
-    /**
      * Determine if the class has a name.
      */
     public function hasName(): bool
     {
-        return ! $this->missingName();
+        return ! \is_null($this->name);
     }
 
     /**
@@ -85,8 +79,11 @@ trait HasName
      *
      * @param  string|\Stringable|(\Closure():string|\Stringable)  $label
      */
-    public function makeName(string|\Stringable|\Closure $label): string
+    public function makeName(string $label): string
     {
-        return str($this->evaluate($label))->snake()->lower()->toString();
+        return (new Stringable($label))
+            ->snake()
+            ->lower()
+            ->value();
     }
 }

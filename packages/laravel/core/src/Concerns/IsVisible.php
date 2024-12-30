@@ -10,17 +10,16 @@ namespace Honed\Core\Concerns;
 trait IsVisible
 {
     /**
-     * @var bool|(\Closure():bool)
+     * @var bool
      */
     protected $visible = true;
 
     /**
      * Set as visible, chainable.
      *
-     * @param  bool|\Closure():bool  $visible
      * @return $this
      */
-    public function visible(bool|\Closure $visible = true): static
+    public function visible(bool $visible = true): static
     {
         $this->setVisible($visible);
 
@@ -30,10 +29,9 @@ trait IsVisible
     /**
      * Set as invisible, chainable.
      *
-     * @param  bool|\Closure():bool  $visible
      * @return $this
      */
-    public function invisible(bool|\Closure $visible = false): static
+    public function invisible(bool $visible = false): static
     {
         $this->setVisible($visible);
 
@@ -42,12 +40,10 @@ trait IsVisible
 
     /**
      * Set the visibility property quietly.
-     *
-     * @param  bool|(\Closure():bool)|null  $visible
      */
-    public function setVisible(bool|\Closure|null $visible): void
+    public function setVisible(bool|null $visible): void
     {
-        if (is_null($visible)) {
+        if (\is_null($visible)) {
             return;
         }
         $this->visible = $visible;
@@ -58,14 +54,6 @@ trait IsVisible
      */
     public function isVisible(): bool
     {
-        return (bool) $this->evaluate($this->visible);
-    }
-
-    /**
-     * Determine if the class is not visible.
-     */
-    public function isNotVisible(): bool
-    {
-        return ! $this->isVisible();
+        return $this->visible;
     }
 }

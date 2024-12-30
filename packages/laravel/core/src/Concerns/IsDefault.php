@@ -10,17 +10,16 @@ namespace Honed\Core\Concerns;
 trait IsDefault
 {
     /**
-     * @var bool|(\Closure():bool)
+     * @var bool
      */
     protected $default = false;
 
     /**
      * Set the class as default, chainable
      *
-     * @param  bool|(\Closure():bool)  $default
      * @return $this
      */
-    public function default(bool|\Closure $default = true): static
+    public function default(bool $default = true): static
     {
         $this->setDefault($default);
 
@@ -29,14 +28,13 @@ trait IsDefault
 
     /**
      * Set the default quietly
-     *
-     * @param  bool|(\Closure():bool)|null  $default
      */
-    public function setDefault(bool|\Closure|null $default): void
+    public function setDefault(bool|null $default): void
     {
-        if (is_null($default)) {
+        if (\is_null($default)) {
             return;
         }
+
         $this->default = $default;
     }
 
@@ -45,14 +43,6 @@ trait IsDefault
      */
     public function isDefault(): bool
     {
-        return (bool) $this->evaluate($this->default);
-    }
-
-    /**
-     * Determine if the class is not default.
-     */
-    public function isNotDefault(): bool
-    {
-        return ! $this->isDefault();
+        return $this->default;
     }
 }

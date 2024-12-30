@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 /**
- * @mixin \Honed\Core\Concerns\Evaluable
+ * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
  */
 trait HasTitle
 {
@@ -46,7 +46,7 @@ trait HasTitle
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
-    public function getTitle(array $named = [], array $typed = []): ?string
+    public function getTitle(array $named = [], array $typed = []): string|null
     {
         return $this->evaluate($this->title, $named, $typed);
     }
@@ -57,7 +57,7 @@ trait HasTitle
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
-    public function resolveTitle(array $named = [], array $typed = []): ?string
+    public function resolveTitle(array $named = [], array $typed = []): string|null
     {
         $this->setTitle($this->getTitle($named, $typed));
 
@@ -65,18 +65,10 @@ trait HasTitle
     }
 
     /**
-     * Determine if the class does not have a title.
-     */
-    public function missingTitle(): bool
-    {
-        return \is_null($this->title);
-    }
-
-    /**
      * Determine if the class has a title.
      */
     public function hasTitle(): bool
     {
-        return ! $this->missingTitle();
+        return ! \is_null($this->title);
     }
 }
