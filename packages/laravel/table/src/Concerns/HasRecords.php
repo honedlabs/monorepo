@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Illuminate\Contracts\Pagination\CursorPaginator;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Contracts\Pagination\CursorPaginator;
+use Honed\Table\Exceptions\InvalidPaginatorException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 trait HasRecords
 {
@@ -53,12 +54,13 @@ trait HasRecords
     /**
      * The paginator type to use for all tables.
      * 
-     * @var class-string
+     * @var class-string|null
      */
     protected static $defaultPaginator = LengthAwarePaginator::class;
 
     /**
      * The name to use for the page query parameter.
+     * 
      * @var string
      */
     protected $page;
@@ -70,7 +72,53 @@ trait HasRecords
      */
     protected static $pageKey = null;
 
-        /**
+    /**
+     * The name to use for changing the number of records per page.
+     * 
+     * @var string
+     */
+    protected $count;
+
+    /**
+     * The name to use for changing the number of records per page for all tables.
+     * 
+     * @var string
+     */
+    protected static $countKey = 'show';
+
+    /**
+     * Configure the options for the number of items to show per page.
+     *
+     * @param  int|array<int,int>  $perPage
+     * @return void
+     */
+    public static function recordsPerPage(int|array $perPage)
+    {
+        static::$defaultPerPageAmount = $perPage;
+    }
+
+    /**
+     * Configure the default paginator to use.
+     *
+     * @param  string|\Honed\Table\Enums\Paginator  $paginator
+     * @return void
+     */
+    public static function usePaginator(string|Paginator $paginator)
+    {
+        static::$defaultPaginator = $paginator;
+    }
+
+    /**
+     * Configure the query parameter to use for the page number.
+     *
+     * @return void
+     */
+    public static function usePageKey(string $name)
+    {
+        static::$pageKey = $name;
+    }
+
+    /**
      * Get the records of the table.
      *
      * @return \Illuminate\Support\Collection<int,array<string,mixed>>|null
@@ -97,95 +145,64 @@ trait HasRecords
     {
         $this->records = $records;
     } 
-    
-    /**
-     * Configure the options for the number of items to show per page.
-     *
-     * @param  int|array<int,int>  $perPage
-     * @return void
-     */
-    public static function usePerPage(int|array $perPage)
-    {
-        static::$usePerPage = $perPage;
-    }
-
-    /**
-     * Configure the default paginator to use.
-     *
-     * @param  string|\Honed\Table\Enums\Paginator  $paginator
-     * @return void
-     */
-    public static function usePaginator(string|Paginator $paginator)
-    {
-        static::$usePaginatorType = $paginator;
-    }
-
-    /**
-     * Configure the query parameter to use for the page number.
-     *
-     * @return void
-     */
-    public static function pageName(string $name)
-    {
-        static::$pageName = $name;
-    }
-
-    /**
-     * Configure the query parameter to use for the number of items to show.
-     *
-     * @return void
-     */
-    public static function showName(string $name)
-    {
-        static::$showName = $name;
-    }
 
     /**
      * Get the options for the number of items to show per page.
      *
      * @return int|array<int,int>
      */
-    public function getPerPage()
+    public function getPerPage(): int|array
     {
-        return $this->inspect('perPage', static::$usePerPage);
+        return match (true) {
+            \property_exists($this, 'perPage') => $this->perPage,
+            \method_exists($this, 'perPage') => $this->perPage(),
+            default => static::$defaultPerPageAmount
+        };
     }
 
     /**
      * Get the default paginator to use.
      *
-     * @return string|\Honed\Table\Enums\Paginator
+     * @return class-string|null
      */
-    public function getPaginatorType()
+    public function getPaginator(): string|null
     {
-        return $this->inspect('paginatorType', static::$usePaginatorType);
+        return match (true) {
+            \property_exists($this, 'paginator') => $this->paginator,
+            \method_exists($this, 'paginator') => $this->paginator(),
+            default => static::$defaultPaginator
+        };
     }
 
     /**
      * Get the query parameter to use for the page number.
-     *
-     * @return string
      */
-    public function getPageName()
+    public function getPageKey(): string
     {
-        return $this->inspect('page', static::$pageName);
+        return match (true) {
+            \property_exists($this, 'page') => $this->page,
+            default => static::$pageKey
+        };
     }
 
     /**
      * Get the query parameter to use for the number of items to show.
-     *
-     * @return string
      */
-    public function getShowName()
+    public function getCountKey(): string
     {
-        return $this->inspect('show', static::$showName);
+        return match (true) {
+            \property_exists($this, 'count') => $this->count,
+            \method_exists($this, 'count') => $this->count(),
+            default => static::$countKey
+        };
     }
 
     /**
      * Get the pagination options for the number of items to show per page.
      *
-     * @return array<int, array{value: int, active: bool}>
+     * @return array<int,array{value:int,active:bool}>
      */
-    public function getPaginationCounts(?int $active = null): array
+    public function getPaginationCounts(int|null $active = null): array
     {
         $perPage = $this->getRecordsPerPage();
 
@@ -198,7 +215,7 @@ trait HasRecords
     {
         $request = request();
 
-        if ($this->getPaginatorType() === 'none') {
+        if (\is_null($this->getPaginator())) {
             return false;
         }
 
@@ -227,21 +244,21 @@ trait HasRecords
      */
     public function paginateRecords(Builder $query): Paginator|CursorPaginator|Collection
     {
-        $paginator = match ($this->getPaginatorType()) {
+        $paginator = match ($this->getPaginator()) {
             LengthAwarePaginator::class => $query->paginate(
                 perPage: $this->getRecordsPerPage(),
-                pageName: $this->getPageName(),
+                pageName: $this->getPageKey(),
             ),
             Paginator::class => $query->simplePaginate(
                 perPage: $this->getRecordsPerPage(),
-                pageName: $this->getPageName(),
+                pageName: $this->getPageKey(),
             ),
             CursorPaginator::class => $query->cursorPaginate(
                 perPage: $this->getRecordsPerPage(),
-                cursorName: $this->getPageName(),
+                cursorName: $this->getPageKey(),
             ),
-            'none' => $query->get(),
-            default => throw new \Exception("Invalid paginator type provided [{$this->getPaginatorType()}]"),
+            null => $query->get(),
+            default => throw new InvalidPaginatorException($this->getPaginator()),
         };
 
         return $paginator->withQueryString();

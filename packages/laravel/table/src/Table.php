@@ -66,20 +66,6 @@ class Table extends Primitive
     protected $request = null;
 
     /**
-     * The name to use for changing the number of records per page.
-     * 
-     * @var string
-     */
-    protected $count;
-
-    /**
-     * The name to use for changing the number of records per page for all tables.
-     * 
-     * @var string
-     */
-    protected static $countKey = 'show';
-
-    /**
      * Build the table with the given assignments.
      *
      * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|class-string|\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)  $resource
@@ -232,7 +218,7 @@ class Table extends Primitive
         if ($this->hasResourceModifier()) {
 
             // Do not assign it to a variable, as the modifications are in-place
-            $$this->evaluate($this->getResourceModifier(), [
+            $this->evaluate($this->getResourceModifier(), [
                 'query' => $this->resource,
                 'builder' => $this->resource,
                 'resource' => $this->resource,
