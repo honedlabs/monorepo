@@ -1,9 +1,9 @@
 <?php
 
 use Honed\Core\Options\Option;
+use Honed\Core\Tests\Stubs\Status;
+use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Tests\Stubs\Component;
-use Workbench\App\Enums\Lang;
-use Workbench\App\Models\Category;
 
 it('can create an option', function () {
     $option = new Option(1);
@@ -105,12 +105,12 @@ it('can chain options', function () {
 
 it('can chain options from enum using defaults', function () {
     $component = new Component;
-    expect($component->fromEnum(Lang::class))->toBeInstanceOf(Component::class);
-    expect($component->getOptions())->toHaveCount(count(Lang::cases()));
+    expect($component->fromEnum(Status::class))->toBeInstanceOf(Component::class);
+    expect($component->getOptions())->toHaveCount(count(Status::cases()));
     expect($component->getOptions())->each(function ($option) {
 
-        expect($enum = Lang::tryFrom($option->value->getValue()))
-            ->toBeInstanceOf(Lang::class)
+        expect($enum = Status::tryFrom($option->value->getValue()))
+            ->toBeInstanceOf(Status::class)
             ->and($option->value->getValue())->toBe($enum->value)
             ->and($option->value->getLabel())->toBe($enum->name);
     });
@@ -118,12 +118,12 @@ it('can chain options from enum using defaults', function () {
 
 it('can chain options from enum using methods', function () {
     $component = new Component;
-    expect($component->fromEnum(Lang::class, null, 'label'))->toBeInstanceOf(Component::class);
-    expect($component->getOptions())->toHaveCount(count(Lang::cases()));
+    expect($component->fromEnum(Status::class, null, 'label'))->toBeInstanceOf(Component::class);
+    expect($component->getOptions())->toHaveCount(count(Status::cases()));
     expect($component->getOptions())->each(function ($option) {
 
-        expect($enum = Lang::tryFrom($option->value->getValue()))
-            ->toBeInstanceOf(Lang::class)
+        expect($enum = Status::tryFrom($option->value->getValue()))
+            ->toBeInstanceOf(Status::class)
             ->and($option->value->getValue())->toBe($enum->value)
             ->and($option->value->getLabel())->toBe($enum->label());
     });
@@ -131,11 +131,11 @@ it('can chain options from enum using methods', function () {
 
 it('can chain options from model, defaulting to key', function () {
     $component = new Component;
-    expect($component->fromModel(Category::class))->toBeInstanceOf(Component::class);
-    expect($component->getOptions())->toHaveCount(Category::count());
+    expect($component->fromModel(Product::class))->toBeInstanceOf(Component::class);
+    expect($component->getOptions())->toHaveCount(Product::count());
     expect($component->getOptions())->each(function ($option) {
-        expect($model = Category::find($option->value->getValue()))
-            ->toBeInstanceOf(Category::class)
+        expect($model = Product::find($option->value->getValue()))
+            ->toBeInstanceOf(Product::class)
             ->and($option->value->getValue())->toBe($model->getKey())
             ->and($option->value->getLabel())->toBe((string) $model->getKey());
     });
@@ -143,11 +143,11 @@ it('can chain options from model, defaulting to key', function () {
 
 it('can chain options from model using properties', function () {
     $component = new Component;
-    expect($component->fromModel(Category::class, 'slug', 'name'))->toBeInstanceOf(Component::class);
-    expect($component->getOptions())->toHaveCount(Category::count());
+    expect($component->fromModel(Product::class, 'slug', 'name'))->toBeInstanceOf(Component::class);
+    expect($component->getOptions())->toHaveCount(Product::count());
     expect($component->getOptions())->each(function ($option) {
-        expect($model = Category::where('slug', $option->value->getValue())->first())
-            ->toBeInstanceOf(Category::class)
+        expect($model = Product::where('slug', $option->value->getValue())->first())
+            ->toBeInstanceOf(Product::class)
             ->and($option->value->getValue())->toBe($model->slug)
             ->and($option->value->getLabel())->toBe((string) $model->name);
     });
@@ -155,11 +155,11 @@ it('can chain options from model using properties', function () {
 
 it('can chain options from model using method', function () {
     $component = new Component;
-    expect($component->fromModel(Category::class, 'url', 'name'))->toBeInstanceOf(Component::class);
-    expect($component->getOptions())->toHaveCount(Category::count());
+    expect($component->fromModel(Product::class, 'url', 'name'))->toBeInstanceOf(Component::class);
+    expect($component->getOptions())->toHaveCount(Product::count());
     expect($component->getOptions())->each(function ($option) {
-        expect($model = Category::where('name', $option->value->getLabel())->first())
-            ->toBeInstanceOf(Category::class)
+        expect($model = Product::where('name', $option->value->getLabel())->first())
+            ->toBeInstanceOf(Product::class)
             ->and($model->url())->toBe($option->value->getValue())
             ->and($model->name)->toBe($option->value->getLabel());
     });
@@ -167,18 +167,18 @@ it('can chain options from model using method', function () {
 
 it('can chain options from collection, defaulting to the item itself', function () {
     $component = new Component;
-    expect($component->fromCollection($c = Category::select('name', 'slug')->get()))->toBeInstanceOf(Component::class);
+    expect($component->fromCollection($c = Product::select('name', 'slug')->get()))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount($c->count());
     expect($component->getOptions())->toHaveCount($c->count());
 });
 
 it('can chain options from collection using properties', function () {
     $component = new Component;
-    expect($component->fromCollection($c = Category::select('name', 'slug')->get(), 'slug', 'name'))->toBeInstanceOf(Component::class);
+    expect($component->fromCollection($c = Product::select('name', 'slug')->get(), 'slug', 'name'))->toBeInstanceOf(Component::class);
     expect($component->getOptions())->toHaveCount($c->count());
     expect($component->getOptions())->each(function ($option) use ($c) {
         expect($model = $c->where('slug', $option->value->getValue())->first())
-            ->toBeInstanceOf(Category::class)
+            ->toBeInstanceOf(Product::class)
             ->and($option->value->getValue())->toBe($model->slug)
             ->and($option->value->getLabel())->toBe((string) $model->name);
     });

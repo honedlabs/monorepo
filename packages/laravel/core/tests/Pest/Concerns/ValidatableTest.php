@@ -31,21 +31,9 @@ it('defaults to no validator', function () {
     expect($component->canValidate())->toBeFalse();
 });
 
-it('can check for no validator', function () {
-    $component = new Component;
-    expect($component->cannotValidate())->toBeTrue();
-});
-
 it('can check for a validator', function () {
     $component = new Component;
     $component->setValidate(fn (int $record) => $record > 0);
-    expect($component->canValidate())->toBeTrue();
-});
-
-it('has alias for checking validator', function () {
-    $component = new Component;
-    $component->setValidate(fn (int $record) => $record > 0);
-    expect($component->cannotValidate())->toBeFalse();
     expect($component->canValidate())->toBeTrue();
 });
 

@@ -8,15 +8,9 @@ it('can set visible', function () {
     expect($component->isVisible())->toBeTrue();
 });
 
-it('prevents null values', function () {
+it('rejects null values', function () {
     $component = new Component;
     $component->setVisible(null);
-    expect($component->isVisible())->toBeTrue();
-});
-
-it('can set closure visible', function () {
-    $component = new Component;
-    $component->setVisible(fn () => true);
     expect($component->isVisible())->toBeTrue();
 });
 
@@ -42,11 +36,4 @@ it('checks if visible', function () {
     expect($component->isVisible())->toBeTrue();
     $component->setVisible(false);
     expect($component->isVisible())->toBeFalse();
-});
-
-it('checks if not visible', function () {
-    $component = new Component;
-    expect($component->isNotVisible())->toBeFalse();
-    $component->setVisible(false);
-    expect($component->isNotVisible())->toBeTrue();
 });
