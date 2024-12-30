@@ -7,6 +7,7 @@ use RuntimeException;
 use Illuminate\Support\Stringable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Honed\Table\Exceptions\MissingResourceException;
 
 trait HasResource
 {
@@ -33,27 +34,25 @@ trait HasResource
      */
     public function getResource()
     {
-        // @phpstan-ignore-next-line
-        $this->resource ??= match (true) {
-            \method_exists($this, 'resource') => $this->resource(),
-            \property_exists($this, 'resource') => $this->resource,
-            default => (new Stringable(static::class))
-                ->classBasename()
-                ->beforeLast('Table')
-                ->singular()
-                ->prepend('\\App\\Models\\')
-                ->toString()
-        };
+        if (! isset($this->resource)) {
+            $this->resource = match (true) {
+                \method_exists($this, 'resource') => $this->resource(),
+                \property_exists($this, 'resource') => $this->resource,
+                default => $this->guessResourceFromTable()
+            };
+        }
 
-        return match (true) {
-            $this->resource instanceof Builder => $this->resource,
+        $this->setResource(match (true) {
+            $this->resource instanceof Builder => null,
             $this->resource instanceof Model => $this->resource->newQuery(),
             \is_string($this->resource) => $this->resource::query(),
-            default => throw new RuntimeException(sprintf('[%s] requires a class-string, model or Eloquent resource.', static::class)),
-        };
+            default => throw new MissingResourceException(static::class)
+        });
+
+        return $this->resource;
     }
 
-        /**
+    /**
      * Set the resource to use for the table.
      *
      * @param  \Illuminate\Contracts\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>|null  $resource
@@ -65,6 +64,21 @@ trait HasResource
         }
 
         $this->resource = $resource;
+    }
+
+    /**
+     * Guess the resource class name from the table class name.
+     * 
+     * @return class-string<\Illuminate\Database\Eloquent\Model>
+     */
+    protected function guessResourceFromTable(): string 
+    {
+        return (new Stringable(static::class))
+            ->classBasename()
+            ->beforeLast('Table')
+            ->singular()
+            ->prepend('\\App\\Models\\')
+            ->value();
     }
 
     /**
@@ -96,34 +110,35 @@ trait HasResource
     }
 
     /**
-     * Resolve a model instance from the given key.
-     */
-    public function resolveModel(int|string $key): Model
-    {
-        $modelClass = $this->getModelClass();
-        $resolver = $this->modelResolver ?? fn (string $modelClass, int|string $key) => $modelClass::findOrFail($key);
-
-        return \call_user_func($resolver, $modelClass, $key);
-    }
-
-    /**
      * Get the model class used by the resource.
+     * 
+     * @throws \Honed\Table\Exceptions\MissingResourceException
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function getModelClass(): Model
+    public function getModel(): Model
     {
         return $this->getResource()->getModel();
     }
 
     /**
      * Get the model class as a name.
+     * 
+     * @throws \Honed\Table\Exceptions\MissingResourceException
      */
-    public function getModelClassName(): string
+    public function getModelName(): string
     {
-        return strtolower(class_basename($this->getModelClass()));
+        return (new Stringable($this->getModel()))
+            ->classBasename()
+            ->value();
     }
 
-    // public function getKeyName(): string
-    // {
-    //     return $this->getResource()->getKeyName();
-    // }
+    /**
+     * Get the name of the model's primary key.
+     * 
+     * @throws \Honed\Table\Exceptions\MissingResourceException
+     */
+    public function getModelKey(): string
+    {
+        return $this->getModel()->getKeyName();
+    }
 }

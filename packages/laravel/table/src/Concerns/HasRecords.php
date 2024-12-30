@@ -13,6 +13,92 @@ use Illuminate\Database\Eloquent\Collection;
 trait HasRecords
 {
     /**
+     * The records of the table retrieved from the resource.
+     * 
+     * @var \Illuminate\Support\Collection<array-key,array<array-key,mixed>>|null
+     */
+    protected $records = null;
+
+        /**
+     * The number of records to show per page. 
+     * An array provides options allowing users to change the number of records shown to themper page.
+     * 
+     * @var int|array<int,int>
+     */
+    protected $perPage;
+
+    /**
+     * The default number of records to show per page.
+     * If $perPage is an array, this should be one of the values.
+     * If not supplied, the lowest value in $perPage will be used.
+     * 
+     * @var int
+     */
+    protected $defaultPerPage;
+
+    /**
+     * The number of records to use per page for all tables.
+     * 
+     * @var int|array<int,int>
+     */
+    protected static $defaultPerPageAmount = 10;
+
+    /**
+     * The paginator instance to use for the table.
+     * 
+     * @var class-string|null
+     */
+    protected $paginator;
+
+    /**
+     * The paginator type to use for all tables.
+     * 
+     * @var class-string
+     */
+    protected static $defaultPaginator = LengthAwarePaginator::class;
+
+    /**
+     * The name to use for the page query parameter.
+     * @var string
+     */
+    protected $page;
+
+    /**
+     * The name to use for the page query parameter for all tables.
+     * 
+     * @var string|null
+     */
+    protected static $pageKey = null;
+
+        /**
+     * Get the records of the table.
+     *
+     * @return \Illuminate\Support\Collection<int,array<string,mixed>>|null
+     */
+    public function getRecords(): ?Collection
+    {
+        return $this->records;
+    }
+
+    /**
+     * Determine if the table has records.
+     */
+    public function hasRecords(): bool
+    {
+        return ! \is_null($this->records);
+    }
+
+    /**
+     * Set the records of the table.
+     * 
+     * @param  \Illuminate\Support\Collection<int,array<string,mixed>>  $records
+     */
+    public function setRecords(Collection $records): void
+    {
+        $this->records = $records;
+    } 
+    
+    /**
      * Configure the options for the number of items to show per page.
      *
      * @param  int|array<int,int>  $perPage
