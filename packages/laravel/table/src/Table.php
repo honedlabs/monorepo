@@ -201,42 +201,33 @@ class Table extends Primitive
             return;
         }
 
-        $this->applyResourceModifier();
-        $this->configureSearchColumns();
-        $this->configureToggleableColumns();
+        $this->modifyResource();
+        $this->setSearchColumns();
+        $this->toggleColumns();
         $this->filterQuery($this->getQuery());
         $this->sortQuery($this->getQuery());
         $this->searchQuery($this->getQuery());
         // $this->selectQuery($this->getQuery());
-        $this->applyBeforeRetrieval();
-        // $this->beforeRetrievingRecords($this->getQuery());
-        // $this->formatAndPaginateRecords();
+        $this->beforeRetrieval();
+        // $this->formatRecords();
+        // $this->paginateRecords();
     }
 
-    protected function applyResourceModifier(): void
+    protected function modifyResource(): void
     {
         if ($this->hasResourceModifier()) {
-
-            // Do not assign it to a variable, as the modifications are in-place
-            $this->evaluate($this->getResourceModifier(), [
-                'query' => $this->resource,
-                'builder' => $this->resource,
-                'resource' => $this->resource,
-            ], [
-                EloquentBuilder::class => $this->resource,
-                Builder::class => $this->resource,
-            ]);
+            $this->getResourceModifier()($this->resource);
         }
     }
 
-    protected function applyBeforeRetrieval(): void
+    protected function beforeRetrieval(): void
     {
         if (\method_exists($this, 'before')) {
             $this->before($this->resource);
         }
     }
 
-    protected function configureSearchColumns(): void
+    protected function setSearchColumns(): void
     {
         $searchProperty = (array) $this->getSearch();
 
@@ -249,7 +240,7 @@ class Table extends Primitive
         $this->setSearch(\array_unique([...$searchProperty, ...$searchColumns]));
     }
 
-    protected function configureToggleableColumns(): void
+    protected function toggleColumns(): void
     {
         $cols = $this->getToggledColumns(); // names
 
