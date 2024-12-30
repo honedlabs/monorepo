@@ -11,4 +11,5 @@ return [
     | parameter to use for the search term. You can specify to use scout
     | searching for every table, this assumes you have Scout configured.
     */
+    'endpoint' => '/actions',
 ];

@@ -34,21 +34,13 @@ trait HasColumns
 
         $this->columns = $columns;
     }
-
-    /**
-     * Determine if the table has no columns.
-     */
-    public function missingColumns(): bool
-    {
-        return $this->getColumns()->isEmpty();
-    }
-
+    
     /**
      * Determine if the table has columns.
      */
     public function hasColumns(): bool
     {
-        return ! $this->missingColumns();
+        return $this->getColumns()->isNotEmpty();
     }
 
     /**

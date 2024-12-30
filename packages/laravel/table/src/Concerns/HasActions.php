@@ -30,19 +30,11 @@ trait HasActions
     }
 
     /**
-     * Determine if the table has no actions.
-     */
-    public function missingActions(): bool
-    {
-        return $this->getActions()->isEmpty();
-    }
-
-    /**
      * Determine if the table has actions.
      */
     public function hasActions(): bool
     {
-        return ! $this->missingActions();
+        return $this->getActions()->isNotEmpty();
     }
 
     /**
