@@ -15,14 +15,10 @@ trait RequiresKey
      */
     public function getKey(): string
     {
-        if (method_exists($this, 'key')) {
-            return $this->key();
-        }
-
-        if (property_exists($this, 'key') && isset($this->key)) {
-            return $this->key;
-        }
-
-        throw new MissingRequiredAttributeException('key', $this);
+        return match (true) {
+            \method_exists($this, 'key') => $this->key(),
+            \property_exists($this, 'key') && isset($this->key) => $this->key,
+            default => throw new MissingRequiredAttributeException('key', $this),
+        };
     }
 }

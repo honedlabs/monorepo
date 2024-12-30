@@ -8,7 +8,6 @@ beforeEach(function () {
 
 it('has no truncate value by default', function () {
     expect($this->formatter->hasTruncate())->toBeFalse();
-    expect($this->formatter->missingTruncate())->toBeTrue();
 });
 
 it('can set a divide by value', function () {

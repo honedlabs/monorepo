@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 beforeEach(function () {
     $this->component = new Component;
@@ -13,7 +13,7 @@ it('can set a string format', function () {
 
 it('prevents null values', function () {
     $this->component->setFormat(null);
-    expect($this->component->missingFormat())->toBeTrue();
+    expect($this->component->hasFormat())->toBeFalse();
 });
 
 it('can set a closure format', function () {
@@ -30,12 +30,6 @@ it('checks for format', function () {
     expect($this->component->hasFormat())->toBeFalse();
     $this->component->setFormat('d M Y');
     expect($this->component->hasFormat())->toBeTrue();
-});
-
-it('checks for no format', function () {
-    expect($this->component->missingFormat())->toBeTrue();
-    $this->component->setFormat('d M Y');
-    expect($this->component->missingFormat())->toBeFalse();
 });
 
 it('resolves a format', function () {

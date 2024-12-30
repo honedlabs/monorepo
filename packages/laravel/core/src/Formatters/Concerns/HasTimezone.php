@@ -51,18 +51,10 @@ trait HasTimezone
     }
 
     /**
-     * Determine if the class does not have a timezone.
-     */
-    public function missingTimezone(): bool
-    {
-        return \is_null($this->timezone);
-    }
-
-    /**
      * Determine if the class has a timezone.
      */
     public function hasTimezone(): bool
     {
-        return ! $this->missingTimezone();
+        return ! \is_null($this->timezone);
     }
 }

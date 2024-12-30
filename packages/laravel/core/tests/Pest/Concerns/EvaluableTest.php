@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 it('can evaluate a closure', function () {
     $component = new Component;

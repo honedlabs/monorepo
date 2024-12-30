@@ -8,7 +8,6 @@ beforeEach(function () {
 
 it('has no timezone by default', function () {
     expect($this->formatter->hasTimezone())->toBeFalse();
-    expect($this->formatter->missingTimezone())->toBeTrue();
 });
 
 it('can set a timezone', function () {
@@ -21,7 +20,7 @@ it('can be set using setter', function () {
     expect($this->formatter->getTimezone())->toBe('.');
 });
 
-it('does not accept null values', function () {
+it('rejects null values', function () {
     $this->formatter->setTimezone('.');
     $this->formatter->setTimezone(null);
     expect($this->formatter->getTimezone())->toBe('.');

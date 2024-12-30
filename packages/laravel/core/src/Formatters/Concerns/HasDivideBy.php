@@ -7,17 +7,16 @@ namespace Honed\Core\Formatters\Concerns;
 trait HasDivideBy
 {
     /**
-     * @var int|(\Closure():int)|null
+     * @var int|null
      */
     protected $divideBy = null;
 
     /**
      * Set the divide by value, chainable.
      *
-     * @param  int|(\Closure():int)  $divideBy
      * @return $this
      */
-    public function divideBy(int|\Closure $divideBy): static
+    public function divideBy(int $divideBy): static
     {
         $this->setDivideBy($divideBy);
 
@@ -26,10 +25,8 @@ trait HasDivideBy
 
     /**
      * Set the divide by value quietly.
-     *
-     * @param  int|(\Closure():int)|null  $divideBy
      */
-    public function setDivideBy(int|\Closure|null $divideBy): void
+    public function setDivideBy(int|null $divideBy): void
     {
         if (\is_null($divideBy)) {
             return;
@@ -41,17 +38,9 @@ trait HasDivideBy
     /**
      * Get the divide by value.
      */
-    public function getDivideBy(): ?int
+    public function getDivideBy(): int|null
     {
         return value($this->divideBy);
-    }
-
-    /**
-     * Determine if the class does not have a divide by value.
-     */
-    public function missingDivideBy(): bool
-    {
-        return \is_null($this->divideBy);
     }
 
     /**
@@ -59,6 +48,6 @@ trait HasDivideBy
      */
     public function hasDivideBy(): bool
     {
-        return ! $this->missingDivideBy();
+        return ! \is_null($this->divideBy);
     }
 }

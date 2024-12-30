@@ -8,7 +8,6 @@ beforeEach(function () {
 
 it('has no currency by default', function () {
     expect($this->formatter->hascurrency())->toBeFalse();
-    expect($this->formatter->missingcurrency())->toBeTrue();
 });
 
 it('can set a currency', function () {

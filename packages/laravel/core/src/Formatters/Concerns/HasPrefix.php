@@ -49,18 +49,10 @@ trait HasPrefix
     }
 
     /**
-     * Determine if the class does not have a prefix.
-     */
-    public function missingPrefix(): bool
-    {
-        return \is_null($this->prefix);
-    }
-
-    /**
      * Determine if the class has a prefix.
      */
     public function hasPrefix(): bool
     {
-        return ! $this->missingPrefix();
+        return ! \is_null($this->prefix);
     }
 }

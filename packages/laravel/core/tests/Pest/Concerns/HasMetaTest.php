@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 beforeEach(function () {
     $this->component = new Component;
@@ -21,8 +21,9 @@ it('can set closure meta', function () {
 });
 
 it('prevents null values', function () {
+    $this->component->setMeta(['key' => 'value']);
     $this->component->setMeta(null);
-    expect($this->component->missingMeta())->toBeTrue();
+    expect($this->component->getMeta())->toEqual(['key' => 'value']);
 });
 
 it('can chain meta', function () {
@@ -38,14 +39,6 @@ it('checks for meta', function () {
     expect($this->component->hasMeta())->toBeFalse();
     $this->component->setMeta(['key' => 'value']);
     expect($this->component->hasMeta())->toBeTrue();
-});
-
-it('checks for no meta', function () {
-    expect($this->component->missingMeta())->toBeTrue();
-    $this->component->setMeta([]);
-    expect($this->component->missingMeta())->toBeTrue();
-    $this->component->setMeta(['key' => 'value']);
-    expect($this->component->missingMeta())->toBeFalse();
 });
 
 it('resolves meta', function () {

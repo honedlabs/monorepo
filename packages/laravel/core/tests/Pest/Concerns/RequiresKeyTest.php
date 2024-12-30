@@ -1,7 +1,7 @@
 <?php
 
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
-use Workbench\App\ConfigurableComponent;
+use Honed\Core\Tests\Stubs\ConfigurableComponent;
 use Workbench\App\KeyComponent;
 
 it('returns key if defined', function () {

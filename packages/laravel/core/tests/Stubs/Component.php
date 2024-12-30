@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App;
+namespace Honed\Core\Tests\Stubs;
 
 use Honed\Core\Concerns\Authorizable;
 use Honed\Core\Concerns\Encodable;

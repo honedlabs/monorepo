@@ -1,6 +1,6 @@
 <?php
 
-namespace Workbench\App;
+namespace Honed\Core\Tests\Stubs;
 
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\IsAnonymous;

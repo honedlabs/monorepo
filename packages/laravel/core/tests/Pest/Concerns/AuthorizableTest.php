@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 it('can chain authorization', function () {
     $component = new Component;

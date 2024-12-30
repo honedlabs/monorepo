@@ -49,18 +49,10 @@ trait HasCurrency
     }
 
     /**
-     * Determine if the class does not have a currency.
-     */
-    public function missingCurrency(): bool
-    {
-        return \is_null($this->currency);
-    }
-
-    /**
      * Determine if the class has a currency.
      */
     public function hasCurrency(): bool
     {
-        return ! $this->missingCurrency();
+        return ! \is_null($this->currency);
     }
 }

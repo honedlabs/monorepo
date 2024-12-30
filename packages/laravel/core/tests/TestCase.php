@@ -4,75 +4,41 @@ declare(strict_types=1);
 
 namespace Honed\Core\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Workbench\App\Providers\WorkbenchServiceProvider;
 use Workbench\Database\Seeders\DatabaseSeeder;
 
 use function Orchestra\Testbench\workbench_path;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Workbench\App\Providers\WorkbenchServiceProvider;
 
 class TestCase extends Orchestra
 {
     protected function setUp(): void
     {
         parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Workbench\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
-
-        $migrator = app('migrator');
-        $migrator->run(workbench_path('database/migrations'));
-        $this->assertTrue(Schema::hasTable('categories'), 'Categories table does not exist');
-        $this->seed(DatabaseSeeder::class);
-    }
-
-    protected function getPackageProviders($app)
-    {
-        return [
-            WorkbenchServiceProvider::class,
-        ];
     }
 
     protected function defineDatabaseMigrations()
     {
-        $this->loadMigrationsFrom(workbench_path('database/migrations'));
-    }
-
-    public function getEnvironmentSetUp($app)
-    {
-        $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
-
-        $app['config']->set('database.default', 'testing');
-        $app['config']->set('database.connections.testing', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
-        ]);
-
-        $app['config']->set('workbench', [
-            'start' => '/',
-            'install' => true,
-            'guard' => 'web',
-            'discovers' => [
-                'web' => true,
-                'api' => false,
-                'commands' => false,
-                'components' => false,
-                'views' => false,
-            ],
-            'build' => [
-                'create-sqlite-db',
-                'migrate:fresh --seed',
-            ],
-            'assets' => [],
-            'sync' => [],
-        ]);
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('public_id')->unique();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('status')->default(Status::Available->value);
+            $table->unsignedInteger('price')->default(0);
+            $table->boolean('best_seller')->default(false);
+            $table->timestamps();
+        });
     }
 
     protected function defineRoutes($router)
     {
-        return require workbench_path('routes/web.php');
+        $router->get('/', fn () => view('app'))->name('home');
+        $router->get('/lang/{lang}', fn ($lang) => session()->put('lang', $lang))->name('lang');
+        $router->get('/{product}', fn () => view('app'))->name('category');
     }
 }

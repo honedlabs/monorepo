@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 beforeEach(function () {
     $this->component = new Component;

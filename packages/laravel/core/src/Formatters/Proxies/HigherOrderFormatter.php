@@ -33,7 +33,7 @@ class HigherOrderFormatter implements HigherOrder
         $primitive = $this->primitive;
 
         /** @phpstan-ignore-next-line */
-        if (! \property_exists($primitive, 'formatter') || $primitive->missingFormatter()) {
+        if (! \property_exists($primitive, 'formatter') || ! $primitive->hasFormatter()) {
             return $primitive;
         }
 

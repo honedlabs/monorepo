@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 beforeEach(function () {
     $this->component = new Component;
@@ -17,8 +17,9 @@ it('can set a closure type', function () {
 });
 
 it('prevents null values', function () {
+    $this->component->setType('Type');
     $this->component->setType(null);
-    expect($this->component->missingType())->toBeTrue();
+    expect($this->component->getType())->toBe('Type');
 });
 
 it('can chain type', function () {
@@ -30,12 +31,6 @@ it('checks for type', function () {
     expect($this->component->hasType())->toBeFalse();
     $this->component->setType('Type');
     expect($this->component->hasType())->toBeTrue();
-});
-
-it('checks for no type', function () {
-    expect($this->component->missingType())->toBeTrue();
-    $this->component->setType('Type');
-    expect($this->component->missingType())->toBeFalse();
 });
 
 it('resolves a type', function () {

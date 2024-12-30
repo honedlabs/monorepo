@@ -1,7 +1,7 @@
 <?php
 
 use Honed\Core\Options\Option;
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 use Workbench\App\Enums\Lang;
 use Workbench\App\Models\Category;
 
@@ -61,13 +61,6 @@ it('checks if it has options', function () {
     expect($component->hasOptions())->toBeFalse();
     $component->addOption(Option::make('value'));
     expect($component->hasOptions())->toBeTrue();
-});
-
-it('checks if it missing options', function () {
-    $component = new Component;
-    expect($component->missingOptions())->toBeTrue();
-    $component->addOption(Option::make('value'));
-    expect($component->missingOptions())->toBeFalse();
 });
 
 it('can set option as single value', function () {

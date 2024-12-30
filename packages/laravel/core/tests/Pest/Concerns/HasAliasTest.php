@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 beforeEach(function () {
     $this->component = new Component;
@@ -18,7 +18,7 @@ it('can set a closure alias', function () {
 
 it('prevents null values', function () {
     $this->component->setAlias(null);
-    expect($this->component->missingAlias())->toBeTrue();
+    expect($this->component->hasAlias())->toBeFalse();
 });
 
 it('can chain alias', function () {
@@ -30,10 +30,4 @@ it('checks for alias', function () {
     expect($this->component->hasAlias())->toBeFalse();
     $this->component->setAlias('Alias');
     expect($this->component->hasAlias())->toBeTrue();
-});
-
-it('checks for no alias', function () {
-    expect($this->component->missingAlias())->toBeTrue();
-    $this->component->setAlias('Alias');
-    expect($this->component->missingAlias())->toBeFalse();
 });

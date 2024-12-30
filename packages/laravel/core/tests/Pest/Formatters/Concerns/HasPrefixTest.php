@@ -8,7 +8,6 @@ beforeEach(function () {
 
 it('has no prefix by default', function () {
     expect($this->formatter->hasPrefix())->toBeFalse();
-    expect($this->formatter->missingPrefix())->toBeTrue();
 });
 
 it('can set a prefix', function () {

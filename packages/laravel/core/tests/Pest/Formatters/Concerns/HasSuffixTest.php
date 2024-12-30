@@ -8,7 +8,6 @@ beforeEach(function () {
 
 it('has no suffix by default', function () {
     expect($this->formatter->hasSuffix())->toBeFalse();
-    expect($this->formatter->missingSuffix())->toBeTrue();
 });
 
 it('can set a suffix', function () {

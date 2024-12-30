@@ -14,7 +14,6 @@ beforeEach(function () {
 
 it('has app locale by default', function () {
     expect($this->component->hasLocale())->toBeFalse();
-    expect($this->component->missingLocale())->toBeTrue();
     expect($this->component->getLocale())->toBe(App::getLocale());
 });
 

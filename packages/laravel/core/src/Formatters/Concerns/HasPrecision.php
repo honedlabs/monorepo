@@ -7,17 +7,16 @@ namespace Honed\Core\Formatters\Concerns;
 trait HasPrecision
 {
     /**
-     * @var int|(\Closure():int)|null
+     * @var int|null
      */
     protected $precision = null;
 
     /**
      * Set the divide by value, chainable.
      *
-     * @param  int|(\Closure():int)  $precision
      * @return $this
      */
-    public function precision(int|\Closure $precision): static
+    public function precision(int $precision): static
     {
         $this->setPrecision($precision);
 
@@ -26,10 +25,8 @@ trait HasPrecision
 
     /**
      * Set the divide by value quietly.
-     *
-     * @param  int|(\Closure():int)|null  $precision
      */
-    public function setPrecision(int|\Closure|null $precision): void
+    public function setPrecision(int|null $precision): void
     {
         if (\is_null($precision)) {
             return;
@@ -41,17 +38,9 @@ trait HasPrecision
     /**
      * Get the divide by value.
      */
-    public function getPrecision(): ?int
+    public function getPrecision(): int|null
     {
-        return value($this->precision);
-    }
-
-    /**
-     * Determine if the class does not have a divide by value.
-     */
-    public function missingPrecision(): bool
-    {
-        return \is_null($this->precision);
+        return $this->precision;
     }
 
     /**
@@ -59,6 +48,6 @@ trait HasPrecision
      */
     public function hasPrecision(): bool
     {
-        return ! $this->missingPrecision();
+        return ! \is_null($this->precision);
     }
 }

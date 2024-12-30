@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Str;
 use Honed\Core\Tests\TestCase;
+use Honed\Core\Tests\Stubs\Status;
 use Honed\Core\Tests\Stubs\Product;
 
 uses(TestCase::class)->in(__DIR__);

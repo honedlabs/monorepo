@@ -133,19 +133,11 @@ trait HasOptions
     }
 
     /**
-     * Determine if the class is missing options.
-     */
-    public function missingOptions(): bool
-    {
-        return empty($this->options);
-    }
-
-    /**
      * Determine if the class has options.
      */
     public function hasOptions(): bool
     {
-        return ! $this->missingOptions();
+        return ! \is_null($this->options);
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
-use Workbench\App\Component;
-use Workbench\App\ConfigurableComponent;
+use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Tests\Stubs\ConfigurableComponent;
 
 beforeEach(function () {
     $this->ext = ConfigurableComponent::make();

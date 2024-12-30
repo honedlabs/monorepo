@@ -8,7 +8,6 @@ beforeEach(function () {
 
 it('has no precision value by default', function () {
     expect($this->formatter->hasPrecision())->toBeFalse();
-    expect($this->formatter->missingPrecision())->toBeTrue();
 });
 
 it('can set a precision value', function () {

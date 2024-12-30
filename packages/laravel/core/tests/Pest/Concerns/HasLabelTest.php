@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 beforeEach(function () {
     $this->component = new Component;
@@ -17,8 +17,9 @@ it('can set a closure label', function () {
 });
 
 it('prevents null values', function () {
+    $this->component->setLabel('Label');
     $this->component->setLabel(null);
-    expect($this->component->missingLabel())->toBeTrue();
+    expect($this->component->getLabel())->toBe('Label');
 });
 
 it('can chain label', function () {
@@ -30,12 +31,6 @@ it('checks for label', function () {
     expect($this->component->hasLabel())->toBeFalse();
     $this->component->setLabel('Label');
     expect($this->component->hasLabel())->toBeTrue();
-});
-
-it('checks for no label', function () {
-    expect($this->component->missingLabel())->toBeTrue();
-    $this->component->setLabel('Label');
-    expect($this->component->missingLabel())->toBeFalse();
 });
 
 it('converts text to a label', function () {

@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 beforeEach(function () {
     $this->component = new Component;
@@ -17,8 +17,9 @@ it('can set a closure placeholder', function () {
 });
 
 it('prevents null values', function () {
+    $this->component->setPlaceholder('Placeholder');
     $this->component->setPlaceholder(null);
-    expect($this->component->missingPlaceholder())->toBeTrue();
+    expect($this->component->getPlaceholder())->toBe('Placeholder');
 });
 
 it('can chain placeholder', function () {
@@ -30,12 +31,6 @@ it('checks for placeholder', function () {
     expect($this->component->hasPlaceholder())->toBeFalse();
     $this->component->setPlaceholder('Placeholder');
     expect($this->component->hasPlaceholder())->toBeTrue();
-});
-
-it('checks for no placeholder', function () {
-    expect($this->component->missingPlaceholder())->toBeTrue();
-    $this->component->setPlaceholder('Placeholder');
-    expect($this->component->missingPlaceholder())->toBeFalse();
 });
 
 it('resolves a placeholder', function () {

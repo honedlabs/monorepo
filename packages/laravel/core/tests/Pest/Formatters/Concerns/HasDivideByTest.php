@@ -8,7 +8,6 @@ beforeEach(function () {
 
 it('has no divide by value by default', function () {
     expect($this->formatter->hasDivideBy())->toBeFalse();
-    expect($this->formatter->missingDivideBy())->toBeTrue();
 });
 
 it('can set a divide by value', function () {

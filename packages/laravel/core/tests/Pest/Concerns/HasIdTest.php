@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 it('can set an id', function () {
     $component = new Component;
@@ -8,16 +8,10 @@ it('can set an id', function () {
     expect($component->getId())->toBe($i);
 });
 
-it('can set a closure id', function () {
-    $component = new Component;
-    $component->setId(fn () => 'id');
-    expect($component->getId())->toBe('id');
-});
-
 it('prevents null values', function () {
     $component = new Component;
     $component->setId(null);
-    expect($component->missingId())->toBeTrue();
+    expect($component->hasId())->toBeFalse();
 });
 
 it('can chain id', function () {
@@ -31,13 +25,6 @@ it('checks for id', function () {
     expect($component->hasId())->toBeFalse();
     $component->setId('Id');
     expect($component->hasId())->toBeTrue();
-});
-
-it('checks for no id', function () {
-    $component = new Component;
-    expect($component->missingId())->toBeTrue();
-    $component->setId('Id');
-    expect($component->missingId())->toBeFalse();
 });
 
 it('can generate an id', function () {

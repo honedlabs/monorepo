@@ -52,18 +52,10 @@ trait HasSuffix
     }
 
     /**
-     * Determine if the class does not have a suffix.
-     */
-    public function missingSuffix(): bool
-    {
-        return \is_null($this->suffix);
-    }
-
-    /**
      * Determine if the class has a suffix.
      */
     public function hasSuffix(): bool
     {
-        return ! $this->missingSuffix();
+        return ! \is_null($this->suffix);
     }
 }

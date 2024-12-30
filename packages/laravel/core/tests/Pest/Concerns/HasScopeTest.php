@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 beforeEach(function () {
     $this->component = new Component;
@@ -17,8 +17,9 @@ it('can set a closure scope', function () {
 });
 
 it('prevents null values', function () {
+    $this->component->setScope('Scope');
     $this->component->setScope(null);
-    expect($this->component->missingScope())->toBeTrue();
+    expect($this->component->getScope())->toBe('Scope');
 });
 
 it('can chain scope', function () {
@@ -30,12 +31,6 @@ it('checks for scope', function () {
     expect($this->component->hasScope())->toBeFalse();
     $this->component->setScope('Scope');
     expect($this->component->hasScope())->toBeTrue();
-});
-
-it('checks for no scope', function () {
-    expect($this->component->missingScope())->toBeTrue();
-    $this->component->setScope('Scope');
-    expect($this->component->missingScope())->toBeFalse();
 });
 
 it('resolves an scope', function () {

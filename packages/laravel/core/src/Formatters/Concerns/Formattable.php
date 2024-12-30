@@ -51,19 +51,11 @@ trait Formattable
     }
 
     /**
-     * Determine if the class does not have a formatter.
-     */
-    public function missingFormatter(): bool
-    {
-        return \is_null($this->formatter);
-    }
-
-    /**
      * Determine if the class has a formatter.
      */
     public function hasFormatter(): bool
     {
-        return ! $this->missingFormatter();
+        return ! \is_null($this->formatter);
     }
 
     /**
@@ -139,7 +131,7 @@ trait Formattable
      */
     public function format(mixed $value)
     {
-        if ($this->missingFormatter()) {
+        if (! $this->hasFormatter()) {
             return $value;
         }
 

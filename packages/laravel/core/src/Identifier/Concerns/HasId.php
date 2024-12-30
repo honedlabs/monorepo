@@ -9,17 +9,16 @@ use Honed\Core\Identifier\Identifier;
 trait HasId
 {
     /**
-     * @var int|string|(\Closure():int|string)|null
+     * @var int|string|null
      */
     protected $id = null;
 
     /**
      * Set the ID, chainable.
      *
-     * @param  int|string|(\Closure():int|string)  $id
      * @return $this
      */
-    public function id(mixed $id): static
+    public function id(int|string $id): static
     {
         $this->setId($id);
 
@@ -28,12 +27,10 @@ trait HasId
 
     /**
      * Set the ID quietly.
-     *
-     * @param  int|string|(\Closure():int|string)|null  $id
      */
-    public function setId(mixed $id): void
+    public function setId(int|string|null $id): void
     {
-        if (is_null($id)) {
+        if (\is_null($id)) {
             return;
         }
         $this->id = $id;
@@ -41,30 +38,19 @@ trait HasId
 
     /**
      * Get the ID.
-     *
-     * @return int|string|null
      */
-    public function getId(): mixed
+    public function getId(): int|string|null
     {
-        $this->setId($this->evaluate($this->id));
-
         return $this->id ??= $this->generateId();
     }
 
-    /**
-     * Determine if the class does not have an ID.
-     */
-    public function missingId(): bool
-    {
-        return \is_null($this->id);
-    }
 
     /**
      * Determine if the class has an ID.
      */
     public function hasId(): bool
     {
-        return ! $this->missingId();
+        return ! \is_null($this->id);
     }
 
     /**
@@ -72,6 +58,6 @@ trait HasId
      */
     public function generateId(): string
     {
-        return $this->id = Identifier::generate();
+        return Identifier::generate();
     }
 }

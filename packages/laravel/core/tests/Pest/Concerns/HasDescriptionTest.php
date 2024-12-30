@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 beforeEach(function () {
     $this->component = new Component;
@@ -13,7 +13,7 @@ it('can set a string description', function () {
 
 it('prevents null values', function () {
     $this->component->setDescription(null);
-    expect($this->component->missingDescription())->toBeTrue();
+    expect($this->component->hasDescription())->toBeFalse();
 });
 
 it('can set a closure description', function () {
@@ -30,12 +30,6 @@ it('checks for description', function () {
     expect($this->component->hasDescription())->toBeFalse();
     $this->component->setDescription('Description');
     expect($this->component->hasDescription())->toBeTrue();
-});
-
-it('checks for no description', function () {
-    expect($this->component->missingDescription())->toBeTrue();
-    $this->component->setDescription('Description');
-    expect($this->component->missingDescription())->toBeFalse();
 });
 
 it('resolves a description', function () {

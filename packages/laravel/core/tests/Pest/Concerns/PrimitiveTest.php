@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\ConfigurableComponent;
+use Honed\Core\Tests\Stubs\ConfigurableComponent;
 
 it('configures primitive', function () {
     $component = new ConfigurableComponent;

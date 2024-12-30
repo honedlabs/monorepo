@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 beforeEach(function () {
     $this->component = new Component;
@@ -17,8 +17,9 @@ it('can set a closure name', function () {
 });
 
 it('prevents null values', function () {
+    $this->component->setName('Name');
     $this->component->setName(null);
-    expect($this->component->missingName())->toBeTrue();
+    expect($this->component->getName())->toBe('Name');
 });
 
 it('can chain name', function () {
@@ -30,12 +31,6 @@ it('checks for name', function () {
     expect($this->component->hasName())->toBeFalse();
     $this->component->setName('Name');
     expect($this->component->hasName())->toBeTrue();
-});
-
-it('checks for no name', function () {
-    expect($this->component->missingName())->toBeTrue();
-    $this->component->setName('Name');
-    expect($this->component->missingName())->toBeFalse();
 });
 
 it('converts text to a name', function () {

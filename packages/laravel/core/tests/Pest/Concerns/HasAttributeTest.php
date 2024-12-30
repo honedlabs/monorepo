@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Component;
+use Honed\Core\Tests\Stubs\Component;
 
 beforeEach(function () {
     $this->component = new Component;
@@ -18,7 +18,7 @@ it('can set a closure attribute', function () {
 
 it('prevents null values', function () {
     $this->component->setAttribute(null);
-    expect($this->component->missingAttribute())->toBeTrue();
+    expect($this->component->hasAttribute())->toBeFalse();
 });
 
 it('can chain attribute', function () {
@@ -30,12 +30,6 @@ it('checks for attribute', function () {
     expect($this->component->hasAttribute())->toBeFalse();
     $this->component->setAttribute('Attribute');
     expect($this->component->hasAttribute())->toBeTrue();
-});
-
-it('checks for no attribute', function () {
-    expect($this->component->missingAttribute())->toBeTrue();
-    $this->component->setAttribute('Attribute');
-    expect($this->component->missingAttribute())->toBeFalse();
 });
 
 it('resolves an attribute', function () {
