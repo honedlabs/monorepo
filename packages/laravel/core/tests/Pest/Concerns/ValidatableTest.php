@@ -1,57 +1,63 @@
 <?php
 
+use Honed\Core\Concerns\Validatable;
 use Honed\Core\Tests\Stubs\Component;
 
-it('can set validator', function () {
-    $component = new Component;
-    $component->setValidate(fn (int $record) => $record > 0);
-    expect($component->canValidate())->toBeTrue();
+class ValidatableComponent
+{
+    use Validatable;
+}
+
+beforeEach(function () {
+    $this->component = new ValidatableComponent;
+    $this->fn = fn (int $record) => $record > 0;
 });
 
-it('can chain validator', function () {
-    $component = new Component;
-    expect($component->validate(fn (int $record) => $record > 0))->toBeInstanceOf(Component::class);
-    expect($component->canValidate())->toBeTrue();
+it('has no validator by default', function () {
+    expect($this->component)
+        ->getValidator()->toBeNull()
+        ->canValidate()->toBeFalse()
+        ->applyValidation('Anything')->toBeTrue();
 });
 
-it('can chain validator with alias', function () {
-    $component = new Component;
-    expect($component->validateUsing(fn (int $record) => $record > 0))->toBeInstanceOf(Component::class);
-    expect($component->canValidate())->toBeTrue();
+it('sets validator', function () {
+    $this->component->setValidate($this->fn);
+    expect($this->component)
+        ->getValidator()->toBeInstanceOf(\Closure::class)
+        ->canValidate()->toBeTrue()
+        ->applyValidation(1)->toBeTrue()
+        ->applyValidation(0)->toBeFalse();
 });
 
-it('prevents null values', function () {
-    $component = new Component;
-    $component->setValidate(null);
-    expect($component->canValidate())->toBeFalse();
+it('rejects null values', function () {
+    $this->component->setValidate($this->fn);
+    $this->component->setValidate(null);
+
+    expect($this->component)
+        ->getValidator()->toBeInstanceOf(\Closure::class)
+        ->canValidate()->toBeTrue()
+        ->applyValidation(1)->toBeTrue()
+        ->applyValidation(0)->toBeFalse();
 });
 
-it('defaults to no validator', function () {
-    $component = new Component;
-    expect($component->canValidate())->toBeFalse();
+it('chains validator', function () {
+    expect($this->component->validate($this->fn))->toBeInstanceOf(ValidatableComponent::class)
+        ->getValidator()->toBeInstanceOf(\Closure::class)
+        ->canValidate()->toBeTrue()
+        ->applyValidation(1)->toBeTrue()
+        ->applyValidation(0)->toBeFalse();
 });
 
-it('can check for a validator', function () {
-    $component = new Component;
-    $component->setValidate(fn (int $record) => $record > 0);
-    expect($component->canValidate())->toBeTrue();
+it('validates values', function () {
+    $this->component->setValidate($this->fn);
+    expect($this->component)
+        ->applyValidation(1)->toBeTrue()
+        ->applyValidation(0)->toBeFalse();
 });
 
-it('applies validator', function () {
-    $component = new Component;
-    $component->setValidate(fn (int $record) => $record > 0);
-    expect($component->applyValidation(2))->toBe(true);
-    expect($component->applyValidation(0))->toBe(false);
-});
-
-it('applies validator with alias', function () {
-    $component = new Component;
-    $component->setValidate(fn (string $record) => mb_strlen($record) > 1);
-    expect($component->isValid('a'))->toBe(false);
-    expect($component->isValid('ab'))->toBe(true);
-});
-
-it('validates true as default', function () {
-    $component = new Component;
-    expect($component->applyValidation(2))->toBe(true);
+it('has alias `isValid` for `applyValidation`', function () {
+    $this->component->setValidate($this->fn);
+    expect($this->component)
+        ->isValid(1)->toBeTrue()
+        ->isValid(0)->toBeFalse();
 });

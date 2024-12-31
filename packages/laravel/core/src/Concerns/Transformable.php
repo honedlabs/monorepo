@@ -20,7 +20,7 @@ trait Transformable
      * @param  \Closure(TArgs):TValue  $transform
      * @return $this
      */
-    public function transform(\Closure $transform): static
+    public function transformer(\Closure $transform): static
     {
         $this->setTransform($transform);
 
@@ -38,7 +38,7 @@ trait Transformable
      */
     public function transformUsing(\Closure $transform): static
     {
-        return $this->transform($transform);
+        return $this->transformer($transform);
     }
 
     /**
@@ -65,17 +65,9 @@ trait Transformable
      *
      * @return (\Closure(TArgs):TValue)|null
      */
-    public function getTransform(): ?\Closure
+    public function getTransformer(): ?\Closure
     {
         return $this->transform;
-    }
-
-    /**
-     * Determine if the class cannot transform a value.
-     */
-    public function cannotTransform(): bool
-    {
-        return \is_null($this->transform);
     }
 
     /**
@@ -83,7 +75,7 @@ trait Transformable
      */
     public function canTransform(): bool
     {
-        return ! $this->cannotTransform();
+        return ! \is_null($this->transform);
     }
 
     /**
@@ -95,12 +87,8 @@ trait Transformable
      * @param  TArgs  $value
      * @return TValue
      */
-    public function applyTransform(mixed $value)
+    public function transform(mixed $value)
     {
-        if ($this->cannotTransform()) {
-            return $value;
-        }
-
-        return ($this->getTransform())($value);
+        return $this->canTransform() ? \call_user_func($this->getTransformer(), $value) : $value;
     }
 }

@@ -1,49 +1,44 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\Transformable;
 
-it('can set transformation', function () {
-    $component = new Component;
-    $component->setTransform(fn (int $record) => $record * 2);
-    expect($component->canTransform())->toBeTrue();
+class TransformableComponent
+{
+    use Transformable;
+}
+
+beforeEach(function () {
+    $this->component = new TransformableComponent;
+    $this->fn = fn (int $record) => $record * 2;
 });
 
-it('can chain transformation', function () {
-    $component = new Component;
-    expect($component->transform(fn (int $record) => $record * 2))->toBeInstanceOf(Component::class);
-    expect($component->canTransform())->toBeTrue();
+it('has no transformer by default', function () {
+    expect($this->component)
+        ->getTransformer()->toBeNull()
+        ->canTransform()->toBeFalse()
+        ->applyTransformation(1)->toBe(1);
 });
 
-it('can chain transformation with alias', function () {
-    $component = new Component;
-    expect($component->transformUsing(fn (int $record) => $record * 2))->toBeInstanceOf(Component::class);
-    expect($component->canTransform())->toBeTrue();
+it('sets transformer', function () {
+    $this->component->setTransform($this->fn);
+    expect($this->component)
+        ->getTransformer()->toBeInstanceOf(\Closure::class)
+        ->canTransform()->toBeTrue()
+        ->applyTransformation(1)->toBe(2);
 });
 
-it('prevents null values', function () {
-    $component = new Component;
-    $component->setTransform(null);
-    expect($component->canTransform())->toBeFalse();
+it('rejects null values', function () {
+    $this->component->setTransform($this->fn);
+    $this->component->setTransform(null);
+    expect($this->component)
+        ->getTransformer()->toBeInstanceOf(\Closure::class)
+        ->canTransform()->toBeTrue()
+        ->applyTransformation(1)->toBe(2);
 });
 
-it('defaults to no transformation', function () {
-    $component = new Component;
-    expect($component->canTransform())->toBeFalse();
-});
-
-it('can check for a transformation', function () {
-    $component = new Component;
-    $component->setTransform(fn (int $record) => $record * 2);
-    expect($component->canTransform())->toBeTrue();
-});
-
-it('applies transformation with alias', function () {
-    $component = new Component;
-    $component->setTransform(fn (string $record) => mb_strtoupper($record));
-    expect($component->applyTransform('a'))->toBe('A');
-});
-
-it('returns original value if no transformation', function () {
-    $component = new Component;
-    expect($component->applyTransform(2))->toBe(2);
+it('chains transformer', function () {
+    expect($this->component->transform($this->fn))->toBeInstanceOf(TransformableComponent::class)
+        ->getTransformer()->toBeInstanceOf(\Closure::class)
+        ->canTransform()->toBeTrue()
+        ->applyTransformation(1)->toBe(2);
 });

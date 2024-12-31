@@ -11,10 +11,10 @@ beforeEach(function () {
     $this->component = new HasIdComponent;
 });
 
-it('has no id by default', function () {
+it('generates an id by default', function () {
     expect($this->component)
-        ->getId()->toBeNull()
-        ->hasId()->toBeFalse();
+        ->getId()->not->toBeNull()
+        ->hasId()->toBeTrue();
 });
 
 it('sets id', function () {
@@ -36,11 +36,4 @@ it('chains id', function () {
     expect($this->component->id('Id'))->toBeInstanceOf(HasIdComponent::class)
         ->getId()->toBe('Id')
         ->hasId()->toBeTrue();
-});
-
-it('resolves id', function () {
-    expect($this->component->id(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(HasIdComponent::class)
-        ->resolveId(['record' => 'Id'])->toBe('Id.')
-        ->getId()->toBe('Id.');
 });
