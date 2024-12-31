@@ -5,18 +5,12 @@ declare(strict_types=1);
 namespace Honed\Core\Options\Concerns;
 
 use Honed\Core\Options\Option;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-/**
- * Specify whether this class contains options
- *
- * @property array<Option> $options
- */
 trait HasOptions
 {
     /**
-     * @var array<int, Option>
+     * @var array<int,\Honed\Core\Options\Option>
      */
     protected $options = [];
 
@@ -26,7 +20,7 @@ trait HasOptions
      * @param  array<int,mixed>|\Illuminate\Support\Collection|class-string<\BackedEnum>|class-string<\Illuminate\Database\Eloquent\Model>  $options
      * @return $this
      */
-    public function options(array|Collection|string $options): static
+    public function options(array|string|Collection $options): static
     {
         match (true) {
             $options instanceof Collection => $this->fromCollection($options),
@@ -98,7 +92,7 @@ trait HasOptions
      */
     public function setOptions(?array $options): void
     {
-        if (is_null($options)) {
+        if (\is_null($options)) {
             return;
         }
 
@@ -125,7 +119,7 @@ trait HasOptions
     /**
      * Get the options
      *
-     * @return array<Option>
+     * @return array<int,\Honed\Core\Options\Option>
      */
     public function getOptions(): array
     {
@@ -137,47 +131,29 @@ trait HasOptions
      */
     public function hasOptions(): bool
     {
-        return ! \is_null($this->options);
+        return \count($this->options) > 0;
     }
 
     /**
      * Get an option field from an item.
-     *
-     * @param  array|object  $item
      */
-    protected function getOptionField(mixed $item, ?string $key): mixed
+    protected function getOptionField(mixed $item, string $key = null): mixed
     {
-        if ($key === null) {
-            return null;
-        }
 
-        if (is_array($item)) {
-            return $item[$key] ?? null;
-        }
-
-        if (is_object($item)) {
-            if (method_exists($item, $key)) {
-                return $item->{$key}();
-            }
-
-            if (property_exists($item, $key)) {
-                return $item->{$key};
-            }
-
-            if (method_exists($item, 'getAttribute')) {
-                return $item->getAttribute($key);
-            }
-        }
-
-        return null;
+        return match (true) {
+            \is_null($key) => $item,
+            \is_array($item) => $item[$key] ?? null,
+            !\is_object($item) => $item,
+            \method_exists($item, $key) => $item->{$key}(),
+            \property_exists($item, $key) => $item->{$key},
+            default => null,
+        };
     }
 
     /**
      * Parse a value and label as an Option class.
-     *
-     * @param  int|string|array|(\Closure():int|string|array)|null  $value
      */
-    protected function parseOption(mixed $value, ?string $label = null): Option
+    protected function parseOption(mixed $value, string $label = null): Option
     {
         return Option::make($value, $label);
     }

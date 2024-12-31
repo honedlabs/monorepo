@@ -1,36 +1,57 @@
 <?php
 
-use Honed\Core\Tests\Stubs\ConfigurableComponent;
+declare(strict_types=1);
 
-it('configures primitive', function () {
-    $component = new ConfigurableComponent;
-    $component->configure();
-    expect($component->getType())->toBe(ConfigurableComponent::SETUP);
+use Honed\Core\Concerns\HasType;
+use Honed\Core\Primitive;
+
+class PrimitiveComponent extends Primitive
+{
+    use HasType;
+
+    public function configure(): static
+    {
+        $this->type = 'primitive';
+
+        return $this;
+    }
+
+    public static function make(): static
+    {
+        return new static;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'type' => $this->getType(),
+        ];
+    }
+}
+
+beforeEach(function () {
+    $this->component = new PrimitiveComponent;
 });
 
-it('makes primitive and configures', function () {
-    expect($c = ConfigurableComponent::make())->toBeInstanceOf(ConfigurableComponent::class);
-    expect($c->getType())->toBe(ConfigurableComponent::SETUP);
+it('can be made', function () {
+    expect(PrimitiveComponent::make())->toBeInstanceOf(PrimitiveComponent::class)
+        ->getType()->toBe('primitive');
 });
 
-it('can be made to array', function () {
-    $component = new ConfigurableComponent;
-    expect($component->toArray())->toBe([
-        'key' => $component->getKey(),
-        'type' => $component->getType(),
+it('has array representation', function () {
+    expect($this->component->toArray())->toEqual([
+        'type' => 'primitive',
     ]);
 });
 
-it('serializes to json using array', function () {
-    $component = new ConfigurableComponent;
-    expect($component->jsonSerialize())->toBe($component->toArray());
+it('is serializable', function () {
+    expect($this->component->jsonSerialize())->toEqual($this->component->toArray());
 });
 
-it('can globally configure', function () {
-    ConfigurableComponent::configureUsing(function ($component) {
+it('is globally configurable', function () {
+    PrimitiveComponent::configureUsing(function ($component) {
         $component->key = 'configured';
     });
 
-    $component = new ConfigurableComponent;
-    expect($component->getKey())->toBe('configured');
+    expect($this->component->key)->toBe('configured');
 });
