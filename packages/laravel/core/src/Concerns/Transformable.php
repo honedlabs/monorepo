@@ -9,7 +9,7 @@ trait Transformable
     /**
      * @var (\Closure(mixed):mixed)|null
      */
-    protected $transform = null;
+    protected $transformer = null;
 
     /**
      * Set the transformation function for a given value, chainable.
@@ -17,28 +17,28 @@ trait Transformable
      * @template TArgs
      * @template TValue
      *
-     * @param  \Closure(TArgs):TValue  $transform
+     * @param  \Closure(TArgs):TValue  $transformer
      * @return $this
      */
-    public function transformer(\Closure $transform): static
+    public function transformer(\Closure $transformer): static
     {
-        $this->setTransform($transform);
+        $this->setTransformer($transformer);
 
         return $this;
     }
 
     /**
-     * Alias for transform
+     * Alias for `transformer`.
      *
      * @template TArgs
      * @template TValue
      *
-     * @param  \Closure(TArgs):TValue  $transform
+     * @param  \Closure(TArgs):TValue  $transformer
      * @return $this
      */
-    public function transformUsing(\Closure $transform): static
+    public function transformUsing(\Closure $transformer): static
     {
-        return $this->transformer($transform);
+        return $this->transformer($transformer);
     }
 
     /**
@@ -47,14 +47,15 @@ trait Transformable
      * @template TArgs
      * @template TValue
      *
-     * @param  \Closure(TArgs):TValue|null  $transform
+     * @param  \Closure(TArgs):TValue|null  $transformer
      */
-    public function setTransform(?\Closure $transform): void
+    public function setTransformer(\Closure|null $transformer): void
     {
-        if (is_null($transform)) {
+        if (\is_null($transformer)) {
             return;
         }
-        $this->transform = $transform;
+
+        $this->transformer = $transformer;
     }
 
     /**
@@ -67,7 +68,7 @@ trait Transformable
      */
     public function getTransformer(): ?\Closure
     {
-        return $this->transform;
+        return $this->transformer;
     }
 
     /**
@@ -75,7 +76,7 @@ trait Transformable
      */
     public function canTransform(): bool
     {
-        return ! \is_null($this->transform);
+        return ! \is_null($this->transformer);
     }
 
     /**

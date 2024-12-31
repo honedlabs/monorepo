@@ -36,9 +36,10 @@ trait HasName
      */
     public function setName(string|\Closure|null $name): void
     {
-        if (is_null($name)) {
+        if (\is_null($name)) {
             return;
         }
+        
         $this->name = $name;
     }
 

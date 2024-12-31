@@ -79,4 +79,30 @@ trait Authorizable
     {
         return $this->isAuthorized($named, $typed);
     }
+
+    /**
+     * Resolve the authorization using the given closure dependencies.
+     *
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
+     */
+    public function resolveAuthorization(array $named = [], array $typed = []): bool
+    {
+        $this->setAuthorize($this->isAuthorized($named, $typed));
+
+        return $this->authorized;
+    }
+
+    /**
+     * Alias for `resolveAuthorization`.
+     *
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
+     */
+    public function resolveAuthorisation(array $named = [], array $typed = []): bool
+    {
+        return $this->resolveAuthorization($named, $typed);
+    }
+
+    
 }

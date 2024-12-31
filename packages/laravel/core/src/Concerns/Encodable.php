@@ -39,11 +39,9 @@ trait Encodable
      */
     public static function encode(string $value): string
     {
-        if (\is_null(static::$encoder)) {
-            return encrypt($value);
-        }
-
-        return \call_user_func(static::$encoder, $value);
+        return \is_null(static::$encoder)
+            ? encrypt($value)
+            : \call_user_func(static::$encoder, $value);
     }
 
     /**
@@ -51,11 +49,9 @@ trait Encodable
      */
     public static function decode(string $value): string
     {
-        if (\is_null(static::$decoder)) {
-            return decrypt($value);
-        }
-
-        return \call_user_func(static::$decoder, $value);
+        return \is_null(static::$decoder)
+            ? decrypt($value)
+            : \call_user_func(static::$decoder, $value);
     }
 
     /**
