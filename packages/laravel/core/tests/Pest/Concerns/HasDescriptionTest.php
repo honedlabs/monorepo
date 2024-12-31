@@ -20,9 +20,9 @@ it('has no description by default', function () {
 });
 
 it('sets description', function () {
-    $this->component->setDescription($p = 'Description');
+    $this->component->setDescription('Description');
     expect($this->component)
-        ->getDescription()->toBe($p)
+        ->getDescription()->toBe('Description')
         ->hasDescription()->toBeTrue();
 });
 
@@ -35,8 +35,8 @@ it('rejects null values', function () {
 });
 
 it('chains description', function () {
-    expect($this->component->description($p = 'Description'))->toBeInstanceOf(HasDescriptionComponent::class)
-        ->getDescription()->toBe($p)
+    expect($this->component->description('Description'))->toBeInstanceOf(HasDescriptionComponent::class)
+        ->getDescription()->toBe('Description')
         ->hasDescription()->toBeTrue();
 });
 

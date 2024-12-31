@@ -1,40 +1,48 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasTitle;
+
+class HasTitleComponent
+{
+    use HasTitle;
+    use Evaluable;
+}
 
 beforeEach(function () {
-    $this->component = new Component;
+    $this->component = new HasTitleComponent;
 });
 
-it('can set a string title', function () {
-    $this->component->setTitle($t = 'Title');
-    expect($this->component->getTitle())->toBe($t);
+it('has no title by default', function () {
+    expect($this->component)
+        ->getTitle()->toBeNull()
+        ->hasTitle()->toBeFalse();
 });
 
-it('can set a closure title', function () {
-    $this->component->setTitle(fn () => 'Title');
-    expect($this->component->getTitle())->toBe('Title');
+it('sets title', function () {
+    $this->component->setTitle('Title');
+    expect($this->component)
+        ->getTitle()->toBe('Title')
+        ->hasTitle()->toBeTrue();
 });
 
-it('prevents null values', function () {
+it('rejects null values', function () {
     $this->component->setTitle('Title');
     $this->component->setTitle(null);
-    expect($this->component->getTitle())->toBe('Title');
+    expect($this->component)
+        ->getTitle()->toBe('Title')
+        ->hasTitle()->toBeTrue();
 });
 
-it('can chain title', function () {
-    expect($this->component->title($t = 'Title'))->toBeInstanceOf(Component::class);
-    expect($this->component->getTitle())->toBe($t);
+it('chains title', function () {
+    expect($this->component->title('Title'))->toBeInstanceOf(HasTitleComponent::class)
+        ->getTitle()->toBe('Title')
+        ->hasTitle()->toBeTrue();
 });
 
-it('checks for title', function () {
-    expect($this->component->hasTitle())->toBeFalse();
-    $this->component->setTitle('Title');
-    expect($this->component->hasTitle())->toBeTrue();
-});
-
-it('resolves a title', function () {
+it('resolves title', function () {
     expect($this->component->title(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(Component::class)
-        ->resolveTitle(['record' => 'Title'])->toBe('Title.');
+        ->toBeInstanceOf(HasTitleComponent::class)
+        ->resolveTitle(['record' => 'Title'])->toBe('Title.')
+        ->getTitle()->toBe('Title.');
 });

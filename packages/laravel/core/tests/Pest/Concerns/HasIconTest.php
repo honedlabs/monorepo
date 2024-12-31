@@ -18,9 +18,9 @@ it('has no icon by default', function () {
 });
 
 it('sets icon', function () {
-    $this->component->setIcon($p = 'Icon');
+    $this->component->setIcon('Icon');
     expect($this->component)
-        ->getIcon()->toBe($p)
+        ->getIcon()->toBe('Icon')
         ->hasIcon()->toBeTrue();
 });
 
@@ -33,7 +33,7 @@ it('rejects null values', function () {
 });
 
 it('chains icon', function () {
-    expect($this->component->icon($p = 'Icon'))->toBeInstanceOf(HasIconComponent::class)
-        ->getIcon()->toBe($p)
+    expect($this->component->icon('Icon'))->toBeInstanceOf(HasIconComponent::class)
+        ->getIcon()->toBe('Icon')
         ->hasIcon()->toBeTrue();
 });

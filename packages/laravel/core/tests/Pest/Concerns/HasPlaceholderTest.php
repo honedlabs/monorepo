@@ -1,40 +1,48 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasPlaceholder;
+
+class HasPlaceholderComponent
+{
+    use HasPlaceholder;
+    use Evaluable;
+}
 
 beforeEach(function () {
-    $this->component = new Component;
+    $this->component = new HasPlaceholderComponent;
 });
 
-it('can set a string placeholder', function () {
-    $this->component->setPlaceholder($p = 'Placeholder');
-    expect($this->component->getPlaceholder())->toBe($p);
+it('has no placeholder by default', function () {
+    expect($this->component)
+        ->getPlaceholder()->toBeNull()
+        ->hasPlaceholder()->toBeFalse();
 });
 
-it('can set a closure placeholder', function () {
-    $this->component->setPlaceholder(fn () => 'Placeholder');
-    expect($this->component->getPlaceholder())->toBe('Placeholder');
+it('sets placeholder', function () {
+    $this->component->setPlaceholder('Placeholder');
+    expect($this->component)
+        ->getPlaceholder()->toBe('Placeholder')
+        ->hasPlaceholder()->toBeTrue();
 });
 
-it('prevents null values', function () {
+it('rejects null values', function () {
     $this->component->setPlaceholder('Placeholder');
     $this->component->setPlaceholder(null);
-    expect($this->component->getPlaceholder())->toBe('Placeholder');
+    expect($this->component)
+        ->getPlaceholder()->toBe('Placeholder')
+        ->hasPlaceholder()->toBeTrue();
 });
 
-it('can chain placeholder', function () {
-    expect($this->component->placeholder($p = 'Placeholder'))->toBeInstanceOf(Component::class);
-    expect($this->component->getPlaceholder())->toBe($p);
+it('chains placeholder', function () {
+    expect($this->component->placeholder('Placeholder'))->toBeInstanceOf(HasPlaceholderComponent::class)
+        ->getPlaceholder()->toBe('Placeholder')
+        ->hasPlaceholder()->toBeTrue();
 });
 
-it('checks for placeholder', function () {
-    expect($this->component->hasPlaceholder())->toBeFalse();
-    $this->component->setPlaceholder('Placeholder');
-    expect($this->component->hasPlaceholder())->toBeTrue();
-});
-
-it('resolves a placeholder', function () {
+it('resolves placeholder', function () {
     expect($this->component->placeholder(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(Component::class)
-        ->resolvePlaceholder(['record' => 'Placeholder'])->toBe('Placeholder.');
+        ->toBeInstanceOf(HasPlaceholderComponent::class)
+        ->resolvePlaceholder(['record' => 'Placeholder'])->toBe('Placeholder.')
+        ->getPlaceholder()->toBe('Placeholder.');
 });

@@ -1,40 +1,41 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasType;
+
+class HasTypeComponent
+{
+    use HasType;
+    use Evaluable;
+}
 
 beforeEach(function () {
-    $this->component = new Component;
+    $this->component = new HasTypeComponent;
 });
 
-it('can set a string type', function () {
-    $this->component->setType($t = 'Type');
-    expect($this->component->getType())->toBe($t);
+it('has no type by default', function () {
+    expect($this->component)
+        ->getType()->toBeNull()
+        ->hasType()->toBeFalse();
 });
 
-it('can set a closure type', function () {
-    $this->component->setType(fn () => 'Type');
-    expect($this->component->getType())->toBe('Type');
+it('sets type', function () {
+    $this->component->setType('Type');
+    expect($this->component)
+        ->getType()->toBe('Type')
+        ->hasType()->toBeTrue();
 });
 
-it('prevents null values', function () {
+it('rejects null values', function () {
     $this->component->setType('Type');
     $this->component->setType(null);
-    expect($this->component->getType())->toBe('Type');
+    expect($this->component)
+        ->getType()->toBe('Type')
+        ->hasType()->toBeTrue();
 });
 
-it('can chain type', function () {
-    expect($this->component->type($t = 'Type'))->toBeInstanceOf(Component::class);
-    expect($this->component->getType())->toBe($t);
-});
-
-it('checks for type', function () {
-    expect($this->component->hasType())->toBeFalse();
-    $this->component->setType('Type');
-    expect($this->component->hasType())->toBeTrue();
-});
-
-it('resolves a type', function () {
-    expect($this->component->type(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(Component::class)
-        ->resolveType(['record' => 'Type'])->toBe('Type.');
+it('chains type', function () {
+    expect($this->component->type('Type'))->toBeInstanceOf(HasTypeComponent::class)
+        ->getType()->toBe('Type')
+        ->hasType()->toBeTrue();
 });

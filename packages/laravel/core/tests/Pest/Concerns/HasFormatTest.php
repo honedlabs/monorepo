@@ -20,9 +20,9 @@ it('has no format by default', function () {
 });
 
 it('sets format', function () {
-    $this->component->setFormat($p = 'Format');
+    $this->component->setFormat('Format');
     expect($this->component)
-        ->getFormat()->toBe($p)
+        ->getFormat()->toBe('Format')
         ->hasFormat()->toBeTrue();
 });
 
@@ -35,8 +35,8 @@ it('rejects null values', function () {
 });
 
 it('chains format', function () {
-    expect($this->component->format($p = 'Format'))->toBeInstanceOf(HasFormatComponent::class)
-        ->getFormat()->toBe($p)
+    expect($this->component->format('Format'))->toBeInstanceOf(HasFormatComponent::class)
+        ->getFormat()->toBe('Format')
         ->hasFormat()->toBeTrue();
 });
 

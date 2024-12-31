@@ -18,9 +18,9 @@ it('has no id by default', function () {
 });
 
 it('sets id', function () {
-    $this->component->setId($p = 'Id');
+    $this->component->setId('Id');
     expect($this->component)
-        ->getId()->toBe($p)
+        ->getId()->toBe('Id')
         ->hasId()->toBeTrue();
 });
 
@@ -33,8 +33,8 @@ it('rejects null values', function () {
 });
 
 it('chains id', function () {
-    expect($this->component->id($p = 'Id'))->toBeInstanceOf(HasIdComponent::class)
-        ->getId()->toBe($p)
+    expect($this->component->id('Id'))->toBeInstanceOf(HasIdComponent::class)
+        ->getId()->toBe('Id')
         ->hasId()->toBeTrue();
 });
 

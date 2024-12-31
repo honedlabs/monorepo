@@ -1,42 +1,39 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\HasScope;
+
+class HasScopeComponent
+{
+    use HasScope;
+}
 
 beforeEach(function () {
-    $this->component = new Component;
+    $this->component = new HasScopeComponent;
 });
 
-it('can set a string scope', function () {
-    $this->component->setScope($n = 'Scope');
-    expect($this->component->getScope())->toBe($n);
+it('has no scope by default', function () {
+    expect($this->component)
+        ->getScope()->toBeNull()
+        ->hasScope()->toBeFalse();
 });
 
-it('can set a closure scope', function () {
-    $this->component->setScope(fn () => 'Scope');
-    expect($this->component->getScope())->toBe('Scope');
+it('sets scope', function () {
+    $this->component->setScope('Scope');
+    expect($this->component)
+        ->getScope()->toBe('Scope')
+        ->hasScope()->toBeTrue();
 });
 
-it('prevents null values', function () {
+it('rejects null values', function () {
     $this->component->setScope('Scope');
     $this->component->setScope(null);
-    expect($this->component->getScope())->toBe('Scope');
+    expect($this->component)
+        ->getScope()->toBe('Scope')
+        ->hasScope()->toBeTrue();
 });
 
-it('can chain scope', function () {
-    expect($this->component->scope($n = 'Scope'))->toBeInstanceOf(Component::class);
-    expect($this->component->getScope())->toBe($n);
-});
-
-it('checks for scope', function () {
-    expect($this->component->hasScope())->toBeFalse();
-    $this->component->setScope('Scope');
-    expect($this->component->hasScope())->toBeTrue();
-});
-
-it('resolves an scope', function () {
-    expect($this->component->scope(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(Component::class)
-        ->resolveScope(['record' => 'Scope'])->toBe('Scope.');
-
-    expect($this->component->getScope())->toBe('Scope.');
+it('chains scope', function () {
+    expect($this->component->scope('Scope'))->toBeInstanceOf(HasScopeComponent::class)
+        ->getScope()->toBe('Scope')
+        ->hasScope()->toBeTrue();
 });

@@ -20,9 +20,9 @@ it('has no label by default', function () {
 });
 
 it('sets label', function () {
-    $this->component->setLabel($p = 'Label');
+    $this->component->setLabel('Label');
     expect($this->component)
-        ->getLabel()->toBe($p)
+        ->getLabel()->toBe('Label')
         ->hasLabel()->toBeTrue();
 });
 
@@ -35,8 +35,8 @@ it('rejects null values', function () {
 });
 
 it('chains label', function () {
-    expect($this->component->label($p = 'Label'))->toBeInstanceOf(HasLabelComponent::class)
-        ->getLabel()->toBe($p)
+    expect($this->component->label('Label'))->toBeInstanceOf(HasLabelComponent::class)
+        ->getLabel()->toBe('Label')
         ->hasLabel()->toBeTrue();
 });
 

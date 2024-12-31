@@ -20,9 +20,9 @@ it('has no attribute by default', function () {
 });
 
 it('sets attribute', function () {
-    $this->component->setAttribute($p = 'Attribute');
+    $this->component->setAttribute('Attribute');
     expect($this->component)
-        ->getAttribute()->toBe($p)
+        ->getAttribute()->toBe('Attribute')
         ->hasAttribute()->toBeTrue();
 });
 
@@ -35,8 +35,8 @@ it('rejects null values', function () {
 });
 
 it('chains attribute', function () {
-    expect($this->component->attribute($p = 'Attribute'))->toBeInstanceOf(HasAttributeComponent::class)
-        ->getAttribute()->toBe($p)
+    expect($this->component->attribute('Attribute'))->toBeInstanceOf(HasAttributeComponent::class)
+        ->getAttribute()->toBe('Attribute')
         ->hasAttribute()->toBeTrue();
 });
 

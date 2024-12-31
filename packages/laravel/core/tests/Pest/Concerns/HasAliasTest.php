@@ -19,9 +19,9 @@ it('has no alias by default', function () {
 });
 
 it('sets alias', function () {
-    $this->component->setAlias($p = 'Alias');
+    $this->component->setAlias('Alias');
     expect($this->component)
-        ->getAlias()->toBe($p)
+        ->getAlias()->toBe('Alias')
         ->hasAlias()->toBeTrue();
 });
 
@@ -34,7 +34,7 @@ it('rejects null values', function () {
 });
 
 it('chains alias', function () {
-    expect($this->component->alias($p = 'Alias'))->toBeInstanceOf(HasAliasComponent::class)
-        ->getAlias()->toBe($p)
+    expect($this->component->alias('Alias'))->toBeInstanceOf(HasAliasComponent::class)
+        ->getAlias()->toBe('Alias')
         ->hasAlias()->toBeTrue();
 });

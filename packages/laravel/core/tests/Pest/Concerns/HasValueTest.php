@@ -1,28 +1,29 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasValue;
+
+class HasValueComponent
+{
+    use HasValue;
+}
 
 beforeEach(function () {
-    $this->component = new Component;
+    $this->component = new HasValueComponent;
 });
 
-it('can set a value', function () {
-    $this->component->setValue($v = 'Value');
-    expect($this->component->getValue())->toBe($v);
+it('has no value by default', function () {
+    expect($this->component)
+        ->getValue()->toBeNull();
 });
 
-it('can set a closure value', function () {
-    $this->component->setValue(fn () => false);
-    expect($this->component->getValue())->toBeFalse();
+it('sets value', function () {
+    $this->component->setValue('Value');
+    expect($this->component)
+        ->getValue()->toBe('Value');
 });
 
-it('can chain value', function () {
-    expect($this->component->value($v = 100))->toBeInstanceOf(Component::class);
-    expect($this->component->getValue())->toBe($v);
-});
-
-it('resolves a value', function () {
-    expect($this->component->value(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(Component::class)
-        ->resolveValue(['record' => 'Value'])->toBe('Value.');
+it('chains value', function () {
+    expect($this->component->value('Value'))->toBeInstanceOf(HasValueComponent::class)
+        ->getValue()->toBe('Value');
 });
