@@ -1,33 +1,40 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasAlias;
+
+class HasAliasComponent
+{
+    use HasAlias;
+}
 
 beforeEach(function () {
-    $this->component = new Component;
+    $this->component = new HasAliasComponent;
 });
 
-it('can set a string alias', function () {
+it('has no alias by default', function () {
+    expect($this->component)
+        ->getAlias()->toBeNull()
+        ->hasAlias()->toBeFalse();
+});
+
+it('sets alias', function () {
     $this->component->setAlias($p = 'Alias');
-    expect($this->component->getAlias())->toBe($p);
+    expect($this->component)
+        ->getAlias()->toBe($p)
+        ->hasAlias()->toBeTrue();
 });
 
-it('can set a closure alias', function () {
-    $this->component->setAlias(fn () => 'Alias');
-    expect($this->component->getAlias())->toBe('Alias');
-});
-
-it('prevents null values', function () {
-    $this->component->setAlias(null);
-    expect($this->component->hasAlias())->toBeFalse();
-});
-
-it('can chain alias', function () {
-    expect($this->component->alias($p = 'Alias'))->toBeInstanceOf(Component::class);
-    expect($this->component->getAlias())->toBe($p);
-});
-
-it('checks for alias', function () {
-    expect($this->component->hasAlias())->toBeFalse();
+it('rejects null values', function () {
     $this->component->setAlias('Alias');
-    expect($this->component->hasAlias())->toBeTrue();
+    $this->component->setAlias(null);
+    expect($this->component)
+        ->getAlias()->toBe('Alias')
+        ->hasAlias()->toBeTrue();
+});
+
+it('chains alias', function () {
+    expect($this->component->alias($p = 'Alias'))->toBeInstanceOf(HasAliasComponent::class)
+        ->getAlias()->toBe($p)
+        ->hasAlias()->toBeTrue();
 });

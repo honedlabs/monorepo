@@ -1,41 +1,48 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasAttribute;
+
+class HasAttributeComponent
+{
+    use HasAttribute;
+    use Evaluable;
+}
 
 beforeEach(function () {
-    $this->component = new Component;
+    $this->component = new HasAttributeComponent;
 });
 
-it('can set a string attribute', function () {
-    $this->component->setAttribute($n = 'Attribute');
-    expect($this->component->getAttribute())->toBe($n);
+it('has no attribute by default', function () {
+    expect($this->component)
+        ->getAttribute()->toBeNull()
+        ->hasAttribute()->toBeFalse();
 });
 
-it('can set a closure attribute', function () {
-    $this->component->setAttribute(fn () => 'Attribute');
-    expect($this->component->getAttribute())->toBe('Attribute');
+it('sets attribute', function () {
+    $this->component->setAttribute($p = 'Attribute');
+    expect($this->component)
+        ->getAttribute()->toBe($p)
+        ->hasAttribute()->toBeTrue();
 });
 
-it('prevents null values', function () {
-    $this->component->setAttribute(null);
-    expect($this->component->hasAttribute())->toBeFalse();
-});
-
-it('can chain attribute', function () {
-    expect($this->component->attribute($n = 'Attribute'))->toBeInstanceOf(Component::class);
-    expect($this->component->getAttribute())->toBe($n);
-});
-
-it('checks for attribute', function () {
-    expect($this->component->hasAttribute())->toBeFalse();
+it('rejects null values', function () {
     $this->component->setAttribute('Attribute');
-    expect($this->component->hasAttribute())->toBeTrue();
+    $this->component->setAttribute(null);
+    expect($this->component)
+        ->getAttribute()->toBe('Attribute')
+        ->hasAttribute()->toBeTrue();
 });
 
-it('resolves an attribute', function () {
-    expect($this->component->attribute(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(Component::class)
-        ->resolveAttribute(['record' => 'Attribute'])->toBe('Attribute.');
+it('chains attribute', function () {
+    expect($this->component->attribute($p = 'Attribute'))->toBeInstanceOf(HasAttributeComponent::class)
+        ->getAttribute()->toBe($p)
+        ->hasAttribute()->toBeTrue();
+});
 
-    expect($this->component->getAttribute())->toBe('Attribute.');
+it('resolves attribute', function () {
+    expect($this->component->attribute(fn ($record) => $record.'.'))
+        ->toBeInstanceOf(HasAttributeComponent::class)
+        ->resolveAttribute(['record' => 'Attribute'])->toBe('Attribute.')
+        ->getAttribute()->toBe('Attribute.');
 });

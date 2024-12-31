@@ -29,7 +29,7 @@ trait Encodable
      *
      * @param  (\Closure(string):string)|null  $decoder
      */
-    public static function setDecoder(?\Closure $decoder = null): void
+    public static function setDecoder(\Closure|null $decoder = null): void
     {
         static::$decoder = $decoder;
     }
@@ -43,7 +43,7 @@ trait Encodable
             return encrypt($value);
         }
 
-        return (static::$encoder)($value);
+        return \call_user_func(static::$encoder, $value);
     }
 
     /**
@@ -55,7 +55,7 @@ trait Encodable
             return decrypt($value);
         }
 
-        return (static::$decoder)($value);
+        return \call_user_func(static::$decoder, $value);
     }
 
     /**

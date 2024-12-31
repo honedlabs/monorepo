@@ -1,39 +1,48 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasDescription;
+
+class HasDescriptionComponent
+{
+    use HasDescription;
+    use Evaluable;
+}
 
 beforeEach(function () {
-    $this->component = new Component;
+    $this->component = new HasDescriptionComponent;
 });
 
-it('can set a string description', function () {
-    $this->component->setDescription($d = 'Description');
-    expect($this->component->getDescription())->toBe($d);
+it('has no description by default', function () {
+    expect($this->component)
+        ->getDescription()->toBeNull()
+        ->hasDescription()->toBeFalse();
 });
 
-it('prevents null values', function () {
-    $this->component->setDescription(null);
-    expect($this->component->hasDescription())->toBeFalse();
+it('sets description', function () {
+    $this->component->setDescription($p = 'Description');
+    expect($this->component)
+        ->getDescription()->toBe($p)
+        ->hasDescription()->toBeTrue();
 });
 
-it('can set a closure description', function () {
-    $this->component->setDescription(fn () => 'Description');
-    expect($this->component->getDescription())->toBe('Description');
-});
-
-it('can chain description', function () {
-    expect($this->component->description($d = 'Description'))->toBeInstanceOf(Component::class);
-    expect($this->component->getDescription())->toBe($d);
-});
-
-it('checks for description', function () {
-    expect($this->component->hasDescription())->toBeFalse();
+it('rejects null values', function () {
     $this->component->setDescription('Description');
-    expect($this->component->hasDescription())->toBeTrue();
+    $this->component->setDescription(null);
+    expect($this->component)
+        ->getDescription()->toBe('Description')
+        ->hasDescription()->toBeTrue();
 });
 
-it('resolves a description', function () {
+it('chains description', function () {
+    expect($this->component->description($p = 'Description'))->toBeInstanceOf(HasDescriptionComponent::class)
+        ->getDescription()->toBe($p)
+        ->hasDescription()->toBeTrue();
+});
+
+it('resolves description', function () {
     expect($this->component->description(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(Component::class)
-        ->resolveDescription(['record' => 'Description'])->toBe('Description.');
+        ->toBeInstanceOf(HasDescriptionComponent::class)
+        ->resolveDescription(['record' => 'Description'])->toBe('Description.')
+        ->getDescription()->toBe('Description.');
 });

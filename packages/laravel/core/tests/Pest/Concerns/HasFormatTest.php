@@ -1,39 +1,48 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasFormat;
+
+class HasFormatComponent
+{
+    use HasFormat;
+    use Evaluable;
+}
 
 beforeEach(function () {
-    $this->component = new Component;
+    $this->component = new HasFormatComponent;
 });
 
-it('can set a string format', function () {
-    $this->component->setFormat($f = 'd M Y');
-    expect($this->component->getFormat())->toBe($f);
+it('has no format by default', function () {
+    expect($this->component)
+        ->getFormat()->toBeNull()
+        ->hasFormat()->toBeFalse();
 });
 
-it('prevents null values', function () {
+it('sets format', function () {
+    $this->component->setFormat($p = 'Format');
+    expect($this->component)
+        ->getFormat()->toBe($p)
+        ->hasFormat()->toBeTrue();
+});
+
+it('rejects null values', function () {
+    $this->component->setFormat('Format');
     $this->component->setFormat(null);
-    expect($this->component->hasFormat())->toBeFalse();
+    expect($this->component)
+        ->getFormat()->toBe('Format')
+        ->hasFormat()->toBeTrue();
 });
 
-it('can set a closure format', function () {
-    $this->component->setFormat(fn () => 'd M Y');
-    expect($this->component->getFormat())->toBe('d M Y');
+it('chains format', function () {
+    expect($this->component->format($p = 'Format'))->toBeInstanceOf(HasFormatComponent::class)
+        ->getFormat()->toBe($p)
+        ->hasFormat()->toBeTrue();
 });
 
-it('can chain format', function () {
-    expect($this->component->format($f = 'd M Y'))->toBeInstanceOf(Component::class);
-    expect($this->component->getFormat())->toBe($f);
-});
-
-it('checks for format', function () {
-    expect($this->component->hasFormat())->toBeFalse();
-    $this->component->setFormat('d M Y');
-    expect($this->component->hasFormat())->toBeTrue();
-});
-
-it('resolves a format', function () {
+it('resolves format', function () {
     expect($this->component->format(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(Component::class)
-        ->resolveFormat(['record' => 'Format'])->toBe('Format.');
+        ->toBeInstanceOf(HasFormatComponent::class)
+        ->resolveFormat(['record' => 'Format'])->toBe('Format.')
+        ->getFormat()->toBe('Format.');
 });

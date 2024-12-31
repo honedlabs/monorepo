@@ -28,7 +28,7 @@ trait Authorizable
     }
 
     /**
-     * Alias for authorize
+     * Alias for `authorize`.
      *
      * @param  bool|\Closure(mixed...):bool  $condition
      * @return $this
@@ -41,22 +41,19 @@ trait Authorizable
     /**
      * Set the condition for authorization quietly.
      *
-     * @param  bool|\Closure(mixed...):bool|null  $condition
+     * @param  bool|\Closure(mixed...):bool  $condition
      */
-    public function setAuthorize(bool|\Closure|null $condition): void
+    public function setAuthorize(bool|\Closure $condition): void
     {
-        if (is_null($condition)) {
-            return;
-        }
         $this->authorized = $condition;
     }
 
     /**
-     * Alias for setAuthorize
+     * Alias for `setAuthorize`.
      *
-     * @param  bool|\Closure(mixed...):bool|null  $condition
+     * @param  bool|\Closure(mixed...):bool  $condition
      */
-    public function setAuthorise(bool|\Closure|null $condition): void
+    public function setAuthorise(bool|\Closure $condition): void
     {
         $this->setAuthorize($condition);
     }
@@ -73,7 +70,7 @@ trait Authorizable
     }
 
     /**
-     * Alias for isAuthorized
+     * Alias for `isAuthorized`.
      *
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
