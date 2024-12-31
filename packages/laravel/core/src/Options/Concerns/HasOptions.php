@@ -17,16 +17,18 @@ trait HasOptions
     /**
      * Set the options, chainable
      *
-     * @param  array<int,mixed>|\Illuminate\Support\Collection|class-string<\BackedEnum>|class-string<\Illuminate\Database\Eloquent\Model>  $options
+     * @param  array<int,mixed>|\Illuminate\Support\Collection|class-string<\BackedEnum>|class-string<\Illuminate\Database\Eloquent\Model>|\Honed\Core\Options\Option  $option
+     * @param array<int,\Honed\Core\Options\Option> $options
      * @return $this
      */
-    public function options(array|string|Collection $options): static
+    public function options(array|string|Collection|Option $option, ...$options): static
     {
         match (true) {
-            $options instanceof Collection => $this->fromCollection($options),
-            \is_string($options) && \enum_exists($options) => $this->fromEnum($options),
-            \is_string($options) => $this->fromModel($options), // if string, assume model
-            default => $this->setOptions($options), // array
+            $option instanceof Collection => $this->fromCollection($option),
+            $option instanceof Option => $this->setOptions([$option, ...$options]),
+            \is_string($option) && \enum_exists($option) => $this->fromEnum($option),
+            \is_string($option) => $this->fromModel($option),
+            default => $this->setOptions($option),
         };
 
         return $this;
@@ -41,11 +43,12 @@ trait HasOptions
      */
     public function fromEnum(string $enum, ?string $value = null, ?string $label = null): static
     {
-        foreach ($enum::cases() as $case) {
-            $optionValue = ($value && method_exists($case, $value)) ? $case->{$value}() : $case->value;
-            $optionLabel = ($label && method_exists($case, $label)) ? $case->{$label}() : $case->name;
-            $this->addOption($this->parseOption($optionValue, $optionLabel));
-        }
+        collect($enum::cases())->each(function ($case) use ($value, $label) {
+            $this->addOption($this->parseOption(
+                $this->getOptionField($case, $value) ?? $case->value,
+                $this->getOptionField($case, $label) ?? $case->name
+            ));
+        });
 
         return $this;
     }
@@ -57,13 +60,14 @@ trait HasOptions
      * @param  class-string<\Illuminate\Database\Eloquent\Model>  $model
      * @return $this
      */
-    public function fromModel(string $model, ?string $value = null, ?string $label = null): static
+    public function fromModel(string $model, string|null $value = null, string|null $label = 'name'): static
     {
-        foreach ($model::all() as $modelInstance) {
-            $optionValue = $this->getOptionField($modelInstance, $value) ?? $modelInstance->getKey();
-            $optionLabel = $label !== null ? $this->getOptionField($modelInstance, $label) : null;
-            $this->addOption($this->parseOption($optionValue, $optionLabel));
-        }
+        collect($model::all())->each(function ($instance) use ($value, $label) {
+            $this->addOption($this->parseOption(
+                $this->getOptionField($instance, $value) ?? $instance->getKey(),
+                $this->getOptionField($instance, $label)
+            ));
+        });
 
         return $this;
     }
@@ -77,9 +81,10 @@ trait HasOptions
     public function fromCollection(Collection $collection, ?string $value = null, ?string $label = null): static
     {
         $collection->each(function ($item) use ($value, $label) {
-            $optionValue = $this->getOptionField($item, $value) ?? $item;
-            $optionLabel = $label !== null ? $this->getOptionField($item, $label) : null;
-            $this->addOption($this->parseOption($optionValue, $optionLabel));
+            $this->addOption($this->parseOption(
+                $this->getOptionField($item, $value) ?? $item,
+                $this->getOptionField($item, $label)
+            ));
         });
 
         return $this;
@@ -141,9 +146,9 @@ trait HasOptions
     {
 
         return match (true) {
-            \is_null($key) => $item,
+            \is_null($key) => null,
             \is_array($item) => $item[$key] ?? null,
-            !\is_object($item) => $item,
+            !\is_object($item) => null,
             \method_exists($item, $key) => $item->{$key}(),
             \property_exists($item, $key) => $item->{$key},
             default => null,
