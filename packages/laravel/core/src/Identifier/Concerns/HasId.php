@@ -33,6 +33,7 @@ trait HasId
         if (\is_null($id)) {
             return;
         }
+        
         $this->id = $id;
     }
 

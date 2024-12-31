@@ -2,30 +2,38 @@
 
 use Honed\Core\Concerns\HasIcon;
 
-class HasIconTestComponent
+class HasIconComponent
 {
     use HasIcon;
 }
 
 beforeEach(function () {
-    $this->component = new HasIconTestComponent;
+    $this->component = new HasIconComponent;
 });
 
-it('can set the icon through chaining', function () {
-    expect($this->component->icon('icon'))->toBeInstanceOf(HasIconTestComponent::class)
-        ->hasIcon()->toBeTrue()
-        ->getIcon()->toBe('icon');
-});
-
-it('can set the icon quietly', function () {
-    $this->component->setIcon('icon');
-
+it('has no icon by default', function () {
     expect($this->component)
-        ->hasIcon()->toBeTrue()
-        ->getIcon()->toBe('icon');
+        ->getIcon()->toBeNull()
+        ->hasIcon()->toBeFalse();
 });
 
-it('can set a closure for the icon', function () {
-    $closure = fn () => 'icon';
-    expect($this->component->icon($closure)->getIcon())->toBe($closure());
+it('sets icon', function () {
+    $this->component->setIcon($p = 'Icon');
+    expect($this->component)
+        ->getIcon()->toBe($p)
+        ->hasIcon()->toBeTrue();
+});
+
+it('rejects null values', function () {
+    $this->component->setIcon('Icon');
+    $this->component->setIcon(null);
+    expect($this->component)
+        ->getIcon()->toBe('Icon')
+        ->hasIcon()->toBeTrue();
+});
+
+it('chains icon', function () {
+    expect($this->component->icon($p = 'Icon'))->toBeInstanceOf(HasIconComponent::class)
+        ->getIcon()->toBe($p)
+        ->hasIcon()->toBeTrue();
 });

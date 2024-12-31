@@ -1,39 +1,46 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Identifier\Concerns\HasId;
 
-it('can set an id', function () {
-    $component = new Component;
-    $component->setId($i = 1);
-    expect($component->getId())->toBe($i);
+class HasIdComponent
+{
+    use HasId;
+}
+
+beforeEach(function () {
+    $this->component = new HasIdComponent;
 });
 
-it('prevents null values', function () {
-    $component = new Component;
-    $component->setId(null);
-    expect($component->hasId())->toBeFalse();
+it('has no id by default', function () {
+    expect($this->component)
+        ->getId()->toBeNull()
+        ->hasId()->toBeFalse();
 });
 
-it('can chain id', function () {
-    $component = new Component;
-    expect($component->id($i = 'id'))->toBeInstanceOf(Component::class);
-    expect($component->getId())->toBe($i);
+it('sets id', function () {
+    $this->component->setId($p = 'Id');
+    expect($this->component)
+        ->getId()->toBe($p)
+        ->hasId()->toBeTrue();
 });
 
-it('checks for id', function () {
-    $component = new Component;
-    expect($component->hasId())->toBeFalse();
-    $component->setId('Id');
-    expect($component->hasId())->toBeTrue();
+it('rejects null values', function () {
+    $this->component->setId('Id');
+    $this->component->setId(null);
+    expect($this->component)
+        ->getId()->toBe('Id')
+        ->hasId()->toBeTrue();
 });
 
-it('can generate an id', function () {
-    $component = new Component;
-    expect($id = $component->generateId())->toBeString();
-    expect($component->getId())->toBe($id);
+it('chains id', function () {
+    expect($this->component->id($p = 'Id'))->toBeInstanceOf(HasIdComponent::class)
+        ->getId()->toBe($p)
+        ->hasId()->toBeTrue();
 });
 
-it('generates an id if none provided', function () {
-    $component = new Component;
-    expect($component->getId())->toBeString();
+it('resolves id', function () {
+    expect($this->component->id(fn ($record) => $record.'.'))
+        ->toBeInstanceOf(HasIdComponent::class)
+        ->resolveId(['record' => 'Id'])->toBe('Id.')
+        ->getId()->toBe('Id.');
 });

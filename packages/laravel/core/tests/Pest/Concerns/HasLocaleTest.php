@@ -1,34 +1,41 @@
 <?php
 
+use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasLocale;
-use Illuminate\Support\Facades\App;
 
-class LocaleComponent
+class HasLocaleComponent
 {
     use HasLocale;
+    use Evaluable;
 }
 
 beforeEach(function () {
-    $this->component = new LocaleComponent;
+    $this->component = new HasLocaleComponent;
 });
 
-it('has app locale by default', function () {
-    expect($this->component->hasLocale())->toBeFalse();
-    expect($this->component->getLocale())->toBe(App::getLocale());
+it('has no locale by default', function () {
+    expect($this->component)
+        ->getLocale()->toBeNull()
+        ->hasLocale()->toBeFalse();
 });
 
-it('can set a locale', function () {
-    expect($this->component->locale('au'))->toBeInstanceOf(LocaleComponent::class)
-        ->getLocale()->toBe('au');
+it('sets locale', function () {
+    $this->component->setLocale($p = 'Locale');
+    expect($this->component)
+        ->getLocale()->toBe($p)
+        ->hasLocale()->toBeTrue();
 });
 
-it('can be set using setter', function () {
-    $this->component->setLocale('au');
-    expect($this->component->getLocale())->toBe('au');
-});
-
-it('does not accept null values', function () {
-    $this->component->setLocale('au');
+it('rejects null values', function () {
+    $this->component->setLocale('Locale');
     $this->component->setLocale(null);
-    expect($this->component->getLocale())->toBe('au');
+    expect($this->component)
+        ->getLocale()->toBe('Locale')
+        ->hasLocale()->toBeTrue();
+});
+
+it('chains locale', function () {
+    expect($this->component->locale($p = 'Locale'))->toBeInstanceOf(HasLocaleComponent::class)
+        ->getLocale()->toBe($p)
+        ->hasLocale()->toBeTrue();
 });

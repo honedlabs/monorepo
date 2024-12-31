@@ -1,45 +1,52 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasLabel;
+
+class HasLabelComponent
+{
+    use HasLabel;
+    use Evaluable;
+}
 
 beforeEach(function () {
-    $this->component = new Component;
+    $this->component = new HasLabelComponent;
 });
 
-it('can set a string label', function () {
-    $this->component->setLabel($l = 'Label');
-    expect($this->component->getLabel())->toBe($l);
+it('has no label by default', function () {
+    expect($this->component)
+        ->getLabel()->toBeNull()
+        ->hasLabel()->toBeFalse();
 });
 
-it('can set a closure label', function () {
-    $this->component->setLabel(fn () => 'Label');
-    expect($this->component->getLabel())->toBe('Label');
+it('sets label', function () {
+    $this->component->setLabel($p = 'Label');
+    expect($this->component)
+        ->getLabel()->toBe($p)
+        ->hasLabel()->toBeTrue();
 });
 
-it('prevents null values', function () {
+it('rejects null values', function () {
     $this->component->setLabel('Label');
     $this->component->setLabel(null);
-    expect($this->component->getLabel())->toBe('Label');
+    expect($this->component)
+        ->getLabel()->toBe('Label')
+        ->hasLabel()->toBeTrue();
 });
 
-it('can chain label', function () {
-    expect($this->component->label($l = 'Label'))->toBeInstanceOf(Component::class);
-    expect($this->component->getLabel())->toBe($l);
+it('chains label', function () {
+    expect($this->component->label($p = 'Label'))->toBeInstanceOf(HasLabelComponent::class)
+        ->getLabel()->toBe($p)
+        ->hasLabel()->toBeTrue();
 });
 
-it('checks for label', function () {
-    expect($this->component->hasLabel())->toBeFalse();
-    $this->component->setLabel('Label');
-    expect($this->component->hasLabel())->toBeTrue();
-});
-
-it('converts text to a label', function () {
-    $label = $this->component->makeLabel('new-Label');
-    expect($label)->toBe('New label');
-});
-
-it('resolves a label', function () {
+it('resolves label', function () {
     expect($this->component->label(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(Component::class)
-        ->resolveLabel(['record' => 'Label'])->toBe('Label.');
+        ->toBeInstanceOf(HasLabelComponent::class)
+        ->resolveLabel(['record' => 'Label'])->toBe('Label.')
+        ->getLabel()->toBe('Label.');
+});
+
+it('makes a label', function () {
+    expect($this->component->makeLabel('new-Label'))->toBe('New label');
 });
