@@ -11,7 +11,7 @@ beforeEach(function () {
     $this->component = new IsActiveComponent;
 });
 
-it('is not active by default', function () {
+it('is not `active` by default', function () {
     expect($this->component->isActive())->toBeFalse();
 });
 

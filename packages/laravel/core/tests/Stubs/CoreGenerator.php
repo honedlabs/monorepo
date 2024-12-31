@@ -1,6 +1,6 @@
 <?php
 
-namespace Workbench\App\Commands;
+namespace Honed\Core\Tests\Stubs;
 
 use Honed\Core\Commands\GeneratorCommand;
 

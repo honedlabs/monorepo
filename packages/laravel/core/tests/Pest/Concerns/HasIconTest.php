@@ -1,10 +1,23 @@
 <?php
 
 use Honed\Core\Concerns\HasIcon;
+use Honed\Core\Contracts\Icon;
 
 class HasIconComponent
 {
     use HasIcon;
+}
+
+enum IconEnum implements Icon
+{
+    case Chevron;
+
+    public function icon(): string
+    {
+        return match ($this) {
+            self::Chevron => 'chevron',
+        };
+    }
 }
 
 beforeEach(function () {
@@ -35,5 +48,11 @@ it('rejects null values', function () {
 it('chains icon', function () {
     expect($this->component->icon('Icon'))->toBeInstanceOf(HasIconComponent::class)
         ->getIcon()->toBe('Icon')
+        ->hasIcon()->toBeTrue();
+});
+
+it('accepts icon contract', function () {
+    expect($this->component->icon(IconEnum::Chevron))->toBeInstanceOf(HasIconComponent::class)
+        ->getIcon()->toBe('chevron')
         ->hasIcon()->toBeTrue();
 });

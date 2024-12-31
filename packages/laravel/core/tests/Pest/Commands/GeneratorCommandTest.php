@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Commands\CoreGenerator;
+use Honed\Core\Tests\Stubs\CoreGenerator;
 
 beforeEach(function () {
     $this->command = new CoreGenerator;

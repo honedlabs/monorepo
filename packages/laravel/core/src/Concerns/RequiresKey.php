@@ -16,8 +16,8 @@ trait RequiresKey
     public function getKey(): string
     {
         return match (true) {
-            \method_exists($this, 'key') => $this->key(),
             \property_exists($this, 'key') && isset($this->key) => $this->key,
+            \method_exists($this, 'key') => $this->key(),
             default => throw new MissingRequiredAttributeException('key', $this),
         };
     }

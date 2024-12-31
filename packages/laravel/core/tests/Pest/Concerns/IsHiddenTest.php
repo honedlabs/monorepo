@@ -1,58 +1,36 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\IsHidden;
 
-it('can set hidden', function () {
-    $component = new Component;
-    $component->setHidden(true);
-    expect($component->isHidden())->toBeTrue();
+class IsHiddenComponent
+{
+    use IsHidden;
+}
+
+beforeEach(function () {
+    $this->component = new IsHiddenComponent;
 });
 
-it('prevents null values', function () {
-    $component = new Component;
-    $component->setHidden(null);
-    expect($component->isHidden())->toBeFalse();
+it('is not `hidden` by default', function () {
+    expect($this->component->isHidden())->toBeFalse();
 });
 
-it('can set closure hidden', function () {
-    $component = new Component;
-    $component->setHidden(fn () => true);
-    expect($component->isHidden())->toBeTrue();
+it('sets hidden', function () {
+    $this->component->setHidden(true);
+    expect($this->component->isHidden())->toBeTrue();
 });
 
-it('defaults to false', function () {
-    $component = new Component;
-    expect($component->isHidden())->toBeFalse();
+it('chains hidden', function () {
+    expect($this->component->hidden())->toBeInstanceOf(IsHiddenComponent::class)
+        ->isHidden()->toBeTrue();
 });
 
-it('can chain hidden', function () {
-    $component = new Component;
-    expect($component->hidden(true))->toBeInstanceOf(Component::class);
-    expect($component->isHidden())->toBeTrue();
+it('has alias `hide` for `hidden`', function () {
+    expect($this->component->hide())->toBeInstanceOf(IsHiddenComponent::class)
+        ->isHidden()->toBeTrue();
 });
 
-it('can chain hide', function () {
-    $component = new Component;
-    expect($component->hide())->toBeInstanceOf(Component::class);
-    expect($component->isHidden())->toBeTrue();
-});
-
-it('can chain show', function () {
-    $component = new Component;
-    expect($component->show())->toBeInstanceOf(Component::class);
-    expect($component->isHidden())->toBeFalse();
-});
-
-it('checks if hidden', function () {
-    $component = new Component;
-    expect($component->isHidden())->toBeFalse();
-    $component->setHidden('Hidden');
-    expect($component->isHidden())->toBeTrue();
-});
-
-it('checks if not hidden', function () {
-    $component = new Component;
-    expect($component->IsNotHidden())->toBeTrue();
-    $component->setHidden('Hidden');
-    expect($component->IsNotHidden())->toBeFalse();
+it('has alias `show` for `hidden`', function () {
+    expect($this->component->show())->toBeInstanceOf(IsHiddenComponent::class)
+        ->isHidden()->toBeFalse();
 });

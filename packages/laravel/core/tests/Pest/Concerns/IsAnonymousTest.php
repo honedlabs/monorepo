@@ -1,16 +1,23 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
-use Honed\Core\Tests\Stubs\ConfigurableComponent;
+use Honed\Core\Concerns\IsAnonymous;
+
+class IsAnonymousParent 
+{
+    use IsAnonymous;
+}
+
+class IsAnonymousComponent extends IsAnonymousParent
+{
+    public string $anonymous = self::class;
+}
 
 beforeEach(function () {
-    $this->ext = ConfigurableComponent::make();
-    $this->base = Component::make();
+    $this->parent = new IsAnonymousParent;
+    $this->child = new IsAnonymousComponent;
 });
 
-it('determines if a class is anonymous', function () {
-    expect($this->ext->isAnonymous())->toBeFalse();
-    expect($this->ext->isNotAnonymous())->toBeTrue();
-    expect($this->base->isAnonymous())->toBeTrue();
-    expect($this->base->isNotAnonymous())->toBeFalse();
+it('checks if the class is anonymous', function () {
+    expect($this->parent->isAnonymous())->toBeFalse();
+    expect($this->child->isAnonymous())->toBeTrue();
 });

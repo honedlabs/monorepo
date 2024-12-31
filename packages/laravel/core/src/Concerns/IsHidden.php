@@ -38,9 +38,9 @@ trait IsHidden
      *
      * @return $this
      */
-    public function show(bool $hidden = false): static
+    public function show(bool $show = false): static
     {
-        return $this->hidden($hidden);
+        return $this->hidden(! $show);
     }
 
     /**

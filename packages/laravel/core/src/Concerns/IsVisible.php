@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-/**
- * @mixin \Honed\Core\Concerns\Evaluable
- */
 trait IsVisible
 {
     /**
      * @var bool
      */
-    protected $invisible = false;
+    protected $visible = true;
 
     /**
      * Set as visible, chainable.
@@ -21,7 +18,7 @@ trait IsVisible
      */
     public function visible(bool $visible = true): static
     {
-        $this->setInvisible($visible);
+        $this->setVisible($visible);
 
         return $this;
     }
@@ -33,9 +30,7 @@ trait IsVisible
      */
     public function invisible(bool $invisible = true): static
     {
-        $this->setInvisible(! $invisible);
-
-        return $this;
+        return $this->visible(! $invisible);
     }
 
     /**

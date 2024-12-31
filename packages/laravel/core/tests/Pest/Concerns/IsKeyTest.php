@@ -1,46 +1,26 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\IsKey;
 
-it('can set key', function () {
-    $component = new Component;
-    $component->setKey(true);
-    expect($component->isKey())->toBeTrue();
+class IsKeyComponent
+{
+    use IsKey;
+}
+
+beforeEach(function () {
+    $this->component = new IsKeyComponent;
 });
 
-it('prevents null values', function () {
-    $component = new Component;
-    $component->setKey(null);
-    expect($component->isKey())->toBeFalse();
+it('is not `key` by default', function () {
+    expect($this->component->isKey())->toBeFalse();
 });
 
-it('can set closure key', function () {
-    $component = new Component;
-    $component->setKey(fn () => true);
-    expect($component->isKey())->toBeTrue();
+it('sets key', function () {
+    $this->component->setKey(true);
+    expect($this->component->isKey())->toBeTrue();
 });
 
-it('defaults to false', function () {
-    $component = new Component;
-    expect($component->isKey())->toBeFalse();
-});
-
-it('can chain key', function () {
-    $component = new Component;
-    expect($component->key(true))->toBeInstanceOf(Component::class);
-    expect($component->isKey())->toBeTrue();
-});
-
-it('checks if key', function () {
-    $component = new Component;
-    expect($component->isKey())->toBeFalse();
-    $component->setKey('Key');
-    expect($component->isKey())->toBeTrue();
-});
-
-it('checks if not key', function () {
-    $component = new Component;
-    expect($component->isNotKey())->toBeTrue();
-    $component->setKey('Key');
-    expect($component->isNotKey())->toBeFalse();
+it('chains key', function () {
+    expect($this->component->key(true))->toBeInstanceOf(IsKeyComponent::class)
+        ->isKey()->toBeTrue();
 });

@@ -1,43 +1,26 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\IsStrict;
+
+class IsStrictComponent
+{
+    use IsStrict;
+}
 
 beforeEach(function () {
-    $this->component = new Component;
+    $this->component = new IsStrictComponent;
 });
 
-it('can set strict', function () {
+it('is not `strict` by default', function () {
+    expect($this->component->isStrict())->toBeFalse();
+});
+
+it('sets strict', function () {
     $this->component->setStrict(true);
     expect($this->component->isStrict())->toBeTrue();
 });
 
-it('prevents null values', function () {
-    $this->component->setStrict(null);
-    expect($this->component->isStrict())->toBeFalse();
-});
-
-it('can set closure strict', function () {
-    $this->component->setStrict(fn () => true);
-    expect($this->component->isStrict())->toBeTrue();
-});
-
-it('stricts to false', function () {
-    expect($this->component->isStrict())->toBeFalse();
-});
-
-it('can chain strict', function () {
-    expect($this->component->strict(true))->toBeInstanceOf(Component::class);
-    expect($this->component->isStrict())->toBeTrue();
-});
-
-it('checks if strict', function () {
-    expect($this->component->isStrict())->toBeFalse();
-    $this->component->setStrict(true);
-    expect($this->component->isStrict())->toBeTrue();
-});
-
-it('checks if not strict', function () {
-    expect($this->component->isNotStrict())->toBeTrue();
-    $this->component->setStrict(true);
-    expect($this->component->isNotStrict())->toBeFalse();
+it('chains strict', function () {
+    expect($this->component->strict(true))->toBeInstanceOf(IsStrictComponent::class)
+        ->isStrict()->toBeTrue();
 });

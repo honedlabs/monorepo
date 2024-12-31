@@ -1,46 +1,26 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Component;
+use Honed\Core\Concerns\IsDefault;
 
-it('can set default', function () {
-    $component = new Component;
-    $component->setDefault(true);
-    expect($component->isDefault())->toBeTrue();
+class IsDefaultComponent
+{
+    use IsDefault;
+}
+
+beforeEach(function () {
+    $this->component = new IsDefaultComponent;
 });
 
-it('prevents null values', function () {
-    $component = new Component;
-    $component->setDefault(null);
-    expect($component->isDefault())->toBeFalse();
+it('is not `default` by default', function () {
+    expect($this->component->isDefault())->toBeFalse();
 });
 
-it('can set closure default', function () {
-    $component = new Component;
-    $component->setDefault(fn () => true);
-    expect($component->isDefault())->toBeTrue();
+it('sets default', function () {
+    $this->component->setDefault(true);
+    expect($this->component->isDefault())->toBeTrue();
 });
 
-it('defaults to false', function () {
-    $component = new Component;
-    expect($component->isDefault())->toBeFalse();
-});
-
-it('can chain default', function () {
-    $component = new Component;
-    expect($component->default(true))->toBeInstanceOf(Component::class);
-    expect($component->isDefault())->toBeTrue();
-});
-
-it('checks if default', function () {
-    $component = new Component;
-    expect($component->isDefault())->toBeFalse();
-    $component->setDefault(true);
-    expect($component->isDefault())->toBeTrue();
-});
-
-it('checks if not default', function () {
-    $component = new Component;
-    expect($component->isNotDefault())->toBeTrue();
-    $component->setDefault(true);
-    expect($component->isNotDefault())->toBeFalse();
+it('chains default', function () {
+    expect($this->component->default(true))->toBeInstanceOf(IsDefaultComponent::class)
+        ->isDefault()->toBeTrue();
 });

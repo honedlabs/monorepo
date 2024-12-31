@@ -1,21 +1,43 @@
 <?php
 
+use Honed\Core\Concerns\RequiresKey;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
-use Honed\Core\Tests\Stubs\ConfigurableComponent;
-use Workbench\App\KeyComponent;
 
-it('returns key if defined', function () {
-    $component = new ConfigurableComponent;
-    expect($component->getKey())->toBe($component->key);
+class KeyMethod
+{
+    use RequiresKey;
+
+    protected string $key;
+
+    protected function key(): string
+    {
+        return 'id';
+    }
+}
+
+class KeyProperty
+{
+    use RequiresKey;
+
+    protected string $key = 'id';
+}
+
+class KeyUndefined
+{
+    use RequiresKey;
+}
+
+it('has method key', function () {
+    expect((new KeyMethod)->getKey())->toBe('id');
+});
+
+it('has property key', function () {
+    $component = new KeyProperty;
+    expect($component->getKey())->toBe('id');
 });
 
 it('throws exception if key not defined', function () {
-    $component = new ConfigurableComponent;
-    unset($component->key);
+    $component = new KeyUndefined;
     $component->getKey();
 })->throws(MissingRequiredAttributeException::class);
 
-it('returns key if method defined', function () {
-    $component = new KeyComponent;
-    expect($component->getKey())->toBe('id');
-});
