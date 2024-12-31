@@ -12,7 +12,7 @@ trait IsVisible
     /**
      * @var bool
      */
-    protected $visible = true;
+    protected $invisible = false;
 
     /**
      * Set as visible, chainable.
@@ -21,7 +21,7 @@ trait IsVisible
      */
     public function visible(bool $visible = true): static
     {
-        $this->setVisible($visible);
+        $this->setInvisible($visible);
 
         return $this;
     }
@@ -31,9 +31,9 @@ trait IsVisible
      *
      * @return $this
      */
-    public function invisible(bool $visible = false): static
+    public function invisible(bool $invisible = true): static
     {
-        $this->setVisible($visible);
+        $this->setInvisible(! $invisible);
 
         return $this;
     }
@@ -41,11 +41,8 @@ trait IsVisible
     /**
      * Set the visibility property quietly.
      */
-    public function setVisible(bool|null $visible): void
+    public function setVisible(bool $visible): void
     {
-        if (\is_null($visible)) {
-            return;
-        }
         $this->visible = $visible;
     }
 

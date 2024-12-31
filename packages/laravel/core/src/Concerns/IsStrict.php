@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-/**
- * @mixin \Honed\Core\Concerns\Evaluable
- */
 trait IsStrict
 {
     /**
@@ -29,12 +26,8 @@ trait IsStrict
     /**
      * Set whether the class is strict matching quietly.
      */
-    public function setStrict(bool|null $strict): void
+    public function setStrict(bool $strict): void
     {
-        if (\is_null($strict)) {
-            return;
-        }
-
         $this->strict = $strict;
     }
 

@@ -26,12 +26,8 @@ trait IsActive
     /**
      * Set the active property quietly.
      */
-    public function setActive(bool|null $active): void
-    {
-        if (\is_null($active)) {
-            return;
-        }
-        
+    public function setActive(bool $active): void
+    {        
         $this->active = $active;
     }
 

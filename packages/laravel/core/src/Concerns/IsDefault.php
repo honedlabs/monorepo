@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-/**
- * @mixin \Honed\Core\Concerns\Evaluable
- */
 trait IsDefault
 {
     /**
@@ -29,12 +26,8 @@ trait IsDefault
     /**
      * Set the default quietly
      */
-    public function setDefault(bool|null $default): void
+    public function setDefault(bool $default): void
     {
-        if (\is_null($default)) {
-            return;
-        }
-
         $this->default = $default;
     }
 

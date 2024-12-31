@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-/**
- * @mixin \Honed\Core\Concerns\Evaluable
- */
 trait IsHidden
 {
     /**
@@ -49,11 +46,8 @@ trait IsHidden
     /**
      * Set the hidden property quietly.
      */
-    public function setHidden(bool|null $hidden): void
+    public function setHidden(bool $hidden): void
     {
-        if (\is_null($hidden)) {
-            return;
-        }
         $this->hidden = $hidden;
     }
 

@@ -26,12 +26,8 @@ trait IsKey
     /**
      * Set the key value quietly
      */
-    public function setKey(bool|null $key): void
+    public function setKey(bool $key): void
     {
-        if (\is_null($key)) {
-            return;
-        }
-
         $this->key = $key;
     }
 
