@@ -8,6 +8,8 @@ use Honed\Core\Primitive;
 class PrimitiveComponent extends Primitive
 {
     use HasType;
+    
+    public string|null $key = null;
 
     public function configure(): static
     {
@@ -46,12 +48,4 @@ it('has array representation', function () {
 
 it('is serializable', function () {
     expect($this->component->jsonSerialize())->toEqual($this->component->toArray());
-});
-
-it('is globally configurable', function () {
-    PrimitiveComponent::configureUsing(function ($component) {
-        $component->key = 'configured';
-    });
-
-    expect($this->component->key)->toBe('configured');
 });

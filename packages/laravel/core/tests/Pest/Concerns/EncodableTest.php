@@ -15,7 +15,8 @@ beforeEach(function () {
 });
 
 it('encodes with default encryption', function () {
-    expect($this->component->encode('secret-value'))->toBe(encrypt('secret-value'));
+    // Can never be the same
+    expect($this->component->encode('secret-value'))->not->toBe(encrypt('secret-value'));
 });
 
 it('decodes with default encryption', function () {
@@ -23,13 +24,13 @@ it('decodes with default encryption', function () {
 });
 
 it('encodes with custom encoder', function () {
-    EncodableComponent::setEncoder(fn ($value) => base64_encode($value));
-    EncodableComponent::setDecoder(fn ($value) => base64_decode($value));
+    EncodableComponent::setEncoder(fn ($value) => \base64_encode($value));
+    EncodableComponent::setDecoder(fn ($value) => \base64_decode($value));
 
     $value = 'test-value';
     $encoded = EncodableComponent::encode($value);
 
-    expect($encoded)->toBe(base64_encode($value));
+    expect($encoded)->toBe(\base64_encode($value));
     expect(EncodableComponent::decode($encoded))->toBe($value);
 });
 
