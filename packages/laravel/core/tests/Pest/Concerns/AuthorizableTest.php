@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\Authorizable;
 
@@ -18,27 +20,38 @@ it('is authorized by default', function () {
     expect($this->component->isAuthorised())->toBeTrue();
 });
 
-it('can chain authorization', function () {
+it('sets authorization', function () {
+    $this->component->setAuthorize(false);
+    expect($this->component)
+        ->isAuthorized()->toBeFalse();
+});
+
+it('chains authorization', function () {
     expect($this->component->authorize(false))->toBeInstanceOf(AuthorizableComponent::class)
         ->isAuthorized()->toBeFalse();
 });
 
-it('can chain authorisation', function () {
+it('has alternative authorise for setting', function () {
+    $this->component->setAuthorise(false);
+    expect($this->component)
+        ->isAuthorised()->toBeFalse();
+});
+
+it('has alternative authorise for chaining', function () {
     expect($this->component->authorise(false))->toBeInstanceOf(AuthorizableComponent::class)
         ->isAuthorised()->toBeFalse();
 });
 
-it('can set boolean authorization', function () {
-    $this->component->setAuthorize(false);
-    expect($this->component->isAuthorized())->toBeFalse();
-    $this->component->setAuthorise(false);
-    expect($this->component->isAuthorised())->toBeFalse();
+it('resolves authorization', function () {
+    $this->component->setAuthorize(fn (int $record) => $record > 2);
+    expect($this->component)
+        ->resolveAuthorization(['record' => 3])->toBeTrue()
+        ->isAuthorized()->toBeTrue();
 });
 
-it('can set closure authorization', function () {
-    $this->component->setAuthorize(fn () => 2 == 3);
-    expect($this->component->isAuthorized())->toBeFalse();
-    $this->component->setAuthorise(fn () => 2 == 3);
-    expect($this->component->isAuthorised())->toBeFalse();
+it('resolves authorisation', function () {
+    $this->component->setAuthorise(fn (int $record) => $record > 2);
+    expect($this->component)
+        ->resolveAuthorisation(['record' => 2])->toBeFalse()
+        ->isAuthorised()->toBeFalse();
 });
-

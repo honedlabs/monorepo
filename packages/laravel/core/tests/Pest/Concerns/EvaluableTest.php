@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Tests\Stubs\Product;
 

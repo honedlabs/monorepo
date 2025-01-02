@@ -61,3 +61,11 @@ it('has alias `isValid` for `validate`', function () {
         ->isValid(1)->toBeTrue()
         ->isValid(0)->toBeFalse();
 });
+
+it('has alias `validateUsing` for `validator`', function () {
+    expect($this->component->validateUsing($this->fn))->toBeInstanceOf(ValidatableComponent::class)
+        ->getValidator()->toBeInstanceOf(\Closure::class)
+        ->canValidate()->toBeTrue()
+        ->validate(1)->toBeTrue()
+        ->validate(0)->toBeFalse();
+});

@@ -31,3 +31,7 @@ it('parses and formats using difference', function () {
 it('hides values which could not be parsed', function () {
     expect($this->formatter->format('invalid date'))->toBeNull();
 });
+
+it('rejects null values from formatting', function () {
+    expect($this->formatter->format(null))->toBeNull();
+});

@@ -88,9 +88,10 @@ trait Authorizable
      */
     public function resolveAuthorization(array $named = [], array $typed = []): bool
     {
-        $this->setAuthorize($this->isAuthorized($named, $typed));
+        $authorized = $this->isAuthorized($named, $typed);
+        $this->setAuthorize($authorized);
 
-        return $this->authorized;
+        return $authorized;
     }
 
     /**

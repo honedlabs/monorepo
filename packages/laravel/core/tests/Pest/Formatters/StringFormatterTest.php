@@ -28,3 +28,7 @@ it('formats a numeric value', function () {
     $this->formatter->setPrefix('ID: ');
     expect($this->formatter->format(123))->toBe('ID: 123');
 });
+
+it('rejects null values from formatting', function () {
+    expect($this->formatter->format(null))->toBeNull();
+});

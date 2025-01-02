@@ -48,3 +48,10 @@ it('transforms values', function () {
     expect($this->component)
         ->transform(1)->toBe(2);
 });
+
+it('has alias `transformUsing` for `transformer`', function () {
+    expect($this->component->transformUsing($this->fn))->toBeInstanceOf(TransformableComponent::class)
+        ->getTransformer()->toBeInstanceOf(\Closure::class)
+        ->canTransform()->toBeTrue()
+        ->transform(1)->toBe(2);
+});
