@@ -26,7 +26,7 @@ trait HasDivideBy
     /**
      * Set the divide by value quietly.
      */
-    public function setDivideBy(int|null $divideBy): void
+    public function setDivideBy(?int $divideBy): void
     {
         if (\is_null($divideBy)) {
             return;

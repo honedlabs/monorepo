@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Str;
-use Honed\Core\Tests\TestCase;
-use Honed\Core\Tests\Stubs\Status;
 use Honed\Core\Tests\Stubs\Product;
+use Honed\Core\Tests\Stubs\Status;
+use Honed\Core\Tests\TestCase;
+use Illuminate\Support\Str;
 
 uses(TestCase::class)->in(__DIR__);
 

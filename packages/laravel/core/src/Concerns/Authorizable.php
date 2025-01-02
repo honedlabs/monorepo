@@ -104,6 +104,4 @@ trait Authorizable
     {
         return $this->resolveAuthorization($named, $typed);
     }
-
-    
 }

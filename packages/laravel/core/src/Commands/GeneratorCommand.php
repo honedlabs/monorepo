@@ -7,6 +7,7 @@ namespace Honed\Core\Commands;
 use Honed\Core\Concerns\ManipulatesFiles;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Support\Stringable;
 use ReflectionClass;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -22,6 +23,11 @@ abstract class GeneratorCommand extends Command implements PromptsForMissingInpu
      */
     protected $type;
 
+    /**
+     * Retrieve the arguments for the command.
+     *
+     * @return array<int,array{string,int,string}>
+     */
     protected function getArguments(): array
     {
         return [
@@ -30,7 +36,12 @@ abstract class GeneratorCommand extends Command implements PromptsForMissingInpu
         ];
     }
 
-    protected function promptForMissingArgumentsUsing()
+    /**
+     * Retrieve the arguments for the command.
+     *
+     * @return array{'name':array{string,string}}
+     */
+    protected function promptForMissingArgumentsUsing(): array
     {
         return [
             'name' => [
@@ -40,6 +51,11 @@ abstract class GeneratorCommand extends Command implements PromptsForMissingInpu
         ];
     }
 
+    /**
+     * Retrieve the options for the command.
+     *
+     * @return array<int,array{string,string,int,string}>
+     */
     protected function getOptions(): array
     {
         return [
@@ -47,12 +63,16 @@ abstract class GeneratorCommand extends Command implements PromptsForMissingInpu
         ];
     }
 
+    /**
+     * Retrieve the default stub path for the command.
+     */
     protected function getDefaultStubPath(): string
     {
         $reflectionClass = new ReflectionClass($this);
 
-        return (string) str($reflectionClass->getFileName())
+        return (new Stringable((string) $reflectionClass->getFileName()))
             ->beforeLast('Commands')
-            ->append('../stubs');
+            ->append('../stubs')
+            ->value();
     }
 }

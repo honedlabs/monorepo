@@ -39,7 +39,7 @@ trait HasLabel
         if (\is_null($label)) {
             return;
         }
-        
+
         $this->label = $label;
     }
 
@@ -60,7 +60,7 @@ trait HasLabel
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
-    public function resolveLabel(array $named = [], array $typed = []): string|null
+    public function resolveLabel(array $named = [], array $typed = []): ?string
     {
         $label = $this->getLabel($named, $typed);
         $this->setLabel($label);
@@ -78,7 +78,7 @@ trait HasLabel
 
     /**
      * Convert a string to the label format.
-     * 
+     *
      * @param  string|\Closure():string  $name
      */
     public function makeLabel(string|\Closure $name): string

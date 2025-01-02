@@ -26,7 +26,7 @@ trait HasAlias
     /**
      * Set the alias quietly.
      */
-    public function setAlias(string|null $alias): void
+    public function setAlias(?string $alias): void
     {
         if (\is_null($alias)) {
             return;
@@ -38,7 +38,7 @@ trait HasAlias
     /**
      * Get the alias.
      */
-    public function getAlias(): string|null
+    public function getAlias(): ?string
     {
         return $this->alias;
     }

@@ -20,7 +20,7 @@ class StringFormatter implements Contracts\Formatter
      * @param  string|(\Closure():string)|null  $prefix
      * @param  string|(\Closure():string)|null  $suffix
      */
-    public function __construct(string|\Closure|null $prefix = null, string|\Closure|null $suffix = null, int $truncate = null)
+    public function __construct(string|\Closure|null $prefix = null, string|\Closure|null $suffix = null, ?int $truncate = null)
     {
         $this->setPrefix($prefix);
         $this->setSuffix($suffix);
@@ -34,7 +34,7 @@ class StringFormatter implements Contracts\Formatter
      * @param  string|(\Closure():string)|null  $suffix
      * @return $this
      */
-    public static function make(string|\Closure|null $prefix = null, string|\Closure|null $suffix = null, int $truncate = null): static
+    public static function make(string|\Closure|null $prefix = null, string|\Closure|null $suffix = null, ?int $truncate = null): static
     {
         return resolve(static::class, compact('prefix', 'suffix', 'truncate'));
     }

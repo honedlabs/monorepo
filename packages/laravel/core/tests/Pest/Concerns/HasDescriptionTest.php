@@ -5,8 +5,8 @@ use Honed\Core\Concerns\HasDescription;
 
 class HasDescriptionComponent
 {
-    use HasDescription;
     use Evaluable;
+    use HasDescription;
 }
 
 beforeEach(function () {

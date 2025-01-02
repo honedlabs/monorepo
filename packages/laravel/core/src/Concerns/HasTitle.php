@@ -46,7 +46,7 @@ trait HasTitle
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
-    public function getTitle(array $named = [], array $typed = []): string|null
+    public function getTitle(array $named = [], array $typed = []): ?string
     {
         return $this->evaluate($this->title, $named, $typed);
     }
@@ -57,7 +57,7 @@ trait HasTitle
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
-    public function resolveTitle(array $named = [], array $typed = []): string|null
+    public function resolveTitle(array $named = [], array $typed = []): ?string
     {
         $this->setTitle($this->getTitle($named, $typed));
 

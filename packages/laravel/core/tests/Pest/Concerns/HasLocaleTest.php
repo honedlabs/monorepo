@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\App;
 
 class HasLocaleComponent
 {
-    use HasLocale;
     use Evaluable;
+    use HasLocale;
 }
 
 beforeEach(function () {

@@ -5,8 +5,8 @@ use Honed\Core\Concerns\HasAttribute;
 
 class HasAttributeComponent
 {
-    use HasAttribute;
     use Evaluable;
+    use HasAttribute;
 }
 
 beforeEach(function () {

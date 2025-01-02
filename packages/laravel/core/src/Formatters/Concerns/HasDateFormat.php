@@ -7,6 +7,7 @@ namespace Honed\Core\Formatters\Concerns;
 trait HasDateFormat
 {
     const DefaultDateFormat = 'd/m/Y';
+
     /**
      * @var string|null
      */
@@ -20,7 +21,7 @@ trait HasDateFormat
     /**
      * Configure the default date format.
      */
-    public static function useDateFormat(string $dateFormat = null): void
+    public static function useDateFormat(?string $dateFormat = null): void
     {
         static::$defaultDateFormat = $dateFormat ?? self::DefaultDateFormat;
     }
@@ -47,7 +48,6 @@ trait HasDateFormat
 
     /**
      * Set the dateFormat quietly.
-     *
      */
     public function setDateFormat(?string $dateFormat): void
     {

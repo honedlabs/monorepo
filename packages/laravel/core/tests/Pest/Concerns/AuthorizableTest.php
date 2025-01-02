@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\Authorizable;
+use Honed\Core\Concerns\Evaluable;
 
 class AuthorizableComponent
 {

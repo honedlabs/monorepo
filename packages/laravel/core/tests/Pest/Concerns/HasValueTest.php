@@ -1,6 +1,5 @@
 <?php
 
-use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasValue;
 
 class HasValueComponent

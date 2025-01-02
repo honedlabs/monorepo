@@ -49,7 +49,7 @@ trait Transformable
      *
      * @param  \Closure(TArgs):TValue|null  $transformer
      */
-    public function setTransformer(\Closure|null $transformer): void
+    public function setTransformer(?\Closure $transformer): void
     {
         if (\is_null($transformer)) {
             return;

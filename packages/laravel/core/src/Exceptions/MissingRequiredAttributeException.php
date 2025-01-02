@@ -9,13 +9,12 @@ use Exception;
  */
 class MissingRequiredAttributeException extends Exception
 {
-    public function __construct(string $attrbiute, mixed $class = null)
+    public function __construct(string $attribute, ?string $class = null)
     {
-        if (is_null($class)) {
-            parent::__construct('Class is missing required attribute: '.$attrbiute);
+        $message = \is_null($class)
+            ? sprintf('Class is missing required attribute [%s]', $attribute)
+            : sprintf('Class [%s] is missing required attribute [%s]', $class, $attribute);
 
-            return;
-        }
-        parent::__construct('Class is missing required attribute '.$attrbiute.' for '.get_class($class));
+        parent::__construct($message);
     }
 }

@@ -5,8 +5,8 @@ use Honed\Core\Concerns\HasLabel;
 
 class HasLabelComponent
 {
-    use HasLabel;
     use Evaluable;
+    use HasLabel;
 }
 
 beforeEach(function () {

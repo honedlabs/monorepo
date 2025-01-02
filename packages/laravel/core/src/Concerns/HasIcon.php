@@ -33,7 +33,7 @@ trait HasIcon
         if (\is_null($icon)) {
             return;
         }
-        
+
         $this->icon = $icon;
     }
 
@@ -48,7 +48,7 @@ trait HasIcon
     /**
      * Get the icon.
      */
-    public function getIcon(): string|null
+    public function getIcon(): ?string
     {
         return $this->icon instanceof Icon ? $this->icon->icon() : $this->icon;
     }

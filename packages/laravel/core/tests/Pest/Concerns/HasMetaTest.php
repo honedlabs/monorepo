@@ -5,8 +5,8 @@ use Honed\Core\Concerns\HasMeta;
 
 class HasMetaComponent
 {
-    use HasMeta;
     use Evaluable;
+    use HasMeta;
 }
 
 beforeEach(function () {

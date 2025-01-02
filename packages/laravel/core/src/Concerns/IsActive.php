@@ -27,7 +27,7 @@ trait IsActive
      * Set the active property quietly.
      */
     public function setActive(bool $active): void
-    {        
+    {
         $this->active = $active;
     }
 

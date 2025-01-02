@@ -46,7 +46,7 @@ trait HasAttribute
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
-    public function getAttribute(array $named = [], array $typed = []): string|null
+    public function getAttribute(array $named = [], array $typed = []): ?string
     {
         return $this->evaluate($this->attribute, $named, $typed);
     }
@@ -57,7 +57,7 @@ trait HasAttribute
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
-    public function resolveAttribute(array $named = [], array $typed = []): string|null
+    public function resolveAttribute(array $named = [], array $typed = []): ?string
     {
         $this->setAttribute($this->getAttribute($named, $typed));
 

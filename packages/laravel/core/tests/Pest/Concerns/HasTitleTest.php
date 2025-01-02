@@ -5,8 +5,8 @@ use Honed\Core\Concerns\HasTitle;
 
 class HasTitleComponent
 {
-    use HasTitle;
     use Evaluable;
+    use HasTitle;
 }
 
 beforeEach(function () {

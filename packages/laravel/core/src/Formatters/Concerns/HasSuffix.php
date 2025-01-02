@@ -43,7 +43,7 @@ trait HasSuffix
 
     /**
      * Get the suffix.
-     * 
+     *
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
@@ -62,7 +62,7 @@ trait HasSuffix
     {
         $suffix = $this->getSuffix($named, $typed);
         $this->setSuffix($suffix);
-        
+
         return $suffix;
     }
 

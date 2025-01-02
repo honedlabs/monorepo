@@ -33,7 +33,7 @@ trait HasId
         if (\is_null($id)) {
             return;
         }
-        
+
         $this->id = $id;
     }
 
@@ -44,7 +44,6 @@ trait HasId
     {
         return $this->id ??= $this->generateId();
     }
-
 
     /**
      * Determine if the class has an ID.

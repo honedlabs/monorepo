@@ -6,8 +6,8 @@ use Honed\Core\Tests\Stubs\Product;
 
 class HasSuffixComponent
 {
-    use HasSuffix;
     use Evaluable;
+    use HasSuffix;
 }
 
 beforeEach(function () {

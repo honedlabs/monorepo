@@ -26,7 +26,7 @@ trait HasScope
     /**
      * Set the scope quietly.
      */
-    public function setScope(string|null $scope): void
+    public function setScope(?string $scope): void
     {
         if (\is_null($scope)) {
             return;
@@ -38,7 +38,7 @@ trait HasScope
     /**
      * Get the scope using the given closure dependencies.
      */
-    public function getScope(): string|null
+    public function getScope(): ?string
     {
         return $this->scope;
     }

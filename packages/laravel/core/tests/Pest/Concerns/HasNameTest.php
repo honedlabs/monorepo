@@ -5,8 +5,8 @@ use Honed\Core\Concerns\HasName;
 
 class HasNameComponent
 {
-    use HasName;
     use Evaluable;
+    use HasName;
 }
 
 beforeEach(function () {

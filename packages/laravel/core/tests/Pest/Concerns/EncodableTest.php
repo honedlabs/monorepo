@@ -1,7 +1,6 @@
 <?php
 
 use Honed\Core\Concerns\Encodable;
-use Honed\Core\Tests\Stubs\Component;
 
 class EncodableComponent
 {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @mixin \Honed\Core\Concerns\Evaluable
  */
+
 namespace Honed\Core\Formatters\Concerns;
 
 trait HasCurrency

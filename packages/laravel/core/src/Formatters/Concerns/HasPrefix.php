@@ -40,7 +40,7 @@ trait HasPrefix
 
     /**
      * Get the prefix.
-     * 
+     *
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
@@ -59,7 +59,7 @@ trait HasPrefix
     {
         $prefix = $this->getPrefix($named, $typed);
         $this->setPrefix($prefix);
-        
+
         return $prefix;
     }
 

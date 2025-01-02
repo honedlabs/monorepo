@@ -39,4 +39,3 @@ it('chains timezone', function () {
         ->getTimezone()->toBe(100)
         ->hasTimezone()->toBeTrue();
 });
-

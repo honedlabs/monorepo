@@ -1,7 +1,6 @@
 <?php
 
 use Honed\Core\Concerns\Validatable;
-use Honed\Core\Tests\Stubs\Component;
 
 class ValidatableComponent
 {

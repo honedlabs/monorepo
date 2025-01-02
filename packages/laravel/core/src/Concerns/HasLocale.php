@@ -28,7 +28,7 @@ trait HasLocale
     /**
      * Set the locale quietly.
      */
-    public function setLocale(string|null $locale): void
+    public function setLocale(?string $locale): void
     {
         if (\is_null($locale)) {
             return;

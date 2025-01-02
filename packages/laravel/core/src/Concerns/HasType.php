@@ -26,7 +26,7 @@ trait HasType
     /**
      * Set the type property quietly.
      */
-    public function setType(string|null $type): void
+    public function setType(?string $type): void
     {
         if (\is_null($type)) {
             return;
@@ -37,7 +37,7 @@ trait HasType
     /**
      * Get the type using the given closure dependencies.
      */
-    public function getType(): string|null
+    public function getType(): ?string
     {
         return $this->type;
     }

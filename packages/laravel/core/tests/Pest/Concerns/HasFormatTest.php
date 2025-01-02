@@ -5,8 +5,8 @@ use Honed\Core\Concerns\HasFormat;
 
 class HasFormatComponent
 {
-    use HasFormat;
     use Evaluable;
+    use HasFormat;
 }
 
 beforeEach(function () {

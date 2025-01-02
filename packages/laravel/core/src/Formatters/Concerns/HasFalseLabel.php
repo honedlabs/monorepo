@@ -21,7 +21,7 @@ trait HasFalseLabel
     /**
      * Configure the default false label.
      */
-    public static function useFalseLabel(string $falseLabel = null): void
+    public static function useFalseLabel(?string $falseLabel = null): void
     {
         static::$defaultFalseLabel = $falseLabel ?? self::FalseLabel;
     }

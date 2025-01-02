@@ -20,7 +20,7 @@ class Option extends Primitive
     /**
      * Create a new Option instance.
      */
-    final public function __construct(int|string|float|bool|null $value, string|\Closure $label = null)
+    final public function __construct(int|string|float|bool|null $value, string|\Closure|null $label = null)
     {
         $this->setValue($value);
         $this->setLabel($label ?? $this->makeLabel((string) $value));
@@ -29,7 +29,7 @@ class Option extends Primitive
     /**
      * Make a new option class.
      */
-    public static function make(int|string|float|bool|null $value, string $label = null): static
+    public static function make(int|string|float|bool|null $value, ?string $label = null): static
     {
         return resolve(static::class, compact('value', 'label'));
     }

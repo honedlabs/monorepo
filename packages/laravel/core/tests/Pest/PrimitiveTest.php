@@ -8,8 +8,8 @@ use Honed\Core\Primitive;
 class PrimitiveComponent extends Primitive
 {
     use HasType;
-    
-    public string|null $key = null;
+
+    public ?string $key = null;
 
     public function configure(): static
     {

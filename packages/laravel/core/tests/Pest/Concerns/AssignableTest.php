@@ -9,8 +9,8 @@ class AssignableComponent
 {
     use Assignable;
     use Evaluable;
-    use HasName;
     use HasDescription;
+    use HasName;
 }
 
 beforeEach(function () {
@@ -28,4 +28,3 @@ it('does not assign properties that do not have a setter', function () {
         ->getName()->toBe('Test')
         ->getDescription()->toBe('This is a test');
 });
-

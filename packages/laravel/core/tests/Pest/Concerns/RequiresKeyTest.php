@@ -40,4 +40,3 @@ it('throws exception if key not defined', function () {
     $component = new KeyUndefined;
     $component->getKey();
 })->throws(MissingRequiredAttributeException::class);
-

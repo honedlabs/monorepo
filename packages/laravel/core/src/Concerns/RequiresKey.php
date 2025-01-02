@@ -18,7 +18,7 @@ trait RequiresKey
         return match (true) {
             \property_exists($this, 'key') && isset($this->key) => $this->key,
             \method_exists($this, 'key') => $this->key(),
-            default => throw new MissingRequiredAttributeException('key', $this),
+            default => throw new MissingRequiredAttributeException('key', static::class),
         };
     }
 }

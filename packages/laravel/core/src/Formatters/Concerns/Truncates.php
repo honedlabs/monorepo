@@ -26,7 +26,7 @@ trait Truncates
     /**
      * Set the truncate amount quietly.
      */
-    public function setTruncate(int|null $truncate): void
+    public function setTruncate(?int $truncate): void
     {
         if (\is_null($truncate)) {
             return;
@@ -38,7 +38,7 @@ trait Truncates
     /**
      * Get the truncate amount.
      */
-    public function getTruncate(): int|null
+    public function getTruncate(): ?int
     {
         return $this->truncate;
     }

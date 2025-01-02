@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+use Honed\Core\Options\Concerns\HasOptions;
 use Honed\Core\Options\Option;
+use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Support\Collection;
-use Honed\Core\Tests\Stubs\Product;
-use Honed\Core\Options\Concerns\HasOptions;
 
 class HasOptionsComponent
 {
@@ -195,8 +195,7 @@ it('has shorthand `fromCollection` with properties', function () {
         ->hasOptions()->toBeTrue()
         ->getOptions()->toHaveCount(2)
         ->getOptions()->sequence(
-            fn ($option) => 
-            $option->toBeInstanceOf(Option::class)
+            fn ($option) => $option->toBeInstanceOf(Option::class)
                 ->getValue()->toBe($a->public_id->serialize())
                 ->getLabel()->toBe((string) $a->name),
             fn ($option) => $option->toBeInstanceOf(Option::class)

@@ -6,8 +6,8 @@ use Honed\Core\Tests\Stubs\Product;
 
 class HasPrefixComponent
 {
-    use HasPrefix;
     use Evaluable;
+    use HasPrefix;
 }
 
 beforeEach(function () {

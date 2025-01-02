@@ -9,7 +9,6 @@ namespace Honed\Core\Concerns;
  */
 trait IsAnonymous
 {
-    
     /**
      * Determine if the class is anonymous.
      */

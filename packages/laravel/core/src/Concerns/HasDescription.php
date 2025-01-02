@@ -47,7 +47,7 @@ trait HasDescription
      * @param  array<string,mixed>  $named
      * @param  array<string,mixed>  $typed
      */
-    public function getDescription(array $named = [], array $typed = []): string|null
+    public function getDescription(array $named = [], array $typed = []): ?string
     {
         return $this->evaluate($this->description, $named, $typed);
     }
@@ -58,7 +58,7 @@ trait HasDescription
      * @param  array<string,mixed>  $named
      * @param  array<string,mixed>  $typed
      */
-    public function resolveDescription(array $named = [], array $typed = []): string|null
+    public function resolveDescription(array $named = [], array $typed = []): ?string
     {
         $this->setDescription($this->getDescription($named, $typed));
 

@@ -2,7 +2,7 @@
 
 use Honed\Core\Concerns\IsAnonymous;
 
-class IsAnonymousParent 
+class IsAnonymousParent
 {
     use IsAnonymous;
 }

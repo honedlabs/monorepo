@@ -6,8 +6,8 @@ use Honed\Core\Tests\Stubs\Product;
 
 class HasCurrencyComponent
 {
-    use HasCurrency;
     use Evaluable;
+    use HasCurrency;
 }
 
 beforeEach(function () {

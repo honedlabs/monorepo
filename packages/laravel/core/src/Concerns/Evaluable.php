@@ -38,7 +38,7 @@ trait Evaluable
         }
 
         if (! $value instanceof Closure) {
-            return $value;
+            return $value; // @phpstan-ignore-line
         }
 
         $dependencies = [];

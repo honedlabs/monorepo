@@ -6,12 +6,18 @@ namespace Honed\Core\Concerns;
 
 trait Configurable
 {
-    protected static array $configurations = [];
+    /**
+     * @var array<class-string, array<\Closure>>
+     */
+    protected static $configurations = [];
 
     /**
      * Provide the class with any necessary setup.
      */
-    public function setUp() {}
+    public function setUp(): void
+    {
+        //
+    }
 
     /**
      * Configure the class using a callback.

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Core\Tests;
 
 use Honed\Core\Tests\Stubs\Status;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra

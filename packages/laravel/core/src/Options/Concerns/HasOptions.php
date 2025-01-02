@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Core\Options\Concerns;
 
 use Honed\Core\Options\Option;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 trait HasOptions
 {
@@ -19,7 +19,7 @@ trait HasOptions
      * Set the options, chainable
      *
      * @param  array<int,mixed>|\Illuminate\Support\Collection|class-string<\BackedEnum>|class-string<\Illuminate\Database\Eloquent\Model>|\Honed\Core\Options\Option  $option
-     * @param array<int,\Honed\Core\Options\Option> $options
+     * @param  array<int,\Honed\Core\Options\Option>  $options
      * @return $this
      */
     public function options(array|string|Collection|Option $option, ...$options): static
@@ -61,7 +61,7 @@ trait HasOptions
      * @param  class-string<\Illuminate\Database\Eloquent\Model>  $model
      * @return $this
      */
-    public function fromModel(string $model, string $value = null, string $label = null): static
+    public function fromModel(string $model, ?string $value = null, ?string $label = null): static
     {
         collect($model::all())->each(function ($instance) use ($value, $label) {
             $this->addOption($this->parseOption(
@@ -79,11 +79,11 @@ trait HasOptions
      *
      * @return $this
      */
-    public function fromCollection(Collection $collection, string $value = null, string $label = null): static
+    public function fromCollection(Collection $collection, ?string $value = null, ?string $label = null): static
     {
         $collection->each(function ($item) use ($value, $label) {
-            $this->addOption($item instanceof Option 
-                ? $item 
+            $this->addOption($item instanceof Option
+                ? $item
                 : $this->parseOption(
                     $this->getOptionField($item, $value) ?? $item,
                     $this->getOptionField($item, $label)
@@ -152,17 +152,17 @@ trait HasOptions
 
     /**
      * Get an option field from an item.
-     * 
+     *
      * @internal
      */
-    protected function getOptionField(mixed $item, string $key = null): mixed
+    protected function getOptionField(mixed $item, ?string $key = null): mixed
     {
 
         return match (true) {
             \is_null($key) => null,
             $item instanceof Model => $item->getAttribute($key),
             \is_array($item) => $item[$key] ?? null,
-            !\is_object($item) => null,
+            ! \is_object($item) => null,
             \method_exists($item, $key) => $item->{$key}(),
             \property_exists($item, $key) => $item->{$key},
             default => null,
@@ -171,10 +171,10 @@ trait HasOptions
 
     /**
      * Parse a value and label as an Option class.
-     * 
+     *
      * @internal
      */
-    protected function parseOption(mixed $value, string $label = null): Option
+    protected function parseOption(mixed $value, ?string $label = null): Option
     {
         return Option::make($value, $label);
     }

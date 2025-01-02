@@ -5,8 +5,8 @@ use Honed\Core\Concerns\HasPlaceholder;
 
 class HasPlaceholderComponent
 {
-    use HasPlaceholder;
     use Evaluable;
+    use HasPlaceholder;
 }
 
 beforeEach(function () {

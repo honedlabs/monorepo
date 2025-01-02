@@ -5,8 +5,8 @@ use Honed\Core\Concerns\HasType;
 
 class HasTypeComponent
 {
-    use HasType;
     use Evaluable;
+    use HasType;
 }
 
 beforeEach(function () {

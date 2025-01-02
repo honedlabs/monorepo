@@ -16,7 +16,7 @@ class DateFormatter implements Contracts\Formatter
     /**
      * Create a new date formatter instance with a format, difference, and timezone.
      */
-    public function __construct(string $format = null, bool $diff = false, string $timezone = null)
+    public function __construct(?string $format = null, bool $diff = false, ?string $timezone = null)
     {
         $this->setDateFormat($format);
         $this->setDifference($diff);
@@ -26,7 +26,7 @@ class DateFormatter implements Contracts\Formatter
     /**
      * Make a date formatter with a format, difference, and timezone.
      */
-    public static function make(string $format = null, bool $diff = false, string $timezone = null): static
+    public static function make(?string $format = null, bool $diff = false, ?string $timezone = null): static
     {
         return resolve(static::class, compact('format', 'diff', 'timezone'));
     }

@@ -26,7 +26,7 @@ trait HasPrecision
     /**
      * Set the precision quietly.
      */
-    public function setPrecision(int|null $precision): void
+    public function setPrecision(?int $precision): void
     {
         if (\is_null($precision)) {
             return;
@@ -38,7 +38,7 @@ trait HasPrecision
     /**
      * Get the divide by value.
      */
-    public function getPrecision(): int|null
+    public function getPrecision(): ?int
     {
         return $this->precision;
     }

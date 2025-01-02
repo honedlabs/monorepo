@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\Configurable;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasName;
 
 class ConfigurableComponent
 {
     use Configurable;
-    use HasName;
     use Evaluable;
+    use HasName;
 
     public function setUp()
     {

@@ -29,7 +29,7 @@ trait Encodable
      *
      * @param  (\Closure(string):string)|null  $decoder
      */
-    public static function setDecoder(\Closure|null $decoder = null): void
+    public static function setDecoder(?\Closure $decoder = null): void
     {
         static::$decoder = $decoder;
     }

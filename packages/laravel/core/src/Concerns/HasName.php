@@ -39,7 +39,7 @@ trait HasName
         if (\is_null($name)) {
             return;
         }
-        
+
         $this->name = $name;
     }
 
