@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Table\Concerns;
 
 use Closure;
@@ -16,7 +18,7 @@ trait HasResource
      * 
      * @var \Illuminate\Contracts\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>|string
      */
-    // protected $resource;
+    protected $resource;
 
     /**
      * Modify the resource query before it is used on a per controller basis.
@@ -37,7 +39,7 @@ trait HasResource
         if (! isset($this->resource)) {
             $this->resource = match (true) {
                 \method_exists($this, 'resource') => $this->resource(),
-                \property_exists($this, 'resource') => $this->resource,
+                \property_exists($this, 'resource') && isset($this->resource) => $this->resource,
                 default => $this->guessResourceFromTable()
             };
         }

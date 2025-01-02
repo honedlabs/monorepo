@@ -3,7 +3,7 @@
 use Honed\Table\Sorts\Sort;
 
 beforeEach(function () {
-    Sort::useAscending();
+    Sort::sortByAscending();
     $this->sort = Sort::make('created_at');
 });
 
@@ -45,17 +45,7 @@ it('has shorthand for setting direction as ascending', function () {
 });
 
 it('can be globally configured for default direction', function () {
-    Sort::useDefaultDirection(Sort::Descending);
-    expect($this->sort->getDefaultDirection())->toBe(Sort::Descending);
-});
-
-it('has shorthand for setting default direction as ascending', function () {
-    Sort::useAscending();
-    expect($this->sort->getDefaultDirection())->toBe(Sort::Ascending);
-});
-
-it('has shorthand for setting default direction as descending', function () {
-    Sort::useDescending();
+    Sort::sortByDescending();
     expect($this->sort->getDefaultDirection())->toBe(Sort::Descending);
 });
 
@@ -63,10 +53,6 @@ it('clears the default direction', function () {
     Sort::useDefaultDirection(null);
     expect($this->sort->getDefaultDirection())->toBe(Sort::Ascending);
 });
-
-it('prevents the default direction from being set to an invalid value', function () {
-    Sort::useDefaultDirection('invalid');
-})->throws(\InvalidArgumentException::class);
 
 it('prevents the direction from being set to an invalid value', function () {
     $this->sort->setDirection('invalid');

@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Honed\Core\Concerns\Encodable;
+use Honed\Core\Concerns\Inspectable;
 use Illuminate\Support\Collection;
 use Honed\Table\Actions\BulkAction;
 use Honed\Table\Columns\BaseColumn;
@@ -29,7 +30,8 @@ use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Stringable;
 
 /**
- * @method static static build((\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)|null) $resource = null) Build the table records and metadata using the current request.
+ * @template T of \Illuminate\Database\Eloquent\Model
+ * @method static static build((\Closure(\Illuminate\Database\Eloquent\Builder<T>):(\Illuminate\Database\Eloquent\Builder<T>)|null) $resource = null) Build the table records and metadata using the current request.
  * @method $this build() Build the table records and metadata using the current request.
  */
 class Table extends Primitive
@@ -67,7 +69,7 @@ class Table extends Primitive
     /**
      * Build the table with the given assignments.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|class-string|\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)  $resource
+     * @param  \Illuminate\Database\Eloquent\Builder<T>|T|class-string<T>|\Closure(\Illuminate\Database\Eloquent\Builder<T>):(\Illuminate\Database\Eloquent\Builder<T>)  $resource
      */
     public function __construct(Model|Builder|Closure|string $resource = null)
     {
@@ -125,7 +127,7 @@ class Table extends Primitive
     /**
      * Create a new table instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|class-string|\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)  $resource
+     * @param  \Illuminate\Database\Eloquent\Builder<T>|T|class-string<T>|\Closure(\Illuminate\Database\Eloquent\Builder<T>):(\Illuminate\Database\Eloquent\Builder<T>)  $resource
      */
     public static function make(Model|Builder|Closure|string $resource = null): static
     {
