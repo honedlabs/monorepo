@@ -6,6 +6,7 @@ namespace Honed\Core\Options\Concerns;
 
 use Honed\Core\Options\Option;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 trait HasOptions
 {
@@ -101,10 +102,10 @@ trait HasOptions
             return;
         }
 
-        collect($options)->each(function ($key, $value) {
+        collect($options)->each(function ($value, $key) {
             $this->addOption(match (true) {
                 $value instanceof Option => $value,
-                \is_int($value) => $this->parseOption($key),
+                \is_int($key) => $this->parseOption($value),
                 default => $this->parseOption($key, $value),
             });
         });
@@ -148,12 +149,15 @@ trait HasOptions
 
     /**
      * Get an option field from an item.
+     * 
+     * @internal
      */
     protected function getOptionField(mixed $item, string $key = null): mixed
     {
 
         return match (true) {
-            \is_null($key) => null,
+            \is_null($key) => $item,
+            $item instanceof Model => $item->getAttribute($key),
             \is_array($item) => $item[$key] ?? null,
             !\is_object($item) => null,
             \method_exists($item, $key) => $item->{$key}(),
@@ -164,6 +168,8 @@ trait HasOptions
 
     /**
      * Parse a value and label as an Option class.
+     * 
+     * @internal
      */
     protected function parseOption(mixed $value, string $label = null): Option
     {

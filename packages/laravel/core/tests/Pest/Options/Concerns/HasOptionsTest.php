@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Honed\Core\Options\Option;
 use Honed\Core\Tests\Stubs\Status;
+use Illuminate\Support\Collection;
 use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Options\Concerns\HasOptions;
 
@@ -14,143 +15,243 @@ class HasOptionsComponent
 
 beforeEach(function () {
     $this->component = new HasOptionsComponent;
+    Product::all()->each->delete();
 });
 
-it('adds an option', function () {
-    $this->component->addOption($option = Option::make('value'));
-    expect($this->component->getOptions())->toBe([$option]);
+it('has no options by default', function () {
+    expect($this->component)
+        ->getOptions()->toBeEmpty()
+        ->hasOptions()->toBeFalse();
 });
 
-it('checks if it has options', function () {
-    $component = new HasOptionsComponent;
-    expect($component->hasOptions())->toBeFalse();
-    $component->addOption(Option::make('value'));
-    expect($component->hasOptions())->toBeTrue();
+it('adds options', function () {
+    $this->component->addOption(Option::make('value', 'Label'));
+    expect($this->component)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(1)
+        ->getOptions()->{0}->scoped(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('value')
+                ->getLabel()->toBe('Label')
+        );
 });
 
-it('can set option as single value', function () {
-    $component = new HasOptionsComponent;
-    $component->setOptions([
-        'value',
-    ]);
-    expect($component->getOptions())->toHaveCount(1);
-    expect($component->getOptions()[0])->toBeInstanceOf(Option::class);
-    expect($component->getOptions()[0]->getValue())->toBe('value');
-    expect($component->getOptions()[0]->getLabel())->toBe('Value');
+it('sets options', function () {
+    $this->component->setOptions([Option::make('value', 'Label')]);
+    expect($this->component)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(1)
+        ->getOptions()->{0}->scoped(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('value')
+                ->getLabel()->toBe('Label')
+        );
 });
 
-it('can set option as key value pair', function () {
-    $component = new HasOptionsComponent;
-    $component->setOptions([
-        'value' => 'Label',
-    ]);
-    expect($component->getOptions())->toHaveCount(1);
-    expect($component->getOptions()[0])->toBeInstanceOf(Option::class);
-    expect($component->getOptions()[0]->getValue())->toBe('value');
-    expect($component->getOptions()[0]->getLabel())->toBe('Label');
+it('rejects null values', function () {
+    $this->component->setOptions([Option::make('value', 'Label')]);
+    $this->component->setOptions(null);
+    expect($this->component)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(1)
+        ->getOptions()->{0}->scoped(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('value')
+                ->getLabel()->toBe('Label')
+        );
 });
 
-it('can set option as Option instance', function () {
-    $component = new HasOptionsComponent;
-    $component->setOptions([
-        Option::make('value'),
-    ]);
-    expect($component->getOptions())->toHaveCount(1);
-    expect($component->getOptions()[0])->toBeInstanceOf(Option::class);
-    expect($component->getOptions()[0]->getValue())->toBe('value');
-    expect($component->getOptions()[0]->getLabel())->toBe('Value');
+it('sets options from list', function () {
+    $this->component->setOptions(['value']);
+    expect($this->component)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(1)
+        ->getOptions()->{0}->scoped(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('value')
+                ->getLabel()->toBe('Value')
+        );
 });
 
-it('can chain options', function () {
-    $component = new HasOptionsComponent;
-    expect($component->options(['key' => 'value']))->toBeInstanceOf(HasOptionsComponent::class);
-    expect($component->hasOptions())->toBeTrue();
-    expect($component->getOptions())->toHaveCount(1);
+it('sets options from associative pair', function () {
+    $this->component->setOptions(['value' => 'Label']);
+    expect($this->component)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(1)
+        ->getOptions()->{0}->scoped(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('value')
+                ->getLabel()->toBe('Label')
+        );
 });
 
-it('can chain options from enum using defaults', function () {
-    $component = new HasOptionsComponent;
-    expect($component->fromEnum(Status::class))->toBeInstanceOf(HasOptionsComponent::class);
-    expect($component->getOptions())->toHaveCount(count(Status::cases()));
-    expect($component->getOptions())->each(function ($option) {
-
-        expect($enum = Status::tryFrom($option->value->getValue()))
-            ->toBeInstanceOf(Status::class)
-            ->and($option->value->getValue())->toBe($enum->value)
-            ->and($option->value->getLabel())->toBe($enum->name);
-    });
+it('can collect options', function () {
+    $this->component->setOptions([Option::make('value', 'Label')]);
+    expect($this->component->collectOptions())->toBeInstanceOf(Collection::class)
+        ->toHaveCount(1)
+        ->first()->scoped(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('value')
+                ->getLabel()->toBe('Label')
+        );
 });
 
-it('can chain options from enum using methods', function () {
-    $component = new HasOptionsComponent;
-    expect($component->fromEnum(Status::class, null, 'label'))->toBeInstanceOf(HasOptionsComponent::class);
-    expect($component->getOptions())->toHaveCount(count(Status::cases()));
-    expect($component->getOptions())->each(function ($option) {
-
-        expect($enum = Status::tryFrom($option->value->getValue()))
-            ->toBeInstanceOf(Status::class)
-            ->and($option->value->getValue())->toBe($enum->value)
-            ->and($option->value->getLabel())->toBe($enum->label());
-    });
+it('has shorthand `fromEnum` with defaults', function () {
+    expect($this->component->fromEnum(Status::class))->toBeInstanceOf(HasOptionsComponent::class)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(\count(Status::cases()))
+        ->getOptions()->sequence(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::Available->value)
+                ->getLabel()->toBe(Status::Available->name),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::Unavailable->value)
+                ->getLabel()->toBe(Status::Unavailable->name),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::ComingSoon->value)
+                ->getLabel()->toBe(Status::ComingSoon->name),
+        );
 });
 
-it('can chain options from model, defaulting to key', function () {
-    $component = new HasOptionsComponent;
-    expect($component->fromModel(Product::class))->toBeInstanceOf(HasOptionsComponent::class);
-    expect($component->getOptions())->toHaveCount(Product::count());
-    expect($component->getOptions())->each(function ($option) {
-        expect($model = Product::find($option->value->getValue()))
-            ->toBeInstanceOf(Product::class)
-            ->and($option->value->getValue())->toBe($model->getKey())
-            ->and($option->value->getLabel())->toBe((string) $model->getKey());
-    });
+it('has shorthand `fromEnum` with methods', function () {
+    expect($this->component->fromEnum(Status::class, label: 'label'))->toBeInstanceOf(HasOptionsComponent::class)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(\count(Status::cases()))
+        ->getOptions()->sequence(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::Available->value)
+                ->getLabel()->toBe(Status::Available->label()),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::Unavailable->value)
+                ->getLabel()->toBe(Status::Unavailable->label()),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::ComingSoon->value)
+                ->getLabel()->toBe(Status::ComingSoon->label()),
+        );
 });
 
-it('can chain options from model using properties', function () {
-    $component = new HasOptionsComponent;
-    expect($component->fromModel(Product::class, 'slug', 'name'))->toBeInstanceOf(HasOptionsComponent::class);
-    expect($component->getOptions())->toHaveCount(Product::count());
-    expect($component->getOptions())->each(function ($option) {
-        expect($model = Product::where('slug', $option->value->getValue())->first())
-            ->toBeInstanceOf(Product::class)
-            ->and($option->value->getValue())->toBe($model->slug)
-            ->and($option->value->getLabel())->toBe((string) $model->name);
-    });
+it('has shorthand `fromModel` with defaults', function () {
+    $a = product();
+    $b = product();
+
+    expect($this->component->fromModel(Product::class))->toBeInstanceOf(HasOptionsComponent::class)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(2)
+        ->getOptions()->sequence(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe($a->getKey())
+                ->getLabel()->toBe((string) $a->getKey()),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe($b->getKey())
+                ->getLabel()->toBe((string) $b->getKey()),
+        );
 });
 
-it('can chain options from model using method', function () {
-    $component = new HasOptionsComponent;
-    expect($component->fromModel(Product::class, 'url', 'name'))->toBeInstanceOf(HasOptionsComponent::class);
-    expect($component->getOptions())->toHaveCount(Product::count());
-    expect($component->getOptions())->each(function ($option) {
-        expect($model = Product::where('name', $option->value->getLabel())->first())
-            ->toBeInstanceOf(Product::class)
-            ->and($model->url())->toBe($option->value->getValue())
-            ->and($model->name)->toBe($option->value->getLabel());
-    });
+it('has shorthand `fromModel` with properties', function () {
+    $a = product();
+    $b = product();
+
+    expect($this->component->fromModel(Product::class, 'public_id', 'name'))->toBeInstanceOf(HasOptionsComponent::class)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(2)
+        ->getOptions()->sequence(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe($a->public_id->serialize())
+                ->getLabel()->toBe((string) $a->name),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe($b->public_id->serialize())
+                ->getLabel()->toBe((string) $b->name),
+        );
 });
 
-it('can chain options from collection, defaulting to the item itself', function () {
-    $component = new HasOptionsComponent;
-    expect($component->fromCollection($c = Product::select('name', 'slug')->get()))->toBeInstanceOf(HasOptionsComponent::class);
-    expect($component->getOptions())->toHaveCount($c->count());
-    expect($component->getOptions())->toHaveCount($c->count());
+it('has shorthand `fromCollection` with defaults', function () {
+    $collection = collect(1, 2, 3);
+    expect($this->component->fromCollection($collection))->toBeInstanceOf(HasOptionsComponent::class)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount($collection->count())
+        ->getOptions()->sequence(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe($collection->get(0))
+                ->getLabel()->toBe((string) $collection->get(0)),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe($collection->get(1))
+                ->getLabel()->toBe((string) $collection->get(1)),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe($collection->get(2))
+                ->getLabel()->toBe((string) $collection->get(2)),
+        );
 });
 
-it('can chain options from collection using properties', function () {
-    $component = new HasOptionsComponent;
-    expect($component->fromCollection($c = Product::select('name', 'slug')->get(), 'slug', 'name'))->toBeInstanceOf(HasOptionsComponent::class);
-    expect($component->getOptions())->toHaveCount($c->count());
-    expect($component->getOptions())->each(function ($option) use ($c) {
-        expect($model = $c->where('slug', $option->value->getValue())->first())
-            ->toBeInstanceOf(Product::class)
-            ->and($option->value->getValue())->toBe($model->slug)
-            ->and($option->value->getLabel())->toBe((string) $model->name);
-    });
+it('has shorthand `fromCollection` with properties', function () {
+    $a = product();
+    $b = product();
+
+    expect($this->component->fromCollection(Product::query()
+            ->select('public_id', 'name')
+            ->orderBy('public_id')
+            ->get()
+        ))->toBeInstanceOf(HasOptionsComponent::class)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(2)
+        ->getOptions()->sequence(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->serialize()->toBe($a->public_id->serialize())
+                ->getLabel()->toBe((string) $a->name),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->serialize()->toBe($b->public_id->serialize())
+                ->getLabel()->toBe((string) $b->name),
+        );
 });
 
-it('does not allow for nulls to be set', function () {
-    $component = new HasOptionsComponent;
-    $component->setOptions(null);
-    expect($component->getOptions())->toBeEmpty();
+it('chains options as array', function () {
+    expect($this->component->options(['value' => 'Label']))->toBeInstanceOf(HasOptionsComponent::class)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(1)
+        ->getOptions()->{0}->scoped(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('value')
+                ->getLabel()->toBe('Label')
+        );
+});
+
+it('chains options as option', function () {
+    expect($this->component->options(Option::make('value', 'Label')))->toBeInstanceOf(HasOptionsComponent::class)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(1)
+        ->getOptions()->{0}->scoped(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('value')
+                ->getLabel()->toBe('Label')
+        );
+});
+
+it('chains options as collection', function () {
+    expect($this->component->options(collect([Option::make('value', 'Label')])))->toBeInstanceOf(HasOptionsComponent::class)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(1)
+        ->getOptions()->{0}->scoped(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('value')
+                ->getLabel()->toBe('Label')
+        );
+});
+
+it('chains options from spread', function () {
+    $a = Option::make('a', 'Label A');
+    $b = Option::make('b', 'Label B');
+    $c = Option::make('c', 'Label C');
+    expect($this->component->options($a, $b, $c))->toBeInstanceOf(HasOptionsComponent::class)
+        ->hasOptions()->toBeTrue()
+        ->getOptions()->toHaveCount(3)
+        ->getOptions()->sequence(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('a')
+                ->getLabel()->toBe('Label A'),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('b')
+                ->getLabel()->toBe('Label B'),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('c')
+                ->getLabel()->toBe('Label C'),
+        );
 });
