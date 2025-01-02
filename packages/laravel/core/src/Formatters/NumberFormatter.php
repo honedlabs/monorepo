@@ -15,12 +15,8 @@ class NumberFormatter implements Contracts\Formatter
 
     /**
      * Create a new number formatter instance with a precision, divide by, and rounding.
-     *
-     * @param  int|(\Closure():int)|null  $precision
-     * @param  int|(\Closure():int)|null  $divideBy
-     * @param  string|(\Closure():string)|null  $locale
      */
-    public function __construct(int|\Closure|null $precision = null, int|\Closure|null $divideBy = null, string|\Closure|null $locale = null)
+    public function __construct(int $precision = null, int $divideBy = null, string $locale = null)
     {
         $this->setPrecision($precision);
         $this->setDivideBy($divideBy);
@@ -29,13 +25,10 @@ class NumberFormatter implements Contracts\Formatter
 
     /**
      * Make a number formatter with a precision, divide by, and rounding.
-     *
-     * @param  int|(\Closure():int)|null  $precision
-     * @param  int|(\Closure():int)|null  $divideBy
-     * @param  string|(\Closure():string)|null  $locale
+     * 
      * @return $this
      */
-    public static function make(int|\Closure|null $precision = null, int|\Closure|null $divideBy = null, string|\Closure|null $locale = null): static
+    public static function make(int $precision = null, int $divideBy = null, string $locale = null): static
     {
         return resolve(static::class, compact('precision', 'divideBy', 'locale'));
     }

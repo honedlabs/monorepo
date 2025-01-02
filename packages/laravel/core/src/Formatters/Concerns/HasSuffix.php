@@ -43,12 +43,10 @@ trait HasSuffix
 
     /**
      * Get the suffix.
-     *
-     * @param  mixed  $parameter
      */
-    public function getSuffix($parameter = null): ?string
+    public function getSuffix(): ?string
     {
-        return value($this->suffix, $parameter);
+        return $this->evaluate($this->suffix);
     }
 
     /**

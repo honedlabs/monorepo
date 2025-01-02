@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 /**
- * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasMeta
 {
     /**
-     * @var array<array-key,mixed>|(\Closure(mixed...):array<array-key,mixed>)
+     * @var array<array-key,mixed>
      */
     protected $meta = [];
 
     /**
      * Set the meta, chainable.
      *
-     * @param  array<array-key, mixed>|\Closure(mixed...):array<array-key,mixed>  $meta
+     * @param  array<array-key,mixed>  $meta
      * @return $this
      */
-    public function meta(array|\Closure $meta): static
+    public function meta(array $meta): static
     {
         $this->setMeta($meta);
 
@@ -30,9 +30,9 @@ trait HasMeta
     /**
      * Set the meta quietly.
      *
-     * @param  array<array-key, mixed>|\Closure(mixed...):array<array-key, mixed>|null  $meta
+     * @param  array<array-key, mixed>|null  $meta
      */
-    public function setMeta(array|\Closure|null $meta): void
+    public function setMeta(array|null $meta): void
     {
         if (\is_null($meta)) {
             return;

@@ -7,7 +7,7 @@ namespace Honed\Core\Concerns;
 use Illuminate\Support\Stringable;
 
 /**
- * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasLabel
 {
@@ -60,7 +60,7 @@ trait HasLabel
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
      */
-    public function resolveLabel(array $named = [], array $typed = []): ?string
+    public function resolveLabel(array $named = [], array $typed = []): string|null
     {
         $this->setLabel($this->getLabel($named, $typed));
 
@@ -77,10 +77,12 @@ trait HasLabel
 
     /**
      * Convert a string to the label format.
+     * 
+     * @param  string|\Closure():string  $name
      */
-    public function makeLabel(mixed $name): string
+    public function makeLabel(string|\Closure $name): string
     {
-        return (new Stringable((string) $this->evaluate($name)))
+        return (new Stringable($this->evaluate($name)))
             ->headline()
             ->lower()
             ->ucfirst()

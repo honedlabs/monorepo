@@ -11,7 +11,7 @@ interface Formatter extends Makeable
     /**
      * Format the value.
      *
-     * @template T
+     * @template T of string|int|float|null
      *
      * @param  T  $value
      * @return T|mixed

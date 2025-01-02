@@ -7,7 +7,7 @@ namespace Honed\Core\Concerns;
 use Illuminate\Support\Stringable;
 
 /**
- * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasName
 {

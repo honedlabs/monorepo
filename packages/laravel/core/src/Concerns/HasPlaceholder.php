@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 /**
- * @method mixed evaluate(mixed $value, array $named = [], array $typed = [])
+ * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasPlaceholder
 {

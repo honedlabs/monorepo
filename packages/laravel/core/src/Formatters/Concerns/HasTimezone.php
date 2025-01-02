@@ -4,23 +4,24 @@ declare(strict_types=1);
 
 namespace Honed\Core\Formatters\Concerns;
 
+use DateTimeZone;
+
 /**
  * @mixin \Honed\Core\Concerns\Evaluable
  */
 trait HasTimezone
 {
     /**
-     * @var \DateTimeZone|string|int|null|(\Closure(): \DateTimeZone|string|int|null)
+     * @var \DateTimeZone|string|int|null
      */
     protected $timezone = null;
 
     /**
      * Set the timezone, chainable.
      *
-     * @param  \DateTimeZone|string|int|(\Closure(): \DateTimeZone|string|int)  $timezone
      * @return $this
      */
-    public function timezone(mixed $timezone): static
+    public function timezone(DateTimeZone|string|int $timezone): static
     {
         $this->setTimezone($timezone);
 
@@ -29,25 +30,22 @@ trait HasTimezone
 
     /**
      * Set the timezone quietly.
-     *
-     * @param  \DateTimeZone|string|int|null|(\Closure(): \DateTimeZone|string|int)  $timezone
      */
-    public function setTimezone(mixed $timezone): void
+    public function setTimezone(DateTimeZone|string|int|null $timezone): void
     {
-        if (is_null($timezone)) {
+        if (\is_null($timezone)) {
             return;
         }
+
         $this->timezone = $timezone;
     }
 
     /**
      * Get the timezone.
-     *
-     * @return \DateTimeZone|string|int|null
      */
-    public function getTimezone(mixed $parameter = null): mixed
+    public function getTimezone(): DateTimeZone|string|int|null
     {
-        return value($this->timezone, $parameter);
+        return $this->timezone;
     }
 
     /**
