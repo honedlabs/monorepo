@@ -165,20 +165,20 @@ it('has shorthand `fromModel` with properties', function () {
 });
 
 it('has shorthand `fromCollection` with defaults', function () {
-    $collection = collect(1, 2, 3);
+    $collection = collect([1, 2, 3]);
     expect($this->component->fromCollection($collection))->toBeInstanceOf(HasOptionsComponent::class)
         ->hasOptions()->toBeTrue()
         ->getOptions()->toHaveCount($collection->count())
         ->getOptions()->sequence(
             fn ($option) => $option->toBeInstanceOf(Option::class)
-                ->getValue()->toBe($collection->get(0))
-                ->getLabel()->toBe((string) $collection->get(0)),
+                ->getValue()->toBe(1)
+                ->getLabel()->toBe((string) 1),
             fn ($option) => $option->toBeInstanceOf(Option::class)
-                ->getValue()->toBe($collection->get(1))
-                ->getLabel()->toBe((string) $collection->get(1)),
+                ->getValue()->toBe(2)
+                ->getLabel()->toBe((string) 2),
             fn ($option) => $option->toBeInstanceOf(Option::class)
-                ->getValue()->toBe($collection->get(2))
-                ->getLabel()->toBe((string) $collection->get(2)),
+                ->getValue()->toBe(3)
+                ->getLabel()->toBe((string) 3),
         );
 });
 
@@ -186,19 +186,21 @@ it('has shorthand `fromCollection` with properties', function () {
     $a = product();
     $b = product();
 
-    expect($this->component->fromCollection(Product::query()
-            ->select('public_id', 'name')
-            ->orderBy('public_id')
-            ->get()
-        ))->toBeInstanceOf(HasOptionsComponent::class)
+    $products = Product::query()
+        ->select('public_id', 'name')
+        ->orderBy('id')
+        ->get();
+
+    expect($this->component->fromCollection($products, 'public_id', 'name'))->toBeInstanceOf(HasOptionsComponent::class)
         ->hasOptions()->toBeTrue()
         ->getOptions()->toHaveCount(2)
         ->getOptions()->sequence(
-            fn ($option) => $option->toBeInstanceOf(Option::class)
-                ->getValue()->serialize()->toBe($a->public_id->serialize())
+            fn ($option) => 
+            $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe($a->public_id->serialize())
                 ->getLabel()->toBe((string) $a->name),
             fn ($option) => $option->toBeInstanceOf(Option::class)
-                ->getValue()->serialize()->toBe($b->public_id->serialize())
+                ->getValue()->toBe($b->public_id->serialize())
                 ->getLabel()->toBe((string) $b->name),
         );
 });

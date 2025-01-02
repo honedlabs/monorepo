@@ -6,7 +6,7 @@ use Honed\Core\Options\Option;
 it('can instantiate', function () {
     expect(new Option(1))->toBeInstanceOf(Option::class)
         ->getValue()->toBe(1)
-        ->getLabel()->toBe(1)
+        ->getLabel()->toBe((string) 1)
         ->getMeta()->toBe([])
         ->isActive()->toBeFalse();
 });

@@ -61,7 +61,7 @@ trait HasOptions
      * @param  class-string<\Illuminate\Database\Eloquent\Model>  $model
      * @return $this
      */
-    public function fromModel(string $model, string|null $value = null, string|null $label = 'name'): static
+    public function fromModel(string $model, string $value = null, string $label = null): static
     {
         collect($model::all())->each(function ($instance) use ($value, $label) {
             $this->addOption($this->parseOption(
@@ -79,13 +79,16 @@ trait HasOptions
      *
      * @return $this
      */
-    public function fromCollection(Collection $collection, ?string $value = null, ?string $label = null): static
+    public function fromCollection(Collection $collection, string $value = null, string $label = null): static
     {
         $collection->each(function ($item) use ($value, $label) {
-            $this->addOption($this->parseOption(
-                $this->getOptionField($item, $value) ?? $item,
-                $this->getOptionField($item, $label)
-            ));
+            $this->addOption($item instanceof Option 
+                ? $item 
+                : $this->parseOption(
+                    $this->getOptionField($item, $value) ?? $item,
+                    $this->getOptionField($item, $label)
+                )
+            );
         });
 
         return $this;
@@ -156,7 +159,7 @@ trait HasOptions
     {
 
         return match (true) {
-            \is_null($key) => $item,
+            \is_null($key) => null,
             $item instanceof Model => $item->getAttribute($key),
             \is_array($item) => $item[$key] ?? null,
             !\is_object($item) => null,
