@@ -93,7 +93,7 @@ trait HasOptions
     /**
      * Set the options quietly.
      *
-     * @param  array<Option>|null  $options
+     * @param  array<\Honed\Core\Options\Option>|null  $options
      */
     public function setOptions(?array $options): void
     {
@@ -101,16 +101,13 @@ trait HasOptions
             return;
         }
 
-        foreach ($options as $value => $label) {
-            if ($label instanceof Option) {
-                $option = $label;
-            } elseif (is_int($value)) {
-                $option = $this->parseOption($label);
-            } else {
-                $option = $this->parseOption($value, $label);
-            }
-            $this->addOption($option);
-        }
+        collect($options)->each(function ($key, $value) {
+            $this->addOption(match (true) {
+                $value instanceof Option => $value,
+                \is_int($value) => $this->parseOption($key),
+                default => $this->parseOption($key, $value),
+            });
+        });
     }
 
     /**
@@ -129,6 +126,16 @@ trait HasOptions
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    /**
+     * Get the options as a collection.
+     *
+     * @return \Illuminate\Support\Collection<int,\Honed\Core\Options\Option>
+     */
+    public function collectOptions(): Collection
+    {
+        return collect($this->options);
     }
 
     /**

@@ -19,13 +19,13 @@ it('accepts a precision, divide by, and locale', function () {
     expect($formatter->getLocale())->toBe('au');
 });
 
-it('can format a number', function () {
+it('formats a number', function () {
     $this->formatter->setPrecision(2);
     $this->formatter->setLocale('au');
     expect($this->formatter->format(1234567))->toBe(Number::format(1234567, precision: 2, locale: 'au'));
 });
 
-it('can cast non-numeric values', function () {
+it('casts non-numeric values', function () {
     $this->formatter->setPrecision(2);
     $this->formatter->setLocale('au');
     expect($this->formatter->format('1234567'))->toBe(Number::format(1234567, precision: 2, locale: 'au'));

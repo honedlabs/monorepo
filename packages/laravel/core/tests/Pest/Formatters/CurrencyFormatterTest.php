@@ -19,13 +19,13 @@ it('accepts a currency, divide by, and locale', function () {
     expect($formatter->getLocale())->toBe('au');
 });
 
-it('can format a currency', function () {
+it('formats a currency', function () {
     $this->formatter->setCurrency('AUD');
     $this->formatter->setLocale('au');
     expect($this->formatter->format(10000))->toBe(Number::currency(10000 / 100, 'AUD', 'au'));
 });
 
-it('can cast non-numeric values', function () {
+it('casts non-numeric values', function () {
     expect($this->formatter->format('1234567'))->toBe(Number::currency(1234567 / 100));
 });
 
@@ -33,12 +33,12 @@ it('does not format non-numeric values', function () {
     expect($this->formatter->format('testing'))->toBeNull();
 });
 
-it('has a shorthand for cents', function () {
+it('has shorthand `cents`', function () {
     $this->formatter->cents();
     expect($this->formatter->getDivideBy())->toBe(100);
 });
 
-it('has a shorthand for dollars', function () {
+it('has shorthand `dollars`', function () {
     $this->formatter->dollars();
     expect($this->formatter->getDivideBy())->toBe(1);
 });

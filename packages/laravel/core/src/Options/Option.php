@@ -19,21 +19,17 @@ class Option extends Primitive
 
     /**
      * Create a new Option instance.
-     * 
-     * @param string|\Closure():string $value
      */
-    final public function __construct(string|\Closure $value, string|\Closure $label = null)
+    final public function __construct(int|string|float|bool|null $value, string|\Closure $label = null)
     {
         $this->setValue($value);
-        $this->setLabel($label ?? $this->makeLabel($value));
+        $this->setLabel($label ?? $this->makeLabel((string) $value));
     }
 
     /**
      * Make a new option class.
-     * 
-     * @param string|\Closure():string $value
      */
-    public static function make(string|\Closure $value, string $label = null): static
+    public static function make(int|string|float|bool|null $value, string $label = null): static
     {
         return resolve(static::class, compact('value', 'label'));
     }

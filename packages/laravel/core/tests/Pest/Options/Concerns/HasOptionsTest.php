@@ -16,7 +16,7 @@ beforeEach(function () {
     $this->component = new HasOptionsComponent;
 });
 
-it('can add an option', function () {
+it('adds an option', function () {
     $this->component->addOption($option = Option::make('value'));
     expect($this->component->getOptions())->toBe([$option]);
 });

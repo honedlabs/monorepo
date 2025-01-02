@@ -17,14 +17,14 @@ it('accepts a prefix and suffix', function () {
     expect($formatter->getSuffix())->toBe('.');
 });
 
-it('can format a string value', function () {
+it('formats a string value', function () {
     $this->formatter->setPrefix('#');
     $this->formatter->setSuffix('.');
     $this->formatter->setTruncate(3);
     expect($this->formatter->format('value'))->toBe('#val....');
 });
 
-it('can format a numeric value', function () {
+it('formats a numeric value', function () {
     $this->formatter->setPrefix('ID: ');
     expect($this->formatter->format(123))->toBe('ID: 123');
 });

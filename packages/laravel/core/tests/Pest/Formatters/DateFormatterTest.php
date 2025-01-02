@@ -19,11 +19,11 @@ it('accepts arguments', function () {
     expect($formatter->isDifference())->toBeTrue();
 });
 
-it('can parse and format a string value', function () {
+it('parses and formats a string value', function () {
     expect($this->formatter->format('january 1st 2000'))->toBe('01/01/2000');
 });
 
-it('can parse and format using difference', function () {
+it('parses and formats using difference', function () {
     Carbon::setTestNow('2000-01-02');
     expect($this->formatter->since()->format('2000-01-01'))->toBe('1 day ago');
 });
