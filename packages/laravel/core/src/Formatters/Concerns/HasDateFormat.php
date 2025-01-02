@@ -6,20 +6,39 @@ namespace Honed\Core\Formatters\Concerns;
 
 trait HasDateFormat
 {
-    public const DefaultDateFormat = 'd/m/Y';
+    const DefaultDateFormat = 'd/m/Y';
+    /**
+     * @var string|null
+     */
+    protected $dateFormat = null;
 
     /**
-     * @var string|(\Closure():string)
+     * @var string
      */
-    protected $dateFormat = self::DefaultDateFormat;
+    protected static $defaultDateFormat = self::DefaultDateFormat;
+
+    /**
+     * Configure the default date format.
+     */
+    public static function useDateFormat(string $dateFormat = null): void
+    {
+        static::$defaultDateFormat = $dateFormat ?? self::DefaultDateFormat;
+    }
+
+    /**
+     * Get the default date format.
+     */
+    public static function getDefaultDateFormat(): string
+    {
+        return static::$defaultDateFormat;
+    }
 
     /**
      * Set the dateFormat, chainable.
      *
-     * @param  string|(\Closure():string)  $dateFormat
      * @return $this
      */
-    public function dateFormat(string|\Closure $dateFormat): static
+    public function dateFormat(string $dateFormat): static
     {
         $this->setDateFormat($dateFormat);
 
@@ -29,9 +48,8 @@ trait HasDateFormat
     /**
      * Set the dateFormat quietly.
      *
-     * @param  string|(\Closure():string)|null  $dateFormat
      */
-    public function setDateFormat(string|\Closure|null $dateFormat): void
+    public function setDateFormat(?string $dateFormat): void
     {
         if (\is_null($dateFormat)) {
             return;
@@ -42,12 +60,10 @@ trait HasDateFormat
 
     /**
      * Get the dateFormat.
-     *
-     * @param  mixed  $parameter
      */
-    public function getDateFormat($parameter = null): string
+    public function getDateFormat(): string
     {
-        return value($this->dateFormat, $parameter);
+        return $this->dateFormat ?? static::getDefaultDateFormat();
     }
 
     /**

@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Core\Formatters\Concerns;
 
-/**
- * @mixin \Honed\Core\Concerns\Evaluable
- */
 trait HasTruthLabel
 {
-    public const DefaultTruthLabel = 'True';
+    const TruthLabel = 'True';
 
     /**
      * @var string|null
@@ -19,16 +16,16 @@ trait HasTruthLabel
     /**
      * @var string
      */
-    protected static $defaultTruthLabel = self::DefaultTruthLabel;
+    protected static $defaultTruthLabel = self::TruthLabel;
 
     /**
      * Configure the default truth label.
      *
      * @return void
      */
-    public static function setDefaultTruthLabel(?string $truthLabel = null)
+    public static function useTruthLabel(?string $truthLabel = null)
     {
-        static::$defaultTruthLabel = $truthLabel ?: self::DefaultTruthLabel;
+        static::$defaultTruthLabel = $truthLabel ?? self::TruthLabel;
     }
 
     /**
@@ -56,7 +53,7 @@ trait HasTruthLabel
      */
     public function setTruthLabel(?string $truthLabel): void
     {
-        if (is_null($truthLabel)) {
+        if (\is_null($truthLabel)) {
             return;
         }
 
@@ -66,7 +63,7 @@ trait HasTruthLabel
     /**
      * Get the truth label.
      */
-    public function getTruthLabel(): ?string
+    public function getTruthLabel(): string
     {
         return $this->truthLabel ?? static::getDefaultTruthLabel();
     }

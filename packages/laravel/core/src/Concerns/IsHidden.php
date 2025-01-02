@@ -6,10 +6,7 @@ namespace Honed\Core\Concerns;
 
 trait IsHidden
 {
-    /**
-     * @var bool
-     */
-    protected $hidden = false;
+    protected bool $hidden = false;
 
     /**
      * Set the hidden property, chainable.

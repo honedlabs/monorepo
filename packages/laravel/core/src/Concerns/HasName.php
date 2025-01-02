@@ -62,9 +62,10 @@ trait HasName
      */
     public function resolveName(array $named = [], array $typed = []): ?string
     {
-        $this->setName($this->getName($named, $typed));
+        $name = $this->getName($named, $typed);
+        $this->setName($name);
 
-        return $this->name;
+        return $name;
     }
 
     /**

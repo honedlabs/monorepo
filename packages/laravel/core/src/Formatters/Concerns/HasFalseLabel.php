@@ -4,31 +4,26 @@ declare(strict_types=1);
 
 namespace Honed\Core\Formatters\Concerns;
 
-/**
- * @mixin \Honed\Core\Concerns\Evaluable
- */
 trait HasFalseLabel
 {
-    public const DefaultFalseLabel = 'False';
+    const FalseLabel = 'False';
 
     /**
-     * @var string|(\Closure():string)|null
+     * @var string|null
      */
     protected $falseLabel = null;
 
     /**
      * @var string
      */
-    protected static $defaultFalseLabel = self::DefaultFalseLabel;
+    protected static $defaultFalseLabel = self::FalseLabel;
 
     /**
      * Configure the default false label.
-     *
-     * @return void
      */
-    public static function setDefaultFalseLabel(?string $falseLabel = null)
+    public static function useFalseLabel(string $falseLabel = null): void
     {
-        static::$defaultFalseLabel = $falseLabel ?: self::DefaultFalseLabel;
+        static::$defaultFalseLabel = $falseLabel ?? self::FalseLabel;
     }
 
     /**
@@ -56,22 +51,23 @@ trait HasFalseLabel
      */
     public function setFalseLabel(?string $falseLabel): void
     {
-        if (is_null($falseLabel)) {
+        if (\is_null($falseLabel)) {
             return;
         }
+
         $this->falseLabel = $falseLabel;
     }
 
     /**
      * Get the false label.
      */
-    public function getFalseLabel(): ?string
+    public function getFalseLabel(): string
     {
         return $this->falseLabel ?? static::getDefaultFalseLabel();
     }
 
     /**
-     * Alias for falseLabel
+     * Alias for `falseLabel`
      *
      * @return $this
      */

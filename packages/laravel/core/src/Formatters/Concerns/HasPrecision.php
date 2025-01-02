@@ -12,7 +12,7 @@ trait HasPrecision
     protected $precision = null;
 
     /**
-     * Set the divide by value, chainable.
+     * Set the precision, chainable.
      *
      * @return $this
      */
@@ -24,7 +24,7 @@ trait HasPrecision
     }
 
     /**
-     * Set the divide by value quietly.
+     * Set the precision quietly.
      */
     public function setPrecision(int|null $precision): void
     {

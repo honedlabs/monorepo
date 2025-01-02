@@ -43,10 +43,27 @@ trait HasSuffix
 
     /**
      * Get the suffix.
+     * 
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
-    public function getSuffix(): ?string
+    public function getSuffix(array $named = [], array $typed = []): ?string
     {
-        return $this->evaluate($this->suffix);
+        return $this->evaluate($this->suffix, $named, $typed);
+    }
+
+    /**
+     * Resolve the suffix using the given closure dependencies.
+     *
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
+     */
+    public function resolveSuffix(array $named = [], array $typed = []): ?string
+    {
+        $suffix = $this->getSuffix($named, $typed);
+        $this->setSuffix($suffix);
+        
+        return $suffix;
     }
 
     /**

@@ -40,12 +40,27 @@ trait HasPrefix
 
     /**
      * Get the prefix.
-     *
-     * @param  mixed  $parameter
+     * 
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
      */
-    public function getPrefix($parameter = null): ?string
+    public function getPrefix(array $named = [], array $typed = []): ?string
     {
-        return value($this->prefix, $parameter);
+        return $this->evaluate($this->prefix, $named, $typed);
+    }
+
+    /**
+     * Resolve the prefix using the given closure dependencies.
+     *
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
+     */
+    public function resolvePrefix(array $named = [], array $typed = []): ?string
+    {
+        $prefix = $this->getPrefix($named, $typed);
+        $this->setPrefix($prefix);
+        
+        return $prefix;
     }
 
     /**

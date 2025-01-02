@@ -38,9 +38,9 @@ trait HasDivideBy
     /**
      * Get the divide by value.
      */
-    public function getDivideBy(): int|null
+    public function getDivideBy(): ?int
     {
-        return value($this->divideBy);
+        return $this->divideBy;
     }
 
     /**

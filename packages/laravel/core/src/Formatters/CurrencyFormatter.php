@@ -2,6 +2,7 @@
 
 namespace Honed\Core\Formatters;
 
+use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasLocale;
 use Illuminate\Support\Number;
 
@@ -10,15 +11,14 @@ class CurrencyFormatter implements Contracts\Formatter
     use Concerns\HasCurrency;
     use Concerns\HasDivideBy;
     use HasLocale;
+    use Evaluable;
 
     /**
      * Create a new currency formatter instance with the currency, precision, divide by, and locale.
      *
      * @param  string|(\Closure():string)|null  $currency
-     * @param  int|(\Closure():int)|null  $divideBy
-     * @param  string|(\Closure():string)|null  $locale
      */
-    public function __construct(string|\Closure|null $currency = null, int|\Closure|null $divideBy = 100, string|\Closure|null $locale = null)
+    public function __construct(string|\Closure|null $currency = null, int $divideBy = 100, string $locale = null)
     {
         $this->setCurrency($currency);
         $this->setDivideBy($divideBy);
@@ -26,14 +26,12 @@ class CurrencyFormatter implements Contracts\Formatter
     }
 
     /**
-     * Make a currency formatter with the currency,precision, divide by, and locale.
+     * Make a currency formatter with the currency, precision, divide by, and locale.
      *
      * @param  string|(\Closure():string)|null  $currency
-     * @param  int|(\Closure():int)|null  $divideBy
-     * @param  string|(\Closure():string)|null  $locale
      * @return $this
      */
-    public static function make(string|\Closure|null $currency = null, int|\Closure|null $divideBy = 100, string|\Closure|null $locale = null): static
+    public static function make(string|\Closure|null $currency = null, int $divideBy = 100, string $locale = null): static
     {
         return resolve(static::class, compact('currency', 'divideBy', 'locale'));
     }

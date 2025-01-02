@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Formatters;
 
+use Honed\Core\Concerns\Evaluable;
 use Illuminate\Support\Str;
 
 class StringFormatter implements Contracts\Formatter
@@ -11,6 +12,7 @@ class StringFormatter implements Contracts\Formatter
     use Concerns\HasPrefix;
     use Concerns\HasSuffix;
     use Concerns\Truncates;
+    use Evaluable;
 
     /**
      * Create a new string formatter instance with a prefix and suffix.

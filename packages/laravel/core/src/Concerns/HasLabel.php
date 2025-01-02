@@ -62,9 +62,10 @@ trait HasLabel
      */
     public function resolveLabel(array $named = [], array $typed = []): string|null
     {
-        $this->setLabel($this->getLabel($named, $typed));
+        $label = $this->getLabel($named, $typed);
+        $this->setLabel($label);
 
-        return $this->label;
+        return $label;
     }
 
     /**

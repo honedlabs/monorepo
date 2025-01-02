@@ -1,42 +1,52 @@
 <?php
 
-use Honed\Core\Formatters\DateFormatter;
+use Honed\Core\Formatters\Concerns\HasDateFormat;
+
+class HasDateFormatComponent
+{
+    use HasDateFormat;
+}
 
 beforeEach(function () {
-    $this->formatter = DateFormatter::make();
+    $this->component = new HasDateFormatComponent;
+    HasDateFormatComponent::useDateFormat();
 });
 
 it('has a default date format', function () {
-    expect($this->formatter->getDateFormat())->toBe(DateFormatter::DefaultDateFormat);
+    expect($this->component)
+        ->getDateFormat()->toBe(HasDateFormatComponent::DefaultDateFormat);
 });
 
-it('can set a date format', function () {
-    expect($this->formatter->dateFormat('d M Y'))->toBeInstanceOf(DateFormatter::class)
-        ->getDateFormat()->toBe('d M Y');
+it('sets date format', function () {
+    $this->component->setDateFormat('DateFormat');
+    expect($this->component)
+        ->getDateFormat()->toBe('DateFormat');
 });
 
-it('can be set using setter', function () {
-    $this->formatter->setDateFormat('d M Y');
-    expect($this->formatter->getDateFormat())->toBe('d M Y');
+it('rejects null values', function () {
+    $this->component->setDateFormat('DateFormat');
+    $this->component->setDateFormat(null);
+    expect($this->component)
+        ->getDateFormat()->toBe('DateFormat');
 });
 
-it('does not accept null values', function () {
-    $this->formatter->setDateFormat('d M Y');
-    $this->formatter->setDateFormat(null);
-    expect($this->formatter->getDateFormat())->toBe('d M Y');
+it('chains date format', function () {
+    expect($this->component->dateFormat('DateFormat'))->toBeInstanceOf(HasDateFormatComponent::class)
+        ->getDateFormat()->toBe('DateFormat');
 });
 
-it('has shorthand for d M Y', function () {
-    expect($this->formatter->dMY())->toBeInstanceOf(DateFormatter::class)
-        ->getDateFormat()->toBe('d/M/Y');
+it('has configurable default date format', function () {
+    HasDateFormatComponent::useDateFormat('DateFormat');
+    expect(HasDateFormatComponent::getDefaultDateFormat())->toBe('DateFormat');
+    expect($this->component)->getDateFormat()->toBe('DateFormat');
 });
 
-it('has shorthand for Y-m-d', function () {
-    expect($this->formatter->Ymd())->toBeInstanceOf(DateFormatter::class)
+it('has shorthand `dMY`', function () {
+    expect($this->component->dMY('-'))->toBeInstanceOf(HasDateFormatComponent::class)
+        ->getDateFormat()->toBe('d-M-Y');
+});
+
+it('has shorthand `Ymd`', function () {
+    expect($this->component->Ymd())->toBeInstanceOf(HasDateFormatComponent::class)
         ->getDateFormat()->toBe('Y-m-d');
-});
-
-it('has delimiters for shorthand functions', function () {
-    expect($this->formatter->dMY('~'))->toBeInstanceOf(DateFormatter::class)
-        ->getDateFormat()->toBe('d~M~Y');
 });

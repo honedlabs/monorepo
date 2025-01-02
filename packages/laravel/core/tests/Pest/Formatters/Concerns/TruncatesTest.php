@@ -1,27 +1,41 @@
 <?php
 
-use Honed\Core\Formatters\StringFormatter;
+declare(strict_types=1);
+
+use Honed\Core\Formatters\Concerns\Truncates;
+
+class TruncatesComponent
+{
+    use Truncates;
+}
 
 beforeEach(function () {
-    $this->formatter = StringFormatter::make();
+    $this->component = new TruncatesComponent;
 });
 
-it('has no truncate value by default', function () {
-    expect($this->formatter->hasTruncate())->toBeFalse();
+it('has no truncation by default', function () {
+    expect($this->component)
+        ->getTruncate()->toBeNull()
+        ->hasTruncate()->toBeFalse();
 });
 
-it('can set a divide by value', function () {
-    expect($this->formatter->truncate(100))->toBeInstanceOf(StringFormatter::class)
-        ->getTruncate()->toBe(100);
+it('sets truncation', function () {
+    $this->component->setTruncate(100);
+    expect($this->component)
+        ->getTruncate()->toBe(100)
+        ->hasTruncate()->toBeTrue();
 });
 
-it('can be set using setter', function () {
-    $this->formatter->setTruncate(100);
-    expect($this->formatter->getTruncate())->toBe(100);
+it('rejects null values', function () {
+    $this->component->setTruncate(100);
+    $this->component->setTruncate(null);
+    expect($this->component)
+        ->getTruncate()->toBe(100)
+        ->hasTruncate()->toBeTrue();
 });
 
-it('does not accept null values', function () {
-    $this->formatter->setTruncate(100);
-    $this->formatter->setTruncate(null);
-    expect($this->formatter->getTruncate())->toBe(100);
+it('chains truncation', function () {
+    expect($this->component->truncate(100))->toBeInstanceOf(TruncatesComponent::class)
+        ->getTruncate()->toBe(100)
+        ->hasTruncate()->toBeTrue();
 });

@@ -1,27 +1,52 @@
 <?php
 
-use Honed\Core\Formatters\CurrencyFormatter;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Formatters\Concerns\HasCurrency;
+use Honed\Core\Tests\Stubs\Product;
+
+class HasCurrencyComponent
+{
+    use HasCurrency;
+    use Evaluable;
+}
 
 beforeEach(function () {
-    $this->formatter = CurrencyFormatter::make();
+    $this->component = new HasCurrencyComponent;
 });
 
 it('has no currency by default', function () {
-    expect($this->formatter->hascurrency())->toBeFalse();
+    expect($this->component)
+        ->getCurrency()->toBeNull()
+        ->hasCurrency()->toBeFalse();
 });
 
-it('can set a currency', function () {
-    expect($this->formatter->currency('USD'))->toBeInstanceOf(CurrencyFormatter::class)
-        ->getcurrency()->toBe('USD');
+it('sets currency', function () {
+    $this->component->setCurrency('Currency');
+    expect($this->component)
+        ->getCurrency()->toBe('Currency')
+        ->hasCurrency()->toBeTrue();
 });
 
-it('can be set using setter', function () {
-    $this->formatter->setcurrency('USD');
-    expect($this->formatter->getcurrency())->toBe('USD');
+it('rejects null values', function () {
+    $this->component->setCurrency('Currency');
+    $this->component->setCurrency(null);
+    expect($this->component)
+        ->getCurrency()->toBe('Currency')
+        ->hasCurrency()->toBeTrue();
 });
 
-it('does not accept null values', function () {
-    $this->formatter->setcurrency('USD');
-    $this->formatter->setcurrency(null);
-    expect($this->formatter->getcurrency())->toBe('USD');
+it('chains currency', function () {
+    expect($this->component->currency('Currency'))->toBeInstanceOf(HasCurrencyComponent::class)
+        ->getCurrency()->toBe('Currency')
+        ->hasCurrency()->toBeTrue();
+});
+
+it('resolves currency', function () {
+    $this->component->currency(fn (Product $product) => $product->name);
+    $product = product();
+
+    expect($this->component)
+        ->resolveCurrency([], [Product::class => $product])->toBe($product->name)
+        ->getCurrency()->toBe($product->name)
+        ->hasCurrency()->toBeTrue();
 });

@@ -24,7 +24,7 @@ trait IsDifference
     }
 
     /**
-     * Set the difference value quietly
+     * Set the difference value quietly.
      */
     public function setDifference(bool $difference): void
     {
@@ -40,7 +40,7 @@ trait IsDifference
     }
 
     /**
-     * Alias for difference
+     * Alias for `difference`.
      *
      * @return $this
      */

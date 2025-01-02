@@ -1,49 +1,31 @@
 <?php
 
-use Honed\Core\Formatters\DateFormatter;
+use Honed\Core\Formatters\Concerns\IsDifference;
+
+class IsDifferenceComponent
+{
+    use IsDifference;
+}
 
 beforeEach(function () {
-    $this->formatter = DateFormatter::make();
+    $this->component = new IsDifferenceComponent;
 });
 
-it('can set difference', function () {
-    $this->formatter->setDifference(true);
-    expect($this->formatter->isDifference())->toBeTrue();
+it('is not `difference` by default', function () {
+    expect($this->component->isDifference())->toBeFalse();
 });
 
-it('prevents null values', function () {
-    $this->formatter->setDifference(null);
-    expect($this->formatter->isDifference())->toBeFalse();
+it('sets difference', function () {
+    $this->component->setDifference(true);
+    expect($this->component->isDifference())->toBeTrue();
 });
 
-it('can set closure difference', function () {
-    $this->formatter->setDifference(fn () => true);
-    expect($this->formatter->isDifference())->toBeTrue();
+it('chains difference', function () {
+    expect($this->component->difference())->toBeInstanceOf(IsDifferenceComponent::class)
+        ->isDifference()->toBeTrue();
 });
 
-it('defaults to false', function () {
-    expect($this->formatter->isDifference())->toBeFalse();
-});
-
-it('can chain difference', function () {
-    expect($this->formatter->difference(true))->toBeInstanceOf(DateFormatter::class);
-    expect($this->formatter->isDifference())->toBeTrue();
-});
-
-it('checks if difference', function () {
-    expect($this->formatter->isDifference())->toBeFalse();
-    expect($this->formatter->isNotDifference())->toBeTrue();
-    $this->formatter->setDifference(true);
-    expect($this->formatter->isDifference())->toBeTrue();
-    expect($this->formatter->isNotDifference())->toBeFalse();
-});
-
-it('has alias since', function () {
-    expect($this->formatter->since())->toBeInstanceOf(DateFormatter::class);
-    expect($this->formatter->isDifference())->toBeTrue();
-});
-
-it('has alias diff', function () {
-    expect($this->formatter->diff())->toBeInstanceOf(DateFormatter::class);
-    expect($this->formatter->isNotDifference())->toBeTrue();
+it('has alias `since` for `difference`', function () {
+    expect($this->component->since())->toBeInstanceOf(IsDifferenceComponent::class)
+        ->isDifference()->toBeTrue();
 });

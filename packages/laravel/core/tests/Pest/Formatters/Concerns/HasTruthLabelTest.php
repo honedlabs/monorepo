@@ -3,12 +3,12 @@
 use Honed\Core\Formatters\BooleanFormatter;
 
 beforeEach(function () {
-    BooleanFormatter::setDefaultTruthLabel();
+    BooleanFormatter::useTruthLabel();
     $this->formatter = BooleanFormatter::make();
 });
 
 it('has a default truth label', function () {
-    expect($this->formatter->getTruthLabel())->toBe(BooleanFormatter::DefaultTruthLabel);
+    expect($this->formatter->getTruthLabel())->toBe(BooleanFormatter::TruthLabel);
 });
 
 it('can set a truth label', function () {
@@ -23,11 +23,11 @@ it('can be set using setter', function () {
 
 it('does not accept null values', function () {
     $this->formatter->setTruthLabel(null);
-    expect($this->formatter->getTruthLabel())->toBe(BooleanFormatter::DefaultTruthLabel);
+    expect($this->formatter->getTruthLabel())->toBe(BooleanFormatter::TruthLabel);
 });
 
 it('can be configured globally', function () {
-    BooleanFormatter::setDefaultTruthLabel('No');
+    BooleanFormatter::useTruthLabel('No');
     expect(BooleanFormatter::make()->getTruthLabel())->toBe('No');
 });
 
