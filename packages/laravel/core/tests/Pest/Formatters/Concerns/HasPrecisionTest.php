@@ -1,27 +1,41 @@
 <?php
 
-use Honed\Core\Formatters\NumberFormatter;
+declare(strict_types=1);
+
+use Honed\Core\Formatters\Concerns\HasPrecision;
+
+class HasPrecisionComponent
+{
+    use HasPrecision;
+}
 
 beforeEach(function () {
-    $this->formatter = NumberFormatter::make();
+    $this->component = new HasPrecisionComponent;
 });
 
-it('has no precision value by default', function () {
-    expect($this->formatter->hasPrecision())->toBeFalse();
+it('has no precision by default', function () {
+    expect($this->component)
+        ->getPrecision()->toBeNull()
+        ->hasPrecision()->toBeFalse();
 });
 
-it('can set a precision value', function () {
-    expect($this->formatter->precision(100))->toBeInstanceOf(NumberFormatter::class)
-        ->getPrecision()->toBe(100);
+it('sets precision', function () {
+    $this->component->setPrecision(100);
+    expect($this->component)
+        ->getPrecision()->toBe(100)
+        ->hasPrecision()->toBeTrue();
 });
 
-it('can be set using setter', function () {
-    $this->formatter->setPrecision(100);
-    expect($this->formatter->getPrecision())->toBe(100);
+it('rejects null values', function () {
+    $this->component->setPrecision(100);
+    $this->component->setPrecision(null);
+    expect($this->component)
+        ->getPrecision()->toBe(100)
+        ->hasPrecision()->toBeTrue();
 });
 
-it('does not accept null values', function () {
-    $this->formatter->setPrecision(100);
-    $this->formatter->setPrecision(null);
-    expect($this->formatter->getPrecision())->toBe(100);
+it('chains precision', function () {
+    expect($this->component->precision(100))->toBeInstanceOf(HasPrecisionComponent::class)
+        ->getPrecision()->toBe(100)
+        ->hasPrecision()->toBeTrue();
 });

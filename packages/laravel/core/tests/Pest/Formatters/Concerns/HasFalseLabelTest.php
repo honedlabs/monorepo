@@ -1,37 +1,47 @@
 <?php
 
-use Honed\Core\Formatters\BooleanFormatter;
+use Honed\Core\Formatters\Concerns\HasFalseLabel;
+
+class HasFalseLabelComponent
+{
+    use HasFalseLabel;
+}
 
 beforeEach(function () {
-    BooleanFormatter::useFalseLabel();
-    $this->formatter = BooleanFormatter::make();
+    $this->component = new HasFalseLabelComponent;
+    HasFalseLabelComponent::useFalseLabel();
 });
 
 it('has a default false label', function () {
-    expect($this->formatter->getFalseLabel())->toBe(BooleanFormatter::FalseLabel);
+    expect($this->component)
+        ->getFalseLabel()->toBe(HasFalseLabelComponent::FalseLabel);
 });
 
-it('can set a false label', function () {
-    expect($this->formatter->falseLabel('No'))->toBeInstanceOf(BooleanFormatter::class)
-        ->getFalseLabel()->toBe('No');
+it('sets false label', function () {
+    $this->component->setFalseLabel('FalseLabel');
+    expect($this->component)
+        ->getFalseLabel()->toBe('FalseLabel');
 });
 
-it('can be set using setter', function () {
-    $this->formatter->setFalseLabel('No');
-    expect($this->formatter->getFalseLabel())->toBe('No');
+it('rejects null values', function () {
+    $this->component->setFalseLabel('FalseLabel');
+    $this->component->setFalseLabel(null);
+    expect($this->component)
+        ->getFalseLabel()->toBe('FalseLabel');
 });
 
-it('does not accept null values', function () {
-    $this->formatter->setFalseLabel(null);
-    expect($this->formatter->getFalseLabel())->toBe(BooleanFormatter::FalseLabel);
+it('chains false label', function () {
+    expect($this->component->falseLabel('FalseLabel'))->toBeInstanceOf(HasFalseLabelComponent::class)
+        ->getFalseLabel()->toBe('FalseLabel');
 });
 
-it('can be configured globally', function () {
-    BooleanFormatter::useFalseLabel('No');
-    expect(BooleanFormatter::make()->getFalseLabel())->toBe('No');
+it('has configurable default false label', function () {
+    HasFalseLabelComponent::useFalseLabel('FalseLabel');
+    expect(HasFalseLabelComponent::getDefaultFalseLabel())->toBe('FalseLabel');
+    expect($this->component)->getFalseLabel()->toBe('FalseLabel');
 });
 
-it('has alias ifFalse', function () {
-    expect($this->formatter->ifFalse('No'))->toBeInstanceOf(BooleanFormatter::class)
-        ->getFalseLabel()->toBe('No');
+it('has alias `ifFalse` for `falseLabel`', function () {
+    expect($this->component->ifFalse('FalseLabel'))->toBeInstanceOf(HasFalseLabelComponent::class)
+        ->getFalseLabel()->toBe('FalseLabel');
 });

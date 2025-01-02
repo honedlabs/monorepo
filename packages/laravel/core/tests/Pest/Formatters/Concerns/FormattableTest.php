@@ -20,16 +20,15 @@ it('has no formatter by default', function () {
     expect($this->component->hasFormatter())->toBeFalse();
 });
 
-it('can set a formatter', function () {
-    expect($this->component->formatter(DateFormatter::make()))->toBeInstanceOf(FormattableComponent::class)
+it('sets formatter', function () {
+    $this->component->setFormatter(DateFormatter::make());
+    expect($this->component)
         ->hasFormatter()->toBeTrue()
         ->getFormatter()->toBeInstanceOf(DateFormatter::class);
 });
 
-it('does not accept null values', function () {
-    expect($this->component->formatter(DateFormatter::make()))
-        ->hasFormatter()->toBeTrue();
-
+it('rejects null values', function () {
+    $this->component->formatter(DateFormatter::make());
     $this->component->setFormatter(null);
 
     expect($this->component)
@@ -37,39 +36,46 @@ it('does not accept null values', function () {
         ->getFormatter()->toBeInstanceOf(DateFormatter::class);
 });
 
-it('can format a value using the given formatter', function () {
-    expect($this->component->formatter(DateFormatter::make())->format('2024-01-01'))->toBe('01/01/2024');
+it('chains formatter', function () {
+    expect($this->component->formatter(DateFormatter::make()))->toBeInstanceOf(FormattableComponent::class)
+        ->hasFormatter()->toBeTrue()
+        ->getFormatter()->toBeInstanceOf(DateFormatter::class);
 });
 
-it('does not format a value if there is no formatter', function () {
+it('can format', function () {
+    expect($this->component->formatter(DateFormatter::make())
+        ->format('2024-01-01'))->toBe('01/01/2024');
+});
+
+it('does not mutate if no formatter', function () {
     expect($this->component->format('2024-01-01'))->toBe('2024-01-01');
 });
 
-it('has a shorthand for setting a boolean formatter', function () {
+it('has shorthand `boolean`', function () {
     expect($this->component->boolean())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->getFormatter()->toBeInstanceOf(BooleanFormatter::class);
 });
 
-it('has a shorthand for setting a string formatter', function () {
+it('has shorthand `string`', function () {
     expect($this->component->string())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->getFormatter()->toBeInstanceOf(StringFormatter::class);
 });
 
-it('has a shorthand for setting a date formatter', function () {
+it('has shorthand `date`', function () {
     expect($this->component->date())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->getFormatter()->toBeInstanceOf(DateFormatter::class);
 });
 
-it('has a shorthand for setting a number formatter', function () {
+it('has shorthand `number`', function () {
     expect($this->component->number())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->getFormatter()->toBeInstanceOf(NumberFormatter::class);
 });
 
-it('has a shorthand for setting a currency formatter', function () {
+it('has shorthand `currency`', function () {
     expect($this->component->currency())->toBeInstanceOf(FormattableComponent::class)
         ->hasFormatter()->toBeTrue()
         ->getFormatter()->toBeInstanceOf(CurrencyFormatter::class);

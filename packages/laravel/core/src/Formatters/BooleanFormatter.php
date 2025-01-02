@@ -12,18 +12,18 @@ class BooleanFormatter implements Contracts\Formatter
     /**
      * Create a new boolean formatter instance with a truth label and false label.
      */
-    public function __construct(string $truthLabel = null, string $falseLabel = null)
+    public function __construct(string $truth = null, string $false = null)
     {
-        $this->setTruthLabel($truthLabel);
-        $this->setFalseLabel($falseLabel);
+        $this->setTruthLabel($truth);
+        $this->setFalseLabel($false);
     }
 
     /**
      * Make a boolean formatter with a truth label and false label.
      */
-    public static function make(string $truthLabel = null, string $falseLabel = null): static
+    public static function make(string $truth = null, string $false = null): static
     {
-        return resolve(static::class, compact('truthLabel', 'falseLabel'));
+        return resolve(static::class, compact('truth', 'false'));
     }
 
     /**
@@ -31,10 +31,10 @@ class BooleanFormatter implements Contracts\Formatter
      * 
      * @return $this
      */
-    public function labels(string $truthLabel = null, string $falseLabel = null): static
+    public function labels(string $truth = null, string $false = null): static
     {
-        $this->setTruthLabel($truthLabel);
-        $this->setFalseLabel($falseLabel);
+        $this->setTruthLabel($truth);
+        $this->setFalseLabel($false);
 
         return $this;
     }

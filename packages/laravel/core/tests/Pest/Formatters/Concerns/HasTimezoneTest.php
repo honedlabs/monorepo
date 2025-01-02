@@ -1,27 +1,42 @@
 <?php
 
-use Honed\Core\Formatters\DateFormatter;
+declare(strict_types=1);
+
+use Honed\Core\Formatters\Concerns\HasTimezone;
+
+class HasTimezoneComponent
+{
+    use HasTimezone;
+}
 
 beforeEach(function () {
-    $this->formatter = DateFormatter::make();
+    $this->component = new HasTimezoneComponent;
 });
 
 it('has no timezone by default', function () {
-    expect($this->formatter->hasTimezone())->toBeFalse();
+    expect($this->component)
+        ->getTimezone()->toBeNull()
+        ->hasTimezone()->toBeFalse();
 });
 
-it('can set a timezone', function () {
-    expect($this->formatter->timezone('.'))->toBeInstanceOf(DateFormatter::class)
-        ->getTimezone()->toBe('.');
-});
-
-it('can be set using setter', function () {
-    $this->formatter->setTimezone('.');
-    expect($this->formatter->getTimezone())->toBe('.');
+it('sets timezone', function () {
+    $this->component->setTimezone(100);
+    expect($this->component)
+        ->getTimezone()->toBe(100)
+        ->hasTimezone()->toBeTrue();
 });
 
 it('rejects null values', function () {
-    $this->formatter->setTimezone('.');
-    $this->formatter->setTimezone(null);
-    expect($this->formatter->getTimezone())->toBe('.');
+    $this->component->setTimezone(100);
+    $this->component->setTimezone(null);
+    expect($this->component)
+        ->getTimezone()->toBe(100)
+        ->hasTimezone()->toBeTrue();
 });
+
+it('chains timezone', function () {
+    expect($this->component->timezone(100))->toBeInstanceOf(HasTimezoneComponent::class)
+        ->getTimezone()->toBe(100)
+        ->hasTimezone()->toBeTrue();
+});
+

@@ -1,27 +1,41 @@
 <?php
 
-use Honed\Core\Formatters\NumberFormatter;
+declare(strict_types=1);
+
+use Honed\Core\Formatters\Concerns\HasDivideBy;
+
+class HasDivideByComponent
+{
+    use HasDivideBy;
+}
 
 beforeEach(function () {
-    $this->formatter = NumberFormatter::make();
+    $this->component = new HasDivideByComponent;
 });
 
-it('has no divide by value by default', function () {
-    expect($this->formatter->hasDivideBy())->toBeFalse();
+it('has no divide by by default', function () {
+    expect($this->component)
+        ->getDivideBy()->toBeNull()
+        ->hasDivideBy()->toBeFalse();
 });
 
-it('can set a divide by value', function () {
-    expect($this->formatter->divideBy(100))->toBeInstanceOf(NumberFormatter::class)
-        ->getDivideBy()->toBe(100);
+it('sets divide by', function () {
+    $this->component->setDivideBy(100);
+    expect($this->component)
+        ->getDivideBy()->toBe(100)
+        ->hasDivideBy()->toBeTrue();
 });
 
-it('can be set using setter', function () {
-    $this->formatter->setDivideBy(100);
-    expect($this->formatter->getDivideBy())->toBe(100);
+it('rejects null values', function () {
+    $this->component->setDivideBy(100);
+    $this->component->setDivideBy(null);
+    expect($this->component)
+        ->getDivideBy()->toBe(100)
+        ->hasDivideBy()->toBeTrue();
 });
 
-it('does not accept null values', function () {
-    $this->formatter->setDivideBy(100);
-    $this->formatter->setDivideBy(null);
-    expect($this->formatter->getDivideBy())->toBe(100);
+it('chains divide by', function () {
+    expect($this->component->divideBy(100))->toBeInstanceOf(HasDivideByComponent::class)
+        ->getDivideBy()->toBe(100)
+        ->hasDivideBy()->toBeTrue();
 });

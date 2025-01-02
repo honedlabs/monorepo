@@ -1,27 +1,52 @@
 <?php
 
-use Honed\Core\Formatters\StringFormatter;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Formatters\Concerns\HasPrefix;
+use Honed\Core\Tests\Stubs\Product;
+
+class HasPrefixComponent
+{
+    use HasPrefix;
+    use Evaluable;
+}
 
 beforeEach(function () {
-    $this->formatter = StringFormatter::make();
+    $this->component = new HasPrefixComponent;
 });
 
 it('has no prefix by default', function () {
-    expect($this->formatter->hasPrefix())->toBeFalse();
+    expect($this->component)
+        ->getPrefix()->toBeNull()
+        ->hasPrefix()->toBeFalse();
 });
 
-it('can set a prefix', function () {
-    expect($this->formatter->prefix('#'))->toBeInstanceOf(StringFormatter::class)
-        ->getPrefix()->toBe('#');
+it('sets prefix', function () {
+    $this->component->setPrefix('Prefix');
+    expect($this->component)
+        ->getPrefix()->toBe('Prefix')
+        ->hasPrefix()->toBeTrue();
 });
 
-it('can be set using setter', function () {
-    $this->formatter->setPrefix('#');
-    expect($this->formatter->getPrefix())->toBe('#');
+it('rejects null values', function () {
+    $this->component->setPrefix('Prefix');
+    $this->component->setPrefix(null);
+    expect($this->component)
+        ->getPrefix()->toBe('Prefix')
+        ->hasPrefix()->toBeTrue();
 });
 
-it('does not accept null values', function () {
-    $this->formatter->setPrefix('#');
-    $this->formatter->setPrefix(null);
-    expect($this->formatter->getPrefix())->toBe('#');
+it('chains prefix', function () {
+    expect($this->component->prefix('Prefix'))->toBeInstanceOf(HasPrefixComponent::class)
+        ->getPrefix()->toBe('Prefix')
+        ->hasPrefix()->toBeTrue();
+});
+
+it('resolves prefix', function () {
+    $this->component->prefix(fn (Product $product) => $product->name);
+    $product = product();
+
+    expect($this->component)
+        ->resolvePrefix([], [Product::class => $product])->toBe($product->name)
+        ->getPrefix()->toBe($product->name)
+        ->hasPrefix()->toBeTrue();
 });

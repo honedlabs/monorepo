@@ -131,10 +131,6 @@ trait Formattable
      */
     public function format(mixed $value)
     {
-        if (! $this->hasFormatter()) {
-            return $value;
-        }
-
-        return $this->formatter->format($value);
+        return $this->hasFormatter() ? $this->formatter->format($value) : $value;
     }
 }

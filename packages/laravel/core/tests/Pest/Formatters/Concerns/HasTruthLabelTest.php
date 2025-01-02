@@ -1,37 +1,47 @@
 <?php
 
-use Honed\Core\Formatters\BooleanFormatter;
+use Honed\Core\Formatters\Concerns\HasTruthLabel;
+
+class HasTruthLabelComponent
+{
+    use HasTruthLabel;
+}
 
 beforeEach(function () {
-    BooleanFormatter::useTruthLabel();
-    $this->formatter = BooleanFormatter::make();
+    $this->component = new HasTruthLabelComponent;
+    HasTruthLabelComponent::useTruthLabel();
 });
 
 it('has a default truth label', function () {
-    expect($this->formatter->getTruthLabel())->toBe(BooleanFormatter::TruthLabel);
+    expect($this->component)
+        ->getTruthLabel()->toBe(HasTruthLabelComponent::TruthLabel);
 });
 
-it('can set a truth label', function () {
-    expect($this->formatter->truthLabel('No'))->toBeInstanceOf(BooleanFormatter::class)
-        ->getTruthLabel()->toBe('No');
+it('sets truth label', function () {
+    $this->component->setTruthLabel('TruthLabel');
+    expect($this->component)
+        ->getTruthLabel()->toBe('TruthLabel');
 });
 
-it('can be set using setter', function () {
-    $this->formatter->setTruthLabel('No');
-    expect($this->formatter->getTruthLabel())->toBe('No');
+it('rejects null values', function () {
+    $this->component->setTruthLabel('TruthLabel');
+    $this->component->setTruthLabel(null);
+    expect($this->component)
+        ->getTruthLabel()->toBe('TruthLabel');
 });
 
-it('does not accept null values', function () {
-    $this->formatter->setTruthLabel(null);
-    expect($this->formatter->getTruthLabel())->toBe(BooleanFormatter::TruthLabel);
+it('chains truth label', function () {
+    expect($this->component->truthLabel('TruthLabel'))->toBeInstanceOf(HasTruthLabelComponent::class)
+        ->getTruthLabel()->toBe('TruthLabel');
 });
 
-it('can be configured globally', function () {
-    BooleanFormatter::useTruthLabel('No');
-    expect(BooleanFormatter::make()->getTruthLabel())->toBe('No');
+it('has configurable default truth label', function () {
+    HasTruthLabelComponent::useTruthLabel('TruthLabel');
+    expect(HasTruthLabelComponent::getDefaultTruthLabel())->toBe('TruthLabel');
+    expect($this->component)->getTruthLabel()->toBe('TruthLabel');
 });
 
-it('has alias ifTrue', function () {
-    expect($this->formatter->ifTrue('No'))->toBeInstanceOf(BooleanFormatter::class)
-        ->getTruthLabel()->toBe('No');
+it('has alias `ifTrue` for `truthLabel`', function () {
+    expect($this->component->ifTrue('TruthLabel'))->toBeInstanceOf(HasTruthLabelComponent::class)
+        ->getTruthLabel()->toBe('TruthLabel');
 });
