@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Core\Link\Concerns;
 
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use Illuminate\Support\Stringable;
 
 /**
  * @mixin \Honed\Core\Concerns\Evaluable
@@ -21,6 +22,16 @@ trait HasLink
      * @var non-empty-array<int,array<string,mixed>>|null
      */
     protected $parameters;
+
+    /**
+     * @var bool
+     */
+    protected $named = false;
+
+    /**
+     * @var bool
+     */
+    protected $absolute = true;
 
     /**
      * Set the link, chainable.
@@ -96,9 +107,16 @@ trait HasLink
      *
      * @param  array<array-key, mixed>  $parameters
      */
-    public function setRoute(string $name, mixed $parameters = [], bool $absolute = true): void
+    public function setRoute(string $name, mixed $parameters = null, bool $absolute = true): void
     {
-        $this->link = route($name, $parameters, $absolute);
+        if (! \is_null($parameters)) {
+            $this->link = route($name, $parameters, $absolute);
+
+            return;
+        }
+
+        $this->link = $name;
+        $this->absolute = $absolute;
     }
 
     /**
@@ -109,7 +127,25 @@ trait HasLink
      */
     public function getLink(array $named = [], array $typed = []): ?string
     {
+        if (\is_callable($this->link) && \count($named) === 0 && \count($typed) === 0) {
+            [$named, $typed] = $this->getClosureParameters();
+        }
+
         return $this->evaluate($this->link, $named, $typed);
+    }
+
+    /**
+     * Resolve the link using the given closure dependencies.
+     *
+     * @param  array<string, mixed>  $named
+     * @param  array<string, mixed>  $typed
+     */
+    public function resolveLink(array $named = [], array $typed = []): ?string
+    {
+        $link = $this->getLink($named, $typed);
+        $this->setLink($link);
+
+        return $link;
     }
 
     /**
@@ -118,5 +154,51 @@ trait HasLink
     public function hasLink(): bool
     {
         return ! \is_null($this->link);
+    }
+
+    /**
+     * Get the binding parameters from the current route action.
+     *
+     * @return non-empty-array<int,array<string,mixed>>
+     */
+    public function getClosureParameters(): array
+    {
+        $currentRoute = Route::current();
+        $routeParameters = $currentRoute?->parameters() ?? [];
+        $request = request();
+
+        $typeHintedParameters = $this->mapParametersToTypes(\array_values($routeParameters));
+
+        return [
+            [
+                'request' => $request,
+                'route' => $currentRoute,
+                ...$routeParameters,
+            ],
+            [
+                Request::class => $request,
+                Route::class => $currentRoute,
+                ...$typeHintedParameters,
+            ],
+        ];
+    }
+
+    /**
+     * Map parameter values to their corresponding types or class names.
+     *
+     * @param  array<int,mixed>  $parameters
+     * @return array<string,mixed>
+     */
+    private function mapParametersToTypes(array $parameters): array
+    {
+        return \array_combine(
+            \array_map(
+                static fn ($value): string => \is_object($value)
+                    ? \get_class($value)
+                    : \gettype($value),
+                $parameters
+            ),
+            $parameters
+        ) ?: [];
     }
 }

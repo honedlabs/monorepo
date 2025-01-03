@@ -5,59 +5,53 @@ declare(strict_types=1);
 namespace Honed\Core\Link;
 
 use Honed\Core\Primitive;
-use Illuminate\Support\Facades\URL as UrlFacade;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Request;
 
 class Link extends Primitive
 {
-    use Concerns\HasUrlDuration;
+    use Concerns\HasLink {
+        getLink as private getDestination;
+        resolveLink as private resolveDestination;
+    }
+    use Concerns\HasLinkDuration;
     use Concerns\HasMethod;
-    use Concerns\HasUrl;
     use Concerns\IsDownloadable;
-    use Concerns\IsNamed;
     use Concerns\IsNewTab;
     use Concerns\IsSigned;
 
     /**
-     * @var string|null
-     */
-    protected $resolvedUrl = null;
-
-    /**
-     * Create a new parameterised url instance.
+     * Create a new parameterised link instance.
      *
-     * @param  string|(\Closure(mixed...):string)|null  $url
-     * @param  string|(\Closure():string)  $method
+     * @param  string|(\Closure(mixed...):string)|null  $link
      */
     final public function __construct(
-        string|\Closure|null $url = null,
-        string|\Closure $method = Request::METHOD_GET,
+        string|\Closure|null $link = null, ?string $method = Request::METHOD_GET,
     ) {
         parent::__construct();
-        $this->setUrl($url);
+        $this->setLink($link);
         $this->setMethod($method);
     }
 
     /**
-     * Make a url parameter object.
+     * Make a link parameter object.
      *
-     * @param  string|(\Closure(mixed...):string)  $url
+     * @param  string|(\Closure(mixed...):string)  $link
      * @param  string|(\Closure():string)|null  $method
      */
-    public static function make(string|\Closure|null $url = null, string|\Closure|null $method = Request::METHOD_GET): static
+    public static function make(string|\Closure|null $link = null, string|\Closure|null $method = Request::METHOD_GET): static
     {
-        return resolve(static::class, compact('url', 'method'));
+        return resolve(static::class, compact('link', 'method'));
     }
 
     /**
-     * Alias for setting a url.
+     * Alias for setting a url, chainable.
      *
      * @param  string|(\Closure(mixed...):string)  $route
      * @return $this
      */
     public function to($route): static
     {
-        $this->setNamed($this->checkIfNamed($route));
         $this->setUrl($route);
 
         return $this;
@@ -69,66 +63,41 @@ class Link extends Primitive
      * @param  string|(\Closure(mixed...):string)  $route
      * @return $this
      */
-    public function signedRoute($route, int|\Carbon\Carbon $duration = 0): static
+    public function signedRoute(string|\Closure $route, int|\Carbon\Carbon $duration = 0): static
     {
-        $this->setNamed($this->checkIfNamed($route));
-        $this->setUrl($route);
+        $this->setLink($route);
         $this->setSigned(true);
-        $this->setDuration($duration);
+        $this->setLinkDuration($duration);
 
         return $this;
     }
 
     /**
-     * Resolve and retrieve the url.
+     * Retrieve the link, evaluating it if it is a closure.
      *
+     * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
      */
-    public function getResolvedUrl(array $parameters = [], array $typed = []): ?string
+    public function getLink(array $parameters = [], array $typed = []): ?string
     {
-        if (! $this->hasUrl()) {
+        if (! $this->hasLink()) {
             return null;
         }
-
-        return $this->resolvedUrl ??= $this->resolveUrl($parameters, $typed);
-    }
-
-    /**
-     * Resolve the url using parameters
-     *
-     * @param  array<string,mixed>  $typed
-     */
-    public function resolveUrl(array $parameters = [], array $typed = []): string
-    {
-        $this->resolvedUrl = match (true) {
-            $this->isNotNamed() => $this->getUrl($parameters, $typed),
-            $this->isSigned() && $this->isTemporary() => URLFacade::temporarySignedRoute($this->getUrl(), $this->getDuration(), ...$parameters),
-            $this->isSigned() => URLFacade::signedRoute($this->getUrl(), ...$parameters),
-            default => URLFacade::route($this->getUrl(), ...$parameters),
+        $link = match (true) {
+            $this->isSigned() && $this->isTemporary() => Url::temporarySignedRoute($this->link, $this->getLinkDuration(), ...$parameters), // @phpstan-ignore-line
+            $this->isSigned() => Url::signedRoute($this->link, ...$parameters), // @phpstan-ignore-line
+            default => $this->getDestination($parameters, $typed),
         };
 
-        return $this->resolvedUrl;
-    }
+        $this->setLink($link);
 
-    /**
-     * Check if the provided url is a named route. It does not check if the route exists.
-     *
-     * @internal
-     */
-    protected function checkIfNamed(string|\Closure|null $url): bool
-    {
-        // Indeterminate
-        if (\is_null($url) || ! \is_string($url)) {
-            return false;
-        }
-
-        return ! str($url)->startsWith('/') && ! str($url)->startsWith('http');
+        return $link;
     }
 
     public function toArray()
     {
         return [
-            'url' => $this->getResolvedUrl(),
+            'url' => $this->getLink(),
             'method' => $this->getMethod(),
         ];
     }

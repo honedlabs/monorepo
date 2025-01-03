@@ -9,21 +9,21 @@ use Carbon\Carbon;
 /**
  * @mixin \Honed\Core\Concerns\Evaluable
  */
-trait HasUrlDuration
+trait HasLinkDuration
 {
     /**
      * @var int|\Carbon\Carbon
      */
-    protected $urlDuration = 0;
+    protected $linkDuration = 0;
 
     /**
      * Set the duration, chainable.
      *
      * @return $this
      */
-    public function urlDuration(int|Carbon|null $duration): static
+    public function linkDuration(int|Carbon|null $duration): static
     {
-        $this->setUrlDuration($duration);
+        $this->setLinkDuration($duration);
 
         return $this;
     }
@@ -31,20 +31,20 @@ trait HasUrlDuration
     /**
      * Set the duration quietly.
      */
-    public function setUrlDuration(int|Carbon|null $duration): void
+    public function setLinkDuration(int|Carbon|null $duration): void
     {
         if (is_null($duration)) {
             return;
         }
-        $this->urlDuration = $duration;
+        $this->linkDuration = $duration;
     }
 
     /**
      * Get the duration.
      */
-    public function getUrlDuration(): int|Carbon|null
+    public function getLinkDuration(): int|Carbon|null
     {
-        return $this->urlDuration;
+        return $this->linkDuration;
     }
 
     /**
@@ -52,6 +52,6 @@ trait HasUrlDuration
      */
     public function isTemporary(): bool
     {
-        return (bool) $this->getUrlDuration() > 0;
+        return (bool) $this->getLinkDuration() > 0;
     }
 }
