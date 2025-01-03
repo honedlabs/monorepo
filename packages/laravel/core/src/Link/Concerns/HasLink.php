@@ -26,11 +26,6 @@ trait HasLink
     /**
      * @var bool
      */
-    protected $named = false;
-
-    /**
-     * @var bool
-     */
     protected $absolute = true;
 
     /**
@@ -87,7 +82,7 @@ trait HasLink
 
         match (true) {
             \is_callable($link) => $this->link = $link,
-            Str::isUrl($link) => $this->setUrl($link),
+            Str::isUrl($link) || Str::startsWith($link, '/') || $link === '#' => $this->setUrl($link),
             default => $this->setRoute($link, $parameters, $absolute),
         };
     }

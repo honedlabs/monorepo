@@ -45,7 +45,7 @@ class TestCase extends Orchestra
     protected function defineRoutes($router)
     {
         $router->get('/', fn () => view('app'))->name('home');
-        $router->get('/lang/{lang}', fn ($lang) => session()->put('lang', $lang))->name('lang');
-        $router->get('/{product}', fn () => view('app'))->name('category');
+        $router->get('/lang/{lang}', fn ($lang) => session()->put('lang', $lang))->name('lang.show');
+        $router->get('/{product}', fn () => view('app'))->name('product.show');
     }
 }
