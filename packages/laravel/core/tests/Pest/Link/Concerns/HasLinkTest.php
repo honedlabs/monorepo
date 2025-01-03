@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Link\Concerns\HasLink;
 use Honed\Core\Tests\Stubs\Product;

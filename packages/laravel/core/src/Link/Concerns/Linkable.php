@@ -24,10 +24,13 @@ trait Linkable
      */
     public function link(mixed $link = null): static
     {
+        if (\is_null($link)) {
+            return $this;
+        }
+
         $instance = $this->linkInstance();
 
         match (true) {
-            \is_null($link) => null,
             $link instanceof Link => $this->setLink($link),
             \is_array($link) => $instance->assign($link),
             \is_callable($link) => $this->evaluate($link, [
