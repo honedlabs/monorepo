@@ -60,7 +60,6 @@ class Table extends Primitive
 
     /**
      * The request instance to use for the table.
-     * Defaults to the current request object.
      * 
      * @var \Illuminate\Http\Request|null
      */
@@ -217,14 +216,14 @@ class Table extends Primitive
     protected function modifyResource(): void
     {
         if ($this->hasResourceModifier()) {
-            $this->getResourceModifier()($this->resource);
+            \call_user_func($this->getResourceModifier(), $this->resource);
         }
     }
 
     protected function beforeRetrieval(): void
     {
         if (\method_exists($this, 'before')) {
-            $this->before($this->resource);
+            \call_user_func($this->getResourceModifier(), $this->resource);
         }
     }
 

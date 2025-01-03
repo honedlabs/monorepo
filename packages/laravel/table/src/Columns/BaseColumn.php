@@ -65,7 +65,7 @@ abstract class BaseColumn extends Primitive
      */
     public function apply(mixed $value): mixed
     {
-        $value = $this->applyTransform($value);
+        $value = $this->transform($value);
 
         return $this->formatValue($value);
     }

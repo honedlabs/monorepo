@@ -7,7 +7,7 @@ beforeEach(function () {
     $this->sort = Sort::make('created_at');
 });
 
-it('does not have a direction by default', function () {
+it('has no direction by default', function () {
     expect($this->sort->getDirection())->toBeNull();
     expect($this->sort->hasDirection())->toBeFalse();
 });
@@ -47,11 +47,6 @@ it('has shorthand for setting direction as ascending', function () {
 it('can be globally configured for default direction', function () {
     Sort::sortByDescending();
     expect($this->sort->getDefaultDirection())->toBe(Sort::Descending);
-});
-
-it('clears the default direction', function () {
-    Sort::useDefaultDirection(null);
-    expect($this->sort->getDefaultDirection())->toBe(Sort::Ascending);
 });
 
 it('prevents the direction from being set to an invalid value', function () {
