@@ -14,7 +14,7 @@ trait HasMethod
      * 
      * @var string
      */
-    protected $method = 'get';
+    protected $method = Request::METHOD_GET;
 
     /**
      * Set the method, chainable.
@@ -41,10 +41,10 @@ trait HasMethod
             return;
         }
 
-        $method = Str::lower($method);
+        $method = Str::upper($method);
 
-        if (! \in_array($method, ['get', 'post', 'put', 'patch', 'delete'])) {
-            throw new \InvalidArgumentException("Invalid HTTP method [{$method}] provided for url.");
+        if (! \in_array($method, [Request::METHOD_GET, Request::METHOD_POST, Request::METHOD_PUT, Request::METHOD_PATCH, Request::METHOD_DELETE])) {
+            throw new \InvalidArgumentException("The provided HTTP method [{$method}] is not valid.");
         }
 
         $this->method = $method;
@@ -63,7 +63,7 @@ trait HasMethod
      *
      * @return $this
      */
-    public function get(): static
+    public function asGet(): static
     {
         return $this->method(Request::METHOD_GET);
     }
@@ -73,7 +73,7 @@ trait HasMethod
      *
      * @return $this
      */
-    public function post(): static
+    public function asPost(): static
     {
         return $this->method(Request::METHOD_POST);
     }
@@ -83,7 +83,7 @@ trait HasMethod
      *
      * @return $this
      */
-    public function put(): static
+    public function asPut(): static
     {
         return $this->method(Request::METHOD_PUT);
     }
@@ -93,7 +93,7 @@ trait HasMethod
      *
      * @return $this
      */
-    public function patch(): static
+    public function asPatch(): static
     {
         return $this->method(Request::METHOD_PATCH);
     }
@@ -103,7 +103,7 @@ trait HasMethod
      *
      * @return $this
      */
-    public function delete(): static
+    public function asDelete(): static
     {
         return $this->method(Request::METHOD_DELETE);
     }
