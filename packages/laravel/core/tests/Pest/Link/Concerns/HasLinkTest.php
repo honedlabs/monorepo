@@ -123,4 +123,3 @@ it('rejects null parameters', function () {
     expect($this->test)
         ->getParameters()->toBeNull();
 });
-

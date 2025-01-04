@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Core\Link\Link;
-use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\URL;
+use Symfony\Component\HttpFoundation\Request;
 
 it('can be made', function () {
     expect(Link::make())->toBeInstanceOf(Link::class);

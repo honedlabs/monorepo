@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 use Honed\Core\Concerns\Evaluable;
-use Honed\Core\Link\Link;
 use Honed\Core\Link\Concerns\Linkable;
+use Honed\Core\Link\Link;
 
 class LinkableTest
 {
-    use Linkable;
     use Evaluable;
+    use Linkable;
 }
 
 beforeEach(function () {
@@ -58,10 +58,10 @@ it('chains link with array assignments', function () {
     ]))->toBeInstanceOf(LinkableTest::class)
         ->isLinkable()->toBeTrue()
         ->getLink()->scoped(fn ($link) => $link
-            ->toBeInstanceOf(Link::class)
-            ->isSigned()->toBeFalse()
-            ->getLinkDuration()->toBe(10)
-            ->getLink()->toBe(route('product.show', $product))
+        ->toBeInstanceOf(Link::class)
+        ->isSigned()->toBeFalse()
+        ->getLinkDuration()->toBe(10)
+        ->getLink()->toBe(route('product.show', $product))
         );
 });
 
@@ -75,10 +75,10 @@ it('chains link with closure', function () {
     ))->toBeInstanceOf(LinkableTest::class)
         ->isLinkable()->toBeTrue()
         ->getLink()->scoped(fn ($link) => $link
-            ->toBeInstanceOf(Link::class)
-            ->isSigned()->toBeFalse()
-            ->getLinkDuration()->toBe(10)
-            ->getLink()->toBe(route('product.show', $product))
+        ->toBeInstanceOf(Link::class)
+        ->isSigned()->toBeFalse()
+        ->getLinkDuration()->toBe(10)
+        ->getLink()->toBe(route('product.show', $product))
         );
 });
 
@@ -88,8 +88,8 @@ it('chains link with parameters', function () {
     expect($this->test->link('product.show', $product))->toBeInstanceOf(LinkableTest::class)
         ->isLinkable()->toBeTrue()
         ->getLink()->scoped(fn ($link) => $link
-            ->toBeInstanceOf(Link::class)
-            ->getLink()->toBe(route('product.show', $product))
+        ->toBeInstanceOf(Link::class)
+        ->getLink()->toBe(route('product.show', $product))
         );
 });
 
@@ -99,8 +99,8 @@ it('has shorthand `route` method', function () {
     expect($this->test->route('product.show', $product))->toBeInstanceOf(LinkableTest::class)
         ->isLinkable()->toBeTrue()
         ->getLink()->scoped(fn ($link) => $link
-            ->toBeInstanceOf(Link::class)
-            ->getLink()->toBe(route('product.show', $product))
+        ->toBeInstanceOf(Link::class)
+        ->getLink()->toBe(route('product.show', $product))
         );
 });
 
@@ -108,7 +108,7 @@ it('has shorthand `url` method', function () {
     expect($this->test->url('/'))->toBeInstanceOf(LinkableTest::class)
         ->isLinkable()->toBeTrue()
         ->getLink()->scoped(fn ($link) => $link
-            ->toBeInstanceOf(Link::class)
-            ->getLink()->toBe('/')
+        ->toBeInstanceOf(Link::class)
+        ->getLink()->toBe('/')
         );
 });

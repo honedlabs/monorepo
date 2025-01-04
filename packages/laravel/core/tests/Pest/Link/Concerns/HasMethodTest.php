@@ -67,4 +67,3 @@ it('has shorthand `asDelete`', function () {
 it('errors if invalid method is provided', function () {
     $this->test->method('invalid');
 })->throws(\InvalidArgumentException::class);
-
