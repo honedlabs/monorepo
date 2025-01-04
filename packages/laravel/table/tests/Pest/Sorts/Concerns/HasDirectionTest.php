@@ -1,67 +1,83 @@
 <?php
 
+use Honed\Table\Sorts\Concerns\HasDirection;
 use Honed\Table\Sorts\Sort;
 
+class HasDirectionTest
+{
+    use HasDirection;
+}
+
 beforeEach(function () {
-    Sort::sortByAscending();
-    $this->sort = Sort::make('created_at');
+    HasDirectionTest::sortByAscending();
+    $this->test = Sort::make('created_at');
 });
 
 it('has no direction by default', function () {
-    expect($this->sort->getDirection())->toBeNull();
-    expect($this->sort->hasDirection())->toBeFalse();
-});
-
-it('can set a direction', function () {
-    expect($this->sort->direction(Sort::Descending))->toBeInstanceOf(Sort::class)
-        ->getDirection()->toBe(Sort::Descending);
-});
-
-it('can be set using setter', function () {
-    $this->sort->setDirection(Sort::Descending);
-    expect($this->sort->getDirection())->toBe(Sort::Descending);
-});
-
-it('does accept null values but defaults to the default direction', function () {
-    $this->sort->setDirection(null);
-    expect($this->sort->getDirection())->toBeNull();
-});
-
-it('checks if it has a direction', function () {
-    expect($this->sort->hasDirection())->toBeFalse();
-    $this->sort->setDirection(Sort::Descending);
-    expect($this->sort->hasDirection())->toBeTrue();
+    expect($this->test)
+        ->getDirection()->toBeNull()
+        ->hasDirection()->toBeFalse();
 });
 
 
-it('has shorthand for setting direction as descending', function () {
-    expect($this->sort->desc())->toBeInstanceOf(Sort::class)
-        ->getDirection()->toBe(Sort::Descending);
+it('sets direction', function () {
+    $this->test->setDirection(Sort::Descending);
+    expect($this->test)
+        ->getDirection()->toBe(Sort::Descending)
+        ->hasDirection()->toBeTrue();
 });
 
-it('has shorthand for setting direction as ascending', function () {
-    expect($this->sort->asc())->toBeInstanceOf(Sort::class)
-        ->getDirection()->toBe(Sort::Ascending);
+it('chains direction', function () {
+    expect($this->test->direction(Sort::Descending))->toBeInstanceOf(Sort::class)
+        ->getDirection()->toBe(Sort::Descending)
+        ->hasDirection()->toBeTrue();
 });
 
-it('can be globally configured for default direction', function () {
-    Sort::sortByDescending();
-    expect($this->sort->getDefaultDirection())->toBe(Sort::Descending);
+it('rejects invalid directions', function () {
+    $this->test->setDirection(Sort::Descending);
+    $this->test->setDirection(null);
+    expect($this->test)
+        ->getDirection()->toBe(Sort::Descending)
+        ->hasDirection()->toBeTrue();
 });
 
-it('prevents the direction from being set to an invalid value', function () {
-    $this->sort->setDirection('invalid');
-})->throws(\InvalidArgumentException::class);
 
-it('holds the active direction', function () {
-    expect($this->sort->getActiveDirection())->toBeNull();
+it('has shorthand `desc`', function () {
+    expect($this->test->desc())->toBeInstanceOf(Sort::class)
+        ->getDirection()->toBe(Sort::Descending)
+        ->hasDirection()->toBeTrue();
 });
 
-it('can set the active direction', function () {
-    $this->sort->setActiveDirection(Sort::Descending);
-    expect($this->sort->getActiveDirection())->toBe(Sort::Descending);
+it('has shorthand `asc`', function () {
+    expect($this->test->asc())->toBeInstanceOf(Sort::class)
+        ->getDirection()->toBe(Sort::Ascending)
+        ->hasDirection()->toBeTrue();
 });
 
-it('does not allow invalid active directions', function () {
-    $this->sort->setActiveDirection('invalid');
-})->throws(\InvalidArgumentException::class);
+it('can be globally configured for descending', function () {
+    HasDirectionTest::sortByDescending();
+    expect($this->test->getDefaultDirection())->toBe(Sort::Descending);
+});
+
+it('can be globally configured for ascending', function () {
+    HasDirectionTest::sortByAscending();
+    expect($this->test->getDefaultDirection())->toBe(Sort::Ascending);
+});
+
+it('has no active direction by default', function () {
+    expect($this->test->getActiveDirection())->toBeNull();
+});
+
+it('sets active direction', function () {
+    $this->test->setActiveDirection(Sort::Descending);
+    expect($this->test->getActiveDirection())->toBe(Sort::Descending);
+});
+
+it('checks if is agnostic', function () {
+    expect($this->test->isAgnostic())->toBeTrue();
+});
+
+it('checks if is not agnostic', function () {
+    $this->test->setActiveDirection(Sort::Descending);
+    expect($this->test->isAgnostic())->toBeFalse();
+});

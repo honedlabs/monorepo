@@ -52,7 +52,7 @@ trait HasDirection
      *
      * @return $this
      */
-    public function direction(string|null $direction): static
+    public function direction(?string $direction): static
     {
         $this->setDirection($direction);
 
@@ -74,10 +74,10 @@ trait HasDirection
      *
      * @param  string|null  $direction
      */
-    public function setDirection(string|null $direction): void
+    public function setDirection(?string $direction): void
     {
-        if (\is_string($direction) && ! \in_array($direction, [self::Ascending, self::Descending])) {
-            throw new \InvalidArgumentException('Direction must be either asc, desc, or null');
+        if (! \in_array($direction, [null, self::Ascending, self::Descending])) {
+            return;
         }
 
         $this->direction = $direction;
@@ -86,7 +86,7 @@ trait HasDirection
     /**
      * Get the direction
      */
-    public function getDirection(): string|null
+    public function getDirection(): ?string
     {
         return $this->direction;
     }
@@ -134,8 +134,8 @@ trait HasDirection
      */
     public function setActiveDirection(string|null $direction): void
     {
-        if (! \in_array($direction, ['asc', 'desc', null])) {
-            throw new \InvalidArgumentException('Direction must be either asc, desc, or null');
+        if (! \in_array($direction, [null, self::Ascending, self::Descending])) {
+            return;
         }
 
         $this->activeDirection = $direction;
