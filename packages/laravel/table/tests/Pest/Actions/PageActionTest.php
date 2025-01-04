@@ -2,7 +2,6 @@
 
 use Honed\Table\Actions\PageAction;
 use Honed\Core\Link\Proxies\HigherOrderLink;
-use Symfony\Component\HttpFoundation\Request;
 
 beforeEach(function () {
     $this->test = PageAction::make('test');
