@@ -55,7 +55,7 @@ class ExampleTable extends Table
             Filter::make('price', 'Max')->alias('max')->lte(),
             Filter::make('price', 'Min')->alias('min')->gt(),
             SetFilter::make('status')->options(Status::class)->strict(),
-            CustomFilter::make('soon')->using(fn (Builder $query, $value) => $query->where('status', Status::COMING_SOON)),
+            CustomFilter::make('soon')->using(fn (Builder $query, $value) => $query->where('status', Status::ComingSoon)),
             DateFilter::make('created_at', 'Year')->alias('year')->year(),
         ];
     }
