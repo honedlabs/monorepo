@@ -42,7 +42,7 @@ trait IsVisible
     }
 
     /**
-     * Determine if the class is visible.
+     * Determine if it is visible.
      */
     public function isVisible(): bool
     {
