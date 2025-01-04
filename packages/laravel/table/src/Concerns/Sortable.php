@@ -19,7 +19,7 @@ trait Sortable
     /**
      * @var string
      */
-    // protected $sort;
+    protected $sort;
 
     /**
      * @var string
@@ -29,7 +29,7 @@ trait Sortable
     /**
      * @var string
      */
-    // protected $order;
+    protected $order;
 
     /**
      * @var string
@@ -66,7 +66,7 @@ trait Sortable
     public function getSorts(): Collection
     {
         return collect(match(true) {
-            \property_exists($this, 'sorts') => $this->sorts,
+            \property_exists($this, 'sorts') && !\is_null($this->sorts) => $this->sorts,
             \method_exists($this, 'sorts') => $this->sorts(),
             default => [],
         });
@@ -99,7 +99,7 @@ trait Sortable
      */
     public function getSortKey()
     {
-        return \property_exists($this, 'sort')
+        return \property_exists($this, 'sort') && !\is_null($this->sort)
             ? $this->sort
             : static::$sortKey;
     }
@@ -111,7 +111,7 @@ trait Sortable
      */
     public function getOrderKey()
     {
-        return \property_exists($this, 'order')
+        return \property_exists($this, 'order') && !\is_null($this->order)
             ? $this->order
             : static::$orderKey;
     }

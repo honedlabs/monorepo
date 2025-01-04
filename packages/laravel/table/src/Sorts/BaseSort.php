@@ -11,6 +11,7 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\IsActive;
+use Honed\Core\Concerns\IsDefault;
 use Honed\Core\Primitive;
 use Honed\Table\Contracts\Sorts;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,6 +27,7 @@ abstract class BaseSort extends Primitive implements Sorts
     use HasMeta;
     use HasType;
     use IsActive;
+    use IsDefault;
 
     /**
      * Create a new sort instance specifying the database column, and optionally the display label.
