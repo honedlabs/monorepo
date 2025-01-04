@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Table\Filters;
 
+use Illuminate\Http\Request;
 use Honed\Core\Concerns\IsStrict;
-use Honed\Core\Options\Concerns\HasOptions;
 use Honed\Table\Filters\Enums\Clause;
 use Honed\Table\Filters\Enums\Operator;
 use Illuminate\Database\Eloquent\Builder;
+use Honed\Core\Options\Concerns\HasOptions;
 
 class SetFilter extends BaseFilter
 {
@@ -23,23 +24,9 @@ class SetFilter extends BaseFilter
         $this->setType('filter:set');
         $this->setClause(Clause::Is);
         $this->setOperator(Operator::Equal);
+        $this->setStrict(true);
     }
 
-    public function apply(Builder $builder): void
-    {
-        $value = $this->transform($this->getValueFromRequest());
-        $this->setValue($value);
-        $this->setActive($this->isFiltering($value));
-
-        $builder->when(
-            $this->isActive() && $this->validate($value),
-            fn (Builder $builder) => $this->handle($builder),
-        );
-    }
-
-    /**
-     * Determine if the filter should be applied.
-     */
     public function isFiltering(mixed $value): bool
     {
         if (\is_null($value)) {
@@ -58,18 +45,14 @@ class SetFilter extends BaseFilter
             }
         }
 
-        // If it not strict about the values, then filtering is true
         return $isFiltering || ! $this->isStrict();
     }
 
-    /**
-     * Retrieve the value of the filter name from the current request.
-     *
-     * @return int|string|array<int,int|string>|null
-     */
-    public function getValueFromRequest(): mixed
+    public function getValueFromRequest(Request $request = null): mixed
     {
-        $input = request()->input($this->getParameterName(), null);
+        $input = ($request ?? request())
+            ->input($this->getParameterName(), null);
+
         if (! \is_null($input) && $this->isMultiple()) {
             return \str_getcsv($input);
         }

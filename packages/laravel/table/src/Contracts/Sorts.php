@@ -8,11 +8,8 @@ interface Sorts
 {
     /**
      * Apply the sort to the builder
-     *
-     * @param  string|null  $sortBy  The sorting field
-     * @param  string|null  $direction  The sorting direction
      */
-    public function apply(Builder $builder, string $sortBy, string $direction = 'asc'): void;
+    public function apply(Builder $builder, string $sortBy, string|null $direction = 'asc'): void;
 
     /**
      * Handle the sorting operation
@@ -30,9 +27,7 @@ interface Sorts
     public function isSorting(?string $sortBy, ?string $direction): bool;
 
     /**
-     * Retrieve the query parameter name of the sort
-     *
-     * @internal
+     * Retrieve the query parameter name of the sort.
      */
     public function getParameterName(): string;
 }

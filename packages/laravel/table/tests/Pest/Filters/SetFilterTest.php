@@ -6,12 +6,14 @@ use Honed\Table\Filters\Enums\Operator;
 use Honed\Table\Filters\SetFilter;
 use Honed\Table\Tests\Stubs\Product;
 use Illuminate\Support\Facades\Request;
+use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
 
 beforeEach(function () {
-    $request = Request::create('/', 'GET', ['name' => 'test']);
-    Request::swap($request);
-    $this->filter = SetFilter::make('name');
+    $this->name = 'name';
+    $this->value = 'test';
+    $this->filter = SetFilter::make($this->name);
     $this->builder = Product::query();
+    Request::swap(Request::create('/', HttpFoundationRequest::METHOD_GET, [$this->name => $this->value]));
 });
 
 it('has defaults', function () {
@@ -24,30 +26,31 @@ it('has defaults', function () {
         ->isStrict()->toBeTrue();
 });
 
-it('can apply the filter', function () {
+it('can be applied', function () {
     $this->filter->apply($this->builder);
+
     expect($this->builder->getQuery()->wheres)
         ->toHaveCount(1)
-        ->toEqual([
-            [
-                'type' => 'Basic',
-                'column' => 'name',
-                'operator' => '=',
-                'value' => 'test',
-                'boolean' => 'and',
-            ],
+        ->{0}->toEqual([
+            'type' => 'Basic',
+            'column' => $this->name,
+            'operator' => Operator::Equal->value,
+            'value' => $this->value,
+            'boolean' => 'and',
         ]);
+
     expect($this->filter)
         ->isActive()->toBeTrue()
-        ->getValue()->toBe('test');
+        ->getValue()->toBe($this->value);
 });
 
-it('does not apply the filter if the request does not have a matching value', function () {
-    Request::swap(Request::create('/', 'GET', ['email' => 'test@example.com']));
+it('does not apply when parameter name is not present', function () {
+    $request = Request::create('/', HttpFoundationRequest::METHOD_GET, ['fake' => $this->value]);
 
-    $this->filter->apply($this->builder);
+    $this->filter->apply($this->builder, $request);
+
     expect($this->builder->getQuery()->wheres)
-        ->toHaveCount(0);
+        ->toBeEmpty();
 
     expect($this->filter)
         ->isActive()->toBeFalse()
@@ -114,12 +117,12 @@ it('can be strict about the values', function () {
     expect($this->filter->isFiltering('test3'))->toBeTrue();
 });
 
-it('has an array form', function () {
+it('has array representation', function () {
     expect($this->filter->toArray())->toEqual([
         'name' => 'name',
         'label' => 'Name',
         'type' => 'filter:set',
-        'isActive' => false,
+        'active' => false,
         'value' => null,
         'meta' => [],
         'options' => [],

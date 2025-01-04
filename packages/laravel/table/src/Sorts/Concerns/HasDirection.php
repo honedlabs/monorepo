@@ -71,8 +71,6 @@ trait HasDirection
 
     /**
      * Set the direction quietly.
-     *
-     * @param  string|null  $direction
      */
     public function setDirection(?string $direction): void
     {
@@ -129,8 +127,6 @@ trait HasDirection
 
     /**
      * Set the active direction.
-     *
-     * @param  'asc'|'desc'|null  $direction
      */
     public function setActiveDirection(string|null $direction): void
     {
