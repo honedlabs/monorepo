@@ -10,17 +10,16 @@ namespace Honed\Table\Columns\Concerns;
 trait IsSearchable
 {
     /**
-     * @var bool|(\Closure():bool)
+     * @var bool
      */
     protected $searchable = false;
 
     /**
      * Set the searchable property, chainable.
      *
-     * @param  bool|(\Closure():bool)  $searchable
      * @return $this
      */
-    public function searchable(bool|\Closure $searchable = true): static
+    public function searchable(?bool $searchable = true): static
     {
         $this->setSearchable($searchable);
 
@@ -29,14 +28,9 @@ trait IsSearchable
 
     /**
      * Set the searchable property quietly.
-     *
-     * @param  bool|(\Closure():bool)|null  $searchable
      */
-    public function setSearchable(bool|\Closure|null $searchable): void
+    public function setSearchable(bool $searchable): void
     {
-        if (\is_null($searchable)) {
-            return;
-        }
         $this->searchable = $searchable;
     }
 
@@ -45,14 +39,6 @@ trait IsSearchable
      */
     public function isSearchable(): bool
     {
-        return (bool) $this->evaluate($this->searchable);
-    }
-
-    /**
-     * Determine if the column is not searchable.
-     */
-    public function isNotSearchable(): bool
-    {
-        return ! $this->isSearchable();
+        return $this->searchable;
     }
 }
