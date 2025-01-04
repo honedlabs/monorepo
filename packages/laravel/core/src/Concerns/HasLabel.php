@@ -84,6 +84,7 @@ trait HasLabel
     public function makeLabel(string|\Closure $name): string
     {
         return (new Stringable($this->evaluate($name)))
+            ->afterLast('.')
             ->headline()
             ->lower()
             ->ucfirst()
