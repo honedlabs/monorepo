@@ -16,8 +16,9 @@ use Honed\Core\Concerns\IsKey;
 use Honed\Core\Concerns\Transformable;
 use Honed\Core\Formatters\Concerns\Formattable;
 use Honed\Core\Primitive;
+use Honed\Table\Columns\Contracts\Column;
 
-abstract class BaseColumn extends Primitive
+abstract class BaseColumn extends Primitive implements Column
 {
     use Authorizable;
     use Concerns\HasBreakpoint;
@@ -55,14 +56,6 @@ abstract class BaseColumn extends Primitive
         return resolve(static::class, compact('name', 'label'));
     }
 
-    /**
-     * Modify the record value to align it with the column configuration.
-     *
-     * @template T
-     *
-     * @param  T  $value
-     * @return T|mixed
-     */
     public function apply(mixed $value): mixed
     {
         $value = $this->transform($value);
@@ -70,14 +63,6 @@ abstract class BaseColumn extends Primitive
         return $this->formatValue($value);
     }
 
-    /**
-     * Format how the records' values are displayed in this column.
-     *
-     * @template T
-     *
-     * @param  T  $value
-     * @return T|mixed
-     */
     public function formatValue(mixed $value): mixed
     {
         return $this->format($value) ?? $this->getPlaceholder();
