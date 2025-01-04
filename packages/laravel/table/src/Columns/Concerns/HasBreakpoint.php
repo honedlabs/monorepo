@@ -5,23 +5,21 @@ declare(strict_types=1);
 namespace Honed\Table\Columns\Concerns;
 
 use Illuminate\Support\Str;
-use InvalidArgumentException;
 
 trait HasBreakpoint
 {
-    protected ?string $breakpoint = null;
 
-    public const ExtraSmall = 'xs';
+    const ExtraSmall = 'xs';
 
-    public const Small = 'sm';
+    const Small = 'sm';
 
-    public const Medium = 'md';
+    const Medium = 'md';
 
-    public const Large = 'lg';
+    const Large = 'lg';
 
-    public const ExtraLarge = 'xl';
+    const ExtraLarge = 'xl';
 
-    public const BREAKPOINTS = [
+    const BREAKPOINTS = [
         self::ExtraSmall,
         self::Small,
         self::Medium,
@@ -30,7 +28,14 @@ trait HasBreakpoint
     ];
 
     /**
-     * @throws InvalidArgumentException
+     * @var string|null
+     */
+    protected $breakpoint = null;
+
+    /**
+     * Set the breakpoint, chainable.
+     * 
+     * @throws \InvalidArgumentException
      */
     public function breakpoint(string $breakpoint): static
     {
@@ -40,33 +45,45 @@ trait HasBreakpoint
     }
 
     /**
-     * @throws InvalidArgumentException
+     * Set the breakpoint quietly.
+     * 
+     * @throws \InvalidArgumentException
      */
     public function setBreakpoint(?string $breakpoint): void
     {
-        if (is_null($breakpoint)) {
+        if (\is_null($breakpoint)) {
             return;
         }
+
         $breakpoint = Str::lower($breakpoint);
 
         if (! in_array($breakpoint, self::BREAKPOINTS)) {
-            throw new InvalidArgumentException("The provided breakpoint [$breakpoint] is invalid. Please provide one of the following: ".implode(', ', self::BREAKPOINTS));
+            throw new \InvalidArgumentException("The provided breakpoint [$breakpoint] is invalid. Please provide one of the following: ".implode(', ', self::BREAKPOINTS));
         }
+
         $this->breakpoint = $breakpoint;
     }
 
+    /**
+     * Get the breakpoint.
+     */
     public function getBreakpoint(): ?string
     {
-        return $this->evaluate($this->breakpoint);
+        return $this->breakpoint;
     }
 
+    /**
+     * Determine if it has a breakpoint.
+     */
     public function hasBreakpoint(): bool
     {
         return ! \is_null($this->breakpoint);
     }
 
     /**
-     * @throws InvalidArgumentException
+     * Set the breakpoint to extra small.
+     * 
+     * @throws \InvalidArgumentException
      */
     public function xs(): static
     {
@@ -74,7 +91,9 @@ trait HasBreakpoint
     }
 
     /**
-     * @throws InvalidArgumentException
+     * Set the breakpoint to small.
+     * 
+     * @throws \InvalidArgumentException
      */
     public function sm(): static
     {
@@ -82,7 +101,9 @@ trait HasBreakpoint
     }
 
     /**
-     * @throws InvalidArgumentException
+     * Set the breakpoint to medium.
+     * 
+     * @throws \InvalidArgumentException
      */
     public function md(): static
     {
@@ -90,7 +111,9 @@ trait HasBreakpoint
     }
 
     /**
-     * @throws InvalidArgumentException
+     * Set the breakpoint to large.
+     * 
+     * @throws \InvalidArgumentException
      */
     public function lg(): static
     {
@@ -98,7 +121,9 @@ trait HasBreakpoint
     }
 
     /**
-     * @throws InvalidArgumentException
+     * Set the breakpoint to extra large.
+     * 
+     * @throws \InvalidArgumentException
      */
     public function xl(): static
     {
