@@ -1,48 +1,53 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Table\Columns\Column;
+use Honed\Table\Tests\Stubs\Product;
 
-// it('has an array form', function () {
-//     expect($this->column->toArray())->toEqual([
-//         'name' => 'name',
-//         'label' => 'Name',
-//         'type' => 'default',
-//         'tooltip' => null,
-//         'breakpoint' => null,
-//         'isHidden' => false,
-//         'isScreenReader' => false,
-//         'isToggleable' => false,
-//         'isActive' => false,
-//         'isSortable' => false,
-//         'isSorting' => false,
-//         'direction' => null,
-//         'meta' => [],
-//     ]);
-// });
+beforeEach(function () {
+    $this->name = 'name';
+    $this->column = Column::make($this->name);
+});
 
-// it('can be made', function () {
-//     expect(Column::make('created_at'))->toBeInstanceOf(Column::class)
-//         ->toArray()->toEqual([
-//             'name' => 'created_at',
-//             'label' => 'Created At',
-//             'type' => 'default',
-//             'tooltip' => null,
-//             'breakpoint' => null,
-//             'isHidden' => false,
-//             'isScreenReader' => false,
-//             'isToggleable' => false,
-//             'isActive' => false,
-//             'isSortable' => false,
-//             'isSorting' => false,
-//             'direction' => null,
-//             'meta' => [],
-//         ]);
-// });
+it('can be instantiated', function () {
+    expect(new Column($this->name))->toBeInstanceOf(Column::class)
+        ->getName()->toBe($this->name)
+        ->getLabel()->toBe('Name');
+});
 
-// it('can be applied to a record', function () {
-//     expect($this->column->transform(fn (Product $product) => 'none')
-//         ->apply(Product::find(1)))->toBe('none');
-// });
+it('can be made', function () {
+    expect(Column::make($this->name))->toBeInstanceOf(Column::class)
+        ->getName()->toBe($this->name)
+        ->getLabel()->toBe('Name');
+});
+
+it('has array representation', function () {
+    expect($this->column->toArray())->toEqual([
+        'name' => $this->name,
+        'label' => 'Name',
+        'type' => 'default',
+        'breakpoint' => null,
+        'hidden' => false,
+        'sr_only' => false,
+        'toggleable' => false,
+        'active' => false,
+        'sortable' => false,
+        'sorting' => false,
+        'direction' => null,
+        'meta' => [],
+    ]);
+});
+
+it('can be applied to a record', function () {
+    $product = product();
+    expect($this->column->transformer(fn (Product $product) => $product->name)
+        ->apply($product))->toBe($product->name);
+});
+
+it('has a placeholder', function () {
+    expect($this->column->placeholder('test'))->formatValue(null)->toBe('test');
+});
 
 // it('can format a record', function () {
 //     expect($this->column->placeholder('test')

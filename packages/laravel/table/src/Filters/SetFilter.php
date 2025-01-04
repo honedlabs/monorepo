@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Table\Filters;
 
 use Illuminate\Http\Request;
+use Honed\Core\Options\Option;
 use Honed\Core\Concerns\IsStrict;
 use Honed\Table\Filters\Enums\Clause;
 use Honed\Table\Filters\Enums\Operator;
@@ -22,7 +23,7 @@ class SetFilter extends BaseFilter
     public function setUp(): void
     {
         $this->setType('filter:set');
-        $this->setClause(Clause::Is);
+        $this->setClause(Clause::Contains);
         $this->setOperator(Operator::Equal);
         $this->setStrict(true);
     }
@@ -33,19 +34,19 @@ class SetFilter extends BaseFilter
             return false;
         }
 
-        // Check if the value is in the options
-        $isFiltering = false;
-
-        foreach ($this->getOptions() as $option) {
-            if ($option->getValue() === $value) {
-                $option->setActive(true);
-                $isFiltering = true;
-            } else {
-                $option->setActive(false);
-            }
+        if (! $this->hasOptions()) {
+            return true;
         }
 
-        return $isFiltering || ! $this->isStrict();
+        $filtering = $this->collectOptions()->reduce(
+            static fn (bool $filtering, Option $option) => $option
+                ->active($option->getValue() === $value)
+                ->isActive() || $filtering,
+            false
+        );
+
+        return $this->isStrict() 
+            ? $filtering : true;
     }
 
     public function getValueFromRequest(Request $request = null): mixed
@@ -53,18 +54,28 @@ class SetFilter extends BaseFilter
         $input = ($request ?? request())
             ->input($this->getParameterName(), null);
 
-        if (! \is_null($input) && $this->isMultiple()) {
-            return \str_getcsv($input);
-        }
-
-        return $input;
+        return ! \is_null($input) && $this->isMultiple()
+            ? \str_getcsv((string) $input)
+            : $input;
     }
 
     public function handle(Builder $builder): void
     {
-        match ($this->isMultiple()) {
-            true => $builder->whereIn($this->getAttribute(), $this->getValue()),
-            false => $this->getClause()->apply($builder, $this->getAttribute(), $this->getOperator(), $this->getValue()),
+        match (true) {
+            ! $this->isMultiple() => $this->getClause()
+                ->apply($builder, 
+                    $this->getAttribute(), 
+                    $this->getOperator(), 
+                    $this->getValue()
+                ),
+            $this->getOperator() === Operator::NotEqual => $builder->whereNotIn(
+                $this->getAttribute(), 
+                $this->getValue()
+            ),
+            default => $builder->whereIn(
+                $this->getAttribute(), 
+                $this->getValue()
+            ),
         };
     }
 

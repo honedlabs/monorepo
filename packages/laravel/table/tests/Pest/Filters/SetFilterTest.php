@@ -34,8 +34,8 @@ it('can be applied', function () {
         ->{0}->toEqual([
             'type' => 'Basic',
             'column' => $this->name,
-            'operator' => Operator::Equal->value,
             'value' => $this->value,
+            'operator' => '=',
             'boolean' => 'and',
         ]);
 
@@ -44,7 +44,7 @@ it('can be applied', function () {
         ->getValue()->toBe($this->value);
 });
 
-it('does not apply when parameter name is not present', function () {
+it('is not applied when parameter name is not present', function () {
     $request = Request::create('/', HttpFoundationRequest::METHOD_GET, ['fake' => $this->value]);
 
     $this->filter->apply($this->builder, $request);
@@ -57,64 +57,65 @@ it('does not apply when parameter name is not present', function () {
         ->getValue()->toBeNull();
 });
 
-it('applies a `whereIn` if the filter is multiple', function () {
-    Request::swap(Request::create('/', 'GET', ['name' => 'test,test2']));
-    $this->filter->setMultiple(true);
-    $this->filter->apply($this->builder);
+it('has options', function () {
+    $this->filter
+        ->options([
+            Option::make('test3', 'Test 3'),
+            Option::make('test2', 'Test 2'),
+            Option::make($this->value, 'Test'),  
+        ])
+        ->apply($this->builder);
 
     expect($this->builder->getQuery()->wheres)
         ->toHaveCount(1)
-        ->toEqual([
-            [
-                'type' => 'In',
-                'column' => 'name',
-                'values' => ['test', 'test2'],
-                'boolean' => 'and',
-            ],
+        ->{0}->toEqual([
+            'type' => 'Basic',
+            'column' => $this->name,
+            'value' => $this->value,
+            'operator' => '=',
+            'boolean' => 'and',
         ]);
+    
+    expect($this->filter)
+        ->hasOptions()->toBeTrue()
+        ->collectOptions()->scoped(fn ($options) => $options
+            ->toHaveCount(3)
+            ->first(fn (Option $option) => $option->isActive())
+                ->getValue()->toBe($this->value)
+        );
 });
 
-it('converts query parameters', function () {
-    expect($this->filter->getValueFromRequest())->toBe('test');
-    Request::swap(Request::create('/', 'GET', ['name' => 'test,test2']));
-    $this->filter->setMultiple(true);
-    expect($this->filter->getValueFromRequest())->toEqual(['test', 'test2']);
-});
+it('accepts multiple values', function () {
+    $value2 = 'test2';
+    $request = Request::create('/', HttpFoundationRequest::METHOD_GET, [$this->name => \sprintf('%s,%s', $this->value, $value2)]);
 
-it('can use options', function () {
-    $this->filter->setOptions([
-        Option::make('test'),
-        Option::make('test2'),
-    ]);
-    expect($this->filter->getOptions())->toHaveCount(2);
+    $this->filter->options([
+            Option::make('test3', 'Test 3'),
+            Option::make('test2', 'Test 2'),
+            Option::make($this->value, 'Test'),  
+        ])
+        ->multiple()
+        ->apply($this->builder, $request);
 
-    $this->filter->apply($this->builder);
     expect($this->builder->getQuery()->wheres)
         ->toHaveCount(1)
-        ->toEqual([
-            [
-                'type' => 'Basic',
-                'column' => 'name',
-                'operator' => '=',
-                'value' => 'test',
-                'boolean' => 'and',
-            ],
+        ->{0}->toEqual([
+            'type' => 'In',
+            'column' => $this->name,
+            'values' => [$this->value, $value2],
+            'boolean' => 'and',
         ]);
 
-    expect(collect($this->filter->getOptions())->first(fn ($option) => $option->isActive()))->not->toBeNull();
-});
-
-it('can be strict about the values', function () {
-    $this->filter->setStrict(true);
-    $this->filter->setOptions([
-        Option::make('test'),
-        Option::make('test2'),
-    ]);
-    expect($this->filter->isFiltering('test3'))->toBeFalse();
-    expect($this->filter->isFiltering('test'))->toBeTrue();
-
-    $this->filter->setStrict(false);
-    expect($this->filter->isFiltering('test3'))->toBeTrue();
+    expect($this->filter)
+        ->hasOptions()->toBeTrue()
+        ->collectOptions()->scoped(fn ($options) => $options
+            ->toHaveCount(3)
+            ->sequence(
+                fn (Option $option) => $option->isActive()->toBeFalse(),
+                fn (Option $option) => $option->isActive()->toBeTrue(),
+                fn (Option $option) => $option->isActive()->toBeTrue(),
+            )
+        );
 });
 
 it('has array representation', function () {
