@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Honed\Table\Columns\BaseColumn;
+use Illuminate\Support\Stringable;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cookie;
 
@@ -12,6 +12,7 @@ trait Toggleable
 {
     /**
      * The name of this table's cookie for remembering column visibility
+     * 
      * @var string
      */
     protected $cookie;
@@ -25,6 +26,7 @@ trait Toggleable
 
     /**
      * The duration of the cookie to use for all tables.
+     * 
      * @var int|null
      */
     protected static $cookieRemember = 60 * 24 * 30 * 365; // 1 year
@@ -48,7 +50,7 @@ trait Toggleable
      * 
      * @var bool
      */
-    // protected $toggle;
+    protected $toggle;
 
     /**
      * Whether to enable toggling of column visibility for all tables.
@@ -102,7 +104,8 @@ trait Toggleable
      */
     public function getDefaultCookie(): string
     {
-        return str(\class_basename($this))
+        return (new Stringable(static::class))
+            ->classBasename()
             ->lower()
             ->kebab()
             ->toString();
@@ -142,12 +145,14 @@ trait Toggleable
 
     /**
      * Update the cookie with the new data.
-     *
-     * @param  mixed  $data
      */
     public function setCookie(mixed $data): void
     {
-        Cookie::queue($this->getCookieName(), \json_encode($data), $this->getRememberDuration());
+        Cookie::queue(
+            $this->getCookieName(), 
+            \json_encode($data), 
+            $this->getRememberDuration()
+        );
     }
 
     /**
@@ -155,18 +160,20 @@ trait Toggleable
      *
      * @return mixed
      */
-    public function getCookie(): mixed
+    public function getCookie(Request $request = null): mixed
     {
-        return \json_decode(request()->cookie($this->getCookieName(), null), true);
+        return \json_decode(
+            ($request ?? request())->cookie($this->getCookieName(), null),
+            true
+        );
     }
 
     /**
-     * Get the columns to show from the request.
+     * Get the columns to show.
      *
-     * @param  \Illuminate\Http\Request|null  $request
      * @return array<int,string>
      */
-    public function getToggleParameters(?Request $request = null): array
+    public function toggleParameters(Request $request = null): array
     {
         $request = $request ?? request();
 
@@ -175,16 +182,5 @@ trait Toggleable
             ->remove(' ')
             ->explode(',')
             ->toArray();
-    }
-
-    /**
-     * Apply the toggleability to determine which columns to show.
-     */
-    public function toggleColumns(): void
-    {
-        $activeColumns = $this->getToggleParameters();
-        // TODO
-        $this->getColumns()
-            ->each(fn (BaseColumn $column) => $column->setActive(true));
     }
 }

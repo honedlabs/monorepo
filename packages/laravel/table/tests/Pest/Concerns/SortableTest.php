@@ -1,8 +1,6 @@
 <?php
 
-use Honed\Table\Table;
 use Honed\Table\Sorts\Sort;
-use Honed\Table\Sorts\BaseSort;
 use Honed\Table\Concerns\Sortable;
 use Honed\Table\Tests\Stubs\Product;
 use Illuminate\Support\Facades\Request;

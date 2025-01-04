@@ -80,7 +80,7 @@ trait Sortable
     }
 
     /**
-     * Get the sorts to apply to the resource.
+     * Get the sorts to apply to a resource.
      *
      * @return Collection<\Honed\Table\Sorts\Contracts\Sort>
      */

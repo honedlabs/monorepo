@@ -38,9 +38,9 @@ it('is empty by default', function () {
 });
 
 it('sets filters', function () {
-    $this->method->setFilters([Filter::make('test')]);
+    $this->test->setFilters([Filter::make('test')]);
 
-    expect($this->method)
+    expect($this->test)
         ->hasFilters()->toBeTrue()
         ->getFilters()->scoped(fn ($filters) => $filters
             ->toBeCollection()
@@ -53,10 +53,10 @@ it('sets filters', function () {
 });
 
 it('rejects null values', function () {
-    $this->method->setFilters([Filter::make('test')]);
-    $this->method->setFilters(null);
+    $this->test->setFilters([Filter::make('test')]);
+    $this->test->setFilters(null);
 
-    expect($this->method)
+    expect($this->test)
         ->hasFilters()->toBeTrue()
         ->getFilters()->toHaveCount(1);
 });
