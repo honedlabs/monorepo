@@ -12,7 +12,7 @@ use Honed\Core\Primitive;
  *
  * @implements \Honed\Core\Contracts\HigherOrder<T>
  */
-class HigherOrderUrl implements HigherOrder
+class HigherOrderLink implements HigherOrder
 {
     /**
      * @param  T  $primitive

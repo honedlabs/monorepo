@@ -54,11 +54,6 @@ it('sets route', function () {
         ->hasLink()->toBeTrue();
 });
 
-// it('holds the route for future parameters', function () {
-//     $product = product();
-//     $this->test->setRoute('product.show');
-// });
-
 it('rejects null values', function () {
     $this->test->setLink('/');
     $this->test->setLink(null);
@@ -114,5 +109,18 @@ it('resolves link with typed parameters', function () {
     expect($this->test)
         ->getLink([], [Product::class => $product])->toBe(route('product.show', $product))
         ->hasLink()->toBeTrue();
+});
+
+it('sets parameters', function () {
+    $product = product();
+    $this->test->setParameters($product);
+    expect($this->test)
+        ->getParameters()->toBe($product);
+});
+
+it('rejects null parameters', function () {
+    $this->test->setParameters(null);
+    expect($this->test)
+        ->getParameters()->toBeNull();
 });
 

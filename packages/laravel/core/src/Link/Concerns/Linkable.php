@@ -22,7 +22,7 @@ trait Linkable
      * @param  \Honed\Core\Link\Link|(\Closure(\Honed\Core\Link\Link):(void|\Honed\Core\Link\Link))|(array<string,mixed>|string|\Closure(mixed...):string)|null  $link
      * @return $this
      */
-    public function link(mixed $link = null): static
+    public function link(mixed $link = null, mixed $parameters = null, bool $absolute = true): static
     {
         if (\is_null($link)) {
             return $this;
@@ -40,7 +40,7 @@ trait Linkable
             ], [
                 Link::class => $instance,
             ]),
-            default => $instance->link($link),
+            default => $instance->link($link, $parameters, $absolute),
         };
 
         return $this;
@@ -49,7 +49,7 @@ trait Linkable
     /**
      * Create a new link instance if one is not already set.
      */
-    private function linkInstance(): Link
+    public function linkInstance(): Link
     {
         return $this->link ??= Link::make();
     }

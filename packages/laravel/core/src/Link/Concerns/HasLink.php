@@ -95,7 +95,6 @@ trait HasLink
     public function setUrl(string|\Closure $url): void
     {
         $this->link = $url;
-        $this->named = false;
     }
 
     /**
@@ -105,16 +104,33 @@ trait HasLink
      */
     public function setRoute(string $name, mixed $parameters = null, bool $absolute = true): void
     {
-        $this->named = true;
-
-        if (! \is_null($parameters)) {
+        try {
             $this->link = route($name, $parameters, $absolute);
+        } catch (\Illuminate\Routing\Exceptions\UrlGenerationException $e) {
+            $this->link = $name;
+            $this->absolute = $absolute;
+            $this->parameters = $parameters;
+        }
+    }
 
+    /**
+     * Set the link parameters quietly.
+     */
+    public function setParameters(mixed $parameters): void
+    {
+        if (\is_null($parameters)) {
             return;
         }
 
-        $this->link = $name;
-        $this->absolute = $absolute;
+        $this->parameters = $parameters;
+    }
+
+    /**
+     * Get the link parameters.
+     */
+    public function getParameters(): mixed
+    {
+        return $this->parameters;
     }
 
     /**

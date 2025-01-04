@@ -68,11 +68,12 @@ class Link extends Primitive
      * @param  string|(\Closure(mixed...):string)  $route
      * @return $this
      */
-    public function signedRoute(string|\Closure $route, int|Carbon $duration = 0): static
+    public function signedRoute(string|\Closure $route, mixed $parameters = null, int|Carbon $duration = 0): static
     {
         $this->setLink($route);
         $this->setSigned(true);
         $this->setLinkDuration($duration);
+        $this->setParameters($parameters);
 
         return $this;
     }
@@ -90,8 +91,8 @@ class Link extends Primitive
         }
 
         return $this->url ??= match (true) {
-            $this->isSigned() && $this->isTemporary() => Url::temporarySignedRoute($this->link, $this->getLinkDuration(), ...$parameters), // @phpstan-ignore-line
-            $this->isSigned() => Url::signedRoute($this->link, ...$parameters), // @phpstan-ignore-line
+            $this->isSigned() && $this->isTemporary() => Url::temporarySignedRoute($this->link, $this->getLinkDuration(), $this->parameters ?? $parameters), // @phpstan-ignore-line
+            $this->isSigned() => Url::signedRoute($this->link, $this->parameters ?? $parameters), // @phpstan-ignore-line
             default => $this->getDestination($parameters, $typed),
         };
     }

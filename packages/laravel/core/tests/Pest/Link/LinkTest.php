@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Honed\Core\Link\Link;
 use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Support\Facades\URL;
 
 it('can be made', function () {
     expect(Link::make())->toBeInstanceOf(Link::class);
@@ -16,7 +17,6 @@ it('has array representation', function () {
     ]);
 });
 
-
 it('has shorthand `to` method', function () {
     expect(Link::make()->to('/'))->toBeInstanceOf(Link::class)
         ->getLink()->toBe('/')
@@ -24,9 +24,16 @@ it('has shorthand `to` method', function () {
 });
 
 it('has shorthand `signedRoute` method', function () {
-    expect(Link::make()->signedRoute('home'))->toBeInstanceOf(Link::class)
-        ->getLink()->toBe('home')
+    $product = product();
+
+    expect(Link::make()->signedRoute('product.show', $product))->toBeInstanceOf(Link::class)
+        ->getLink()->toBe(URL::signedRoute('product.show', $product))
         ->isSigned()->toBeTrue()
         ->isTemporary()->toBeFalse();
 });
 
+it('can be null', function () {
+    expect(Link::make())->toBeInstanceOf(Link::class)
+        ->hasLink()->toBeFalse()
+        ->getLink()->toBeNull();
+});

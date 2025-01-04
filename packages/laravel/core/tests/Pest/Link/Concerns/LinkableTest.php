@@ -82,6 +82,17 @@ it('chains link with closure', function () {
         );
 });
 
+it('chains link with parameters', function () {
+    $product = product();
+
+    expect($this->test->link('product.show', $product))->toBeInstanceOf(LinkableTest::class)
+        ->isLinkable()->toBeTrue()
+        ->getLink()->scoped(fn ($link) => $link
+            ->toBeInstanceOf(Link::class)
+            ->getLink()->toBe(route('product.show', $product))
+        );
+});
+
 it('has shorthand `route` method', function () {
     $product = product();
 
