@@ -9,7 +9,7 @@ use Honed\Table\Confirm\Concerns\Confirmable;
 class BulkAction extends BaseAction
 {
     use Concerns\Actionable;
-    use Concerns\DeselectsOnEnd;
+    use Concerns\IsDeselecting;
     use Concerns\IsInline;
     use Confirmable;
 
