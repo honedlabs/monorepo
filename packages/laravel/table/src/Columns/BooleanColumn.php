@@ -8,7 +8,7 @@ class BooleanColumn extends BaseColumn
 {
     public function setUp(): void
     {
-        $this->setType('boolean');
+        $this->setType('col:bool');
         $this->boolean();
     }
 }

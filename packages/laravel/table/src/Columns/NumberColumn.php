@@ -8,7 +8,7 @@ class NumberColumn extends BaseColumn
 {
     public function setUp(): void
     {
-        $this->setType('number');
+        $this->setType('col:number');
         $this->number();
     }
 }

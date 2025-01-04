@@ -37,6 +37,7 @@ trait IsToggleable
         if (\is_null($toggleable)) {
             return;
         }
+        
         $this->toggleable = $toggleable;
     }
 

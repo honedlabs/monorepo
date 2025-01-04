@@ -18,9 +18,8 @@ use Honed\Core\Concerns\Validatable;
 use Honed\Core\Concerns\Authorizable;
 use Honed\Core\Concerns\HasAttribute;
 use Honed\Core\Concerns\Transformable;
-use Honed\Table\Filters\Contracts\Filter;
 
-abstract class BaseFilter extends Primitive implements Filter
+abstract class BaseFilter extends Primitive implements Contracts\Filter
 {
     use Authorizable;
     use HasAlias;

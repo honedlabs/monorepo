@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Confirm\Concerns;
 
+use Illuminate\Support\Str;
 use Honed\Table\Confirm\Confirm;
 
 /**
@@ -19,22 +20,26 @@ trait Confirmable
     /**
      * Set the properties of the confirm
      *
-     * @param  string|\Honed\Table\Confirm\Confirm|(\Closure(\Honed\Table\Confirm\Confirm):void)|array<string,mixed>  $confirm
+     * @param  string|\Honed\Table\Confirm\Confirm|(\Closure(\Honed\Table\Confirm\Confirm):void|\Honed\Table\Confirm\Confirm)|array<string,mixed>  $confirm
      * @return $this
      */
     public function confirm(mixed $confirm): static
     {
-        $confirmInstance = $this->makeConfirm();
+        if (\is_null($confirm)) {
+            return $this;
+        }
+
+        $instance = $this->confirmInstance();
 
         match (true) {
             $confirm instanceof Confirm => $this->setConfirm($confirm),
             \is_array($confirm) => $this->getConfirm()->assign($confirm),
             \is_callable($confirm) => $this->evaluate($confirm, [
-                'confirm' => $confirmInstance,
+                'confirm' => $instance,
             ], [
-                Confirm::class => $confirmInstance,
+                Confirm::class => $instance,
             ]),
-            default => $this->getConfirm()->setDescription($confirm),
+            default => $this->getConfirm()->setTitle($confirm),
         };
 
         return $this;
@@ -43,7 +48,7 @@ trait Confirmable
     /**
      * Create a new confirm instance if one is not already set.
      */
-    public function makeConfirm(): Confirm
+    public function confirmInstance(): Confirm
     {
         return $this->confirm ??= Confirm::make();
     }
@@ -62,10 +67,14 @@ trait Confirmable
 
     /**
      * Get the confirm instance.
+     *
+     * @param  'title'|'description'|'cancel'|'success'|'intent'|null  $key
      */
-    public function getConfirm(): ?Confirm
+    public function getConfirm(?string $key = null): Confirm|string|null
     {
-        return $this->confirm;
+        return \is_null($key) || ! $this->isConfirmable()
+            ? $this->confirm
+            : $this->confirm->{'get'.Str::studly($key)}();
     }
 
     /**
