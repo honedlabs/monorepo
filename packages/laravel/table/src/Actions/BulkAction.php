@@ -23,7 +23,7 @@ class BulkAction extends BaseAction
         return array_merge(parent::toArray(), [
             'action' => $this->hasAction(),
             'confirm' => $this->getConfirm()?->toArray(),
-            'deselect' => $this->deselectsOnEnd(),
+            'deselect' => $this->isDeselecting(),
         ]);
     }
 }
