@@ -1,6 +1,7 @@
 <?php
 
 use Honed\Table\Actions\InlineAction;
+use Symfony\Component\HttpFoundation\Request;
 
 beforeEach(function () {
     $this->action = InlineAction::make('test');
@@ -31,7 +32,7 @@ it('forwards calls to url', function () {
             'hasAction' => false,
             'meta' => [],
             'url' => '/products',
-            'method' => 'get',
+            'method' => Request::METHOD_GET,
         ]);
 });
 

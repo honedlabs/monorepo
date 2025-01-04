@@ -1,16 +1,17 @@
 <?php
 
 use Honed\Table\Actions\PageAction;
+use Symfony\Component\HttpFoundation\Request;
 
 beforeEach(function () {
     $this->action = PageAction::make('test');
 });
 
-it('has a type of page', function () {
+it('is type page', function () {
     expect($this->action->getType())->toBe('page');
 });
 
-it('has an array form', function () {
+it('has array representation', function () {
     expect($this->action->toArray())->toEqual([
         'type' => 'page',
         'name' => 'test',
@@ -27,6 +28,6 @@ it('forwards calls to url', function () {
             'label' => 'Test',
             'meta' => [],
             'url' => '/products',
-            'method' => 'get',
+            'method' => Request::METHOD_GET,
         ]);
 });

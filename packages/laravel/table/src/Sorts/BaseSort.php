@@ -34,7 +34,7 @@ abstract class BaseSort extends Primitive implements Sorts
     {
         parent::__construct();
         $this->setAttribute($attribute);
-        $this->setLabel($label ?? $this->makeLabel($this->getAttribute()));
+        $this->setLabel($label ?? $this->makeLabel($attribute));
     }
 
     /**
@@ -45,9 +45,12 @@ abstract class BaseSort extends Primitive implements Sorts
         return resolve(static::class, compact('attribute', 'label'));
     }
 
-    public function apply(Builder $builder, string|null $sortBy, string|null $direction = 'asc'): void
+    public function apply(Builder $builder, string|null $sortBy, string|null $direction = null): void
     {
-        $this->setActive($this->isSorting($sortBy, $direction));
+        $this->setActive(
+            $this->isSorting($sortBy, $direction)
+        );
+
         $this->setActiveDirection($direction);
 
         $builder->when(
@@ -58,7 +61,10 @@ abstract class BaseSort extends Primitive implements Sorts
 
     public function handle(Builder $builder, string|null $direction = null): void
     {
-        $builder->orderBy($this->getAttribute(), $direction ?? static::getDefaultDirection());
+        $builder->orderBy(
+            $this->getAttribute(),
+            $direction ?? static::getDefaultDirection(),
+        );
     }
 
     public function isSorting(string|null $sortBy, string|null $direction): bool
@@ -68,7 +74,10 @@ abstract class BaseSort extends Primitive implements Sorts
 
     public function getParameterName(): string
     {
-        return $this->getAlias() ?? (new Stringable($this->getAttribute()))->afterLast('.')->value();
+        return $this->getAlias() 
+            ?? (new Stringable($this->getAttribute()))
+                ->afterLast('.')
+                ->value();
     }
 
     public function toArray(): array
@@ -77,7 +86,7 @@ abstract class BaseSort extends Primitive implements Sorts
             'name' => $this->getParameterName(),
             'label' => $this->getLabel(),
             'type' => $this->getType(),
-            'isActive' => $this->isActive(),
+            'active' => $this->isActive(),
             'meta' => $this->getMeta(),
             ...(! $this->hasDirection() ? ['direction' => $this->getActiveDirection()] : []),
         ];

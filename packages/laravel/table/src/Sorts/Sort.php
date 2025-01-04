@@ -18,6 +18,6 @@ class Sort extends BaseSort
     public function isSorting(?string $sortBy, ?string $direction): bool
     {
         return parent::isSorting($sortBy, $direction)
-            && ($this->isAgnostic() ? true : $direction === $this->getDirection());
+            && ($this->isAgnostic() || $direction === $this->getDirection());
     }
 }
