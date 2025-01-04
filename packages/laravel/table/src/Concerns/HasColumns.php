@@ -79,7 +79,8 @@ trait HasColumns
     {
         return $this->getColumns()
             ->filter(static fn (BaseColumn $column): bool => $column->isSearchable())
-            ->pluck('name');
+            ->map(static fn (BaseColumn $column): string => $column->getName())
+            ->values();
     }
 
     /**
