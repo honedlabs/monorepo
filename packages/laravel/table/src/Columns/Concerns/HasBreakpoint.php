@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 
 trait HasBreakpoint
 {
-
     const ExtraSmall = 'xs';
 
     const Small = 'sm';
@@ -19,13 +18,7 @@ trait HasBreakpoint
 
     const ExtraLarge = 'xl';
 
-    const BREAKPOINTS = [
-        self::ExtraSmall,
-        self::Small,
-        self::Medium,
-        self::Large,
-        self::ExtraLarge,
-    ];
+    const BREAKPOINTS = [self::ExtraSmall, self::Small, self::Medium, self::Large, self::ExtraLarge];
 
     /**
      * @var string|null
