@@ -22,9 +22,8 @@ trait IsSortable
     protected $sort;
 
     /**
-     * Set the sortable property, chainable.
+     * Set as sortable, chainable.
      *
-     * @param  bool|non-empty-string|null  $sortable
      * @return $this
      */
     public function sortable(bool|string|null $sortable = true): static
@@ -35,9 +34,7 @@ trait IsSortable
     }
 
     /**
-     * Set the sortable property quietly.
-     *
-     * @param  bool|non-empty-string|null  $sortable
+     * Set as sortable quietly.
      */
     public function setSortable(bool|string|null $sortable): void
     {
@@ -54,7 +51,7 @@ trait IsSortable
     }
 
     /**
-     * Determine if the column is sortable.
+     * Determine if it is sortable.
      */
     public function isSortable(): bool
     {

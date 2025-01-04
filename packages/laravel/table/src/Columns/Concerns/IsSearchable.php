@@ -15,11 +15,11 @@ trait IsSearchable
     protected $searchable = false;
 
     /**
-     * Set the searchable property, chainable.
+     * Set as searchable, chainable.
      *
      * @return $this
      */
-    public function searchable(?bool $searchable = true): static
+    public function searchable(bool $searchable = true): static
     {
         $this->setSearchable($searchable);
 
@@ -27,7 +27,7 @@ trait IsSearchable
     }
 
     /**
-     * Set the searchable property quietly.
+     * Set as searchable quietly.
      */
     public function setSearchable(bool $searchable): void
     {
@@ -35,7 +35,7 @@ trait IsSearchable
     }
 
     /**
-     * Determine if the column is searchable.
+     * Determine if it is searchable.
      */
     public function isSearchable(): bool
     {
