@@ -19,9 +19,9 @@ trait HasLink
     protected $link = null;
 
     /**
-     * @var non-empty-array<int,array<string,mixed>>|null
+     * @var mixed
      */
-    protected $parameters;
+    protected $parameters = null;
 
     /**
      * @var bool
@@ -95,6 +95,7 @@ trait HasLink
     public function setUrl(string|\Closure $url): void
     {
         $this->link = $url;
+        $this->named = false;
     }
 
     /**
@@ -104,6 +105,8 @@ trait HasLink
      */
     public function setRoute(string $name, mixed $parameters = null, bool $absolute = true): void
     {
+        $this->named = true;
+
         if (! \is_null($parameters)) {
             $this->link = route($name, $parameters, $absolute);
 

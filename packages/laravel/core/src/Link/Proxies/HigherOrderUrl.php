@@ -30,9 +30,9 @@ class HigherOrderUrl implements HigherOrder
     {
         $primitive = $this->primitive;
 
-        $primitive->makeUrl(); // @phpstan-ignore-line
+        $primitive->linkInstance(); // @phpstan-ignore-line
 
-        $url = $primitive->getUrl(); // @phpstan-ignore-line
+        $url = $primitive->getLink(); // @phpstan-ignore-line
         if ($url && method_exists($url, $name)) {
             $url->{$name}(...$arguments);
         }

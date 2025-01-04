@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Link;
 
+use Carbon\Carbon;
 use Honed\Core\Primitive;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,13 +22,17 @@ class Link extends Primitive
     use Concerns\IsSigned;
 
     /**
+     * @var string|null
+     */
+    protected $url;
+
+    /**
      * Create a new parameterised link instance.
      *
      * @param  string|(\Closure(mixed...):string)|null  $link
      */
-    final public function __construct(
-        string|\Closure|null $link = null, ?string $method = Request::METHOD_GET,
-    ) {
+    final public function __construct(string|\Closure|null $link = null, ?string $method = Request::METHOD_GET)
+    {
         parent::__construct();
         $this->setLink($link);
         $this->setMethod($method);
@@ -63,7 +68,7 @@ class Link extends Primitive
      * @param  string|(\Closure(mixed...):string)  $route
      * @return $this
      */
-    public function signedRoute(string|\Closure $route, int|\Carbon\Carbon $duration = 0): static
+    public function signedRoute(string|\Closure $route, int|Carbon $duration = 0): static
     {
         $this->setLink($route);
         $this->setSigned(true);
@@ -83,15 +88,12 @@ class Link extends Primitive
         if (! $this->hasLink()) {
             return null;
         }
-        $link = match (true) {
+
+        return $this->url ??= match (true) {
             $this->isSigned() && $this->isTemporary() => Url::temporarySignedRoute($this->link, $this->getLinkDuration(), ...$parameters), // @phpstan-ignore-line
             $this->isSigned() => Url::signedRoute($this->link, ...$parameters), // @phpstan-ignore-line
             default => $this->getDestination($parameters, $typed),
         };
-
-        $this->setLink($link);
-
-        return $link;
     }
 
     public function toArray()

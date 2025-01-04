@@ -52,14 +52,14 @@ it('chains link with array assignments', function () {
     $product = product();
 
     expect($this->test->link([
-        'signed' => true,
+        'signed' => false,
         'linkDuration' => 10,
         'link' => route('product.show', $product),
     ]))->toBeInstanceOf(LinkableTest::class)
-        ->getLink()->toBeInstanceOf(Link::class)
         ->isLinkable()->toBeTrue()
         ->getLink()->scoped(fn ($link) => $link
-            ->isSigned()->toBeTrue()
+            ->toBeInstanceOf(Link::class)
+            ->isSigned()->toBeFalse()
             ->getLinkDuration()->toBe(10)
             ->getLink()->toBe(route('product.show', $product))
         );
@@ -70,13 +70,13 @@ it('chains link with closure', function () {
 
     expect($this->test->link(fn (Link $link) => $link
         ->link(route('product.show', $product))
-        ->signed(true)
+        ->signed(false)
         ->linkDuration(10)
     ))->toBeInstanceOf(LinkableTest::class)
-        ->getLink()->toBeInstanceOf(Link::class)
         ->isLinkable()->toBeTrue()
         ->getLink()->scoped(fn ($link) => $link
-            ->isSigned()->toBeTrue()
+            ->toBeInstanceOf(Link::class)
+            ->isSigned()->toBeFalse()
             ->getLinkDuration()->toBe(10)
             ->getLink()->toBe(route('product.show', $product))
         );
@@ -86,16 +86,18 @@ it('has shorthand `route` method', function () {
     $product = product();
 
     expect($this->test->route('product.show', $product))->toBeInstanceOf(LinkableTest::class)
-        ->getLink()->toBeInstanceOf(Link::class)
         ->isLinkable()->toBeTrue()
         ->getLink()->scoped(fn ($link) => $link
+            ->toBeInstanceOf(Link::class)
             ->getLink()->toBe(route('product.show', $product))
         );
 });
 
 it('has shorthand `url` method', function () {
     expect($this->test->url('/'))->toBeInstanceOf(LinkableTest::class)
-        ->getLink()->toBeInstanceOf(Link::class)
         ->isLinkable()->toBeTrue()
-        ->getLink()->scoped(fn ($link) => $link->getLink()->toBe('/'));
+        ->getLink()->scoped(fn ($link) => $link
+            ->toBeInstanceOf(Link::class)
+            ->getLink()->toBe('/')
+        );
 });
