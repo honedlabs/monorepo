@@ -128,7 +128,7 @@ trait HasDirection
     /**
      * Set the active direction.
      */
-    public function setActiveDirection(string|null $direction): void
+    public function setActiveDirection(?string $direction): void
     {
         if (! \in_array($direction, [null, self::Ascending, self::Descending])) {
             return;

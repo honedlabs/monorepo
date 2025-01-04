@@ -46,7 +46,7 @@ abstract class BaseSort extends Primitive implements Contracts\Sort
         return resolve(static::class, compact('attribute', 'label'));
     }
 
-    public function apply(Builder $builder, string|null $sortBy, string|null $direction = null): void
+    public function apply(Builder $builder, ?string $sortBy, ?string $direction = null): void
     {
         $this->setActive(
             $this->isSorting($sortBy, $direction)
@@ -60,7 +60,7 @@ abstract class BaseSort extends Primitive implements Contracts\Sort
         );
     }
 
-    public function handle(Builder $builder, string|null $direction = null): void
+    public function handle(Builder $builder, ?string $direction = null): void
     {
         $builder->orderBy(
             $this->getAttribute(),
@@ -68,7 +68,7 @@ abstract class BaseSort extends Primitive implements Contracts\Sort
         );
     }
 
-    public function isSorting(string|null $sortBy, string|null $direction): bool
+    public function isSorting(?string $sortBy, ?string $direction): bool
     {
         return $sortBy === $this->getParameterName();
     }

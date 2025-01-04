@@ -12,6 +12,11 @@ use Illuminate\Support\Collection;
 trait Filterable
 {
     /**
+     * @var array<int,\Honed\Table\Filters\Contracts\Filter>
+     */
+    protected $filters;
+
+    /**
      * Set the list of filters to apply to a query.
      *
      * @param  array<int, \Honed\Table\Filters\Contracts\Filter>|null  $filters
