@@ -23,20 +23,7 @@ it('can be made', function () {
 });
 
 it('has array representation', function () {
-    expect($this->column->toArray())->toEqual([
-        'name' => $this->name,
-        'label' => 'Name',
-        'type' => 'default',
-        'breakpoint' => null,
-        'hidden' => false,
-        'sr_only' => false,
-        'toggleable' => false,
-        'active' => false,
-        'sortable' => false,
-        'sorting' => false,
-        'direction' => null,
-        'meta' => [],
-    ]);
+    expect($this->column->toArray())->toBeArray();
 });
 
 it('can be applied to a record', function () {

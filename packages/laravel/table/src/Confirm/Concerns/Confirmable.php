@@ -34,7 +34,7 @@ trait Confirmable
             ], [
                 Confirm::class => $confirmInstance,
             ]),
-            default => $this->getConfirm()->setDescription($confirm), // string case
+            default => $this->getConfirm()->setDescription($confirm),
         };
 
         return $this;
@@ -42,8 +42,6 @@ trait Confirmable
 
     /**
      * Create a new confirm instance if one is not already set.
-     *
-     * @internal
      */
     public function makeConfirm(): Confirm
     {
@@ -51,13 +49,9 @@ trait Confirmable
     }
 
     /**
-     * Override the confirm instance.
-     *
-     * @internal
-     *
-     * @param  \Honed\Table\Confirm\Confirm|bool|null  $confirm
+     * Set the confirm instance quietly.
      */
-    public function setConfirm($confirm)
+    public function setConfirm(Confirm|null $confirm)
     {
         if (\is_null($confirm)) {
             return;
@@ -68,32 +62,17 @@ trait Confirmable
 
     /**
      * Get the confirm instance.
-     *
-     * @return \Honed\Table\Confirm\Confirm|null
      */
-    public function getConfirm()
+    public function getConfirm(): ?Confirm
     {
         return $this->confirm;
     }
 
     /**
-     * Determine if the action is not confirmable.
-     *
-     * @return bool
-     */
-    public function isNotConfirmable()
-    {
-        // @phpstan-ignore-next-line
-        return \is_null($this->confirm);
-    }
-
-    /**
      * Determine if the action is confirmable.
-     *
-     * @return bool
      */
-    public function isConfirmable()
+    public function isConfirmable(): bool
     {
-        return ! $this->isNotConfirmable();
+        return ! \is_null($this->confirm);
     }
 }

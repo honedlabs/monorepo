@@ -102,7 +102,7 @@ abstract class BaseColumn extends Primitive
             'toggleable' => $this->isToggleable(),
             'active' => $this->isActive(),
             'sortable' => $this->isSortable(),
-            'sorting' => $this->isSorting(),
+            // 'sorting' => $this->isSorting(),
             'direction' => $this->getSort()?->getDirection(),
             'meta' => $this->getMeta(),
         ];
