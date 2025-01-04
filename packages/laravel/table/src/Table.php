@@ -6,13 +6,9 @@ namespace Honed\Table;
 
 use Closure;
 use Exception;
-use RuntimeException;
 use Honed\Core\Primitive;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Honed\Core\Concerns\Encodable;
-use Honed\Core\Concerns\Inspectable;
 use Illuminate\Support\Collection;
 use Honed\Table\Actions\BulkAction;
 use Honed\Table\Columns\BaseColumn;
@@ -24,10 +20,8 @@ use Honed\Table\Http\DTOs\BulkActionData;
 use Illuminate\Database\Eloquent\Builder;
 use Honed\Table\Http\DTOs\InlineActionData;
 use Honed\Table\Http\Requests\TableActionRequest;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
-use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Support\Stringable;
+use Illuminate\Pipeline\Pipeline;
 
 /**
  * @template T of \Illuminate\Database\Eloquent\Model
@@ -157,37 +151,24 @@ class Table extends Primitive
         $this->configureTableForCurrentRequest();
 
         return [
-            /* The ID of this table, used to deserialize it for actions */
             'id' => $this->encodeClass(),
-            /* The column attribute used to identify a record */
             'key' => $this->getKeyName(),
-            /* The records of the table */
             'records' => $this->getRecords(),
-            /* The available column options */
             'columns' => $this->getColumns(),
-            /* The available bulk action options */
-            'bulkActions' => $this->getBulkActions(),
-            /* The available page action options, generally page links */
-            'pageActions' => $this->getPageActions(),
-            /* The available filter options */
+            'actions' => [
+                'bulk' => $this->getBulkActions(),
+                'page' => $this->getPageActions(),
+            ],
             'filters' => $this->getFilters(),
-            /* The available sort options */
             'sorts' => $this->getSorts(),
-            /* The pagination data for the records */
             'paginator' => $this->getPaginator(),
-            /* Whether the table has toggling enabled */
+            // 'pages'
             'toggleable' => $this->isToggleable(),
-            /* The query parameter term for sorting */
             'sort' => $this->getSortKey(),
-            /* The query parameter term for ordering */
             'order' => $this->getOrderKey(),
-            /* The query parameter term for changing the number of records per page */
             'count' => $this->getCountKey(),
-            /* The query parameter term for searching */
             'search' => $this->getSearchKey(),
-            /* The query parameter term for toggling column visibility */
             'toggle' => $this->getToggleKey(),
-            /* The route used to handle actions, it is required to be a 'post' route */
             'endpoint' => $this->getEndpoint(),
         ];
     }
@@ -201,16 +182,21 @@ class Table extends Primitive
             return;
         }
 
-        $this->modifyResource();
-        $this->setSearchColumns();
         $this->toggleColumns();
-        $this->filterQuery($this->getResource());
-        $this->sortQuery($this->getResource());
-        $this->searchQuery($this->getResource());
+
+        // Manipulate a variable, not the original resource so that actions can be performed on the original resource
+        $resource = $this->getResource();
+
+
+
+        $this->modifyResource($resource);
+        $this->filterQuery($resource);
+        $this->sortQuery($resource);
+        $this->searchQuery($resource);
         // $this->selectQuery($this->getQuery());
-        $this->beforeRetrieval();
-        // $this->formatRecords();
-        // $this->paginateRecords();
+        $this->beforeRetrieval($resource);
+        $records = $this->paginateRecords($resource);
+        $formatted = $this->formatRecords($records);
     }
 
     protected function modifyResource(): void
@@ -220,10 +206,10 @@ class Table extends Primitive
         }
     }
 
-    protected function beforeRetrieval(): void
+    protected function beforeRetrieval(Builder $resource): void
     {
         if (\method_exists($this, 'before')) {
-            \call_user_func($this->getResourceModifier(), $this->resource);
+            \call_user_func($this->getResourceModifier(), $resource);
         }
     }
 
@@ -295,9 +281,9 @@ class Table extends Primitive
         // Ensure that the user is authorized to perform the action on this model
         if (! $action->isAuthorized([
             'record' => $record,
-            $this->getModelClassName() => $record,
+            $this->getModelName() => $record,
         ], [
-            (string) $this->getModelClass() => $record,
+            (string) $this->getModel() => $record,
             Model::class => $record,
         ])) {
             throw new \Exception('Unauthorized');
@@ -308,11 +294,11 @@ class Table extends Primitive
             named: [
                 'record' => $record,
                 'model' => $record,
-                $this->getModelClassName() => $record,
+                strtolower($this->getModelName()) => $record,
             ],
             typed: [
-                (string) $this->getModelClass() => $record,
-                // Model::class => $record,
+                (string) $this->getModel() => $record,
+                Model::class => $record,
             ],
         );
     }

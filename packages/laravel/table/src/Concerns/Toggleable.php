@@ -14,14 +14,14 @@ trait Toggleable
      * The name of this table's cookie for remembering column visibility
      * @var string
      */
-    // protected $cookie;
+    protected $cookie;
 
     /**
      * The duration that this table's cookie should be remembered for
      * 
      * @var int|null
      */
-    // protected $duration;
+    protected $duration;
 
     /**
      * The duration of the cookie to use for all tables.
@@ -34,7 +34,7 @@ trait Toggleable
      * 
      * @var string
      */
-    // protected $remember;
+    protected $remember;
 
     /**
      * The name to use for the query parameter to toggle visibility for all tables.
@@ -92,7 +92,7 @@ trait Toggleable
      */
     public function getCookieName(): string
     {
-        return \property_exists($this, 'cookie')
+        return \property_exists($this, 'cookie') && ! \is_null($this->cookie)
             ? $this->cookie
             : $this->getDefaultCookie();
     }
@@ -115,7 +115,7 @@ trait Toggleable
      */
     public function getRememberDuration()
     {
-        return \property_exists($this, 'duration')
+        return \property_exists($this, 'duration') && ! \is_null($this->duration)
             ? $this->duration
             : static::$cookieRemember;
     }
@@ -125,7 +125,7 @@ trait Toggleable
      */
     public function getRememberName(): string
     {
-        return \property_exists($this, 'remember')
+        return \property_exists($this, 'remember') && ! \is_null($this->remember)
             ? $this->remember
             : static::$rememberName;
     }
@@ -135,7 +135,7 @@ trait Toggleable
      */
     public function isToggleable(): bool
     {
-        return (bool) \property_exists($this, 'toggle')
+        return (bool) (\property_exists($this, 'toggle') && ! \is_null($this->toggle))
             ? $this->toggle
             : static::$defaultToggle;
     }
