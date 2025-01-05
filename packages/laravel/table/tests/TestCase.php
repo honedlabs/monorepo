@@ -11,8 +11,10 @@ use Honed\Table\TableServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Inertia\ServiceProvider as InertiaServiceProvider;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
 class TestCase extends Orchestra
 {
@@ -61,7 +63,7 @@ class TestCase extends Orchestra
 
     protected function defineRoutes($router)
     {
-        $router->middleware(SubstituteBindings::class)->group(function ($router) {
+        $router->middleware(SubstituteBindings::class, EncryptCookies::class, AddQueuedCookiesToResponse::class)->group(function ($router) {
             $router->get('/', fn () => Inertia::render('Home'))->name('home.index');
             $router->get('/products', fn () => Inertia::render('Products/Index'))->name('product.index');
             $router->get('/products/{product}', fn () => Inertia::render('Products/Show'))->name('product.show');

@@ -5,17 +5,31 @@ declare(strict_types=1);
 namespace Honed\Table\Concerns;
 
 use Illuminate\Support\Stringable;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 
 trait Toggleable
 {
+    const RememberDuration = 60 * 24 * 30 * 365; // 1 year
+
+    const RememberName = 'cols';
+
     /**
      * The name of this table's cookie for remembering column visibility
      * 
      * @var string
      */
     protected $cookie;
+
+    /**
+     * Whether the table has cookies enabled.
+     */
+    protected $cookies;
+
+    /**
+     * Whether the table has cookies enabled by default.
+     */
+    protected static $withCookies = true;
 
     /**
      * The duration that this table's cookie should be remembered for
@@ -29,7 +43,7 @@ trait Toggleable
      * 
      * @var int|null
      */
-    protected static $cookieRemember = 60 * 24 * 30 * 365; // 1 year
+    protected static $cookieRemember = self::RememberDuration;
 
     /**
      * The name of the query parameter to use for toggling columns.
@@ -43,7 +57,7 @@ trait Toggleable
      * 
      * @var string
      */
-    protected static $rememberName = 'cols';
+    protected static $rememberName = self::RememberName;
 
     /**
      * Whether to enable toggling of column visibility for this table.
@@ -61,8 +75,6 @@ trait Toggleable
 
     /**
      * Configure the default duration of the cookie to use for all tables.
-     *
-     * @param  int|null  $seconds  The duration in seconds
      */
     public static function rememberCookieFor(int|null $seconds): void
     {
@@ -71,22 +83,34 @@ trait Toggleable
 
     /**
      * Configure the name of the query parameter to use for toggling columns.
-     *
-     * @param  string  $name  The name of the query parameter
      */
-    public static function rememberCookieAs(string $name): void
+    public static function rememberCookieAs(string $name = null): void
     {
-        static::$rememberName = $name;
+        static::$rememberName = $name ?? self::RememberName;
     }
 
     /**
      * Configure whether to enable toggling of columns for all tables by default.
-     *
-     * @param  bool  $toggle  Whether to enable toggling of columns
      */
     public static function alwaysToggleable(bool $toggle = true): void
     {
         static::$defaultToggle = $toggle;
+    }
+
+    /**
+     * Configure whether to enable cookies for all tables by default.
+     */
+    public static function useCookies(bool $cookies = true): void
+    {
+        static::$withCookies = $cookies;
+    }
+
+    /**
+     * Set as toggleable quietly.
+     */
+    public function setToggleable(bool $toggle): void
+    {
+        $this->toggle = $toggle;
     }
 
     /**
@@ -100,27 +124,38 @@ trait Toggleable
     }
 
     /**
+     * Determine whether the table has cookies enabled.
+     */
+    public function useCookie(): bool
+    {
+        return (bool) (\property_exists($this, 'cookies') && ! \is_null($this->cookies))
+            ? $this->cookies
+            : static::$withCookies;
+    }
+
+    /**
      * Get the default cookie name to use for the table.
      */
     public function getDefaultCookie(): string
     {
         return (new Stringable(static::class))
             ->classBasename()
-            ->lower()
+            ->append('Table')
             ->kebab()
+            ->lower()
             ->toString();
     }
 
     /**
      * Get the default duration of the cookie to use for the table toggle.
-     *
-     * @return int
      */
-    public function getRememberDuration()
+    public function getRememberDuration(): int
     {
-        return \property_exists($this, 'duration') && ! \is_null($this->duration)
-            ? $this->duration
-            : static::$cookieRemember;
+        return match (true) {
+            ! \property_exists($this, 'duration') || \is_null($this->duration) => static::$cookieRemember,
+            $this->duration > 0 => $this->duration,
+            default => 5 * 365 * 24 * 60 * 60,
+        };
     }
 
     /**
@@ -146,7 +181,7 @@ trait Toggleable
     /**
      * Update the cookie with the new data.
      */
-    public function setCookie(mixed $data): void
+    public function enqueueCookie(mixed $data): void
     {
         Cookie::queue(
             $this->getCookieName(), 
@@ -157,10 +192,8 @@ trait Toggleable
 
     /**
      * Get the data stored in the cookie.
-     *
-     * @return mixed
      */
-    public function getCookie(Request $request = null): mixed
+    public function retrieveCookie(Request $request = null): mixed
     {
         return \json_decode(
             ($request ?? request())->cookie($this->getCookieName(), null),
@@ -177,7 +210,7 @@ trait Toggleable
     {
         $request = $request ?? request();
 
-        return $request->string($this->getToggleName())
+        return $request->string($this->getRememberName())
             ->trim()
             ->remove(' ')
             ->explode(',')
