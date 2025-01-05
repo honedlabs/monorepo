@@ -39,7 +39,7 @@ trait IsOptimizable
      */
     public function isOptimized(): bool
     {
-        return \property_exists($this, 'optimize')
+        return \property_exists($this, 'optimize') && ! \is_null($this->optimize)
             ? $this->optimize
             : static::$defaultOptimize;
     }
