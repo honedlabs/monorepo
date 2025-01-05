@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 
 trait Searchable
 {
+    const SearchTerm = 'search';
+
     /**
      * The column names to use for searching.
      * 
@@ -28,7 +30,7 @@ trait Searchable
      * 
      * @var string
      */
-    protected static $useTerm = 'search';
+    protected static $useTerm = self::SearchTerm;
 
     /**
      * Whether the table should use Laravel Scout for searching.
@@ -47,9 +49,9 @@ trait Searchable
     /**
      * Configure the default search query parameter to use for all tables.
      */
-    public static function useSearchTerm(string $term): void
+    public static function useSearchTerm(?string $term = null): void
     {
-        static::$useTerm = $term;
+        static::$useTerm = $term ?? self::SearchTerm;
     }
 
     /**
@@ -58,14 +60,6 @@ trait Searchable
     public static function useScout(bool $scout = true): void
     {
         static::$useScout = $scout;
-    }
-
-    /**
-     * Determine whether to use Laravel Scout for searching.
-     */
-    public static function usesScout(): bool
-    {
-        return static::$useScout;
     }
 
     /**
@@ -113,21 +107,21 @@ trait Searchable
     /**
      * Determine whether to apply searching if available.
      */
-    public function isSearching(): bool
+    public function isSearching(Request $request = null): bool
     {
-        return filled($this->getSearch()) && (bool) $this->getSearchParameters();
+        return \count($this->getSearch()) > 0 && (bool) $this->getSearchParameters($request);
     }
 
     /**
      * Apply the search to the builder.
      */
-    protected function searchQuery(Builder $builder): void
+    public function searchQuery(Builder $builder, Request $request = null): void
     {
-        if (! $this->isSearching()) {
+        $term = $this->getSearchParameters($request);
+
+        if (\count($this->getSearch()) === 0 || ! (bool) $term) {
             return;
         }
-
-        $term = $this->getSearchParameters();
 
         if ($this->isScoutSearch()) {
             // @phpstan-ignore-next-line

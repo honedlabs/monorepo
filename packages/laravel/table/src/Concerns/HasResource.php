@@ -56,7 +56,6 @@ trait HasResource
         };
     }
 
-
     /**
      * Set the resource to use for the table.
      *
