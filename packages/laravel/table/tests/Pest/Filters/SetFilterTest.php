@@ -13,7 +13,9 @@ beforeEach(function () {
     $this->value = 'test';
     $this->filter = SetFilter::make($this->name);
     $this->builder = Product::query();
-    Request::swap(Request::create('/', HttpFoundationRequest::METHOD_GET, [$this->name => $this->value]));
+    Request::swap(Request::create('/', HttpFoundationRequest::METHOD_GET, [
+        $this->name => $this->value
+    ]));
 });
 
 it('has defaults', function () {
