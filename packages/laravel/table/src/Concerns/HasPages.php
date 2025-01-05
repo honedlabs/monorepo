@@ -4,18 +4,24 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Honed\Table\PageAmount;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Honed\Table\Exceptions\InvalidPaginatorException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\CursorPaginator as PaginationCursorPaginator;
 use Illuminate\Pagination\LengthAwarePaginator as PaginationLengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 trait HasPages
 {
+    /**
+     * @var \Illuminate\Support\Collection<int,\Honed\Table\PageAmount>|null
+     */
+    protected $pages;
+
     /**
      * @var int|array<int,int>
      */
@@ -101,6 +107,18 @@ trait HasPages
         return match (true) {
             \property_exists($this, 'perPage') && ! \is_null($this->perPage) => $this->perPage,
             \method_exists($this, 'perPage') => $this->perPage(),
+            default => $this->getDefaultPerPageAmount()
+        };
+    }
+
+    /**
+     * Get default per page amount.
+     */
+    public function getDefaultPerPage(): int
+    {
+        return match (true) {
+            \property_exists($this, 'defaultPerPage') && ! \is_null($this->defaultPerPage) => $this->defaultPerPage,
+            \method_exists($this, 'defaultPerPage') => $this->defaultPerPage(),
             default => static::$defaultPerPageAmount
         };
     }
@@ -144,6 +162,60 @@ trait HasPages
     }
 
     /**
+     * Retrieve the records to use for pagination for the given request, setting the page options if applicable.
+     */
+    public function getRecordsPerPage(Request $request = null): int
+    {
+        $amounts = $this->getPerPage();
+    
+        if (!\is_array($amounts)) {
+            return $amounts;
+        }
+    
+        $amount = ($request ?? request())
+            ->input($this->getCountKey(), null);
+    
+
+        $amount = match (true) {
+            ! \is_numeric($amount) || ! \in_array((int) $amount, $amounts) => $this->getDefaultPerPage(),
+            default => (int) $amount,
+        };
+
+        $this->setPages(collect($amounts)
+            ->map(static fn (int $perPage) => PageAmount::make($perPage, $perPage === $amount)));        
+    
+        return $amount;
+    }
+
+    /**
+     * Set the page amount options quietly.
+     * 
+     * @param \Illuminate\Support\Collection<int,\Honed\Table\PageAmount> $pages
+     */
+    public function setPages(Collection $pages): void
+    {
+        $this->pages = $pages;
+    }
+
+    /**
+     * Get the page amount options.
+     * 
+     * @return \Illuminate\Support\Collection<int,\Honed\Table\PageAmount>|null
+     */
+    public function getPages(): ?Collection
+    {
+        return $this->pages;
+    }
+
+    /**
+     * Determine if the page amount options have been set.
+     */
+    public function hasPages(): bool
+    {
+        return ! \is_null($this->pages);
+    }
+    
+    /**
      * Execute the query and paginate the results.
      * 
      * @throws \Honed\Table\Exceptions\InvalidPaginatorException
@@ -178,10 +250,5 @@ trait HasPages
         };
 
         return $paginated->withQueryString();
-    }
-
-    public function getRecordsPerPage(Request $request = null)
-    {
-
     }
 }
