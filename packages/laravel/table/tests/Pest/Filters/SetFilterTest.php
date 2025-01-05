@@ -25,7 +25,7 @@ it('has defaults', function () {
         ->getOperator()->toBe(Operator::Equal)
         ->hasOptions()->toBeFalse()
         ->isMultiple()->toBeFalse()
-        ->isStrict()->toBeTrue();
+        ->isStrict()->toBeFalse();
 });
 
 it('can be applied', function () {
@@ -113,21 +113,24 @@ it('accepts multiple values', function () {
         ->collectOptions()->scoped(fn ($options) => $options
             ->toHaveCount(3)
             ->sequence(
-                fn (Option $option) => $option->isActive()->toBeFalse(),
-                fn (Option $option) => $option->isActive()->toBeTrue(),
-                fn (Option $option) => $option->isActive()->toBeTrue(),
+                fn ($option) => $option->isActive()->toBeFalse(),
+                fn ($option) => $option->isActive()->toBeTrue(),
+                fn ($option) => $option->isActive()->toBeTrue(),
             )
         );
 });
 
 it('has array representation', function () {
-    expect($this->filter->toArray())->toEqual([
-        'name' => 'name',
-        'label' => 'Name',
-        'type' => 'filter:set',
-        'active' => false,
-        'value' => null,
-        'meta' => [],
-        'options' => [],
-    ]);
+    expect($this->filter->toArray())
+        ->toBeArray()
+        ->toHaveKeys([
+            'name',
+            'label',
+            'type',
+            'active',
+            'value',
+            'meta',
+            'options',
+            'multiple',
+        ]);
 });

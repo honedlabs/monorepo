@@ -30,13 +30,17 @@ class SetFilter extends Filter
 
     public function isFiltering(mixed $value): bool
     {
-        if (parent::isFiltering($value) && ! $this->hasOptions()) {
+        if (\is_null($value)) {
+            return false;
+        }
+
+        if (! $this->hasOptions()) {
             return true;
         }
 
         $filtering = $this->collectOptions()->reduce(
             static fn (bool $filtering, Option $option) => $option
-                ->active($option->getValue() === $value)
+                ->active(\in_array($option->getValue(), (array) $value))
                 ->isActive() || $filtering
             , false);
 
@@ -51,26 +55,6 @@ class SetFilter extends Filter
         return ! \is_null($input) && $this->isMultiple()
             ? \str_getcsv((string) $input)
             : $input;
-    }
-
-    public function handle(Builder $builder): void
-    {
-        match (true) {
-            ! $this->isMultiple() => $this->getClause()
-                ->apply($builder, 
-                    $this->getAttribute(), 
-                    $this->getOperator(), 
-                    $this->getValue()
-                ),
-            $this->getOperator() === Operator::NotEqual => $builder->whereNotIn(
-                $this->getAttribute(), 
-                $this->getValue()
-            ),
-            default => $builder->whereIn(
-                $this->getAttribute(), 
-                $this->getValue()
-            ),
-        };
     }
 
     public function toArray(): array
@@ -97,6 +81,9 @@ class SetFilter extends Filter
     public function setMultiple(bool $multiple): void
     {
         $this->multiple = $multiple;
+
+        !$this->getClause()?->isMultiple()
+            && $this->setClause(Clause::Contains);
     }
 
     /**
