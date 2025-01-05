@@ -27,3 +27,7 @@ it('configures globally', function () {
     IsOptimizableTest::shouldOptimize(true);
     expect($this->test->isOptimized())->toBeTrue();
 });
+
+it('optimizes a query', function () {
+    $this->test->optimize($this->builder);
+})->todo();

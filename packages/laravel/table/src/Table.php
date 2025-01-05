@@ -41,6 +41,8 @@ class Table extends Primitive
     use Concerns\HasResource;
     use Concerns\Toggleable;
     use Concerns\IsOptimizable;
+    use Concerns\ActsBeforeRetrieval;
+    use Concerns\HasResourceModifier;
     use Encodable;
     use IsAnonymous;
     use RequiresKey;
@@ -187,30 +189,16 @@ class Table extends Primitive
         // Manipulate a variable, not the original resource so that actions can be performed on the original resource
         $resource = $this->getResource();
 
-
-
         $this->modifyResource($resource);
         $this->filterQuery($resource);
         $this->sortQuery($resource);
         $this->searchQuery($resource);
-        // $this->selectQuery($this->getQuery());
+        $this->optimizeQuery($resource);
         $this->beforeRetrieval($resource);
+
         $records = $this->paginateRecords($resource);
         $formatted = $this->formatRecords($records);
-    }
-
-    protected function modifyResource(): void
-    {
-        if ($this->hasResourceModifier()) {
-            \call_user_func($this->getResourceModifier(), $this->resource);
-        }
-    }
-
-    protected function beforeRetrieval(Builder $resource): void
-    {
-        if (\method_exists($this, 'before')) {
-            \call_user_func($this->getResourceModifier(), $resource);
-        }
+        $this->setRecords($formatted);
     }
 
     protected function setSearchColumns(): void

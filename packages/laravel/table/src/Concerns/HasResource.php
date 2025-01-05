@@ -21,45 +21,48 @@ trait HasResource
     protected $resource;
 
     /**
-     * Modify the resource query before it is used on a per controller basis.
+     * The resource query builder instance.
      * 
-     * @var (\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)|null)|null
+     * @var \Illuminate\Contracts\Database\Eloquent\Builder|null
      */
-    protected $resourceModifier = null;
+    protected $builder;
 
     /**
      * Get the resource to use for the table as an Eloquent query builder.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
-     *
-     * @throws \RuntimeException
+     * @throws \Honed\Table\Exceptions\MissingResourceException
      */
-    public function getResource()
+    public function getResource(): Builder
     {
-        if (! isset($this->resource)) {
-            $this->resource = match (true) {
-                \method_exists($this, 'resource') => $this->resource(),
-                \property_exists($this, 'resource') && isset($this->resource) => $this->resource,
-                default => $this->guessResourceFromTable()
-            };
-        }
-
-        $this->setResource(match (true) {
-            $this->resource instanceof Builder => null, // do nothing
-            $this->resource instanceof Model => $this->resource->newQuery(),
-            \is_string($this->resource) => $this->resource::query(),
-            default => throw new MissingResourceException(static::class)
+        return $this->builder ??= $this->resolveResource(match (true) {
+            \method_exists($this, 'resource') => $this->resource(),
+            \property_exists($this, 'resource') && !\is_null($this->resource) => $this->resource,
+            default => $this->guessResource()
         });
-
-        return $this->resource;
     }
+
+    /**
+     * Resolve the given resource into a query builder.
+     *
+     * @throws \Honed\Table\Exceptions\MissingResourceException
+     */
+    protected function resolveResource(mixed $resource): Builder
+    {
+        return match (true) {
+            $resource instanceof Builder => $resource,
+            $resource instanceof Model => $resource->newQuery(),
+            \is_string($resource) => $resource::query(),
+            default => throw new MissingResourceException(static::class)
+        };
+    }
+
 
     /**
      * Set the resource to use for the table.
      *
-     * @param  \Illuminate\Contracts\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>|null  $resource
+     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Contracts\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>|null  $resource
      */
-    public function setResource(Model|Builder|Closure|string|null $resource): void
+    public function setResource(Model|Builder|string|null $resource): void
     {
         if (\is_null($resource)) {
             return;
@@ -73,7 +76,7 @@ trait HasResource
      * 
      * @return class-string<\Illuminate\Database\Eloquent\Model>
      */
-    protected function guessResourceFromTable(): string 
+    public function guessResource(): string 
     {
         return (new Stringable(static::class))
             ->classBasename()
@@ -81,34 +84,6 @@ trait HasResource
             ->singular()
             ->prepend('\\App\\Models\\')
             ->value();
-    }
-
-    /**
-     * Retrieve the resource modifier.
-     * 
-     * @return (\Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder|null))|null
-     */
-    public function getResourceModifier(): ?Closure
-    {
-        return $this->resourceModifier;
-    }
-
-    /**
-     * Determine if the table has a resource modifier.
-     */
-    public function hasResourceModifier(): bool
-    {
-        return ! \is_null($this->resourceModifier);
-    }
-
-    /**
-     * Set the resource modifier.
-     * 
-     * @param  \Closure(\Illuminate\Database\Eloquent\Builder):(\Illuminate\Database\Eloquent\Builder)  $resourceModifier
-     */
-    public function setResourceModifier(Closure $resourceModifier): void
-    {
-        $this->resourceModifier = $resourceModifier;
     }
 
     /**
@@ -129,9 +104,7 @@ trait HasResource
      */
     public function getModelName(): string
     {
-        return (new Stringable($this->getModel()))
-            ->classBasename()
-            ->value();
+        return \class_basename($this->getModel());
     }
 
     /**
