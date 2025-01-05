@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Illuminate\Database\Eloquent\Builder;
+
 trait IsOptimizable
 {
     /**
@@ -42,5 +44,17 @@ trait IsOptimizable
         return \property_exists($this, 'optimize') && ! \is_null($this->optimize)
             ? $this->optimize
             : static::$defaultOptimize;
+    }
+
+    /**
+     * Optimize a query
+     */
+    public function optimize(Builder $builder): void
+    {
+        if (! $this->isOptimized()) {
+            return;
+        }
+
+        // $builder->select($this->getColumns()->pluck('name')->all());
     }
 }

@@ -14,14 +14,14 @@ trait Searchable
      * 
      * @var string|array<int,string>
      */
-    // protected $search;
+    protected $search;
 
     /**
      * The name of the query parameter to use for searching.
      * 
      * @var string
      */
-    // protected $term;
+    protected $term;
 
     /**
      * The name of the query parameter to use for searching for all tables.
@@ -35,7 +35,7 @@ trait Searchable
      * 
      * @var bool
      */
-    // protected $scout;
+    protected $scout;
 
     /**
      * Whether the table should use Laravel Scout for searching for all tables.
@@ -76,7 +76,7 @@ trait Searchable
     public function getSearch(): string|array
     {
         return match (true) {
-            \property_exists($this, 'search') => $this->search,
+            \property_exists($this, 'search') && ! \is_null($this->search) => $this->search,
             \method_exists($this, 'search') => $this->search(),
             default => [],
         };
@@ -87,7 +87,7 @@ trait Searchable
      */
     public function getSearchTerm(): string
     {
-        return \property_exists($this, 'term')
+        return \property_exists($this, 'term') && ! \is_null($this->term)
             ? $this->term
             : static::$useTerm;
     }
@@ -97,7 +97,7 @@ trait Searchable
      */
     public function isScoutSearch(): bool
     {
-        return (bool) (\property_exists($this, 'scout')
+        return (bool) (\property_exists($this, 'scout') && ! \is_null($this->scout)
             ? $this->scout
             : static::$useScout);
     }
@@ -107,9 +107,7 @@ trait Searchable
      */
     public function getSearchParameters(Request $request = null): ?string
     {
-        $request = $request ?? request();
-
-        return $request->input($this->getSearchTerm(), null);
+        return ($request ?? request())->input($this->getSearchTerm(), null);
     }
 
     /**

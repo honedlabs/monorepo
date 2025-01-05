@@ -216,4 +216,15 @@ trait Toggleable
             ->explode(',')
             ->toArray();
     }
+
+    /**
+     * 
+     */
+    public function atoggleColumns(array $columns = [], Request $request = null): void
+    {
+        // Cookies, query parameters, or default
+
+        
+
+    }
 }
