@@ -70,11 +70,11 @@ trait HasPages
     protected static $countKey = 'show';
 
     /**
-     * Configure the options for the number of records to show per page.
+     * Configure the options for the default number of records to show per page.
      *
-     * @param  int|array<int,int>  $perPage
+     * @param  int|non-empty-array<int,int>  $perPage
      */
-    public static function recordsPerPage(int|array $perPage): void
+    public static function recordsPerPage(int|array $perPage = 10): void
     {
         static::$defaultPerPageAmount = $perPage;
     }
@@ -82,19 +82,27 @@ trait HasPages
     /**
      * Configure the paginator to use.
      *
-     * @param 'cursor'|'simple'|'length-aware'|class-string<\Illuminate\Contracts\Pagination\Paginator> $paginator
+     * @param 'cursor'|'simple'|'length-aware'|class-string<\Illuminate\Contracts\Pagination\Paginator>|null $paginator
      */
-    public static function usePaginator(string $paginator): void
+    public static function usePaginator(?string $paginator = null): void
     {
-        static::$defaultPaginator = $paginator;
+        static::$defaultPaginator = $paginator ?? LengthAwarePaginator::class;
     }
 
     /**
      * Configure the query parameter name to use for the current page number being shown.
      */
-    public static function usePageKey(?string $name): void
+    public static function usePageKey(?string $name = null): void
     {
         static::$pageKey = $name;
+    }
+
+    /**
+     * Configure the query parameter name to use for the number of records to display.
+     */
+    public static function useCountKey(?string $count = null): void
+    {
+        static::$countKey = $count;
     }
 
     /**
@@ -107,7 +115,7 @@ trait HasPages
         return match (true) {
             \property_exists($this, 'perPage') && ! \is_null($this->perPage) => $this->perPage,
             \method_exists($this, 'perPage') => $this->perPage(),
-            default => $this->getDefaultPerPageAmount()
+            default => $this->getDefaultPerPage()
         };
     }
 
@@ -162,32 +170,6 @@ trait HasPages
     }
 
     /**
-     * Retrieve the records to use for pagination for the given request, setting the page options if applicable.
-     */
-    public function getRecordsPerPage(Request $request = null): int
-    {
-        $amounts = $this->getPerPage();
-    
-        if (!\is_array($amounts)) {
-            return $amounts;
-        }
-    
-        $amount = ($request ?? request())
-            ->input($this->getCountKey(), null);
-    
-
-        $amount = match (true) {
-            ! \is_numeric($amount) || ! \in_array((int) $amount, $amounts) => $this->getDefaultPerPage(),
-            default => (int) $amount,
-        };
-
-        $this->setPages(collect($amounts)
-            ->map(static fn (int $perPage) => PageAmount::make($perPage, $perPage === $amount)));        
-    
-        return $amount;
-    }
-
-    /**
      * Set the page amount options quietly.
      * 
      * @param \Illuminate\Support\Collection<int,\Honed\Table\PageAmount> $pages
@@ -213,6 +195,32 @@ trait HasPages
     public function hasPages(): bool
     {
         return ! \is_null($this->pages);
+    }
+
+    /**
+     * Retrieve the records to use for pagination for the given request, setting the page options if applicable.
+     */
+    public function getRecordsPerPage(Request $request = null): int
+    {
+        $amounts = $this->getPerPage();
+    
+        if (!\is_array($amounts)) {
+            return $amounts;
+        }
+    
+        $amount = ($request ?? request())
+            ->input($this->getCountKey(), null);
+    
+
+        $amount = match (true) {
+            ! \is_numeric($amount) || ! \in_array((int) $amount, $amounts) => $this->getDefaultPerPage(),
+            default => (int) $amount,
+        };
+
+        $this->setPages(collect($amounts)
+            ->map(static fn (int $perPage) => PageAmount::make($perPage, $perPage === $amount)));        
+    
+        return $amount;
     }
     
     /**

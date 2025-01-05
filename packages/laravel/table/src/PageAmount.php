@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Table;
 
 use Honed\Core\Concerns\HasValue;
@@ -11,14 +13,15 @@ class PageAmount extends Primitive
     use IsActive;
     use HasValue;
 
-    public function __construct(int $value)
+    public function __construct(int $value, bool $active = false)
     {
         $this->setValue($value);
+        $this->setActive($active);
     }
 
-    public static function make(int $value): static
+    public static function make(int $value, bool $active = false): static
     {
-        return new static($value);
+        return new static($value, $active);
     }
 
     public function toArray(): array

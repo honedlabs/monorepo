@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Table\Filters\Filter;
 use Illuminate\Support\Facades\Request;
 

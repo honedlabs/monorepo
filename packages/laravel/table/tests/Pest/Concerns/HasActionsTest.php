@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Table\Actions\BulkAction;
 use Honed\Table\Actions\Contracts\Action;
 use Honed\Table\Actions\PageAction;
