@@ -2,9 +2,16 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Concerns\HasPages;
 use Honed\Table\PageAmount;
+use Honed\Table\Concerns\HasPages;
+use Illuminate\Support\Collection;
+use Honed\Table\Tests\Stubs\Product;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Pagination\CursorPaginator;
+use Honed\Table\Exceptions\InvalidPaginatorException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
 
 class HasPagesTest
 {
@@ -107,7 +114,13 @@ it('retrieves paginator', function () {
     
     expect($this->method)
         ->getPaginator()->toBe('length-aware');
+});
 
+it('sets paginator', function () {
+    $this->test->setPaginator('simple');
+
+    expect($this->test)
+        ->getPaginator()->toBe('simple');
 });
 
 it('retrieves page key', function () {
@@ -145,21 +158,141 @@ it('sets pages', function () {
 });
 
 it('gets number of records from empty request', function () {
+    $request = Request::create('/', HttpFoundationRequest::METHOD_GET, [
+        'other' => 10
+    ]);
 
+    expect($this->method)
+        ->getRecordsPerPage($request)->toBe(20)
+        ->getPages()->scoped(fn ($pages) => $pages
+            ->toHaveCount(3)
+            ->sequence(
+                fn ($page) => $page
+                    ->getValue()->toBe(10)
+                    ->isActive()->toBeFalse(),
+                fn ($page) => $page
+                    ->getValue()->toBe(20)
+                    ->isActive()->toBeTrue(),
+                fn ($page) => $page
+                    ->getValue()->toBe(50)
+                    ->isActive()->toBeFalse(),
+            )
+        );
 });
 
 it('gets number of records when not array', function () {
+    $request = Request::create('/', HttpFoundationRequest::METHOD_GET, [
+        $this->test->getShownKey() => 100
+    ]);
 
+    expect($this->test)
+        ->getRecordsPerPage($request)->toBe(10)
+        ->hasPages()->toBeFalse()
+        ->getPages()->toBeNull();
 });
 
 it('gets number of records from request', function () {
+    $request = Request::create('/', HttpFoundationRequest::METHOD_GET, [
+        $this->method->getShownKey() => 50
+    ]);
 
+    expect($this->method)
+        ->getRecordsPerPage($request)->toBe(50)
+        ->getPages()->scoped(fn ($pages) => $pages
+            ->toHaveCount(3)
+            ->sequence(
+                fn ($page) => $page
+                    ->getValue()->toBe(10)
+                    ->isActive()->toBeFalse(),
+                fn ($page) => $page
+                    ->getValue()->toBe(20)
+                    ->isActive()->toBeFalse(),
+                fn ($page) => $page
+                    ->getValue()->toBe(50)
+                    ->isActive()->toBeTrue(),
+            )
+        );
 });
 
-// Complete pagionation pipeline
-it('paginates', function () {
-    foreach (\range(1, 10) as $i) {
+it('prevents invalid page amounts', function () {
+    $request = Request::create('/', HttpFoundationRequest::METHOD_GET, [
+        $this->method->getShownKey() => 100
+    ]);
+
+    expect($this->method)
+        ->getRecordsPerPage($request)->toBe(20)
+        ->getPages()->scoped(fn ($pages) => $pages
+            ->toHaveCount(3)
+            ->sequence(
+                fn ($page) => $page
+                    ->getValue()->toBe(10)
+                    ->isActive()->toBeFalse(),
+                fn ($page) => $page
+                    ->getValue()->toBe(20)
+                    ->isActive()->toBeTrue(),
+                fn ($page) => $page
+                    ->getValue()->toBe(50)
+                    ->isActive()->toBeFalse(),
+            )
+        );
+});
+
+it('paginates length aware', function () {
+    foreach (\range(1, 20) as $i) {
         product();
     }
 
+    $builder = Product::query();
+
+    expect($this->test->paginateRecords($builder))
+        ->toBeInstanceOf(LengthAwarePaginator::class)
+        ->toHaveCount(10);
 });
+
+it('paginates simple', function () {
+    foreach (\range(1, 20) as $i) {
+        product();
+    }
+    $this->test->setPaginator('simple');
+
+    $builder = Product::query();
+
+    expect($this->test->paginateRecords($builder))
+        ->toBeInstanceOf(Paginator::class)
+        ->toHaveCount(10);
+});
+
+it('paginates cursor', function () {
+    foreach (\range(1, 20) as $i) {
+        product();
+    }
+    $this->test->setPaginator('cursor');
+
+    $builder = Product::query();
+
+    expect($this->test->paginateRecords($builder))
+        ->toBeInstanceOf(CursorPaginator::class)
+        ->toHaveCount(10);
+});
+
+it('paginates collection', function () {
+    foreach (\range(1, 20) as $i) {
+        product();
+    }
+    $this->test->setPaginator('collection');
+
+    $builder = Product::query();
+
+    expect($this->test->paginateRecords($builder))
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(20);
+});
+
+it('errors on invalid paginator', function () {
+    $this->test->setPaginator('invalid');
+
+    $builder = Product::query();
+
+    $this->test->paginateRecords($builder);
+})->throws(InvalidPaginatorException::class);
+

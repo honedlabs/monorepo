@@ -176,6 +176,16 @@ trait HasPages
     }
 
     /**
+     * Set the paginator to use.
+     * 
+     * @param 'cursor'|'simple'|'length-aware'|class-string<\Illuminate\Contracts\Pagination\Paginator>|null $paginator
+     */
+    public function setPaginator(?string $paginator): void
+    {
+        $this->paginator = $paginator;
+    }
+
+    /**
      * Set the page amount options quietly.
      * 
      * @param \Illuminate\Support\Collection<int,\Honed\Table\PageAmount> $pages
@@ -216,6 +226,8 @@ trait HasPages
 
         $requestedAmount = ($request ?? request())
             ->integer($this->getShownKey(), null);
+        
+        // dd($requestedAmount);
 
         $currentAmount = in_array($requestedAmount, $perPageOptions, true)
             ? $requestedAmount
@@ -261,6 +273,6 @@ trait HasPages
             default => throw new InvalidPaginatorException($paginator),
         };
 
-        return $paginated->withQueryString();
+        return $paginated instanceof Collection ? $paginated : $paginated->withQueryString();
     }
 }
