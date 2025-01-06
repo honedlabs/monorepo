@@ -17,20 +17,34 @@ class HasPagesMethodTest extends HasPagesTest
     {
         return 'page';
     }
+
+    public function paginator()
+    {
+        return 'length-aware';
+    }
+
+    public function shown()
+    {
+        return 'records';
+    }
+
+    public function perPage()
+    {
+        return [10, 20, 50];
+    }
+
+    public function defaultPerPage()
+    {
+        return 20;
+    }
     
 }
-
-beforeAll(function () {
-    foreach (\range(1, 10) as $i) {
-        product();
-    }
-});
 
 beforeEach(function () {
     HasPagesTest::usePageKey();
     HasPagesTest::usePaginator();
     HasPagesTest::recordsPerPage();
-    HasPagesTest::useCountKey();
+    HasPagesTest::useShownKey();
     $this->test = new HasPagesTest();
     $this->method = new HasPagesMethodTest();
 });
@@ -44,12 +58,12 @@ it('configures page key', function () {
         ->toBe('page');
 });
 
-it('configures count key', function () {
-    HasPagesTest::useCountKey('num');
-    expect($this->test->getCountKey())
+it('configures shown key', function () {
+    HasPagesTest::useShownKey('num');
+    expect($this->test->getShownKey())
         ->toBe('num');
 
-    expect($this->method->getCountKey())
+    expect($this->method->getShownKey())
         ->toBe('records');
 });
 
@@ -104,12 +118,12 @@ it('retrieves page key', function () {
         ->getPageKey()->toBe('page');
 });
 
-it('retrieves count key', function () {
+it('retrieves shown key', function () {
     expect($this->test)
-        ->getCountKey()->toBe('show');
+        ->getShownKey()->toBe('show');
     
     expect($this->method)
-        ->getCountKey()->toBe('records');
+        ->getShownKey()->toBe('records');
 });
 
 it('sets pages', function () {
@@ -144,5 +158,8 @@ it('gets number of records from request', function () {
 
 // Complete pagionation pipeline
 it('paginates', function () {
+    foreach (\range(1, 10) as $i) {
+        product();
+    }
 
 });
