@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Honed\Table\Columns\Column;
 use Honed\Table\Concerns\IsOptimizable;
+use Honed\Table\Tests\Stubs\Product;
 
 class IsOptimizableTest
 {
@@ -29,5 +31,28 @@ it('configures globally', function () {
 });
 
 it('optimizes a query', function () {
-    $this->test->optimize($this->builder);
-})->todo();
+    $this->test->setOptimize(true);
+    $builder = Product::query();
+    $columns = collect([
+        Column::make('name'),
+        Column::make('price'),
+    ]);
+
+    $this->test->optimize($builder, $columns);
+
+    expect($builder->getQuery()->columns)
+        ->toEqual(['name', 'price']);
+});
+
+it('does not optimize a query if not optimizable', function () {
+    $builder = Product::query();
+    $columns = collect([
+        Column::make('name'),
+        Column::make('price'),
+    ]);
+
+    $this->test->optimize($builder, $columns);
+
+    expect($builder->getQuery()->columns)
+        ->toBeNull();
+});

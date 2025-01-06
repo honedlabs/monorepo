@@ -32,6 +32,7 @@ class Table extends Primitive
 {
     use Concerns\Filterable;
     use Concerns\HasRecords;
+    use Concerns\HasPages;
     use Concerns\HasActions;
     use Concerns\HasColumns;
     use Concerns\HasEndpoint;
@@ -184,7 +185,9 @@ class Table extends Primitive
             return;
         }
 
-        $this->toggleColumns();
+        $columns = $this->getColumns();
+
+        $activeColumns = $this->toggleColumns($columns);
 
         // Manipulate a variable, not the original resource so that actions can be performed on the original resource
         $resource = $this->getResource();
@@ -192,13 +195,13 @@ class Table extends Primitive
         $this->modifyResource($resource);
         $this->filterQuery($resource);
         $this->sortQuery($resource);
-        $this->searchQuery($resource);
-        $this->optimizeQuery($resource);
+        $this->searchQuery($resource, $activeColumns);
+        $this->optimizeQuery($resource, $activeColumns);
         $this->beforeRetrieval($resource);
 
         $records = $this->paginateRecords($resource);
-        $formatted = $this->formatRecords($records);
-        $this->setRecords($formatted);
+        $formatted = $this->formatRecords($activeColumns);
+        // $this->setRecords($formatted);
     }
 
     protected function setSearchColumns(): void
@@ -212,23 +215,6 @@ class Table extends Primitive
 
         // Override the search property with the unique combination of the property and columns
         $this->setSearch(\array_unique([...$searchProperty, ...$searchColumns]));
-    }
-
-    protected function toggleColumns(): void
-    {
-        $cols = $this->getToggledColumns(); // names
-
-        if (empty($cols)) {
-            return;
-        }
-
-        $this->getColumns()->each(function (BaseColumn $column) use ($cols) {
-            if (\in_array($column->getName(), $cols)) {
-                $column->setActive(true);
-            } else {
-                $column->setActive(false);
-            }
-        });
     }
 
     /**

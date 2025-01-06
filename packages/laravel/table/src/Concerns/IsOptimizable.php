@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 
 trait IsOptimizable
@@ -48,13 +49,15 @@ trait IsOptimizable
 
     /**
      * Optimize a query
+     * 
+     * @param \Illuminate\Support\Collection<\Honed\Table\Columns\Contracts\Column> $activeColumns
      */
-    public function optimize(Builder $builder): void
+    public function optimize(Builder $builder, Collection $activeColumns): void
     {
         if (! $this->isOptimized()) {
             return;
         }
 
-        // $builder->select($this->getColumns()->pluck('name')->all());
+        $builder->select(...$activeColumns->map->getName());
     }
 }

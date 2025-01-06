@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Illuminate\Support\Stringable;
+use Honed\Table\Columns\BaseColumn;
+use Honed\Table\Columns\Contracts\Column;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Stringable;
 use Illuminate\Support\Facades\Cookie;
 
 trait Toggleable
@@ -202,29 +205,65 @@ trait Toggleable
     }
 
     /**
-     * Get the columns to show.
+     * Resolve parameters using cookies if applicable.
      *
-     * @return array<int,string>
+     * @param array<int,string>|null $params
+     * @return array<int,string>|null
      */
-    public function toggleParameters(Request $request = null): array
+    protected function resolveCookieParams(?array $params, ?Request $request): ?array
     {
-        $request = $request ?? request();
+        if (! \is_null($params)) {
+            $this->enqueueCookie($params);
+            return $params;
+        }
 
-        return $request->string($this->getRememberName())
-            ->trim()
-            ->remove(' ')
-            ->explode(',')
-            ->toArray();
+        return $this->retrieveCookie($request);
     }
 
     /**
-     * 
+     * Get the columns to show.
+     *
+     * @return array<int,string>|null
      */
-    public function atoggleColumns(array $columns = [], Request $request = null): void
+    public function toggleParameters(Request $request = null): ?array
     {
-        // Cookies, query parameters, or default
+        $params = ($request ?? request())
+            ->string($this->getRememberName())
+            ->trim()
+            ->remove(' ')
+            ->explode(',')
+            ->filter(fn($param) => $param !== '') // Filter out empty strings
+            ->toArray();
 
-        
+        return empty($params) ? null : $params;
+    }
 
+    /**
+     * Toggle the columns for the request.
+     * 
+     * @param \Illuminate\Support\Collection<\Honed\Table\Columns\Contracts\Column> $columns
+     * @return \Illuminate\Support\Collection<\Honed\Table\Columns\Contracts\Column>
+     */
+    public function toggleColumns(Collection $columns, Request $request = null)
+    {
+        if (! $this->isToggleable()) {
+            // All columns are active by default using `setUp()`
+            return $columns;
+        }
+
+        $params = $this->toggleParameters($request);
+
+        if ($this->useCookie()) {
+            $params = $this->resolveCookieParams($params, $request);
+        }
+
+        return $columns
+            ->when(! \is_null($params),
+                fn (Collection $columns) => $columns
+                    ->filter(static fn (BaseColumn $column) => $column
+                        ->active(!$column->isToggleable() || \in_array($column->getName(), $params))
+                        ->isActive()
+                    )
+            );
     }
 }

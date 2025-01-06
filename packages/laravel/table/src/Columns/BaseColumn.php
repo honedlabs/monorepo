@@ -49,6 +49,14 @@ abstract class BaseColumn extends Primitive implements Column
     }
 
     /**
+     * Ensure all columns are active by default.
+     */
+    public function setUp(): void
+    {
+        $this->setActive(true);
+    }
+
+    /**
      * Make a column specifying the related database attribute, and optionally the display label.
      */
     public static function make(string $name, string $label = null): static

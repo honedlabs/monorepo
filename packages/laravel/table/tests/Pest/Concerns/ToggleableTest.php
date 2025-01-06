@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use function Pest\Laravel\get;
+use Honed\Table\Columns\Column;
 use Honed\Table\Concerns\Toggleable;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Request;
@@ -138,4 +139,31 @@ it('retrieves toggle parameters', function () {
     ]);
     expect($this->test->toggleParameters($request))
         ->toBe($this->data);
+});
+
+it('retrirves empty toggle parameters', function () {
+
+    expect($this->test->toggleParameters())
+        ->toBeNull();
+});
+
+describe('toggling', function () {
+    beforeEach(function () {
+        $this->columns = collect([
+            Column::make('name'),
+            Column::make('price'),
+        ]);
+    });
+
+    it('toggles columns', function () {
+        $request = Request::create('/', HttpFoundationRequest::METHOD_GET, [
+            $this->property->getRememberName() => 'name,price,misc',
+        ]);
+
+        $this->property->toggleColumns($this->columns, $request);
+    });
+
+    it('fallbacks to using cookie', function () {
+        $this->property->toggleColumns($this->columns);
+    });
 });

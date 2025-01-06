@@ -10,24 +10,41 @@ class HasRecordsTest
 }
 
 beforeEach(function () {
+    HasRecordsTest::reduceRecords(false);
     $this->test = new HasRecordsTest();
 });
 
 it('has no records by default', function () {
     expect($this->test)
-        ->hasRecords()->toBeFalse();
+        ->hasRecords()->toBeFalse()
+        ->getRecords()->toBeNull();
 });
 
 it('can set records', function () {
     $this->test->setRecords(collect([1, 2, 3]));
+    expect($this->test)
+        ->hasRecords()->toBeTrue()
+        ->getRecords()->toBeCollection([1, 2, 3]);
+});
 
-    expect($this->test)->hasRecords()->toBeTrue();
-})->todo();
+it('can configure whether to reduce records', function () {
+    HasRecordsTest::reduceRecords(true);
 
-it('formats records using columns', function () {
+    expect($this->test)
+        ->isReducing()->toBeTrue();
+});
 
-})->todo();
+it('is not reducing by default', function () {
+    expect($this->test)
+        ->isReducing()->toBeFalse();
+});
 
-it('paginates records', function () {
-
-})->todo();
+describe('formatting', function () {
+    beforeEach(function () {
+        $this->columns = collect();
+    });
+    
+    it('formats records using columns', function () {
+    
+    })->todo();
+});

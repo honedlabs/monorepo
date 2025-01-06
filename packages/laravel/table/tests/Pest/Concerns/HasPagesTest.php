@@ -237,62 +237,71 @@ it('prevents invalid page amounts', function () {
         );
 });
 
-it('paginates length aware', function () {
-    foreach (\range(1, 20) as $i) {
-        product();
-    }
+describe('paginates', function () {
 
-    $builder = Product::query();
+    beforeEach(function () {
+        foreach (\range(1, 20) as $i) {
+            product();
+        }
+    });
 
-    expect($this->test->paginateRecords($builder))
-        ->toBeInstanceOf(LengthAwarePaginator::class)
-        ->toHaveCount(10);
+    it('paginates length aware', function () {
+        $builder = Product::query();
+
+        $builder = Product::query();
+
+        expect($this->test->paginateRecords($builder))
+            ->toBeInstanceOf(LengthAwarePaginator::class)
+            ->toHaveCount(10);
+    });
+
+    it('paginates simple', function () {
+        $this->test->setPaginator('simple');
+
+        $builder = Product::query();
+
+        expect($this->test->paginateRecords($builder))
+            ->toBeInstanceOf(Paginator::class)
+            ->toHaveCount(10);
+    });
+
+    it('paginates cursor', function () {
+        $this->test->setPaginator('cursor');
+
+        $builder = Product::query();
+
+        expect($this->test->paginateRecords($builder))
+            ->toBeInstanceOf(CursorPaginator::class)
+            ->toHaveCount(10);
+    });
+
+    it('paginates collection', function () {
+        $this->test->setPaginator('collection');
+
+        $builder = Product::query();
+
+        expect($this->test->paginateRecords($builder))
+            ->toBeInstanceOf(Collection::class)
+            ->toHaveCount(20);
+    });
+
+    it('errors on invalid paginator', function () {
+        $this->test->setPaginator('invalid');
+
+        $builder = Product::query();
+
+        $this->test->paginateRecords($builder);
+    })->throws(InvalidPaginatorException::class);
+
+    it('handles pipeline correctly', function () {
+        $request = Request::create('/', HttpFoundationRequest::METHOD_GET, [
+            $this->method->getShownKey() => 20
+        ]);
+
+        $builder = Product::query();
+
+        expect($this->method->paginateRecords($builder, $request))
+            ->toBeInstanceOf(LengthAwarePaginator::class)
+            ->toHaveCount(20);
+    });
 });
-
-it('paginates simple', function () {
-    foreach (\range(1, 20) as $i) {
-        product();
-    }
-    $this->test->setPaginator('simple');
-
-    $builder = Product::query();
-
-    expect($this->test->paginateRecords($builder))
-        ->toBeInstanceOf(Paginator::class)
-        ->toHaveCount(10);
-});
-
-it('paginates cursor', function () {
-    foreach (\range(1, 20) as $i) {
-        product();
-    }
-    $this->test->setPaginator('cursor');
-
-    $builder = Product::query();
-
-    expect($this->test->paginateRecords($builder))
-        ->toBeInstanceOf(CursorPaginator::class)
-        ->toHaveCount(10);
-});
-
-it('paginates collection', function () {
-    foreach (\range(1, 20) as $i) {
-        product();
-    }
-    $this->test->setPaginator('collection');
-
-    $builder = Product::query();
-
-    expect($this->test->paginateRecords($builder))
-        ->toBeInstanceOf(Collection::class)
-        ->toHaveCount(20);
-});
-
-it('errors on invalid paginator', function () {
-    $this->test->setPaginator('invalid');
-
-    $builder = Product::query();
-
-    $this->test->paginateRecords($builder);
-})->throws(InvalidPaginatorException::class);
-
