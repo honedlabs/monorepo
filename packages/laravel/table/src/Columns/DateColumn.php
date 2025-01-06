@@ -8,6 +8,7 @@ class DateColumn extends BaseColumn
 {
     public function setUp(): void
     {
+        parent::setUp();
         $this->setType('col:date');
         $this->date();
     }

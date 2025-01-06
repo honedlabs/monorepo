@@ -147,23 +147,68 @@ it('retrirves empty toggle parameters', function () {
         ->toBeNull();
 });
 
-describe('toggling', function () {
+describe('pipeline', function () {
     beforeEach(function () {
         $this->columns = collect([
-            Column::make('name'),
-            Column::make('price'),
+            Column::make('name')->toggleable(),
+            Column::make('price')->toggleable(),
+            Column::make('status')->toggleable(),
+            Column::make('public_id'),
+            Column::make('description')->toggleable(false)
         ]);
+
+        $this->data = ['name', 'price', 'misc'];
+
+        $this->request = Request::create('/', HttpFoundationRequest::METHOD_GET, [
+            $this->property->getRememberName() => \implode(',', $this->data),
+        ]);
+
+        Request::swap($this->request);
     });
 
-    it('toggles columns', function () {
-        $request = Request::create('/', HttpFoundationRequest::METHOD_GET, [
-            $this->property->getRememberName() => 'name,price,misc',
-        ]);
+    it('does not toggle columns by default', function () {
+        expect($this->test->toggleColumns($this->columns))
+            ->toBeCollection()
+            ->toHaveCount(5)
+            ->each(fn ($column) => $column->isActive()->toBeTrue());
+    }); 
 
-        $this->property->toggleColumns($this->columns, $request);
+    it('toggles columns', function () {
+        expect($this->property->toggleColumns($this->columns))
+            ->toBeCollection()
+            ->toHaveCount(4)
+            ->each(fn ($column) => $column->isActive()->toBeTrue()
+                ->getName()->not->toBe('status')
+            );
     });
 
     it('fallbacks to using cookie', function () {
-        $this->property->toggleColumns($this->columns);
+        $request = Request::create('/');
+        $request->cookies->set(
+            $this->property->getCookieName(), 
+            \json_encode($this->data)
+        );
+
+        expect($this->property->toggleColumns($this->columns, $request))
+            ->toBeCollection()
+            ->toHaveCount(4)
+            ->each(fn ($column) => $column->isActive()->toBeTrue()
+                ->getName()->not->toBe('status')
+            );
+    });
+
+    it('updates cookie', function () {
+        $this->request->cookies->set(
+            $this->property->getCookieName(), 
+            \json_encode(['description'])
+        );
+
+        $this->property->toggleColumns($this->columns, $this->request);
+
+        $response = get('/');
+
+        expect($response->getCookie($this->property->getCookieName()))
+            ->not->toBeNull()
+            ->getValue()->toBe(\json_encode(['description']));
     });
 });

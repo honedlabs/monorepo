@@ -8,6 +8,7 @@ class BooleanColumn extends BaseColumn
 {
     public function setUp(): void
     {
+        parent::setUp();
         $this->setType('col:bool');
         $this->boolean();
     }
