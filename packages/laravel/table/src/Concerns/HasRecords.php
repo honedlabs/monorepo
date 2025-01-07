@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Honed\Table\Actions\InlineAction;
+use Honed\Table\Tests\Stubs\Product;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 trait HasRecords
@@ -65,7 +68,10 @@ trait HasRecords
         $this->records = $records;
     }
 
-    public function isReducing()
+    /**
+     * Determine if the records should be reduced.
+     */
+    public function isReducing(): bool
     {
         return match (true) {
             \property_exists($this, 'reduce') && !\is_null($this->reduce) => (bool) $this->reduce,
@@ -76,15 +82,64 @@ trait HasRecords
 
     /**
      * Format the records using the provided columns.
+     * 
+     * @param \Illuminate\Support\Collection<int,\Honed\Table\Columns\BaseColumn> $activeColumns
+     * @param \Illuminate\Support\Collection<int,\Honed\Table\Actions\InlineAction> $inlineActions
      */
-    public function formatRecords(Collection $activeColumns)
+    public function formatRecords(Collection $records, Collection $activeColumns, Collection $inlineActions = null, mixed $selectableEvaluation = null)
     {
-        if (! $this->hasRecords()) {
-            return;
+        if ($records->isEmpty()) {
+            return $records;
         }
 
+        $columnsMap = $activeColumns->keyBy(fn ($column) => $column->getName());
+        $reducing = $this->isReducing();
 
+        return $records->map(function ($record) use ($inlineActions, $selectableEvaluation, $columnsMap, $reducing) {
+            $formattedRecord = $reducing ? [] : (\is_array($record) ? $record : $record->toArray());
 
+            if (! \is_null($inlineActions) && $inlineActions->isNotEmpty()) {
+                $formattedRecord['actions'] = $inlineActions
+                    ->filter(fn ($action) => $action->isAuthorized([
+                        'record' => $record,
+                        'model' => $record,
+                        'product' => $record,
+                    ], [
+                        Product::class => $record,
+                        Model::class => $record,
+                    ]))
+                    ->values();
+            }
+
+            $formattedRecord['selectable'] = $selectableEvaluation ? (bool) $selectableEvaluation($record) : false;
+
+            // Format columns
+            foreach ($columnsMap as $name => $column) {
+                $value = $this->accessRecord($record, $name);
+                $formattedRecord[$name] = $column->format($value, $record);
+            }
+
+            return $formattedRecord;
+        });
     }
 
+    protected function accessRecord(mixed $record, string $property): mixed
+    {
+        return match (true) {
+            is_array($record) => $record[$property] ?? null,
+            default => $record->{$property} ?? null,
+        };
+    }
+
+    protected function resolveActions(Collection $actions, mixed $record): Collection
+    {
+        return $actions
+            ->filter(fn (InlineAction $action) => $action->isAuthorized($record))
+            ->each(fn (InlineAction $action) => $action->link->resolveLink([
+                'record' => $record,
+            ], [
+                
+            ]))
+            ->values();
+    }
 }

@@ -51,7 +51,7 @@ class Table extends Primitive
     /**
      * The parent class-string of the table.
      * 
-     * @var class-string<\Honed\Table\Table>
+     * @var class-string<\Honed\Table\Table<T>>
      */
     protected $anonymous = self::class;
 
@@ -155,7 +155,16 @@ class Table extends Primitive
 
         return [
             'id' => $this->encodeClass(),
-            'key' => $this->getKeyName(),
+            'endpoint' => $this->isAnonymous() ? null : $this->getEndpoint(),
+            'toggleable' => $this->isToggleable(),
+            'keys' => [
+                'records' => $this->getKeyName(),
+                'sorts' => $this->getSortKey(),
+                'order' => $this->getOrderKey(),
+                'search' => $this->getSearchKey(),
+                'toggle' => $this->getToggleKey(),
+                'shown' => $this->getShownKey(),
+            ],
             'records' => $this->getRecords(),
             'columns' => $this->getColumns(),
             'actions' => [
@@ -164,15 +173,7 @@ class Table extends Primitive
             ],
             'filters' => $this->getFilters(),
             'sorts' => $this->getSorts(),
-            'paginator' => $this->getPaginator(),
-            // 'pages'
-            'toggleable' => $this->isToggleable(),
-            'sort' => $this->getSortKey(),
-            'order' => $this->getOrderKey(),
-            'count' => $this->getCountKey(),
-            'search' => $this->getSearchKey(),
-            'toggle' => $this->getToggleKey(),
-            'endpoint' => $this->getEndpoint(),
+            'pages' => $this->getPages(),
         ];
     }
 
@@ -186,22 +187,19 @@ class Table extends Primitive
         }
 
         $columns = $this->getColumns();
-
         $activeColumns = $this->toggleColumns($columns);
-
-        // Manipulate a variable, not the original resource so that actions can be performed on the original resource
         $resource = $this->getResource();
-
+        
         $this->modifyResource($resource);
         $this->filterQuery($resource);
         $this->sortQuery($resource);
-        $this->searchQuery($resource, $activeColumns);
+        $this->searchQuery($resource, $columns);
         $this->optimizeQuery($resource, $activeColumns);
         $this->beforeRetrieval($resource);
 
         $records = $this->paginateRecords($resource);
-        $formatted = $this->formatRecords($activeColumns);
-        // $this->setRecords($formatted);
+        $formatted = $this->formatRecords($records, $activeColumns, $this->getInlineActions(), $this->getSelector());
+        $this->setRecords($formatted);
     }
 
     protected function setSearchColumns(): void
