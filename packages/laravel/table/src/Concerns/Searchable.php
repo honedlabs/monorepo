@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 trait Searchable
 {
@@ -65,15 +66,15 @@ trait Searchable
     /**
      * Get the columns to use for searching.
      *
-     * @return string|array<int,string>
+     * @return \Illuminate\Support\Collection<int,string>
      */
-    public function getSearch(): string|array
+    public function getSearch(): Collection
     {
-        return match (true) {
-            \property_exists($this, 'search') && ! \is_null($this->search) => $this->search,
-            \method_exists($this, 'search') => $this->search(),
+        return collect(match (true) {
+            \property_exists($this, 'search') && ! \is_null($this->search) => (array) $this->search,
+            \method_exists($this, 'search') => (array) $this->search(),
             default => [],
-        };
+        });
     }
 
     /**
@@ -114,24 +115,39 @@ trait Searchable
 
     /**
      * Apply the search to the builder.
+     * 
+     * @param \Illuminate\Support\Collection<int,\Honed\Table\Columns\Contracts\Column> $columns
      */
-    public function searchQuery(Builder $builder, Request $request = null): void
+    public function searchQuery(Builder $builder, Collection $columns = null, Request $request = null): void
     {
+        $terms = $this->getSearch()
+            ->when($columns,
+                fn ($terms) => $terms
+                    ->merge($columns
+                        ->filter->isSearchable()
+                        ->map->getName()
+                )
+            )->unique();
+
         $term = $this->getSearchParameters($request);
 
-        if (\count($this->getSearch()) === 0 || ! (bool) $term) {
+        if ($terms->isEmpty() || ! (bool) $term) {
             return;
         }
 
         if ($this->isScoutSearch()) {
             // @phpstan-ignore-next-line
-            $builder->search($term);
-
+            $builder->whereIn('id', $builder->getModel()
+                ->search($term)
+                ->get()
+                ->pluck('id')
+                ->toArray()
+            );
             return;
         }
 
         $builder->whereAny(
-            (array) $this->getSearch(),
+            $terms->toArray(),
             'LIKE',
             "%{$term}%"
         );

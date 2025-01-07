@@ -251,8 +251,9 @@ trait Toggleable
             return $columns;
         }
 
+        
         $params = $this->toggleParameters($request);
-
+        
         if ($this->useCookie()) {
             $params = $this->resolveCookieParams($params, $request);
         }
@@ -263,7 +264,7 @@ trait Toggleable
                     ->filter(static fn (BaseColumn $column) => $column
                         ->active(!$column->isToggleable() || \in_array($column->getName(), $params))
                         ->isActive()
-                    )
+                    )->values()
             );
     }
 }

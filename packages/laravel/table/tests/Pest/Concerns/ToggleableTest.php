@@ -16,7 +16,7 @@ class ToggleableTest
 
 class ToggleablePropertyTest extends ToggleableTest
 {
-    public $cookies = false;
+    public $cookies = true;
 
     public $cookie = 'example';
 
@@ -101,7 +101,7 @@ it('retrieves whether to use cookies', function () {
         ->useCookie()->toBeTrue();
 
     expect($this->property)
-        ->useCookie()->toBeFalse();
+        ->useCookie()->toBeTrue();
 });
 
 it('enqueues a cookie', function () {
@@ -141,13 +141,13 @@ it('retrieves toggle parameters', function () {
         ->toBe($this->data);
 });
 
-it('retrirves empty toggle parameters', function () {
+it('retrieves empty toggle parameters', function () {
 
     expect($this->test->toggleParameters())
         ->toBeNull();
 });
 
-describe('pipeline', function () {
+describe('toggles', function () {
     beforeEach(function () {
         $this->columns = collect([
             Column::make('name')->toggleable(),
@@ -166,14 +166,14 @@ describe('pipeline', function () {
         Request::swap($this->request);
     });
 
-    it('does not toggle columns by default', function () {
+    test('not by default', function () {
         expect($this->test->toggleColumns($this->columns))
             ->toBeCollection()
             ->toHaveCount(5)
             ->each(fn ($column) => $column->isActive()->toBeTrue());
     }); 
 
-    it('toggles columns', function () {
+    test('with request', function () {
         expect($this->property->toggleColumns($this->columns))
             ->toBeCollection()
             ->toHaveCount(4)
@@ -182,12 +182,10 @@ describe('pipeline', function () {
             );
     });
 
-    it('fallbacks to using cookie', function () {
-        $request = Request::create('/');
-        $request->cookies->set(
-            $this->property->getCookieName(), 
-            \json_encode($this->data)
-        );
+    test('with cookie', function () {
+        $request = Request::create('/', HttpFoundationRequest::METHOD_GET, [], [
+            $this->property->getCookieName() => \json_encode($this->data),
+        ]);
 
         expect($this->property->toggleColumns($this->columns, $request))
             ->toBeCollection()
@@ -197,18 +195,16 @@ describe('pipeline', function () {
             );
     });
 
-    it('updates cookie', function () {
-        $this->request->cookies->set(
-            $this->property->getCookieName(), 
-            \json_encode(['description'])
-        );
+    test('with updated cookie', function () {
+        $request = Request::create('/', HttpFoundationRequest::METHOD_GET, [], [
+            $this->property->getCookieName() => \json_encode(['description']),
+        ]);
 
-        $this->property->toggleColumns($this->columns, $this->request);
-
-        $response = get('/');
-
-        expect($response->getCookie($this->property->getCookieName()))
-            ->not->toBeNull()
-            ->getValue()->toBe(\json_encode(['description']));
+        expect($this->property->toggleColumns($this->columns, $request))
+            ->toBeCollection()
+            ->toHaveCount(2)
+            ->each(fn ($column) => $column->isActive()->toBeTrue()
+                ->getName()->toBeIn(['description', 'public_id'])
+            );
     });
 });

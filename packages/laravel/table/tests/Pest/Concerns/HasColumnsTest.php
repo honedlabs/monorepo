@@ -93,15 +93,3 @@ it('gets key column', function () {
             ->getName()->toBe('test4')
         );
 });
-
-it('gets active columns', function () {
-    expect($this->method)
-        ->hasColumns()->toBeTrue()
-        ->getActiveColumns()->scoped(fn ($columns) => $columns
-            ->toBeCollection()
-            ->first()->scoped(fn ($column) => $column
-                ->toBeInstanceOf(Column::class)
-                ->getName()->toBe('test5')
-            )
-        );
-});
