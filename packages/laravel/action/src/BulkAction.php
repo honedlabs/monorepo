@@ -7,15 +7,11 @@ namespace Honed\Action;
 use Honed\Core\Concerns\IsDefault;
 use Honed\Core\Contracts\HigherOrder;
 use Honed\Core\Contracts\ProxiesHigherOrder;
-use Honed\Core\Link\Concerns\Linkable;
-use Honed\Core\Link\Proxies\HigherOrderLink;
 
-class InlineAction extends Action implements ProxiesHigherOrder
+class BulkAction extends Action implements ProxiesHigherOrder
 {
-    // use Confirmable;
     use IsDefault;
     use Concerns\MorphsAction;
-    use Linkable;
     use Concerns\HasAction;
 
     public function setUp(): void
@@ -27,7 +23,6 @@ class InlineAction extends Action implements ProxiesHigherOrder
     {
         return match ($property) {
             // 'confirm' => new HigherOrderConfirm($this),
-            'link' => new HigherOrderLink($this),
             default => parent::__get($property),
         };
     }
@@ -37,16 +32,16 @@ class InlineAction extends Action implements ProxiesHigherOrder
         return \array_merge(parent::toArray(), [
             'action' => $this->hasAction(),
             // 'confirm' => $this->confirm(),
-            'link' => $this->link(),
+            // 'deselect' => $this->deselect(),
         ]);
     }
 
     /**
-     * Morph this action to accomodate for bulk requests.
+     * Morph this action to accomodate for inline requests.
      * 
      * @return $this
      */
-    public function isAlsoBulk()
+    public function isAlsoInline()
     {
         return $this->morph();
     }
