@@ -13,7 +13,7 @@ beforeEach(function () {
     $this->test = new AliasTest;
 });
 
-it('null by default', function () {
+it('is null by default', function () {
     expect($this->test)
         ->alias()->toBeNull()
         ->hasAlias()->toBeFalse();

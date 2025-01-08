@@ -4,72 +4,72 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-/**
- * @mixin \Honed\Core\Concerns\Evaluable
- */
 trait HasDescription
 {
+    use EvaluableDependency {
+        traitEvaluatesModel as hasDescriptionEvaluatesModel;
+    }
+
     /**
-     * @var string|\Closure(mixed...):string|null
+     * @var string|\Closure|null
      */
     protected $description = null;
 
     /**
-     * Set the description, chainable.
-     *
-     * @param  string|\Closure(mixed...):string  $description
-     * @return $this
+     * Get or set the description for the instance.
+     * 
+     * @param string|\Closure|null $description The description to set, or null to retrieve the current description.
+     * @return $this|string The current description when no argument is provided, or the instance when setting the description.
      */
-    public function description(string|\Closure $description): static
+    public function description($description = null)
     {
-        $this->setDescription($description);
+        if (\is_null($description)) {
+            return $this->description;
+        }
+
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Set the description quietly.
-     *
-     * @param  string|(\Closure(mixed...):string)|null  $description
+     * Determine if the instance has an description set.
+     * 
+     * @return bool True if an description is set, false otherwise.
      */
-    public function setDescription(string|\Closure|null $description): void
-    {
-        if (is_null($description)) {
-            return;
-        }
-
-        $this->description = $description;
-    }
-
-    /**
-     * Get the description using the given closure dependencies.
-     *
-     * @param  array<string,mixed>  $named
-     * @param  array<string,mixed>  $typed
-     */
-    public function getDescription(array $named = [], array $typed = []): ?string
-    {
-        return $this->evaluate($this->description, $named, $typed);
-    }
-
-    /**
-     * Resolve the description using the given closure dependencies.
-     *
-     * @param  array<string,mixed>  $named
-     * @param  array<string,mixed>  $typed
-     */
-    public function resolveDescription(array $named = [], array $typed = []): ?string
-    {
-        $this->setDescription($this->getDescription($named, $typed));
-
-        return $this->description;
-    }
-
-    /**
-     * Determine if the class has a description.
-     */
-    public function hasDescription(): bool
+    public function hasDescription()
     {
         return ! \is_null($this->description);
     }
+
+    /**
+     * Evaluate the description using injected named and typed parameters, or from a model.
+     * 
+     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $namedOrModel The named parameters to inject into the description, or the model to evaluate the description from.
+     * @param array<string,mixed> $typed The typed parameters to inject into the description, if provided.
+     * @return string The evaluated description.
+     */
+    public function evaluateDescription($namedOrModel = [], $typed = [])
+    {
+        $evaluated = match (true) {
+            $namedOrModel instanceof \Illuminate\Database\Eloquent\Model => $this->evaluateDescriptionFromModel($namedOrModel),
+            default => $this->evaluate($this->description, $namedOrModel, $typed)
+        };
+
+        $this->description = $evaluated;
+
+        return $evaluated;
+    }
+
+    /**
+     * Evaluate the description from a model.
+     * 
+     * @param \Illuminate\Database\Eloquent\Model $model The model to evaluate the description from.
+     * @return string The evaluated description.
+     */
+    private function evaluateDescriptionFromModel($model)
+    {
+        return $this->hasDescriptionEvaluatesModel($model, 'evaluateDescription');
+    }
 }
+

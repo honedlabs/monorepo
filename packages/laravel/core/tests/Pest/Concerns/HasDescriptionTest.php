@@ -1,48 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasDescription;
+use Honed\Core\Tests\Stubs\Product;
 
-class HasDescriptionComponent
+class DescriptionTest
 {
     use Evaluable;
     use HasDescription;
 }
 
 beforeEach(function () {
-    $this->component = new HasDescriptionComponent;
+    $this->test = new DescriptionTest;
 });
 
-it('has no description by default', function () {
-    expect($this->component)
-        ->getDescription()->toBeNull()
+it('is null by default', function () {
+    expect($this->test)
+        ->description()->toBeNull()
         ->hasDescription()->toBeFalse();
 });
 
-it('sets description', function () {
-    $this->component->setDescription('Description');
-    expect($this->component)
-        ->getDescription()->toBe('Description')
+it('sets', function () {
+    expect($this->test->description('test'))
+        ->toBeInstanceOf(DescriptionTest::class)
+        ->description()->toBe('test')
         ->hasDescription()->toBeTrue();
 });
 
-it('rejects null values', function () {
-    $this->component->setDescription('Description');
-    $this->component->setDescription(null);
-    expect($this->component)
-        ->getDescription()->toBe('Description')
+it('gets', function () {
+    expect($this->test->description('test'))
+        ->description()->toBe('test')
         ->hasDescription()->toBeTrue();
 });
 
-it('chains description', function () {
-    expect($this->component->description('Description'))->toBeInstanceOf(HasDescriptionComponent::class)
-        ->getDescription()->toBe('Description')
+it('evaluates', function () {
+    $product = product();
+    expect($this->test->description(fn (Product $product) => $product->name))
+        ->evaluateDescription(['product' => $product])->toBe($product->name)
         ->hasDescription()->toBeTrue();
 });
 
-it('resolves description', function () {
-    expect($this->component->description(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(HasDescriptionComponent::class)
-        ->resolveDescription(['record' => 'Description'])->toBe('Description.')
-        ->getDescription()->toBe('Description.');
+it('evaluates from model', function () {
+    $product = product();
+    expect($this->test->description(fn (Product $product) => $product->name))
+        ->evaluateDescription($product)->toBe($product->name)
+        ->hasDescription()->toBeTrue();
 });

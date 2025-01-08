@@ -4,70 +4,36 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-/**
- * @mixin \Honed\Core\Concerns\Evaluable
- */
 trait HasAttribute
 {
     /**
-     * @var string|(\Closure(mixed...):string)|null
+     * @var string|null
      */
     protected $attribute = null;
 
     /**
-     * Set the attribute to be used, chainable.
-     *
-     * @param  string|(\Closure(mixed...):string)  $attribute
-     * @return $this
+     * Get or set the attribute for the instance.
+     * 
+     * @param string|null $attribute The attribute to set, or null to retrieve the current attribute.
+     * @return $this|string The current attribute when no argument is provided, or the instance when setting the attribute.
      */
-    public function attribute(string|\Closure $attribute): static
+    public function attribute($attribute = null)
     {
-        $this->setAttribute($attribute);
+        if (\is_null($attribute)) {
+            return $this->attribute;
+        }
+
+        $this->attribute = $attribute;
 
         return $this;
     }
 
     /**
-     * Set the attribute to be used quietly.
-     *
-     * @param  string|(\Closure(mixed...):string)  $attribute
+     * Determine if the instance has an attribute set.
+     * 
+     * @return bool True if an attribute is set, false otherwise.
      */
-    public function setAttribute(string|\Closure|null $attribute): void
-    {
-        if (\is_null($attribute)) {
-            return;
-        }
-        $this->attribute = $attribute;
-    }
-
-    /**
-     * Get the attribute using the given closure dependencies.
-     *
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
-     */
-    public function getAttribute(array $named = [], array $typed = []): ?string
-    {
-        return $this->evaluate($this->attribute, $named, $typed);
-    }
-
-    /**
-     * Resolve the attribute using the given closure dependencies.
-     *
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
-     */
-    public function resolveAttribute(array $named = [], array $typed = []): ?string
-    {
-        $this->setAttribute($this->getAttribute($named, $typed));
-
-        return $this->attribute;
-    }
-
-    /**
-     * Determine if the class has a attribute.
-     */
-    public function hasAttribute(): bool
+    public function hasAttribute()
     {
         return ! \is_null($this->attribute);
     }
