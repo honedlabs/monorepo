@@ -15,6 +15,10 @@ trait MorphsAction
      */
     public function morph()
     {
+        if (\method_exists($this, 'hasLink') && $this->hasLink()) {
+            // throw new CannotMorphLinkException();
+        } 
+        
         $this->type(Creator::Polymorphic);
 
         return $this;
