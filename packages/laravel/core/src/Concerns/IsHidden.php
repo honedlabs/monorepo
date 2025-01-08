@@ -6,52 +6,63 @@ namespace Honed\Core\Concerns;
 
 trait IsHidden
 {
-    protected bool $hidden = false;
+    /**
+     * @var bool
+     */
+    protected $hidden = false;
 
     /**
-     * Set the hidden property, chainable.
+     * Set the instance as hidden.
      *
+     * @param bool $hidden The hidden state to set.
      * @return $this
      */
-    public function hidden(bool $hidden = true): static
+    public function hidden($hidden = true)
     {
-        $this->setHidden($hidden);
+        $this->hidden = $hidden;
 
         return $this;
     }
 
     /**
-     * Set as hidden, chainable.
+     * Alias for `hidden`.
      *
+     * @param bool $hide The hidden state to set.
      * @return $this
      */
-    public function hide(bool $hidden = true): static
+    public function hide($hide = true)
     {
-        return $this->hidden($hidden);
+        return $this->hidden($hide);
     }
 
     /**
-     * Set as not hidden, chainable.
+     * Set the instance as shown.
      *
+     * @param bool $show The show state to set.
      * @return $this
      */
-    public function show(bool $show = true): static
+    public function shown($shown = true)
     {
-        return $this->hidden(! $show);
+        return $this->hidden(! $shown);
     }
 
     /**
-     * Set the hidden property quietly.
+     * Alias for `shown`.
+     *
+     * @param bool $show The show state to set.
+     * @return $this
      */
-    public function setHidden(bool $hidden): void
+    public function show($show = true)
     {
-        $this->hidden = $hidden;
+        return $this->shown($show);
     }
 
     /**
-     * Determine if the class is hidden.
+     * Determine if the instance is hidden.
+     * 
+     * @return bool True if the instance is hidden, false otherwise.
      */
-    public function isHidden(): bool
+    public function isHidden()
     {
         return $this->hidden;
     }

@@ -12,29 +12,35 @@ trait IsStrict
     protected $strict = false;
 
     /**
-     * Set whether the class is strict matching, chainable.
+     * Set the instance as strict.
      *
+     * @param bool $strict The strict state to set.
      * @return $this
      */
-    public function strict(bool $strict = true): static
+    public function strict($strict = true)
     {
-        $this->setStrict($strict);
+        $this->strict = $strict;
 
         return $this;
     }
 
     /**
-     * Set whether the class is strict matching quietly.
+     * Set the instance as relaxed.
+     *
+     * @param bool $relaxed The relaxed state to set.
+     * @return $this
      */
-    public function setStrict(bool $strict): void
+    public function relaxed($relaxed = true)
     {
-        $this->strict = $strict;
+        return $this->strict(! $relaxed);
     }
 
     /**
-     * Determine if the class is strict matching.
+     * Determine if the instance is strict.
+     * 
+     * @return bool True if the instance is strict, false otherwise.
      */
-    public function isStrict(): bool
+    public function isStrict()
     {
         return $this->strict;
     }

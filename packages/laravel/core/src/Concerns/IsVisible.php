@@ -12,7 +12,7 @@ trait IsVisible
     protected $visible = true;
 
     /**
-     * Set as visible, chainable.
+     * Set the instance as visible.
      *
      * @param bool $visible The visible state to set.
      * @return $this
@@ -25,7 +25,7 @@ trait IsVisible
     }
 
     /**
-     * Set as invisible, chainable.
+     * Set the instance as invisible.
      *
      * @param bool $invisible The invisible state to set.
      * @return $this

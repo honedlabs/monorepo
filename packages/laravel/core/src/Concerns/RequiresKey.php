@@ -9,7 +9,7 @@ use Honed\Core\Exceptions\MissingRequiredAttributeException;
 trait RequiresKey
 {
     /**
-     * Retrieve the key property
+     * Retrieve the key property.
      *
      * @throws MissingRequiredAttributeException
      */

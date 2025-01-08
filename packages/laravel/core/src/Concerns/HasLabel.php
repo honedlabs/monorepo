@@ -85,6 +85,6 @@ trait HasLabel
             ->headline()
             ->lower()
             ->ucfirst()
-            ->value();
+            ->toString();
     }
 }
