@@ -7,79 +7,43 @@ namespace Honed\Core\Concerns;
 trait Validatable
 {
     /**
-     * @var (\Closure(mixed):bool)|null
+     * @var \Closure|null
      */
     protected $validator = null;
 
     /**
-     * Set the validation function, chainable.
-     *
-     * @param  (\Closure(mixed):bool)  $validator
+     * Set the validation function for the instance.
+     * 
+     * @param \Closure|bool $validator The validation function to be set.
      * @return $this
      */
-    public function validator(\Closure $validator): static
+    public function validator($validator)
     {
-        $this->setValidator($validator);
+        $this->validator = $validator;
 
         return $this;
     }
 
     /**
-     * Alias for `validator`.
-     *
-     * @param  (\Closure(mixed):bool)  $validator
-     * @return $this
+     * Determine if the instance has a validation function set.
+     * 
+     * @return bool True if a validation function is set, false otherwise.
      */
-    public function validateUsing(\Closure $validator): static
-    {
-        return $this->validator($validator);
-    }
-
-    /**
-     * Set the validation function quietly.
-     *
-     * @param  (\Closure(mixed):bool)|null  $validator
-     */
-    public function setValidator(?\Closure $validator): void
-    {
-        if (\is_null($validator)) {
-            return;
-        }
-
-        $this->validator = $validator;
-    }
-
-    /**
-     * Determine if the class can validate.
-     */
-    public function canValidate(): bool
+    public function validates(): bool
     {
         return ! \is_null($this->validator);
     }
 
     /**
-     * Get the validation function.
-     *
-     * @return (\Closure(mixed):bool)|null
+     * Determine if the argument passes the validation function.
+     * 
+     * @param mixed $value The value to validate.
+     * @return bool True if the value passes the validation function, false otherwise.
      */
-    public function getValidator(): ?\Closure
+    public function validate($value)
     {
-        return $this->validator;
-    }
-
-    /**
-     * Apply the validation function to a given value.
-     */
-    public function validate(mixed $value): bool
-    {
-        return $this->canValidate() ? \call_user_func($this->getValidator(), $value) : true;
-    }
-
-    /**
-     * Alias for `validate`.
-     */
-    public function isValid(mixed $value): bool
-    {
-        return $this->validate($value);
+        return $this->validates() 
+            ? \call_user_func($this->validator, $value) 
+            : true;
     }
 }

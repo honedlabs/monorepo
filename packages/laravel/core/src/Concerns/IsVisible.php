@@ -16,7 +16,7 @@ trait IsVisible
      *
      * @return $this
      */
-    public function visible(bool $visible = true): static
+    public function visible($visible = null): static
     {
         $this->setVisible($visible);
 

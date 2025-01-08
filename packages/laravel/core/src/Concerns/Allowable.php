@@ -9,20 +9,11 @@ trait Allowable
     use EvaluableDependency {
         evaluateModelForTrait as evaluateModelForAllowable;
     }
+    
     /**
      * @var \Closure|bool
      */
     protected $allow = true;
-
-    /**
-     * Evaluate the closure using injected named and typed parameters.
-     *
-     * @param mixed $value
-     * @param array<string,mixed> $named
-     * @param array<string,mixed> $typed
-     * @return mixed
-     */
-    abstract public function evaluate($value, $named = [], $typed = []);
 
     /**
      * Set the allow condition for the instance.

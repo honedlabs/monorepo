@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Illuminate\Support\Facades\App;
-
 trait HasLocale
 {
     /**
@@ -14,41 +12,28 @@ trait HasLocale
     protected $locale = null;
 
     /**
-     * Set the locale, chainable.
-     *
-     * @return $this
+     * Get or set the locale for the instance.
+     * 
+     * @param string|null $locale The locale to set, or null to retrieve the current locale.
+     * @return string|null|$this The current locale when no argument is provided, or the instance when setting the locale.
      */
-    public function locale(string $locale): static
+    public function locale($locale = null)
     {
-        $this->setLocale($locale);
+        if (\is_null($locale)) {
+            return $this->locale;
+        }
+
+        $this->locale = $locale;
 
         return $this;
     }
 
     /**
-     * Set the locale quietly.
+     * Determine if the instance has an locale set.
+     * 
+     * @return bool True if an locale is set, false otherwise.
      */
-    public function setLocale(?string $locale): void
-    {
-        if (\is_null($locale)) {
-            return;
-        }
-
-        $this->locale = $locale;
-    }
-
-    /**
-     * Get the locale.
-     */
-    public function getLocale(): string
-    {
-        return $this->locale ?? App::getLocale();
-    }
-
-    /**
-     * Determine if the class has a locale.
-     */
-    public function hasLocale(): bool
+    public function hasLocale()
     {
         return ! \is_null($this->locale);
     }
