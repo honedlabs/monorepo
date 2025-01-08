@@ -31,7 +31,7 @@ trait Evaluable
      * @param  array<string, mixed>  $typed
      * @return T
      */
-    public function evaluate(mixed $value, array $named = [], array $typed = []): mixed
+    public function evaluate($value, $named = [], $typed = []): mixed
     {
         if (\is_object($value) && method_exists($value, '__invoke')) {
             $value = $value->__invoke(...); // @phpstan-ignore-line

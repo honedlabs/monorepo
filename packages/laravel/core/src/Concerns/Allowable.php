@@ -45,4 +45,21 @@ trait Allowable
             $typed
         );
     }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @return bool
+     */
+    public function allowsModel($model)
+    {
+        return $this->allows([
+            'model' => $model,
+            'record' => $model,
+            'resource' => $model,
+            str($model->getTable())->singular()->camel()->toString() => $model,
+        ], [
+            \Illuminate\Database\Eloquent\Model::class => $model,
+            $model::class => $model
+        ]);
+    }
 }
