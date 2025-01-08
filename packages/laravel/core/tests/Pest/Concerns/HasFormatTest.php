@@ -1,48 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasFormat;
+use Honed\Core\Tests\Stubs\Product;
 
-class HasFormatComponent
+class FormatTest
 {
     use Evaluable;
     use HasFormat;
 }
 
 beforeEach(function () {
-    $this->component = new HasFormatComponent;
+    $this->test = new FormatTest;
 });
 
-it('has no format by default', function () {
-    expect($this->component)
-        ->getFormat()->toBeNull()
+it('is null by default', function () {
+    expect($this->test)
+        ->format()->toBeNull()
         ->hasFormat()->toBeFalse();
 });
 
-it('sets format', function () {
-    $this->component->setFormat('Format');
-    expect($this->component)
-        ->getFormat()->toBe('Format')
+it('sets', function () {
+    expect($this->test->format('test'))
+        ->toBeInstanceOf(FormatTest::class)
+        ->format()->toBe('test')
         ->hasFormat()->toBeTrue();
 });
 
-it('rejects null values', function () {
-    $this->component->setFormat('Format');
-    $this->component->setFormat(null);
-    expect($this->component)
-        ->getFormat()->toBe('Format')
+it('gets', function () {
+    expect($this->test->format('test'))
+        ->format()->toBe('test')
         ->hasFormat()->toBeTrue();
 });
 
-it('chains format', function () {
-    expect($this->component->format('Format'))->toBeInstanceOf(HasFormatComponent::class)
-        ->getFormat()->toBe('Format')
+it('evaluates', function () {
+    $product = product();
+    expect($this->test->format(fn (Product $product) => $product->name))
+        ->evaluateFormat(['product' => $product])->toBe($product->name)
         ->hasFormat()->toBeTrue();
 });
 
-it('resolves format', function () {
-    expect($this->component->format(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(HasFormatComponent::class)
-        ->resolveFormat(['record' => 'Format'])->toBe('Format.')
-        ->getFormat()->toBe('Format.');
+it('evaluates from model', function () {
+    $product = product();
+    expect($this->test->format(fn (Product $product) => $product->name))
+        ->evaluateFormat($product)->toBe($product->name)
+        ->hasFormat()->toBeTrue();
 });

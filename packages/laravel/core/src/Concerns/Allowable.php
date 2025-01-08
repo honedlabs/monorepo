@@ -6,6 +6,9 @@ namespace Honed\Core\Concerns;
 
 trait Allowable
 {
+    use EvaluableDependency {
+        evaluateModelForTrait as evaluateModelForAllowable;
+    }
     /**
      * @var \Closure|bool
      */
@@ -43,11 +46,11 @@ trait Allowable
      */
     public function allows($named = [], $typed = [])
     {
-        return (bool) $this->evaluate(
-            $this->allow,
-            $named,
-            $typed
-        );
+        $evaluated = (bool) $this->evaluate($this->allow, $named, $typed);
+
+        $this->allow = $evaluated;
+
+        return $evaluated;
     }
 
     /**
@@ -58,14 +61,6 @@ trait Allowable
      */
     public function allowsModel($model)
     {
-        return $this->allows([
-            'model' => $model,
-            'record' => $model,
-            'resource' => $model,
-            str($model->getTable())->singular()->camel()->toString() => $model,
-        ], [
-            \Illuminate\Database\Eloquent\Model::class => $model,
-            $model::class => $model
-        ]);
+        return $this->evaluateModelForAllowable($model, 'allows');
     }
 }
