@@ -14,11 +14,12 @@ trait IsVisible
     /**
      * Set as visible, chainable.
      *
+     * @param bool $visible The visible state to set.
      * @return $this
      */
-    public function visible($visible = null): static
+    public function visible($visible = true)
     {
-        $this->setVisible($visible);
+        $this->visible = $visible;
 
         return $this;
     }
@@ -26,25 +27,20 @@ trait IsVisible
     /**
      * Set as invisible, chainable.
      *
+     * @param bool $invisible The invisible state to set.
      * @return $this
      */
-    public function invisible(bool $invisible = true): static
+    public function invisible($invisible = true)
     {
         return $this->visible(! $invisible);
     }
 
     /**
-     * Set the visibility property quietly.
+     * Determine if the instance is visible.
+     * 
+     * @return bool True if the instance is visible, false otherwise.
      */
-    public function setVisible(bool $visible): void
-    {
-        $this->visible = $visible;
-    }
-
-    /**
-     * Determine if it is visible.
-     */
-    public function isVisible(): bool
+    public function isVisible()
     {
         return $this->visible;
     }
