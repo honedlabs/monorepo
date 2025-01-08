@@ -12,41 +12,28 @@ trait HasAlias
     protected $alias = null;
 
     /**
-     * Set the alias, chainable.
-     *
-     * @return $this
+     * Get or set the alias for the instance.
+     * 
+     * @param string|null $alias The alias to set, or null to retrieve the current alias.
+     * @return $this|string The current alias when no argument is provided, or the instance when setting the alias.
      */
-    public function alias(string $alias): static
+    public function alias($alias = null)
     {
-        $this->setAlias($alias);
+        if (\is_null($alias)) {
+            return $this->alias;
+        }
+
+        $this->alias = $alias;
 
         return $this;
     }
 
     /**
-     * Set the alias quietly.
+     * Determine if the instance has an alias set.
+     * 
+     * @return bool True if an alias is set, false otherwise.
      */
-    public function setAlias(?string $alias): void
-    {
-        if (\is_null($alias)) {
-            return;
-        }
-
-        $this->alias = $alias;
-    }
-
-    /**
-     * Get the alias.
-     */
-    public function getAlias(): ?string
-    {
-        return $this->alias;
-    }
-
-    /**
-     * Determine if the class has a alias.
-     */
-    public function hasAlias(): bool
+    public function hasAlias()
     {
         return ! \is_null($this->alias);
     }

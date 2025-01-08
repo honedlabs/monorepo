@@ -1,39 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\HasAlias;
 
-class HasAliasComponent
+class AliasTest
 {
     use HasAlias;
 }
 
 beforeEach(function () {
-    $this->component = new HasAliasComponent;
+    $this->test = new AliasTest;
 });
 
-it('has no alias by default', function () {
-    expect($this->component)
-        ->getAlias()->toBeNull()
+it('null by default', function () {
+    expect($this->test)
+        ->alias()->toBeNull()
         ->hasAlias()->toBeFalse();
 });
 
-it('sets alias', function () {
-    $this->component->setAlias('Alias');
-    expect($this->component)
-        ->getAlias()->toBe('Alias')
+it('sets', function () {
+    expect($this->test->alias('test'))
+        ->toBeInstanceOf(AliasTest::class)
+        ->alias()->toBe('test')
         ->hasAlias()->toBeTrue();
 });
 
-it('rejects null values', function () {
-    $this->component->setAlias('Alias');
-    $this->component->setAlias(null);
-    expect($this->component)
-        ->getAlias()->toBe('Alias')
-        ->hasAlias()->toBeTrue();
-});
-
-it('chains alias', function () {
-    expect($this->component->alias('Alias'))->toBeInstanceOf(HasAliasComponent::class)
-        ->getAlias()->toBe('Alias')
+it('gets', function () {
+    expect($this->test->alias('test'))
+        ->alias()->toBe('test')
         ->hasAlias()->toBeTrue();
 });
