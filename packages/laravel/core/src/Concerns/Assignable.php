@@ -6,6 +6,9 @@ namespace Honed\Core\Concerns;
 
 use Illuminate\Support\Stringable;
 
+/**
+ * Deprecated
+ */
 trait Assignable
 {
     /**
