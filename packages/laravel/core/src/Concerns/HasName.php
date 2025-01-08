@@ -4,88 +4,85 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Illuminate\Support\Stringable;
-
-/**
- * @mixin \Honed\Core\Concerns\Evaluable
- */
 trait HasName
 {
+    use EvaluableDependency {
+        evaluateModelForTrait as evaluateModelForName;
+    }
+
     /**
-     * @var string|\Closure(mixed...):string|null
+     * @var string|\Closure|null
      */
     protected $name = null;
 
     /**
-     * Set the name, chainable.
-     *
-     * @param  string|(\Closure(mixed...):string)  $name
-     * @return $this
+     * Get or set the name for the instance.
+     * 
+     * @param string|\Closure|null $name The name to set, or null to retrieve the current name.
+     * @return string|null|$this The current name when no argument is provided, or the instance when setting the name.
      */
-    public function name(string|\Closure $name): static
+    public function name($name = null)
     {
-        $this->setName($name);
+        if (\is_null($name)) {
+            return $this->name;
+        }
+
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Set the name quietly.
-     *
-     * @param  string|(\Closure(mixed...):string)|null  $name
+     * Determine if the instance has an name set.
+     * 
+     * @return bool True if an name is set, false otherwise.
      */
-    public function setName(string|\Closure|null $name): void
-    {
-        if (\is_null($name)) {
-            return;
-        }
-
-        $this->name = $name;
-    }
-
-    /**
-     * Get the name using the given closure dependencies.
-     *
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
-     */
-    public function getName(array $named = [], array $typed = []): ?string
-    {
-        return $this->evaluate($this->name, $named, $typed);
-    }
-
-    /**
-     * Resolve the name using the given closure dependencies.
-     *
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
-     */
-    public function resolveName(array $named = [], array $typed = []): ?string
-    {
-        $name = $this->getName($named, $typed);
-        $this->setName($name);
-
-        return $name;
-    }
-
-    /**
-     * Determine if the class has a name.
-     */
-    public function hasName(): bool
+    public function hasName()
     {
         return ! \is_null($this->name);
     }
 
     /**
-     * Convert a string to the name format
-     *
-     * @param  string|\Stringable|(\Closure():string|\Stringable)  $label
+     * Evaluate the name using injected named and typed parameters, or from a model.
+     * 
+     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $namedOrModel The named parameters to inject into the name, or the model to evaluate the name from.
+     * @param array<string,mixed> $typed The typed parameters to inject into the name, if provided.
+     * @return string|null The evaluated name.
      */
-    public function makeName(string $label): string
+    public function evaluateName($namedOrModel = [], $typed = [])
     {
-        return (new Stringable($label))
+        $evaluated = match (true) {
+            $namedOrModel instanceof \Illuminate\Database\Eloquent\Model => $this->evaluateNameFromModel($namedOrModel),
+            default => $this->evaluate($this->name, $namedOrModel, $typed)
+        };
+
+        $this->name = $evaluated;
+
+        return $evaluated;
+    }
+
+    /**
+     * Evaluate the name from a model.
+     * 
+     * @param \Illuminate\Database\Eloquent\Model $model The model to evaluate the name from.
+     * @return string|null The evaluated name.
+     */
+    private function evaluateNameFromModel($model)
+    {
+        return $this->evaluateModelForName($model, 'evaluateName');
+    }
+
+    /**
+     * Convert a string to the name name.
+     *
+     * @param string $label
+     * @return string
+     */
+    public function makeName($label)
+    {
+        return str($label)
             ->snake()
             ->lower()
-            ->value();
+            ->toString();
     }
 }

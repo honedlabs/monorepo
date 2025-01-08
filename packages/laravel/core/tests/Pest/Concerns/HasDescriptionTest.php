@@ -42,7 +42,7 @@ it('evaluates', function () {
         ->hasDescription()->toBeTrue();
 });
 
-it('evaluates from model', function () {
+it('evaluates model', function () {
     $product = product();
     expect($this->test->description(fn (Product $product) => $product->name))
         ->evaluateDescription($product)->toBe($product->name)

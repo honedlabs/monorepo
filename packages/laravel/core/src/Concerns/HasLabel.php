@@ -78,7 +78,7 @@ trait HasLabel
      * @param  string  $name
      * @return string
      */
-    public function labelFrom($name)
+    public function makeLabel($name)
     {
         return str($name)
             ->afterLast('.')
