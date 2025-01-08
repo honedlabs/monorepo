@@ -12,41 +12,28 @@ trait HasScope
     protected $scope = null;
 
     /**
-     * Set the scope, chainable.
-     *
-     * @return $this
+     * Get or set the scope for the instance.
+     * 
+     * @param string|null $scope The scope to set, or null to retrieve the current scope.
+     * @return string|null|$this The current scope when no argument is provided, or the instance when setting the scope.
      */
-    public function scope(string $scope): static
+    public function scope($scope = null)
     {
-        $this->setScope($scope);
+        if (\is_null($scope)) {
+            return $this->scope;
+        }
+
+        $this->scope = $scope;
 
         return $this;
     }
 
     /**
-     * Set the scope quietly.
+     * Determine if the instance has an scope set.
+     * 
+     * @return bool True if an scope is set, false otherwise.
      */
-    public function setScope(?string $scope): void
-    {
-        if (\is_null($scope)) {
-            return;
-        }
-
-        $this->scope = $scope;
-    }
-
-    /**
-     * Get the scope using the given closure dependencies.
-     */
-    public function getScope(): ?string
-    {
-        return $this->scope;
-    }
-
-    /**
-     * Determine if the class has a scope.
-     */
-    public function hasScope(): bool
+    public function hasScope()
     {
         return ! \is_null($this->scope);
     }

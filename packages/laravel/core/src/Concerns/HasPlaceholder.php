@@ -4,70 +4,36 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-/**
- * @mixin \Honed\Core\Concerns\Evaluable
- */
 trait HasPlaceholder
 {
     /**
-     * @var string|(\Closure(mixed...):string)|null
+     * @var string|null
      */
     protected $placeholder = null;
 
     /**
-     * Set the placeholder, chainable.
-     *
-     * @param  string|(\Closure(mixed...):string)  $placeholder
-     * @return $this
+     * Get or set the placeholder for the instance.
+     * 
+     * @param string|null $placeholder The placeholder to set, or null to retrieve the current placeholder.
+     * @return string|null|$this The current placeholder when no argument is provided, or the instance when setting the placeholder.
      */
-    public function placeholder(string|\Closure $placeholder): static
+    public function placeholder($placeholder = null)
     {
-        $this->setPlaceholder($placeholder);
+        if (\is_null($placeholder)) {
+            return $this->placeholder;
+        }
+
+        $this->placeholder = $placeholder;
 
         return $this;
     }
 
     /**
-     * Set the placeholder quietly.
-     *
-     * @param  string|(\Closure(mixed...):string)|null  $placeholder
+     * Determine if the instance has an placeholder set.
+     * 
+     * @return bool True if an placeholder is set, false otherwise.
      */
-    public function setPlaceholder(string|\Closure|null $placeholder): void
-    {
-        if (is_null($placeholder)) {
-            return;
-        }
-        $this->placeholder = $placeholder;
-    }
-
-    /**
-     * Get the placeholder using the given closure dependencies.
-     *
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
-     */
-    public function getPlaceholder(array $named = [], array $typed = []): ?string
-    {
-        return $this->evaluate($this->placeholder, $named, $typed);
-    }
-
-    /**
-     * Resolve the placeholder using the given closure dependencies.
-     *
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
-     */
-    public function resolvePlaceholder(array $named = [], array $typed = []): ?string
-    {
-        $this->setPlaceholder($this->getPlaceholder($named, $typed));
-
-        return $this->placeholder;
-    }
-
-    /**
-     * Determine if the class has a placeholder.
-     */
-    public function hasPlaceholder(): bool
+    public function hasPlaceholder()
     {
         return ! \is_null($this->placeholder);
     }

@@ -12,40 +12,28 @@ trait HasType
     protected $type = null;
 
     /**
-     * Set the type property, chainable
-     *
-     * @return $this
+     * Get or set the type for the instance.
+     * 
+     * @param string|null $type The type to set, or null to retrieve the current type.
+     * @return string|null|$this The current type when no argument is provided, or the instance when setting the type.
      */
-    public function type(string $type): static
+    public function type($type = null)
     {
-        $this->setType($type);
+        if (\is_null($type)) {
+            return $this->type;
+        }
+
+        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * Set the type property quietly.
+     * Determine if the instance has an type set.
+     * 
+     * @return bool True if an type is set, false otherwise.
      */
-    public function setType(?string $type): void
-    {
-        if (\is_null($type)) {
-            return;
-        }
-        $this->type = $type;
-    }
-
-    /**
-     * Get the type using the given closure dependencies.
-     */
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    /**
-     * Determine if the class has a type.
-     */
-    public function hasType(): bool
+    public function hasType()
     {
         return ! \is_null($this->type);
     }
