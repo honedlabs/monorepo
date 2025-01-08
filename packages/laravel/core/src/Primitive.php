@@ -9,25 +9,40 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 
-/**
- * @implements Arrayable<string, mixed>
- */
 abstract class Primitive implements \JsonSerializable, Arrayable, Contracts\Makeable
 {
-    use Concerns\Assignable;
-    use Concerns\Configurable;
     use Concerns\Evaluable;
     use Conditionable;
     use Macroable;
     use Tappable;
 
+    /**
+     * Construct the instance.
+     * 
+     * @return void
+     */
     public function __construct()
     {
-        $this->configure();
+        $this->setUp();
     }
 
+    /**
+     * Serialize the instance
+     * 
+     * @return array<mixed>
+     */
     public function jsonSerialize(): mixed
     {
         return $this->toArray();
+    }
+
+    /**
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
+     */
+    public function setUp()
+    {
+        //
     }
 }

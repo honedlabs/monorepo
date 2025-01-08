@@ -11,15 +11,15 @@ trait HasMeta
     }
 
     /**
-     * @var array|\Closure
+     * @var array<string,mixed>|\Closure
      */
     protected $meta = [];
 
     /**
      * Get or set the meta for the instance.
      * 
-     * @param array|\Closure|null $meta The meta to set, or null to retrieve the current meta.
-     * @return array|$this The current meta when no argument is provided, or the instance when setting the meta.
+     * @param array<string,mixed>|\Closure|null $meta The meta to set, or null to retrieve the current meta.
+     * @return array<string,mixed>|$this The current meta when no argument is provided, or the instance when setting the meta.
      */
     public function meta($meta = null)
     {
@@ -47,11 +47,11 @@ trait HasMeta
      * 
      * @param array<array,mixed>|\Illuminate\Database\Eloquent\Model $namedOrModel The named parameters to inject into the meta, or the model to evaluate the meta from.
      * @param array<array,mixed> $typed The typed parameters to inject into the meta, if provided.
-     * @return array The evaluated meta.
+     * @return array<string,mixed> The evaluated meta.
      */
     public function evaluateMeta($namedOrModel = [], $typed = [])
     {
-        $evaluated = match (true) {
+        $evaluated = (array) match (true) {
             $namedOrModel instanceof \Illuminate\Database\Eloquent\Model => $this->evaluateMetaFromModel($namedOrModel),
             default => $this->evaluate($this->meta, $namedOrModel, $typed)
         };
@@ -65,7 +65,7 @@ trait HasMeta
      * Evaluate the meta from a model.
      * 
      * @param \Illuminate\Database\Eloquent\Model $model The model to evaluate the meta from.
-     * @return array The evaluated meta.
+     * @return array<string,mixed> The evaluated meta.
      */
     private function evaluateMetaFromModel($model)
     {

@@ -13,7 +13,7 @@ trait RequiresKey
      *
      * @throws MissingRequiredAttributeException
      */
-    public function getKey(): string
+    public function requiredKey(): string
     {
         return match (true) {
             \property_exists($this, 'key') && isset($this->key) => $this->key,

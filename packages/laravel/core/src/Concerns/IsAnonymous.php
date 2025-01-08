@@ -10,9 +10,11 @@ namespace Honed\Core\Concerns;
 trait IsAnonymous
 {
     /**
-     * Determine if the class is anonymous.
+     * Determine if the instance is anonymous.
+     * 
+     * @return bool True if the instance is anonymous, false otherwise.
      */
-    public function isAnonymous(): bool
+    public function isAnonymous()
     {
         if (! \property_exists($this, 'anonymous')) {
             return false;
