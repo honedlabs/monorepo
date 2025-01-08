@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
+use Honed\Action\Exceptions\InvalidActionTypeException;
+
 class Creator
 {
     const Bulk = 'bulk';
     const Inline = 'inline';
     const Page = 'page';
+    const Polymorphic = 'polymorphic';
 
     /**
      * Create a new action.
@@ -24,6 +27,7 @@ class Creator
             self::Bulk => $this->bulk($name, $label),
             self::Inline => $this->inline($name, $label),
             self::Page => $this->page($name, $label),
+            self::Polymorphic => $this->polymorphic($name, $label),
             default => throw new InvalidActionTypeException($type)
         };
     }
@@ -62,5 +66,17 @@ class Creator
     public function page($name, $label = null)
     {
         return $this->new(self::Page, $name, $label);
+    }
+
+    /**
+     * Create a new polymorphic action.
+     * 
+     * @param string $name
+     * @param string|\Closure $label
+     * @return \Honed\Action\Action
+     */
+    public function polymorphic($name, $label = null)
+    {
+        return $this->new(self::Polymorphic, $name, $label);
     }
 }
