@@ -2,6 +2,7 @@
 
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Tests\Stubs\Product;
 
 class HasLabelTest
 {
@@ -41,10 +42,11 @@ it('chains label', function () {
 });
 
 it('resolves label', function () {
-    expect($this->test->label(fn ($record) => $record.'.'))
+    $product = product();
+    expect($this->test->label(fn (Product $product) => $product->name))
         ->toBeInstanceOf(HasLabelTest::class)
-        ->resolveLabel(['record' => 'Label'])->toBe('Label.')
-        ->getLabel()->toBe('Label.');
+        ->resolveLabel(['product' => $product])->toBe($product->name)
+        ->getLabel()->toBe($product->name);
 });
 
 it('makes a label', function () {
