@@ -8,8 +8,6 @@ use Honed\Core\Contracts\HigherOrder;
 use Honed\Core\Primitive;
 
 /**
- * @internal
- *
  * @template T of \Honed\Core\Primitive
  *
  * @implements \Honed\Core\Contracts\HigherOrder<T>
