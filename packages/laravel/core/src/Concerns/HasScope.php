@@ -29,9 +29,9 @@ trait HasScope
     }
 
     /**
-     * Determine if the instance has an scope set.
+     * Determine if the instance has a scope set.
      * 
-     * @return bool True if an scope is set, false otherwise.
+     * @return bool True if a scope is set, false otherwise.
      */
     public function hasScope()
     {
