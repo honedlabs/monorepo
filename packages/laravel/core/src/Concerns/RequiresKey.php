@@ -8,12 +8,14 @@ use Honed\Core\Exceptions\MissingRequiredAttributeException;
 
 trait RequiresKey
 {
+
+
     /**
      * Retrieve the key property.
      *
      * @throws MissingRequiredAttributeException
      */
-    public function requiredKey(): string
+    public function getKey(): string
     {
         return match (true) {
             \property_exists($this, 'key') && isset($this->key) => $this->key,

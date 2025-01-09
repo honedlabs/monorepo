@@ -39,7 +39,7 @@ trait HasMeta
      */
     public function hasMeta()
     {
-        return ! \is_null($this->meta);
+        return \count($this->meta) > 0;
     }
 
     /**

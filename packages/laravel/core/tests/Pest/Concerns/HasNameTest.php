@@ -1,39 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasName;
+use Honed\Core\Tests\Stubs\Product;
 
-class A
+class NameTest
 {
-    
+    use Evaluable;
+    use HasName;
 }
 
-class B extends A
-{
+beforeEach(function () {
+    $this->test = new NameTest;
+});
 
-}
+it('is null by default', function () {
+    expect($this->test)
+        ->name()->toBeNull()
+        ->hasName()->toBeFalse();
+});
 
-interface C extends D
-{
+it('sets', function () {
+    expect($this->test->name('test'))
+        ->toBeInstanceOf(NameTest::class)
+        ->name()->toBe('test')
+        ->hasName()->toBeTrue();
+});
 
-}
+it('gets', function () {
+    expect($this->test->name('test'))
+        ->name()->toBe('test')
+        ->hasName()->toBeTrue();
+});
 
-interface D
-{
+it('evaluates', function () {
+    $product = product();
+    expect($this->test->name(fn (Product $product) => $product->name))
+        ->evaluateName(['product' => $product])->toBe($product->name)
+        ->hasName()->toBeTrue();
+});
 
-}
-
-interface E
-{
-
-}
-
-class F extends B implements C, E
-{
-
-}
-
-test('xx', function () {
-    $f = new F();
-    dd($f instanceof E);
+it('evaluates model', function () {
+    $product = product();
+    expect($this->test->name(fn (Product $product) => $product->name))
+        ->evaluateName($product)->toBe($product->name)
+        ->hasName()->toBeTrue();
 });

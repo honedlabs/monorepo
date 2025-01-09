@@ -1,48 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasTitle;
+use Honed\Core\Tests\Stubs\Product;
 
-class HasTitleComponent
+class TitleTest
 {
     use Evaluable;
     use HasTitle;
 }
 
 beforeEach(function () {
-    $this->component = new HasTitleComponent;
+    $this->test = new TitleTest;
 });
 
-it('has no title by default', function () {
-    expect($this->component)
-        ->getTitle()->toBeNull()
+it('is null by default', function () {
+    expect($this->test)
+        ->title()->toBeNull()
         ->hasTitle()->toBeFalse();
 });
 
-it('sets title', function () {
-    $this->component->setTitle('Title');
-    expect($this->component)
-        ->getTitle()->toBe('Title')
+it('sets', function () {
+    expect($this->test->title('test'))
+        ->toBeInstanceOf(TitleTest::class)
+        ->title()->toBe('test')
         ->hasTitle()->toBeTrue();
 });
 
-it('rejects null values', function () {
-    $this->component->setTitle('Title');
-    $this->component->setTitle(null);
-    expect($this->component)
-        ->getTitle()->toBe('Title')
+it('gets', function () {
+    expect($this->test->title('test'))
+        ->title()->toBe('test')
         ->hasTitle()->toBeTrue();
 });
 
-it('chains title', function () {
-    expect($this->component->title('Title'))->toBeInstanceOf(HasTitleComponent::class)
-        ->getTitle()->toBe('Title')
+it('evaluates', function () {
+    $product = product();
+    expect($this->test->title(fn (Product $product) => $product->name))
+        ->evaluateTitle(['product' => $product])->toBe($product->name)
         ->hasTitle()->toBeTrue();
 });
 
-it('resolves title', function () {
-    expect($this->component->title(fn ($record) => $record.'.'))
-        ->toBeInstanceOf(HasTitleComponent::class)
-        ->resolveTitle(['record' => 'Title'])->toBe('Title.')
-        ->getTitle()->toBe('Title.');
+it('evaluates model', function () {
+    $product = product();
+    expect($this->test->title(fn (Product $product) => $product->name))
+        ->evaluateTitle($product)->toBe($product->name)
+        ->hasTitle()->toBeTrue();
 });

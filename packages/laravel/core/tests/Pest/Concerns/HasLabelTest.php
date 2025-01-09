@@ -1,54 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Tests\Stubs\Product;
 
-class HasLabelTest
+class LabelTest
 {
     use Evaluable;
     use HasLabel;
 }
 
 beforeEach(function () {
-    $this->test = new HasLabelTest;
+    $this->test = new LabelTest;
 });
 
-it('has no label by default', function () {
+it('is null by default', function () {
     expect($this->test)
-        ->getLabel()->toBeNull()
+        ->label()->toBeNull()
         ->hasLabel()->toBeFalse();
 });
 
-it('sets label', function () {
-    $this->test->setLabel('Label');
-    expect($this->test)
-        ->getLabel()->toBe('Label')
+it('sets', function () {
+    expect($this->test->label('test'))
+        ->toBeInstanceOf(LabelTest::class)
+        ->label()->toBe('test')
         ->hasLabel()->toBeTrue();
 });
 
-it('rejects null values', function () {
-    $this->test->setLabel('Label');
-    $this->test->setLabel(null);
-    expect($this->test)
-        ->getLabel()->toBe('Label')
+it('gets', function () {
+    expect($this->test->label('test'))
+        ->label()->toBe('test')
         ->hasLabel()->toBeTrue();
 });
 
-it('chains label', function () {
-    expect($this->test->label('Label'))->toBeInstanceOf(HasLabelTest::class)
-        ->getLabel()->toBe('Label')
-        ->hasLabel()->toBeTrue();
-});
-
-it('resolves label', function () {
+it('evaluates', function () {
     $product = product();
     expect($this->test->label(fn (Product $product) => $product->name))
-        ->toBeInstanceOf(HasLabelTest::class)
-        ->resolveLabel(['product' => $product])->toBe($product->name)
-        ->getLabel()->toBe($product->name);
+        ->evaluateLabel(['product' => $product])->toBe($product->name)
+        ->hasLabel()->toBeTrue();
 });
 
-it('makes a label', function () {
-    expect($this->test->makeLabel('new-Label'))->toBe('New label');
+it('evaluates model', function () {
+    $product = product();
+    expect($this->test->label(fn (Product $product) => $product->name))
+        ->evaluateLabel($product)->toBe($product->name)
+        ->hasLabel()->toBeTrue();
 });

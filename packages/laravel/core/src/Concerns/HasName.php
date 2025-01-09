@@ -11,9 +11,9 @@ trait HasName
     }
 
     /**
-     * @var string|\Closure|null
+     * @var string|\Closure
      */
-    protected $name = null;
+    protected $name;
 
     /**
      * Get or set the name for the instance.

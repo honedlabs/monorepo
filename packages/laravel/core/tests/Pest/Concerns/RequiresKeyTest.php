@@ -3,40 +3,35 @@
 use Honed\Core\Concerns\RequiresKey;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
 
-class KeyMethod
+class RequiresKeyTest
 {
     use RequiresKey;
+}
 
-    protected string $key;
+class RequiresKeyProperty extends RequiresKeyTest
+{
+    protected $key = 'property';
+}
 
-    protected function key(): string
+class RequiresKeyMethod extends RequiresKeyTest
+{
+    protected function key()
     {
-        return 'id';
+        return 'method';
     }
 }
 
-class KeyProperty
-{
-    use RequiresKey;
-
-    protected string $key = 'id';
-}
-
-class KeyUndefined
-{
-    use RequiresKey;
-}
-
-it('has method key', function () {
-    expect((new KeyMethod)->getKey())->toBe('id');
+it('gets from method', function () {
+    expect((new RequiresKeyMethod)->getKey())
+        ->toBe('method');
 });
 
 it('has property key', function () {
-    $component = new KeyProperty;
-    expect($component->getKey())->toBe('id');
+    expect((new RequiresKeyProperty)->getKey())
+        ->toBe('property');
 });
 
-it('throws exception if key not defined', function () {
-    $component = new KeyUndefined;
-    $component->getKey();
-})->throws(MissingRequiredAttributeException::class);
+it('errors', function () {
+    expect(fn () => (new RequiresKeyTest)->getKey())
+        ->toThrow(MissingRequiredAttributeException::class);
+});
