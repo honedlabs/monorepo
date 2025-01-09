@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Core\Formatters;
 
-class BooleanFormatter implements Contracts\Formatter
+use Honed\Core\Contracts\Formats;
+
+class BooleanFormatter implements Formats
 {
     /**
      * @var string

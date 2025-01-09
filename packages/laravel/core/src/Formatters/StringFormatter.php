@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Core\Formatters;
 
-use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Contracts\Formats;
 use Illuminate\Support\Stringable;
 
-class StringFormatter implements Contracts\Formatter
+class StringFormatter implements Formats
 {
     /**
      * @var string

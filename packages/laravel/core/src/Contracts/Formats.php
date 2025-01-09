@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\Core\Formatters\Contracts;
+namespace Honed\Core\Contracts;
 
-use Honed\Core\Contracts\Makeable;
-
-interface Formatter extends Makeable
+interface Formats extends Makeable
 {
     /**
      * Format the value.

@@ -10,7 +10,10 @@ namespace Honed\Core\Contracts;
 interface HigherOrder
 {
     /**
-     * @param  array<mixed>  $parameters
+     * Dynamically call methods on the underlying object.
+     * 
+     * @param string $method
+     * @param array<mixed> $parameters
      * @return T
      */
     public function __call(string $method, array $parameters);

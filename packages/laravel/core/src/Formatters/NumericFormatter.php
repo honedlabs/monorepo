@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Core\Formatters;
 
+use Honed\Core\Contracts\Formats;
 use Illuminate\Support\Number;
 
-class NumericFormatter implements Contracts\Formatter
+class NumericFormatter implements Formats
 {
     /**
      * @var int

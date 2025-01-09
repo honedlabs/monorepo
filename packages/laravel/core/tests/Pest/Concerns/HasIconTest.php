@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Contracts\Icon;
+use Honed\Core\Contracts\IsIcon;
 use Honed\Core\Concerns\HasIcon;
 
 class IconTest
@@ -10,7 +10,7 @@ class IconTest
     use HasIcon;
 }
 
-enum IconEnum implements Icon
+enum IconEnum implements IsIcon
 {
     case Chevron;
 

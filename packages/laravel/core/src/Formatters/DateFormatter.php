@@ -6,8 +6,9 @@ namespace Honed\Core\Formatters;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
+use Honed\Core\Contracts\Formats;
 
-class DateFormatter implements Contracts\Formatter
+class DateFormatter implements Formats
 {
     /**
      * @var string

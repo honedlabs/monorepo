@@ -12,15 +12,15 @@ use Honed\Core\Formatters\StringFormatter;
 trait HasFormatter
 {
     /**
-     * @var \Honed\Core\Contracts\Formatter
+     * @var \Honed\Core\Contracts\Formats
      */
     protected $formatter;
 
     /**
      * Get or set the formatter for the instance.
      * 
-     * @param \Honed\Core\Contracts\Formatter|null $formatter The formatter to set, or null to retrieve the current formatter.
-     * @return \Honed\Core\Contracts\Formatter|null|$this The current formatter when no argument is provided, or the instance when setting the formatter.
+     * @param \Honed\Core\Contracts\Formats|null $formatter The formatter to set, or null to retrieve the current formatter.
+     * @return \Honed\Core\Contracts\Formats|null|$this The current formatter when no argument is provided, or the instance when setting the formatter.
      */
     public function formatter($formatter = null)
     {

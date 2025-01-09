@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Core\Link\Proxies;
+namespace Honed\Core\Proxies;
 
 use Honed\Core\Contracts\HigherOrder;
 use Honed\Core\Primitive;

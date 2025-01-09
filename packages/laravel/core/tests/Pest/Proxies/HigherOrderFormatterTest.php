@@ -1,8 +1,8 @@
 <?php
 
 use Honed\Core\Contracts\HigherOrder;
-use Honed\Core\Formatters\Concerns\Formattable;
-use Honed\Core\Formatters\Proxies\HigherOrderFormatter;
+use Honed\Core\Concerns\HasFormatter;
+use Honed\Core\Proxies\HigherOrderFormatter;
 use Honed\Core\Primitive;
 
 class HigherOrderFormatterComponent extends Primitive implements HigherOrder
@@ -12,7 +12,7 @@ class HigherOrderFormatterComponent extends Primitive implements HigherOrder
         return resolve(static::class);
     }
 
-    public function __get(string $property): HigherOrder
+    public function __get($property)
     {
         return match ($property) {
             'formatter' => new HigherOrderFormatter($this),
@@ -28,7 +28,7 @@ class HigherOrderFormatterComponent extends Primitive implements HigherOrder
 
 class HigherOrderFormatterTraitComponent extends HigherOrderFormatterComponent
 {
-    use Formattable;
+    use HasFormatter;
 }
 
 beforeEach(function () {

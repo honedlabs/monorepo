@@ -19,7 +19,7 @@ class HigherOrderLinkTest extends Primitive implements ProxiesHigherOrder
         return new static;
     }
 
-    public function __get(string $property): HigherOrder
+    public function __get($property)
     {
         return match ($property) {
             'link' => new HigherOrderLink($this),
