@@ -18,7 +18,7 @@ class Option extends Primitive
     use IsActive;
 
     /**
-     * Create a new Option instance.
+     * Create a new option instance.
      * 
      * @param int|string|float|null $value
      * @param string $label

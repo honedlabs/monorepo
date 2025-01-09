@@ -9,8 +9,6 @@ use Illuminate\Support\Stringable;
 
 class StringFormatter implements Contracts\Formatter
 {
-    use Evaluable;
-
     /**
      * @var string
      */
