@@ -11,9 +11,9 @@ trait HasLabel
     }
 
     /**
-     * @var string|\Closure|null
+     * @var string|\Closure
      */
-    protected $label = null;
+    protected $label;
 
     /**
      * Get or set the label for the instance.
@@ -24,7 +24,7 @@ trait HasLabel
     public function label($label = null)
     {
         if (\is_null($label)) {
-            return $this->label;
+            return $this->label instanceof \Closure ? $this->evaluateLabel() : $this->label;
         }
 
         $this->label = $label;
@@ -39,7 +39,7 @@ trait HasLabel
      */
     public function hasLabel()
     {
-        return ! \is_null($this->label);
+        return isset($this->label);
     }
 
     /**

@@ -11,10 +11,10 @@ interface Formatter extends Makeable
     /**
      * Format the value.
      *
-     * @template T of string|int|float|null
+     * @template TValue of string|int|float|null
      *
-     * @param  T  $value
-     * @return T|mixed
+     * @param  TValue  $value
+     * @return TValue|mixed
      */
-    public function format(mixed $value): mixed;
+    public function format($value);
 }

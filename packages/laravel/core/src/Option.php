@@ -20,13 +20,13 @@ class Option extends Primitive
     /**
      * Create a new Option instance.
      * 
-     * @param mixed $value
+     * @param int|string|float|null $value
      * @param string $label
      */
     final public function __construct($value, $label = null)
     {
-        $this->setValue($value);
-        $this->setLabel($label ?? $this->makeLabel((string) $value));
+        $this->value($value);
+        $this->label($label ?? $this->makeLabel((string) $value));
     }
 
     /**
@@ -44,10 +44,10 @@ class Option extends Primitive
     public function toArray()
     {
         return [
-            'value' => $this->getValue(),
-            'label' => $this->getLabel(),
-            'meta' => $this->getMeta(),
-            'active' => $this->isActive(),
+            'value' => $this->value(),
+            'label' => $this->label(),
+            'meta' => $this->meta(),
+            'active' => $this->active(),
         ];
     }
 }
