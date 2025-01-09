@@ -104,6 +104,16 @@ class NumericFormatter implements Contracts\Formatter
     }
 
     /**
+     * Set the divide by amount to 100, to indicate the value is stored in cents.
+     * 
+     * @return $this
+     */
+    public function cents()
+    {
+        return $this->divideBy(100);
+    }
+
+    /**
      * Determine if the instance has a divide by amount set.
      * 
      * @return bool True if a divideBy is set, false otherwise.
