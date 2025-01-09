@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Formatters;
 
-use Honed\Core\Concerns\HasLocale;
 use Illuminate\Support\Number;
 
 class NumericFormatter implements Contracts\Formatter
@@ -168,23 +167,26 @@ class NumericFormatter implements Contracts\Formatter
         return ! \is_null($this->currency);
     }
 
-    
-
     /**
      * Format the value as a number.
      * 
      * @param mixed $value
-     * @return string|null|false
+     * @return mixed
      */
-    public function format(mixed $value): string|null|false
+    public function format(mixed $value)
     {
         if (\is_null($value) || ! \is_numeric($value)) {
             return null;
         }
 
-        $value = (float) $value;
-        $value = $this->hasDivideBy() ? $value / $this->getDivideBy() : $value;
+        if ($this->hasDivideBy()) {
+            $value = $value / $this->divideBy();
+        }
 
-        return Number::format($value, precision: $this->getPrecision(), locale: $this->getLocale());
+        return match (true) {
+            $this->hasCurrency() => Number::currency($value, $this->currency(), $this->locale()),
+            $this->hasLocale() => Number::format($value, precision: $this->precision(), locale: $this->locale()),
+            default => $value
+        };
     }
 }
