@@ -1,41 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\Encodable;
 
-class EncodableComponent
+class EncodableTest
 {
     use Encodable;
 }
 
 beforeEach(function () {
-    $this->component = new EncodableComponent;
-    EncodableComponent::setEncoder();
-    EncodableComponent::setDecoder();
+    EncodableTest::encoder();
+    EncodableTest::decoder();
+    $this->test = new EncodableTest;
+    $this->encoder = fn ($v) => (string) ($v * 2);
+    $this->decoder = fn ($v) => 'decoded';
 });
 
-it('encodes with default encryption', function () {
-    // Can never be the same
-    expect($this->component->encode('secret-value'))->not->toBe(encrypt('secret-value'));
+it('encrypts by default', function () {
+    expect($this->test->encode(2))->not->toBe(2);
+    expect($this->test->decode($this->test->encode(2)))->toBe(2);
 });
 
-it('decodes with default encryption', function () {
-    expect($this->component->decode(encrypt('secret-value')))->toBe('secret-value');
+it('sets encoder', function () {
+    EncodableTest::encoder($this->encoder);
+    expect($this->test->encode(2))->toBe('4');
 });
 
-it('encodes with custom encoder', function () {
-    EncodableComponent::setEncoder(fn ($value) => \base64_encode($value));
-    EncodableComponent::setDecoder(fn ($value) => \base64_decode($value));
-
-    $value = 'test-value';
-    $encoded = EncodableComponent::encode($value);
-
-    expect($encoded)->toBe(\base64_encode($value));
-    expect(EncodableComponent::decode($encoded))->toBe($value);
-});
-
-it('can encode and decode class names', function () {
-    $encoded = EncodableComponent::encodeClass();
-    $decoded = EncodableComponent::decodeClass($encoded);
-
-    expect($decoded)->toBe(EncodableComponent::class);
+it('sets decoder', function () {
+    EncodableTest::decoder($this->decoder);
+    expect($this->test->decode($this->test->encode(2)))->toBe('decoded');
 });

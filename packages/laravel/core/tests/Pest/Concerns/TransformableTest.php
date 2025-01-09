@@ -1,57 +1,34 @@
 <?php
 
-use Honed\Core\Concerns\Transformable;
+declare(strict_types=1);
 
-class TransformableComponent
+use Honed\Core\Concerns\Transformable;
+use Honed\Core\Tests\Stubs\Product;
+
+class TransformableTest
 {
     use Transformable;
 }
 
 beforeEach(function () {
-    $this->component = new TransformableComponent;
-    $this->fn = fn (int $record) => $record * 2;
+    $this->test = new TransformableTest;
+    $this->fn = fn ($v) => $v * 2;
 });
 
-it('has no transformer by default', function () {
-    expect($this->component)
-        ->getTransformer()->toBeNull()
-        ->canTransform()->toBeFalse()
-        ->transform(1)->toBe(1);
+it('does not mutate by default', function () {
+    expect($this->test)
+        ->transform(2)->toBe(2)
+        ->transforms()->toBeFalse();
 });
 
-it('sets transformer', function () {
-    $this->component->setTransformer($this->fn);
-    expect($this->component)
-        ->getTransformer()->toBeInstanceOf(\Closure::class)
-        ->canTransform()->toBeTrue()
-        ->transform(1)->toBe(2);
+it('sets', function () {
+    expect($this->test->transformer($this->fn))
+        ->toBeInstanceOf(TransformableTest::class)
+        ->transforms()->toBeTrue();
 });
 
-it('rejects null values', function () {
-    $this->component->setTransformer($this->fn);
-    $this->component->setTransformer(null);
-    expect($this->component)
-        ->getTransformer()->toBeInstanceOf(\Closure::class)
-        ->canTransform()->toBeTrue()
-        ->transform(1)->toBe(2);
-});
-
-it('chains transformer', function () {
-    expect($this->component->transformer($this->fn))->toBeInstanceOf(TransformableComponent::class)
-        ->getTransformer()->toBeInstanceOf(\Closure::class)
-        ->canTransform()->toBeTrue()
-        ->transform(1)->toBe(2);
-});
-
-it('transforms values', function () {
-    $this->component->setTransformer($this->fn);
-    expect($this->component)
-        ->transform(1)->toBe(2);
-});
-
-it('has alias `transformUsing` for `transformer`', function () {
-    expect($this->component->transformUsing($this->fn))->toBeInstanceOf(TransformableComponent::class)
-        ->getTransformer()->toBeInstanceOf(\Closure::class)
-        ->canTransform()->toBeTrue()
-        ->transform(1)->toBe(2);
+it('transforms', function () {
+    expect($this->test->transformer($this->fn))
+        ->transforms()->toBeTrue()
+        ->transform(2)->toBe(4);
 });

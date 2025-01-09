@@ -5,20 +5,20 @@ namespace Honed\Core\Concerns;
 trait Encodable
 {
     /**
-     * @var (\Closure(string): string)|null
+     * @var (\Closure(string):string)|null
      */
-    protected static $encoder = null;
+    protected static $encoder;
 
     /**
-     * @var (\Closure(string): string)|null
+     * @var (\Closure(string):string)|null
      */
-    protected static $decoder = null;
+    protected static $decoder;
 
     /**
      * Set the encoder for the instance.
      *
-     * @param  (\Closure(string): string)  $encoder
-     * @return void
+     * @param  (\Closure(string):string)|null  $encoder
+     * @return static
      */
     public static function encoder($encoder = null)
     {
@@ -28,7 +28,8 @@ trait Encodable
     /**
      * Set the decoder for the instance.
      *
-     * @param  (\Closure(string): string)  $decoder
+     * @param  (\Closure(string):string)|null  $decoder
+     * @return static
      */
     public static function decoder($decoder = null)
     {

@@ -7,14 +7,14 @@ namespace Honed\Core\Concerns;
 trait Validatable
 {
     /**
-     * @var \Closure|null
+     * @var \Closure
      */
-    protected $validator = null;
+    protected $validator;
 
     /**
      * Set the validation function for the instance.
      * 
-     * @param \Closure|bool $validator The validation function to be set.
+     * @param \Closure $validator The validation function to be set.
      * @return $this
      */
     public function validator($validator)

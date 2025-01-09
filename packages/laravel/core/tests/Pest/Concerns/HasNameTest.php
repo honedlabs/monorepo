@@ -48,3 +48,7 @@ it('evaluates model', function () {
         ->evaluateName($product)->toBe($product->name)
         ->hasName()->toBeTrue();
 });
+
+it('makes name', function () {
+    expect($this->test->makeName('Title Case'))->toBe('title_case');
+});

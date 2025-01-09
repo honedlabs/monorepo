@@ -48,3 +48,7 @@ it('evaluates model', function () {
         ->evaluateLabel($product)->toBe($product->name)
         ->hasLabel()->toBeTrue();
 });
+
+it('makes label', function () {
+    expect($this->test->makeLabel('lower-case'))->toBe('Lower case');
+});

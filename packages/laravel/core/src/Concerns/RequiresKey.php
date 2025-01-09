@@ -8,7 +8,10 @@ use Honed\Core\Exceptions\MissingRequiredAttributeException;
 
 trait RequiresKey
 {
-
+    /**
+     * @var string
+     */
+    protected $key;
 
     /**
      * Retrieve the key property.

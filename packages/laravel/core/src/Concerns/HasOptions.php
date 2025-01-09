@@ -13,7 +13,7 @@ trait HasOptions
     /**
      * @var array<int,\Honed\Core\Option>
      */
-    protected $options = [];
+    protected $options;
 
     /**
      * Set the options, chainable
