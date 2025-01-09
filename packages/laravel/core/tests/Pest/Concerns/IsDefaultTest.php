@@ -1,26 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\IsDefault;
 
-class IsDefaultComponent
+class DefaultTest
 {
     use IsDefault;
 }
 
 beforeEach(function () {
-    $this->component = new IsDefaultComponent;
+    $this->test = new DefaultTest;
 });
 
-it('is not `default` by default', function () {
-    expect($this->component->isDefault())->toBeFalse();
+it('is false by default', function () {
+    expect($this->test)
+        ->isDefault()->toBeFalse();
 });
 
 it('sets default', function () {
-    $this->component->setDefault(true);
-    expect($this->component->isDefault())->toBeTrue();
-});
-
-it('chains default', function () {
-    expect($this->component->default(true))->toBeInstanceOf(IsDefaultComponent::class)
+    expect($this->test->default())
+        ->toBeInstanceOf(DefaultTest::class)
         ->isDefault()->toBeTrue();
 });

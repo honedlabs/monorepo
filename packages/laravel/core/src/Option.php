@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Core\Options;
+namespace Honed\Core;
 
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
@@ -19,8 +19,11 @@ class Option extends Primitive
 
     /**
      * Create a new Option instance.
+     * 
+     * @param mixed $value
+     * @param string $label
      */
-    final public function __construct(int|string|float|bool|null $value, string|\Closure|null $label = null)
+    final public function __construct($value, $label = null)
     {
         $this->setValue($value);
         $this->setLabel($label ?? $this->makeLabel((string) $value));
@@ -28,8 +31,12 @@ class Option extends Primitive
 
     /**
      * Make a new option class.
+     * 
+     * @param mixed $value
+     * @param string $label
+     * @return static
      */
-    public static function make(int|string|float|bool|null $value, ?string $label = null): static
+    public static function make($value, $label = null)
     {
         return resolve(static::class, compact('value', 'label'));
     }

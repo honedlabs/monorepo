@@ -11,9 +11,9 @@ trait HasDescription
     }
 
     /**
-     * @var string|\Closure|null
+     * @var string|\Closure
      */
-    protected $description = null;
+    protected $description;
 
     /**
      * Get or set the description for the instance.

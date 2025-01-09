@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\IsVisible;
 
-class IsVisibleTest
+class VisibleTest
 {
     use IsVisible;
 }
 
 beforeEach(function () {
-    $this->test = new IsVisibleTest;
+    $this->test = new VisibleTest;
 });
 
 it('is true by default', function () {
@@ -20,12 +20,12 @@ it('is true by default', function () {
 
 it('sets visible', function () {
     expect($this->test->visible())
-        ->toBeInstanceOf(IsVisibleTest::class)
+        ->toBeInstanceOf(VisibleTest::class)
         ->isVisible()->toBeTrue();
 });
 
 it('sets invisible', function () {
     expect($this->test->invisible())
-        ->toBeInstanceOf(IsVisibleTest::class)
+        ->toBeInstanceOf(VisibleTest::class)
         ->isVisible()->toBeFalse();
 });

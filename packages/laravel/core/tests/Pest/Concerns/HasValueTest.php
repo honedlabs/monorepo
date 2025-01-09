@@ -1,28 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\HasValue;
 
-class HasValueComponent
+class ValueTest
 {
     use HasValue;
 }
 
 beforeEach(function () {
-    $this->component = new HasValueComponent;
+    $this->test = new ValueTest;
 });
 
-it('has no value by default', function () {
-    expect($this->component)
-        ->getValue()->toBeNull();
+it('is null by default', function () {
+    expect($this->test)
+        ->value()->toBeNull()
+        ->hasValue()->toBeFalse();
 });
 
-it('sets value', function () {
-    $this->component->setValue('Value');
-    expect($this->component)
-        ->getValue()->toBe('Value');
+it('sets', function () {
+    expect($this->test->value('test'))
+        ->toBeInstanceOf(ValueTest::class)
+        ->value()->toBe('test')
+        ->hasValue()->toBeTrue();
 });
 
-it('chains value', function () {
-    expect($this->component->value('Value'))->toBeInstanceOf(HasValueComponent::class)
-        ->getValue()->toBe('Value');
+it('gets', function () {
+    expect($this->test->value('test'))
+        ->value()->toBe('test')
+        ->hasValue()->toBeTrue();
 });

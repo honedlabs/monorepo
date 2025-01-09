@@ -1,41 +1,33 @@
 <?php
 
-use Honed\Core\Concerns\Evaluable;
+declare(strict_types=1);
+
 use Honed\Core\Concerns\HasType;
 
-class HasTypeComponent
+class TypeTest
 {
-    use Evaluable;
     use HasType;
 }
 
 beforeEach(function () {
-    $this->component = new HasTypeComponent;
+    $this->test = new TypeTest;
 });
 
-it('has no type by default', function () {
-    expect($this->component)
-        ->getType()->toBeNull()
+it('is null by default', function () {
+    expect($this->test)
+        ->type()->toBeNull()
         ->hasType()->toBeFalse();
 });
 
-it('sets type', function () {
-    $this->component->setType('Type');
-    expect($this->component)
-        ->getType()->toBe('Type')
+it('sets', function () {
+    expect($this->test->type('test'))
+        ->toBeInstanceOf(TypeTest::class)
+        ->type()->toBe('test')
         ->hasType()->toBeTrue();
 });
 
-it('rejects null values', function () {
-    $this->component->setType('Type');
-    $this->component->setType(null);
-    expect($this->component)
-        ->getType()->toBe('Type')
-        ->hasType()->toBeTrue();
-});
-
-it('chains type', function () {
-    expect($this->component->type('Type'))->toBeInstanceOf(HasTypeComponent::class)
-        ->getType()->toBe('Type')
+it('gets', function () {
+    expect($this->test->type('test'))
+        ->type()->toBe('test')
         ->hasType()->toBeTrue();
 });

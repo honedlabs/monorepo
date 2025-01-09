@@ -1,26 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\IsActive;
 
-class IsActiveComponent
+class ActiveTest
 {
     use IsActive;
 }
 
 beforeEach(function () {
-    $this->component = new IsActiveComponent;
+    $this->test = new ActiveTest;
 });
 
-it('is not `active` by default', function () {
-    expect($this->component->isActive())->toBeFalse();
+it('is false by default', function () {
+    expect($this->test)
+        ->isActive()->toBeFalse();
 });
 
 it('sets active', function () {
-    $this->component->setActive(true);
-    expect($this->component->isActive())->toBeTrue();
+    expect($this->test->active())
+        ->toBeInstanceOf(ActiveTest::class)
+        ->isActive()->toBeTrue();
 });
 
-it('chains active', function () {
-    expect($this->component->active(true))->toBeInstanceOf(IsActiveComponent::class)
-        ->isActive()->toBeTrue();
+it('sets inactive', function () {
+    expect($this->test->inactive())
+        ->toBeInstanceOf(ActiveTest::class)
+        ->isActive()->toBeFalse();
 });

@@ -11,9 +11,9 @@ trait HasFormat
     }
 
     /**
-     * @var string|\Closure|null
+     * @var string|\Closure
      */
-    protected $format = null;
+    protected $format;
 
     /**
      * Get or set the format for the instance.

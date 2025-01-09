@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Contracts\Icon;
+use Honed\Core\Concerns\HasIcon;
 
-class HasIconComponent
+class IconTest
 {
     use HasIcon;
 }
@@ -16,45 +16,35 @@ enum IconEnum implements Icon
 
     public function icon(): string
     {
-        return match ($this) {
-            self::Chevron => 'chevron',
-        };
+        return 'chevron';
     }
 }
 
 beforeEach(function () {
-    $this->component = new HasIconComponent;
+    $this->test = new IconTest;
 });
 
-it('has no icon by default', function () {
-    expect($this->component)
-        ->getIcon()->toBeNull()
+it('is null by default', function () {
+    expect($this->test)
+        ->icon()->toBeNull()
         ->hasIcon()->toBeFalse();
 });
 
-it('sets icon', function () {
-    $this->component->setIcon('Icon');
-    expect($this->component)
-        ->getIcon()->toBe('Icon')
+it('sets', function () {
+    expect($this->test->icon('test'))
+        ->toBeInstanceOf(IconTest::class)
+        ->icon()->toBe('test')
         ->hasIcon()->toBeTrue();
 });
 
-it('rejects null values', function () {
-    $this->component->setIcon('Icon');
-    $this->component->setIcon(null);
-    expect($this->component)
-        ->getIcon()->toBe('Icon')
+it('gets', function () {
+    expect($this->test->icon('test'))
+        ->icon()->toBe('test')
         ->hasIcon()->toBeTrue();
 });
 
-it('chains icon', function () {
-    expect($this->component->icon('Icon'))->toBeInstanceOf(HasIconComponent::class)
-        ->getIcon()->toBe('Icon')
-        ->hasIcon()->toBeTrue();
-});
-
-it('accepts icon contract', function () {
-    expect($this->component->icon(IconEnum::Chevron))->toBeInstanceOf(HasIconComponent::class)
-        ->getIcon()->toBe('chevron')
+it('gets icon interface', function () {
+    expect($this->test->icon(IconEnum::Chevron))->toBeInstanceOf(IconTest::class)
+        ->icon()->toBe('chevron')
         ->hasIcon()->toBeTrue();
 });

@@ -7,9 +7,9 @@ namespace Honed\Core\Concerns;
 trait HasAlias
 {
     /**
-     * @var string|null
+     * @var string
      */
-    protected $alias = null;
+    protected $alias;
 
     /**
      * Get or set the alias for the instance.

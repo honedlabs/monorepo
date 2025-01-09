@@ -1,36 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\IsHidden;
 
-class IsHiddenComponent
+class HiddenTest
 {
     use IsHidden;
 }
 
 beforeEach(function () {
-    $this->component = new IsHiddenComponent;
+    $this->test = new HiddenTest;
 });
 
-it('is not `hidden` by default', function () {
-    expect($this->component->isHidden())->toBeFalse();
+it('is false by default', function () {
+    expect($this->test)
+        ->isHidden()->toBeFalse();
 });
 
 it('sets hidden', function () {
-    $this->component->setHidden(true);
-    expect($this->component->isHidden())->toBeTrue();
-});
-
-it('chains hidden', function () {
-    expect($this->component->hidden())->toBeInstanceOf(IsHiddenComponent::class)
+    expect($this->test->hidden())
+        ->toBeInstanceOf(HiddenTest::class)
         ->isHidden()->toBeTrue();
 });
 
-it('has alias `hide` for `hidden`', function () {
-    expect($this->component->hide())->toBeInstanceOf(IsHiddenComponent::class)
+it('sets hide', function () {
+    expect($this->test->hide())
+        ->toBeInstanceOf(HiddenTest::class)
         ->isHidden()->toBeTrue();
 });
 
-it('has alias `show` for `hidden`', function () {
-    expect($this->component->show())->toBeInstanceOf(IsHiddenComponent::class)
+it('sets shown', function () {
+    expect($this->test->shown())
+        ->toBeInstanceOf(HiddenTest::class)
+        ->isHidden()->toBeFalse();
+});
+
+it('sets show', function () {
+    expect($this->test->show())
+        ->toBeInstanceOf(HiddenTest::class)
         ->isHidden()->toBeFalse();
 });

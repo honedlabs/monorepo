@@ -1,26 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\IsStrict;
 
-class IsStrictComponent
+class StrictTest
 {
     use IsStrict;
 }
 
 beforeEach(function () {
-    $this->component = new IsStrictComponent;
+    $this->test = new StrictTest;
 });
 
-it('is not `strict` by default', function () {
-    expect($this->component->isStrict())->toBeFalse();
+it('is false by default', function () {
+    expect($this->test)
+        ->isStrict()->toBeFalse();
 });
 
 it('sets strict', function () {
-    $this->component->setStrict(true);
-    expect($this->component->isStrict())->toBeTrue();
+    expect($this->test->strict())
+        ->toBeInstanceOf(StrictTest::class)
+        ->isStrict()->toBeTrue();
 });
 
-it('chains strict', function () {
-    expect($this->component->strict(true))->toBeInstanceOf(IsStrictComponent::class)
-        ->isStrict()->toBeTrue();
+it('sets relaxed', function () {
+    expect($this->test->relaxed())
+        ->toBeInstanceOf(StrictTest::class)
+        ->isStrict()->toBeFalse();
 });

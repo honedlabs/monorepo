@@ -1,26 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\IsKey;
 
-class IsKeyComponent
+class KeyTest
 {
     use IsKey;
 }
 
 beforeEach(function () {
-    $this->component = new IsKeyComponent;
+    $this->test = new KeyTest;
 });
 
-it('is not `key` by default', function () {
-    expect($this->component->isKey())->toBeFalse();
+it('is false by default', function () {
+    expect($this->test)
+        ->isKey()->toBeFalse();
 });
 
 it('sets key', function () {
-    $this->component->setKey(true);
-    expect($this->component->isKey())->toBeTrue();
-});
-
-it('chains key', function () {
-    expect($this->component->key(true))->toBeInstanceOf(IsKeyComponent::class)
+    expect($this->test->key())
+        ->toBeInstanceOf(KeyTest::class)
         ->isKey()->toBeTrue();
 });

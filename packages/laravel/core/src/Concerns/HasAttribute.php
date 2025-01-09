@@ -7,9 +7,9 @@ namespace Honed\Core\Concerns;
 trait HasAttribute
 {
     /**
-     * @var string|null
+     * @var string
      */
-    protected $attribute = null;
+    protected $attribute;
 
     /**
      * Get or set the attribute for the instance.

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Honed\Core\Options\Concerns;
+namespace Honed\Core\Concerns;
 
-use Honed\Core\Options\Option;
+use Honed\Core\Option;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 trait HasOptions
 {
     /**
-     * @var array<int,\Honed\Core\Options\Option>
+     * @var array<int,\Honed\Core\Option>
      */
     protected $options = [];
 

@@ -9,9 +9,9 @@ use Honed\Core\Contracts\Icon;
 trait HasIcon
 {
     /**
-     * @var string|\Honed\Core\Contracts\Icon|null
+     * @var string|\Honed\Core\Contracts\Icon
      */
-    protected $icon = null;
+    protected $icon;
 
     /**
      * Get or set the icon for the instance.
