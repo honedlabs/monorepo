@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Contracts\HigherOrder;
 use Honed\Core\Concerns\HasFormatter;
 use Honed\Core\Proxies\HigherOrderFormatter;

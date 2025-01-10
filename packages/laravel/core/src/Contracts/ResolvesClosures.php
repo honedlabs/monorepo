@@ -4,5 +4,12 @@ namespace Honed\Core\Contracts;
 
 interface ResolvesClosures
 {
-    public function resolve($namedOrModel = [], $typed = []);
+    /**
+     * Resolve the instance closures.
+     * 
+     * @param array<string,mixed> $named
+     * @param array<string,mixed> $typed
+     * @return mixed
+     */
+    public function resolve($named = [], $typed = []);
 }

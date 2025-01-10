@@ -5,31 +5,22 @@ declare(strict_types=1);
 namespace Honed\Core;
 
 use Honed\Core\Concerns\Evaluable;
-use Honed\Core\Concerns\EvaluableDependency;
 use Honed\Core\Contracts\ResolvesClosures;
 use Symfony\Component\HttpFoundation\Request;
 
 class Destination extends Primitive implements ResolvesClosures
 {
     use Evaluable;
-    use EvaluableDependency {
-        evaluateModelForTrait as evaluateModelForDestination;
-    }
 
     /**
-     * Indicate that for a signed link, it does not expire
-     */
-    const DoesntExpire = 0;
-
-    /**
-     * @var string
+     * @var string|\Closure
      */
     protected $destination;
 
     /**
-     * @var \Closure
+     * @var string
      */
-    protected $resolver;
+    protected $resolved;
 
     /**
      * @var mixed
@@ -44,7 +35,7 @@ class Destination extends Primitive implements ResolvesClosures
     /**
      * @var string
      */
-    protected $how = Request::METHOD_GET;
+    protected $as = Request::METHOD_GET;
 
     /**
      * @var bool
@@ -62,34 +53,34 @@ class Destination extends Primitive implements ResolvesClosures
     protected $download = false;
 
     /**
-     * @var int|null
+     * @var int
      */
-    protected $duration = null;
+    protected $duration = 0;
 
     /**
      * Create a new destination instance.
      * 
      * @param mixed $destination
      */
-    public function __construct($destination = null, $how = Request::METHOD_GET)
+    public function __construct($destination = null, $as = Request::METHOD_GET)
     {
         $this->to($destination);
-        $this->how($how);
+        $this->as($as);
     }
 
     /**
      * Make a new destination instance.
      */
-    public static function make($destination = null, $how = Request::METHOD_GET)
+    public static function make($destination = null, $as = Request::METHOD_GET)
     {
-        return resolve(static::class, compact('destination', 'how'));
+        return resolve(static::class, compact('destination', 'as'));
     }
 
     public function toArray()
     {
         return [
             'href' => $this->destination(),
-            'method' => $this->how(),
+            'method' => $this->as(),
         ];
     }
 
@@ -109,6 +100,7 @@ class Destination extends Primitive implements ResolvesClosures
         }
 
         $this->destination = $destination;
+
         $this->parameters = $parameters;
 
         return $this;
@@ -116,10 +108,8 @@ class Destination extends Primitive implements ResolvesClosures
 
     /**
      * Determine if the instance has a destination set.
-     * 
-     * @return bool True if a destination is set, false otherwise.
      */
-    public function hasDestination()
+    public function hasDestination(): bool
     {
         return isset($this->destination);
     }
@@ -127,16 +117,16 @@ class Destination extends Primitive implements ResolvesClosures
     /**
      * Get or set the HTTP method to use for the destination.
      * 
-     * @param string|null $how
+     * @param string|null $as
      * @return string|null|$this The current HTTP method when no argument is provided, or the instance when setting the HTTP method.
      */
-    public function how($how = null)
+    public function as($as = null)
     {
-        if (\is_null($how)) {
-            return $this->how;
+        if (\is_null($as)) {
+            return $this->as;
         }
 
-        $this->how = $how;
+        $this->as = $as;
 
         return $this;
     }
@@ -148,7 +138,7 @@ class Destination extends Primitive implements ResolvesClosures
      */
     public function asGet()
     {
-        return $this->how(Request::METHOD_GET);
+        return $this->as(Request::METHOD_GET);
     }
 
     /**
@@ -158,7 +148,7 @@ class Destination extends Primitive implements ResolvesClosures
      */
     public function asPost()
     {
-        return $this->how(Request::METHOD_POST);
+        return $this->as(Request::METHOD_POST);
     }
 
     /**
@@ -168,7 +158,7 @@ class Destination extends Primitive implements ResolvesClosures
      */
     public function asPut()
     {
-        return $this->how(Request::METHOD_PUT);
+        return $this->as(Request::METHOD_PUT);
     }
 
     /**
@@ -178,7 +168,7 @@ class Destination extends Primitive implements ResolvesClosures
      */
     public function asPatch()
     {
-        return $this->how(Request::METHOD_PATCH);
+        return $this->as(Request::METHOD_PATCH);
     }
 
     /**
@@ -188,7 +178,7 @@ class Destination extends Primitive implements ResolvesClosures
      */
     public function asDelete()
     {
-        return $this->how(Request::METHOD_DELETE);
+        return $this->as(Request::METHOD_DELETE);
     }
 
     /**
@@ -217,15 +207,14 @@ class Destination extends Primitive implements ResolvesClosures
     public function signed($signed = true)
     {
         $this->signed = $signed;
+
         return $this;
     }
 
     /**
      * Determine if the link is signed.
-     * 
-     * @return bool
      */
-    public function isSigned()
+    public function isSigned(): bool
     {
         return $this->signed;
     }
@@ -239,15 +228,14 @@ class Destination extends Primitive implements ResolvesClosures
     public function inNewTab($newTab = true)
     {
         $this->newTab = $newTab;
+
         return $this;
     }
 
     /**
      * Determine if the link should open in a new tab.
-     * 
-     * @return bool
      */
-    public function isNewTab()
+    public function isNewTab(): bool
     {
         return $this->newTab;
     }
@@ -266,10 +254,8 @@ class Destination extends Primitive implements ResolvesClosures
 
     /**
      * Determine if the link should be downloaded.
-     * 
-     * @return bool
      */
-    public function isDownload()
+    public function isDownload(): bool
     {
         return $this->download;
     }
@@ -292,20 +278,33 @@ class Destination extends Primitive implements ResolvesClosures
     }
 
     /**
-     * Determine if the destination is a temporary one.
+     * Set the duration of the link.
      * 
-     * @return bool
+     * @param int $seconds
+     * @return $this
      */
-    public function isTemporary()
+    public function temporary($seconds = 120)
     {
-        return isset($this->duration) && $this->duration !== self::DoesntExpire;
+        $this->duration = $seconds;
+
+        return $this;
     }
 
     /**
-     * @return string|null
+     * Determine if the destination is a temporary one.
      */
+    public function isTemporary(): bool
+    {
+        return $this->duration > 0;
+    }
+
     public function resolve($named = [], $typed = [])
     {
+        return $this->resolved ??= match (true) {
+            \is_callable($this->destination) => $this->evaluate($this->destination, $named, $typed),
+            
+            default => $this->destination,
+        };
 
     }
 }
