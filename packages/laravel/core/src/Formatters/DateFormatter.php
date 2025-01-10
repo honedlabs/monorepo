@@ -13,7 +13,7 @@ class DateFormatter implements Formats
     /**
      * @var string
      */
-    protected $date;
+    protected $date = 'd/m/Y';
 
     /**
      * @var string
@@ -49,7 +49,7 @@ class DateFormatter implements Formats
      */
     public static function make($date = null, $timezone = null, $diff = false)
     {
-        return resolve(static::class, compact('format', 'timezone', 'diff'));
+        return resolve(static::class, compact('date', 'timezone', 'diff'));
     }
 
     /**

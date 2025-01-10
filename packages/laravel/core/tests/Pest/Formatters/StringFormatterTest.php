@@ -34,5 +34,12 @@ it('sets limit', function () {
 
 it('formats', function () {
     expect($this->formatter->format('value'))->toBe('value');
+
     expect($this->formatter->prefix('#')->format(123))->toBe('#123');
+
+    expect($this->formatter->suffix('.'))->format('value')->toBe('#value.');
+
+    expect($this->formatter->limit(3))->format('value')->toBe('#val....');
+
+    expect($this->formatter->format(null))->toBeNull();
 });

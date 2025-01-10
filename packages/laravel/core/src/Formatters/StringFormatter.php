@@ -151,7 +151,7 @@ class StringFormatter implements Formats
             ->when($this->hasPrefix(), 
                 fn (Stringable $str) => $str->prepend($this->prefix()))
             ->when($this->hasSuffix(), 
-                fn (Stringable $str) => $str->suffix($this->suffix()))
+                fn (Stringable $str) => $str->append($this->suffix()))
             ->toString();
     }
 }
