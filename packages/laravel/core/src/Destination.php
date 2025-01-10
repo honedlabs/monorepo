@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Core;
 
+use Illuminate\Support\Str;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Contracts\ResolvesClosures;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Request;
 
 class Destination extends Primitive implements ResolvesClosures
@@ -48,11 +50,6 @@ class Destination extends Primitive implements ResolvesClosures
     protected $newTab = false;
 
     /**
-     * @var bool
-     */
-    protected $download = false;
-
-    /**
      * @var int
      */
     protected $duration = 0;
@@ -79,7 +76,7 @@ class Destination extends Primitive implements ResolvesClosures
     public function toArray()
     {
         return [
-            'href' => $this->destination(),
+            'href' => $this->resolve(),
             'method' => $this->as(),
         ];
     }
@@ -92,7 +89,7 @@ class Destination extends Primitive implements ResolvesClosures
      * @param mixed $parameters
      * @return string|\Closure|null|$this The current destination when no destination is provided, or the instance when setting the destination.
      */
-    public function to($destination, $parameters = [])
+    public function to($destination = null, $parameters = [])
     {
 
         if (\is_null($destination)) {
@@ -241,26 +238,6 @@ class Destination extends Primitive implements ResolvesClosures
     }
 
     /**
-     * Set the link to be downloaded.
-     * 
-     * @param bool $download
-     * @return $this
-     */
-    public function asDownload($download = true)
-    {
-        $this->download = $download;
-        return $this;
-    }
-
-    /**
-     * Determine if the link should be downloaded.
-     */
-    public function isDownload(): bool
-    {
-        return $this->download;
-    }
-
-    /**
      * Get or set the duration of the link.
      * 
      * @param int|null $duration
@@ -298,13 +275,15 @@ class Destination extends Primitive implements ResolvesClosures
         return $this->duration > 0;
     }
 
-    public function resolve($named = [], $typed = [])
+    public function resolve($parameters = null, $typed = null)
     {
         return $this->resolved ??= match (true) {
-            \is_callable($this->destination) => $this->evaluate($this->destination, $named, $typed),
-            
-            default => $this->destination,
+            \is_null($this->destination) => null,
+            \is_callable($this->destination) => $this->evaluate($this->destination, $parameters, $typed),
+            \is_string($this->destination) && (Str::isUrl($this->destination) || Str::startsWith($this->destination, ['/', '#'])) => $this->destination,
+            $this->isSigned() && $this->isTemporary() => URL::temporarySignedRoute($this->destination, $this->duration, $parameters ?? $this->parameters),
+            $this->isSigned() => URL::signedRoute($this->destination, $parameters ?? $this->parameters),
+            default => route($this->destination, $parameters ?? $this->parameters),
         };
-
     }
 }

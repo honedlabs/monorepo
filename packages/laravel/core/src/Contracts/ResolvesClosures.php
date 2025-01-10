@@ -7,9 +7,9 @@ interface ResolvesClosures
     /**
      * Resolve the instance closures.
      * 
-     * @param array<string,mixed> $named
-     * @param array<string,mixed> $typed
+     * @param mixed $parameters
+     * @param array<string,mixed>|null $typed
      * @return mixed
      */
-    public function resolve($named = [], $typed = []);
+    public function resolve($parameters = null, $typed = null);
 }

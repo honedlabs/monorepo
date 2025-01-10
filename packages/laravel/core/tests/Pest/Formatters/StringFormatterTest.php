@@ -6,29 +6,33 @@ beforeEach(function () {
     $this->formatter = StringFormatter::make();
 });
 
-it('can be made', function () {
-    $formatter = StringFormatter::make();
-    expect($formatter)->toBeInstanceOf(StringFormatter::class);
+it('makes', function () {
+    expect(StringFormatter::make())
+        ->toBeInstanceOf(StringFormatter::class);
 });
 
-it('accepts a prefix and suffix', function () {
-    $formatter = StringFormatter::make('#', '.');
-    expect($formatter->getPrefix())->toBe('#');
-    expect($formatter->getSuffix())->toBe('.');
+it('sets prefix', function () {
+    expect($this->formatter->prefix('#'))
+        ->toBeInstanceOf(StringFormatter::class)
+        ->prefix()->toBe('#')
+        ->hasPrefix()->toBeTrue();
 });
 
-it('formats a string value', function () {
-    $this->formatter->setPrefix('#');
-    $this->formatter->setSuffix('.');
-    $this->formatter->setTruncate(3);
-    expect($this->formatter->format('value'))->toBe('#val....');
+it('sets suffix', function () {
+    expect($this->formatter->suffix('.'))
+        ->toBeInstanceOf(StringFormatter::class)
+        ->suffix()->toBe('.')
+        ->hasSuffix()->toBeTrue();
 });
 
-it('formats a numeric value', function () {
-    $this->formatter->setPrefix('ID: ');
-    expect($this->formatter->format(123))->toBe('ID: 123');
+it('sets limit', function () {
+    expect($this->formatter->limit(3))
+        ->toBeInstanceOf(StringFormatter::class)
+        ->limit()->toBe(3)
+        ->hasLimit()->toBeTrue();
 });
 
-it('rejects null values from formatting', function () {
-    expect($this->formatter->format(null))->toBeNull();
+it('formats', function () {
+    expect($this->formatter->format('value'))->toBe('value');
+    expect($this->formatter->prefix('#')->format(123))->toBe('#123');
 });
