@@ -16,45 +16,31 @@ trait HasFormat
     protected $format;
 
     /**
-     * Get or set the format for the instance.
+     * Set the format for the instance.
      * 
-     * @param string|\Closure|null $format The format to set, or null to retrieve the current format.
-     * @return string|null|$this The current format when no argument is provided, or the instance when setting the format.
+     * @param string|\Closure|null $format 
+     * @return $this
      */
-    public function format($format = null)
+    public function format($format): static
     {
-        if (\is_null($format)) {
-            return $this->format;
+        if (! \is_null($format)) {
+            $this->format = $format;
         }
-
-        $this->format = $format;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has an format set.
+     * Get the format for the instance, evaluating it if necessary.
      * 
-     * @return bool True if an format is set, false otherwise.
+     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
+     * @param array<string,mixed> $typed
      */
-    public function hasFormat()
+    public function getFormat($parameters = [], $typed = []): ?string
     {
-        return ! \is_null($this->format);
-    }
-
-    /**
-     * Evaluate the format using injected named and typed parameters, or from a model.
-     * 
-     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $namedOrModel The named parameters to inject into the format, or the model to evaluate the format from.
-     * @param array<string,mixed> $typed The typed parameters to inject into the format, if provided.
-     * @return string|null The evaluated format.
-     */
-    public function evaluateFormat($namedOrModel = [], $typed = [])
-    {
-        $evaluated = match (true) {
-            $namedOrModel instanceof \Illuminate\Database\Eloquent\Model => $this->evaluateFormatFromModel($namedOrModel),
-            default => $this->evaluate($this->format, $namedOrModel, $typed)
-        };
+        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model 
+            ? $this->evaluateModelForFormat($parameters, 'getFormat') 
+            : $this->evaluate($this->format, $parameters, $typed);
 
         $this->format = $evaluated;
 
@@ -62,14 +48,11 @@ trait HasFormat
     }
 
     /**
-     * Evaluate the format from a model.
-     * 
-     * @param \Illuminate\Database\Eloquent\Model $model The model to evaluate the format from.
-     * @return string|null The evaluated format.
+     * Determine if the instance has a format set.
      */
-    private function evaluateFormatFromModel($model)
+    public function hasFormat(): bool
     {
-        return $this->evaluateModelForFormat($model, 'evaluateFormat');
+        return isset($this->format);
     }
 }
 

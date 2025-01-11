@@ -14,10 +14,9 @@ trait IsVisible
     /**
      * Set the instance as visible.
      *
-     * @param bool $visible The visible state to set.
      * @return $this
      */
-    public function visible($visible = true)
+    public function visible(bool $visible = true): static
     {
         $this->visible = $visible;
 
@@ -27,20 +26,17 @@ trait IsVisible
     /**
      * Set the instance as invisible.
      *
-     * @param bool $invisible The invisible state to set.
      * @return $this
      */
-    public function invisible($invisible = true)
+    public function invisible(bool $invisible = true): static
     {
         return $this->visible(! $invisible);
     }
 
     /**
      * Determine if the instance is visible.
-     * 
-     * @return bool True if the instance is visible, false otherwise.
      */
-    public function isVisible()
+    public function isVisible(): bool
     {
         return $this->visible;
     }

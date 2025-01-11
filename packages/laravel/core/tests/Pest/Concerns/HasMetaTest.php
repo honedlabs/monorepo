@@ -16,36 +16,35 @@ beforeEach(function () {
     $this->test = new MetaTest;
 });
 
-it('is empty by default', function () {
-    expect($this->test)
-        ->meta()->toBeEmpty()
-        ->meta()->toBeArray()
-        ->hasMeta()->toBeFalse();
-});
-
 it('sets', function () {
     expect($this->test->meta(['name' => 'test']))
         ->toBeInstanceOf(MetaTest::class)
-        ->meta()->toEqual(['name' => 'test'])
         ->hasMeta()->toBeTrue();
 });
 
 it('gets', function () {
+    expect($this->test)
+        ->getMeta()->scoped(fn ($meta) => $meta
+            ->toBeArray()
+            ->toBeEmpty()
+        )
+        ->hasMeta()->toBeFalse();
+
     expect($this->test->meta(['name' => 'test']))
-        ->meta()->toEqual(['name' => 'test'])
+        ->getMeta()->toEqual(['name' => 'test'])
         ->hasMeta()->toBeTrue();
 });
 
 it('evaluates', function () {
     $product = product();
     expect($this->test->meta(fn (Product $product) => ['name' => $product->name]))
-        ->evaluateMeta(['product' => $product])->toEqual(['name' => $product->name])
+        ->getMeta(['product' => $product])->toEqual(['name' => $product->name])
         ->hasMeta()->toBeTrue();
 });
 
 it('evaluates model', function () {
     $product = product();
     expect($this->test->meta(fn (Product $product) => ['name' => $product->name]))
-        ->evaluateMeta($product)->toEqual(['name' => $product->name])
+        ->getMeta($product)->toEqual(['name' => $product->name])
         ->hasMeta()->toBeTrue();
 });

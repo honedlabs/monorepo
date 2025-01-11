@@ -56,3 +56,9 @@ it('sets destination closure', function () {
             ->getParameters()->toBe($this->product)
         )->resolveDestination($this->product)->toBe(route('product.show', $this->product));
 });
+
+it('has alias destination', function () {
+    expect($this->test->destination('product.show', $this->product))
+        ->toBeInstanceOf(DestinationTest::class)
+        ->hasDestination()->toBeTrue();
+});

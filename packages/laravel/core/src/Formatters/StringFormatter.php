@@ -24,122 +24,121 @@ class StringFormatter implements Formats
      */
     protected $limit;
 
-    /**
-     * Create a new string formatter instance with a prefix and suffix.
-     *
-     * @param string|null $prefix
-     * @param string|null $suffix
-     * @param int|null $limit
-     */
-    public function __construct($prefix = null, $suffix = null, $limit = null)
-    {
+    public function __construct(
+        string $prefix = null,
+        string $suffix = null,
+        int $limit = null
+    ) {
         $this->prefix($prefix);
         $this->suffix($suffix);
         $this->limit($limit);
     }
 
     /**
-     * Make a string formatter with a prefix and suffix.
-     *
-     * @param string|null $prefix
-     * @param string|null $suffix
-     * @param int|null $limit
-     * 
-     * @return static
+     * Make a new string formatter.
      */
-    public static function make($prefix = null, $suffix = null, $limit = null)
-    {
+    public static function make(
+        string $prefix = null,
+        string $suffix = null,
+        int $limit = null
+    ): static {
         return resolve(static::class, compact('prefix', 'suffix', 'limit'));
     }
 
     /**
-     * Get or set the prefix for the instance.
+     * Set the prefix for the instance.
      * 
-     * @param string|null $prefix The prefix to set, or null to retrieve the current prefix.
-     * @return string|null|$this The current prefix when no argument is provided, or the instance when setting the prefix.
+     * @return $this
      */
-    public function prefix($prefix = null)
+    public function prefix(string $prefix = null): static
     {
-        if (\is_null($prefix)) {
-            return $this->prefix;
+        if (! \is_null($prefix)) {
+            $this->prefix = $prefix;
         }
-
-        $this->prefix = $prefix;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has a prefix set.
-     * 
-     * @return bool True if a prefix is set, false otherwise.
+     * Get the prefix for the instance.
      */
-    public function hasPrefix()
+    public function getPrefix(): ?string
     {
-        return ! \is_null($this->prefix);
+        return $this->prefix;
+    }
+
+    /**
+     * Determine if the instance has a prefix set.
+     */
+    public function hasPrefix(): bool
+    {
+        return isset($this->prefix);
     }
 
     /**
      * Get or set the suffix for the instance.
      * 
-     * @param string|null $suffix The suffix to set, or null to retrieve the current suffix.
-     * @return string|null|$this The current suffix when no argument is provided, or the instance when setting the suffix.
+     * @return $this
      */
-    public function suffix($suffix = null)
+    public function suffix(string $suffix = null): static
     {
-        if (\is_null($suffix)) {
-            return $this->suffix;
+        if (! \is_null($suffix)) {
+            $this->suffix = $suffix;
         }
-
-        $this->suffix = $suffix;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has a suffix set.
-     * 
-     * @return bool True if a suffix is set, false otherwise.
+     * Get the suffix for the instance.
      */
-    public function hasSuffix()
+    public function getSuffix(): ?string
     {
-        return ! \is_null($this->suffix);
+        return $this->suffix;
+    }
+
+    /**
+     * Determine if the instance has a suffix set.
+     */
+    public function hasSuffix(): bool
+    {
+        return isset($this->suffix);
     }
 
     /**
      * Get or set the limit for the instance.
      * 
-     * @param int|null $limit The limit to set, or null to retrieve the current limit.
-     * @return int|null|$this The current limit when no argument is provided, or the instance when setting the limit.
+     * @return $this
      */
-    public function limit($limit = null)
+    public function limit(int $limit = null): static
     {
-        if (\is_null($limit)) {
-            return $this->limit;
+        if (! \is_null($limit)) {
+            $this->limit = $limit;
         }
-
-        $this->limit = $limit;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has a limit set.
-     * 
-     * @return bool True if a limit is set, false otherwise.
+     * Get the limit for the instance.
      */
-    public function hasLimit()
+    public function getLimit(): ?int
     {
-        return ! \is_null($this->limit);
+        return $this->limit;
     }
 
     /**
-     * Format the value as a string
-     * 
-     * @param mixed $value
-     * @return string|null
+     * Determine if the instance has a limit set.
      */
-    public function format($value)
+    public function hasLimit(): bool
+    {
+        return isset($this->limit);
+    }
+
+    /**
+     * Format the value as a string.
+     */
+    public function format(mixed $value): ?string
     {
         if (\is_null($value)) {
             return null;
@@ -147,11 +146,11 @@ class StringFormatter implements Formats
 
         return (str((string) $value))
             ->when($this->hasLimit(), 
-                fn (Stringable $str) => $str->limit($this->limit()))
+                fn (Stringable $str) => $str->limit($this->getLimit()))
             ->when($this->hasPrefix(), 
-                fn (Stringable $str) => $str->prepend($this->prefix()))
+                fn (Stringable $str) => $str->prepend($this->getPrefix()))
             ->when($this->hasSuffix(), 
-                fn (Stringable $str) => $str->append($this->suffix()))
+                fn (Stringable $str) => $str->append($this->getSuffix()))
             ->toString();
     }
 }

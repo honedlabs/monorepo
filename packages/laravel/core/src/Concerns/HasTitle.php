@@ -11,50 +11,36 @@ trait HasTitle
     }
 
     /**
-     * @var string|\Closure|null
+     * @var string|\Closure
      */
-    protected $title = null;
+    protected $title;
 
     /**
-     * Get or set the title for the instance.
+     * Set the title for the instance.
      * 
-     * @param string|\Closure|null $title The title to set, or null to retrieve the current title.
-     * @return string|null|$this The current title when no argument is provided, or the instance when setting the title.
+     * @param string|\Closure|null $title 
+     * @return $this
      */
-    public function title($title = null)
+    public function title($title): static
     {
-        if (\is_null($title)) {
-            return $this->title;
+        if (! \is_null($title)) {
+            $this->title = $title;
         }
-
-        $this->title = $title;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has an title set.
+     * Get the title for the instance, evaluating it if necessary.
      * 
-     * @return bool True if an title is set, false otherwise.
+     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
+     * @param array<string,mixed> $typed
      */
-    public function hasTitle()
+    public function getTitle($parameters = [], $typed = []): ?string
     {
-        return ! \is_null($this->title);
-    }
-
-    /**
-     * Evaluate the title using injected named and typed parameters, or from a model.
-     * 
-     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $namedOrModel The named parameters to inject into the title, or the model to evaluate the title from.
-     * @param array<string,mixed> $typed The typed parameters to inject into the title, if provided.
-     * @return string|null The evaluated title.
-     */
-    public function evaluateTitle($namedOrModel = [], $typed = [])
-    {
-        $evaluated = match (true) {
-            $namedOrModel instanceof \Illuminate\Database\Eloquent\Model => $this->evaluateTitleFromModel($namedOrModel),
-            default => $this->evaluate($this->title, $namedOrModel, $typed)
-        };
+        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model 
+            ? $this->evaluateModelForTitle($parameters, 'getTitle') 
+            : $this->evaluate($this->title, $parameters, $typed);
 
         $this->title = $evaluated;
 
@@ -62,14 +48,11 @@ trait HasTitle
     }
 
     /**
-     * Evaluate the title from a model.
-     * 
-     * @param \Illuminate\Database\Eloquent\Model $model The model to evaluate the title from.
-     * @return string|null The evaluated title.
+     * Determine if the instance has a title set.
      */
-    private function evaluateTitleFromModel($model)
+    public function hasTitle(): bool
     {
-        return $this->evaluateModelForTitle($model, 'evaluateTitle');
+        return isset($this->title);
     }
 }
 

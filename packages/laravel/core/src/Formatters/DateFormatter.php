@@ -25,94 +25,85 @@ class DateFormatter implements Formats
      */
     protected $since;
 
-    /**
-     * Create a new date formatter instance.
-     * 
-     * @param string|null $date
-     * @param string|null $timezone
-     * @param bool $diff
-     */
-    public function __construct($date = null, $timezone = null, $diff = false)
-    {
+    public function __construct(
+        string $date = null,
+        string $timezone = null,
+        bool $diff = false
+    ) {
         $this->date($date);
         $this->timezone($timezone);
         $this->since($diff);
     }
 
     /**
-     * Make a date formatter.
-     * 
-     * @param string|null $date
-     * @param string|null $timezone
-     * @param bool $diff
-     * @return static
+     * Make a new date formatter.
      */
-    public static function make($date = null, $timezone = null, $diff = false)
-    {
+    public static function make(
+        string $date = null,
+        string $timezone = null,
+        bool $diff = false
+    ): static {
         return resolve(static::class, compact('date', 'timezone', 'diff'));
     }
 
     /**
-     * Get or set the date for the instance.
+     * Set the date for the instance.
      * 
-     * @param string|null $date The date to set, or null to retrieve the current date.
-     * @return string|null|$this The current date when no argument is provided, or the instance when setting the date.
+     * @return $this
      */
     public function date($date = null)
     {
-        if (\is_null($date)) {
-            return $this->date;
+        if (! \is_null($date)) {
+            $this->date = $date;
         }
-
-        $this->date = $date;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has a date set.
-     * 
-     * @return bool True if a date is set, false otherwise.
+     * Get the date for the instance.
      */
-    public function hasDate()
+    public function getDate(): string
     {
-        return ! \is_null($this->date);
+        return $this->date;
     }
 
     /**
-     * Get or set the timezone for the instance.
+     * Set the timezone for the instance.
      * 
-     * @param string|null $timezone The timezone to set, or null to retrieve the current timezone.
-     * @return string|null|$this The current timezone when no argument is provided, or the instance when setting the timezone.
+     * @return $this
      */
     public function timezone($timezone = null)
     {
-        if (\is_null($timezone)) {
-            return $this->timezone;
+        if (! \is_null($timezone)) {
+            $this->timezone = $timezone;
         }
 
-        $this->timezone = $timezone;
-
         return $this;
+    }
+
+    /**
+     * Get the timezone for the instance.
+     */
+    public function getTimezone(): ?string
+    {
+        return $this->timezone;
     }
 
     /**
      * Determine if the instance has a timezone set.
-     * 
-     * @return bool True if a timezone is set, false otherwise.
      */
-    public function hasTimezone()
+    public function hasTimezone(): bool
     {
-        return ! \is_null($this->timezone);
+        return isset($this->timezone);
     }
 
     /**
      * Set the instance to use diff for humans.
      *
-     * @param bool $since The diff for humans state to set.
      * @return $this
      */
-    public function since($since = true)
+    public function since(bool $since = true): static
     {
         $this->since = $since;
 
@@ -121,29 +112,25 @@ class DateFormatter implements Formats
 
     /**
      * Determine if the instance uses diff for humans.
-     * 
-     * @return bool True if the instance uses diff for humans, false otherwise.
      */
-    public function usesDiffForHumans()
+    public function isSince(): bool
     {
         return $this->since;
     }
 
     /**
-     * Format the value as a string.
-     * 
-     * @return string|null
+     * Format the value as a date string.
      */
-    public function format($value)
+    public function format(mixed $value): ?string
     {
         if (\is_null($value)) {
             return null;
         }
 
         try {
-            return $this->usesDiffForHumans()
-                ? Carbon::parse($value, $this->timezone())->diffForHumans()
-                : Carbon::parse($value, $this->timezone())->format($this->date());
+            return $this->isSince()
+                ? Carbon::parse($value, $this->getTimezone())->diffForHumans()
+                : Carbon::parse($value, $this->getTimezone())->format($this->getDate());
         } catch (InvalidFormatException $th) {
             return null;
         }

@@ -14,21 +14,21 @@ it('makes', function () {
 it('sets prefix', function () {
     expect($this->formatter->prefix('#'))
         ->toBeInstanceOf(StringFormatter::class)
-        ->prefix()->toBe('#')
+        ->getPrefix()->toBe('#')
         ->hasPrefix()->toBeTrue();
 });
 
 it('sets suffix', function () {
     expect($this->formatter->suffix('.'))
         ->toBeInstanceOf(StringFormatter::class)
-        ->suffix()->toBe('.')
+        ->getSuffix()->toBe('.')
         ->hasSuffix()->toBeTrue();
 });
 
 it('sets limit', function () {
     expect($this->formatter->limit(3))
         ->toBeInstanceOf(StringFormatter::class)
-        ->limit()->toBe(3)
+        ->getLimit()->toBe(3)
         ->hasLimit()->toBeTrue();
 });
 

@@ -14,10 +14,9 @@ trait IsActive
     /**
      * Set the instance as active.
      *
-     * @param bool $active The active state to set.
      * @return $this
      */
-    public function active($active = true)
+    public function active(bool $active = true): static
     {
         $this->active = $active;
 
@@ -27,20 +26,17 @@ trait IsActive
     /**
      * Set the instance as inactive.
      *
-     * @param bool $inactive The inactive state to set.
      * @return $this
      */
-    public function inactive($inactive = true)
+    public function inactive(bool $inactive = true): static
     {
         return $this->active(! $inactive);
     }
 
     /**
      * Determine if the instance is active.
-     * 
-     * @return bool True if the instance is active, false otherwise.
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active;
     }

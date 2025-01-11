@@ -15,35 +15,35 @@ it('makes', function () {
 it('sets precision', function () {
     expect($this->formatter->precision(2))
         ->toBeInstanceOf(NumericFormatter::class)
-        ->precision()->toBe(2)
+        ->getPrecision()->toBe(2)
         ->hasPrecision()->toBeTrue();
 });
 
 it('sets divide by', function () {
     expect($this->formatter->divideBy(1000))
         ->toBeInstanceOf(NumericFormatter::class)
-        ->divideBy()->toBe(1000)
+        ->getDivideBy()->toBe(1000)
         ->hasDivideBy()->toBeTrue();
 });
 
 it('sets locale', function () {
     expect($this->formatter->locale('au'))
         ->toBeInstanceOf(NumericFormatter::class)
-        ->locale()->toBe('au')
+        ->getLocale()->toBe('au')
         ->hasLocale()->toBeTrue();
 });
 
 it('sets currency', function () {
     expect($this->formatter->currency('USD'))
         ->toBeInstanceOf(NumericFormatter::class)
-        ->currency()->toBe('USD')
+        ->getCurrency()->toBe('USD')
         ->hasCurrency()->toBeTrue();
 });
 
 it('sets cents', function () {
     expect($this->formatter->cents())
         ->toBeInstanceOf(NumericFormatter::class)
-        ->divideBy()->toBe(100)
+        ->getDivideBy()->toBe(100)
         ->hasDivideBy()->toBeTrue();
 });
 

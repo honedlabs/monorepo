@@ -14,10 +14,9 @@ trait Validatable
     /**
      * Set the validation function for the instance.
      * 
-     * @param \Closure $validator The validation function to be set.
      * @return $this
      */
-    public function validator($validator)
+    public function validator(\Closure $validator): static
     {
         $this->validator = $validator;
 
@@ -26,8 +25,6 @@ trait Validatable
 
     /**
      * Determine if the instance has a validation function set.
-     * 
-     * @return bool True if a validation function is set, false otherwise.
      */
     public function validates(): bool
     {
@@ -38,12 +35,11 @@ trait Validatable
      * Determine if the argument passes the validation function.
      * 
      * @param mixed $value The value to validate.
-     * @return bool True if the value passes the validation function, false otherwise.
      */
-    public function validate($value)
+    public function validate($value): bool
     {
         return $this->validates() 
-            ? \call_user_func($this->validator, $value) 
+            ? (bool) \call_user_func($this->validator, $value) 
             : true;
     }
 }

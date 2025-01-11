@@ -38,7 +38,7 @@ class HigherOrderFormatter implements HigherOrder
         /**
          * @var \Honed\Core\Contracts\Formatter
          */
-        $formatter = $primitive->formatter(); // @phpstan-ignore-line
+        $formatter = $primitive->getFormatter(); // @phpstan-ignore-line
 
         if (\method_exists($formatter, $name)) {
             $formatter->{$name}(...$arguments);

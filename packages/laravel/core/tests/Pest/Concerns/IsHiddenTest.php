@@ -24,20 +24,8 @@ it('sets hidden', function () {
         ->isHidden()->toBeTrue();
 });
 
-it('sets hide', function () {
-    expect($this->test->hide())
-        ->toBeInstanceOf(HiddenTest::class)
-        ->isHidden()->toBeTrue();
-});
-
 it('sets shown', function () {
     expect($this->test->shown())
-        ->toBeInstanceOf(HiddenTest::class)
-        ->isHidden()->toBeFalse();
-});
-
-it('sets show', function () {
-    expect($this->test->show())
         ->toBeInstanceOf(HiddenTest::class)
         ->isHidden()->toBeFalse();
 });

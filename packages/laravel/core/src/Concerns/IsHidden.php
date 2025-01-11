@@ -14,10 +14,9 @@ trait IsHidden
     /**
      * Set the instance as hidden.
      *
-     * @param bool $hidden The hidden state to set.
      * @return $this
      */
-    public function hidden($hidden = true)
+    public function hidden(bool $hidden = true): static
     {
         $this->hidden = $hidden;
 
@@ -25,44 +24,19 @@ trait IsHidden
     }
 
     /**
-     * Alias for `hidden`.
-     *
-     * @param bool $hide The hidden state to set.
-     * @return $this
-     */
-    public function hide($hide = true)
-    {
-        return $this->hidden($hide);
-    }
-
-    /**
      * Set the instance as shown.
      *
-     * @param bool $show The show state to set.
      * @return $this
      */
-    public function shown($shown = true)
+    public function shown(bool $shown = true): static
     {
         return $this->hidden(! $shown);
     }
 
     /**
-     * Alias for `shown`.
-     *
-     * @param bool $show The show state to set.
-     * @return $this
-     */
-    public function show($show = true)
-    {
-        return $this->shown($show);
-    }
-
-    /**
      * Determine if the instance is hidden.
-     * 
-     * @return bool True if the instance is hidden, false otherwise.
      */
-    public function isHidden()
+    public function isHidden(): bool
     {
         return $this->hidden;
     }

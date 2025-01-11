@@ -18,10 +18,7 @@ class HigherOrderFormatterTest extends Primitive implements HigherOrder
 
     public function __get($property)
     {
-        return match ($property) {
-            'formatter' => new HigherOrderFormatter($this),
-            default => throw new \Exception('Fail'),
-        };
+        return new HigherOrderFormatter($this);
     }
 
     public function toArray()

@@ -16,45 +16,31 @@ trait HasName
     protected $name;
 
     /**
-     * Get or set the name for the instance.
+     * Set the name for the instance.
      * 
-     * @param string|\Closure|null $name The name to set, or null to retrieve the current name.
-     * @return string|null|$this The current name when no argument is provided, or the instance when setting the name.
+     * @param string|\Closure|null $name 
+     * @return $this
      */
-    public function name($name = null)
+    public function name($name): static
     {
-        if (\is_null($name)) {
-            return $this->name;
+        if (! \is_null($name)) {
+            $this->name = $name;
         }
-
-        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has an name set.
+     * Get the name for the instance, evaluating it if necessary.
      * 
-     * @return bool True if an name is set, false otherwise.
+     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
+     * @param array<string,mixed> $typed
      */
-    public function hasName()
+    public function getName($parameters = [], $typed = []): ?string
     {
-        return ! \is_null($this->name);
-    }
-
-    /**
-     * Evaluate the name using injected named and typed parameters, or from a model.
-     * 
-     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $namedOrModel The named parameters to inject into the name, or the model to evaluate the name from.
-     * @param array<string,mixed> $typed The typed parameters to inject into the name, if provided.
-     * @return string|null The evaluated name.
-     */
-    public function evaluateName($namedOrModel = [], $typed = [])
-    {
-        $evaluated = match (true) {
-            $namedOrModel instanceof \Illuminate\Database\Eloquent\Model => $this->evaluateNameFromModel($namedOrModel),
-            default => $this->evaluate($this->name, $namedOrModel, $typed)
-        };
+        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model 
+            ? $this->evaluateModelForName($parameters, 'getName') 
+            : $this->evaluate($this->name, $parameters, $typed);
 
         $this->name = $evaluated;
 
@@ -62,23 +48,17 @@ trait HasName
     }
 
     /**
-     * Evaluate the name from a model.
-     * 
-     * @param \Illuminate\Database\Eloquent\Model $model The model to evaluate the name from.
-     * @return string|null The evaluated name.
+     * Determine if the instance has a name set.
      */
-    private function evaluateNameFromModel($model)
+    public function hasName(): bool
     {
-        return $this->evaluateModelForName($model, 'evaluateName');
+        return isset($this->name);
     }
 
     /**
-     * Convert a string to the name name.
-     *
-     * @param string $label
-     * @return string
+     * Convert a string to the name format
      */
-    public function makeName($label)
+    public function makeName(string $label): string
     {
         return str($label)
             ->snake()
@@ -86,3 +66,4 @@ trait HasName
             ->toString();
     }
 }
+

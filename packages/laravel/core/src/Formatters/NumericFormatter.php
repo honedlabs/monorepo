@@ -29,16 +29,12 @@ class NumericFormatter implements Formats
      */
     protected $currency;
 
-    /**
-     * Create a new numeric formatter instance.
-     * 
-     * @param int|null $precision
-     * @param int|null $divideBy
-     * @param string|null $locale
-     * @param string|null $currency
-     */
-    public function __construct($precision = null, $divideBy = null, $locale = null, $currency = null)
-    {
+    public function __construct(
+        int $precision = null,
+        int $divideBy = null,
+        string $locale = null,
+        string $currency = null
+    ) {
         $this->precision($precision);
         $this->divideBy($divideBy);
         $this->locale($locale);
@@ -46,62 +42,67 @@ class NumericFormatter implements Formats
     }
 
     /**
-     * Make a numeric formatter.
-     *
-     * @param int|null $precision
-     * @param int|null $divideBy
-     * @param string|null $locale
-     * @param string|null $currency
-     * 
-     * @return static
+     * Make a new numeric formatter.
      */
-    public static function make($precision = null, $divideBy = null, $locale = null, $currency = null)
-    {
+    public static function make(
+        int $precision = null,
+        int $divideBy = null,
+        string $locale = null,
+        string $currency = null
+    ): static {
         return resolve(static::class, compact('precision', 'divideBy', 'locale', 'currency'));
     }
 
     /**
-     * Get or set the precision for the instance.
+     * Set the precision for the instance.
      * 
-     * @param int|null $precision The precision to set, or null to retrieve the current precision.
-     * @return int|null|$this The current precision when no argument is provided, or the instance when setting the precision.
+     * @return $this
      */
-    public function precision($precision = null)
+    public function precision(int $precision = null): static
     {
-        if (\is_null($precision)) {
-            return $this->precision;
+        if (! \is_null($precision)) {
+            $this->precision = $precision;
         }
 
-        $this->precision = $precision;
-
         return $this;
+    }
+
+    /**
+     * Get the precision for the instance.
+     */
+    public function getPrecision(): ?int
+    {
+        return $this->precision;
     }
 
     /**
      * Determine if the instance has a precision.
-     * 
-     * @return bool True if a precision is set, false otherwise.
      */
-    public function hasPrecision()
+    public function hasPrecision(): bool
     {
-        return ! \is_null($this->precision);
+        return isset($this->precision);
     }
 
     /**
-     * Get or set the divide by amount for the instance.
+     * Set the divide by amount for the instance.
      * 
-     * @param int|null $divideBy The divide by amount to set, or null to retrieve the current divide by amount.
-     * @return int|null|$this The current divide by amount when no argument is provided, or the instance when setting the divide by amount.
+     * @return $this
      */
-    public function divideBy($divideBy = null)
+    public function divideBy(int $divideBy = null): static
     {
-        if (\is_null($divideBy)) {
-            return $this->divideBy;
+        if (! \is_null($divideBy)) {
+            $this->divideBy = $divideBy;
         }
 
-        $this->divideBy = $divideBy;
-
         return $this;
+    }
+
+    /**
+     * Get the divide by amount for the instance.
+     */
+    public function getDivideBy(): ?int
+    {
+        return $this->divideBy;
     }
 
     /**
@@ -109,94 +110,95 @@ class NumericFormatter implements Formats
      * 
      * @return $this
      */
-    public function cents()
+    public function cents(): static
     {
         return $this->divideBy(100);
     }
 
     /**
      * Determine if the instance has a divide by amount set.
-     * 
-     * @return bool True if a divideBy is set, false otherwise.
      */
-    public function hasDivideBy()
+    public function hasDivideBy(): bool
     {
-        return ! \is_null($this->divideBy);
+        return isset($this->divideBy);
     }
 
     /**
      * Get or set the locale for the instance.
      * 
-     * @param string|null $locale The locale to set, or null to retrieve the current locale.
-     * @return string|null|$this The current locale when no argument is provided, or the instance when setting the locale.
+     * @return $this
      */
-    public function locale($locale = null)
+    public function locale(string $locale = null): static
     {
-        if (\is_null($locale)) {
-            return $this->locale;
+        if (! \is_null($locale)) {
+            $this->locale = $locale;
         }
 
-        $this->locale = $locale;
+        return $this;   
+    }
 
-        return $this;
+    /**
+     * Get the locale for the instance.
+     */
+    public function getLocale(): ?string
+    {
+        return $this->locale;
     }
 
     /**
      * Determine if the instance has a locale set.
-     * 
-     * @return bool True if a locale is set, false otherwise.
      */
-    public function hasLocale()
+    public function hasLocale(): bool
     {
-        return ! \is_null($this->locale);
+        return isset($this->locale);
     }
 
     /**
-     * Get or set the currency for the instance.
+     * Set the currency for the instance.
      * 
-     * @param string|null $currency The currency to set, or null to retrieve the current currency.
-     * @return string|null|$this The current currency when no argument is provided, or the instance when setting the currency.
+     * @return $this
      */
-    public function currency($currency = null)
+    public function currency(string $currency = null): static
     {
-        if (\is_null($currency)) {
-            return $this->currency;
+        if (! \is_null($currency)) {
+            $this->currency = $currency;
         }
-
-        $this->currency = $currency;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has a currency set.
-     * 
-     * @return bool True if a currency is set, false otherwise.
+     * Get the currency for the instance.
      */
-    public function hasCurrency()
+    public function getCurrency(): ?string
     {
-        return ! \is_null($this->currency);
+        return $this->currency;
+    }
+
+    /**
+     * Determine if the instance has a currency set.
+     */
+    public function hasCurrency(): bool
+    {
+        return isset($this->currency);
     }
 
     /**
      * Format the value as a number.
-     * 
-     * @param mixed $value
-     * @return mixed
      */
-    public function format(mixed $value)
+    public function format(mixed $value): mixed
     {
         if (\is_null($value) || ! \is_numeric($value)) {
             return null;
         }
 
         if ($this->hasDivideBy()) {
-            $value = $value / $this->divideBy();
+            $value = $value / $this->getDivideBy();
         }
 
         return match (true) {
-            $this->hasCurrency() => Number::currency($value, $this->currency(), $this->locale()),
-            $this->hasLocale() => Number::format($value, precision: $this->precision(), locale: $this->locale()),
+            $this->hasCurrency() => Number::currency($value, $this->getCurrency(), $this->getLocale()),
+            $this->hasLocale() => Number::format($value, precision: $this->getPrecision(), locale: $this->getLocale()),
             default => $value
         };
     }

@@ -12,24 +12,27 @@ it('makes', function () {
         ->toBeInstanceOf(DateFormatter::class);
 });
 
+it('defaults to d/m/Y', function () {
+    expect($this->formatter->getDate())->toBe('d/m/Y');
+});
+
 it('sets date', function () {
     expect($this->formatter->date('dd-mm-yyyy'))
         ->toBeInstanceOf(DateFormatter::class)
-        ->date()->toBe('dd-mm-yyyy')
-        ->hasDate()->toBeTrue();
+        ->getDate()->toBe('dd-mm-yyyy');
 });
 
 it('sets timezone', function () {
     expect($this->formatter->timezone('Europe/London'))
         ->toBeInstanceOf(DateFormatter::class)
-        ->timezone()->toBe('Europe/London')
+        ->getTimezone()->toBe('Europe/London')
         ->hasTimezone()->toBeTrue();
 });
 
 it('sets since', function () {
     expect($this->formatter->since())
         ->toBeInstanceOf(DateFormatter::class)
-        ->usesDiffForHumans()->toBeTrue();
+        ->isSince()->toBeTrue();
 });
 
 it('formats', function () {

@@ -17,38 +17,38 @@ beforeEach(function (){
     $this->test = new FormatterTest;
 });
 
-it('sets formatter', function () {
+it('sets', function () {
     expect($this->test->formatter(BooleanFormatter::make()))
         ->toBeInstanceOf(FormatterTest::class)
-        ->formatter()->toBeInstanceOf(BooleanFormatter::class)
         ->hasFormatter()->toBeTrue();
 });
 
-it('sets boolean formatter', function () {
+
+it('sets boolean', function () {
     expect($this->test->formatBoolean())
         ->toBeInstanceOf(FormatterTest::class)
-        ->formatter()->toBeInstanceOf(BooleanFormatter::class)
+        ->getFormatter()->toBeInstanceOf(BooleanFormatter::class)
         ->hasFormatter()->toBeTrue();
 });
 
 it('sets date formatter', function () {
     expect($this->test->formatDate())
         ->toBeInstanceOf(FormatterTest::class)
-        ->formatter()->toBeInstanceOf(DateFormatter::class)
+        ->getFormatter()->toBeInstanceOf(DateFormatter::class)
         ->hasFormatter()->toBeTrue();
 });
 
 it('sets numeric formatter', function () {
     expect($this->test->formatNumeric())
         ->toBeInstanceOf(FormatterTest::class)
-        ->formatter()->toBeInstanceOf(NumericFormatter::class)
+        ->getFormatter()->toBeInstanceOf(NumericFormatter::class)
         ->hasFormatter()->toBeTrue();
 });
 
 it('sets string formatter', function () {
     expect($this->test->formatString())
         ->toBeInstanceOf(FormatterTest::class)
-        ->formatter()->toBeInstanceOf(StringFormatter::class)
+        ->getFormatter()->toBeInstanceOf(StringFormatter::class)
         ->hasFormatter()->toBeTrue();
 });
 

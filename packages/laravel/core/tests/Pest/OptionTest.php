@@ -4,9 +4,9 @@ use Honed\Core\Option;
 
 it('makes', function () {
     expect(Option::make('value'))->toBeInstanceOf(Option::class)
-        ->value()->toBe('value')
-        ->label()->toBe('Value')
-        ->meta()->toBe([])
+        ->getValue()->toBe('value')
+        ->getLabel()->toBe('Value')
+        ->getMeta()->toBe([])
         ->isActive()->toBeFalse();
 });
 

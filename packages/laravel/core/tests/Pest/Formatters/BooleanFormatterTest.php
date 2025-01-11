@@ -11,23 +11,23 @@ it('makes', function () {
         ->toBeInstanceOf(BooleanFormatter::class);
 });
 
-it('sets true label', function () {
+it('sets true', function () {
     expect($this->formatter->true('Yes'))
         ->toBeInstanceOf(BooleanFormatter::class)
-        ->true()->toBe('Yes');
+        ->getTrue()->toBe('Yes');
 });
 
-it('sets false label', function () {
+it('sets false', function () {
     expect($this->formatter->false('No'))
         ->toBeInstanceOf(BooleanFormatter::class)
-        ->false()->toBe('No');
+        ->getFalse()->toBe('No');
 });
 
 it('sets labels', function () {
     expect($this->formatter->labels('Yes', 'No'))
         ->toBeInstanceOf(BooleanFormatter::class)
-        ->true()->toBe('Yes')
-        ->false()->toBe('No');
+        ->getTrue()->toBe('Yes')
+        ->getFalse()->toBe('No');
 });
 
 it('formats', function () {

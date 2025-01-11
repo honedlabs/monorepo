@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Honed\Core\Formatters\BooleanFormatter;
+use Honed\Core\Contracts\Formats;
 use Honed\Core\Formatters\DateFormatter;
-use Honed\Core\Formatters\NumericFormatter;
 use Honed\Core\Formatters\StringFormatter;
+use Honed\Core\Formatters\BooleanFormatter;
+use Honed\Core\Formatters\NumericFormatter;
 
 trait HasFormatter
 {
@@ -17,83 +18,81 @@ trait HasFormatter
     protected $formatter;
 
     /**
-     * Get or set the formatter for the instance.
+     * Set the formatter for the instance.
      * 
-     * @param \Honed\Core\Contracts\Formats|null $formatter The formatter to set, or null to retrieve the current formatter.
-     * @return \Honed\Core\Contracts\Formats|null|$this The current formatter when no argument is provided, or the instance when setting the formatter.
+     * @return $this
      */
-    public function formatter($formatter = null)
+    public function formatter(?Formats $formatter): static
     {
-        if (\is_null($formatter)) {
-            return $this->formatter;
+        if (! \is_null($formatter)) {
+            $this->formatter = $formatter;
         }
-
-        $this->formatter = $formatter;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has a formatter set.
-     * 
-     * @return bool True if a formatter is set, false otherwise.
+     * Get the formatter for the instance.
      */
-    public function hasFormatter()
+    public function getFormatter(): ?Formats
     {
-        return ! \is_null($this->formatter);
+        return $this->formatter;
+    }
+
+    /**
+     * Determine if the instance has a formatter set.
+     */
+    public function hasFormatter(): bool
+    {
+        return isset($this->formatter);
     }
 
     /**
      * Set the class to use a boolean formatter.
      *
-     * @param string|null $true
-     * @param string|null $false
      * @return $this
      */
-    public function formatBoolean($true = null, $false = null): static
+    public function formatBoolean(?string $true = null, ?string $false = null): static
     {
         return $this->formatter(BooleanFormatter::make($true, $false));
     }
 
     /**
      * Set the class to use a string formatter.
-     *
-     * @param string|null $prefix
-     * @param string|null $suffix
-     * @param int|null $limit    
      * 
      * @return $this
      */
-    public function formatString($prefix = null, $suffix = null, $limit = null): static
+    public function formatString(
+        ?string $prefix = null, 
+        ?string $suffix = null, 
+        ?int $limit = null): static
     {
         return $this->formatter(StringFormatter::make($prefix, $suffix, $limit));
     }
 
     /**
      * Set the class to use a date formatter.
-     *
-     * @param string|null $date
-     * @param string|null $timezone
-     * @param bool $diff
      * 
      * @return $this
      */
-    public function formatDate($date = null, $timezone = null, $diff = false): static
+    public function formatDate(
+        ?string $date = null, 
+        ?string $timezone = null, 
+        ?bool $diff = false): static
     {
         return $this->formatter(DateFormatter::make($date, $timezone, $diff));
     }
 
     /**
      * Set the class to use a number formatter.
-     *
-     * @param int|null $precision
-     * @param int|null $divideBy
-     * @param string|null $locale
-     * @param string|null $currency
      * 
      * @return $this
      */
-    public function formatNumeric($precision = null, $divideBy = null, $locale = null, $currency = null): static
+    public function formatNumeric(
+        ?int $precision = null, 
+        ?int $divideBy = null, 
+        ?string $locale = null, 
+        ?string $currency = null): static
     {
         return $this->formatter(NumericFormatter::make($precision, $divideBy, $locale, $currency));
     }

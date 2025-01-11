@@ -14,10 +14,9 @@ trait IsStrict
     /**
      * Set the instance as strict.
      *
-     * @param bool $strict The strict state to set.
      * @return $this
      */
-    public function strict($strict = true)
+    public function strict(bool $strict = true): static
     {
         $this->strict = $strict;
 
@@ -27,20 +26,17 @@ trait IsStrict
     /**
      * Set the instance as relaxed.
      *
-     * @param bool $relaxed The relaxed state to set.
      * @return $this
      */
-    public function relaxed($relaxed = true)
+    public function relaxed(bool $relaxed = true): static
     {
         return $this->strict(! $relaxed);
     }
 
     /**
      * Determine if the instance is strict.
-     * 
-     * @return bool True if the instance is strict, false otherwise.
      */
-    public function isStrict()
+    public function isStrict(): bool
     {
         return $this->strict;
     }

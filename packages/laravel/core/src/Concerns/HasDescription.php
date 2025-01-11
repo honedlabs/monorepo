@@ -16,45 +16,31 @@ trait HasDescription
     protected $description;
 
     /**
-     * Get or set the description for the instance.
+     * Set the description for the instance.
      * 
-     * @param string|\Closure|null $description The description to set, or null to retrieve the current description.
-     * @return string|null|$this The current description when no argument is provided, or the instance when setting the description.
+     * @param string|\Closure|null $description 
+     * @return $this
      */
-    public function description($description = null)
+    public function description($description): static
     {
-        if (\is_null($description)) {
-            return $this->description;
+        if (! \is_null($description)) {
+            $this->description = $description;
         }
-
-        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has an description set.
+     * Get the description for the instance, evaluating it if necessary.
      * 
-     * @return bool True if an description is set, false otherwise.
+     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
+     * @param array<string,mixed> $typed
      */
-    public function hasDescription()
+    public function getDescription($parameters = [], $typed = []): ?string
     {
-        return ! \is_null($this->description);
-    }
-
-    /**
-     * Evaluate the description using injected named and typed parameters, or from a model.
-     * 
-     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $namedOrModel The named parameters to inject into the description, or the model to evaluate the description from.
-     * @param array<string,mixed> $typed The typed parameters to inject into the description, if provided.
-     * @return string|null The evaluated description.
-     */
-    public function evaluateDescription($namedOrModel = [], $typed = [])
-    {
-        $evaluated = match (true) {
-            $namedOrModel instanceof \Illuminate\Database\Eloquent\Model => $this->evaluateDescriptionFromModel($namedOrModel),
-            default => $this->evaluate($this->description, $namedOrModel, $typed)
-        };
+        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model 
+            ? $this->evaluateModelForDescription($parameters, 'getDescription') 
+            : $this->evaluate($this->description, $parameters, $typed);
 
         $this->description = $evaluated;
 
@@ -62,14 +48,11 @@ trait HasDescription
     }
 
     /**
-     * Evaluate the description from a model.
-     * 
-     * @param \Illuminate\Database\Eloquent\Model $model The model to evaluate the description from.
-     * @return string|null The evaluated description.
+     * Determine if the instance has a description set.
      */
-    private function evaluateDescriptionFromModel($model)
+    public function hasDescription(): bool
     {
-        return $this->evaluateModelForDescription($model, 'evaluateDescription');
+        return isset($this->description);
     }
 }
 

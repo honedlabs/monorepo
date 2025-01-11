@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Honed\Core\Option;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 trait HasOptions
@@ -17,52 +18,51 @@ trait HasOptions
     /**
      * Get or set the options for the instance.
      *
-     * @param  \Honed\Core\Option|class-string<\BackedEnum>|class-string<\Illuminate\Database\Eloquent\Model>|null  $option The option to add, or null to retrieve the current options.
-     * @param  \Illuminate\Support\Collection<int,\Honed\Core\Option>|string  $options The options to add, or accessors for the given first argument.
-     * @return \Illuminate\Support\Collection<int,\Honed\Core\Option>|null The current options when no argument is provided, or the instance when setting the options.
+     * @param  \Honed\Core\Option|class-string<\BackedEnum>|class-string<\Illuminate\Database\Eloquent\Model>|null  $option 
+     * @param  array<int,\Honed\Core\Option|string>  $options 
+     * @return $this
      */
-    public function options($option = null, ...$options)
+    public function options($option, ...$options): static
     {
-        if (\is_null($option)) {
-            return $this->options;
+        if (! \is_null($option)) {
+            $this->options = $option instanceof Option 
+                ? collect([$option, ...$options])
+                : collect(match (true) {
+                    \is_string($option) && \enum_exists($option) => $option::cases(),
+                    \is_string($option) => $option::all(),
+                    default => $option,
+                })->map(fn ($case) => Option::make(
+                    $this->parseOptionValue($case, isset($options[0]) ? $options[0] : null) ?? $case->value,
+                    $this->parseOptionValue($case, isset($options[1]) ? $options[1] : null) ?? $case->name
+                ));
         }
-
-        $options = $option instanceof Option 
-            ? collect([$option, ...$options])
-            : collect(match (true) {
-                \is_string($option) && \enum_exists($option) => $option::cases(),
-                \is_string($option) => $option::all(),
-                default => $option,
-            })->map(fn ($case) => Option::make(
-                $this->parseOptionValue($case, isset($options[0]) ? $options[0] : null) ?? $case->value,
-                $this->parseOptionValue($case, isset($options[1]) ? $options[1] : null) ?? $case->name
-            ));
-
-        $this->options = $options;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has options.
+     * Get the options for the instance.
      * 
-     * @return bool True if the instance has options, false otherwise.
+     * @return \Illuminate\Support\Collection<int,\Honed\Core\Option>|null
      */
-    public function hasOptions()
+    public function getOptions(): ?Collection
     {
-        return isset($this->options) && $this->options()->isNotEmpty();
+        return $this->options;
+    }
+
+    /**
+     * Determine if the instance has options.
+     */
+    public function hasOptions(): bool
+    {
+        return isset($this->options) && $this->getOptions()->isNotEmpty();
     }
 
     /**
      * Get an option field from an item.
-     *
-     * @param  mixed  $item The item to get the field from.
-     * @param  string|null  $key The key to get the field from, or null to use the item itself.
-     * @return mixed The field value.
      */
-    private function parseOptionValue($item, $key = null)
+    private function parseOptionValue(mixed $item, ?string $key = null): mixed
     {
-
         return match (true) {
             \is_null($key) => null,
             $item instanceof Model => $item->getAttribute($key),

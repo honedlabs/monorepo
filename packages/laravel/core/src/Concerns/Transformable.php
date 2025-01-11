@@ -14,10 +14,9 @@ trait Transformable
     /**
      * Set the transformer function for the instance.
      * 
-     * @param \Closure|bool $transformer The transformer function to be set.
      * @return $this
      */
-    public function transformer($transformer)
+    public function transformer(\Closure $transformer): static
     {
         $this->transformer = $transformer;
 
@@ -26,8 +25,6 @@ trait Transformable
 
     /**
      * Determine if the instance has a transformer function set.
-     * 
-     * @return bool True if a transformer function is set, false otherwise.
      */
     public function transforms(): bool
     {
@@ -36,11 +33,8 @@ trait Transformable
 
     /**
      * Transform the argument using the transformer function.
-     * 
-     * @param mixed $value The value to transform.
-     * @return mixed The transformed value.
      */
-    public function transform($value)
+    public function transform(mixed $value): mixed
     {
         return $this->transforms() 
             ? \call_user_func($this->transformer, $value) 

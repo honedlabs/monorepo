@@ -16,45 +16,31 @@ trait HasLabel
     protected $label;
 
     /**
-     * Get or set the label for the instance.
+     * Set the label for the instance.
      * 
-     * @param string|\Closure|null $label The label to set, or null to retrieve the current label.
-     * @return string|null|$this The current label when no argument is provided, or the instance when setting the label.
+     * @param string|\Closure|null $label 
+     * @return $this
      */
-    public function label($label = null)
+    public function label($label): static
     {
-        if (\is_null($label)) {
-            return $this->label instanceof \Closure ? $this->evaluateLabel() : $this->label;
+        if (! \is_null($label)) {
+            $this->label = $label;
         }
-
-        $this->label = $label;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has an label set.
+     * Get the label for the instance, evaluating it if necessary.
      * 
-     * @return bool True if an label is set, false otherwise.
+     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
+     * @param array<string,mixed> $typed
      */
-    public function hasLabel()
+    public function getLabel($parameters = [], $typed = []): ?string
     {
-        return isset($this->label);
-    }
-
-    /**
-     * Evaluate the label using injected named and typed parameters, or from a model.
-     * 
-     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $namedOrModel The named parameters to inject into the label, or the model to evaluate the label from.
-     * @param array<string,mixed> $typed The typed parameters to inject into the label, if provided.
-     * @return string|null The evaluated label.
-     */
-    public function evaluateLabel($namedOrModel = [], $typed = [])
-    {
-        $evaluated = match (true) {
-            $namedOrModel instanceof \Illuminate\Database\Eloquent\Model => $this->evaluateLabelFromModel($namedOrModel),
-            default => $this->evaluate($this->label, $namedOrModel, $typed)
-        };
+        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model 
+            ? $this->evaluateModelForLabel($parameters, 'getLabel') 
+            : $this->evaluate($this->label, $parameters, $typed);
 
         $this->label = $evaluated;
 
@@ -62,23 +48,17 @@ trait HasLabel
     }
 
     /**
-     * Evaluate the label from a model.
-     * 
-     * @param \Illuminate\Database\Eloquent\Model $model The model to evaluate the label from.
-     * @return string|null The evaluated label.
+     * Determine if the instance has a label set.
      */
-    private function evaluateLabelFromModel($model)
+    public function hasLabel(): bool
     {
-        return $this->evaluateModelForLabel($model, 'evaluateLabel');
+        return isset($this->label);
     }
 
     /**
      * Convert a string to the label format.
-     *
-     * @param  string  $name
-     * @return string
      */
-    public function makeLabel($name)
+    public function makeLabel(string $name): string
     {
         return str($name)
             ->afterLast('.')
@@ -88,3 +68,4 @@ trait HasLabel
             ->toString();
     }
 }
+

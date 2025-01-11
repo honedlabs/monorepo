@@ -9,7 +9,12 @@ use Honed\Core\Destination;
 trait HasDestination
 {
     /**
-     * Set the destination. 
+     * @var \Honed\Core\Destination
+     */
+    protected $destination;
+
+    /**
+     * Set the destination for the instance.
      * 
      * @param \Honed\Core\Destination|\Closure|string $destination
      * @param \Honed\Core\Destination|\Closure|string $parameters
@@ -30,6 +35,18 @@ trait HasDestination
         };
 
         return $this;
+    }
+
+    /**
+     * Set the destination for the instance.
+     * 
+     * @param \Honed\Core\Destination|\Closure|string $destination
+     * @param \Honed\Core\Destination|\Closure|string $parameters
+     * @return $this
+     */
+    public function destination($destination, $parameters = null): static
+    {
+        return $this->to($destination, $parameters);
     }
 
     /**

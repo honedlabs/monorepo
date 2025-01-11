@@ -11,10 +11,8 @@ trait IsAnonymous
 {
     /**
      * Determine if the instance is anonymous.
-     * 
-     * @return bool True if the instance is anonymous, false otherwise.
      */
-    public function isAnonymous()
+    public function isAnonymous(): bool
     {
         if (! \property_exists($this, 'anonymous')) {
             return false;

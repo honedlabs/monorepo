@@ -16,35 +16,29 @@ beforeEach(function () {
     $this->test = new DescriptionTest;
 });
 
-it('is null by default', function () {
-    expect($this->test)
-        ->description()->toBeNull()
-        ->hasDescription()->toBeFalse();
-});
-
 it('sets', function () {
     expect($this->test->description('test'))
         ->toBeInstanceOf(DescriptionTest::class)
-        ->description()->toBe('test')
         ->hasDescription()->toBeTrue();
 });
 
 it('gets', function () {
     expect($this->test->description('test'))
-        ->description()->toBe('test')
+        ->getDescription()->toBe('test')
         ->hasDescription()->toBeTrue();
 });
 
 it('evaluates', function () {
     $product = product();
+
     expect($this->test->description(fn (Product $product) => $product->name))
-        ->evaluateDescription(['product' => $product])->toBe($product->name)
+        ->getDescription(['product' => $product])->toBe($product->name)
         ->hasDescription()->toBeTrue();
 });
 
 it('evaluates model', function () {
     $product = product();
     expect($this->test->description(fn (Product $product) => $product->name))
-        ->evaluateDescription($product)->toBe($product->name)
+        ->getDescription($product)->toBe($product->name)
         ->hasDescription()->toBeTrue();
 });

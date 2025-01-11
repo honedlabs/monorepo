@@ -18,12 +18,6 @@ class BooleanFormatter implements Formats
      */
     protected $false = 'False';
 
-    /**
-     * Create a new boolean formatter instance.
-     * 
-     * @param string|null $true
-     * @param string|null $false
-     */
     public function __construct($true = null, $false = null)
     {
         $this->true($true);
@@ -33,12 +27,9 @@ class BooleanFormatter implements Formats
     /**
      * Make a new boolean formatter.
      * 
-     * @param string|null $true
-     * @param string|null $false
-     * 
      * @return $this
      */
-    public static function make($true = null, $false = null)
+    public static function make(string $true = null, string $false = null): static
     {
         return resolve(static::class, compact('true', 'false'));
     }
@@ -46,9 +37,6 @@ class BooleanFormatter implements Formats
     /**
      * Set the truth and false labels, chainable.
      *
-     * @param string|null $true
-     * @param string|null $false
-     * 
      * @return $this
      */
     public function labels(?string $true = null, ?string $false = null): static
@@ -60,49 +48,56 @@ class BooleanFormatter implements Formats
     }
 
     /**
-     * Get or set the true label for the instance.
+     * Set the true label for the instance.
      * 
-     * @param string|null $true The true label to set, or null to retrieve the current true label.
-     * @return string|$this The current true label when no argument is provided, or the instance when setting the true label.
+     * @return $this
      */
-    public function true($true = null)
+    public function true(string $true = null): static
     {
-        if (\is_null($true)) {
-            return $this->true;
+        if (! \is_null($true)) {
+            $this->true = $true;
         }
-
-        $this->true = $true;
 
         return $this;
     }
 
     /**
-     * Get or set the false label for the instance.
-     * 
-     * @param string|null $false The false label to set, or null to retrieve the current false label.
-     * @return string|$this The current false label when no argument is provided, or the instance when setting the false label.
+     * Get the true label for the instance.
      */
-    public function false($false = null)
+    public function getTrue(): string
     {
-        if (\is_null($false)) {
-            return $this->false;
-        }
+        return $this->true;
+    }
 
-        $this->false = $false;
+    /**
+     * Set the false label for the instance.
+     * 
+     * @return $this
+     */
+    public function false(string $false = null): static
+    {
+        if (! \is_null($false)) {
+            $this->false = $false;
+        }
 
         return $this;
     }
 
     /**
-     * Format the value as a boolean.
-     * 
-     * @param mixed $value
-     * @return string
+     * Get the false label for the instance.
      */
-    public function format($value): string
+    public function getFalse(): string
+    {
+        return $this->false;
+    }
+
+    /**
+     * Format the value as a boolean label.
+     */
+    public function format(mixed $value): string
     {
         return ((bool) $value) 
-            ? $this->true() 
-            : $this->false();
+            ? $this->getTrue() 
+            : $this->getFalse();
     }
 }
