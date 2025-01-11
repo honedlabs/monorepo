@@ -11,14 +11,14 @@ trait HasTitle
     }
 
     /**
-     * @var string|\Closure
+     * @var string|\Closure|null
      */
     protected $title;
 
     /**
      * Set the title for the instance.
-     * 
-     * @param string|\Closure|null $title 
+     *
+     * @param  string|\Closure|null  $title
      * @return $this
      */
     public function title($title): static
@@ -32,14 +32,17 @@ trait HasTitle
 
     /**
      * Get the title for the instance, evaluating it if necessary.
-     * 
-     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
-     * @param array<string,mixed> $typed
+     *
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      */
     public function getTitle($parameters = [], $typed = []): ?string
     {
-        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model 
-            ? $this->evaluateModelForTitle($parameters, 'getTitle') 
+        /**
+         * @var string|null
+         */
+        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model
+            ? $this->evaluateModelForTitle($parameters, 'getTitle')
             : $this->evaluate($this->title, $parameters, $typed);
 
         $this->title = $evaluated;
@@ -55,4 +58,3 @@ trait HasTitle
         return isset($this->title);
     }
 }
-

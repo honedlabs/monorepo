@@ -13,7 +13,7 @@ trait HasAlias
 
     /**
      * Set the alias for the instance.
-     * 
+     *
      * @return $this
      */
     public function alias(?string $alias): static

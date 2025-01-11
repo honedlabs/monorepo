@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Contracts\HigherOrder;
 use Honed\Core\Concerns\HasFormatter;
-use Honed\Core\Proxies\HigherOrderFormatter;
+use Honed\Core\Contracts\HigherOrder;
 use Honed\Core\Primitive;
+use Honed\Core\Proxies\HigherOrderFormatter;
 
 class HigherOrderFormatterTest extends Primitive implements HigherOrder
 {
@@ -27,7 +27,6 @@ class HigherOrderFormatterTest extends Primitive implements HigherOrder
     }
 }
 
-
 beforeEach(function () {
     $this->test = HigherOrderFormatterTest::make();
 });
@@ -40,4 +39,3 @@ it('forwards calls', function () {
         ->toBeInstanceOf(HigherOrderFormatterTest::class)
         ->hasFormatter()->toBeTrue();
 });
-

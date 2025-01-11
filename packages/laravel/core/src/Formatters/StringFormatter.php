@@ -10,24 +10,24 @@ use Illuminate\Support\Stringable;
 class StringFormatter implements Formats
 {
     /**
-     * @var string
+     * @var string|null
      */
-    protected $prefix;
+    protected $prefix = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $suffix;
+    protected $suffix = null;
 
     /**
-     * @var int
+     * @var int|null
      */
-    protected $limit;
+    protected $limit = null;
 
     public function __construct(
-        string $prefix = null,
-        string $suffix = null,
-        int $limit = null
+        ?string $prefix = null,
+        ?string $suffix = null,
+        ?int $limit = null
     ) {
         $this->prefix($prefix);
         $this->suffix($suffix);
@@ -38,19 +38,19 @@ class StringFormatter implements Formats
      * Make a new string formatter.
      */
     public static function make(
-        string $prefix = null,
-        string $suffix = null,
-        int $limit = null
+        ?string $prefix = null,
+        ?string $suffix = null,
+        ?int $limit = null
     ): static {
         return resolve(static::class, compact('prefix', 'suffix', 'limit'));
     }
 
     /**
      * Set the prefix for the instance.
-     * 
+     *
      * @return $this
      */
-    public function prefix(string $prefix = null): static
+    public function prefix(?string $prefix = null): static
     {
         if (! \is_null($prefix)) {
             $this->prefix = $prefix;
@@ -72,15 +72,15 @@ class StringFormatter implements Formats
      */
     public function hasPrefix(): bool
     {
-        return isset($this->prefix);
+        return ! \is_null($this->prefix);
     }
 
     /**
      * Get or set the suffix for the instance.
-     * 
+     *
      * @return $this
      */
-    public function suffix(string $suffix = null): static
+    public function suffix(?string $suffix = null): static
     {
         if (! \is_null($suffix)) {
             $this->suffix = $suffix;
@@ -102,15 +102,15 @@ class StringFormatter implements Formats
      */
     public function hasSuffix(): bool
     {
-        return isset($this->suffix);
+        return ! \is_null($this->suffix);
     }
 
     /**
      * Get or set the limit for the instance.
-     * 
+     *
      * @return $this
      */
-    public function limit(int $limit = null): static
+    public function limit(?int $limit = null): static
     {
         if (! \is_null($limit)) {
             $this->limit = $limit;
@@ -132,7 +132,7 @@ class StringFormatter implements Formats
      */
     public function hasLimit(): bool
     {
-        return isset($this->limit);
+        return ! \is_null($this->limit);
     }
 
     /**
@@ -144,13 +144,13 @@ class StringFormatter implements Formats
             return null;
         }
 
-        return (str((string) $value))
-            ->when($this->hasLimit(), 
-                fn (Stringable $str) => $str->limit($this->getLimit()))
-            ->when($this->hasPrefix(), 
-                fn (Stringable $str) => $str->prepend($this->getPrefix()))
-            ->when($this->hasSuffix(), 
-                fn (Stringable $str) => $str->append($this->getSuffix()))
+        return str((string) $value)
+            ->when($this->hasLimit(),
+                fn (Stringable $str) => $str->limit($this->getLimit())) // @phpstan-ignore-line
+            ->when($this->hasPrefix(),
+                fn (Stringable $str) => $str->prepend($this->getPrefix())) // @phpstan-ignore-line
+            ->when($this->hasSuffix(),
+                fn (Stringable $str) => $str->append($this->getSuffix())) // @phpstan-ignore-line
             ->toString();
     }
 }

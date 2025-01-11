@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Honed\Core\Contracts\Formats;
-use Honed\Core\Formatters\DateFormatter;
-use Honed\Core\Formatters\StringFormatter;
 use Honed\Core\Formatters\BooleanFormatter;
+use Honed\Core\Formatters\DateFormatter;
 use Honed\Core\Formatters\NumericFormatter;
+use Honed\Core\Formatters\StringFormatter;
 
 trait HasFormatter
 {
@@ -19,7 +19,7 @@ trait HasFormatter
 
     /**
      * Set the formatter for the instance.
-     * 
+     *
      * @return $this
      */
     public function formatter(?Formats $formatter): static
@@ -59,12 +59,12 @@ trait HasFormatter
 
     /**
      * Set the class to use a string formatter.
-     * 
+     *
      * @return $this
      */
     public function formatString(
-        ?string $prefix = null, 
-        ?string $suffix = null, 
+        ?string $prefix = null,
+        ?string $suffix = null,
         ?int $limit = null): static
     {
         return $this->formatter(StringFormatter::make($prefix, $suffix, $limit));
@@ -72,12 +72,12 @@ trait HasFormatter
 
     /**
      * Set the class to use a date formatter.
-     * 
+     *
      * @return $this
      */
     public function formatDate(
-        ?string $date = null, 
-        ?string $timezone = null, 
+        ?string $date = null,
+        ?string $timezone = null,
         ?bool $diff = false): static
     {
         return $this->formatter(DateFormatter::make($date, $timezone, $diff));
@@ -85,13 +85,13 @@ trait HasFormatter
 
     /**
      * Set the class to use a number formatter.
-     * 
+     *
      * @return $this
      */
     public function formatNumeric(
-        ?int $precision = null, 
-        ?int $divideBy = null, 
-        ?string $locale = null, 
+        ?int $precision = null,
+        ?int $divideBy = null,
+        ?string $locale = null,
         ?string $currency = null): static
     {
         return $this->formatter(NumericFormatter::make($precision, $divideBy, $locale, $currency));
@@ -100,13 +100,12 @@ trait HasFormatter
     /**
      * Apply the formatter to the given value.
      *
-     * @param mixed $value
      * @return mixed
      */
     public function format(mixed $value)
     {
-        return $this->hasFormatter() 
-            ? $this->formatter->format($value) 
+        return $this->hasFormatter()
+            ? $this->formatter->format($value)
             : $value;
     }
 }

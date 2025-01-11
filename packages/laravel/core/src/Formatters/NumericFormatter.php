@@ -10,30 +10,30 @@ use Illuminate\Support\Number;
 class NumericFormatter implements Formats
 {
     /**
-     * @var int
+     * @var int|null
      */
-    protected $precision;
+    protected $precision = null;
 
     /**
-     * @var int
+     * @var int|null
      */
-    protected $divideBy;
+    protected $divideBy = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $locale;
+    protected $locale = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $currency;
+    protected $currency = null;
 
     public function __construct(
-        int $precision = null,
-        int $divideBy = null,
-        string $locale = null,
-        string $currency = null
+        ?int $precision = null,
+        ?int $divideBy = null,
+        ?string $locale = null,
+        ?string $currency = null
     ) {
         $this->precision($precision);
         $this->divideBy($divideBy);
@@ -45,20 +45,20 @@ class NumericFormatter implements Formats
      * Make a new numeric formatter.
      */
     public static function make(
-        int $precision = null,
-        int $divideBy = null,
-        string $locale = null,
-        string $currency = null
+        ?int $precision = null,
+        ?int $divideBy = null,
+        ?string $locale = null,
+        ?string $currency = null
     ): static {
         return resolve(static::class, compact('precision', 'divideBy', 'locale', 'currency'));
     }
 
     /**
      * Set the precision for the instance.
-     * 
+     *
      * @return $this
      */
-    public function precision(int $precision = null): static
+    public function precision(?int $precision): static
     {
         if (! \is_null($precision)) {
             $this->precision = $precision;
@@ -80,15 +80,15 @@ class NumericFormatter implements Formats
      */
     public function hasPrecision(): bool
     {
-        return isset($this->precision);
+        return ! \is_null($this->precision);
     }
 
     /**
      * Set the divide by amount for the instance.
-     * 
+     *
      * @return $this
      */
-    public function divideBy(int $divideBy = null): static
+    public function divideBy(?int $divideBy): static
     {
         if (! \is_null($divideBy)) {
             $this->divideBy = $divideBy;
@@ -107,7 +107,7 @@ class NumericFormatter implements Formats
 
     /**
      * Set the divide by amount to 100, to indicate the value is stored in cents.
-     * 
+     *
      * @return $this
      */
     public function cents(): static
@@ -120,21 +120,21 @@ class NumericFormatter implements Formats
      */
     public function hasDivideBy(): bool
     {
-        return isset($this->divideBy);
+        return ! \is_null($this->divideBy);
     }
 
     /**
      * Get or set the locale for the instance.
-     * 
+     *
      * @return $this
      */
-    public function locale(string $locale = null): static
+    public function locale(?string $locale): static
     {
         if (! \is_null($locale)) {
             $this->locale = $locale;
         }
 
-        return $this;   
+        return $this;
     }
 
     /**
@@ -150,15 +150,15 @@ class NumericFormatter implements Formats
      */
     public function hasLocale(): bool
     {
-        return isset($this->locale);
+        return ! \is_null($this->locale);
     }
 
     /**
      * Set the currency for the instance.
-     * 
+     *
      * @return $this
      */
-    public function currency(string $currency = null): static
+    public function currency(?string $currency): static
     {
         if (! \is_null($currency)) {
             $this->currency = $currency;
@@ -180,7 +180,7 @@ class NumericFormatter implements Formats
      */
     public function hasCurrency(): bool
     {
-        return isset($this->currency);
+        return ! \is_null($this->currency);
     }
 
     /**
@@ -197,8 +197,8 @@ class NumericFormatter implements Formats
         }
 
         return match (true) {
-            $this->hasCurrency() => Number::currency($value, $this->getCurrency(), $this->getLocale()),
-            $this->hasLocale() => Number::format($value, precision: $this->getPrecision(), locale: $this->getLocale()),
+            $this->hasCurrency() => Number::currency($value, $this->getCurrency(), $this->getLocale()), // @phpstan-ignore-line
+            $this->hasLocale() => Number::format($value, precision: $this->getPrecision(), locale: $this->getLocale()), // @phpstan-ignore-line
             default => $value
         };
     }

@@ -13,8 +13,8 @@ trait HasPlaceholder
 
     /**
      * Set the placeholder for the instance.
-     * 
-     * @param string|null $placeholder
+     *
+     * @param  string|null  $placeholder
      * @return $this
      */
     public function placeholder($placeholder): static

@@ -15,9 +15,9 @@ trait HasDestination
 
     /**
      * Set the destination for the instance.
-     * 
-     * @param \Honed\Core\Destination|\Closure|string $destination
-     * @param \Honed\Core\Destination|\Closure|string $parameters
+     *
+     * @param  \Honed\Core\Destination|\Closure|string  $destination
+     * @param  \Honed\Core\Destination|\Closure|string  $parameters
      * @return $this
      */
     public function to($destination, $parameters = null): static
@@ -27,10 +27,9 @@ trait HasDestination
             $destination instanceof Destination => $this->destination = $destination,
             ! \is_callable($destination) => $this->destination = $this->newDestination()->to($destination, $parameters),
             collect((new \ReflectionFunction($destination))->getParameters())
-                ->some(fn (\ReflectionParameter $parameter) => 
-                    ($t = $parameter->getType()) instanceof \ReflectionNamedType && $t->getName() === Destination::class
+                ->some(fn (\ReflectionParameter $parameter) => ($t = $parameter->getType()) instanceof \ReflectionNamedType && $t->getName() === Destination::class
                         || \in_array($parameter->getName(), ['destination', 'url', 'link'])
-            ) => $this->destination = \call_user_func($destination, $this->newDestination()),
+                ) => $this->destination = \call_user_func($destination, $this->newDestination()),
             default => $this->newDestination()->to($destination, $parameters)
         };
 
@@ -39,9 +38,9 @@ trait HasDestination
 
     /**
      * Set the destination for the instance.
-     * 
-     * @param \Honed\Core\Destination|\Closure|string $destination
-     * @param \Honed\Core\Destination|\Closure|string $parameters
+     *
+     * @param  \Honed\Core\Destination|\Closure|string  $destination
+     * @param  \Honed\Core\Destination|\Closure|string  $parameters
      * @return $this
      */
     public function destination($destination, $parameters = null): static
@@ -67,9 +66,9 @@ trait HasDestination
 
     /**
      * Resolve the destination.
-     * 
-     * @param mixed $parameters
-     * @param array<string,mixed>|null $typed
+     *
+     * @param  mixed  $parameters
+     * @param  array<string,mixed>|null  $typed
      */
     public function resolveDestination($parameters = null, $typed = null): ?string
     {

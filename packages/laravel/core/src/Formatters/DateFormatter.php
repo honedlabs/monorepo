@@ -16,18 +16,18 @@ class DateFormatter implements Formats
     protected $date = 'd/m/Y';
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $timezone;
+    protected $timezone = null;
 
     /**
      * @var bool
      */
-    protected $since;
+    protected $since = false;
 
     public function __construct(
-        string $date = null,
-        string $timezone = null,
+        ?string $date = null,
+        ?string $timezone = null,
         bool $diff = false
     ) {
         $this->date($date);
@@ -39,8 +39,8 @@ class DateFormatter implements Formats
      * Make a new date formatter.
      */
     public static function make(
-        string $date = null,
-        string $timezone = null,
+        ?string $date = null,
+        ?string $timezone = null,
         bool $diff = false
     ): static {
         return resolve(static::class, compact('date', 'timezone', 'diff'));
@@ -48,10 +48,10 @@ class DateFormatter implements Formats
 
     /**
      * Set the date for the instance.
-     * 
+     *
      * @return $this
      */
-    public function date($date = null)
+    public function date(?string $date): static
     {
         if (! \is_null($date)) {
             $this->date = $date;
@@ -70,10 +70,10 @@ class DateFormatter implements Formats
 
     /**
      * Set the timezone for the instance.
-     * 
+     *
      * @return $this
      */
-    public function timezone($timezone = null)
+    public function timezone(?string $timezone): static
     {
         if (! \is_null($timezone)) {
             $this->timezone = $timezone;
@@ -95,7 +95,7 @@ class DateFormatter implements Formats
      */
     public function hasTimezone(): bool
     {
-        return isset($this->timezone);
+        return ! \is_null($this->timezone);
     }
 
     /**

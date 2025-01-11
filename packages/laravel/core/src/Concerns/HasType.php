@@ -13,7 +13,7 @@ trait HasType
 
     /**
      * Set the type for the instance.
-     * 
+     *
      * @return $this
      */
     public function type(?string $type): static

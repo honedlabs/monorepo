@@ -11,14 +11,14 @@ trait HasLabel
     }
 
     /**
-     * @var string|\Closure
+     * @var string|\Closure|null
      */
     protected $label;
 
     /**
      * Set the label for the instance.
-     * 
-     * @param string|\Closure|null $label 
+     *
+     * @param  string|\Closure|null  $label
      * @return $this
      */
     public function label($label): static
@@ -32,14 +32,17 @@ trait HasLabel
 
     /**
      * Get the label for the instance, evaluating it if necessary.
-     * 
-     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
-     * @param array<string,mixed> $typed
+     *
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      */
     public function getLabel($parameters = [], $typed = []): ?string
     {
-        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model 
-            ? $this->evaluateModelForLabel($parameters, 'getLabel') 
+        /**
+         * @var string|null
+         */
+        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model
+            ? $this->evaluateModelForLabel($parameters, 'getLabel')
             : $this->evaluate($this->label, $parameters, $typed);
 
         $this->label = $evaluated;
@@ -68,4 +71,3 @@ trait HasLabel
             ->toString();
     }
 }
-

@@ -11,14 +11,14 @@ trait HasFormat
     }
 
     /**
-     * @var string|\Closure
+     * @var string|\Closure|null
      */
     protected $format;
 
     /**
      * Set the format for the instance.
-     * 
-     * @param string|\Closure|null $format 
+     *
+     * @param  string|\Closure|null  $format
      * @return $this
      */
     public function format($format): static
@@ -32,14 +32,17 @@ trait HasFormat
 
     /**
      * Get the format for the instance, evaluating it if necessary.
-     * 
-     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
-     * @param array<string,mixed> $typed
+     *
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      */
     public function getFormat($parameters = [], $typed = []): ?string
     {
-        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model 
-            ? $this->evaluateModelForFormat($parameters, 'getFormat') 
+        /**
+         * @var string|null
+         */
+        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model
+            ? $this->evaluateModelForFormat($parameters, 'getFormat')
             : $this->evaluate($this->format, $parameters, $typed);
 
         $this->format = $evaluated;
@@ -55,4 +58,3 @@ trait HasFormat
         return isset($this->format);
     }
 }
-

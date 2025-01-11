@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Primitive;
+use Honed\Core\Concerns\HasDescription;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\HasDescription;
+use Honed\Core\Primitive;
 
 class PrimitiveTest extends Primitive
 {
-    use HasType;
-    use HasName;
     use HasDescription;
+    use HasName;
+    use HasType;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->type('primitive');
         $this->name('test');

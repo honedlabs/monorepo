@@ -21,16 +21,16 @@ it('sets options', function () {
         ->toBeInstanceOf(OptionsTest::class)
         ->hasOptions()->toBeTrue()
         ->getOptions()->scoped(fn ($options) => $options
-            ->toBeCollection()
-            ->toHaveCount(2)
-            ->sequence(
-                fn ($option) => $option->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe('value')
-                    ->getLabel()->toBe('Label'),
-                fn ($option) => $option->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe('value2')
-                    ->getLabel()->toBe('Label2'),
-            )
+        ->toBeCollection()
+        ->toHaveCount(2)
+        ->sequence(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('value')
+                ->getLabel()->toBe('Label'),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('value2')
+                ->getLabel()->toBe('Label2'),
+        )
         );
 });
 
@@ -39,19 +39,19 @@ it('sets enums with defaults', function () {
         ->toBeInstanceOf(OptionsTest::class)
         ->hasOptions()->toBeTrue()
         ->getOptions()->scoped(fn ($options) => $options
-            ->toBeCollection()
-            ->toHaveCount(3)
-            ->sequence(
-                fn ($option) => $option->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe(Status::Available->value)
-                    ->getLabel()->toBe(Status::Available->name),
-                fn ($option) => $option->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe(Status::Unavailable->value)
-                    ->getLabel()->toBe(Status::Unavailable->name),
-                fn ($option) => $option->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe(Status::ComingSoon->value)
-                    ->getLabel()->toBe(Status::ComingSoon->name),
-            )
+        ->toBeCollection()
+        ->toHaveCount(3)
+        ->sequence(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::Available->value)
+                ->getLabel()->toBe(Status::Available->name),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::Unavailable->value)
+                ->getLabel()->toBe(Status::Unavailable->name),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::ComingSoon->value)
+                ->getLabel()->toBe(Status::ComingSoon->name),
+        )
         );
 });
 
@@ -60,19 +60,19 @@ it('sets enums with methods', function () {
         ->toBeInstanceOf(OptionsTest::class)
         ->hasOptions()->toBeTrue()
         ->getOptions()->scoped(fn ($options) => $options
-            ->toBeCollection()
-            ->toHaveCount(3)
-            ->sequence(
-                fn ($option) => $option->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe(Status::Available->value)
-                    ->getLabel()->toBe(Status::Available->label()),
-                fn ($option) => $option->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe(Status::Unavailable->value)
-                    ->getLabel()->toBe(Status::Unavailable->label()),
-                fn ($option) => $option->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe(Status::ComingSoon->value)
-                    ->getLabel()->toBe(Status::ComingSoon->label()),
-            )
+        ->toBeCollection()
+        ->toHaveCount(3)
+        ->sequence(
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::Available->value)
+                ->getLabel()->toBe(Status::Available->label()),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::Unavailable->value)
+                ->getLabel()->toBe(Status::Unavailable->label()),
+            fn ($option) => $option->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(Status::ComingSoon->value)
+                ->getLabel()->toBe(Status::ComingSoon->label()),
+        )
         );
 });
 
@@ -83,12 +83,12 @@ it('sets from model', function () {
         ->toBeInstanceOf(OptionsTest::class)
         ->hasOptions()->toBeTrue()
         ->getOptions()->scoped(fn ($options) => $options
-            ->toBeCollection()
-            ->toHaveCount(1)
-            ->first()->scoped(fn ($option) => $option
-                ->toBeInstanceOf(Option::class)
-                ->getValue()->toBe($product->id)
-                ->getLabel()->toBe($product->name)
-            )
+        ->toBeCollection()
+        ->toHaveCount(1)
+        ->first()->scoped(fn ($option) => $option
+        ->toBeInstanceOf(Option::class)
+        ->getValue()->toBe($product->id)
+        ->getLabel()->toBe($product->name)
+        )
         );
 });

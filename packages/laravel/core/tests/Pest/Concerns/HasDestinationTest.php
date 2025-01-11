@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use Honed\Core\Concerns\HasDestination;
 use Honed\Core\Destination;
 use Honed\Core\Tests\Stubs\Product;
-use Honed\Core\Concerns\HasDestination;
 
 class DestinationTest
 {
@@ -32,7 +32,7 @@ it('sets closure', function () {
         ->toBeInstanceOf(DestinationTest::class)
         ->hasDestination()->toBeTrue()
         ->getDestination()->scoped(fn ($destination) => $destination
-            ->goesTo()->toBeInstanceOf(\Closure::class)
+        ->goesTo()->toBeInstanceOf(\Closure::class)
         )->resolveDestination($this->product)->toBe(route('product.show', $this->product));
 });
 
@@ -41,19 +41,19 @@ it('sets string', function () {
         ->toBeInstanceOf(DestinationTest::class)
         ->hasDestination()->toBeTrue()
         ->getDestination()->scoped(fn ($destination) => $destination
-            ->goesTo()->toBe('https://honed.dev')
+        ->goesTo()->toBe('https://honed.dev')
         )->resolveDestination($this->product)->toBe('https://honed.dev');
 });
 
 it('sets destination closure', function () {
     expect($this->test->to(fn (Destination $d) => $d
-            ->to('product.show')
-            ->parameters($this->product)
-        ))->toBeInstanceOf(DestinationTest::class)
+        ->to('product.show')
+        ->parameters($this->product)
+    ))->toBeInstanceOf(DestinationTest::class)
         ->hasDestination()->toBeTrue()
         ->getDestination()->scoped(fn ($destination) => $destination
-            ->goesTo()->toBe('product.show')
-            ->getParameters()->toBe($this->product)
+    ->goesTo()->toBe('product.show')
+    ->getParameters()->toBe($this->product)
         )->resolveDestination($this->product)->toBe(route('product.show', $this->product));
 });
 

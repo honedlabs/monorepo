@@ -13,7 +13,7 @@ trait Validatable
 
     /**
      * Set the validation function for the instance.
-     * 
+     *
      * @return $this
      */
     public function validator(\Closure $validator): static
@@ -33,13 +33,13 @@ trait Validatable
 
     /**
      * Determine if the argument passes the validation function.
-     * 
-     * @param mixed $value The value to validate.
+     *
+     * @param  mixed  $value  The value to validate.
      */
     public function validate($value): bool
     {
-        return $this->validates() 
-            ? (bool) \call_user_func($this->validator, $value) 
+        return $this->validates()
+            ? (bool) \call_user_func($this->validator, $value)
             : true;
     }
 }

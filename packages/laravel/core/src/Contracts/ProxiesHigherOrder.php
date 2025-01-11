@@ -12,8 +12,7 @@ interface ProxiesHigherOrder
     /**
      * Dynamically forward calls to the underlying proxies.
      *
-     * @param string $property
-     * 
+     * @param  string  $property
      * @return HigherOrder<T>
      */
     public function __get($property);

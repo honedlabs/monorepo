@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Honed\Core\Option;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 trait HasOptions
 {
@@ -18,14 +18,14 @@ trait HasOptions
     /**
      * Get or set the options for the instance.
      *
-     * @param  \Honed\Core\Option|class-string<\BackedEnum>|class-string<\Illuminate\Database\Eloquent\Model>|null  $option 
-     * @param  array<int,\Honed\Core\Option|string>  $options 
+     * @param  \Honed\Core\Option|class-string<\BackedEnum>|class-string<\Illuminate\Database\Eloquent\Model>|null  $option
+     * @param  array<int,\Honed\Core\Option|string>  $options
      * @return $this
      */
     public function options($option, ...$options): static
     {
         if (! \is_null($option)) {
-            $this->options = $option instanceof Option 
+            $this->options = $option instanceof Option
                 ? collect([$option, ...$options])
                 : collect(match (true) {
                     \is_string($option) && \enum_exists($option) => $option::cases(),
@@ -42,7 +42,7 @@ trait HasOptions
 
     /**
      * Get the options for the instance.
-     * 
+     *
      * @return \Illuminate\Support\Collection<int,\Honed\Core\Option>|null
      */
     public function getOptions(): ?Collection

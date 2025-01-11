@@ -15,8 +15,8 @@ trait HasIcon
 
     /**
      * Set the icon for the instance.
-     * 
-     * @param string|\Honed\Core\Contracts\IsIcon|null $icon
+     *
+     * @param  string|\Honed\Core\Contracts\IsIcon|null  $icon
      * @return $this
      */
     public function icon($icon): static

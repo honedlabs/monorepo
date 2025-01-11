@@ -13,7 +13,7 @@ trait Transformable
 
     /**
      * Set the transformer function for the instance.
-     * 
+     *
      * @return $this
      */
     public function transformer(\Closure $transformer): static
@@ -36,8 +36,8 @@ trait Transformable
      */
     public function transform(mixed $value): mixed
     {
-        return $this->transforms() 
-            ? \call_user_func($this->transformer, $value) 
+        return $this->transforms()
+            ? \call_user_func($this->transformer, $value)
             : $value;
     }
 }

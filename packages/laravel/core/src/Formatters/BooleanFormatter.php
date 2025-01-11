@@ -18,7 +18,7 @@ class BooleanFormatter implements Formats
      */
     protected $false = 'False';
 
-    public function __construct($true = null, $false = null)
+    public function __construct(?string $true = null, ?string $false = null)
     {
         $this->true($true);
         $this->false($false);
@@ -26,10 +26,10 @@ class BooleanFormatter implements Formats
 
     /**
      * Make a new boolean formatter.
-     * 
+     *
      * @return $this
      */
-    public static function make(string $true = null, string $false = null): static
+    public static function make(?string $true = null, ?string $false = null): static
     {
         return resolve(static::class, compact('true', 'false'));
     }
@@ -49,10 +49,10 @@ class BooleanFormatter implements Formats
 
     /**
      * Set the true label for the instance.
-     * 
+     *
      * @return $this
      */
-    public function true(string $true = null): static
+    public function true(?string $true): static
     {
         if (! \is_null($true)) {
             $this->true = $true;
@@ -71,10 +71,10 @@ class BooleanFormatter implements Formats
 
     /**
      * Set the false label for the instance.
-     * 
+     *
      * @return $this
      */
-    public function false(string $false = null): static
+    public function false(?string $false): static
     {
         if (! \is_null($false)) {
             $this->false = $false;
@@ -96,8 +96,8 @@ class BooleanFormatter implements Formats
      */
     public function format(mixed $value): string
     {
-        return ((bool) $value) 
-            ? $this->getTrue() 
+        return ((bool) $value)
+            ? $this->getTrue()
             : $this->getFalse();
     }
 }

@@ -8,8 +8,10 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\IsActive;
-use Honed\Core\Primitive;
 
+/**
+ * @extends Primitive<string,mixed>
+ */
 class Option extends Primitive
 {
     use HasLabel;
@@ -19,9 +21,9 @@ class Option extends Primitive
 
     /**
      * Create a new option instance.
-     * 
-     * @param int|string|float|null $value
-     * @param string $label
+     *
+     * @param  int|string|float|null  $value
+     * @param  string  $label
      */
     final public function __construct($value, $label = null)
     {
@@ -31,9 +33,9 @@ class Option extends Primitive
 
     /**
      * Make a new option class.
-     * 
-     * @param mixed $value
-     * @param string $label
+     *
+     * @param  mixed  $value
+     * @param  string  $label
      * @return static
      */
     public static function make($value, $label = null)

@@ -13,7 +13,7 @@ trait HasAttribute
 
     /**
      * Set the attribute for the instance.
-     * 
+     *
      * @return $this
      */
     public function attribute(?string $attribute): static

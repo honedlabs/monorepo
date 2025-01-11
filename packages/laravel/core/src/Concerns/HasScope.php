@@ -13,7 +13,7 @@ trait HasScope
 
     /**
      * Set the scope for the instance.
-     * 
+     *
      * @return $this
      */
     public function scope(?string $scope): static

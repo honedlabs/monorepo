@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Pest\Expectation;
 use Honed\Core\Destination;
 use Illuminate\Support\Facades\URL;
+use Pest\Expectation;
 use Symfony\Component\HttpFoundation\Request;
 
 beforeEach(function () {

@@ -38,8 +38,8 @@ trait Encodable
 
     /**
      * Encode a value using the instance's encoder.
-     * 
-     * @param mixed $value The value to encode.
+     *
+     * @param  mixed  $value  The value to encode.
      * @return string The encoded value.
      */
     public static function encode($value)
@@ -51,8 +51,8 @@ trait Encodable
 
     /**
      * Decode a value using the instance's decoder.
-     * 
-     * @param string $value The value to decode.
+     *
+     * @param  string  $value  The value to decode.
      * @return string The decoded value.
      */
     public static function decode($value)

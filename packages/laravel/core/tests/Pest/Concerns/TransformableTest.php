@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Core\Concerns\Transformable;
-use Honed\Core\Tests\Stubs\Product;
 
 class TransformableTest
 {

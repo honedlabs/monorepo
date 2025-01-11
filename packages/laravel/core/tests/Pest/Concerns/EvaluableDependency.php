@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Core\Concerns\Evaluable;
-use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Concerns\EvaluableDependency;
+use Honed\Core\Tests\Stubs\Product;
 
 class EvaluableDependencyTest
 {
@@ -13,7 +13,7 @@ class EvaluableDependencyTest
 }
 
 beforeEach(function () {
-    $this->test = new EvaluableDependencyTest();
+    $this->test = new EvaluableDependencyTest;
 });
 
 test('name `model`', function () {
@@ -45,5 +45,3 @@ test('type model child', function () {
     expect($this->test->allow(fn (Product $product) => $product->id > 100))
         ->allowsModel($this->product)->toBeFalse();
 });
-
-

@@ -11,14 +11,14 @@ trait HasName
     }
 
     /**
-     * @var string|\Closure
+     * @var string|\Closure|null
      */
     protected $name;
 
     /**
      * Set the name for the instance.
-     * 
-     * @param string|\Closure|null $name 
+     *
+     * @param  string|\Closure|null  $name
      * @return $this
      */
     public function name($name): static
@@ -32,14 +32,17 @@ trait HasName
 
     /**
      * Get the name for the instance, evaluating it if necessary.
-     * 
-     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
-     * @param array<string,mixed> $typed
+     *
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      */
     public function getName($parameters = [], $typed = []): ?string
     {
-        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model 
-            ? $this->evaluateModelForName($parameters, 'getName') 
+        /**
+         * @var string|null
+         */
+        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model
+            ? $this->evaluateModelForName($parameters, 'getName')
             : $this->evaluate($this->name, $parameters, $typed);
 
         $this->name = $evaluated;
@@ -66,4 +69,3 @@ trait HasName
             ->toString();
     }
 }
-

@@ -3,17 +3,17 @@
 declare(strict_types=1);
 
 use Honed\Core\Concerns\HasFormatter;
-use Honed\Core\Formatters\DateFormatter;
-use Honed\Core\Formatters\StringFormatter;
 use Honed\Core\Formatters\BooleanFormatter;
+use Honed\Core\Formatters\DateFormatter;
 use Honed\Core\Formatters\NumericFormatter;
+use Honed\Core\Formatters\StringFormatter;
 
 class FormatterTest
 {
     use HasFormatter;
 }
 
-beforeEach(function (){
+beforeEach(function () {
     $this->test = new FormatterTest;
 });
 
@@ -22,7 +22,6 @@ it('sets', function () {
         ->toBeInstanceOf(FormatterTest::class)
         ->hasFormatter()->toBeTrue();
 });
-
 
 it('sets boolean', function () {
     expect($this->test->formatBoolean())

@@ -11,14 +11,14 @@ trait HasDescription
     }
 
     /**
-     * @var string|\Closure
+     * @var string|\Closure|null
      */
     protected $description;
 
     /**
      * Set the description for the instance.
-     * 
-     * @param string|\Closure|null $description 
+     *
+     * @param  string|\Closure|null  $description
      * @return $this
      */
     public function description($description): static
@@ -32,14 +32,17 @@ trait HasDescription
 
     /**
      * Get the description for the instance, evaluating it if necessary.
-     * 
-     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
-     * @param array<string,mixed> $typed
+     *
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      */
     public function getDescription($parameters = [], $typed = []): ?string
     {
-        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model 
-            ? $this->evaluateModelForDescription($parameters, 'getDescription') 
+        /**
+         * @var string|null
+         */
+        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model
+            ? $this->evaluateModelForDescription($parameters, 'getDescription')
             : $this->evaluate($this->description, $parameters, $typed);
 
         $this->description = $evaluated;
@@ -55,4 +58,3 @@ trait HasDescription
         return isset($this->description);
     }
 }
-

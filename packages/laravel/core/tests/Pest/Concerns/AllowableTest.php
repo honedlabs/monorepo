@@ -36,4 +36,3 @@ it('allows models', function () {
     expect($this->test->allow(fn (Product $product) => $product->id > 100))
         ->isAllowed(product())->toBeFalse();
 });
-

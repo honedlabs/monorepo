@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Core;
 
-use Illuminate\Support\Str;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\EvaluableDependency;
 use Honed\Core\Contracts\ResolvesClosures;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @extends Primitive<string,mixed>
+ */
 class Destination extends Primitive implements ResolvesClosures
 {
     use Evaluable;
@@ -19,12 +22,12 @@ class Destination extends Primitive implements ResolvesClosures
     }
 
     /**
-     * @var string|\Closure
+     * @var string|\Closure|null
      */
     protected $to;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $href;
 
@@ -53,26 +56,23 @@ class Destination extends Primitive implements ResolvesClosures
      */
     protected $temporary = 0;
 
-    /**
-     * Create a new destination instance.
-     * 
-     * @param mixed $to
-     * @param mixed $parameters
-     */
-    public function __construct($to = null, $parameters = [], string $via = Request::METHOD_GET)
-    {
+    public function __construct(
+        string|\Closure|null $to = null,
+        mixed $parameters = [],
+        string $via = Request::METHOD_GET
+    ) {
         $this->to($to, $parameters);
         $this->via($via);
     }
 
     /**
      * Make a new destination instance.
-     * 
-     * @param mixed $to
-     * @param mixed $parameters
      */
-    public static function make($to = null, $parameters = [], string $via = Request::METHOD_GET): Destination
-    {
+    public static function make(
+        string|\Closure|null $to = null,
+        mixed $parameters = [],
+        string $via = Request::METHOD_GET
+    ): Destination {
         return resolve(static::class, compact('to', 'parameters', 'via'));
     }
 
@@ -81,18 +81,16 @@ class Destination extends Primitive implements ResolvesClosures
         return [
             'href' => $this->resolve(),
             'method' => $this->getVia(),
-            'tab' => $this->isTab()
+            'tab' => $this->isTab(),
         ];
     }
 
     /**
      * Set the destination and parameters for this link.
-     * 
-     * @param string|\Closure|null $destination
-     * @param mixed $parameters
+     *
      * @return $this
      */
-    public function to($destination = null, $parameters = []): static
+    public function to(string|\Closure|null $destination = null, mixed $parameters = []): static
     {
 
         if (! \is_null($destination)) {
@@ -105,7 +103,7 @@ class Destination extends Primitive implements ResolvesClosures
 
     /**
      * Get the destination to be used for the link.
-     * 
+     *
      * @return string|\Closure|null
      */
     public function goesTo()
@@ -115,11 +113,10 @@ class Destination extends Primitive implements ResolvesClosures
 
     /**
      * Set the HTTP method to use for the link.
-     * 
-     * @param string|null $via
+     *
      * @return $this
      */
-    public function via($via = Request::METHOD_GET): static
+    public function via(?string $via): static
     {
         if (! \is_null($via)) {
             $this->via = $via;
@@ -130,50 +127,50 @@ class Destination extends Primitive implements ResolvesClosures
 
     /**
      * Set the HTTP method to a get request.
-     * 
+     *
      * @return $this
      */
-    public function viaGet()
+    public function viaGet(): static
     {
         return $this->via(Request::METHOD_GET);
     }
 
     /**
      * Set the HTTP method to a post request.
-     * 
+     *
      * @return $this
      */
-    public function viaPost()
+    public function viaPost(): static
     {
         return $this->via(Request::METHOD_POST);
     }
 
     /**
      * Set the HTTP method to a put request.
-     * 
+     *
      * @return $this
      */
-    public function viaPut()
+    public function viaPut(): static
     {
         return $this->via(Request::METHOD_PUT);
     }
 
     /**
      * Set the HTTP method to a patch request.
-     * 
+     *
      * @return $this
      */
-    public function viaPatch()
+    public function viaPatch(): static
     {
         return $this->via(Request::METHOD_PATCH);
     }
 
     /**
      * Set the HTTP method to a delete request.
-     * 
+     *
      * @return $this
      */
-    public function viaDelete()
+    public function viaDelete(): static
     {
         return $this->via(Request::METHOD_DELETE);
     }
@@ -188,11 +185,10 @@ class Destination extends Primitive implements ResolvesClosures
 
     /**
      * Set the parameters to be used for the link.
-     * 
-     * @param mixed $parameters
+     *
      * @return $this
      */
-    public function parameters($parameters = null): static
+    public function parameters(mixed $parameters = null): static
     {
         if (! \is_null($parameters)) {
             $this->parameters = $parameters;
@@ -203,17 +199,15 @@ class Destination extends Primitive implements ResolvesClosures
 
     /**
      * Get the parameters to be used for the link.
-     * 
-     * @return mixed
      */
-    public function getParameters()
+    public function getParameters(): mixed
     {
         return $this->parameters;
     }
 
     /**
      * Set the link to be signed.
-     * 
+     *
      * @return $this
      */
     public function signed(bool $signed = true): static
@@ -233,7 +227,7 @@ class Destination extends Primitive implements ResolvesClosures
 
     /**
      * Set the link to open in a new tab.
-     * 
+     *
      * @return $this
      */
     public function tab(bool $tab = true): static
@@ -253,7 +247,7 @@ class Destination extends Primitive implements ResolvesClosures
 
     /**
      * Set the duration of the link.
-     * 
+     *
      * @return $this
      */
     public function temporary(int $seconds = 120): static
@@ -273,19 +267,20 @@ class Destination extends Primitive implements ResolvesClosures
 
     /**
      * Resolve the destination url using the provided parameters at call-time or from the instance.
-     * 
-     * @param mixed $parameters
-     * @param array<string,mixed>|null $typed
+     *
+     * @param  mixed  $parameters
+     * @param  array<string,mixed>|null  $typed
      */
     public function resolve($parameters = null, $typed = null): ?string
     {
+        // @phpstan-ignore-next-line
         return $this->href ??= match (true) {
             \is_null($this->to) => null,
-            \is_callable($this->to) => $parameters instanceof \Illuminate\Database\Eloquent\Model 
-                ? $this->evaluateModelForDestination($parameters, 'resolve') 
-                : $this->evaluate($this->to, $parameters ?? [], $typed ?? []),
+            \is_callable($this->to) => $parameters instanceof \Illuminate\Database\Eloquent\Model
+                ? $this->evaluateModelForDestination($parameters, 'resolve')
+                : $this->evaluate($this->to, $parameters ?? [], $typed ?? []), // @phpstan-ignore-line
             static::isUri($this->to) => $this->to,
-            $this->isSigned() && $this->isTemporary() => URL::temporarySignedRoute($this->to, $this->temporary, $parameters ?? $this->parameters),
+            $this->isSigned() && $this->isTemporary() => URL::temporarySignedRoute($this->to, $this->temporary, $parameters ?? $this->parameters), // @phpstan-ignore-line
             $this->isSigned() => URL::signedRoute($this->to, $parameters ?? $this->parameters),
             default => route($this->to, $parameters ?? $this->parameters),
         };
@@ -294,9 +289,9 @@ class Destination extends Primitive implements ResolvesClosures
     /**
      * Determine if the provided value is a valid URI.
      */
-    private static function isUri(mixed $uri): bool
+    public static function isUri(mixed $uri): bool
     {
-        return \is_string($uri) 
+        return \is_string($uri)
             && (Str::isUrl($uri) || Str::startsWith($uri, ['/', '#']));
     }
 }

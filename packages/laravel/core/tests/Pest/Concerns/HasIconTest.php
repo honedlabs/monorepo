@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Contracts\IsIcon;
 use Honed\Core\Concerns\HasIcon;
+use Honed\Core\Contracts\IsIcon;
 
 class IconTest
 {

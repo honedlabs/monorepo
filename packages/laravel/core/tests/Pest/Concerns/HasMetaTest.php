@@ -25,8 +25,8 @@ it('sets', function () {
 it('gets', function () {
     expect($this->test)
         ->getMeta()->scoped(fn ($meta) => $meta
-            ->toBeArray()
-            ->toBeEmpty()
+        ->toBeArray()
+        ->toBeEmpty()
         )
         ->hasMeta()->toBeFalse();
 

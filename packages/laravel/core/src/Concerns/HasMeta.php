@@ -17,8 +17,8 @@ trait HasMeta
 
     /**
      * Get or set the meta for the instance.
-     * 
-     * @param array<string,mixed>|\Closure|null $meta
+     *
+     * @param  array<string,mixed>|\Closure|null  $meta
      * @return $this
      */
     public function meta($meta = null): static
@@ -32,15 +32,18 @@ trait HasMeta
 
     /**
      * Get the meta for the instance, evaluating it if necessary.
-     * 
-     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
-     * @param array<string,mixed> $typed
+     *
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      * @return array<string,mixed>
      */
     public function getMeta($parameters = [], $typed = []): array
     {
-        $evaluated = ($parameters instanceof \Illuminate\Database\Eloquent\Model 
-            ? $this->evaluateModelForMeta($parameters, 'getMeta') 
+        /**
+         * @var array<string,mixed>
+         */
+        $evaluated = (array) ($parameters instanceof \Illuminate\Database\Eloquent\Model
+            ? $this->evaluateModelForMeta($parameters, 'getMeta')
             : $this->evaluate($this->meta, $parameters, $typed));
 
         $this->meta = $evaluated;
@@ -56,4 +59,3 @@ trait HasMeta
         return $this->meta instanceof \Closure || \count($this->meta) > 0;
     }
 }
-

@@ -13,7 +13,7 @@ trait HasValue
 
     /**
      * Set the value for the instance.
-     * 
+     *
      * @return $this
      */
     public function value(mixed $value): static
@@ -32,7 +32,6 @@ trait HasValue
     {
         return $this->value;
     }
-    
 
     /**
      * Determine if the instance has an value set.
