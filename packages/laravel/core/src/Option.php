@@ -47,7 +47,7 @@ class Option extends Primitive
             'value' => $this->value(),
             'label' => $this->label(),
             'meta' => $this->meta(),
-            'active' => $this->active(),
+            'active' => $this->isActive(),
         ];
     }
 }

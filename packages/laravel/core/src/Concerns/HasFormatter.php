@@ -50,7 +50,7 @@ trait HasFormatter
      * @param string|null $false
      * @return $this
      */
-    public function boolean($true = null, $false = null): static
+    public function formatBoolean($true = null, $false = null): static
     {
         return $this->formatter(BooleanFormatter::make($true, $false));
     }
@@ -64,7 +64,7 @@ trait HasFormatter
      * 
      * @return $this
      */
-    public function string($prefix = null, $suffix = null, $limit = null): static
+    public function formatString($prefix = null, $suffix = null, $limit = null): static
     {
         return $this->formatter(StringFormatter::make($prefix, $suffix, $limit));
     }
@@ -78,7 +78,7 @@ trait HasFormatter
      * 
      * @return $this
      */
-    public function date($date = null, $timezone = null, $diff = false): static
+    public function formatDate($date = null, $timezone = null, $diff = false): static
     {
         return $this->formatter(DateFormatter::make($date, $timezone, $diff));
     }
@@ -93,7 +93,7 @@ trait HasFormatter
      * 
      * @return $this
      */
-    public function numeric($precision = null, $divideBy = null, $locale = null, $currency = null): static
+    public function formatNumeric($precision = null, $divideBy = null, $locale = null, $currency = null): static
     {
         return $this->formatter(NumericFormatter::make($precision, $divideBy, $locale, $currency));
     }

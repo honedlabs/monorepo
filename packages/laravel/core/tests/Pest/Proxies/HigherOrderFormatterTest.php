@@ -7,8 +7,10 @@ use Honed\Core\Concerns\HasFormatter;
 use Honed\Core\Proxies\HigherOrderFormatter;
 use Honed\Core\Primitive;
 
-class HigherOrderFormatterComponent extends Primitive implements HigherOrder
+class HigherOrderFormatterTest extends Primitive implements HigherOrder
 {
+    use HasFormatter;
+
     public static function make()
     {
         return resolve(static::class);
@@ -28,23 +30,17 @@ class HigherOrderFormatterComponent extends Primitive implements HigherOrder
     }
 }
 
-class HigherOrderFormatterTraitComponent extends HigherOrderFormatterComponent
-{
-    use HasFormatter;
-}
 
 beforeEach(function () {
-    $this->formattable = HigherOrderFormatterTraitComponent::make();
+    $this->test = HigherOrderFormatterTest::make();
 });
 
-it('forwards calls to the higher order', function () {
-    expect($this->formattable->boolean()->formatter->truthLabel('Agree'))
-        ->toBeInstanceOf(HigherOrderFormatterTraitComponent::class)
+it('forwards calls', function () {
+    expect($this->test->formatter->true('Agree'))
+        ->toBeInstanceOf(HigherOrderFormatterTest::class);
+
+    expect($this->test->formatBoolean()->formatter->true('Agree'))
+        ->toBeInstanceOf(HigherOrderFormatterTest::class)
         ->hasFormatter()->toBeTrue();
 });
 
-it('handles case where primitive does not have formatter set', function () {
-    expect($this->formattable->formatter->truthLabel('Agree'))
-        ->toBeInstanceOf(HigherOrderFormatterTraitComponent::class)
-        ->hasFormatter()->toBeFalse();
-});

@@ -17,12 +17,12 @@ class Destination extends Primitive implements ResolvesClosures
     /**
      * @var string|\Closure
      */
-    protected $destination;
+    protected $to;
 
     /**
      * @var string
      */
-    protected $resolved;
+    protected $href;
 
     /**
      * @var mixed
@@ -30,14 +30,9 @@ class Destination extends Primitive implements ResolvesClosures
     protected $parameters = [];
 
     /**
-     * @var array<string,mixed>
-     */
-    protected $typedParameters = [];
-
-    /**
      * @var string
      */
-    protected $as = Request::METHOD_GET;
+    protected $via = Request::METHOD_GET;
 
     /**
      * @var bool
@@ -47,161 +42,177 @@ class Destination extends Primitive implements ResolvesClosures
     /**
      * @var bool
      */
-    protected $newTab = false;
+    protected $tab = false;
 
     /**
      * @var int
      */
-    protected $duration = 0;
+    protected $temporary = 0;
 
     /**
      * Create a new destination instance.
      * 
-     * @param mixed $destination
+     * @param mixed $to
+     * @param mixed $parameters
      */
-    public function __construct($destination = null, $as = Request::METHOD_GET)
+    public function __construct($to = null, $parameters = [], string $via = Request::METHOD_GET)
     {
-        $this->to($destination);
-        $this->as($as);
+        $this->to($to, $parameters);
+        $this->via($via);
     }
 
     /**
      * Make a new destination instance.
+     * 
+     * @param mixed $to
+     * @param mixed $parameters
      */
-    public static function make($destination = null, $as = Request::METHOD_GET)
+    public static function make($to = null, $parameters = [], string $via = Request::METHOD_GET): Destination
     {
-        return resolve(static::class, compact('destination', 'as'));
+        return resolve(static::class, compact('to', 'parameters', 'via'));
     }
 
     public function toArray()
     {
         return [
             'href' => $this->resolve(),
-            'method' => $this->as(),
+            'method' => $this->getVia(),
+            'tab' => $this->isTab()
         ];
     }
 
     /**
-     * Set the destination and parameters to resolve as a closure, or as a Laravel route. 
-     * If no destination is provided, the current destination will be returned.
+     * Set the destination and parameters for this link.
      * 
      * @param string|\Closure|null $destination
      * @param mixed $parameters
-     * @return string|\Closure|null|$this The current destination when no destination is provided, or the instance when setting the destination.
+     * @return $this
      */
-    public function to($destination = null, $parameters = [])
+    public function to($destination = null, $parameters = []): static
     {
 
-        if (\is_null($destination)) {
-            return $this->destination;
+        if (! \is_null($destination)) {
+            $this->to = $destination;
+            $this->parameters = $parameters;
         }
-
-        $this->destination = $destination;
-
-        $this->parameters = $parameters;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has a destination set.
+     * Get the destination to be used for the link.
+     * 
+     * @return string|\Closure|null
      */
-    public function hasDestination(): bool
+    public function getTo()
     {
-        return isset($this->destination);
+        return $this->to;
     }
 
     /**
-     * Get or set the HTTP method to use for the destination.
+     * Set the HTTP method to use for the link.
      * 
-     * @param string|null $as
-     * @return string|null|$this The current HTTP method when no argument is provided, or the instance when setting the HTTP method.
+     * @param string|null $via
+     * @return $this
      */
-    public function as($as = null)
+    public function via($via = Request::METHOD_GET): static
     {
-        if (\is_null($as)) {
-            return $this->as;
+        if (! \is_null($via)) {
+            $this->via = $via;
         }
-
-        $this->as = $as;
 
         return $this;
     }
 
     /**
-     * Set the HTTP method to a GET request
+     * Set the HTTP method to a get request.
      * 
      * @return $this
      */
-    public function asGet()
+    public function viaGet()
     {
-        return $this->as(Request::METHOD_GET);
+        return $this->via(Request::METHOD_GET);
     }
 
     /**
-     * Set the HTTP method to a POST request
+     * Set the HTTP method to a post request.
      * 
      * @return $this
      */
-    public function asPost()
+    public function viaPost()
     {
-        return $this->as(Request::METHOD_POST);
+        return $this->via(Request::METHOD_POST);
     }
 
     /**
-     * Set the HTTP method to a PUT request
+     * Set the HTTP method to a put request.
      * 
      * @return $this
      */
-    public function asPut()
+    public function viaPut()
     {
-        return $this->as(Request::METHOD_PUT);
+        return $this->via(Request::METHOD_PUT);
     }
 
     /**
-     * Set the HTTP method to a PATCH request
+     * Set the HTTP method to a patch request.
      * 
      * @return $this
      */
-    public function asPatch()
+    public function viaPatch()
     {
-        return $this->as(Request::METHOD_PATCH);
+        return $this->via(Request::METHOD_PATCH);
     }
 
     /**
-     * Set the HTTP method to a DELETE request
+     * Set the HTTP method to a delete request.
      * 
      * @return $this
      */
-    public function asDelete()
+    public function viaDelete()
     {
-        return $this->as(Request::METHOD_DELETE);
+        return $this->via(Request::METHOD_DELETE);
     }
 
     /**
-     * Set or get the parameters to be used for the destination.
-     * 
-     * @param mixed $parameters The parameters to set, or null to retrieve the current parameters.
-     * @return mixed|$this The current parameters when no argument is provided, or the instance when setting the parameters.
+     * Get the HTTP method to use for the link.
      */
-    public function parameters($parameters = null)
+    public function getVia(): string
     {
-        if (\is_null($parameters)) {
-            return $this->parameters;
+        return $this->via;
+    }
+
+    /**
+     * Set the parameters to be used for the link.
+     * 
+     * @param mixed $parameters
+     * @return $this
+     */
+    public function parameters($parameters = null): static
+    {
+        if (! \is_null($parameters)) {
+            $this->parameters = $parameters;
         }
 
-        $this->parameters = $parameters;
-
         return $this;
+    }
+
+    /**
+     * Get the parameters to be used for the link.
+     * 
+     * @return mixed
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 
     /**
      * Set the link to be signed.
      * 
-     * @param bool $signed
      * @return $this
      */
-    public function signed($signed = true)
+    public function signed(bool $signed = true): static
     {
         $this->signed = $signed;
 
@@ -219,12 +230,11 @@ class Destination extends Primitive implements ResolvesClosures
     /**
      * Set the link to open in a new tab.
      * 
-     * @param bool $newTab
      * @return $this
      */
-    public function inNewTab($newTab = true)
+    public function tab(bool $tab = true): static
     {
-        $this->newTab = $newTab;
+        $this->tab = $tab;
 
         return $this;
     }
@@ -232,37 +242,19 @@ class Destination extends Primitive implements ResolvesClosures
     /**
      * Determine if the link should open in a new tab.
      */
-    public function isNewTab(): bool
+    public function isTab(): bool
     {
-        return $this->newTab;
-    }
-
-    /**
-     * Get or set the duration of the link.
-     * 
-     * @param int|null $duration
-     * @return int|null|$this The current duration when no argument is provided, or the instance when setting the duration.
-     */
-    public function duration($duration = null)
-    {
-        if (\is_null($duration)) {
-            return $this->duration;
-        }
-
-        $this->duration = $duration;
-
-        return $this;
+        return $this->tab;
     }
 
     /**
      * Set the duration of the link.
      * 
-     * @param int $seconds
      * @return $this
      */
-    public function temporary($seconds = 120)
+    public function temporary(int $seconds = 120): static
     {
-        $this->duration = $seconds;
+        $this->temporary = $seconds;
 
         return $this;
     }
@@ -272,18 +264,24 @@ class Destination extends Primitive implements ResolvesClosures
      */
     public function isTemporary(): bool
     {
-        return $this->duration > 0;
+        return $this->temporary > 0;
     }
 
-    public function resolve($parameters = null, $typed = null)
+    /**
+     * Resolve the destination url using the provided parameters at call-time or from the instance.
+     * 
+     * @param mixed $parameters
+     * @param array<string,mixed>|null $typed
+     */
+    public function resolve($parameters = null, $typed = null): ?string
     {
-        return $this->resolved ??= match (true) {
-            \is_null($this->destination) => null,
-            \is_callable($this->destination) => $this->evaluate($this->destination, $parameters, $typed),
-            \is_string($this->destination) && (Str::isUrl($this->destination) || Str::startsWith($this->destination, ['/', '#'])) => $this->destination,
-            $this->isSigned() && $this->isTemporary() => URL::temporarySignedRoute($this->destination, $this->duration, $parameters ?? $this->parameters),
-            $this->isSigned() => URL::signedRoute($this->destination, $parameters ?? $this->parameters),
-            default => route($this->destination, $parameters ?? $this->parameters),
+        return $this->href ??= match (true) {
+            \is_null($this->to) => null,
+            \is_callable($this->to) => $this->evaluate($this->to, $parameters, $typed),
+            \is_string($this->to) && (Str::isUrl($this->to) || Str::startsWith($this->to, ['/', '#'])) => $this->to,
+            $this->isSigned() && $this->isTemporary() => URL::temporarySignedRoute($this->to, $this->temporary, $parameters ?? $this->parameters),
+            $this->isSigned() => URL::signedRoute($this->to, $parameters ?? $this->parameters),
+            default => route($this->to, $parameters ?? $this->parameters),
         };
     }
 }
