@@ -110,6 +110,14 @@ class Destination extends Primitive implements ResolvesClosures
     }
 
     /**
+     * Determine if the destination has been set.
+     */
+    public function hasDestination(): bool
+    {
+        return ! \is_null($this->to);
+    }
+
+    /**
      * Set the HTTP method to use for the link.
      * 
      * @param string|null $via
