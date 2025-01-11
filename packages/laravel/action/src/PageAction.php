@@ -13,7 +13,7 @@ use Honed\Core\Link\Proxies\HigherOrderLink;
 /**
  * @property-read \Honed\Core\Link\Proxies\HigherOrderLink $link
  */
-class BulkAction extends Action implements ProxiesHigherOrder
+class PageAction extends Action implements ProxiesHigherOrder
 {
     use Linkable;
 

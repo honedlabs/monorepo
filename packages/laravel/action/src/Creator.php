@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
+use Honed\Action\PageAction;
 use Honed\Action\Exceptions\InvalidActionTypeException;
 
 class Creator
@@ -15,13 +16,8 @@ class Creator
 
     /**
      * Create a new action.
-     * 
-     * @param string $type
-     * @param string $name
-     * @param string|\Closure $label
-     * @return \Honed\Action\Action
      */
-    public function new($type, $name, $label = null)
+    public function new(string $type, string $name, string|\Closure $label = null): Action
     {
         return match ($type) {
             self::Bulk => $this->bulk($name, $label),
@@ -34,49 +30,33 @@ class Creator
 
     /**
      * Create a new bulk action.
-     * 
-     * @param string $name
-     * @param string|\Closure $label
-     * @return \Honed\Action\Action
      */
-    public function bulk($name, $label = null)
+    public function bulk(string $name, string|\Closure $label = null): BulkAction
     {
-        return $this->new(self::Bulk, $name, $label);
+        return BulkAction::make($name, $label);
     }
 
     /**
      * Create a new inline action.
-     * 
-     * @param string $name
-     * @param string|\Closure $label
-     * @return \Honed\Action\Action
      */
-    public function inline($name, $label = null)
+    public function inline(string $name, string|\Closure $label = null): InlineAction
     {
-        return $this->new(self::Inline, $name, $label);
+        return InlineAction::make($name, $label);
     }
 
     /**
      * Create a new page action.
-     * 
-     * @param string $name
-     * @param string|\Closure $label
-     * @return \Honed\Action\Action
      */
-    public function page($name, $label = null)
+    public function page(string $name, string|\Closure $label = null): PageAction
     {
-        return $this->new(self::Page, $name, $label);
+        return PageAction::make($name, $label);
     }
 
     /**
      * Create a new polymorphic action.
-     * 
-     * @param string $name
-     * @param string|\Closure $label
-     * @return \Honed\Action\Action
      */
-    public function polymorphic($name, $label = null)
+    public function polymorphic(string $name, string|\Closure $label = null): Action
     {
-        return $this->new(self::Polymorphic, $name, $label);
+        return InlineAction::make($name, $label)->morph();
     }
 }

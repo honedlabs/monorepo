@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Core\Concerns\IsDefault;
 use Honed\Core\Contracts\HigherOrder;
 use Honed\Core\Contracts\ProxiesHigherOrder;
 
@@ -40,7 +39,7 @@ class BulkAction extends Action implements ProxiesHigherOrder
      * 
      * @return $this
      */
-    public function isAlsoInline()
+    public function isAlsoInline(): static
     {
         return $this->morph();
     }

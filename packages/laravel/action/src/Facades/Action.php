@@ -7,12 +7,12 @@ namespace Honed\Action\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Honed\Action\Action
+ * @see \Honed\Action\Creator
  */
 class Action extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Honed\Action\Action::class;
+        return \Honed\Action\Creator::class;
     }
 }

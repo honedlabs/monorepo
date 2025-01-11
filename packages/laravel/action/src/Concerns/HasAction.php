@@ -11,17 +11,16 @@ trait HasAction
      */
     protected $action = null;
 
-    abstract public function handle();
-
     /**
-     * @param \Closure|null $action
-     * @return \Closure|null|$this
+     * @return $this
      */
-    public function action($action = null)
+    public function action(\Closure $action = null): static
     {
-        return \is_null($action) 
-            ? $this->action 
-            : $this;
+        if (! \is_null($action)) {
+            $this->action = $action;
+        }
+
+        return $this;
     }
 
     /**
