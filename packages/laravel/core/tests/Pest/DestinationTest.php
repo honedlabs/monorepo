@@ -27,22 +27,19 @@ it('has array representation', function () {
 it('sets destination', function () {
     expect($this->destination->to('https://honed.dev'))
         ->toBeInstanceOf(Destination::class)
-        ->hasDestination()->toBeTrue()
-        ->getTo()->toBe('https://honed.dev')
+        ->goesTo()->toBe('https://honed.dev')
         ->resolve($this->product)->toBe('https://honed.dev');
 });
 
 it('gets destination', function () {
     expect($this->destination->to('https://honed.dev'))
-        ->hasDestination()->toBeTrue()
-        ->getTo()->toBe('https://honed.dev')
+        ->goesTo()->toBe('https://honed.dev')
         ->resolve($this->product)->toBe('https://honed.dev');
 });
 
 it('sets destination with parameters', function () {
     expect($this->destination->to('product.show', $this->product))
-        ->hasDestination()->toBeTrue()
-        ->getTo()->toBe('product.show')
+        ->goesTo()->toBe('product.show')
         ->resolve($this->product)->toBe(route('product.show', $this->product));
 });
 

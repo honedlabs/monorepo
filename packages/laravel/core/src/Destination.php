@@ -6,6 +6,7 @@ namespace Honed\Core;
 
 use Illuminate\Support\Str;
 use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\EvaluableDependency;
 use Honed\Core\Contracts\ResolvesClosures;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 class Destination extends Primitive implements ResolvesClosures
 {
     use Evaluable;
+    use EvaluableDependency {
+        evaluateModelForTrait as evaluateModelForDestination;
+    }
 
     /**
      * @var string|\Closure
@@ -104,17 +108,9 @@ class Destination extends Primitive implements ResolvesClosures
      * 
      * @return string|\Closure|null
      */
-    public function getTo()
+    public function goesTo()
     {
         return $this->to;
-    }
-
-    /**
-     * Determine if the destination has been set.
-     */
-    public function hasDestination(): bool
-    {
-        return ! \is_null($this->to);
     }
 
     /**
@@ -285,11 +281,22 @@ class Destination extends Primitive implements ResolvesClosures
     {
         return $this->href ??= match (true) {
             \is_null($this->to) => null,
-            \is_callable($this->to) => $this->evaluate($this->to, $parameters, $typed),
-            \is_string($this->to) && (Str::isUrl($this->to) || Str::startsWith($this->to, ['/', '#'])) => $this->to,
+            \is_callable($this->to) => $parameters instanceof \Illuminate\Database\Eloquent\Model 
+                ? $this->evaluateModelForDestination($parameters, 'resolve') 
+                : $this->evaluate($this->to, $parameters ?? [], $typed ?? []),
+            static::isUri($this->to) => $this->to,
             $this->isSigned() && $this->isTemporary() => URL::temporarySignedRoute($this->to, $this->temporary, $parameters ?? $this->parameters),
             $this->isSigned() => URL::signedRoute($this->to, $parameters ?? $this->parameters),
             default => route($this->to, $parameters ?? $this->parameters),
         };
+    }
+
+    /**
+     * Determine if the provided value is a valid URI.
+     */
+    private static function isUri(mixed $uri): bool
+    {
+        return \is_string($uri) 
+            && (Str::isUrl($uri) || Str::startsWith($uri, ['/', '#']));
     }
 }

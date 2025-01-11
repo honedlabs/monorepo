@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Honed\Core\Destination;
-use Laravel\SerializableClosure\Support\ReflectionClosure;
 
 trait HasDestination
 {
@@ -13,15 +12,15 @@ trait HasDestination
      * Set the destination. 
      * 
      * @param \Honed\Core\Destination|\Closure|string $destination
-     * @param mixed $parameters
+     * @param \Honed\Core\Destination|\Closure|string $parameters
      * @return $this
      */
-    public function destination($destination, $parameters = null): static
+    public function to($destination, $parameters = null): static
     {
 
         match (true) {
             $destination instanceof Destination => $this->destination = $destination,
-            !\is_callable($destination) => $this->destination = $this->newDestination()->to($destination, $parameters),
+            ! \is_callable($destination) => $this->destination = $this->newDestination()->to($destination, $parameters),
             collect((new \ReflectionFunction($destination))->getParameters())
                 ->some(fn (\ReflectionParameter $parameter) => 
                     ($t = $parameter->getType()) instanceof \ReflectionNamedType && $t->getName() === Destination::class
@@ -34,26 +33,15 @@ trait HasDestination
     }
 
     /**
-     * Alias for `destination`.
-     * 
-     * @param \Honed\Core\Destination|\Closure|string $destination
-     * @param mixed $parameters
-     * @return $this
+     * Get the destination.
      */
-    public function to($destination, $parameters = null): static
-    {
-        return $this->destination($destination, $parameters);
-    }
-
-    /**
-     * @return \Honed\Core\Destination|null
-     */
-    public function getDestination()
+    public function getDestination(): ?Destination
     {
         return $this->destination;
     }
 
     /**
+     * Determine if the destination has been set.
      */
     public function hasDestination(): bool
     {
@@ -61,15 +49,21 @@ trait HasDestination
     }
 
     /**
-     * @return \Honed\Core\Destination|null
+     * Resolve the destination.
+     * 
+     * @param mixed $parameters
+     * @param array<string,mixed>|null $typed
      */
-    public function resolveDestination($parameters = null, $typed = null)
+    public function resolveDestination($parameters = null, $typed = null): ?string
     {
         return $this->destination?->resolve($parameters, $typed);
 
     }
 
-    private function newDestination()
+    /**
+     * Access the destination for this instance.
+     */
+    private function newDestination(): Destination
     {
         return $this->destination ??= Destination::make();
     }
