@@ -15,19 +15,17 @@ beforeEach(function () {
 
 it('is null by default', function () {
     expect($this->test)
-        ->placeholder()->toBeNull()
         ->hasPlaceholder()->toBeFalse();
 });
 
 it('sets', function () {
     expect($this->test->placeholder('test'))
         ->toBeInstanceOf(PlaceholderTest::class)
-        ->placeholder()->toBe('test')
         ->hasPlaceholder()->toBeTrue();
 });
 
 it('gets', function () {
     expect($this->test->placeholder('test'))
-        ->placeholder()->toBe('test')
+        ->getPlaceholder()->toBe('test')
         ->hasPlaceholder()->toBeTrue();
 });

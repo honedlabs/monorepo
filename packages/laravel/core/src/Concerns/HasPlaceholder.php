@@ -7,34 +7,38 @@ namespace Honed\Core\Concerns;
 trait HasPlaceholder
 {
     /**
-     * @var string|null
+     * @var string
      */
-    protected $placeholder = null;
+    protected $placeholder;
 
     /**
-     * Get or set the placeholder for the instance.
+     * Set the placeholder for the instance.
      * 
-     * @param string|null $placeholder The placeholder to set, or null to retrieve the current placeholder.
-     * @return string|null|$this The current placeholder when no argument is provided, or the instance when setting the placeholder.
+     * @param string|null $placeholder
+     * @return $this
      */
-    public function placeholder($placeholder = null)
+    public function placeholder($placeholder): static
     {
-        if (\is_null($placeholder)) {
-            return $this->placeholder;
+        if (! \is_null($placeholder)) {
+            $this->placeholder = $placeholder;
         }
-
-        $this->placeholder = $placeholder;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has an placeholder set.
-     * 
-     * @return bool True if an placeholder is set, false otherwise.
+     * Get the placeholder for the instance.
      */
-    public function hasPlaceholder()
+    public function getPlaceholder(): ?string
     {
-        return ! \is_null($this->placeholder);
+        return $this->placeholder;
+    }
+
+    /**
+     * Determine if the instance has an placeholder set.
+     */
+    public function hasPlaceholder(): bool
+    {
+        return isset($this->placeholder);
     }
 }

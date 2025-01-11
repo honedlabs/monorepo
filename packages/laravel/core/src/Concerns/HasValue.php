@@ -12,29 +12,33 @@ trait HasValue
     protected $value = null;
 
     /**
-     * Get or set the value for the instance.
+     * Set the value for the instance.
      * 
-     * @param mixed $value The value to set, or null to retrieve the current value.
-     * @return mixed|$this The current value when no argument is provided, or the instance when setting the value.
+     * @return $this
      */
-    public function value($value = null)
+    public function value(mixed $value): static
     {
-        if (\is_null($value)) {
-            return $this->value;
+        if (! \is_null($value)) {
+            $this->value = $value;
         }
-
-        $this->value = $value;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has an value set.
-     * 
-     * @return bool True if an value is set, false otherwise.
+     * Get the value for the instance.
      */
-    public function hasValue()
+    public function getValue(): mixed
     {
-        return ! \is_null($this->value);
+        return $this->value;
+    }
+    
+
+    /**
+     * Determine if the instance has an value set.
+     */
+    public function hasValue(): bool
+    {
+        return isset($this->value);
     }
 }

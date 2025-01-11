@@ -14,29 +14,33 @@ trait HasIcon
     protected $icon;
 
     /**
-     * Get or set the icon for the instance.
+     * Set the icon for the instance.
      * 
-     * @param string|\Honed\Core\Contracts\IsIcon|null $icon The icon to set, or null to retrieve the current icon.
-     * @return string|null|$this The current icon when no argument is provided, or the instance when setting the icon.
+     * @param string|\Honed\Core\Contracts\IsIcon|null $icon
+     * @return $this
      */
-    public function icon($icon = null)
+    public function icon($icon): static
     {
-        if (\is_null($icon)) {
-            return $this->icon instanceof IsIcon ? $this->icon->icon() : $this->icon;
+        if (! \is_null($icon)) {
+            $this->icon = $icon;
         }
-
-        $this->icon = $icon;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has an icon set.
-     * 
-     * @return bool True if an icon is set, false otherwise.
+     * Get the icon for the instance.
      */
-    public function hasIcon()
+    public function getIcon(): ?string
     {
-        return ! \is_null($this->icon);
+        return $this->icon instanceof IsIcon ? $this->icon->icon() : $this->icon;
+    }
+
+    /**
+     * Determine if the instance has an icon set.
+     */
+    public function hasIcon(): bool
+    {
+        return isset($this->icon);
     }
 }

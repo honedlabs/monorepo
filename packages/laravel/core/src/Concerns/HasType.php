@@ -7,34 +7,37 @@ namespace Honed\Core\Concerns;
 trait HasType
 {
     /**
-     * @var string|null
+     * @var string
      */
-    protected $type = null;
+    protected $type;
 
     /**
-     * Get or set the type for the instance.
+     * Set the type for the instance.
      * 
-     * @param string|null $type The type to set, or null to retrieve the current type.
-     * @return string|null|$this The current type when no argument is provided, or the instance when setting the type.
+     * @return $this
      */
-    public function type($type = null)
+    public function type(?string $type): static
     {
-        if (\is_null($type)) {
-            return $this->type;
+        if (! \is_null($type)) {
+            $this->type = $type;
         }
-
-        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has an type set.
-     * 
-     * @return bool True if an type is set, false otherwise.
+     * Get the type for the instance.
      */
-    public function hasType()
+    public function getType(): ?string
     {
-        return ! \is_null($this->type);
+        return $this->type;
+    }
+
+    /**
+     * Determine if the instance has an type set.
+     */
+    public function hasType(): bool
+    {
+        return isset($this->type);
     }
 }

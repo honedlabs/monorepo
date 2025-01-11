@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Illuminate\Database\Eloquent\Model;
+
 trait Allowable
 {
     use EvaluableDependency {
@@ -18,10 +20,9 @@ trait Allowable
     /**
      * Set the allow condition for the instance.
      * 
-     * @param \Closure|bool $allow The allow condition to be set.
      * @return $this
      */
-    public function allow($allow)
+    public function allow(\Closure|bool $allow): static
     {
         $this->allow = $allow;
 
@@ -31,27 +32,17 @@ trait Allowable
     /**
      * Determine if the instance allows the given parameters.
      * 
-     * @param array<string,mixed> $named The named parameters to inject into the allow condition, if provided.
-     * @param array<string,mixed> $typed The typed parameters to inject into the allow condition, if provided.
-     * @return bool True if the allow condition evaluates to true, false otherwise.
+     * @param array<string,mixed>|\Illuminate\Database\Eloquent\Model $parameters
+     * @param array<string,mixed> $typed
      */
-    public function allows($named = [], $typed = [])
+    public function isAllowed($parameters = [], $typed = []): bool
     {
-        $evaluated = (bool) $this->evaluate($this->allow, $named, $typed);
+        $evaluated = (bool) ($parameters instanceof Model 
+            ? $this->evaluateModelForAllowable($parameters, 'isAllowed') 
+            : $this->evaluate($this->allow, $parameters, $typed));
 
         $this->allow = $evaluated;
 
         return $evaluated;
-    }
-
-    /**
-     * Determine if the instance allows the given model using generated closure parameters to be injected.
-     * 
-     * @param \Illuminate\Database\Eloquent\Model $model The model to check.
-     * @return bool True if the allow condition evaluates to true, false otherwise.
-     */
-    public function allowsModel($model)
-    {
-        return $this->evaluateModelForAllowable($model, 'allows');
     }
 }

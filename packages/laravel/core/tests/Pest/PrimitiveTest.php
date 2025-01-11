@@ -27,9 +27,9 @@ class PrimitiveTest extends Primitive
     public function toArray(): array
     {
         return [
-            'type' => $this->type(),
-            'name' => $this->name(),
-            'description' => $this->description(),
+            'type' => $this->getType(),
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
         ];
     }
 }
@@ -40,9 +40,9 @@ beforeEach(function () {
 
 it('makes', function () {
     expect(PrimitiveTest::make())->toBeInstanceOf(PrimitiveTest::class)
-        ->type()->toBe('primitive')
-        ->name()->toBe('test')
-        ->description()->toBeNull();
+        ->getType()->toBe('primitive')
+        ->getName()->toBe('test')
+        ->getDescription()->toBeNull();
 });
 
 it('has array representation', function () {

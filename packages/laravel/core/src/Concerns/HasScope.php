@@ -7,34 +7,37 @@ namespace Honed\Core\Concerns;
 trait HasScope
 {
     /**
-     * @var string|null
+     * @var string
      */
-    protected $scope = null;
+    protected $scope;
 
     /**
-     * Get or set the scope for the instance.
+     * Set the scope for the instance.
      * 
-     * @param string|null $scope The scope to set, or null to retrieve the current scope.
-     * @return string|null|$this The current scope when no argument is provided, or the instance when setting the scope.
+     * @return $this
      */
-    public function scope($scope = null)
+    public function scope(?string $scope): static
     {
-        if (\is_null($scope)) {
-            return $this->scope;
+        if (! \is_null($scope)) {
+            $this->scope = $scope;
         }
-
-        $this->scope = $scope;
 
         return $this;
     }
 
     /**
-     * Determine if the instance has a scope set.
-     * 
-     * @return bool True if a scope is set, false otherwise.
+     * Get the scope for the instance.
      */
-    public function hasScope()
+    public function getScope(): ?string
     {
-        return ! \is_null($this->scope);
+        return $this->scope;
+    }
+
+    /**
+     * Determine if the instance has an scope set.
+     */
+    public function hasScope(): bool
+    {
+        return isset($this->scope);
     }
 }

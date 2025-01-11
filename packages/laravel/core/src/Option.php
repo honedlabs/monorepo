@@ -44,9 +44,9 @@ class Option extends Primitive
     public function toArray()
     {
         return [
-            'value' => $this->value(),
-            'label' => $this->label(),
-            'meta' => $this->meta(),
+            'value' => $this->getValue(),
+            'label' => $this->getLabel(),
+            'meta' => $this->getMeta(),
             'active' => $this->isActive(),
         ];
     }
