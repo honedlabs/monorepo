@@ -10,7 +10,10 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait HasAction
 {
-    protected \Closure|null $action = null;
+    /**
+     * @var \Closure|null
+     */
+    protected $action;
 
     /**
      * Execute the action handler using the provided data.
