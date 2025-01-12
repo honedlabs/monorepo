@@ -7,6 +7,7 @@ namespace Honed\Action\Concerns;
 use Honed\Action\BulkAction;
 use Honed\Action\PageAction;
 use Honed\Action\InlineAction;
+use Illuminate\Support\Collection;
 
 trait HasActions
 {
@@ -31,10 +32,8 @@ trait HasActions
 
     /**
      * Determine if the instance has actions.
-     * 
-     * @return bool
      */
-    public function hasActions()
+    public function hasActions(): bool
     {
         return $this->getActions()->isNotEmpty();
     }
@@ -44,7 +43,7 @@ trait HasActions
      * 
      * @return \Illuminate\Support\Collection<int,\Honed\Action\InlineAction>
      */
-    public function inlineActions()
+    public function inlineActions(): Collection
     {
         return $this->getActions()
             ->filter(static fn ($action) => $action instanceof InlineAction)
@@ -56,10 +55,10 @@ trait HasActions
      * 
      * @return \Illuminate\Support\Collection<int,\Honed\Action\BulkAction>
      */
-    public function bulkActions()
+    public function bulkActions(): Collection
     {
         return $this->getActions()
-            ->filter(static fn ($action) => $action instanceof BulkAction)
+            ->filter(static fn ($action) => $action instanceof BulkAction && $action->isAllowed())
             ->values();
     }
 
@@ -68,10 +67,10 @@ trait HasActions
      * 
      * @return \Illuminate\Support\Collection<int,\Honed\Action\PageAction>
      */
-    public function pageActions()
+    public function pageActions(): Collection
     {
         return $this->getActions()
-            ->filter(static fn ($action) => $action instanceof PageAction)
+            ->filter(static fn ($action) => $action instanceof PageAction && $action->isAllowed())
             ->values();
     }
 }

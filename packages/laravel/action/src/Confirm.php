@@ -33,7 +33,7 @@ class Confirm extends Primitive implements ResolvesClosures
     /**
      * @var string|null
      */
-    protected $intent = null;
+    protected $intent;
 
     public function __construct(
         string|\Closure $title = null, 
@@ -105,14 +105,6 @@ class Confirm extends Primitive implements ResolvesClosures
     }
 
     /**
-     * Determine if the confirm has a dismiss message set.
-     */
-    public function hasDismiss(): bool
-    {
-        return ! \is_null($this->dismiss);
-    }
-
-    /**
      * Set the submit text for the confirm.
      *
      * @return $this
@@ -132,14 +124,6 @@ class Confirm extends Primitive implements ResolvesClosures
     public function getSubmit(): ?string
     {
         return $this->submit;
-    }
-
-    /**
-     * Determine if the confirm has a submit message set.
-     */
-    public function hasSubmit(): bool
-    {
-        return ! \is_null($this->submit);
     }
 
     /**
@@ -169,7 +153,7 @@ class Confirm extends Primitive implements ResolvesClosures
      */
     public function hasIntent(): bool
     {
-        return isset($this->intent);
+        return ! \is_null($this->intent);
     }
 
     /**

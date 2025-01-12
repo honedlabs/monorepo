@@ -50,7 +50,7 @@ trait ChunksBuilder
     /**
      * Get the chunk size.
      */
-    public function chunkSize(): int
+    public function getChunkSize(): int
     {
         return $this->chunkSize ?? 1000;
     }
@@ -58,7 +58,7 @@ trait ChunksBuilder
     /**
      * Determine if the action should chunk by id.
      */
-    public function chunkById(): bool
+    public function chunksById(): bool
     {
         return $this->chunkById ?? true;
     }
@@ -72,7 +72,7 @@ trait ChunksBuilder
             return false;
         }
 
-        return $this->chunkById() 
+        return $this->chunksById() 
             ? $builder->chunkById($this->getChunkSize(), $this->provideChunkCallback($callback, $model))
             : $builder->chunk($this->getChunkSize(), $this->provideChunkCallback($callback, $model));
     }
@@ -80,7 +80,7 @@ trait ChunksBuilder
     /**
      * Provide the chunk callback.
      */
-    private function provideChunkCallback(callable $callback, bool $model): \Closure
+    private function provideChunkCallback(callable $callback, bool $model = false): \Closure
     {
         return $model 
             ? function (Collection $records) use ($callback) {
