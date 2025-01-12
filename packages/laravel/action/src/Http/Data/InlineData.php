@@ -19,8 +19,8 @@ class InlineData implements Transfer
     public static function from($request)
     {
         return resolve(BulkData::class, [
-            'name' => $request->input('name'),
-            'id' => $request->input('id'),
+            'name' => $request->validated('name'),
+            'id' => $request->validated('id'),
         ]);
     }
 }

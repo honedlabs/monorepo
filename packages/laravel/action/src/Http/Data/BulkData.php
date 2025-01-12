@@ -21,10 +21,10 @@ class BulkData implements Transfer
     public static function from($request)
     {
         return resolve(BulkData::class, [
-            'name' => $request->input('name'),
-            'except' => $request->input('except'),
-            'only' => $request->input('only'),
-            'all' => $request->input('all'),
+            'name' => $request->validated('name'),
+            'except' => $request->validated('except'),
+            'only' => $request->validated('only'),
+            'all' => $request->validated('all'),
         ]);
     }
 }
