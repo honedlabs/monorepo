@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Action\Tests;
 
-use Inertia\Inertia;
-use Honed\Action\Tests\Stubs\Status;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Schema;
 use Honed\Action\ActionServiceProvider;
+use Honed\Action\Tests\Stubs\Status;
 use Illuminate\Database\Schema\Blueprint;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 use Inertia\ServiceProvider as InertiaServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

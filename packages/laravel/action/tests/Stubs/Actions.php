@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Honed\Action\Tests\Stubs;
 
 use Honed\Action\BulkAction;
-use Honed\Action\PageAction;
-use Honed\Action\InlineAction;
 use Honed\Action\Concerns\HasActions;
 use Honed\Action\Contracts\DefinesActions;
+use Honed\Action\InlineAction;
+use Honed\Action\PageAction;
 
 class Actions implements DefinesActions
 {
     use HasActions;
-
 
     public function actions(): array
     {

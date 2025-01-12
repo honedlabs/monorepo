@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use Honed\Action\Creator;
 use Honed\Action\InlineAction;
-use Honed\Action\Tests\Stubs\Product;
 use Honed\Action\Tests\Stubs\DestroyAction;
+use Honed\Action\Tests\Stubs\Product;
 
 beforeEach(function () {
     $this->test = InlineAction::make('test');
@@ -57,7 +57,7 @@ describe('executes', function () {
 
         expect($this->test->execute($this->product))
             ->toBeInstanceOf(\Inertia\Response::class);
-        
+
         expect($this->product->name)
             ->toBe('test');
     });

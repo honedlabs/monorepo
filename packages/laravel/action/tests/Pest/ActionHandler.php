@@ -21,7 +21,7 @@ class Actions implements DefinesActions
 
 beforeEach(function () {
     $this->test = new ActionHandler(
-        new Actions(),
+        new Actions,
         Product::query(),
         'public_id',
         true

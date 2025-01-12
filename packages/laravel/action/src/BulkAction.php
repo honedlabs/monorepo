@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Illuminate\Support\Collection;
 use Honed\Action\Contracts\HasHandler;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 class BulkAction extends Action
 {
-    use Concerns\HasAction;
     use Concerns\ChunksBuilder;
-    use ForwardsCalls;
+    use Concerns\HasAction;
+    use Concerns\HasConfirm;
     use Concerns\KeepsSelected;
+    use ForwardsCalls;
 
     protected $type = Creator::Bulk;
 
@@ -24,13 +25,21 @@ class BulkAction extends Action
         return \array_merge(parent::toArray(), [
             'action' => $this->hasAction(),
             'keepSelected' => $this->keepsSelected(),
+            'confirm' => $this->getConfirm(),
         ]);
+    }
+
+    public function resolve($parameters = null, $typed = null): static
+    {
+        $this->resolveConfirm($parameters, $typed);
+
+        return parent::resolve($parameters, $typed);
     }
 
     /**
      * Execute the action handler using the provided data.
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder $builder
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $builder
      * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
     public function execute($builder)
@@ -57,7 +66,7 @@ class BulkAction extends Action
             $retrieveRecords && $handler => \call_user_func($callback, $builder->get()),
 
             $retrieveRecords => $this->evaluateCallbackWithRecords($builder, $callback, $plural),
-            
+
             $singularAccess => $builder->get()->each(fn ($model) => \call_user_func($callback, $model)),
 
             $handler => \call_user_func($callback, $builder),
@@ -89,7 +98,7 @@ class BulkAction extends Action
 
     /**
      * Retrieve the parameters for the handle method.
-     * 
+     *
      * @return array<int,\ReflectionParameter>
      */
     private function getHandleParameters(): array
@@ -101,29 +110,27 @@ class BulkAction extends Action
 
     /**
      * Determine if the action executable requires the records to be retrieved.
-     * 
-     * @param array<int,\ReflectionParameter> $parameters
+     *
+     * @param  array<int,\ReflectionParameter>  $parameters
      */
     private function isCollectionCallback(array $parameters, string $plural): bool
     {
         return collect($parameters)
-            ->some(fn (\ReflectionParameter $parameter) => 
-                ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Collection::class])
+            ->some(fn (\ReflectionParameter $parameter) => ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Collection::class])
                     || \in_array($parameter->getName(), ['records', 'collection', $plural])
             );
     }
 
     /**
      * Determine if the action executable requires a model to be retrieved, and then acts on individual collection records.
-     * 
-     * @param array<int,\ReflectionParameter> $parameters
+     *
+     * @param  array<int,\ReflectionParameter>  $parameters
      */
     private function isModelCallback(array $parameters, Model $model, string $singular): bool
     {
         return collect($parameters)
-            ->some(fn (\ReflectionParameter $parameter) => 
-                ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Model::class, $model::class])
+            ->some(fn (\ReflectionParameter $parameter) => ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Model::class, $model::class])
                     || \in_array($parameter->getName(), ['model', 'record', $singular])
-        );
+            );
     }
 }

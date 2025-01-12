@@ -15,16 +15,16 @@ trait HasConfirm
 
     /**
      * Set the confirm for the instance.
-     * 
-     * @param \Honed\Action\Confirm|\Closure|string|null $confirm
+     *
+     * @param  \Honed\Action\Confirm|\Closure|string|null  $confirm
      * @return $this
      */
-    public function confirm($confirm, string $description = null): static
+    public function confirm($confirm, ?string $description = null): static
     {
         match (true) {
             \is_null($confirm) => null,
             $confirm instanceof Confirm => $this->confirm = $confirm,
-            $this->callsConfirm($confirm) => \call_user_func($confirm, $this->newConfirm()),
+            $this->callsConfirm($confirm) => \call_user_func($confirm, $this->newConfirm()), // @phpstan-ignore-line
             default => $this->newConfirm()->title($confirm)->description($description)
         };
 
@@ -41,16 +41,14 @@ trait HasConfirm
 
     /**
      * Resolve the confirm for this instance.
-     * 
+     *
      * @param  mixed  $parameters
      * @param  array<string,mixed>|null  $typed
      * @return $this
      */
     public function resolveConfirm($parameters = null, $typed = null): static
     {
-        if ($this->hasConfirm()) {
-            $this->getConfirm()->resolve($parameters, $typed);
-        }
+        $this->getConfirm()?->resolve($parameters, $typed);
 
         return $this;
     }
@@ -82,7 +80,7 @@ trait HasConfirm
 
         $parameter = collect((new \ReflectionFunction($confirm))->getParameters())->first();
 
-        return ($parameter instanceof \ReflectionNamedType && $parameter->getName() === Confirm::class)
-            || $parameter->getName() === 'confirm';
+        return (($parameter instanceof \ReflectionNamedType) && ($parameter->getName() === Confirm::class))
+            || ($parameter?->getName() === 'confirm');
     }
 }

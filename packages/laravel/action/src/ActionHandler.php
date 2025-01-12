@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Action\Http\Data\BulkData;
-use Honed\Action\Http\Data\InlineData;
-use Illuminate\Database\Eloquent\Builder;
 use Honed\Action\Contracts\DefinesActions;
 use Honed\Action\Exceptions\InvalidActionException;
-use Honed\Action\Http\Requests\ActionRequest;
+use Honed\Action\Http\Data\BulkData;
+use Honed\Action\Http\Data\InlineData;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 
 class ActionHandler
@@ -22,12 +20,15 @@ class ActionHandler
         protected Builder $resource,
         protected ?string $findBy = null,
         protected bool $tablePrefix = false
-    ) { }
+    ) {}
 
     /**
      * Handle the incoming action request using the actions from the source, and the resource provided.
+     *
+     * @param  \Honed\Action\Http\Requests\ActionRequest  $request
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse
      */
-    public function handle(ActionRequest $request): Responsable|RedirectResponse
+    public function handle($request)
     {
         $type = $request->validated('type');
 
@@ -75,7 +76,7 @@ class ActionHandler
 
                 $data->all
                     ? $query->whereNotIn($this->column(), $data->except)
-                    : $query->whereIn($this->column(), $data->only)
+                    : $query->whereIn($this->column(), $data->only),
             ],
 
             default => throw new InvalidActionException($type),
@@ -83,7 +84,7 @@ class ActionHandler
     }
 
     /**
-     * Get the model for the resource.
+     * Get the model for this resource.
      */
     protected function model(): Model
     {
@@ -91,17 +92,20 @@ class ActionHandler
     }
 
     /**
-     * Get the key to use for filtering the resource.
+     * Retrieve the key to use for selecting records.
      */
     protected function key(): string
     {
         return $this->findBy ??= $this->model()->getKeyName();
     }
 
+    /**
+     * Retrieve the namespaced column to use for selecting records.
+     */
     protected function column(): string
     {
-        return $this->tablePrefix 
-            ? $this->model()->getTable() . '.' . $this->key() 
+        return $this->tablePrefix
+            ? $this->model()->getTable().'.'.$this->key()
             : $this->key();
     }
 }

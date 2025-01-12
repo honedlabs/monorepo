@@ -10,7 +10,7 @@ class KeepsSelectedTest
 }
 
 beforeEach(function () {
-    $this->test = new KeepsSelectedTest();
+    $this->test = new KeepsSelectedTest;
 });
 
 it('sets', function () {

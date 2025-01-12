@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Honed\Action\Concerns\HasAction;
 use Honed\Action\Tests\Stubs\Product;
 
-class HasActionTest 
+class HasActionTest
 {
     use HasAction;
 

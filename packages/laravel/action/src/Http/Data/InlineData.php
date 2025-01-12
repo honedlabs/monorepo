@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Action\Http\Data;
 
-use Honed\Core\Contracts\Transfer;
-
-class InlineData implements Transfer
+class InlineData extends ActionData
 {
     public function __construct(
-        public readonly string $name,
+        string $name,
         public readonly int|string $id,
-    ) {}
+    ) {
+        parent::__construct($name);
+    }
 
     /**
-     * @param \Honed\Action\Http\Requests\ActionRequest $request
+     * Create a new inline data transfer object.
+     *
+     * @param  \Honed\Action\Http\Requests\ActionRequest  $request
      */
-    public static function from($request)
+    public static function from($request): static
     {
-        return resolve(BulkData::class, [
+        return resolve(InlineData::class, [
             'name' => $request->validated('name'),
             'id' => $request->validated('id'),
         ]);

@@ -11,7 +11,7 @@ class ChunksBuilderTest
 }
 
 beforeEach(function () {
-    $this->test = new ChunksBuilderTest();
+    $this->test = new ChunksBuilderTest;
 });
 
 it('does not chunk by default', function () {
@@ -36,7 +36,7 @@ it('chunks by id', function () {
     populate(100);
 
     expect($this->test->chunk()->chunkRecords(
-        Product::query(), 
+        Product::query(),
         fn ($products) => $products->each(fn ($product) => $product->update(['name' => 'test'])),
         false
     ))->toBeTrue();
@@ -52,7 +52,7 @@ it('chunks by custom callback', function () {
 
     expect($this->test->chunk(500, false)
         ->chunkRecords(
-            Product::query()->orderBy('public_id'), 
+            Product::query()->orderBy('public_id'),
             fn ($products) => $products->each(fn ($product) => $product->update(['name' => 'test'])),
             false
         ))->toBeTrue();
@@ -63,13 +63,12 @@ it('chunks by custom callback', function () {
         });
 });
 
-
 it('chunks by model', function () {
     populate(100);
 
     expect($this->test->chunk()
         ->chunkRecords(
-            Product::query(), 
+            Product::query(),
             fn ($product) => $product->update(['name' => 'test']),
             true
         ))->toBeTrue();

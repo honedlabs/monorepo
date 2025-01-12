@@ -10,7 +10,7 @@ trait KeepsSelected
 
     /**
      * Set the action to keep the records selected.
-     * 
+     *
      * @return $this
      */
     public function keepSelected(bool $keep = true): static

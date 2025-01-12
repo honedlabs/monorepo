@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Contracts\HasHandler;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 trait HasAction
 {
@@ -17,17 +17,17 @@ trait HasAction
 
     /**
      * Execute the action handler using the provided data.
-     * 
+     *
      * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
     abstract public function execute($data);
 
     /**
      * Set the action handler.
-     * 
+     *
      * @return $this
      */
-    public function action(\Closure $action = null): static
+    public function action(?\Closure $action = null): static
     {
         if (! \is_null($action)) {
             $this->action = $action;
@@ -54,15 +54,18 @@ trait HasAction
 
     /**
      * Retrieve the parameter names for the action.
-     * 
-     * @return array{0: \Illuminate\Database\Eloquent\Model, 1: string, 2: string}
+     *
+     * @template T of \Illuminate\Database\Eloquent\Model
+     *
+     * @param  T|\Illuminate\Database\Eloquent\Builder<T>  $parameter
+     * @return array{0: T, 1: string, 2: string}
      */
     public function getActionParameterNames(Builder|Model $parameter): array
     {
-        $model = $parameter instanceof Builder 
-            ? $parameter->getModel() 
+        $model = $parameter instanceof Builder
+            ? $parameter->getModel()
             : $parameter;
-            
+
         $table = $model->getTable();
 
         return [

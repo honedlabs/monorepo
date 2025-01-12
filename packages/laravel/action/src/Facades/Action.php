@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \Honed\Action\Creator
- * 
+ *
  * @method static \Honed\Action\Action new(string $type, string $name, string|\Closure $label = null)
  * @method static \Honed\Action\BulkAction bulk(string $name, string|\Closure $label = null)
  * @method static \Honed\Action\InlineAction inline(string $name, string|\Closure $label = null)

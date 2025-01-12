@@ -9,22 +9,22 @@ use Illuminate\Support\Traits\ForwardsCalls;
 
 class PageAction extends Action
 {
-    use HasDestination;
     use ForwardsCalls;
+    use HasDestination;
 
     protected $type = Creator::Page;
 
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
-            ...($this->hasDestination() ? $this->getDestination()->toArray() : [])
+            ...($this->hasDestination() ? $this->getDestination()->toArray() : []), // @phpstan-ignore-line
         ]);
     }
 
     public function resolve($parameters = null, $typed = null): static
     {
-        $this->getDestination($parameters, $typed);
-        
+        // $this->resolveDestination($parameters, $typed);
+
         return parent::resolve($parameters, $typed);
     }
 }

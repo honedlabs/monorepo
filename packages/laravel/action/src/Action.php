@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Core\Primitive;
+use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Concerns\HasMeta;
+use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Concerns\Allowable;
 use Honed\Core\Contracts\ResolvesClosures;
+use Honed\Core\Primitive;
 
 /**
  * @extends \Honed\Core\Primitive<string,mixed>
@@ -19,12 +18,12 @@ use Honed\Core\Contracts\ResolvesClosures;
 abstract class Action extends Primitive implements ResolvesClosures
 {
     use Allowable;
+    use HasIcon;
     use HasLabel;
     use HasName;
-    use HasIcon;
     use HasType;
 
-    public function __construct(?string $name = null, string|\Closure $label = null)
+    public function __construct(?string $name = null, string|\Closure|null $label = null)
     {
         parent::__construct();
 
@@ -35,9 +34,9 @@ abstract class Action extends Primitive implements ResolvesClosures
     /**
      * Make a new action.
      */
-    public static function make(?string $name = null, string|\Closure $label = null): static
+    public static function make(?string $name = null, string|\Closure|null $label = null): static
     {
-        return new static($name, $label);
+        return resolve(static::class, \compact('name', 'label'));
     }
 
     public function toArray(): array

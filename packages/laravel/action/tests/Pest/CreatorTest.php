@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Creator;
 use Honed\Action\BulkAction;
-use Honed\Action\PageAction;
-use Honed\Action\InlineAction;
+use Honed\Action\Creator;
 use Honed\Action\Exceptions\InvalidActionTypeException;
+use Honed\Action\InlineAction;
+use Honed\Action\PageAction;
 
 beforeEach(function () {
     $this->test = new Creator;

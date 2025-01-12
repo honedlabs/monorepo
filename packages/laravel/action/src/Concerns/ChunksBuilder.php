@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-use Illuminate\Support\Collection;
 use Honed\Action\Contracts\ShouldChunk;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 trait ChunksBuilder
 {
@@ -27,7 +27,7 @@ trait ChunksBuilder
 
     /**
      * Set the action to chunk the records.
-     * 
+     *
      * @return $this
      */
     public function chunk(int $size = 1000, bool $chunkById = true): static
@@ -65,6 +65,10 @@ trait ChunksBuilder
 
     /**
      * Chunk the records using the builder.
+     *
+     * @template T of \Illuminate\Database\Eloquent\Model
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<T>  $builder
      */
     public function chunkRecords(Builder $builder, callable $callback, bool $model = false): bool
     {
@@ -72,7 +76,7 @@ trait ChunksBuilder
             return false;
         }
 
-        return $this->chunksById() 
+        return $this->chunksById()
             ? $builder->chunkById($this->getChunkSize(), $this->provideChunkCallback($callback, $model))
             : $builder->chunk($this->getChunkSize(), $this->provideChunkCallback($callback, $model));
     }
@@ -82,15 +86,14 @@ trait ChunksBuilder
      */
     private function provideChunkCallback(callable $callback, bool $model = false): \Closure
     {
-        return $model 
+        return $model
             ? function (Collection $records) use ($callback) {
                 foreach ($records as $record) {
                     \call_user_func($callback, $record);
                 }
             }
-            : function (Collection $records) use ($callback) {
-                \call_user_func($callback, $records);
-            };
+        : function (Collection $records) use ($callback) {
+            \call_user_func($callback, $records);
+        };
     }
 }
-

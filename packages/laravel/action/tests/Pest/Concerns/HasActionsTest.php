@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Honed\Action\BulkAction;
-use Honed\Action\PageAction;
-use Honed\Action\InlineAction;
 use Honed\Action\Concerns\HasActions;
+use Honed\Action\InlineAction;
+use Honed\Action\PageAction;
 
 class HasActionsTest
 {
@@ -36,15 +36,15 @@ it('has actions', function () {
     expect($this->test)
         ->hasActions()->toBeFalse()
         ->getActions()->scoped(fn ($actions) => $actions
-            ->toBeCollection()
-            ->toBeEmpty()
+        ->toBeCollection()
+        ->toBeEmpty()
         );
-    
+
     expect($this->method)
         ->hasActions()->toBeTrue()
         ->getActions()->scoped(fn ($actions) => $actions
-            ->toBeCollection()
-            ->toHaveCount(5)
+        ->toBeCollection()
+        ->toHaveCount(5)
         );
 });
 

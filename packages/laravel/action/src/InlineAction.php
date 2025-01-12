@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Core\Concerns\IsDefault;
-use Honed\Core\Concerns\HasDestination;
-use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Contracts\HasHandler;
+use Honed\Core\Concerns\HasDestination;
+use Honed\Core\Concerns\IsDefault;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 class InlineAction extends Action
 {
-    use IsDefault;
-    use HasDestination;
     use Concerns\HasAction;
+    use Concerns\HasConfirm;
     use ForwardsCalls;
+    use HasDestination;
+    use IsDefault;
 
     protected $type = Creator::Inline;
 
@@ -24,21 +25,22 @@ class InlineAction extends Action
         return \array_merge(parent::toArray(), [
             'action' => $this->hasAction(),
             'default' => $this->isDefault(),
-            ...($this->hasDestination() ? $this->getDestination()->toArray() : [])
+            'confirm' => $this->getConfirm(),
+            ...($this->hasDestination() ? $this->getDestination()->toArray() : []), // @phpstan-ignore-line
         ]);
     }
 
     public function resolve($parameters = null, $typed = null): static
     {
         $this->getDestination($parameters, $typed);
-        
+
         return parent::resolve($parameters, $typed);
     }
-    
+
     /**
      * Execute the action handler using the provided data.
-     * 
-     * @param \Illuminate\Database\Eloquent\Model $record
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $record
      * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|null
      */
     public function execute($record)
