@@ -8,12 +8,14 @@ use Honed\Core\Concerns\IsDefault;
 use Honed\Core\Concerns\HasDestination;
 use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Contracts\HandlesAction;
+use Illuminate\Support\Traits\ForwardsCalls;
 
 class InlineAction extends Action
 {
     use IsDefault;
     use HasDestination;
     use Concerns\HasAction;
+    use ForwardsCalls;
 
     protected $type = Creator::Inline;
 

@@ -8,11 +8,13 @@ use Illuminate\Support\Collection;
 use Honed\Action\Contracts\HandlesAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Traits\ForwardsCalls;
 
 class BulkAction extends Action
 {
     use Concerns\HasAction;
     use Concerns\ChunksBuilder;
+    use ForwardsCalls;
 
     protected $type = Creator::Bulk;
 
