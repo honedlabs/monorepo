@@ -2,14 +2,20 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Destination;
-use Illuminate\Support\Facades\URL;
 use Pest\Expectation;
+use Honed\Core\Destination;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Request;
 
 beforeEach(function () {
     $this->destination = Destination::make()->to('product.show');
     $this->product = product();
+    $this->get = Str::lower(Request::METHOD_GET);
+    $this->post = Str::lower(Request::METHOD_POST);
+    $this->patch = Str::lower(Request::METHOD_PATCH);
+    $this->put = Str::lower(Request::METHOD_PUT);
+    $this->delete = Str::lower(Request::METHOD_DELETE);
 });
 
 it('makes', function () {
@@ -43,34 +49,9 @@ it('sets destination with parameters', function () {
         ->resolve($this->product)->toBe(route('product.show', $this->product));
 });
 
-it('has method', function () {
-    expect($this->destination->via(Request::METHOD_GET))
-        ->getVia()->toBe(Request::METHOD_GET);
-});
-
-it('sets method to GET', function () {
-    expect($this->destination->viaGet())
-        ->getVia()->toBe(Request::METHOD_GET);
-});
-
-it('sets method to POST', function () {
-    expect($this->destination->viaPost())
-        ->getVia()->toBe(Request::METHOD_POST);
-});
-
-it('sets method to PATCH', function () {
-    expect($this->destination->viaPatch())
-        ->getVia()->toBe(Request::METHOD_PATCH);
-});
-
-it('sets method to PUT', function () {
-    expect($this->destination->viaPut())
-        ->getVia()->toBe(Request::METHOD_PUT);
-});
-
-it('sets method to DELETE', function () {
-    expect($this->destination->viaDelete())
-        ->getVia()->toBe(Request::METHOD_DELETE);
+it('sets method', function () {
+    expect($this->destination->via(Request::METHOD_POST))
+        ->getVia()->toBe($this->post);
 });
 
 it('has parameters', function () {

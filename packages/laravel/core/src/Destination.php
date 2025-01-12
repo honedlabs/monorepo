@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core;
 
 use Honed\Core\Concerns\Evaluable;
-use Honed\Core\Concerns\EvaluableDependency;
+use Honed\Core\Concerns\EvaluatesClosures;
 use Honed\Core\Contracts\ResolvesClosures;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 class Destination extends Primitive implements ResolvesClosures
 {
     use Evaluable;
-    use EvaluableDependency {
+    use EvaluatesClosures {
         evaluateModelForTrait as evaluateModelForDestination;
     }
 
@@ -72,8 +72,8 @@ class Destination extends Primitive implements ResolvesClosures
         string|\Closure|null $to = null,
         mixed $parameters = [],
         string $via = Request::METHOD_GET
-    ): Destination {
-        return resolve(static::class, compact('to', 'parameters', 'via'));
+    ): static {
+        return new static($to, $parameters, $via);
     }
 
     public function toArray()
@@ -83,6 +83,34 @@ class Destination extends Primitive implements ResolvesClosures
             'method' => $this->getVia(),
             'tab' => $this->isTab(),
         ];
+    }
+
+    public function resolve($parameters = null, $typed = null): static
+    {
+        $this->getHref($parameters, $typed);
+
+        return $this;
+    }
+
+    /**
+     * Get the href for this destination.
+     */
+    public function getHref($parameters = null, $typed = null): ?string
+    {
+        $evaluated = match (true) {
+            \is_null($this->to) => null,
+            \is_callable($this->to) => $parameters instanceof \Illuminate\Database\Eloquent\Model
+                ? $this->evaluateModelForDestination($parameters, 'resolve')
+                : $this->evaluate($this->to, $parameters ?? [], $typed ?? []), // @phpstan-ignore-line
+            $this->isUri($this->to) => $this->to,
+            $this->isSigned() && $this->isTemporary() => URL::temporarySignedRoute($this->to, $this->temporary, $parameters ?? $this->parameters), // @phpstan-ignore-line
+            $this->isSigned() => URL::signedRoute($this->to, $parameters ?? $this->parameters),
+            default => route($this->to, $parameters ?? $this->parameters),
+        };
+
+        $this->href = $evaluated;
+
+        return $evaluated;
     }
 
     /**
@@ -119,60 +147,10 @@ class Destination extends Primitive implements ResolvesClosures
     public function via(?string $via): static
     {
         if (! \is_null($via)) {
-            $this->via = $via;
+            $this->via = Str::lower($via);
         }
 
         return $this;
-    }
-
-    /**
-     * Set the HTTP method to a get request.
-     *
-     * @return $this
-     */
-    public function viaGet(): static
-    {
-        return $this->via(Request::METHOD_GET);
-    }
-
-    /**
-     * Set the HTTP method to a post request.
-     *
-     * @return $this
-     */
-    public function viaPost(): static
-    {
-        return $this->via(Request::METHOD_POST);
-    }
-
-    /**
-     * Set the HTTP method to a put request.
-     *
-     * @return $this
-     */
-    public function viaPut(): static
-    {
-        return $this->via(Request::METHOD_PUT);
-    }
-
-    /**
-     * Set the HTTP method to a patch request.
-     *
-     * @return $this
-     */
-    public function viaPatch(): static
-    {
-        return $this->via(Request::METHOD_PATCH);
-    }
-
-    /**
-     * Set the HTTP method to a delete request.
-     *
-     * @return $this
-     */
-    public function viaDelete(): static
-    {
-        return $this->via(Request::METHOD_DELETE);
     }
 
     /**
@@ -266,30 +244,9 @@ class Destination extends Primitive implements ResolvesClosures
     }
 
     /**
-     * Resolve the destination url using the provided parameters at call-time or from the instance.
-     *
-     * @param  mixed  $parameters
-     * @param  array<string,mixed>|null  $typed
-     */
-    public function resolve($parameters = null, $typed = null): ?string
-    {
-        // @phpstan-ignore-next-line
-        return $this->href ??= match (true) {
-            \is_null($this->to) => null,
-            \is_callable($this->to) => $parameters instanceof \Illuminate\Database\Eloquent\Model
-                ? $this->evaluateModelForDestination($parameters, 'resolve')
-                : $this->evaluate($this->to, $parameters ?? [], $typed ?? []), // @phpstan-ignore-line
-            static::isUri($this->to) => $this->to,
-            $this->isSigned() && $this->isTemporary() => URL::temporarySignedRoute($this->to, $this->temporary, $parameters ?? $this->parameters), // @phpstan-ignore-line
-            $this->isSigned() => URL::signedRoute($this->to, $parameters ?? $this->parameters),
-            default => route($this->to, $parameters ?? $this->parameters),
-        };
-    }
-
-    /**
      * Determine if the provided value is a valid URI.
      */
-    public static function isUri(mixed $uri): bool
+    private function isUri(mixed $uri): bool
     {
         return \is_string($uri)
             && (Str::isUrl($uri) || Str::startsWith($uri, ['/', '#']));

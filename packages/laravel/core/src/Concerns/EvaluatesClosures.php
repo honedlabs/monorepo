@@ -7,7 +7,7 @@ namespace Honed\Core\Concerns;
 /**
  * @internal
  */
-trait EvaluableDependency
+trait EvaluatesClosures
 {
     /**
      * Evaluate the closure using injected named and typed parameters.

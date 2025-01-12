@@ -6,7 +6,7 @@ namespace Honed\Core\Concerns;
 
 trait HasDescription
 {
-    use EvaluableDependency {
+    use EvaluatesClosures {
         evaluateModelForTrait as evaluateModelForDescription;
     }
 

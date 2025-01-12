@@ -9,7 +9,7 @@ interface ResolvesClosures
      *
      * @param  mixed  $parameters
      * @param  array<string,mixed>|null  $typed
-     * @return mixed
+     * @return $this
      */
-    public function resolve($parameters = null, $typed = null);
+    public function resolve($parameters = null, $typed = null): static;
 }

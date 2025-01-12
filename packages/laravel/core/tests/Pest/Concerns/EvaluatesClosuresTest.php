@@ -2,18 +2,20 @@
 
 declare(strict_types=1);
 
+use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\Evaluable;
-use Honed\Core\Concerns\EvaluableDependency;
+use Honed\Core\Concerns\EvaluatesClosures;
 use Honed\Core\Tests\Stubs\Product;
 
-class EvaluableDependencyTest
+class EvaluatesClosuresTest
 {
     use Evaluable;
-    use EvaluableDependency;
+    use Allowable;
+    use EvaluatesClosures;
 }
 
 beforeEach(function () {
-    $this->test = new EvaluableDependencyTest;
+    $this->test = new EvaluatesClosuresTest;
 });
 
 test('name `model`', function () {

@@ -6,7 +6,7 @@ namespace Honed\Core\Concerns;
 
 trait HasMeta
 {
-    use EvaluableDependency {
+    use EvaluatesClosures {
         evaluateModelForTrait as evaluateModelForMeta;
     }
 

@@ -6,7 +6,7 @@ namespace Honed\Core\Concerns;
 
 trait HasFormat
 {
-    use EvaluableDependency {
+    use EvaluatesClosures {
         evaluateModelForTrait as evaluateModelForFormat;
     }
 

@@ -6,7 +6,7 @@ namespace Honed\Core\Concerns;
 
 trait HasLabel
 {
-    use EvaluableDependency {
+    use EvaluatesClosures {
         evaluateModelForTrait as evaluateModelForLabel;
     }
 

@@ -16,14 +16,13 @@ trait HasDestination
     /**
      * Set the destination for the instance.
      *
-     * @param  \Honed\Core\Destination|\Closure|string  $destination
-     * @param  \Honed\Core\Destination|\Closure|string  $parameters
+     * @param  \Honed\Core\Destination|\Closure|string|null  $destination
      * @return $this
      */
-    public function to($destination, $parameters = null): static
+    public function destination($destination, mixed $parameters = null): static
     {
-
         match (true) {
+            \is_null($destination) => null,
             $destination instanceof Destination => $this->destination = $destination,
             ! \is_callable($destination) => $this->destination = $this->newDestination()->to($destination, $parameters),
             collect((new \ReflectionFunction($destination))->getParameters())
@@ -37,19 +36,18 @@ trait HasDestination
     }
 
     /**
-     * Set the destination for the instance.
+     * Alias for `destination`.
      *
-     * @param  \Honed\Core\Destination|\Closure|string  $destination
-     * @param  \Honed\Core\Destination|\Closure|string  $parameters
+     * @param  \Honed\Core\Destination|\Closure|string|null  $destination
      * @return $this
      */
-    public function destination($destination, $parameters = null): static
+    public function to($destination, mixed $parameters = null): static
     {
-        return $this->to($destination, $parameters);
+        return $this->destination($destination, $parameters);
     }
 
     /**
-     * Get the destination.
+     * Get the destination for this instance.
      */
     public function getDestination(): ?Destination
     {
@@ -57,23 +55,11 @@ trait HasDestination
     }
 
     /**
-     * Determine if the destination has been set.
+     * Determine if the instance has a destination.
      */
     public function hasDestination(): bool
     {
-        return isset($this->destination);
-    }
-
-    /**
-     * Resolve the destination.
-     *
-     * @param  mixed  $parameters
-     * @param  array<string,mixed>|null  $typed
-     */
-    public function resolveDestination($parameters = null, $typed = null): ?string
-    {
-        return $this->destination?->resolve($parameters, $typed);
-
+        return ! \is_null($this->destination);
     }
 
     /**
@@ -82,5 +68,20 @@ trait HasDestination
     private function newDestination(): Destination
     {
         return $this->destination ??= Destination::make();
+    }
+
+    /**
+     * Determine if the destination is a closure that modifies the destination on the instance.
+     */
+    private function callsDestination(mixed $destination): bool
+    {
+        if (! $destination instanceof \Closure) {
+            return false;
+        }
+
+        $parameter = collect((new \ReflectionFunction($destination))->getParameters())->first();
+
+        return ($parameter instanceof \ReflectionNamedType && $parameter->getName() === Destination::class)
+            || \in_array($parameter->getName(), ['destination', 'url', 'link']);
     }
 }

@@ -6,7 +6,7 @@ namespace Honed\Core\Concerns;
 
 trait HasTitle
 {
-    use EvaluableDependency {
+    use EvaluatesClosures {
         evaluateModelForTrait as evaluateModelForTitle;
     }
 

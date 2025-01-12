@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 trait Allowable
 {
-    use EvaluableDependency {
+    use EvaluatesClosures {
         evaluateModelForTrait as evaluateModelForAllowable;
     }
 
