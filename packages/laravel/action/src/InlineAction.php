@@ -6,15 +6,23 @@ namespace Honed\Action;
 
 use Honed\Core\Concerns\IsDefault;
 use Honed\Core\Contracts\HigherOrder;
+use Illuminate\Http\RedirectResponse;
 use Honed\Core\Concerns\HasDestination;
+use Illuminate\Database\Eloquent\Model;
+use Honed\Action\Contracts\HandlesAction;
+use Honed\Core\Concerns\EvaluableDependency;
 use Honed\Core\Contracts\ProxiesHigherOrder;
+use Illuminate\Contracts\Support\Responsable;
 
 class InlineAction extends Action
 {
-    use IsDefault;
+use IsDefault;
     use Concerns\MorphsAction;
     use HasDestination;
     use Concerns\HasAction;
+    use EvaluableDependency {
+        evaluateModelForTrait as evaluateModelForAction;
+    }
 
     public function setUp(): void
     {
@@ -41,14 +49,27 @@ class InlineAction extends Action
     }
 
     /**
+     * Execute the action handler using the provided data.
+     * 
      * @param \Illuminate\Database\Eloquent\Model $record
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
-    public function execute($record): void
+    public function execute($record)
     {
         if (! $this->hasAction()) {
             return;
         }
 
-
+        return $this instanceof HandlesAction
+            ? $this->handle($record)
+            : $this->evaluate($this->getAction(), [
+                'model' => $record,
+                'record' => $record,
+                'resource' => $record,
+                str($record->getTable())->singular()->camel()->toString() => $record
+            ], [
+                Model::class => $record,
+                $record::class => $record,
+            ]);
     }
 }

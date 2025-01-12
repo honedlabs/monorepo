@@ -62,6 +62,5 @@ abstract class Action extends Primitive implements ResolvesClosures
         $this->getExtra($parameters, $typed);
 
         return $this;
-        
     }
 }

@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
+use Honed\Action\Contracts\HandlesAction;
+
 trait HasAction
 {
-    /**
-     * @var \Closure|null
-     */
-    protected $action = null;
+    protected \Closure|null $action = null;
 
     /**
      * Execute the action handler using the provided data.
+     * 
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
-    abstract public function execute($data): void;
+    abstract public function execute($data);
 
     /**
      * Set the action handler.
@@ -43,6 +44,6 @@ trait HasAction
      */
     public function hasAction()
     {
-        return ! \is_null($this->action);
+        return ! \is_null($this->action) || $this instanceof HandlesAction;
     }
 }
