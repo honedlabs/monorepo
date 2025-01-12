@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Illuminate\Support\Collection;
-use Honed\Core\Contracts\HigherOrder;
 use Honed\Action\Contracts\HandlesAction;
-use Honed\Action\Tests\Stubs\Product;
-use Honed\Core\Contracts\ProxiesHigherOrder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,8 +23,6 @@ class BulkAction extends Action
     {
         return \array_merge(parent::toArray(), [
             'action' => $this->hasAction(),
-            // 'confirm' => $this->confirm(),
-            // 'deselect' => $this->deselect(),
         ]);
     }
 
@@ -39,9 +34,9 @@ class BulkAction extends Action
      */
     public function execute($data)
     {
-        // if (! $this->hasAction()) {
-        //     return;
-        // }
+        if (! $this->hasAction()) {
+            return;
+        }
 
         return $this instanceof HandlesAction
             ? $this->executeHandler($data)
@@ -55,11 +50,35 @@ class BulkAction extends Action
 
     private function executeCallback(Builder $builder)
     {
-        dd($builder);
+        [$model, $singular, $plural] = $this->getActionParameterNames($builder);
 
-        return $this->evaluate($this->getAction(), [
-            'data' => $builder,
-        ]);
+        $callback = $this->getAction();
+
+        $selects = $this->isCollectionCallback(
+            (new \ReflectionFunction($callback))->getParameters(),
+            $plural,
+        );
+
+        $callsModel = $this->isModelCallback(
+            (new \ReflectionFunction($callback))->getParameters(),
+            $model,
+            $singular,
+        );
+
+        return match (true) {
+            $this->chunks() => $this->chunkRecords($builder, $callback, $callsModel),
+
+            $selects => $this->withRecords($builder, $callback, $plural),
+
+            $callsModel => $builder->get()->each(fn ($model) => \call_user_func($callback, $model)),
+
+            default => $this->evaluate($callback, [
+                'query' => $builder,
+                'builder' => $builder,
+            ], [
+                Builder::class => $builder,
+            ]),
+        };
     }
 
     /**
@@ -69,13 +88,30 @@ class BulkAction extends Action
      */
     private function getActionParameterNames(Builder $builder): array
     {
-        $table = $builder->getTable();
+        $model = $builder->getModel();
+        $table = $model->getTable();
 
         return [
-            $builder->getModel(),
+            $model,
             str($table)->camel()->singular()->toString(),
             str($table)->camel()->toString(),
         ];
+    }
+
+    /**
+     * Evaluate the action handler with retrieved records.
+     */
+    private function withRecords(Builder $builder, \Closure $callback, string $plural): void
+    {
+        $records = $builder->get();
+
+        $this->evaluate($callback, [
+            'records' => $records,
+            'collection' => $records,
+            $plural => $records,
+        ], [
+            Collection::class => $records,
+        ]);
     }
 
     /**
@@ -93,17 +129,24 @@ class BulkAction extends Action
     /**
      * Determine if the action executable requires the records to be retrieved.
      */
-    private function selectsRecords(array $parameters): bool
+    private function isCollectionCallback(array $parameters, string $plural): bool
     {
-        return collect($this->getHandleParameters())
+        return collect($parameters)
             ->some(fn (\ReflectionParameter $parameter) => 
-                ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Collection::class, Model::class, $model])
-                    || \in_array($parameter->getName(), ['records', $parameters])
+                ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Collection::class])
+                    || \in_array($parameter->getName(), ['records', 'collection', $plural])
             );
     }
 
-    public function handle($products)
+    /**
+     * Determine if the action executable requires a model to be retrieved, and then acts on individual collection records.
+     */
+    private function isModelCallback(array $parameters, Model $model, string $singular): bool
     {
-        //
+        return collect($parameters)
+        ->some(fn (\ReflectionParameter $parameter) => 
+            ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Model::class, $model::class])
+                || \in_array($parameter->getName(), ['model', 'record', $singular])
+        );
     }
 }

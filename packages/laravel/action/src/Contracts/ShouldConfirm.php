@@ -9,7 +9,7 @@ use Honed\Action\Confirm;
 /**
  * @phpstan-require-extends \Honed\Action\Action
  */
-interface Confirms
+interface ShouldConfirm
 {
     public function confirm(): Confirm;
 }

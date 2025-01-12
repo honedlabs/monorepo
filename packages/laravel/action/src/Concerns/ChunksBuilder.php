@@ -80,16 +80,16 @@ trait ChunksBuilder
     /**
      * Provide the chunk callback.
      */
-    private function provideChunkCallback(\Closure $callback, bool $models): \Closure
+    private function provideChunkCallback(\Closure $callback, bool $model): \Closure
     {
-        return $models 
+        return $model 
             ? function (Collection $records) use ($callback) {
-                $callback($records);
+                foreach ($records as $record) {
+                    \call_user_func($callback, $record);
+                }
             }
             : function (Collection $records) use ($callback) {
-                foreach ($records as $record) {
-                    $callback($record);
-                }
+                \call_user_func($callback, $records);
             };
     }
 }
