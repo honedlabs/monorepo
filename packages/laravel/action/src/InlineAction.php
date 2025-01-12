@@ -16,8 +16,7 @@ use Illuminate\Contracts\Support\Responsable;
 
 class InlineAction extends Action
 {
-use IsDefault;
-    use Concerns\MorphsAction;
+    use IsDefault;
     use HasDestination;
     use Concerns\HasAction;
     use EvaluableDependency {
@@ -33,21 +32,12 @@ use IsDefault;
     {
         return \array_merge(parent::toArray(), [
             'action' => $this->hasAction(),
+            'default' => $this->isDefault(),
             // 'confirm' => $this->confirm(),
             // 'link' => $this->link(),
         ]);
     }
-
-    /**
-     * Morph this action to accomodate for bulk requests.
-     * 
-     * @return $this
-     */
-    public function acceptsBulk()
-    {
-        return $this->morph();
-    }
-
+    
     /**
      * Execute the action handler using the provided data.
      * 

@@ -17,11 +17,5 @@ it('makes', function () {
 it('has array representation', function () {
     expect($this->test->toArray())
         ->toBeArray()
-        ->toHaveKeys(['name', 'label', 'type', 'icon', 'extra', 'action']);
-});
-
-it('morphs', function () {
-    expect($this->test->acceptsBulk())
-        ->toBeInstanceOf(InlineAction::class)
-        ->getType()->toBe(Creator::Polymorphic);
+        ->toHaveKeys(['name', 'label', 'type', 'icon', 'extra', 'default', 'action']);
 });

@@ -12,7 +12,6 @@ class Creator
     const Bulk = 'bulk';
     const Inline = 'inline';
     const Page = 'page';
-    const Polymorphic = 'polymorphic';
 
     /**
      * Create a new action.
@@ -23,7 +22,6 @@ class Creator
             self::Bulk => $this->bulk($name, $label),
             self::Inline => $this->inline($name, $label),
             self::Page => $this->page($name, $label),
-            self::Polymorphic => $this->polymorphic($name, $label),
             default => throw new InvalidActionTypeException($type)
         };
     }
@@ -50,13 +48,5 @@ class Creator
     public function page(string $name, string|\Closure $label = null): PageAction
     {
         return PageAction::make($name, $label);
-    }
-
-    /**
-     * Create a new polymorphic action.
-     */
-    public function polymorphic(string $name, string|\Closure $label = null): Action
-    {
-        return InlineAction::make($name, $label)->morph();
     }
 }
