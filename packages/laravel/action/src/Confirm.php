@@ -99,7 +99,7 @@ class Confirm extends Primitive implements ResolvesClosures
     /**
      * Get the dismiss text for the confirm.
      */
-    public function getDismiss(): ?string
+    public function getDismiss(): string
     {
         return $this->dismiss;
     }
@@ -121,7 +121,7 @@ class Confirm extends Primitive implements ResolvesClosures
     /**
      * Get the submit text for the confirm.
      */
-    public function getSubmit(): ?string
+    public function getSubmit(): string
     {
         return $this->submit;
     }

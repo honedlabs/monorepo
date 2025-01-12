@@ -15,6 +15,7 @@ class BulkAction extends Action
     use Concerns\HasAction;
     use Concerns\ChunksBuilder;
     use ForwardsCalls;
+    use Concerns\KeepsSelected;
 
     protected $type = Creator::Bulk;
 
@@ -22,6 +23,7 @@ class BulkAction extends Action
     {
         return \array_merge(parent::toArray(), [
             'action' => $this->hasAction(),
+            'keepSelected' => $this->keepsSelected(),
         ]);
     }
 

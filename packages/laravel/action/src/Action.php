@@ -59,7 +59,7 @@ abstract class Action extends Primitive implements ResolvesClosures
         $this->getLabel($parameters, $typed);
         $this->getName($parameters, $typed);
         $this->getIcon($parameters, $typed);
-        $this->getExtra($parameters, $typed);
+        // $this->getExtra($parameters, $typed);
 
         return $this;
     }

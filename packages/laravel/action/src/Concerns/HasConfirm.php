@@ -64,9 +64,9 @@ trait HasConfirm
             return false;
         }
 
-        return collect((new \ReflectionFunction($confirm))->getParameters())
-            ->some(fn (\ReflectionParameter $parameter) => 
-                ($t = $parameter->getType()) instanceof \ReflectionNamedType && $t->getName() === Confirm::class
-                    || $parameter->getName() === 'confirm');
+        $parameter = collect((new \ReflectionFunction($confirm))->getParameters())->first();
+
+        return ($parameter instanceof \ReflectionNamedType && $parameter->getName() === Confirm::class)
+            || $parameter->getName() === 'confirm';
     }
 }

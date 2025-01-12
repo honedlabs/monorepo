@@ -20,4 +20,10 @@ class PageAction extends Action
             'to' => $this->resolveDestination()
         ]);
     }
+
+    public function resolve($parameters = null, $typed = null): static
+    {
+        $this->getDestination($parameters, $typed);
+        return parent::resolve($parameters, $typed);
+    }
 }

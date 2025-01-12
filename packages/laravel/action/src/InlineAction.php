@@ -26,6 +26,12 @@ class InlineAction extends Action
             'default' => $this->isDefault(),
         ]);
     }
+
+    public function resolve($parameters = null, $typed = null): static
+    {
+        $this->getDestination($parameters, $typed);
+        return parent::resolve($parameters, $typed);
+    }
     
     /**
      * Execute the action handler using the provided data.
