@@ -40,6 +40,22 @@ trait HasConfirm
     }
 
     /**
+     * Resolve the confirm for this instance.
+     * 
+     * @param  mixed  $parameters
+     * @param  array<string,mixed>|null  $typed
+     * @return $this
+     */
+    public function resolveConfirm($parameters = null, $typed = null): static
+    {
+        if ($this->hasConfirm()) {
+            $this->getConfirm()->resolve($parameters, $typed);
+        }
+
+        return $this;
+    }
+
+    /**
      * Determine if the instance has a confirm.
      */
     public function hasConfirm(): bool
