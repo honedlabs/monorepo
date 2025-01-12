@@ -44,5 +44,6 @@ it('evaluates model', function () {
 });
 
 it('makes a name', function () {
+    expect($this->test->makeName(null))->toBeNull();
     expect($this->test->makeName('New label'))->toBe('new_label');
 });

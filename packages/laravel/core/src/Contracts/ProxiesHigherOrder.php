@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core\Contracts;
 
 /**
- * @template T
+ * @template TProxy
  */
 interface ProxiesHigherOrder
 {
