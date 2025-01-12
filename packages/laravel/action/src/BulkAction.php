@@ -43,34 +43,67 @@ class BulkAction extends Action
             : $this->executeCallback($data);
     }
 
+    /**
+     * Execute the action handler using the handle method.
+     * 
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|null
+     */
     private function executeHandler(Builder $builder)
     {
-        return $this->handle($builder);
+        [$model, $singular, $plural] = $this->getActionParameterNames($builder);
+
+        $parameters = $this->getHandleParameters();
+
+        $retrieveRecords = $this->isCollectionCallback(
+            $parameters,
+            $plural,
+        );
+
+        $singularAccess = $this->isModelCallback(
+            $parameters,
+            $model,
+            $singular,
+        );
+
+        return match (true) {
+            $this->chunks() => $this->chunkRecords($builder, [$this, 'handle'], $singularAccess),
+
+            $retrieveRecords => $this->handle($builder->get()),
+
+            $singularAccess => $builder->get()->each(fn ($model) => \call_user_func([$this, 'handle'], $model)),
+
+            default => $this->handle($builder),
+        };
     }
 
+    /**
+     * Execute the action handler using the callback.
+     * 
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|null
+     */
     private function executeCallback(Builder $builder)
     {
         [$model, $singular, $plural] = $this->getActionParameterNames($builder);
 
         $callback = $this->getAction();
 
-        $selects = $this->isCollectionCallback(
+        $retrieveRecords = $this->isCollectionCallback(
             (new \ReflectionFunction($callback))->getParameters(),
             $plural,
         );
 
-        $callsModel = $this->isModelCallback(
+        $singularAccess = $this->isModelCallback(
             (new \ReflectionFunction($callback))->getParameters(),
             $model,
             $singular,
         );
 
         return match (true) {
-            $this->chunks() => $this->chunkRecords($builder, $callback, $callsModel),
+            $this->chunks() => $this->chunkRecords($builder, $callback, $singularAccess),
 
-            $selects => $this->withRecords($builder, $callback, $plural),
+            $retrieveRecords => $this->evaluateCallbackWithRecords($builder, $callback, $plural),
 
-            $callsModel => $builder->get()->each(fn ($model) => \call_user_func($callback, $model)),
+            $singularAccess => $builder->get()->each(fn ($model) => \call_user_func($callback, $model)),
 
             default => $this->evaluate($callback, [
                 'query' => $builder,
@@ -101,7 +134,7 @@ class BulkAction extends Action
     /**
      * Evaluate the action handler with retrieved records.
      */
-    private function withRecords(Builder $builder, \Closure $callback, string $plural): void
+    private function evaluateCallbackWithRecords(Builder $builder, \Closure $callback, string $plural): void
     {
         $records = $builder->get();
 

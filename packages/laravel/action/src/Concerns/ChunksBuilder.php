@@ -66,7 +66,7 @@ trait ChunksBuilder
     /**
      * Chunk the records using the builder.
      */
-    public function chunkRecords(Builder $builder, \Closure $callback, bool $model = false): bool
+    public function chunkRecords(Builder $builder, callable $callback, bool $model = false): bool
     {
         if (! $this->chunks()) {
             return false;
@@ -80,7 +80,7 @@ trait ChunksBuilder
     /**
      * Provide the chunk callback.
      */
-    private function provideChunkCallback(\Closure $callback, bool $model): \Closure
+    private function provideChunkCallback(callable $callback, bool $model): \Closure
     {
         return $model 
             ? function (Collection $records) use ($callback) {
