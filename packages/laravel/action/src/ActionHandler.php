@@ -15,6 +15,11 @@ use Illuminate\Http\Response;
 
 class ActionHandler
 {
+    /**
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $resource
+     */
     public function __construct(
         protected DefinesActions $source,
         protected Builder $resource,
@@ -57,6 +62,8 @@ class ActionHandler
 
     /**
      * Retrieve the action and query based on the type and data.
+     * 
+     * @return array{0: \Honed\Action\Action, 1: \Illuminate\Database\Eloquent\Builder<TModel>|TModel}
      */
     private function resolveAction(string $type, InlineData|BulkData $data): array
     {

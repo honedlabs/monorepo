@@ -12,7 +12,9 @@ interface HasHandler
     /**
      * Set the action's handler.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder  $data
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     * 
+     * @param  TModel|\Illuminate\Database\Eloquent\Builder<TModel>  $data
      * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|null
      */
     public function handle($data);

@@ -29,6 +29,10 @@ class BulkAction extends Action
         ]);
     }
 
+    /**
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model|null  $parameters
+     * @param  array<string,mixed>|null  $typed
+     */
     public function resolve($parameters = null, $typed = null): static
     {
         $this->resolveConfirm($parameters, $typed);
@@ -39,8 +43,10 @@ class BulkAction extends Action
     /**
      * Execute the action handler using the provided data.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $builder
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|bool|void
      */
     public function execute($builder)
     {
@@ -52,9 +58,14 @@ class BulkAction extends Action
 
         $handler = $this instanceof HasHandler;
 
-        $callback = $handler ? [$this, 'handle'] : $this->getAction();
+        /**
+         * @phpstan-var callable|\Closure
+         */
+        $callback = $handler ? [$this, 'handle'] : $this->getAction(); // @phpstan-ignore-line
 
-        $parameters = $handler ? $this->getHandleParameters() : (new \ReflectionFunction($callback))->getParameters();
+        $parameters = $handler 
+            ? $this->getHandleParameters() 
+            : (new \ReflectionFunction($callback))->getParameters(); // @phpstan-ignore-line
 
         $retrieveRecords = $this->isCollectionCallback($parameters, $plural);
 
@@ -65,7 +76,7 @@ class BulkAction extends Action
 
             $retrieveRecords && $handler => \call_user_func($callback, $builder->get()),
 
-            $retrieveRecords => $this->evaluateCallbackWithRecords($builder, $callback, $plural),
+            $retrieveRecords => $this->evaluateCallbackWithRecords($builder, $callback, $plural), // @phpstan-ignore-line
 
             $singularAccess => $builder->get()->each(fn ($model) => \call_user_func($callback, $model)),
 
@@ -82,12 +93,16 @@ class BulkAction extends Action
 
     /**
      * Evaluate the action handler with retrieved records.
+     * 
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
      */
-    private function evaluateCallbackWithRecords(Builder $builder, \Closure $callback, string $plural): void
+    private function evaluateCallbackWithRecords(Builder $builder, \Closure $callback, string $plural): mixed
     {
         $records = $builder->get();
 
-        $this->evaluate($callback, [
+        return $this->evaluate($callback, [
             'records' => $records,
             'collection' => $records,
             $plural => $records,

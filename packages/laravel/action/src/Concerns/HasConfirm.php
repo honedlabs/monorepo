@@ -42,7 +42,7 @@ trait HasConfirm
     /**
      * Resolve the confirm for this instance.
      *
-     * @param  mixed  $parameters
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model|null  $parameters
      * @param  array<string,mixed>|null  $typed
      * @return $this
      */
@@ -79,8 +79,10 @@ trait HasConfirm
         }
 
         $parameter = collect((new \ReflectionFunction($confirm))->getParameters())->first();
+        
+        $type = $parameter?->getType();
 
-        return (($parameter instanceof \ReflectionNamedType) && ($parameter->getName() === Confirm::class))
+        return ($type instanceof \ReflectionNamedType && $type->getName() === Confirm::class)
             || ($parameter?->getName() === 'confirm');
     }
 }

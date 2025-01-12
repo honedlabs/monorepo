@@ -51,6 +51,9 @@ abstract class Action extends Primitive implements ResolvesClosures
     }
 
     /**
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model|null  $parameters
+     * @param  array<string,mixed>|null  $typed
+     * 
      * @return $this
      */
     public function resolve($parameters = null, $typed = null): static
