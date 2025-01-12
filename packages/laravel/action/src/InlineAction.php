@@ -19,9 +19,6 @@ class InlineAction extends Action
     use IsDefault;
     use HasDestination;
     use Concerns\HasAction;
-    use EvaluableDependency {
-        evaluateModelForTrait as evaluateModelForAction;
-    }
 
     public function setUp(): void
     {
@@ -33,8 +30,6 @@ class InlineAction extends Action
         return \array_merge(parent::toArray(), [
             'action' => $this->hasAction(),
             'default' => $this->isDefault(),
-            // 'confirm' => $this->confirm(),
-            // 'link' => $this->link(),
         ]);
     }
     
@@ -55,8 +50,10 @@ class InlineAction extends Action
             : $this->evaluate($this->getAction(), [
                 'model' => $record,
                 'record' => $record,
-                'resource' => $record,
-                str($record->getTable())->singular()->camel()->toString() => $record
+                str($record->getTable())
+                    ->singular()
+                    ->camel()
+                    ->toString() => $record,
             ], [
                 Model::class => $record,
                 $record::class => $record,

@@ -29,30 +29,26 @@ class BulkAction extends Action
     /**
      * Execute the action handler using the provided data.
      * 
-     * @param \Illuminate\Database\Eloquent\Builder $data
+     * @param \Illuminate\Database\Eloquent\Builder $builder
      * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
-    public function execute($data)
+    public function execute($builder)
     {
         if (! $this->hasAction()) {
             return;
         }
 
-        return $this instanceof HandlesAction
-            ? $this->executeHandler($data)
-            : $this->executeCallback($data);
-    }
+        $handler = $this instanceof HandlesAction;
 
-    /**
-     * Execute the action handler using the handle method.
-     * 
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|null
-     */
-    private function executeHandler(Builder $builder)
-    {
         [$model, $singular, $plural] = $this->getActionParameterNames($builder);
 
-        $parameters = $this->getHandleParameters();
+        $callback = $handler 
+            ? [$this, 'handle'] 
+            : $this->getAction();
+
+        $parameters = $handler 
+            ? $this->getHandleParameters()
+            : (new \ReflectionFunction($callback))->getParameters();
 
         $retrieveRecords = $this->isCollectionCallback(
             $parameters,
@@ -61,39 +57,6 @@ class BulkAction extends Action
 
         $singularAccess = $this->isModelCallback(
             $parameters,
-            $model,
-            $singular,
-        );
-
-        return match (true) {
-            $this->chunks() => $this->chunkRecords($builder, [$this, 'handle'], $singularAccess),
-
-            $retrieveRecords => $this->handle($builder->get()),
-
-            $singularAccess => $builder->get()->each(fn ($model) => \call_user_func([$this, 'handle'], $model)),
-
-            default => $this->handle($builder),
-        };
-    }
-
-    /**
-     * Execute the action handler using the callback.
-     * 
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|null
-     */
-    private function executeCallback(Builder $builder)
-    {
-        [$model, $singular, $plural] = $this->getActionParameterNames($builder);
-
-        $callback = $this->getAction();
-
-        $retrieveRecords = $this->isCollectionCallback(
-            (new \ReflectionFunction($callback))->getParameters(),
-            $plural,
-        );
-
-        $singularAccess = $this->isModelCallback(
-            (new \ReflectionFunction($callback))->getParameters(),
             $model,
             $singular,
         );
@@ -101,9 +64,13 @@ class BulkAction extends Action
         return match (true) {
             $this->chunks() => $this->chunkRecords($builder, $callback, $singularAccess),
 
-            $retrieveRecords => $this->evaluateCallbackWithRecords($builder, $callback, $plural),
+            $retrieveRecords && $handler => \call_user_func($callback, $builder->get()),
 
+            $retrieveRecords => $this->evaluateCallbackWithRecords($builder, $callback, $plural),
+            
             $singularAccess => $builder->get()->each(fn ($model) => \call_user_func($callback, $model)),
+
+            $handler => \call_user_func($callback, $builder),
 
             default => $this->evaluate($callback, [
                 'query' => $builder,
@@ -161,6 +128,8 @@ class BulkAction extends Action
 
     /**
      * Determine if the action executable requires the records to be retrieved.
+     * 
+     * @param array<int,\ReflectionParameter> $parameters
      */
     private function isCollectionCallback(array $parameters, string $plural): bool
     {
@@ -173,6 +142,8 @@ class BulkAction extends Action
 
     /**
      * Determine if the action executable requires a model to be retrieved, and then acts on individual collection records.
+     * 
+     * @param array<int,\ReflectionParameter> $parameters
      */
     private function isModelCallback(array $parameters, Model $model, string $singular): bool
     {
