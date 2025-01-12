@@ -14,9 +14,9 @@ trait HasConfirm
     protected $confirm;
 
     /**
-     * Set the confirm for this instance.
+     * Set the confirm for the instance.
      * 
-     * @param \Honed\Action\Confirm|string|\Closure|null $confirm
+     * @param \Honed\Action\Confirm|\Closure|string|null $confirm
      * @return $this
      */
     public function confirm($confirm, string $description = null): static
@@ -56,7 +56,7 @@ trait HasConfirm
     }
 
     /**
-     * Determine if the parameter modifies the confirm on the instance.
+     * Determine if the confirm is a closure that modifies the confirm on the instance.
      */
     private function callsConfirm(mixed $confirm): bool
     {

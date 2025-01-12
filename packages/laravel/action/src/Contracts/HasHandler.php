@@ -7,7 +7,7 @@ namespace Honed\Action\Contracts;
 /**
  * @phpstan-require-extends \Honed\Action\Action
  */
-interface HandlesAction
+interface HasHandler
 {
     /**
      * Set the action's handler.

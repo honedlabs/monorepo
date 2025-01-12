@@ -53,9 +53,9 @@ class TestCase extends Orchestra
     {
         $router->middleware(SubstituteBindings::class)->group(function ($router) {
             $router->get('/', fn () => Inertia::render('Home'))->name('home.index');
-            $router->get('/products', fn () => Inertia::render('Products/Index'))->name('product.index');
-            $router->get('/products/{product}', fn () => Inertia::render('Products/Show'))->name('product.show');
-            $router->get('/products/create', fn () => Inertia::render('Products/Create'))->name('product.create');
+            $router->get('/products', fn () => Inertia::render('Products/Index'))->name('products.index');
+            $router->get('/products/{product}', fn () => Inertia::render('Products/Show'))->name('products.show');
+            $router->get('/products/create', fn () => Inertia::render('Products/Create'))->name('products.create');
         });
     }
 

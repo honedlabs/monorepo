@@ -7,7 +7,7 @@ namespace Honed\Action;
 use Honed\Core\Concerns\IsDefault;
 use Honed\Core\Concerns\HasDestination;
 use Illuminate\Database\Eloquent\Model;
-use Honed\Action\Contracts\HandlesAction;
+use Honed\Action\Contracts\HasHandler;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 class InlineAction extends Action
@@ -24,12 +24,14 @@ class InlineAction extends Action
         return \array_merge(parent::toArray(), [
             'action' => $this->hasAction(),
             'default' => $this->isDefault(),
+            ...($this->hasDestination() ? $this->getDestination()->toArray() : [])
         ]);
     }
 
     public function resolve($parameters = null, $typed = null): static
     {
         $this->getDestination($parameters, $typed);
+        
         return parent::resolve($parameters, $typed);
     }
     
@@ -47,7 +49,7 @@ class InlineAction extends Action
 
         [$model, $singular] = $this->getActionParameterNames($record);
 
-        return $this instanceof HandlesAction
+        return $this instanceof HasHandler
             ? \call_user_func([$this, 'handle'], $record)
             : $this->evaluate($this->getAction(), [
                 'model' => $model,

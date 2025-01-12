@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Honed\Action\Tests\Stubs;
 
 use Honed\Action\Contracts\HasHandler;
-use Honed\Action\InlineAction;
+use Honed\Action\BulkAction;
+use Honed\Action\Contracts\ShouldChunk;
 
-class DestroyAction extends InlineAction implements HasHandler
+class BulkDestroyAction extends BulkAction implements ShouldChunk, HasHandler
 {
     public function setUp(): void
     {

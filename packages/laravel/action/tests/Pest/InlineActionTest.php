@@ -22,6 +22,20 @@ it('has array representation', function () {
         ->toHaveKeys(['name', 'label', 'type', 'icon', 'extra', 'default', 'action']);
 });
 
+it('has array representation with destination', function () {
+    expect($this->test->to('test')->toArray())
+        ->toBeArray()
+        ->toHaveKeys(['name', 'label', 'type', 'icon', 'extra', 'default', 'action', 'href', 'method', 'tab']);
+});
+
+it('resolves', function () {
+    $product = product();
+
+    expect(DestroyAction::make()->resolve($product))
+        ->toBeInstanceOf(DestroyAction::class)
+        ->getLabel()->toBe('Destroy '.$product->name);
+});
+
 describe('executes', function () {
     beforeEach(function () {
         $this->product = product();
@@ -53,7 +67,7 @@ describe('executes', function () {
 
         expect($action)
             ->getName()->toBe('destroy')
-            ->getLabel($this->product)->toBeInstanceOf(\Closure::class)
+            ->getLabel($this->product)->toBe('Destroy '.$this->product->name)
             ->getType()->toBe(Creator::Inline)
             ->hasAction()->toBeTrue();
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Illuminate\Support\Collection;
-use Honed\Action\Contracts\HandlesAction;
+use Honed\Action\Contracts\HasHandler;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\ForwardsCalls;
@@ -41,7 +41,7 @@ class BulkAction extends Action
 
         [$model, $singular, $plural] = $this->getActionParameterNames($builder);
 
-        $handler = $this instanceof HandlesAction;
+        $handler = $this instanceof HasHandler;
 
         $callback = $handler ? [$this, 'handle'] : $this->getAction();
 
@@ -121,9 +121,9 @@ class BulkAction extends Action
     private function isModelCallback(array $parameters, Model $model, string $singular): bool
     {
         return collect($parameters)
-        ->some(fn (\ReflectionParameter $parameter) => 
-            ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Model::class, $model::class])
-                || \in_array($parameter->getName(), ['model', 'record', $singular])
+            ->some(fn (\ReflectionParameter $parameter) => 
+                ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Model::class, $model::class])
+                    || \in_array($parameter->getName(), ['model', 'record', $singular])
         );
     }
 }

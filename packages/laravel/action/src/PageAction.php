@@ -17,13 +17,14 @@ class PageAction extends Action
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
-            'to' => $this->resolveDestination()
+            ...($this->hasDestination() ? $this->getDestination()->toArray() : [])
         ]);
     }
 
     public function resolve($parameters = null, $typed = null): static
     {
         $this->getDestination($parameters, $typed);
+        
         return parent::resolve($parameters, $typed);
     }
 }

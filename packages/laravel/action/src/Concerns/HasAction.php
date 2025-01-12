@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
-use Honed\Action\Contracts\HandlesAction;
+use Honed\Action\Contracts\HasHandler;
 use Illuminate\Database\Eloquent\Builder;
 
 trait HasAction
@@ -46,7 +46,7 @@ trait HasAction
      */
     public function hasAction()
     {
-        return ! \is_null($this->action) || $this instanceof HandlesAction;
+        return ! \is_null($this->action) || $this instanceof HasHandler;
     }
 
         /**

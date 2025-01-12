@@ -8,13 +8,11 @@ use Honed\Core\Primitive;
 use Honed\Core\Concerns\HasTitle;
 use Honed\Core\Concerns\HasDescription;
 use Honed\Core\Contracts\ResolvesClosures;
-use Honed\Core\Concerns\EvaluableDependency;
 
 class Confirm extends Primitive implements ResolvesClosures
 {
     use HasTitle;
     use HasDescription;
-    use EvaluableDependency;
 
     const Constructive = 'constructive';
     const Destructive = 'destructive';
