@@ -9,10 +9,13 @@ use Honed\Core\Contracts\HigherOrder;
 use Honed\Action\Contracts\HandlesAction;
 use Honed\Action\Tests\Stubs\Product;
 use Honed\Core\Contracts\ProxiesHigherOrder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class BulkAction extends Action
 {
     use Concerns\HasAction;
+    use Concerns\ChunksBuilder;
 
     public function setUp(): void
     {
@@ -40,26 +43,63 @@ class BulkAction extends Action
         //     return;
         // }
 
-
-        $model = $data->getModel();
-        $parameters = str($model->getTable())->camel()->toString();
-        $parameter = str($parameters)->singular()->toString();
-
-        $needsCollection = collect(
-            collect((new \ReflectionClass($this))->getMethods())
-                ->first(fn (\ReflectionMethod $method) => $method->getName() === 'handle')
-                ->getParameters()
-            )->some(fn (\ReflectionParameter $parameter) => 
-                ($t = $parameter->getType()) instanceof \ReflectionNamedType && $t->getName() === Collection::class
-                    || \in_array($parameter->getName(), ['records', $parameters])
-            )
-        );
-
         return $this instanceof HandlesAction
-            ? $this->handle($data)
-            : $this->evaluate($this->getAction(), [
-                'data' => $data,
-            ]);
+            ? $this->executeHandler($data)
+            : $this->executeCallback($data);
+    }
+
+    private function executeHandler(Builder $builder)
+    {
+        return $this->handle($builder);
+    }
+
+    private function executeCallback(Builder $builder)
+    {
+        dd($builder);
+
+        return $this->evaluate($this->getAction(), [
+            'data' => $builder,
+        ]);
+    }
+
+    /**
+     * Retrieve the parameter names for the action.
+     * 
+     * @return array{0: \Illuminate\Database\Eloquent\Model, 1: string, 2: string}
+     */
+    private function getActionParameterNames(Builder $builder): array
+    {
+        $table = $builder->getTable();
+
+        return [
+            $builder->getModel(),
+            str($table)->camel()->singular()->toString(),
+            str($table)->camel()->toString(),
+        ];
+    }
+
+    /**
+     * Retrieve the parameters for the handle method.
+     * 
+     * @return array<int,\ReflectionParameter>
+     */
+    private function getHandleParameters(): array
+    {
+        return collect((new \ReflectionClass($this))->getMethods())
+            ->first(fn (\ReflectionMethod $method) => $method->getName() === 'handle')
+            ->getParameters();
+    }
+
+    /**
+     * Determine if the action executable requires the records to be retrieved.
+     */
+    private function selectsRecords(array $parameters): bool
+    {
+        return collect($this->getHandleParameters())
+            ->some(fn (\ReflectionParameter $parameter) => 
+                ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Collection::class, Model::class, $model])
+                    || \in_array($parameter->getName(), ['records', $parameters])
+            );
     }
 
     public function handle($products)
