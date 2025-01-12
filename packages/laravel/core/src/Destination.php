@@ -73,7 +73,7 @@ class Destination extends Primitive implements ResolvesClosures
         mixed $parameters = [],
         string $via = Request::METHOD_GET
     ): static {
-        return new static($to, $parameters, $via);
+        return resolve(static::class, compact('to', 'parameters', 'via'));
     }
 
     public function toArray()
@@ -94,13 +94,19 @@ class Destination extends Primitive implements ResolvesClosures
 
     /**
      * Get the href for this destination.
+     * 
+     * @param  mixed  $parameters
+     * @param  array<string,mixed>|null  $typed
      */
     public function getHref($parameters = null, $typed = null): ?string
     {
+        /**
+         * @var string|null
+         */
         $evaluated = match (true) {
             \is_null($this->to) => null,
             \is_callable($this->to) => $parameters instanceof \Illuminate\Database\Eloquent\Model
-                ? $this->evaluateModelForDestination($parameters, 'resolve')
+                ? $this->evaluateModelForDestination($parameters, 'getHref')
                 : $this->evaluate($this->to, $parameters ?? [], $typed ?? []), // @phpstan-ignore-line
             $this->isUri($this->to) => $this->to,
             $this->isSigned() && $this->isTemporary() => URL::temporarySignedRoute($this->to, $this->temporary, $parameters ?? $this->parameters), // @phpstan-ignore-line

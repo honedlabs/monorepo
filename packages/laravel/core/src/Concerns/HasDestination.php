@@ -24,11 +24,7 @@ trait HasDestination
         match (true) {
             \is_null($destination) => null,
             $destination instanceof Destination => $this->destination = $destination,
-            ! \is_callable($destination) => $this->destination = $this->newDestination()->to($destination, $parameters),
-            collect((new \ReflectionFunction($destination))->getParameters())
-                ->some(fn (\ReflectionParameter $parameter) => ($t = $parameter->getType()) instanceof \ReflectionNamedType && $t->getName() === Destination::class
-                        || \in_array($parameter->getName(), ['destination', 'url', 'link'])
-                ) => $this->destination = \call_user_func($destination, $this->newDestination()),
+            $this->callsDestination($destination) => \call_user_func($destination, $this->newDestination()),
             default => $this->newDestination()->to($destination, $parameters)
         };
 
@@ -81,7 +77,8 @@ trait HasDestination
 
         $parameter = collect((new \ReflectionFunction($destination))->getParameters())->first();
 
-        return ($parameter instanceof \ReflectionNamedType && $parameter->getName() === Destination::class)
-            || \in_array($parameter->getName(), ['destination', 'url', 'link']);
+
+        return (($t = $parameter->getType()) instanceof \ReflectionNamedType && $t->getName() === Destination::class)
+            || $parameter->getName() === 'destination';
     }
 }

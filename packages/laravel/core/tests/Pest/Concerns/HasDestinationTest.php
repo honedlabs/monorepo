@@ -21,8 +21,11 @@ it('sets class', function () {
     expect($this->test->to($destination))
         ->toBeInstanceOf(DestinationTest::class)
         ->hasDestination()->toBeTrue()
-        ->getDestination()->toBe($destination)
-        ->resolveDestination()->toBe(route('product.show', $this->product));
+        ->getDestination()->scoped(fn ($destination) => $destination
+            ->goesTo()->toBe('product.show')
+            ->getParameters()->toBe($this->product)
+            ->getHref($this->product)->toBe(route('product.show', $this->product))
+        );
 });
 
 it('sets closure', function () {
@@ -32,8 +35,9 @@ it('sets closure', function () {
         ->toBeInstanceOf(DestinationTest::class)
         ->hasDestination()->toBeTrue()
         ->getDestination()->scoped(fn ($destination) => $destination
-        ->goesTo()->toBeInstanceOf(\Closure::class)
-        )->resolveDestination($this->product)->toBe(route('product.show', $this->product));
+            ->goesTo()->toBeInstanceOf(\Closure::class)
+            ->getHref($this->product)->toBe(route('product.show', $this->product))
+        );
 });
 
 it('sets string', function () {
@@ -41,8 +45,9 @@ it('sets string', function () {
         ->toBeInstanceOf(DestinationTest::class)
         ->hasDestination()->toBeTrue()
         ->getDestination()->scoped(fn ($destination) => $destination
-        ->goesTo()->toBe('https://honed.dev')
-        )->resolveDestination($this->product)->toBe('https://honed.dev');
+            ->goesTo()->toBe('https://honed.dev')
+            ->getHref()->toBe('https://honed.dev')
+        );
 });
 
 it('sets destination closure', function () {
@@ -52,9 +57,10 @@ it('sets destination closure', function () {
     ))->toBeInstanceOf(DestinationTest::class)
         ->hasDestination()->toBeTrue()
         ->getDestination()->scoped(fn ($destination) => $destination
-    ->goesTo()->toBe('product.show')
-    ->getParameters()->toBe($this->product)
-        )->resolveDestination($this->product)->toBe(route('product.show', $this->product));
+            ->goesTo()->toBe('product.show')
+            ->getParameters()->toBe($this->product)
+            ->getHref($this->product)->toBe(route('product.show', $this->product))
+        );
 });
 
 it('has alias destination', function () {
