@@ -49,12 +49,12 @@ trait HasAction
         return ! \is_null($this->action) || $this instanceof HasHandler;
     }
 
-        /**
+    /**
      * Retrieve the parameter names for the action.
      * 
      * @return array{0: \Illuminate\Database\Eloquent\Model, 1: string, 2: string}
      */
-    private function getActionParameterNames(Builder|Model $parameter): array
+    public function getActionParameterNames(Builder|Model $parameter): array
     {
         $model = $parameter instanceof Builder 
             ? $parameter->getModel() 

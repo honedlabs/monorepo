@@ -24,7 +24,7 @@ it('does not chunk by default', function () {
         ->toBeFalse();
 });
 
-it('can chunk', function () {
+it('chunks', function () {
     expect($this->test->chunk())
         ->toBeInstanceOf(ChunksBuilderTest::class)
         ->chunks()->toBeTrue()
@@ -32,12 +32,13 @@ it('can chunk', function () {
         ->chunksById()->toBeTrue();
 });
 
-it('chunks records by id', function () {
+it('chunks by id', function () {
     populate(100);
 
     expect($this->test->chunk()->chunkRecords(
         Product::query(), 
-        fn ($products) => $products->each(fn ($product) => $product->update(['name' => 'test']))
+        fn ($products) => $products->each(fn ($product) => $product->update(['name' => 'test'])),
+        false
     ))->toBeTrue();
 
     expect(Product::query()->get())
@@ -52,7 +53,8 @@ it('chunks by custom callback', function () {
     expect($this->test->chunk(500, false)
         ->chunkRecords(
             Product::query()->orderBy('public_id'), 
-            fn ($products) => $products->each(fn ($product) => $product->update(['name' => 'test']))
+            fn ($products) => $products->each(fn ($product) => $product->update(['name' => 'test'])),
+            false
         ))->toBeTrue();
 
     expect(Product::query()->get())
@@ -62,7 +64,7 @@ it('chunks by custom callback', function () {
 });
 
 
-it('chunks with model function', function () {
+it('chunks by model', function () {
     populate(100);
 
     expect($this->test->chunk()
