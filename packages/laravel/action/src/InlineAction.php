@@ -5,14 +5,9 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Honed\Core\Concerns\IsDefault;
-use Honed\Core\Contracts\HigherOrder;
-use Illuminate\Http\RedirectResponse;
 use Honed\Core\Concerns\HasDestination;
 use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Contracts\HandlesAction;
-use Honed\Core\Concerns\EvaluableDependency;
-use Honed\Core\Contracts\ProxiesHigherOrder;
-use Illuminate\Contracts\Support\Responsable;
 
 class InlineAction extends Action
 {
@@ -20,10 +15,7 @@ class InlineAction extends Action
     use HasDestination;
     use Concerns\HasAction;
 
-    public function setUp(): void
-    {
-        $this->type(Creator::Inline);
-    }
+    protected $type = Creator::Inline;
 
     public function toArray(): array
     {
@@ -37,7 +29,7 @@ class InlineAction extends Action
      * Execute the action handler using the provided data.
      * 
      * @param \Illuminate\Database\Eloquent\Model $record
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|null
      */
     public function execute($record)
     {
@@ -45,18 +37,17 @@ class InlineAction extends Action
             return;
         }
 
+        [$model, $singular] = $this->getActionParameterNames($record);
+
         return $this instanceof HandlesAction
-            ? $this->handle($record)
+            ? \call_user_func([$this, 'handle'], $record)
             : $this->evaluate($this->getAction(), [
-                'model' => $record,
+                'model' => $model,
                 'record' => $record,
-                str($record->getTable())
-                    ->singular()
-                    ->camel()
-                    ->toString() => $record,
+                $singular => $record,
             ], [
                 Model::class => $record,
-                $record::class => $record,
+                $model::class => $record,
             ]);
     }
 }

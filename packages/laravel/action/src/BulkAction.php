@@ -14,10 +14,7 @@ class BulkAction extends Action
     use Concerns\HasAction;
     use Concerns\ChunksBuilder;
 
-    public function setUp(): void
-    {
-        $this->type(Creator::Bulk);
-    }
+    protected $type = Creator::Bulk;
 
     public function toArray(): array
     {
@@ -38,28 +35,17 @@ class BulkAction extends Action
             return;
         }
 
-        $handler = $this instanceof HandlesAction;
-
         [$model, $singular, $plural] = $this->getActionParameterNames($builder);
 
-        $callback = $handler 
-            ? [$this, 'handle'] 
-            : $this->getAction();
+        $handler = $this instanceof HandlesAction;
 
-        $parameters = $handler 
-            ? $this->getHandleParameters()
-            : (new \ReflectionFunction($callback))->getParameters();
+        $callback = $handler ? [$this, 'handle'] : $this->getAction();
 
-        $retrieveRecords = $this->isCollectionCallback(
-            $parameters,
-            $plural,
-        );
+        $parameters = $handler ? $this->getHandleParameters() : (new \ReflectionFunction($callback))->getParameters();
 
-        $singularAccess = $this->isModelCallback(
-            $parameters,
-            $model,
-            $singular,
-        );
+        $retrieveRecords = $this->isCollectionCallback($parameters, $plural);
+
+        $singularAccess = $this->isModelCallback($parameters, $model, $singular);
 
         return match (true) {
             $this->chunks() => $this->chunkRecords($builder, $callback, $singularAccess),
@@ -79,23 +65,6 @@ class BulkAction extends Action
                 Builder::class => $builder,
             ]),
         };
-    }
-
-    /**
-     * Retrieve the parameter names for the action.
-     * 
-     * @return array{0: \Illuminate\Database\Eloquent\Model, 1: string, 2: string}
-     */
-    private function getActionParameterNames(Builder $builder): array
-    {
-        $model = $builder->getModel();
-        $table = $model->getTable();
-
-        return [
-            $model,
-            str($table)->camel()->singular()->toString(),
-            str($table)->camel()->toString(),
-        ];
     }
 
     /**

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
+use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Contracts\HandlesAction;
+use Illuminate\Database\Eloquent\Builder;
 
 trait HasAction
 {
@@ -45,5 +47,25 @@ trait HasAction
     public function hasAction()
     {
         return ! \is_null($this->action) || $this instanceof HandlesAction;
+    }
+
+        /**
+     * Retrieve the parameter names for the action.
+     * 
+     * @return array{0: \Illuminate\Database\Eloquent\Model, 1: string, 2: string}
+     */
+    private function getActionParameterNames(Builder|Model $parameter): array
+    {
+        $model = $parameter instanceof Builder 
+            ? $parameter->getModel() 
+            : $parameter;
+            
+        $table = $model->getTable();
+
+        return [
+            $model,
+            str($table)->singular()->camel()->toString(),
+            str($table)->camel()->toString(),
+        ];
     }
 }

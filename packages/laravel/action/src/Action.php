@@ -24,7 +24,7 @@ abstract class Action extends Primitive implements ResolvesClosures
     use HasIcon;
     use HasType;
 
-    public function __construct(string $name, string|\Closure $label = null)
+    public function __construct(?string $name = null, string|\Closure $label = null)
     {
         parent::__construct();
 
@@ -35,7 +35,7 @@ abstract class Action extends Primitive implements ResolvesClosures
     /**
      * Make a new action.
      */
-    public static function make(string $name, string|\Closure $label = null): static
+    public static function make(?string $name = null, string|\Closure $label = null): static
     {
         return new static($name, $label);
     }

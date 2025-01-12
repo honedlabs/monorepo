@@ -10,10 +10,7 @@ class PageAction extends Action
 {
     use HasDestination;
 
-    public function setUp(): void
-    {
-        $this->type(Creator::Page);
-    }
+    protected $type = Creator::Page;
 
     public function toArray(): array
     {
