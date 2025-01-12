@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Core\Primitive;
 use Honed\Action\Http\Data\BulkData;
 use Honed\Action\Http\Data\InlineData;
 use Illuminate\Database\Eloquent\Builder;
 use Honed\Action\Contracts\DefinesActions;
+use Honed\Action\Exceptions\InvalidActionException;
 use Honed\Action\Http\Requests\ActionRequest;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 
 class ActionHandler
@@ -19,21 +20,32 @@ class ActionHandler
     public function __construct(
         protected DefinesActions $source,
         protected Builder $resource,
-        protected string $findBy = null,
+        protected ?string $findBy = null,
         protected bool $tablePrefix = false
-    ) {
-
-    }
+    ) { }
 
     /**
-     * @return void
+     * Handle the incoming action request using the actions from the source, and the resource provided.
      */
-    public function handle(ActionRequest $request)
+    public function handle(ActionRequest $request): Responsable|RedirectResponse
     {
-        $result = match ($request->validated('type')) {
-            'inline' => $this->handleInline(InlineData::from($request)),
-            // 'bulk' => $this->handleBulk(BulkData::from($request))
+        $type = $request->validated('type');
+
+        $data = match ($type) {
+            Creator::Inline => InlineData::from($request),
+            Creator::Bulk => BulkData::from($request),
+            default => abort(400),
         };
+
+        [$action, $query] = $this->resolveAction($type, $data);
+
+        // Validate to ensure the action exists and is allowed
+        match (true) {
+            \is_null($action) => abort(400),
+            $action instanceof InlineAction && ! $action->isAllowed($query) => abort(403),
+        };
+
+        $result = $action->execute($query);
 
         if ($result instanceof Responsable || $result instanceof Response) {
             return $result;
@@ -42,9 +54,32 @@ class ActionHandler
         return back();
     }
 
-    protected function handleInline(InlineData $request)
+    /**
+     * Retrieve the action and query based on the type and data.
+     */
+    private function resolveAction(string $type, InlineData|BulkData $data): array
     {
+        $query = $this->resource;
 
+        return match ($type) {
+            Creator::Inline => [
+                $this->source->inlineActions()
+                    ->first(fn (InlineAction $action) => $action->getName() === $data->name),
+
+                $query->where($this->column(), $data->id)->first(),
+            ],
+
+            Creator::Bulk => [
+                $this->source->bulkActions()
+                    ->first(fn (BulkAction $action) => $action->getName() === $data->name),
+
+                $data->all
+                    ? $query->whereNotIn($this->column(), $data->except)
+                    : $query->whereIn($this->column(), $data->only)
+            ],
+
+            default => throw new InvalidActionException($type),
+        };
     }
 
     /**

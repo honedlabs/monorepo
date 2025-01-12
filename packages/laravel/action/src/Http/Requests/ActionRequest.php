@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Action\Http\Requests;
 
+use Honed\Action\Creator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ActionRequest extends FormRequest
@@ -15,17 +16,20 @@ class ActionRequest extends FormRequest
      */
     public function rules(): array
     {
+        $excludeInline = \sprintf('exclude_if:type,%s', Creator::Inline);
+        $excludeBulk = \sprintf('exclude_if:type,%s', Creator::Bulk);
+
         return [
             'name' => ['required', 'string'],
-            'type' => ['required', 'in:bulk,inline'],
+            'type' => ['required', \sprintf('in:%s,%s', Creator::Inline, Creator::Bulk)],
             
-            'only' => ['exclude_if:type,inline', 'sometimes', 'array'],
-            'except' => ['exclude_if:type,inline', 'sometimes', 'array'],
-            'all' => ['exclude_if:type,inline', 'required', 'boolean'],
-            'only.*' => ['exclude_if:type,inline', 'sometimes', 'string', 'integer'],
-            'except.*' => ['exclude_if:type,inline', 'sometimes', 'string', 'integer']
-            ,
-            'id' => ['exclude_if:type,bulk', 'required', 'string', 'integer'],
+            'only' => [$excludeInline, 'sometimes', 'array'],
+            'except' => [$excludeInline, 'sometimes', 'array'],
+            'all' => [$excludeInline, 'required', 'boolean'],
+            'only.*' => [$excludeInline, 'sometimes', 'string', 'integer'],
+            'except.*' => [$excludeInline, 'sometimes', 'string', 'integer'],
+
+            'id' => [$excludeBulk, 'required', 'string', 'integer'],
         ];
     }
 }
