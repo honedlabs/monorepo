@@ -21,3 +21,10 @@ function product(?string $name = null): Product
         'created_at' => now()->subDays(fake()->randomNumber(2)),
     ]);
 }
+
+function populate(int $count = 1000): void
+{
+    foreach (\range(1, $count) as $i) {
+        product();
+    }
+}
