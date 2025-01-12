@@ -8,7 +8,7 @@ use Honed\Action\Creator;
 
 trait MorphsAction
 {
-    abstract public function type();
+    abstract public function type(?string $type): static;
 
     /**
      * @return $this

@@ -8,7 +8,7 @@ use Honed\Action\BulkAction;
 use Honed\Action\PageAction;
 use Honed\Action\InlineAction;
 
-trait HandlesActions
+trait HasActions
 {
     /**
      * @var array<int,\Honed\Action\Action>

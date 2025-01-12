@@ -7,7 +7,7 @@ namespace Honed\Action;
 use Honed\Core\Contracts\HigherOrder;
 use Honed\Core\Contracts\ProxiesHigherOrder;
 
-class BulkAction extends Action implements ProxiesHigherOrder
+class BulkAction extends Action
 {
     use Concerns\MorphsAction;
     use Concerns\HasAction;
@@ -15,14 +15,6 @@ class BulkAction extends Action implements ProxiesHigherOrder
     public function setUp(): void
     {
         $this->type(Creator::Bulk);
-    }
-
-    public function __get(string $property): HigherOrder
-    {
-        return match ($property) {
-            // 'confirm' => new HigherOrderConfirm($this),
-            default => parent::__get($property),
-        };
     }
 
     public function toArray(): array
@@ -39,12 +31,12 @@ class BulkAction extends Action implements ProxiesHigherOrder
      * 
      * @return $this
      */
-    public function isAlsoInline(): static
+    public function acceptsInline(): static
     {
         return $this->morph();
     }
 
-    public function handle()
+    public function execute($data): void
     {
         //
     }

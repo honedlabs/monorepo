@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Action\Transfers;
 
-class BulkData implements Transfers
+class BulkData
 {
     public function __construct(
-        public readonly $name,
-        public readonly $value,
-        public readonly $label,
+        public readonly string $name,
+        public readonly string $value,
+        public readonly string $label,
     ) {}
 
     // public static function from($request)

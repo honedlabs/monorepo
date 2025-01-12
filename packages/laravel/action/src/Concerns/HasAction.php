@@ -12,6 +12,13 @@ trait HasAction
     protected $action = null;
 
     /**
+     * Execute the action handler using the provided data.
+     */
+    abstract public function execute($data): void;
+
+    /**
+     * Set the action handler.
+     * 
      * @return $this
      */
     public function action(\Closure $action = null): static
@@ -21,6 +28,14 @@ trait HasAction
         }
 
         return $this;
+    }
+
+    /**
+     * Get the action handler.
+     */
+    public function getAction(): ?\Closure
+    {
+        return $this->action;
     }
 
     /**

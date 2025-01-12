@@ -11,15 +11,15 @@ use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\Allowable;
+use Honed\Core\Contracts\ResolvesClosures;
 
 /**
  * @extends \Honed\Core\Primitive<string,mixed>
  */
-abstract class Action extends Primitive
+abstract class Action extends Primitive implements ResolvesClosures
 {
     use Allowable;
     use HasLabel;
-    use HasMeta;
     use HasName;
     use HasIcon;
     use HasType;
@@ -47,7 +47,21 @@ abstract class Action extends Primitive
             'label' => $this->getLabel(),
             'type' => $this->getType(),
             'icon' => $this->getIcon(),
-            'meta' => $this->getMeta(),
+            'extra' => null,
         ];
+    }
+
+    /**
+     * @return $this
+     */
+    public function resolve($parameters = null, $typed = null): static
+    {
+        $this->getLabel($parameters, $typed);
+        $this->getName($parameters, $typed);
+        $this->getIcon($parameters, $typed);
+        $this->getExtra($parameters, $typed);
+
+        return $this;
+        
     }
 }
