@@ -22,9 +22,9 @@ it('sets class', function () {
         ->toBeInstanceOf(DestinationTest::class)
         ->hasDestination()->toBeTrue()
         ->getDestination()->scoped(fn ($destination) => $destination
-            ->goesTo()->toBe('product.show')
-            ->getParameters()->toBe($this->product)
-            ->getHref($this->product)->toBe(route('product.show', $this->product))
+        ->goesTo()->toBe('product.show')
+        ->getParameters()->toBe($this->product)
+        ->get($this->product)->toBe(route('product.show', $this->product))
         );
 });
 
@@ -34,9 +34,9 @@ it('sets closure', function () {
     expect($this->test->to($fn))
         ->toBeInstanceOf(DestinationTest::class)
         ->hasDestination()->toBeTrue()
-        ->getDestination()->scoped(fn ($destination) => $destination
-            ->goesTo()->toBeInstanceOf(\Closure::class)
-            ->getHref($this->product)->toBe(route('product.show', $this->product))
+        ->getDestination($this->product)->scoped(fn ($destination) => $destination
+        ->goesTo()->toBeInstanceOf(\Closure::class)
+        ->get()->toBe(route('product.show', $this->product))
         );
 });
 
@@ -45,8 +45,8 @@ it('sets string', function () {
         ->toBeInstanceOf(DestinationTest::class)
         ->hasDestination()->toBeTrue()
         ->getDestination()->scoped(fn ($destination) => $destination
-            ->goesTo()->toBe('https://honed.dev')
-            ->getHref()->toBe('https://honed.dev')
+        ->goesTo()->toBe('https://honed.dev')
+        ->get()->toBe('https://honed.dev')
         );
 });
 
@@ -57,9 +57,9 @@ it('sets destination closure', function () {
     ))->toBeInstanceOf(DestinationTest::class)
         ->hasDestination()->toBeTrue()
         ->getDestination()->scoped(fn ($destination) => $destination
-            ->goesTo()->toBe('product.show')
-            ->getParameters()->toBe($this->product)
-            ->getHref($this->product)->toBe(route('product.show', $this->product))
+        ->goesTo()->toBe('product.show')
+        ->getParameters()->toBe($this->product)
+        ->get($this->product)->toBe(route('product.show', $this->product))
         );
 });
 

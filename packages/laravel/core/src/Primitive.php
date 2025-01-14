@@ -39,7 +39,7 @@ abstract class Primitive implements \JsonSerializable, Arrayable, Contracts\Make
      */
     public function jsonSerialize(): mixed
     {
-        return \array_filter($this->toArray(), static fn ($value) => ! \is_null($value));
+        return \array_filter($this->toArray(), static fn ($value) => !empty($value));
     }
 
     /**

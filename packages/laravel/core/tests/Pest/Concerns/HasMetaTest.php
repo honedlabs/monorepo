@@ -8,7 +8,6 @@ use Honed\Core\Tests\Stubs\Product;
 
 class MetaTest
 {
-    use Evaluable;
     use HasMeta;
 }
 
@@ -25,26 +24,12 @@ it('sets', function () {
 it('gets', function () {
     expect($this->test)
         ->getMeta()->scoped(fn ($meta) => $meta
-        ->toBeArray()
-        ->toBeEmpty()
+            ->toBeArray()
+            ->toBeEmpty()
         )
         ->hasMeta()->toBeFalse();
 
     expect($this->test->meta(['name' => 'test']))
         ->getMeta()->toEqual(['name' => 'test'])
-        ->hasMeta()->toBeTrue();
-});
-
-it('evaluates', function () {
-    $product = product();
-    expect($this->test->meta(fn (Product $product) => ['name' => $product->name]))
-        ->getMeta(['product' => $product])->toEqual(['name' => $product->name])
-        ->hasMeta()->toBeTrue();
-});
-
-it('evaluates model', function () {
-    $product = product();
-    expect($this->test->meta(fn (Product $product) => ['name' => $product->name]))
-        ->getMeta($product)->toEqual(['name' => $product->name])
         ->hasMeta()->toBeTrue();
 });

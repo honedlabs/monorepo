@@ -8,6 +8,10 @@ use Honed\Core\Contracts\IsIcon;
 
 trait HasIcon
 {
+    use EvaluatesClosures {
+        evaluateModelForTrait as evaluateModelForIcon;
+    }
+
     /**
      * @var string|\Honed\Core\Contracts\IsIcon
      */
@@ -29,11 +33,22 @@ trait HasIcon
     }
 
     /**
-     * Get the icon for the instance.
+     * Get the icon for the instance, evaluating it if necessary.
+     *
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      */
-    public function getIcon(): ?string
+    public function getIcon($parameters = [], $typed = []): ?string
     {
-        return $this->icon instanceof IsIcon ? $this->icon->icon() : $this->icon;
+        $evaluated = match (true) {
+            $this->icon instanceof IsIcon => $this->icon->icon(),
+            $parameters instanceof \Illuminate\Database\Eloquent\Model => $this->evaluateModelForIcon($parameters, 'getIcon'),
+            default => $this->evaluate($this->icon, $parameters, $typed),
+        };
+
+        $this->icon = $evaluated;
+
+        return $evaluated;
     }
 
     /**

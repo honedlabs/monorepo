@@ -18,21 +18,21 @@ beforeEach(function () {
 
 it('allows by default', function () {
     expect($this->test)
-        ->isAllowed()->toBeTrue();
+        ->allows()->toBeTrue();
 });
 
 it('sets', function () {
     expect($this->test->allow(false))
         ->toBeInstanceOf(AllowableTest::class)
-        ->isAllowed()->toBeFalse();
+        ->allows()->toBeFalse();
 });
 
 it('allows', function () {
     expect($this->test->allow(fn (Product $product) => $product->id > 100))
-        ->isAllowed(['product' => product()])->toBeFalse();
+        ->allows(['product' => product()])->toBeFalse();
 });
 
 it('allows models', function () {
     expect($this->test->allow(fn (Product $product) => $product->id > 100))
-        ->isAllowed(product())->toBeFalse();
+        ->allows(product())->toBeFalse();
 });

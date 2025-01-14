@@ -6,19 +6,15 @@ namespace Honed\Core\Concerns;
 
 trait HasMeta
 {
-    use EvaluatesClosures {
-        evaluateModelForTrait as evaluateModelForMeta;
-    }
-
     /**
-     * @var array<string,mixed>|\Closure
+     * @var array<string,mixed>
      */
-    protected $meta = [];
+    protected array $meta = [];
 
     /**
      * Get or set the meta for the instance.
      *
-     * @param  array<string,mixed>|\Closure|null  $meta
+     * @param  array<string,mixed>|null  $meta
      * @return $this
      */
     public function meta($meta = null): static
@@ -31,24 +27,13 @@ trait HasMeta
     }
 
     /**
-     * Get the meta for the instance, evaluating it if necessary.
+     * Get the meta for the instance.
      *
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
-     * @param  array<string,mixed>  $typed
      * @return array<string,mixed>
      */
-    public function getMeta($parameters = [], $typed = []): array
+    public function getMeta(): array
     {
-        /**
-         * @var array<string,mixed>
-         */
-        $evaluated = (array) ($parameters instanceof \Illuminate\Database\Eloquent\Model
-            ? $this->evaluateModelForMeta($parameters, 'getMeta')
-            : $this->evaluate($this->meta, $parameters, $typed));
-
-        $this->meta = $evaluated;
-
-        return $evaluated;
+        return $this->meta;
     }
 
     /**
@@ -56,6 +41,6 @@ trait HasMeta
      */
     public function hasMeta(): bool
     {
-        return $this->meta instanceof \Closure || \count($this->meta) > 0;
+        return ! empty($this->meta);
     }
 }

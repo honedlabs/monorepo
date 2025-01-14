@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Contracts;
 
-interface Transferable
+interface TransferObject
 {
     /**
      * Create a new instance from a request.

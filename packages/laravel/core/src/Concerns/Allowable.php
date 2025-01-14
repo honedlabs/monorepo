@@ -35,10 +35,10 @@ trait Allowable
      * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
      * @param  array<string,mixed>  $typed
      */
-    public function isAllowed($parameters = [], $typed = []): bool
+    public function allows($parameters = [], $typed = []): bool
     {
         $evaluated = (bool) ($parameters instanceof Model
-            ? $this->evaluateModelForAllowable($parameters, 'isAllowed')
+            ? $this->evaluateModelForAllowable($parameters, 'allows')
             : $this->evaluate($this->allow, $parameters, $typed));
 
         $this->allow = $evaluated;

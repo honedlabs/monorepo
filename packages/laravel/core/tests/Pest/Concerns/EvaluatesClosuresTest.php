@@ -9,8 +9,8 @@ use Honed\Core\Tests\Stubs\Product;
 
 class EvaluatesClosuresTest
 {
-    use Evaluable;
     use Allowable;
+    use Evaluable;
     use EvaluatesClosures;
 }
 
@@ -21,30 +21,30 @@ beforeEach(function () {
 
 test('name `model`', function () {
     expect($this->test->allow(fn ($model) => $model->id > 100))
-        ->isAllowed($this->product)->toBeFalse();
+        ->allows($this->product)->toBeFalse();
 });
 
 test('name `record`', function () {
     expect($this->test->allow(fn ($record) => $record->id > 100))
-        ->isAllowed($this->product)->toBeFalse();
+        ->allows($this->product)->toBeFalse();
 });
 
 test('name `resource`', function () {
     expect($this->test->allow(fn ($resource) => $resource->id > 100))
-        ->isAllowed($this->product)->toBeFalse();
+        ->allows($this->product)->toBeFalse();
 });
 
 test('name from table', function () {
     expect($this->test->allow(fn ($product) => $product->id > 100))
-        ->isAllowed($this->product)->toBeFalse();
+        ->allows($this->product)->toBeFalse();
 });
 
 test('type model', function () {
     expect($this->test->allow(fn (\Illuminate\Database\Eloquent\Model $model) => $model->id > 100))
-        ->isAllowed($this->product)->toBeFalse();
+        ->allows($this->product)->toBeFalse();
 });
 
 test('type model child', function () {
     expect($this->test->allow(fn (Product $product) => $product->id > 100))
-        ->isAllowed($this->product)->toBeFalse();
+        ->allows($this->product)->toBeFalse();
 });

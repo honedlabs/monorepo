@@ -29,7 +29,7 @@ class Destination extends Primitive implements ResolvesClosures
     /**
      * @var string|null
      */
-    protected $href;
+    protected $destination;
 
     /**
      * @var mixed
@@ -73,7 +73,7 @@ class Destination extends Primitive implements ResolvesClosures
         mixed $parameters = [],
         string $via = Request::METHOD_GET
     ): static {
-        return resolve(static::class, compact('to', 'parameters', 'via'));
+        return resolve(static::class, \compact('to', 'parameters', 'via'));
     }
 
     public function toArray()
@@ -85,38 +85,38 @@ class Destination extends Primitive implements ResolvesClosures
         ];
     }
 
-    public function resolve($parameters = null, $typed = null): static
+    /**
+     * Resolve the destination.
+     *
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
+     * @return $this
+     */
+    public function resolve($parameters = [], $typed = []): static
     {
-        $this->getHref($parameters, $typed);
+        $this->get($parameters, $typed);
 
         return $this;
     }
 
     /**
-     * Get the href for this destination.
-     * 
-     * @param  mixed  $parameters
-     * @param  array<string,mixed>|null  $typed
+     * Get the destination.
+     *
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      */
-    public function getHref($parameters = null, $typed = null): ?string
+    public function get($parameters = [], $typed = []): ?string
     {
-        /**
-         * @var string|null
-         */
-        $evaluated = match (true) {
+        return $this->destination ??= match (true) { // @phpstan-ignore-line
             \is_null($this->to) => null,
             \is_callable($this->to) => $parameters instanceof \Illuminate\Database\Eloquent\Model
-                ? $this->evaluateModelForDestination($parameters, 'getHref')
-                : $this->evaluate($this->to, $parameters ?? [], $typed ?? []), // @phpstan-ignore-line
+                ? $this->evaluateModelForDestination($parameters, 'get')
+                : $this->evaluate($this->to, $parameters, $typed),
             $this->isUri($this->to) => $this->to,
-            $this->isSigned() && $this->isTemporary() => URL::temporarySignedRoute($this->to, $this->temporary, $parameters ?? $this->parameters), // @phpstan-ignore-line
-            $this->isSigned() => URL::signedRoute($this->to, $parameters ?? $this->parameters),
-            default => route($this->to, $parameters ?? $this->parameters),
+            $this->isSigned() && $this->isTemporary() => URL::temporarySignedRoute($this->to, $this->temporary, empty($parameters) ? $this->parameters : $parameters), // @phpstan-ignore-line
+            $this->isSigned() => URL::signedRoute($this->to, empty($parameters) ? $this->parameters : $parameters),
+            default => route($this->to, empty($parameters) ? $this->parameters : $parameters),
         };
-
-        $this->href = $evaluated;
-
-        return $evaluated;
     }
 
     /**

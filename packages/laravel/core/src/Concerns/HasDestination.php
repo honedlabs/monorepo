@@ -44,9 +44,14 @@ trait HasDestination
 
     /**
      * Get the destination for this instance.
+     *
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      */
-    public function getDestination(): ?Destination
+    public function getDestination($parameters = [], $typed = []): ?Destination
     {
+        $this->destination?->resolve($parameters, $typed);
+
         return $this->destination;
     }
 
@@ -77,8 +82,9 @@ trait HasDestination
 
         $parameter = collect((new \ReflectionFunction($destination))->getParameters())->first();
 
+        $type = $parameter->getType();
 
-        return (($t = $parameter->getType()) instanceof \ReflectionNamedType && $t->getName() === Destination::class)
+        return ($type instanceof \ReflectionNamedType && $type->getName() === Destination::class)
             || $parameter->getName() === 'destination';
     }
 }

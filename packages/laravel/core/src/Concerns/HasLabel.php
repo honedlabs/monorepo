@@ -65,7 +65,7 @@ trait HasLabel
     {
         if (\is_null($name)) {
             return null;
-        } 
+        }
 
         return str($name)
             ->afterLast('.')
