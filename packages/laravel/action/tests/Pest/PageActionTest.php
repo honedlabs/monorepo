@@ -26,16 +26,16 @@ it('has array representation with destination', function () {
         ->toHaveKeys(['name', 'label', 'type', 'icon', 'extra', 'href', 'method', 'tab']);
 });
 
-// it('resolves', function () {
-//     $product = product();
+it('resolves', function () {
+    $product = product();
 
-//     expect(PageAction::make('test')
-//             ->to(fn (Product $product) => route('products.show', $product))
-//             ->resolve($product)
-//         )->toBeInstanceOf(PageAction::class)
-//         ->getLabel()->toBe('Test')
-//         ->getDestination()->scoped(fn ($destination) => $destination
-//             ->getHref()->toBe(route('products.show', $product))
-//             ->getMethod()->toBe('GET')
-//             ->getTab()->toBeFalse());
-// });
+    expect(PageAction::make('test')
+            ->to(fn (Product $product) => route('products.show', $product))
+            ->resolve($product)
+        )->toBeInstanceOf(PageAction::class)
+        ->getLabel()->toBe('Test')
+        ->getDestination()->scoped(fn ($destination) => $destination
+            ->getHref()->toBe(route('products.show', $product))
+            ->getMethod()->toBe('GET')
+            ->getTab()->toBeFalse());
+});

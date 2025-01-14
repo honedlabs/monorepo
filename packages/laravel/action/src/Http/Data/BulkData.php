@@ -11,13 +11,11 @@ class BulkData extends ActionData
      * @param  array<int,string|int>  $except
      */
     public function __construct(
-        string $name,
+        public readonly string $name,
         public readonly array $only,
         public readonly array $except,
         public readonly bool $all,
-    ) {
-        parent::__construct($name);
-    }
+    ) { }
 
     /**
      * Create a new bulk data transfer object.
@@ -27,10 +25,10 @@ class BulkData extends ActionData
     public static function from($request): static
     {
         return resolve(BulkData::class, [
-            'name' => $request->validated('name'),
-            'except' => $request->validated('except'),
-            'only' => $request->validated('only'),
-            'all' => $request->validated('all'),
+            'name' => $request->input('name'),
+            'except' => $request->input('except'),
+            'only' => $request->input('only'),
+            'all' => $request->input('all'),
         ]);
     }
 }

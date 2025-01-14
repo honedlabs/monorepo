@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\RequestFactories;
+namespace Honed\Action\Tests\RequestFactories;
 
 use Honed\Action\Creator;
 use Worksome\RequestFactories\RequestFactory;
 
-class InlineActionRequestFactory extends RequestFactory
+class InlineActionRequest extends RequestFactory
 {
     public function definition(): array
     {

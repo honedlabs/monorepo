@@ -22,6 +22,7 @@ abstract class Action extends Primitive implements ResolvesClosures
     use HasLabel;
     use HasName;
     use HasType;
+    use Concerns\HasAction;
 
     public function __construct(?string $name = null, string|\Closure|null $label = null)
     {
@@ -51,12 +52,12 @@ abstract class Action extends Primitive implements ResolvesClosures
     }
 
     /**
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model|null  $parameters
-     * @param  array<string,mixed>|null  $typed
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      * 
      * @return $this
      */
-    public function resolve($parameters = null, $typed = null): static
+    public function resolve($parameters = [], $typed = []): static
     {
         $this->getLabel($parameters, $typed);
         $this->getName($parameters, $typed);

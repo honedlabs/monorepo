@@ -6,30 +6,31 @@ namespace Honed\Action\Http\Requests;
 
 use Honed\Action\Creator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ActionRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string,array<int,string>>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
     {
-        $excludeInline = \sprintf('exclude_if:type,%s', Creator::Inline);
-        $excludeBulk = \sprintf('exclude_if:type,%s', Creator::Bulk);
+        $isInline = Rule::excludeIf(fn ($request) => $request->input('type') === Creator::Inline);
+        $isBulk = Rule::excludeIf(fn ($request) => $request->input('type') === Creator::Bulk);
 
         return [
             'name' => ['required', 'string'],
-            'type' => ['required', \sprintf('in:%s,%s', Creator::Inline, Creator::Bulk)],
+            'type' => ['required', Rule::in([Creator::Inline, Creator::Bulk, Creator::Page])],
 
-            'only' => [$excludeInline, 'sometimes', 'array'],
-            'except' => [$excludeInline, 'sometimes', 'array'],
-            'all' => [$excludeInline, 'required', 'boolean'],
-            'only.*' => [$excludeInline, 'sometimes', 'string', 'integer'],
-            'except.*' => [$excludeInline, 'sometimes', 'string', 'integer'],
+            'only' => [$isInline, 'sometimes', 'array'],
+            'except' => [$isInline, 'sometimes', 'array'],
+            'all' => [$isInline, 'required', 'boolean'],
+            'only.*' => [$isInline, 'sometimes', 'string', 'integer'],
+            'except.*' => [$isInline, 'sometimes', 'string', 'integer'],
 
-            'id' => [$excludeBulk, 'required', 'string', 'integer'],
+            'id' => [$isBulk, 'required', 'string', 'integer'],
         ];
     }
 }

@@ -12,7 +12,6 @@ use Illuminate\Support\Traits\ForwardsCalls;
 
 class InlineAction extends Action
 {
-    use Concerns\HasAction;
     use Concerns\HasConfirm;
     use ForwardsCalls;
     use HasDestination;
@@ -30,7 +29,11 @@ class InlineAction extends Action
         ]);
     }
 
-    public function resolve($parameters = null, $typed = null): static
+    /**
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
+     */
+    public function resolve($parameters = [], $typed = []): static
     {
         $this->getDestination($parameters, $typed);
 

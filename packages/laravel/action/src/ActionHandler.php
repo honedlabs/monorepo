@@ -13,11 +13,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ */
 class ActionHandler
 {
     /**
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     * 
      * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $resource
      */
     public function __construct(
@@ -31,10 +32,13 @@ class ActionHandler
      * Handle the incoming action request using the actions from the source, and the resource provided.
      *
      * @param  \Honed\Action\Http\Requests\ActionRequest  $request
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
     public function handle($request)
     {
+        /**
+         * @var string
+         */
         $type = $request->validated('type');
 
         $data = match ($type) {
@@ -46,10 +50,13 @@ class ActionHandler
         [$action, $query] = $this->resolveAction($type, $data);
 
         // Validate to ensure the action exists and is allowed
-        match (true) {
-            \is_null($action) => abort(400),
-            $action instanceof InlineAction && ! $action->isAllowed($query) => abort(403),
-        };
+        if (\is_null($action)) {
+            return abort(400);
+        }
+
+        if ($action instanceof InlineAction && ! $action->allows($query)) {
+            return abort(403);
+        }
 
         $result = $action->execute($query);
 
@@ -63,7 +70,7 @@ class ActionHandler
     /**
      * Retrieve the action and query based on the type and data.
      * 
-     * @return array{0: \Honed\Action\Action, 1: \Illuminate\Database\Eloquent\Builder<TModel>|TModel}
+     * @return array{0: \Honed\Action\Action|null, 1: \Illuminate\Database\Eloquent\Builder<TModel>|TModel}
      */
     private function resolveAction(string $type, InlineData|BulkData $data): array
     {
@@ -92,8 +99,10 @@ class ActionHandler
 
     /**
      * Get the model for this resource.
+     * 
+     * @return TModel
      */
-    protected function model(): Model
+    protected function model()
     {
         return $this->resource->getModel();
     }

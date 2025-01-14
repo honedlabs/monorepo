@@ -78,10 +78,10 @@ class Confirm extends Primitive implements ResolvesClosures
     }
 
     /**
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model|null  $parameters
-     * @param  array<string,mixed>|null  $typed
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      */
-    public function resolve($parameters = null, $typed = null): static
+    public function resolve($parameters = [], $typed = []): static
     {
         $this->getTitle($parameters, $typed);
         $this->getDescription($parameters, $typed);

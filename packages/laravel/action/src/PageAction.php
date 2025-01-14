@@ -9,6 +9,7 @@ use Illuminate\Support\Traits\ForwardsCalls;
 
 class PageAction extends Action
 {
+    use Concerns\HasBulkActions;
     use ForwardsCalls;
     use HasDestination;
 
@@ -17,13 +18,18 @@ class PageAction extends Action
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
+            'action' => $this->hasAction(),
             ...($this->hasDestination() ? $this->getDestination()->toArray() : []), // @phpstan-ignore-line
         ]);
     }
 
-    public function resolve($parameters = null, $typed = null): static
+    /**
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
+     */
+    public function resolve($parameters = [], $typed = []): static
     {
-        // $this->resolveDestination($parameters, $typed);
+        $this->getDestination($parameters, $typed);
 
         return parent::resolve($parameters, $typed);
     }

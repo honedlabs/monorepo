@@ -33,24 +33,17 @@ trait HasConfirm
 
     /**
      * Get the confirm for this instance.
-     */
-    public function getConfirm(): ?Confirm
-    {
-        return $this->confirm;
-    }
-
-    /**
-     * Resolve the confirm for this instance.
      *
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model|null  $parameters
-     * @param  array<string,mixed>|null  $typed
-     * @return $this
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      */
-    public function resolveConfirm($parameters = null, $typed = null): static
+    public function getConfirm($parameters = [], $typed = []): ?Confirm
     {
-        $this->getConfirm()?->resolve($parameters, $typed);
+        if (!empty($parameters) || !empty($typed)) {
+            $this->confirm?->resolve($parameters, $typed);
+        }
 
-        return $this;
+        return $this->confirm;
     }
 
     /**
@@ -79,7 +72,7 @@ trait HasConfirm
         }
 
         $parameter = collect((new \ReflectionFunction($confirm))->getParameters())->first();
-        
+
         $type = $parameter?->getType();
 
         return ($type instanceof \ReflectionNamedType && $type->getName() === Confirm::class)
