@@ -22,6 +22,8 @@ class Refine extends Primitive
     use Concerns\HasSorts;
     use Concerns\HasRequest;
 
+    protected bool $refined = false;
+
     public function __construct(Request $request)
     {
         $this->request($request);
@@ -29,10 +31,20 @@ class Refine extends Primitive
 
     public function __call($name, $arguments)
     {
+        if ($name === 'sorts') {
+            return $this->addSorts($arguments);
+        }
+
+        if ($name === 'filters') {
+            return $this->addFilters($arguments);
+        }
+
+        $this->refine();
+
         return $this->forwardDecoratedCallTo($this->getBuilder(), $name, $arguments);
     }
 
-    public static function make(Model|string|Builder $model)
+    public static function make(Model|string|Builder $model): static
     {
         return static::query($model);
     }
@@ -72,6 +84,20 @@ class Refine extends Primitive
             'filters' => $this->getFilters()->toArray(),
             'scope' => $this->getScope(),
         ];
+    }
+
+    public function refine(): static
+    {
+        if ($this->refined) {
+            return $this;
+        }
+
+        $this->sort($this->getBuilder());
+        $this->filter($this->getBuilder());
+
+        $this->refined = true;
+
+        return $this;
     }
 
     
