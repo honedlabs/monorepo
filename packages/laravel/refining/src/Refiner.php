@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Refining;
 
+use Honed\Core\Primitive;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\Allowable;
 use Illuminate\Http\Client\Request;
 use Honed\Core\Concerns\HasAttribute;
-use Honed\Core\Primitive;
 use Honed\Refining\Contracts\Refines;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -21,6 +22,7 @@ abstract class Refiner extends Primitive
     use HasAttribute;
     use HasType;
     use HasAlias;
+    use HasValue;
 
     public function __construct(string $attribute, string $label = null)
     {

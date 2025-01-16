@@ -17,4 +17,9 @@ use Honed\Refining\Refiner;
 class Sort extends Refiner
 {
     use IsDefault;
+
+    public function isActive(): bool
+    {
+        return $this->getValue();
+    }
 }
