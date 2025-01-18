@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refining\Concerns;
 
+use Honed\Refining\Sorts\Sort;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ trait HasSorts
     protected $sortBy;
 
     /**
-     * @param \Honed\Refining\Sorts\Sort|iterable<\Honed\Refining\Sorts\Sort> $sorts
+     * @param iterable<\Honed\Refining\Sorts\Sort> $sorts
      * @return $this
      */
     public function addSorts(iterable $sorts): static
@@ -34,6 +35,13 @@ trait HasSorts
 
         return $this;
     }
+
+    // public function addSort(Sort $sort): static
+    // {
+    //     $this->addSorts([$sort]);
+
+    //     return $this;
+    // }
 
     /**
      * @return array<int,\Honed\Refining\Sorts\Sort>

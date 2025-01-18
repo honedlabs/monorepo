@@ -20,13 +20,8 @@ trait HasRequest
         return $this;
     }
 
-    public function getRequest(): ?Request
+    public function getRequest(): Request
     {
         return $this->request;
-    }
-
-    public function hasRequest(): bool
-    {
-        return ! \is_null($this->request);
     }
 }

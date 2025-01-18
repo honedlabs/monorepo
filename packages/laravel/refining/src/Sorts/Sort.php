@@ -17,6 +17,16 @@ class Sort extends Refiner
      */
     protected $direction;
 
+    /**
+     * @var 'asc'|'desc'|null
+     */
+    protected $fixed;
+
+    public function setUp()
+    {
+        $this->type('sort');
+    }
+
     public function isActive(): bool
     {
         return $this->getValue();
@@ -45,5 +55,43 @@ class Sort extends Refiner
             'direction' => $this->getValue(),
             'next' => $this->getNextDirection(),
         ]);
+    }
+
+    public function getNextDirection(): string
+    {
+        return match ($this->direction) {
+            'desc' => null,
+            'asc' => $this->getDescendingValue(),
+            default => $this->getAscendingValue(),
+        };
+    }
+
+    public function getDescendingValue(): string
+    {
+        return \sprintf('-%s', $this->getParameter());
+    }
+
+    public function getAscendingValue(): string
+    {
+        return $this->getParameter();
+    }
+
+    public function asc(): static
+    {
+        $this->fixed = 'asc';
+
+        return $this;
+    }
+
+    public function desc(): static
+    {
+        $this->fixed = 'desc';
+
+        return $this;
+    }
+
+    public function isFixed(): bool
+    {
+        return ! \is_null($this->fixed);
     }
 }

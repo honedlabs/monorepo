@@ -30,6 +30,8 @@ class Refine extends Primitive
 
     protected bool $refined = false;
 
+    protected bool $scout = false;
+
     public function __construct(Request $request)
     {
         $this->request($request);
@@ -112,8 +114,8 @@ class Refine extends Primitive
             return $this;
         }
 
-        $this->sort($this->getBuilder());
-        $this->filter($this->getBuilder());
+        $this->sort($this->getBuilder(), $this->getRequest());
+        $this->filter($this->getBuilder(), $this->getRequest());
 
         $this->refined = true;
 
