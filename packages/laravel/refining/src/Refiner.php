@@ -12,8 +12,9 @@ use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\Allowable;
 use Illuminate\Http\Client\Request;
 use Honed\Core\Concerns\HasAttribute;
+use Honed\Core\Concerns\HasMeta;
 use Honed\Refining\Contracts\Refines;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 abstract class Refiner extends Primitive
 {
@@ -23,6 +24,7 @@ abstract class Refiner extends Primitive
     use HasType;
     use HasAlias;
     use HasValue;
+    use HasMeta;
 
     public function __construct(string $attribute, string $label = null)
     {
@@ -46,7 +48,7 @@ abstract class Refiner extends Primitive
 
     abstract public function isActive(): bool;
 
-    abstract public function apply(Builder $builder, Request $request): void;
+    abstract public function apply(Builder $builder): void;
 
     public function toArray(): array
     {
@@ -55,6 +57,7 @@ abstract class Refiner extends Primitive
             'label' => $this->getLabel(),
             'type' => $this->getType(),
             'active' => $this->isActive(),
+            'meta' => $this->getMeta(),
         ];
     }
 }

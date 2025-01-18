@@ -6,13 +6,14 @@ namespace Honed\Refining\Concerns;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 trait HasSorts
 {
     /**
      * @var array<int,\Honed\Refining\Sorts\Sort>
      */
-    protected $sorts;
+    protected $sorts = [];
 
     /**
      * @var string
@@ -21,6 +22,7 @@ trait HasSorts
 
     /**
      * @param \Honed\Refining\Sorts\Sort|iterable<\Honed\Refining\Sorts\Sort> $sorts
+     * @return $this
      */
     public function addSorts(iterable $sorts): static
     {
@@ -44,7 +46,10 @@ trait HasSorts
         };
     }
 
-    public function sort(Builder $builder): static
+    /**
+     * @return $this
+     */
+    public function sort(Builder $builder, Request $request): static
     {
         foreach ($this->getSorts() as $sort) {
             $sort->apply($builder, $this->getBuilder());

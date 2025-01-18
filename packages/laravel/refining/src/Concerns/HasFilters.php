@@ -12,10 +12,11 @@ trait HasFilters
     /**
      * @var array<int,\Honed\Refining\Filters\Filter>
      */
-    protected $filters;
+    protected $filters = [];
 
     /**
      * @param \Honed\Refining\Filters\Filter|iterable<\Honed\Refining\Filters\Filter> $filters
+     * @return $this
      */
     public function addFilters(iterable $filters): static
     {
@@ -27,8 +28,9 @@ trait HasFilters
 
         return $this;
     }
+
     /**
-     * @return array<int,\Honed\Refining\Sorts\Sort>
+     * @return array<int,\Honed\Refining\Filters\Filter>
      */
     public function getFilters(): array
     {
@@ -38,6 +40,9 @@ trait HasFilters
         };
     }
 
+    /**
+     * @return $this
+     */
     public function filter(Builder $builder): static
     {
         foreach ($this->getFilters() as $filter) {

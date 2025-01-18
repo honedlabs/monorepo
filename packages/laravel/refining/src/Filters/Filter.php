@@ -12,9 +12,10 @@ class Filter extends Refiner
 {
     use Validatable;
     
-    public function apply(Builder $builder, Request $request): void
+    public function apply(Builder $builder): void
     {
-        $builder->when($this->isActive() && $this->validate($value),
+        $builder->when(
+            $this->isActive() && $this->validate($value),
             fn (Builder $builder) => $builder->where($this->getAttribute(), $value)
         );
     }
