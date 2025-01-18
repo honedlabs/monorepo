@@ -13,9 +13,9 @@ trait HasSearch
     /**
      * @var array<int,\Honed\Refining\Searches\Search>
      */
-    protected $searches = [];
+    protected $searches;
 
-    protected $searchKey;
+    protected string $searchKey = 'search';
 
     /**
      * @param iterable<\Honed\Refining\Searches\Search> $searches
@@ -53,5 +53,23 @@ trait HasSearch
         }
 
         return $this;
+    }
+
+    /**
+     * Sets the search key to look for in the request.
+     */
+    public function searchKey(string $searchKey): static
+    {
+        $this->searchKey = $searchKey;
+
+        return $this;
+    }
+
+    /**
+     * Gets the search key to look for in the request.
+     */
+    public function getSearchKey(): string
+    {
+        return $this->searchKey;
     }
 }

@@ -14,12 +14,9 @@ trait HasSorts
     /**
      * @var array<int,\Honed\Refining\Sorts\Sort>
      */
-    protected $sorts = [];
+    protected $sorts;
 
-    /**
-     * @var string
-     */
-    protected $sortBy;
+    protected string $sortKey = 'sort';
 
     /**
      * @param iterable<\Honed\Refining\Sorts\Sort> $sorts
@@ -35,13 +32,6 @@ trait HasSorts
 
         return $this;
     }
-
-    // public function addSort(Sort $sort): static
-    // {
-    //     $this->addSorts([$sort]);
-
-    //     return $this;
-    // }
 
     /**
      * @return array<int,\Honed\Refining\Sorts\Sort>
@@ -64,5 +54,23 @@ trait HasSorts
         }
 
         return $this;
+    }
+
+    /**
+     * Sets the sort key to look for in the request.
+     */
+    public function sortKey(string $sortKey): static
+    {
+        $this->sortKey = $sortKey;
+
+        return $this;
+    }
+
+    /**
+     * Gets the sort key to look for in the request.
+     */
+    public function getSortKey(): string
+    {
+        return $this->sortKey;
     }
 }
