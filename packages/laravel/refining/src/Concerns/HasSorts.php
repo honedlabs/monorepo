@@ -49,11 +49,27 @@ trait HasSorts
      */
     public function sort(Builder $builder, Request $request): static
     {
+        [$name, $direction] = $this->getSortFromRequest($request);
+        
         foreach ($this->getSorts() as $sort) {
             $sort->apply($builder, $this->getBuilder());
         }
 
         return $this;
+    }
+
+    /**
+     * @return array{0: string|null, 1: string|null}
+     */
+    public function getSortFromRequest(Request $request): array
+    {
+        $sort = $request->query($this->getSortKey(), null);
+
+        if (!$sort) {
+            return [null, null];
+        }
+
+        return [$sort, \str_starts_with($sort, '-') ? 'desc' : 'asc'];
     }
 
     /**
@@ -73,4 +89,8 @@ trait HasSorts
     {
         return $this->sortKey;
     }
+
+    /**
+     * 
+     */
 }

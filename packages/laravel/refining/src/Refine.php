@@ -27,10 +27,11 @@ class Refine extends Primitive
     use Concerns\HasFilters;
     use Concerns\HasSorts;
     use Concerns\HasRequest;
+    use Concerns\HasSearch;
 
     protected bool $refined = false;
 
-    protected bool $scout = false;
+    // protected bool $scout = false;
 
     public function __construct(Request $request)
     {
@@ -94,6 +95,7 @@ class Refine extends Primitive
         return [
             'sorts' => $this->getSorts(),
             'filters' => $this->getFilters(),
+            'searches' => $this->getSearches(),
         ];
     }
 
@@ -114,6 +116,7 @@ class Refine extends Primitive
             return $this;
         }
 
+        $this->search($this->getBuilder(), $this->getRequest()); // Apply search first to determine scout usage
         $this->sort($this->getBuilder(), $this->getRequest());
         $this->filter($this->getBuilder(), $this->getRequest());
 
