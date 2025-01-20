@@ -26,8 +26,16 @@ class BooleanFilter extends Filter
         );
     }
 
+    public function isActive(): bool
+    {
+        return (bool) $this->getValue();
+    }
+
+    /**
+     * @return bool
+     */
     public function getValueFromRequest(Request $request): mixed
     {
-        return \filter_var($request->input($this->getParameter()), \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE);
+        return $request->boolean($this->getParameter());
     }
 }
