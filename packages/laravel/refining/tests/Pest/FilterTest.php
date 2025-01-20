@@ -45,7 +45,7 @@ it('does not filter if no value', function () {
 });
 
 it('filters using like mode', function () {
-    $request = request()->merge(['name' => 'test']);
+    $request = request()->merge([$this->param => 'test']);
     
     $this->filter->like()->apply($this->builder, $request);
 

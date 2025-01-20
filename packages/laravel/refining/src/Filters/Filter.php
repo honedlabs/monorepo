@@ -13,6 +13,7 @@ class Filter extends Refiner
 {
     use Validatable;
 
+    const Is = '=';
     const Not = '!=';
     const GreaterThan = '>';
     const LessThan = '<';
@@ -23,7 +24,7 @@ class Filter extends Refiner
 
     protected string $mode = self::Exact;
 
-    protected string $operator = '=';
+    protected string $operator = self::Is;
 
     public function setUp(): void
     {
@@ -40,7 +41,7 @@ class Filter extends Refiner
     public function apply(Builder $builder, Request $request): void
     {
         /** @var string|int|float|null */
-        $value = $request->input($this->getParameter());
+        $value = $this->getValueFromRequest($request);
 
         $this->value($value);
 
@@ -95,6 +96,11 @@ class Filter extends Refiner
         );
     }
 
+    public function getValueFromRequest(Request $request): mixed
+    {
+        return $request->input($this->getParameter());
+    }
+
     public function isActive(): bool
     {
         return $this->hasValue();
@@ -115,7 +121,7 @@ class Filter extends Refiner
      */
     public function exact(): static
     {
-        return $this->mode(static::Exact);
+        return $this->mode(self::Exact);
     }
 
     /**
@@ -123,7 +129,7 @@ class Filter extends Refiner
      */
     public function like(): static
     {
-        return $this->mode(static::Like);
+        return $this->mode(self::Like);
     }
 
     /**
@@ -131,7 +137,7 @@ class Filter extends Refiner
      */
     public function startsWith(): static
     {
-        return $this->mode(static::StartsWith);
+        return $this->mode(self::StartsWith);
     }
 
     /**
@@ -139,7 +145,7 @@ class Filter extends Refiner
      */
     public function endsWith(): static
     {
-        return $this->mode(static::EndsWith);
+        return $this->mode(self::EndsWith);
     }
 
     /**
@@ -157,7 +163,7 @@ class Filter extends Refiner
      */
     public function not(): static
     {
-        return $this->operator(static::Not);
+        return $this->operator(self::Not);
     }
 
     /**
@@ -165,7 +171,7 @@ class Filter extends Refiner
      */
     public function gt(): static
     {
-        return $this->operator(static::GreaterThan);
+        return $this->operator(self::GreaterThan);
     }
 
     /**
@@ -173,7 +179,7 @@ class Filter extends Refiner
      */
     public function lt(): static
     {
-        return $this->operator(static::LessThan);
+        return $this->operator(self::LessThan);
     }
 
     public function getMode(): string
