@@ -13,26 +13,78 @@ class Filter extends Refiner
 {
     use Validatable;
 
-    protected string $mode = 'exact';
+    const Not = '!=';
+    const GreaterThan = '>';
+    const LessThan = '<';
+    const Exact = 'exact';
+    const Like = 'like';
+    const StartsWith = 'starts_with';
+    const EndsWith = 'ends_with';
+
+    protected string $mode = self::Exact;
+
     protected string $operator = '=';
+
+    public function setUp(): void
+    {
+        $this->type('filter');
+    }
     
     public function apply(Builder $builder, Request $request): void
     {
-        $value = $request->get($this->getParameter());
+        /** @var string|int|float|null */
+        $value = $request->input($this->getParameter());
 
         $this->value($value);
 
         if ($this->isActive() && $this->validate($value)) {
-            $this->handle($builder, $value, $this->getAttribute());
+            /** @var string */
+            $attribute = $this->getAttribute();
+            $this->handle($builder, $value, $attribute);
         }
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @param string|int|float|bool|null $value
+     */
     public function handle(Builder $builder, mixed $value, string $property): void
     {
-        $builder->{$this->getStatement()}(
-            column: $builder->qualifyColumn($property),
-            operator: $this->getOperator(),
-            value: $value,
+        $column = $builder->qualifyColumn($property);
+
+        if ($this->getMode() === self::Exact) {
+            $builder->where(
+                column: $column,
+                operator: $this->getOperator(),
+                value: $value,
+                boolean: 'and'
+            );
+
+            return;
+        }
+
+        $operator = match (\mb_strtolower($operator = $this->getOperator())) {
+            '=', 'like' => 'LIKE',
+            '!=', 'not like' => 'NOT LIKE',
+            default => throw new \InvalidArgumentException("Invalid operator [{$operator}] provided for [{$property}] filter.")
+        };
+
+        $sql = match ($this->getMode()) {
+            self::StartsWith => "{$column} {$operator} ?",
+            self::EndsWith => "{$column} {$operator} ?",
+            default => "LOWER({$column}) {$operator} ?",
+        };
+
+        $bindings = match ($this->getMode()) {
+            self::StartsWith => ["{$value}%"],
+            self::EndsWith => ["%{$value}"],
+            default => ['%' . mb_strtolower((string) $value, 'UTF8') . '%'],
+        };
+
+        $builder->whereRaw(
+            sql: $sql,
+            bindings: $bindings,
+            boolean: 'and'
         );
     }
 
@@ -56,7 +108,7 @@ class Filter extends Refiner
      */
     public function exact(): static
     {
-        return $this->mode('exact');
+        return $this->mode(static::Exact);
     }
 
     /**
@@ -64,7 +116,7 @@ class Filter extends Refiner
      */
     public function like(): static
     {
-        return $this->mode('like');
+        return $this->mode(static::Like);
     }
 
     /**
@@ -72,7 +124,7 @@ class Filter extends Refiner
      */
     public function startsWith(): static
     {
-        return $this->mode('starts_with');
+        return $this->mode(static::StartsWith);
     }
 
     /**
@@ -80,7 +132,7 @@ class Filter extends Refiner
      */
     public function endsWith(): static
     {
-        return $this->mode('ends_with');
+        return $this->mode(static::EndsWith);
     }
 
     /**
@@ -91,5 +143,39 @@ class Filter extends Refiner
         $this->operator = $operator;
 
         return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function not(): static
+    {
+        return $this->operator(static::Not);
+    }
+
+    /**
+     * @return $this
+     */
+    public function gt(): static
+    {
+        return $this->operator(static::GreaterThan);
+    }
+
+    /**
+     * @return $this
+     */
+    public function lt(): static
+    {
+        return $this->operator(static::LessThan);
+    }
+
+    public function getMode(): string
+    {
+        return $this->mode;
+    }
+
+    public function getOperator(): string
+    {
+        return $this->operator;
     }
 }

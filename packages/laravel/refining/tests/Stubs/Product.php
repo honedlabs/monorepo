@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Refining\Tests\Stubs;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -13,4 +14,9 @@ class Product extends Model
     protected $casts = [
         'status' => Status::class,
     ];
+
+    public function details(): HasMany
+    {
+        return $this->hasMany(ProductDetail::class);
+    }
 }

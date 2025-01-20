@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
- * @mixin \Illuminate\Database\Eloquent\Builder
+ * @mixin \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
  * @extends Primitive<string, mixed>
  */
 class Refine extends Primitive
@@ -37,13 +37,20 @@ class Refine extends Primitive
         $this->request($request);
     }
 
+    /**
+     * @param string $name
+     * @param array<int, mixed> $arguments
+     * @return $this
+     */
     public function __call($name, $arguments)
     {
         if ($name === 'sorts') {
+            /** @var array<int, \Honed\Refining\Sorts\Sort> $arguments */
             return $this->addSorts($arguments);
         }
 
         if ($name === 'filters') {
+            /** @var array<int, \Honed\Refining\Filters\Filter> $arguments */
             return $this->addFilters($arguments);
         }
 
@@ -53,13 +60,16 @@ class Refine extends Primitive
         return $this->forwardDecoratedCallTo($this->getBuilder(), $name, $arguments);
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $model
+     */
     public static function make(Model|string|Builder $model): static
     {
         return static::query($model);
     }
 
     /**
-     * Refines the given model.
+     * @param \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model> $model
      */
     public static function model(Model|string $model): static
     {
@@ -67,7 +77,7 @@ class Refine extends Primitive
     }
 
     /**
-     * Refines the given query.
+     * @param \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $query
      */
     public static function query(Model|string|Builder $query): static
     {
@@ -75,7 +85,7 @@ class Refine extends Primitive
             $query = $query::query();
         }
 
-        if (\is_string($query) && class_exists($query) && is_subclass_of($query, Model::class)) {
+        if (\is_string($query) && \class_exists($query)) {
             $query = $query::query();
         }
 
@@ -136,6 +146,7 @@ class Refine extends Primitive
             match (true) {
                 $refiner instanceof Filter => $this->addFilter($refiner),
                 $refiner instanceof Sort => $this->addSort($refiner),
+                default => null,
             };
         }
 

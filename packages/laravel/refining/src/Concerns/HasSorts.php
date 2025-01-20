@@ -55,7 +55,7 @@ trait HasSorts
         [$name, $direction] = $this->getSortFromRequest($request);
 
         foreach ($this->getSorts() as $sort) {
-            $sort->value($name)->direction($direction)->apply($builder);
+            $sort->value($name)->direction($direction)->apply($builder, $request);
         }
 
         return $this;

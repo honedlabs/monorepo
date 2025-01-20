@@ -17,6 +17,9 @@ trait HasSearch
 
     protected string $searchKey = 'search';
 
+    /** Allow for only certain columns to be used for searching */
+    protected string $onlyOnKey = 'columns';
+
     /**
      * @param iterable<\Honed\Refining\Searches\Search> $searches
      * @return $this
@@ -48,9 +51,18 @@ trait HasSearch
      */
     public function search(Builder $builder, Request $request): static
     {
-        foreach ($this->getSearches() as $search) {
-            $search->apply($builder, $this->getBuilder());
-        }
+        // $columns = ['name', 'description', 'values'];
+        // $builder->where(function ($query) use ($columns) {
+        //     $query->where(
+        //         column: 'name',
+        //         operator: 'like',
+        //         value: '%test%',
+        //         boolean: 'or'
+        //     )
+        // });
+        // foreach ($this->getSearches() as $search) {
+        //     $search->apply($builder, $this->getBuilder());
+        // }
 
         return $this;
     }

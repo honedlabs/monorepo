@@ -25,11 +25,11 @@ trait HasBuilderInstance
     }
 
     /**
-     * @return Builder<\Illuminate\Database\Eloquent\Model>|null
+     * @return Builder<\Illuminate\Database\Eloquent\Model>
      */
-    public function getBuilder(): ?Builder
+    public function getBuilder(): Builder
     {
-        if (! $this->hasBuilder()) {
+        if (\is_null($this->builder)) {
             throw new \RuntimeException('Builder instance has not been set.');
         }
         

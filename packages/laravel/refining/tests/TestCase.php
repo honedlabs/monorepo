@@ -46,11 +46,14 @@ class TestCase extends Orchestra
             $table->boolean('best_seller')->default(false);
             $table->timestamps();
         });
-    }
 
-    protected function defineRoutes($router)
-    {
-        // $router->get('/', fn () => 'Hello World');
+        Schema::create('product_details', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained('products');
+            $table->unsignedBigInteger('quantity')->default(0);
+            $table->string('color')->nullable();
+            $table->timestamps();
+        });
     }
 
     public function getEnvironmentSetUp($app)
