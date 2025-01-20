@@ -6,7 +6,7 @@ namespace Honed\Refining\Filters;
 
 use Honed\Refining\Refiner;
 use Honed\Core\Concerns\Validatable;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class Filter extends Refiner
@@ -18,6 +18,10 @@ class Filter extends Refiner
     
     public function apply(Builder $builder, Request $request): void
     {
+        $value = $request->get($this->getParameter());
+
+        $this->value($value);
+
         if ($this->isActive() && $this->validate($value)) {
             $this->handle($builder, $value, $this->getAttribute());
         }
@@ -30,7 +34,6 @@ class Filter extends Refiner
             operator: $this->getOperator(),
             value: $value,
         );
-
     }
 
     public function isActive(): bool
@@ -38,31 +41,55 @@ class Filter extends Refiner
         return $this->hasValue();
     }
 
-    public function exact()
+    /**
+     * @return $this
+     */
+    public function mode(string $mode): static
     {
+        $this->mode = $mode;
 
+        return $this;
     }
 
-    public function like()
+    /**
+     * @return $this
+     */
+    public function exact(): static
     {
-
+        return $this->mode('exact');
     }
 
-    public function startsWith()
+    /**
+     * @return $this
+     */
+    public function like(): static
     {
-
+        return $this->mode('like');
     }
 
-    public function endsWith()
+    /**
+     * @return $this
+     */
+    public function startsWith(): static
     {
-
+        return $this->mode('starts_with');
     }
 
-    public function operator()
+    /**
+     * @return $this
+     */
+    public function endsWith(): static
     {
-
+        return $this->mode('ends_with');
     }
 
-    public function 
+    /**
+     * @return $this
+     */
+    public function operator(string $operator): static
+    {
+        $this->operator = $operator;
 
+        return $this;
+    }
 }

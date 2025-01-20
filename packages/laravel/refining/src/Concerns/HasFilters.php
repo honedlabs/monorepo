@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Refining\Concerns;
 
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Arrayable;
 
 trait HasFilters
 {
     /**
-     * @var array<int,\Honed\Refining\Filters\Filter>
+     * @var array<int,\Honed\Refining\Filters\Filter>|null
      */
-    protected $filters = [];
+    protected $filters;
 
     /**
-     * @param \Honed\Refining\Filters\Filter|iterable<\Honed\Refining\Filters\Filter> $filters
+     * @param iterable<\Honed\Refining\Filters\Filter> $filters
      * @return $this
      */
     public function addFilters(iterable $filters): static
@@ -24,7 +25,8 @@ trait HasFilters
             $filters = $filters->toArray();
         }
 
-        $this->filters = \array_merge($this->filters, $filters);
+        /** @var array<int, \Honed\Refining\Filters\Filter> $filters */
+        $this->filters = \array_merge($this->filters ?? [], $filters);
 
         return $this;
     }
@@ -41,12 +43,13 @@ trait HasFilters
     }
 
     /**
+     * @param Builder<\Illuminate\Database\Eloquent\Model> $builder
      * @return $this
      */
-    public function filter(Builder $builder): static
+    public function filter(Builder $builder, Request $request): static
     {
         foreach ($this->getFilters() as $filter) {
-            $filter->apply($builder);
+            $filter->apply($builder, $request);
         }
 
         return $this;

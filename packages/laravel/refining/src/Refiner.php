@@ -5,17 +5,21 @@ declare(strict_types=1);
 namespace Honed\Refining;
 
 use Honed\Core\Primitive;
+use Illuminate\Http\Request;
+use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\Allowable;
-use Illuminate\Http\Client\Request;
 use Honed\Core\Concerns\HasAttribute;
-use Honed\Core\Concerns\HasMeta;
 use Honed\Refining\Contracts\Refines;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @extends Primitive<string, mixed>
+ * @method void handle(mixed ...$parameters)
+ */
 abstract class Refiner extends Primitive
 {
     use Allowable;
@@ -33,7 +37,7 @@ abstract class Refiner extends Primitive
         $this->setUp();
     }
 
-    public static function make(string $attribute, string $label = null)
+    public static function make(string $attribute, string $label = null): static
     {
         return resolve(static::class, \compact('attribute', 'label'));
     }
@@ -48,7 +52,13 @@ abstract class Refiner extends Primitive
 
     abstract public function isActive(): bool;
 
-    abstract public function apply(Builder $builder): void;
+    /**
+     * Apply the refiner to the given query for the provided request.
+     * 
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     * @param Builder<TModel> $builder
+     */
+    abstract public function apply(Builder $builder, Request $request): void;
 
     public function toArray(): array
     {

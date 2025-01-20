@@ -7,20 +7,21 @@ namespace Honed\Refining\Sorts;
 use Honed\Refining\Refiner;
 use Honed\Core\Concerns\IsDefault;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class Sort extends Refiner
 {
     use IsDefault;
 
     /**
-     * @var string|null
+     * @var 'asc'|'desc'|null
      */
     protected $direction;
 
     /**
      * @var 'asc'|'desc'|null
      */
-    protected $fixed;
+    protected $only;
 
     public function setUp()
     {
@@ -29,18 +30,19 @@ class Sort extends Refiner
 
     public function isActive(): bool
     {
-        return $this->getValue();
+        return $this->getValue() === $this->getParameter();
     }
 
-    public function apply(Builder $builder): void
+    public function apply(Builder $builder, Request $request): void
     {
-        $this->direction = $this->getSortDirection();
-
         if ($this->isActive()) {
-            $this->handle($builder, $this->direction, $this->getParameter());
+            $this->handle($builder, $this->getDirection() ?? 'asc', $this->getParameter());
         }
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     */
     public function handle(Builder $builder, string $direction, string $property): void
     {
         $builder->orderBy(
@@ -52,13 +54,38 @@ class Sort extends Refiner
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
-            'direction' => $this->getValue(),
+            'direction' => $this->getDirection(),
             'next' => $this->getNextDirection(),
         ]);
     }
 
-    public function getNextDirection(): string
+    /**
+     * @param 'asc'|'desc'|null $direction
+     * @return $this
+     */
+    public function direction(?string $direction): static
     {
+        $this->direction = $direction;
+
+        return $this;
+    }
+
+    /**
+     * @return 'asc'|'desc'|null
+     */
+    public function getDirection(): ?string
+    {
+        return $this->isSingularDirection() ? $this->only : $this->direction;
+    }
+
+    public function getNextDirection(): ?string
+    {
+        if ($this->isSingularDirection()) {
+            return $this->only === 'desc' 
+                ? $this->getDescendingValue() 
+                : $this->getAscendingValue();
+        }
+
         return match ($this->direction) {
             'desc' => null,
             'asc' => $this->getDescendingValue(),
@@ -78,20 +105,20 @@ class Sort extends Refiner
 
     public function asc(): static
     {
-        $this->fixed = 'asc';
+        $this->only = 'asc';
 
         return $this;
     }
 
     public function desc(): static
     {
-        $this->fixed = 'desc';
+        $this->only = 'desc';
 
         return $this;
     }
 
-    public function isFixed(): bool
+    public function isSingularDirection(): bool
     {
-        return ! \is_null($this->fixed);
+        return ! \is_null($this->only);
     }
 }

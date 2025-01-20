@@ -9,10 +9,14 @@ use Illuminate\Database\Eloquent\Builder;
 trait HasBuilderInstance
 {
     /**
-     * @var \Illuminate\Database\Eloquent\Builder
+     * @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|null
      */
     protected $builder;
 
+    /**
+     * @param Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @return $this
+     */
     public function builder(Builder $builder): static
     {
         $this->builder = $builder;
@@ -20,6 +24,9 @@ trait HasBuilderInstance
         return $this;
     }
 
+    /**
+     * @return Builder<\Illuminate\Database\Eloquent\Model>|null
+     */
     public function getBuilder(): ?Builder
     {
         if (! $this->hasBuilder()) {

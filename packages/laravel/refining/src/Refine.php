@@ -16,8 +16,7 @@ use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Builder
- * @method static sorts(iterable<\Honed\Refining\Sorts\Sort> $sorts)
- * @method static filters(iterable<\Honed\Refining\Filters\Filter> $filters)
+ * @extends Primitive<string, mixed>
  */
 class Refine extends Primitive
 {

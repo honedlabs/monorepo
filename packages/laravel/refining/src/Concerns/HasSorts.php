@@ -8,11 +8,12 @@ use Honed\Refining\Sorts\Sort;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 trait HasSorts
 {
     /**
-     * @var array<int,\Honed\Refining\Sorts\Sort>
+     * @var array<int,\Honed\Refining\Sorts\Sort>|null
      */
     protected $sorts;
 
@@ -27,8 +28,9 @@ trait HasSorts
         if ($sorts instanceof Arrayable) {
             $sorts = $sorts->toArray();
         }
-
-        $this->sorts = \array_merge($this->sorts, $sorts);
+        
+        /** @var array<int, \Honed\Refining\Sorts\Sort> $sorts */
+        $this->sorts = \array_merge($this->sorts ?? [], $sorts);
 
         return $this;
     }
@@ -45,31 +47,34 @@ trait HasSorts
     }
 
     /**
+     * @param Builder<\Illuminate\Database\Eloquent\Model> $builder
      * @return $this
      */
     public function sort(Builder $builder, Request $request): static
     {
         [$name, $direction] = $this->getSortFromRequest($request);
-        
+
         foreach ($this->getSorts() as $sort) {
-            $sort->apply($builder, $this->getBuilder());
+            $sort->value($name)->direction($direction)->apply($builder);
         }
 
         return $this;
     }
-
+    
     /**
-     * @return array{0: string|null, 1: string|null}
+     * Get the sort name and direction from the request.
+     *
+     * @return array{0: string|null, 1: 'asc'|'desc'|null}
      */
     public function getSortFromRequest(Request $request): array
     {
-        $sort = $request->query($this->getSortKey(), null);
+        $sort = $request->string($this->getSortKey());
 
-        if (!$sort) {
-            return [null, null];
-        }
-
-        return [$sort, \str_starts_with($sort, '-') ? 'desc' : 'asc'];
+        return match (true) {
+            $sort->isEmpty() => [null, null],
+            $sort->startsWith('-') => [$sort->after('-')->toString(), 'desc'],
+            default => [$sort->toString(), 'asc'],
+        };
     }
 
     /**
@@ -89,8 +94,4 @@ trait HasSorts
     {
         return $this->sortKey;
     }
-
-    /**
-     * 
-     */
 }
