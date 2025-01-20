@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Honed\Refining\Sorts;
 
 use Honed\Refining\Refiner;
-use Honed\Core\Concerns\IsDefault;
+use Laravel\Scout\Builder as ScoutBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Honed\Core\Concerns\IsDefault;
 
 class Sort extends Refiner
 {

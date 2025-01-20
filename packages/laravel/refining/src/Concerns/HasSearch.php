@@ -51,7 +51,7 @@ trait HasSearch
      */
     public function search(Builder $builder, Request $request): static
     {
-        // $columns = ['name', 'description', 'values'];
+        $columns = ['name', 'description', 'values'];
         // $builder->where(function ($query) use ($columns) {
         //     $query->where(
         //         column: 'name',
@@ -60,13 +60,30 @@ trait HasSearch
         //         boolean: 'or'
         //     )
         // });
-        // foreach ($this->getSearches() as $search) {
-        //     $search->apply($builder, $this->getBuilder());
-        // }
+        foreach ($this->getSearches() as $search) {
+            $search->value($columns)->apply($builder, $request);
+        }
 
         return $this;
     }
 
+    public function getProcessedParameter(Request $request): ?array
+    {
+        // Retrieve the raw query parameter value
+        $rawValue = $request->query($this->parameterName);
+
+        if (\is_null($rawValue)) {
+            return null;
+        }
+
+        $processedArray = \array_filter(
+            \array_map('trim', \explode(',', $rawValue)),
+            fn ($value) => $value !== ''
+        );
+
+        return empty($processedArray) ? null : $processedArray;
+    }
+    
     /**
      * Sets the search key to look for in the request.
      */

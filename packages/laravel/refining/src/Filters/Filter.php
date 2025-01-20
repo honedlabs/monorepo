@@ -29,6 +29,13 @@ class Filter extends Refiner
     {
         $this->type('filter');
     }
+
+    public function toArray(): array
+    {
+        return \array_merge(parent::toArray(), [
+            'value' => $this->getValue(),
+        ]);
+    }
     
     public function apply(Builder $builder, Request $request): void
     {
