@@ -37,7 +37,7 @@ class Sort extends Refiner
     public function apply(Builder $builder, Request $request): void
     {
         if ($this->isActive()) {
-            $this->handle($builder, $this->getDirection() ?? 'asc', $this->getParameter());
+            $this->handle($builder, $this->getDirection() ?? 'asc', $this->getAttribute());
         }
     }
 
@@ -81,15 +81,11 @@ class Sort extends Refiner
 
     public function getNextDirection(): ?string
     {
-        if ($this->isSingularDirection()) {
-            return $this->only === 'desc' 
-                ? $this->getDescendingValue() 
-                : $this->getAscendingValue();
-        }
-
-        return match ($this->direction) {
-            'desc' => null,
-            'asc' => $this->getDescendingValue(),
+        return match (true) {
+            $this->isSingularDirection() && $this->only === 'desc' => $this->getDescendingValue(),
+            $this->isSingularDirection() => $this->getAscendingValue(),
+            $this->direction === 'desc' => null,
+            $this->direction === 'asc' => $this->getDescendingValue(),
             default => $this->getAscendingValue(),
         };
     }

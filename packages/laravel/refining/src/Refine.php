@@ -151,5 +151,13 @@ class Refine extends Primitive
         }
 
         return $this;
-    }    
+    }
+
+    /**
+     * @return $this
+     */
+    public function for(Request $request): static
+    {
+        return $this->request($request);
+    }
 }

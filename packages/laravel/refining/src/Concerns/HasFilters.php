@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Refining\Concerns;
 
 use Illuminate\Http\Request;
+use Honed\Refining\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -27,6 +28,16 @@ trait HasFilters
 
         /** @var array<int, \Honed\Refining\Filters\Filter> $filters */
         $this->filters = \array_merge($this->filters ?? [], $filters);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function addFilter(Filter $filter): static
+    {
+        $this->filters[] = $filter;
 
         return $this;
     }

@@ -36,6 +36,16 @@ trait HasSorts
     }
 
     /**
+     * @return $this
+     */
+    public function addSort(Sort $sort): static
+    {
+        $this->sorts[] = $sort;
+
+        return $this;
+    }
+
+    /**
      * @return array<int,\Honed\Refining\Sorts\Sort>
      */
     public function getSorts(): array

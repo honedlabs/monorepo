@@ -35,9 +35,4 @@ trait HasBuilderInstance
         
         return $this->builder;
     }
-
-    public function hasBuilder(): bool
-    {
-        return ! \is_null($this->builder);
-    }
 }
