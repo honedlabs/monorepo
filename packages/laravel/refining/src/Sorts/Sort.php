@@ -34,11 +34,17 @@ class Sort extends Refiner
         return $this->getValue() === $this->getParameter();
     }
 
-    public function apply(Builder $builder, Request $request): void
+    public function apply(Builder $builder, Request $request, string $sortKey): bool
     {
-        if ($this->isActive()) {
-            $this->handle($builder, $this->getDirection() ?? 'asc', $this->getAttribute());
+        [$this->value, $this->direction] = $this->getValueFromRequest($request, $sortKey);
+
+        if (!$this->isActive()) {
+            return false;
         }
+        
+        $this->handle($builder, $this->getDirection() ?? 'asc', $this->getAttribute());
+        
+        return true;
     }
 
     /**
@@ -50,6 +56,22 @@ class Sort extends Refiner
             column: $builder->qualifyColumn($property),
             direction: $direction,
         );
+    }
+
+    /**
+     * Retrieve the sort value and direction from the request.
+     *
+     * @return array{0: string|null, 1: 'asc'|'desc'|null}
+     */
+    public function getValueFromRequest(Request $request, string $sortKey): array
+    {
+        $sort = $request->string($sortKey);
+
+        return match (true) {
+            $sort->isEmpty() => [null, null],
+            $sort->startsWith('-') => [$sort->after('-')->toString(), 'desc'],
+            default => [$sort->toString(), 'asc'],
+        };
     }
 
     public function toArray(): array

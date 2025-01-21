@@ -12,12 +12,14 @@ use Illuminate\Support\Str;
 
 trait HasSorts
 {
+    const SortKey = 'sort';
+
     /**
      * @var array<int,\Honed\Refining\Sorts\Sort>|null
      */
     protected $sorts;
 
-    protected string $sortKey = 'sort';
+    protected string $sortKey = self::SortKey;
 
     /**
      * @param iterable<\Honed\Refining\Sorts\Sort> $sorts
@@ -62,31 +64,15 @@ trait HasSorts
      */
     public function sort(Builder $builder, Request $request): static
     {
-        [$name, $direction] = $this->getSortFromRequest($request);
+        $sorts = $this->getSorts();
 
-        foreach ($this->getSorts() as $sort) {
-            $sort->value($name)->direction($direction)->apply($builder, $request);
+        foreach ($sorts as $sort) {
+            $sort->apply($builder, $request, $this->getSortKey());
         }
 
         return $this;
     }
     
-    /**
-     * Get the sort name and direction from the request.
-     *
-     * @return array{0: string|null, 1: 'asc'|'desc'|null}
-     */
-    public function getSortFromRequest(Request $request): array
-    {
-        $sort = $request->string($this->getSortKey());
-
-        return match (true) {
-            $sort->isEmpty() => [null, null],
-            $sort->startsWith('-') => [$sort->after('-')->toString(), 'desc'],
-            default => [$sort->toString(), 'asc'],
-        };
-    }
-
     /**
      * Sets the sort key to look for in the request.
      */

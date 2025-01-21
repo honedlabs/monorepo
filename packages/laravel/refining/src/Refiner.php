@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * @extends Primitive<string, mixed>
  * @method void handle(mixed ...$parameters)
+ * @method bool apply(mixed ...$parameters)
+ * @method void getValueFromRequest(mixed ...$parameters)
  */
 abstract class Refiner extends Primitive
 {
@@ -50,15 +52,10 @@ abstract class Refiner extends Primitive
                 ->value();
     }
 
-    abstract public function isActive(): bool;
-
     /**
-     * Apply the refiner to the given query for the provided request.
-     * 
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     * @param Builder<TModel> $builder
+     * Determine if the refiner is currently being applied.
      */
-    abstract public function apply(Builder $builder, Request $request): void;
+    abstract public function isActive(): bool;
 
     public function toArray(): array
     {

@@ -38,18 +38,23 @@ class Filter extends Refiner
         ]);
     }
     
-    public function apply(Builder $builder, Request $request): void
+    public function apply(Builder $builder, Request $request): bool
     {
         /** @var string|int|float|null */
         $value = $this->getValueFromRequest($request);
 
         $this->value($value);
 
-        if ($this->isActive() && $this->validate($value)) {
-            /** @var string */
-            $attribute = $this->getAttribute();
-            $this->handle($builder, $value, $attribute);
+        if (!$this->isActive() || !$this->validate($value)) {
+            return false;
         }
+
+        /** @var string */
+        $attribute = $this->getAttribute();
+
+        $this->handle($builder, $value, $attribute);
+
+        return true;
     }
 
     /**
@@ -96,7 +101,12 @@ class Filter extends Refiner
         );
     }
 
-    public function getValueFromRequest(Request $request): mixed
+    /**
+     * Retrieve the filter value from the request.
+     * 
+     * @return string|int|float|bool|null
+     */
+    public function getValueFromRequest(Request $request)
     {
         return $request->input($this->getParameter());
     }
