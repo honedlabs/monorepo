@@ -4,14 +4,26 @@ declare(strict_types=1);
 
 namespace Honed\Refining\Sorts;
 
+use Honed\Refining\Concerns\HasCallback;
 use Illuminate\Database\Eloquent\Builder;
 
 class CallbackSort extends Sort
 {
-    // use HasCallback;
+    use HasCallback;
 
     public function handle(Builder $builder, string $direction, string $property): void
     {
-        $this->getCallback()($builder, $direction, $property);
+        $this->evaluate(
+            value: $this->getCallback(),
+            named: [
+                'builder' => $builder,
+                'direction' => $direction,
+                'property' => $property,
+                'attribute' => $property
+            ],
+            typed: [
+                Builder::class => $builder,
+            ],
+        );
     }
 }
