@@ -34,16 +34,24 @@ class Sort extends Refiner
         return $this->getValue() === $this->getParameter();
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     */
     public function apply(Builder $builder, Request $request, string $sortKey): bool
     {
         [$this->value, $this->direction] = $this->getValueFromRequest($request, $sortKey);
 
-        if (!$this->isActive()) {
+        if (! $this->isActive()) {
             return false;
         }
         
-        $this->handle($builder, $this->getDirection() ?? 'asc', $this->getAttribute());
-        
+        /** @var string $attribute */
+        $attribute = $this->getAttribute();
+
+        $direction = $this->getDirection() ?? 'asc';
+
+        $this->handle($builder, $direction, $attribute);
+
         return true;
     }
 

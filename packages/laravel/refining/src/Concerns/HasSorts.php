@@ -66,8 +66,17 @@ trait HasSorts
     {
         $sorts = $this->getSorts();
 
+        $applied = false;
+        
         foreach ($sorts as $sort) {
-            $sort->apply($builder, $request, $this->getSortKey());
+            $applied |= $sort->apply($builder, $request, $this->getSortKey());
+        }
+
+        if (! $applied) {
+            /** @var \Honed\Refining\Sorts\Sort|null $sort */
+            $sort = \array_find($sorts, static fn (Sort $sort) => $sort->isDefault());
+
+            $sort?->handle($builder, $sort->getDirection() ?? 'asc', type($sort->getAttribute())->asString());
         }
 
         return $this;

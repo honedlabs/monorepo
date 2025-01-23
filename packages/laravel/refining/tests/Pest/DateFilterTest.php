@@ -16,7 +16,8 @@ beforeEach(function () {
 it('filters by date value', function () {
     $request = Request::create('/', 'GET', [$this->param => '01-01-2025']);
     
-    $this->filter->apply($this->builder, $request);
+    expect($this->filter->apply($this->builder, $request))
+        ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toHaveCount(1)
@@ -35,7 +36,8 @@ it('filters by date value', function () {
 it('does not filter if not a date', function () {
     $request = Request::create('/', 'GET', [$this->param => 'test']);
     
-    $this->filter->apply($this->builder, $request);
+    expect($this->filter->apply($this->builder, $request))
+        ->toBeFalse();
 
     expect($this->builder->getQuery()->wheres)->toBeArray()->toBeEmpty();
 

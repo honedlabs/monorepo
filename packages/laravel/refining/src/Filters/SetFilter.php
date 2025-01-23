@@ -11,8 +11,7 @@ use Illuminate\Http\Request;
 class SetFilter extends Filter
 {
     use HasOptions;
-
-    protected bool $multiple = false;
+    use Concerns\IsMultiple;
 
     public function setUp(): void
     {
@@ -34,18 +33,10 @@ class SetFilter extends Filter
         );
     }
 
-    /**
-     * @return $this
-     */
-    public function multiple(bool $multiple = true): static
+    public function toArray(): array
     {
-        $this->multiple = $multiple;
-
-        return $this;   
-    }
-
-    public function isMultiple(): bool
-    {
-        return $this->multiple;
+        return \array_merge(parent::toArray(), [
+            'options' => $this->getOptions(),
+        ]);
     }
 }

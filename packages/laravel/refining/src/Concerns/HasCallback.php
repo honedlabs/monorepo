@@ -7,7 +7,7 @@ namespace Honed\Refining\Concerns;
 trait HasCallback
 {
     /**
-     * @var string|callable|object
+     * @var string|callable|object|null
      */
     protected $callback;
 
@@ -21,7 +21,7 @@ trait HasCallback
         return $this;
     }
 
-    public function getCallback(): object
+    public function getCallback(): mixed
     {
         if (\is_null($this->callback)) {
             throw new \InvalidArgumentException('No callback has been set.');

@@ -43,7 +43,15 @@ it('requires refiners to be set', function () {
         ->wheres->scoped(fn ($wheres) => $wheres
             ->toBeArray()
             ->toBeEmpty()
-        )->orders->toBeNull();
+        )->orders->scoped(fn ($orders) => $orders
+            ->toBeArray()
+            ->toHaveCount(1)
+            ->{0}->scoped(fn ($order) => $order
+                ->toBeArray()
+                ->{'column'}->toBe(Product::query()->qualifyColumn('name'))
+                ->{'direction'}->toBe('desc')
+            )
+        );
 });
 
 it('requires a parameterised request', function () {
@@ -53,7 +61,14 @@ it('requires a parameterised request', function () {
         ->wheres->scoped(fn ($wheres) => $wheres
             ->toBeArray()
             ->toBeEmpty()
-        )->orders->toBeNull();
+        )->orders->scoped(fn ($orders) => $orders // The default should be used
+            ->toBeArray()
+            ->toHaveCount(1)
+            ->{0}->scoped(fn ($order) => $order
+                ->{'column'}->toBe(Product::query()->qualifyColumn('name'))
+                ->{'direction'}->toBe('desc')
+            )
+        );
 });
 
 it('can apply a filter', function () {
@@ -71,7 +86,15 @@ it('can apply a filter', function () {
                 ->{'value'}->toBe(100)
                 ->{'boolean'}->toBe('and')
             )
-        )->orders->toBeNull();
+        )->orders->scoped(fn ($orders) => $orders
+            ->toBeArray()
+            ->toHaveCount(1)
+            ->{0}->scoped(fn ($order) => $order
+                ->toBeArray()
+                ->{'column'}->toBe($this->builder->qualifyColumn('name'))
+                ->{'direction'}->toBe('desc')
+            )
+        );
 });
 
 it('can apply a sort', function () {
@@ -110,6 +133,11 @@ it('can apply multiple refiners', function () {
         )->orders->scoped(fn ($orders) => $orders
             ->toBeArray()
             ->toHaveCount(1)
+            ->{0}->scoped(fn ($order) => $order
+                ->toBeArray()
+                ->{'column'}->toBe($this->builder->qualifyColumn('price'))
+                ->{'direction'}->toBe('desc')
+            )
         );
 });
 

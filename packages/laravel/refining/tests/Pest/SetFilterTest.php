@@ -3,14 +3,26 @@
 declare(strict_types=1);
 
 use Honed\Refining\Tests\Stubs\Product;
-use Illuminate\Support\Facades\Request;
 use Honed\Refining\Filters\SetFilter;
+use Honed\Refining\Tests\Stubs\Status;
 
 beforeEach(function () {
     $this->builder = Product::query();
-    $this->param = 'is_active';
+    $this->param = 'status';
     $this->filter = SetFilter::make($this->param);
 });
 
 
-// it();
+it('filters with options', function () {
+    // dd(Status::cases());
+
+    $this->filter->options([
+        'draft' => 'Draft',
+        'published' => 'Published',
+        'archived' => 'Archived',
+    ]);
+
+    // dd($this->filter->getOptions());
+});
+
+// it('')

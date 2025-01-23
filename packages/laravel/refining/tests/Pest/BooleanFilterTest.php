@@ -15,7 +15,8 @@ beforeEach(function () {
 it('filters by boolean value', function () {
     $request = Request::create('/', 'GET', [$this->param => 'true']);
     
-    $this->filter->apply($this->builder, $request);
+    expect($this->filter->apply($this->builder, $request))
+        ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toHaveCount(1)
@@ -34,7 +35,8 @@ it('filters by boolean value', function () {
 it('does not filter if falsy value', function () {
     $request = Request::create('/', 'GET', [$this->param => '0']);
     
-    $this->filter->apply($this->builder, $request);
+    expect($this->filter->apply($this->builder, $request))
+        ->toBeFalse();
 
     expect($this->builder->getQuery()->wheres)->toBeArray()->toBeEmpty();
 
