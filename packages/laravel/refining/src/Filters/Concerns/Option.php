@@ -17,18 +17,21 @@ class Option extends Primitive
     use IsActive;
 
     public function __construct(
-        string $value,
-        string $label,
-        bool $active = true,
+        mixed $value,
+        string $label = null,
     ) {
         $this->value($value);
         $this->label($label ?? $this->makeLabel((string) $value));
-        $this->active($active);
     }
 
-    public static function make(string $value, string $label, bool $active = true): static
-    {
-        return resolve(static::class, \compact('value', 'label', 'active'));
+    /**
+     * @return $this
+     */
+    public static function make(
+        mixed $value,
+        string $label = null,
+    ): static {
+        return resolve(static::class, \compact('value', 'label'));
     }
 
     public function toArray(): array

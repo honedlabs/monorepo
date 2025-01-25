@@ -10,17 +10,22 @@ use Illuminate\Contracts\Support\Arrayable;
 
 trait HasSearch
 {
+    const SearchKey = 'search';
+    const ColumnsKey = 'columns';
+
     /**
      * @var array<int,\Honed\Refining\Searches\Search>
      */
     protected $searches;
 
-    protected string $searchKey = 'search';
+    protected string $searchKey = self::SearchKey;
 
     /** Allow for only certain columns to be used for searching */
-    protected string $onlyOnKey = 'columns';
+    protected string $onlyOnKey = self::ColumnsKey;
 
     /**
+     * Define new columns to be used for searching.
+     * 
      * @param iterable<\Honed\Refining\Searches\Search> $searches
      * @return $this
      */
@@ -36,6 +41,8 @@ trait HasSearch
     }
 
     /**
+     * Retrieve the columns to be used for searching.
+     * 
      * @return array<int,\Honed\Refining\Searches\Search>
      */
     public function getSearches(): array
@@ -47,6 +54,9 @@ trait HasSearch
     }
 
     /**
+     * Search the query.
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
      * @return $this
      */
     public function search(Builder $builder, Request $request): static
@@ -61,31 +71,36 @@ trait HasSearch
         //     )
         // });
         foreach ($this->getSearches() as $search) {
-            $search->value($columns)->apply($builder, $request);
+            if (\in_array($search->getAttribute(), $columns)) {
+                $search->apply($builder, $request);
+                // $builder->whereAny
+            }
         }
 
         return $this;
     }
 
-    public function getProcessedParameter(Request $request): ?array
-    {
-        // Retrieve the raw query parameter value
-        $rawValue = $request->query($this->parameterName);
+    // public function getProcessedParameter(Request $request): ?array
+    // {
+    //     // Retrieve the raw query parameter value
+    //     $rawValue = $request->query($this->parameterName);
 
-        if (\is_null($rawValue)) {
-            return null;
-        }
+    //     if (\is_null($rawValue)) {
+    //         return null;
+    //     }
 
-        $processedArray = \array_filter(
-            \array_map('trim', \explode(',', $rawValue)),
-            fn ($value) => $value !== ''
-        );
+    //     $processedArray = \array_filter(
+    //         \array_map('trim', \explode(',', $rawValue)),
+    //         fn ($value) => $value !== ''
+    //     );
 
-        return empty($processedArray) ? null : $processedArray;
-    }
+    //     return empty($processedArray) ? null : $processedArray;
+    // }
     
     /**
      * Sets the search key to look for in the request.
+     * 
+     * @return $this
      */
     public function searchKey(string $searchKey): static
     {

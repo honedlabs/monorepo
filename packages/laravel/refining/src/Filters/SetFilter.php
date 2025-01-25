@@ -4,38 +4,34 @@ declare(strict_types=1);
 
 namespace Honed\Refining\Filters;
 
-use Honed\Core\Concerns\HasOptions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class SetFilter extends Filter
 {
-    use HasOptions;
+    use Concerns\HasOptions;
     use Concerns\IsMultiple;
 
+    /**
+     * @inheritdoc
+     */
     public function setUp(): void
     {
         $this->type('set');
     }
 
     /**
-     * @param Carbon\Carbon $value
+     * @inheritdoc
      */
-    public function handle(Builder $builder, mixed $value, string $property): void
+    public function apply(Builder $builder, Request $request): bool
     {
-        $column = $builder->qualifyColumn($property);
-
-        $builder->whereDate(
-            column: $column,
-            operator: self::Is,
-            value: $value,
-            boolean: 'and'
-        );
+        return false;
     }
 
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
+            'multiple' => $this->isMultiple(),
             'options' => $this->getOptions(),
         ]);
     }

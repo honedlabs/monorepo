@@ -8,6 +8,9 @@ trait IsMultiple
 {
     protected bool $multiple = false;
 
+    /**
+     * @return $this
+     */
     public function multiple(bool $multiple = true): static
     {
         $this->multiple = $multiple;
