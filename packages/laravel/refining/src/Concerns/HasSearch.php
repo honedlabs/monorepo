@@ -90,6 +90,7 @@ trait HasSearch
             $search->apply(
                 builder: $builder, 
                 request: $request, 
+                searchKey: $this->getSearchKey(),
                 and: $i === 0,
                 columns: $this->searchAll ? true : $columns,
             );

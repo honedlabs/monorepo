@@ -17,25 +17,26 @@ class Search extends Refiner
 
     public function isActive(): bool
     {
-        return true;
+        return $this->hasValue();
     }
 
     /**
      * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
-     * @param array<int, string>|true $columns
+     * @param array<int,string>|true $columns
      */
-    public function apply(Builder $builder, Request $request, array|true $columns, bool $and): bool
+    public function apply(Builder $builder, Request $request, string $searchKey, array|true $columns, bool $and): bool
     {
-        $value = $this->getValueFromRequest($request);
+        $value = $this->getValueFromRequest($request, $searchKey);
 
-        $this->value($value);
+        $shouldBeApplied = $columns === true || \in_array($this->getParameter(), $columns);
+        
+        $this->value($shouldBeApplied ? $value : null);
 
         if (! $this->isActive()) {
             return false;
         }
 
         $attribute = type($this->getAttribute())->asString();
-
         $value = type($value)->asString();
 
         $this->handle($builder, $value, $attribute, $and);
@@ -43,9 +44,9 @@ class Search extends Refiner
         return true;
     }
 
-    public function getValueFromRequest(Request $request): ?string
+    public function getValueFromRequest(Request $request, string $searchKey): ?string
     {
-        $v = $request->string($this->getParameter())->toString();
+        $v = $request->string($searchKey)->toString();
 
         if (empty($v)) {
             return null;
