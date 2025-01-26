@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Honed\Refining\Filters\SetFilter;
 use Honed\Refining\Tests\Stubs\Status;
 use Honed\Refining\Tests\Stubs\Product;
+use Illuminate\Support\Facades\Request;
 use Honed\Refining\Filters\Concerns\Option;
 
 beforeEach(function () {
@@ -14,9 +15,9 @@ beforeEach(function () {
 });
 
 it('can be multiple', function () {
-    expect($this->filter->multiple())
+    expect($this->filter)
         ->isMultiple()->toBeFalse()
-        ->toBe($this->filter)
+        ->multiple()->toBe($this->filter)
         ->isMultiple()->toBeTrue();
 });
 
@@ -82,21 +83,21 @@ it('has options', function () {
 
 
 it('filters with options', function () {
-    // dd(Status::cases());
+    $request = Request::create('/', 'GET', [$this->param => Status::Available->value]);
 
-    $this->filter->options([
-        'draft' => 'Draft',
-        'published' => 'Published',
-        'archived' => 'Archived',
-    ]);
+    expect($this->filter->options(Status::class)->apply($this->builder, $request))
+        ->toBeTrue();
 
-    // dd($this->filter->getOptions());
-});
-
-it('tests', function () {
-    $statuses = collect(Status::cases())->flatMap(fn ($case) => [$case->value => $case->name])->toArray();
-    // dd(\array_map(fn ($value, $label) => [$value => $label], 
-    //     \array_keys($statuses), 
-    //     $statuses)
-    // );
+    expect($this->builder->getQuery()->wheres)->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($order) => $order
+            ->{'column'}->toBe($this->builder->qualifyColumn('status'))
+            ->{'value'}->toBe(Status::Available->value)
+            ->{'operator'}->toBe('=')
+            ->{'boolean'}->toBe('and')
+        );
+    
+    expect($this->filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe(Status::Available->value);
 });

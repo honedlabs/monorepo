@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @extends Primitive<string, mixed>
  * @method void handle(mixed ...$parameters)
  * @method bool apply(mixed ...$parameters)
- * @method void getValueFromRequest(mixed ...$parameters)
+ * @method mixed getValueFromRequest(mixed ...$parameters)
  */
 abstract class Refiner extends Primitive
 {

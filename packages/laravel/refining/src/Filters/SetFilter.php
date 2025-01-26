@@ -21,10 +21,16 @@ class SetFilter extends Filter
     }
 
     /**
-     * @inheritdoc
+     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
      */
     public function apply(Builder $builder, Request $request): bool
     {
+        $value = $this->getValueFromRequest($request);
+
+        $options = $this->getOptions();
+
+        // dd($options, $value);
+        
         return false;
     }
 
