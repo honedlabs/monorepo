@@ -125,7 +125,7 @@ class Refine extends Primitive
             return $this;
         }
 
-        $this->search($this->getBuilder(), $this->getRequest()); // Apply search first to determine scout usage
+        // $this->search($this->getBuilder(), $this->getRequest()); // Apply search first to determine scout usage
         $this->sort($this->getBuilder(), $this->getRequest());
         $this->filter($this->getBuilder(), $this->getRequest());
 

@@ -14,14 +14,32 @@ trait HasSearch
     const ColumnsKey = 'columns';
 
     /**
+     * Whether the search should consider the presence of the columns key in the request.
+     * 
+     * @var bool
+     */
+    protected $searchAll = false;
+
+    /**
+     * An array of the attributes to be used for searching.
+     * 
      * @var array<int,\Honed\Refining\Searches\Search>
      */
     protected $searches;
 
-    protected string $searchKey = self::SearchKey;
+    /**
+     * The query parameter key to look for in the request for the search value.
+     * 
+     * @var string
+     */
+    protected $searchKey = self::SearchKey;
 
-    /** Allow for only certain columns to be used for searching */
-    protected string $onlyOnKey = self::ColumnsKey;
+    /**
+     * The query parameter key to look for in the request for the columns to be used for searching.
+     * 
+     * @var string
+     */
+    protected $columnsKey = self::ColumnsKey;
 
     /**
      * Define new columns to be used for searching.
@@ -61,20 +79,15 @@ trait HasSearch
      */
     public function search(Builder $builder, Request $request): static
     {
-        $columns = ['name', 'description', 'values'];
-        // $builder->where(function ($query) use ($columns) {
-        //     $query->where(
-        //         column: 'name',
-        //         operator: 'like',
-        //         value: '%test%',
-        //         boolean: 'or'
-        //     )
-        // });
-        foreach ($this->getSearches() as $search) {
-            if (\in_array($search->getAttribute(), $columns)) {
-                $search->apply($builder, $request);
-                // $builder->whereAny
-            }
+        $columns = $this->getSearchesFromRequest($request);
+
+        foreach ($this->getSearches() as $i => $search) {
+            $search->apply(
+                builder: $builder, 
+                request: $request, 
+                and: $i === 0,
+                columns: $this->searchAll ? true : $columns,
+            );
         }
 
         return $this;

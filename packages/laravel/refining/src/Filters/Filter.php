@@ -40,7 +40,9 @@ class Filter extends Refiner
     
     public function apply(Builder $builder, Request $request): bool
     {
-        /** @var string|int|float|null */
+        /** 
+         * @var string|int|float|null 
+         */
         $value = $this->getValueFromRequest($request);
 
         $this->value($value);

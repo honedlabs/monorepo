@@ -39,6 +39,9 @@ trait HasOptions
         return $this;
     }
 
+    /**
+     * @return array<int,\Honed\Refining\Filters\Concerns\Option>
+     */
     public function getOptions(): array
     {
         return $this->options ?? [];

@@ -143,7 +143,7 @@ it('can apply multiple refiners', function () {
 
 it('can refine a query', function () {
     $request = Request::create('/', 'GET', ['favourite' => '1', 'status' => 'active', 'sort' => '-price']);
-
+    
     expect(Refine::query(Product::query()
         ->where('description', 'like', '%test%')
     )->with($this->refiners)->for($request)->getQuery())
