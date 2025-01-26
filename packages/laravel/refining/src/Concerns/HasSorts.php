@@ -8,7 +8,6 @@ use Honed\Refining\Sorts\Sort;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 trait HasSorts
 {
@@ -22,7 +21,7 @@ trait HasSorts
     protected string $sortKey = self::SortKey;
 
     /**
-     * @param iterable<\Honed\Refining\Sorts\Sort> $sorts
+     * @param  iterable<\Honed\Refining\Sorts\Sort>  $sorts
      * @return $this
      */
     public function addSorts(iterable $sorts): static
@@ -30,7 +29,7 @@ trait HasSorts
         if ($sorts instanceof Arrayable) {
             $sorts = $sorts->toArray();
         }
-        
+
         /** @var array<int, \Honed\Refining\Sorts\Sort> $sorts */
         $this->sorts = \array_merge($this->sorts ?? [], $sorts);
 
@@ -59,7 +58,7 @@ trait HasSorts
     }
 
     /**
-     * @param Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @param  Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @return $this
      */
     public function sort(Builder $builder, Request $request): static
@@ -67,7 +66,7 @@ trait HasSorts
         $sorts = $this->getSorts();
 
         $applied = false;
-        
+
         foreach ($sorts as $sort) {
             $applied |= $sort->apply($builder, $request, $this->getSortKey());
         }
@@ -81,7 +80,7 @@ trait HasSorts
 
         return $this;
     }
-    
+
     /**
      * Sets the sort key to look for in the request.
      */

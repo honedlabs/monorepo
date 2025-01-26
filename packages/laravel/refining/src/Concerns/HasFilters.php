@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Refining\Concerns;
 
-use Illuminate\Http\Request;
 use Honed\Refining\Filters\Filter;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 trait HasFilters
 {
@@ -17,7 +17,7 @@ trait HasFilters
     protected $filters;
 
     /**
-     * @param iterable<\Honed\Refining\Filters\Filter> $filters
+     * @param  iterable<\Honed\Refining\Filters\Filter>  $filters
      * @return $this
      */
     public function addFilters(iterable $filters): static
@@ -54,7 +54,7 @@ trait HasFilters
     }
 
     /**
-     * @param Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @param  Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @return $this
      */
     public function filter(Builder $builder, Request $request): static

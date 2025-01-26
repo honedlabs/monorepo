@@ -28,23 +28,23 @@ it('sorts with callback', function () {
     expect($this->builder->getQuery()->orders)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'column'}->toBe('description')
-            ->{'direction'}->toBe('desc')
+        ->{'column'}->toBe('description')
+        ->{'direction'}->toBe('desc')
         );
-    
+
     expect($this->sort)
         ->isActive()->toBeTrue()
         ->getDirection()->toBe('desc');
 });
 
-it('does not sort if no value', function () {    
+it('does not sort if no value', function () {
     $request = Request::create('/', 'GET', ['order' => 'test']);
 
     expect($this->sort->apply($this->builder, $request, Refine::SortKey))
         ->toBeFalse();
 
     expect($this->builder->getQuery()->orders)->toBeNull();
-    
+
     expect($this->sort)
         ->isActive()->toBeFalse()
         ->getValue()->toBeNull();

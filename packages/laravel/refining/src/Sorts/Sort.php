@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Refining\Sorts;
 
+use Honed\Core\Concerns\IsDefault;
 use Honed\Refining\Refiner;
-use Laravel\Scout\Builder as ScoutBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Honed\Core\Concerns\IsDefault;
 
 class Sort extends Refiner
 {
@@ -35,7 +34,7 @@ class Sort extends Refiner
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      */
     public function apply(Builder $builder, Request $request, string $sortKey): bool
     {
@@ -44,7 +43,7 @@ class Sort extends Refiner
         if (! $this->isActive()) {
             return false;
         }
-        
+
         /** @var string $attribute */
         $attribute = $this->getAttribute();
 
@@ -56,7 +55,7 @@ class Sort extends Refiner
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      */
     public function handle(Builder $builder, string $direction, string $property): void
     {
@@ -91,7 +90,7 @@ class Sort extends Refiner
     }
 
     /**
-     * @param 'asc'|'desc'|null $direction
+     * @param  'asc'|'desc'|null  $direction
      * @return $this
      */
     public function direction(?string $direction): static

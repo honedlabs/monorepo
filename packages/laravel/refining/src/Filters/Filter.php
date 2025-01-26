@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Refining\Filters;
 
-use Honed\Refining\Refiner;
 use Honed\Core\Concerns\Validatable;
+use Honed\Refining\Refiner;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -14,30 +14,37 @@ class Filter extends Refiner
     use Validatable;
 
     const Is = '=';
+
     const Not = '!=';
+
     const GreaterThan = '>';
+
     const LessThan = '<';
+
     const Exact = 'exact';
+
     const Like = 'like';
+
     const StartsWith = 'starts_with';
+
     const EndsWith = 'ends_with';
 
     /**
      * The database filter to use.
-     * 
+     *
      * @var string
      */
     protected $mode = self::Exact;
 
     /**
      * The operator to use.
-     * 
+     *
      * @var string
      */
     protected $operator = self::Is;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setUp(): void
     {
@@ -45,7 +52,7 @@ class Filter extends Refiner
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function toArray(): array
     {
@@ -53,22 +60,22 @@ class Filter extends Refiner
             'value' => $this->getValue(),
         ]);
     }
-    
+
     /**
      * Apply the filter to the builder.
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      */
     public function apply(Builder $builder, Request $request): bool
     {
-        /** 
-         * @var string|int|float|null 
+        /**
+         * @var string|int|float|null
          */
         $value = $this->getValueFromRequest($request);
 
         $this->value($value);
 
-        if (!$this->isActive() || !$this->validate($value)) {
+        if (! $this->isActive() || ! $this->validate($value)) {
             return false;
         }
 
@@ -82,8 +89,8 @@ class Filter extends Refiner
 
     /**
      * Execute the filter as a query on the builder.
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      */
     public function handle(Builder $builder, mixed $value, string $property): void
     {
@@ -115,7 +122,7 @@ class Filter extends Refiner
         $bindings = match ($this->getMode()) {
             self::StartsWith => ["{$value}%"], // @phpstan-ignore-line
             self::EndsWith => ["%{$value}"], // @phpstan-ignore-line
-            default => ['%' . mb_strtolower((string) $value, 'UTF8') . '%'], // @phpstan-ignore-line
+            default => ['%'.mb_strtolower((string) $value, 'UTF8').'%'], // @phpstan-ignore-line
         };
 
         $builder->whereRaw(
@@ -127,7 +134,7 @@ class Filter extends Refiner
 
     /**
      * Retrieve the filter value from the request.
-     * 
+     *
      * @return string|int|float|null
      */
     public function getValueFromRequest(Request $request)

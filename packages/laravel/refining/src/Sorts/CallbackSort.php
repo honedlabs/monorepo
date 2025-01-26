@@ -19,7 +19,7 @@ class CallbackSort extends Sort
                 'builder' => $builder,
                 'direction' => $direction,
                 'property' => $property,
-                'attribute' => $property
+                'attribute' => $property,
             ],
             typed: [
                 Builder::class => $builder,

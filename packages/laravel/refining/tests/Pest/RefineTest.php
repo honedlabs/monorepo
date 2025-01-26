@@ -2,18 +2,16 @@
 
 declare(strict_types=1);
 
+use Honed\Refining\Filters\BooleanFilter;
+use Honed\Refining\Filters\DateFilter;
+use Honed\Refining\Filters\Filter;
 use Honed\Refining\Refine;
 use Honed\Refining\Sorts\Sort;
-use Honed\Refining\Filters\Filter;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Honed\Refining\Filters\DateFilter;
-use Honed\Refining\Tests\Stubs\Status;
 use Honed\Refining\Tests\Stubs\Product;
-use Illuminate\Support\Facades\Request;
-use Honed\Refining\Filters\BooleanFilter;
-use Illuminate\Database\Eloquent\Builder;
+use Honed\Refining\Tests\Stubs\Status;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
     $this->builder = Product::query();
@@ -27,7 +25,7 @@ beforeEach(function () {
         BooleanFilter::make('best_seller', 'Favourite')->alias('favourite'),
         DateFilter::make('created_at', 'Oldest')->alias('oldest')->gt(),
         DateFilter::make('created_at', 'Newest')->alias('newest')->lt(),
-        
+
         Sort::make('name', 'A-Z')->alias('name-desc')->desc()->default(),
         Sort::make('name', 'Z-A')->alias('name-asc')->asc(),
         Sort::make('price'),
@@ -41,16 +39,16 @@ beforeEach(function () {
 it('requires refiners to be set', function () {
     expect(Refine::model(Product::class)->with($this->refiners)->getQuery())
         ->wheres->scoped(fn ($wheres) => $wheres
-            ->toBeArray()
-            ->toBeEmpty()
+        ->toBeArray()
+        ->toBeEmpty()
         )->orders->scoped(fn ($orders) => $orders
-            ->toBeArray()
-            ->toHaveCount(1)
-            ->{0}->scoped(fn ($order) => $order
-                ->toBeArray()
-                ->{'column'}->toBe(Product::query()->qualifyColumn('name'))
-                ->{'direction'}->toBe('desc')
-            )
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($order) => $order
+        ->toBeArray()
+        ->{'column'}->toBe(Product::query()->qualifyColumn('name'))
+        ->{'direction'}->toBe('desc')
+        )
         );
 });
 
@@ -59,15 +57,15 @@ it('requires a parameterised request', function () {
 
     expect(Refine::model(Product::class)->with($this->refiners)->for($request)->getQuery())
         ->wheres->scoped(fn ($wheres) => $wheres
-            ->toBeArray()
-            ->toBeEmpty()
+        ->toBeArray()
+        ->toBeEmpty()
         )->orders->scoped(fn ($orders) => $orders // The default should be used
-            ->toBeArray()
-            ->toHaveCount(1)
-            ->{0}->scoped(fn ($order) => $order
-                ->{'column'}->toBe(Product::query()->qualifyColumn('name'))
-                ->{'direction'}->toBe('desc')
-            )
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($order) => $order
+        ->{'column'}->toBe(Product::query()->qualifyColumn('name'))
+        ->{'direction'}->toBe('desc')
+        )
         );
 });
 
@@ -76,24 +74,24 @@ it('can apply a filter', function () {
 
     expect(Refine::model(Product::class)->with($this->refiners)->for($request)->getQuery())
         ->wheres->scoped(fn ($wheres) => $wheres
-            ->toBeArray()
-            ->toHaveCount(1)
-            ->{0}->scoped(fn ($filter) => $filter
-                ->toBeArray()
-                ->{'type'}->toBe('Basic')
-                ->{'column'}->toBe($this->builder->qualifyColumn('price'))
-                ->{'operator'}->toBe(Filter::GreaterThan)
-                ->{'value'}->toBe(100)
-                ->{'boolean'}->toBe('and')
-            )
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($filter) => $filter
+        ->toBeArray()
+        ->{'type'}->toBe('Basic')
+        ->{'column'}->toBe($this->builder->qualifyColumn('price'))
+        ->{'operator'}->toBe(Filter::GreaterThan)
+        ->{'value'}->toBe(100)
+        ->{'boolean'}->toBe('and')
+        )
         )->orders->scoped(fn ($orders) => $orders
-            ->toBeArray()
-            ->toHaveCount(1)
-            ->{0}->scoped(fn ($order) => $order
-                ->toBeArray()
-                ->{'column'}->toBe($this->builder->qualifyColumn('name'))
-                ->{'direction'}->toBe('desc')
-            )
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($order) => $order
+        ->toBeArray()
+        ->{'column'}->toBe($this->builder->qualifyColumn('name'))
+        ->{'direction'}->toBe('desc')
+        )
         );
 });
 
@@ -102,54 +100,50 @@ it('can apply a sort', function () {
 
     expect(Refine::model(Product::class)->with($this->refiners)->for($request)->getQuery())
         ->wheres->scoped(fn ($wheres) => $wheres
-            ->toBeArray()
-            ->toBeEmpty()
+        ->toBeArray()
+        ->toBeEmpty()
         )->orders->scoped(fn ($orders) => $orders
-            ->toBeArray()
-            ->toHaveCount(1)
-            ->{0}->scoped(fn ($order) => $order
-                ->toBeArray()
-                    ->{'column'}->toBe($this->builder->qualifyColumn('name'))
-                    ->{'direction'}->toBe('asc')
-            )
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($order) => $order
+        ->toBeArray()
+        ->{'column'}->toBe($this->builder->qualifyColumn('name'))
+        ->{'direction'}->toBe('asc')
+        )
         );
 });
 
-it('can apply a search', function () {
+it('can apply a search', function () {})->todo();
 
-})->todo();
-
-it('can search only selected columns', function () {
-
-})->todo();
+it('can search only selected columns', function () {})->todo();
 
 it('can apply multiple refiners', function () {
     $request = Request::create('/', 'GET', ['favourite' => '1', 'status' => 'active', 'sort' => '-price']);
 
     expect(Refine::model(Product::class)->with($this->refiners)->for($request)->getQuery())
         ->wheres->scoped(fn ($wheres) => $wheres
-            ->toBeArray()
-            ->toHaveCount(1)
+        ->toBeArray()
+        ->toHaveCount(1)
         )->orders->scoped(fn ($orders) => $orders
-            ->toBeArray()
-            ->toHaveCount(1)
-            ->{0}->scoped(fn ($order) => $order
-                ->toBeArray()
-                ->{'column'}->toBe($this->builder->qualifyColumn('price'))
-                ->{'direction'}->toBe('desc')
-            )
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($order) => $order
+        ->toBeArray()
+        ->{'column'}->toBe($this->builder->qualifyColumn('price'))
+        ->{'direction'}->toBe('desc')
+        )
         );
 });
 
 it('can refine a query', function () {
     $request = Request::create('/', 'GET', ['favourite' => '1', 'status' => 'active', 'sort' => '-price']);
-    
+
     expect(Refine::query(Product::query()
         ->where('description', 'like', '%test%')
     )->with($this->refiners)->for($request)->getQuery())
         ->wheres->scoped(fn ($wheres) => $wheres
-            ->toBeArray()
-            ->toHaveCount(2)
+        ->toBeArray()
+        ->toHaveCount(2)
         );
 });
 

@@ -14,18 +14,18 @@ beforeEach(function () {
 
 it('filters by exact value', function () {
     $request = Request::create('/', 'GET', [$this->param => 'test']);
-    
+
     $this->filter->apply($this->builder, $request);
 
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'column'}->toBe($this->builder->qualifyColumn('name'))
-            ->{'value'}->toBe('test')
-            ->{'operator'}->toBe('=')
-            ->{'boolean'}->toBe('and')
+        ->{'column'}->toBe($this->builder->qualifyColumn('name'))
+        ->{'value'}->toBe('test')
+        ->{'operator'}->toBe('=')
+        ->{'boolean'}->toBe('and')
         );
-    
+
     expect($this->filter)
         ->isActive()->toBeTrue()
         ->getValue()->toBe('test');
@@ -33,7 +33,7 @@ it('filters by exact value', function () {
 
 it('does not filter if no value', function () {
     $request = Request::create('/', 'GET', ['other' => 'test']);
-    
+
     $this->filter->apply($this->builder, $request);
 
     expect($this->builder->getQuery()->wheres)->toBeArray()
@@ -46,17 +46,17 @@ it('does not filter if no value', function () {
 
 it('filters using like mode', function () {
     $request = request()->merge([$this->param => 'test']);
-    
+
     $this->filter->like()->apply($this->builder, $request);
 
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'type'}->toBe('raw')
-            ->{'sql'}->toBe(\sprintf('LOWER(%s) LIKE ?', $this->builder->qualifyColumn('name')))
-            ->{'boolean'}->toBe('and')
+        ->{'type'}->toBe('raw')
+        ->{'sql'}->toBe(\sprintf('LOWER(%s) LIKE ?', $this->builder->qualifyColumn('name')))
+        ->{'boolean'}->toBe('and')
         );
-    
+
     expect($this->filter)
         ->isActive()->toBeTrue()
         ->getValue()->toBe('test');
@@ -64,17 +64,17 @@ it('filters using like mode', function () {
 
 it('filters using starts with mode', function () {
     $request = request()->merge(['name' => 'test']);
-    
+
     $this->filter->startsWith()->apply($this->builder, $request);
 
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'type'}->toBe('raw')
-            ->{'sql'}->toBe(\sprintf('%s LIKE ?', $this->builder->qualifyColumn('name')))
-            ->{'boolean'}->toBe('and')
+        ->{'type'}->toBe('raw')
+        ->{'sql'}->toBe(\sprintf('%s LIKE ?', $this->builder->qualifyColumn('name')))
+        ->{'boolean'}->toBe('and')
         );
-    
+
     expect($this->filter)
         ->isActive()->toBeTrue()
         ->getValue()->toBe('test');
@@ -82,17 +82,17 @@ it('filters using starts with mode', function () {
 
 it('filters using ends with mode', function () {
     $request = request()->merge(['name' => 'test']);
-    
+
     $this->filter->endsWith()->apply($this->builder, $request);
 
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'type'}->toBe('raw')
-            ->{'sql'}->toBe(\sprintf('%s LIKE ?', $this->builder->qualifyColumn('name')))
-            ->{'boolean'}->toBe('and')
+        ->{'type'}->toBe('raw')
+        ->{'sql'}->toBe(\sprintf('%s LIKE ?', $this->builder->qualifyColumn('name')))
+        ->{'boolean'}->toBe('and')
         );
-    
+
     expect($this->filter)
         ->isActive()->toBeTrue()
         ->getValue()->toBe('test');
@@ -100,17 +100,17 @@ it('filters using ends with mode', function () {
 
 it('filters using similarity checks and inversion', function () {
     $request = request()->merge(['name' => 'test']);
-    
+
     $this->filter->not()->like()->apply($this->builder, $request);
 
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'type'}->toBe('raw')
-            ->{'sql'}->toBe(\sprintf('LOWER(%s) NOT LIKE ?', $this->builder->qualifyColumn('name')))
-            ->{'boolean'}->toBe('and')
+        ->{'type'}->toBe('raw')
+        ->{'sql'}->toBe(\sprintf('LOWER(%s) NOT LIKE ?', $this->builder->qualifyColumn('name')))
+        ->{'boolean'}->toBe('and')
         );
-    
+
     expect($this->filter)
         ->isActive()->toBeTrue()
         ->getValue()->toBe('test');

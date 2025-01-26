@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class DateFilter extends Filter
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setUp(): void
     {
@@ -19,7 +19,7 @@ class DateFilter extends Filter
     }
 
     /**
-     * @param \Illuminate\Support\Carbon $value
+     * @param  \Illuminate\Support\Carbon  $value
      */
     public function handle(Builder $builder, mixed $value, string $property): void
     {

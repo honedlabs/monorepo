@@ -21,10 +21,10 @@ it('sorts by attribute', function () {
     expect($this->builder->getQuery()->orders)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'column'}->toBe($this->builder->qualifyColumn('name'))
-            ->{'direction'}->toBe('asc')
+        ->{'column'}->toBe($this->builder->qualifyColumn('name'))
+        ->{'direction'}->toBe('asc')
         );
-    
+
     expect($this->sort)
         ->isActive()->toBeTrue()
         ->getNextDirection()->toBe('-name')
@@ -45,10 +45,10 @@ it('can enforce a singular direction', function () {
     expect($this->builder->getQuery()->orders)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'column'}->toBe($this->builder->qualifyColumn('name'))
-            ->{'direction'}->toBe('desc')
+        ->{'column'}->toBe($this->builder->qualifyColumn('name'))
+        ->{'direction'}->toBe('desc')
         );
-    
+
     expect($this->sort)
         ->isActive()->toBeTrue()
         ->getDirection()->toBe('desc')
@@ -57,7 +57,7 @@ it('can enforce a singular direction', function () {
 
 it('does not sort if no value', function () {
     $request = Request::create('/', 'GET', ['order' => 'test']);
-    
+
     expect($this->sort->apply($this->builder, $request, Refine::SortKey))
         ->toBeFalse();
 

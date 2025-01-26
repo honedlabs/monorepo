@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Refining\Searches;
 
 use Honed\Refining\Refiner;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class Search extends Refiner
 {
@@ -21,15 +21,15 @@ class Search extends Refiner
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
-     * @param array<int,string>|true $columns
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  array<int,string>|true  $columns
      */
     public function apply(Builder $builder, Request $request, string $searchKey, array|true $columns, bool $and): bool
     {
         $value = $this->getValueFromRequest($request, $searchKey);
 
         $shouldBeApplied = $columns === true || \in_array($this->getParameter(), $columns);
-        
+
         $this->value($shouldBeApplied ? $value : null);
 
         if (! $this->isActive()) {
@@ -56,7 +56,7 @@ class Search extends Refiner
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      */
     public function handle(Builder $builder, string $value, string $property, bool $boolean): void
     {
@@ -68,4 +68,3 @@ class Search extends Refiner
         );
     }
 }
-

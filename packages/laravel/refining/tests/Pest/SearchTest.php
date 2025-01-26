@@ -24,10 +24,10 @@ it('searches', function () {
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'column'}->toBe($this->builder->qualifyColumn('name'))
-            ->{'value'}->toBe('%test%')
-            ->{'operator'}->toBe('like')
-            ->{'boolean'}->toBe('and')
+        ->{'column'}->toBe($this->builder->qualifyColumn('name'))
+        ->{'value'}->toBe('%test%')
+        ->{'operator'}->toBe('like')
+        ->{'boolean'}->toBe('and')
         );
 });
 
@@ -41,11 +41,12 @@ it('changes query boolean', function () {
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'column'}->toBe($this->builder->qualifyColumn('name'))
-            ->{'value'}->toBe('%test%')
-            ->{'operator'}->toBe('like')
-            ->{'boolean'}->toBe('or')
-        );}
+        ->{'column'}->toBe($this->builder->qualifyColumn('name'))
+        ->{'value'}->toBe('%test%')
+        ->{'operator'}->toBe('like')
+        ->{'boolean'}->toBe('or')
+        );
+}
 );
 
 it('prevents searching if no value is provided', function () {
@@ -58,7 +59,7 @@ it('prevents searching if no value is provided', function () {
 
 it('prevents searching if key does not match', function () {
     $key = 'other';
-    
+
     $request = Request::create('/', 'GET', [$key => 'test']);
 
     expect($this->search->apply($this->builder, $request, $this->key, true, true))->toBeFalse();
@@ -78,9 +79,9 @@ it('only runs if it is in array', function () {
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'column'}->toBe($this->builder->qualifyColumn('name'))
-            ->{'value'}->toBe('%test%')
-            ->{'operator'}->toBe('like')
-            ->{'boolean'}->toBe('and')
+        ->{'column'}->toBe($this->builder->qualifyColumn('name'))
+        ->{'value'}->toBe('%test%')
+        ->{'operator'}->toBe('like')
+        ->{'boolean'}->toBe('and')
         );
 });

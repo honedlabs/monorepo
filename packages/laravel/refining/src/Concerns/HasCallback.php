@@ -12,7 +12,7 @@ trait HasCallback
     protected $callback;
 
     /**
-     * @param string|callable|object $callback
+     * @param  string|callable|object  $callback
      */
     public function callback($callback): static
     {

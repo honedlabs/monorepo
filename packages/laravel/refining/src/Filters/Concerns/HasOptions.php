@@ -14,7 +14,7 @@ trait HasOptions
     protected $options;
 
     /**
-     * @param class-string<\BackedEnum>|iterable<mixed> $options
+     * @param  class-string<\BackedEnum>|iterable<mixed>  $options
      */
     public function options(string|iterable $options): static
     {
@@ -51,11 +51,11 @@ trait HasOptions
 
     public function hasOptions(): bool
     {
-        return !\is_null($this->options) && \count($this->options) > 0;
+        return ! \is_null($this->options) && \count($this->options) > 0;
     }
 
     /**
-     * @param class-string<\BackedEnum> $enum
+     * @param  class-string<\BackedEnum>  $enum
      */
     public function enum(string $enum): static
     {
@@ -63,5 +63,4 @@ trait HasOptions
 
         return $this;
     }
-
 }

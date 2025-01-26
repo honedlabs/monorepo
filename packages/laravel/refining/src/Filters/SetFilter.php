@@ -14,7 +14,7 @@ class SetFilter extends Filter
     use Concerns\IsMultiple;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setUp(): void
     {
@@ -22,7 +22,7 @@ class SetFilter extends Filter
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isActive(): bool
     {
@@ -32,13 +32,13 @@ class SetFilter extends Filter
 
         $value = $this->getValue();
 
-        return parent::isActive() 
-            && \is_array($value) 
+        return parent::isActive()
+            && \is_array($value)
             && \count($value) > 0;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function apply(Builder $builder, Request $request): bool
     {
@@ -48,22 +48,22 @@ class SetFilter extends Filter
             $this->getOptions(),
             fn (Option $option) => $option->active(
                 \in_array(
-                    $option->getValue(), 
-                    (array) $rawValue, 
+                    $option->getValue(),
+                    (array) $rawValue,
                     true
                 ))->isActive(),
         );
 
         $value = match (true) {
             $this->isMultiple() => \array_map(
-                fn (Option $option) => $option->getValue(), 
+                fn (Option $option) => $option->getValue(),
                 $options),
             default => \array_shift($options)?->getValue(),
         };
 
         $this->value($value);
 
-        if (! $this->isActive() || !$this->validate($value)) {
+        if (! $this->isActive() || ! $this->validate($value)) {
             return false;
         }
 
@@ -71,8 +71,8 @@ class SetFilter extends Filter
 
         if ($this->isMultiple()) {
             $this->handleMultiple(
-                $builder, 
-                type($value)->asArray(), 
+                $builder,
+                type($value)->asArray(),
                 $property
             );
 
@@ -88,8 +88,8 @@ class SetFilter extends Filter
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
-     * @param array<int,string|int|float> $value
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  array<int,string|int|float>  $value
      */
     private function handleMultiple(Builder $builder, array $value, string $property): void
     {
@@ -125,7 +125,7 @@ class SetFilter extends Filter
         }
 
         return \array_map(
-            fn ($v) => \trim($v), 
+            fn ($v) => \trim($v),
             \explode(',', (string) $value)
         );
     }

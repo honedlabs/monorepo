@@ -13,6 +13,9 @@ trait HasRequest
      */
     protected $request;
 
+    /**
+     * @return $this
+     */
     public function request(Request $request): static
     {
         $this->request = $request;

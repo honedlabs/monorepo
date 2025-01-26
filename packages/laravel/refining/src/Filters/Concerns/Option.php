@@ -8,20 +8,19 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\IsActive;
 use Honed\Core\Primitive;
-use Illuminate\Contracts\Support\Arrayable;
 
 /**
  * @extends Primitive<string, mixed>
  */
 class Option extends Primitive
 {
-    use HasValue;
     use HasLabel;
+    use HasValue;
     use IsActive;
 
     public function __construct(
         string|int|float $value,
-        string $label = null,
+        ?string $label = null,
     ) {
         $this->value($value);
         $this->label($label ?? $this->makeLabel((string) $value));
@@ -32,7 +31,7 @@ class Option extends Primitive
      */
     public static function make(
         string|int|float $value,
-        string $label = null,
+        ?string $label = null,
     ): static {
         return resolve(static::class, \compact('value', 'label'));
     }

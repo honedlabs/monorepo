@@ -19,7 +19,7 @@ class CallbackFilter extends Filter
                 'builder' => $builder,
                 'value' => $value,
                 'property' => $property,
-                'attribute' => $property
+                'attribute' => $property,
             ],
             typed: [
                 Builder::class => $builder,

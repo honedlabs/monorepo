@@ -4,29 +4,29 @@ declare(strict_types=1);
 
 namespace Honed\Refining;
 
-use Honed\Core\Primitive;
-use Illuminate\Http\Request;
-use Honed\Refining\Sorts\Sort;
 use Honed\Core\Concerns\HasScope;
+use Honed\Core\Primitive;
 use Honed\Refining\Filters\Filter;
-use Honed\Refining\Contracts\Refines;
-use Illuminate\Database\Eloquent\Model;
+use Honed\Refining\Sorts\Sort;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
+ *
  * @extends Primitive<string, mixed>
  */
 class Refine extends Primitive
 {
-    use ForwardsCalls;
-    use HasScope;
     use Concerns\HasBuilderInstance;
     use Concerns\HasFilters;
-    use Concerns\HasSorts;
     use Concerns\HasRequest;
     use Concerns\HasSearch;
+    use Concerns\HasSorts;
+    use ForwardsCalls;
+    use HasScope;
 
     protected bool $refined = false;
 
@@ -38,11 +38,10 @@ class Refine extends Primitive
     }
 
     /**
-     * @param string $name
-     * @param array<int, mixed> $arguments
-     * @return $this
+     * @param  string  $name
+     * @param  array<int, mixed>  $arguments
      */
-    public function __call($name, $arguments)
+    public function __call($name, $arguments): mixed
     {
         if ($name === 'sorts') {
             /** @var array<int, \Honed\Refining\Sorts\Sort> $arguments */
@@ -61,7 +60,7 @@ class Refine extends Primitive
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $model
+     * @param  \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $model
      */
     public static function make(Model|string|Builder $model): static
     {
@@ -69,7 +68,7 @@ class Refine extends Primitive
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model> $model
+     * @param  \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>  $model
      */
     public static function model(Model|string $model): static
     {
@@ -77,7 +76,7 @@ class Refine extends Primitive
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $query
+     * @param  \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $query
      */
     public static function query(Model|string|Builder $query): static
     {
@@ -89,7 +88,7 @@ class Refine extends Primitive
             $query = $query::query();
         }
 
-        if (!$query instanceof Builder) {
+        if (! $query instanceof Builder) {
             throw new \InvalidArgumentException('Expected a model class name or a query instance.');
         }
 
@@ -136,8 +135,8 @@ class Refine extends Primitive
 
     /**
      * Add the given filters or sorts to the refine pipeline.
-     * 
-     * @param iterable<\Honed\Refining\Refiner> $refiners
+     *
+     * @param  iterable<\Honed\Refining\Refiner>  $refiners
      * @return $this
      */
     public function with(iterable $refiners): static

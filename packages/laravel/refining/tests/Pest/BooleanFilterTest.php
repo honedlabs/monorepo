@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use Honed\Refining\Filters\BooleanFilter;
 use Honed\Refining\Tests\Stubs\Product;
 use Illuminate\Support\Facades\Request;
-use Honed\Refining\Filters\BooleanFilter;
 
 beforeEach(function () {
     $this->builder = Product::query();
@@ -14,17 +14,17 @@ beforeEach(function () {
 
 it('filters by boolean value', function () {
     $request = Request::create('/', 'GET', [$this->param => 'true']);
-    
+
     expect($this->filter->apply($this->builder, $request))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($order) => $order
-            ->{'column'}->toBe($this->builder->qualifyColumn('is_active'))
-            ->{'value'}->toBe(true)
-            ->{'operator'}->toBe('=')
-            ->{'boolean'}->toBe('and')
+        ->{'column'}->toBe($this->builder->qualifyColumn('is_active'))
+        ->{'value'}->toBe(true)
+        ->{'operator'}->toBe('=')
+        ->{'boolean'}->toBe('and')
         );
 
     expect($this->filter)
@@ -34,7 +34,7 @@ it('filters by boolean value', function () {
 
 it('does not filter if falsy value', function () {
     $request = Request::create('/', 'GET', [$this->param => '0']);
-    
+
     expect($this->filter->apply($this->builder, $request))
         ->toBeFalse();
 

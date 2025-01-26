@@ -14,7 +14,7 @@ trait HasBuilderInstance
     protected $builder;
 
     /**
-     * @param Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @param  Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @return $this
      */
     public function builder(Builder $builder): static
@@ -32,7 +32,7 @@ trait HasBuilderInstance
         if (\is_null($this->builder)) {
             throw new \RuntimeException('Builder instance has not been set.');
         }
-        
+
         return $this->builder;
     }
 }
