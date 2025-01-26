@@ -10,13 +10,16 @@ use Illuminate\Http\Request;
 
 class DateFilter extends Filter
 {
+    /**
+     * @inheritdoc
+     */
     public function setUp(): void
     {
         $this->type('date');
     }
 
     /**
-     * @param Carbon\Carbon $value
+     * @param \Illuminate\Support\Carbon $value
      */
     public function handle(Builder $builder, mixed $value, string $property): void
     {
@@ -24,14 +27,14 @@ class DateFilter extends Filter
 
         $builder->whereDate(
             column: $column,
-            operator: self::Is,
+            operator: $this->getOperator(),
             value: $value,
             boolean: 'and'
         );
     }
 
     /**
-     * @return Carbon\Carbon|null
+     * @return \Illuminate\Support\Carbon|null
      */
     public function getValueFromRequest(Request $request): mixed
     {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Refining\Filters\Concerns;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Collection;
 
 trait HasOptions
 {
@@ -14,6 +13,9 @@ trait HasOptions
      */
     protected $options;
 
+    /**
+     * @param class-string<\BackedEnum>|iterable<mixed> $options
+     */
     public function options(string|iterable $options): static
     {
         if ($options instanceof Arrayable) {
@@ -25,14 +27,14 @@ trait HasOptions
                 fn ($case) => Option::make($case->value, $case->name),
                 $options::cases()
             ),
-            \array_is_list($options) => \array_map(
-                fn ($value) => Option::make($value),
-                $options
+            \array_is_list($o = type($options)->asArray()) => \array_map(
+                fn ($value) => $value instanceof Option ? $value : Option::make($value),
+                $o
             ),
             default => \array_map(
                 fn ($value, $label) => Option::make($value, $label),
-                \array_keys($options),
-                $options,
+                \array_keys($o),
+                $o,
             ),
         };
 

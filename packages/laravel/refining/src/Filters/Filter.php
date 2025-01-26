@@ -22,15 +22,31 @@ class Filter extends Refiner
     const StartsWith = 'starts_with';
     const EndsWith = 'ends_with';
 
-    protected string $mode = self::Exact;
+    /**
+     * The database filter to use.
+     * 
+     * @var string
+     */
+    protected $mode = self::Exact;
 
-    protected string $operator = self::Is;
+    /**
+     * The operator to use.
+     * 
+     * @var string
+     */
+    protected $operator = self::Is;
 
+    /**
+     * @inheritdoc
+     */
     public function setUp(): void
     {
         $this->type('filter');
     }
 
+    /**
+     * @inheritdoc
+     */
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
@@ -38,6 +54,11 @@ class Filter extends Refiner
         ]);
     }
     
+    /**
+     * Apply the filter to the builder.
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     */
     public function apply(Builder $builder, Request $request): bool
     {
         /** 
@@ -60,8 +81,9 @@ class Filter extends Refiner
     }
 
     /**
+     * Execute the filter as a query on the builder.
+     * 
      * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
-     * @param string|int|float|bool|null $value
      */
     public function handle(Builder $builder, mixed $value, string $property): void
     {
@@ -91,9 +113,9 @@ class Filter extends Refiner
         };
 
         $bindings = match ($this->getMode()) {
-            self::StartsWith => ["{$value}%"],
-            self::EndsWith => ["%{$value}"],
-            default => ['%' . mb_strtolower((string) $value, 'UTF8') . '%'],
+            self::StartsWith => ["{$value}%"], // @phpstan-ignore-line
+            self::EndsWith => ["%{$value}"], // @phpstan-ignore-line
+            default => ['%' . mb_strtolower((string) $value, 'UTF8') . '%'], // @phpstan-ignore-line
         };
 
         $builder->whereRaw(
@@ -106,11 +128,11 @@ class Filter extends Refiner
     /**
      * Retrieve the filter value from the request.
      * 
-     * @return string|int|float|bool|null
+     * @return string|int|float|null
      */
     public function getValueFromRequest(Request $request)
     {
-        return $request->input($this->getParameter());
+        return $request->input($this->getParameter()); // @phpstan-ignore-line
     }
 
     public function isActive(): bool

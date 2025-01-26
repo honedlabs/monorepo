@@ -67,24 +67,36 @@ class SetFilter extends Filter
             return false;
         }
 
+        $property = type($this->getAttribute())->asString();
+
         if ($this->isMultiple()) {
-            $this->handleMultiple($builder, $value, $this->getAttribute());
+            $this->handleMultiple(
+                $builder, 
+                type($value)->asArray(), 
+                $property
+            );
+
             return true;
         }
 
-        parent::handle($builder, $value, $this->getAttribute());
+        /**
+         * @var string|int|float $value
+         */
+        parent::handle($builder, $value, $property);
 
         return true;
     }
 
     /**
      * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
-     * @param non-empty-array<int,mixed>|string|int $value
+     * @param array<int,string|int|float> $value
      */
     private function handleMultiple(Builder $builder, array $value, string $property): void
     {
+        $column = $builder->qualifyColumn($property);
+
         $builder->whereIn(
-            column: $builder->qualifyColumn($property),
+            column: $column,
             values: $value,
             boolean: 'and'
         );
@@ -98,14 +110,23 @@ class SetFilter extends Filter
         ]);
     }
 
-    public function getValueFromRequest(Request $request): array|string|null
+    /**
+     * @return array<int,string|int|float>|string|int|float|null
+     */
+    public function getValueFromRequest(Request $request)
     {
         $value = parent::getValueFromRequest($request);
 
         if (! $this->isMultiple()) {
+            /**
+             * @var string|int|float|null $value
+             */
             return $value;
         }
 
-        return \explode(',', (string) $value);
+        return \array_map(
+            fn ($v) => \trim($v), 
+            \explode(',', (string) $value)
+        );
     }
 }

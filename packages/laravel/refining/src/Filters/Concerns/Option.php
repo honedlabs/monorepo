@@ -10,6 +10,9 @@ use Honed\Core\Concerns\IsActive;
 use Honed\Core\Primitive;
 use Illuminate\Contracts\Support\Arrayable;
 
+/**
+ * @extends Primitive<string, mixed>
+ */
 class Option extends Primitive
 {
     use HasValue;
@@ -17,7 +20,7 @@ class Option extends Primitive
     use IsActive;
 
     public function __construct(
-        mixed $value,
+        string|int|float $value,
         string $label = null,
     ) {
         $this->value($value);
@@ -28,7 +31,7 @@ class Option extends Primitive
      * @return $this
      */
     public static function make(
-        mixed $value,
+        string|int|float $value,
         string $label = null,
     ): static {
         return resolve(static::class, \compact('value', 'label'));

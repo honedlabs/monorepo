@@ -31,10 +31,7 @@ class BooleanFilter extends Filter
         return (bool) $this->getValue();
     }
 
-    /**
-     * @return bool
-     */
-    public function getValueFromRequest(Request $request): mixed
+    public function getValueFromRequest(Request $request): bool // @phpstan-ignore-line
     {
         return $request->boolean($this->getParameter());
     }

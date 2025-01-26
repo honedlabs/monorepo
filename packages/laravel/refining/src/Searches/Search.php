@@ -22,11 +22,9 @@ class Search extends Refiner
 
     /**
      * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
-     * @param \Illuminate\Http\Request $request
      * @param array<int, string>|true $columns
-     * @param bool $and
      */
-    public function apply(Builder $builder, Request $request, array|true $columns, bool $and)
+    public function apply(Builder $builder, Request $request, array|true $columns, bool $and): bool
     {
         $value = $this->getValueFromRequest($request);
 

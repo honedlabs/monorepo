@@ -23,7 +23,7 @@ trait HasSearch
     /**
      * An array of the attributes to be used for searching.
      * 
-     * @var array<int,\Honed\Refining\Searches\Search>
+     * @var array<int,\Honed\Refining\Searches\Search>|null
      */
     protected $searches;
 
@@ -53,7 +53,12 @@ trait HasSearch
             $searches = $searches->toArray();
         }
 
-        $this->searches = \array_merge($this->searches, $searches);
+        /**
+         * @var array<int, \Honed\Refining\Searches\Search>
+         */
+        $searches = type($searches)->asArray();
+
+        $this->searches = \array_merge($this->searches ?? [], $searches);
 
         return $this;
     }
@@ -93,22 +98,24 @@ trait HasSearch
         return $this;
     }
 
-    // public function getProcessedParameter(Request $request): ?array
-    // {
-    //     // Retrieve the raw query parameter value
-    //     $rawValue = $request->query($this->parameterName);
+    /**
+     * Retrieve the columns to be used for searching from the request.
+     * 
+     * @return array<int,string>|true
+     */
+    public function getSearchesFromRequest(Request $request): array|true
+    {
+        $value = $request->string($this->searchKey)->toString();
 
-    //     if (\is_null($rawValue)) {
-    //         return null;
-    //     }
+        if (empty($value)) {
+            return true;
+        }
 
-    //     $processedArray = \array_filter(
-    //         \array_map('trim', \explode(',', $rawValue)),
-    //         fn ($value) => $value !== ''
-    //     );
-
-    //     return empty($processedArray) ? null : $processedArray;
-    // }
+        return \array_map(
+            fn ($v) => \trim($v), 
+            \explode(',', (string) $value)
+        );
+    }
     
     /**
      * Sets the search key to look for in the request.
