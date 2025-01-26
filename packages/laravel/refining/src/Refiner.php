@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Refining;
 
 use Honed\Core\Primitive;
-use Illuminate\Http\Request;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasAlias;
@@ -14,15 +13,11 @@ use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasAttribute;
 use Honed\Refining\Contracts\Refines;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @extends Primitive<string, mixed>
- * @method void handle(mixed ...$parameters)
- * @method bool apply(mixed ...$parameters)
- * @method mixed getValueFromRequest(mixed ...$parameters)
  */
-abstract class Refiner extends Primitive
+abstract class Refiner extends Primitive implements Refines
 {
     use Allowable;
     use HasLabel;

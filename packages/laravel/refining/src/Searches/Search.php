@@ -30,27 +30,40 @@ class Search extends Refiner
 
         $this->value($value);
 
-        if (!$this->isActive()) {
+        if (! $this->isActive()) {
             return false;
         }
 
-        /** @var string */
-        $attribute = $this->getAttribute();
+        $attribute = type($this->getAttribute())->asString();
 
-        $this->handle($builder, $value, $attribute);
+        $value = type($value)->asString();
+
+        $this->handle($builder, $value, $attribute, $and);
 
         return true;
+    }
+
+    public function getValueFromRequest(Request $request): ?string
+    {
+        $v = $request->string($this->getParameter())->toString();
+
+        if (empty($v)) {
+            return null;
+        }
+
+        return $v;
     }
 
     /**
      * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
      */
-    public function handle(Builder $builder, string $value, string $property): void
+    public function handle(Builder $builder, string $value, string $property, bool $boolean): void
     {
         $builder->where(
             column: $builder->qualifyColumn($property),
             operator: 'like',
-            value: '%'.$value.'%'
+            value: '%'.$value.'%',
+            boolean: $boolean ? 'and' : 'or',
         );
     }
 }
