@@ -21,6 +21,7 @@ jobs:
           - lock
           - nav
           - table
+          - refine
 
     steps:
       - name: Checkout
