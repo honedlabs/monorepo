@@ -183,8 +183,10 @@ trait Toggleable
 
     /**
      * Update the cookie with the new data.
+     * 
+     * @param mixed $data
      */
-    public function enqueueCookie(mixed $data): void
+    public function enqueueCookie($data): void
     {
         Cookie::queue(
             $this->getCookieName(), 
@@ -195,11 +197,13 @@ trait Toggleable
 
     /**
      * Get the data stored in the cookie.
+     * 
+     * @param \Illuminate\Http\Request $request
      */
-    public function retrieveCookie(Request $request = null): mixed
+    public function retrieveCookie($request = null): mixed
     {
         return \json_decode(
-            ($request ?? request())->cookie($this->getCookieName(), null),
+            ($request ?? request())->cookie($this->getCookieName(), '[]'),
             true
         );
     }
@@ -208,9 +212,10 @@ trait Toggleable
      * Resolve parameters using cookies if applicable.
      *
      * @param array<int,string>|null $params
+     * @param \Illuminate\Http\Request|null $request
      * @return array<int,string>|null
      */
-    protected function resolveCookieParams(?array $params, ?Request $request): ?array
+    protected function resolveCookieParams($params, $request): ?array
     {
         if (! \is_null($params)) {
             $this->enqueueCookie($params);

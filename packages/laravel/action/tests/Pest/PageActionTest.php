@@ -35,7 +35,7 @@ it('resolves', function () {
         )->toBeInstanceOf(PageAction::class)
         ->getLabel()->toBe('Test')
         ->getDestination()->scoped(fn ($destination) => $destination
-            ->getHref()->toBe(route('products.show', $product))
+            ->get()->toBe(route('products.show', $product))
             ->getMethod()->toBe('GET')
             ->getTab()->toBeFalse());
 });

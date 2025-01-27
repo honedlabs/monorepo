@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Action\Http\Data;
 
-class InlineData extends ActionData
+use Honed\Core\Contracts\TransferObject;
+
+class InlineData implements TransferObject
 {
     public function __construct(
         public readonly string $name,

@@ -84,9 +84,10 @@ class ExampleTable extends Table
             InlineAction::make('edit-route')
                 ->route('product.show'),
 
-            BulkAction::make('touch')->action(fn (Product $product) => $product->update(['name' => 'Bulk'])),
+            BulkAction::make('touch')
+                ->action(fn (Product $product) => $product->update(['name' => 'Bulk'])),
 
-            PageAction::make('create')->url->to('/products/create'),
+            PageAction::make('create')->link->to('/products/create'),
 
         ];
     }

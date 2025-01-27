@@ -7,9 +7,9 @@ interface ResolvesClosures
     /**
      * Resolve the instance closures.
      *
-     * @param  mixed  $parameters
-     * @param  array<string,mixed>|null  $typed
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $typed
      * @return $this
      */
-    public function resolve($parameters = null, $typed = null): static;
+    public function resolve($parameters = [], $typed = []): static;
 }

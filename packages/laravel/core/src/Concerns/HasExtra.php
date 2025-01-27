@@ -35,7 +35,7 @@ trait HasExtra
      *
      * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
      * @param  array<string,mixed>  $typed
-     * @return array<string,mixed>|null
+     * @return array<string,mixed>
      */
     public function getExtra($parameters = [], $typed = []): ?array
     {

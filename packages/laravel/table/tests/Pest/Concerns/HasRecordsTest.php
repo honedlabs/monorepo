@@ -54,7 +54,7 @@ describe('formats', function () {
         $this->actions = collect([
             // InlineAction::make('show')->link(fn (Product $p) => route('product.show', $p->id)),
             InlineAction::make('show.other')->link->link(fn (mixed $record) => route('product.show', $record->id)),
-            InlineAction::make('delete')->authorize(fn (Product $p) => $p->id !== 1)
+            InlineAction::make('delete')->authorize(fn (Product $p) => $p->id % 2 === 0)
         ]);
 
         foreach (\range(1, 10) as $_) {
@@ -82,7 +82,9 @@ describe('formats', function () {
         expect($this->test->formatRecords(Product::all(), $this->columns, $this->actions))
             ->toBeCollection()
             ->toHaveCount(10)
-            ->dd()
-            ->each(fn ($record) => $record->toHaveKey('actions'));
+            ->each(fn ($record, $i) => $record
+                ->toHaveKey('actions')
+                ->{'actions'}->toHaveCount($i % 2 === 0 ? 1 : 2)
+            );
     });
 });

@@ -6,6 +6,6 @@ namespace Honed\Table\Actions\Contracts;
 
 interface Action
 {
-    
+
 }
 

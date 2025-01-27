@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Action\Http\Data;
 
-class PageData extends ActionData
+use Honed\Core\Contracts\TransferObject;
+
+class PageData implements TransferObject
 {
     public function __construct(
         public readonly string $name,

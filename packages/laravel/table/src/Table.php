@@ -67,7 +67,7 @@ class Table extends Primitive
      *
      * @param  \Illuminate\Database\Eloquent\Builder<T>|T|class-string<T>|\Closure(\Illuminate\Database\Eloquent\Builder<T>):(\Illuminate\Database\Eloquent\Builder<T>)  $resource
      */
-    public function __construct(Model|Builder|Closure|string $resource = null)
+    public function __construct($resource = null)
     {
         match (true) {
             \is_null($resource) => null,
@@ -194,7 +194,7 @@ class Table extends Primitive
         $this->filterQuery($resource);
         $this->sortQuery($resource);
         $this->searchQuery($resource, $columns);
-        $this->optimizeQuery($resource, $activeColumns);
+        $this->optimize($resource, $activeColumns);
         $this->beforeRetrieval($resource);
 
         $records = $this->paginateRecords($resource);

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Action\Http\Data;
 
-class BulkData extends ActionData
+use Honed\Core\Contracts\TransferObject;
+
+class BulkData implements TransferObject
 {
     /**
      * @param  array<int,string|int>  $only
