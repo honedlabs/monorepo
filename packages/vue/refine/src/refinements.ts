@@ -3,6 +3,7 @@ import type { VisitOptions } from '@inertiajs/core'
 import type { Ref } from 'vue'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { debouncedRef } from '@vueuse/core'
+import { type CalendarDateTime } from '@internationalized/date'
 
 export type SortDirection = 'asc' | 'desc'
 
@@ -17,15 +18,24 @@ export interface Refinement {
 }
 
 export interface FilterRefinement extends Refinement {
-    type: 'callback' | 'exact' | string
+    type: 'set' | 'callback' | 'exact' | 'similar' | 'boolean' | 'date' | string
     value: any
 }
+
+export type FilterBinding<T extends FilterRefinement, U extends any = any> = 
+	T extends { type: 'similar' } ? string :
+		T extends { type: 'boolean' } ? boolean :
+			T extends { type: 'set', multiple: true } ? U[] :
+				T extends { type: 'date' } 
+					? CalendarDateTime|null
+					: U
 
 export interface SortRefinement extends Refinement {
     type: 'sort'
     direction?: SortDirection
     next?: SortDirection
 }
+
 
 export interface SearchRefinement extends Refinement {
     type: 'search'
@@ -191,7 +201,6 @@ export function useRefinements<
 			...search,
 			// bind: (value: string) => baseSearch.value = value,
 			toggle: () => applySearch(search.name),
-			clear: () => clearSearch(),
 		}))),
 		getFilter,
 		getSort,
@@ -202,6 +211,7 @@ export function useRefinements<
 		isFiltering,
 		clearFilters,
 		clearSort,
+		clearSearch,
 		reset,
 	}
 }
