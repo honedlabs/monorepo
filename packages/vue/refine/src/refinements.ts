@@ -1,8 +1,7 @@
 import { router } from '@inertiajs/vue3'
 import type { VisitOptions } from '@inertiajs/core'
-import type { Ref } from 'vue'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
-import { debouncedRef } from '@vueuse/core'
+import { watchPausable } from '@vueuse/core'
 import { type CalendarDateTime } from '@internationalized/date'
 
 export type SortDirection = 'asc' | 'desc'
@@ -46,6 +45,7 @@ export interface Refinements {
     sorts: SortRefinement[]
     searches: SearchRefinement[]
 	search: string
+	columns?: string[]
     keys: {
         sorts: string
         search: string
@@ -66,13 +66,11 @@ export function useRefinements<
 	T extends object,
 	K extends { [U in keyof T]: T[U] extends Refinements ? U : never }[keyof T],
 >(
-    props: T, 
-    refinementsKeys: K, 
+	props: T, 
+    key: K,
     options: RefinementOptions = {}
 ) {
-    const state = reactive<Record<string, any>>({})
-
-	const refinements = computed(() => props[refinementsKeys] as Refinements)
+	const refinements = computed(() => props[key] as Refinements)
 
 	const sortsKey = computed(() => refinements.value.keys.sorts)
     const searchKey = computed(() => refinements.value.keys.search)
@@ -81,22 +79,51 @@ export function useRefinements<
     const currentSort = computed(() => refinements.value.sorts.find(({ active }) => active))
 	const currentFilters = computed(() => refinements.value.filters.filter(({ active }) => active))
 
+	const state = reactive<Record<string, any>>({})
+
+	function initializeState() {
+		state[searchKey.value] = refinements.value.search
+		state[sortsKey.value] = currentSort.value?.direction
+		state[columnsKey.value] = refinements.value.columns
+		
+		refinements.value.filters.forEach((filter) => {
+			state[filter.name] = filter.value
+		})
+	}
+
+	initializeState()
+
+	// watchPausable(refinements.value, () => {
+	// 	initializeState()
+	// }, {
+	// 	immediate: true,
+	// })
+
 	const {
-		debounce = 500,
 		watch = true,
 		...visitOptions
 	} = options
 
-	const baseSearch = ref('')
-	const search = debouncedRef(baseSearch, debounce)
+
 
     function refine(options: VisitOptions = {}) {
+        const data: Record<string, any> = {}
+        
+        for (const key in state) {
+            const value = state[key]
+            if ([null, '', []].includes(value)) {
+                data[key] = undefined
+            } else if (Array.isArray(value)) {
+                data[key] = value.join(',')
+            } else {
+                data[key] = value
+            }
+        }
+
         router.reload({
             ...visitOptions,
             ...options,
-            data: {
-                ...state
-            }
+            data
         })
     }
 
@@ -108,13 +135,11 @@ export function useRefinements<
 		return refinements.value.filters.find((sort) => sort.name === name)
 	}
 
-	function bindFilter(name: string, options: any = {}) {
-
-	}
-
 	function applySearch(value: string, options: VisitOptions = {}) {
+		state[searchKey.value] = value
 		return refine(options)
 	}
+
 
 	function applyFilter(name: string, value: any, options: VisitOptions = {}) {
 		const filter = getFilter(name)
@@ -124,9 +149,7 @@ export function useRefinements<
 			return
 		}
 
-		if (['', null].includes(value)) {
-			value = undefined
-		}
+		state[name] = value
 
 		return refine(options)
 	}
@@ -139,7 +162,7 @@ export function useRefinements<
 			return
 		}
 
-		const next = options?.direction ?? sort.next
+		state[name] = options?.direction ?? sort.next
 
 		return refine(options)
 	}
@@ -160,32 +183,42 @@ export function useRefinements<
 		return currentFilters.value.length !== 0
 	}
 
-	function clearFilters(...filters: (keyof any) []) {
+	function clearFilters(...filters: (string) []) {
+		if (filters.length === 0) {
+			for (const key in state) {
+				state[key] = undefined
+			}
+		} else {
+			filters.forEach((filter) => {
+				state[filter] = undefined
+			})
+		}
 
+		return refine()
 	}
 
+
 	function clearSort() {
-		router.reload({
-			...visitOptions,
-			data: {
-				[sortsKey.value]: undefined,
-			},
-		})
+		state[sortsKey.value] = undefined
+		return refine()
 	}
 
 	function clearSearch() {
-		baseSearch.value = ''
+		state[searchKey.value] = ''
+		return refine()
 	}
+
 
 	function reset(options: VisitOptions = {}) {
-		router.reload({
-			...visitOptions,
-			...options,
-		})
+		for (const key in state) {
+			state[key] = undefined
+		}
+
+		return refine(options)
 	}
 
+
 	return {
-		search,
 		filters: computed(() => refinements.value.filters.map((filter) => ({
 			...filter,
 			// bind: (value: any) => state[filter.name] = value,
@@ -195,7 +228,6 @@ export function useRefinements<
 		sorts: computed(() => refinements.value.sorts.map((sort) => ({
 			...sort,
 			toggle: () => applySort(sort.name),
-			clear: () => clearSort(),
 		}))),
 		searches: computed(() => refinements.value.searches.map((search) => ({
 			...search,
@@ -213,5 +245,6 @@ export function useRefinements<
 		clearSort,
 		clearSearch,
 		reset,
+		refine,
 	}
 }
