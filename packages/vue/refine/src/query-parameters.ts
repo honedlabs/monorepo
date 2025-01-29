@@ -1,9 +1,6 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import { reactive, ref, toValue, watch } from 'vue'
 
-/**
- * Access reactive query parameters.
- */
 export function useQueryParameters<T extends Record<string, any> = Record<string, any>>() {
 	const state: Record<string, any> = reactive({})
 
@@ -40,9 +37,6 @@ interface UseQueryParameterOptions<V extends RouteParameter, R> {
 	transform?: 'number' | 'bool' | 'string' | 'date' | TransformFunction<V, R>
 }
 
-/**
- * Makes the specified query parameter reactive.
- */
 export function useQueryParameter<
   ParameterType extends RouteParameter = RouteParameter,
   Options extends UseQueryParameterOptions<ParameterType, any> = UseQueryParameterOptions<ParameterType, ParameterType>,
