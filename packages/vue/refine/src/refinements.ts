@@ -53,13 +53,11 @@ export interface SortOptions extends VisitOptions {
 }
 
 export function useRefinements<
-	Properties extends object,
-	RefinementsKey extends {
-		[K in keyof Properties]: Properties[K] extends Refinements ? K : never;
-	}[keyof Properties],
+	T extends object,
+	K extends { [U in keyof T]: T[U] extends Refinements ? U : never }[keyof T],
 >(
-    props: Properties, 
-    refinementsKeys: RefinementsKey, 
+    props: T, 
+    refinementsKeys: K, 
     options: RefinementOptions = {}
 ) {
     const state = reactive<Record<string, any>>({})
@@ -98,6 +96,10 @@ export function useRefinements<
 
 	function getFilter(name: string): FilterRefinement | undefined {
 		return refinements.value.filters.find((sort) => sort.name === name)
+	}
+
+	function bindFilter(name: string, options: any = {}) {
+
 	}
 
 	function applySearch(value: string, options: VisitOptions = {}) {

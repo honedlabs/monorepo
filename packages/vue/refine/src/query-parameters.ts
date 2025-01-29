@@ -1,3 +1,4 @@
+import { parseDateTime, type CalendarDateTime } from '@internationalized/date'
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import { reactive, ref, toValue, watch } from 'vue'
 
@@ -28,9 +29,11 @@ type TransformType<T extends RouteParameter, O> =
 	O extends { transform: 'number' } ? number :
 		O extends { transform: 'bool' } ? boolean :
 			O extends { transform: 'string' } ? string :
-				O extends { transform: 'date' } ? Date :
-					O extends { transform: TransformFunction<T, infer R> } ? R :
-						T
+				O extends { transform: 'date' } ? CalendarDateTime|null :
+					O extends { transform: TransformFunction<T, infer R> } 
+						? R 
+						: T
+
 
 interface UseQueryParameterOptions<V extends RouteParameter, R> {
 	defaultValue?: MaybeRefOrGetter<R>
@@ -55,8 +58,11 @@ export function useQueryParameter<
 			case 'string':
 				return String(value) as TransformType<ParameterType, Options>
 			case 'date':
-				return new Date(value as any) as TransformType<ParameterType, Options>
+				try { return parseDateTime(String(value)) as TransformType<ParameterType, Options> }
+				catch (error) { return null as TransformType<ParameterType, Options> }
+
 			default:
+
 				if (typeof options.transform === 'function') {
 					return options.transform(value) as TransformType<ParameterType, Options>
 				}
