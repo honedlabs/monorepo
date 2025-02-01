@@ -7,6 +7,7 @@ namespace Honed\Nav;
 use Honed\Core\Primitive;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\Allowable;
+use Honed\Core\Concerns\Evaluable;
 
 class NavGroup implements Primitive
 {
@@ -49,7 +50,7 @@ class NavGroup implements Primitive
     {
         return \array_filter(
             $this->getItems(), 
-            fn (NavItem|NavGroup $nav) => $nav->allowed(),
+            fn (NavItem|NavGroup $nav) => $nav->allows(),
         );
     }
 }

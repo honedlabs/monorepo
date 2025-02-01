@@ -25,10 +25,6 @@ class NavServiceProvider extends ServiceProvider
             __DIR__.'/../config/nav.php' => config_path('nav.php'),
         ], 'nav-config');
 
-        $this->publishes([
-            __DIR__.'/../routes/nav.php' => base_path('routes/nav.php'),
-        ], 'nav-routes');
-
         $this->registerNavigation();
     }
 
