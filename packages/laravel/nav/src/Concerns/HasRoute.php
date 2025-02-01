@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Nav\Concerns;
 
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Request;
 
 trait HasRoute
@@ -38,7 +40,7 @@ trait HasRoute
     {
         if (! \is_null($route)) {
             $this->route = match (true) {
-                \is_string($route) => route($route, $parameters),
+                \is_string($route) => route($route, $parameters, true),
                 $route instanceof \Closure => $route,
             };
         }
@@ -52,7 +54,7 @@ trait HasRoute
     public function url(string|\Closure|null $url): static
     {
         if (! \is_null($url)) {
-            $this->route = $url;
+            $this->route = URL::to($url);
         }
 
         return $this;

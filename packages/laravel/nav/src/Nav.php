@@ -18,9 +18,11 @@ class Nav
     /**
      * Configure a new navigation group.
      * 
+     * @param array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>
+     * 
      * @return $this
      */
-    public function make(string $group, NavItem|NavGroup ...$items): static
+    public function make(string $group, ...$items): static
     {
         $this->items[$group] = \array_is_list($items) 
             ? $items 
@@ -32,9 +34,11 @@ class Nav
     /**
      * Append a navigation item to the provided group.  
      * 
+     * @param array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>
+     * 
      * @return $this
      */
-    public function add(string $group, NavItem|NavGroup ...$items): static
+    public function add(string $group, ...$items): static
     {
         $items = \array_is_list($items) 
             ? $items 
@@ -48,9 +52,11 @@ class Nav
     /**
      * Retrieve the navigation item and groups associated with the provided group(s).
      * 
+     * @param array<int,string> $groups
+     * 
      * @return array<string|int,mixed>
      */
-    public function get(string ...$groups): array
+    public function get(...$groups): array
     {
         return match (\count($groups)) {
             0 => $this->items,
@@ -76,17 +82,23 @@ class Nav
     /**
      * Determine if the provided group(s) have navigation defined.
      * 
+     * @param array<int,string> $groups
+     * 
      * @return bool
      */
-    public function hasGroups(string ...$groups): bool
+    public function hasGroups(...$groups): bool
     {
         return \count(\array_intersect($groups, \array_keys($this->items))) > 0;
     }
 
     /**
      * Share the navigation items via Inertia.
+     * 
+     * @param array<int,string> $groups
+     * 
+     * @return $this
      */
-    public function share(string ...$groups): static
+    public function share(...$groups): static
     {
         Inertia::share([
             self::ShareProp => $this->get(...$groups),

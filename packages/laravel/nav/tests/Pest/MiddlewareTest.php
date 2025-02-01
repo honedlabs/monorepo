@@ -6,25 +6,32 @@ use Inertia\Testing\AssertableInertia as Assert;
 
 use function Pest\Laravel\get;
 
-it('shares the navigation', function () {
-    Nav::items(NavItem::make('Home', '/'), NavItem::make('About', '/about'), NavItem::make('Contact', '/contact'));
-    $response = get('/');
+beforeEach(function () {
+    $this->product = product();
 
-    $response->assertInertia(fn (Assert $page) => $page
-        ->has('nav', 3)
+    $this->nav = Nav::make('nav', [
+        NavItem::make('Home')->url('/'),
+    ]);
+
+    $this->sidebar = Nav::make('sidebar', [
+        NavItem::make('Index', 'products.index'),
+        NavItem::make('Show', 'products.show', $this->product),
+        NavItem::make('Edit', 'products.edit', $this->product)->allow(false),
+    ]);
+});
+
+it('shares the navigation', function () {    
+    get(route('products.index'))->assertInertia(fn (Assert $page) => $page
+        ->dd()
+        ->has(Nav::ShareProp, 2)
         ->where('nav.0', [
-            'name' => 'Home',
-            'url' => '/',
+            'label' => 'Index',
+            'href' => route('products.index'),
             'isActive' => true,
         ])
         ->where('nav.1', [
-            'name' => 'About',
-            'url' => '/about',
-            'isActive' => false,
-        ])
-        ->where('nav.2', [
-            'name' => 'Contact',
-            'url' => '/contact',
+            'label' => 'Show',
+            'href' => route('products.show', $this->product),
             'isActive' => false,
         ])
     );

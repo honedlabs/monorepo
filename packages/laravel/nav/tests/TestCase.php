@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Nav\Tests;
 
+use Honed\Nav\Middleware\ShareNavigation;
 use Honed\Nav\Middleware\SharesNavigation;
 use Honed\Nav\NavServiceProvider;
 use Illuminate\Support\Facades\View;
@@ -56,9 +57,9 @@ class TestCase extends Orchestra
     protected function defineRoutes($router)
     {
         $router->middleware([HandlesInertiaRequests::class, SubstituteBindings::class])->group(function ($router) {
-            $router->get('/', fn () => inertia('Home'));
+            $router->middleware(ShareNavigation::class)->get('/', fn () => inertia('Home'));
 
-            $router->get('/products', fn () => inertia('Products/Index'))->name('products.index');
+            $router->middleware(ShareNavigation::class . ':sidebar')->get('/products', fn () => inertia('Products/Index'))->name('products.index');
             $router->get('/products/{product:public_id}', fn (Product $product) => inertia('Products/Show', ['product' => $product]))->name('products.show');
             $router->get('/products/{product}/edit', fn (Product $product) => inertia('Products/Edit', ['product' => $product]))->name('products.edit');
 

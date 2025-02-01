@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+use Honed\Nav\NavItem;
+use Honed\Nav\NavGroup;
+
+beforeEach(function () {
+    $this->label = 'Pages';
+});
+
+it('can be made', function () {
+    expect(NavGroup::make($this->label))->toBeInstanceOf(NavGroup::class)
+        ->getLabel()->toBe($this->label)
+        ->toArray()->toEqual([
+            'label' => $this->label,
+            'items' => [],
+        ]);
+});
+
+it('can filter allowed items', function () {
+    $group = NavGroup::make($this->label, [
+        NavItem::make('Home', 'products.index')->allow(true),
+        NavItem::make('Products', 'products.index')->allow(false),
+    ]);
+
+    expect($group->getAllowedItems())
+        ->toBeArray()->toHaveCount(1)
+        ->{0}->scoped(fn ($item) => $item
+            ->getLabel()->toBe('Home')
+        );
+        
+});

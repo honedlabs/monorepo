@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Nav\Facades;
 
+use Honed\Nav\Nav as NavNav;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -19,8 +20,10 @@ use Illuminate\Support\Facades\Facade;
  */
 class Nav extends Facade
 {
+    const ShareProp = NavNav::ShareProp;
+
     protected static function getFacadeAccessor(): string
     {
-        return \Honed\Nav\Nav::class;
+        return NavNav::class;
     }
 }
