@@ -9,12 +9,16 @@ use Honed\Core\Concerns\Allowable;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Route;
 use Honed\Core\Concerns\HasDestination;
+use Honed\Core\Concerns\HasIcon;
+use Honed\Core\Concerns\HasLabel;
 use Illuminate\Support\Facades\Request;
 
 class NavItem extends Primitive
 {
+    use HasLabel;
     use Allowable;
     use HasDestination;
+    use HasIcon;
 
     /**
      * Create a new nav item instance.
@@ -26,12 +30,9 @@ class NavItem extends Primitive
      * @param  mixed  $parameters  The parameters to pass to the link
      * @param  bool  $absolute  Whether the link should be absolute
      */
-    public function __construct(string $name, protected string $link, protected \Closure|string|null $active = null, protected ?string $icon = null, mixed $parameters = [], bool $absolute = true)
+    public function __construct(string $label)
     {
-        $this->setName($name);
-        $this->setLink($link, $parameters, $absolute);
-        $this->setActive($active);
-        $this->setIcon($icon);
+        $this->label($label);
     }
 
     /**

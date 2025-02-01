@@ -10,18 +10,25 @@ use Honed\Core\Concerns\Allowable;
 
 class NavGroup implements Primitive
 {
-    use Concerns\HasNavItems;
+    use Concerns\HasItems;
     use HasLabel;
     use Allowable;
 
-    public function __construct(string $label, ...$items)
+    /**
+     * @param  array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>  $items
+     */
+    public function __construct(string $label, array $items = [])
     {
         $this->label($label);
+        $this->items($items);
     }
 
-    public static function make(string $label, $route = null, $parameters = []): static
+    /**
+     * @param  array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>  $items
+     */
+    public static function make(string $label, array $items = []): static
     {
-        return resolve(static::class, compact('label', 'route', 'parameters'));
+        return resolve(static::class, compact('label', 'items'));
     }
 
     /**
@@ -31,7 +38,18 @@ class NavGroup implements Primitive
     {
         return [
             'label' => $this->getLabel(),
-            'items' => $this->getItems(),
+            'items' => $this->getAllowedItems(),
         ];
+    }
+
+    /**
+     * @return array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>
+     */
+    public function getAllowedItems(): array
+    {
+        return \array_filter(
+            $this->getItems(), 
+            fn (NavItem|NavGroup $nav) => $nav->allowed(),
+        );
     }
 }

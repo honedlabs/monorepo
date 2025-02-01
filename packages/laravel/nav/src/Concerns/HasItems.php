@@ -7,7 +7,7 @@ namespace Honed\Nav\Concerns;
 use Honed\Nav\NavGroup;
 use Honed\Nav\NavItem;
 
-trait HasNavItems
+trait HasItems
 {
     /**
      * @var array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>|null
@@ -17,13 +17,15 @@ trait HasNavItems
     /**
      * Set the navigation items.    
      * 
-     * @param  array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>  $items
+     * @param  array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>|null  $items
      * 
      * @return $this
      */
-    public function items(...$items): static
+    public function items(?array $items): static
     {
-        $this->items = $items;
+        if (! \is_null($items)) {
+            $this->items = $items;
+        }
 
         return $this;
     }
@@ -37,6 +39,10 @@ trait HasNavItems
      */
     public function add(NavItem|NavGroup $item): static
     {
+        if (! $this->items) {
+            $this->items = [];
+        }
+
         $this->items[] = $item;
 
         return $this;
@@ -47,7 +53,6 @@ trait HasNavItems
      * 
      * @return array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>
      */
-
     public function getItems(): array
     {
         return $this->items ?? [];
