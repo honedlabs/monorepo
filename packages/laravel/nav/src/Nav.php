@@ -11,21 +11,20 @@ class Nav
     const ShareProp = 'nav';
 
     /**
-     * @var array<string, array<\Honed\Nav\NavItem|\Honed\Nav\NavGroup>>
+     * @var array<string, array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>>
      */
     protected $items = [];
 
     /**
      * Configure a new navigation group.
-
-     * 
-     * @param  array<int,\Honed\Nav\NavItem>|\Honed\Nav\NavItem  $items
      * 
      * @return $this
      */
-    public function make(string $group, ...$items): static
+    public function make(string $group, NavItem|NavGroup ...$items): static
     {
-        $this->items[$group] = $items;
+        $this->items[$group] = \array_is_list($items) 
+            ? $items 
+            : \array_values($items);
 
         return $this;
     }
@@ -33,13 +32,15 @@ class Nav
     /**
      * Append a navigation item to the provided group.  
      * 
-     * @param  array<int,\Honed\Nav\NavItem>|\Honed\Nav\NavItem  $item
-     * 
      * @return $this
      */
-    public function add(string $group, ...$item): static
+    public function add(string $group, NavItem|NavGroup ...$items): static
     {
-        $this->items[$group][] = $item;
+        $items = \array_is_list($items) 
+            ? $items 
+            : \array_values($items);
+
+        \array_push($this->items[$group], ...$items);
 
         return $this;
     }
@@ -47,25 +48,19 @@ class Nav
     /**
      * Retrieve the navigation item and groups associated with the provided group(s).
      * 
-     * @param  array<int,string>|null  $groups
-     * 
-     * @return array<string, array<\Honed\Nav\NavItem|\Honed\Nav\NavGroup>>
+     * @return array<string|int,mixed>
      */
-    public function get(...$groups = null)
+    public function get(string ...$groups): array
     {
-        if (\is_null($groups)) {
-            return $this->items;
-        }
-
-        if (\count($groups) === 1) {
-            return $this->items[\reset($groups)] ?? [];
-        }
-
-        return \array_filter(
-            $this->items, 
-            fn (string $key) => \in_array($key, $groups), 
-            \ARRAY_FILTER_USE_KEY
-        );
+        return match (\count($groups)) {
+            0 => $this->items,
+            1 => $this->items[$groups[0]] ?? [],
+            default => \array_filter(
+                $this->items, 
+                fn ($key) => \in_array($key, $groups), 
+                \ARRAY_FILTER_USE_KEY
+            ),
+        };
     }
 
     /**
@@ -81,21 +76,17 @@ class Nav
     /**
      * Determine if the provided group(s) have navigation defined.
      * 
-     * @param  array<int,string>  $groups
-     * 
      * @return bool
      */
-    public function hasGroups(...$groups): bool
+    public function hasGroups(string ...$groups): bool
     {
         return \count(\array_intersect($groups, \array_keys($this->items))) > 0;
     }
 
     /**
      * Share the navigation items via Inertia.
-     * 
-     * @param  array<int,string>|null  $groups
      */
-    public function share(...$groups = null): static
+    public function share(string ...$groups): static
     {
         Inertia::share([
             self::ShareProp => $this->get(...$groups),

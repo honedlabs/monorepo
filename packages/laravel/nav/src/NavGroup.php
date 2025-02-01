@@ -9,7 +9,10 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\Evaluable;
 
-class NavGroup implements Primitive
+/**
+ * @extends Primitive<string, mixed>
+ */
+class NavGroup extends Primitive
 {
     use Concerns\HasItems;
     use HasLabel;
@@ -33,7 +36,7 @@ class NavGroup implements Primitive
     }
 
     /**
-     * @return array<int,mixed>
+     * @return array<string,mixed>
      */
     public function toArray(): array
     {

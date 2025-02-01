@@ -58,12 +58,12 @@ class TestCase extends Orchestra
         $router->middleware([HandlesInertiaRequests::class, SubstituteBindings::class])->group(function ($router) {
             $router->get('/', fn () => inertia('Home'));
 
-            $router->get('/products', fn () => inertia('Products/Index'))->name('product.index');
-            $router->get('/products/{product:public_id}', fn (Product $product) => inertia('Products/Show', ['product' => $product]))->name('product.show');
-            $router->get('/products/{product}/edit', fn (Product $product) => inertia('Products/Edit', ['product' => $product]))->name('product.edit');
+            $router->get('/products', fn () => inertia('Products/Index'))->name('products.index');
+            $router->get('/products/{product:public_id}', fn (Product $product) => inertia('Products/Show', ['product' => $product]))->name('products.show');
+            $router->get('/products/{product}/edit', fn (Product $product) => inertia('Products/Edit', ['product' => $product]))->name('products.edit');
 
             $router->get('/status/{status}', fn (Status $status) => inertia('Status/Show', ['status' => $status]))->name('status.show');
-            $router->get('/testing/{word}', fn (string $word) => inertia('Testing/Show', ['word' => $word]))->name('word.show');
+            $router->get('/testing/{word}', fn (string $word) => inertia('Testing/Show', ['word' => $word]))->name('words.show');
         });
     }
 
