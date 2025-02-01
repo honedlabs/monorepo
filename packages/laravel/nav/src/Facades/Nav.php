@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Nav\Facades;
 
 use Illuminate\Support\Facades\Facade;

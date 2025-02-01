@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Nav;
 
 use Honed\Core\Primitive;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Route;
+use Honed\Core\Concerns\Allowable;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Route;
+use Honed\Core\Concerns\HasDestination;
+use Illuminate\Support\Facades\Request;
 
 class NavItem extends Primitive
 {
-    use \Honed\Core\Concerns\Authorizable;
-    use \Honed\Core\Concerns\HasName;
+    use Allowable;
+    use HasDestination;
 
     /**
      * Create a new nav item instance.
