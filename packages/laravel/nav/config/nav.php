@@ -13,4 +13,13 @@ return [
     */
     'files' => base_path('routes/nav.php'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Icons
+    |--------------------------------------------------------------------------
+    |
+    | Whether the navigation items should pass an icon property to Inertia.
+    |
+    */
+    'icons' => false,
 ];

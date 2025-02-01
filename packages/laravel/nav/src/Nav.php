@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Honed\Nav;
 
 use Inertia\Inertia;
-use Illuminate\Support\Collection;
 
-class Navigation
+class Nav
 {
     const ShareProp = 'nav';
 
@@ -18,6 +17,7 @@ class Navigation
 
     /**
      * Configure a new navigation group.
+
      * 
      * @param  array<int,\Honed\Nav\NavItem>|\Honed\Nav\NavItem  $items
      * 
@@ -78,11 +78,30 @@ class Navigation
         return $this->items[$group] ?? [];
     }
 
-    public function share(...$groups)
+    /**
+     * Determine if the provided group(s) have navigation defined.
+     * 
+     * @param  array<int,string>  $groups
+     * 
+     * @return bool
+     */
+    public function hasGroups(...$groups): bool
+    {
+        return \count(\array_intersect($groups, \array_keys($this->items))) > 0;
+    }
+
+    /**
+     * Share the navigation items via Inertia.
+     * 
+     * @param  array<int,string>|null  $groups
+     */
+    public function share(...$groups = null): static
     {
         Inertia::share([
             self::ShareProp => $this->get(...$groups),
         ]);
+
+        return $this;
     }
 
 }
