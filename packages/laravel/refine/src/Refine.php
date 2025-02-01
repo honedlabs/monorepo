@@ -104,14 +104,14 @@ class Refine extends Primitive
         return [
             'sorts' => $this->getSorts(),
             'filters' => $this->getFilters(),
-            'searches' => $this->getSearches(),
+            ...($this->hasMatches() ? ['searches' => $this->getSearches()] : []),
             'search' => [
                 'value' => $this->getSearchValue(),
             ],
             'keys' => [
                 'sorts' => $this->getSortKey(),
                 'search' => $this->getSearchKey(),
-                'match' => $this->getMatchKey(),
+                ...($this->hasMatches() ? ['match' => $this->getMatchKey()] : []),
             ]
         ];
     }

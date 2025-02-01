@@ -39,10 +39,8 @@ beforeEach(function () {
         Search::make('name'),
         Search::make('description'),
     ];
-});
 
-it('refines all', function () {
-    $request = Request::create('/', 'GET', [
+    $this->request = Request::create('/', 'GET', [
         'name' => 'test',
 
         'price' => 100, 
@@ -56,12 +54,14 @@ it('refines all', function () {
 
         'sort' => '-price',
 
-        Refine::SearchKey => 'search',
+        RefineFixture::SearchKey => 'search term',
     ]);
+});
 
+it('refines all', function () {
     expect(Refine::query($this->builder))
         ->toBeInstanceOf(Refine::class)
-        ->for($request)->toBeInstanceOf(Refine::class)
+        ->for($this->request)->toBeInstanceOf(Refine::class)
         ->with($this->refiners)->toBeInstanceOf(Refine::class)
         ->hasSorts()->toBeTrue()
         ->hasFilters()->toBeTrue()
@@ -133,26 +133,9 @@ it('refines all', function () {
 
 it('refines all with fixture', function () {
 
-    $request = Request::create('/', 'GET', [
-        'name' => 'test',
-
-        'price' => 100, 
-        'status' => \sprintf('%s,%s', Status::Available->value, Status::Unavailable->value),
-        'only' => Status::ComingSoon->value,
-
-        'favourite' => '1',
-
-        'oldest' => '2000-01-01',
-        'newest' => '2001-01-01',
-
-        'sort' => '-price',
-
-        RefineFixture::SearchKey => 'search',
-    ]);
-
     expect(RefineFixture::query($this->builder))
         ->toBeInstanceOf(RefineFixture::class)
-        ->for($request)->toBeInstanceOf(RefineFixture::class)
+        ->for($this->request)->toBeInstanceOf(RefineFixture::class)
         ->hasSorts()->toBeTrue()
         ->hasFilters()->toBeTrue()
         ->hasSearch()->toBeTrue()
@@ -251,7 +234,14 @@ it('can filter and then retrieve refiners', function () {
 
     expect($refine->refinements())
         ->toBeArray()
-        ->toHaveKeys(['sorts', 'filters', 'searches']);
+        ->toHaveKeys(['sorts', 'filters', 'search', 'keys'])
+        ->{'search'}->scoped(fn ($search) => $search
+            ->toBeArray()
+            ->toHaveKey('value')
+        )->{'keys'}->scoped(fn ($keys) => $keys
+            ->toBeArray()
+            ->toHaveKeys(['sorts', 'search'])
+        );
 
     expect($this->builder->getQuery()->wheres)
         ->toBeArray()
@@ -267,7 +257,7 @@ it('can filter and then retrieve refiners', function () {
 
 it('can change the search columns', function () {
     $request = Request::create('/', 'GET', [
-        Refine::SearchKey => 'search',
+        Refine::SearchKey => 'search+term',
         Refine::MatchKey => 'description',
     ]);
 
@@ -291,16 +281,30 @@ it('throws exception when no builder is set', function () {
     Refine::make('non-existent-class')->with($this->refiners)->getQuery();
 })->throws(\InvalidArgumentException::class);
 
-it('has array representation', function () {
-    expect(Refine::make(Product::class)->with($this->refiners)->toArray())
-        ->toBeArray()
-        ->toHaveKeys(['sorts', 'filters', 'searches', 'keys', 'search'])
-        ->keys->toHaveKeys(['sorts', 'search', 'match']);
+it('has array representation with matches', function () {
+    $refine = Refine::make(Product::class)->for($this->request)->with($this->refiners);
 
-    expect(Refine::make(Product::class)->with($this->refiners)->refinements())
+    expect($refine->refine()->toArray())
         ->toBeArray()
-        ->toHaveKeys(['sorts', 'filters', 'searches', 'keys', 'search'])
-        ->keys->toHaveKeys(['sorts', 'search', 'match']);
+        ->toHaveKeys(['sorts', 'filters', 'search', 'keys'])
+        ->{'search'}->scoped(fn ($search) => $search
+            ->toBeArray()
+            ->toEqual(['value' => 'search term'])
+        )->{'keys'}->scoped(fn ($keys) => $keys
+            ->toBeArray()
+            ->toHaveKeys(['sorts', 'search'])
+        );
+    
+    expect($refine->matches()->refine()->toArray())
+        ->toBeArray()
+        ->toHaveKeys(['sorts', 'filters', 'searches', 'search', 'keys'])
+        ->{'search'}->scoped(fn ($search) => $search
+            ->toBeArray()
+            ->toEqual(['value' => 'search term'])
+        )->{'keys'}->scoped(fn ($keys) => $keys
+            ->toBeArray()
+            ->toHaveKeys(['sorts', 'search', 'match'])
+        );
 });
 
 it('only refines once', function () {
