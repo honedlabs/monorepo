@@ -12,9 +12,8 @@ use Honed\Core\Concerns\HasDestination;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Nav\Tests\Stubs\Product;
-use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Request;
 
 /**
  * @extends Primitive<string, mixed>
@@ -78,10 +77,10 @@ class NavItem extends Primitive
     {
         $request = request();
 
-        return match (true) {
-            \is_string($this->active) => $request->route()->named($this->active),
+        return (bool) match (true) {
+            \is_string($this->active) => $request->route()?->named($this->active),
             \is_callable($this->active) => $this->evaluate($this->active),
-            default => $request->route()->named($this->getRoute()),
+            default => $request->url() === $this->getRoute(),
         };
     }
 
@@ -92,12 +91,16 @@ class NavItem extends Primitive
     {
         $request = request();
 
-        if ($request->route()->hasParameter($parameterName)) {
+        if ($request->route()?->hasParameter($parameterName)) {
             return [$request->route()->parameter($parameterName)];
         }
 
         return match ($parameterName) {
-            'name' => [$request->route()->getName()],
+            'name' => [$request->route()?->getName()],
+            'url' => [$request->url()],
+            'uri' => [$request->uri()?->path()],
+            'request' => [$request],
+            'route' => [$request->route()],
             default => [],
         };
     }
@@ -109,7 +112,7 @@ class NavItem extends Primitive
     {
         $request = request();
 
-        $parameters = $request->route()->parameters();
+        $parameters = $request->route()?->parameters() ?? [];
 
         foreach ($parameters as $parameter) {
             if ($parameter instanceof $parameterType) {
@@ -118,7 +121,7 @@ class NavItem extends Primitive
         }
 
         return match ($parameterType) {
-            HttpRequest::class => [$request],
+            Request::class => [$request],
             Route::class => [$request->route()],
             default => [],
         };

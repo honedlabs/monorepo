@@ -43,7 +43,6 @@ trait HasRoute
             };
         }
 
-
         return $this;
     }
 
@@ -82,11 +81,11 @@ trait HasRoute
     /**
      * @return $this
      */
-    public function external(bool $external = true): static
+    public function external(?string $url = null): static
     {
-        $this->external = $external;
+        $this->external = true;
 
-        return $this;
+        return $this->url($url);
     }
 
     /**
