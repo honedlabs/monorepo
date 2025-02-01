@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Tests\Fixtures;
 
-use Honed\Refine\Refine;
-use Honed\Refine\Sorts\Sort;
-use Honed\Refine\Filters\Filter;
-use Honed\Refine\Searches\Search;
-use Honed\Refine\Filters\SetFilter;
-use Honed\Refine\Filters\DateFilter;
-use Honed\Refine\Tests\Stubs\Status;
 use Honed\Refine\Filters\BooleanFilter;
+use Honed\Refine\Filters\DateFilter;
+use Honed\Refine\Filters\Filter;
+use Honed\Refine\Filters\SetFilter;
+use Honed\Refine\Refine;
+use Honed\Refine\Searches\Search;
+use Honed\Refine\Sorts\Sort;
+use Honed\Refine\Tests\Stubs\Status;
 
 class RefineFixture extends Refine
 {
@@ -25,7 +25,7 @@ class RefineFixture extends Refine
             BooleanFilter::make('best_seller', 'Favourite')->alias('favourite'),
             DateFilter::make('created_at', 'Oldest')->alias('oldest')->gt(),
             DateFilter::make('created_at', 'Newest')->alias('newest')->lt(),
-    
+
         ];
     }
 
@@ -46,5 +46,4 @@ class RefineFixture extends Refine
             Search::make('description'),
         ];
     }
-
 }

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
-use Illuminate\Http\Request;
 use Honed\Refine\Searches\Search;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Stringable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 trait HasSearch
 {
@@ -112,12 +111,12 @@ trait HasSearch
      */
     public function search(Builder $builder, Request $request): static
     {
-        $columns = $this->hasMatches() 
-            ? $this->getMatchesFromRequest($request) 
+        $columns = $this->hasMatches()
+            ? $this->getMatchesFromRequest($request)
             : true;
 
         $searchFor = $this->getSearchFromRequest($request);
-        
+
         $this->searchValue = $searchFor;
 
         $applied = false;
@@ -136,10 +135,17 @@ trait HasSearch
      */
     public function getMatchesFromRequest(Request $request): array|true
     {
-        return $request->string($this->getMatchKey(), null)
-            ?->explode(',', PHP_INT_MAX)
+        $matches = $request->string($this->getMatchKey(), null);
+
+        if ($matches->isEmpty()) {
+            return true;
+        }
+
+        /** @var array<int,string> */
+        return $matches
+            ->explode(',', PHP_INT_MAX)
             ->map(fn ($v) => \trim($v))
-            ->toArray() ?? true;
+            ->toArray();
     }
 
     /**

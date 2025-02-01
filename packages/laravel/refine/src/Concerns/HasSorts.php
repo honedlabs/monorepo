@@ -90,7 +90,6 @@ trait HasSorts
 
     /**
      * @param  array<int, \Honed\Refine\Sorts\Sort>  $sorts
-     * @return \Honed\Refine\Sorts\Sort|null
      */
     private function getDefaultSort(array $sorts): ?Sort
     {
@@ -99,6 +98,7 @@ trait HasSorts
                 return $sort;
             }
         }
+
         return null;
     }
 

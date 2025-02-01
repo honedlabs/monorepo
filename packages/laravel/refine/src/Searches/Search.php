@@ -6,7 +6,6 @@ namespace Honed\Refine\Searches;
 
 use Honed\Refine\Refiner;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class Search extends Refiner
 {
