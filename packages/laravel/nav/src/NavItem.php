@@ -98,7 +98,7 @@ class NavItem extends Primitive
         return match ($parameterName) {
             'name' => [$request->route()?->getName()],
             'url' => [$request->url()],
-            'uri' => [$request->uri()?->path()],
+            'uri' => [$request->uri()->path()],
             'request' => [$request],
             'route' => [$request->route()],
             default => [],

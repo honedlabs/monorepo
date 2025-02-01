@@ -8,11 +8,7 @@ use function Pest\Laravel\get;
 
 beforeEach(function () {
     $this->product = product();
-
-    $this->nav = Nav::make('nav', [
-        NavItem::make('Home')->url('/'),
-    ]);
-
+    
     $this->sidebar = Nav::make('sidebar', [
         NavItem::make('Index', 'products.index'),
         NavItem::make('Show', 'products.show', $this->product),
@@ -22,17 +18,16 @@ beforeEach(function () {
 
 it('shares the navigation', function () {    
     get(route('products.index'))->assertInertia(fn (Assert $page) => $page
-        ->dd()
         ->has(Nav::ShareProp, 2)
         ->where('nav.0', [
             'label' => 'Index',
             'href' => route('products.index'),
-            'isActive' => true,
+            'active' => true,
         ])
         ->where('nav.1', [
             'label' => 'Show',
             'href' => route('products.show', $this->product),
-            'isActive' => false,
+            'active' => false,
         ])
     );
 });

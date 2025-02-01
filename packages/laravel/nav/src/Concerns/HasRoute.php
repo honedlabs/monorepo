@@ -54,7 +54,9 @@ trait HasRoute
     public function url(string|\Closure|null $url): static
     {
         if (! \is_null($url)) {
-            $this->route = URL::to($url);
+            $this->route = $url instanceof \Closure 
+                ? $url 
+                : URL::to($url);
         }
 
         return $this;
