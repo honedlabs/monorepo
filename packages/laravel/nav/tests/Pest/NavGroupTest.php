@@ -28,6 +28,12 @@ it('can filter allowed items', function () {
         ->toBeArray()->toHaveCount(1)
         ->{0}->scoped(fn ($item) => $item
             ->getLabel()->toBe('Home')
-        );
-        
+        );     
+});
+
+it('can add items', function () {
+    expect(NavGroup::make($this->label))
+        ->add(NavItem::make('Home', 'products.index'))->toBeInstanceOf(NavGroup::class)
+        ->getItems()->toHaveCount(1)
+        ->hasItems()->toBeTrue();
 });
