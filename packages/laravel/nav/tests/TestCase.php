@@ -18,7 +18,6 @@ use Honed\Nav\Tests\Stubs\Status;
 use Honed\Nav\Tests\Stubs\Product;
 use Inertia\Middleware as HandlesInertiaRequests;
 
-
 class TestCase extends Orchestra
 {
     protected function setUp(): void

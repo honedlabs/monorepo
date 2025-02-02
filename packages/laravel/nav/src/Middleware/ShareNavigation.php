@@ -14,13 +14,13 @@ class ShareNavigation
     /**
      * Handle the incoming request.
      *
-     * @param  array<int,string>  ...$groups
+     * @param  string ...$groups
      * @return \Closure
      */
     public function handle(Request $request, Closure $next, ...$groups)
     {
         Nav::share(...$groups);
-        
+
         return $next($request);
     }
 }

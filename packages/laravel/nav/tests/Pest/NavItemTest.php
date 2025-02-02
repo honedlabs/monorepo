@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Honed\Nav\NavItem;
 use Illuminate\Http\Request;
 
+use Illuminate\Routing\Route;
 use function Pest\Laravel\get;
 use Honed\Nav\Tests\Stubs\Product;
 
@@ -55,6 +56,11 @@ it('can be active', function (string|\Closure|null $condition, bool $expected) {
     'wildcard' => ['products.*', true],
     'typed parameter product' => fn () =>[fn (Product $p) => request()->url() === route('products.show', $p), true],
     'named parameter product' => fn () => [fn ($product) => request()->url() === route('products.show', $product), true],
+    'typed parameter route' => fn () => [fn (Route $r) => $r->getName() === 'products.show', true],
+    'named parameter route' => fn () => [fn ($route) => $route->getName() === 'products.show', true],
+    'named parameter named' => fn () => [fn ($name) => $name === 'products.show', true],
+    'named parameter url' => fn () => [fn (Product $p, $url) => $url === route('products.show', $p), true],
+    'named parameter uri' => fn () => [fn (Product $p, $uri) => '/'.$uri === route('products.show', $p, false), true],
 ]);
 
 it('can be active without route model binding', function (string|\Closure|null $condition, bool $expected) {

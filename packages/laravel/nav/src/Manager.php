@@ -6,7 +6,7 @@ namespace Honed\Nav;
 
 use Inertia\Inertia;
 
-class Nav
+class Manager
 {
     const ShareProp = 'nav';
 

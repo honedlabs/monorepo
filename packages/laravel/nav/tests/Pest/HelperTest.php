@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Nav\Nav;
+use Honed\Nav\Manager;
 
 it('has a `nav` helper', function () {
-    expect(nav())->toBeInstanceOf(Nav::class);
+    expect(nav())->toBeInstanceOf(Manager::class);
 });
