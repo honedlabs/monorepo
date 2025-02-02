@@ -40,4 +40,27 @@ trait HasScope
     {
         return isset($this->scope);
     }
+
+    /**
+     * Format a value using the scope for the instance.
+     */
+    public function formatScope(string $value): string
+    {
+        if (! $this->hasScope()) {
+            return $value;
+        }
+
+        return \sprintf('%s[%s]', $this->getScope(), $value);
+    }
+
+    /**
+     * Retrieve a value from a formatted scope.
+     */
+    public function decodeScope(string $value): string
+    {
+        return \str($value)
+            ->afterLast('[')
+            ->beforeLast(']')
+            ->toString();
+    }
 }
