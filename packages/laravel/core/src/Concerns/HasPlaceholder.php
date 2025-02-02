@@ -7,7 +7,7 @@ namespace Honed\Core\Concerns;
 trait HasPlaceholder
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected $placeholder;
 
@@ -39,6 +39,6 @@ trait HasPlaceholder
      */
     public function hasPlaceholder(): bool
     {
-        return isset($this->placeholder);
+        return ! \is_null($this->placeholder);
     }
 }

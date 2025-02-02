@@ -5,44 +5,35 @@ namespace Honed\Core\Concerns;
 trait Encodable
 {
     /**
-     * @var (\Closure(string):string)|null
+     * @var \Closure|null
      */
     protected static $encoder;
 
     /**
-     * @var (\Closure(string):string)|null
+     * @var \Closure|null
      */
     protected static $decoder;
 
     /**
      * Set the encoder for the instance.
-     *
-     * @param  (\Closure(string):string)|null  $encoder
-     * @return static
      */
-    public static function encoder($encoder = null)
+    public static function encoder(\Closure $encoder = null): void
     {
         static::$encoder = $encoder;
     }
 
     /**
      * Set the decoder for the instance.
-     *
-     * @param  (\Closure(string):string)|null  $decoder
-     * @return static
      */
-    public static function decoder($decoder = null)
+    public static function decoder(\Closure $decoder = null): void
     {
         static::$decoder = $decoder;
     }
 
     /**
      * Encode a value using the instance's encoder.
-     *
-     * @param  mixed  $value  The value to encode.
-     * @return string The encoded value.
      */
-    public static function encode($value)
+    public static function encode(mixed $value): string
     {
         return \is_null(static::$encoder)
             ? encrypt($value)
@@ -51,11 +42,8 @@ trait Encodable
 
     /**
      * Decode a value using the instance's decoder.
-     *
-     * @param  string  $value  The value to decode.
-     * @return string The decoded value.
      */
-    public static function decode($value)
+    public static function decode(mixed $value): string
     {
         return \is_null(static::$decoder)
             ? decrypt($value)

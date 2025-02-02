@@ -7,7 +7,7 @@ namespace Honed\Core\Concerns;
 trait HasScope
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected $scope;
 
@@ -38,7 +38,7 @@ trait HasScope
      */
     public function hasScope(): bool
     {
-        return isset($this->scope);
+        return ! \is_null($this->scope);
     }
 
     /**

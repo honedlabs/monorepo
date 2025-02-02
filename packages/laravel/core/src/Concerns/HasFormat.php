@@ -6,10 +6,6 @@ namespace Honed\Core\Concerns;
 
 trait HasFormat
 {
-    use EvaluatesClosures {
-        evaluateModelForTrait as evaluateModelForFormat;
-    }
-
     /**
      * @var string|\Closure|null
      */
@@ -18,10 +14,9 @@ trait HasFormat
     /**
      * Set the format for the instance.
      *
-     * @param  string|\Closure|null  $format
      * @return $this
      */
-    public function format($format): static
+    public function format(string|\Closure|null $format): static
     {
         if (! \is_null($format)) {
             $this->format = $format;
@@ -31,19 +26,25 @@ trait HasFormat
     }
 
     /**
-     * Get the format for the instance, evaluating it if necessary.
+     * Get the format for the instance.
+     */
+    public function getFormat(): string
+    {
+        return $this->format instanceof \Closure
+            ? $this->resolveFormat()
+            : $this->format;
+    }
+
+    /**
+     * Evaluate the format for the instance.
      *
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
      */
-    public function getFormat($parameters = [], $typed = []): ?string
+    public function resolveFormat(array $parameters = [], array $typed = []): ?string
     {
-        /**
-         * @var string|null
-         */
-        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model
-            ? $this->evaluateModelForFormat($parameters, 'getFormat')
-            : $this->evaluate($this->format, $parameters, $typed);
+        /** @var string|null */
+        $evaluated = $this->evaluate($this->format, $parameters, $typed);
 
         $this->format = $evaluated;
 
@@ -55,6 +56,6 @@ trait HasFormat
      */
     public function hasFormat(): bool
     {
-        return isset($this->format);
+        return ! \is_null($this->format);
     }
 }

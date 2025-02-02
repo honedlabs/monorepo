@@ -7,7 +7,7 @@ namespace Honed\Core\Concerns;
 trait HasAlias
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected $alias;
 
@@ -38,6 +38,6 @@ trait HasAlias
      */
     public function hasAlias(): bool
     {
-        return isset($this->alias);
+        return ! \is_null($this->alias);
     }
 }

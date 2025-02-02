@@ -41,6 +41,6 @@ trait HasMeta
      */
     public function hasMeta(): bool
     {
-        return ! empty($this->meta);
+        return \count($this->meta) > 0;
     }
 }

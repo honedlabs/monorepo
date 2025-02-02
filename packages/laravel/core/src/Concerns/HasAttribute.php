@@ -7,7 +7,7 @@ namespace Honed\Core\Concerns;
 trait HasAttribute
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected $attribute;
 
@@ -38,6 +38,6 @@ trait HasAttribute
      */
     public function hasAttribute(): bool
     {
-        return isset($this->attribute);
+        return ! \is_null($this->attribute);
     }
 }

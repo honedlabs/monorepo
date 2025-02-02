@@ -8,10 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 
 trait Allowable
 {
-    use EvaluatesClosures {
-        evaluateModelForTrait as evaluateModelForAllowable;
-    }
-
     /**
      * @var \Closure|bool
      */
@@ -32,14 +28,12 @@ trait Allowable
     /**
      * Determine if the instance allows the given parameters.
      *
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
      */
-    public function allows($parameters = [], $typed = []): bool
+    public function isAllowed($parameters = [], $typed = []): bool
     {
-        $evaluated = (bool) ($parameters instanceof Model
-            ? $this->evaluateModelForAllowable($parameters, 'allows')
-            : $this->evaluate($this->allow, $parameters, $typed));
+        $evaluated = $this->evaluate($this->allow, $parameters, $typed);
 
         $this->allow = $evaluated;
 

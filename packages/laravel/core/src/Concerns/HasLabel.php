@@ -6,10 +6,6 @@ namespace Honed\Core\Concerns;
 
 trait HasLabel
 {
-    use EvaluatesClosures {
-        evaluateModelForTrait as evaluateModelForLabel;
-    }
-
     /**
      * @var string|\Closure|null
      */
@@ -18,10 +14,9 @@ trait HasLabel
     /**
      * Set the label for the instance.
      *
-     * @param  string|\Closure|null  $label
      * @return $this
      */
-    public function label($label): static
+    public function label(string|\Closure|null $label): static
     {
         if (! \is_null($label)) {
             $this->label = $label;
@@ -31,19 +26,25 @@ trait HasLabel
     }
 
     /**
-     * Get the label for the instance, evaluating it if necessary.
+     * Get the label for the instance.
+     */
+    public function getLabel(): ?string
+    {
+        return $this->label instanceof \Closure
+            ? $this->resolveLabel()
+            : $this->label;
+    }
+
+    /**
+     * Evaluate the label for the instance.
      *
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
      */
-    public function getLabel($parameters = [], $typed = []): ?string
+    public function resolveLabel(array $parameters = [], array $typed = []): ?string
     {
-        /**
-         * @var string|null
-         */
-        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model
-            ? $this->evaluateModelForLabel($parameters, 'getLabel')
-            : $this->evaluate($this->label, $parameters, $typed);
+        /** @var string|null */
+        $evaluated = $this->evaluate($this->label, $parameters, $typed);
 
         $this->label = $evaluated;
 
@@ -55,7 +56,7 @@ trait HasLabel
      */
     public function hasLabel(): bool
     {
-        return isset($this->label);
+        return ! \is_null($this->label);
     }
 
     /**

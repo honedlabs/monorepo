@@ -6,10 +6,6 @@ namespace Honed\Core\Concerns;
 
 trait HasExtra
 {
-    use EvaluatesClosures {
-        evaluateModelForTrait as evaluateModelForExtra;
-    }
-
     /**
      * @var array<string,mixed>|\Closure
      */
@@ -18,10 +14,9 @@ trait HasExtra
     /**
      * Set the extra for the instance.
      *
-     * @param  string|\Closure|null  $extra
      * @return $this
      */
-    public function extra($extra): static
+    public function extra(array|\Closure|null $extra): static
     {
         if (! \is_null($extra)) {
             $this->extra = $extra;
@@ -31,20 +26,28 @@ trait HasExtra
     }
 
     /**
-     * Get the extra for the instance, evaluating it if necessary.
+     * Get the extra for the instance.
+     */
+    public function getExtra(): array
+    {
+        return $this->extra instanceof \Closure
+            ? $this->resolveExtra()
+            : $this->extra;
+    }
+
+    /**
+     * Evaluate the extra parameters for the instance.
      *
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed> $parameters
      * @param  array<string,mixed>  $typed
+     * 
      * @return array<string,mixed>
      */
-    public function getExtra($parameters = [], $typed = []): ?array
+
+    public function resolveExtra(array $parameters = [], array $typed = []): array
     {
-        /**
-         * @var array<string,mixed>|null
-         */
-        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model
-            ? $this->evaluateModelForExtra($parameters, 'getExtra')
-            : $this->evaluate($this->extra, $parameters, $typed);
+        /** @var array<string,mixed>|null */
+        $evaluated = $this->evaluate($this->extra, $parameters, $typed);
 
         $this->extra = $evaluated;
 

@@ -6,10 +6,6 @@ namespace Honed\Core\Concerns;
 
 trait HasName
 {
-    use EvaluatesClosures {
-        evaluateModelForTrait as evaluateModelForName;
-    }
-
     /**
      * @var string|\Closure|null
      */
@@ -18,10 +14,9 @@ trait HasName
     /**
      * Set the name for the instance.
      *
-     * @param  string|\Closure|null  $name
      * @return $this
      */
-    public function name($name): static
+    public function name(string|\Closure|null $name): static
     {
         if (! \is_null($name)) {
             $this->name = $name;
@@ -31,19 +26,25 @@ trait HasName
     }
 
     /**
-     * Get the name for the instance, evaluating it if necessary.
+     * Get the name for the instance.
+     */
+    public function getName(): ?string
+    {
+        return $this->name instanceof \Closure
+            ? $this->resolveName()
+            : $this->name;
+    }
+
+    /**
+     * Evaluate the name for the instance.
      *
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
      */
-    public function getName($parameters = [], $typed = []): ?string
+    public function resolveName(array $parameters = [], array $typed = []): ?string
     {
-        /**
-         * @var string|null
-         */
-        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model
-            ? $this->evaluateModelForName($parameters, 'getName')
-            : $this->evaluate($this->name, $parameters, $typed);
+        /** @var string|null */
+        $evaluated = $this->evaluate($this->name, $parameters, $typed);
 
         $this->name = $evaluated;
 
@@ -55,7 +56,7 @@ trait HasName
      */
     public function hasName(): bool
     {
-        return isset($this->name);
+        return ! \is_null($this->name);
     }
 
     /**

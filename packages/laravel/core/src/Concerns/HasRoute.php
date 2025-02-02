@@ -127,6 +127,24 @@ trait HasRoute
     }
 
     /**
+     * Evaluate the route for the instance.
+     *
+     * @param  array<string,mixed>  $parameters
+     * @param  array<string,mixed>  $typed
+     */
+
+    public function resolveRoute(array $parameters = [], array $typed = []): ?string
+    {
+        /** @var string|null */
+        $evaluated = $this->evaluate($this->route, $parameters, $typed);
+
+        $this->route = $evaluated;
+
+        return $evaluated;
+    }
+
+    
+    /**
      * Get the HTTP method for the route.
      * 
      * @default \Symfony\Component\HttpFoundation\Request::METHOD_GET

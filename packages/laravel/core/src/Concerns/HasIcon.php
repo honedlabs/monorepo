@@ -8,22 +8,17 @@ use Honed\Core\Contracts\IsIcon;
 
 trait HasIcon
 {
-    use EvaluatesClosures {
-        evaluateModelForTrait as evaluateModelForIcon;
-    }
-
     /**
-     * @var string|\Honed\Core\Contracts\IsIcon
+     * @var string|\Honed\Core\Contracts\IsIcon|null
      */
     protected $icon;
 
     /**
      * Set the icon for the instance.
      *
-     * @param  string|\Honed\Core\Contracts\IsIcon|null  $icon
      * @return $this
      */
-    public function icon($icon): static
+    public function icon(string|IsIcon|null $icon): static
     {
         if (! \is_null($icon)) {
             $this->icon = $icon;
@@ -52,10 +47,26 @@ trait HasIcon
     }
 
     /**
+     * Evaluate the icon for the instance.
+     *
+     * @param  array<string,mixed> $parameters
+     * @param  array<string,mixed>  $typed
+     */
+    public function resolveIcon(array $parameters = [], array $typed = []): ?string
+    {
+        /** @var string|null */
+        $evaluated = $this->evaluate($this->icon, $parameters, $typed);
+
+        $this->icon = $evaluated;
+
+        return $evaluated;
+    }
+
+    /**
      * Determine if the instance has an icon set.
      */
     public function hasIcon(): bool
     {
-        return isset($this->icon);
+        return ! \is_null($this->icon);
     }
 }

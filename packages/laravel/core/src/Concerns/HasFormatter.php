@@ -13,7 +13,7 @@ use Honed\Core\Formatters\StringFormatter;
 trait HasFormatter
 {
     /**
-     * @var \Honed\Core\Contracts\Formats
+     * @var \Honed\Core\Contracts\Formats|null
      */
     protected $formatter;
 
@@ -44,7 +44,7 @@ trait HasFormatter
      */
     public function hasFormatter(): bool
     {
-        return isset($this->formatter);
+        return ! \is_null($this->formatter);
     }
 
     /**
@@ -62,10 +62,7 @@ trait HasFormatter
      *
      * @return $this
      */
-    public function formatString(
-        ?string $prefix = null,
-        ?string $suffix = null,
-        ?int $limit = null): static
+    public function formatString(?string $prefix = null, ?string $suffix = null, ?int $limit = null): static
     {
         return $this->formatter(StringFormatter::make($prefix, $suffix, $limit));
     }
@@ -75,10 +72,7 @@ trait HasFormatter
      *
      * @return $this
      */
-    public function formatDate(
-        ?string $date = null,
-        ?string $timezone = null,
-        ?bool $diff = false): static
+    public function formatDate(?string $date = null, ?string $timezone = null, ?bool $diff = false): static
     {
         return $this->formatter(DateFormatter::make($date, $timezone, $diff));
     }
@@ -88,11 +82,7 @@ trait HasFormatter
      *
      * @return $this
      */
-    public function formatNumeric(
-        ?int $precision = null,
-        ?int $divideBy = null,
-        ?string $locale = null,
-        ?string $currency = null): static
+    public function formatNumeric(?int $precision = null, ?int $divideBy = null, ?string $locale = null, ?string $currency = null): static
     {
         return $this->formatter(NumericFormatter::make($precision, $divideBy, $locale, $currency));
     }

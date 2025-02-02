@@ -6,10 +6,6 @@ namespace Honed\Core\Concerns;
 
 trait HasDescription
 {
-    use EvaluatesClosures {
-        evaluateModelForTrait as evaluateModelForDescription;
-    }
-
     /**
      * @var string|\Closure|null
      */
@@ -18,10 +14,9 @@ trait HasDescription
     /**
      * Set the description for the instance.
      *
-     * @param  string|\Closure|null  $description
      * @return $this
      */
-    public function description($description): static
+    public function description(string|\Closure|null $description): static
     {
         if (! \is_null($description)) {
             $this->description = $description;
@@ -31,19 +26,25 @@ trait HasDescription
     }
 
     /**
-     * Get the description for the instance, evaluating it if necessary.
+     * Get the description for the instance.
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description instanceof \Closure
+            ? $this->resolveDescription()
+            : $this->description;
+    }
+
+    /**
+     * Evaluate the description for the instance.
      *
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
+     * @param  array<string,mixed> $parameters
      * @param  array<string,mixed>  $typed
      */
-    public function getDescription($parameters = [], $typed = []): ?string
+    public function resolveDescription(array $parameters = [], array $typed = []): ?string
     {
-        /**
-         * @var string|null
-         */
-        $evaluated = $parameters instanceof \Illuminate\Database\Eloquent\Model
-            ? $this->evaluateModelForDescription($parameters, 'getDescription')
-            : $this->evaluate($this->description, $parameters, $typed);
+        /** @var string|null */
+        $evaluated = $this->evaluate($this->description, $parameters, $typed);
 
         $this->description = $evaluated;
 
@@ -55,6 +56,6 @@ trait HasDescription
      */
     public function hasDescription(): bool
     {
-        return isset($this->description);
+        return ! \is_null($this->description);
     }
 }
