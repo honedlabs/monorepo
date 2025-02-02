@@ -25,15 +25,12 @@ class Table extends Refine
     use Concerns\HasRecords;
     use Concerns\HasPages;
     use Concerns\HasColumns;
-    use Concerns\HasEndpoint;
-    use Concerns\Searchable;
     use Concerns\HasResource;
     use Concerns\Toggleable;
-    use Concerns\HasResourceModifier;
     use Encodable;
     use RequiresKey;
 
-    public static function make($modifier): static
+    public static function make($modifier = null): static
     {
         return resolve(static::class)->modifier($modifier);
     }
@@ -53,28 +50,24 @@ class Table extends Refine
     }
 
     /**
-     * Build the table records and metadata using the current request.
-     * 
      * @return $this
      */
-    protected function buildTable(): static
+    public function buildTable(): static
     {
-        if ($this->refined) {
+        if ($this->isRefined()) {
             return $this;
         }
 
         $resource = $this->getResource();
 
         $columns = $this->getColumns();
-
-        $activeColumns = $this->toggleColumns($columns);
         
         $this->modifyResource($resource);
 
         $this->refine();
         
         $records = $this->paginateRecords($resource);
-        $formatted = $this->formatRecords($records, $activeColumns, $this->getInlineActions(), $this->getSelector());
+        $formatted = $this->formatRecords($records, $columns, $this->getInlineActions(), $this->getSelector());
         $this->setRecords($formatted);
 
         return $this;
@@ -94,7 +87,9 @@ class Table extends Refine
                 'order' => $this->getOrderKey(),
                 'search' => $this->getSearchKey(),
                 'toggle' => $this->getToggleKey(),
-                'shown' => $this->getShownKey(),
+                'pages' => $this->getPagesKey(),
+                ...($this->hasMatches() ? ['match' => $this->getMatchKey()] : []),
+
             ],
             'records' => $this->getRecords(),
             'columns' => $this->getColumns(),
