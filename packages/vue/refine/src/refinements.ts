@@ -35,12 +35,12 @@ export interface Refinements {
     searches: SearchRefinement[]
 	search: {
 		value: string
-		matches: string[]
+		matches?: string[]
 	}
     keys: {
         sorts: string
         search: string
-        matches: string
+        matches?: string
     }
 }
 
@@ -53,7 +53,7 @@ export type FilterBinding<T extends FilterRefinement, U extends any = any> =
 		T extends { type: 'boolean' } ? boolean :
 			T extends { type: 'set', multiple: true } ? U[] :
 				T extends { type: 'date' } 
-					? CalendarDateTime|null
+					? CalendarDateTime | null
 					: U
 
 export function useRefinements<
@@ -74,7 +74,7 @@ export function useRefinements<
 	const currentFilters = computed(() => refinements.value.filters.filter(({ active }) => active))
 	const currentSearches = computed(() => refinements.value.searches.filter(({ active }) => active))
 	
-	const state = reactive<Record<
+	const params = reactive<Record<
 		typeof searchKey.value, string
 	> & Record<
 		typeof sortsKey.value, SortDirection | undefined
@@ -84,21 +84,21 @@ export function useRefinements<
 		[F in Refinements['filters'][number] as F['name']]: FilterBinding<F>
 	}>({})
 
-	function updateState() {
-		state[searchKey.value] = refinements.value.search.value
-		state[sortsKey.value] = currentSort.value?.direction
-		state[matchesKey.value] = refinements.value.search.matches
+	function updateParams() {
+		params[searchKey.value] = refinements.value.search.value
+		params[sortsKey.value] = currentSort.value?.direction
+		params[matchesKey.value] = refinements.value.search.matches
 		
 		refinements.value.filters.forEach((filter) => {
-			state[filter.name] = filter.value
+			params[filter.name] = filter.value
 		})
 	}
 
     function refine(options: VisitOptions = {}) {
         const data: Record<string, any> = {}
         
-        for (const key in state) {
-            const value = state[key]
+        for (const key in params) {
+            const value = params[key]
 
             if ([null, '', []].includes(value)) {
                 data[key] = undefined
@@ -138,7 +138,7 @@ export function useRefinements<
 			return
 		}
 
-		state[name] = value
+		params[name] = value
 
 		return refine(options)
 	}
@@ -151,28 +151,28 @@ export function useRefinements<
 			return
 		}
 
-		state[name] = options?.direction ?? sort.next
+		params[name] = options?.direction ?? sort.next
 
 		return refine(options)
 	}
 
 	function applySearch(value: string, options: VisitOptions = {}) {
-		state[searchKey.value] = value
+		params[searchKey.value] = value
 
 		return refine(options)
 	}
 
 	function applyMatch(name: string, options: VisitOptions = {}) {
-		if (! Array.isArray(state[matchesKey.value])) {
-			state[matchesKey.value] = []
+		if (! Array.isArray(params[matchesKey.value])) {
+			params[matchesKey.value] = []
 		}
 
-		const i = state[matchesKey.value].indexOf(name)
+		const i = params[matchesKey.value].indexOf(name)
 
 		if (i !== -1) {
-			state[matchesKey.value].splice(i, 1)
+			params[matchesKey.value].splice(i, 1)
 		} else {
-			state[matchesKey.value].push(name)
+			params[matchesKey.value].push(name)
 		}
 
 		return refine(options)
@@ -205,12 +205,12 @@ export function useRefinements<
 	function clearFilters(...filters: (string) []) {
 		if (filters.length === 0) {
 
-			for (const key in state) {
-				state[key] = undefined
+			for (const key in params) {
+				params[key] = undefined
 			}
 		} else {
 			filters.forEach((filter) => {
-				state[filter] = undefined
+				params[filter] = undefined
 			})
 		}
 
@@ -218,35 +218,35 @@ export function useRefinements<
 	}
 
 	function clearSort(options: VisitOptions = {}) {
-		state[sortsKey.value] = undefined
+		params[sortsKey.value] = undefined
 
 		return refine(options)
 	}
 
 	function clearSearch(options: VisitOptions = {}) {
-		state[searchKey.value] = ''
+		params[searchKey.value] = ''
 
 		return refine(options)
 	}
 
 	function clearMatches(options: VisitOptions = {}) {
-		state[matchesKey.value] = []
+		params[matchesKey.value] = []
 
 		return refine(options)
 	}
 
 	function reset(options: VisitOptions = {}) {
-		for (const key in state) {
-			state[key] = undefined
+		for (const key in params) {
+			params[key] = undefined
 		}
 
 		return refine(options)
 	}
 
-	updateState()
+	updateParams()
 
 	return {
-		state,
+		params,
 		filters: computed(() => refinements.value.filters.map((filter) => ({
 			...filter,
 			apply: (v: FilterBinding<typeof filter>) => applyFilter(filter.name, v),

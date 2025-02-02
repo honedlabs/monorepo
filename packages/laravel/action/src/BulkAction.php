@@ -11,7 +11,6 @@ class BulkAction extends Action
     use Concerns\HasBulkActions;
     use Concerns\HasConfirm;
     use Concerns\KeepsSelected;
-    use ForwardsCalls;
 
     protected $type = Creator::Bulk;
 

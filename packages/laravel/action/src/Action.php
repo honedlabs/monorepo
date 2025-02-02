@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Core\Concerns\Allowable;
+use Honed\Core\Primitive;
 use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasRoute;
+use Honed\Core\Concerns\Allowable;
 use Honed\Core\Contracts\ResolvesClosures;
-use Honed\Core\Primitive;
+use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
  * @extends \Honed\Core\Primitive<string,mixed>
@@ -22,6 +24,8 @@ abstract class Action extends Primitive implements ResolvesClosures
     use HasLabel;
     use HasName;
     use HasType;
+    use HasRoute;
+    use ForwardsCalls;
     use Concerns\HasAction;
 
     public function __construct(?string $name = null, string|\Closure|null $label = null)
@@ -32,9 +36,6 @@ abstract class Action extends Primitive implements ResolvesClosures
         $this->label($label ?? $this->makeLabel($name));
     }
 
-    /**
-     * Make a new action.
-     */
     public static function make(?string $name = null, string|\Closure|null $label = null): static
     {
         return resolve(static::class, \compact('name', 'label'));
@@ -46,8 +47,12 @@ abstract class Action extends Primitive implements ResolvesClosures
             'name' => $this->getName(),
             'label' => $this->getLabel(),
             'type' => $this->getType(),
-            'icon' => $this->getIcon(),
-            'extra' => null,
+            ...($this->hasIcon() ? ['icon' => $this->getIcon()] : []),
+            ...($this->hasRoute() 
+                ? [
+                    'href' => $this->getRoute(),
+                    'method' => $this->getMethod(),
+                ] : [])
         ];
     }
 

@@ -4,20 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use Closure;
-use Exception;
 use Honed\Refine\Refine;
-use Honed\Core\Primitive;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Honed\Core\Concerns\Encodable;
-use Illuminate\Support\Collection;
-use Honed\Table\Actions\BulkAction;
-use Honed\Table\Columns\BaseColumn;
 use Honed\Core\Concerns\RequiresKey;
-use Honed\Refine\Concerns\HasRequest;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
 
 class Table extends Refine

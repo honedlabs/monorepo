@@ -55,7 +55,7 @@ trait HasColumns
             \method_exists($this, 'columns') => $this->columns(),
             \property_exists($this, 'columns') => $this->columns,
             default => [],
-        })->filter(static fn (BaseColumn $column): bool => $column->isAuthorized());
+        })->filter(static fn (BaseColumn $column): bool => $column->allows());
     }
 
     /**

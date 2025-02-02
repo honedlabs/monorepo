@@ -18,49 +18,32 @@ trait Toggleable
     const RememberName = 'cols';
 
     /**
-     * The name of this table's cookie for remembering column visibility
+     * The name of the cookie for remembering column preferences.
      * 
      * @var string
      */
     protected $cookie;
 
     /**
-     * Whether the table has cookies enabled.
-     */
-    protected $cookies;
-
-    /**
-     * Whether the table has cookies enabled by default.
-     */
-    protected static $withCookies = true;
-
-    /**
-     * The duration that this table's cookie should be remembered for
+     * Whether to use cookies to remember column preferences.
      * 
-     * @var int|null
+     * @var bool|null
      */
-    protected $duration;
+    protected $remember;
 
     /**
-     * The duration of the cookie to use for all tables.
+     * The duration that this table's cookie should be remembered for.
      * 
-     * @var int|null
+     * @var int
      */
-    protected static $cookieRemember = self::RememberDuration;
+    protected $duration = 60 * 60 * 24 * 30 * 365;
 
     /**
      * The name of the query parameter to use for toggling columns.
      * 
      * @var string
      */
-    protected $remember;
-
-    /**
-     * The name to use for the query parameter to toggle visibility for all tables.
-     * 
-     * @var string
-     */
-    protected static $rememberName = self::RememberName;
+    protected $toggleKey;
 
     /**
      * Whether to enable toggling of column visibility for this table.
@@ -68,44 +51,28 @@ trait Toggleable
      * @var bool
      */
     protected $toggle;
-
+    
     /**
-     * Whether to enable toggling of column visibility for all tables.
-     * 
+     * Indicates if all tables have toggleable columns.
+     *
      * @var bool
      */
-    protected static $defaultToggle = false;
+    protected static $toggleable = false;
+
+    /**
+     * Indicates if all tables remember column visibility.
+     *
+     * @var bool
+     */
+    protected static $remembers = false;
+
 
     /**
      * Configure the default duration of the cookie to use for all tables.
      */
-    public static function rememberCookieFor(int|null $seconds): void
+    public static function remembers(bool $remembers = true): void
     {
-        static::$cookieRemember = $seconds;
-    }
-
-    /**
-     * Configure the name of the query parameter to use for toggling columns.
-     */
-    public static function rememberCookieAs(string $name = null): void
-    {
-        static::$rememberName = $name ?? self::RememberName;
-    }
-
-    /**
-     * Configure whether to enable toggling of columns for all tables by default.
-     */
-    public static function alwaysToggleable(bool $toggle = true): void
-    {
-        static::$defaultToggle = $toggle;
-    }
-
-    /**
-     * Configure whether to enable cookies for all tables by default.
-     */
-    public static function useCookies(bool $cookies = true): void
-    {
-        static::$withCookies = $cookies;
+        static::$remembers = $remembers;
     }
 
     /**

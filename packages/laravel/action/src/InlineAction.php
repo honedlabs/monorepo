@@ -13,8 +13,6 @@ use Illuminate\Support\Traits\ForwardsCalls;
 class InlineAction extends Action
 {
     use Concerns\HasConfirm;
-    use ForwardsCalls;
-    use HasDestination;
     use IsDefault;
 
     protected $type = Creator::Inline;
@@ -25,7 +23,6 @@ class InlineAction extends Action
             'action' => $this->hasAction(),
             'default' => $this->isDefault(),
             'confirm' => $this->getConfirm(),
-            ...($this->hasDestination() ? $this->getDestination()->toArray() : []), // @phpstan-ignore-line
         ]);
     }
 
@@ -36,6 +33,7 @@ class InlineAction extends Action
     public function resolve($parameters = [], $typed = []): static
     {
         $this->getDestination($parameters, $typed);
+        // $this->resolveRoute
 
         return parent::resolve($parameters, $typed);
     }

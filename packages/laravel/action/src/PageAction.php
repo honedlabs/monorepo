@@ -10,8 +10,6 @@ use Illuminate\Support\Traits\ForwardsCalls;
 class PageAction extends Action
 {
     use Concerns\HasBulkActions;
-    use ForwardsCalls;
-    use HasDestination;
 
     protected $type = Creator::Page;
 

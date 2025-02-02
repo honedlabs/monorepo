@@ -44,12 +44,12 @@ class ActionHandler
         $data = match ($type) {
             Creator::Inline => InlineData::from($request),
             Creator::Bulk => BulkData::from($request),
+            // Creator::Page => Inline
             default => abort(400),
         };
 
         [$action, $query] = $this->resolveAction($type, $data);
 
-        // Validate to ensure the action exists and is allowed
         if (\is_null($action)) {
             return abort(400);
         }
