@@ -89,11 +89,9 @@ class Manager
     }
 
     /**
-     * Determine if all provided group(s) have navigation defined.
+     * Determine if all provided group(s) are defined.
      * 
      * @param string ...$groups
-     * 
-     * @return bool
      */
     public function hasGroups(...$groups): bool
     {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Nav\Concerns;
 
-use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -34,6 +33,8 @@ trait HasRoute
     protected $method = Request::METHOD_GET;
 
     /**
+     * Set the route for this instance.
+     * 
      * @return $this
      */
     public function route(string|\Closure|null $route, mixed $parameters = []): static
@@ -49,6 +50,8 @@ trait HasRoute
     }
 
     /**
+     * Set the url for this instance.
+     * 
      * @return $this
      */
     public function url(string|\Closure|null $url): static
@@ -63,6 +66,8 @@ trait HasRoute
     }
 
     /**
+     * Set the HTTP method for the route.
+     * 
      * @return $this
      */
     public function method(?string $method): static 
@@ -83,6 +88,8 @@ trait HasRoute
     }
 
     /**
+     * Mark the route as being an external url.
+     * 
      * @return $this
      */
     public function external(?string $url = null): static
@@ -94,7 +101,6 @@ trait HasRoute
 
     /**
      * Determine if the route is set.
-
      */
     public function hasRoute(): bool
     {
@@ -109,7 +115,9 @@ trait HasRoute
         return $this->external;
     }
 
-        /**
+    /**
+     * Retrieve the route for this instance, resolving any closures.
+     * 
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
      */
