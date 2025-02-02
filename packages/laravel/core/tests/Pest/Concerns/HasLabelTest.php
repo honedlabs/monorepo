@@ -14,36 +14,34 @@ class LabelTest
 
 beforeEach(function () {
     $this->test = new LabelTest;
+    $this->param = 'label';
 });
 
 it('sets', function () {
-    expect($this->test->label('test'))
+    expect($this->test->label($this->param))
         ->toBeInstanceOf(LabelTest::class)
         ->hasLabel()->toBeTrue();
 });
 
 it('gets', function () {
-    expect($this->test->label('test'))
-        ->getLabel()->toBe('test')
+    expect($this->test->label($this->param))
+        ->getLabel()->toBe($this->param)
+        ->hasLabel()->toBeTrue();
+
+    expect($this->test->label(fn () => $this->param))
+        ->getLabel()->toBe($this->param)
         ->hasLabel()->toBeTrue();
 });
 
-it('evaluates', function () {
+it('resolves', function () {
     $product = product();
 
     expect($this->test->label(fn (Product $product) => $product->name))
-        ->getLabel(['product' => $product])->toBe($product->name)
-        ->hasLabel()->toBeTrue();
+        ->resolveLabel(['product' => $product])->toBe($product->name)
+        ->getLabel()->toBe($product->name);
 });
 
-it('evaluates model', function () {
-    $product = product();
-    expect($this->test->label(fn (Product $product) => $product->name))
-        ->getLabel($product)->toBe($product->name)
-        ->hasLabel()->toBeTrue();
-});
-
-it('makes a label', function () {
+it('converts', function () {
     expect($this->test->makeLabel(null))->toBeNull();
     expect($this->test->makeLabel('new-Label'))->toBe('New label');
 });

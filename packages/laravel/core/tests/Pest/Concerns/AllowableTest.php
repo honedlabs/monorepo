@@ -16,23 +16,16 @@ beforeEach(function () {
     $this->test = new AllowableTest;
 });
 
-it('allows by default', function () {
-    expect($this->test)
-        ->allows()->toBeTrue();
-});
-
 it('sets', function () {
     expect($this->test->allow(false))
         ->toBeInstanceOf(AllowableTest::class)
-        ->allows()->toBeFalse();
+        ->isAllowed()->toBeFalse();
 });
 
-it('allows', function () {
-    expect($this->test->allow(fn (Product $product) => $product->id > 100))
-        ->allows(['product' => product()])->toBeFalse();
-});
+it('checks', function () {
+    expect($this->test)
+        ->isAllowed()->toBeTrue();
 
-it('allows models', function () {
     expect($this->test->allow(fn (Product $product) => $product->id > 100))
-        ->allows(product())->toBeFalse();
+        ->isAllowed(['product' => product()])->toBeFalse();
 });

@@ -14,31 +14,29 @@ class DescriptionTest
 
 beforeEach(function () {
     $this->test = new DescriptionTest;
+    $this->param = 'description';
 });
 
 it('sets', function () {
-    expect($this->test->description('test'))
+    expect($this->test->description($this->param))
         ->toBeInstanceOf(DescriptionTest::class)
         ->hasDescription()->toBeTrue();
 });
 
 it('gets', function () {
-    expect($this->test->description('test'))
-        ->getDescription()->toBe('test')
+    expect($this->test->description($this->param))
+        ->getDescription()->toBe($this->param)
+        ->hasDescription()->toBeTrue();
+
+    expect($this->test->description(fn () => $this->param))
+        ->getDescription()->toBe($this->param)
         ->hasDescription()->toBeTrue();
 });
 
-it('evaluates', function () {
+it('resolves', function () {
     $product = product();
 
     expect($this->test->description(fn (Product $product) => $product->name))
-        ->getDescription(['product' => $product])->toBe($product->name)
-        ->hasDescription()->toBeTrue();
-});
-
-it('evaluates model', function () {
-    $product = product();
-    expect($this->test->description(fn (Product $product) => $product->name))
-        ->getDescription($product)->toBe($product->name)
-        ->hasDescription()->toBeTrue();
+        ->resolveDescription(['product' => $product])->toBe($product->name)
+        ->getDescription()->toBe($product->name);
 });
