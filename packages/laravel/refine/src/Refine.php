@@ -63,7 +63,7 @@ class Refine extends Primitive
     /**
      * @param  \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $model
      */
-    public static function make(Model|string|Builder $model): static
+    public static function make($model): static
     {
         return static::query($model);
     }
