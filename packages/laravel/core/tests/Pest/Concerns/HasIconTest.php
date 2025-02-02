@@ -25,6 +25,7 @@ enum IconEnum implements IsIcon
 
 beforeEach(function () {
     $this->test = new IconTest;
+    $this->param = 'icon';
 });
 
 it('is null by default', function () {
@@ -33,34 +34,28 @@ it('is null by default', function () {
 });
 
 it('sets', function () {
-    expect($this->test->icon('test'))
+    expect($this->test->icon($this->param))
         ->toBeInstanceOf(IconTest::class)
         ->hasIcon()->toBeTrue();
 });
 
 it('gets', function () {
-    expect($this->test->icon('test'))
-        ->getIcon()->toBe('test')
+    expect($this->test->icon($this->param))
+        ->getIcon()->toBe($this->param)
         ->hasIcon()->toBeTrue();
 });
 
-it('gets icon interface', function () {
+it('gets via contract', function () {
     expect($this->test->icon(IconEnum::Chevron))->toBeInstanceOf(IconTest::class)
-        ->getIcon()->toBe('chevron')
+        ->getIcon()->toBe(IconEnum::Chevron->icon())
         ->hasIcon()->toBeTrue();
 });
 
-it('evaluates', function () {
+it('resolves', function () {
     $product = product();
 
     expect($this->test->icon(fn (Product $product) => $product->name))
-        ->getIcon(['product' => $product])->toBe($product->name)
-        ->hasIcon()->toBeTrue();
+        ->resolveIcon(['product' => $product])->toBe($product->name)
+        ->getIcon()->toBe($product->name);
 });
 
-it('evaluates model', function () {
-    $product = product();
-    expect($this->test->icon(fn (Product $product) => $product->name))
-        ->getIcon($product)->toBe($product->name)
-        ->hasIcon()->toBeTrue();
-});

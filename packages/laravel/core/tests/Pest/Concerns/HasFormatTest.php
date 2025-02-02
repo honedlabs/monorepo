@@ -14,31 +14,29 @@ class FormatTest
 
 beforeEach(function () {
     $this->test = new FormatTest;
+    $this->param = 'format';
 });
 
 it('sets', function () {
-    expect($this->test->format('test'))
+    expect($this->test->format($this->param))
         ->toBeInstanceOf(FormatTest::class)
         ->hasFormat()->toBeTrue();
 });
 
 it('gets', function () {
-    expect($this->test->format('test'))
-        ->getFormat()->toBe('test')
+    expect($this->test->format($this->param))
+        ->getFormat()->toBe($this->param)
+        ->hasFormat()->toBeTrue();
+
+    expect($this->test->format(fn () => $this->param))
+        ->getFormat()->toBe($this->param)
         ->hasFormat()->toBeTrue();
 });
 
-it('evaluates', function () {
+it('resolves', function () {
     $product = product();
 
     expect($this->test->format(fn (Product $product) => $product->name))
-        ->getFormat(['product' => $product])->toBe($product->name)
-        ->hasFormat()->toBeTrue();
-});
-
-it('evaluates model', function () {
-    $product = product();
-    expect($this->test->format(fn (Product $product) => $product->name))
-        ->getFormat($product)->toBe($product->name)
-        ->hasFormat()->toBeTrue();
+        ->resolveFormat(['product' => $product])->toBe($product->name)
+        ->getFormat()->toBe($product->name);
 });

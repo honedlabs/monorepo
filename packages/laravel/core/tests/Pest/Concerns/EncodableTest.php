@@ -12,6 +12,7 @@ class EncodableTest
 beforeEach(function () {
     EncodableTest::encoder();
     EncodableTest::decoder();
+    
     $this->test = new EncodableTest;
     $this->encoder = fn ($v) => (string) ($v * 2);
     $this->decoder = fn ($v) => 'decoded';
@@ -19,7 +20,7 @@ beforeEach(function () {
 
 it('encrypts by default', function () {
     expect($this->test->encode(2))->not->toBe(2);
-    expect($this->test->decode($this->test->encode(2)))->toBe(2);
+    expect($this->test->decode($this->test->encode(2)))->toBe('2');
 });
 
 it('sets encoder', function () {

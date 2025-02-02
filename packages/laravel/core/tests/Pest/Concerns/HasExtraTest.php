@@ -14,37 +14,35 @@ class ExtraTest
 
 beforeEach(function () {
     $this->test = new ExtraTest;
+    $this->param = ['extra' => 'Extra'];
 });
 
+
 it('sets', function () {
-    expect($this->test->extra(['name' => 'test']))
+    expect($this->test->extra($this->param))
         ->toBeInstanceOf(ExtraTest::class)
         ->hasExtra()->toBeTrue();
 });
 
+
 it('gets', function () {
     expect($this->test)
         ->getExtra()->scoped(fn ($extra) => $extra
-        ->toBeArray()
-        ->toBeEmpty()
+            ->toBeArray()
+            ->toBeEmpty()
         )
         ->hasExtra()->toBeFalse();
 
-    expect($this->test->extra(['name' => 'test']))
-        ->getExtra()->toEqual(['name' => 'test'])
+    expect($this->test->extra($this->param))
+        ->getExtra()->toEqual($this->param)
         ->hasExtra()->toBeTrue();
+
 });
 
-it('evaluates', function () {
+it('resolves', function () {
     $product = product();
-    expect($this->test->extra(fn (Product $product) => ['name' => $product->name]))
-        ->getExtra(['product' => $product])->toEqual(['name' => $product->name])
-        ->hasExtra()->toBeTrue();
-});
 
-it('evaluates model', function () {
-    $product = product();
-    expect($this->test->extra(fn (Product $product) => ['name' => $product->name]))
-        ->getExtra($product)->toEqual(['name' => $product->name])
-        ->hasExtra()->toBeTrue();
+    expect($this->test->extra(fn (Product $product) => ['extra' => $product->name]))
+        ->resolveExtra(['product' => $product])->toEqual(['extra' => $product->name])
+        ->getExtra()->toEqual(['extra' => $product->name]);
 });

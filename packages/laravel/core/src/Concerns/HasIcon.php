@@ -9,7 +9,7 @@ use Honed\Core\Contracts\IsIcon;
 trait HasIcon
 {
     /**
-     * @var string|\Honed\Core\Contracts\IsIcon|null
+     * @var string|\Honed\Core\Contracts\IsIcon|\Closure|null
      */
     protected $icon;
 
@@ -18,7 +18,7 @@ trait HasIcon
      *
      * @return $this
      */
-    public function icon(string|IsIcon|null $icon): static
+    public function icon(string|IsIcon|\Closure|null $icon): static
     {
         if (! \is_null($icon)) {
             $this->icon = $icon;
@@ -28,22 +28,15 @@ trait HasIcon
     }
 
     /**
-     * Get the icon for the instance, evaluating it if necessary.
-     *
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
-     * @param  array<string,mixed>  $typed
+     * Get the icon for the instance.
      */
-    public function getIcon($parameters = [], $typed = []): ?string
+    public function getIcon(): ?string
     {
-        $evaluated = match (true) {
+        return match (true) {
             $this->icon instanceof IsIcon => $this->icon->icon(),
-            $parameters instanceof \Illuminate\Database\Eloquent\Model => $this->evaluateModelForIcon($parameters, 'getIcon'),
-            default => $this->evaluate($this->icon, $parameters, $typed),
+            $this->icon instanceof \Closure => $this->resolveIcon(),
+            default => $this->icon,
         };
-
-        $this->icon = $evaluated;
-
-        return $evaluated;
     }
 
     /**
