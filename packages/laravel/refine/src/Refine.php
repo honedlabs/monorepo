@@ -44,20 +44,23 @@ class Refine extends Primitive
      */
     public function __call($name, $arguments): mixed
     {
+        /** @var array<int, Sort> $arguments */
         if ($name === 'sorts') {
-            /** @var array<int, \Honed\Refine\Sorts\Sort> $arguments */
             return $this->addSorts($arguments);
         }
 
+        /** @var array<int, Filter> $arguments */
         if ($name === 'filters') {
-            /** @var array<int, \Honed\Refine\Filters\Filter> $arguments */
             return $this->addFilters($arguments);
         }
 
-        // Delay the refine call
-        $this->refine();
+        /** @var array<int, Search> $arguments */
+        if ($name === 'searches') {
+            return $this->addSearches($arguments);
+        }
 
-        return $this->forwardDecoratedCallTo($this->getBuilder(), $name, $arguments);
+        // Delay the refine call until records are retrieved
+        return $this->refine()->forwardDecoratedCallTo($this->getBuilder(), $name, $arguments);
     }
 
     /**
