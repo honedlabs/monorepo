@@ -18,14 +18,14 @@ use Illuminate\Pagination\LengthAwarePaginator as PaginationLengthAwarePaginator
 trait HasPages
 {
     /**
-     * @var \Illuminate\Support\Collection<int,\Honed\Table\PageAmount>|null
+     * @var array<int,\Honed\Table\Page>|null
      */
     protected $pages;
 
     /**
-     * @var int|array<int,int>
+     * @var int|array<int,int>|null
      */
-    protected $perPage;
+    protected $pagination;
 
     /**
      * @var int|array<int,int>
@@ -42,74 +42,20 @@ trait HasPages
      */
     protected static $defaultPerPageAmount = 10;
 
-
     /**
      * @var 'cursor'|'simple'|'length-aware'|class-string<\Illuminate\Contracts\Pagination\Paginator>|null
      */
     protected $paginator;
 
     /**
-     * @var 'cursor'|'simple'|'length-aware'|class-string<\Illuminate\Contracts\Pagination\Paginator>
-     */
-    protected static $defaultPaginator = LengthAwarePaginator::class;
-
-    /**
-     * @var string
-     */
-    protected $page;
-
-    /**
-     * Use the default page key.
-     * 
      * @var string|null
      */
-    protected static $pageKey = null;
+    protected $pageKey;
 
     /**
      * @var string
      */
     protected $shown;
-
-    /**
-     * @var string
-     */
-    protected static $shownKey = 'show';
-
-    /**
-     * Configure the options for the default number of records to show per page.
-     *
-     * @param  int|non-empty-array<int,int>  $perPage
-     */
-    public static function recordsPerPage(int|array $perPage = 10): void
-    {
-        static::$globalPerPage = $perPage;
-    }
-
-    /**
-     * Configure the paginator to use.
-     *
-     * @param 'cursor'|'simple'|'length-aware'|class-string<\Illuminate\Contracts\Pagination\Paginator>|null $paginator
-     */
-    public static function usePaginator(?string $paginator = null): void
-    {
-        static::$defaultPaginator = $paginator ?? LengthAwarePaginator::class;
-    }
-
-    /**
-     * Configure the query parameter name to use for the current page number being shown.
-     */
-    public static function usePageKey(?string $name = null): void
-    {
-        static::$pageKey = $name;
-    }
-
-    /**
-     * Configure the query parameter name to use for the number of records to display.
-     */
-    public static function useShownKey(?string $shown = null): void
-    {
-        static::$shownKey = $shown ?? 'show';
-    }
 
     /**
      * Get the options for the number of records to show per page.
@@ -147,7 +93,7 @@ trait HasPages
         return match (true) {
             \property_exists($this, 'paginator') && ! \is_null($this->paginator) => $this->paginator,
             \method_exists($this, 'paginator') => $this->paginator(),
-            default => static::$defaultPaginator
+            default => LengthAwarePaginator::class
         };
     }
 
@@ -173,36 +119,6 @@ trait HasPages
             \method_exists($this, 'shown') => $this->shown(),
             default => static::$shownKey
         };
-    }
-
-    /**
-     * Set the paginator to use.
-     * 
-     * @param 'cursor'|'simple'|'length-aware'|class-string<\Illuminate\Contracts\Pagination\Paginator>|null $paginator
-     */
-    public function setPaginator(?string $paginator): void
-    {
-        $this->paginator = $paginator;
-    }
-
-    /**
-     * Set the page amount options quietly.
-     * 
-     * @param \Illuminate\Support\Collection<int,\Honed\Table\PageAmount> $pages
-     */
-    public function setPages(Collection $pages): void
-    {
-        $this->pages = $pages;
-    }
-
-    /**
-     * Get the page amount options.
-     * 
-     * @return \Illuminate\Support\Collection<int,\Honed\Table\PageAmount>|null
-     */
-    public function getPages(): ?Collection
-    {
-        return $this->pages;
     }
 
     /**
