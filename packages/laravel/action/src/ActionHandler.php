@@ -54,7 +54,7 @@ class ActionHandler
             return abort(400);
         }
 
-        if ($action instanceof InlineAction && ! $action->allows($query)) {
+        if ($action instanceof InlineAction && ! $action->isAllowed($query)) {
             return abort(403);
         }
 

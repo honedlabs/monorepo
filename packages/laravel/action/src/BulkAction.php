@@ -22,16 +22,4 @@ class BulkAction extends Action
             'confirm' => $this->getConfirm(),
         ]);
     }
-
-    /**
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $parameters
-     * @param  array<string,mixed>  $typed
-     */
-    public function resolve($parameters = [], $typed = []): static
-    {
-        // $this->resolveConfirm($parameters, $typed);
-
-        return parent::resolve($parameters, $typed);
-    }
-
 }

@@ -92,9 +92,11 @@ trait HasBulkActions
      */
     private function getHandleParameters(): array
     {
-        return collect((new \ReflectionClass($this))->getMethods())
+        $methods = (new \ReflectionClass($this))->getMethods();
+
+        return collect($methods)
             ->first(fn (\ReflectionMethod $method) => $method->getName() === 'handle')
-            ->getParameters();
+            ?->getParameters() ?? [];
     }
 
     /**
