@@ -48,28 +48,43 @@ class Table extends Refine
         }
 
         $resource = $this->getResource();
-
+        
         $columns = $this->getColumns();
         
         $this->modifyResource($resource);
-
+        
         $this->refine();
         
         $records = $this->paginateRecords($resource);
+        
         $formatted = $this->formatRecords($records, $columns, $this->getInlineActions(), $this->getSelector());
+
         $this->setRecords($formatted);
 
         return $this;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function toArray(): array
     {
         $this->buildTable();
 
-        return [
+        return \array_merge(parent::toArray(), [
             'id' => $this->encodeClass(),
-            'endpoint' => $this->isAnonymous() ? null : $this->getEndpoint(),
+            'records' => $this->getRecords(),
+            'meta' => $this->getMeta(),
+            'columns' => $this->getColumns(),
+            'pages' => $this->getPages(),
+            'filters' => $this->getFilters(),
+            'sorts' => $this->getSorts(),
+            'endpoint' => $this->getEndpoint(),
             'toggleable' => $this->isToggleable(),
+            'actions' => [
+                'bulk' => $this->getBulkActions(),
+                'page' => $this->getPageActions(),
+            ],
             'keys' => [
                 'records' => $this->getKeyName(),
                 'sorts' => $this->getSortKey(),
@@ -78,17 +93,7 @@ class Table extends Refine
                 'toggle' => $this->getToggleKey(),
                 'pages' => $this->getPagesKey(),
                 ...($this->hasMatches() ? ['match' => $this->getMatchKey()] : []),
-
             ],
-            'records' => $this->getRecords(),
-            'columns' => $this->getColumns(),
-            'actions' => [
-                'bulk' => $this->getBulkActions(),
-                'page' => $this->getPageActions(),
-            ],
-            'filters' => $this->getFilters(),
-            'sorts' => $this->getSorts(),
-            'pages' => $this->getPages(),
-        ];
+        ]);
     }
 }

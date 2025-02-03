@@ -5,67 +5,51 @@ declare(strict_types=1);
 namespace Honed\Table\Concerns;
 
 use Honed\Table\Columns\BaseColumn;
-use Honed\Table\Columns\Contracts\Column;
+use Honed\Table\Columns\Column;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Stringable;
 use Illuminate\Support\Facades\Cookie;
 
-trait Toggleable
+trait HasToggle
 {
-    const RememberDuration = 60 * 24 * 30 * 365; // 1 year
+    const Duration = 60 * 24 * 30 * 365; // 1 year
 
     const RememberName = 'cols';
 
     /**
-     * The name of the cookie for remembering column preferences.
-     * 
-     * @var string
+     * @var bool
+     */
+    protected $toggle;
+
+    /**
+     * @var string|null
      */
     protected $cookie;
 
     /**
-     * Whether to use cookies to remember column preferences.
-     * 
      * @var bool|null
      */
     protected $remember;
 
     /**
-     * The duration that this table's cookie should be remembered for.
-     * 
-     * @var int
+     * @var int|null
      */
-    protected $duration = 60 * 60 * 24 * 30 * 365;
+    protected $duration;
 
     /**
-     * The name of the query parameter to use for toggling columns.
-     * 
-     * @var string
+     * @var string|null
      */
-    protected $toggleKey;
-
-    /**
-     * Whether to enable toggling of column visibility for this table.
-     * 
-     * @var bool
-     */
-    protected $toggle;
+    protected $columnsKey;
     
     /**
-     * Indicates if all tables have toggleable columns.
-     *
      * @var bool
      */
     protected static $toggleable = false;
 
     /**
-     * Indicates if all tables remember column visibility.
-     *
      * @var bool
      */
     protected static $remembers = false;
-
 
     /**
      * Configure the default duration of the cookie to use for all tables.
@@ -78,37 +62,21 @@ trait Toggleable
     /**
      * Set as toggleable quietly.
      */
-    public function setToggleable(bool $toggle): void
+    public static function toggleable(bool $toggle = true): void
     {
-        $this->toggle = $toggle;
+        static::$toggleable = $toggle;
     }
 
     /**
      * Get the cookie name to use for the table toggle.
      */
-    public function getCookieName(): string
+    public function getCookie(): string
     {
-        return \property_exists($this, 'cookie') && ! \is_null($this->cookie)
-            ? $this->cookie
-            : $this->getDefaultCookie();
-    }
+        if (\property_exists($this, 'cookie') && ! \is_null($this->cookie)) {
+            return $this->cookie;
+        }
 
-    /**
-     * Determine whether the table has cookies enabled.
-     */
-    public function useCookie(): bool
-    {
-        return (bool) (\property_exists($this, 'cookies') && ! \is_null($this->cookies))
-            ? $this->cookies
-            : static::$withCookies;
-    }
-
-    /**
-     * Get the default cookie name to use for the table.
-     */
-    public function getDefaultCookie(): string
-    {
-        return (new Stringable(static::class))
+        return str(static::class)
             ->classBasename()
             ->append('Table')
             ->kebab()
@@ -119,13 +87,13 @@ trait Toggleable
     /**
      * Get the default duration of the cookie to use for the table toggle.
      */
-    public function getRememberDuration(): int
+    public function getDuration(): int
     {
-        return match (true) {
-            ! \property_exists($this, 'duration') || \is_null($this->duration) => static::$cookieRemember,
-            $this->duration > 0 => $this->duration,
-            default => 5 * 365 * 24 * 60 * 60,
-        };
+        if (\property_exists($this, 'duration') && ! \is_null($this->duration)) {
+            return $this->duration;
+        }
+
+        return self::Duration;
     }
 
     /**
@@ -145,7 +113,7 @@ trait Toggleable
     {
         return (bool) (\property_exists($this, 'toggle') && ! \is_null($this->toggle))
             ? $this->toggle
-            : static::$defaultToggle;
+            : static::$toggleable;
     }
 
     /**
@@ -197,10 +165,9 @@ trait Toggleable
      *
      * @return array<int,string>|null
      */
-    public function toggleParameters(Request $request = null): ?array
+    public function toggleParameters(Request $request): ?array
     {
-        $params = ($request ?? request())
-            ->string($this->getRememberName())
+        $params = $request->string($this->getRememberName())
             ->trim()
             ->remove(' ')
             ->explode(',')
@@ -211,8 +178,6 @@ trait Toggleable
     }
 
     /**
-     * Toggle the columns for the request.
-     * 
      * @param \Illuminate\Support\Collection<\Honed\Table\Columns\Contracts\Column> $columns
      * @return \Illuminate\Support\Collection<\Honed\Table\Columns\Contracts\Column>
      */
@@ -233,10 +198,28 @@ trait Toggleable
         return $columns
             ->when(! \is_null($params),
                 fn (Collection $columns) => $columns
-                    ->filter(static fn (BaseColumn $column) => $column
+                    ->filter(static fn (Column $column) => $column
                         ->active(!$column->isToggleable() || \in_array($column->getName(), $params))
                         ->isActive()
                     )->values()
             );
+    }
+
+    /**
+     * @return array<int,string>|true
+     */
+    public function getColumnsFromRequest(Request $request): array|true
+    {
+        $matches = $request->string($this->getColumnsKey(), null);
+
+        if ($matches->isEmpty()) {
+            return true;
+        }
+
+        /** @var array<int,string> */
+        return $matches
+            ->explode(',', PHP_INT_MAX)
+            ->map(fn ($v) => \trim($v))
+            ->toArray();
     }
 }
