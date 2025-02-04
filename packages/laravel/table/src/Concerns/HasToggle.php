@@ -6,6 +6,7 @@ namespace Honed\Table\Concerns;
 
 use Honed\Table\Columns\BaseColumn;
 use Honed\Table\Columns\Column;
+use Honed\Table\Contracts\ShouldRemember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cookie;
@@ -13,23 +14,22 @@ use Illuminate\Support\Facades\Cookie;
 trait HasToggle
 {
     const Duration = 60 * 24 * 30 * 365; // 1 year
-
-    const RememberName = 'cols';
+    const ColumnsKey = 'columns';
 
     /**
-     * @var bool
+     * @var bool|null
      */
     protected $toggle;
-
-    /**
-     * @var string|null
-     */
-    protected $cookie;
 
     /**
      * @var bool|null
      */
     protected $remember;
+
+    /**
+     * @var string|null
+     */
+    protected $cookie;
 
     /**
      * @var int|null
@@ -42,29 +42,31 @@ trait HasToggle
     protected $columnsKey;
     
     /**
-     * @var bool
+     * Determine whether this table has toggling of the columns enabled.
      */
-    protected static $toggleable = false;
-
-    /**
-     * @var bool
-     */
-    protected static $remembers = false;
-
-    /**
-     * Configure the default duration of the cookie to use for all tables.
-     */
-    public static function remembers(bool $remembers = true): void
+    public function isToggleable(): bool
     {
-        static::$remembers = $remembers;
+        if (\property_exists($this, 'toggle') && ! \is_null($this->toggle)) {
+            return $this->toggle;
+        }
+
+        return false;
     }
 
     /**
-     * Set as toggleable quietly.
+     * Determine whether this table has toggling of the columns enabled.
      */
-    public static function toggleable(bool $toggle = true): void
+    public function isRemembering(): bool
     {
-        static::$toggleable = $toggle;
+        if (\property_exists($this, 'remember') && ! \is_null($this->remember)) {
+            return $this->remember;
+        }
+
+        if ($this instanceof ShouldRemember) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -99,21 +101,13 @@ trait HasToggle
     /**
      * Get the query parameter to use for toggling columns.
      */
-    public function getRememberName(): string
+    public function getColumnsKey(): string
     {
-        return \property_exists($this, 'remember') && ! \is_null($this->remember)
-            ? $this->remember
-            : static::$rememberName;
-    }
+        if (\property_exists($this, 'columnsKey') && ! \is_null($this->columnsKey)) {
+            return $this->columnsKey;
+        }
 
-    /**
-     * Determine whether this table has toggling of the columns enabled.
-     */
-    public function isToggleable(): bool
-    {
-        return (bool) (\property_exists($this, 'toggle') && ! \is_null($this->toggle))
-            ? $this->toggle
-            : static::$toggleable;
+        return self::ColumnsKey;
     }
 
     /**
