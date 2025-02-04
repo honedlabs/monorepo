@@ -111,108 +111,75 @@ trait HasToggle
     }
 
     /**
-     * Update the cookie with the new data.
-     * 
-     * @param mixed $data
+     * @return array<int,\Honed\Table\Columns\Column>
      */
-    public function enqueueCookie($data): void
+    public function toggle(): array
     {
-        Cookie::queue(
-            $this->getCookieName(), 
-            \json_encode($data), 
-            $this->getRememberDuration()
-        );
-    }
+        $columns = $this->getColumns();
 
-    /**
-     * Get the data stored in the cookie.
-     * 
-     * @param \Illuminate\Http\Request $request
-     */
-    public function retrieveCookie($request = null): mixed
-    {
-        return \json_decode(
-            ($request ?? request())->cookie($this->getCookieName(), '[]'),
-            true
-        );
-    }
-
-    /**
-     * Resolve parameters using cookies if applicable.
-     *
-     * @param array<int,string>|null $params
-     * @param \Illuminate\Http\Request|null $request
-     * @return array<int,string>|null
-     */
-    protected function resolveCookieParams($params, $request): ?array
-    {
-        if (! \is_null($params)) {
-            $this->enqueueCookie($params);
-            return $params;
-        }
-
-        return $this->retrieveCookie($request);
-    }
-
-    /**
-     * Get the columns to show.
-     *
-     * @return array<int,string>|null
-     */
-    public function toggleParameters(Request $request): ?array
-    {
-        $params = $request->string($this->getRememberName())
-            ->trim()
-            ->remove(' ')
-            ->explode(',')
-            ->filter(fn($param) => $param !== '') // Filter out empty strings
-            ->toArray();
-
-        return empty($params) ? null : $params;
-    }
-
-    /**
-     * @param \Illuminate\Support\Collection<\Honed\Table\Columns\Contracts\Column> $columns
-     * @return \Illuminate\Support\Collection<\Honed\Table\Columns\Contracts\Column>
-     */
-    public function toggleColumns(Collection $columns, Request $request = null)
-    {
         if (! $this->isToggleable()) {
-            // All columns are active by default using `setUp()`
             return $columns;
         }
 
-        
-        $params = $this->toggleParameters($request);
-        
-        if ($this->useCookie()) {
-            $params = $this->resolveCookieParams($params, $request);
+        /** @var \Illuminate\Http\Request */
+        $request = $this->getRequest();
+
+        $params = $this->getColumnsFromRequest($request);
+
+        if ($this->isRemembering()) {
+            $params = $this->configureCookie($request, $params);
         }
 
-        return $columns
-            ->when(! \is_null($params),
-                fn (Collection $columns) => $columns
-                    ->filter(static fn (Column $column) => $column
-                        ->active(!$column->isToggleable() || \in_array($column->getName(), $params))
-                        ->isActive()
-                    )->values()
-            );
+        return \array_filter($columns,
+            function (Column $column) use ($params) {
+                if (\is_null($params)) {
+                    return $column->isKey() || $column->isToggleable();
+                }
+
+                return \in_array($column->getName(), $params);
+            }
+        );
     }
 
     /**
-     * @return array<int,string>|true
+     * @param array<int,string>|null $params
+     * 
+     * @return array<int,string>|null
      */
-    public function getColumnsFromRequest(Request $request): array|true
+    public function configureCookie(Request $request, ?array $params): ?array
+    {
+        if (! \is_null($params)) {
+            Cookie::queue($this->getCookie(), \json_encode($params), $this->getDuration());
+
+            return $params;
+        }
+
+        $params = $request->cookie($this->getCookie(), null);
+
+        if (\is_null($params)) {
+            return null;
+        }
+
+        /** @var array<int,string> */
+        return \json_decode($params, false);
+    }
+
+    /**
+     * Retrieve the columns to display from the request.
+     * 
+     * @return array<int,string>|null
+     */
+    public function getColumnsFromRequest(Request $request): ?array
     {
         $matches = $request->string($this->getColumnsKey(), null);
 
         if ($matches->isEmpty()) {
-            return true;
+            return null;
         }
 
         /** @var array<int,string> */
         return $matches
-            ->explode(',', PHP_INT_MAX)
+            ->explode(',')
             ->map(fn ($v) => \trim($v))
             ->toArray();
     }

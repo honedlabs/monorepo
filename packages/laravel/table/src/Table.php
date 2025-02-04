@@ -15,7 +15,7 @@ class Table extends Refine
     use Concerns\HasPages;
     use Concerns\HasColumns;
     use Concerns\HasResource;
-    use Concerns\Toggleable;
+    use Concerns\HasToggle;
     use Encodable;
     use RequiresKey;
 
@@ -49,7 +49,7 @@ class Table extends Refine
 
         $resource = $this->getResource();
         
-        $columns = $this->getColumns();
+        $columns = $this->toggle();
         
         $this->modifyResource($resource);
         
