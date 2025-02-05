@@ -36,7 +36,7 @@ class InlineAction extends Action
             return;
         }
 
-        [$model, $singular] = $this->getActionParameterNames($record);
+        [$model, $singular] = $this->getParameterNames($record);
 
         return $this instanceof HasHandler
             ? \call_user_func([$this, 'handle'], $record)

@@ -28,7 +28,7 @@ trait HasBulkActions
             return;
         }
 
-        [$model, $singular, $plural] = $this->getActionParameterNames($builder);
+        [$model, $singular, $plural] = $this->getParameterNames($builder);
 
         $handler = $this instanceof HasHandler;
 
