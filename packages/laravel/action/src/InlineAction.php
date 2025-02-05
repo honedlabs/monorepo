@@ -19,7 +19,6 @@ class InlineAction extends Action
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
-            'action' => $this->hasAction(),
             'default' => $this->isDefault(),
         ]);
     }

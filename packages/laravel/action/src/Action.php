@@ -31,7 +31,7 @@ abstract class Action extends Primitive
     use Concerns\HasAction;
     use Concerns\HasConfirm;
 
-    public function __construct(?string $name = null, string|\Closure|null $label = null)
+    public function __construct(string $name, string|\Closure $label = null)
     {
         parent::__construct();
 
@@ -39,7 +39,7 @@ abstract class Action extends Primitive
         $this->label($label ?? $this->makeLabel($name));
     }
 
-    public static function make(?string $name = null, string|\Closure|null $label = null): static
+    public static function make(string $name, string|\Closure $label = null): static
     {
         return resolve(static::class, \compact('name', 'label'));
     }
@@ -51,17 +51,31 @@ abstract class Action extends Primitive
             'label' => $this->getLabel(),
             'type' => $this->getType(),
             'icon' => $this->getIcon(),
+            'extra' => $this->getExtra(),
+            'action' => $this->hasAction(),
             'confirm' => $this->getConfirm()?->toArray(),
-            ...($this->hasExtra() ? ['extra' => $this->getExtra()] : []),
-            ...($this->hasRoute() 
-                ? [
-                    'href' => $this->getRoute(),
-                    'method' => $this->getMethod(),
-                ] : [])
+            ...$this->toArrayRoute(),
         ];
     }
 
     /**
+     * @return array<string,mixed>
+     */
+    protected function toArrayRoute(): array
+    {
+        if (! $this->hasRoute()) {
+            return [];
+        }
+
+        return [
+            'href' => $this->getRoute(),
+            'method' => $this->getMethod(),
+        ];
+    }
+
+    /**
+     * Resolve the action.
+     * 
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
      * 
