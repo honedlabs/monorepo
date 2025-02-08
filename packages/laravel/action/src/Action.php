@@ -31,17 +31,11 @@ abstract class Action extends Primitive
     use Concerns\HasAction;
     use Concerns\HasConfirm;
 
-    public function __construct(string $name, string|\Closure $label = null)
-    {
-        parent::__construct();
-
-        $this->name($name);
-        $this->label($label ?? $this->makeLabel($name));
-    }
-
     public static function make(string $name, string|\Closure $label = null): static
     {
-        return resolve(static::class, \compact('name', 'label'));
+        return resolve(static::class)
+            ->name($name)
+            ->label($label ?? static::makeLabel($name));
     }
 
     public function toArray(): array

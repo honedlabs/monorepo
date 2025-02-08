@@ -54,7 +54,15 @@ it('has array representation with route', function () {
 it('resolves', function () {
     $product = product();
 
-    expect((new DestroyAction())->resolve($product))
+    $named = [
+        'record' => $product,
+    ];
+
+    $typed = [
+        Product::class => $product,
+    ];
+
+    expect((new DestroyAction())->resolve($named, $typed))
         ->toBeInstanceOf(DestroyAction::class)
         ->getLabel()->toBe('Destroy '.$product->name);
 });
@@ -88,9 +96,17 @@ describe('executes', function () {
     test('with handler', function () {
         $action = new DestroyAction();
 
+        $named = [
+            'product' => $this->product,
+        ];
+
+        $typed = [
+            Product::class => $this->product,
+        ];
+
         expect($action)
             ->getName()->toBe('destroy')
-            ->resolveLabel($this->product)->toBe('Destroy '.$this->product->name)
+            ->resolveLabel($named, $typed)->toBe('Destroy '.$this->product->name)
             ->getType()->toBe(Creator::Inline)
             ->hasAction()->toBeTrue();
 

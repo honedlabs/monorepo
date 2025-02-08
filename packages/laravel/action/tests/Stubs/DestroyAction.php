@@ -9,13 +9,9 @@ use Honed\Action\InlineAction;
 
 class DestroyAction extends InlineAction implements HasHandler
 {
-    public function __construct()
-    {
-        //
-    }
-    
     public function setUp(): void
     {
+        parent::setUp();
         $this->name('destroy');
         $this->label(fn (Product $product) => 'Destroy '.$product->name);
     }

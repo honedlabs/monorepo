@@ -62,7 +62,7 @@ trait HasName
     /**
      * Convert a string to the name format
      */
-    public function makeName(?string $label): ?string
+    public static function makeName(?string $label): ?string
     {
         if (\is_null($label)) {
             return null;
