@@ -11,7 +11,10 @@ class BulkAction extends Action
     use Concerns\HasBulkActions;
     use Concerns\KeepsSelected;
 
-    protected $type = Creator::Bulk;
+    public function setUp(): void
+    {
+        $this->type(Creator::Bulk);
+    }
 
     public function toArray(): array
     {

@@ -9,6 +9,11 @@ use Honed\Action\InlineAction;
 
 class DestroyAction extends InlineAction implements HasHandler
 {
+    public function __construct()
+    {
+        //
+    }
+    
     public function setUp(): void
     {
         $this->name('destroy');

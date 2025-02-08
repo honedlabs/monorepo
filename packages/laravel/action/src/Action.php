@@ -54,14 +54,14 @@ abstract class Action extends Primitive
             'extra' => $this->getExtra(),
             'action' => $this->hasAction(),
             'confirm' => $this->getConfirm()?->toArray(),
-            ...$this->toArrayRoute(),
+            ...$this->routeToArray(),
         ];
     }
 
     /**
      * @return array<string,mixed>
      */
-    protected function toArrayRoute(): array
+    protected function routeToArray(): array
     {
         if (! $this->hasRoute()) {
             return [];

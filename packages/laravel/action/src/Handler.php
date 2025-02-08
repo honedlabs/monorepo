@@ -15,9 +15,11 @@ use Honed\Core\Concerns\HasBuilderInstance;
 use Honed\Action\Concerns\HasParameterNames;
 use Illuminate\Contracts\Support\Responsable;
 use Honed\Action\Exceptions\InvalidActionException;
+use Honed\Core\Concerns\RequiresKey;
+use Honed\Core\Contracts\Makeable;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class Handler
+class Handler implements Makeable
 {
     use HasBuilderInstance;
     use Concerns\HasParameterNames;
@@ -25,7 +27,7 @@ class Handler
     /**
      * @var array<int,\Honed\Action\Action>
      */
-    protected array $actions;
+    protected $actions = [];
 
     /**
      * @var string|null
@@ -36,11 +38,22 @@ class Handler
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  array<int,\Honed\Action\Action>  $actions
      */
-    public function __construct(Builder $builder, array $actions, string $key = null) 
+    public function __construct(Builder $builder, array $actions, string $key = null)
     {
         $this->builder = $builder;
         $this->actions = $actions;
         $this->key = $key;
+    }
+
+    /**
+     * Make a new handler instance.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  array<int,\Honed\Action\Action>  $actions
+     */
+    public static function make(Builder $builder, array $actions, string $key = null): static
+    {
+        return resolve(static::class, \compact('builder', 'actions', 'key'));
     }
 
     /**

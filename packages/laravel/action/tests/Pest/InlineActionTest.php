@@ -6,6 +6,7 @@ use Honed\Action\Creator;
 use Honed\Action\InlineAction;
 use Honed\Action\Tests\Stubs\DestroyAction;
 use Honed\Action\Tests\Stubs\Product;
+use Symfony\Component\HttpFoundation\Request;
 
 beforeEach(function () {
     $this->test = InlineAction::make('test');
@@ -19,19 +20,41 @@ it('makes', function () {
 it('has array representation', function () {
     expect($this->test->toArray())
         ->toBeArray()
-        ->toHaveKeys(['name', 'label', 'type', 'icon', 'extra', 'default', 'action']);
+        ->toEqual([
+            'name' => 'test',
+            'label' => 'Test',
+            'type' => Creator::Inline,
+            'icon' => null,
+            'extra' => [],
+            'action' => false,
+            'confirm' => null,
+            'default' => false,
+            'action' => false,
+        ]);
 });
 
-it('has array representation with destination', function () {
-    expect($this->test->to('test')->toArray())
+it('has array representation with route', function () {
+    expect($this->test->route('products.index')->toArray())
         ->toBeArray()
-        ->toHaveKeys(['name', 'label', 'type', 'icon', 'extra', 'default', 'action', 'href', 'method', 'tab']);
+        ->toEqual([
+            'name' => 'test',
+            'label' => 'Test',
+            'type' => Creator::Inline,
+            'icon' => null,
+            'extra' => [],
+            'action' => false,
+            'confirm' => null,
+            'default' => false,
+            'action' => false,
+            'href' => route('products.index'),
+            'method' => Request::METHOD_GET
+        ]);
 });
 
 it('resolves', function () {
     $product = product();
 
-    expect(DestroyAction::make()->resolve($product))
+    expect((new DestroyAction())->resolve($product))
         ->toBeInstanceOf(DestroyAction::class)
         ->getLabel()->toBe('Destroy '.$product->name);
 });
@@ -63,7 +86,7 @@ describe('executes', function () {
     });
 
     test('with handler', function () {
-        $action = DestroyAction::make();
+        $action = new DestroyAction();
 
         expect($action)
             ->getName()->toBe('destroy')

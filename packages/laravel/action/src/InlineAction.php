@@ -14,7 +14,10 @@ class InlineAction extends Action
 {
     use IsDefault;
 
-    protected $type = Creator::Inline;
+    public function setUp(): void
+    {
+        $this->type(Creator::Inline);
+    }
 
     public function toArray(): array
     {
@@ -36,17 +39,41 @@ class InlineAction extends Action
             return;
         }
 
+        return $this instanceof HasHandler
+            ? $this->callHandler($record)
+            : $this->callAction($record);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model  $record
+     * 
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
+     */
+    protected function callHandler($record)
+    {
+        return \call_user_func([$this, 'handle'], $record);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model  $record
+     * 
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
+     */
+    protected function callAction($record)
+    {
         [$model, $singular] = $this->getParameterNames($record);
 
-        return $this instanceof HasHandler
-            ? \call_user_func([$this, 'handle'], $record)
-            : $this->evaluate($this->getAction(), [
-                'model' => $model,
-                'record' => $record,
-                $singular => $record,
-            ], [
-                Model::class => $record,
-                $model::class => $record,
-            ]);
+        $named = [
+            'model' => $model,
+            'record' => $record,
+            $singular => $record,
+        ];
+
+        $typed = [
+            Model::class => $record,
+            $model::class => $record,
+        ];
+
+        return $this->evaluate($this->getAction(), $named, $typed);
     }
 }
