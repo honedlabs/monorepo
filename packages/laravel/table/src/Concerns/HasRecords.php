@@ -14,7 +14,7 @@ trait HasRecords
     /**
      * The records of the table retrieved from the resource.
      * 
-     * @var \Illuminate\Support\Collection<array-key,array<array-key,mixed>>|null
+     * @var \Illuminate\Support\Collection<int,mixed>|null
      */
     protected $records = null;
 
@@ -37,87 +37,34 @@ trait HasRecords
     }
 
     /**
-     * Set the records of the table.
-     * 
-     * @param  \Illuminate\Support\Collection<int,array<string,mixed>>  $records
-     */
-    public function setRecords(Collection $records): void
-    {
-        $this->records = $records;
-    }
-
-    /**
-     * Determine if the records should be reduced.
-     */
-    public function isReducing(): bool
-    {
-        return match (true) {
-            \property_exists($this, 'reduce') && !\is_null($this->reduce) => (bool) $this->reduce,
-            \method_exists($this, 'reduce') => (bool) $this->reduce(),
-            default => static::$defaultReduce,
-        };
-    }
-
-    /**
      * Format the records using the provided columns.
      * 
-     * @param \Illuminate\Support\Collection<int,\Honed\Table\Columns\BaseColumn> $activeColumns
-     * @param \Illuminate\Support\Collection<int,\Honed\Table\Actions\InlineAction> $inlineActions
+     * @param \Illuminate\Support\Collection<int,\Honed\Table\Columns\Column> $activeColumns
      */
-    public function formatRecords(Collection $records, Collection $activeColumns, Collection $inlineActions = null, mixed $selectableEvaluation = null)
+    public function formatRecords(Collection $activeColumns): void
     {
-        if ($records->isEmpty()) {
-            return $records;
+        if (! $this->hasRecords()) {
+            return;
         }
 
-        $columnsMap = $activeColumns->keyBy(fn ($column) => $column->getName());
-        $reducing = $this->isReducing();
-
-        return $records->map(function ($record) use ($inlineActions, $selectableEvaluation, $columnsMap, $reducing) {
-            $formattedRecord = $reducing ? [] : (\is_array($record) ? $record : $record->toArray());
-
-            if (! \is_null($inlineActions) && $inlineActions->isNotEmpty()) {
-                $formattedRecord['actions'] = $inlineActions
-                    ->filter(fn ($action) => $action->isAuthorized([
-                        'record' => $record,
-                        'model' => $record,
-                        'product' => $record,
-                    ], [
-                        Product::class => $record,
-                        Model::class => $record,
-                    ]))
-                    ->values();
-            }
-
-            $formattedRecord['selectable'] = $selectableEvaluation ? (bool) $selectableEvaluation($record) : false;
-
-            // Format columns
-            foreach ($columnsMap as $name => $column) {
-                $value = $this->accessRecord($record, $name);
-                $formattedRecord[$name] = $column->format($value, $record);
-            }
-
-            return $formattedRecord;
-        });
+        $this->records = $this->getRecords();
     }
 
-    protected function accessRecord(mixed $record, string $property): mixed
-    {
-        return match (true) {
-            is_array($record) => $record[$property] ?? null,
-            default => $record->{$property} ?? null,
-        };
-    }
 
-    protected function resolveActions(Collection $actions, mixed $record): Collection
-    {
-        return $actions
-            ->filter(fn (InlineAction $action) => $action->isAuthorized($record))
-            ->each(fn (InlineAction $action) => $action->link->resolveLink([
-                'record' => $record,
-            ], [
+    // /**
+    //  * @return array<int,\Honed\Action\InlineAction>
+    //  */
+    // protected function setActionsForRecord(Model $record): array
+    // {
+    //     $actions = $this->inlineActions();
+
+    //     return $actions
+    //         ->filter(fn (InlineAction $action) => $action->isAuthorized($record))
+    //         ->each(fn (InlineAction $action) => $action->link->resolveLink([
+    //             'record' => $record,
+    //         ], [
                 
-            ]))
-            ->values();
-    }
+    //         ]))
+    //         ->values();
+    // }
 }

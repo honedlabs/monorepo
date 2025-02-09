@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Honed\Table\Tests\Stubs;
+namespace Honed\Table\Tests\Fixtures;
 
-use Honed\Table\Actions\BulkAction;
-use Honed\Table\Actions\InlineAction;
-use Honed\Table\Actions\PageAction;
-use Honed\Table\Columns\BooleanColumn;
+use Honed\Action\Confirm;
+use Honed\Action\BulkAction;
+use Honed\Action\PageAction;
+use Honed\Refine\Sorts\Sort;
+use Honed\Action\InlineAction;
 use Honed\Table\Columns\Column;
+use Honed\Refine\Filters\Filter;
+use Honed\Refine\Filters\SetFilter;
 use Honed\Table\Columns\DateColumn;
-use Honed\Table\Columns\NumberColumn;
 use Honed\Table\Columns\TextColumn;
-use Honed\Table\Confirm\Confirm;
-use Honed\Table\Filters\CustomFilter;
-use Honed\Table\Filters\DateFilter;
-use Honed\Table\Filters\Filter;
-use Honed\Table\Filters\SetFilter;
-use Honed\Table\Sorts\CustomSort;
-use Honed\Table\Sorts\Sort;
-use Honed\Table\Table;
-use Illuminate\Database\Eloquent\Builder;
+use Honed\Table\Tests\Stubs\Status;
+use Honed\Refine\Filters\DateFilter;
+use Honed\Table\Table as HonedTable;
+use Honed\Table\Tests\Stubs\Product;
+use Honed\Refine\Filters\CustomFilter;
+use Honed\Table\Columns\BooleanColumn;
+use Honed\Table\Columns\NumericColumn;
 
-class ExampleTable extends Table
+class Table extends HonedTable
 {
     public $resource = Product::class;
 
@@ -44,7 +44,7 @@ class ExampleTable extends Table
             TextColumn::make('description')->placeholder('-'), //->truncate(100)
             BooleanColumn::make('best_seller', 'Favourite'), //->labels('Favourite', 'Not Favourite'),
             Column::make('status')->meta(['badge' => true]),
-            NumberColumn::make('price')->currency(),
+            NumericColumn::make('price')->currency(),
             DateColumn::make('created_at')->sortable(),
         ];
     }
@@ -55,7 +55,6 @@ class ExampleTable extends Table
             Filter::make('price', 'Max')->alias('max')->lte(),
             Filter::make('price', 'Min')->alias('min')->gt(),
             SetFilter::make('status')->options(Status::class)->strict(),
-            CustomFilter::make('soon')->using(fn (Builder $query, $value) => $query->where('status', Status::ComingSoon)),
             DateFilter::make('created_at', 'Year')->alias('year')->year(),
         ];
     }
@@ -65,7 +64,6 @@ class ExampleTable extends Table
         return [
             Sort::make('name', 'A-Z')->asc(),
             Sort::make('name', 'Z-A')->desc(),
-            CustomSort::make('desc')->using(fn (Builder $query) => $query->orderByDesc('description')),
         ];
     }
 
@@ -77,23 +75,18 @@ class ExampleTable extends Table
                 ->bulk(),
 
             InlineAction::make('delete')
-                ->authorize(fn (Product $product) => $product->id % 2 === 0)
+                ->allow(fn (Product $product) => $product->id % 2 === 0)
                 ->action(fn (Product $product) => $product->delete())
                 ->confirm(fn (Confirm $confirm) => $confirm->title(fn (Product $product) => 'You are about to delete '.$product->name)->description('Are you sure?')),
 
-            InlineAction::make('edit-route')
-                ->route('product.show'),
+            InlineAction::make('show')
+                ->route('products.show'),
 
-            BulkAction::make('touch')
+            BulkAction::make('update')
                 ->action(fn (Product $product) => $product->update(['name' => 'Bulk'])),
 
-            PageAction::make('create')->link->to('/products/create'),
+            PageAction::make('create')->route('products.create'),
 
         ];
-    }
-
-    public function count()
-    {
-        dd('Instance');
     }
 }
