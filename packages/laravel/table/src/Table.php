@@ -4,24 +4,32 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use Honed\Refine\Refine;
+use Honed\Action\Concerns\HasActions;
 use Honed\Core\Concerns\Encodable;
 use Honed\Core\Concerns\RequiresKey;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
+use Honed\Refine\Refine;
+use Illuminate\Database\Eloquent\Builder;
 
 class Table extends Refine
 {
-    use Concerns\HasRecords;
-    use Concerns\HasPages;
     use Concerns\HasColumns;
+    use Concerns\HasModifier;
+    use Concerns\HasPages;
+    use Concerns\HasRecords;
     use Concerns\HasResource;
     use Concerns\HasToggle;
     use Encodable;
+    use HasActions;
     use RequiresKey;
 
+    /**
+     * @param \Closure|null $modifier
+     */
     public static function make($modifier = null): static
     {
-        return resolve(static::class)->modifier($modifier);
+        return resolve(static::class)
+            ->modifier($modifier);
     }
 
     /**
@@ -46,20 +54,16 @@ class Table extends Refine
         if ($this->isRefined()) {
             return $this;
         }
-
-        $resource = $this->getResource();
         
-        $columns = $this->toggle();
+        $activeColumns = $this->toggle();
         
-        $this->modifyResource($resource);
+        $this->modify();
         
         $this->refine();
         
-        $records = $this->paginateRecords($resource);
+        $this->paginateRecords();
         
-        $formatted = $this->formatRecords($records, $columns, $this->getInlineActions(), $this->getSelector());
-
-        $this->setRecords($formatted);
+        $this->formatRecords($activeColumns);
 
         return $this;
     }
@@ -71,20 +75,17 @@ class Table extends Refine
     {
         $this->buildTable();
 
-        return \array_merge(parent::toArray(), [
-            'id' => $this->encodeClass(),
+        return [
+            'id' => $this->encode(static::class),
             'records' => $this->getRecords(),
             'meta' => $this->getMeta(),
             'columns' => $this->getColumns(),
             'pages' => $this->getPages(),
             'filters' => $this->getFilters(),
             'sorts' => $this->getSorts(),
-            'endpoint' => $this->getEndpoint(),
             'toggleable' => $this->isToggleable(),
-            'actions' => [
-                'bulk' => $this->getBulkActions(),
-                'page' => $this->getPageActions(),
-            ],
+            'actions' => $this->actionsToArray(),
+            'endpoint' => $this->getEndpoint(),
             'keys' => [
                 'records' => $this->getKeyName(),
                 'sorts' => $this->getSortKey(),
@@ -94,6 +95,29 @@ class Table extends Refine
                 'pages' => $this->getPagesKey(),
                 ...($this->hasMatches() ? ['match' => $this->getMatchKey()] : []),
             ],
-        ]);
+        ];
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    {
+        return match ($parameterName) {
+            'resource' => [$this->getResource()],
+            'query' => [$this->getResource()],
+            default => [],
+        };
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
+    {
+        return match ($parameterType) {
+            Builder::class => [$this->getResource()],
+            default => [],
+        };
     }
 }

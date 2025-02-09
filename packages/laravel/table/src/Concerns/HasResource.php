@@ -77,7 +77,7 @@ trait HasResource
      * 
      * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $resource
      */
-    public function modifyResource(Builder $resource): void
+    public function modify(Builder $resource): void
     {
         if (! $this->hasModifier()) {
             return;

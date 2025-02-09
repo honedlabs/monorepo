@@ -19,7 +19,7 @@ trait HasToggle
     /**
      * @var bool|null
      */
-    protected $toggle;
+    // protected $toggle;
 
     /**
      * @var bool|null

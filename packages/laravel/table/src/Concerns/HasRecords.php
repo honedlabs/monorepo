@@ -19,28 +19,6 @@ trait HasRecords
     protected $records = null;
 
     /**
-     * Whether to reduce the records to only contain properties present in the columns.
-     * 
-     * @var bool
-     */
-    protected $reduce;
-
-    /**
-     * Whether to reduce the records to only contain properties present in the columns by default.
-     * 
-     * @var bool
-     */
-    protected static $defaultReduce = false;
-
-    /**
-     * Configure whether to reduce the records to only contain properties present in the columns by default.
-     */
-    public static function reduceRecords(bool $reduce = false): void
-    {
-        self::$defaultReduce = $reduce;
-    }
-
-    /**
      * Get the records of the table.
      *
      * @return \Illuminate\Support\Collection<int,array<string,mixed>>|null
