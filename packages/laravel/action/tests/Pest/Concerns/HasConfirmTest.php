@@ -58,7 +58,8 @@ it('resolves', function () {
 
     expect($test)
         ->hasConfirm()->toBeTrue()
-        ->resolveConfirm(...params($product))->scoped(fn ($confirm) => $confirm
+        ->resolveConfirm(...params($product))->toBeInstanceOf(InlineAction::class)
+        ->getConfirm()->scoped(fn ($confirm) => $confirm
             ->getName()->toBe(\sprintf('Delete %s', $product->name))
             ->getDescription()->toBe(\sprintf('Are you sure you want to delete %s?', $product->name))
             ->getSubmit()->toBe('Delete')

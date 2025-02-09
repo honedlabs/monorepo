@@ -49,7 +49,7 @@ class InlineAction extends Action
      */
     protected function callHandler($record)
     {
-        return \call_user_func([$this, 'handle'], $record);
+        return \call_user_func([$this, 'handle'], $record); // @phpstan-ignore-line
     }
 
     /**

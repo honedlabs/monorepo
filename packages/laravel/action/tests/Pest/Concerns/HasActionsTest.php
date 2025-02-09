@@ -22,7 +22,6 @@ class HasActionsMethod extends HasActionsTest
             BulkAction::make('restore.products')->allow(false),
             PageAction::make('create.product'),
             PageAction::make('show.product')->allow(false),
-
         ];
     }
 }

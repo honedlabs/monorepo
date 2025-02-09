@@ -31,7 +31,7 @@ it('has array representation', function () {
         ]);
 });
 
-it('has array representation with destination', function () {
+it('has array representation with route', function () {
     expect($this->test->route('products.index')->toArray())
         ->toBeArray()
         ->toEqual([
@@ -44,7 +44,7 @@ it('has array representation with destination', function () {
             'confirm' => null,
             'action' => false,
             'href' => route('products.index'),
-            'method' => Request::METHOD_GET
+            'method' => Request::METHOD_GET,
         ]);
 });
 

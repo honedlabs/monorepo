@@ -8,9 +8,8 @@ use Honed\Core\Contracts\TransferObject;
 
 class ActionData implements TransferObject
 {
-    public function __construct(
-        public readonly string $name,
-    ) {
+    public function __construct(public readonly string $name) 
+    {
         //
     }
 

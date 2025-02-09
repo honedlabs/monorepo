@@ -69,14 +69,12 @@ class Handler implements Makeable
             Creator::Page => ActionData::from($request),
             default => abort(400),
         };
-
+        
         [$action, $query] = $this->resolveAction($type, $data);
 
         abort_if(\is_null($action), 400);
 
-        $inline = $action instanceof InlineAction;
-
-        abort_if($inline && \is_null($query), 404);
+        abort_if(\is_null($query), 404);
 
         $this->checkValidity($action, $query);
 
@@ -101,7 +99,7 @@ class Handler implements Makeable
             Creator::Inline => $this->resolveInlineAction(type($data)->as(InlineData::class)),
             Creator::Bulk => $this->resolveBulkAction(type($data)->as(BulkData::class)),
             Creator::Page => $this->resolvePageAction($data),
-            default => throw new InvalidActionException($type),
+            default => static::throwInvalidArgumentException($type),
         };
     }
 
@@ -171,14 +169,10 @@ class Handler implements Makeable
     /**
      * Check whether the action is valid and the current user can execute it.
      * 
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Model|null $query
+     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Model $query
      */
-    protected function checkValidity(?Action $action, $query): void
+    protected function checkValidity(Action $action, $query): void
     {
-        abort_if(\is_null($action), 400);
-
-        abort_if(\is_null($query), 404);
-
         [$model, $singular, $plural] = $this->getParameterNames($query);
 
         $named = [
@@ -197,5 +191,15 @@ class Handler implements Makeable
         ];
 
         abort_if(! $action->isAllowed($named, $typed), 403);
+    }
+
+    /**
+     * Throw an invalid argument exception.
+     */
+    protected static function throwInvalidArgumentException(string $type): never
+    {
+        throw new \InvalidArgumentException(\sprintf(
+            'Action type [%s] is invalid.', $type
+        ));
     }
 }
