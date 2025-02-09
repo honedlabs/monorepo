@@ -10,12 +10,6 @@ beforeEach(function () {
     $this->test = Table::make();
 });
 
-
-it('can be made', function () {
-    expect($this->test)
-        ->toBeInstanceOf(HonedTable::class);
-});
-
 it('has array representation', function () {
     expect($this->test)
         ->toArray()

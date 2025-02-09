@@ -11,16 +11,6 @@ use Honed\Table\Tests\Stubs\ExampleTable;
 
 uses(TestCase::class)->in(__DIR__);
 
-function exampleTable(): ExampleTable
-{
-    return ExampleTable::make();
-}
-
-function blankTable(): Table
-{
-    return Table::make();
-}
-
 function product(?string $name = null): Product
 {
     return Product::create([

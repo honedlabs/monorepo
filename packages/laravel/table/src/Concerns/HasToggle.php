@@ -130,15 +130,10 @@ trait HasToggle
             $params = $this->configureCookie($request, $params);
         }
 
-        return \array_filter($columns,
-            function (Column $column) use ($params) {
-                if (\is_null($params)) {
-                    return $column->isKey() || $column->isToggleable();
-                }
-
-                return \in_array($column->getName(), $params);
-            }
-        );
+        return $columns->filter(static fn (Column $column) => $column->isKey() || $column->isToggleable())
+            ->filter(static fn (Column $column) => \is_null($params) || \in_array($column->getName(), $params))
+            ->values()
+            ->all();
     }
 
     /**

@@ -65,7 +65,7 @@ trait IsSortable
     /**
      * @return $this
      */
-    protected function enableSorting(string $sortable): static
+    protected function enableSorting(string|true $sortable): static
     {
         $this->sortable = true;
         $this->sort = Sort::make(

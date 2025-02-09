@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Honed\Action\Action;
 use Honed\Table\Actions\InlineAction;
+use Honed\Table\Columns\Column;
 use Honed\Table\Tests\Stubs\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 trait HasRecords
@@ -19,11 +22,16 @@ trait HasRecords
     protected $records = null;
 
     /**
+     * @var array<string,mixed>
+     */
+    protected $meta = [];
+
+    /**
      * Get the records of the table.
      *
-     * @return \Illuminate\Support\Collection<int,array<string,mixed>>|null
+     * @return array<int,array<string,mixed>>|null
      */
-    public function getRecords(): ?Collection
+    public function getRecords(): ?array
     {
         return $this->records;
     }
@@ -41,30 +49,49 @@ trait HasRecords
      * 
      * @param \Illuminate\Support\Collection<int,\Honed\Table\Columns\Column> $activeColumns
      */
-    public function formatRecords(Collection $activeColumns): void
+    public function formatAndPaginateRecords(Collection $activeColumns): void
     {
         if (! $this->hasRecords()) {
             return;
         }
 
-        $this->records = $this->getRecords();
+        $this->records = $this->getRecords()
+            ->reduce(fn (array $records, Model $record) => 
+                \array_push($records, $this->formatRecord($record, $activeColumns)), 
+            []);
     }
 
+    /**
+     * Format a record using the provided columns.
+     * 
+     * @param \Illuminate\Database\Eloquent\Model $record
+     * @param \Illuminate\Support\Collection<int,\Honed\Table\Columns\Column> $activeColumns
+     * 
+     * @return array<string,mixed>
+     */
+    protected function formatRecord(Model $record, Collection $columns): array
+    {
+        $reducing = false;
 
-    // /**
-    //  * @return array<int,\Honed\Action\InlineAction>
-    //  */
-    // protected function setActionsForRecord(Model $record): array
-    // {
-    //     $actions = $this->inlineActions();
+        $actions = $this->inlineActions()
+            ->filter(fn (Action $action) => $action->isAllowed($record))
+            ->map(fn (Action $action) => $action->resolve()->toArray())
+            ->all();
 
-    //     return $actions
-    //         ->filter(fn (InlineAction $action) => $action->isAuthorized($record))
-    //         ->each(fn (InlineAction $action) => $action->link->resolveLink([
-    //             'record' => $record,
-    //         ], [
-                
-    //         ]))
-    //         ->values();
-    // }
+        $key = $record->{$this->getKeyname()};
+
+        $formatted = match ($reducing) {
+            true => [],
+            false => $record->toArray(),
+        };
+
+        foreach ($columns as $column) {
+            $formatted[$column->getName()] = $column->format($record);
+        }
+
+        $formatted['actions'] = $actions;
+        $formatted['key'] = $key;
+
+        return $formatted;
+    }
 }

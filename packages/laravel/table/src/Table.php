@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use Honed\Action\Concerns\HasActions;
+use Honed\Refine\Refine;
+use Honed\Table\Columns\Column;
 use Honed\Core\Concerns\Encodable;
 use Honed\Core\Concerns\RequiresKey;
-use Honed\Core\Exceptions\MissingRequiredAttributeException;
-use Honed\Refine\Refine;
+use Honed\Action\Concerns\HasActions;
 use Illuminate\Database\Eloquent\Builder;
+use Honed\Core\Exceptions\MissingRequiredAttributeException;
 
 class Table extends Refine
 {
@@ -54,6 +55,8 @@ class Table extends Refine
         if ($this->isRefined()) {
             return $this;
         }
+
+        $this->builder($this->getResource());
         
         $activeColumns = $this->toggle();
         
@@ -79,7 +82,9 @@ class Table extends Refine
             'id' => $this->encode(static::class),
             'records' => $this->getRecords(),
             'meta' => $this->getMeta(),
-            'columns' => $this->getColumns(),
+            'columns' => $this->getColumns()
+                ->filter(static fn (Column $column) => $column->isActive())
+                ->toArray(),
             'pages' => $this->getPages(),
             'filters' => $this->getFilters(),
             'sorts' => $this->getSorts(),
