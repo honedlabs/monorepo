@@ -14,6 +14,8 @@ trait HasRequest
     protected $request;
 
     /**
+     * Set the request instance.
+     *
      * @return $this
      */
     public function request(Request $request): static
@@ -23,6 +25,9 @@ trait HasRequest
         return $this;
     }
 
+    /**
+     * Get the request instance.
+     */
     public function getRequest(): Request
     {
         return $this->request;
