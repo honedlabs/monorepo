@@ -5,17 +5,13 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Honed\Action\Http\Data\BulkData;
-use Honed\Action\Http\Data\PageData;
 use Honed\Action\Http\Data\ActionData;
 use Honed\Action\Http\Data\InlineData;
 use Illuminate\Database\Eloquent\Model;
-use Honed\Core\Contracts\TransferObject;
 use Illuminate\Database\Eloquent\Builder;
 use Honed\Core\Concerns\HasBuilderInstance;
-use Honed\Action\Concerns\HasParameterNames;
 use Illuminate\Contracts\Support\Responsable;
 use Honed\Action\Exceptions\InvalidActionException;
-use Honed\Core\Concerns\RequiresKey;
 use Honed\Core\Contracts\Makeable;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -135,8 +131,10 @@ class Handler implements Makeable
     protected function resolveInlineAction(InlineData $data): array
     {
         return [
-            collect($this->getActions())->first(fn (Action $action) => $action instanceof InlineAction && $action->getName() === $data->name),
-            $this->getBuilder()->where($this->getKey($this->getBuilder()), $data->id)->first(),
+            collect($this->getActions())
+                ->first(fn (Action $action) => $action instanceof InlineAction && $action->getName() === $data->name),
+            $this->getBuilder()
+                ->where($this->getKey($this->getBuilder()), $data->id)->first(),
         ];
     }
 
@@ -150,8 +148,11 @@ class Handler implements Makeable
         $key = $this->getKey($builder);
 
         return [
-            collect($this->getActions())->first(fn (Action $action) => $action instanceof BulkAction && $action->getName() === $data->name),
-            $data->all ? $builder->whereNotIn($key, $data->except) : $builder->whereIn($key, $data->only),
+            collect($this->getActions())
+                ->first(fn (Action $action) => $action instanceof BulkAction && $action->getName() === $data->name),
+            $data->all 
+                ? $builder->whereNotIn($key, $data->except) 
+                : $builder->whereIn($key, $data->only),
         ];
     }
 
@@ -161,7 +162,8 @@ class Handler implements Makeable
     protected function resolvePageAction(ActionData $data): array
     {
         return [
-            collect($this->getActions())->first(fn (Action $action) => $action instanceof PageAction && $action->getName() === $data->name),
+            collect($this->getActions())
+                ->first(fn (Action $action) => $action instanceof PageAction && $action->getName() === $data->name),
             $this->getBuilder(),
         ];
     }

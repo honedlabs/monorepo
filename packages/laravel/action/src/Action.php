@@ -12,7 +12,6 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasExtra;
-use Honed\Core\Contracts\ResolvesClosures;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
@@ -55,7 +54,7 @@ abstract class Action extends Primitive
     /**
      * @return array<string,mixed>
      */
-    protected function routeToArray(): array
+    public function routeToArray(): array
     {
         if (! $this->hasRoute()) {
             return [];
@@ -68,17 +67,17 @@ abstract class Action extends Primitive
     }
 
     /**
-     * Resolve the action.
+     * Resolve the action's properties.
      * 
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
      * 
      * @return $this
      */
-    public function resolve($parameters = [], $typed = []): static
+    public function resolve(array $parameters = [], array $typed = []): static
     {
-        $this->resolveLabel($parameters, $typed);
         $this->resolveName($parameters, $typed);
+        $this->resolveLabel($parameters, $typed);
         $this->resolveIcon($parameters, $typed);
         $this->resolveRoute($parameters, $typed);
 
