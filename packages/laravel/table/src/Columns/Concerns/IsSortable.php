@@ -17,7 +17,7 @@ trait IsSortable
     protected $sortable = false;
 
     /**
-     * @var \Honed\Table\Sorts\Contracts\Sort|null
+     * @var \Honed\Refine\Sorts\Sort|null
      */
     protected $sort;
 
@@ -49,6 +49,17 @@ trait IsSortable
     public function getSort(): ?Sort
     {
         return $this->sort;
+    }
+
+    /**
+     * @return array{direction: 'asc'|'desc'|null, next: 'asc'|'desc'|null}
+     */
+    public function sortToArray(): array
+    {
+        return [
+            'direction' => $this->getSort()?->getDirection(),
+            'next' => $this->getSort()?->getNextDirection(),
+        ];
     }
 
     /**

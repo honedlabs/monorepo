@@ -11,10 +11,14 @@ use Honed\Core\Concerns\RequiresKey;
 use Honed\Action\Concerns\HasActions;
 use Illuminate\Database\Eloquent\Builder;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Table extends Refine
 {
+    use Concerns\ConfiguresKeys;
     use Concerns\HasColumns;
+    use Concerns\HasEndpoint;
     use Concerns\HasModifier;
     use Concerns\HasPages;
     use Concerns\HasRecords;
@@ -56,7 +60,9 @@ class Table extends Refine
             return $this;
         }
 
-        $this->builder($this->getResource());
+        $this->builder(
+            $this->createBuilder($this->getResource())
+        );
         
         $activeColumns = $this->toggle();
         
@@ -64,9 +70,7 @@ class Table extends Refine
         
         $this->refine();
         
-        $this->paginateRecords();
-        
-        $this->formatRecords($activeColumns);
+        $this->formatAndPaginateRecords($activeColumns);
 
         return $this;
     }
@@ -91,15 +95,7 @@ class Table extends Refine
             'toggleable' => $this->isToggleable(),
             'actions' => $this->actionsToArray(),
             'endpoint' => $this->getEndpoint(),
-            'keys' => [
-                'records' => $this->getKeyName(),
-                'sorts' => $this->getSortKey(),
-                'order' => $this->getOrderKey(),
-                'search' => $this->getSearchKey(),
-                'toggle' => $this->getToggleKey(),
-                'pages' => $this->getPagesKey(),
-                ...($this->hasMatches() ? ['match' => $this->getMatchKey()] : []),
-            ],
+            'keys' => $this->keysToArray(),
         ];
     }
 
@@ -109,8 +105,10 @@ class Table extends Refine
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         return match ($parameterName) {
+            'builder' => [$this->getResource()],
             'resource' => [$this->getResource()],
             'query' => [$this->getResource()],
+            'request' => [$this->getRequest()],
             default => [],
         };
     }
@@ -122,6 +120,8 @@ class Table extends Refine
     {
         return match ($parameterType) {
             Builder::class => [$this->getResource()],
+            Model::class => [$this->getResource()],
+            Request::class => [$this->getRequest()],
             default => [],
         };
     }

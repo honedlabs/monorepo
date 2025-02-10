@@ -43,19 +43,9 @@ trait HasPages
     protected static $defaultPerPageAmount = 10;
 
     /**
-     * @var 'cursor'|'simple'|'length-aware'|class-string<\Illuminate\Contracts\Pagination\Paginator>|null
+     * @var 'cursor'|'simple'|'length-aware'|class-string|null
      */
     protected $paginator;
-
-    /**
-     * @var string|null
-     */
-    protected $pageKey;
-
-    /**
-     * @var string
-     */
-    protected $shown;
 
     /**
      * Get the options for the number of records to show per page.

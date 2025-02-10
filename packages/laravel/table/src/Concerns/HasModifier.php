@@ -44,10 +44,10 @@ trait HasModifier
      */
     public function modify(): void
     {
-        if (! $this->hasModifier()) {
+        if (\is_null($this->modifier)) {
             return;
         }
         
-        \call_user_func($this->getModifier(), $this->getResource());
+        \call_user_func($this->modifier, $this->getResource());
     }
 }

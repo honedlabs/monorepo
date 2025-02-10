@@ -18,6 +18,9 @@ use Honed\Core\Concerns\IsKey;
 use Honed\Core\Concerns\Transformable;
 use Honed\Core\Primitive;
 
+/**
+ * @extends Primitive<string, mixed>
+ */
 class Column extends Primitive
 {
     use Allowable;
