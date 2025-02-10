@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class Table extends Refine
 {
@@ -85,9 +86,10 @@ class Table extends Refine
             'id' => $this->encode(static::class),
             'records' => $this->getRecords(),
             'meta' => $this->getMeta(),
-            'columns' => $this->getColumns()
-                ->filter(static fn (Column $column) => $column->isActive())
-                ->toArray(),
+            'columns' => Arr::where(
+                $this->getColumns(),
+                static fn (Column $column): bool => $column->isActive()
+            ),
             'pages' => $this->getPages(),
             'filters' => $this->getFilters(),
             'sorts' => $this->getSorts(),

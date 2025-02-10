@@ -15,7 +15,7 @@ function product(?string $name = null): Product
 {
     return seller()->products()->create([
         'public_id' => Str::uuid(),
-        'name' => $name ?? fake()->unique()->words(2),
+        'name' => $name ?? fake()->unique()->words(2, true),
         'description' => fake()->sentence(),
         'price' => fake()->randomNumber(4),
         'best_seller' => fake()->boolean(),

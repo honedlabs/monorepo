@@ -40,4 +40,5 @@ it('has array representation', function () {
 it('accepts a request to use', function () {
     // $this->test->build(request());
     dd($this->test->toArray());
+
 });

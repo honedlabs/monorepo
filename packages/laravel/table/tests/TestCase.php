@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Table\Tests;
 
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 use Honed\Table\Tests\Stubs\Status;
 use Illuminate\Support\Facades\View;
 use Honed\Table\TableServiceProvider;
@@ -83,5 +84,6 @@ class TestCase extends Orchestra
     protected function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
+        config()->set('app.key', 'base64:'.base64_encode(Str::random(32)));
     }
 }

@@ -23,7 +23,7 @@ trait HasResource
     {
         return match (true) {
             \method_exists($this, 'resource') => $this->resource(),
-            \property_exists($this, 'resource') && ! \is_null($this->resource) => $this->resource,
+            isset($this->resource) => $this->resource,
             default => $this->guessResource()
         };
     }
