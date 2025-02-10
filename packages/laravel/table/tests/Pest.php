@@ -13,7 +13,7 @@ uses(TestCase::class)->in(__DIR__);
 
 function product(?string $name = null): Product
 {
-    return Product::create([
+    return seller()->products()->create([
         'public_id' => Str::uuid(),
         'name' => $name ?? fake()->unique()->words(2),
         'description' => fake()->sentence(),

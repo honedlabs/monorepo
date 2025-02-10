@@ -134,10 +134,7 @@ trait HasRecords
             : $this->getDefaultPagination();
 
         $this->pages = Arr::map($pagination, 
-            static fn (int $perPage) => Page::make(
-                $perPage, 
-                $perPage === $perPage
-            )
+            static fn (int $amount) => Page::make($amount, $perPage)
         );
 
         return $perPage;
@@ -348,8 +345,8 @@ trait HasRecords
             'total' => $paginator->total(),
             'from' => $paginator->firstItem(),
             'to' => $paginator->lastItem(),
-            'first' => $paginator->firstPageUrl(),
-            'last' => $paginator->lastPageUrl(),
+            'first' => $paginator->url(1),
+            'last' => $paginator->url($paginator->lastPage()),
             'links' => $paginator->linkCollection()->slice(1, -1)->toArray(),
         ]);
     }
@@ -392,7 +389,9 @@ trait HasRecords
      */
     protected static function throwInvalidPaginatorException(string $paginator): never
     {
-        throw new \InvalidArgumentException(\sprintf('The paginator [%s] is not valid.', $paginator));
+        throw new \InvalidArgumentException(
+            \sprintf('The paginator [%s] is not valid.', $paginator
+        ));
     }
     
 }

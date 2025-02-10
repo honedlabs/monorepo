@@ -91,7 +91,7 @@ class Table extends Refine
             'pages' => $this->getPages(),
             'filters' => $this->getFilters(),
             'sorts' => $this->getSorts(),
-            'toggleable' => $this->isToggleable(),
+            'toggle' => $this->isToggleable(),
             'actions' => $this->actionsToArray(),
             'endpoint' => $this->getEndpoint(),
             'keys' => $this->keysToArray(),

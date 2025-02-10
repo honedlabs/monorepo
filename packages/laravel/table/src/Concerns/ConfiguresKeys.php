@@ -157,10 +157,8 @@ trait ConfiguresKeys
             'record' => $this->getKeyName(),
             'records' => $this->getRecordsKey(),
             'sorts' => $this->getSortKey(),
-            'filters' => $this->getFilterKey(),
             'search' => $this->getSearchKey(),
-            'toggle' => $this->getToggleKey(),
-            'pages' => $this->getPagesKey(),
+            'columns' => $this->getColumnsKey(),
             ...($this->hasMatches() ? ['match' => $this->getMatchKey()] : []),
         ];
     }

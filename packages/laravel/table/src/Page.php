@@ -16,11 +16,11 @@ class Page extends Primitive
     use IsActive;
     use HasValue;
 
-    public static function make(int $value, bool $active = false): static
+    public static function make(int $value, int $active = 0): static
     {
         return resolve(static::class)
             ->value($value)
-            ->active($active);
+            ->active($active === $value);
     }
 
     public function toArray(): array

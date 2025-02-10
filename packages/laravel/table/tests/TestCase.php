@@ -21,22 +21,11 @@ class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
+
         View::addLocation(__DIR__.'/Stubs');
         Inertia::setRootView('app');
         config()->set('inertia.testing.ensure_pages_exist', false);
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
-    }
-
-    /**
-     * Define environment setup.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    protected function getEnvironmentSetUp($app)
-    {
-        // Generate a random key for testing
-        $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
     }
 
     protected function getPackageProviders($app)
@@ -89,5 +78,10 @@ class TestCase extends Orchestra
             $router->get('/products/{product}', fn () => Inertia::render('Products/Show'))->name('products.show');
             $router->get('/products/create', fn () => Inertia::render('Products/Create'))->name('products.create');
         });
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        config()->set('database.default', 'testing');
     }
 }

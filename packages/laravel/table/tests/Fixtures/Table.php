@@ -28,9 +28,9 @@ class Table extends HonedTable
 
     public $toggle = true;
 
-    public $perPage = [10, 25, 50];
+    public $pagination = [10, 25, 50];
 
-    public $defaultPerPage = 10;
+    public $defaultPagination = 10;
 
     public $cookie = 'example-table';
 
@@ -80,9 +80,9 @@ class Table extends HonedTable
             InlineAction::make('delete')
                 ->allow(fn (Product $product) => $product->id % 2 === 0)
                 ->action(fn (Product $product) => $product->delete())
-                ->confirm(fn (Confirm $confirm) => $confirm->title(fn (Product $product) => 'You are about to delete '.$product->name)->description('Are you sure?')),
+                ->confirm(fn (Confirm $confirm) => $confirm->name(fn (Product $product) => 'You are about to delete '.$product->name)->description('Are you sure?')),
             InlineAction::make('show')
-                ->route('products.show'),
+                ->route(fn ($product) => route('products.show', $product)),
             BulkAction::make('update')
                 ->action(fn (Product $product) => $product->update(['name' => 'Bulk'])),
             PageAction::make('create')

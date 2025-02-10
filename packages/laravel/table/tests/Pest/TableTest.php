@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 use Honed\Table\Table as HonedTable;
 use Honed\Table\Tests\Fixtures\Table;
-
+use Illuminate\Support\Arr;
 
 beforeEach(function () {
     $this->test = Table::make();
+
+    foreach (\range(1, 100) as $i) {
+        product();
+    }
 });
 
 it('has array representation', function () {
