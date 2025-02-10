@@ -10,6 +10,8 @@ trait ConfiguresKeys
 
     const ColumnKey = 'columns';
 
+    const RecordKey = 'rows';
+
     /**
      * The key for pagination.
      * 
@@ -41,7 +43,23 @@ trait ConfiguresKeys
     protected static $defaultColumnsKey = self::ColumnKey;
 
     /**
+     * The key for the number of records to show.
+     * 
+     * @var string|null
+     */
+    protected $recordsKey;
+
+    /**
+     * The default key for the number of records to show.
+     * 
+     * @var string
+     */
+    protected static $defaultRecordsKey = self::RecordKey;
+
+    /**
      * Get the key for pagination.
+
+
      */
     public function getPageKey(): string
 
@@ -67,6 +85,18 @@ trait ConfiguresKeys
     }
 
     /**
+     * Get the key for the number of records to show.
+     */
+    public function getRecordsKey(): string
+    {
+        return match (true) {
+            \property_exists($this, 'recordsKey') && ! \is_null($this->recordsKey) => $this->recordsKey,
+            \method_exists($this, 'recordsKey') => $this->recordsKey(),
+            default => static::getDefaultRecordsKey(),
+        };
+    }
+
+    /**
      * Get the default page key for all tables.
      */
     public static function getDefaultPageKey(): string
@@ -83,7 +113,16 @@ trait ConfiguresKeys
     }
 
     /**
+     * Get the default records key for all tables.
+     */
+    public static function getDefaultRecordsKey(): string
+    {
+        return static::$defaultRecordsKey;
+    }
+
+    /**
      * Set the default page key for all tables.
+
      */
     public static function usePageKey(string $key): void
     {
@@ -99,15 +138,24 @@ trait ConfiguresKeys
     }
 
     /**
+     * Set the default records key for all tables.
+     */
+    public static function useRecordsKey(string $key): void
+    {
+        static::$defaultRecordsKey = $key;
+    }
+
+    /**
      * Get the keys for the table as an array.
      * 
      * @return array<string,string>
      */
+
     public function keysToArray(): array
     {
         return [
-
-            'records' => $this->getKeyName(),
+            'record' => $this->getKeyName(),
+            'records' => $this->getRecordsKey(),
             'sorts' => $this->getSortKey(),
             'filters' => $this->getFilterKey(),
             'search' => $this->getSearchKey(),

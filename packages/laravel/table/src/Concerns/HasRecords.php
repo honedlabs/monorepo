@@ -6,6 +6,7 @@ namespace Honed\Table\Concerns;
 
 use Illuminate\Support\Arr;
 use Honed\Action\InlineAction;
+use Honed\Table\Page;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,9 +20,9 @@ trait HasRecords
     use HasPaginator;
 
     /**
-     * @var array<int,\Honed\Table\Page>|null
+     * @var array<int,\Honed\Table\Page>
      */
-    protected $pages;    
+    protected $pages = [];
 
     /**
      * The records of the table retrieved from the resource.
@@ -64,11 +65,21 @@ trait HasRecords
     }
 
     /**
+     * Get the page options of the table.
+     * 
+     * @return array<int,\Honed\Table\Page>
+     */
+    public function getPages(): array
+    {
+        return $this->pages;
+    }
+    
+    /**
      * Format the records using the provided columns.
      * 
      * @param array<int,\Honed\Table\Columns\Column> $activeColumns
      */
-    public function formatAndPaginateRecords(array $activeColumns): void
+    public function formatAndPaginate(array $activeColumns): void
     {
         if ($this->hasRecords()) {
             return;
@@ -105,6 +116,49 @@ trait HasRecords
         $this->records = $formattedRecords;
     }
 
+    /**
+     * Get the number of records to show per page.
+     */
+    protected function getRecordsPerPage(): int
+    {
+        $pagination = $this->getPagination();
+        
+        if (! \is_array($pagination)) {
+            return $pagination;
+        }
+
+        $perPage = $this->getRecordsFromRequest();
+
+        $perPage = \in_array($perPage, type($this->getPagination())->asArray())
+            ? $perPage
+            : $this->getDefaultPagination();
+
+        $this->pages = Arr::map($pagination, 
+            static fn (int $perPage) => Page::make(
+                $perPage, 
+                $perPage === $perPage
+            )
+        );
+
+        return $perPage;
+    }
+
+    /**
+     * Get the number of records to show per page from the request.
+     */
+    protected function getRecordsFromRequest(): int
+    {
+        /**
+         * @var \Illuminate\Http\Request
+         */
+        $request = $this->getRequest();
+
+        return $request->integer(
+            $this->getRecordsKey(),
+            $this->getDefaultPagination(),
+        );
+    }
+
 
     /**
      * Format a record using the provided columns.
@@ -118,12 +172,12 @@ trait HasRecords
     {
         $reducing = false;
 
-        $actions = \array_map(
-            fn (InlineAction $action) => $action->resolve()->toArray(),
-            \array_filter(
+        $actions = Arr::map(
+            Arr::where(
                 $this->inlineActions(),
                 fn (InlineAction $action) => $action->isAllowed($record)
-            )
+            ),
+            fn (InlineAction $action) => $action->resolve()->toArray(),
         );
 
         $key = $record->{$this->getKeyname()};
@@ -131,11 +185,11 @@ trait HasRecords
         $formatted = ($reducing) ? [] : $record->toArray(); // @phpstan-ignore-line
 
         foreach ($columns as $column) {
-            $formatted[$column->getName()] = $column->format($record);
+            Arr::set($formatted, $column->getName(), $column->format($record));
         }
 
-        $formatted['actions'] = $actions;
-        $formatted['key'] = $key;
+        Arr::set($formatted, 'actions', $actions);
+        Arr::set($formatted, 'key', $key);
 
         return $formatted;
     }

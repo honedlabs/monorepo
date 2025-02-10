@@ -20,7 +20,6 @@ class Table extends Refine
     use Concerns\HasColumns;
     use Concerns\HasEndpoint;
     use Concerns\HasModifier;
-    use Concerns\HasPages;
     use Concerns\HasRecords;
     use Concerns\HasResource;
     use Concerns\HasToggle;
@@ -70,7 +69,7 @@ class Table extends Refine
         
         $this->refine();
         
-        $this->formatAndPaginateRecords($activeColumns);
+        $this->formatAndPaginate($activeColumns);
 
         return $this;
     }
