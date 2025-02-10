@@ -11,11 +11,13 @@ use Honed\Core\Concerns\RequiresKey;
 use Honed\Action\Concerns\HasActions;
 use Illuminate\Database\Eloquent\Builder;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
+use Honed\Table\Concerns\HasTableBindings;
+use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class Table extends Refine
+class Table extends Refine implements UrlRoutable
 {
     use Concerns\ConfiguresKeys;
     use Concerns\HasColumns;
@@ -27,6 +29,7 @@ class Table extends Refine
     use Encodable;
     use HasActions;
     use RequiresKey;
+    use HasTableBindings;
 
     /**
      * @param \Closure|null $modifier
@@ -47,11 +50,14 @@ class Table extends Refine
         try {
             return $this->getKey();
         } catch (MissingRequiredAttributeException $e) {
-            return $this->getKeyColumn()?->getName() ?? throw $e;
+            return $this->getKeyColumn()
+                ?->getName() ?? throw $e;
         }
     }
 
     /**
+     * Build the table using the given request.
+     * 
      * @return $this
      */
     public function buildTable(): static
@@ -83,13 +89,10 @@ class Table extends Refine
         $this->buildTable();
 
         return [
-            'id' => $this->encode(static::class),
+            'table' => $this->getRouteKey(),
             'records' => $this->getRecords(),
             'meta' => $this->getMeta(),
-            'columns' => Arr::where(
-                $this->getColumns(),
-                static fn (Column $column): bool => $column->isActive()
-            ),
+            'columns' => $this->getActiveColumns(),
             'pages' => $this->getPages(),
             'filters' => $this->getFilters(),
             'sorts' => $this->getSorts(),
@@ -97,6 +100,23 @@ class Table extends Refine
             'actions' => $this->actionsToArray(),
             'endpoint' => $this->getEndpoint(),
             'keys' => $this->keysToArray(),
+        ];
+    }
+
+    /**
+     * Get the keys for the table as an array.
+     * 
+     * @return array<string,string>
+     */
+    public function keysToArray(): array
+    {
+        return [
+            'record' => $this->getKeyName(),
+            'records' => $this->getRecordsKey(),
+            'sorts' => $this->getSortKey(),
+            'search' => $this->getSearchKey(),
+            'columns' => $this->getColumnsKey(),
+            ...($this->hasMatches() ? ['match' => $this->getMatchKey()] : []),
         ];
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Honed\Action\Concerns\HasParameterNames;
 use Illuminate\Support\Arr;
 use Honed\Action\InlineAction;
 use Honed\Table\Page;
@@ -18,6 +19,7 @@ trait HasRecords
 {
     use HasPagination;
     use HasPaginator;
+    use HasParameterNames;
 
     /**
      * @var array<int,\Honed\Table\Page>
@@ -168,12 +170,14 @@ trait HasRecords
     {
         $reducing = false;
 
+        [$named, $typed] = static::getNamedAndTypedParameters($record);
+
         $actions = Arr::map(
             Arr::where(
                 $this->inlineActions(),
-                fn (InlineAction $action) => $action->isAllowed($record)
+                fn (InlineAction $action) => $action->isAllowed($named, $typed)
             ),
-            fn (InlineAction $action) => $action->resolve()->toArray(),
+            fn (InlineAction $action) => $action->resolve($named, $typed)->toArray(),
         );
 
         $key = $record->{$this->getKeyname()};
@@ -281,7 +285,7 @@ trait HasRecords
             $metadata,
         ];
     }
-    
+
     /**
      * Throw an exception for an invalid paginator type.
      */

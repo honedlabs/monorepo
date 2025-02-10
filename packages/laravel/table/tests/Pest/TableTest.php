@@ -14,31 +14,34 @@ beforeEach(function () {
     }
 });
 
-it('has array representation', function () {
-    expect($this->test)
-        ->toArray()
-        ->toBeArray()
-        ->toHaveKeys([
-            'id',
-            'key',
-            'records',
-            'columns',
-            'actions',
-            'filters',
-            'sorts',
-            'paginator',
-            'toggleable',
-            'sort',
-            'order',
-            'count',
-            'search',
-            'toggle',
-            'endpoint',
-        ]);
-})->skip();
+it('builds', function () {
+    expect($this->test->buildTable())
+        ->toBe($this->test)
+        ->getPaginator()->toBe('length-aware')
+        ->getMeta()->toHaveCount(10)
+        ->getCookie()->toBe('example-table');
+});
 
-it('accepts a request to use', function () {
-    // $this->test->build(request());
-    dd($this->test->toArray());
+it('can be modified', function () {
 
 });
+
+// it('refines', function () {
+//     expect($this->test->buildTable())
+//         ->toBe($this->test)
+//         ->getFilters()->toBe([]);
+// });
+
+// it('toggles', function () {
+//     expect($this->test->buildTable())
+//         ->toBe($this->test)
+//         ->getColumns()->toBe([]);
+// });
+
+// it('actions', function () {
+//     expect($this->test->buildTable())
+//         ->toBe($this->test)
+//         ->getActions()->toBe([]);
+// });
+
+

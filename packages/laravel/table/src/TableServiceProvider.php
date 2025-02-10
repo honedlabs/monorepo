@@ -3,6 +3,7 @@
 namespace Honed\Table;
 
 use Honed\Table\Console\Commands\TableMakeCommand;
+use Honed\Table\Http\InvokedController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -30,7 +31,6 @@ class TableServiceProvider extends ServiceProvider
         ], 'table-config');
 
         $this->configureEndpoint();
-        $this->configureBindings();
     }
 
     /**
@@ -44,33 +44,12 @@ class TableServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the route model binding for the Table class.
-     */
-    private function configureBindings(): void
-    {
-        Route::bind('table', function (string $value): Table {
-            try {
-                $class = Table::decode($value);
-
-                if (! \class_exists($class) || ! \is_subclass_of($class, Table::class)) {
-                    abort(404);
-                }
-
-                return $class::make();
-                
-            } catch (\Throwable $th) {
-                abort(404);
-            }
-        });
-    }
-
-    /**
      * Configure the default endpoint for the Table class.
      */
     private function configureEndpoint(): void
     {
         Route::macro('table', function () {
-            Route::post(Table::getDefaultEndpoint(), [Table::class, 'handleAction']);
+            Route::post(Table::getDefaultEndpoint(), InvokedController::class);
         });
     }
 }

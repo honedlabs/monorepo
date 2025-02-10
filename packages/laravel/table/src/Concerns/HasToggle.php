@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Honed\Table\Columns\BaseColumn;
-use Honed\Table\Columns\Column;
-use Honed\Table\Contracts\ShouldRemember;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use Honed\Table\Columns\Column;
 use Illuminate\Support\Collection;
+use Honed\Table\Columns\BaseColumn;
 use Illuminate\Support\Facades\Cookie;
+use Honed\Table\Contracts\ShouldRemember;
 
 trait HasToggle
 {
@@ -46,7 +47,7 @@ trait HasToggle
      */
     public function isToggleable(): bool
     {
-        if (\property_exists($this, 'toggle') && ! \is_null($this->toggle)) {
+        if (isset($this->toggle)) {
             return $this->toggle;
         }
 
@@ -58,7 +59,7 @@ trait HasToggle
      */
     public function isRemembering(): bool
     {
-        if (\property_exists($this, 'remember') && ! \is_null($this->remember)) {
+        if (isset($this->remember)) {
             return $this->remember;
         }
 
@@ -74,7 +75,7 @@ trait HasToggle
      */
     public function getCookie(): string
     {
-        if (\property_exists($this, 'cookie') && ! \is_null($this->cookie)) {
+        if (isset($this->cookie)) {
             return $this->cookie;
         }
 
@@ -91,7 +92,7 @@ trait HasToggle
      */
     public function getDuration(): int
     {
-        if (\property_exists($this, 'duration') && ! \is_null($this->duration)) {
+        if (isset($this->duration)) {
             return $this->duration;
         }
 
@@ -103,7 +104,7 @@ trait HasToggle
      */
     public function getColumnsKey(): string
     {
-        if (\property_exists($this, 'columnsKey') && ! \is_null($this->columnsKey)) {
+        if (isset($this->columnsKey)) {
             return $this->columnsKey;
         }
 
@@ -130,10 +131,14 @@ trait HasToggle
             $params = $this->configureCookie($request, $params);
         }
 
-        return $columns->filter(static fn (Column $column) => $column->isKey() || $column->isToggleable())
-            ->filter(static fn (Column $column) => \is_null($params) || \in_array($column->getName(), $params))
-            ->values()
-            ->all();
+        return Arr::where(
+            $columns,
+            static fn (Column $column) => ($column->isKey() || 
+                $column->isToggleable()) && (
+                    \is_null($params) || 
+                    \in_array($column->getName(), $params)
+                )
+        );
     }
 
     /**
@@ -144,7 +149,11 @@ trait HasToggle
     public function configureCookie(Request $request, ?array $params): ?array
     {
         if (! \is_null($params)) {
-            Cookie::queue($this->getCookie(), \json_encode($params), $this->getDuration());
+            Cookie::queue(
+                $this->getCookie(), 
+                \json_encode($params), 
+                $this->getDuration()
+            );
 
             return $params;
         }
