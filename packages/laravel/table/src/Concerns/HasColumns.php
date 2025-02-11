@@ -11,7 +11,7 @@ trait HasColumns
     /**
      * Retrieved columns with authorization applied.
      * 
-     * @var Collection<int,\Honed\Table\Columns\Column>|null
+     * @var array<int,\Honed\Table\Columns\Column>|null
      */
     protected $cachedColumns;
 

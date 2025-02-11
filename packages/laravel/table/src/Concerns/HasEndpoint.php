@@ -22,7 +22,7 @@ trait HasEndpoint
     public function getEndpoint(): string
     {
         return match (true) {
-            \property_exists($this, 'endpoint') && ! \is_null($this->endpoint) => $this->endpoint,
+            isset($this->endpoint) => $this->endpoint,
             \method_exists($this, 'endpoint') => $this->endpoint(),
             default => static::getDefaultEndpoint(),
         };

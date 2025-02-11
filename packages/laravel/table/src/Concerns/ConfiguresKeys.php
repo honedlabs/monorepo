@@ -65,10 +65,11 @@ trait ConfiguresKeys
 
     {
         return match (true) {
-            \property_exists($this, 'pageKey') && ! \is_null($this->pageKey) => $this->pageKey,
+            isset($this->pageKey) => $this->pageKey,
             \method_exists($this, 'pageKey') => $this->pageKey(),
             default => static::getDefaultPageKey(),
         };
+
     }
 
     /**
@@ -77,8 +78,7 @@ trait ConfiguresKeys
     public function getColumnKey(): string
     {
         return match (true) {
-
-            \property_exists($this, 'columnsKey') && ! \is_null($this->columnsKey) => $this->columnsKey,
+            isset($this->columnsKey) => $this->columnsKey,
             \method_exists($this, 'columnsKey') => $this->columnsKey(),
             default => static::getDefaultColumnsKey(),
         };
@@ -90,10 +90,11 @@ trait ConfiguresKeys
     public function getRecordsKey(): string
     {
         return match (true) {
-            \property_exists($this, 'recordsKey') && ! \is_null($this->recordsKey) => $this->recordsKey,
+            isset($this->recordsKey) => $this->recordsKey,
             \method_exists($this, 'recordsKey') => $this->recordsKey(),
             default => static::getDefaultRecordsKey(),
         };
+
     }
 
     /**
@@ -145,22 +146,6 @@ trait ConfiguresKeys
         static::$defaultRecordsKey = $key;
     }
 
-    /**
-     * Get the keys for the table as an array.
-     * 
-     * @return array<string,string>
-     */
-
-    public function keysToArray(): array
-    {
-        return [
-            'record' => $this->getKeyName(),
-            'records' => $this->getRecordsKey(),
-            'sorts' => $this->getSortKey(),
-            'search' => $this->getSearchKey(),
-            'columns' => $this->getColumnsKey(),
-            ...($this->hasMatches() ? ['match' => $this->getMatchKey()] : []),
-        ];
-    }
+    
 }
 

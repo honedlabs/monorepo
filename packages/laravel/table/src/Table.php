@@ -56,6 +56,30 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
+     * @param  string  $name
+     * @param  array<int, mixed>  $arguments
+     */
+    public function __call($name, $arguments): mixed
+    {
+        // /** @var array<int, \Honed\Refine\Sort> $arguments */
+        // if ($name === 'sorts') {
+        //     return $this->addSorts($arguments);
+        // }
+
+        // /** @var array<int, \Honed\Refine\Filter> $arguments */
+        // if ($name === 'filters') {
+        //     return $this->addFilters($arguments);
+        // }
+
+        // /** @var array<int, \Honed\Refine\Search> $arguments */
+        // if ($name === 'searches') {
+        //     return $this->addSearches($arguments);
+        // }
+
+        return $this;
+    }
+
+    /**
      * Build the table using the given request.
      * 
      * @return $this

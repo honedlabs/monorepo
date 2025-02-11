@@ -14,9 +14,9 @@ trait HasPagination
     protected $pagination;
 
     /**
-     * @var int
+     * @var int|null
      */
-    protected $defaultPagination = self::PerPage;
+    protected $defaultPagination;
 
     /**
      * @var int|array<int,int>
@@ -35,7 +35,7 @@ trait HasPagination
      */
     public function getPagination(): int|array
     {
-        if (\property_exists($this, 'pagination') && ! \is_null($this->pagination)) {
+        if (isset($this->pagination)) {
             return $this->pagination;
         }
 
@@ -53,7 +53,7 @@ trait HasPagination
      */
     public function getDefaultPagination(): int
     {
-        if (\property_exists($this, 'defaultPagination') && ! \is_null($this->defaultPagination)) {
+        if (isset($this->defaultPagination)) {
             return $this->defaultPagination;
         }
 

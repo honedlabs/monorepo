@@ -281,7 +281,7 @@ trait HasRecords
         $metadata = [];
 
         return [
-            $builder->get(),
+            $builder->get()->toArray(),
             $metadata,
         ];
     }

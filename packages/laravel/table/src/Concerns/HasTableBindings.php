@@ -13,7 +13,7 @@ trait HasTableBindings
      */
     public function getRouteKey()
     {
-        return $this->encode(static::class);
+        return Table::encode(static::class);
     }
 
     /**
@@ -25,6 +25,8 @@ trait HasTableBindings
     }
 
     /**
+     * @param mixed $value
+     * @param string|null $field
      * @return \Honed\Table\Table|null
      */
     public function resolveRouteBinding($value, $field = null)
@@ -43,6 +45,9 @@ trait HasTableBindings
     }
 
     /**
+     * @param string $childType
+     * @param string $value
+     * @param string|null $field
      * @return \Honed\Table\Table|null
      */
     public function resolveChildRouteBinding($childType, $value, $field)

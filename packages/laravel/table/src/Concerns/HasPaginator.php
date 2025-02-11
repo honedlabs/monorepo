@@ -34,7 +34,7 @@ trait HasPaginator
      */
     public function getPaginator(): string
     {
-        if (\property_exists($this, 'paginator') && ! \is_null($this->paginator)) {
+        if (isset($this->paginator)) {
             return $this->paginator;
         }
 
