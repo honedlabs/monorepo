@@ -15,6 +15,7 @@ use Honed\Table\Contracts\ShouldRemember;
 trait HasToggle
 {
     const Duration = 60 * 24 * 30 * 365; // 1 year
+
     const ColumnsKey = 'columns';
 
     /**
@@ -43,7 +44,8 @@ trait HasToggle
     protected $columnsKey;
     
     /**
-     * Determine whether this table has toggling of the columns enabled.
+     * Determine whether this table allows for the user to toggle which
+     * columns are visible.
      */
     public function isToggleable(): bool
     {
@@ -55,7 +57,7 @@ trait HasToggle
     }
 
     /**
-     * Determine whether this table has toggling of the columns enabled.
+     * Determine whether the user's preferences should be remembered.
      */
     public function isRemembering(): bool
     {
@@ -79,6 +81,14 @@ trait HasToggle
             return $this->cookie;
         }
 
+        return $this->guessCookieName();
+    }
+
+    /**
+     * Guess the name of the cookie to use for the table toggle.
+     */
+    public function guessCookieName(): string
+    {
         return str(static::class)
             ->classBasename()
             ->append('Table')
@@ -88,7 +98,8 @@ trait HasToggle
     }
 
     /**
-     * Get the default duration of the cookie to use for the table toggle.
+     * Get the duration of the cookie to use for how long the table should.
+     * remember the user's preferences.
      */
     public function getDuration(): int
     {
@@ -112,12 +123,14 @@ trait HasToggle
     }
 
     /**
+     * Toggle the columns that are visible.
+     * 
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * 
      * @return array<int,\Honed\Table\Columns\Column>
      */
-    public function toggle(): array
+    public function toggle(array $columns): array
     {
-        $columns = $this->getColumns();
-
         if (! $this->isToggleable()) {
             return $columns;
         }
@@ -128,44 +141,47 @@ trait HasToggle
         $params = $this->getColumnsFromRequest($request);
 
         if ($this->isRemembering()) {
-            $params = $this->configureCookie($request, $params);
+            $params = $this->useColumnsCookie($request, $params);
         }
 
+        // Get the columns which are active
         return Arr::where(
             $columns,
-            static fn (Column $column) => ($column->isKey() || 
-                $column->isToggleable()) && (
-                    \is_null($params) || 
-                    \in_array($column->getName(), $params)
-                )
+            static fn (Column &$column) => $column->active(
+                    $column->isToggledOn($params)
+                )->isActive()
         );
     }
 
     /**
+     * Use the columns cookie to determine which columns are active, or set the
+     * cookie to the current columns.
+     * 
      * @param array<int,string>|null $params
      * 
      * @return array<int,string>|null
      */
-    public function configureCookie(Request $request, ?array $params): ?array
+    public function useColumnsCookie(Request $request, ?array $params): ?array
     {
+        // If there are params, overwrite the current cookie
         if (! \is_null($params)) {
             Cookie::queue(
                 $this->getCookie(), 
-                \json_encode($params), 
+                $params, 
                 $this->getDuration()
             );
 
             return $params;
         }
 
+        /** @var array<int,string>|null */
         $params = $request->cookie($this->getCookie(), null);
 
         if (\is_null($params)) {
             return null;
         }
 
-        /** @var array<int,string> */
-        return \json_decode($params, false);
+        return $params;
     }
 
     /**
@@ -184,7 +200,8 @@ trait HasToggle
         /** @var array<int,string> */
         return $matches
             ->explode(',')
-            ->map(fn ($v) => \trim($v))
+            ->map(fn ($value) => trim($value))
+            ->filter()
             ->toArray();
     }
 }

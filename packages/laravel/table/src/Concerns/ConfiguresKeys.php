@@ -27,7 +27,6 @@ trait ConfiguresKeys
      */
     protected static $defaultPageKey = self::PageKey;
 
-
     /**
      * The key for the columns to show.
      * 

@@ -67,8 +67,7 @@ class Table extends Refine implements UrlRoutable
         try {
             return $this->getKey();
         } catch (MissingRequiredAttributeException $e) {
-            return $this->getKeyColumn()
-                ?->getName() ?? throw $e;
+            return $this->getKeyColumn()?->getName() ?? throw $e;
         }
     }
 
@@ -78,22 +77,12 @@ class Table extends Refine implements UrlRoutable
      */
     public function __call($name, $arguments): mixed
     {
-        // /** @var array<int, \Honed\Refine\Sort> $arguments */
-        // if ($name === 'sorts') {
-        //     return $this->addSorts($arguments);
-        // }
-
-        // /** @var array<int, \Honed\Refine\Filter> $arguments */
-        // if ($name === 'filters') {
-        //     return $this->addFilters($arguments);
-        // }
-
-        // /** @var array<int, \Honed\Refine\Search> $arguments */
-        // if ($name === 'searches') {
-        //     return $this->addSearches($arguments);
-        // }
-
-        return $this;
+        return match ($name) {
+            'sorts' => $this->addSorts($arguments), // @phpstan-ignore-line
+            'filters' => $this->addFilters($arguments), // @phpstan-ignore-line
+            'searches' => $this->addSearches($arguments), // @phpstan-ignore-line
+            default => $this,
+        };
     }
 
     /**
@@ -111,7 +100,7 @@ class Table extends Refine implements UrlRoutable
             $this->createBuilder($this->getResource())
         );
         
-        $activeColumns = $this->toggle();
+        $activeColumns = $this->toggle($this->getColumns());
         
         $this->modify();
         
@@ -122,9 +111,6 @@ class Table extends Refine implements UrlRoutable
         return $this;
     }
 
-    /**
-     * @return array<string,mixed>
-     */
     public function toArray(): array
     {
         $this->buildTable();

@@ -19,7 +19,7 @@ class TableActionRequest extends ActionRequest
     public function rules(): array
     {
         return \array_merge(parent::rules(), [
-            InvokedController::TableKey => ['required', 'string'],
+            InvokedController::TableKey => ['required'],
         ]);
     }
 

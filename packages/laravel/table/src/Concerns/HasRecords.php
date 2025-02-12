@@ -8,12 +8,8 @@ use Honed\Action\Concerns\HasParameterNames;
 use Illuminate\Support\Arr;
 use Honed\Action\InlineAction;
 use Honed\Table\Page;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\CursorPaginator;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 trait HasRecords
 {
