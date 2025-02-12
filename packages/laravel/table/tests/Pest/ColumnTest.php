@@ -28,7 +28,7 @@ it('has array representation', function () {
         'label' => 'Name',
         'hidden' => false,
         'icon' => null,
-        'toggle' => false,
+        'toggle' => true,
         'active' => true,
         'sort' => null,
         'meta' => [],
@@ -65,7 +65,7 @@ it('can be sortable', function () {
             'label' => 'Name',
             'hidden' => false,
             'icon' => null,
-            'toggle' => false,
+            'toggle' => true,
             'active' => true,
             'sort' => [
                 'direction' => null,
@@ -77,8 +77,9 @@ it('can be sortable', function () {
 });
 
 it('can be toggleable', function () {
-    expect($this->test->toggleable())
-        ->toBeInstanceOf(Column::class)
+    expect($this->test)
+        ->sometimes()->toBeInstanceOf(Column::class)
+        ->isSometimes()->toBeTrue()
         ->isToggleable()->toBeTrue()
         ->toArray()->toEqual([
             'name' => 'name',
@@ -86,6 +87,20 @@ it('can be toggleable', function () {
             'hidden' => false,
             'icon' => null,
             'toggle' => true,
+            'active' => true,
+            'class' => null,
+            'sort' => null,
+            'meta' => [],
+        ])
+        ->always()->toBeInstanceOf(Column::class)
+        ->isToggleable()->toBeFalse()
+        ->isAlways()->toBeTrue()
+        ->toArray()->toEqual([
+            'name' => 'name',
+            'label' => 'Name',
+            'hidden' => false,
+            'icon' => null,
+            'toggle' => false,
             'active' => true,
             'class' => null,
             'sort' => null,

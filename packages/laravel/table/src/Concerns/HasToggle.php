@@ -44,6 +44,11 @@ trait HasToggle
     protected $columnsKey;
     
     /**
+     * @var bool|null
+     */
+    protected $orderable;
+
+    /**
      * Determine whether this table allows for the user to toggle which
      * columns are visible.
      */
@@ -123,6 +128,18 @@ trait HasToggle
     }
 
     /**
+     * Determine whether the user can order the columns.
+     */
+    public function isOrderable(): bool
+    {
+        if (isset($this->orderable)) {
+            return $this->orderable;
+        }
+
+        return false;
+    }
+
+    /**
      * Toggle the columns that are visible.
      * 
      * @param  array<int,\Honed\Table\Columns\Column>  $columns
@@ -147,8 +164,8 @@ trait HasToggle
         // Get the columns which are active
         return Arr::where(
             $columns,
-            static fn (Column &$column) => $column->active(
-                    $column->isToggledOn($params)
+            static fn (Column $column) => $column->active(
+                    $column->isDisplayed($params)
                 )->isActive()
         );
     }
