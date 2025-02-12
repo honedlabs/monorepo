@@ -58,4 +58,3 @@ it('resolves', function () {
         ->resolveIcon(['product' => $product])->toBe($product->name)
         ->getIcon()->toBe($product->name);
 });
-

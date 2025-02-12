@@ -82,6 +82,3 @@ it('sets external', function () {
         ->toBeInstanceOf(RouteTest::class)
         ->isExternal()->toBeTrue();
 });
-
-
-

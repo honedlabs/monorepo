@@ -12,7 +12,7 @@ class EncodableTest
 beforeEach(function () {
     EncodableTest::encoder();
     EncodableTest::decoder();
-    
+
     $this->test = new EncodableTest;
     $this->encoder = fn ($v) => (string) ($v * 2);
     $this->decoder = fn ($v) => 'decoded';

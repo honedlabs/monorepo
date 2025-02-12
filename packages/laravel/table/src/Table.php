@@ -9,13 +9,14 @@ use Honed\Table\Columns\Column;
 use Honed\Core\Concerns\Encodable;
 use Honed\Core\Concerns\RequiresKey;
 use Honed\Action\Concerns\HasActions;
+use Honed\Action\Handler;
+use Honed\Action\Http\Requests\ActionRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
 use Honed\Table\Concerns\HasTableBindings;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 
 class Table extends Refine implements UrlRoutable
 {
@@ -38,6 +39,22 @@ class Table extends Refine implements UrlRoutable
     {
         return resolve(static::class)
             ->modifier($modifier);
+    }
+
+    /**
+     * Handle the incoming action request for this table.
+     * 
+     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
+     */
+    public function handle(ActionRequest $request)
+    {
+        $response = Handler::make(
+            $this->getBuilder(),
+            $this->getActions(),
+            $this->getKeyName()
+        )->handle($request);
+
+        return $response;
     }
 
     /**

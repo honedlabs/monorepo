@@ -26,7 +26,6 @@ class Column extends Primitive
     use Allowable;
     use Concerns\IsSearchable;
     use Concerns\IsSortable;
-    use Concerns\IsSrOnly;
     use Concerns\IsToggleable;
     use Concerns\HasClass;
     use HasExtra;

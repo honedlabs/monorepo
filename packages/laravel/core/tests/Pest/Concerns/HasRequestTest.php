@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_requests=1);
+declare(strict_types=1);
 
 use Honed\Core\Concerns\HasRequest;
 use Illuminate\Support\Facades\Request;
@@ -9,7 +9,6 @@ class RequestTest
 {
     use HasRequest;
 }
-
 
 beforeEach(function () {
     $this->request = Request::create('/');
@@ -22,9 +21,7 @@ it('sets', function () {
         ->getRequest()->toBe($this->request);
 });
 
-
 it('gets', function () {
     expect($this->test->request($this->request))
         ->getRequest()->toBe($this->request);
 });
-

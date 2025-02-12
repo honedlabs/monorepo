@@ -38,7 +38,7 @@ trait HasDescription
     /**
      * Evaluate the description for the instance.
      *
-     * @param  array<string,mixed> $parameters
+     * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
      */
     public function resolveDescription(array $parameters = [], array $typed = []): ?string

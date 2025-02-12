@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Illuminate\Database\Eloquent\Model;
-
 trait Allowable
 {
     /**

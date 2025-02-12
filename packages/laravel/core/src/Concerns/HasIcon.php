@@ -42,7 +42,7 @@ trait HasIcon
     /**
      * Evaluate the icon for the instance.
      *
-     * @param  array<string,mixed> $parameters
+     * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
      */
     public function resolveIcon(array $parameters = [], array $typed = []): ?string

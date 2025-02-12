@@ -16,7 +16,7 @@ trait HasBuilderInstance
 
     /**
      * Set the builder instance.
-     * 
+     *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @return $this
      */
@@ -28,13 +28,21 @@ trait HasBuilderInstance
     }
 
     /**
+     * Determine if the builder instance has been set.
+     */
+    public function hasBuilder(): bool
+    {
+        return ! \is_null($this->builder);
+    }
+
+    /**
      * Get the builder instance.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
      */
     public function getBuilder(): Builder
     {
-        if (\is_null($this->builder)) {
+        if (! $this->hasBuilder()) {
             throw new \RuntimeException('Builder instance has not been set.');
         }
 
@@ -43,7 +51,7 @@ trait HasBuilderInstance
 
     /**
      * Create a new builder instance.
-     * 
+     *
      * @param  \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $query
      * @return \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
      */
@@ -56,7 +64,7 @@ trait HasBuilderInstance
         if (\is_string($query) && \class_exists($query)) {
             return $query::query();
         }
-        
+
         if (! $query instanceof Builder) {
             throw new \InvalidArgumentException('Expected a model class name or a query instance.');
         }

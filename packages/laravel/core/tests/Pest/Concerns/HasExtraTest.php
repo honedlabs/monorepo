@@ -17,19 +17,17 @@ beforeEach(function () {
     $this->param = ['extra' => 'Extra'];
 });
 
-
 it('sets', function () {
     expect($this->test->extra($this->param))
         ->toBeInstanceOf(ExtraTest::class)
         ->hasExtra()->toBeTrue();
 });
 
-
 it('gets', function () {
     expect($this->test)
         ->getExtra()->scoped(fn ($extra) => $extra
-            ->toBeArray()
-            ->toBeEmpty()
+        ->toBeArray()
+        ->toBeEmpty()
         )
         ->hasExtra()->toBeFalse();
 

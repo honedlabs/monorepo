@@ -17,7 +17,7 @@ trait Encodable
     /**
      * Set the encoder for the instance.
      */
-    public static function encoder(\Closure $encoder = null): void
+    public static function encoder(?\Closure $encoder = null): void
     {
         static::$encoder = $encoder;
     }
@@ -25,7 +25,7 @@ trait Encodable
     /**
      * Set the decoder for the instance.
      */
-    public static function decoder(\Closure $decoder = null): void
+    public static function decoder(?\Closure $decoder = null): void
     {
         static::$decoder = $decoder;
     }

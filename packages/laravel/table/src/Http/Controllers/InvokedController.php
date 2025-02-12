@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Table\Http;
 
-use Honed\Action\Handler;
 use Honed\Table\Http\Requests\TableActionRequest;
 use Honed\Table\Concerns\HasTableBindings;
-
 
 class InvokedController
 {
@@ -28,11 +26,6 @@ class InvokedController
 
         abort_if(! $table, 404);
 
-        $response = Handler::make(
-            $table->getBuilder(), 
-            $table->getActions()
-        )->handle($request);
-
-        return $response;
+        return $table->handle($request);
     }
 }
