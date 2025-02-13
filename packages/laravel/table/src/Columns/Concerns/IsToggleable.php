@@ -71,7 +71,7 @@ trait IsToggleable
      * 
      * @param  array<int,string>|null  $params
      */
-    public function isDisplayed(?array $params): bool
+    public function isDisplayed(?array $params = null): bool
     {
         if (! $this->isToggleable()) {
             return true;

@@ -9,11 +9,18 @@ trait HasPagination
     const PerPage = 10;
 
     /**
+     * The pagination options for the table.
+     * 
+     * An array will provide the user the ability to select how many rows are
+     * shown per page.
+     * 
      * @var int|array<int,int>|null
      */
     protected $pagination;
 
     /**
+     * The default pagination amount for the table if pagination is an array.
+     * 
      * @var int|null
      */
     protected $defaultPagination;
@@ -39,10 +46,6 @@ trait HasPagination
             return $this->pagination;
         }
 
-        if (\method_exists($this, 'pagination')) {
-            return $this->pagination();
-        }
-
         return static::$perPage;
     }
 
@@ -55,10 +58,6 @@ trait HasPagination
     {
         if (isset($this->defaultPagination)) {
             return $this->defaultPagination;
-        }
-
-        if (\method_exists($this, 'defaultPagination')) {
-            return $this->defaultPagination();
         }
 
         return static::$defaultPerPage;

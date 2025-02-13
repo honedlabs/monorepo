@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Honed\Table\Table as HonedTable;
 use Honed\Table\Tests\Fixtures\Table;
+use Honed\Table\Tests\Stubs\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 
 beforeEach(function () {
@@ -23,7 +25,35 @@ it('builds', function () {
 });
 
 it('can be modified', function () {
+    $fn = fn (Builder $product) => $product->where('best_seller', true);
 
+    expect($this->test)
+        ->hasModifier()->toBeFalse()
+        ->modifier($fn)->toBe($this->test)
+        ->hasModifier()->toBeTrue();
+
+    expect(Table::make($fn)->buildTable())
+        ->hasModifier()->toBeTrue()
+        ->getBuilder()->getQuery()->scoped(fn ($query) => $query
+            ->wheres->scoped(fn ($wheres) => $wheres
+                ->toBeArray()
+                ->toHaveCount(1)
+                ->{0}->toEqual([
+                    'type' => 'Basic',
+                    'column' => 'best_seller',
+                    'operator' => '=',
+                    'value' => true,
+                    'boolean' => 'and',
+                ])
+            )->orders->scoped(fn ($orders) => $orders
+                ->toBeArray()
+                ->toHaveCount(1)
+                ->{0}->toEqual([
+                    'column' => 'products.name',
+                    'direction' => 'desc',
+                ])
+            )
+        );
 });
 
 // it('refines', function () {

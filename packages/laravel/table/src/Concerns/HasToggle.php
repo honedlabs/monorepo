@@ -19,31 +19,45 @@ trait HasToggle
     const ColumnsKey = 'columns';
 
     /**
+     * Whether the table should allow the user to toggle which columns are visible.
+     * 
      * @var bool|null
      */
     protected $toggle;
 
     /**
+     * Whether the table should remember the user's preferences for column visibility
+     *  via a cookie.
+     * 
      * @var bool|null
      */
     protected $remember;
 
     /**
+     * The name of the cookie to use for remembering the user's preferences.
+     * 
      * @var string|null
      */
     protected $cookie;
 
     /**
+     * The duration of the cookie to use for remembering the user's preferences.
+     * 
      * @var int|null
      */
     protected $duration;
 
     /**
+     * The query parameter to use for retrieving the columns to display as a 
+     * comma-separated list of column names.
+     * 
      * @var string|null
      */
     protected $columnsKey;
     
     /**
+     * Whether the table should allow the user to change the order of the columns.
+     * 
      * @var bool|null
      */
     protected $orderable;

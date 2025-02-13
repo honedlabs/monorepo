@@ -48,6 +48,6 @@ trait HasModifier
             return;
         }
         
-        \call_user_func($this->modifier, $this->getResource());
+        $this->evaluate($this->modifier);
     }
 }

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Honed\Table;
 
 use Honed\Refine\Refine;
-use Honed\Table\Columns\Column;
 use Honed\Core\Concerns\Encodable;
 use Honed\Core\Concerns\RequiresKey;
 use Honed\Action\Concerns\HasActions;
+use Honed\Action\Concerns\HasParameterNames;
 use Honed\Action\Handler;
 use Honed\Action\Http\Requests\ActionRequest;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,6 +31,7 @@ class Table extends Refine implements UrlRoutable
     use HasActions;
     use RequiresKey;
     use HasTableBindings;
+    use HasParameterNames;
 
     /**
      * @param \Closure|null $modifier
@@ -152,11 +153,15 @@ class Table extends Refine implements UrlRoutable
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
+        [$_, $singular, $plural] = $this->getParameterNames($this->getBuilder());
+
         return match ($parameterName) {
-            'builder' => [$this->getResource()],
+            'builder' => [$this->getBuilder()],
             'resource' => [$this->getResource()],
-            'query' => [$this->getResource()],
+            'query' => [$this->getBuilder()],
             'request' => [$this->getRequest()],
+            $singular => [$this->getBuilder()],
+            $plural => [$this->getBuilder()],
             default => [],
         };
     }
@@ -165,11 +170,13 @@ class Table extends Refine implements UrlRoutable
      * @return array<mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
-    {
+    {        
+        [$model] = $this->getParameterNames($this->getBuilder());
         return match ($parameterType) {
-            Builder::class => [$this->getResource()],
-            Model::class => [$this->getResource()],
+            Builder::class => [$this->getBuilder()],
+            Model::class => [$this->getBuilder()],
             Request::class => [$this->getRequest()],
+            $model::class => [$this->getBuilder()],
             default => [],
         };
     }
