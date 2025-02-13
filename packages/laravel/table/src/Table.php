@@ -97,16 +97,28 @@ class Table extends Refine implements UrlRoutable
             return $this;
         }
 
+        // Assign the builder to the defined resource.
         $this->builder(
-            $this->createBuilder($this->getResource())
+            $this->createBuilder(
+                $this->getResource()
+            )
         );
-        
-        $activeColumns = $this->toggle($this->getColumns());
-        
+
+        // Intermediate step allowing for table reuse with
+        // minor changes between them.
         $this->modify();
         
+        // Execute the parent refine method to scope the builder
+        // according to the given request.
         $this->refine();
+
+        // If toggling is enabled, we need to determine which
+        // columns are to be used from the request, cookie or by the
+        // default state of each column.
+        $activeColumns = $this->toggle($this->getColumns());
         
+        // Retrieved the records, generate metadata and complete the
+        // table pipeline.
         $this->formatAndPaginate($activeColumns);
 
         return $this;
@@ -172,6 +184,7 @@ class Table extends Refine implements UrlRoutable
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {        
         [$model] = $this->getParameterNames($this->getBuilder());
+        
         return match ($parameterType) {
             Builder::class => [$this->getBuilder()],
             Model::class => [$this->getBuilder()],

@@ -37,3 +37,13 @@ function seller(?string $name = null): Seller
         'name' => $name ?? fake()->unique()->name(),
     ]);
 }
+
+function qualifyProduct(string $column)
+{
+    return Product::query()->qualifyColumn($column);
+}
+
+function searchSql(string $column)
+{
+    return \sprintf('LOWER(%s) LIKE ?', qualifyProduct($column));
+}

@@ -181,7 +181,12 @@ trait HasRecords
         $formatted = ($reducing) ? [] : $record->toArray(); // @phpstan-ignore-line
 
         foreach ($columns as $column) {
-            Arr::set($formatted, $column->getName(), $column->format($record));
+            $name = $column->getName();
+
+            Arr::set($formatted, 
+                $name, 
+                $column->format($record->{$name})
+            );
         }
 
         Arr::set($formatted, 'actions', $actions);

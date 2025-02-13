@@ -46,13 +46,13 @@ class Table extends HonedTable
     {
         return [
             Column::make('id')->key(),
-            TextColumn::make('name')->searchable(),
+            TextColumn::make('name')->always()->searchable(),
             TextColumn::make('description')->placeholder('-'),
             BooleanColumn::make('best_seller', 'Favourite')->formatBoolean('Favourite', 'Not favourite'),
-            TextColumn::make('seller.name', 'Sold by'),
+            TextColumn::make('seller.name', 'Sold by')->sometimes(),
             Column::make('status')->meta(['badge' => true]),
-            NumericColumn::make('price'),
-            DateColumn::make('created_at')->sortable(),
+            NumericColumn::make('price')->sortable(),
+            DateColumn::make('created_at')->sometimes()->sortable(),
         ];
     }
 
