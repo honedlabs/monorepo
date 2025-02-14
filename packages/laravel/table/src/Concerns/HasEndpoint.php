@@ -6,15 +6,21 @@ namespace Honed\Table\Concerns;
 
 trait HasEndpoint
 {
+    const Endpoint = '/actions';
+
     /**
+     * The endpoint to be used to handle table actions.
+     * 
      * @var string|null
      */
     protected $endpoint;
 
     /**
+     * The default endpoint to be used for all tables.
+     * 
      * @var string
      */
-    protected static $defaultEndpoint = '/actions';
+    protected static $defaultEndpoint = self::Endpoint;
 
     /**
      * Get the endpoint to be used for table actions.

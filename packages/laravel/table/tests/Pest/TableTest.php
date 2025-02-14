@@ -164,22 +164,73 @@ it('can refine', function () {
         );
 });
 
-// it('refines', function () {
-//     expect($this->test->buildTable())
-//         ->toBe($this->test)
-//         ->getFilters()->toBe([]);
-// });
-
-// it('toggles', function () {
+// it('toggles without request', function () {
 //     expect($this->test->buildTable())
 //         ->toBe($this->test)
 //         ->getColumns()->toBe([]);
 // });
 
-// it('actions', function () {
-//     expect($this->test->buildTable())
-//         ->toBe($this->test)
-//         ->getActions()->toBe([]);
-// });
+it('formats and paginates', function () {
+    expect(Table::make()->buildTable())
+        ->getPaginator()->toBe('length-aware')
+        ->getRecords()->scoped(fn ($records) => $records
+            ->toBeArray()
+            ->toHaveCount(10)
+            ->{0}->dd()
+            ->each->toHaveKeys([
+                'id',
+                'name',
+                'description',
+                'status',
+                'price',
+                'public_id'
+            ])
+        )
+        ->getMeta()->toHaveKeys([
+            'prev',
+            'current',
+            'next',
+            'per_page',
+            'total',
+            'from',
+            'to',
+            'first',
+            'last',
+            'links'
+        ]);
 
+    expect(Table::make()->paginator('cursor')->buildTable())
+        ->getPaginator()->toBe('cursor')
+        ->getMeta()->toHaveKeys([
+            'prev',
+            'per_page',
+            'next',
+        ]);
 
+    expect(Table::make()->paginator('simple')->buildTable())
+        ->getPaginator()->toBe('simple')
+        ->getMeta()->toHaveKeys([
+            'prev',
+            'current',
+            'next',
+            'per_page',
+        ]);
+
+    expect(Table::make()->paginator('none')->buildTable())
+        ->getPaginator()->toBe('none')
+        ->getMeta()->toBeEmpty();
+
+    expect(fn() => Table::make()->paginator('invalid')->buildTable())
+        ->toThrow(\InvalidArgumentException::class);
+});
+
+it('has endpoint', function () {
+    expect($this->test)
+        ->getEndpoint()->toBe(Table::Endpoint);
+});
+
+it('has method calls', function () {
+    expect($this->test)
+        ->endpoint('test')->toBe($this->test)
+        ->getEndpoint()->toBe('test');
+});

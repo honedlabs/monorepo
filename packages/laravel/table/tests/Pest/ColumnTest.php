@@ -4,6 +4,7 @@ use Honed\Refine\Sorts\Sort;
 use Honed\Table\Columns\Column;
 use Honed\Table\Columns\DateColumn;
 use Honed\Table\Columns\TextColumn;
+use Honed\Table\Columns\HiddenColumn;
 use Honed\Table\Columns\BooleanColumn;
 use Honed\Table\Columns\NumericColumn;
 use Honed\Core\Formatters\DateFormatter;
@@ -28,6 +29,7 @@ it('has array representation', function () {
     expect($this->test->toArray())->toEqual([
         'name' => $this->param,
         'label' => ucfirst($this->param),
+        'type' => 'default',
         'hidden' => false,
         'icon' => null,
         'toggle' => true,
@@ -166,4 +168,10 @@ it('can have classes', function () {
         ->class('bg-red-500 text-white', 'font-bold')->toBeInstanceOf(Column::class)
         ->hasClass()->toBeTrue()
         ->getClass()->toBe('bg-red-500 text-white font-bold');
+});
+
+it('has other column types', function () {
+    expect(HiddenColumn::make($this->param))
+        ->toBeInstanceOf(Column::class)
+        ->isHidden()->toBeTrue();
 });

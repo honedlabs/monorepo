@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Honed\Action\Concerns\HasParameterNames;
-use Illuminate\Support\Arr;
-use Honed\Action\InlineAction;
 use Honed\Table\Page;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Honed\Action\InlineAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Honed\Action\Concerns\HasParameterNames;
 
 trait HasRecords
 {
@@ -176,21 +177,19 @@ trait HasRecords
             fn (InlineAction $action) => $action->resolve($named, $typed)->toArray(),
         );
 
-        $key = $record->{$this->getKeyname()};
-
-        $formatted = ($reducing) ? [] : $record->toArray(); // @phpstan-ignore-line
+        // $formatted = ($reducing) ? [] : $record->toArray(); // @phpstan-ignore-line
+        $formatted = [];
 
         foreach ($columns as $column) {
             $name = $column->getName();
 
             Arr::set($formatted, 
-                $name, 
-                $column->format($record->{$name})
+                Str::replace('.', '_', $name),
+                Arr::get($record, $name)
             );
         }
 
         Arr::set($formatted, 'actions', $actions);
-        Arr::set($formatted, 'key', $key);
 
         return $formatted;
     }
@@ -198,14 +197,16 @@ trait HasRecords
     /**
      * Length-aware paginate the records from the builder.
      * 
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @template T of \Illuminate\Database\Eloquent\Model
      * 
-     * @return array{0:array<int,mixed>,1:array<string,mixed>}
+     * @param \Illuminate\Database\Eloquent\Builder<T> $builder
+     * 
+     * @return array{0:array<int,T>,1:array<string,mixed>}
      */
     protected function lengthAwarePaginateRecords(Builder $builder): array
     {
         /**
-         * @var \Illuminate\Pagination\LengthAwarePaginator<\Illuminate\Database\Eloquent\Model> $paginated
+         * @var \Illuminate\Pagination\LengthAwarePaginator<T> $paginated
          */
         $paginated = $builder->paginate(
             perPage: $this->getRecordsPerPage(),
@@ -215,7 +216,7 @@ trait HasRecords
         $paginated->withQueryString();
 
         return [
-            $paginated->items(),
+            $paginated->getCollection(),
             $this->lengthAwarePaginatorMetadata($paginated),
         ];
     }
@@ -223,14 +224,16 @@ trait HasRecords
     /**
      * Simple paginate the records from the builder.
      * 
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @template T of \Illuminate\Database\Eloquent\Model
      * 
-     * @return array{0:array<int,mixed>,1:array<string,mixed>}
+     * @param \Illuminate\Database\Eloquent\Builder<T> $builder
+     * 
+     * @return array{0:\Illuminate\Support\Collection<int,T>,1:array<string,mixed>}
      */
     protected function simplePaginateRecords(Builder $builder): array
     {
         /**
-         * @var \Illuminate\Pagination\Paginator<\Illuminate\Database\Eloquent\Model> $paginated
+         * @var \Illuminate\Pagination\Paginator<T> $paginated
          */
         $paginated = $builder->simplePaginate(
             perPage: $this->getRecordsPerPage(),
@@ -240,7 +243,7 @@ trait HasRecords
         $paginated->withQueryString();
 
         return [
-            $paginated->items(),
+            $paginated->getCollection(),
             $this->simplePaginatorMetadata($paginated),
         ];
     }
@@ -248,14 +251,16 @@ trait HasRecords
     /**
      * Cursor paginate the records from the builder.
      * 
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @template T of \Illuminate\Database\Eloquent\Model
      * 
-     * @return array{0:array<int,mixed>,1:array<string,mixed>}
+     * @param \Illuminate\Database\Eloquent\Builder<T> $builder
+     * 
+     * @return array{0:\Illuminate\Support\Collection<int,T>,1:array<string,mixed>}
      */
     protected function cursorPaginateRecords(Builder $builder): array
     {
         /**
-         * @var \Illuminate\Pagination\CursorPaginator<\Illuminate\Database\Eloquent\Model> $paginated
+         * @var \Illuminate\Pagination\CursorPaginator<T> $paginated
          */
         $paginated = $builder->cursorPaginate(
             perPage: $this->getRecordsPerPage(),
@@ -265,7 +270,7 @@ trait HasRecords
         $paginated->withQueryString();
 
         return [
-            $paginated->items(),
+            $paginated->getCollection(),
             $this->cursorPaginatorMetadata($paginated),
         ];
     }
@@ -273,17 +278,19 @@ trait HasRecords
     /**
      * Collect the records from the builder.
      * 
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @template T of \Illuminate\Database\Eloquent\Model
      * 
-     * @return array{0:array<int,mixed>,1:array<string,mixed>}
+     * @param \Illuminate\Database\Eloquent\Builder<T> $builder
+     * 
+     * @return array{0:\Illuminate\Support\Collection<int,T>,1:array<string,mixed>}
      */
     protected function collectRecords(Builder $builder): array
     {
-        $metadata = [];
+        $retrieved = $builder->get();
 
         return [
-            $builder->get()->toArray(),
-            $metadata,
+            $retrieved,
+            []
         ];
     }
 

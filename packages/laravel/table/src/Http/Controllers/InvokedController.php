@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Http;
 
-use Honed\Table\Http\Requests\TableActionRequest;
+use Honed\Table\Http\Requests\TableRequest;
 use Honed\Table\Concerns\HasTableBindings;
 
 class InvokedController
@@ -18,7 +18,7 @@ class InvokedController
      * 
      * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
-    public function __invoke(TableActionRequest $request)
+    public function __invoke(TableRequest $request)
     {
         $table = $this->resolveRouteBinding(
             $request->validated(self::TableKey)

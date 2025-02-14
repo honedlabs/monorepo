@@ -7,7 +7,7 @@ namespace Honed\Table\Http\Requests;
 use Honed\Table\Http\InvokedController;
 use Honed\Action\Http\Requests\ActionRequest;
 
-class TableActionRequest extends ActionRequest
+class TableRequest extends ActionRequest
 
 {
     /**

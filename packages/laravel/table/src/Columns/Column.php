@@ -12,6 +12,7 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasPlaceholder;
+use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\IsActive;
 use Honed\Core\Concerns\IsHidden;
 use Honed\Core\Concerns\IsKey;
@@ -28,6 +29,7 @@ class Column extends Primitive
     use Concerns\IsSortable;
     use Concerns\IsToggleable;
     use Concerns\HasClass;
+    use HasType;
     use HasExtra;
     use HasFormatter;
     use HasLabel;
@@ -53,6 +55,7 @@ class Column extends Primitive
     public function setUp(): void
     {
         $this->active(true);
+        $this->type('default');
     }
 
     /**
@@ -78,6 +81,7 @@ class Column extends Primitive
         return [
             'name' => $this->getName(),
             'label' => $this->getLabel(),
+            'type' => $this->getType(),
             'hidden' => $this->isHidden(),
             'icon' => $this->getIcon(),
             'toggle' => $this->isToggleable(),

@@ -53,6 +53,7 @@ class Table extends HonedTable
             Column::make('status')->meta(['badge' => true]),
             NumericColumn::make('price')->sortable(),
             DateColumn::make('created_at')->sometimes()->sortable(),
+            Column::make('public_id')->hidden()->always(),
         ];
     }
 

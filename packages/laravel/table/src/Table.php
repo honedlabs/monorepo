@@ -17,6 +17,7 @@ use Honed\Table\Concerns\HasTableBindings;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class Table extends Refine implements UrlRoutable
 {
@@ -78,12 +79,16 @@ class Table extends Refine implements UrlRoutable
      */
     public function __call($name, $arguments): mixed
     {
-        return match ($name) {
+        match ($name) {
             'sorts' => $this->addSorts($arguments), // @phpstan-ignore-line
             'filters' => $this->addFilters($arguments), // @phpstan-ignore-line
             'searches' => $this->addSearches($arguments), // @phpstan-ignore-line
-            default => $this,
+            'paginator' => $this->paginator = Arr::first($arguments), // @phpstan-ignore-line
+            'endpoint' => $this->endpoint = Arr::first($arguments), // @phpstan-ignore-line
+            default => null,
         };
+
+        return $this;
     }
 
     /**
