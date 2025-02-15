@@ -2,11 +2,13 @@
 
 use Honed\Refine\Sorts\Sort;
 use Honed\Table\Columns\Column;
+use Honed\Table\Columns\KeyColumn;
 use Honed\Table\Columns\DateColumn;
 use Honed\Table\Columns\TextColumn;
 use Honed\Table\Columns\HiddenColumn;
 use Honed\Table\Columns\BooleanColumn;
 use Honed\Table\Columns\NumericColumn;
+use Honed\Table\Columns\CurrencyColumn;
 use Honed\Core\Formatters\DateFormatter;
 use Honed\Core\Formatters\StringFormatter;
 use Honed\Core\Formatters\BooleanFormatter;
@@ -178,5 +180,19 @@ it('can have classes', function () {
 it('has other column types', function () {
     expect(HiddenColumn::make($this->param))
         ->toBeInstanceOf(Column::class)
+        ->getType()->toBe('hidden')
+        ->isAlways()->toBeTrue()
         ->isHidden()->toBeTrue();
+
+    expect(KeyColumn::make($this->param))
+        ->toBeInstanceOf(Column::class)
+        ->getType()->toBe('key')
+        ->isKey()->toBeTrue()
+        ->isHidden()->toBeTrue();
+
+    expect(CurrencyColumn::make($this->param))
+        ->toBeInstanceOf(Column::class)
+        ->getType()->toBe('currency')
+        ->hasFormatter()->toBeTrue()
+        ->getFormatter()->toBeInstanceOf(NumericFormatter::class);
 });

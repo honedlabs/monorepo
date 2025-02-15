@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Honed\Table\Page;
 use Honed\Table\Concerns\Keys\PagesKey;
 use Honed\Table\Concerns\Keys\RecordsKey;
 
@@ -52,8 +51,6 @@ trait HasPagination
 
     /**
      * Retrieve the default pagination options for the table.
-     * 
-     * @return int
      */
     public function getDefault(): int
     {
@@ -70,19 +67,20 @@ trait HasPagination
      */
     protected function getRecordsPerPage(): int
     {
-        $paginationOptions = $this->getPagination();
+        $pagination = $this->getPagination();
         
-        if (! \is_array($paginationOptions)) {
-            return $paginationOptions;
+        if (! \is_array($pagination)) {
+            return $pagination;
         }
 
         $perPage = $this->getRecordsFromRequest();
+
         $default = $this->getDefault();
 
-        $validPerPage = \in_array($perPage, $paginationOptions) ? $perPage : $default;
-        $this->pages = $this->generatePages($paginationOptions, $validPerPage);
+        $perPage = \in_array($perPage, $pagination) ? $perPage : $default;
+        $this->pages = $this->generatePages($pagination, $perPage);
 
-        return $validPerPage;
+        return $perPage;
     }
 
     /**

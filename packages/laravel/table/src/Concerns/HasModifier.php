@@ -16,9 +16,7 @@ trait HasModifier
      */
     public function modifier(?\Closure $modifier): static
     {
-        if (! \is_null($modifier)) {
-            $this->modifier = $modifier;
-        }
+        $this->modifier = $modifier;
 
         return $this;
     }
@@ -37,17 +35,5 @@ trait HasModifier
     public function getModifier(): \Closure|null
     {
         return $this->modifier;
-    }
-
-    /**
-     * Apply the resource modifier to the resource.
-     */
-    public function modify(): void
-    {
-        if (\is_null($this->getModifier())) {
-            return;
-        }
-        
-        $this->evaluate($this->getModifier());
     }
 }

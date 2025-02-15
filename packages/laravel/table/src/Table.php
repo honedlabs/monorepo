@@ -21,7 +21,6 @@ use Illuminate\Support\Arr;
 
 class Table extends Refine implements UrlRoutable
 {
-    // use Concerns\ConfiguresKeys;
     use Concerns\HasColumns;
     use Concerns\HasEndpoint;
     use Concerns\HasModifier;
@@ -108,7 +107,7 @@ class Table extends Refine implements UrlRoutable
 
         // Intermediate step allowing for table reuse with
         // minor changes between them.
-        $this->modify();
+        $this->evaluate($this->getModifier());
         
         // Execute the parent refine method to scope the builder
         // according to the given request.
