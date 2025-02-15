@@ -168,4 +168,17 @@ trait HasSearches
     {
         return $this->searchValue;
     }
+
+    /**
+     * Get the searches as an array.
+     * 
+     * @return array<int,mixed>
+     */
+    public function searchesToArray(): array
+    {
+        return \array_map(
+            static fn (Search $search) => $search->toArray(), 
+            $this->getSearches()
+        );
+    }
 }

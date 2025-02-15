@@ -109,7 +109,7 @@ trait HasFilters
     public function filtersToArray(): array
     {
         return \array_map(
-            fn (Filter $filter) => $filter->toArray(), 
+            static fn (Filter $filter) => $filter->toArray(), 
             $this->getFilters()
         );
     }

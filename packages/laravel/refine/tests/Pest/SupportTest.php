@@ -2,42 +2,59 @@
 
 declare(strict_types=1);
 
-// it('has magic methods', function () {
-//     expect(Refine::make(Product::class))
-//         ->addSorts([Sort::make('name', 'A-Z')])->toBeInstanceOf(Refine::class)
-//         ->getSorts()->toHaveCount(1);
+use Honed\Refine\Refine;
+use Honed\Refine\Sorts\Sort;
+use Honed\Refine\Filters\Filter;
+use Honed\Refine\Searches\Search;
+use Honed\Refine\Tests\Stubs\Product;
 
-//     expect(Refine::make(Product::class))
-//         ->addFilters([Filter::make('name', 'Name')->like()])->toBeInstanceOf(Refine::class)
-//         ->getFilters()->toHaveCount(1);
-// });
+it('can set the sorts key', function () {
+    expect(Refine::make(Product::class))
+        ->getSortsKey()->toBe(config('refine.keys.sorts'))
+        ->sortsKey('test')->toBeInstanceOf(Refine::class)
+        ->getSortsKey()->toBe('test');
+});
 
-// it('can change the sort key', function () {
-//     expect(Refine::make(Product::class))
-//         ->sortKey('name')->toBeInstanceOf(Refine::class)
-//         ->getSortKey()->toBe('name');
-// });
+it('can set the search key', function () {
+    expect(Refine::make(Product::class))
+        ->getSearchesKey()->toBe(config('refine.keys.searches'))
+        ->searchesKey('test')->toBeInstanceOf(Refine::class)
+        ->getSearchesKey()->toBe('test');
+});
 
-// it('can change the search key', function () {
-//     expect(Refine::make(Product::class))
-//         ->searchKey('name')->toBeInstanceOf(Refine::class)
-//         ->getSearchKey()->toBe('name');
-// });
+it('can set the matches key', function () {
+    expect(Refine::make(Product::class))
+        ->getMatchesKey()->toBe(config('refine.keys.matches'))
+        ->matchesKey('test')->toBeInstanceOf(Refine::class)
+        ->getMatchesKey()->toBe('test');
+});
 
-// it('can change columns key', function () {
-//     expect(Refine::make(Product::class))
-//         ->matchKey('name')->toBeInstanceOf(Refine::class)
-//         ->getMatchKey()->toBe('name');
-// });
+it('can set as matching', function () {
+    expect(Refine::make(Product::class))
+        ->canMatch()->toBe(config('refine.matches'))
+        ->matches()->toBeInstanceOf(Refine::class)
+        ->canMatch()->toBeTrue();
+});
 
-// it('has magic methods for setting filters', function () {
-//     expect(Refine::make(Product::class))
-//         ->filters(Filter::make('name', 'Name')->like())->toBeInstanceOf(Refine::class)
-//         ->getFilters()->toHaveCount(1);
-// });
+it('has sorts method', function () {
+    expect(Refine::make(Product::class))
+        ->sorts([Sort::make('name', 'A-Z')])->toBeInstanceOf(Refine::class)
+        ->getSorts()->toHaveCount(1);
+});
 
-// it('has magic methods for setting sorts', function () {
-//     expect(Refine::make(Product::class))
-//         ->sorts(Sort::make('name', 'A-Z'))->toBeInstanceOf(Refine::class)
-//         ->getSorts()->toHaveCount(1);
-// });
+it('has filters method', function () {
+    expect(Refine::make(Product::class))
+        ->filters([Filter::make('name')])->toBeInstanceOf(Refine::class)
+        ->getFilters()->toHaveCount(1);
+});
+
+it('has searches method', function () {
+    expect(Refine::make(Product::class))
+        ->searches([Search::make('name')])->toBeInstanceOf(Refine::class)
+        ->getSearches()->toHaveCount(1);
+});
+
+
+
+
+

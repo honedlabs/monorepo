@@ -138,7 +138,7 @@ trait HasSorts
     public function sortsToArray(): array
     {
         return \array_map(
-            fn (Sort $sort) => $sort->toArray(),
+            static fn (Sort $sort) => $sort->toArray(),
             $this->getSorts()
         );
     }

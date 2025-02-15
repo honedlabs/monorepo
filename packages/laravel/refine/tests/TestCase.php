@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Tests;
 
+use Honed\Refine\RefineServiceProvider;
 use Honed\Refine\Tests\Stubs\Status;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,13 +25,13 @@ class TestCase extends Orchestra
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
         
         config()->set('refine', require __DIR__.'/../config/refine.php');
-
     }
 
     protected function getPackageProviders($app)
     {
         return [
             InertiaServiceProvider::class,
+            RefineServiceProvider::class,
         ];
     }
 

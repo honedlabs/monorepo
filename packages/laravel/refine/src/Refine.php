@@ -92,10 +92,10 @@ class Refine extends Primitive
     public function toArray()
     {
         return [
-            'sorts' => $this->getSorts(),
-            'filters' => $this->getFilters(),
+            'sorts' => $this->sortsToArray(),
+            'filters' => $this->filtersToArray(),
             'search' => $this->getSearchValue(),
-            ...($this->canMatch() ? ['searches' => $this->getSearches()] : []),
+            ...($this->canMatch() ? ['searches' => $this->searchesToArray()] : []),
             'keys' => $this->keysToArray(),
         ];
     }
