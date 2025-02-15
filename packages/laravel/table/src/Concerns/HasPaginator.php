@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator as PaginationLengthAwarePaginator;
 use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -18,14 +19,6 @@ trait HasPaginator
      * @var 'cursor'|'simple'|'length-aware'|'none'|string|null
      */
     protected $paginator;
-
-
-    /**
-     * The default paginator for all tables.
-     * 
-     * @var 'cursor'|'simple'|'length-aware'|'none'|string
-     */
-    protected static $defaultPaginator = self::Paginator;
 
     /**
      * Retrieve the default paginator for the table.
@@ -42,17 +35,7 @@ trait HasPaginator
             return $this->paginator();
         }
 
-        return static::$defaultPaginator;
-    }
-
-    /**
-     * Set the default paginator for the table.
-     * 
-     * @param 'cursor'|'simple'|'length-aware'|'none'|string $paginator
-     */
-    public static function usePaginator(string $paginator): void
-    {
-        static::$defaultPaginator = $paginator;
+        return config('table.paginator', 'length-aware');
     }
 
         /**

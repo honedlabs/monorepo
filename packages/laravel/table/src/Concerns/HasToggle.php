@@ -14,10 +14,6 @@ use Honed\Table\Contracts\ShouldRemember;
 
 trait HasToggle
 {
-    const Duration = 60 * 24 * 30 * 365; // 1 year
-
-    const ColumnsKey = 'columns';
-
     /**
      * Whether the table should allow the user to toggle which columns are visible.
      * 
@@ -72,7 +68,10 @@ trait HasToggle
             return $this->toggle;
         }
 
-        return false;
+        /**
+         * @var bool
+         */
+        return config('table.toggle.enabled', false);
     }
 
     /**
@@ -88,7 +87,10 @@ trait HasToggle
             return true;
         }
 
-        return false;
+        /**
+         * @var bool
+         */
+        return config('table.toggle.remember', false);
     }
 
     /**
@@ -126,7 +128,10 @@ trait HasToggle
             return $this->duration;
         }
 
-        return self::Duration;
+        /**
+         * @var int
+         */
+        return config('table.toggle.remember.duration', 60 * 24 * 30 * 365);
     }
 
     /**
@@ -138,7 +143,10 @@ trait HasToggle
             return $this->columnsKey;
         }
 
-        return self::ColumnsKey;
+        /**
+         * @var string
+         */
+        return config('table.keys.columns', 'columns');
     }
 
     /**

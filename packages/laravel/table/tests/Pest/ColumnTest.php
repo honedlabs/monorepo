@@ -73,6 +73,7 @@ it('can be sortable', function () {
         ->toArray()->toEqual([
             'name' => $this->param,
             'label' => ucfirst($this->param),
+            'type' => 'default',
             'hidden' => false,
             'icon' => null,
             'toggle' => true,
@@ -90,6 +91,7 @@ it('can be sortable', function () {
         ->toArray()->toEqual([
             'name' => $this->param,
             'label' => ucfirst($this->param),
+            'type' => 'default',
             'hidden' => false,
             'icon' => null,
             'toggle' => true,
@@ -108,6 +110,7 @@ it('can be sortable', function () {
         ->toArray()->toEqual([
             'name' => 'name',
             'label' => 'Name',
+            'type' => 'default',
             'hidden' => false,
             'icon' => null,
             'toggle' => true,
@@ -130,6 +133,7 @@ it('can be toggleable', function () {
         ->toArray()->toEqual([
             'name' => $this->param,
             'label' => ucfirst($this->param),
+            'type' => 'default',
             'hidden' => false,
             'icon' => null,
             'toggle' => true,
@@ -144,6 +148,7 @@ it('can be toggleable', function () {
         ->toArray()->toEqual([
             'name' => $this->param,
             'label' => ucfirst($this->param),
+            'type' => 'default',
             'hidden' => false,
             'icon' => null,
             'toggle' => false,

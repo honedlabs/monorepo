@@ -26,19 +26,9 @@ trait HasPagination
     protected $defaultPagination;
 
     /**
-     * @var int|array<int,int>
-     */
-    protected static $perPage = self::PerPage;
-
-    /**
-     * @var int
-     */
-    protected static $defaultPerPage = self::PerPage;
-
-    /**
      * Retrieve the pagination options for the table.
      * 
-     * @return int|array<int,int>
+     * @return int|non-empty-list<int>
      */
     public function getPagination(): int|array
     {
@@ -46,7 +36,14 @@ trait HasPagination
             return $this->pagination;
         }
 
-        return static::$perPage;
+        if (\method_exists($this, 'pagination')) {
+            return $this->pagination();
+        }
+
+        /**
+         * @var int|non-empty-list<int>
+         */
+        return config('table.pagination.default', 10);
     }
 
     /**
@@ -60,26 +57,13 @@ trait HasPagination
             return $this->defaultPagination;
         }
 
-        return static::$defaultPerPage;
-    }
+        if (\method_exists($this, 'defaultPagination')) {
+            return $this->defaultPagination();
+        }
 
-    /**
-     * Set the per page amount for all tables.
-     * 
-     * @param int|array<int,int> $perPage
-     */
-    public static function perPage(int|array $perPage): void
-    {
-        static::$perPage = $perPage;
-    }
-
-    /**
-     * Set the default per page amount for all tables.
-     * 
-     * @param int $perPage
-     */
-    public static function defaultPerPage(int $perPage): void
-    {
-        static::$defaultPerPage = $perPage;
+        /**
+         * @var int
+         */
+        return config('table.pagination.default', 10);
     }
 }

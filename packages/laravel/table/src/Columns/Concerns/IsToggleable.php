@@ -78,7 +78,7 @@ trait IsToggleable
         }
 
         if (\is_null($params)) {
-            return $this->isSometimes();
+            return ! $this->isSometimes();
         }
 
         return \in_array($this->getName(), $params);

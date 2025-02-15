@@ -176,14 +176,14 @@ it('formats and paginates', function () {
         ->getRecords()->scoped(fn ($records) => $records
             ->toBeArray()
             ->toHaveCount(10)
-            ->{0}->dd()
             ->each->toHaveKeys([
                 'id',
                 'name',
                 'description',
+                'best_seller',
                 'status',
                 'price',
-                'public_id'
+                'actions'
             ])
         )
         ->getMeta()->toHaveKeys([
@@ -226,7 +226,7 @@ it('formats and paginates', function () {
 
 it('has endpoint', function () {
     expect($this->test)
-        ->getEndpoint()->toBe(Table::Endpoint);
+        ->getEndpoint()->toBe(config('table.endpoint', '/actions'));
 });
 
 it('has method calls', function () {

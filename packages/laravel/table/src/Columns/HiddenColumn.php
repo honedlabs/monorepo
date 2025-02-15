@@ -10,6 +10,8 @@ class HiddenColumn extends Column
     {
         parent::setUp();
 
+        $this->type('hidden');
+        $this->always();
         $this->hidden();
     }
 }

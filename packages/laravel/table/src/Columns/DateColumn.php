@@ -9,6 +9,8 @@ class DateColumn extends Column
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->type('date');
         $this->formatDate();
     }
 }
