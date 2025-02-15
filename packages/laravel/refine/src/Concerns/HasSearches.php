@@ -45,7 +45,7 @@ trait HasSearches
         }
         
         /**
-         * @var array<int, \Honed\Refine\Searches\Search>
+         * @var array<int, \Honed\Refine\Searches\Search> $searches
          */
         $this->searches = \array_merge($this->searches ?? [], $searches);
 
@@ -141,7 +141,7 @@ trait HasSearches
         /** @var array<int,string> */
         return $matches
             ->explode(',')
-            ->map(\trim(...))
+            ->map(fn ($value) => \trim($value))
             ->toArray();
     }
 

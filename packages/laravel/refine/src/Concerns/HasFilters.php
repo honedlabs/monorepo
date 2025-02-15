@@ -100,4 +100,17 @@ trait HasFilters
 
         return $this;
     }
+
+    /**
+     * Get the filters as an array.
+     * 
+     * @return array<int,mixed>
+     */
+    public function filtersToArray(): array
+    {
+        return \array_map(
+            fn (Filter $filter) => $filter->toArray(), 
+            $this->getFilters()
+        );
+    }
 }

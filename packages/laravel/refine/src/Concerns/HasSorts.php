@@ -99,11 +99,12 @@ trait HasSorts
     public function sort(Builder $builder, Request $request): static
     {
         $sorts = $this->getSorts();
+        $key = $this->getSortsKey();
 
         $applied = false;
 
         foreach ($sorts as $sort) {
-            $applied |= $sort->apply($builder, $request, $this->getSortKey());
+            $applied |= $sort->apply($builder, $request, $key);
         }
 
         if (! $applied) {
@@ -124,8 +125,22 @@ trait HasSorts
      * 
      * @param  array<int, \Honed\Refine\Sorts\Sort>  $sorts
      */
-    protected function getDefaultSort(array $sorts): ?Sort
+    public function getDefaultSort(array $sorts): ?Sort
     {
         return Arr::first($sorts, fn (Sort $sort) => $sort->isDefault());
     }
+
+    /**
+     * Get the sorts as an array.
+     * 
+     * @return array<int,mixed>
+     */
+    public function sortsToArray(): array
+    {
+        return \array_map(
+            fn (Sort $sort) => $sort->toArray(),
+            $this->getSorts()
+        );
+    }
+    
 }

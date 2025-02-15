@@ -29,10 +29,8 @@ trait HasCallback
 
     /**
      * Retrieve the callback.
-     * 
-     * @return callable
      */
-    public function getCallback(): callable
+    public function getCallback(): mixed
     {
         if (\is_null($this->callback)) {
             throw new \InvalidArgumentException('No callback has been set.');

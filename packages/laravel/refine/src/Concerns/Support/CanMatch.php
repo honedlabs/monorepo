@@ -22,7 +22,18 @@ trait CanMatch
             return $this->matches;
         }
 
-        /** @var bool */
-        return config('refine.matches', false);
+        return (bool) config('refine.matches', false);
+    }
+
+    /**
+     * Set whether the search can select which columns are used to search on.
+     * 
+     * @return $this
+     */
+    public function matches(bool $matches = true): static
+    {
+        $this->matches = $matches;
+
+        return $this;
     }
 }

@@ -23,9 +23,7 @@ class TestCase extends Orchestra
         config()->set('inertia.testing.ensure_pages_exist', false);
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
         
-        config()->set('refine.searches', 'search');
-        config()->set('refine.matches', 'match');
-        config()->set('refine.sorts', 'sort');
+        config()->set('refine', require __DIR__.'/../config/refine.php');
 
     }
 
