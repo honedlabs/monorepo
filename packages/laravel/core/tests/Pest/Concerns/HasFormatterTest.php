@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Honed\Core\Concerns\HasFormatter;
 use Honed\Core\Formatters\BooleanFormatter;
 use Honed\Core\Formatters\DateFormatter;
-use Honed\Core\Formatters\NumericFormatter;
+use Honed\Core\Formatters\NumberFormatter;
 use Honed\Core\Formatters\StringFormatter;
 
 class FormatterTest
@@ -37,10 +37,10 @@ it('sets date formatter', function () {
         ->hasFormatter()->toBeTrue();
 });
 
-it('sets numeric formatter', function () {
-    expect($this->test->formatNumeric())
+it('sets number formatter', function () {
+    expect($this->test->formatNumber())
         ->toBeInstanceOf(FormatterTest::class)
-        ->getFormatter()->toBeInstanceOf(NumericFormatter::class)
+        ->getFormatter()->toBeInstanceOf(NumberFormatter::class)
         ->hasFormatter()->toBeTrue();
 });
 

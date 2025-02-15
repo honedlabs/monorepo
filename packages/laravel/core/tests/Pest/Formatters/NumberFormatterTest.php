@@ -1,48 +1,48 @@
 <?php
 
-use Honed\Core\Formatters\NumericFormatter;
+use Honed\Core\Formatters\NumberFormatter;
 use Illuminate\Support\Number;
 
 beforeEach(function () {
-    $this->formatter = NumericFormatter::make();
+    $this->formatter = NumberFormatter::make();
 });
 
 it('makes', function () {
-    expect(NumericFormatter::make())
-        ->toBeInstanceOf(NumericFormatter::class);
+    expect(NumberFormatter::make())
+        ->toBeInstanceOf(NumberFormatter::class);
 });
 
 it('sets precision', function () {
     expect($this->formatter->precision(2))
-        ->toBeInstanceOf(NumericFormatter::class)
+        ->toBeInstanceOf(NumberFormatter::class)
         ->getPrecision()->toBe(2)
         ->hasPrecision()->toBeTrue();
 });
 
 it('sets divide by', function () {
     expect($this->formatter->divideBy(1000))
-        ->toBeInstanceOf(NumericFormatter::class)
+        ->toBeInstanceOf(NumberFormatter::class)
         ->getDivideBy()->toBe(1000)
         ->hasDivideBy()->toBeTrue();
 });
 
 it('sets locale', function () {
-    expect($this->formatter->locale('au'))
-        ->toBeInstanceOf(NumericFormatter::class)
-        ->getLocale()->toBe('au')
+    expect($this->formatter->locale('US'))
+        ->toBeInstanceOf(NumberFormatter::class)
+        ->getLocale()->toBe('US')
         ->hasLocale()->toBeTrue();
 });
 
 it('sets currency', function () {
     expect($this->formatter->currency('USD'))
-        ->toBeInstanceOf(NumericFormatter::class)
+        ->toBeInstanceOf(NumberFormatter::class)
         ->getCurrency()->toBe('USD')
         ->hasCurrency()->toBeTrue();
 });
 
 it('sets cents', function () {
     expect($this->formatter->cents())
-        ->toBeInstanceOf(NumericFormatter::class)
+        ->toBeInstanceOf(NumberFormatter::class)
         ->getDivideBy()->toBe(100)
         ->hasDivideBy()->toBeTrue();
 });

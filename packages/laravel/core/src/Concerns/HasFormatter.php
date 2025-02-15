@@ -7,7 +7,7 @@ namespace Honed\Core\Concerns;
 use Honed\Core\Contracts\Formats;
 use Honed\Core\Formatters\BooleanFormatter;
 use Honed\Core\Formatters\DateFormatter;
-use Honed\Core\Formatters\NumericFormatter;
+use Honed\Core\Formatters\NumberFormatter;
 use Honed\Core\Formatters\StringFormatter;
 
 trait HasFormatter
@@ -82,9 +82,9 @@ trait HasFormatter
      *
      * @return $this
      */
-    public function formatNumeric(?int $precision = null, ?int $divideBy = null, ?string $locale = null, ?string $currency = null): static
+    public function formatNumber(?int $precision = null, ?int $divideBy = null, ?string $locale = null, ?string $currency = null): static
     {
-        return $this->formatter(NumericFormatter::make($precision, $divideBy, $locale, $currency));
+        return $this->formatter(NumberFormatter::make($precision, $divideBy, $locale, $currency));
     }
 
     /**

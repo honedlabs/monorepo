@@ -7,7 +7,7 @@ namespace Honed\Core\Formatters;
 use Honed\Core\Contracts\Formats;
 use Illuminate\Support\Number;
 
-class NumericFormatter implements Formats
+class NumberFormatter implements Formats
 {
     /**
      * @var int|null
@@ -42,7 +42,7 @@ class NumericFormatter implements Formats
     }
 
     /**
-     * Make a new numeric formatter.
+     * Make a new number formatter.
      */
     public static function make(
         ?int $precision = null,
