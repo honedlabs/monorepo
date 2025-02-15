@@ -17,6 +17,8 @@ use ReflectionParameter;
 trait Evaluable
 {
     /**
+     * The identifier for the evaluation.
+     *
      * @var string|null
      */
     protected $evaluationIdentifier;
@@ -113,7 +115,9 @@ trait Evaluable
     }
 
     /**
-     * @return array<mixed>
+     * Provide a selection of default dependencies for evaluation by name.
+     *
+     * @return array<int,mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
@@ -121,13 +125,18 @@ trait Evaluable
     }
 
     /**
-     * @return array<mixed>
+     * Provide a selection of default dependencies for evaluation by type.
+     *
+     * @return array<int,mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
         return [];
     }
 
+    /**
+     * Retrieve the typed reflection parameter class name.
+     */
     protected function getTypedReflectionParameterClassName(ReflectionParameter $parameter): ?string
     {
         $type = $parameter->getType();

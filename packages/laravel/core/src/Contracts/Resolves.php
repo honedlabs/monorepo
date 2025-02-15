@@ -7,7 +7,7 @@ namespace Honed\Core\Contracts;
 interface ResolvesClosures
 {
     /**
-     * Resolve any properties which are closures.
+     * Evaluate the class properties using the provided parameters and typed parameters.
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed

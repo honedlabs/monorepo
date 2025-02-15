@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Contracts\IsIcon;
+use Honed\Core\Contracts\Iconable;
 use Honed\Core\Tests\Stubs\Product;
 
 class IconTest
@@ -13,7 +13,7 @@ class IconTest
     use HasIcon;
 }
 
-enum IconEnum implements IsIcon
+enum IconEnum implements Iconable
 {
     case Chevron;
 

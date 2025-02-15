@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Honed\Core\Contracts\IsIcon;
+use Honed\Core\Contracts\Iconable;
 
 trait HasIcon
 {
     /**
-     * @var string|\Honed\Core\Contracts\IsIcon|\Closure|null
+     * @var string|\Honed\Core\Contracts\Iconable|\Closure|null
      */
     protected $icon;
 
@@ -18,7 +18,7 @@ trait HasIcon
      *
      * @return $this
      */
-    public function icon(string|IsIcon|\Closure|null $icon): static
+    public function icon(string|Iconable|\Closure|null $icon): static
     {
         if (! \is_null($icon)) {
             $this->icon = $icon;
@@ -33,7 +33,7 @@ trait HasIcon
     public function getIcon(): ?string
     {
         return match (true) {
-            $this->icon instanceof IsIcon => $this->icon->icon(),
+            $this->icon instanceof Iconable => $this->icon->icon(),
             $this->icon instanceof \Closure => $this->resolveIcon(),
             default => $this->icon,
         };
