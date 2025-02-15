@@ -18,7 +18,7 @@ beforeEach(function () {
     ]);
 });
 
-it('shares the navigation', function () {    
+it('shares the navigation', function () {
     get(route('products.index'))->assertInertia(fn (Assert $page) => $page
         ->has(Nav::ShareProp, 2)
         ->where('nav.0', [
