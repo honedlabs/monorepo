@@ -31,10 +31,7 @@ trait HasPaginator
             return $this->paginator;
         }
 
-        if (\method_exists($this, 'paginator')) {
-            return $this->paginator();
-        }
-
+        /** @var string */
         return config('table.paginator', 'length-aware');
     }
 

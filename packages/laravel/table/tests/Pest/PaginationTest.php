@@ -23,10 +23,10 @@ it('has pagination', function () {
 
 it('has default pagination', function () {
     expect($this->table)
-        ->getDefaultPagination()->toBe(FixtureTable::DefaultPagination);
+        ->getDefault()->toBe(FixtureTable::DefaultPagination);
 
     expect(Table::make())
-        ->getDefaultPagination()->toBe(config('table.pagination.default'));
+        ->getDefault()->toBe(config('table.pagination.default'));
 });
 
 it('can be length-aware', function () {

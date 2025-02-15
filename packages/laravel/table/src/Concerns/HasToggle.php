@@ -7,11 +7,14 @@ namespace Honed\Table\Concerns;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Honed\Table\Columns\Column;
+use Honed\Table\Concerns\Keys\ColumnsKey;
 use Illuminate\Support\Facades\Cookie;
 use Honed\Table\Contracts\ShouldRemember;
 
 trait HasToggle
 {
+    use ColumnsKey;
+
     /**
      * Whether the table should allow the user to toggle which columns are visible.
      * 
@@ -40,14 +43,6 @@ trait HasToggle
      * @var int|null
      */
     protected $duration;
-
-    /**
-     * The query parameter to use for retrieving the columns to display as a 
-     * comma-separated list of column names.
-     * 
-     * @var string|null
-     */
-    protected $columnsKey;
     
     /**
      * Whether the table should allow the user to change the order of the columns.
@@ -66,9 +61,7 @@ trait HasToggle
             return $this->toggle;
         }
 
-        /**
-         * @var bool
-         */
+        /** @var bool */
         return config('table.toggle.enabled', false);
     }
 
@@ -85,9 +78,7 @@ trait HasToggle
             return true;
         }
 
-        /**
-         * @var bool
-         */
+        /** @var bool */
         return config('table.toggle.remember', false);
     }
 
@@ -126,25 +117,8 @@ trait HasToggle
             return $this->duration;
         }
 
-        /**
-         * @var int
-         */
+        /** @var int */
         return config('table.toggle.remember.duration', 15768000);
-    }
-
-    /**
-     * Get the query parameter to use for toggling columns.
-     */
-    public function getColumnsKey(): string
-    {
-        if (isset($this->columnsKey)) {
-            return $this->columnsKey;
-        }
-
-        /**
-         * @var string
-         */
-        return config('table.keys.columns', 'columns');
     }
 
     /**
@@ -156,6 +130,7 @@ trait HasToggle
             return $this->order;
         }
 
+        /** @var bool */
         return config('table.toggle.order', false);
     }
 
@@ -174,17 +149,17 @@ trait HasToggle
 
         /** @var \Illuminate\Http\Request */
         $request = $this->getRequest();
-
-        $params = $this->getColumnsFromRequest($request);
+        
+        $activeColumns = $this->getColumnsFromRequest($request);
 
         if ($this->hasRemember()) {
-            $params = $this->configureCookie($request, $params);
+            $activeColumns = $this->configureCookie($request, $activeColumns);
         }
 
-        // Get the columns which are active
-        return Arr::where($columns,
-            static fn (Column $column) => $column
-                ->active($column->isDisplayed($params))
+        return Arr::where(
+            $columns,
+            fn (Column $column) => $column
+                ->active($column->isDisplayed($activeColumns))
                 ->isActive()
         );
     }
@@ -199,21 +174,13 @@ trait HasToggle
      */
     public function configureCookie(Request $request, ?array $params): ?array
     {
-        // If there are params, overwrite the current cookie
-        if (! \is_null($params)) {
+        if (\is_null($params)) {
             Cookie::queue($this->getCookie(), $params, $this->getDuration());
-
             return $params;
         }
 
         /** @var array<int,string>|null */
-        $params = $request->cookie($this->getCookie(), null);
-
-        if (\is_null($params)) {
-            return null;
-        }
-
-        return $params;
+        return $request->cookie($this->getCookie());
     }
 
     /**

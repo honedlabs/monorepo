@@ -25,7 +25,7 @@ class TableController extends Controller
             $request->validated(self::TableKey)
         );
 
-        abort_unless($table, 404);
+        abort_unless((bool) $table, 404);
 
         return $table->handle($request);
     }

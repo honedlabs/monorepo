@@ -21,7 +21,7 @@ use Illuminate\Support\Arr;
 
 class Table extends Refine implements UrlRoutable
 {
-    use Concerns\ConfiguresKeys;
+    // use Concerns\ConfiguresKeys;
     use Concerns\HasColumns;
     use Concerns\HasEndpoint;
     use Concerns\HasModifier;
@@ -145,7 +145,7 @@ class Table extends Refine implements UrlRoutable
             'pages' => $this->getPages(),
             'filters' => $this->getFilters(),
             'sorts' => $this->getSorts(),
-            'toggle' => $this->isToggleable(),
+            'toggle' => $this->hasToggle(),
             'actions' => $this->actionsToArray(),
             'endpoint' => $this->getEndpoint(),
             'keys' => $this->keysToArray(),

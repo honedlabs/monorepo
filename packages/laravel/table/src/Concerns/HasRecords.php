@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Honed\Table\Page;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Honed\Action\InlineAction;
+use Honed\Table\Columns\Column;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Honed\Action\Concerns\HasParameterNames;
@@ -19,11 +20,6 @@ trait HasRecords
     use HasParameterNames;
 
     /**
-     * @var array<int,\Honed\Table\Page>
-     */
-    protected $pages = [];
-
-    /**
      * The records of the table retrieved from the resource.
      * 
      * @var array<int,mixed>|null
@@ -31,6 +27,8 @@ trait HasRecords
     protected $records = null;
 
     /**
+     * The pagination metadata of the table.
+     * 
      * @var array<string,mixed>
      */
     protected $meta = [];
@@ -46,16 +44,6 @@ trait HasRecords
     }
 
     /**
-     * Get the meta data of the table.
-     * 
-     * @return array<string,mixed>
-     */
-    public function getMeta(): array
-    {
-        return $this->meta;
-    }
-
-    /**
      * Determine if the table has records.
      */
     public function hasRecords(): bool
@@ -64,13 +52,13 @@ trait HasRecords
     }
 
     /**
-     * Get the page options of the table.
+     * Get the meta data of the table.
      * 
-     * @return array<int,\Honed\Table\Page>
+     * @return array<string,mixed>
      */
-    public function getPages(): array
+    public function getMeta(): array
     {
-        return $this->pages;
+        return $this->meta;
     }
     
     /**
@@ -84,6 +72,19 @@ trait HasRecords
             return;
         }
 
+        [$records, $this->meta] = $this->retrievedRecords();
+
+        $this->records = $this->formatRecords($records, $activeColumns);
+    }
+
+    /**
+     * Retrieve the records from the underlying builder, returning the records
+     * collection and pagination metadata.
+     * 
+     * @return array{0:\Illuminate\Support\Collection<int,\Illuminate\Database\Eloquent\Model>,1:array<string,mixed>}
+     */
+    protected function retrievedRecords(): array
+    {
         /**
          * @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
          */
@@ -91,68 +92,28 @@ trait HasRecords
 
         $paginator = $this->getPaginator();
 
-        /**
-         * @var array<int,\Illuminate\Database\Eloquent\Model> $records
-         */
-        [$records, $this->meta] = match (true) {
-            $this->isLengthAware($paginator) => $this->lengthAwarePaginateRecords($builder),
-
-            $this->isSimple($paginator) => $this->simplePaginateRecords($builder),
-
-            $this->isCursor($paginator) => $this->cursorPaginateRecords($builder),
-
-            $this->isCollection($paginator) => $this->collectRecords($builder),
-            
+        return match (true) {
+            static::isLengthAware($paginator) => $this->lengthAwarePaginateRecords($builder),
+            static::isSimple($paginator) => $this->simplePaginateRecords($builder),
+            static::isCursor($paginator) => $this->cursorPaginateRecords($builder),
+            static::isCollection($paginator) => $this->collectRecords($builder),
             default => static::throwInvalidPaginatorException($paginator),
         };
-
-        $formattedRecords = [];
-
-        foreach ($records as $record) {
-            $formattedRecords[] = $this->formatRecord($record, $activeColumns);
-        }
-        
-        $this->records = $formattedRecords;
     }
 
     /**
-     * Get the number of records to show per page.
+     * Format the records using the provided columns.
+     * 
+     * @param \Illuminate\Support\Collection<int,\Illuminate\Database\Eloquent\Model> $records
+     * @param array<int,\Honed\Table\Columns\Column> $activeColumns
+     * 
+     * @return array<int,array<string,mixed>>
      */
-    protected function getRecordsPerPage(): int
+    protected function formatRecords(Collection $records, array $activeColumns): array
     {
-        $pagination = $this->getPagination();
-        
-        if (! \is_array($pagination)) {
-            return $pagination;
-        }
-
-        $perPage = $this->getRecordsFromRequest();
-
-        $perPage = \in_array($perPage, $pagination)
-            ? $perPage
-            : $this->getDefaultPagination();
-
-        $this->pages = Arr::map($pagination, 
-            static fn (int $amount) => Page::make($amount, $perPage)
-        );
-
-        return $perPage;
-    }
-
-    /**
-     * Get the number of records to show per page from the request.
-     */
-    protected function getRecordsFromRequest(): int
-    {
-        /**
-         * @var \Illuminate\Http\Request
-         */
-        $request = $this->getRequest();
-
-        return $request->integer(
-            $this->getRecordsKey(),
-            $this->getDefaultPagination(),
-        );
+        return $records->map(
+            fn (Model $record) => $this->formatRecord($record, $activeColumns)
+        )->all();
     }
 
     /**
@@ -165,33 +126,22 @@ trait HasRecords
      */
     protected function formatRecord(Model $record, array $columns): array
     {
-        $reducing = false;
-
         [$named, $typed] = static::getNamedAndTypedParameters($record);
 
-        $actions = Arr::map(
-            Arr::where(
-                $this->inlineActions(),
-                fn (InlineAction $action) => $action->isAllowed($named, $typed)
-            ),
-            fn (InlineAction $action) => $action->resolve($named, $typed)->toArray(),
+        $actions = collect($this->inlineActions())
+            ->filter(fn (InlineAction $action) => $action->isAllowed($named, $typed))
+            ->map(fn (InlineAction $action) => $action->resolve($named, $typed)->toArray())
+            ->all();
+
+        $formatted = \array_reduce(
+            $columns,
+            fn (array $carry, Column $column) => \array_merge($carry, [
+                Str::replace('.', '_', $column->getName()) => Arr::get($record, $column->getName())
+            ]),
+            []
         );
 
-        // $formatted = ($reducing) ? [] : $record->toArray(); // @phpstan-ignore-line
-        $formatted = [];
-
-        foreach ($columns as $column) {
-            $name = $column->getName();
-
-            Arr::set($formatted, 
-                Str::replace('.', '_', $name),
-                Arr::get($record, $name)
-            );
-        }
-
-        Arr::set($formatted, 'actions', $actions);
-
-        return $formatted;
+        return \array_merge($formatted, ['actions' => $actions]);
     }
 
     /**
@@ -201,7 +151,7 @@ trait HasRecords
      * 
      * @param \Illuminate\Database\Eloquent\Builder<T> $builder
      * 
-     * @return array{0:array<int,T>,1:array<string,mixed>}
+     * @return array{0:\Illuminate\Support\Collection<int,T>,1:array<string,mixed>}
      */
     protected function lengthAwarePaginateRecords(Builder $builder): array
     {
@@ -210,7 +160,7 @@ trait HasRecords
          */
         $paginated = $builder->paginate(
             perPage: $this->getRecordsPerPage(),
-            pageName: $this->getPageKey(),
+            pageName: $this->getPagesKey(),
         );
 
         $paginated->withQueryString();
@@ -237,7 +187,7 @@ trait HasRecords
          */
         $paginated = $builder->simplePaginate(
             perPage: $this->getRecordsPerPage(),
-            pageName: $this->getPageKey(),
+            pageName: $this->getPagesKey(),
         );
 
         $paginated->withQueryString();
@@ -264,7 +214,7 @@ trait HasRecords
          */
         $paginated = $builder->cursorPaginate(
             perPage: $this->getRecordsPerPage(),
-            cursorName: $this->getPageKey(),
+            cursorName: $this->getPagesKey(),
         );
 
         $paginated->withQueryString();

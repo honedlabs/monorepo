@@ -26,6 +26,7 @@ trait HasEndpoint
             return $this->endpoint();
         }
 
+        /** @var string */
         return config('table.endpoint', '/actions');
     }
 }

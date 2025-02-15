@@ -39,7 +39,7 @@ class Table extends HonedTable
 
     public $pagination = self::Pagination;
     
-    public $defaultPagination = self::DefaultPagination;
+    public $default = self::DefaultPagination;
     
     public $toggle = self::Toggle;
 

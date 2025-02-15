@@ -50,8 +50,11 @@ class TableServiceProvider extends ServiceProvider
     private function registerRoutesMacro(): void
     {
         Router::macro('table', function () {
+            /** @var string */
+            $endpoint = config('table.endpoint', '/actions/{table}');
+
             /** @var \Illuminate\Routing\Router $this */
-            $this->match(['post', 'patch', 'put'], config('table.endpoint', '/actions/{table}'), [TableController::class, 'handle'])->name('table.actions');
+            $this->match(['post', 'patch', 'put'], $endpoint, [TableController::class, 'handle'])->name('table.actions');
         });
     }
 }

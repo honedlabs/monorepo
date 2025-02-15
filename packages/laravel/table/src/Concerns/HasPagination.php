@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Honed\Table\Page;
+use Honed\Table\Concerns\Keys\PagesKey;
+use Honed\Table\Concerns\Keys\RecordsKey;
+
 trait HasPagination
 {
-    /**
-     * The key for pagination.
-     * 
-     * @var string|null
-     */
-
-    protected $pageKey;
+    use HasPages;
+    use RecordsKey;
+    use PagesKey;
     
     /**
      * The pagination options for the table.
@@ -29,12 +29,12 @@ trait HasPagination
      * 
      * @var int|null
      */
-    protected $defaultPagination;
+    protected $default;
 
     /**
      * Retrieve the pagination options for the table.
      * 
-     * @return int|non-empty-list<int>
+     * @return int|array<int,int>
      */
     public function getPagination(): int|array
     {
@@ -46,7 +46,7 @@ trait HasPagination
             return $this->pagination();
         }
 
-        /** @var int|non-empty-list<int> */
+        /** @var int|array<int,int> */
         return config('table.pagination.default', 10);
     }
 
@@ -55,14 +55,10 @@ trait HasPagination
      * 
      * @return int
      */
-    public function getDefaultPagination(): int
+    public function getDefault(): int
     {
-        if (isset($this->defaultPagination)) {
-            return $this->defaultPagination;
-        }
-
-        if (\method_exists($this, 'defaultPagination')) {
-            return $this->defaultPagination();
+        if (isset($this->default)) {
+            return $this->default;
         }
 
         /** @var int */
@@ -70,27 +66,38 @@ trait HasPagination
     }
 
     /**
-     * Sets the page key to look for in the request.
-     * 
-     * @return $this
+     * Get the number of records to show per page.
      */
-    public function pagesKey(string $pagesKey): static
+    protected function getRecordsPerPage(): int
     {
-        $this->pagesKey = $pagesKey;
+        $paginationOptions = $this->getPagination();
+        
+        if (! \is_array($paginationOptions)) {
+            return $paginationOptions;
+        }
 
-        return $this;
+        $perPage = $this->getRecordsFromRequest();
+        $default = $this->getDefault();
+
+        $validPerPage = \in_array($perPage, $paginationOptions) ? $perPage : $default;
+        $this->pages = $this->generatePages($paginationOptions, $validPerPage);
+
+        return $validPerPage;
     }
 
     /**
-     * Gets the page key to look for in the request.
+     * Get the number of records to show per page from the request.
      */
-    public function getPagesKey(): string
+    protected function getRecordsFromRequest(): int
     {
-        if (isset($this->pagesKey)) {
-            return $this->pagesKey;
-        }
+        /**
+         * @var \Illuminate\Http\Request
+         */
+        $request = $this->getRequest();
 
-        /** @var string */
-        return config('table.keys.pages', 'page');
+        return $request->integer(
+            $this->getRecordsKey(),
+            $this->getDefault(),
+        );
     }
 }
