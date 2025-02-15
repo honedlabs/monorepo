@@ -11,7 +11,7 @@ use Honed\Action\PageAction;
 trait HasActions
 {
     /**
-     * @var array<int,\Honed\Action\Action>
+     * @var array<int,\Honed\Action\Action>|null
      */
     public $actions;
 
@@ -23,7 +23,7 @@ trait HasActions
     public function getActions(): array
     {
         return match (true) {
-            \property_exists($this, 'actions') && ! \is_null($this->actions) => $this->actions,
+            isset($this->actions) => $this->actions,
             \method_exists($this, 'actions') => $this->actions(),
             default => [],
         };
@@ -44,7 +44,9 @@ trait HasActions
      */
     public function inlineActions(): array
     {
-        return \array_filter($this->getActions(), static fn ($action) => $action instanceof InlineAction);
+        return \array_filter($this->getActions(), static fn ($action) => 
+            $action instanceof InlineAction
+        );
     }
 
     /**
@@ -55,7 +57,9 @@ trait HasActions
     public function bulkActions(): array
     {
         return \array_values(
-            \array_filter($this->getActions(), static fn ($action) => $action instanceof BulkAction && $action->isAllowed())
+            \array_filter($this->getActions(), static fn ($action) => 
+                $action instanceof BulkAction && $action->isAllowed()
+            )
         );
     }
 
@@ -67,7 +71,9 @@ trait HasActions
     public function pageActions(): array
     {
         return \array_values(
-            \array_filter($this->getActions(), static fn ($action) => $action instanceof PageAction && $action->isAllowed())
+            \array_filter($this->getActions(), static fn ($action) => 
+                $action instanceof PageAction && $action->isAllowed()
+            )
         );
     }
 
