@@ -19,7 +19,7 @@ class TableMakeCommand extends GeneratorCommand
 
     protected $type = 'Table';
 
-    protected function getStub()
+    protected function getStub(): string
     {
         $stub = '/stubs/table.php.stub';
 

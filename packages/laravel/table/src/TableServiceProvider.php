@@ -3,8 +3,8 @@
 namespace Honed\Table;
 
 use Honed\Table\Console\Commands\TableMakeCommand;
-use Honed\Table\Http\InvokedController;
-use Illuminate\Support\Facades\Route;
+use Honed\Table\Http\Controllers\TableController;
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
 class TableServiceProvider extends ServiceProvider
@@ -12,6 +12,8 @@ class TableServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/table.php', 'table');
+
+        $this->registerRoutesMacro();
     }
 
     public function boot(): void
@@ -30,7 +32,6 @@ class TableServiceProvider extends ServiceProvider
             __DIR__.'/../config/table.php' => config_path('table.php'),
         ], 'table-config');
 
-        $this->configureEndpoint();
     }
 
     /**
@@ -44,12 +45,13 @@ class TableServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the default endpoint for the Table class.
+     * Register the route macro for the Table class.
      */
-    private function configureEndpoint(): void
+    private function registerRoutesMacro(): void
     {
-        Route::macro('table', function () {
-            Route::post(Table::getDefaultEndpoint(), InvokedController::class);
+        Router::macro('table', function () {
+            /** @var \Illuminate\Routing\Router $this */
+            $this->match(['post', 'patch', 'put'], config('table.endpoint', '/actions/{table}'), [TableController::class, 'handle'])->name('table.actions');
         });
     }
 }

@@ -21,7 +21,7 @@ trait HasTableBindings
      */
     public function getRouteKeyName()
     {
-        return 'id';
+        return 'table';
     }
 
     /**

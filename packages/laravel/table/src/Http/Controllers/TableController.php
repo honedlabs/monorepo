@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Honed\Table\Http;
+namespace Honed\Table\Http\Controllers;
 
 use Honed\Table\Http\Requests\TableRequest;
 use Honed\Table\Concerns\HasTableBindings;
+use Illuminate\Routing\Controller;
 
-class InvokedController
+class TableController extends Controller
 {
     const TableKey = 'table';
 
@@ -18,13 +19,13 @@ class InvokedController
      * 
      * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
-    public function __invoke(TableRequest $request)
+    public function handle(TableRequest $request)
     {
         $table = $this->resolveRouteBinding(
             $request->validated(self::TableKey)
         );
 
-        abort_if(! $table, 404);
+        abort_unless($table, 404);
 
         return $table->handle($request);
     }

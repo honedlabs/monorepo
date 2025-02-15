@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 use Honed\Table\Table;
-use Honed\Table\Tests\Fixtures\Table as FixtureTable;
 use Honed\Table\Tests\Stubs\Product;
+use Illuminate\Database\Eloquent\Builder;
+use Honed\Table\Tests\Fixtures\Table as FixtureTable;
 
 beforeEach(function () {
     $this->test = FixtureTable::make();
@@ -55,3 +56,16 @@ it('can apply a modifier anonymously', function () {
             ])
         );
 });
+
+it('has a resource', function () {
+    expect($this->test)
+        ->getResource()->toBeInstanceOf(Builder::class)
+        ->getBuilder()->toBeInstanceOf(Builder::class);
+});
+
+it('guesses a resource', function () {
+    expect(FixtureTable::make()->guessResource())
+        ->toBe('\\App\\Models\\');
+});
+
+

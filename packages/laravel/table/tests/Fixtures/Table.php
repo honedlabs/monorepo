@@ -119,7 +119,7 @@ class Table extends HonedTable
                 ->confirm(fn (Confirm $confirm) => $confirm->name(fn (Product $product) => 'You are about to delete '.$product->name)->description('Are you sure?')),
             InlineAction::make('show')
                 ->route(fn ($product) => route('products.show', $product)),
-            BulkAction::make('update')
+            BulkAction::make('edit')
                 ->action(fn (Product $product) => $product->update(['name' => 'Bulk'])),
             BulkAction::make('delete')
                 ->action(fn (Product $product) => $product->delete())
@@ -129,7 +129,10 @@ class Table extends HonedTable
                 ->route('products.create'),
 
             PageAction::make('factory')
-                ->action(fn () => product('test')),
+                ->action(function () {
+                    $product = product('test');
+                    return to_route('products.show', $product);
+                }),
         ];
     }
 }
