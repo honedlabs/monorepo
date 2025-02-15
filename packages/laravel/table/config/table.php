@@ -26,5 +26,5 @@ return [
         'pages' => 'page',
         'columns' => 'columns',
         'records' => 'rows',
-    ]
+    ],
 ];

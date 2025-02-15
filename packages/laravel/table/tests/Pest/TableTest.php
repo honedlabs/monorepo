@@ -2,13 +2,10 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Arr;
-use Illuminate\Http\Request;
-use Honed\Table\Tests\Stubs\Status;
-use Honed\Table\Table as HonedTable;
-use Honed\Table\Tests\Stubs\Product;
 use Honed\Table\Tests\Fixtures\Table;
+use Honed\Table\Tests\Stubs\Status;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 beforeEach(function () {
     $this->test = Table::make();
@@ -37,30 +34,28 @@ it('can be modified', function () {
     expect(Table::make($fn)->buildTable())
         ->hasModifier()->toBeTrue()
         ->getBuilder()->getQuery()->scoped(fn ($query) => $query
-            ->wheres->scoped(fn ($wheres) => $wheres
-                ->toBeArray()
-                ->toHaveCount(1)
-                ->{0}->toEqual([
-                    'type' => 'Basic',
-                    'column' => 'best_seller',
-                    'operator' => '=',
-                    'value' => true,
-                    'boolean' => 'and',
-                ])
-            )->orders->scoped(fn ($orders) => $orders
-                ->toBeArray()
-                ->toHaveCount(1)
-                ->{0}->toEqual([
-                    'column' => 'products.name',
-                    'direction' => 'desc',
-                ])
-            )
+        ->wheres->scoped(fn ($wheres) => $wheres
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->toEqual([
+            'type' => 'Basic',
+            'column' => 'best_seller',
+            'operator' => '=',
+            'value' => true,
+            'boolean' => 'and',
+        ])
+        )->orders->scoped(fn ($orders) => $orders
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->toEqual([
+            'column' => 'products.name',
+            'direction' => 'desc',
+        ])
+        )
         );
 });
 
-it('can toggle', function () {
-
-});
+it('can toggle', function () {});
 
 it('can refine', function () {
     $request = Request::create('/', 'GET', [
@@ -84,83 +79,83 @@ it('can refine', function () {
 
     expect($this->test->for($request)->buildTable())
         ->getBuilder()->getQuery()->scoped(fn ($query) => $query
-            ->wheres->scoped(fn ($wheres) => $wheres
-                ->toBeArray()
-                ->toHaveCount(9)
-                ->toEqualCanonicalizing([
-                    // Search done on name (column) and description (property)
-                    [
-                        'type' => 'raw',
-                        'sql' => searchSql('name'),
-                        'boolean' => 'and',
-                    ],
-                    [
-                        'type' => 'raw',
-                        'sql' => searchSql('description'),
-                        'boolean' => 'or',
-                    ],
-                    // Name where filter 
-                    [
-                        'type' => 'raw',
-                        'sql' => searchSql('name'),
-                        'boolean' => 'and',
-                    ],
-                    // Price set filter
-                    [
-                        'type' => 'Basic',
-                        'column' => qualifyProduct('price'),
-                        'operator' => '<',
-                        'value' => 100,
-                        'boolean' => 'and',
-                    ],
-                    // Status set filter
-                    [
-                        'type' => 'In',
-                        'column' => qualifyProduct('status'),
-                        'values' => [Status::Available->value, Status::Unavailable->value],
-                        'boolean' => 'and',
-                    ],
-                    // Only set filter
-                    [
-                        'type' => 'Basic',
-                        'column' => qualifyProduct('status'),
-                        'operator' => '=',
-                        'value' => Status::ComingSoon->value,
-                        'boolean' => 'and',
-                    ],
-                    // Favourite filter
-                    [
-                        'type' => 'Basic',
-                        'column' => qualifyProduct('best_seller'),
-                        'operator' => '=',
-                        'value' => true,
-                        'boolean' => 'and',
-                    ],
-                    // Oldest date filter
-                    [
-                        'type' => 'Date',
-                        'column' => qualifyProduct('created_at'),
-                        'operator' => '>',
-                        'value' => '2000-01-01',
-                        'boolean' => 'and',
-                    ],
-                    // Newest date filter
-                    [
-                        'type' => 'Date',
-                        'column' => qualifyProduct('created_at'),
-                        'operator' => '<',
-                        'value' => '2001-01-01',
-                        'boolean' => 'and',
-                    ],
-                ])
-            )->orders->scoped(fn ($orders) => $orders
-                ->toBeArray()
-                ->toHaveCount(1)
-                ->{0}->toEqual([
-                    'column' => qualifyProduct('price'),
-                    'direction' => 'desc',
-                ])
-            )
+        ->wheres->scoped(fn ($wheres) => $wheres
+        ->toBeArray()
+        ->toHaveCount(9)
+        ->toEqualCanonicalizing([
+            // Search done on name (column) and description (property)
+            [
+                'type' => 'raw',
+                'sql' => searchSql('name'),
+                'boolean' => 'and',
+            ],
+            [
+                'type' => 'raw',
+                'sql' => searchSql('description'),
+                'boolean' => 'or',
+            ],
+            // Name where filter
+            [
+                'type' => 'raw',
+                'sql' => searchSql('name'),
+                'boolean' => 'and',
+            ],
+            // Price set filter
+            [
+                'type' => 'Basic',
+                'column' => qualifyProduct('price'),
+                'operator' => '<',
+                'value' => 100,
+                'boolean' => 'and',
+            ],
+            // Status set filter
+            [
+                'type' => 'In',
+                'column' => qualifyProduct('status'),
+                'values' => [Status::Available->value, Status::Unavailable->value],
+                'boolean' => 'and',
+            ],
+            // Only set filter
+            [
+                'type' => 'Basic',
+                'column' => qualifyProduct('status'),
+                'operator' => '=',
+                'value' => Status::ComingSoon->value,
+                'boolean' => 'and',
+            ],
+            // Favourite filter
+            [
+                'type' => 'Basic',
+                'column' => qualifyProduct('best_seller'),
+                'operator' => '=',
+                'value' => true,
+                'boolean' => 'and',
+            ],
+            // Oldest date filter
+            [
+                'type' => 'Date',
+                'column' => qualifyProduct('created_at'),
+                'operator' => '>',
+                'value' => '2000-01-01',
+                'boolean' => 'and',
+            ],
+            // Newest date filter
+            [
+                'type' => 'Date',
+                'column' => qualifyProduct('created_at'),
+                'operator' => '<',
+                'value' => '2001-01-01',
+                'boolean' => 'and',
+            ],
+        ])
+        )->orders->scoped(fn ($orders) => $orders
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->toEqual([
+            'column' => qualifyProduct('price'),
+            'direction' => 'desc',
+        ])
+        )
         );
 });
 
@@ -174,17 +169,17 @@ it('formats and paginates', function () {
     expect(Table::make()->buildTable())
         ->getPaginator()->toBe('length-aware')
         ->getRecords()->scoped(fn ($records) => $records
-            ->toBeArray()
-            ->toHaveCount(Table::DefaultPagination)
-            ->each->toHaveKeys([
-                'id',
-                'name',
-                'description',
-                'best_seller',
-                'status',
-                'price',
-                'actions'
-            ])
+        ->toBeArray()
+        ->toHaveCount(Table::DefaultPagination)
+        ->each->toHaveKeys([
+            'id',
+            'name',
+            'description',
+            'best_seller',
+            'status',
+            'price',
+            'actions',
+        ])
         )
         ->getMeta()->toHaveKeys([
             'prev',
@@ -196,7 +191,7 @@ it('formats and paginates', function () {
             'to',
             'first',
             'last',
-            'links'
+            'links',
         ]);
 
     expect(Table::make()->paginator('cursor')->buildTable())
@@ -220,7 +215,7 @@ it('formats and paginates', function () {
         ->getPaginator()->toBe('none')
         ->getMeta()->toBeEmpty();
 
-    expect(fn() => Table::make()->paginator('invalid')->buildTable())
+    expect(fn () => Table::make()->paginator('invalid')->buildTable())
         ->toThrow(\InvalidArgumentException::class);
 });
 

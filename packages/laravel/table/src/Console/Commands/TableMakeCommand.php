@@ -27,7 +27,7 @@ class TableMakeCommand extends GeneratorCommand
     }
 
     /**
-     * @param string $stub
+     * @param  string  $stub
      */
     protected function resolveStubPath($stub): string
     {
@@ -37,7 +37,7 @@ class TableMakeCommand extends GeneratorCommand
     }
 
     /**
-     * @param string $rootNamespace
+     * @param  string  $rootNamespace
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
@@ -45,7 +45,7 @@ class TableMakeCommand extends GeneratorCommand
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      */
     protected function buildClass($name): string
     {
@@ -63,7 +63,7 @@ class TableMakeCommand extends GeneratorCommand
     }
 
     /**
-     * @param string $table
+     * @param  string  $table
      */
     protected function parseModel($table): string
     {

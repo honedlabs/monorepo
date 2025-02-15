@@ -32,7 +32,7 @@ trait HasModifier
     /**
      * Get the resource modifier.
      */
-    public function getModifier(): \Closure|null
+    public function getModifier(): ?\Closure
     {
         return $this->modifier;
     }

@@ -4,31 +4,31 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use Honed\Action\Concerns\HasParameterNames;
 use Honed\Action\InlineAction;
 use Honed\Table\Columns\Column;
-use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Honed\Action\Concerns\HasParameterNames;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 trait HasRecords
 {
-    use HasPagination;
-    use HasPaginator;
     use HasParameterNames;
+    use Support\HasPagination;
+    use Support\HasPaginator;
 
     /**
      * The records of the table retrieved from the resource.
-     * 
+     *
      * @var array<int,mixed>|null
      */
     protected $records = null;
 
     /**
      * The pagination metadata of the table.
-     * 
+     *
      * @var array<string,mixed>
      */
     protected $meta = [];
@@ -53,18 +53,18 @@ trait HasRecords
 
     /**
      * Get the meta data of the table.
-     * 
+     *
      * @return array<string,mixed>
      */
     public function getMeta(): array
     {
         return $this->meta;
     }
-    
+
     /**
      * Format the records using the provided columns.
-     * 
-     * @param array<int,\Honed\Table\Columns\Column> $activeColumns
+     *
+     * @param  array<int,\Honed\Table\Columns\Column>  $activeColumns
      */
     public function formatAndPaginate(array $activeColumns): void
     {
@@ -80,7 +80,7 @@ trait HasRecords
     /**
      * Retrieve the records from the underlying builder, returning the records
      * collection and pagination metadata.
-     * 
+     *
      * @return array{0:\Illuminate\Support\Collection<int,\Illuminate\Database\Eloquent\Model>,1:array<string,mixed>}
      */
     protected function retrievedRecords(): array
@@ -103,10 +103,9 @@ trait HasRecords
 
     /**
      * Format the records using the provided columns.
-     * 
-     * @param \Illuminate\Support\Collection<int,\Illuminate\Database\Eloquent\Model> $records
-     * @param array<int,\Honed\Table\Columns\Column> $activeColumns
-     * 
+     *
+     * @param  \Illuminate\Support\Collection<int,\Illuminate\Database\Eloquent\Model>  $records
+     * @param  array<int,\Honed\Table\Columns\Column>  $activeColumns
      * @return array<int,array<string,mixed>>
      */
     protected function formatRecords(Collection $records, array $activeColumns): array
@@ -118,10 +117,8 @@ trait HasRecords
 
     /**
      * Format a record using the provided columns.
-     * 
-     * @param \Illuminate\Database\Eloquent\Model $record
-     * @param array<int,\Honed\Table\Columns\Column> $columns
-     * 
+     *
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
      * @return array<string,mixed>
      */
     protected function formatRecord(Model $record, array $columns): array
@@ -133,24 +130,34 @@ trait HasRecords
             ->map(fn (InlineAction $action) => $action->resolve($named, $typed)->toArray())
             ->all();
 
-        $formatted = \array_reduce(
-            $columns,
-            fn (array $carry, Column $column) => \array_merge($carry, [
-                Str::replace('.', '_', $column->getName()) => Arr::get($record, $column->getName())
-            ]),
-            []
-        );
+        $formatted = collect($columns)
+            ->mapWithKeys(fn (Column $column) => $this->formatColumn($column, $record))
+            ->all();
 
         return \array_merge($formatted, ['actions' => $actions]);
     }
 
     /**
+     * Format a single column's value for the record.
+     *
+     *
+     * @return array<string,mixed>
+     */
+    protected function formatColumn(Column $column, Model $record): array
+    {
+        /** @var string */
+        $name = $column->getName();
+        $key = Str::replace('.', '_', $name);
+
+        return [$key => Arr::get($record, $name)];
+    }
+
+    /**
      * Length-aware paginate the records from the builder.
-     * 
+     *
      * @template T of \Illuminate\Database\Eloquent\Model
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder<T> $builder
-     * 
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<T>  $builder
      * @return array{0:\Illuminate\Support\Collection<int,T>,1:array<string,mixed>}
      */
     protected function lengthAwarePaginateRecords(Builder $builder): array
@@ -173,11 +180,10 @@ trait HasRecords
 
     /**
      * Simple paginate the records from the builder.
-     * 
+     *
      * @template T of \Illuminate\Database\Eloquent\Model
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder<T> $builder
-     * 
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<T>  $builder
      * @return array{0:\Illuminate\Support\Collection<int,T>,1:array<string,mixed>}
      */
     protected function simplePaginateRecords(Builder $builder): array
@@ -200,11 +206,10 @@ trait HasRecords
 
     /**
      * Cursor paginate the records from the builder.
-     * 
+     *
      * @template T of \Illuminate\Database\Eloquent\Model
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder<T> $builder
-     * 
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<T>  $builder
      * @return array{0:\Illuminate\Support\Collection<int,T>,1:array<string,mixed>}
      */
     protected function cursorPaginateRecords(Builder $builder): array
@@ -227,11 +232,10 @@ trait HasRecords
 
     /**
      * Collect the records from the builder.
-     * 
+     *
      * @template T of \Illuminate\Database\Eloquent\Model
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder<T> $builder
-     * 
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<T>  $builder
      * @return array{0:\Illuminate\Support\Collection<int,T>,1:array<string,mixed>}
      */
     protected function collectRecords(Builder $builder): array
@@ -240,7 +244,7 @@ trait HasRecords
 
         return [
             $retrieved,
-            []
+            [],
         ];
     }
 
@@ -251,7 +255,6 @@ trait HasRecords
     {
         throw new \InvalidArgumentException(
             \sprintf('The paginator [%s] is not valid.', $paginator
-        ));
+            ));
     }
-    
 }

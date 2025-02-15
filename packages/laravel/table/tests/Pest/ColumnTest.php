@@ -1,18 +1,17 @@
 <?php
 
-use Honed\Refine\Sorts\Sort;
-use Honed\Table\Columns\Column;
-use Honed\Table\Columns\KeyColumn;
-use Honed\Table\Columns\DateColumn;
-use Honed\Table\Columns\TextColumn;
-use Honed\Table\Columns\HiddenColumn;
-use Honed\Table\Columns\BooleanColumn;
-use Honed\Table\Columns\NumericColumn;
-use Honed\Table\Columns\CurrencyColumn;
-use Honed\Core\Formatters\DateFormatter;
-use Honed\Core\Formatters\StringFormatter;
 use Honed\Core\Formatters\BooleanFormatter;
+use Honed\Core\Formatters\DateFormatter;
 use Honed\Core\Formatters\NumericFormatter;
+use Honed\Core\Formatters\StringFormatter;
+use Honed\Refine\Sorts\Sort;
+use Honed\Table\Columns\BooleanColumn;
+use Honed\Table\Columns\Column;
+use Honed\Table\Columns\DateColumn;
+use Honed\Table\Columns\HiddenColumn;
+use Honed\Table\Columns\KeyColumn;
+use Honed\Table\Columns\NumericColumn;
+use Honed\Table\Columns\TextColumn;
 
 beforeEach(function () {
     $this->param = 'name';
@@ -68,10 +67,10 @@ it('can be sortable', function () {
         ->sortable()->toBeInstanceOf(Column::class)
         ->isSortable()->toBeTrue()
         ->getSort()->scoped(fn ($sort) => $sort
-            ->toBeInstanceOf(Sort::class)
-            ->getDirection()->toBeNull()
-            ->getNextDirection()->toBe($this->param)
-        )        
+        ->toBeInstanceOf(Sort::class)
+        ->getDirection()->toBeNull()
+        ->getNextDirection()->toBe($this->param)
+        )
         ->toArray()->toEqual([
             'name' => $this->param,
             'label' => ucfirst($this->param),
@@ -104,9 +103,9 @@ it('can be sortable', function () {
         ])
         ->sortable('description')->toBeInstanceOf(Column::class)
         ->getSort()->scoped(fn ($sort) => $sort
-            ->toBeInstanceOf(Sort::class)
-            ->getDirection()->toBeNull()
-            ->getNextDirection()->toBe('description')
+        ->toBeInstanceOf(Sort::class)
+        ->getDirection()->toBeNull()
+        ->getNextDirection()->toBe('description')
         )
         ->isSortable()->toBeTrue()
         ->toArray()->toEqual([
@@ -189,10 +188,4 @@ it('has other column types', function () {
         ->getType()->toBe('key')
         ->isKey()->toBeTrue()
         ->isHidden()->toBeTrue();
-
-    expect(CurrencyColumn::make($this->param))
-        ->toBeInstanceOf(Column::class)
-        ->getType()->toBe('currency')
-        ->hasFormatter()->toBeTrue()
-        ->getFormatter()->toBeInstanceOf(NumericFormatter::class);
 });

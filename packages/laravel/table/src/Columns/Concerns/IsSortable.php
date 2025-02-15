@@ -80,7 +80,7 @@ trait IsSortable
     {
         $this->sortable = true;
         $this->sort = Sort::make(
-            \is_string($sortable) 
+            \is_string($sortable)
                 ? $sortable : type($this->getName())->asString()
         );
 

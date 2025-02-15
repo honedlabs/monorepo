@@ -16,13 +16,13 @@ trait HasClass
     /**
      * Set the class for the column.
      *
-     * @param array<string> $class
+     * @param  array<string>  $class
      * @return $this
      */
     public function class(...$class): static
     {
         $this->class = \array_merge(
-            (array) $this->class, 
+            (array) $this->class,
             $class
         );
 

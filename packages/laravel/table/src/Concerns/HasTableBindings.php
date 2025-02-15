@@ -25,8 +25,8 @@ trait HasTableBindings
     }
 
     /**
-     * @param mixed $value
-     * @param string|null $field
+     * @param  mixed  $value
+     * @param  string|null  $field
      * @return \Honed\Table\Table|null
      */
     public function resolveRouteBinding($value, $field = null)
@@ -45,9 +45,9 @@ trait HasTableBindings
     }
 
     /**
-     * @param string $childType
-     * @param string $value
-     * @param string|null $field
+     * @param  string  $childType
+     * @param  string  $value
+     * @param  string|null  $field
      * @return \Honed\Table\Table|null
      */
     public function resolveChildRouteBinding($childType, $value, $field)

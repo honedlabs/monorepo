@@ -2,27 +2,26 @@
 
 namespace Honed\Table\Concerns;
 
-use Illuminate\Support\Arr;
 use Honed\Table\Columns\Column;
-use Illuminate\Support\Collection;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 
 trait HasColumns
 {
     /**
      * Retrieved columns with authorization applied.
-     * 
+     *
      * @var array<int,\Honed\Table\Columns\Column>|null
      */
     protected $cachedColumns;
 
     /**
      * The columns to be used for the table.
-     * 
+     *
      * @var array<int,\Honed\Table\Columns\Column>|null
      */
     protected $columns;
-    
+
     /**
      * Determine if the table has columns.
      */
@@ -59,12 +58,12 @@ trait HasColumns
 
     /**
      * Get the source columns for the table, with permissions applied.
-     * 
+     *
      * @return array<int,\Honed\Table\Columns\Column>
      */
     protected function getSourceColumns(): array
     {
-        $columns = match(true) {
+        $columns = match (true) {
             \method_exists($this, 'columns') => $this->columns(),
             isset($this->columns) => $this->columns,
             default => [],
@@ -78,7 +77,7 @@ trait HasColumns
 
     /**
      * Get the columns which are active for toggling.
-     * 
+     *
      * @return array<int,\Honed\Table\Columns\Column>
      */
     public function getActiveColumns(): array

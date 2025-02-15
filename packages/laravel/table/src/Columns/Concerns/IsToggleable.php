@@ -28,7 +28,7 @@ trait IsToggleable
 
     /**
      * Set the column to be shown sometimes; it's visibility can be toggled.
-     * The boolean provided indicates whether the column is visible 
+     * The boolean provided indicates whether the column is visible
      * to begin with - if false, the column will be shown initially.
      */
     public function sometimes(bool $sometimes = true): static
@@ -68,7 +68,7 @@ trait IsToggleable
 
     /**
      * Determine if this column should be shown on initial load.
-     * 
+     *
      * @param  array<int,string>|null  $params
      */
     public function isDisplayed(?array $params = null): bool

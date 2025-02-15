@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Table\Http\Controllers;
 
-use Honed\Table\Http\Requests\TableRequest;
 use Honed\Table\Concerns\HasTableBindings;
+use Honed\Table\Http\Requests\TableRequest;
 use Illuminate\Routing\Controller;
 
 class TableController extends Controller
@@ -16,7 +16,7 @@ class TableController extends Controller
 
     /**
      * Delegate the incoming action request to the appropriate table.
-     * 
+     *
      * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
     public function handle(TableRequest $request)

@@ -25,27 +25,27 @@ use Honed\Core\Primitive;
 class Column extends Primitive
 {
     use Allowable;
+    use Concerns\HasClass;
     use Concerns\IsSearchable;
     use Concerns\IsSortable;
     use Concerns\IsToggleable;
-    use Concerns\HasClass;
-    use HasType;
     use HasExtra;
     use HasFormatter;
+    use HasIcon;
     use HasLabel;
     use HasMeta;
     use HasName;
     use HasPlaceholder;
+    use HasType;
     use IsActive;
     use IsHidden;
     use IsKey;
     use Transformable;
-    use HasIcon;
 
     /**
      * Create a new column instance.
      */
-    public static function make(string $name, string $label = null): static
+    public static function make(string $name, ?string $label = null): static
     {
         return resolve(static::class)
             ->name($name)

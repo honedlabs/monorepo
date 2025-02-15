@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Table;
 use Honed\Action\Creator;
-use Illuminate\Support\Arr;
-use function Pest\Laravel\post;
-
-use Honed\Table\Tests\Stubs\Product;
+use Honed\Table\Table;
 use Honed\Table\Tests\Fixtures\Table as FixtureTable;
+use Honed\Table\Tests\Stubs\Product;
+use Illuminate\Support\Arr;
+
+use function Pest\Laravel\post;
 
 beforeEach(function () {
     $this->table = FixtureTable::make();
@@ -61,7 +61,7 @@ it('can authorize the action', function () {
 
     post(route('table.actions'), $data)
         ->assertRedirect('/');
-    
+
     $this->assertDatabaseHas('products', [
         'id' => $a->id,
     ]);
@@ -92,7 +92,7 @@ it('can handle bulk actions at endpoint', function () {
 
     expect($products)
         ->each(fn ($product) => $product->name->toBe('Bulk')
-    );    
+        );
 });
 
 it('can handle specific tables', function () {

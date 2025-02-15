@@ -8,7 +8,7 @@ trait HasEndpoint
 {
     /**
      * The endpoint to be used to handle table actions.
-     * 
+     *
      * @var string|null
      */
     protected $endpoint;

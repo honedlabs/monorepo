@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Tests\Fixtures\Table as FixtureTable;
 use Honed\Table\Table;
+use Honed\Table\Tests\Fixtures\Table as FixtureTable;
 
 beforeEach(function () {
     $this->table = FixtureTable::make();
@@ -36,17 +36,17 @@ it('can be length-aware', function () {
         ->getPaginator()->toBe('length-aware')
         ->buildTable()->toBe($this->table)
         ->getRecords()->scoped(fn ($records) => $records
-            ->toBeArray()
-            ->toHaveCount(FixtureTable::DefaultPagination)
-            ->each->toHaveKeys([
-                'id',
-                'name',
-                'description',
-                'best_seller',
-                'status',
-                'price',
-                'actions'
-            ])
+        ->toBeArray()
+        ->toHaveCount(FixtureTable::DefaultPagination)
+        ->each->toHaveKeys([
+            'id',
+            'name',
+            'description',
+            'best_seller',
+            'status',
+            'price',
+            'actions',
+        ])
         )
         ->getMeta()->toHaveKeys([
             'prev',
@@ -58,7 +58,7 @@ it('can be length-aware', function () {
             'to',
             'first',
             'last',
-            'links'
+            'links',
         ]);
 
     expect(Table::make())
@@ -108,4 +108,3 @@ it('can set the page key', function () {
         ->pagesKey('test')
         ->getPagesKey()->toBe('test');
 });
-

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use Honed\Refine\Refine;
-use Honed\Core\Concerns\Encodable;
-use Honed\Core\Concerns\RequiresKey;
 use Honed\Action\Concerns\HasActions;
 use Honed\Action\Concerns\HasParameterNames;
 use Honed\Action\Handler;
 use Honed\Action\Http\Requests\ActionRequest;
-use Illuminate\Database\Eloquent\Builder;
+use Honed\Core\Concerns\Encodable;
+use Honed\Core\Concerns\RequiresKey;
 use Honed\Core\Exceptions\MissingRequiredAttributeException;
+use Honed\Refine\Refine;
 use Honed\Table\Concerns\HasTableBindings;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -29,12 +29,12 @@ class Table extends Refine implements UrlRoutable
     use Concerns\HasToggle;
     use Encodable;
     use HasActions;
-    use RequiresKey;
-    use HasTableBindings;
     use HasParameterNames;
+    use HasTableBindings;
+    use RequiresKey;
 
     /**
-     * @param \Closure|null $modifier
+     * @param  \Closure|null  $modifier
      */
     public static function make($modifier = null): static
     {
@@ -44,7 +44,7 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Handle the incoming action request for this table.
-     * 
+     *
      * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
     public function handle(ActionRequest $request)
@@ -96,7 +96,7 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Build the table using the given request.
-     * 
+     *
      * @return $this
      */
     public function buildTable(): static
@@ -108,7 +108,7 @@ class Table extends Refine implements UrlRoutable
         // Intermediate step allowing for table reuse with
         // minor changes between them.
         $this->evaluate($this->getModifier());
-        
+
         // Execute the parent refine method to scope the builder
         // according to the given request.
         $this->refine();
@@ -117,7 +117,7 @@ class Table extends Refine implements UrlRoutable
         // columns are to be used from the request, cookie or by the
         // default state of each column.
         $activeColumns = $this->toggle($this->getColumns());
-        
+
         // Retrieved the records, generate metadata and complete the
         // table pipeline.
         $this->formatAndPaginate($activeColumns);
@@ -144,7 +144,7 @@ class Table extends Refine implements UrlRoutable
             'pages' => $this->getPages(),
             'filters' => $this->getFilters(),
             'sorts' => $this->getSorts(),
-            'toggle' => $this->hasToggle(),
+            'toggle' => $this->canToggle(),
             'actions' => $this->actionsToArray(),
             'endpoint' => $this->getEndpoint(),
             'keys' => $this->keysToArray(),
@@ -153,7 +153,7 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Get the keys for the table as an array.
-     * 
+     *
      * @return array<string,string>
      */
     public function keysToArray(): array
@@ -190,9 +190,9 @@ class Table extends Refine implements UrlRoutable
      * @return array<mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
-    {        
+    {
         [$model] = $this->getParameterNames($this->getBuilder());
-        
+
         return match ($parameterType) {
             Builder::class => [$this->getBuilder()],
             Model::class => [$this->getBuilder()],

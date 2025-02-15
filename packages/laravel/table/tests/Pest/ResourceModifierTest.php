@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Honed\Table\Table;
+use Honed\Table\Tests\Fixtures\Table as FixtureTable;
 use Honed\Table\Tests\Stubs\Product;
 use Illuminate\Database\Eloquent\Builder;
-use Honed\Table\Tests\Fixtures\Table as FixtureTable;
 
 beforeEach(function () {
     $this->test = FixtureTable::make();
@@ -26,34 +26,34 @@ it('can apply a modifier', function () {
         ->hasModifier()->toBeTrue()
         ->getModifier()->toBe($fn)
         ->buildTable()->getBuilder()->getQuery()->wheres->scoped(fn ($wheres) => $wheres
-            ->toBeArray()
-            ->toHaveCount(1)
-            ->{0}->toEqual([
-                'type' => 'Basic',
-                'column' => 'best_seller',
-                'operator' => '=',
-                'value' => true,
-                'boolean' => 'and',
-            ])
-        ); 
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->toEqual([
+            'type' => 'Basic',
+            'column' => 'best_seller',
+            'operator' => '=',
+            'value' => true,
+            'boolean' => 'and',
+        ])
+        );
 });
 
 it('can apply a modifier anonymously', function () {
     $fn = fn ($product) => $product->where('best_seller', true);
-    
+
     expect(Table::make()->builder(Product::query())->modifier($fn)->buildTable())
         ->hasModifier()->toBeTrue()
         ->getModifier()->toBe($fn)
         ->buildTable()->getBuilder()->getQuery()->wheres->scoped(fn ($wheres) => $wheres
-            ->toBeArray()
-            ->toHaveCount(1)
-            ->{0}->toEqual([
-                'type' => 'Basic',
-                'column' => 'best_seller',
-                'operator' => '=',
-                'value' => true,
-                'boolean' => 'and',
-            ])
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->toEqual([
+            'type' => 'Basic',
+            'column' => 'best_seller',
+            'operator' => '=',
+            'value' => true,
+            'boolean' => 'and',
+        ])
         );
 });
 
@@ -67,5 +67,3 @@ it('guesses a resource', function () {
     expect(FixtureTable::make()->guessResource())
         ->toBe('\\App\\Models\\');
 });
-
-
