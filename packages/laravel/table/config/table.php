@@ -12,11 +12,17 @@ return [
 
     'toggle' => [
         'enabled' => false,
+        'order' => false,
         'remember' => false,
-        'duration' => 60 * 24 * 30 * 365,
+        'duration' => 15768000,
     ],
 
+    'matching' => false,
+
     'keys' => [
+        'searches' => 'search',
+        'matches' => 'matches',
+        'sorts' => 'sort',
         'pages' => 'page',
         'columns' => 'columns',
         'records' => 'rows',

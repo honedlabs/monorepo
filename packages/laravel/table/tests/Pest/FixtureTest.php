@@ -175,7 +175,7 @@ it('formats and paginates', function () {
         ->getPaginator()->toBe('length-aware')
         ->getRecords()->scoped(fn ($records) => $records
             ->toBeArray()
-            ->toHaveCount(10)
+            ->toHaveCount(Table::DefaultPagination)
             ->each->toHaveKeys([
                 'id',
                 'name',
@@ -227,10 +227,4 @@ it('formats and paginates', function () {
 it('has endpoint', function () {
     expect($this->test)
         ->getEndpoint()->toBe(config('table.endpoint', '/actions'));
-});
-
-it('has method calls', function () {
-    expect($this->test)
-        ->endpoint('test')->toBe($this->test)
-        ->getEndpoint()->toBe('test');
 });

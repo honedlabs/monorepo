@@ -79,12 +79,16 @@ class Table extends Refine implements UrlRoutable
      */
     public function __call($name, $arguments): mixed
     {
+        $args = Arr::first($arguments);
+
         match ($name) {
-            'sorts' => $this->addSorts($arguments), // @phpstan-ignore-line
-            'filters' => $this->addFilters($arguments), // @phpstan-ignore-line
-            'searches' => $this->addSearches($arguments), // @phpstan-ignore-line
-            'paginator' => $this->paginator = Arr::first($arguments), // @phpstan-ignore-line
-            'endpoint' => $this->endpoint = Arr::first($arguments), // @phpstan-ignore-line
+            'columns' => $this->addColumns($args), // @phpstan-ignore-line
+            'sorts' => $this->addSorts($args), // @phpstan-ignore-line
+            'filters' => $this->addFilters($args), // @phpstan-ignore-line
+            'searches' => $this->addSearches($args), // @phpstan-ignore-line
+            'pagination' => $this->pagination = $args, // @phpstan-ignore-line
+            'paginator' => $this->paginator = $args, // @phpstan-ignore-line
+            'endpoint' => $this->endpoint = $args, // @phpstan-ignore-line
             default => null,
         };
 
@@ -101,13 +105,6 @@ class Table extends Refine implements UrlRoutable
         if ($this->isRefined()) {
             return $this;
         }
-
-        // Assign the builder to the defined resource.
-        $this->builder(
-            $this->createBuilder(
-                $this->getResource()
-            )
-        );
 
         // Intermediate step allowing for table reuse with
         // minor changes between them.
@@ -127,6 +124,13 @@ class Table extends Refine implements UrlRoutable
         $this->formatAndPaginate($activeColumns);
 
         return $this;
+    }
+
+    public function getBuilder(): Builder
+    {
+        $this->builder ??= $this->createBuilder($this->getResource());
+
+        return parent::getBuilder();
     }
 
     public function toArray(): array

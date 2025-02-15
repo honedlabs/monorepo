@@ -7,8 +7,6 @@ namespace Honed\Table\Concerns;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Honed\Table\Columns\Column;
-use Illuminate\Support\Collection;
-use Honed\Table\Columns\BaseColumn;
 use Illuminate\Support\Facades\Cookie;
 use Honed\Table\Contracts\ShouldRemember;
 
@@ -56,13 +54,13 @@ trait HasToggle
      * 
      * @var bool|null
      */
-    protected $orderable;
+    protected $order;
 
     /**
      * Determine whether this table allows for the user to toggle which
      * columns are visible.
      */
-    public function isToggleable(): bool
+    public function hasToggle(): bool
     {
         if (isset($this->toggle)) {
             return $this->toggle;
@@ -77,7 +75,7 @@ trait HasToggle
     /**
      * Determine whether the user's preferences should be remembered.
      */
-    public function isRemembering(): bool
+    public function hasRemember(): bool
     {
         if (isset($this->remember)) {
             return $this->remember;
@@ -131,7 +129,7 @@ trait HasToggle
         /**
          * @var int
          */
-        return config('table.toggle.remember.duration', 60 * 24 * 30 * 365);
+        return config('table.toggle.remember.duration', 15768000);
     }
 
     /**
@@ -152,13 +150,13 @@ trait HasToggle
     /**
      * Determine whether the user can order the columns.
      */
-    public function isOrderable(): bool
+    public function hasOrder(): bool
     {
-        if (isset($this->orderable)) {
-            return $this->orderable;
+        if (isset($this->order)) {
+            return $this->order;
         }
 
-        return false;
+        return config('table.toggle.order', false);
     }
 
     /**
@@ -170,7 +168,7 @@ trait HasToggle
      */
     public function toggle(array $columns): array
     {
-        if (! $this->isToggleable()) {
+        if (! $this->hasToggle()) {
             return $columns;
         }
 
@@ -179,16 +177,15 @@ trait HasToggle
 
         $params = $this->getColumnsFromRequest($request);
 
-        if ($this->isRemembering()) {
-            $params = $this->useColumnsCookie($request, $params);
+        if ($this->hasRemember()) {
+            $params = $this->configureCookie($request, $params);
         }
 
         // Get the columns which are active
-        return Arr::where(
-            $columns,
-            static fn (Column $column) => $column->active(
-                    $column->isDisplayed($params)
-                )->isActive()
+        return Arr::where($columns,
+            static fn (Column $column) => $column
+                ->active($column->isDisplayed($params))
+                ->isActive()
         );
     }
 
@@ -200,15 +197,11 @@ trait HasToggle
      * 
      * @return array<int,string>|null
      */
-    public function useColumnsCookie(Request $request, ?array $params): ?array
+    public function configureCookie(Request $request, ?array $params): ?array
     {
         // If there are params, overwrite the current cookie
         if (! \is_null($params)) {
-            Cookie::queue(
-                $this->getCookie(), 
-                $params, 
-                $this->getDuration()
-            );
+            Cookie::queue($this->getCookie(), $params, $this->getDuration());
 
             return $params;
         }

@@ -2,9 +2,10 @@
 
 namespace Honed\Table\Concerns;
 
-use Honed\Table\Columns\Column;
 use Illuminate\Support\Arr;
+use Honed\Table\Columns\Column;
 use Illuminate\Support\Collection;
+use Illuminate\Contracts\Support\Arrayable;
 
 trait HasColumns
 {
@@ -28,6 +29,22 @@ trait HasColumns
     public function hasColumns(): bool
     {
         return ! empty($this->getColumns());
+    }
+
+    /**
+     * @param  iterable<\Honed\Table\Columns\Column>  $columns
+     * @return $this
+     */
+    public function addColumns(iterable $columns): static
+    {
+        if ($columns instanceof Arrayable) {
+            $columns = $columns->toArray();
+        }
+
+        /** @var array<int, \Honed\Table\Columns\Column> $columns */
+        $this->columns = \array_merge($this->columns ?? [], $columns);
+
+        return $this;
     }
 
     /**

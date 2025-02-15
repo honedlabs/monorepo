@@ -31,6 +31,13 @@ function category(?string $name = null): Category
     ]);
 }
 
+function populate(int $count = 100)
+{
+    foreach (\range(1, $count) as $i) {
+        product();
+    }
+}
+
 function seller(?string $name = null): Seller
 {
     return Seller::create([

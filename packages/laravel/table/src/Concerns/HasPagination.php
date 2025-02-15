@@ -6,8 +6,14 @@ namespace Honed\Table\Concerns;
 
 trait HasPagination
 {
-    const PerPage = 10;
+    /**
+     * The key for pagination.
+     * 
+     * @var string|null
+     */
 
+    protected $pageKey;
+    
     /**
      * The pagination options for the table.
      * 
@@ -40,9 +46,7 @@ trait HasPagination
             return $this->pagination();
         }
 
-        /**
-         * @var int|non-empty-list<int>
-         */
+        /** @var int|non-empty-list<int> */
         return config('table.pagination.default', 10);
     }
 
@@ -61,9 +65,32 @@ trait HasPagination
             return $this->defaultPagination();
         }
 
-        /**
-         * @var int
-         */
+        /** @var int */
         return config('table.pagination.default', 10);
+    }
+
+    /**
+     * Sets the page key to look for in the request.
+     * 
+     * @return $this
+     */
+    public function pagesKey(string $pagesKey): static
+    {
+        $this->pagesKey = $pagesKey;
+
+        return $this;
+    }
+
+    /**
+     * Gets the page key to look for in the request.
+     */
+    public function getPagesKey(): string
+    {
+        if (isset($this->pagesKey)) {
+            return $this->pagesKey;
+        }
+
+        /** @var string */
+        return config('table.keys.pages', 'page');
     }
 }

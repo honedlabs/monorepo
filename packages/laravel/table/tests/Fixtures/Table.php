@@ -26,15 +26,34 @@ use Honed\Refine\Filters\BooleanFilter;
 
 class Table extends HonedTable
 {
-    public $search = ['description'];
+    const Pagination = [10, 25, 50];
+    const DefaultPagination = 15;
+    const Search = ['description'];
+    const Toggle = true;
+    const Remember = true;
+    const ColumnsKey = 'cols';
+    const Duration = 10;
+    const Order = true;
+    const Cookie = 'example-table';
+    const PagesKey = 'cursor';
 
-    public $toggle = true;
+    public $pagination = self::Pagination;
+    
+    public $defaultPagination = self::DefaultPagination;
+    
+    public $toggle = self::Toggle;
 
-    public $pagination = [10, 25, 50];
+    public $remember = self::Remember;
 
-    public $defaultPagination = 10;
+    public $columnsKey = self::ColumnsKey;
+    
+    public $duration = self::Duration;
+    
+    public $order = self::Order;
 
-    public $cookie = 'example-table';
+    public $cookie = self::Cookie;
+
+    public $pagesKey = self::PagesKey;
 
     public function resource()
     {
@@ -54,6 +73,7 @@ class Table extends HonedTable
             NumericColumn::make('price')->sortable(),
             DateColumn::make('created_at')->sometimes()->sortable(),
             Column::make('public_id')->hidden()->always(),
+            Column::make('updated_at')->allow(false),
         ];
     }
 
