@@ -10,20 +10,12 @@ use Inertia\Inertia;
 
 class Trail extends Primitive
 {
+    use Concerns\IsTerminable;
+
     /**
      * @var array<int,\Honed\Crumb\Crumb>
      */
     protected $crumbs;
-
-    /**
-     * @var bool
-     */
-    protected $terminating = false;
-
-    /**
-     * @var bool
-     */
-    protected $terminated = false;
 
     /**
      * Create a new trail instance.
@@ -49,16 +41,6 @@ class Trail extends Primitive
     public function toArray(): array
     {
         return $this->crumbs();
-    }
-
-    /**
-     * Set the trail to lock when a crumb in the trail matches.
-     */
-    public function terminating(bool $terminating = true): static
-    {
-        $this->terminating = $terminating;
-
-        return $this;
     }
 
     /**
@@ -104,22 +86,6 @@ class Trail extends Primitive
         }
 
         return $this;
-    }
-
-    /**
-     * Determine if the trail is terminating.
-     */
-    public function isTerminating(): bool
-    {
-        return $this->terminating;
-    }
-
-    /**
-     * Determine if the trail has terminated.
-     */
-    public function isTerminated(): bool
-    {
-        return $this->terminated;
     }
 
     /**

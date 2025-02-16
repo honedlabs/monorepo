@@ -6,11 +6,10 @@ namespace Honed\Crumb;
 
 use Honed\Crumb\Exceptions\CrumbsNotFoundException;
 use Honed\Crumb\Exceptions\DuplicateCrumbsException;
+use Illuminate\Support\Arr;
 
 class Manager
 {
-    const ShareProp = 'crumbs';
-
     /**
      * @var array<string,\Closure>
      */
@@ -38,7 +37,7 @@ class Manager
             throw new DuplicateCrumbsException($name);
         }
 
-        $this->trails[$name] = $trail;
+        Arr::set($this->trails, $name, $trail);
     }
 
     /**
@@ -46,7 +45,7 @@ class Manager
      */
     public function exists(string $name): bool
     {
-        return isset($this->trails[$name]);
+        return Arr::has($this->trails, $name);
     }
 
     /**
@@ -63,10 +62,10 @@ class Manager
         $trail = Trail::make()->terminating();
 
         if ($this->before) {
-            ($this->before)($trail);
+            \call_user_func($this->before, $trail);
         }
 
-        ($this->trails[$name])($trail);
+        \call_user_func(Arr::get($this->trails, $name), $trail);
 
         return $trail;
     }
