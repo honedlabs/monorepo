@@ -16,10 +16,11 @@ trait HasSorts
     use SortsKey;
 
     /**
+     * List of the sorts.
+     * 
      * @var array<int,\Honed\Refine\Sorts\Sort>|null
      */
     protected $sorts;
-
 
     /**
      * Merge a set of sorts with the existing sorts.
