@@ -36,7 +36,7 @@ class Manager
     public function for(string $name, \Closure $trail): static
     {
         if ($this->hasTrail($name)) {
-            throw new DuplicateCrumbsException($name);
+            static::throwDuplicateCrumbsException($name);
         }
 
         Arr::set($this->trails, $name, $trail);
@@ -69,7 +69,10 @@ class Manager
             \call_user_func($this->before, $trail);
         }
 
-        \call_user_func(Arr::get($this->trails, $name), $trail);
+        /** @var \Closure */
+        $callback = Arr::get($this->trails, $name);
+
+        \call_user_func($callback, $trail);
 
         return $trail;
     }
@@ -79,6 +82,21 @@ class Manager
      */
     protected static function throwCrumbNotFoundException(string $crumb): never
     {
-        throw new CrumbsNotFoundException($crumb);
+        throw new \InvalidArgumentException(
+            \sprintf('There were no crumbs defined for [%s].', 
+            $crumb
+        ));
     }
+
+    /**
+     * Throw an exception for a duplicate crumb trail.
+     */
+    protected static function throwDuplicateCrumbsException(string $crumb): never
+    {
+        throw new \InvalidArgumentException(
+            \sprintf('There already exists a crumb with the name [%s].', 
+            $crumb
+        ));
+    }
+    
 }

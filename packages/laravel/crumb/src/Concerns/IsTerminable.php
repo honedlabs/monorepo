@@ -29,18 +29,6 @@ trait IsTerminable
     }
 
     /**
-     * Set the trail to have terminated.
-     * 
-     * @return $this
-     */
-    protected function terminate(bool $terminated = true): static
-    {
-        $this->terminated = $terminated;
-
-        return $this;
-    }
-
-    /**
      * Determine if the trail is terminating.
      */
     public function isTerminating(): bool
@@ -55,6 +43,17 @@ trait IsTerminable
     {
         return $this->terminated;
     }
+
     
-    
+    /**
+     * Set the trail to have terminated.
+     * 
+     * @return $this
+     */
+    protected function terminate(bool $terminated = true): static
+    {
+        $this->terminated = $terminated;
+
+        return $this;
+    }    
 }

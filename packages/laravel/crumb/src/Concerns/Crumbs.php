@@ -8,14 +8,12 @@ use Honed\Crumb\Attributes\Crumb;
 use Honed\Crumb\Exceptions\ClassDoesNotExtendControllerException;
 use Honed\Crumb\Facades\Crumbs as CrumbFacade;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 
-/**
- * @mixin \Illuminate\Routing\Controller
- */
 trait Crumbs
 {
-    final public function __construct()
+    public function __construct()
     {
         $this->configureCrumbs();
     }
@@ -28,7 +26,7 @@ trait Crumbs
     public function configureCrumbs(): void
     {
         if (! \in_array('Illuminate\Routing\Controller', \class_parents($this))) {
-            throw new ClassDoesNotExtendControllerException(\class_basename($this));
+            static::throwControllerExtensionException(\class_basename($this));
         }
 
         $this->middleware(function (Request $request, \Closure $next) {
@@ -48,8 +46,13 @@ trait Crumbs
      */
     public function getCrumbName(): ?string
     {
+        // dd($this->getCrumbFromMethod());
+        if ($crumb = $this->getCrumbFromMethod()) {
+            return $crumb->getName();
+        }
+
         return match (true) {
-            (bool) ($c = collect((new \ReflectionMethod($this, Route::getCurrentRoute()->getActionMethod()))
+            (bool) ($c = collect((new \ReflectionClass($this))
                 ->getAttributes(Crumb::class)
             )->first()?->newInstance()->getCrumb()) => $c,
 
@@ -57,10 +60,39 @@ trait Crumbs
                 ->getAttributes(Crumb::class)
             )->first()?->newInstance()->getCrumb()) => $c,
 
-            \property_exists($this, 'crumb') => $this->crumb,
+            isset($this->crumb) => $this->crumb,
 
-            \method_exists($this, 'crumb') => $this->crumb,
+            method_exists($this, 'crumb') => $this->crumb(),
             default => null,
         };
+    }
+
+    protected function getCrumbFromMethod(): ?Crumb
+    {
+        $action = Route::getCurrentRoute()?->getActionMethod();
+
+        if (! $action) {
+            return null;
+        }
+
+        $crumb = Arr::first(
+            (new \ReflectionMethod($this, $action))->getAttributes(Crumb::class),
+            static fn (\ReflectionAttribute $attribute) => $attribute->newInstance()->getCrumb()
+        );
+
+        return $crumb;
+    }
+    
+    
+
+    /**
+     * Throw an exception for when the using class is not a controller.
+     */
+    protected static function throwControllerExtensionException(string $class): never
+    {
+        throw new \LogicException(\sprintf(
+            'Class [%s] does not extend the [Illuminate\Routing\Controller] controller class.',
+            $class
+        ));
     }
 }
