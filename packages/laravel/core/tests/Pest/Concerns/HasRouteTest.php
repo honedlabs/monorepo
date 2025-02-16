@@ -16,7 +16,7 @@ class RouteTest
 
 beforeEach(function () {
     $this->test = new RouteTest;
-    $this->route = 'product.show';
+    $this->route = 'products.show';
     $this->param = product();
     $this->url = '/';
 });

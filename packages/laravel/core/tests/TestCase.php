@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Tests;
 
+use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -44,8 +45,10 @@ class TestCase extends Orchestra
 
     protected function defineRoutes($router)
     {
-        $router->get('/', fn () => view('app'))->name('home');
-        $router->get('/lang/{lang}', fn ($lang) => session()->put('lang', $lang))->name('lang.show');
-        $router->get('/{product}', fn () => view('app'))->name('product.show');
+        $router->middleware('web')->group(function ($router) {
+            $router->get('/', fn () => view('app'))->name('home');
+            $router->get('/lang/{lang}', fn ($lang) => session()->put('lang', $lang))->name('lang.show');
+            $router->get('/{product}', fn (Product $product) => $product)->name('products.show');
+        });
     }
 }
