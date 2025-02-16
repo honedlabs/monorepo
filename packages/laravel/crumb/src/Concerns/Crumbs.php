@@ -28,13 +28,9 @@ trait Crumbs
         if (! \in_array('Illuminate\Routing\Controller', \class_parents($this))) {
             static::throwControllerExtensionException(\class_basename($this));
         }
-
+        
         $name = $this->getCrumbName();
-
-        if (! $name) {
-            return;
-        } 
-
+        
         $this->middleware('crumb:' . $name);
     }
 
@@ -58,16 +54,16 @@ trait Crumbs
     protected function getMethodCrumbAttribute(): ?string
     {
         $action = Route::getCurrentRoute()?->getActionMethod();
-
+        
         if (! $action) {
             return null;
         }
+        /** @var \ReflectionAttribute<\Honed\Crumb\Attributes\Crumb>|null $attribute */
+        $attribute = Arr::first(
+            (new \ReflectionMethod($this, $action))->getAttributes(Crumb::class)
+        );
 
-        $crumb = Arr::first((new \ReflectionMethod($this, $action))->getAttributes(Crumb::class))
-            ->newInstance()
-            ->getCrumbName();
-
-        return $crumb;
+        return $attribute?->newInstance()->getCrumbName();
     }
 
     /**
@@ -75,11 +71,11 @@ trait Crumbs
      */
     protected function getClassCrumbAttribute(): ?string
     {
-        $crumb = Arr::first((new \ReflectionClass($this))->getAttributes(Crumb::class))
-            ->newInstance()
-            ->getCrumbName();
+        $attribute = Arr::first(
+            (new \ReflectionClass($this))->getAttributes(Crumb::class)
+        );
 
-        return $crumb;
+        return $attribute?->newInstance()->getCrumbName();
     }
     
     /**

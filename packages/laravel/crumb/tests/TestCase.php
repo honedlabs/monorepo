@@ -6,11 +6,12 @@ namespace Honed\Crumb\Tests;
 
 use Honed\Crumb\CrumbServiceProvider;
 use Honed\Crumb\Tests\Stubs\MethodController;
-use Honed\Crumb\Tests\Stubs\ProductController;
+use Honed\Crumb\Tests\Fixtures\ProductController;
 use Honed\Crumb\Tests\Stubs\PropertyController;
 use Honed\Crumb\Tests\Stubs\Status;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
@@ -56,13 +57,12 @@ class TestCase extends Orchestra
 
     protected function defineRoutes($router)
     {
-        $router->middleware(HandlesInertiaRequests::class, SubstituteBindings::class)->group(function ($router) {
+        $router->middleware(HandlesInertiaRequests::class, SubstituteBindings::class)->group(function (Router $router) {
             $router->get('/', fn () => inertia('Home'))->name('home');
 
-            $router->get('/products', [ProductController::class, 'index'])->name('products.index');
-            $router->get('/products/{product:public_id}', [ProductController::class, 'show'])->name('products.show');
-            $router->get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-
+            $router->resource('products', ProductController::class)
+                ->only('index', 'show', 'edit');
+                
             $router->get('/status/{status}', [MethodController::class, 'show'])->name('status.show');
             $router->get('/testing/{word}', [PropertyController::class, 'show'])->name('word.show');
         });

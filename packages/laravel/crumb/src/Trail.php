@@ -42,7 +42,7 @@ class Trail extends Primitive
         
         $this->addCrumb($crumb);
         
-        $this->terminate($this->isTerminating() && $crumb->isCurrent());
+        $this->terminate($crumb->isCurrent());
 
         return $this;
     }

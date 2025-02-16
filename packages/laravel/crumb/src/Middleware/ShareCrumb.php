@@ -16,10 +16,14 @@ class ShareCrumb
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $crumb): Response
+    public function handle(Request $request, Closure $next, ?string $crumb): Response
     {
-        Crumbs::get($crumb)->share();
- 
+        $crumb ??= config('crumb.default');
+
+        if ($crumb) {
+            Crumbs::get($crumb)->share();
+        }
+
         return $next($request);
     }
 }

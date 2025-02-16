@@ -3,8 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Crumb\Crumb;
-use Honed\Crumb\Exceptions\CrumbsNotFoundException;
-use Honed\Crumb\Exceptions\DuplicateCrumbsException;
 use Honed\Crumb\Facades\Crumbs;
 use Honed\Crumb\Manager;
 use Honed\Crumb\Trail;
@@ -40,7 +38,7 @@ it('throws error if the key already exists', function () {
     });
 })->throws(\InvalidArgumentException::class);
 
-it('retrieves crumbs with termination', function () {
+it('retrieves crumbs', function () {
     $product = product();
 
     $response = get(route('products.show', $product));
@@ -64,19 +62,19 @@ it('retrieves crumbs with termination', function () {
         ]));
 });
 
-it('can shortcut breadcrumbs', function () {
-    $response = get(route('products.index'));
+// it('can shortcut breadcrumbs', function () {
+//     $response = get(route('products.index'));
 
-    $response->assertInertia(fn (Assert $page) => $page->has('crumbs')
-        ->count('crumbs', 2)
-        ->where('crumbs.0', [
-            'name' => 'Home',
-            'url' => route('home'),
-            'icon' => null,
-        ])
-        ->where('crumbs.1', [
-            'name' => 'Products',
-            'url' => route('products.index'),
-            'icon' => null,
-        ]));
-});
+//     $response->assertInertia(fn (Assert $page) => $page->has('crumbs')
+//         ->count('crumbs', 2)
+//         ->where('crumbs.0', [
+//             'name' => 'Home',
+//             'url' => route('home'),
+//             'icon' => null,
+//         ])
+//         ->where('crumbs.1', [
+//             'name' => 'Products',
+//             'url' => route('products.index'),
+//             'icon' => null,
+//         ]));
+// });

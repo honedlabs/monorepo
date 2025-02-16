@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Crumb;
 
-use Honed\Crumb\Exceptions\CrumbsNotFoundException;
-use Honed\Crumb\Exceptions\DuplicateCrumbsException;
 use Illuminate\Support\Arr;
 
 class Manager
