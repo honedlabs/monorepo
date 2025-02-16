@@ -19,8 +19,6 @@ use Illuminate\Support\Facades\Facade;
  */
 class Nav extends Facade
 {
-    const ShareProp = Manager::ShareProp;
-
     protected static function getFacadeAccessor(): string
     {
         return Manager::class;

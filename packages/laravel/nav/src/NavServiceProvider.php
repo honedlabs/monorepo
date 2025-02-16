@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Nav;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class NavServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,8 @@ class NavServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/nav.php', 'nav');
+
+        $this->registerMiddleware();
     }
 
     /**
@@ -26,6 +29,14 @@ class NavServiceProvider extends ServiceProvider
         ], 'nav-config');
 
         $this->registerNavigation();
+    }
+
+        /**
+     * Register the middleware alias.
+     */
+    protected function registerMiddleware(): void
+    {
+        Route::aliasMiddleware('nav', Middleware\ShareNavigation::class);
     }
 
     /**

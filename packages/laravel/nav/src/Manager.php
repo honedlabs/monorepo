@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Nav;
 
 use Honed\Nav\Support\Parameters;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
 
@@ -13,25 +14,57 @@ class Manager
     /**
      * Keyed navigation groups.
      *
-     * @var array<string, array<int,\Honed\Nav\NavGroup>>
+     * @var array<string, array<int,\Honed\Nav\NavBase>>
      */
     protected $items = [];
 
     /**
      * Set a navigation group under a given name.
      *
-     * @param  array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>  $items
+     * @param  iterable<\Honed\Nav\NavBase>  $items
      * @return $this
      *
      * @throws \InvalidArgumentException
      */
-    public function for(string $name, array $items): static
+    public function for(string $name, iterable $items): static
     {
         if ($this->hasGroup($name)) {
             static::throwDuplicateGroupException($name);
         }
 
+        if ($items instanceof Arrayable) {
+            $items = $items->toArray();
+        }
+
+        /** @var array<int,\Honed\Nav\NavBase> $items */
         Arr::set($this->items, $name, $items);
+
+        return $this;
+    }
+
+    /**
+     * Add navigation items to an existing group.
+     *
+     * @param  iterable<\Honed\Nav\NavBase>  $items
+     * @return $this
+     */
+    public function add(string $name, iterable $items): static
+    {
+        if (!$this->hasGroup($name)) {
+            static::throwDuplicateGroupException($name);
+        }
+
+        if ($items instanceof Arrayable) {
+            $items = $items->toArray();
+        }
+
+        /** @var array<int,\Honed\Nav\NavBase> $current */
+        $current = Arr::get($this->items, $name);
+
+        /** @var array<int,\Honed\Nav\NavBase> $items */
+        $updated = \array_merge($current, $items);
+
+        Arr::set($this->items, $name, $updated);
 
         return $this;
     }
@@ -52,38 +85,20 @@ class Manager
     public function get(string ...$groups): array
     {
         return match (\count($groups)) {
-            0 => \array_combine(
-                \array_keys($this->items),
-                \array_map(
-                    fn ($group) => $this->getAllowedItems($group),
-                    \array_keys($this->items)
-                )
-            ),
-            1 => $this->getAllowedItems($groups[0]),
-            default => \array_combine(
-                \array_keys(\array_filter(
-                    $this->items,
-                    fn ($key) => \in_array($key, $groups),
-                    \ARRAY_FILTER_USE_KEY
-                )),
-                \array_map(
-                    fn ($group) => $this->getAllowedItems($group),
-                    \array_filter(
-                        \array_keys($this->items),
-                        fn ($key) => \in_array($key, $groups)
-                    )
-                )
-            ),
+            0 => $this->items,
+            1 => $this->getGroup($groups[0]),
+            default => Arr::only($this->items, $groups),
         };
     }
 
     /**
      * Retrieve the navigation group for the given name.
      *
-     * @return array<\Honed\Nav\NavGroup>
+     * @return array<int,\Honed\Nav\NavBase>
      */
     public function getGroup(string $group): array
     {
+        /** @var array<int,\Honed\Nav\NavBase> */
         return Arr::get($this->items, $group);
     }
 
@@ -94,7 +109,18 @@ class Manager
      */
     public function share(string ...$groups): static
     {
-        Inertia::share(Parameters::Prop, $this->get(...$groups));
+        $groups = $this->get(...$groups);
+
+        // Need to map each group to an array for serialization
+        // $groups = \array_map(
+        //     fn (array $group) => \array_map(
+        //         fn (NavBase $item) => $item->toArray(),
+        //         $group
+        //     ),
+        //     $groups
+        // );
+
+        Inertia::share(Parameters::Prop, $groups);
 
         return $this;
     }
