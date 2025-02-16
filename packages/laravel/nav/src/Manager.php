@@ -50,8 +50,8 @@ class Manager
      */
     public function add(string $name, iterable $items): static
     {
-        if (!$this->hasGroup($name)) {
-            static::throwDuplicateGroupException($name);
+        if (! $this->hasGroup($name)) {
+            static::throwMissingGroupException($name);
         }
 
         if ($items instanceof Arrayable) {
@@ -112,13 +112,13 @@ class Manager
         $groups = $this->get(...$groups);
 
         // Need to map each group to an array for serialization
-        // $groups = \array_map(
-        //     fn (array $group) => \array_map(
-        //         fn (NavBase $item) => $item->toArray(),
-        //         $group
-        //     ),
-        //     $groups
-        // );
+        $groups = \array_map(
+            fn (array $group) => \array_map(
+                fn (NavBase $item) => $item->toArray(),
+                $group
+            ),
+            $groups
+        );
 
         Inertia::share(Parameters::Prop, $groups);
 
@@ -132,6 +132,17 @@ class Manager
     {
         throw new \InvalidArgumentException(
             \sprintf('There already exists a group with the name [%s].',
+                $group
+            ));
+    }
+
+    /**
+     * Throw an exception for a missing group.
+     */
+    protected static function throwMissingGroupException(string $group): never
+    {
+        throw new \InvalidArgumentException(
+            \sprintf('There is no group with the name [%s].',
                 $group
             ));
     }
