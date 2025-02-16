@@ -4,53 +4,45 @@ declare(strict_types=1);
 
 namespace Honed\Nav;
 
-use Honed\Core\Primitive;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasRoute;
-use Honed\Core\Concerns\Allowable;
-use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasRequest;
 
-/**
- * @extends Primitive<string, mixed>
- */
-class NavItem extends Primitive
+class NavItem extends NavBase
 {
-    use Allowable;
     use HasRoute;
-    use Evaluable;
-    use HasIcon;
-    use HasLabel;
+    use HasRequest;
 
     /**
      * @var string|\Closure|null
      */
     protected $active;
 
-    public function __construct(string $label, string|\Closure|null $route = null, mixed $parameters = [])
+    public function __construct(Request $request)
     {
-        $this->label($label);
-        $this->route($route, $parameters);
-    }
-
-    public static function make(string $label, string|\Closure|null $route = null, mixed $parameters = []): static
-    {
-        return resolve(static::class, compact('label', 'route', 'parameters'));
+        $this->request($request);
     }
 
     /**
-     * @return array<string,mixed>
+     * Create a new nav item instance.
+     */
+    public static function make(string $label, string|\Closure|null $route = null, mixed $parameters = []): static
+    {
+        return resolve(static::class)
+            ->label($label)
+            ->route($route, $parameters);
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function toArray(): array
     {
-        return [
-            'label' => $this->getLabel(),
+        return \array_merge(parent::toArray(), [
             'href' => $this->getRoute(),
             'active' => $this->isActive(),
-            ...($this->hasIcon() ? ['icon' => $this->getIcon()] : []),
-        ];
+        ]);
     }
 
     /**
