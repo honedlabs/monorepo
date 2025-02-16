@@ -13,5 +13,5 @@ interface Resolves
      * @param  array<string,mixed>  $typed
      * @return $this
      */
-    public function resolve($parameters = [], $typed = []): static;
+    public function resolve(array $parameters = [], array $typed = []): static;
 }
