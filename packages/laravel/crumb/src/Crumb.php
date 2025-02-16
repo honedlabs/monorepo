@@ -7,13 +7,15 @@ namespace Honed\Crumb;
 use Honed\Core\Primitive;
 use Illuminate\Http\Request;
 use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasRoute;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
 
+/**
+ * @extends \Honed\Core\Primitive<string, mixed>
+ */
 class Crumb extends Primitive
 {
     use HasIcon;
@@ -31,7 +33,7 @@ class Crumb extends Primitive
      *
      * @return $this
      */
-    public static function make(string|\Closure $name, string|\Closure $link = null, array $parameters = []): static
+    public static function make(string|\Closure $name, string|\Closure $link = null, mixed $parameters = []): static
     {
         return resolve(static::class)
             ->name($name)
@@ -63,17 +65,15 @@ class Crumb extends Primitive
         ];
     }
 
-    // /**
-    //  * Determine if the current route corresponds to this crumb.
-    //  */
-    // public function isCurrent(): bool
-    // {
-    //     [$named, $typed] = $this->getClosureParameters();
+    /**
+     * Determine if the current route corresponds to this crumb.
+     */
+    public function isCurrent(): bool
+    {
+        $route = $this->resolveRoute();
 
-    //     $this->link = $this->getLink($named, $typed);
-
-    //     return (bool) $this->link ? Request::url() === url($this->link) : false;
-    // }
+        return (bool) ($route ? $this->getRequest()->url() === $route : false);
+    }
 
     /**
      * {@inheritDoc}
@@ -83,7 +83,7 @@ class Crumb extends Primitive
         $request = $this->getRequest();
 
         $parameters = Arr::mapWithKeys(
-            $request->route()->parameters(),
+            $request->route()?->parameters() ?? [],
             static fn ($value, $key) => [$key => [$value]]
         );
 
@@ -102,7 +102,7 @@ class Crumb extends Primitive
         $request = $this->getRequest();
 
         $parameters = Arr::mapWithKeys(
-            $request->route()->parameters(),
+            $request->route()?->parameters() ?? [],
             $this->getTypedParameters(...)
         );
 

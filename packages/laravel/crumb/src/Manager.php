@@ -21,29 +21,33 @@ class Manager
     protected $before = null;
 
     /**
-     * Set crumbs to be added globally, before all other crumbs.
+     * Set a crumb to be added globally, before all other crumbs.
      */
-    public function before(\Closure $trail): void
+    public function before(\Closure $trail): static
     {
         $this->before = $trail;
+
+        return $this;
     }
 
     /**
      * Set a crumb trail for a given name.
      */
-    public function for(string $name, \Closure $trail): void
+    public function for(string $name, \Closure $trail): static
     {
-        if ($this->exists($name)) {
+        if ($this->hasTrail($name)) {
             throw new DuplicateCrumbsException($name);
         }
 
         Arr::set($this->trails, $name, $trail);
+
+        return $this;
     }
 
     /**
-     * Determine if the crumb trail is defined.
+     * Determine if the tail exists.
      */
-    public function exists(string $name): bool
+    public function hasTrail(string $name): bool
     {
         return Arr::has($this->trails, $name);
     }
@@ -55,7 +59,7 @@ class Manager
      */
     public function get(string $name): Trail
     {
-        if (! $this->exists($name)) {
+        if (! $this->hasTrail($name)) {
             static::throwCrumbNotFoundException($name);
         }
 
@@ -70,7 +74,6 @@ class Manager
         return $trail;
     }
 
-    
     /**
      * Throw an exception for a missing crumb trail.
      */
