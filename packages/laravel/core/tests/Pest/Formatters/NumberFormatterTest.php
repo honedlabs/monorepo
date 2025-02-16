@@ -54,11 +54,11 @@ it('formats', function () {
     expect($this->formatter->divideBy(100)->format(1000))
         ->toBe(10);
 
-    expect($this->formatter->locale('au')->format(1000))
-        ->toBe(Number::format(10, locale: 'au'));
+    expect($this->formatter->locale('US')->format(1000))
+        ->toBe(Number::format(10, locale: 'US'));
 
     expect($this->formatter->currency('USD')->format(1000))
-        ->toBe(Number::currency(10, 'USD', 'au'));
+        ->toBe(Number::currency(10, 'USD', 'US'));
 
     expect($this->formatter->format(null))
         ->toBeNull();

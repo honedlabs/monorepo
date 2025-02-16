@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Contracts;
 
-interface ResolvesClosures
+interface Resolves
 {
     /**
      * Evaluate the class properties using the provided parameters and typed parameters.
