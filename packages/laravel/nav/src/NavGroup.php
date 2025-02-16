@@ -10,7 +10,7 @@ class NavGroup extends NavBase
 
     /**
      * Create a new nav group instance.
-     * 
+     *
      * @param  array<int,\Honed\Nav\NavBase>  $items
      */
     public static function make(string $label, array $items = []): static

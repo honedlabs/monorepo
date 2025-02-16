@@ -11,7 +11,7 @@ trait HasItems
 {
     /**
      * List of navigation items.
-     * 
+     *
      * @var array<int,\Honed\Nav\NavBase>
      */
     protected $items = [];
@@ -27,7 +27,7 @@ trait HasItems
         if ($items instanceof Arrayable) {
             $items = $items->toArray();
         }
-    
+
         /** @var array<int,\Honed\Nav\NavBase> $items */
         $this->items = $items;
 
@@ -75,7 +75,7 @@ trait HasItems
 
     /**
      * Get the navigation items as an array
-     * 
+     *
      * @return array<int,mixed>
      */
     public function itemsToArray(): array

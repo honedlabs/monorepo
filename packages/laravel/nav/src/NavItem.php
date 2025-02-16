@@ -4,25 +4,18 @@ declare(strict_types=1);
 
 namespace Honed\Nav;
 
+use Honed\Core\Concerns\HasRoute;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Honed\Core\Concerns\HasRoute;
-use Honed\Core\Concerns\HasRequest;
 
 class NavItem extends NavBase
 {
     use HasRoute;
-    use HasRequest;
 
     /**
      * @var string|\Closure|null
      */
     protected $active;
-
-    public function __construct(Request $request)
-    {
-        $this->request($request);
-    }
 
     /**
      * Create a new nav item instance.
@@ -73,46 +66,46 @@ class NavItem extends NavBase
         };
     }
 
-    /**
-     * @return array<int,mixed>
-     */
-    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
-    {
-        $request = request();
+    // /**
+    //  * @return array<int,mixed>
+    //  */
+    // public function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    // {
+    //     $request = request();
 
-        if ($request->route()?->hasParameter($parameterName)) {
-            return [$request->route()->parameter($parameterName)];
-        }
+    //     if ($request->route()?->hasParameter($parameterName)) {
+    //         return [$request->route()->parameter($parameterName)];
+    //     }
 
-        return match ($parameterName) {
-            'name' => [$request->route()?->getName()],
-            'url' => [$request->url()],
-            'uri' => [$request->uri()->path()],
-            'request' => [$request],
-            'route' => [$request->route()],
-            default => [],
-        };
-    }
+    //     return match ($parameterName) {
+    //         'name' => [$request->route()?->getName()],
+    //         'url' => [$request->url()],
+    //         'uri' => [$request->uri()->path()],
+    //         'request' => [$request],
+    //         'route' => [$request->route()],
+    //         default => [],
+    //     };
+    // }
 
-    /**
-     * @return array<int,mixed>
-     */
-    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
-    {
-        $request = request();
+    // /**
+    //  * @return array<int,mixed>
+    //  */
+    // public function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
+    // {
+    //     $request = request();
 
-        $parameters = $request->route()?->parameters() ?? [];
+    //     $parameters = $request->route()?->parameters() ?? [];
 
-        foreach ($parameters as $parameter) {
-            if ($parameter instanceof $parameterType) {
-                return [$parameter];
-            }
-        }
+    //     foreach ($parameters as $parameter) {
+    //         if ($parameter instanceof $parameterType) {
+    //             return [$parameter];
+    //         }
+    //     }
 
-        return match ($parameterType) {
-            Request::class => [$request],
-            Route::class => [$request->route()],
-            default => [],
-        };
-    }
+    //     return match ($parameterType) {
+    //         Request::class => [$request],
+    //         Route::class => [$request->route()],
+    //         default => [],
+    //     };
+    // }
 }
