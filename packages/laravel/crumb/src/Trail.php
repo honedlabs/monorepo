@@ -103,6 +103,8 @@ class Trail extends Primitive
      */
     protected static function throwNonTerminatingCrumbException(): never
     {
-        throw new \BadMethodCallException('This method is only available on terminating crumbs.');
+        throw new \BadMethodCallException(
+            'This method is only available on terminating crumbs.'
+        );
     }
 }

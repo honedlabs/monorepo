@@ -29,16 +29,13 @@ trait Crumbs
             static::throwControllerExtensionException(\class_basename($this));
         }
 
-        $this->middleware(function (Request $request, \Closure $next) {
-            $name = $this->getCrumbName();
+        $name = $this->getCrumbName();
 
-            // If no, don't share breadcrumbs and don't error.
-            if ($name) {
-                CrumbFacade::get($name)->share();
-            }
+        if (! $name) {
+            return;
+        } 
 
-            return $next($request);
-        });
+        $this->middleware('crumb:' . $name);
     }
 
     /**
@@ -46,28 +43,19 @@ trait Crumbs
      */
     public function getCrumbName(): ?string
     {
-        // dd($this->getCrumbFromMethod());
-        if ($crumb = $this->getCrumbFromMethod()) {
-            return $crumb->getName();
-        }
-
         return match (true) {
-            (bool) ($c = collect((new \ReflectionClass($this))
-                ->getAttributes(Crumb::class)
-            )->first()?->newInstance()->getCrumb()) => $c,
-
-            (bool) ($c = collect((new \ReflectionClass($this))
-                ->getAttributes(Crumb::class)
-            )->first()?->newInstance()->getCrumb()) => $c,
-
+            (bool) ($name = $this->getMethodCrumbAttribute()) => $name,
+            (bool) ($name = $this->getClassCrumbAttribute()) => $name,
             isset($this->crumb) => $this->crumb,
-
-            method_exists($this, 'crumb') => $this->crumb(),
+            \method_exists($this, 'crumb') => $this->crumb(),
             default => null,
         };
     }
 
-    protected function getCrumbFromMethod(): ?Crumb
+    /**
+     * Get the crumb attribute on the active method.
+     */
+    protected function getMethodCrumbAttribute(): ?string
     {
         $action = Route::getCurrentRoute()?->getActionMethod();
 
@@ -75,16 +63,25 @@ trait Crumbs
             return null;
         }
 
-        $crumb = Arr::first(
-            (new \ReflectionMethod($this, $action))->getAttributes(Crumb::class),
-            static fn (\ReflectionAttribute $attribute) => $attribute->newInstance()->getCrumb()
-        );
+        $crumb = Arr::first((new \ReflectionMethod($this, $action))->getAttributes(Crumb::class))
+            ->newInstance()
+            ->getCrumbName();
+
+        return $crumb;
+    }
+
+    /**
+     * Get the crumb attribute on the class.
+     */
+    protected function getClassCrumbAttribute(): ?string
+    {
+        $crumb = Arr::first((new \ReflectionClass($this))->getAttributes(Crumb::class))
+            ->newInstance()
+            ->getCrumbName();
 
         return $crumb;
     }
     
-    
-
     /**
      * Throw an exception for when the using class is not a controller.
      */

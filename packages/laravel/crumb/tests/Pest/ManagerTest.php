@@ -64,19 +64,19 @@ it('retrieves crumbs with termination', function () {
         ]));
 });
 
-// it('can shortcut breadcrumbs', function () {
-//     $response = get(route('products.index'));
+it('can shortcut breadcrumbs', function () {
+    $response = get(route('products.index'));
 
-//     $response->assertInertia(fn (Assert $page) => $page->has('crumbs')
-//         ->count('crumbs', 2)
-//         ->where('crumbs.0', [
-//             'name' => 'Home',
-//             'url' => route('home'),
-//             'icon' => null,
-//         ])
-//         ->where('crumbs.1', [
-//             'name' => 'Products',
-//             'url' => route('products.index'),
-//             'icon' => null,
-//         ]));
-// });
+    $response->assertInertia(fn (Assert $page) => $page->has('crumbs')
+        ->count('crumbs', 2)
+        ->where('crumbs.0', [
+            'name' => 'Home',
+            'url' => route('home'),
+            'icon' => null,
+        ])
+        ->where('crumbs.1', [
+            'name' => 'Products',
+            'url' => route('products.index'),
+            'icon' => null,
+        ]));
+});
