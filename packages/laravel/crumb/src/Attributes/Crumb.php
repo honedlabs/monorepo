@@ -11,7 +11,7 @@ class Crumb
 {
     public function __construct(
         protected readonly string $crumb
-    ) { }
+    ) {}
 
     /**
      * Get the name of the crumb.

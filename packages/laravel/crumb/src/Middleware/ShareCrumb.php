@@ -8,7 +8,7 @@ use Closure;
 use Honed\Crumb\Facades\Crumbs;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
- 
+
 class ShareCrumb
 {
     /**
@@ -18,12 +18,22 @@ class ShareCrumb
      */
     public function handle(Request $request, Closure $next, ?string $crumb): Response
     {
-        $crumb ??= config('crumb.default');
+        $crumb ??= $this->getDefaultCrumb();
 
         if ($crumb) {
+
             Crumbs::get($crumb)->share();
         }
 
         return $next($request);
+    }
+
+    /**
+     * Retrieve the default crumb to use if none is provided.
+     */
+    protected function getDefaultCrumb(): ?string
+    {
+        /** @var string|null */
+        return config('crumb.default');
     }
 }

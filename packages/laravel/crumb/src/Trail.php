@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Crumb;
 
 use Honed\Core\Primitive;
-use Honed\Crumb\Exceptions\NonTerminatingCrumbException;
 use Honed\Crumb\Support\Parameters;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
@@ -15,8 +14,8 @@ use Inertia\Inertia;
  */
 class Trail extends Primitive
 {
-    use Concerns\IsTerminable;
     use Concerns\HasCrumbs;
+    use Concerns\IsTerminable;
 
     /**
      * Make a new trail instance.
@@ -39,9 +38,9 @@ class Trail extends Primitive
         }
 
         $crumb = $crumb instanceof Crumb ? $crumb : Crumb::make($crumb, $link, $parameters);
-        
+
         $this->addCrumb($crumb);
-        
+
         $this->terminate($crumb->isCurrent());
 
         return $this;
@@ -65,7 +64,7 @@ class Trail extends Primitive
         }
 
         $crumb = Arr::first(
-            $crumbs, 
+            $crumbs,
             static fn (Crumb $crumb): bool => $crumb->isCurrent()
         );
 
@@ -77,7 +76,6 @@ class Trail extends Primitive
         return $this;
     }
 
-    
     /**
      * Get the trail as an array.
      */
@@ -93,7 +91,7 @@ class Trail extends Primitive
      */
     public function share(): static
     {
-        Inertia::share(Parameters::Prop, $this->getCrumbs());
+        Inertia::share(Parameters::Prop, $this->toArray());
 
         return $this;
     }

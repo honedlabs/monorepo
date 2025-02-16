@@ -20,6 +20,8 @@ class Manager
 
     /**
      * Set a crumb to be added globally, before all other crumbs.
+     *
+     * @return $this
      */
     public function before(\Closure $trail): static
     {
@@ -30,6 +32,10 @@ class Manager
 
     /**
      * Set a crumb trail for a given name.
+     *
+     * @return $this
+     *
+     * @throws \InvalidArgumentException
      */
     public function for(string $name, \Closure $trail): static
     {
@@ -53,7 +59,7 @@ class Manager
     /**
      * Retrieve a crumb trail by name.
      *
-     * @throws \Honed\Crumb\Exceptions\CrumbsNotFoundException
+     * @throws \InvalidArgumentException
      */
     public function get(string $name): Trail
     {
@@ -81,9 +87,9 @@ class Manager
     protected static function throwCrumbNotFoundException(string $crumb): never
     {
         throw new \InvalidArgumentException(
-            \sprintf('There were no crumbs defined for [%s].', 
-            $crumb
-        ));
+            \sprintf('There were no crumbs defined for [%s].',
+                $crumb
+            ));
     }
 
     /**
@@ -92,9 +98,8 @@ class Manager
     protected static function throwDuplicateCrumbsException(string $crumb): never
     {
         throw new \InvalidArgumentException(
-            \sprintf('There already exists a crumb with the name [%s].', 
-            $crumb
-        ));
+            \sprintf('There already exists a crumb with the name [%s].',
+                $crumb
+            ));
     }
-    
 }

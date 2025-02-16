@@ -17,7 +17,7 @@ return [
     | Default crumb
     |--------------------------------------------------------------------------
     |
-    | Provide a default crumb group to use for when no crumb is specified for 
+    | Provide a default crumb group to use for when no crumb is specified for
     | middleware.
     |
     */

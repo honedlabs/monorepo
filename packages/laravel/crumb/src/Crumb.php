@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Crumb;
 
-use Honed\Core\Primitive;
-use Illuminate\Support\Arr;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Contracts\Resolves;
-use Honed\Core\Concerns\HasRequest;
+use Honed\Core\Primitive;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Honed\Core\Primitive<string, mixed>
@@ -21,8 +21,8 @@ class Crumb extends Primitive implements Resolves
 {
     use HasIcon;
     use HasName;
-    use HasRoute;
     use HasRequest;
+    use HasRoute;
 
     public function __construct(Request $request)
     {
@@ -34,7 +34,7 @@ class Crumb extends Primitive implements Resolves
      *
      * @return $this
      */
-    public static function make(string|\Closure $name, string|\Closure $link = null, mixed $parameters = []): static
+    public static function make(string|\Closure $name, string|\Closure|null $link = null, mixed $parameters = []): static
     {
         return resolve(static::class)
             ->name($name)
@@ -118,7 +118,7 @@ class Crumb extends Primitive implements Resolves
 
     /**
      * Retrieve the classes for evaluation by type.
-     * 
+     *
      * @return array<class-string, mixed>
      */
     protected function getTypedParameters(mixed $value): array

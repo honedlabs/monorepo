@@ -40,7 +40,6 @@ it('can add crumb classes', function () {
         ]);
 });
 
-
 it('is terminable', function () {
     expect(Trail::make())
         ->hasTerminated()->toBeFalse()
@@ -76,21 +75,21 @@ it('selects', function () {
             Crumb::make('Edit', fn ($product) => route('products.edit', $product)),
             Crumb::make('Show', fn ($product) => route('products.show', $product)),
         );
-    
+
     expect($trail)
         ->hasTerminated()->toBeTrue();
 
     expect($trail->getCrumbs())
         ->toHaveCount(2)
         ->{0}->scoped(fn ($crumb) => $crumb
-            ->isCurrent()->toBeFalse()
-            ->getName()->toBe('Products')
-            ->getRoute()->toBe(route('products.index'))
+        ->isCurrent()->toBeFalse()
+        ->getName()->toBe('Products')
+        ->getRoute()->toBe(route('products.index'))
         )
         ->{1}->scoped(fn ($crumb) => $crumb
-            ->isCurrent()->toBeTrue()
-            ->getName()->toBe('Show')
-            ->getRoute()->toBe(route('products.show', $product))
+        ->isCurrent()->toBeTrue()
+        ->getName()->toBe('Show')
+        ->getRoute()->toBe(route('products.show', $product))
         );
 });
 

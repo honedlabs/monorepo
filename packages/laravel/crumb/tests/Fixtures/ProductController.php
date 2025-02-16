@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Crumb\Tests\Fixtures;
 
-use Illuminate\Http\Request;
-use Honed\Crumb\Concerns\Crumbs;
 use Honed\Crumb\Attributes\Crumb;
-use Illuminate\Routing\Controller;
+use Honed\Crumb\Concerns\Crumbs;
 use Honed\Crumb\Tests\Stubs\Product;
+use Illuminate\Routing\Controller;
 
 #[Crumb('products')]
 class ProductController extends Controller
@@ -24,14 +23,14 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return inertia('Product/Show', [
-            'product' => $product
+            'product' => $product,
         ]);
     }
 
     public function edit(Product $product)
     {
         return inertia('Product/Edit', [
-            'product' => $product
+            'product' => $product,
         ]);
     }
 }

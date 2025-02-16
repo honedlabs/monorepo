@@ -6,7 +6,6 @@ namespace Honed\Crumb\Concerns;
 
 use Honed\Crumb\Attributes\Crumb;
 use Honed\Crumb\Exceptions\ClassDoesNotExtendControllerException;
-use Honed\Crumb\Facades\Crumbs as CrumbFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
@@ -28,10 +27,10 @@ trait Crumbs
         if (! \in_array('Illuminate\Routing\Controller', \class_parents($this))) {
             static::throwControllerExtensionException(\class_basename($this));
         }
-        
+
         $name = $this->getCrumbName();
-        
-        $this->middleware('crumb:' . $name);
+
+        $this->middleware('crumb:'.$name);
     }
 
     /**
@@ -54,7 +53,7 @@ trait Crumbs
     protected function getMethodCrumbAttribute(): ?string
     {
         $action = Route::getCurrentRoute()?->getActionMethod();
-        
+
         if (! $action) {
             return null;
         }
@@ -77,7 +76,7 @@ trait Crumbs
 
         return $attribute?->newInstance()->getCrumbName();
     }
-    
+
     /**
      * Throw an exception for when the using class is not a controller.
      */

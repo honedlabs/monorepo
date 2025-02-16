@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Honed\Crumb\Tests;
 
 use Honed\Crumb\CrumbServiceProvider;
-use Honed\Crumb\Tests\Stubs\MethodController;
+use Honed\Crumb\Tests\Fixtures\MethodController;
 use Honed\Crumb\Tests\Fixtures\ProductController;
-use Honed\Crumb\Tests\Stubs\PropertyController;
+use Honed\Crumb\Tests\Fixtures\PropertyController;
 use Honed\Crumb\Tests\Stubs\Status;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\Middleware\SubstituteBindings;
@@ -30,7 +30,8 @@ class TestCase extends Orchestra
 
         config()->set('inertia.testing.ensure_pages_exist', false);
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
-        // config()->set('crumb.files', realpath(__DIR__).'../config/crumbs.php');
+
+        $this->withoutExceptionHandling();
     }
 
     protected function getPackageProviders($app)
@@ -62,7 +63,7 @@ class TestCase extends Orchestra
 
             $router->resource('products', ProductController::class)
                 ->only('index', 'show', 'edit');
-                
+
             $router->get('/status/{status}', [MethodController::class, 'show'])->name('status.show');
             $router->get('/testing/{word}', [PropertyController::class, 'show'])->name('word.show');
         });
@@ -70,6 +71,6 @@ class TestCase extends Orchestra
 
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('crumb.files', realpath(__DIR__).'/Stubs/crumbs.php');
+        $app['config']->set('crumb.files', realpath(__DIR__).'/Fixtures/crumbs.php');
     }
 }
