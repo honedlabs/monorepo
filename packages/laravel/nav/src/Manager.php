@@ -4,50 +4,52 @@ declare(strict_types=1);
 
 namespace Honed\Nav;
 
+use Honed\Nav\Support\Parameters;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 
 class Manager
 {
-    const ShareProp = 'nav';
-
     /**
-     * @var array<string, array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>>
+     * Keyed navigation groups.
+     *
+     * @var array<string, array<int,\Honed\Nav\NavGroup>>
      */
     protected $items = [];
 
     /**
-     * Configure a new navigation group.
+     * Set a navigation group under a given name.
      *
      * @param  array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>  $items
      * @return $this
+     *
+     * @throws \InvalidArgumentException
      */
-    public function make(string $group, array $items): static
+    public function for(string $name, array $items): static
     {
-        $this->items[$group] = $items;
+        if ($this->hasGroup($name)) {
+            static::throwDuplicateGroupException($name);
+        }
+
+        Arr::set($this->items, $name, $items);
 
         return $this;
     }
 
     /**
-     * Append a navigation item to the provided group.
-     *
-     * @param  array<int,\Honed\Nav\NavItem|\Honed\Nav\NavGroup>  $items
-     * @return $this
+     * Determine if the group exists.
      */
-    public function add(string $group, array $items): static
+    public function hasGroup(string $name): bool
     {
-        \array_push($this->items[$group], ...$items);
-
-        return $this;
+        return Arr::has($this->items, $name);
     }
 
     /**
      * Retrieve the navigation item and groups associated with the provided group(s).
      *
-     * @param  string  ...$groups
      * @return array<int|string,mixed>
      */
-    public function get(...$groups): array
+    public function get(string ...$groups): array
     {
         return match (\count($groups)) {
             0 => \array_combine(
@@ -76,48 +78,35 @@ class Manager
     }
 
     /**
-     * Retrieve the navigation items associated with the provided group.
+     * Retrieve the navigation group for the given name.
      *
-     * @return array<\Honed\Nav\NavItem|\Honed\Nav\NavGroup>
+     * @return array<\Honed\Nav\NavGroup>
      */
-    public function group(string $group)
+    public function getGroup(string $group): array
     {
-        return $this->items[$group] ?? [];
+        return Arr::get($this->items, $group);
     }
 
     /**
-     * Determine if all provided group(s) are defined.
+     * Share the navigation items with Inertia.
      *
-     * @param  string  ...$groups
-     */
-    public function hasGroups(...$groups): bool
-    {
-        return \count(\array_intersect($groups, \array_keys($this->items))) === \count($groups);
-    }
-
-    /**
-     * @return array<\Honed\Nav\NavItem|\Honed\Nav\NavGroup>
-     */
-    public function getAllowedItems(string $group): array
-    {
-        return \array_filter(
-            $this->items[$group],
-            fn (NavItem|NavGroup $nav) => $nav->isAllowed(),
-        );
-    }
-
-    /**
-     * Share the navigation items via Inertia.
-     *
-     * @param  string  ...$groups
      * @return $this
      */
-    public function share(...$groups): static
+    public function share(string ...$groups): static
     {
-        Inertia::share([
-            self::ShareProp => $this->get(...$groups),
-        ]);
+        Inertia::share(Parameters::Prop, $this->get(...$groups));
 
         return $this;
+    }
+
+    /**
+     * Throw an exception for a duplicate group.
+     */
+    protected static function throwDuplicateGroupException(string $group): never
+    {
+        throw new \InvalidArgumentException(
+            \sprintf('There already exists a group with the name [%s].',
+                $group
+            ));
     }
 }

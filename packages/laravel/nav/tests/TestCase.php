@@ -45,7 +45,7 @@ class TestCase extends Orchestra
             $table->uuid('public_id')->unique();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('status')->default(Status::AVAILABLE->value);
+            $table->string('status')->default(Status::Available->value);
             $table->unsignedInteger('price')->default(0);
             $table->boolean('best_seller')->default(false);
             $table->timestamps();
@@ -56,6 +56,10 @@ class TestCase extends Orchestra
     {
         $router->middleware([HandlesInertiaRequests::class, SubstituteBindings::class])->group(function ($router) {
             $router->middleware(ShareNavigation::class)->get('/', fn () => inertia('Home'));
+
+            $router->get('/about', fn () => inertia('About'));
+            $router->get('/contact', fn () => inertia('Contact'));
+            $router->get('/dashboard', fn () => inertia('Dashboard'));
 
             $router->middleware(ShareNavigation::class.':sidebar')->get('/products', fn () => inertia('Products/Index'))->name('products.index');
             $router->get('/products/{product:public_id}', fn (Product $product) => inertia('Products/Show', ['product' => $product]))->name('products.show');

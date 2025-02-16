@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Nav;
 
+use Illuminate\Support\Arr;
+
 class NavGroup extends NavBase
 {
     use Concerns\HasItems;
@@ -11,13 +13,13 @@ class NavGroup extends NavBase
     /**
      * Create a new nav group instance.
      *
-     * @param  array<int,\Honed\Nav\NavBase>  $items
+     * @param  array<int,mixed>  $items
      */
-    public static function make(string $label, array $items = []): static
+    public static function make(string $label, ...$items): static
     {
         return resolve(static::class)
             ->label($label)
-            ->items($items);
+            ->items(Arr::flatten($items));
     }
 
     /**
