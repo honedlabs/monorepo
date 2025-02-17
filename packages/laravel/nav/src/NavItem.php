@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Nav;
 
-use Illuminate\Support\Str;
 use Honed\Core\Concerns\HasRoute;
+use Illuminate\Support\Str;
 
 class NavItem extends NavBase
 {
@@ -19,8 +19,11 @@ class NavItem extends NavBase
     /**
      * Create a new nav item instance.
      */
-    public static function make(string $label, string|\Closure|null $route = null, mixed $parameters = []): static
-    {
+    public static function make(
+        string $label,
+        string|\Closure|null $route = null,
+        mixed $parameters = [],
+    ): static {
         return resolve(static::class)
             ->label($label)
             ->when(static::isUri($route),
@@ -61,7 +64,7 @@ class NavItem extends NavBase
     {
         $request = request();
         $route = $this->resolveRoute();
-        
+
         return (bool) match (true) {
             \is_string($this->active) => $request->route()?->named($this->active),
             $this->active instanceof \Closure => $this->evaluate($this->active),
