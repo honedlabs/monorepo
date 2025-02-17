@@ -82,6 +82,9 @@
     },
     "extra": {
         "laravel": {
+            "providers": [
+                "Honed\\Nav\\NavServiceProvider"
+            ],
             "aliases": {
                 "Nav": "Honed\\Nav\\Facades\\Nav"
             }

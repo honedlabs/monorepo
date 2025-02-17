@@ -59,9 +59,9 @@ class NavItem extends NavBase
      */
     public function isActive(): bool
     {
-        $request = $this->getRequest();
+        $request = request();
         $route = $this->resolveRoute();
-
+        
         return (bool) match (true) {
             \is_string($this->active) => $request->route()?->named($this->active),
             $this->active instanceof \Closure => $this->evaluate($this->active),

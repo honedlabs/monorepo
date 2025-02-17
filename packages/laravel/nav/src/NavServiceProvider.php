@@ -14,9 +14,11 @@ class NavServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/nav.php', 'nav');
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/nav.php', 'nav');
 
         $this->registerMiddleware();
+
     }
 
     /**
@@ -28,6 +30,7 @@ class NavServiceProvider extends ServiceProvider
             __DIR__.'/../config/nav.php' => config_path('nav.php'),
         ], 'nav-config');
 
+        // Load the files containing navs
         $this->registerNavigation();
     }
 

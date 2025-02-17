@@ -8,10 +8,8 @@ use Inertia\Inertia;
 use Illuminate\Routing\Router;
 use Honed\Nav\NavServiceProvider;
 use Honed\Nav\Tests\Stubs\Status;
-use Honed\Nav\Tests\Stubs\Product;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
-use Honed\Nav\Middleware\ShareNavigation;
 use Illuminate\Database\Schema\Blueprint;
 use Honed\Nav\Tests\Stubs\ProductController;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -28,11 +26,19 @@ class TestCase extends Orchestra
         View::addLocation(__DIR__.'/Stubs');
         Inertia::setRootView('app');
 
+        $this->withoutExceptionHandling();
+
         config()->set('inertia.testing.ensure_pages_exist', false);
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
+    }
 
+    protected function resolveApplicationConfiguration($app)
+    {
+        parent::resolveApplicationConfiguration($app);
+
+        // Fix to prevent missing names in testing
+        $this->defineRoutes($app['router']);
         config()->set('nav.files', realpath(__DIR__).'/Fixtures/nav.php');
-
     }
 
     protected function getPackageProviders($app)
@@ -59,9 +65,13 @@ class TestCase extends Orchestra
 
     protected function defineRoutes($router)
     {
-        $router->middleware([HandlesInertiaRequests::class, SubstituteBindings::class])->group(function (Router $router) {
-            
-            $router->middleware('nav:primary')->get('/', fn () => inertia('Home'));
+        $router->middleware([
+            HandlesInertiaRequests::class, 
+            SubstituteBindings::class
+        ])->group(function (Router $router) {
+
+            $router->middleware('nav:primary')
+                ->get('/', fn () => inertia('Home'));
 
             $router->middleware('nav:primary,products')
                 ->resource('products', ProductController::class);
@@ -69,14 +79,11 @@ class TestCase extends Orchestra
             $router->get('/about', fn () => inertia('About'));
             $router->get('/contact', fn () => inertia('Contact'));
             $router->get('/dashboard', fn () => inertia('Dashboard'));
-            
-
-            $router->middleware(ShareNavigation::class.':sidebar')->get('/products', fn () => inertia('Products/Index'))->name('products.index');
-            $router->get('/products/{product:public_id}', fn (Product $product) => inertia('Products/Show', ['product' => $product]))->name('products.show');
-            $router->get('/products/{product}/edit', fn (Product $product) => inertia('Products/Edit', ['product' => $product]))->name('products.edit');
-
-            $router->get('/status/{status}', fn (Status $status) => inertia('Status/Show', ['status' => $status]))->name('status.show');
-            $router->get('/testing/{word}', fn (string $word) => inertia('Testing/Show', ['word' => $word]))->name('words.show');
         });
     }
+
+    // protected function getEnvironmentSetUp($app)
+    // {
+    //     $app['config']->set('nav.files', realpath(__DIR__).'/Fixtures/nav.php');
+    // }
 }

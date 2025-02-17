@@ -13,6 +13,7 @@ beforeEach(function () {
 });
 
 it('makes', function () {
+    get(route('products.index'));
     expect(NavItem::make($this->label, 'products.index'))
         ->toBeInstanceOf(NavItem::class)
         ->getLabel()->toBe($this->label)
@@ -20,7 +21,7 @@ it('makes', function () {
         ->toArray()->toEqual([
             'label' => $this->label,
             'href' => route('products.index'),
-            'active' => false,
+            'active' => true,
             'icon' => null,
         ]);
 });

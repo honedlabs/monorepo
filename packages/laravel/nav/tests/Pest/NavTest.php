@@ -2,15 +2,19 @@
 
 declare(strict_types=1);
 
-use Honed\Nav\Facades\Nav;
 use Honed\Nav\Manager;
-use Honed\Nav\NavGroup;
 use Honed\Nav\NavItem;
+use Honed\Nav\NavGroup;
+use Honed\Nav\Facades\Nav;
+use Illuminate\Support\Arr;
 
 beforeEach(function () {
     $this->product = product();
 
-    Nav::for('nav', [NavItem::make('Home', 'products.index')]);
+    Nav::for('nav', [
+        NavItem::make('Home', 'products.index'),
+        NavItem::make('About', '/about')->allow(false),
+    ]);
 
     Nav::for('sidebar', [
         NavGroup::make('Products', [
@@ -25,6 +29,7 @@ beforeEach(function () {
         ])->allow(false),
     ]);
 });
+
 
 it('defines a new group', function () {
     expect(Nav::for('example', [NavItem::make('Index', 'products.index')]))
@@ -67,10 +72,12 @@ it('can retrieve a single group', function () {
 it('can retrieve all groups', function () {
     expect(Nav::get())
         ->toBeArray()
-        ->toHaveCount(2)
-        ->toHaveKeys(['nav', 'sidebar'])
+        ->toHaveCount(4)
+        ->toHaveKeys(['nav', 'sidebar', 'primary', 'products'])
         ->{'nav'}->toHaveCount(1)
-        ->{'sidebar'}->toHaveCount(2);
+        ->{'sidebar'}->toHaveCount(1)
+        ->{'primary'}->toHaveCount(3)
+        ->{'products'}->toHaveCount(1);
 });
 
 it('can retrieve multiple groups', function () {

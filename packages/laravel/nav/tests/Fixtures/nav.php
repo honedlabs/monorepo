@@ -11,7 +11,7 @@ Nav::for('primary', [
     NavItem::make('About', '/about'),
     NavItem::make('Contact', '/contact'),
     NavItem::make('Dashboard', '/dashboard')
-        ->allow(fn ($user) => false),
+        ->allow(false),
 
 ]);
 

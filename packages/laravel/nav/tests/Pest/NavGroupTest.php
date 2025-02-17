@@ -41,29 +41,10 @@ it('can add items', function () {
         ->hasItems()->toBeTrue();
 });
 
-it('accepts variadic items', function () {
-    expect(NavGroup::make($this->label,
-        NavItem::make('Home', 'products.index'),
-        NavItem::make('Products', 'products.index'),
-    ))->toBeInstanceOf(NavGroup::class)
-        ->getItems()->toHaveCount(2);
-});
-
 it('accepts array of items', function () {
     expect(NavGroup::make($this->label, [
         NavItem::make('Home', 'products.index'),
         NavItem::make('Products', 'products.index'),
     ]))->toBeInstanceOf(NavGroup::class)
-        ->getItems()->toHaveCount(2);
-});
-
-it('accepts arrayable items', function () {
-    $items = collect([
-        NavItem::make('Home', 'products.index'),
-        NavItem::make('Products', 'products.index'),
-    ]);
-
-    expect(NavGroup::make($this->label, $items))
-        ->toBeInstanceOf(NavGroup::class)
         ->getItems()->toHaveCount(2);
 });

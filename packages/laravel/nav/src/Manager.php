@@ -21,19 +21,15 @@ class Manager
     /**
      * Set a navigation group under a given name.
      *
-     * @param  iterable<\Honed\Nav\NavBase>  $items
+     * @param  array<int,\Honed\Nav\NavBase>  $items
      * @return $this
      *
      * @throws \InvalidArgumentException
      */
-    public function for(string $name, iterable $items): static
+    public function for(string $name, array $items): static
     {
         if ($this->hasGroup($name)) {
             static::throwDuplicateGroupException($name);
-        }
-
-        if ($items instanceof Arrayable) {
-            $items = $items->toArray();
         }
 
         /** @var array<int,\Honed\Nav\NavBase> $items */
@@ -45,17 +41,13 @@ class Manager
     /**
      * Add navigation items to an existing group.
      *
-     * @param  iterable<\Honed\Nav\NavBase>  $items
+     * @param  array<int,\Honed\Nav\NavBase>  $items
      * @return $this
      */
-    public function add(string $name, iterable $items): static
+    public function add(string $name, array $items): static
     {
         if (! $this->hasGroup($name)) {
             static::throwMissingGroupException($name);
-        }
-
-        if ($items instanceof Arrayable) {
-            $items = $items->toArray();
         }
 
         /** @var array<int,\Honed\Nav\NavBase> $current */
@@ -70,25 +62,44 @@ class Manager
     }
 
     /**
-     * Determine if the group exists.
+     * Determine if the group(s) exists.
+     * 
+     * @param string|array<int,string> $groups
      */
-    public function hasGroup(string $name): bool
+    public function hasGroup(string|array $groups): bool
     {
-        return Arr::has($this->items, $name);
+        if (\is_array($groups) && ! \count($groups)) {
+            return true;
+        }
+
+        return Arr::has($this->items, $groups);
     }
 
     /**
-     * Retrieve the navigation item and groups associated with the provided group(s).
+     * Retrieve navigation groups and their allowed items.
      *
+     * @param string|array<int,string> $groups
      * @return array<int|string,mixed>
      */
-    public function get(string ...$groups): array
+    public function get(...$groups): array
     {
-        return match (\count($groups)) {
-            0 => $this->items,
-            1 => $this->getGroup($groups[0]),
-            default => Arr::only($this->items, $groups),
-        };
+        $groups = Arr::flatten($groups);
+
+        if (! $this->hasGroup($groups)) {
+            static::throwMissingGroupException(implode(', ', $groups));
+        }
+
+        if (\count($groups) === 1) {
+            return $this->getGroup($groups[0]);
+        }
+
+        $keys = empty($groups) ? \array_keys($this->items) : $groups;
+
+        return \array_reduce(
+            $keys,
+            fn (array $acc, string $key) => $acc + [$key => $this->getGroup($key)],
+            []
+        );
     }
 
     /**
@@ -99,26 +110,26 @@ class Manager
     public function getGroup(string $group): array
     {
         /** @var array<int,\Honed\Nav\NavBase> */
-        return Arr::get($this->items, $group);
+        $items = Arr::get($this->items, $group);
+
+        return \array_values(
+            \array_filter($items, 
+                fn (NavBase $item) => $item->isAllowed()
+            )
+        );
     }
 
     /**
      * Share the navigation items with Inertia.
+     * 
+     * @param string|array<int,string> $groups
      *
      * @return $this
      */
-    public function share(string ...$groups): static
+    public function share(...$groups): static
     {
         $groups = $this->get(...$groups);
 
-        // Need to map each group to an array for serialization
-        $groups = \array_map(
-            fn (array $group) => \array_map(
-                fn (NavBase $item) => $item->toArray(),
-                $group
-            ),
-            $groups
-        );
 
         Inertia::share(Parameters::Prop, $groups);
 

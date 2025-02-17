@@ -13,13 +13,13 @@ class NavGroup extends NavBase
     /**
      * Create a new nav group instance.
      *
-     * @param  array<int,mixed>  $items
+     * @param  array<int,\Honed\Nav\NavBase>  $items
      */
-    public static function make(string $label, ...$items): static
+    public static function make(string $label, array $items = []): static
     {
         return resolve(static::class)
             ->label($label)
-            ->items(Arr::flatten($items));
+            ->items($items);
     }
 
     /**
