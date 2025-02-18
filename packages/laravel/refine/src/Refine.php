@@ -62,13 +62,15 @@ class Refine extends Primitive
         // Delay the refine call until records are retrieved
         return $this->refine()
             ->forwardDecoratedCallTo(
-                $this->getBuilder(), 
-                $name, 
+                $this->getBuilder(),
+                $name,
                 $arguments
             );
     }
 
     /**
+     * Create a new refine instance.
+     *
      * @param  \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $model
      */
     public static function make($model): static
