@@ -65,7 +65,8 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => $action instanceof BulkAction && $action->isAllowed()
+                static fn (Action $action) => 
+                    $action instanceof BulkAction && $action->isAllowed()
             )
         );
     }
@@ -80,7 +81,8 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => $action instanceof PageAction && $action->isAllowed()
+                static fn (Action $action) => 
+                    $action instanceof PageAction && $action->isAllowed()
             )
         );
     }
