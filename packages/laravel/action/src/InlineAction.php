@@ -12,11 +12,17 @@ class InlineAction extends Action
 {
     use IsDefault;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp(): void
     {
         $this->type(Creator::Inline);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function toArray(): array
     {
         return \array_merge(parent::toArray(), [
@@ -25,36 +31,30 @@ class InlineAction extends Action
     }
 
     /**
-     * Execute the action handler using the provided data.
+     * Execute the inline action on the given record.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $record
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
-    public function execute($record)
+    public function execute($record): mixed
     {
         if (! $this->hasAction()) {
             return;
         }
 
-        return $this instanceof Handles
-            ? $this->callHandler($record)
-            : $this->callAction($record);
+        $handler = $this->getHandler();
+
+        [$named, $typed] = $this->getEvaluationParameters($record);
+
+        return $this->evaluate($handler, $named, $typed);
     }
 
     /**
+     * Get the named and typed parameters to use for callable evaluation.
+     * 
      * @param  \Illuminate\Database\Eloquent\Model  $record
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
+     * @return array{array<string, mixed>,  array<class-string, mixed>}
      */
-    protected function callHandler($record)
-    {
-        return \call_user_func([$this, 'handle'], $record); // @phpstan-ignore-line
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Model  $record
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
-     */
-    protected function callAction($record)
+    protected function getEvaluationParameters($record): array
     {
         [$model, $singular] = $this->getParameterNames($record);
 
@@ -69,6 +69,6 @@ class InlineAction extends Action
             $model::class => $record,
         ];
 
-        return $this->evaluate($this->getAction(), $named, $typed);
+        return [$named, $typed];
     }
 }

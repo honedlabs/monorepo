@@ -9,7 +9,7 @@ use Honed\Action\Concerns\HasActions;
 use Honed\Action\InlineAction;
 use Honed\Action\PageAction;
 
-class Filled
+class FilledActions
 {
     use HasActions;
 

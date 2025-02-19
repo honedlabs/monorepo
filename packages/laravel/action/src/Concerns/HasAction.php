@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-use Honed\Action\Contracts\Handles;
+use Honed\Action\Contracts\Actionable;
+use Illuminate\Support\Facades\App;
 
 trait HasAction
 {
     use HasParameterNames;
 
     /**
-     * @var \Closure|null
+     * @var \Closure|class-string<\Honed\Action\Contracts\Actionable>|null
      */
     protected $action;
 
@@ -19,16 +20,16 @@ trait HasAction
      * Execute the action handler using the provided data.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Model  $parameter
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
      */
-    abstract public function execute($parameter);
+    abstract public function execute($parameter): mixed;
 
     /**
      * Set the action handler.
      *
+     * @param  \Closure|class-string<\Honed\Action\Contracts\Actionable>|null  $action
      * @return $this
      */
-    public function action(?\Closure $action = null): static
+    public function action(\Closure|string $action = null): static
     {
         if (! \is_null($action)) {
             $this->action = $action;
@@ -39,8 +40,10 @@ trait HasAction
 
     /**
      * Get the action handler.
+     * 
+     * @return \Closure|class-string<\Honed\Action\Contracts\Actionable>|null
      */
-    public function getAction(): ?\Closure
+    public function getAction(): \Closure|string|null
     {
         return $this->action;
     }
@@ -52,6 +55,20 @@ trait HasAction
      */
     public function hasAction()
     {
-        return isset($this->action) || $this instanceof Handles;
+        return isset($this->action) || $this instanceof Actionable;
+    }
+
+    /**
+     * Get the handler for the actionable class.
+     */
+    protected function getHandler(): mixed
+    {
+        $action = $this->getAction();
+
+        return match (true) {
+            \is_string($action) => [App::make($action), 'handle'],
+            $this instanceof Actionable => [$this, 'handle'],
+            default => $action,
+        };
     }
 }

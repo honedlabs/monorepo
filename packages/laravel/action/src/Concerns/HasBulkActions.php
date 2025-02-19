@@ -17,12 +17,9 @@ trait HasBulkActions
     /**
      * Execute the action handler using the provided data.
      *
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|bool|void
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      */
-    public function execute($builder)
+    public function execute($builder): mixed
     {
         if (! $this->hasAction()) {
             return;

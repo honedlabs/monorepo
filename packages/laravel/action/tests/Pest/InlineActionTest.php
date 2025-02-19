@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 use Honed\Action\Creator;
 use Honed\Action\InlineAction;
-use Honed\Action\Tests\Stubs\DestroyAction;
+use Honed\Action\Tests\Fixtures\DestroyAction;
 use Honed\Action\Tests\Stubs\Product;
 use Symfony\Component\HttpFoundation\Request;
+use Tests\Pest\Fixtures\DestroyProduct;
 
 beforeEach(function () {
     $this->test = InlineAction::make('test');
-});
-
-it('makes', function () {
-    expect($this->test)
-        ->toBeInstanceOf(InlineAction::class);
 });
 
 it('has array representation', function () {
@@ -114,6 +110,13 @@ describe('executes', function () {
             ->toBeNull();
 
         expect(Product::find($this->product->id))
+            ->toBeNull();
+    });
+
+    test('with class-string action', function () {
+
+        expect($this->test->action(DestroyProduct::class))
+            ->execute($this->product)
             ->toBeNull();
     });
 });
