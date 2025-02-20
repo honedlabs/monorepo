@@ -6,16 +6,20 @@ namespace Honed\Action\Concerns;
 
 use Honed\Action\Contracts\Handles;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 trait HasBulkActions
 {
     use HasAction;
-    use Support\ChunksBuilder;
+    use Support\IsChunked;
+    use Support\CanChunkById;
+    use Support\HasChunkSize;
+    use Support\ActsOnRecord;    
 
     /**
-     * Execute the action handler using the provided data.
+     * Execute the bulk action on the given query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      */
@@ -24,101 +28,87 @@ trait HasBulkActions
         if (! $this->hasAction()) {
             return;
         }
+        
+        $handler = $this->getHandler();
+        
+        if ($this->isChunked()) {
+            return $this->executeWithChunking($builder, $handler);
+        }
 
-        [$model, $singular, $plural] = $this->getParameterNames($builder);
+        [$named, $typed] = $this->getEvaluationParameters($builder);
 
-        $handler = $this instanceof Handles;
-
-        /**
-         * @phpstan-var callable|\Closure
-         */
-        $callback = $handler ? [$this, 'handle'] : $this->getAction(); // @phpstan-ignore-line
-
-        $parameters = $handler
-            ? $this->getHandleParameters()
-            : (new \ReflectionFunction($callback))->getParameters(); // @phpstan-ignore-line
-
-        $retrieveRecords = $this->isCollectionCallback($parameters, $plural);
-
-        $singularAccess = $this->isModelCallback($parameters, $model, $singular);
-
-        return match (true) {
-            $this->chunks() => $this->chunkRecords($builder, $callback, $singularAccess),
-
-            $retrieveRecords && $handler => \call_user_func($callback, $builder->get()),
-
-            $retrieveRecords => $this->evaluateCallbackWithRecords($builder, $callback, $plural), // @phpstan-ignore-line
-
-            $singularAccess => $builder->get()->each(fn ($model) => \call_user_func($callback, $model)),
-
-            $handler => \call_user_func($callback, $builder),
-
-            default => $this->evaluate($callback, [
-                'query' => $builder,
-                'builder' => $builder,
-            ], [
-                Builder::class => $builder,
-            ]),
-        };
+        return $this->evaluate($handler, $named, $typed);
     }
 
     /**
-     * Evaluate the action handler with retrieved records.
-     *
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
+     * Handle the chunking of the records.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  callable  $handler
      */
-    private function evaluateCallbackWithRecords(Builder $builder, \Closure $callback, string $plural): mixed
+    protected function executeWithChunking(Builder $builder, mixed $handler): mixed
     {
-        $records = $builder->get();
+        if ($this->chunksById()) {
+            return $builder->chunkById(
+                $this->getChunkSize(), 
+                $this->performChunk($handler)
+            );
+        }   
 
-        return $this->evaluate($callback, [
+        return $builder->chunk(
+            $this->getChunkSize(), 
+            $this->performChunk($handler)
+        );
+    }
+
+    /**
+     * Select whether the handler should be called on a record basis, or 
+     * operates on the collection of records.
+     * 
+     * @param  callable  $handler
+     */
+    protected function performChunk(mixed $handler): mixed
+    {
+        if ($this->actsOnRecord()) {
+            return static fn (Collection $records) => $records
+                ->each(static fn ($record) => \call_user_func($handler, $record));
+        }
+
+        return static fn (Collection $records) => \call_user_func($handler, $records);
+    }
+
+    /**
+     * Get the named and typed parameters to use for callable evaluation.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $records
+     * @return array{array<string, mixed>,  array<class-string, mixed>}
+     */
+    protected function getEvaluationParameters($records): array
+    {
+        [$model, $singular, $plural] = $this->getParameterNames($records);
+
+        if ($this->actsOnRecord()) {
+            $records = $records->get();
+        }
+
+        $named = [
+            'model' => $records,
+            'record' => $records,
+            'builder' => $records,
+            'query' => $records,
             'records' => $records,
-            'collection' => $records,
+            $singular => $records,
             $plural => $records,
-        ], [
+        ];
+
+        $typed = [
+            Builder::class => $records,
+            EloquentCollection::class => $records,
             Collection::class => $records,
-        ]);
-    }
+            Model::class => $records,
+            $model::class => $records,
+        ];
 
-    /**
-     * Retrieve the parameters for the handle method.
-     *
-     * @return array<int,\ReflectionParameter>
-     */
-    private function getHandleParameters(): array
-    {
-        $methods = (new \ReflectionClass($this))->getMethods();
-
-        return collect($methods)
-            ->first(fn (\ReflectionMethod $method) => $method->getName() === 'handle')
-            ?->getParameters() ?? [];
-    }
-
-    /**
-     * Determine if the action executable requires the records to be retrieved.
-     *
-     * @param  array<int,\ReflectionParameter>  $parameters
-     */
-    private function isCollectionCallback(array $parameters, string $plural): bool
-    {
-        return collect($parameters)
-            ->some(fn (\ReflectionParameter $parameter) => ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Collection::class])
-                    || \in_array($parameter->getName(), ['records', 'collection', $plural])
-            );
-    }
-
-    /**
-     * Determine if the action executable requires a model to be retrieved, and then acts on individual collection records.
-     *
-     * @param  array<int,\ReflectionParameter>  $parameters
-     */
-    private function isModelCallback(array $parameters, Model $model, string $singular): bool
-    {
-        return collect($parameters)
-            ->some(fn (\ReflectionParameter $parameter) => ($t = $parameter->getType()) instanceof \ReflectionNamedType && \in_array($t->getName(), [Model::class, $model::class])
-                    || \in_array($parameter->getName(), ['model', 'record', $singular])
-            );
+        return [$named, $typed];
     }
 }
