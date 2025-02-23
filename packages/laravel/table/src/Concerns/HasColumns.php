@@ -3,7 +3,6 @@
 namespace Honed\Table\Concerns;
 
 use Honed\Table\Columns\Column;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -33,6 +32,7 @@ trait HasColumns
 
     /**
      * @template T of \Honed\Table\Columns\Column
+     *
      * @param  array<int,T>|Collection<int,T>  $columns
      * @return $this
      */

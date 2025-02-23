@@ -32,14 +32,14 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * A unique identifier column for the table.
-     * 
+     *
      * @var string|null
      */
     protected $key;
 
     /**
      * Get the unique identifier key for table records.
-     * 
+     *
      * @throws \RuntimeException When no key is defined
      */
     public function getKey(): string
@@ -56,6 +56,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * Set the key property for the table.
 
+     *
      * @return $this
      */
     public function key(string $key): static
@@ -115,7 +116,7 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Create a new table instance.
-     * 
+     *
      * @param  \Closure|null  $modifier
      */
     public static function make($modifier = null): static

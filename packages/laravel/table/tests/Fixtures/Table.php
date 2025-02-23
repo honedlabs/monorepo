@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Table\Tests\Fixtures;
 
 use Honed\Action\BulkAction;
-use Honed\Action\Confirm;
 use Honed\Action\InlineAction;
 use Honed\Action\PageAction;
 use Honed\Refine\Filters\BooleanFilter;
