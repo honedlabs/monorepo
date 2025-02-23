@@ -6,7 +6,7 @@ namespace Honed\Action\Tests\Fixtures;
 
 use Honed\Action\Concerns\HasActions;
 
-class Blank
+class BlankActions
 {
     use HasActions;
 }

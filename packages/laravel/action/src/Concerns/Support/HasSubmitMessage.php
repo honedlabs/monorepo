@@ -8,7 +8,7 @@ trait HasSubmitMessage
 {
     /**
      * The message to display on the submit button.
-     * 
+     *
      * @var string|null
      */
     protected $submit;
@@ -37,5 +37,5 @@ trait HasSubmitMessage
         }
 
         return $this->submit;
-    }    
+    }
 }

@@ -14,20 +14,20 @@ use Honed\Core\Primitive;
  */
 class Confirm extends Primitive implements Resolves
 {
+    use Concerns\Support\HasDismissMessage;
+    use Concerns\Support\HasIntent;
+    use Concerns\Support\HasSubmitMessage;
     use HasDescription;
     use HasName;
-    use Concerns\Support\HasDismissMessage;
-    use Concerns\Support\HasSubmitMessage;
-    use Concerns\Support\HasIntent;
 
     /**
      * Create a new confirm instance.
      */
     public static function make(
-        string|\Closure|null $name = null, 
-        string|\Closure|null $description = null, 
-        string $dismiss = 'Cancel', 
-        string $submit = 'Confirm', 
+        string|\Closure|null $name = null,
+        string|\Closure|null $description = null,
+        string $dismiss = 'Cancel',
+        string $submit = 'Confirm',
         ?string $intent = null
     ): static {
         return resolve(static::class)

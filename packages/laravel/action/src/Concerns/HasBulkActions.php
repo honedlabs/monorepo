@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-use Honed\Action\Contracts\Handles;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
@@ -13,10 +12,10 @@ use Illuminate\Support\Collection;
 trait HasBulkActions
 {
     use HasAction;
-    use Support\IsChunked;
+    use Support\ActsOnRecord;
     use Support\CanChunkById;
     use Support\HasChunkSize;
-    use Support\ActsOnRecord;    
+    use Support\IsChunked;
 
     /**
      * Execute the bulk action on the given query.
@@ -31,7 +30,7 @@ trait HasBulkActions
         if (! $handler) {
             return;
         }
-        
+
         if ($this->isChunked()) {
             return $this->executeWithChunking($builder, $handler);
         }
@@ -43,7 +42,7 @@ trait HasBulkActions
 
     /**
      * Handle the chunking of the records.
-     * 
+     *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  callable  $handler
      */
@@ -51,21 +50,21 @@ trait HasBulkActions
     {
         if ($this->chunksById()) {
             return $builder->chunkById(
-                $this->getChunkSize(), 
+                $this->getChunkSize(),
                 $this->performChunk($handler)
             );
-        }   
+        }
 
         return $builder->chunk(
-            $this->getChunkSize(), 
+            $this->getChunkSize(),
             $this->performChunk($handler)
         );
     }
 
     /**
-     * Select whether the handler should be called on a record basis, or 
+     * Select whether the handler should be called on a record basis, or
      * operates on the collection of records.
-     * 
+     *
      * @param  callable  $handler
      * @return \Closure(Collection<int,\Illuminate\Database\Eloquent\Model>):mixed
      */
@@ -81,7 +80,7 @@ trait HasBulkActions
 
     /**
      * Get the named and typed parameters to use for callable evaluation.
-     * 
+     *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $records
      * @return array{array<string, mixed>,  array<class-string, mixed>}
      */

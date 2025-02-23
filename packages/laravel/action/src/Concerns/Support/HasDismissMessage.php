@@ -8,7 +8,7 @@ trait HasDismissMessage
 {
     /**
      * The message to display on the dismiss button.
-     * 
+     *
      * @var string|null
      */
     protected $dismiss;
@@ -37,5 +37,5 @@ trait HasDismissMessage
         }
 
         return $this->dismiss;
-    }    
+    }
 }

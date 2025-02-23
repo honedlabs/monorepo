@@ -56,3 +56,16 @@ it('resolves', function () {
         'method' => Request::METHOD_GET,
     ]);
 });
+
+it('executes', function () {
+    $product = product();
+
+    $this->test
+        ->action(fn (Product $product) => $product->update(['name' => 'test']))
+        ->execute($product);
+    
+    $this->assertDatabaseHas('products', [
+        'id' => $product->id,
+        'name' => 'test',
+    ]);
+});

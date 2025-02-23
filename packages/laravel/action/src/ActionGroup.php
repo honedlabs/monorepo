@@ -16,7 +16,7 @@ class ActionGroup extends Primitive
 
     /**
      * Create a new action group instance.
-     * 
+     *
      * @param  iterable<\Honed\Action\Action>  $actions
      */
     public static function make(iterable $actions = []): static
@@ -27,7 +27,7 @@ class ActionGroup extends Primitive
 
     /**
      * Set a single resource to apply the inline actions to.
-     * 
+     *
      * @param  \Illuminate\Database\Eloquent\Model  $resource
      * @return $this
      */
@@ -39,7 +39,7 @@ class ActionGroup extends Primitive
 
     /**
      * Set multiple resources to apply the inline actions to each.
-     * 
+     *
      * @param  iterable<\Illuminate\Database\Eloquent\Model>  $resources
      * @return $this
      */

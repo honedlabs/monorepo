@@ -9,7 +9,7 @@ trait ActsOnRecord
     /**
      * Determine whether the action should act on a retrieved record, or on the
      * underlying query/collection.
-     * 
+     *
      * @var bool
      */
     protected $retrieve = false;

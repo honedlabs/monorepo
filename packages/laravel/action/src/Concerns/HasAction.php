@@ -26,7 +26,7 @@ trait HasAction
 
     /**
      * Get the named and typed parameters to use for callable evaluation.
-     * 
+     *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Model  $parameter
      * @return array{array<string, mixed>,  array<class-string, mixed>}
      */
@@ -38,7 +38,7 @@ trait HasAction
      * @param  \Closure|class-string<\Honed\Action\Contracts\Actionable>|null  $action
      * @return $this
      */
-    public function action(\Closure|string $action = null): static
+    public function action(\Closure|string|null $action = null): static
     {
         if (! \is_null($action)) {
             $this->action = $action;
@@ -49,7 +49,7 @@ trait HasAction
 
     /**
      * Get the action handler.
-     * 
+     *
      * @return \Closure|class-string<\Honed\Action\Contracts\Actionable>|null
      */
     public function getAction(): \Closure|string|null
@@ -76,10 +76,10 @@ trait HasAction
 
         return match (true) {
             \is_string($action) => \Closure::fromCallable([
-                App::make($action), 'handle'
+                type(App::make($action))->as(Actionable::class), 'handle',
             ]),
             $this instanceof Actionable => \Closure::fromCallable([
-                $this, 'handle'
+                $this, 'handle',
             ]),
             default => $action,
         };

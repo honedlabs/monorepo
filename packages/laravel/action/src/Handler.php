@@ -11,11 +11,9 @@ use Honed\Core\Concerns\HasBuilderInstance;
 use Honed\Core\Contracts\Makeable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-/**
- * @template TModel of \Illuminate\Database\Eloquent\Model
- */
 class Handler implements Makeable
 {
     use Concerns\HasParameterNames;
@@ -32,7 +30,7 @@ class Handler implements Makeable
     protected $key;
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  array<int,\Honed\Action\Action>  $actions
      */
     public function __construct(Builder $builder, array $actions, ?string $key = null)
@@ -45,7 +43,7 @@ class Handler implements Makeable
     /**
      * Make a new handler instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  array<int,\Honed\Action\Action>  $actions
      */
     public static function make(Builder $builder, array $actions, ?string $key = null): static
@@ -79,7 +77,7 @@ class Handler implements Makeable
 
         abort_if(! $action->isAllowed(...static::getNamedAndTypedParameters($query)), 403);
 
-        /** @var \Illuminate\Database\Eloquent\Builder<TModel>|TModel $query */
+        /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Model $query */
         $result = $action->execute($query);
 
         if ($result instanceof Responsable || $result instanceof RedirectResponse) {
@@ -92,7 +90,7 @@ class Handler implements Makeable
     /**
      * Retrieve the action and query based on the type and data.
      *
-     * @return array{0: \Honed\Action\Action|null, 1: \Illuminate\Database\Eloquent\Builder<TModel>|TModel|null}
+     * @return array{0: \Honed\Action\Action|null, 1: \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Model|null}
      */
     protected function resolveAction(string $type, ActionData $data): array
     {
@@ -117,30 +115,29 @@ class Handler implements Makeable
     /**
      * Get the key to use for selecting records.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      */
     protected function getKey(Builder $builder): string
     {
-        return $builder->qualifyColumn($this->key 
+        return $builder->qualifyColumn($this->key
             ??= $builder->getModel()->getKeyName());
     }
 
     /**
-     * @return array{\Honed\Action\Action|null,TModel|null}
+     * @return array{\Honed\Action\Action|null,\Illuminate\Database\Eloquent\Model|null}
      */
     protected function resolveInlineAction(InlineData $data): array
     {
         return [
-            collect($this->getActions())
-                ->first(fn (Action $action) => $action instanceof InlineAction 
-                    && $action->getName() === $data->name),
+            $this->getAction($data->name, InlineAction::class),
             $this->getBuilder()
-                ->where($this->getKey($this->getBuilder()), $data->id)->first(),
+                ->where($this->getKey($this->getBuilder()), $data->id)
+                ->first(),
         ];
     }
 
     /**
-     * @return array{\Honed\Action\Action|null,\Illuminate\Database\Eloquent\Builder<TModel>}
+     * @return array{\Honed\Action\Action|null,\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>}
      */
     protected function resolveBulkAction(BulkData $data): array
     {
@@ -149,9 +146,7 @@ class Handler implements Makeable
         $key = $this->getKey($builder);
 
         return [
-            collect($this->getActions())
-                ->first(fn (Action $action) => $action instanceof BulkAction 
-                    && $action->getName() === $data->name),
+            $this->getAction($data->name, BulkAction::class),
             $data->all
                 ? $builder->whereNotIn($key, $data->except)
                 : $builder->whereIn($key, $data->only),
@@ -159,14 +154,12 @@ class Handler implements Makeable
     }
 
     /**
-     * @return array{\Honed\Action\Action|null,\Illuminate\Database\Eloquent\Builder<TModel>}
+     * @return array{\Honed\Action\Action|null,\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>}
      */
     protected function resolvePageAction(ActionData $data): array
     {
         return [
-            collect($this->getActions())
-                ->first(fn (Action $action) => $action instanceof PageAction 
-                    && $action->getName() === $data->name),
+            $this->getAction($data->name, PageAction::class),
             $this->getBuilder(),
         ];
     }
@@ -179,5 +172,19 @@ class Handler implements Makeable
         throw new \InvalidArgumentException(\sprintf(
             'Action type [%s] is invalid.', $type
         ));
+    }
+
+    /**
+     * Find the action by name and type.
+     *
+     * @param  class-string<\Honed\Action\Action>  $type
+     */
+    protected function getAction(string $name, string $type): ?Action
+    {
+        return Arr::first(
+            $this->getActions(),
+            fn (Action $action) => $action instanceof $type
+                && $action->getName() === $name
+        );
     }
 }

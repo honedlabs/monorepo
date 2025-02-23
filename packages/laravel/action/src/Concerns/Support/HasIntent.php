@@ -14,7 +14,7 @@ trait HasIntent
 
     /**
      * The intent of the confirm.
-     * 
+     *
      * @var string|null
      */
     protected $intent;
@@ -78,5 +78,4 @@ trait HasIntent
     {
         return $this->intent(self::Informative);
     }
-
 }

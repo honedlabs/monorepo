@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Core\Primitive;
-use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\HasExtra;
-use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Concerns\Allowable;
+use Honed\Core\Concerns\HasExtra;
+use Honed\Core\Concerns\HasIcon;
+use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasRoute;
+use Honed\Core\Concerns\HasType;
 use Honed\Core\Contracts\Resolves;
+use Honed\Core\Primitive;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Traits\ForwardsCalls;
 
@@ -61,6 +61,7 @@ abstract class Action extends Primitive implements Resolves
 
     /**
      * Get the array representation of the action's route if applicable.
+     *
      * @return array<string,mixed>
      */
     public function routeToArray(): array
@@ -107,7 +108,7 @@ abstract class Action extends Primitive implements Resolves
     {
         return match ($parameterType) {
             Confirm::class => [$this->confirmInstance()],
-            default => [App::make($parameterType)], // Depdency injection
+            default => [App::make($parameterType)], // Dependency injection
         };
     }
 }

@@ -30,7 +30,7 @@ trait CanChunkById
      */
     public function chunksById(): bool
     {
-        return $this->chunkById 
+        return $this->chunkById
             ?? (bool) config('action.chunk_by_id', true);
     }
 }

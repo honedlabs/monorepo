@@ -10,11 +10,11 @@ trait IsChunked
 {
     /**
      * Whether the action should be chunked.
-     * 
+     *
      * @var bool|null
      */
     protected $chunk;
-    
+
     /**
      * Set the action to chunk the records.
      *
@@ -42,5 +42,4 @@ trait IsChunked
 
         return (bool) config('action.chunk', false);
     }
-    
 }

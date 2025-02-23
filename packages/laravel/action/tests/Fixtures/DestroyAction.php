@@ -15,7 +15,7 @@ class DestroyAction extends InlineAction implements Actionable
         parent::setUp();
 
         $this->name('destroy');
-        $this->label(fn (Product $product) => 'Destroy '. $product->name);
+        $this->label(fn (Product $product) => 'Destroy '.$product->name);
     }
 
     public function handle($product)

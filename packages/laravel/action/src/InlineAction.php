@@ -50,7 +50,7 @@ class InlineAction extends Action
 
     /**
      * Get the named and typed parameters to use for callable evaluation.
-     * 
+     *
      * @param  \Illuminate\Database\Eloquent\Model  $record
      * @return array{array<string, mixed>,  array<class-string, mixed>}
      */

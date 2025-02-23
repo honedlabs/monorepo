@@ -25,7 +25,7 @@ trait HasParameterNames
 
         /** @var \Illuminate\Support\Stringable $strTable */
         $strTable = str($model->getTable());
-        
+
         return [
             $model,
             $strTable->singular()->camel()->toString(),

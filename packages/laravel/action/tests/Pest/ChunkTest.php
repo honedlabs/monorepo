@@ -9,8 +9,7 @@ use Honed\Action\Tests\Stubs\Product;
 beforeEach(function () {
     $this->product = product();
     $this->query = Product::query();
-    $this->test = BulkAction::make('test')
-        ->chunk();
+    $this->test = BulkAction::make('test')->chunk();
 });
 it('can chunk', function () {
     expect($this->test)
