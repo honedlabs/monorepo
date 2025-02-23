@@ -20,8 +20,9 @@ trait HasAction
      * Execute the action handler using the provided data.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Model  $parameter
+     * @return mixed
      */
-    abstract public function execute($parameter): mixed;
+    abstract public function execute($parameter);
 
     /**
      * Get the named and typed parameters to use for callable evaluation.
@@ -69,13 +70,17 @@ trait HasAction
     /**
      * Get the handler for the actionable class.
      */
-    protected function getHandler(): mixed
+    protected function getHandler(): ?\Closure
     {
         $action = $this->getAction();
 
         return match (true) {
-            \is_string($action) => [App::make($action), 'handle'],
-            $this instanceof Actionable => [$this, 'handle'],
+            \is_string($action) => \Closure::fromCallable([
+                App::make($action), 'handle'
+            ]),
+            $this instanceof Actionable => \Closure::fromCallable([
+                $this, 'handle'
+            ]),
             default => $action,
         };
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Action\Contracts\Handles;
 use Honed\Core\Concerns\IsDefault;
 use Illuminate\Database\Eloquent\Model;
 
@@ -34,14 +33,15 @@ class InlineAction extends Action
      * Execute the inline action on the given record.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $record
+     * @return mixed
      */
-    public function execute($record): mixed
+    public function execute($record)
     {
-        if (! $this->hasAction()) {
+        $handler = $this->getHandler();
+
+        if (! $handler) {
             return;
         }
-
-        $handler = $this->getHandler();
 
         [$named, $typed] = $this->getEvaluationParameters($record);
 
@@ -59,7 +59,7 @@ class InlineAction extends Action
         [$model, $singular] = $this->getParameterNames($record);
 
         $named = [
-            'model' => $model,
+            'model' => $record,
             'record' => $record,
             $singular => $record,
         ];

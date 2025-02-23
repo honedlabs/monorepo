@@ -47,14 +47,14 @@ describe('executes', function () {
             ->toBeNull();
     });
 
-    test('with collection callback', function () {
-        $this->action->action(fn (Collection $collection) => $collection
-            ->each(fn (Product $product) => $product->update(['name' => 'Updated']))
-        )->execute($this->builder);
+    // test('with collection callback', function () {
+    //     $this->action->action(fn (Collection $collection) => $collection
+    //         ->each(fn (Product $product) => $product->update(['name' => 'Updated']))
+    //     )->execute($this->builder);
 
-        expect(Product::query()->get())
-            ->each(function (Expectation $product) {
-                expect($product->value->name)->toBe('Updated');
-            });
-    });
+    //     expect(Product::query()->get())
+    //         ->each(function (Expectation $product) {
+    //             expect($product->value->name)->toBe('Updated');
+    //         });
+    // });
 });

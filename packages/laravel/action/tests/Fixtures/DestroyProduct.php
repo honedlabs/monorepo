@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Pest\Fixtures;
+namespace Honed\Action\Tests\Fixtures;
 
 use Honed\Action\Tests\Stubs\Product;
 use Honed\Action\Contracts\Actionable;

@@ -22,14 +22,15 @@ trait HasBulkActions
      * Execute the bulk action on the given query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @return mixed
      */
-    public function execute($builder): mixed
+    public function execute($builder)
     {
-        if (! $this->hasAction()) {
+        $handler = $this->getHandler();
+
+        if (! $handler) {
             return;
         }
-        
-        $handler = $this->getHandler();
         
         if ($this->isChunked()) {
             return $this->executeWithChunking($builder, $handler);
@@ -66,6 +67,7 @@ trait HasBulkActions
      * operates on the collection of records.
      * 
      * @param  callable  $handler
+     * @return \Closure(Collection<int,\Illuminate\Database\Eloquent\Model>):mixed
      */
     protected function performChunk(mixed $handler): mixed
     {

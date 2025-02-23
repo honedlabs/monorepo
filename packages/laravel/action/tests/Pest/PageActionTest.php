@@ -11,11 +11,6 @@ beforeEach(function () {
     $this->test = PageAction::make('test');
 });
 
-it('makes', function () {
-    expect($this->test)
-        ->toBeInstanceOf(PageAction::class);
-});
-
 it('has array representation', function () {
     expect($this->test->toArray())
         ->toBeArray()

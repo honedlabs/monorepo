@@ -13,4 +13,18 @@ return [
     'chunk' => false,
     'chunk_size' => 200,
     'chunk_by_id' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Confirmation
+    |--------------------------------------------------------------------------
+    |
+    | You can configure the dismiss and submit messages for the confirmation
+    | class globally here.
+    |
+    */
+    'confirm' => [
+        'dismiss' => 'Cancel',
+        'submit' => 'Confirm',
+    ],
 ];

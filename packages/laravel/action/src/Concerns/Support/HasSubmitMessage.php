@@ -9,9 +9,9 @@ trait HasSubmitMessage
     /**
      * The message to display on the submit button.
      * 
-     * @var string
+     * @var string|null
      */
-    protected $submit = 'Cancel';
+    protected $submit;
 
     /**
      * Set the submit message for the confirm.
@@ -32,6 +32,10 @@ trait HasSubmitMessage
      */
     public function getSubmit(): string
     {
+        if (\is_null($this->submit)) {
+            return type(config('action.confirm.submit', 'Confirm'))->asString();
+        }
+
         return $this->submit;
     }    
 }

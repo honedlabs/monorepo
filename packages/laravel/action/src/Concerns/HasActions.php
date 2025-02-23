@@ -33,6 +33,33 @@ trait HasActions
     }
 
     /**
+     * Add a list of actions to the instance.
+     * 
+     * @param  iterable<\Honed\Action\Action>  $actions
+     * @return $this
+     */
+    public function addActions(iterable $actions): static
+    {
+        foreach ($actions as $action) {
+            $this->addAction($action);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a single action to the instance.
+     * 
+     * @return $this
+     */
+    public function addAction(Action $action): static
+    {
+        $this->actions[] = $action;
+
+        return $this;
+    }
+
+    /**
      * Determine if the instance has any actions.
      */
     public function hasActions(): bool
@@ -90,7 +117,7 @@ trait HasActions
     /**
      * Get the actions as an array.
      *
-     * @return array<string,array<int,\Honed\Action\Action>|bool>
+     * @return array<string,mixed>
      */
     public function actionsToArray(): array
     {

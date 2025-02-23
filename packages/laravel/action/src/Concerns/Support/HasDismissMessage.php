@@ -9,9 +9,9 @@ trait HasDismissMessage
     /**
      * The message to display on the dismiss button.
      * 
-     * @var string
+     * @var string|null
      */
-    protected $dismiss = 'Cancel';
+    protected $dismiss;
 
     /**
      * Set the dismiss message for the confirm.
@@ -32,6 +32,10 @@ trait HasDismissMessage
      */
     public function getDismiss(): string
     {
+        if (\is_null($this->dismiss)) {
+            return type(config('action.confirm.dismiss', 'Cancel'))->asString();
+        }
+
         return $this->dismiss;
     }    
 }

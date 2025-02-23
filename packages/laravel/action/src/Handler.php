@@ -57,7 +57,7 @@ class Handler implements Makeable
      * Handle the incoming action request using the actions from the source, and the resource provided.
      *
      * @param  \Honed\Action\Http\Requests\ActionRequest  $request
-     * @return \Illuminate\Contracts\Support\Responsable|\Illuminate\Http\RedirectResponse|void
+     * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse|void
      */
     public function handle($request)
     {
