@@ -32,6 +32,6 @@ it('accepts a model option', function () {
     expect($builder)->toContain('@template TModel of \App\Models\Product');
 
     $model = file_get_contents(app_path('Models/Product.php'));
-    expect($model)->toContain('use Illuminate\Database\Eloquent\Builder;');
+    expect($model)->toContain('return new ProductBuilder($query);');
 });
 

@@ -117,23 +117,24 @@ class BuilderMakeCommand extends GeneratorCommand
      * Replace the template TModel of the builder.
      *
      * @param  string  $stub
-     * @param  string  $name
      * @return $this
      */
     protected function replaceModel(&$stub)
     {
         $searches = ['DummyModel', '{{ model }}', '{{ Model }}', '{{model}}', '{{Model}}'];
-        
+
         $model = $this->option('model');
 
         if (! $model) {
             \str_replace($searches, '', $stub);
+
             return $this;
         }
 
         // Ensure it is a model
         if (! \in_array($model, $this->possibleModels())) {
             $this->error('The model '.$model.' does not exist.');
+
             return $this;
         }
 
@@ -148,7 +149,6 @@ class BuilderMakeCommand extends GeneratorCommand
     /**
      * Insert the type hinting of the new builder into the model file.
      *
-     * @param  string  $stub
      * @param  string  $name
      * @return $this
      */
@@ -163,22 +163,28 @@ class BuilderMakeCommand extends GeneratorCommand
         $path = app_path('Models/'.$model.'.php');
         $stub = \file_get_contents($path);
 
+        if (! $stub) {
+            $this->error('The model '.$model.' does not exist.');
+
+            return $this;
+        }
+
         // Add use statement for the builder
         $stub = \str_replace(
             "use Illuminate\Database\Eloquent\Model;\n",
-            "use Illuminate\Database\Eloquent\Model;\nuse ".$name.";\n", 
+            "use Illuminate\Database\Eloquent\Model;\nuse ".$name.";\n",
             $stub
         );
 
         // Find the end of the model class by the last closing brace
         $classEnd = strrpos($stub, '}');
-        
+
         if ($classEnd) {
             $inserts = $this->getInserts($name, $model);
 
             // Insert the variable before the closing brace
             $stub = substr_replace(
-                $stub, 
+                $stub,
                 $inserts,
                 $classEnd,
                 0
@@ -218,6 +224,7 @@ class BuilderMakeCommand extends GeneratorCommand
         $query = "\n\tpublic static function query()\n\t{\n\t\treturn parent::query();\n\t}\n";
 
         $functions = $eloquentDocBlock.$newEloquentBuilder.$queryDocBlock.$query;
+
         return $functions;
     }
 }
