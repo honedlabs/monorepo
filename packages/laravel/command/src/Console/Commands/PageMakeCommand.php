@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Command\Console\Commands;
 
-use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
 #[AsCommand(name: 'make:page')]
-class PageMakeCommand extends GeneratorCommand
+class PageMakeCommand extends JsMakeCommand
 {
     /**
      * The console command name.
@@ -40,29 +39,6 @@ class PageMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         return $this->resolveStubPath('/stubs/page.stub');
-    }
-
-    /**
-     * Get the root namespace for the class.
-     *
-     * @return string
-     */
-    protected function rootNamespace()
-    {
-        return resource_path('js');
-    }
-
-    /**
-     * Resolve the fully-qualified path to the stub.
-     *
-     * @param  string  $stub
-     * @return string
-     */
-    protected function resolveStubPath($stub)
-    {
-        return file_exists($customPath = $this->laravel->basePath(\trim($stub, '/')))
-            ? $customPath
-            : __DIR__.'/../../..'.$stub;
     }
 
     /**
