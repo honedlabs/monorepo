@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Console\Commands;
+namespace Honed\Command\Console\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -23,14 +23,14 @@ class BuilderMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $description = 'Create a new atomic builder class';
+    protected $description = 'Create a new builder class';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Builer';
+    protected $type = 'Builder';
 
     /**
      * Get the stub file for the generator.
@@ -67,15 +67,30 @@ class BuilderMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the console command options.
+     * Get the console command options
      *
-     * @return array<int, array<int, mixed>>
+     * @return array<int,array<int,mixed>>
      */
     protected function getOptions()
     {
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the builder already exists'],
             ['model', null, InputOption::VALUE_OPTIONAL, 'The model that the builder should be for.'],
+        ];
+    }
+
+    /**
+     * Prompt for missing input arguments using the returned questions.
+     *
+     * @return array<string,mixed>
+     */
+    protected function promptForMissingArgumentsUsing()
+    {
+        return [
+            'name' => [
+                'What should the '.strtolower($this->type).' be named?',
+                'E.g. PostBuilder',
+            ],
         ];
     }
 }
