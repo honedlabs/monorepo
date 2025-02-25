@@ -10,7 +10,9 @@ use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 use Inertia\Support\Header;
 
 class Modal implements Responsable
@@ -23,12 +25,21 @@ class Modal implements Responsable
     protected $baseURL;
 
     /**
+     * The props to pass to the modal.
+     *
+     * @var array<string, mixed>
+     */
+    protected $props;
+
+    /**
      * @param  array<string, mixed>|Arrayable<string, mixed>  $props
      */
     public function __construct(
         protected string $component,
-        protected array|Arrayable $props = []
-    ) {}
+        array|Arrayable $props = []
+    ) {
+        $this->with($props);
+    }
 
     /**
      * Set the base named route for the modal.
@@ -42,6 +53,8 @@ class Modal implements Responsable
 
     /**
      * Set the base URL for the modal.
+     *
+     * @return $this
      */
     public function baseURL(string $url): static
     {
@@ -51,24 +64,32 @@ class Modal implements Responsable
     }
 
     /**
+     * Set the props for the response.
+     *
      * @param  array<string, mixed>|Arrayable<string, mixed>  $props
+     * @return $this
      */
     public function with(array|Arrayable $props): static
     {
+        if ($props instanceof Arrayable) {
+            $props = $props->toArray();
+        }
+
         $this->props = $props;
 
         return $this;
     }
 
+    /**
+     * Render the modal on the base URL.
+     */
     public function render(): mixed
     {
-        /** @phpstan-ignore-next-line */
-        inertia()->share(['modal' => $this->component()]);
+        Inertia::share(['modal' => $this->component(), ...Arr::dot($this->props, 'modal.props.')]);
 
         // render background component on first visit
         if (request()->header(Header::INERTIA) && request()->header(Header::PARTIAL_COMPONENT)) {
-            /** @phpstan-ignore-next-line */
-            return inertia()->render(request()->header(Header::PARTIAL_COMPONENT));
+            return Inertia::render(request()->header(Header::PARTIAL_COMPONENT));
         }
 
         /** @var Request $originalRequest */
@@ -109,10 +130,7 @@ class Modal implements Responsable
 
         $middleware = new SubstituteBindings($router);
 
-        return $middleware->handle(
-            $request,
-            fn () => $route->run()
-        );
+        return $middleware->handle($request, fn () => $route->run());
     }
 
     /**
@@ -124,7 +142,6 @@ class Modal implements Responsable
             'component' => $this->component,
             'baseURL' => $this->baseURL,
             'redirectURL' => $this->redirectURL(),
-            'props' => $this->props,
             'key' => request()->header(ModalHeader::KEY, Str::uuid()->toString()),
             'nonce' => Str::uuid()->toString(),
         ];
