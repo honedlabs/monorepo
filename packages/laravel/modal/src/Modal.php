@@ -32,7 +32,9 @@ class Modal implements Responsable
     protected $props;
 
     /**
-     * @param  array<string, mixed>|Arrayable<string, mixed>  $props
+     * Create a modal instance.
+     *
+     * @param  array<string, mixed>|\Illuminate\Contracts\Support\Arrayable<string, mixed>  $props
      */
     public function __construct(
         protected string $component,
@@ -43,6 +45,8 @@ class Modal implements Responsable
 
     /**
      * Set the base named route for the modal.
+     *
+     * @return $this
      */
     public function baseRoute(string $name, mixed $parameters = [], bool $absolute = true): static
     {
@@ -82,6 +86,8 @@ class Modal implements Responsable
 
     /**
      * Render the modal on the base URL.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Support\Responsable
      */
     public function render(): mixed
     {
@@ -92,17 +98,17 @@ class Modal implements Responsable
             return Inertia::render(request()->header(Header::PARTIAL_COMPONENT));
         }
 
-        /** @var Request $originalRequest */
-        $originalRequest = app('request');
+        /** @var Request $incoming */
+        $incoming = app('request');
 
         $request = Request::create(
             $this->redirectURL(),
             Request::METHOD_GET,
-            $originalRequest->query->all(),
-            $originalRequest->cookies->all(),
-            $originalRequest->files->all(),
-            $originalRequest->server->all(),
-            $originalRequest->getContent()
+            $incoming->query->all(),
+            $incoming->cookies->all(),
+            $incoming->files->all(),
+            $incoming->server->all(),
+            $incoming->getContent()
         );
 
         /** @var \Illuminate\Routing\Router */
@@ -110,19 +116,24 @@ class Modal implements Responsable
 
         $baseRoute = $router->getRoutes()->match($request);
 
-        $request->headers->replace($originalRequest->headers->all());
+        $request->headers->replace($incoming->headers->all());
 
         /** @phpstan-ignore-next-line */
-        $request->setJson($originalRequest->json())
-            ->setUserResolver(fn () => $originalRequest->getUserResolver())
+        $request->setJson($incoming->json())
+            ->setUserResolver(fn () => $incoming->getUserResolver())
             ->setRouteResolver(fn () => $baseRoute)
-            ->setLaravelSession($originalRequest->session());
+            ->setLaravelSession($incoming->session());
 
         app()->instance('request', $request);
 
         return $this->handleRoute($request, $baseRoute);
     }
 
+    /**
+     * Execute the route action.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Support\Responsable
+     */
     protected function handleRoute(Request $request, Route $route): mixed
     {
         /** @var \Illuminate\Routing\Router */
@@ -130,10 +141,13 @@ class Modal implements Responsable
 
         $middleware = new SubstituteBindings($router);
 
+        /** @var \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Support\Responsable */
         return $middleware->handle($request, fn () => $route->run());
     }
 
     /**
+     * Retrieve the modal component for serialization..
+     *
      * @return array<string, mixed>
      */
     protected function component(): array
@@ -147,6 +161,9 @@ class Modal implements Responsable
         ];
     }
 
+    /**
+     * Get the URL to redirect to when the modal is exited.
+     */
     protected function redirectURL(): string
     {
         if (request()->header(ModalHeader::REDIRECT)) {
@@ -155,7 +172,7 @@ class Modal implements Responsable
 
         $referer = request()->headers->get('referer');
 
-        if (request()->header(Header::INERTIA) && $referer && $referer != url()->current()) {
+        if (request()->header(Header::INERTIA) && $referer && $referer !== url()->current()) {
             return $referer;
         }
 
@@ -164,6 +181,9 @@ class Modal implements Responsable
 
     /**
      * Create an HTTP response that represents the modal.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function toResponse($request)
     {
@@ -173,7 +193,6 @@ class Modal implements Responsable
             return $response->toResponse($request);
         }
 
-        /** @phpstan-ignore-next-line */
         return $response;
     }
 }
