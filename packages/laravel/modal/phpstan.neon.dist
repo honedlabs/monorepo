@@ -1,0 +1,23 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 9
+    paths:
+        - src
+    tmpDir: build/phpstan
+    checkOctaneCompatibility: true
+
+    universalObjectCratesClasses:
+        - Illuminate\Routing\Route
+
+    ignoreErrors:
+        # -
+        #     message: '#Offset (.*?) does not exist on array\|null#'
+        #     paths:
+        #         - tests/*
+        # -
+        #    message: '#expects resource, resource\|false given#'
+        #    paths:
+        #        - tests/*
+        # - '#should return \$this#'
