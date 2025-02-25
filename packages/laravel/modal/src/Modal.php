@@ -15,7 +15,12 @@ use Inertia\Support\Header;
 
 class Modal implements Responsable
 {
-    protected string $baseURL;
+    /**
+     * The route to display the modal on if not coming from an Inertia page.
+     *
+     * @var string
+     */
+    protected $baseURL;
 
     /**
      * @param  array<string, mixed>|Arrayable<string, mixed>  $props
@@ -25,6 +30,9 @@ class Modal implements Responsable
         protected array|Arrayable $props = []
     ) {}
 
+    /**
+     * Set the base named route for the modal.
+     */
     public function baseRoute(string $name, mixed $parameters = [], bool $absolute = true): static
     {
         $this->baseURL = route($name, $parameters, $absolute);
@@ -32,11 +40,9 @@ class Modal implements Responsable
         return $this;
     }
 
-    public function basePageRoute(string $name, mixed $parameters = [], bool $absolute = true): static
-    {
-        return $this->baseRoute($name, $parameters, $absolute);
-    }
-
+    /**
+     * Set the base URL for the modal.
+     */
     public function baseURL(string $url): static
     {
         $this->baseURL = $url;
@@ -139,6 +145,9 @@ class Modal implements Responsable
         return $this->baseURL;
     }
 
+    /**
+     * Create an HTTP response that represents the modal.
+     */
     public function toResponse($request)
     {
         $response = $this->render();

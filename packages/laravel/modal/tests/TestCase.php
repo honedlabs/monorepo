@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Modal\Tests;
 
-use Inertia\Inertia;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\View;
 use Honed\Modal\ModalServiceProvider;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
 use Inertia\ServiceProvider as InertiaServiceProvider;
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
 
@@ -21,7 +21,7 @@ class TestCase extends TestbenchTestCase
 
         View::addLocation(__DIR__.'/Stubs');
         Inertia::setRootView('app');
-        
+
         config()->set('inertia.testing.ensure_pages_exist', false);
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
     }
@@ -62,7 +62,6 @@ class TestCase extends TestbenchTestCase
     //     });
     // }
 
-    
     protected function getEnvironmentSetUp($app)
     {
         // config()->set('table', require __DIR__.'/../config/table.php');
