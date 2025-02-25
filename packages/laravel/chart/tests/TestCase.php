@@ -4,7 +4,6 @@ namespace Conquest\Chart\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\View;
-use Inertia\ServiceProvider;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Workbench\App\Providers\WorkbenchServiceProvider;
@@ -28,7 +27,6 @@ class TestCase extends Orchestra
     {
         return [
             WorkbenchServiceProvider::class,
-            ServiceProvider::class,
         ];
     }
 

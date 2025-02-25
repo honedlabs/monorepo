@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Illuminate\Routing\Route;
-use function Pest\Laravel\get;
-
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Tests\Stubs\Product;
-use Illuminate\Support\Facades\Request as RequestFacade;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Request as RequestFacade;
+
+use function Pest\Laravel\get;
 
 class RequestTest
 {
@@ -33,7 +33,7 @@ it('gets', function () {
 
 it('has named parameters', function (string $name, string $type) {
     $p = product();
-    
+
     get(route('products.show', $p))
         ->assertOk();
 
@@ -49,7 +49,7 @@ it('has named parameters', function (string $name, string $type) {
 
 it('has typed parameters', function (string $type) {
     $p = product();
-    
+
     get(route('products.show', $p))
         ->assertOk();
 
