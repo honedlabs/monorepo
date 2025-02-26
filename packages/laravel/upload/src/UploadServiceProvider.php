@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
-use Honed\Command\Console\Commands\UploadMakeCommand;
+use Honed\Upload\Console\Commands\UploadMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 final class UploadServiceProvider extends ServiceProvider
@@ -26,9 +26,13 @@ final class UploadServiceProvider extends ServiceProvider
             __DIR__.'/../config/upload.php' => config_path('upload.php'),
         ], 'config');
 
+        $this->publishes([
+            __DIR__.'/../stubs' => base_path('stubs'),
+        ], 'stubs');
+
         if ($this->app->runningInConsole()) {
             $this->commands([
-                UploadMakeCommand::class,
+                UploadMakeCommand::class
             ]);
         }
     }
