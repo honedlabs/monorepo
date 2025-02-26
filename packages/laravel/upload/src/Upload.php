@@ -50,7 +50,7 @@ class Upload implements Responsable
     /**
      * The file size unit to use.
      * 
-     * @var 'bytes'|'kilobytes'|'megabytes'|'gigabytes'
+     * @var 'bytes'|'kilobytes'|'megabytes'|'gigabytes'|string|null
      */
     protected $unit;
 
@@ -185,7 +185,7 @@ class Upload implements Responsable
     /**
      * Set the file size unit to use.
      * 
-     * @param 'bytes'|'kilobytes'|'megabytes'|'gigabytes' $unit
+     * @param 'bytes'|'kilobytes'|'megabytes'|'gigabytes'|string $unit
      * @return $this
      */
     public function unit($unit)
@@ -236,9 +236,20 @@ class Upload implements Responsable
     }
 
     /**
+     * Get the file size unit to use.
+     * 
+     * @return 'bytes'|'kilobytes'|'megabytes'|'gigabytes'|string
+     */
+    public function getUnit()
+    {
+        return $this->unit
+            ?? type(config('upload.unit', 'bytes'))->asString();
+    }
+
+    /**
      * Get the minimum file size to upload in bytes.
      * 
-     * @return int|null
+     * @return int
      */
     public function getMinSize()
     {
@@ -247,7 +258,7 @@ class Upload implements Responsable
             ?? config('upload.size.min');
 
         if (\is_null($minSize)) {
-            return null;
+            return 0;
         }
 
         return $this->convertSize($minSize);
@@ -256,7 +267,7 @@ class Upload implements Responsable
     /**
      * Get the maximum file size to upload in bytes.
      * 
-     * @return int|null
+     * @return int
      */
     public function getMaxSize()
     {
@@ -265,7 +276,7 @@ class Upload implements Responsable
             ?? config('upload.size.max');
 
         if (\is_null($maxSize)) {
-            return null;
+            return PHP_INT_MAX;
         }
 
         return $this->convertSize($maxSize);
@@ -279,11 +290,11 @@ class Upload implements Responsable
      */
     protected function convertSize(int $size)
     {
-        return match ($this->unit) {
-            'bytes' => $size,
+        return match ($this->getUnit()) {
             'kilobytes' => $size * 1024,
             'megabytes' => $size * (1024 ** 2),
             'gigabytes' => $size * (1024 ** 3),
+            default => $size,
         };
     }
 
@@ -299,7 +310,7 @@ class Upload implements Responsable
             $types = $types->all();
         }
 
-        $this->types = \array_merge($this->types, Arr::wrap($types));
+        $this->types = Arr::wrap($types);
 
         return $this;
     }
@@ -312,7 +323,7 @@ class Upload implements Responsable
      */
     public function accepts($types)
     {
-        return $this->accepts($types);
+        return $this->types($types);
     }
 
     /**
@@ -501,7 +512,7 @@ class Upload implements Responsable
     {
         return match ($this->name) {
             null, 'same' => '${fileName}',
-            'uuid' => Str::uuid(),
+            'uuid' => Str::uuid()->toString(),
             'random' => Str::random(),
             default => $this->name,
         };
@@ -523,7 +534,7 @@ class Upload implements Responsable
     /**
      * Get the policy condition options for the request.
      * 
-     * @return array<int,array<string,mixed>>
+     * @return array<int,array<int,mixed>>
      */
     protected function getOptions()
     {
@@ -539,12 +550,10 @@ class Upload implements Responsable
         }
 
         if (filled($this->getMinSize())) {
-            $options[] = \array_filter([
-                'content-length-range',
-                $this->getMinSize(),
-                $this->getMaxSize(),
-            ]);
+            $options[] = ['content-length-range', $this->getMinSize(), $this->getMaxSize()];
         }
+
+        return $options;
     }
 
     /**
@@ -615,6 +624,12 @@ class Upload implements Responsable
         // );
     }
 
+    /**
+     * Create a new response for the upload.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function toResponse($request)
     {
         $validated = $this->validate($request);
@@ -652,7 +667,7 @@ class Upload implements Responsable
     /**
      * Get the validation rules for file uploads.
      * 
-     * @return array<string,array<int,string>>
+     * @return array<string,array<int,mixed>>
      */
     protected function getValidationRules()
     {
@@ -662,12 +677,7 @@ class Upload implements Responsable
         return [
             'name' => ['required', 'string', 'max:1024'],
             'type' => ['required', new OfType($this->getTypes())],
-            'size' => \array_merge(['required', 'integer'],
-                \array_filter([
-                    $min ? "min:{$min}" : null,
-                    $max ? "max:{$max}" : null,
-                ])
-            ),
+            'size' => ['required', 'integer', 'min:'.$min, 'max:'.$max],
         ];
     }
 
