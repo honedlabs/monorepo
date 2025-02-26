@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'disk' => 's3',
 
@@ -11,5 +13,11 @@ return [
 
     'types' => [
 
-    ]
+    ],
+
+    'expires' => '+2 minutes',
+
+    'bucket' => null,
+
+    'acl' => 'public-read',
 ];

@@ -4,12 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
+use Aws\S3\PostObjectV4;
 use Aws\S3\S3Client;
 use Honed\Core\Primitive;
+use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
+use Carbon\Carbon;
 
-
-class Upload extends Primitive
+class Upload implements Responsable
 {
+    use Conditionable;
+    use Macroable;
+    use Tappable;
+
     /**
      * The disk to retrieve the S3 credentials from.
      * 
@@ -34,7 +45,7 @@ class Upload extends Primitive
     /**
      * The file size unit to use.
      * 
-     * @var string
+     * @var 'bytes'|'kilobytes'|'megabytes'|'gigabytes'
      */
     protected $unit;
 
@@ -44,6 +55,32 @@ class Upload extends Primitive
      * @var array<string>
      */
     protected $types = [];
+
+    /**
+     * The duration of the presigned URL.
+     * 
+     * @var \Carbon\Carbon|int|string|null
+     */
+    protected $duration;
+
+    /**
+     * The bucket to upload the file to.
+     * 
+     * @var string|null
+     */
+    protected $bucket;
+
+    /**
+     * The path prefix to store the file in
+     */
+    protected $prefix;
+
+    /**
+     * The ACL to use for the file.
+     * 
+     * @var string|null
+     */
+    protected $acl;
 
     /**
      * Set the disk to retrieve the S3 credentials from.
@@ -70,35 +107,35 @@ class Upload extends Primitive
     }
 
     /**
-     * Set the maximum file size to upload in bytes.
+     * Set the maximum file size to upload.
      * 
-     * @param int $size
+     * @param int $max
      * @return $this
      */
-    public function max($size)
+    public function max($max)
     {
-        $this->maxSize = $size;
+        $this->maxSize = $max;
 
         return $this;
     }
 
     /**
-     * Set the minimum file size to upload in bytes
-     * 
-     * @param int $size
-     * @return $this
-     */
-    public function min($size)
-    {
-        $this->minSize = $size;
-
-        return $this;
-    }
-
-    /**
-     * Set the minimum and maximum file size to upload in bytes.
+     * Set the minimum file size to upload.
      * 
      * @param int $min
+     * @return $this
+     */
+    public function min($min)
+    {
+        $this->minSize = $min;
+
+        return $this;
+    }
+
+    /**
+     * Set the minimum and maximum file size to upload.
+     * 
+     * @param int $size
      * @param int|null $max
      * @return $this
      */
@@ -106,7 +143,7 @@ class Upload extends Primitive
     {
         return $this->when(\is_null($max), 
             fn () => $this->max($size),
-            fn () => $this->min($size)->max($max),
+            fn () => $this->min($size)->max(type($max)->asInt()),
         );
     }
 
@@ -216,6 +253,76 @@ class Upload extends Primitive
     }
 
     /**
+     * Set the types of files to accept.
+     * 
+     * @param string|array<int,string>|\Illuminate\Support\Collection<int,string> $types
+     * @return $this
+     */
+    public function types($types)
+    {
+        if ($types instanceof Collection) {
+            $types = $types->all();
+        }
+
+        $this->types = \array_merge($this->types, Arr::wrap($types));
+
+        return $this;
+    }
+
+    /**
+     * Set the types of files to accept.
+     * 
+     * @param string|array<int,string>|\Illuminate\Support\Collection<int,string> $types
+     * @return $this
+     */
+    public function accepts($types)
+    {
+        return $this->accepts($types);
+    }
+
+    /**
+     * Set the types of files to accept to all image MIME types.
+     * 
+     * @return $this
+     */
+    public function image()
+    {
+        return $this->types('image/');
+    }
+
+    /**
+     * Set the types of files to accept to all video MIME types.
+     * 
+     * @return $this
+     */
+    public function video()
+    {
+        return $this->types('video/');
+    }
+
+    /**
+     * Set the types of files to accept to all audio MIME types.
+     * 
+     * @return $this
+     */
+    public function audio()
+    {
+        return $this->types('audio/');
+    }
+
+    /**
+     * Get the types of files to accept.
+     * 
+     * @return array<int,string>
+     */
+    public function getTypes()
+    {
+        return empty($this->types)
+            ? type(config('upload.types'))->asArray()
+            : $this->types;
+    }
+    
+    /**
      * Create a new upload instance.
      * 
      * @param string|null $disk
@@ -227,30 +334,194 @@ class Upload extends Primitive
             ->disk($disk);
     }
 
-    public function createUploadUrl(int $bytes, string $contentType)
+    /**
+     * Set the duration of the presigned URL.
+     * If an integer is provided, it will be interpreted as the number of seconds.
+     * 
+     * @param \Carbon\Carbon|int|string|null $duration
+     * @return $this
+     */
+    public function duration($duration)
     {
-        $client = $this->client();
+        $this->duration = $duration;
 
-        $command = $client->getCommand('putObject', array_filter([
-            'Bucket' => config('filesystems.disks.s3.bucket'),
-            'Key' => $key = 'tmp/'.hash('sha256', (string) Str::uuid()),
-            'ACL' => 'private',
-            'ContentType' => $contentType,
-            'ContentLength' => $bytes,
-        ]));
+        return $this;
+    }
 
-        $request = $client->createPresignedRequest($command, '+5 minutes');
+    /**
+     * Set the duration of the presigned URL.
+     * If an integer is provided, it will be interpreted as the number of seconds.
+     * 
+     * @param \Carbon\Carbon|int|string|null $expires
+     * @return $this
+     */
+    public function expires($expires)
+    {
+        $this->duration = $expires;
 
-        $uri = $request->getUri();
+        return $this;
+    }
 
-        return new SignedUrl(
-            key: $key,
-            url: $uri->getScheme().'://'.$uri->getAuthority().$uri->getPath().'?'.$uri->getQuery(),
-            headers: array_filter(array_merge($request->getHeaders(), [
-                'Content-Type' => $contentType,
-                'Cache-Control' => null,
-                'Host' => null,
-            ])),
+    /**
+     * Set the duration of the presigned URL to a number of seconds.
+     * 
+     * @param int $seconds
+     * @return $this
+     */
+    public function seconds($seconds)
+    {
+        $this->duration = \sprintf('+%d seconds', $seconds);
+
+        return $this;
+    }
+
+    /**
+     * Set the duration of the presigned URL to a number of minutes.
+     * 
+     * @param int $minutes
+     * @return $this
+     */
+    public function minutes($minutes)
+    {
+        $this->duration = \sprintf('+%d minutes', $minutes);
+
+        return $this;
+    }
+
+    /**
+     * Get the duration of the presigned URL.
+     * 
+     * @return string
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * Set the bucket to upload the file to.
+     * 
+     * @param string $bucket
+     * @return $this
+     */
+    public function bucket($bucket)
+    {
+        $this->bucket = $bucket;
+
+        return $this;
+    }
+
+    /**
+     * Get the bucket to upload the file to.
+     * 
+     * @return string
+     */
+    public function getBucket()
+    {
+        return type($this->bucket
+            ?? config('upload.bucket')
+            ?? $this->getDiskConfig('bucket')
+        )->asString();
+    }
+
+    /**
+     * Set the ACL to use for the file.
+     * 
+     * @param string $acl
+     * @return $this
+     */
+    public function acl($acl)
+    {
+        $this->acl = $acl;
+
+        return $this;
+    }
+
+    /**
+     * Get the ACL to use for the file.
+     * 
+     * @return string
+     */
+    public function getAcl()
+    {
+        return $this->acl
+            ?? type(config('upload.acl'))->asString();
+    }
+
+    protected function getFormInputs()
+    {
+        return [
+            'acl' => $this->getAcl(),
+            'key' => '${filename}',
+        ];
+    }
+
+    protected function getOptions()
+    {
+        return [
+            ['acl' => $this->getAcl()],
+            ['bucket' => $this->getBucket()],
+            ['key' => '${filename}'],
+            ['starts-with', '$Content-Type', 'image/'],
+            ['content-length-range', 0, (2 * 1024 * 1024)],
+        ];
+    }
+
+    public function toResponse($request)
+    {
+        $client = $this->getClient();
+
+        $postObject = new PostObjectV4(
+            $client, 
+            $this->getBucket(), 
+            $this->getFormInputs(), 
+            $this->getOptions(), 
+            $this->getDuration()
+        );
+
+
+        $formAttributes = $postObject->getFormAttributes();
+        
+        $formInputs = $postObject->getFormInputs();
+        
+        return response()->json([
+            'code' => 200, 
+            'attributes' => $formAttributes, 
+            'inputs' => $formInputs
+        ]);
+        // $command = $client->getCommand('putObject', array_filter([
+        //     'Bucket' => config('filesystems.disks.s3.bucket'),
+        //     'Key' => $key = 'tmp/'.hash('sha256', (string) Str::uuid()),
+        //     'ACL' => 'private',
+        //     'ContentType' => $contentType,
+        //     'ContentLength' => $bytes,
+        // ]));
+
+        // $request = $client->createPresignedRequest($command, '+5 minutes');
+
+        // $uri = $request->getUri();
+
+        // return new SignedUrl(
+        //     key: $key,
+        //     url: $uri->getScheme().'://'.$uri->getAuthority().$uri->getPath().'?'.$uri->getQuery(),
+        //     headers: array_filter(array_merge($request->getHeaders(), [
+        //         'Content-Type' => $contentType,
+        //         'Cache-Control' => null,
+        //         'Host' => null,
+        //     ])),
+        // );
+    }
+
+    /**
+     * Get a configuration value from the disk.
+     * 
+     * @param string $key
+     * @return mixed
+     */
+    protected function getDiskConfig(string $key)
+    {
+        return config(
+            \sprintf('filesystems.disks.%s.%s', $this->getDisk(), $key)
         );
     }
 
@@ -259,15 +530,13 @@ class Upload extends Primitive
      * 
      * @return \Aws\S3\S3Client
      */
-    protected function client()
+    protected function getClient()
     {
-        $key = \sprintf('filesystems.disks.%s', $this->name);
-
         return new S3Client([
-            'region' => config($key.'.region'),
+            'region' => $this->getDiskConfig('region'),
             'credentials' => [
-                'key' => config($key.'.key'),
-                'secret' => config($key.'.secret'),
+                'key' => $this->getDiskConfig('key'),
+                'secret' => $this->getDiskConfig('secret'),
             ],
         ]);
     }
