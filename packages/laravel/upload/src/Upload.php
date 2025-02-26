@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Aws\S3\S3Client;
 use Aws\S3\PostObjectV4;
 use Honed\Core\Concerns\HasRequest;
-use Honed\Core\Primitive;
+use Honed\Upload\Rules\OfType;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
@@ -17,6 +17,7 @@ use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class Upload implements Responsable
 {
@@ -531,7 +532,6 @@ class Upload implements Responsable
             ['bucket' => $this->getBucket()],
             // ['key' => '${filename}'],
             // ['starts-with', '$Content-Type', 'image/'],
-            // ['content-length-range', 0, (2 * 1024 * 1024)],
         ];
 
         if (filled($this->getTypes())) {
@@ -568,6 +568,7 @@ class Upload implements Responsable
     protected function getClient()
     {
         return new S3Client([
+            'version' => 'latest',
             'region' => $this->getDiskConfig('region'),
             'credentials' => [
                 'key' => $this->getDiskConfig('key'),
@@ -616,6 +617,8 @@ class Upload implements Responsable
 
     public function toResponse($request)
     {
+        $validated = $this->validate($request);
+        
         $object = $this->create();
 
         $formAttributes = $object->getFormAttributes();
@@ -628,5 +631,58 @@ class Upload implements Responsable
             'attributes' => $formAttributes, 
             'inputs' => $formInputs
         ]);
+    }
+
+    /**
+     * Validate the incoming request.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return array<string,mixed>
+     */
+    protected function validate($request)
+    {
+        return Validator::make(
+            $request->all(), 
+            $this->getValidationRules(),
+            [],
+            $this->getValidationAttributes(),
+        )->validate();
+    }
+
+    /**
+     * Get the validation rules for file uploads.
+     * 
+     * @return array<string,array<int,string>>
+     */
+    protected function getValidationRules()
+    {
+        $min = $this->getMinSize();
+        $max = $this->getMaxSize();
+
+        return [
+            'name' => ['required', 'string', 'max:1024'],
+            'type' => ['required', new OfType($this->getTypes())],
+            'size' => \array_merge(['required', 'integer'],
+                \array_filter([
+                    $min ? "min:{$min}" : null,
+                    $max ? "max:{$max}" : null,
+                ])
+            ),
+        ];
+    }
+
+
+    /**
+     * Get the attributes for the request.
+     * 
+     * @return array<string,string>
+     */
+    protected function getValidationAttributes()
+    {
+        return [
+            'name' => 'file name',
+            'type' => 'file type',
+            'size' => 'file size',
+        ];
     }
 }
