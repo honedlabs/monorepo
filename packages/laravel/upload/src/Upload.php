@@ -264,7 +264,7 @@ class Upload implements Responsable
     {
         /** @var int|null */
         $minSize = $this->minSize
-            ?? config('upload.size.min');
+            ?? config('upload.size.min', null);
 
         if (\is_null($minSize)) {
             return 0;
@@ -282,7 +282,7 @@ class Upload implements Responsable
     {
         /** @var int|null */
         $maxSize = $this->maxSize
-            ?? config('upload.size.max');
+            ?? config('upload.size.max', null);
 
         if (\is_null($maxSize)) {
             return PHP_INT_MAX;
@@ -372,7 +372,7 @@ class Upload implements Responsable
     public function getTypes()
     {
         return empty($this->types)
-            ? type(config('upload.types'))->asArray()
+            ? type(config('upload.types', []))->asArray()
             : $this->types;
     }
 
@@ -468,7 +468,7 @@ class Upload implements Responsable
     public function getBucket()
     {
         return type($this->bucket
-            ?? config('upload.bucket')
+            ?? config('upload.bucket', null)
             ?? $this->getDiskConfig('bucket')
         )->asString();
     }
@@ -544,7 +544,7 @@ class Upload implements Responsable
     public function getAcl()
     {
         return $this->acl
-            ?? type(config('upload.acl'))->asString();
+            ?? type(config('upload.acl', 'public-read'))->asString();
     }
 
     /**

@@ -32,7 +32,7 @@ final class UploadServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                UploadMakeCommand::class
+                UploadMakeCommand::class,
             ]);
         }
     }
