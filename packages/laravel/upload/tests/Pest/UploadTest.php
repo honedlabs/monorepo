@@ -12,8 +12,13 @@ it('tests', function () {
 it('builds', function () {
     Upload::into('s3')
         ->megabytes()
-        ->size(10, 20)
+        ->size(1, 10)
         ->image()
-        ->expires(now()->addMinutes(2))
-        ->accepts('image');
+        ->minutes(2)
+        // ->name('same')
+        // ->uuid() // name('uuid')
+        // ->random() // name('random')
+        // ->path('tmp/test')
+        // ->as(fn ($name) => 'tmp/test/'.$name)
+        ->create();
 });

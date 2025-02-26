@@ -4,22 +4,26 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
-use Aws\S3\PostObjectV4;
-use Aws\S3\S3Client;
-use Honed\Core\Primitive;
-use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Traits\Conditionable;
-use Illuminate\Support\Traits\Macroable;
-use Illuminate\Support\Traits\Tappable;
 use Carbon\Carbon;
+use Aws\S3\S3Client;
+use Aws\S3\PostObjectV4;
+use Honed\Core\Concerns\HasRequest;
+use Honed\Core\Primitive;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Traits\Tappable;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\Request;
 
 class Upload implements Responsable
 {
     use Conditionable;
     use Macroable;
     use Tappable;
+    use HasRequest;
 
     /**
      * The disk to retrieve the S3 credentials from.
@@ -72,6 +76,8 @@ class Upload implements Responsable
 
     /**
      * The path prefix to store the file in
+     * 
+     * @var string|null
      */
     protected $prefix;
 
@@ -81,6 +87,34 @@ class Upload implements Responsable
      * @var string|null
      */
     protected $acl;
+
+    /**
+     * The name of the file to be stored.
+     * 
+     * @var string|null
+     */
+    protected $name;
+
+    /**
+     * Create a new upload instance.
+     */
+    public function __construct(
+        Request $request
+    ) {
+        $this->request($request);
+    }
+
+    /**
+     * Create a new upload instance.
+     * 
+     * @param string|null $disk
+     * @return \Honed\Upload\Upload
+     */
+    public static function into($disk = 's3')
+    {
+        return resolve(static::class)
+            ->disk($disk);
+    }
 
     /**
      * Set the disk to retrieve the S3 credentials from.
@@ -321,18 +355,6 @@ class Upload implements Responsable
             ? type(config('upload.types'))->asArray()
             : $this->types;
     }
-    
-    /**
-     * Create a new upload instance.
-     * 
-     * @param string|null $disk
-     * @return \Honed\Upload\Upload
-     */
-    public static function into($disk = 's3')
-    {
-        return resolve(static::class)
-            ->disk($disk);
-    }
 
     /**
      * Set the duration of the presigned URL.
@@ -395,8 +417,16 @@ class Upload implements Responsable
      */
     public function getDuration()
     {
-        return $this->duration;
+        $duration = $this->duration;
+
+        return match (true) {
+            \is_string($duration) => $duration,
+            \is_int($duration) => \sprintf('+%d seconds', $duration),
+            $duration instanceof Carbon => \sprintf('+%d seconds', \round(\abs($duration->diffInSeconds()))),
+            default => type(config('upload.expires', '+2 minutes'))->asString(),
+        };
     }
+
 
     /**
      * Set the bucket to upload the file to.
@@ -448,6 +478,39 @@ class Upload implements Responsable
             ?? type(config('upload.acl'))->asString();
     }
 
+    /**
+     * Set the name, or method, of generating the name of the file to be stored.
+     * 
+     * @param 'same'|'uuid'|'random'|string $name
+     * @return $this
+     */
+    public function name($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the name of the file to be stored.
+     * 
+     * @return string
+     */
+    public function getName()
+    {
+        return match ($this->name) {
+            null, 'same' => '${fileName}',
+            'uuid' => Str::uuid(),
+            'random' => Str::random(),
+            default => $this->name,
+        };
+    }
+
+    /**
+     * Get the defaults for form input fields.
+     * 
+     * @return array<string,mixed>
+     */
     protected function getFormInputs()
     {
         return [
@@ -456,60 +519,32 @@ class Upload implements Responsable
         ];
     }
 
+    /**
+     * Get the policy condition options for the request.
+     * 
+     * @return array<int,array<string,mixed>>
+     */
     protected function getOptions()
     {
-        return [
+        $options = [
             ['acl' => $this->getAcl()],
             ['bucket' => $this->getBucket()],
-            ['key' => '${filename}'],
-            ['starts-with', '$Content-Type', 'image/'],
-            ['content-length-range', 0, (2 * 1024 * 1024)],
+            // ['key' => '${filename}'],
+            // ['starts-with', '$Content-Type', 'image/'],
+            // ['content-length-range', 0, (2 * 1024 * 1024)],
         ];
-    }
 
-    public function toResponse($request)
-    {
-        $client = $this->getClient();
+        if (filled($this->getTypes())) {
+            $options[] = ['starts-with', '$Content-Type', ...$this->getTypes()];
+        }
 
-        $postObject = new PostObjectV4(
-            $client, 
-            $this->getBucket(), 
-            $this->getFormInputs(), 
-            $this->getOptions(), 
-            $this->getDuration()
-        );
-
-
-        $formAttributes = $postObject->getFormAttributes();
-        
-        $formInputs = $postObject->getFormInputs();
-        
-        return response()->json([
-            'code' => 200, 
-            'attributes' => $formAttributes, 
-            'inputs' => $formInputs
-        ]);
-        // $command = $client->getCommand('putObject', array_filter([
-        //     'Bucket' => config('filesystems.disks.s3.bucket'),
-        //     'Key' => $key = 'tmp/'.hash('sha256', (string) Str::uuid()),
-        //     'ACL' => 'private',
-        //     'ContentType' => $contentType,
-        //     'ContentLength' => $bytes,
-        // ]));
-
-        // $request = $client->createPresignedRequest($command, '+5 minutes');
-
-        // $uri = $request->getUri();
-
-        // return new SignedUrl(
-        //     key: $key,
-        //     url: $uri->getScheme().'://'.$uri->getAuthority().$uri->getPath().'?'.$uri->getQuery(),
-        //     headers: array_filter(array_merge($request->getHeaders(), [
-        //         'Content-Type' => $contentType,
-        //         'Cache-Control' => null,
-        //         'Host' => null,
-        //     ])),
-        // );
+        if (filled($this->getMinSize())) {
+            $options[] = \array_filter([
+                'content-length-range',
+                $this->getMinSize(),
+                $this->getMaxSize(),
+            ]);
+        }
     }
 
     /**
@@ -538,6 +573,60 @@ class Upload implements Responsable
                 'key' => $this->getDiskConfig('key'),
                 'secret' => $this->getDiskConfig('secret'),
             ],
+        ]);
+    }
+
+    /**
+     * Create a new presigned post object.
+     * 
+     * @return \Aws\S3\PostObjectV4
+     */
+    public function create()
+    {
+        return new PostObjectV4(
+            $this->getClient(), 
+            $this->getBucket(), 
+            $this->getFormInputs(), 
+            $this->getOptions(), 
+            $this->getDuration()
+        );
+
+        // $command = $client->getCommand('putObject', array_filter([
+        //     'Bucket' => config('filesystems.disks.s3.bucket'),
+        //     'Key' => $key = 'tmp/'.hash('sha256', (string) Str::uuid()),
+        //     'ACL' => 'private',
+        //     'ContentType' => $contentType,
+        //     'ContentLength' => $bytes,
+        // ]));
+
+        // $request = $client->createPresignedRequest($command, '+5 minutes');
+
+        // $uri = $request->getUri();
+
+        // return new SignedUrl(
+        //     key: $key,
+        //     url: $uri->getScheme().'://'.$uri->getAuthority().$uri->getPath().'?'.$uri->getQuery(),
+        //     headers: array_filter(array_merge($request->getHeaders(), [
+        //         'Content-Type' => $contentType,
+        //         'Cache-Control' => null,
+        //         'Host' => null,
+        //     ])),
+        // );
+    }
+
+    public function toResponse($request)
+    {
+        $object = $this->create();
+
+        $formAttributes = $object->getFormAttributes();
+        $formInputs = $object->getFormInputs();
+
+        // event(new UploadCreated);
+        
+        return response()->json([
+            'code' => 200, 
+            'attributes' => $formAttributes, 
+            'inputs' => $formInputs
         ]);
     }
 }
