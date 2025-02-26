@@ -4,97 +4,97 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
-use Carbon\Carbon;
-use Aws\S3\S3Client;
 use Aws\S3\PostObjectV4;
+use Aws\S3\S3Client;
+use Carbon\Carbon;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Upload\Rules\OfType;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Traits\Tappable;
-use Illuminate\Support\Traits\Macroable;
-use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
 
 class Upload implements Responsable
 {
     use Conditionable;
+    use HasRequest;
     use Macroable;
     use Tappable;
-    use HasRequest;
 
     /**
      * The disk to retrieve the S3 credentials from.
-     * 
+     *
      * @var string|null
      */
     protected $disk;
 
     /**
      * The maximum file size to upload.
-     * 
+     *
      * @var int|null
      */
     protected $maxSize;
 
     /**
      * The minimum file size to upload.
-     * 
+     *
      * @var int|null
      */
     protected $minSize;
 
     /**
      * The file size unit to use.
-     * 
+     *
      * @var 'bytes'|'kilobytes'|'megabytes'|'gigabytes'|string|null
      */
     protected $unit;
 
     /**
      * The types of files to accept.
-     * 
+     *
      * @var array<string>
      */
     protected $types = [];
 
     /**
      * The duration of the presigned URL.
-     * 
+     *
      * @var \Carbon\Carbon|int|string|null
      */
     protected $duration;
 
     /**
      * The bucket to upload the file to.
-     * 
+     *
      * @var string|null
      */
     protected $bucket;
 
     /**
      * The path prefix to store the file in
-     * 
+     *
      * @var string|null
      */
-    protected $prefix;
-
-    /**
-     * The ACL to use for the file.
-     * 
-     * @var string|null
-     */
-    protected $acl;
+    protected $path;
 
     /**
      * The name of the file to be stored.
-     * 
+     *
      * @var string|null
      */
     protected $name;
+
+    /**
+     * The ACL to use for the file.
+     *
+     * @var string|null
+     */
+    protected $acl;
 
     /**
      * Create a new upload instance.
@@ -103,24 +103,33 @@ class Upload implements Responsable
         Request $request
     ) {
         $this->request($request);
+        $this->setUp();
+    }
+
+    /**
+     * Set up the upload.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        //
     }
 
     /**
      * Create a new upload instance.
-     * 
-     * @param string|null $disk
+     *
      * @return \Honed\Upload\Upload
      */
-    public static function into($disk = 's3')
+    public static function make()
     {
-        return resolve(static::class)
-            ->disk($disk);
+        return resolve(static::class);
     }
 
     /**
      * Set the disk to retrieve the S3 credentials from.
-     * 
-     * @param string $disk
+     *
+     * @param  string  $disk
      * @return $this
      */
     public function disk($disk)
@@ -132,19 +141,19 @@ class Upload implements Responsable
 
     /**
      * Get the disk to retrieve the S3 credentials from.
-     * 
+     *
      * @return string
      */
     public function getDisk()
     {
-        return $this->disk 
+        return $this->disk
             ?? type(config('upload.disk', 's3'))->asString();
     }
 
     /**
      * Set the maximum file size to upload.
-     * 
-     * @param int $max
+     *
+     * @param  int  $max
      * @return $this
      */
     public function max($max)
@@ -156,8 +165,8 @@ class Upload implements Responsable
 
     /**
      * Set the minimum file size to upload.
-     * 
-     * @param int $min
+     *
+     * @param  int  $min
      * @return $this
      */
     public function min($min)
@@ -169,14 +178,14 @@ class Upload implements Responsable
 
     /**
      * Set the minimum and maximum file size to upload.
-     * 
-     * @param int $size
-     * @param int|null $max
+     *
+     * @param  int  $size
+     * @param  int|null  $max
      * @return $this
      */
     public function size($size, $max = null)
     {
-        return $this->when(\is_null($max), 
+        return $this->when(\is_null($max),
             fn () => $this->max($size),
             fn () => $this->min($size)->max(type($max)->asInt()),
         );
@@ -184,8 +193,8 @@ class Upload implements Responsable
 
     /**
      * Set the file size unit to use.
-     * 
-     * @param 'bytes'|'kilobytes'|'megabytes'|'gigabytes'|string $unit
+     *
+     * @param  'bytes'|'kilobytes'|'megabytes'|'gigabytes'|string  $unit
      * @return $this
      */
     public function unit($unit)
@@ -197,7 +206,7 @@ class Upload implements Responsable
 
     /**
      * Set the file size unit to bytes.
-     * 
+     *
      * @return $this
      */
     public function bytes()
@@ -207,7 +216,7 @@ class Upload implements Responsable
 
     /**
      * Set the file size unit to kilobytes.
-     * 
+     *
      * @return $this
      */
     public function kilobytes()
@@ -217,7 +226,7 @@ class Upload implements Responsable
 
     /**
      * Set the file size unit to megabytes.
-     * 
+     *
      * @return $this
      */
     public function megabytes()
@@ -227,7 +236,7 @@ class Upload implements Responsable
 
     /**
      * Set the file size unit to gigabytes.
-     * 
+     *
      * @return $this
      */
     public function gigabytes()
@@ -237,7 +246,7 @@ class Upload implements Responsable
 
     /**
      * Get the file size unit to use.
-     * 
+     *
      * @return 'bytes'|'kilobytes'|'megabytes'|'gigabytes'|string
      */
     public function getUnit()
@@ -248,7 +257,7 @@ class Upload implements Responsable
 
     /**
      * Get the minimum file size to upload in bytes.
-     * 
+     *
      * @return int
      */
     public function getMinSize()
@@ -266,7 +275,7 @@ class Upload implements Responsable
 
     /**
      * Get the maximum file size to upload in bytes.
-     * 
+     *
      * @return int
      */
     public function getMaxSize()
@@ -283,9 +292,8 @@ class Upload implements Responsable
     }
 
     /**
-     * Convert the provided size into the number of bytes using the unit.
-     * 
-     * @param int $size
+     * Convert the provided size make the number of bytes using the unit.
+     *
      * @return int
      */
     protected function convertSize(int $size)
@@ -300,8 +308,8 @@ class Upload implements Responsable
 
     /**
      * Set the types of files to accept.
-     * 
-     * @param string|array<int,string>|\Illuminate\Support\Collection<int,string> $types
+     *
+     * @param  string|array<int,string>|\Illuminate\Support\Collection<int,string>  $types
      * @return $this
      */
     public function types($types)
@@ -317,8 +325,8 @@ class Upload implements Responsable
 
     /**
      * Set the types of files to accept.
-     * 
-     * @param string|array<int,string>|\Illuminate\Support\Collection<int,string> $types
+     *
+     * @param  string|array<int,string>|\Illuminate\Support\Collection<int,string>  $types
      * @return $this
      */
     public function accepts($types)
@@ -328,7 +336,7 @@ class Upload implements Responsable
 
     /**
      * Set the types of files to accept to all image MIME types.
-     * 
+     *
      * @return $this
      */
     public function image()
@@ -338,7 +346,7 @@ class Upload implements Responsable
 
     /**
      * Set the types of files to accept to all video MIME types.
-     * 
+     *
      * @return $this
      */
     public function video()
@@ -348,7 +356,7 @@ class Upload implements Responsable
 
     /**
      * Set the types of files to accept to all audio MIME types.
-     * 
+     *
      * @return $this
      */
     public function audio()
@@ -358,7 +366,7 @@ class Upload implements Responsable
 
     /**
      * Get the types of files to accept.
-     * 
+     *
      * @return array<int,string>
      */
     public function getTypes()
@@ -371,8 +379,8 @@ class Upload implements Responsable
     /**
      * Set the duration of the presigned URL.
      * If an integer is provided, it will be interpreted as the number of seconds.
-     * 
-     * @param \Carbon\Carbon|int|string|null $duration
+     *
+     * @param  \Carbon\Carbon|int|string|null  $duration
      * @return $this
      */
     public function duration($duration)
@@ -385,8 +393,8 @@ class Upload implements Responsable
     /**
      * Set the duration of the presigned URL.
      * If an integer is provided, it will be interpreted as the number of seconds.
-     * 
-     * @param \Carbon\Carbon|int|string|null $expires
+     *
+     * @param  \Carbon\Carbon|int|string|null  $expires
      * @return $this
      */
     public function expires($expires)
@@ -398,8 +406,8 @@ class Upload implements Responsable
 
     /**
      * Set the duration of the presigned URL to a number of seconds.
-     * 
-     * @param int $seconds
+     *
+     * @param  int  $seconds
      * @return $this
      */
     public function seconds($seconds)
@@ -411,8 +419,8 @@ class Upload implements Responsable
 
     /**
      * Set the duration of the presigned URL to a number of minutes.
-     * 
-     * @param int $minutes
+     *
+     * @param  int  $minutes
      * @return $this
      */
     public function minutes($minutes)
@@ -424,7 +432,7 @@ class Upload implements Responsable
 
     /**
      * Get the duration of the presigned URL.
-     * 
+     *
      * @return string
      */
     public function getDuration()
@@ -439,11 +447,10 @@ class Upload implements Responsable
         };
     }
 
-
     /**
      * Set the bucket to upload the file to.
-     * 
-     * @param string $bucket
+     *
+     * @param  string  $bucket
      * @return $this
      */
     public function bucket($bucket)
@@ -455,7 +462,7 @@ class Upload implements Responsable
 
     /**
      * Get the bucket to upload the file to.
-     * 
+     *
      * @return string
      */
     public function getBucket()
@@ -467,33 +474,32 @@ class Upload implements Responsable
     }
 
     /**
-     * Set the ACL to use for the file.
-     * 
-     * @param string $acl
+     * Set the path to store the file at.
+     *
+     * @param  string  $path
      * @return $this
      */
-    public function acl($acl)
+    public function path($path)
     {
-        $this->acl = $acl;
+        $this->path = $path;
 
         return $this;
     }
 
     /**
-     * Get the ACL to use for the file.
-     * 
-     * @return string
+     * Get the path to store the file at.
+     *
+     * @return string|null
      */
-    public function getAcl()
+    public function getPath()
     {
-        return $this->acl
-            ?? type(config('upload.acl'))->asString();
+        return $this->path;
     }
 
     /**
      * Set the name, or method, of generating the name of the file to be stored.
-     * 
-     * @param 'same'|'uuid'|'random'|string $name
+     *
+     * @param  'same'|'uuid'|'random'|string  $name
      * @return $this
      */
     public function name($name)
@@ -505,44 +511,68 @@ class Upload implements Responsable
 
     /**
      * Get the name of the file to be stored.
-     * 
-     * @return string
+     *
+     * @return string|null
      */
-    public function getName()
+    public function getGeneratedName()
     {
         return match ($this->name) {
-            null, 'same' => '${fileName}',
             'uuid' => Str::uuid()->toString(),
             'random' => Str::random(),
-            default => $this->name,
+            default => null,
         };
     }
 
     /**
+     * Set the ACL to use for the file.
+     *
+     * @param  string  $acl
+     * @return $this
+     */
+    public function acl($acl)
+    {
+        $this->acl = $acl;
+
+        return $this;
+    }
+
+    /**
+     * Get the ACL to use for the file.
+     *
+     * @return string
+     */
+    public function getAcl()
+    {
+        return $this->acl
+            ?? type(config('upload.acl'))->asString();
+    }
+
+    /**
      * Get the defaults for form input fields.
-     * 
+     *
+     * @param  string  $key
      * @return array<string,mixed>
      */
-    protected function getFormInputs()
+    protected function getFormInputs($key)
     {
         return [
             'acl' => $this->getAcl(),
-            'key' => '${filename}',
+            'key' => $key,
         ];
     }
 
     /**
      * Get the policy condition options for the request.
-     * 
-     * @return array<int,array<int,mixed>>
+     *
+     * @param  string  $key
+     * @return array<int,array<int|string,mixed>>
      */
-    protected function getOptions()
+    protected function getOptions($key)
     {
         $options = [
             ['acl' => $this->getAcl()],
             ['bucket' => $this->getBucket()],
-            // ['key' => '${filename}'],
-            // ['starts-with', '$Content-Type', 'image/'],
+            ['$key' => $key],
         ];
 
         if (filled($this->getTypes())) {
@@ -558,8 +588,7 @@ class Upload implements Responsable
 
     /**
      * Get a configuration value from the disk.
-     * 
-     * @param string $key
+     *
      * @return mixed
      */
     protected function getDiskConfig(string $key)
@@ -571,7 +600,7 @@ class Upload implements Responsable
 
     /**
      * Get the S3 client to use for uploading files.
-     * 
+     *
      * @return \Aws\S3\S3Client
      */
     protected function getClient()
@@ -587,77 +616,15 @@ class Upload implements Responsable
     }
 
     /**
-     * Create a new presigned post object.
-     * 
-     * @return \Aws\S3\PostObjectV4
-     */
-    public function create()
-    {
-        return new PostObjectV4(
-            $this->getClient(), 
-            $this->getBucket(), 
-            $this->getFormInputs(), 
-            $this->getOptions(), 
-            $this->getDuration()
-        );
-
-        // $command = $client->getCommand('putObject', array_filter([
-        //     'Bucket' => config('filesystems.disks.s3.bucket'),
-        //     'Key' => $key = 'tmp/'.hash('sha256', (string) Str::uuid()),
-        //     'ACL' => 'private',
-        //     'ContentType' => $contentType,
-        //     'ContentLength' => $bytes,
-        // ]));
-
-        // $request = $client->createPresignedRequest($command, '+5 minutes');
-
-        // $uri = $request->getUri();
-
-        // return new SignedUrl(
-        //     key: $key,
-        //     url: $uri->getScheme().'://'.$uri->getAuthority().$uri->getPath().'?'.$uri->getQuery(),
-        //     headers: array_filter(array_merge($request->getHeaders(), [
-        //         'Content-Type' => $contentType,
-        //         'Cache-Control' => null,
-        //         'Host' => null,
-        //     ])),
-        // );
-    }
-
-    /**
-     * Create a new response for the upload.
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function toResponse($request)
-    {
-        $validated = $this->validate($request);
-        
-        $object = $this->create();
-
-        $formAttributes = $object->getFormAttributes();
-        $formInputs = $object->getFormInputs();
-
-        // event(new UploadCreated);
-        
-        return response()->json([
-            'code' => 200, 
-            'attributes' => $formAttributes, 
-            'inputs' => $formInputs
-        ]);
-    }
-
-    /**
      * Validate the incoming request.
-     * 
-     * @param \Illuminate\Http\Request $request
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return array<string,mixed>
      */
     protected function validate($request)
     {
         return Validator::make(
-            $request->all(), 
+            $request->all(),
             $this->getValidationRules(),
             [],
             $this->getValidationAttributes(),
@@ -666,7 +633,7 @@ class Upload implements Responsable
 
     /**
      * Get the validation rules for file uploads.
-     * 
+     *
      * @return array<string,array<int,mixed>>
      */
     protected function getValidationRules()
@@ -681,10 +648,9 @@ class Upload implements Responsable
         ];
     }
 
-
     /**
      * Get the attributes for the request.
-     * 
+     *
      * @return array<string,string>
      */
     protected function getValidationAttributes()
@@ -694,5 +660,60 @@ class Upload implements Responsable
             'type' => 'file type',
             'size' => 'file size',
         ];
+    }
+
+    /**
+     * Create a signed upload URL response.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function create()
+    {
+        return $this->toResponse($this->getRequest());
+    }
+
+    /**
+     * Create a signed upload URL response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toResponse($request)
+    {
+        /**
+         * @var array{name:string,type:string,size:int}
+         */
+        $validated = $this->validate($request);
+
+        $key = $this->buildStorageKey($validated['name']);
+
+        $postObject = new PostObjectV4(
+            $this->getClient(),
+            $this->getBucket(),
+            $this->getFormInputs($key),
+            $this->getOptions($key),
+            $this->getDuration()
+        );
+
+        return response()->json([
+            'code' => 200,
+            'attributes' => $postObject->getFormAttributes(),
+            'inputs' => $postObject->getFormInputs(),
+        ]);
+    }
+
+    /**
+     * Build the storage key path for the uploaded file.
+     *
+     * @param  string  $filename
+     * @return string
+     */
+    protected function buildStorageKey($filename)
+    {
+        $prefix = \rtrim($this->getPath() ?? '', '/').'/';
+        $name = \pathinfo($filename, \PATHINFO_FILENAME);
+        $extension = \pathinfo($filename, \PATHINFO_EXTENSION);
+
+        return $prefix.($this->getGeneratedName() ?? $name).'.'.$extension;
     }
 }

@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Honed\Upload\Rules;
 
 use Closure;
-use Illuminate\Support\Str;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Str;
 
 final class OfType implements ValidationRule
 {
     /**
-     * @param array<int, string> $types
+     * @param  array<int, string>  $types
      */
     public function __construct(
         protected array $types
-    ) { }
+    ) {}
 
     /**
      * Run the validation rule.
@@ -24,8 +24,13 @@ final class OfType implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        if (empty($this->types)) {
+            return;
+        }
+
         if (! \is_string($value)) {
             $fail('The :attribute must be a string.');
+
             return;
         }
 

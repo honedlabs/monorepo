@@ -5,28 +5,28 @@ declare(strict_types=1);
 use Honed\Upload\Upload;
 
 it('has disk', function () {
-    expect(Upload::into())
+    expect(Upload::make())
         ->getDisk()->toBe('s3')
         ->disk('s3.key')->toBeInstanceOf(Upload::class)
         ->getDisk()->toBe('s3.key');
 });
 
 it('has max size', function () {
-    expect(Upload::into())
+    expect(Upload::make())
         ->getMaxSize()->toBe(PHP_INT_MAX)
         ->max(1000)->toBeInstanceOf(Upload::class)
         ->getMaxSize()->toBe(1000);
 });
 
 it('has min size', function () {
-    expect(Upload::into())
+    expect(Upload::make())
         ->getMinSize()->toBe(0)
         ->min(1000)->toBeInstanceOf(Upload::class)
         ->getMinSize()->toBe(1000);
 });
 
 it('has sizes', function () {
-    expect(Upload::into())
+    expect(Upload::make())
         ->size(1000)->toBeInstanceOf(Upload::class)
         ->getMinSize()->toBe(0)
         ->getMaxSize()->toBe(1000)
@@ -36,7 +36,7 @@ it('has sizes', function () {
 });
 
 it('has unit', function () {
-    expect(Upload::into())
+    expect(Upload::make())
         ->unit('petabytes')->toBeInstanceOf(Upload::class)
         ->getUnit()->toBe('petabytes')
         ->bytes()->toBeInstanceOf(Upload::class)
@@ -50,7 +50,7 @@ it('has unit', function () {
 });
 
 it('has types', function () {
-    expect(Upload::into())
+    expect(Upload::make())
         ->types('image/png')->toBeInstanceOf(Upload::class)
         ->getTypes()->toEqual(['image/png'])
         ->accepts('image/svg+xml')->toBeInstanceOf(Upload::class)
@@ -66,7 +66,7 @@ it('has types', function () {
 it('has duration', function () {
     $fn = fn ($d) => \sprintf('+%d seconds', $d);
 
-    expect(Upload::into())
+    expect(Upload::make())
         ->duration(1)->toBeInstanceOf(Upload::class)
         ->getDuration()->toBe($fn(1))
         ->expires(1)->toBeInstanceOf(Upload::class)
@@ -82,38 +82,14 @@ it('has duration', function () {
 });
 
 it('has bucket', function () {
-    expect(Upload::into())
+    expect(Upload::make())
         ->bucket('my-bucket')->toBeInstanceOf(Upload::class)
         ->getBucket()->toBe('my-bucket');
 });
 
 it('has acl', function () {
-    expect(Upload::into())
+    expect(Upload::make())
         ->getAcl()->toBe('public-read')
         ->acl('private-read')->toBeInstanceOf(Upload::class)
         ->getAcl()->toBe('private-read');
 });
-
-// it('has name', function () {
-//     expect(Upload::into())
-//         ->getName()->toBe('${fileName}')
-//         ->name('my-name')->toBeInstanceOf(Upload::class)
-//         ->getName()->toBe('my-name');
-// });
-
-
-
-
-// it('builds', function () {
-//     Upload::into('s3')
-//         ->megabytes()
-//         ->size(1, 10)
-//         ->image()
-//         ->minutes(2)
-//         // ->name('same')
-//         // ->uuid() // name('uuid')
-//         // ->random() // name('random')
-//         // ->path('tmp/test')
-//         // ->as(fn ($name) => 'tmp/test/'.$name)
-//         ->create();
-// });
