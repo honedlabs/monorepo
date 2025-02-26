@@ -62,6 +62,7 @@ return [
     | This will be used to validate the expiration time of the request to the
     | upload endpoint.
     */
+
     'expires' => '+2 minutes',
 
     /*
@@ -73,5 +74,6 @@ return [
     | set the ACL for the uploaded file. Typically you will not need to change
     | this, but you can if you need to.
     */
+
     'acl' => 'public-read',
 ];
