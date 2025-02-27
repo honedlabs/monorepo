@@ -31,7 +31,7 @@ trait Allowable
      */
     public function isAllowed($parameters = [], $typed = []): bool
     {
-        $evaluated = $this->evaluate($this->allow, $parameters, $typed);
+        $evaluated = (bool) $this->evaluate($this->allow, $parameters, $typed);
 
         $this->allow = $evaluated;
 
