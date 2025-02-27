@@ -44,6 +44,7 @@ trait HasIcon
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
+     * @return string|\Honed\Core\Contracts\Iconable|null
      */
     public function resolveIcon(array $parameters = [], array $typed = []): ?string
     {

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
+use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasScope;
-
-class ScopeTest
-{
-    use HasScope;
-}
+use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
-    $this->test = new ScopeTest;
+    $this->test = new class
+    {
+        use HasScope;
+    };
     $this->param = 'scope';
 });
 
@@ -21,7 +21,7 @@ it('is null by default', function () {
 
 it('sets', function () {
     expect($this->test->scope($this->param))
-        ->toBeInstanceOf(ScopeTest::class)
+        ->toBe($this->test)
         ->hasScope()->toBeTrue();
 });
 
@@ -37,11 +37,24 @@ it('formats', function () {
         ->hasScope()->toBeFalse();
 
     expect($this->test->scope($this->param))
-        ->formatScope('test')->toBe('scope[test]')
+        ->formatScope('test')->toBe('scope{test}')
         ->hasScope()->toBeTrue();
 });
 
 it('decodes', function () {
     expect($this->test->scope($this->param))
-        ->decodeScope('scope[test]')->toBe('test');
+        ->decodeScope('scope{test}')->toBe('test');
+});
+
+it('handles requests', function () {
+    $test = new class
+    {
+        use HasRequest;
+        use HasScope;
+    };
+    $request = Request::create('?'.$this->param.'{param}=test');
+
+    expect($test->request($request)->scope($this->param))
+        ->getQueryParameter($test->formatScope('param'))
+        ->toBe('test');
 });

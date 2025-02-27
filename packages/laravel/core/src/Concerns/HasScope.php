@@ -50,7 +50,7 @@ trait HasScope
             return $value;
         }
 
-        return \sprintf('%s[%s]', $this->getScope(), $value);
+        return \sprintf('%s{%s}', $this->getScope(), $value);
     }
 
     /**
@@ -59,8 +59,8 @@ trait HasScope
     public function decodeScope(string $value): string
     {
         return \str($value)
-            ->afterLast('[')
-            ->beforeLast(']')
+            ->afterLast('{')
+            ->beforeLast('}')
             ->toString();
     }
 }

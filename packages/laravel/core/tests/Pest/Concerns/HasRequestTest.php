@@ -3,12 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Core\Concerns\HasRequest;
-use Honed\Core\Tests\Stubs\Product;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Request as RequestFacade;
-
-use function Pest\Laravel\get;
 
 class RequestTest
 {
@@ -31,34 +26,18 @@ it('gets', function () {
         ->getRequest()->toBe($this->request);
 });
 
-it('has named parameters', function (string $name, string $type) {
-    $p = product();
+it('gets query parameter', function ($key, $value) {
+    $param = 'param';
 
-    get(route('products.show', $p))
-        ->assertOk();
-
-    $this->test->request(RequestFacade::instance());
-
-    expect($this->test->resolveRequestClosureDependencyForEvaluationByName($name))
-        ->{0}->toBeInstanceOf($type);
+    $request = RequestFacade::create('?'.$param.$key.'='.$value);
+    expect($this->test)
+        ->request($request)
+        ->getQueryParameter($param)->toBe($value);
 })->with([
-    ['request', Request::class],
-    ['route', Route::class],
-    ['product', Product::class],
-]);
-
-it('has typed parameters', function (string $type) {
-    $p = product();
-
-    get(route('products.show', $p))
-        ->assertOk();
-
-    $this->test->request(RequestFacade::instance());
-
-    expect($this->test->resolveRequestClosureDependencyForEvaluationByType($type))
-        ->{0}->toBeInstanceOf($type);
-})->with([
-    [Request::class],
-    [Route::class],
-    [Product::class],
+    ['', 'value'],
+    ['[]', 'value'],
+    ['[][]', 'value'],
+    ['[1]', 'value'],
+    ['[key]', 'value'],
+    ['[key][1]', 'value'],
 ]);
