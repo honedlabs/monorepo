@@ -26,6 +26,7 @@ jobs:
           - nav
           - refine
           - table
+          - upload
 
     steps:
       - name: Checkout
