@@ -75,7 +75,7 @@ class Filter extends Refiner
     }
 
     /**
-     * Apply the request to the builder.
+     * Filter the builder using the request.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  \Illuminate\Http\Request  $request
