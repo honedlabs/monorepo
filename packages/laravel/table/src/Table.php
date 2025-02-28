@@ -11,7 +11,6 @@ use Honed\Core\Concerns\Encodable;
 use Honed\Refine\Refine;
 use Honed\Refine\Searches\Search;
 use Honed\Table\Columns\Column;
-use Honed\Table\Concerns\HasTableBindings;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -25,15 +24,14 @@ use Illuminate\Support\Facades\App;
 class Table extends Refine implements UrlRoutable
 {
     use Concerns\HasColumns;
-    use Concerns\HasEndpoint;
-    use Concerns\HasModifier;
     use Concerns\HasRecords;
     use Concerns\HasResource;
     use Concerns\HasToggle;
+    use HasParameterNames;
     use Encodable;
     use HasActions;
     use HasParameterNames;
-    use HasTableBindings;
+    use Concerns\HasTableBindings;
 
     /**
      * A unique identifier column for the table.
@@ -43,13 +41,40 @@ class Table extends Refine implements UrlRoutable
     protected $key;
 
     /**
+     * An optional closure to modify the builder before it is refined.
+     *
+     * @var \Closure|null
+     */
+    protected $modifier;
+
+    /**
+     * The endpoint to be used to handle table actions.
+     *
+     * @var string|null
+     */
+    protected $endpoint;
+
+    /**
+     * The table records.
+     *
+     * @var array<int,array<string,mixed>>
+     */
+    protected $records = [];
+
+    /**
+     * The pagination data of the table.
+     *
+     * @var array<string,mixed>
+     */
+    protected $paginationData = [];
+
+    /**
      * Get the unique identifier key for table records.
      *
      * @return string
-     *
-     * @throws \RuntimeException When no key is defined
+     * @throws \RuntimeException
      */
-    public function getKey()
+    public function getRecordKey()
     {
         $key = $this->key
             ?? $this->getKeyColumn()?->getName();
@@ -70,16 +95,58 @@ class Table extends Refine implements UrlRoutable
     public function key($key)
     {
         $this->key = $key;
+        return $this;
+    }
+
+    /**
+     * Set the resource modifier callback.
+     *
+     * @param  \Closure|null  $modifier
+     * @return $this
+     */
+    public function modifier($modifier)
+    {
+        $this->modifier = $modifier;
 
         return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Get the resource modifier.
+     *
+     * @return \Closure|null
      */
-    protected function getFallbackSortsKey()
+    public function getModifier()
     {
-        return type(config('table.config.sorts', 'sort'))->asString();
+        return $this->modifier;
+    }
+
+    /**
+     * Get the endpoint to be used for table actions.
+     *
+     * @return string
+     */
+    public function getEndpoint()
+    {
+        if (isset($this->endpoint)) {
+            return $this->endpoint;
+        }
+
+        if (\method_exists($this, 'endpoint')) {
+            return $this->endpoint();
+        }
+
+        return $this->getFallbackEndpoint();
+    }
+
+    /**
+     * Get the fallback endpoint to be used for table actions.
+     *
+     * @return string
+     */
+    public function getFallbackEndpoint()
+    {
+        return type(config('table.endpoint', '/actions'))->asString();
     }
 
     /**
@@ -104,6 +171,18 @@ class Table extends Refine implements UrlRoutable
     protected function getFallbackCanMatch()
     {
         return (bool) config('table.matches', false);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBuilder()
+    {
+        $this->builder ??= $this->createBuilder(
+            $this->getResource()
+        );
+
+        return parent::getBuilder();
     }
 
     /**
@@ -156,6 +235,25 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
+     * Retrieve the records from the underlying builder resource.
+     *
+     */
+    protected function retrieveRecords()
+    {
+        $builder = $this->getBuilder();
+        
+        [$records, $this->paginationData] = $this->paginateRecords($builder);
+
+        return match (true) {
+            static::isLengthAware($paginator) => $this->lengthAwarePaginateRecords($builder),
+            static::isSimple($paginator) => $this->simplePaginateRecords($builder),
+            static::isCursor($paginator) => $this->cursorPaginateRecords($builder),
+            static::isCollection($paginator) => $this->collectRecords($builder),
+            default => static::throwInvalidPaginatorException($paginator),
+        };
+    }
+
+    /**
      * Build the table using the given request.
      *
      * @return $this
@@ -186,21 +284,9 @@ class Table extends Refine implements UrlRoutable
 
         // Retrieved the records, generate metadata and complete the
         // table pipeline.
-        $this->formatAndPaginate($columns);
+        $this->retrieveRecords($columns);
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBuilder()
-    {
-        $this->builder ??= $this->createBuilder(
-            $this->getResource()
-        );
-
-        return parent::getBuilder();
     }
 
     /**
@@ -213,10 +299,10 @@ class Table extends Refine implements UrlRoutable
         return \array_merge(parent::toArray(), [
             'id' => $this->getRouteKey(),
             'records' => $this->getRecords(),
-            'paginator' => $this->getMeta(),
-            'columns' => $this->getColumns(),
-            'recordsPerPage' => $this->getPages(),
-            'toggleable' => $this->canToggle(),
+            'paginator' => $this->getPaginationData(),
+            'columns' => $this->columnsToArray(),
+            'recordsPerPage' => $this->recordsPerPageToArray(),
+            'toggleable' => $this->isToggleable(),
             'actions' => $this->actionsToArray(),
         ]);
     }
@@ -228,7 +314,7 @@ class Table extends Refine implements UrlRoutable
     {
         return \array_merge(parent::configToArray(), [
             'endpoint' => $this->getEndpoint(),
-            'record' => $this->getKey(),
+            'record' => $this->getRecordKey(),
             'records' => $this->getRecordsKey(),
             'columns' => $this->getColumnsKey(),
             'pages' => $this->getPagesKey(),

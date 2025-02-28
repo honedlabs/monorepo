@@ -7,10 +7,8 @@ namespace Honed\Table\Concerns;
 use Honed\Action\Concerns\HasParameterNames;
 use Honed\Action\InlineAction;
 use Honed\Table\Columns\Column;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 trait HasRecords
@@ -20,18 +18,92 @@ trait HasRecords
     use Support\HasPaginator;
 
     /**
-     * The records of the table retrieved from the resource.
+     * The query parameter for the page number.
      *
-     * @var array<int,mixed>|null
+     * @var string|null
      */
-    protected $records = null;
+    protected $pagesKey;
 
     /**
-     * The pagination metadata of the table.
+     * The query parameter for the number of records to show per page.
      *
-     * @var array<string,mixed>
+     * @var string|null
      */
-    protected $meta = [];
+    protected $recordsKey;
+
+    /**
+     * Set the query parameter for the page number.
+     *
+     * @param  string  $pagesKey
+     * @return $this
+     */
+    public function pagesKey($pagesKey)
+    {
+        $this->pagesKey = $pagesKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the query parameter for the page number.
+     * 
+     * @return string
+     */
+    public function getPagesKey()
+    {
+        if (isset($this->pagesKey)) {
+            return $this->pagesKey;
+        }
+
+        return $this->getFallbackPagesKey();
+    }
+
+    /**
+     * Get the query parameter for the page number.
+     * 
+     * @return string
+     */
+    protected function getFallbackPagesKey()
+    {
+        return type(config('table.config.pages', 'page'))->asString();
+    }
+
+    /**
+     * Set the query parameter for the number of records to show per page.
+     *
+     * @param  string  $recordsKey
+     * @return $this
+     */
+    public function recordsKey($recordsKey)
+    {
+        $this->recordsKey = $recordsKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the query parameter for the number of records to show per page.
+     *
+     * @return string
+     */
+    public function getRecordsKey()
+    {
+        if (isset($this->recordsKey)) {
+            return $this->recordsKey;
+        }
+
+        return $this->getFallbackRecordsKey();
+    }
+
+    /**
+     * Get the query parameter for the number of records to show per page.
+     * 
+     * @return string
+     */
+    protected function getFallbackRecordsKey()
+    {
+        return type(config('table.config.records', 'rows'))->asString();
+    }
 
     /**
      * Get the records of the table.
@@ -44,21 +116,13 @@ trait HasRecords
     }
 
     /**
-     * Determine if the table has records.
-     */
-    public function hasRecords(): bool
-    {
-        return ! \is_null($this->records);
-    }
-
-    /**
      * Get the meta data of the table.
      *
      * @return array<string,mixed>
      */
-    public function getMeta()
+    public function getPaginationData()
     {
-        return $this->meta;
+        return $this->paginationData;
     }
 
     /**
@@ -67,7 +131,7 @@ trait HasRecords
      * @param  array<int,\Honed\Table\Columns\Column>  $activeColumns
      * @return void
      */
-    public function formatAndPaginate($activeColumns)
+    public function retrieveRecords($activeColumns)
     {
         if ($this->hasRecords()) {
             return;
@@ -129,12 +193,13 @@ trait HasRecords
 
         $actions = collect($this->getInlineActions())
             ->filter(fn (InlineAction $action) => $action->isAllowed($named, $typed))
-            ->map(fn (InlineAction $action) => $action->resolve($named, $typed)->toArray())
-            ->all();
+            ->map(fn (InlineAction $action) => $action->resolve($named, $typed))
+            ->values()
+            ->toArray();
 
         $formatted = collect($columns)
             ->mapWithKeys(fn (Column $column) => $this->formatColumn($column, $record))
-            ->all();
+            ->toArray();
 
         return \array_merge($formatted, ['actions' => $actions]);
     }

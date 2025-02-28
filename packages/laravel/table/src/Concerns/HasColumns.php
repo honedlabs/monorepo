@@ -140,4 +140,17 @@ trait HasColumns
             static fn (Column $column): bool => $column->isKey()
         );
     }
+
+    /**
+     * Get the columns as an array.
+     *
+     * @return array<string,mixed>
+     */
+    public function columnsToArray()
+    {
+        return \array_map(
+            static fn (Column $column) => $column->toArray(),
+            $this->getColumns()
+        );
+    }
 }
