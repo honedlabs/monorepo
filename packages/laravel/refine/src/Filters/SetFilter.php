@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Honed\Refine\Filters;
 
 use Honed\Refine\Filters\Concerns\Option;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class SetFilter extends Filter
 {
@@ -16,18 +14,18 @@ class SetFilter extends Filter
     /**
      * {@inheritdoc}
      */
-    public function setUp(): void
+    public function setUp()
     {
         $this->type('set');
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function getUniqueKey()
     {
-        return \sprintf('%s.%s', 
-            parent::getUniqueKey(), 
+        return \sprintf('%s.%s',
+            parent::getUniqueKey(),
             $this->isMultiple() ? 'multiple' : 'single'
         );
     }
@@ -35,7 +33,7 @@ class SetFilter extends Filter
     /**
      * {@inheritdoc}
      */
-    public function isActive(): bool
+    public function isActive()
     {
         if (! $this->isMultiple()) {
             return parent::isActive();
@@ -51,7 +49,7 @@ class SetFilter extends Filter
     /**
      * {@inheritdoc}
      */
-    public function apply(Builder $builder, Request $request): bool
+    public function apply($builder, $request)
     {
         $rawValue = $this->getValueFromRequest($request);
 
@@ -99,10 +97,14 @@ class SetFilter extends Filter
     }
 
     /**
+     * Handle the case where the filter is a multiple filter.
+     *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  array<int,string|int|float>  $value
+     * @param  string  $property
+     * @return void
      */
-    private function handleMultiple(Builder $builder, array $value, string $property): void
+    private function handleMultiple($builder, $value, $property)
     {
         $column = $builder->qualifyColumn($property);
 
@@ -116,7 +118,7 @@ class SetFilter extends Filter
     /**
      * {@inheritdoc}
      */
-    public function toArray(): array
+    public function toArray()
     {
         return \array_merge(parent::toArray(), [
             'multiple' => $this->isMultiple(),
@@ -125,16 +127,16 @@ class SetFilter extends Filter
     }
 
     /**
+     * {@inheritdoc}
+     *
      * @return array<int,string|int|float>|string|int|float|null
      */
-    public function getValueFromRequest(Request $request): mixed
+    public function getValueFromRequest($request)
     {
         $value = parent::getValueFromRequest($request);
 
         if (! $this->isMultiple()) {
-            /**
-             * @var string|int|float|null $value
-             */
+            /** @var string|int|float|null $value */
             return $value;
         }
 

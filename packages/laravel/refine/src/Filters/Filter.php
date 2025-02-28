@@ -67,7 +67,7 @@ class Filter extends Refiner
     /**
      * {@inheritdoc}
      */
-    public function toArray(): array
+    public function toArray()
     {
         return \array_merge(parent::toArray(), [
             'value' => $this->getValue(),
@@ -75,15 +75,15 @@ class Filter extends Refiner
     }
 
     /**
-     * Apply the filter to the builder.
+     * Apply the request to the builder.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
      */
-    public function apply(Builder $builder, Request $request): bool
+    public function apply($builder, $request)
     {
-        /**
-         * @var string|int|float|null
-         */
+        /** @var string|int|float|null */
         $value = $this->getValueFromRequest($request);
 
         $this->value($value);
@@ -101,11 +101,14 @@ class Filter extends Refiner
     }
 
     /**
-     * Execute the filter as a query on the builder.
+     * Add the filter query scope to the builder.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  mixed  $value
+     * @param  string  $property
+     * @return void
      */
-    public function handle(Builder $builder, mixed $value, string $property): void
+    public function handle($builder, $value, $property)
     {
         $column = $builder->qualifyColumn($property);
 
@@ -148,17 +151,20 @@ class Filter extends Refiner
     /**
      * Retrieve the filter value from the request.
      *
-     * @return string|int|float|null
+     * @param  \Illuminate\Http\Request  $request
+     * @return string|int|float|bool|null
      */
-    public function getValueFromRequest(Request $request): mixed
+    public function getValueFromRequest($request)
     {
         return $request->input($this->getParameter()); // @phpstan-ignore-line
     }
 
     /**
      * Determine if the filter is active.
+     *
+     * @return bool
      */
-    public function isActive(): bool
+    public function isActive()
     {
         return $this->hasValue();
     }
@@ -166,9 +172,10 @@ class Filter extends Refiner
     /**
      * Set the mode for the filter.
      *
+     * @param  string  $mode
      * @return $this
      */
-    public function mode(string $mode): static
+    public function mode($mode)
     {
         $this->mode = $mode;
 
@@ -180,7 +187,7 @@ class Filter extends Refiner
      *
      * @return $this
      */
-    public function exact(): static
+    public function exact()
     {
         return $this->mode(self::Exact);
     }
@@ -190,7 +197,7 @@ class Filter extends Refiner
      *
      * @return $this
      */
-    public function like(): static
+    public function like()
     {
         return $this->mode(self::Like);
     }
@@ -200,7 +207,7 @@ class Filter extends Refiner
      *
      * @return $this
      */
-    public function startsWith(): static
+    public function startsWith()
     {
         return $this->mode(self::StartsWith);
     }
@@ -210,7 +217,7 @@ class Filter extends Refiner
      *
      * @return $this
      */
-    public function endsWith(): static
+    public function endsWith()
     {
         return $this->mode(self::EndsWith);
     }
@@ -218,9 +225,10 @@ class Filter extends Refiner
     /**
      * Set the operator for the filter.
      *
+     * @param  string  $operator
      * @return $this
      */
-    public function operator(string $operator): static
+    public function operator($operator)
     {
         $this->operator = $operator;
 
@@ -232,7 +240,7 @@ class Filter extends Refiner
      *
      * @return $this
      */
-    public function not(): static
+    public function not()
     {
         return $this->operator(self::Not);
     }
@@ -242,7 +250,7 @@ class Filter extends Refiner
      *
      * @return $this
      */
-    public function gt(): static
+    public function gt()
     {
         return $this->operator(self::GreaterThan);
     }
@@ -252,23 +260,27 @@ class Filter extends Refiner
      *
      * @return $this
      */
-    public function lt(): static
+    public function lt()
     {
         return $this->operator(self::LessThan);
     }
 
     /**
      * Get the mode for the filter.
+     *
+     * @return string
      */
-    public function getMode(): string
+    public function getMode()
     {
         return $this->mode;
     }
 
     /**
      * Get the operator for the filter.
+     *
+     * @return string
      */
-    public function getOperator(): string
+    public function getOperator()
     {
         return $this->operator;
     }
