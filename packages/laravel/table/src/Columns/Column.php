@@ -99,12 +99,12 @@ class Column extends Primitive
             'label' => $this->getLabel(),
             'type' => $this->getType(),
             'hidden' => $this->isHidden(),
-            'icon' => $this->getIcon(),
-            'toggleable' => $this->isToggleable(),
             'active' => $this->isActive(),
-            'sort' => $this->isSortable() ? $this->sortToArray() : null,
+            'toggleable' => $this->isToggleable(),
+            'icon' => $this->getIcon(),
             'class' => $this->getClass(),
             'meta' => $this->getMeta(),
+            'sort' => $this->isSortable() ? $this->sortToArray() : null,
         ];
     }
 }

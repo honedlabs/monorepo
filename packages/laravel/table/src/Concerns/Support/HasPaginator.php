@@ -4,37 +4,46 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns\Support;
 
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Pagination\CursorPaginator;
-use Illuminate\Pagination\LengthAwarePaginator;
-
 trait HasPaginator
 {
     /**
      * The paginator to use for the table.
      *
-     * @var 'cursor'|'simple'|'length-aware'|'none'|string|null
+     * @var 'cursor'|'simple'|'length-aware'|'collection'|string|null
      */
     protected $paginator;
 
     /**
      * Retrieve the default paginator for the table.
      *
-     * @return 'cursor'|'simple'|'length-aware'|'none'|string
+     * @return 'cursor'|'simple'|'length-aware'|'collection'|string
      */
-    public function getPaginator(): string
+    public function getPaginator()
     {
         if (isset($this->paginator)) {
             return $this->paginator;
         }
 
+        return $this->getFallbackPaginator();
+    }
+
+    /**
+     * Get the fallback paginator for the table.
+     *
+     * @return 'cursor'|'simple'|'length-aware'|'collection'|string
+     */
+    protected function getFallbackPaginator()
+    {
         return type(config('table.paginator', 'length-aware'))->asString();
     }
 
     /**
      * Determine if the paginator is a length-aware paginator.
+     * 
+     * @param string
+     * @return bool
      */
-    protected static function isLengthAware(string $paginator): bool
+    protected static function isLengthAware($paginator)
     {
         return \in_array($paginator, [
             'length-aware',
@@ -45,8 +54,11 @@ trait HasPaginator
 
     /**
      * Determine if the paginator is a simple paginator.
+     * 
+     * @param string
+     * @return bool
      */
-    protected static function isSimple(string $paginator): bool
+    protected static function isSimple($paginator)
     {
         return \in_array($paginator, [
             'simple',
@@ -57,8 +69,11 @@ trait HasPaginator
 
     /**
      * Determine if the paginator is a cursor paginator.
+     * 
+     * @param string
+     * @return bool
      */
-    protected static function isCursor(string $paginator): bool
+    protected static function isCursor($paginator)
     {
         return \in_array($paginator, [
             'cursor',
@@ -68,10 +83,12 @@ trait HasPaginator
     }
 
     /**
-     * Determine if the paginator is a collection, indicating no
-     * pagination is to be applied.
+     * Determine if the paginator is a collection.
+     * 
+     * @param string
+     * @return bool
      */
-    protected static function isCollection(string $paginator): bool
+    protected static function isCollection($paginator)
     {
         return \in_array($paginator, [
             'none',
@@ -81,51 +98,87 @@ trait HasPaginator
     }
 
     /**
-     * Get the metadata for the length-aware paginator.
-     *
-     * @param  \Illuminate\Pagination\LengthAwarePaginator<\Illuminate\Database\Eloquent\Model>  $paginator
-     * @return array<string,mixed>
+     * Get the pagination data for the length-aware paginator.
+     * 
+     * @param \Illuminate\Contracts\Pagination\LengthAwarePaginator $paginator
+     * @return array<string, mixed>
      */
-    protected static function lengthAwarePaginatorMetadata(LengthAwarePaginator $paginator): array
+    protected static function lengthAwarePaginator($paginator)
     {
-        return \array_merge(static::simplePaginatorMetadata($paginator), [
+        return \array_merge(static::simplePaginator($paginator), [
             'total' => $paginator->total(),
             'from' => $paginator->firstItem(),
             'to' => $paginator->lastItem(),
-            'first' => $paginator->url(1),
-            'last' => $paginator->url($paginator->lastPage()),
-            'links' => $paginator->linkCollection()->slice(1, -1)->toArray(),
+            'firstLink' => $paginator->url(1),
+            'lastLink' => $paginator->url($paginator->lastPage()),
+            'links' => static::createPaginatorLinks($paginator),
         ]);
     }
 
     /**
-     * Get the metadata for the simple paginator.
+     * Create pagination links with a sliding window around the current page.
      *
-     * @param  \Illuminate\Contracts\Pagination\Paginator<\Illuminate\Database\Eloquent\Model>  $paginator
-     * @return array<string,mixed>
+     * @param  \Illuminate\Contracts\Pagination\LengthAwarePaginator  $paginator
+     * @return array<int, array<string, mixed>>
      */
-    protected static function simplePaginatorMetadata(Paginator $paginator): array
+    protected static function createPaginatorLinks($paginator)
     {
-        return [
-            'prev' => $paginator->previousPageUrl(),
-            'current' => $paginator->currentPage(),
-            'next' => $paginator->nextPageUrl(),
-            'per_page' => $paginator->perPage(),
-        ];
+        $currentPage = $paginator->currentPage();
+        $lastPage = $paginator->lastPage();
+        $onEachSide = 2;
+        
+        // Calculate window boundaries with balanced distribution
+        $start = max(1, min($currentPage - $onEachSide, $lastPage - ($onEachSide * 2)));
+        $end = min($lastPage, max($currentPage + $onEachSide, ($onEachSide * 2 + 1)));
+        
+        return collect(range($start, $end))
+            ->map(static fn ($page) => [
+                'url' => $paginator->url($page),
+                'label' => (string) $page,
+                'active' => $currentPage === $page,
+            ])
+            ->values()
+            ->all();
     }
 
     /**
-     * Get the metadata for the cursor paginator.
-     *
-     * @param  \Illuminate\Pagination\CursorPaginator<\Illuminate\Database\Eloquent\Model>  $paginator
-     * @return array<string,mixed>
+     * Get the pagination data for the simple paginator.
+     * 
+     * @param \Illuminate\Contracts\Pagination\Paginator $paginator
+     * @return array<string, mixed>
      */
-    protected static function cursorPaginatorMetadata(CursorPaginator $paginator): array
+    protected static function simplePaginator($paginator)
+    {
+        return \array_merge(static::cursorPaginator($paginator), [
+            'currentPage' => $paginator->currentPage(),
+        ]);
+    }
+
+    /**
+     * Get the pagination data for the cursor paginator.
+     * 
+     * @param \Illuminate\Pagination\AbstractCursorPaginator|\Illuminate\Contracts\Pagination\Paginator $paginator
+     * @return array<string, mixed>
+     */
+    protected static function cursorPaginator($paginator)
+    {
+        return \array_merge(static::collectionPaginator($paginator), [
+            'prevLink' => $paginator->previousPageUrl(),
+            'nextLink' => $paginator->nextPageUrl(),
+            'perPage' => $paginator->perPage(),
+        ]);
+    }
+
+    /**
+     * Get the base metadata for the collection paginator, and all others.
+     * 
+     * @param \Illuminate\Support\Collection|\Illuminate\Pagination\AbstractCursorPaginator|\Illuminate\Contracts\Pagination\Paginator $paginator
+     * @return array<string, mixed>
+     */
+    protected static function collectionPaginator($paginator)
     {
         return [
-            'prev' => $paginator->previousPageUrl(),
-            'next' => $paginator->nextPageUrl(),
-            'per_page' => $paginator->perPage(),
+            'empty' => $paginator->isEmpty(),
         ];
     }
 }

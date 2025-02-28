@@ -77,7 +77,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public function getFallbackSortsKey()
+    protected function getFallbackSortsKey()
     {
         return type(config('table.config.sorts', 'sort'))->asString();
     }
@@ -85,7 +85,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public function getFallbackSearchesKey()
+    protected function getFallbackSearchesKey()
     {
         return type(config('table.config.searches', 'search'))->asString();
     }
@@ -93,7 +93,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public function getFallbackMatchesKey()
+    protected function getFallbackMatchesKey()
     {
         return type(config('table.config.matches', 'match'))->asString();
     }
@@ -101,7 +101,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public function getFallbackCanMatch()
+    protected function getFallbackCanMatch()
     {
         return (bool) config('table.matches', false);
     }
@@ -265,6 +265,7 @@ class Table extends Refine implements UrlRoutable
             Model::class => [$this->getBuilder()],
             Request::class => [$this->getRequest()],
             $model::class => [$this->getBuilder()],
+            /** If typing reaches this point, use dependency injection. */
             default => [App::make($parameterType)],
         };
     }

@@ -8,6 +8,9 @@ use Honed\Table\Tests\Stubs\Status;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
+// This test is used to verify functionality on a table class with duplicated
+// query parameters and nested relationships.
+
 beforeEach(function () {
     $this->test = FixtureTable::make();
 
