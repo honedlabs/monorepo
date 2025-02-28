@@ -25,7 +25,7 @@ return [
     | class globally here.
     |
     */
-    
+
     'confirm' => [
         'dismiss' => 'Cancel',
         'submit' => 'Confirm',
