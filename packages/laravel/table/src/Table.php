@@ -4,19 +4,25 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use Honed\Action\Concerns\HasActions;
-use Honed\Action\Concerns\HasParameterNames;
-use Honed\Action\Handler;
-use Honed\Action\Http\Requests\ActionRequest;
-use Honed\Core\Concerns\Encodable;
 use Honed\Refine\Refine;
-use Honed\Table\Concerns\HasTableBindings;
-use Illuminate\Contracts\Routing\UrlRoutable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
+use Honed\Action\Handler;
 use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use Honed\Table\Columns\Column;
+use Honed\Refine\Searches\Search;
+use Honed\Core\Concerns\Encodable;
+use Illuminate\Support\Facades\App;
+use Honed\Action\Concerns\HasActions;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Honed\Table\Concerns\HasTableBindings;
+use Honed\Action\Concerns\HasParameterNames;
+use Honed\Action\Http\Requests\ActionRequest;
+use Illuminate\Contracts\Routing\UrlRoutable;
 
+/**
+ * @extends Refine<\Illuminate\Database\Eloquent\Model>
+ */
 class Table extends Refine implements UrlRoutable
 {
     use Concerns\HasColumns;
@@ -55,11 +61,10 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Set the key property for the table.
-
      *
      * @return $this
      */
-    public function key(string $key): static
+    public function key(string $key)
     {
         $this->key = $key;
 
@@ -69,49 +74,33 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public function getSortsKey(): string
+    public function getFallbackSortsKey()
     {
-        if (isset($this->sortsKey)) {
-            return $this->sortsKey;
-        }
-
-        return type(config('table.keys.sorts', 'sort'))->asString();
+        return type(config('table.config.sorts', 'sort'))->asString();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSearchesKey(): string
+    public function getFallbackSearchesKey()
     {
-        if (isset($this->searchesKey)) {
-            return $this->searchesKey;
-        }
-
-        return type(config('table.keys.searches', 'search'))->asString();
+        return type(config('table.config.searches', 'search'))->asString();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMatchesKey(): string
+    public function getFallbackMatchesKey()
     {
-        if (isset($this->matchesKey)) {
-            return $this->matchesKey;
-        }
-
-        return type(config('table.keys.matches', 'match'))->asString();
+        return type(config('table.config.matches', 'match'))->asString();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function canMatch(): bool
+    public function getFallbackCanMatch()
     {
-        if (isset($this->matches)) {
-            return $this->matches;
-        }
-
-        return type(config('table.matches', false))->asBool();
+        return (bool) config('table.matches', false);
     }
 
     /**
@@ -140,10 +129,9 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
-     * @param  string  $name
-     * @param  array<int, mixed>  $arguments
+     * {@inheritdoc}
      */
-    public function __call($name, $arguments): mixed
+    public function __call($name, $arguments)
     {
         $args = Arr::first($arguments);
 
@@ -167,11 +155,21 @@ class Table extends Refine implements UrlRoutable
      *
      * @return $this
      */
-    public function buildTable(): static
+    public function build(): static
     {
         if ($this->isRefined()) {
             return $this;
         }
+
+        // If toggling is enabled, we need to determine which
+        // columns are to be used from the request, cookie or by the
+        // default state of each column.
+        $columns = $this->toggle($this->getColumns());
+
+        // Before refining, merge the column sorts and searches
+        // with the defined sorts and searches.
+        $this->mergeSorts($columns);
+        $this->mergeSearches($columns);
 
         // Intermediate step allowing for table reuse with
         // minor changes between them.
@@ -181,58 +179,60 @@ class Table extends Refine implements UrlRoutable
         // according to the given request.
         $this->refine();
 
-        // If toggling is enabled, we need to determine which
-        // columns are to be used from the request, cookie or by the
-        // default state of each column.
-        $activeColumns = $this->toggle($this->getColumns());
 
         // Retrieved the records, generate metadata and complete the
         // table pipeline.
-        $this->formatAndPaginate($activeColumns);
+        $this->formatAndPaginate($columns);
 
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getBuilder(): Builder
     {
-        $this->builder ??= $this->createBuilder($this->getResource());
+        $this->builder ??= $this->createBuilder(
+            $this->getResource()
+        );
 
         return parent::getBuilder();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function toArray(): array
     {
-        $this->buildTable();
+        $this->build();
 
-        return [
-            'table' => $this->getRouteKey(),
+        return \array_merge(parent::toArray(), [
+            'id' => $this->getRouteKey(),
             'records' => $this->getRecords(),
-            'meta' => $this->getMeta(),
-            'columns' => $this->getActiveColumns(),
-            'pages' => $this->getPages(),
-            'filters' => $this->getFilters(),
-            'sorts' => $this->getSorts(),
-            'toggle' => $this->canToggle(),
+            'paginator' => $this->getMeta(),
+            'columns' => $this->getColumns(),
+            'recordsPerPage' => $this->getPages(),
+            'toggleable' => $this->canToggle(),
             'actions' => $this->actionsToArray(),
-            'endpoint' => $this->getEndpoint(),
-            'keys' => $this->keysToArray(),
-        ];
-    }
-
-    /**
-     * Get the keys for the table as an array.
-     */
-    public function keysToArray(): array
-    {
-        return \array_merge(parent::keysToArray(), [
-            'record' => $this->getKey(),
-            'records' => $this->getRecordsKey(),
-            'columns' => $this->getColumnsKey(),
         ]);
     }
 
     /**
-     * @return array<mixed>
+     * {@inheritdoc}
+     */
+    public function configToArray()
+    {
+        return \array_merge(parent::configToArray(), [
+            'endpoint' => $this->getEndpoint(),
+            'record' => $this->getKey(),
+            'records' => $this->getRecordsKey(),
+            'columns' => $this->getColumnsKey(),
+            'pages' => $this->getPagesKey(),
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
@@ -250,7 +250,7 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
-     * @return array<mixed>
+     * {@inheritdoc}
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
@@ -261,8 +261,44 @@ class Table extends Refine implements UrlRoutable
             Model::class => [$this->getBuilder()],
             Request::class => [$this->getRequest()],
             $model::class => [$this->getBuilder()],
-            default => [],
+            default => [App::make($parameterType)],
         };
+    }
+
+    /**
+     * Merge the column sorts with the defined sorts.
+     * 
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @return void
+     */
+    protected function mergeSorts($columns)
+    {
+        /** @var array<int,\Honed\Refine\Sorts\Sort> */
+        $sorts = \array_map(
+            fn (Column $column) => $column->getSort(),
+            $this->getColumnSorts($columns)
+        );
+
+        $this->addSorts($sorts);
+    }
+
+    /**
+     * Merge the column searches with the defined searches.
+     * 
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @return void
+     */
+    protected function mergeSearches($columns)
+    {
+        /** @var array<int,\Honed\Refine\Searches\Search> */
+        $searches = \array_map(
+            fn (Column $column) => Search::make(
+                $column->getName(), 
+                $column->getLabel()
+            ), $this->getColumnSearches($columns)
+        );
+
+        $this->addSearches($searches);
     }
 
     /**
