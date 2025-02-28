@@ -231,16 +231,16 @@ it('refines all with fixture', function () {
 it('requires refiners to be set', function () {
     expect(Refine::make(Product::class)->using($this->refiners)->getQuery())
         ->wheres->scoped(fn ($wheres) => $wheres
-        ->toBeArray()
-        ->toBeEmpty()
+            ->toBeArray()
+            ->toBeEmpty()
         )->orders->scoped(fn ($orders) => $orders
-        ->toBeArray()
-        ->toHaveCount(1)
-        ->{0}->scoped(fn ($order) => $order
-        ->toBeArray()
-        ->{'column'}->toBe(Product::query()->qualifyColumn('name'))
-        ->{'direction'}->toBe('desc')
-        )
+            ->toBeArray()
+            ->toHaveCount(1)
+            ->{0}->scoped(fn ($order) => $order
+                ->toBeArray()
+                ->{'column'}->toBe(Product::query()->qualifyColumn('name'))
+                ->{'direction'}->toBe('desc')
+            )
         );
 });
 
@@ -281,6 +281,7 @@ it('has array representation', function () {
     expect($refine->refine()->toArray())
         ->toHaveKeys(['sorts', 'filters', 'config'])
         ->{'config'}->scoped(fn ($config) => $config
+            ->{'delimiter'}->toBe(config('refine.delimiter'))
             ->{'search'}->toBe($this->term)
             ->{'searches'}->toBe(config('refine.config.searches'))
             ->{'sorts'}->toBe(config('refine.config.sorts'))
@@ -290,6 +291,7 @@ it('has array representation', function () {
         ->toHaveKeys(['sorts', 'filters', 'searches', 'config'])
         ->{'searches'}->toHaveCount(2)
         ->{'config'}->scoped(fn ($config) => $config
+            ->{'delimiter'}->toBe(config('refine.delimiter'))
             ->{'search'}->toBe($this->term)
             ->{'searches'}->toBe(config('refine.config.searches'))
             ->{'sorts'}->toBe(config('refine.config.sorts'))

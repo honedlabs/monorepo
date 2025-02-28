@@ -128,8 +128,8 @@ class Refine extends Primitive
         return [
             'sorts' => $this->sortsToArray(),
             'filters' => $this->filtersToArray(),
-            ...($this->canMatch() ? ['searches' => $this->searchesToArray()] : []),
             'config' => $this->configToArray(),
+            ...($this->canMatch() ? ['searches' => $this->searchesToArray()] : []),
         ];
     }
 
@@ -141,6 +141,7 @@ class Refine extends Primitive
     public function configToArray()
     {
         return [
+            'delimiter' => $this->getDelimiter(),
             'search' => $this->getTerm(),
             'searches' => $this->getSearchesKey(),
             'sorts' => $this->getSortsKey(),
