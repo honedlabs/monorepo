@@ -253,7 +253,7 @@ it('can change the search columns', function () {
     Refine::make($this->builder)
         ->using($this->refiners)
         ->request($request)
-        ->matches()
+        ->match()
         ->refine();
 
     expect($this->builder->getQuery()->wheres)
@@ -286,7 +286,7 @@ it('has array representation', function () {
             ->{'sorts'}->toBe(config('refine.config.sorts'))
         );
 
-    expect($refine->matches()->refine()->toArray())
+    expect($refine->match()->refine()->toArray())
         ->toHaveKeys(['sorts', 'filters', 'searches', 'config'])
         ->{'searches'}->toHaveCount(2)
         ->{'config'}->scoped(fn ($config) => $config

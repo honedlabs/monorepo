@@ -5,37 +5,35 @@ declare(strict_types=1);
 namespace Honed\Refine;
 
 use Honed\Core\Concerns\HasBuilderInstance;
-use Honed\Core\Concerns\HasRequest;
-use Honed\Core\Concerns\HasScope;
 use Honed\Core\Primitive;
 use Honed\Refine\Concerns\AccessesRequest;
 use Honed\Refine\Filters\Filter;
 use Honed\Refine\Searches\Search;
 use Honed\Refine\Sorts\Sort;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ *
  * @mixin \Illuminate\Database\Eloquent\Builder<TModel>
+ *
  * @extends Primitive<string, mixed>
  */
 class Refine extends Primitive
 {
+    use AccessesRequest;
     use Concerns\HasFilters;
     use Concerns\HasSearches;
     use Concerns\HasSorts;
     use ForwardsCalls;
     use HasBuilderInstance;
-    use AccessesRequest;
 
     /**
      * Whether the refine pipeline has been run.
-     * 
+     *
      * @var bool
      */
     protected $refined = false;
@@ -50,7 +48,7 @@ class Refine extends Primitive
 
     /**
      * Mark the refine pipeline as refined.
-     * 
+     *
      * @return $this
      */
     protected function markAsRefined()
@@ -62,7 +60,7 @@ class Refine extends Primitive
 
     /**
      * Determine if the refine pipeline has been run.
-     * 
+     *
      * @return bool
      */
     public function isRefined()
@@ -72,26 +70,33 @@ class Refine extends Primitive
 
     /**
      * Dynamically handle calls to the class.
-     * 
+     *
      * @param  string  $name
      * @param  array<int, mixed>  $arguments
      * @return mixed
      */
     public function __call($name, $arguments)
     {
-        /** @var array<int, Sort> $arguments */
+
         if ($name === 'sorts') {
-            return $this->addSorts($arguments);
+            /** @var array<int, \Honed\Refine\Sorts\Sort> $argument */
+            $argument = $arguments[0];
+
+            return $this->addSorts($argument);
         }
 
-        /** @var array<int, Filter> $arguments */
         if ($name === 'filters') {
-            return $this->addFilters($arguments);
+            /** @var array<int, \Honed\Refine\Filters\Filter> $argument */
+            $argument = $arguments[0];
+
+            return $this->addFilters($argument);
         }
 
-        /** @var array<int, Search> $arguments */
         if ($name === 'searches') {
-            return $this->addSearches($arguments);
+            /** @var array<int, \Honed\Refine\Searches\Search> $argument */
+            $argument = $arguments[0];
+
+            return $this->addSearches($argument);
         }
 
         // Delay the refine call until records are retrieved
@@ -104,7 +109,7 @@ class Refine extends Primitive
 
     /**
      * Create a new refine instance.
-     * 
+     *
      * @param  TModel|class-string<TModel>|\Illuminate\Database\Eloquent\Builder<TModel>  $query
      * @return static
      */
@@ -136,7 +141,7 @@ class Refine extends Primitive
     public function configToArray()
     {
         return [
-            'search' => $this->getSearchValue(),
+            'search' => $this->getTerm(),
             'searches' => $this->getSearchesKey(),
             'sorts' => $this->getSortsKey(),
             ...($this->canMatch() ? ['matches' => $this->getMatchesKey()] : []),

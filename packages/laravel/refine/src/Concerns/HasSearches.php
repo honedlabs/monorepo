@@ -4,19 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
-use Honed\Refine\Concerns\Support\CanMatch;
-use Honed\Refine\Concerns\Support\MatchesKey;
-use Honed\Refine\Concerns\Support\SearchesKey;
 use Honed\Refine\Searches\Search;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 trait HasSearches
 {
-    use CanMatch;
-    use MatchesKey;
-    use SearchesKey;
     use AccessesRequest;
 
     /**
@@ -57,9 +49,10 @@ trait HasSearches
     /**
      * Set the query parameter to identify the search string.
      *
+     * @param  string  $searchesKey
      * @return $this
      */
-    public function searchesKey(string $searchesKey): static
+    public function searchesKey($searchesKey)
     {
         $this->searchesKey = $searchesKey;
 
@@ -68,8 +61,10 @@ trait HasSearches
 
     /**
      * Get the query parameter to identify the search string.
+     *
+     * @return string
      */
-    public function getSearchesKey(): string
+    public function getSearchesKey()
     {
         if (isset($this->searchesKey)) {
             return $this->searchesKey;
@@ -80,16 +75,20 @@ trait HasSearches
 
     /**
      * Get the fallback query parameter to identify the search string.
+     *
+     * @return string
      */
-    protected function getFallbackSearchesKey(): string
+    protected function getFallbackSearchesKey()
     {
         return type(config('refine.config.searches', 'search'))->asString();
     }
 
     /**
      * Get the query parameter to identify the columns to search on.
+     *
+     * @return string
      */
-    public function getMatchesKey(): string
+    public function getMatchesKey()
     {
         if (isset($this->matchesKey)) {
             return $this->matchesKey;
@@ -100,16 +99,33 @@ trait HasSearches
 
     /**
      * Get the fallback query parameter to identify the columns to search on.
+     *
+     * @return string
      */
-    protected function getFallbackMatchesKey(): string
+    protected function getFallbackMatchesKey()
     {
         return type(config('refine.config.matches', 'match'))->asString();
     }
 
     /**
-     * Determine whether the search columns can be toggled.
+     * Set whether the search columns can be toggled.
+     *
+     * @param  bool|null  $match
+     * @return $this
      */
-    public function canMatch(): bool
+    public function match($match = true)
+    {
+        $this->match = $match;
+
+        return $this;
+    }
+
+    /**
+     * Determine whether the search columns can be toggled.
+     *
+     * @return bool
+     */
+    public function canMatch()
     {
         if (isset($this->match)) {
             return $this->match;
@@ -120,8 +136,10 @@ trait HasSearches
 
     /**
      * Get the fallback value to determine whether the search columns can be toggled.
+     *
+     * @return bool
      */
-    protected function getFallbackCanMatch(): bool
+    protected function getFallbackCanMatch()
     {
         return (bool) config('refine.matches', false);
     }
@@ -132,7 +150,7 @@ trait HasSearches
      * @param  array<int, \Honed\Refine\Searches\Search>|\Illuminate\Support\Collection<int, \Honed\Refine\Searches\Search>  $searches
      * @return $this
      */
-    public function addSearches($searches): static
+    public function addSearches($searches)
     {
         if ($searches instanceof Collection) {
             $searches = $searches->all();
@@ -146,9 +164,10 @@ trait HasSearches
     /**
      * Add a single search to the list of searches.
      *
+     * @param  \Honed\Refine\Searches\Search  $search
      * @return $this
      */
-    public function addSearch(Search $search): static
+    public function addSearch($search)
     {
         $this->searches[] = $search;
 
@@ -160,7 +179,7 @@ trait HasSearches
      *
      * @return array<int,\Honed\Refine\Searches\Search>
      */
-    public function getSearches(): array
+    public function getSearches()
     {
         return once(function () {
             $methodSearches = method_exists($this, 'searches') ? $this->searches() : [];
@@ -177,8 +196,10 @@ trait HasSearches
 
     /**
      * Determines if the instance has any searches.
+     *
+     * @return bool
      */
-    public function hasSearch(): bool
+    public function hasSearch()
     {
         return filled($this->getSearches());
     }
@@ -189,7 +210,7 @@ trait HasSearches
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @return $this
      */
-    public function search(Builder $builder): static
+    public function search($builder)
     {
         $columns = ($this->canMatch()
             ? $this->getArrayFromQueryParameter($this->getMatchesKey())
@@ -212,24 +233,27 @@ trait HasSearches
 
     /**
      * Get the search value from the request.
+     *
+     * @return string|null
      */
-    public function getSearchTerm(): ?string
+    public function getSearchTerm()
     {
-        $search = str($this->getQueryParameter($this->getSearchesKey()));
+        /** @var string|null */
+        $param = $this->getQueryParameter($this->getSearchesKey());
 
-        if ($search->isEmpty()) {
+        if (empty($param)) {
             return null;
         }
 
-        return $search
-            ->replace('+', ' ')
-            ->toString();
+        return \str_replace('+', ' ', $param);
     }
 
     /**
      * Retrieve the search value.
+     *
+     * @return string|null
      */
-    public function getTerm(): ?string
+    public function getTerm()
     {
         return $this->term;
     }
@@ -237,9 +261,9 @@ trait HasSearches
     /**
      * Get the searches as an array.
      *
-     * @return array<int,mixed>
+     * @return array<int,array<string,mixed>>
      */
-    public function searchesToArray(): array
+    public function searchesToArray()
     {
         return \array_map(
             static fn (Search $search) => $search->toArray(),

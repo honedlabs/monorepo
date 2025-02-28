@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
+use Honed\Core\Concerns\HasRequest;
 use Honed\Refine\Filters\Filter;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 trait HasFilters
 {
+    use HasRequest;
+
     /**
      * List of the filters.
      *
@@ -25,7 +25,7 @@ trait HasFilters
      * @param  array<int, \Honed\Refine\Filters\Filter>|\Illuminate\Support\Collection<int, \Honed\Refine\Filters\Filter>  $filters
      * @return $this
      */
-    public function addFilters($filters): static
+    public function addFilters($filters)
     {
         if ($filters instanceof Collection) {
             $filters = $filters->all();
@@ -39,9 +39,10 @@ trait HasFilters
     /**
      * Add a single filter to the list of filters.
      *
+     * @param  \Honed\Refine\Filters\Filter  $filter
      * @return $this
      */
-    public function addFilter(Filter $filter): static
+    public function addFilter($filter)
     {
         $this->filters[] = $filter;
 
@@ -53,7 +54,7 @@ trait HasFilters
      *
      * @return array<int,\Honed\Refine\Filters\Filter>
      */
-    public function getFilters(): array
+    public function getFilters()
     {
         return once(function () {
             $methodFilters = method_exists($this, 'filters') ? $this->filters() : [];
@@ -70,8 +71,10 @@ trait HasFilters
 
     /**
      * Determines if the instance has any filters.
+     *
+     * @return bool
      */
-    public function hasFilters(): bool
+    public function hasFilters()
     {
         return filled($this->getFilters());
     }
@@ -82,8 +85,10 @@ trait HasFilters
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @return $this
      */
-    public function filter(Builder $builder, Request $request): static
+    public function filter($builder)
     {
+        $request = $this->getRequest();
+
         foreach ($this->getFilters() as $filter) {
             $filter->apply($builder, $request);
         }
@@ -96,7 +101,7 @@ trait HasFilters
      *
      * @return array<int,array<string,mixed>>
      */
-    public function filtersToArray(): array
+    public function filtersToArray()
     {
         return \array_map(
             static fn (Filter $filter) => $filter->toArray(),
