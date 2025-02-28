@@ -18,13 +18,13 @@ jobs:
           # - action
           # - chart
           # - command
-          # - core
+          - core
           # - crumb
           # - flash
           # - lock
           # - modal
           # - nav
-          - refine
+          # - refine
           # - table
           # - upload
 

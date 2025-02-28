@@ -46,9 +46,22 @@ class Filter extends Refiner
     /**
      * {@inheritdoc}
      */
-    public function setUp(): void
+    public function setUp()
     {
         $this->type('filter');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUniqueKey()
+    {
+        return \sprintf(
+            '%s.%s.%s',
+            $this->getAttribute(),
+            $this->getOperator(),
+            $this->getMode(),
+        );
     }
 
     /**

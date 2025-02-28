@@ -20,6 +20,17 @@ class SetFilter extends Filter
     {
         $this->type('set');
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getUniqueKey()
+    {
+        return \sprintf('%s.%s', 
+            parent::getUniqueKey(), 
+            $this->isMultiple() ? 'multiple' : 'single'
+        );
+    }
 
     /**
      * {@inheritdoc}

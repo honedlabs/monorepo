@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Upload\Upload;
+use Illuminate\Support\Str;
 
 it('has disk', function () {
     expect(Upload::make())
@@ -92,4 +93,13 @@ it('has acl', function () {
         ->getAcl()->toBe('public-read')
         ->acl('private-read')->toBeInstanceOf(Upload::class)
         ->getAcl()->toBe('private-read');
+});
+
+it('api sample', function () {
+    Upload::make()
+        ->disk('avatar')
+        ->size(1, 10)
+        ->megabytes()
+        ->path('{'.Str::uuid()->toString().'}')
+        ->types('image/png');
 });

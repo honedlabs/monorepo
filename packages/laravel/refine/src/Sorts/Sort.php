@@ -23,13 +23,24 @@ class Sort extends Refiner
      */
     protected $only;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         $this->type('sort');
     }
 
     /**
-     * Determine if the sort is currently active.
+     * {@inheritdoc}
+     */
+    public function getUniqueKey()
+    {
+        return \sprintf('%s.%s', $this->getAttribute(), $this->getDirection());
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function isActive(): bool
     {

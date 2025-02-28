@@ -9,7 +9,6 @@ use Honed\Modal\Support\ModalHeader;
 use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia;
 use Honed\Modal\Tests\Stubs\ExampleController;
-
 use Honed\Modal\Tests\Stubs\ExampleMiddleware;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Routing\Middleware\SubstituteBindings;
@@ -27,7 +26,7 @@ beforeEach(function () {
         });
 });
 
-test('modals can be rendered', function () {
+it('can be rendered', function () {
     $user = user();
     $tweet = tweet($user);
 
@@ -42,7 +41,7 @@ test('modals can be rendered', function () {
         });
 });
 
-test('pass raw data without model bindings', function () {
+it('passes raw data without model bindings', function () {
     $user = 'test-user';
     $tweet = 'test-tweet';
 
@@ -57,7 +56,7 @@ test('pass raw data without model bindings', function () {
         });
 });
 
-test('preserve background on inertia visits', function () {
+it('preserves background on inertia visits', function () {
     $fromURL = route('home');
     $user = user();
     $tweet = tweet($user);
@@ -73,7 +72,7 @@ test('preserve background on inertia visits', function () {
         ->assertJsonPath('props.modal.baseURL', route('users.show', $user));
 });
 
-test('preserve background on non-inertia visits', function () {
+it('preserves background on non-inertia visits', function () {
     $fromURL = route('home');
     $user = user();
     $tweet = tweet($user);
@@ -89,7 +88,7 @@ test('preserve background on non-inertia visits', function () {
         });
 });
 
-test('preserve query string for parent componentы', function () {
+it('preserves query string for parent component', function () {
     $user = user();
     $tweet = tweet($user);
 
@@ -105,7 +104,7 @@ test('preserve query string for parent componentы', function () {
         ->assertJsonPath('props.modal.redirectURL', $fromURL);
 });
 
-test('route parameters are bound correctly', function () {
+it('binds route parameters correctly', function () {
     $fromURL = route('home');
     $user = user();
     $otherUser = user();
@@ -121,3 +120,7 @@ test('route parameters are bound correctly', function () {
                 ->where('modal.baseURL', route('users.show', $otherUser));
         });
 });
+
+it('executes config middleware', function () {
+
+})->skip();

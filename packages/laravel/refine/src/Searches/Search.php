@@ -9,11 +9,25 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Search extends Refiner
 {
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         $this->type('search');
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getUniqueKey()
+    {
+        return $this->getAttribute();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isActive(): bool
     {
         return $this->hasValue();
