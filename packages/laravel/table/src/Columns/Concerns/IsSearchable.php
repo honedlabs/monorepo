@@ -26,7 +26,7 @@ trait IsSearchable
 
     /**
      * Determine if the column is searchable.
-     * 
+     *
      * @return bool
      */
     public function isSearchable()

@@ -26,7 +26,7 @@ trait HasModifier
 
     /**
      * Determine if the instance has a resource modifier.
-     * 
+     *
      * @return bool
      */
     public function hasModifier()
@@ -36,7 +36,7 @@ trait HasModifier
 
     /**
      * Get the resource modifier.
-     * 
+     *
      * @return \Closure|null
      */
     public function getModifier()

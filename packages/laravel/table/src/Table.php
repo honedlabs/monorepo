@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use Honed\Refine\Refine;
-use Honed\Action\Handler;
-use Illuminate\Support\Arr;
-use Illuminate\Http\Request;
-use Honed\Table\Columns\Column;
-use Honed\Refine\Searches\Search;
-use Honed\Core\Concerns\Encodable;
-use Illuminate\Support\Facades\App;
 use Honed\Action\Concerns\HasActions;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Honed\Table\Concerns\HasTableBindings;
 use Honed\Action\Concerns\HasParameterNames;
-use Honed\Action\Http\Requests\ActionRequest;
+use Honed\Action\Handler;
+use Honed\Core\Concerns\Encodable;
+use Honed\Refine\Refine;
+use Honed\Refine\Searches\Search;
+use Honed\Table\Columns\Column;
+use Honed\Table\Concerns\HasTableBindings;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 
 /**
  * @extends Refine<\Illuminate\Database\Eloquent\Model>
@@ -46,11 +45,14 @@ class Table extends Refine implements UrlRoutable
     /**
      * Get the unique identifier key for table records.
      *
+     * @return string
+     *
      * @throws \RuntimeException When no key is defined
      */
-    public function getKey(): string
+    public function getKey()
     {
-        $key = $this->key ?? $this->getKeyColumn()?->getName();
+        $key = $this->key
+            ?? $this->getKeyColumn()?->getName();
 
         if (\is_null($key)) {
             static::throwMissingKeyException();
@@ -62,9 +64,10 @@ class Table extends Refine implements UrlRoutable
     /**
      * Set the key property for the table.
      *
+     * @param  string  $key
      * @return $this
      */
-    public function key(string $key)
+    public function key($key)
     {
         $this->key = $key;
 
@@ -107,8 +110,9 @@ class Table extends Refine implements UrlRoutable
      * Create a new table instance.
      *
      * @param  \Closure|null  $modifier
+     * @return static
      */
-    public static function make($modifier = null): static
+    public static function make($modifier = null)
     {
         return resolve(static::class)
             ->modifier($modifier);
@@ -117,9 +121,10 @@ class Table extends Refine implements UrlRoutable
     /**
      * Handle the incoming action request for this table.
      *
+     * @param  \Honed\Action\Http\Requests\ActionRequest  $request
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse|void
      */
-    public function handle(ActionRequest $request)
+    public function handle($request)
     {
         return Handler::make(
             $this->getBuilder(),
@@ -155,7 +160,7 @@ class Table extends Refine implements UrlRoutable
      *
      * @return $this
      */
-    public function build(): static
+    public function build()
     {
         if ($this->isRefined()) {
             return $this;
@@ -179,7 +184,6 @@ class Table extends Refine implements UrlRoutable
         // according to the given request.
         $this->refine();
 
-
         // Retrieved the records, generate metadata and complete the
         // table pipeline.
         $this->formatAndPaginate($columns);
@@ -190,7 +194,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public function getBuilder(): Builder
+    public function getBuilder()
     {
         $this->builder ??= $this->createBuilder(
             $this->getResource()
@@ -202,7 +206,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public function toArray(): array
+    public function toArray()
     {
         $this->build();
 
@@ -234,7 +238,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         [$_, $singular, $plural] = $this->getParameterNames($this->getBuilder());
 
@@ -252,7 +256,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
+    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
         [$model] = $this->getParameterNames($this->getBuilder());
 
@@ -267,7 +271,7 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Merge the column sorts with the defined sorts.
-     * 
+     *
      * @param  array<int,\Honed\Table\Columns\Column>  $columns
      * @return void
      */
@@ -284,7 +288,7 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Merge the column searches with the defined searches.
-     * 
+     *
      * @param  array<int,\Honed\Table\Columns\Column>  $columns
      * @return void
      */
@@ -293,7 +297,7 @@ class Table extends Refine implements UrlRoutable
         /** @var array<int,\Honed\Refine\Searches\Search> */
         $searches = \array_map(
             fn (Column $column) => Search::make(
-                $column->getName(), 
+                type($column->getName())->asString(),
                 $column->getLabel()
             ), $this->getColumnSearches($columns)
         );
@@ -303,8 +307,10 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Throw an exception if the table does not have a key column or key property defined.
+     *
+     * @return never
      */
-    protected static function throwMissingKeyException(): never
+    protected static function throwMissingKeyException()
     {
         throw new \RuntimeException(
             'The table must have a key column or a key property defined.'

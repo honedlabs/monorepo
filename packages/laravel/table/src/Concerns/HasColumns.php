@@ -23,7 +23,7 @@ trait HasColumns
      * @param  array<int,T>|Collection<int,T>  $columns
      * @return $this
      */
-    public function addColumns($columns): static
+    public function addColumns($columns)
     {
         if ($columns instanceof Collection) {
             $columns = $columns->all();
@@ -69,14 +69,13 @@ trait HasColumns
 
     /**
      * Determine if the table has columns.
-     * 
+     *
      * @return bool
      */
     public function hasColumns()
     {
         return filled($this->getColumns());
     }
-
 
     /**
      * Get the columns which are active for toggling.
@@ -121,7 +120,6 @@ trait HasColumns
     {
         $columns = $columns ?? $this->getColumns();
 
-        /** @var array<int,string> */
         return \array_values(
             \array_filter(
                 $columns,
@@ -132,7 +130,7 @@ trait HasColumns
 
     /**
      * Get the key column for the table.
-     * 
+     *
      * @return \Honed\Table\Columns\Column|null
      */
     public function getKeyColumn()

@@ -163,11 +163,8 @@ it('builds', function () {
                 'endpoint' => config('table.endpoint'),
                 'search' => 'search term'
             ])->{'actions'}->scoped(fn ($actions) => $actions
-                ->toHaveKeys([
-                    'actions',
-                    'bulk',
-                    'page',
-                ])->{'actions'}->toBeTrue()
+                ->toHaveKeys([ 'hasInline', 'bulk', 'page'])
+                ->{'hasInline'}->toBeTrue()
                 ->{'bulk'}->toHaveCount(1)
                 ->{'page'}->toHaveCount(2)
             )->{'toggleable'}->toBe(FixtureTable::Toggle)

@@ -27,7 +27,7 @@ trait HasResource
 
     /**
      * Guess an Eloquent model to use for the table based on the class name.
-     * 
+     *
      * @return string
      */
     public function guessResource()
