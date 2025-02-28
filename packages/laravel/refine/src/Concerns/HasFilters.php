@@ -8,6 +8,7 @@ use Honed\Refine\Filters\Filter;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 trait HasFilters
 {
@@ -21,18 +22,15 @@ trait HasFilters
     /**
      * Merge a set of filters with the existing filters.
      *
-     * @param  iterable<\Honed\Refine\Filters\Filter>  $filters
+     * @param  array<int, \Honed\Refine\Filters\Filter>|\Illuminate\Support\Collection<int, \Honed\Refine\Filters\Filter>  $filters
      * @return $this
      */
-    public function addFilters(iterable $filters): static
+    public function addFilters($filters): static
     {
-        if ($filters instanceof Arrayable) {
-            $filters = $filters->toArray();
+        if ($filters instanceof Collection) {
+            $filters = $filters->all();
         }
 
-        /**
-         * @var array<int, \Honed\Refine\Filters\Filter> $filters
-         */
         $this->filters = \array_merge($this->filters ?? [], $filters);
 
         return $this;
@@ -57,25 +55,17 @@ trait HasFilters
      */
     public function getFilters(): array
     {
-        return $this->filters ??= $this->getSourceFilters();
-    }
+        return once(function () {
+            $methodFilters = method_exists($this, 'filters') ? $this->filters() : [];
+            $propertyFilters = $this->filters ?? [];
 
-    /**
-     * Retrieve the filters which are available..
-     *
-     * @return array<int,\Honed\Refine\Filters\Filter>
-     */
-    protected function getSourceFilters(): array
-    {
-        $filters = match (true) {
-            \method_exists($this, 'filters') => $this->filters(),
-            default => [],
-        };
-
-        return \array_filter(
-            $filters,
-            fn (Filter $filter) => $filter->isAllowed()
-        );
+            return \array_values(
+                \array_filter(
+                    \array_merge($propertyFilters, $methodFilters),
+                    static fn (Filter $filter) => $filter->isAllowed()
+                )
+            );
+        });
     }
 
     /**
@@ -104,7 +94,7 @@ trait HasFilters
     /**
      * Get the filters as an array.
      *
-     * @return array<int,mixed>
+     * @return array<int,array<string,mixed>>
      */
     public function filtersToArray(): array
     {

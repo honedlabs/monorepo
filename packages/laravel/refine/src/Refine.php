@@ -8,6 +8,7 @@ use Honed\Core\Concerns\HasBuilderInstance;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasScope;
 use Honed\Core\Primitive;
+use Honed\Refine\Concerns\AccessesRequest;
 use Honed\Refine\Filters\Filter;
 use Honed\Refine\Searches\Search;
 use Honed\Refine\Sorts\Sort;
@@ -30,14 +31,18 @@ class Refine extends Primitive
     use Concerns\HasSorts;
     use ForwardsCalls;
     use HasBuilderInstance;
-    use HasRequest;
-    use HasScope;
+    use AccessesRequest;
 
     /**
+     * Whether the refine pipeline has been run.
+     * 
      * @var bool
      */
     protected $refined = false;
 
+    /**
+     * Create a new refine instance.
+     */
     public function __construct(Request $request)
     {
         $this->request($request);
@@ -48,7 +53,7 @@ class Refine extends Primitive
      * 
      * @return $this
      */
-    protected function markAsRefined(): static
+    protected function markAsRefined()
     {
         $this->refined = true;
 
@@ -57,8 +62,10 @@ class Refine extends Primitive
 
     /**
      * Determine if the refine pipeline has been run.
+     * 
+     * @return bool
      */
-    public function isRefined(): bool
+    public function isRefined()
     {
         return $this->refined;
     }
@@ -68,8 +75,9 @@ class Refine extends Primitive
      * 
      * @param  string  $name
      * @param  array<int, mixed>  $arguments
+     * @return mixed
      */
-    public function __call($name, $arguments): mixed
+    public function __call($name, $arguments)
     {
         /** @var array<int, Sort> $arguments */
         if ($name === 'sorts') {
@@ -87,20 +95,20 @@ class Refine extends Primitive
         }
 
         // Delay the refine call until records are retrieved
-        return $this->refine()
-            ->forwardDecoratedCallTo(
-                $this->getBuilder(),
-                $name,
-                $arguments
-            );
+        return $this->refine()->forwardDecoratedCallTo(
+            $this->getBuilder(),
+            $name,
+            $arguments
+        );
     }
 
     /**
      * Create a new refine instance.
      * 
      * @param  TModel|class-string<TModel>|\Illuminate\Database\Eloquent\Builder<TModel>  $query
+     * @return static
      */
-    public static function make(mixed $query): static
+    public static function make($query)
     {
         $query = static::createBuilder($query);
 
@@ -125,7 +133,7 @@ class Refine extends Primitive
      *
      * @return array<string,mixed>
      */
-    public function configToArray(): array
+    public function configToArray()
     {
         return [
             'search' => $this->getSearchValue(),
@@ -140,7 +148,7 @@ class Refine extends Primitive
      *
      * @return $this
      */
-    public function refine(): static
+    public function refine()
     {
         if ($this->isRefined()) {
             return $this;
@@ -161,13 +169,12 @@ class Refine extends Primitive
      * @param  array<int,string>  $pipes
      * @return $this
      */
-    public function pipe(array $pipes): static
+    public function pipe($pipes)
     {
         $builder = $this->getBuilder();
-        $request = $this->getRequest();
 
         foreach ($pipes as $pipe) {
-            $this->{$pipe}($builder, $request);
+            $this->{$pipe}($builder);
         }
 
         return $this;
@@ -179,7 +186,7 @@ class Refine extends Primitive
      * @param  array<int, \Honed\Refine\Refiner>|\Illuminate\Support\Collection<int, \Honed\Refine\Refiner>  $refiners
      * @return $this
      */
-    public function using(array|Collection $refiners): static
+    public function using($refiners)
     {
         if ($refiners instanceof Collection) {
             $refiners = $refiners->all();
