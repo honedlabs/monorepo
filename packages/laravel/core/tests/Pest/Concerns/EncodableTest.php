@@ -20,7 +20,7 @@ beforeEach(function () {
 
 it('encrypts by default', function () {
     expect($this->test->encode(2))->not->toBe(2);
-    expect($this->test->decode($this->test->encode(2)))->toBe('2');
+    expect($this->test->decode($this->test->encode(2)))->toBe(2);
 });
 
 it('sets encoder', function () {

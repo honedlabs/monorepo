@@ -14,9 +14,10 @@ trait Allowable
     /**
      * Set the allow condition for the instance.
      *
+     * @param  \Closure|bool  $allow
      * @return $this
      */
-    public function allow(\Closure|bool $allow): static
+    public function allow($allow)
     {
         $this->allow = $allow;
 
@@ -28,8 +29,9 @@ trait Allowable
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
+     * @return bool
      */
-    public function isAllowed($parameters = [], $typed = []): bool
+    public function isAllowed($parameters = [], $typed = [])
     {
         $evaluated = (bool) $this->evaluate($this->allow, $parameters, $typed);
 

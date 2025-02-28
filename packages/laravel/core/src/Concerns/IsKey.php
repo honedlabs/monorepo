@@ -14,9 +14,10 @@ trait IsKey
     /**
      * Set the instance as the key.
      *
+     * @param  bool  $key
      * @return $this
      */
-    public function key(bool $key = true): static
+    public function key($key = true)
     {
         $this->key = $key;
 
@@ -25,8 +26,10 @@ trait IsKey
 
     /**
      * Determine if the instance is the key.
+     *
+     * @return bool
      */
-    public function isKey(): bool
+    public function isKey()
     {
         return $this->key;
     }

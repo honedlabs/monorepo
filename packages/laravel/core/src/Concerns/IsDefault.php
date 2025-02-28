@@ -14,9 +14,10 @@ trait IsDefault
     /**
      * Set the instance as the default.
      *
+     * @param  bool  $default
      * @return $this
      */
-    public function default(bool $default = true): static
+    public function default($default = true)
     {
         $this->default = $default;
 
@@ -25,8 +26,10 @@ trait IsDefault
 
     /**
      * Determine if the instance is the default.
+     *
+     * @return bool
      */
-    public function isDefault(): bool
+    public function isDefault()
     {
         return $this->default;
     }

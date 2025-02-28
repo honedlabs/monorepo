@@ -16,7 +16,7 @@ trait HasType
      *
      * @return $this
      */
-    public function type(?string $type): static
+    public function type(?string $type)
     {
         if (! \is_null($type)) {
             $this->type = $type;
@@ -27,16 +27,20 @@ trait HasType
 
     /**
      * Get the type for the instance.
+     *
+     * @return string|null
      */
-    public function getType(): ?string
+    public function getType()
     {
         return $this->type;
     }
 
     /**
      * Determine if the instance has an type set.
+     *
+     * @return bool
      */
-    public function hasType(): bool
+    public function hasType()
     {
         return isset($this->type);
     }

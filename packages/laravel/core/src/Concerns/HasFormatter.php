@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Honed\Core\Contracts\Formats;
 use Honed\Core\Formatters\BooleanFormatter;
 use Honed\Core\Formatters\DateFormatter;
 use Honed\Core\Formatters\NumberFormatter;
@@ -20,9 +19,10 @@ trait HasFormatter
     /**
      * Set the formatter for the instance.
      *
+     * @param  \Honed\Core\Contracts\Formats|null  $formatter
      * @return $this
      */
-    public function formatter(?Formats $formatter): static
+    public function formatter($formatter)
     {
         if (! \is_null($formatter)) {
             $this->formatter = $formatter;
@@ -33,16 +33,20 @@ trait HasFormatter
 
     /**
      * Get the formatter for the instance.
+     *
+     * @return \Honed\Core\Contracts\Formats|null
      */
-    public function getFormatter(): ?Formats
+    public function getFormatter()
     {
         return $this->formatter;
     }
 
     /**
      * Determine if the instance has a formatter set.
+     *
+     * @return bool
      */
-    public function hasFormatter(): bool
+    public function hasFormatter()
     {
         return ! \is_null($this->formatter);
     }
@@ -50,9 +54,11 @@ trait HasFormatter
     /**
      * Set the class to use a boolean formatter.
      *
+     * @param  string|null  $true
+     * @param  string|null  $false
      * @return $this
      */
-    public function formatBoolean(?string $true = null, ?string $false = null): static
+    public function formatBoolean($true = null, $false = null)
     {
         return $this->formatter(BooleanFormatter::make($true, $false));
     }
@@ -60,9 +66,12 @@ trait HasFormatter
     /**
      * Set the class to use a string formatter.
      *
+     * @param  string|null  $prefix
+     * @param  string|null  $suffix
+     * @param  int|null  $limit
      * @return $this
      */
-    public function formatString(?string $prefix = null, ?string $suffix = null, ?int $limit = null): static
+    public function formatString($prefix = null, $suffix = null, $limit = null)
     {
         return $this->formatter(StringFormatter::make($prefix, $suffix, $limit));
     }
@@ -70,9 +79,12 @@ trait HasFormatter
     /**
      * Set the class to use a date formatter.
      *
+     * @param  string|null  $date
+     * @param  string|null  $timezone
+     * @param  bool|null  $diff
      * @return $this
      */
-    public function formatDate(?string $date = null, ?string $timezone = null, ?bool $diff = false): static
+    public function formatDate($date = null, $timezone = null, $diff = false)
     {
         return $this->formatter(DateFormatter::make($date, $timezone, $diff));
     }
@@ -80,9 +92,13 @@ trait HasFormatter
     /**
      * Set the class to use a number formatter.
      *
+     * @param  int|null  $precision
+     * @param  int|null  $divideBy
+     * @param  string|null  $locale
+     * @param  string|null  $currency
      * @return $this
      */
-    public function formatNumber(?int $precision = null, ?int $divideBy = null, ?string $locale = null, ?string $currency = null): static
+    public function formatNumber($precision = null, $divideBy = null, $locale = null, $currency = null)
     {
         return $this->formatter(NumberFormatter::make($precision, $divideBy, $locale, $currency));
     }
@@ -90,9 +106,10 @@ trait HasFormatter
     /**
      * Apply the formatter to the given value.
      *
+     * @param  mixed  $value
      * @return mixed
      */
-    public function format(mixed $value)
+    public function format($value)
     {
         return $this->hasFormatter()
             ? $this->formatter->format($value)

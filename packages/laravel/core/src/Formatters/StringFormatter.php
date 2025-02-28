@@ -24,33 +24,29 @@ class StringFormatter implements Formats
      */
     protected $limit = null;
 
-    public function __construct(
-        ?string $prefix = null,
-        ?string $suffix = null,
-        ?int $limit = null
-    ) {
-        $this->prefix($prefix);
-        $this->suffix($suffix);
-        $this->limit($limit);
-    }
-
     /**
      * Make a new string formatter.
+     *
+     * @param  string|null  $prefix
+     * @param  string|null  $suffix
+     * @param  int|null  $limit
+     * @return static
      */
-    public static function make(
-        ?string $prefix = null,
-        ?string $suffix = null,
-        ?int $limit = null
-    ): static {
-        return resolve(static::class, compact('prefix', 'suffix', 'limit'));
+    public static function make($prefix = null, $suffix = null, $limit = null)
+    {
+        return resolve(static::class)
+            ->prefix($prefix)
+            ->suffix($suffix)
+            ->limit($limit);
     }
 
     /**
      * Set the prefix for the instance.
      *
+     * @param  string|null  $prefix
      * @return $this
      */
-    public function prefix(?string $prefix = null): static
+    public function prefix($prefix = null)
     {
         if (! \is_null($prefix)) {
             $this->prefix = $prefix;
@@ -61,16 +57,20 @@ class StringFormatter implements Formats
 
     /**
      * Get the prefix for the instance.
+     *
+     * @return string|null
      */
-    public function getPrefix(): ?string
+    public function getPrefix()
     {
         return $this->prefix;
     }
 
     /**
      * Determine if the instance has a prefix set.
+     *
+     * @return bool
      */
-    public function hasPrefix(): bool
+    public function hasPrefix()
     {
         return ! \is_null($this->prefix);
     }
@@ -78,9 +78,10 @@ class StringFormatter implements Formats
     /**
      * Get or set the suffix for the instance.
      *
+     * @param  string|null  $suffix
      * @return $this
      */
-    public function suffix(?string $suffix = null): static
+    public function suffix($suffix = null)
     {
         if (! \is_null($suffix)) {
             $this->suffix = $suffix;
@@ -91,16 +92,20 @@ class StringFormatter implements Formats
 
     /**
      * Get the suffix for the instance.
+     *
+     * @return string|null
      */
-    public function getSuffix(): ?string
+    public function getSuffix()
     {
         return $this->suffix;
     }
 
     /**
      * Determine if the instance has a suffix set.
+     *
+     * @return bool
      */
-    public function hasSuffix(): bool
+    public function hasSuffix()
     {
         return ! \is_null($this->suffix);
     }
@@ -108,9 +113,10 @@ class StringFormatter implements Formats
     /**
      * Get or set the limit for the instance.
      *
+     * @param  int|null  $limit
      * @return $this
      */
-    public function limit(?int $limit = null): static
+    public function limit($limit = null)
     {
         if (! \is_null($limit)) {
             $this->limit = $limit;
@@ -121,30 +127,38 @@ class StringFormatter implements Formats
 
     /**
      * Get the limit for the instance.
+     *
+     * @return int|null
      */
-    public function getLimit(): ?int
+    public function getLimit()
     {
         return $this->limit;
     }
 
     /**
      * Determine if the instance has a limit set.
+     *
+     * @return bool
      */
-    public function hasLimit(): bool
+    public function hasLimit()
     {
         return ! \is_null($this->limit);
     }
 
     /**
      * Format the value as a string.
+     *
+     * @param  mixed  $value
+     * @return string|null
      */
-    public function format(mixed $value): ?string
+    public function format($value)
     {
         if (\is_null($value)) {
             return null;
         }
 
-        return str((string) $value)
+        /** @var string $value */
+        return str($value)
             ->when($this->hasLimit(),
                 fn (Stringable $str) => $str->limit($this->getLimit())) // @phpstan-ignore-line
             ->when($this->hasPrefix(),

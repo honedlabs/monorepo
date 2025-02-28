@@ -14,9 +14,10 @@ trait IsHidden
     /**
      * Set the instance as hidden.
      *
+     * @param  bool  $hidden
      * @return $this
      */
-    public function hidden(bool $hidden = true): static
+    public function hidden($hidden = true)
     {
         $this->hidden = $hidden;
 
@@ -26,17 +27,20 @@ trait IsHidden
     /**
      * Set the instance as shown.
      *
+     * @param  bool  $shown
      * @return $this
      */
-    public function shown(bool $shown = true): static
+    public function shown($shown = true)
     {
         return $this->hidden(! $shown);
     }
 
     /**
      * Determine if the instance is hidden.
+     *
+     * @return bool
      */
-    public function isHidden(): bool
+    public function isHidden()
     {
         return $this->hidden;
     }

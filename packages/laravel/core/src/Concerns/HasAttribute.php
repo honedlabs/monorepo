@@ -14,9 +14,10 @@ trait HasAttribute
     /**
      * Set the attribute for the instance.
      *
+     * @param  string|null  $attribute
      * @return $this
      */
-    public function attribute(?string $attribute): static
+    public function attribute($attribute)
     {
         if (! \is_null($attribute)) {
             $this->attribute = $attribute;
@@ -27,16 +28,20 @@ trait HasAttribute
 
     /**
      * Get the attribute for the instance.
+     *
+     * @return string|null
      */
-    public function getAttribute(): ?string
+    public function getAttribute()
     {
         return $this->attribute;
     }
 
     /**
      * Determine if the instance has an attribute set.
+     *
+     * @return bool
      */
-    public function hasAttribute(): bool
+    public function hasAttribute()
     {
         return ! \is_null($this->attribute);
     }

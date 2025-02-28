@@ -16,24 +16,32 @@ trait Encodable
 
     /**
      * Set the encoder for the instance.
+     *
+     * @param  \Closure|null  $encoder
+     * @return void
      */
-    public static function encoder(?\Closure $encoder = null): void
+    public static function encoder($encoder = null)
     {
         static::$encoder = $encoder;
     }
 
     /**
      * Set the decoder for the instance.
+     *
+     * @param  \Closure|null  $decoder
+     * @return void
      */
-    public static function decoder(?\Closure $decoder = null): void
+    public static function decoder($decoder = null)
     {
         static::$decoder = $decoder;
     }
 
     /**
      * Encode a value using the instance's encoder.
+     *
+     * @return string
      */
-    public static function encode(mixed $value): string
+    public static function encode(mixed $value)
     {
         return \is_null(static::$encoder)
             ? encrypt($value)
@@ -42,8 +50,10 @@ trait Encodable
 
     /**
      * Decode a value using the instance's decoder.
+     *
+     * @return string
      */
-    public static function decode(mixed $value): string
+    public static function decode(mixed $value)
     {
         return \is_null(static::$decoder)
             ? decrypt($value)

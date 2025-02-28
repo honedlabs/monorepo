@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 trait HasRoute
 {
-    const ValidMethods = [
+    public const ValidMethods = [
         Request::METHOD_GET,
         Request::METHOD_POST,
         Request::METHOD_PUT,
@@ -35,9 +35,11 @@ trait HasRoute
     /**
      * Set the route for this instance.
      *
+     * @param  string|\Closure|null  $route
+     * @param  array<string,mixed>  $parameters
      * @return $this
      */
-    public function route(string|\Closure|null $route, mixed $parameters = []): static
+    public function route($route, $parameters = [])
     {
         if (! \is_null($route)) {
             $this->route = match (true) {
@@ -52,9 +54,10 @@ trait HasRoute
     /**
      * Set the url for this instance.
      *
+     * @param  string|\Closure|null  $url
      * @return $this
      */
-    public function url(string|\Closure|null $url): static
+    public function url($url)
     {
         if (! \is_null($url)) {
             $this->route = $url instanceof \Closure
@@ -68,9 +71,10 @@ trait HasRoute
     /**
      * Set the HTTP method for the route.
      *
+     * @param  string|null  $method
      * @return $this
      */
-    public function method(?string $method): static
+    public function method($method)
     {
         if (\is_null($method)) {
             return $this;
@@ -90,9 +94,10 @@ trait HasRoute
     /**
      * Mark the route as being an external url.
      *
+     * @param  string|null  $url
      * @return $this
      */
-    public function external(?string $url = null): static
+    public function external($url = null)
     {
         $this->external = true;
 
@@ -101,16 +106,20 @@ trait HasRoute
 
     /**
      * Determine if the route is set.
+     *
+     * @return bool
      */
-    public function hasRoute(): bool
+    public function hasRoute()
     {
         return ! \is_null($this->route);
     }
 
     /**
      * Determine if the route points to an external link.
+     *
+     * @return bool
      */
-    public function isExternal(): bool
+    public function isExternal()
     {
         return $this->external;
     }
@@ -120,8 +129,9 @@ trait HasRoute
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
+     * @return string|null
      */
-    public function getRoute($parameters = [], $typed = []): ?string
+    public function getRoute($parameters = [], $typed = [])
     {
         return $this->evaluate($this->route, $parameters, $typed);
     }
@@ -131,8 +141,9 @@ trait HasRoute
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
+     * @return string|null
      */
-    public function resolveRoute(array $parameters = [], array $typed = []): ?string
+    public function resolveRoute(array $parameters = [], array $typed = [])
     {
         /** @var string|null */
         $evaluated = $this->evaluate($this->route, $parameters, $typed);
@@ -145,9 +156,9 @@ trait HasRoute
     /**
      * Get the HTTP method for the route.
      *
-     * @default \Symfony\Component\HttpFoundation\Request::METHOD_GET
+     * @return string
      */
-    public function getMethod(): string
+    public function getMethod()
     {
         return $this->method;
     }

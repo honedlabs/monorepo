@@ -14,9 +14,10 @@ trait HasFormat
     /**
      * Set the format for the instance.
      *
+     * @param  string|\Closure|null  $format
      * @return $this
      */
-    public function format(string|\Closure|null $format): static
+    public function format($format)
     {
         if (! \is_null($format)) {
             $this->format = $format;
@@ -27,8 +28,10 @@ trait HasFormat
 
     /**
      * Get the format for the instance.
+     *
+     * @return string|null
      */
-    public function getFormat(): string
+    public function getFormat()
     {
         return $this->format instanceof \Closure
             ? $this->resolveFormat()
@@ -40,8 +43,9 @@ trait HasFormat
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
+     * @return string|null
      */
-    public function resolveFormat(array $parameters = [], array $typed = []): ?string
+    public function resolveFormat($parameters = [], $typed = [])
     {
         /** @var string|null */
         $evaluated = $this->evaluate($this->format, $parameters, $typed);
@@ -53,8 +57,10 @@ trait HasFormat
 
     /**
      * Determine if the instance has a format set.
+     *
+     * @return bool
      */
-    public function hasFormat(): bool
+    public function hasFormat()
     {
         return ! \is_null($this->format);
     }

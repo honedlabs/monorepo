@@ -17,7 +17,7 @@ trait HasPlaceholder
      * @param  string|null  $placeholder
      * @return $this
      */
-    public function placeholder($placeholder): static
+    public function placeholder($placeholder)
     {
         if (! \is_null($placeholder)) {
             $this->placeholder = $placeholder;
@@ -28,16 +28,20 @@ trait HasPlaceholder
 
     /**
      * Get the placeholder for the instance.
+     *
+     * @return string|null
      */
-    public function getPlaceholder(): ?string
+    public function getPlaceholder()
     {
         return $this->placeholder;
     }
 
     /**
      * Determine if the instance has an placeholder set.
+     *
+     * @return bool
      */
-    public function hasPlaceholder(): bool
+    public function hasPlaceholder()
     {
         return ! \is_null($this->placeholder);
     }

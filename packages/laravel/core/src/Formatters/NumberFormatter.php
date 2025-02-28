@@ -29,36 +29,31 @@ class NumberFormatter implements Formats
      */
     protected $currency = null;
 
-    public function __construct(
-        ?int $precision = null,
-        ?int $divideBy = null,
-        ?string $locale = null,
-        ?string $currency = null
-    ) {
-        $this->precision($precision);
-        $this->divideBy($divideBy);
-        $this->locale($locale);
-        $this->currency($currency);
-    }
-
     /**
      * Make a new number formatter.
+     *
+     * @param  int|null  $precision
+     * @param  int|null  $divideBy
+     * @param  string|null  $locale
+     * @param  string|null  $currency
+     * @return static
      */
-    public static function make(
-        ?int $precision = null,
-        ?int $divideBy = null,
-        ?string $locale = null,
-        ?string $currency = null
-    ): static {
-        return resolve(static::class, compact('precision', 'divideBy', 'locale', 'currency'));
+    public static function make($precision = null, $divideBy = null, $locale = null, $currency = null)
+    {
+        return resolve(static::class)
+            ->precision($precision)
+            ->divideBy($divideBy)
+            ->locale($locale)
+            ->currency($currency);
     }
 
     /**
      * Set the precision for the instance.
      *
+     * @param  int|null  $precision
      * @return $this
      */
-    public function precision(?int $precision): static
+    public function precision($precision = null)
     {
         if (! \is_null($precision)) {
             $this->precision = $precision;
@@ -69,16 +64,20 @@ class NumberFormatter implements Formats
 
     /**
      * Get the precision for the instance.
+     *
+     * @return int|null
      */
-    public function getPrecision(): ?int
+    public function getPrecision()
     {
         return $this->precision;
     }
 
     /**
      * Determine if the instance has a precision.
+     *
+     * @return bool
      */
-    public function hasPrecision(): bool
+    public function hasPrecision()
     {
         return ! \is_null($this->precision);
     }
@@ -86,9 +85,10 @@ class NumberFormatter implements Formats
     /**
      * Set the divide by amount for the instance.
      *
+     * @param  int|null  $divideBy
      * @return $this
      */
-    public function divideBy(?int $divideBy): static
+    public function divideBy($divideBy = null)
     {
         if (! \is_null($divideBy)) {
             $this->divideBy = $divideBy;
@@ -99,8 +99,10 @@ class NumberFormatter implements Formats
 
     /**
      * Get the divide by amount for the instance.
+     *
+     * @return int|null
      */
-    public function getDivideBy(): ?int
+    public function getDivideBy()
     {
         return $this->divideBy;
     }
@@ -110,15 +112,17 @@ class NumberFormatter implements Formats
      *
      * @return $this
      */
-    public function cents(): static
+    public function cents()
     {
         return $this->divideBy(100);
     }
 
     /**
      * Determine if the instance has a divide by amount set.
+     *
+     * @return bool
      */
-    public function hasDivideBy(): bool
+    public function hasDivideBy()
     {
         return ! \is_null($this->divideBy);
     }
@@ -126,9 +130,10 @@ class NumberFormatter implements Formats
     /**
      * Get or set the locale for the instance.
      *
+     * @param  string|null  $locale
      * @return $this
      */
-    public function locale(?string $locale): static
+    public function locale($locale = null)
     {
         if (! \is_null($locale)) {
             $this->locale = $locale;
@@ -139,16 +144,20 @@ class NumberFormatter implements Formats
 
     /**
      * Get the locale for the instance.
+     *
+     * @return string|null
      */
-    public function getLocale(): ?string
+    public function getLocale()
     {
         return $this->locale;
     }
 
     /**
      * Determine if the instance has a locale set.
+     *
+     * @return bool
      */
-    public function hasLocale(): bool
+    public function hasLocale()
     {
         return ! \is_null($this->locale);
     }
@@ -156,9 +165,10 @@ class NumberFormatter implements Formats
     /**
      * Set the currency for the instance.
      *
+     * @param  string|null  $currency
      * @return $this
      */
-    public function currency(?string $currency): static
+    public function currency($currency = null)
     {
         if (! \is_null($currency)) {
             $this->currency = $currency;
@@ -169,24 +179,31 @@ class NumberFormatter implements Formats
 
     /**
      * Get the currency for the instance.
+     *
+     * @return string|null
      */
-    public function getCurrency(): ?string
+    public function getCurrency()
     {
         return $this->currency;
     }
 
     /**
      * Determine if the instance has a currency set.
+     *
+     * @return bool
      */
-    public function hasCurrency(): bool
+    public function hasCurrency()
     {
         return ! \is_null($this->currency);
     }
 
     /**
      * Format the value as a number.
+     *
+     * @param  mixed  $value
+     * @return mixed
      */
-    public function format(mixed $value): mixed
+    public function format($value)
     {
         if (\is_null($value) || ! \is_numeric($value)) {
             return null;

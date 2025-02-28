@@ -16,7 +16,7 @@ trait HasValue
      *
      * @return $this
      */
-    public function value(mixed $value): static
+    public function value(mixed $value)
     {
         if (! \is_null($value)) {
             $this->value = $value;
@@ -27,16 +27,20 @@ trait HasValue
 
     /**
      * Get the value for the instance.
+     *
+     * @return mixed
      */
-    public function getValue(): mixed
+    public function getValue()
     {
         return $this->value;
     }
 
     /**
      * Determine if the instance has an value set.
+     *
+     * @return bool
      */
-    public function hasValue(): bool
+    public function hasValue()
     {
         return isset($this->value);
     }

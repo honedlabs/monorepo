@@ -16,9 +16,10 @@ trait HasIcon
     /**
      * Set the icon for the instance.
      *
+     * @param  string|Iconable|\Closure|null  $icon
      * @return $this
      */
-    public function icon(string|Iconable|\Closure|null $icon): static
+    public function icon($icon)
     {
         if (! \is_null($icon)) {
             $this->icon = $icon;
@@ -29,8 +30,10 @@ trait HasIcon
 
     /**
      * Get the icon for the instance.
+     *
+     * @return string|null
      */
-    public function getIcon(): ?string
+    public function getIcon()
     {
         return match (true) {
             $this->icon instanceof Iconable => $this->icon->icon(),
@@ -46,7 +49,7 @@ trait HasIcon
      * @param  array<string,mixed>  $typed
      * @return string|\Honed\Core\Contracts\Iconable|null
      */
-    public function resolveIcon(array $parameters = [], array $typed = []): ?string
+    public function resolveIcon($parameters = [], $typed = [])
     {
         /** @var string|null */
         $evaluated = $this->evaluate($this->icon, $parameters, $typed);
@@ -58,8 +61,10 @@ trait HasIcon
 
     /**
      * Determine if the instance has an icon set.
+     *
+     * @return bool
      */
-    public function hasIcon(): bool
+    public function hasIcon()
     {
         return ! \is_null($this->icon);
     }

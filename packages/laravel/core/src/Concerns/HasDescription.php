@@ -14,9 +14,10 @@ trait HasDescription
     /**
      * Set the description for the instance.
      *
+     * @param  string|\Closure|null  $description
      * @return $this
      */
-    public function description(string|\Closure|null $description): static
+    public function description($description)
     {
         if (! \is_null($description)) {
             $this->description = $description;
@@ -27,8 +28,10 @@ trait HasDescription
 
     /**
      * Get the description for the instance.
+     *
+     * @return string|null
      */
-    public function getDescription(): ?string
+    public function getDescription()
     {
         return $this->description instanceof \Closure
             ? $this->resolveDescription()
@@ -40,8 +43,9 @@ trait HasDescription
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
+     * @return string|null
      */
-    public function resolveDescription(array $parameters = [], array $typed = []): ?string
+    public function resolveDescription($parameters = [], $typed = [])
     {
         /** @var string|null */
         $evaluated = $this->evaluate($this->description, $parameters, $typed);
@@ -53,8 +57,10 @@ trait HasDescription
 
     /**
      * Determine if the instance has a description set.
+     *
+     * @return bool
      */
-    public function hasDescription(): bool
+    public function hasDescription()
     {
         return ! \is_null($this->description);
     }

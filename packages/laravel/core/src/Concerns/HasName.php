@@ -14,9 +14,10 @@ trait HasName
     /**
      * Set the name for the instance.
      *
+     * @param  string|\Closure|null  $name
      * @return $this
      */
-    public function name(string|\Closure|null $name): static
+    public function name($name)
     {
         if (! \is_null($name)) {
             $this->name = $name;
@@ -27,8 +28,10 @@ trait HasName
 
     /**
      * Get the name for the instance.
+     *
+     * @return string|null
      */
-    public function getName(): ?string
+    public function getName()
     {
         return $this->name instanceof \Closure
             ? $this->resolveName()
@@ -40,8 +43,9 @@ trait HasName
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
+     * @return string|null
      */
-    public function resolveName(array $parameters = [], array $typed = []): ?string
+    public function resolveName($parameters = [], $typed = [])
     {
         /** @var string|null */
         $evaluated = $this->evaluate($this->name, $parameters, $typed);
@@ -53,16 +57,21 @@ trait HasName
 
     /**
      * Determine if the instance has a name set.
+     *
+     * @return bool
      */
-    public function hasName(): bool
+    public function hasName()
     {
         return ! \is_null($this->name);
     }
 
     /**
      * Convert a string to the name format
+     *
+     * @param  string|null  $label
+     * @return string|null
      */
-    public static function makeName(?string $label): ?string
+    public static function makeName($label)
     {
         if (\is_null($label)) {
             return null;

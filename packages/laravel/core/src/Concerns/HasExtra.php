@@ -14,9 +14,10 @@ trait HasExtra
     /**
      * Set the extra for the instance.
      *
+     * @param  array<string,mixed>|\Closure|null  $extra
      * @return $this
      */
-    public function extra(array|\Closure|null $extra): static
+    public function extra($extra)
     {
         if (! \is_null($extra)) {
             $this->extra = $extra;
@@ -27,8 +28,10 @@ trait HasExtra
 
     /**
      * Get the extra for the instance.
+     *
+     * @return array<string,mixed>
      */
-    public function getExtra(): array
+    public function getExtra()
     {
         return $this->extra instanceof \Closure
             ? $this->resolveExtra()
@@ -42,7 +45,7 @@ trait HasExtra
      * @param  array<string,mixed>  $typed
      * @return array<string,mixed>
      */
-    public function resolveExtra(array $parameters = [], array $typed = []): array
+    public function resolveExtra($parameters = [], $typed = [])
     {
         /** @var array<string,mixed>|null */
         $evaluated = $this->evaluate($this->extra, $parameters, $typed);
@@ -54,9 +57,11 @@ trait HasExtra
 
     /**
      * Determine if the instance has a extra set.
+     *
+     * @return bool
      */
-    public function hasExtra(): bool
+    public function hasExtra()
     {
-        return $this->extra instanceof \Closure || \count($this->extra) > 0;
+        return $this->extra instanceof \Closure || filled($this->extra);
     }
 }

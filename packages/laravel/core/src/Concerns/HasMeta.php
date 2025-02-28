@@ -17,7 +17,7 @@ trait HasMeta
      * @param  array<string,mixed>|null  $meta
      * @return $this
      */
-    public function meta($meta = null): static
+    public function meta($meta = null)
     {
         if (! \is_null($meta)) {
             $this->meta = $meta;
@@ -31,16 +31,18 @@ trait HasMeta
      *
      * @return array<string,mixed>
      */
-    public function getMeta(): array
+    public function getMeta()
     {
         return $this->meta;
     }
 
     /**
      * Determine if the instance has meta set.
+     *
+     * @return bool
      */
-    public function hasMeta(): bool
+    public function hasMeta()
     {
-        return \count($this->meta) > 0;
+        return filled($this->meta);
     }
 }

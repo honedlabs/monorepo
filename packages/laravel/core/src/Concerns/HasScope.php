@@ -14,9 +14,10 @@ trait HasScope
     /**
      * Set the scope for the instance.
      *
+     * @param  string|null  $scope
      * @return $this
      */
-    public function scope(?string $scope): static
+    public function scope($scope)
     {
         if (! \is_null($scope)) {
             $this->scope = $scope;
@@ -27,24 +28,31 @@ trait HasScope
 
     /**
      * Get the scope for the instance.
+     *
+     * @return string|null
      */
-    public function getScope(): ?string
+    public function getScope()
     {
         return $this->scope;
     }
 
     /**
      * Determine if the instance has an scope set.
+     *
+     * @return bool
      */
-    public function hasScope(): bool
+    public function hasScope()
     {
         return ! \is_null($this->scope);
     }
 
     /**
      * Format a value using the scope for the instance.
+     *
+     * @param  string  $value
+     * @return string
      */
-    public function formatScope(string $value): string
+    public function formatScope($value)
     {
         if (! $this->hasScope()) {
             return $value;
@@ -55,8 +63,11 @@ trait HasScope
 
     /**
      * Retrieve a value from a formatted scope.
+     *
+     * @param  string  $value
+     * @return string
      */
-    public function decodeScope(string $value): string
+    public function decodeScope($value)
     {
         return \str($value)
             ->afterLast('{')

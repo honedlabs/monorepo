@@ -8,6 +8,8 @@ interface Iconable
 {
     /**
      * Get the icon.
+     *
+     * @return string
      */
-    public function icon(): string;
+    public function icon();
 }

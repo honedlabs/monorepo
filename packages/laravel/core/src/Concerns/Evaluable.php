@@ -8,7 +8,6 @@ use Closure;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use ReflectionFunction;
 use ReflectionNamedType;
-use ReflectionParameter;
 
 /**
  * Taken from FilamentPHP
@@ -33,7 +32,7 @@ trait Evaluable
      * @param  array<string, mixed>  $typed
      * @return T
      */
-    public function evaluate($value, $named = [], $typed = []): mixed
+    public function evaluate($value, $named = [], $typed = [])
     {
         if (\is_object($value) && method_exists($value, '__invoke')) {
             $value = $value->__invoke(...); // @phpstan-ignore-line
@@ -55,10 +54,12 @@ trait Evaluable
     /**
      * Resolve a closure dependency for evaluation.
      *
+     * @param  \ReflectionParameter  $parameter
      * @param  array<string,mixed>  $named
      * @param  array<string,mixed>  $typed
+     * @return mixed
      */
-    protected function resolveClosureDependencyForEvaluation(ReflectionParameter $parameter, array $named, array $typed): mixed
+    protected function resolveClosureDependencyForEvaluation($parameter, $named = [], $typed = [])
     {
         $parameterName = $parameter->getName();
 
@@ -117,9 +118,10 @@ trait Evaluable
     /**
      * Provide a selection of default dependencies for evaluation by name.
      *
+     * @param  string  $parameterName
      * @return array<int,mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return [];
     }
@@ -127,17 +129,21 @@ trait Evaluable
     /**
      * Provide a selection of default dependencies for evaluation by type.
      *
+     * @param  string  $parameterType
      * @return array<int,mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
+    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
         return [];
     }
 
     /**
      * Retrieve the typed reflection parameter class name.
+     *
+     * @param  \ReflectionParameter  $parameter
+     * @return string|null
      */
-    protected function getTypedReflectionParameterClassName(ReflectionParameter $parameter): ?string
+    protected function getTypedReflectionParameterClassName($parameter)
     {
         $type = $parameter->getType();
 

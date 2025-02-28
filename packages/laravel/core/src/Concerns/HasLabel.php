@@ -14,9 +14,10 @@ trait HasLabel
     /**
      * Set the label for the instance.
      *
+     * @param  string|\Closure|null  $label
      * @return $this
      */
-    public function label(string|\Closure|null $label): static
+    public function label($label)
     {
         if (! \is_null($label)) {
             $this->label = $label;
@@ -27,8 +28,10 @@ trait HasLabel
 
     /**
      * Get the label for the instance.
+     *
+     * @return string|null
      */
-    public function getLabel(): ?string
+    public function getLabel()
     {
         return $this->label instanceof \Closure
             ? $this->resolveLabel()
@@ -40,8 +43,9 @@ trait HasLabel
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<string,mixed>  $typed
+     * @return string|null
      */
-    public function resolveLabel(array $parameters = [], array $typed = []): ?string
+    public function resolveLabel(array $parameters = [], array $typed = [])
     {
         /** @var string|null */
         $evaluated = $this->evaluate($this->label, $parameters, $typed);
@@ -53,16 +57,21 @@ trait HasLabel
 
     /**
      * Determine if the instance has a label set.
+     *
+     * @return bool
      */
-    public function hasLabel(): bool
+    public function hasLabel()
     {
         return ! \is_null($this->label);
     }
 
     /**
      * Convert a string to the label format.
+     *
+     * @param  string|null  $name
+     * @return string|null
      */
-    public static function makeLabel(?string $name): ?string
+    public static function makeLabel($name)
     {
         if (\is_null($name)) {
             return null;

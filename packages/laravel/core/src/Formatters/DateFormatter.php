@@ -25,33 +25,29 @@ class DateFormatter implements Formats
      */
     protected $since = false;
 
-    public function __construct(
-        ?string $date = null,
-        ?string $timezone = null,
-        bool $diff = false
-    ) {
-        $this->date($date);
-        $this->timezone($timezone);
-        $this->since($diff);
-    }
-
     /**
      * Make a new date formatter.
+     *
+     * @param  string|null  $date
+     * @param  string|null  $timezone
+     * @param  bool  $diff
+     * @return static
      */
-    public static function make(
-        ?string $date = null,
-        ?string $timezone = null,
-        bool $diff = false
-    ): static {
-        return resolve(static::class, compact('date', 'timezone', 'diff'));
+    public static function make($date = null, $timezone = null, $diff = false)
+    {
+        return resolve(static::class)
+            ->date($date)
+            ->timezone($timezone)
+            ->since($diff);
     }
 
     /**
      * Set the date for the instance.
      *
+     * @param  string|null  $date
      * @return $this
      */
-    public function date(?string $date): static
+    public function date($date = null)
     {
         if (! \is_null($date)) {
             $this->date = $date;
@@ -62,8 +58,10 @@ class DateFormatter implements Formats
 
     /**
      * Get the date for the instance.
+     *
+     * @return string
      */
-    public function getDate(): string
+    public function getDate()
     {
         return $this->date;
     }
@@ -71,9 +69,10 @@ class DateFormatter implements Formats
     /**
      * Set the timezone for the instance.
      *
+     * @param  string|null  $timezone
      * @return $this
      */
-    public function timezone(?string $timezone): static
+    public function timezone($timezone = null)
     {
         if (! \is_null($timezone)) {
             $this->timezone = $timezone;
@@ -84,16 +83,20 @@ class DateFormatter implements Formats
 
     /**
      * Get the timezone for the instance.
+     *
+     * @return string|null
      */
-    public function getTimezone(): ?string
+    public function getTimezone()
     {
         return $this->timezone;
     }
 
     /**
      * Determine if the instance has a timezone set.
+     *
+     * @return bool
      */
-    public function hasTimezone(): bool
+    public function hasTimezone()
     {
         return ! \is_null($this->timezone);
     }
@@ -101,9 +104,10 @@ class DateFormatter implements Formats
     /**
      * Set the instance to use diff for humans.
      *
+     * @param  bool  $since
      * @return $this
      */
-    public function since(bool $since = true): static
+    public function since($since = true)
     {
         $this->since = $since;
 
@@ -112,17 +116,23 @@ class DateFormatter implements Formats
 
     /**
      * Determine if the instance uses diff for humans.
+     *
+     * @return bool
      */
-    public function isSince(): bool
+    public function isSince()
     {
         return $this->since;
     }
 
     /**
      * Format the value as a date string.
+     *
+     * @param  mixed  $value
+     * @return string|null
      */
-    public function format(mixed $value): ?string
+    public function format($value)
     {
+        /** @var string|null $value */
         if (\is_null($value)) {
             return null;
         }
