@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Honed\Refine;
 
 use Honed\Core\Concerns\HasBuilderInstance;
+use Honed\Core\Concerns\HasRequest;
+use Honed\Core\Concerns\HasScope;
 use Honed\Core\Primitive;
-use Honed\Refine\Concerns\AccessesRequest;
 use Honed\Refine\Filters\Filter;
 use Honed\Refine\Searches\Search;
 use Honed\Refine\Sorts\Sort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
@@ -24,12 +24,13 @@ use Illuminate\Support\Traits\ForwardsCalls;
  */
 class Refine extends Primitive
 {
-    use AccessesRequest;
     use Concerns\HasFilters;
     use Concerns\HasSearches;
     use Concerns\HasSorts;
     use ForwardsCalls;
     use HasBuilderInstance;
+    use HasRequest;
+    use HasScope;
 
     /**
      * Whether the refine pipeline has been run.
@@ -160,30 +161,13 @@ class Refine extends Primitive
             return $this;
         }
 
-        $this->pipe([
-            'search',
-            'sort',
-            'filter',
-        ]);
-
-        return $this->markAsRefined();
-    }
-
-    /**
-     * Pipe the builder through a series of methods.
-     *
-     * @param  array<int,string>  $pipes
-     * @return $this
-     */
-    public function pipe($pipes)
-    {
         $builder = $this->getBuilder();
 
-        foreach ($pipes as $pipe) {
-            $this->{$pipe}($builder);
-        }
+        $this->search($builder);
+        $this->sort($builder);
+        $this->filter($builder);
 
-        return $this;
+        return $this->markAsRefined();
     }
 
     /**
@@ -194,18 +178,14 @@ class Refine extends Primitive
      */
     public function using($refiners)
     {
-        if ($refiners instanceof Collection) {
-            $refiners = $refiners->all();
-        }
-
-        foreach ($refiners as $refiner) {
+        collect($refiners)->each(function ($refiner) {
             match (true) {
                 $refiner instanceof Filter => $this->addFilter($refiner),
                 $refiner instanceof Sort => $this->addSort($refiner),
                 $refiner instanceof Search => $this->addSearch($refiner),
                 default => null,
             };
-        }
+        });
 
         return $this;
     }

@@ -85,10 +85,7 @@
         "laravel": {
             "providers": [
                 "Honed\\Refine\\RefineServiceProvider"
-            ],
-            "aliases": {
-                "Refine": "Honed\\Refine\\Facades\\Refine"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",

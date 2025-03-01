@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Honed\Refine\Tests\Stubs\Product;
 use Honed\Refine\Tests\Stubs\Status;
 use Honed\Refine\Tests\TestCase;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 
 uses(TestCase::class)->in(__DIR__);
 
