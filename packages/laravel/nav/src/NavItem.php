@@ -13,14 +13,14 @@ class NavItem extends NavBase
 
     /**
      * Condition for this nav item to be considered active.
-     * 
+     *
      * @var string|\Closure|null
      */
     protected $active;
 
     /**
      * Create a new nav item instance.
-     * 
+     *
      * @param  string  $label
      * @param  string|\Closure|null  $route
      * @param  array<string,mixed>  $parameters
@@ -64,12 +64,12 @@ class NavItem extends NavBase
 
     /**
      * Determine if this nav item is active.
-     * 
+     *
      * @return bool
      */
     public function isActive()
     {
-        $request = request();
+        $request = $this->getRequest();
         $route = $this->resolveRoute();
 
         return (bool) match (true) {
@@ -81,7 +81,7 @@ class NavItem extends NavBase
 
     /**
      * Determine if the given route is a uri.
-     * 
+     *
      * @param  mixed  $route
      * @return bool
      */

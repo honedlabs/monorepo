@@ -24,6 +24,11 @@ abstract class NavBase extends Primitive
     use HasLabel;
     use HasRequest;
 
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -68,11 +73,9 @@ abstract class NavBase extends Primitive
 
         $parameters = Arr::mapWithKeys(
             $request->route()?->parameters() ?? [],
-            static fn ($value, $key) => [
-                $key => \is_object($value) 
-                    ? [\get_class($value) => [$value]] 
-                    : [],
-            ],
+            static fn ($value) => \is_object($value)
+                ? [\get_class($value) => [$value]]
+                : [],
         );
 
         /** @var array<int,mixed> */

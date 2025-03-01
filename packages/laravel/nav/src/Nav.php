@@ -8,7 +8,7 @@ use Honed\Nav\Support\Parameters;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
 
-class Manager
+class Nav
 {
     /**
      * Keyed navigation groups.
@@ -63,25 +63,32 @@ class Manager
     }
 
     /**
-     * Determine if the group(s) exists.
+     * Determine if one or more navigation groups exist.
      *
      * @param  string|array<int,string>  $groups
      * @return bool
      */
     public function hasGroup($groups)
     {
-        if (\is_array($groups) && ! \count($groups)) {
+        $groups = Arr::wrap($groups);
+
+        if (empty($groups)) {
             return true;
         }
 
-        return Arr::has($this->items, $groups);
+        return empty(
+            \array_diff(
+                $groups,
+                \array_keys($this->items)
+            )
+        );
     }
 
     /**
      * Retrieve navigation groups and their allowed items.
      *
      * @param  string|array<int,string>  $groups
-     * @return array<int|string,mixed>
+     * @return array<string,array<int,\Honed\Nav\NavBase>>
      */
     public function get(...$groups)
     {
@@ -91,10 +98,6 @@ class Manager
             static::throwMissingGroupException(implode(', ', $groups));
         }
 
-        if (\count($groups) === 1) {
-            return $this->getGroup($groups[0]);
-        }
-
         $keys = empty($groups) ? \array_keys($this->items) : $groups;
 
         return $this->getGroups($keys);
@@ -102,9 +105,9 @@ class Manager
 
     /**
      * Retrieve the navigation groups for the given keys.
-     * 
-     * @param array<int,string> $keys
-     * @return array<int,array<int,\Honed\Nav\NavBase>>
+     *
+     * @param  array<int,string>  $keys
+     * @return array<string,array<int,\Honed\Nav\NavBase>>
      */
     protected function getGroups($keys)
     {
@@ -134,6 +137,25 @@ class Manager
     }
 
     /**
+     * Get the navigation items as an array.
+     *
+     * @param  string|array<int,string>  $groups
+     * @return array<string,array<int,array<string,mixed>>>
+     */
+    public function getToArray(...$groups)
+    {
+        $groups = $this->get(...$groups);
+
+        return \array_map(
+            fn ($group) => \array_map(
+                fn (NavBase $item) => $item->toArray(),
+                $group
+            ),
+            $groups
+        );
+    }
+
+    /**
      * Share the navigation items with Inertia.
      *
      * @param  string|array<int,string>  $groups
@@ -141,38 +163,37 @@ class Manager
      */
     public function share(...$groups)
     {
-        $groups = $this->get(...$groups);
-
-        Inertia::share(Parameters::Prop, $groups);
+        Inertia::share(
+            Parameters::Prop,
+            $this->getToArray(...$groups)
+        );
 
         return $this;
     }
 
     /**
      * Throw an exception for a duplicate group.
-     * 
+     *
      * @param  string  $group
      * @return never
      */
     protected static function throwDuplicateGroupException($group)
     {
         throw new \InvalidArgumentException(
-            \sprintf('There already exists a group with the name [%s].',
-                $group
-            ));
+            \sprintf('There already exists a group with the name [%s].', $group)
+        );
     }
 
     /**
      * Throw an exception for a missing group.
-     * 
+     *
      * @param  string  $group
      * @return never
      */
     protected static function throwMissingGroupException($group)
     {
         throw new \InvalidArgumentException(
-            \sprintf('There is no group with the name [%s].',
-                $group
-            ));
+            \sprintf('There is no group with the name [%s].', $group)
+        );
     }
 }
