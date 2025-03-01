@@ -7,17 +7,21 @@ namespace Honed\Core\Concerns;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ */
 trait HasBuilderInstance
 {
     /**
-     * @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|null
+     * @var TBuilder<TModel>|null
      */
     protected $builder;
 
     /**
      * Set the builder instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  TBuilder<TModel>  $builder
      * @return $this
      */
     public function builder($builder)
@@ -40,7 +44,7 @@ trait HasBuilderInstance
     /**
      * Get the builder instance.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
+     * @return TBuilder<TModel>
      */
     public function getBuilder()
     {
@@ -54,8 +58,8 @@ trait HasBuilderInstance
     /**
      * Create a new builder instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
+     * @param  TModel|class-string<TModel>|TBuilder<TModel>  $query
+     * @return TBuilder<TModel>
      */
     public static function createBuilder($query)
     {
