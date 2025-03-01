@@ -7,6 +7,9 @@ namespace Honed\Refine\Concerns;
 use Honed\Refine\Searches\Search;
 use Illuminate\Support\Collection;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ */
 trait HasSearches
 {
     /**
@@ -262,7 +265,7 @@ trait HasSearches
     /**
      * Apply a search to the query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
      * @param  \Illuminate\Http\Request  $request
      * @return $this
      */

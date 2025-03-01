@@ -8,6 +8,9 @@ use Honed\Refine\Sorts\Sort;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ */
 trait HasSorts
 {
     /**
@@ -124,7 +127,7 @@ trait HasSorts
     /**
      * Apply a sort to the query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
      * @param  \Illuminate\Http\Request  $request
      * @return $this
      */
@@ -150,7 +153,7 @@ trait HasSorts
     /**
      * Apply a default sort to the query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
      * @param  array<int, \Honed\Refine\Sorts\Sort>  $sorts
      * @return void
      */

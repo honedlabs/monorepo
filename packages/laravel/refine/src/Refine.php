@@ -8,6 +8,9 @@ use Honed\Core\Concerns\HasBuilderInstance;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasScope;
 use Honed\Core\Primitive;
+use Honed\Refine\Concerns\HasFilters;
+use Honed\Refine\Concerns\HasSearches;
+use Honed\Refine\Concerns\HasSorts;
 use Honed\Refine\Filters\Filter;
 use Honed\Refine\Searches\Search;
 use Honed\Refine\Sorts\Sort;
@@ -17,20 +20,29 @@ use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @mixin \Illuminate\Database\Eloquent\Builder<TModel>
+ * @mixin TBuilder
  *
  * @extends Primitive<string, mixed>
  */
 class Refine extends Primitive
 {
-    use Concerns\HasFilters;
-    use Concerns\HasSearches;
-    use Concerns\HasSorts;
     use ForwardsCalls;
+
+    /** @use HasBuilderInstance<TBuilder, TModel> */
     use HasBuilderInstance;
+
+    /** @use HasFilters<TModel> */
+    use HasFilters;
+
     use HasRequest;
+
     use HasScope;
+    /** @use HasSearches<TModel> */
+    use HasSearches;
+    /** @use HasSorts<TModel> */
+    use HasSorts;
 
     /**
      * Whether the refine pipeline has been run.
@@ -38,6 +50,13 @@ class Refine extends Primitive
      * @var bool
      */
     protected $refined = false;
+
+    /**
+     * A closure to be called after the refiners have been applied.
+     *
+     * @var \Closure|null
+     */
+    protected $after;
 
     /**
      * The delimiter to use for array access.
@@ -57,7 +76,7 @@ class Refine extends Primitive
     /**
      * Create a new refine instance.
      *
-     * @param  TModel|class-string<TModel>|\Illuminate\Database\Eloquent\Builder<TModel>  $query
+     * @param  TModel|class-string<TModel>|TBuilder  $query
      * @return static
      */
     public static function make($query)
@@ -76,34 +95,21 @@ class Refine extends Primitive
      */
     public function __call($name, $arguments)
     {
-
-        if ($name === 'sorts') {
-            /** @var array<int, \Honed\Refine\Sorts\Sort> $argument */
-            $argument = $arguments[0];
-
-            return $this->addSorts($argument);
-        }
-
-        if ($name === 'filters') {
-            /** @var array<int, \Honed\Refine\Filters\Filter> $argument */
-            $argument = $arguments[0];
-
-            return $this->addFilters($argument);
-        }
-
-        if ($name === 'searches') {
-            /** @var array<int, \Honed\Refine\Searches\Search> $argument */
-            $argument = $arguments[0];
-
-            return $this->addSearches($argument);
-        }
-
-        // Delay the refine call until records are retrieved
-        return $this->refine()->forwardDecoratedCallTo(
-            $this->getBuilder(),
-            $name,
-            $arguments
-        );
+        return match (true) {
+            // @phpstan-ignore-next-line
+            $name === 'sorts' => $this->addSorts($arguments[0]),
+            // @phpstan-ignore-next-line
+            $name === 'filters' => $this->addFilters($arguments[0]),
+            // @phpstan-ignore-next-line
+            $name === 'searches' => $this->addSearches($arguments[0]),
+            // @phpstan-ignore-next-line
+            $name === 'after' => $this->after = $arguments[0],
+            default => $this->refine()->forwardDecoratedCallTo(
+                $this->getBuilder(),
+                $name,
+                $arguments
+            ),
+        };
     }
 
     /**
@@ -208,11 +214,42 @@ class Refine extends Primitive
         $builder = $this->getBuilder();
         $request = $this->getRequest();
 
+        $this->pipeline($builder, $request);
+
+        return $this->markAsRefined();
+    }
+
+    /**
+     * Execute the refine pipeline.
+     *
+     * @param  TBuilder<TModel>  $builder
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function pipeline($builder, $request)
+    {
         $this->search($builder, $request);
         $this->filter($builder, $request);
         $this->sort($builder, $request);
+        $this->afterRefining($builder, $request);
+    }
 
-        return $this->markAsRefined();
+    /**
+     * Execute a closure after refiners have been applied.
+     *
+     * @param  TBuilder<TModel>  $builder
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function afterRefining($builder, $request)
+    {
+        if (isset($this->after)) {
+            \call_user_func($this->after, $builder, $request);
+        }
+
+        if (\method_exists($this, 'after')) {
+            \call_user_func([$this, 'after'], $builder, $request);
+        }
     }
 
     /**
