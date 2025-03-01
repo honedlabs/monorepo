@@ -67,6 +67,16 @@ class Filter extends Refiner
     }
 
     /**
+     * Determine if the filter is active.
+     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->hasValue();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray()
@@ -161,16 +171,6 @@ class Filter extends Refiner
         $key = $this->formatScope($this->getParameter());
 
         return $request->safe($key);
-    }
-
-    /**
-     * Determine if the filter is active.
-     *
-     * @return bool
-     */
-    public function isActive()
-    {
-        return $this->hasValue();
     }
 
     /**

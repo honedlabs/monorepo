@@ -13,15 +13,30 @@ class Sort extends Refiner
 {
     use IsDefault;
 
+    const ASCENDING = 'asc';
+
+    const DESCENDING = 'desc';
+
     /**
+     * The request direction of the sort.
+     *
      * @var 'asc'|'desc'|null
      */
     protected $direction;
 
     /**
+     * Indicate that the sort only acts in a single direction.
+     *
      * @var 'asc'|'desc'|null
      */
     protected $only;
+
+    /**
+     * Invert the direction for sorts which are not singular.
+     *
+     * @var bool
+     */
+    protected $invert = false;
 
     /**
      * {@inheritdoc}
@@ -108,8 +123,8 @@ class Sort extends Refiner
 
         return match (true) {
             $sort->isEmpty() => [null, null],
-            $sort->startsWith('-') => [$sort->after('-')->value(), 'desc'],
-            default => [$sort->value(), 'asc'],
+            $sort->startsWith('-') => [$sort->after('-')->value(), self::DESCENDING],
+            default => [$sort->value(), self::ASCENDING],
         };
     }
 
@@ -154,11 +169,23 @@ class Sort extends Refiner
      */
     public function getNextDirection()
     {
+        if ($this->isSingularDirection()) {
+            return $this->only === self::DESCENDING
+                ? $this->getDescendingValue()
+                : $this->getAscendingValue();
+        }
+
+        if ($this->isInverted()) {
+            return match (true) {
+                $this->direction === self::DESCENDING => $this->getAscendingValue(),
+                $this->direction === self::ASCENDING => null,
+                default => $this->getDescendingValue(),
+            };
+        }
+
         return match (true) {
-            $this->isSingularDirection() && $this->only === 'desc' => $this->getDescendingValue(),
-            $this->isSingularDirection() => $this->getAscendingValue(),
-            $this->direction === 'desc' => null,
-            $this->direction === 'asc' => $this->getDescendingValue(),
+            $this->direction === self::DESCENDING => null,
+            $this->direction === self::ASCENDING => $this->getDescendingValue(),
             default => $this->getAscendingValue(),
         };
     }
@@ -190,7 +217,7 @@ class Sort extends Refiner
      */
     public function asc()
     {
-        $this->only = 'asc';
+        $this->only = self::ASCENDING;
 
         return $this;
     }
@@ -202,7 +229,7 @@ class Sort extends Refiner
      */
     public function desc()
     {
-        $this->only = 'desc';
+        $this->only = self::DESCENDING;
 
         return $this;
     }
@@ -215,5 +242,27 @@ class Sort extends Refiner
     public function isSingularDirection()
     {
         return ! \is_null($this->only);
+    }
+
+    /**
+     * Invert the direction of the sort.
+     *
+     * @return $this
+     */
+    public function invert()
+    {
+        $this->invert = true;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the sort is inverted.
+     *
+     * @return bool
+     */
+    public function isInverted()
+    {
+        return $this->invert;
     }
 }
