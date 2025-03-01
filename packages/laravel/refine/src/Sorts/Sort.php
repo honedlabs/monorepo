@@ -44,7 +44,13 @@ class Sort extends Refiner
      */
     public function isActive()
     {
-        return $this->getValue() === $this->getParameter();
+        $isSorting = $this->getValue() === $this->getParameter();
+
+        if ($this->isSingularDirection()) {
+            return $isSorting && $this->getDirection() === $this->only;
+        }
+
+        return $isSorting;
     }
 
     /**
@@ -52,12 +58,12 @@ class Sort extends Refiner
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  \Illuminate\Http\Request  $request
-     * @param  string  $sortKey
+     * @param  string  $key
      * @return bool
      */
-    public function apply($builder, $request, $sortKey)
+    public function apply($builder, $request, $key)
     {
-        [$this->value, $this->direction] = $this->getValueFromRequest($request, $sortKey);
+        [$this->value, $this->direction] = $this->getRefiningValue($request, $key);
 
         if (! $this->isActive()) {
             return false;
@@ -93,17 +99,17 @@ class Sort extends Refiner
      * Retrieve the sort value and direction from the request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  string  $sortKey
+     * @param  string  $key
      * @return array{0: string|null, 1: 'asc'|'desc'|null}
      */
-    public function getValueFromRequest($request, $sortKey)
+    public function getRefiningValue($request, $key)
     {
-        $sort = $request->string($sortKey);
+        $sort = $request->safeString($key);
 
         return match (true) {
             $sort->isEmpty() => [null, null],
-            $sort->startsWith('-') => [$sort->after('-')->toString(), 'desc'],
-            default => [$sort->toString(), 'asc'],
+            $sort->startsWith('-') => [$sort->after('-')->value(), 'desc'],
+            default => [$sort->value(), 'asc'],
         };
     }
 

@@ -94,7 +94,7 @@ trait HasFilters
         $filters = $this->getFilters();
 
         foreach ($filters as $filter) {
-            $filter->apply($builder, $request);
+            $filter->scope($this->getScope())->apply($builder, $request);
         }
 
         return $this;

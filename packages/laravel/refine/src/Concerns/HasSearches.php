@@ -220,16 +220,17 @@ trait HasSearches
         /** @var string */
         $key = $this->formatScope($this->getMatchesKey());
 
-        $columns = $request->safeArray($key)
-            ->map(\trim(...))
-            ->filter()
-            ->values();
+        $columns = $request->safeArray($key, null, $this->getDelimiter());
 
-        if ($columns->isEmpty()) {
+        if (\is_null($columns) || $columns->isEmpty()) {
             return true;
         }
 
-        return $columns->all();
+        return $columns
+            ->map(\trim(...))
+            ->filter()
+            ->values()
+            ->all();
     }
 
     /**
