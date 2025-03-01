@@ -70,6 +70,13 @@
             "phpstan/extension-installer": true
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Honed\\Core\\CoreServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
