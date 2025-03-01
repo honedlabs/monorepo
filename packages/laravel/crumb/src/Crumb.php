@@ -27,15 +27,15 @@ class Crumb extends Primitive implements Resolves
 
     public function __construct(Request $request)
     {
-        $this->$request = $request;
+        $this->request($request);
     }
 
     /**
      * Make a new crumb instance.
      *
-     * @param string|\Closure $name
-     * @param string|\Closure|null $link
-     * @param mixed $parameters
+     * @param  string|\Closure  $name
+     * @param  string|\Closure|null  $link
+     * @param  mixed  $parameters
      * @return $this
      */
     public static function make($name, $link = null, $parameters = [])
@@ -58,7 +58,7 @@ class Crumb extends Primitive implements Resolves
 
     /**
      * Determine if the current route corresponds to this crumb.
-     * 
+     *
      * @return bool
      */
     public function isCurrent()
@@ -102,7 +102,7 @@ class Crumb extends Primitive implements Resolves
                 $parameters,
                 $parameterName,
                 parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
-            ),        
+            ),
         };
     }
 
@@ -125,9 +125,9 @@ class Crumb extends Primitive implements Resolves
             Request::class => [$request],
             Route::class => [$request->route()],
             default => Arr::get(
-                $parameters, 
-                $parameterType, 
-                App::make($parameterType)
+                $parameters,
+                $parameterType,
+                fn () => App::make($parameterType)
             ),
         };
     }
