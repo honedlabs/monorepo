@@ -26,7 +26,7 @@ abstract class NavBase extends Primitive
 
     public function __construct(Request $request)
     {
-        $this->request = $request;
+        $this->request($request);
     }
 
     /**
@@ -85,7 +85,7 @@ abstract class NavBase extends Primitive
             default => Arr::get(
                 $parameters,
                 $parameterType,
-                App::make($parameterType),
+                fn () => App::make($parameterType),
             ),
         };
     }
