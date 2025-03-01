@@ -19,9 +19,10 @@ trait IsTerminable
     /**
      * Set the trail to terminate when a crumb in the trail matches.
      *
+     * @param bool $terminating
      * @return $this
      */
-    public function terminating(bool $terminating = true): static
+    public function terminating($terminating = true)
     {
         $this->terminating = $terminating;
 
@@ -30,16 +31,20 @@ trait IsTerminable
 
     /**
      * Determine if the trail is terminating.
+     *
+     * @return bool
      */
-    public function isTerminating(): bool
+    public function isTerminating()
     {
         return $this->terminating;
     }
 
     /**
      * Determine if the trail has terminated.
+     * 
+     * @return bool
      */
-    public function hasTerminated(): bool
+    public function hasTerminated()
     {
         return $this->terminated;
     }
@@ -47,11 +52,12 @@ trait IsTerminable
     /**
      * Set the trail to have terminated.
      *
+     * @param bool $terminated
      * @return $this
      */
-    protected function terminate(bool $terminated = true): static
+    protected function terminate($terminate = true)
     {
-        $this->terminated = $terminated;
+        $this->terminated = $terminate;
 
         return $this;
     }

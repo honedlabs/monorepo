@@ -20,9 +20,10 @@ trait Crumbs
     /**
      * Share the crumbs relevant to the current request to your Inertia view.
      *
+     * @return void
      * @throws ClassDoesNotExtendControllerException
      */
-    public function configureCrumbs(): void
+    public function configureCrumbs()
     {
         if (! \in_array('Illuminate\Routing\Controller', \class_parents($this))) {
             static::throwControllerExtensionException(\class_basename($this));
@@ -35,8 +36,10 @@ trait Crumbs
 
     /**
      * Retrieve the crumb name to use from the method call, or class instance.
+     * 
+     * @return string|null
      */
-    public function getCrumbName(): ?string
+    public function getCrumbName()
     {
         return match (true) {
             (bool) ($name = $this->getMethodCrumbAttribute()) => $name,
@@ -49,8 +52,10 @@ trait Crumbs
 
     /**
      * Get the crumb attribute on the active method.
+     * 
+     * @return string|null
      */
-    protected function getMethodCrumbAttribute(): ?string
+    protected function getMethodCrumbAttribute()
     {
         $action = Route::getCurrentRoute()?->getActionMethod();
 
@@ -67,8 +72,10 @@ trait Crumbs
 
     /**
      * Get the crumb attribute on the class.
+     * 
+     * @return string|null
      */
-    protected function getClassCrumbAttribute(): ?string
+    protected function getClassCrumbAttribute()
     {
         $attribute = Arr::first(
             (new \ReflectionClass($this))->getAttributes(Crumb::class)
@@ -79,8 +86,11 @@ trait Crumbs
 
     /**
      * Throw an exception for when the using class is not a controller.
+     * 
+     * @param string $class
+     * @return never
      */
-    protected static function throwControllerExtensionException(string $class): never
+    protected static function throwControllerExtensionException($class)
     {
         throw new \LogicException(\sprintf(
             'Class [%s] does not extend the [Illuminate\Routing\Controller] controller class.',

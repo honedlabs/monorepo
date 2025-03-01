@@ -19,8 +19,11 @@ class Trail extends Primitive
 
     /**
      * Make a new trail instance.
+     * 
+     * @param \Honed\Crumb\Crumb $crumbs
+     * @return static
      */
-    public static function make(Crumb ...$crumbs): static
+    public static function make(...$crumbs)
     {
         return resolve(static::class)
             ->crumbs($crumbs);
@@ -29,9 +32,12 @@ class Trail extends Primitive
     /**
      * Append crumbs to the end of the crumb trail.
      *
+     * @param \Honed\Crumb\Crumb|\Closure|string $crumb
+     * @param \Honed\Crumb\Crumb|\Closure|string|null $link
+     * @param mixed $parameters
      * @return $this
      */
-    public function add(string|\Closure|Crumb $crumb, string|\Closure|null $link = null, mixed $parameters = []): static
+    public function add($crumb, $link = null, $parameters = [])
     {
         if ($this->hasTerminated()) {
             return $this;
@@ -49,11 +55,12 @@ class Trail extends Primitive
     /**
      * Select and add the first matching crumb to the trail.
      *
+     * @param \Honed\Crumb\Crumb ...$crumbs
      * @return $this
      *
      * @throws \BadMethodCallException
      */
-    public function select(Crumb ...$crumbs): static
+    public function select(...$crumbs)
     {
         if ($this->hasTerminated()) {
             return $this;
@@ -78,8 +85,10 @@ class Trail extends Primitive
 
     /**
      * Get the trail as an array.
+     * 
+     * @return array<int,mixed>
      */
-    public function toArray(): array
+    public function toArray()
     {
         return $this->crumbsToArray();
     }

@@ -6,6 +6,7 @@ namespace Honed\Crumb\Concerns;
 
 use Honed\Crumb\Crumb;
 use Illuminate\Contracts\Support\Arrayable;
+use Ramsey\Collection\Collection;
 
 trait HasCrumbs
 {
@@ -19,18 +20,15 @@ trait HasCrumbs
     /**
      * Merge a set of crumbs with existing.
      *
-     * @param  iterable<\Honed\Crumb\Trail>  $crumbs
+     * @param  array<int,\Honed\Crumb\Trail>|\Illuminate\Support\Collection<int,\Honed\Crumb\Trail>  $crumbs
      * @return $this
      */
-    public function crumbs(iterable $crumbs): static
+    public function crumbs($crumbs)
     {
-        if ($crumbs instanceof Arrayable) {
-            $crumbs = $crumbs->toArray();
+        if ($crumbs instanceof Collection) {
+            $crumbs = $crumbs->all();
         }
 
-        /**
-         * @var array<int, \Honed\Crumb\Crumb> $crumbs
-         */
         $this->crumbs = \array_merge($this->crumbs, $crumbs);
 
         return $this;
@@ -39,9 +37,10 @@ trait HasCrumbs
     /**
      * Add a single crumb to the list of crumbs.
      *
+     * @param \Honed\Crumb\Crumb $crumb
      * @return $this
      */
-    public function addCrumb(Crumb $crumb): static
+    public function addCrumb(Crumb $crumb)
     {
         $this->crumbs[] = $crumb;
 
@@ -53,15 +52,17 @@ trait HasCrumbs
      *
      * @return array<int,\Honed\Crumb\Crumb>
      */
-    public function getCrumbs(): array
+    public function getCrumbs()
     {
         return $this->crumbs;
     }
 
     /**
      * Determine if the instance has crumbs.
+     * 
+     * @return bool
      */
-    public function hasCrumbs(): bool
+    public function hasCrumbs()
     {
         return filled($this->getCrumbs());
     }
@@ -71,7 +72,7 @@ trait HasCrumbs
      *
      * @return array<int,mixed>
      */
-    public function crumbsToArray(): array
+    public function crumbsToArray()
     {
         return \array_map(
             static fn (Crumb $crumb) => $crumb->toArray(),
