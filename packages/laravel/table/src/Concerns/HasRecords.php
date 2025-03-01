@@ -128,18 +128,15 @@ trait HasRecords
     /**
      * Format the records using the provided columns.
      *
-     * @param  array<int,\Honed\Table\Columns\Column>  $activeColumns
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
      * @return void
      */
-    public function retrieveRecords($activeColumns)
+    public function retrieveRecords($columns)
     {
-        if ($this->hasRecords()) {
-            return;
-        }
 
         [$records, $this->meta] = $this->retrievedRecords();
 
-        $this->records = $this->formatRecords($records, $activeColumns);
+        $this->records = $this->formatRecords($records, $columns);
     }
 
     /**
@@ -150,9 +147,6 @@ trait HasRecords
      */
     protected function retrievedRecords()
     {
-        /**
-         * @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
-         */
         $builder = $this->getBuilder();
 
         $paginator = $this->getPaginator();

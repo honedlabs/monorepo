@@ -2,17 +2,116 @@
 
 declare(strict_types=1);
 
-namespace Honed\Table\Concerns\Support;
+namespace Honed\Table\Concerns;
 
-trait HasPaginator
+use Honed\Table\PerPageRecord;
+use Illuminate\Support\Collection;
+
+trait HasPagination
 {
     /**
-     * The paginator to use for the table.
+     * The paginator to use.
      *
      * @var 'cursor'|'simple'|'length-aware'|'collection'|string|null
      */
     protected $paginator;
 
+    /**
+     * The pagination options.
+     *
+     * @var int|array<int,int>|null
+     */
+    protected $pagination;
+
+    /**
+     * The default pagination amount if pagination is an array.
+     *
+     * @var int|null
+     */
+    protected $defaultPagination;
+
+    /**
+     * The records per page options if dynamic.
+     *
+     * @var array<int,\Honed\Table\PerPageRecord>
+     */
+    protected $recordsPerPage = [];
+
+    /**
+     * Retrieve the default paginator for the table.
+     *
+     * @return 'cursor'|'simple'|'length-aware'|'collection'|string
+     */
+    public function getPaginator()
+    {
+        if (isset($this->paginator)) {
+            return $this->paginator;
+        }
+
+        return $this->getFallbackPaginator();
+    }
+
+    /**
+     * Retrieve the default paginator for the table.
+     *
+     * @return 'cursor'|'simple'|'length-aware'|'collection'|string
+     */
+    protected function getFallbackPaginator()
+    {
+        return type(config('table.paginator', 'length-aware'))->asString();
+    }
+
+    /**
+     * Retrieve the pagination options for the table.
+     *
+     * @return int|array<int,int>
+     */
+    public function getPagination()
+    {
+        if (isset($this->pagination)) {
+            return $this->pagination;
+        }
+
+        if (\method_exists($this, 'pagination')) {
+            return $this->pagination();
+        }
+
+        return $this->getDefaultPagination();
+    }
+
+    /**
+     * Retrieve the default pagination options for the table.
+     * 
+     * @return int
+     */
+    public function getDefaultPagination()
+    {
+        if (isset($this->default)) {
+            return $this->default;
+        }
+
+        return $this->getFallbackDefaultPagination();
+    }
+
+    /**
+     * Get the fallback default pagination options for the table.
+     *
+     * @return int
+     */
+    protected function getFallbackDefaultPagination()
+    {
+        return type(config('table.pagination.default', 10))->asInt();
+    }
+
+    /**
+     * Get records per page options.
+     *
+     * @return array<int,\Honed\Table\PerPageRecord>
+     */
+    public function getRecordsPerPage()
+    {
+        return $this->pages;
+    }
 
     /**
      * Determine if the paginator is a length-aware paginator.
@@ -156,6 +255,81 @@ trait HasPaginator
     {
         return [
             'empty' => $paginator->isEmpty(),
+        ];
+    }
+
+        /**
+     * Create the record per page options for the table.
+     *
+     * @param  array<int,int>  $pagination
+     * @param  int  $active
+     * @return void
+     */
+    public function createRecordsPerPage($pagination, $active)
+    {
+        $this->recordsPerPage = \array_map(
+            static fn (int $amount) => PerPageRecord::make($amount, $active),
+            $pagination
+        );
+    }
+
+    /**
+     * Ensure that the pagination count is a valid option.
+     * 
+     * @param  int  $count
+     * @param  array<int,int>  $options
+     * @return void
+     */
+    protected function validatePagination(&$count, $options)
+    {
+        if (\in_array($count, $options)) {
+            return;
+        }
+
+        $count = $this->getDefaultPagination();
+    }
+
+    /**
+     * Paginate the data.
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @param int $count
+     * @return \Illuminate\Support\Collection<\Illuminate\Database\Eloquent\Model>
+     */
+    protected function paginate($builder, $count)
+    {
+        $paginator = $this->getPaginator();
+        $key = $this->getPagesKey();
+
+        [$data, $method] = match (true) {
+            static::isLengthAware($paginator) => [
+                $builder->paginate($count, pageName: $key),
+                'lengthAwarePaginator',
+            ],
+            static::isSimple($paginator) => [
+                $builder->simplePaginate($count, pageName: $key),
+                'simplePaginator',
+            ],
+            static::isCursor($paginator) => [
+                $builder->cursorPaginate(perPage: $count, cursorName: $key),
+                'cursorPaginator',
+            ],
+            static::isCollection($paginator) => [
+                $builder->get(),
+                'collectionPaginator',
+            ],
+            default => static::throwInvalidPaginatorException($paginator),
+        };
+
+        if (! $data instanceof Collection) {
+            $data->withQueryString();
+        }
+
+        $paginationData = call_user_func([static::class, $method], $data);
+
+        return [
+            $data instanceof Collection ? $data : $data->getCollection(),
+            $paginationData,
         ];
     }
 }

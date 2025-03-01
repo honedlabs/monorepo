@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\App;
 class Table extends Refine implements UrlRoutable
 {
     use Concerns\HasColumns;
-    use Concerns\HasRecords;
+    use Concerns\HasPagination;
     use Concerns\HasResource;
     use Concerns\HasToggle;
     use HasParameterNames;
@@ -69,6 +69,18 @@ class Table extends Refine implements UrlRoutable
     protected $paginationData = [];
 
     /**
+     * Create a new table instance.
+     *
+     * @param  \Closure|null  $modifier
+     * @return static
+     */
+    public static function make($modifier = null)
+    {
+        return resolve(static::class)
+            ->modifier($modifier);
+    }
+
+    /**
      * Get the unique identifier key for table records.
      *
      * @return string
@@ -76,14 +88,9 @@ class Table extends Refine implements UrlRoutable
      */
     public function getRecordKey()
     {
-        $key = $this->key
-            ?? $this->getKeyColumn()?->getName();
-
-        if (\is_null($key)) {
-            static::throwMissingKeyException();
-        }
-
-        return $key;
+        return $this->key
+            ?? $this->getKeyColumn()?->getName()
+            ?? static::throwMissingKeyException();
     }
 
     /**
@@ -95,6 +102,7 @@ class Table extends Refine implements UrlRoutable
     public function key($key)
     {
         $this->key = $key;
+        
         return $this;
     }
 
@@ -186,18 +194,6 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
-     * Create a new table instance.
-     *
-     * @param  \Closure|null  $modifier
-     * @return static
-     */
-    public static function make($modifier = null)
-    {
-        return resolve(static::class)
-            ->modifier($modifier);
-    }
-
-    /**
      * Handle the incoming action request for this table.
      *
      * @param  \Honed\Action\Http\Requests\ActionRequest  $request
@@ -235,22 +231,107 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
+     * Merge the column sorts with the defined sorts.
+     *
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @return void
+     */
+    protected function mergeSorts($columns)
+    {
+        /** @var array<int,\Honed\Refine\Sorts\Sort> */
+        $sorts = \array_map(
+            fn (Column $column) => $column->getSort(),
+            $this->getColumnSorts($columns)
+        );
+
+        $this->addSorts($sorts);
+    }
+
+    /**
+     * Merge the column searches with the defined searches.
+     *
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @return void
+     */
+    protected function mergeSearches($columns)
+    {
+        /** @var array<int,\Honed\Refine\Searches\Search> */
+        $searches = \array_map(
+            fn (Column $column) => Search::make(
+                type($column->getName())->asString(),
+                $column->getLabel()
+            ), $this->getColumnSearches($columns)
+        );
+
+        $this->addSearches($searches);
+    }
+
+    /**
+     * Get the number of records to show per page.
+     * 
+     * @return int
+     */
+    protected function getCount()
+    {
+        $pagination = $this->getPagination();
+
+        if (! \is_array($pagination)) {
+            return $pagination;
+        }
+
+        $param = $this->formatScope($this->getRecordsKey());
+        $count = $this->getRequest()->safeInteger($param, 0);
+
+        $this->validatePagination($count, $pagination);
+        $this->createRecordsPerPage($pagination, $count);
+
+        return $count;
+    }
+
+    /**
      * Retrieve the records from the underlying builder resource.
      *
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @return void
      */
-    protected function retrieveRecords()
+    protected function retrieveRecords($columns)
     {
         $builder = $this->getBuilder();
+        $count = $this->getCount();
         
-        [$records, $this->paginationData] = $this->paginateRecords($builder);
+        [$records, $this->paginationData] = $this->paginate($builder, $count);
 
-        return match (true) {
-            static::isLengthAware($paginator) => $this->lengthAwarePaginateRecords($builder),
-            static::isSimple($paginator) => $this->simplePaginateRecords($builder),
-            static::isCursor($paginator) => $this->cursorPaginateRecords($builder),
-            static::isCollection($paginator) => $this->collectRecords($builder),
-            default => static::throwInvalidPaginatorException($paginator),
-        };
+        // Get the inline actions once to prevent repeated filters
+        $actions = $this->getInlineActions();
+
+        $this->records = $records->map(
+            fn ($record) => $this->createRecord($record, $columns, $actions)
+        )->all();
+    }
+
+    /**
+     * Create a record for the table.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @param  array<int,\Honed\Action\InlineAction>  $actions
+     * @return array<string,mixed>
+     */
+    protected function createRecord($model, $columns, $actions)
+    {
+        [$named, $typed] = static::getNamedAndTypedParameters($model);
+
+        $actions = collect($actions)
+            ->filter(fn ($action) => $action->isAllowed($named, $typed))
+            ->map(fn ($action) => $action->resolve($named, $typed))
+            ->values()
+            ->toArray();
+
+        $record = collect($columns)
+            ->mapWithKeys(fn (Column $column) => $this->formatColumn($column, $model))
+            ->toArray();
+
+        return \array_merge($record, ['actions' => $actions]);
     }
 
     /**
@@ -354,42 +435,6 @@ class Table extends Refine implements UrlRoutable
             /** If typing reaches this point, use dependency injection. */
             default => [App::make($parameterType)],
         };
-    }
-
-    /**
-     * Merge the column sorts with the defined sorts.
-     *
-     * @param  array<int,\Honed\Table\Columns\Column>  $columns
-     * @return void
-     */
-    protected function mergeSorts($columns)
-    {
-        /** @var array<int,\Honed\Refine\Sorts\Sort> */
-        $sorts = \array_map(
-            fn (Column $column) => $column->getSort(),
-            $this->getColumnSorts($columns)
-        );
-
-        $this->addSorts($sorts);
-    }
-
-    /**
-     * Merge the column searches with the defined searches.
-     *
-     * @param  array<int,\Honed\Table\Columns\Column>  $columns
-     * @return void
-     */
-    protected function mergeSearches($columns)
-    {
-        /** @var array<int,\Honed\Refine\Searches\Search> */
-        $searches = \array_map(
-            fn (Column $column) => Search::make(
-                type($column->getName())->asString(),
-                $column->getLabel()
-            ), $this->getColumnSearches($columns)
-        );
-
-        $this->addSearches($searches);
     }
 
     /**
