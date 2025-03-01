@@ -40,6 +40,13 @@ class Refine extends Primitive
     protected $refined = false;
 
     /**
+     * The delimiter to use for array access.
+     *
+     * @var string|null
+     */
+    protected $delimiter;
+
+    /**
      * Create a new refine instance.
      */
     public function __construct(Request $request)
@@ -122,6 +129,43 @@ class Refine extends Primitive
     }
 
     /**
+     * Set the delimiter to use for array access.
+     *
+     * @param  string  $delimiter
+     * @return $this
+     */
+    public function delimiter($delimiter)
+    {
+        $this->delimiter = $delimiter;
+
+        return $this;
+    }
+
+    /**
+     * Get the delimiter to use for array access.
+     *
+     * @return string|null
+     */
+    public function getDelimiter()
+    {
+        if (isset($this->delimiter)) {
+            return $this->delimiter;
+        }
+
+        return $this->fallbackDelimiter();
+    }
+
+    /**
+     * Get the fallback delimiter to use for array access.
+     *
+     * @return string
+     */
+    public function fallbackDelimiter()
+    {
+        return type(config('refine.delimiter'))->asString();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray()
@@ -162,10 +206,11 @@ class Refine extends Primitive
         }
 
         $builder = $this->getBuilder();
+        $request = $this->getRequest();
 
-        $this->search($builder);
-        $this->sort($builder);
-        $this->filter($builder);
+        $this->search($builder, $request);
+        $this->filter($builder, $request);
+        $this->sort($builder, $request);
 
         return $this->markAsRefined();
     }

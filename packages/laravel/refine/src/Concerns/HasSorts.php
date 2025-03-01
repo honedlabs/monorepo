@@ -10,8 +10,6 @@ use Illuminate\Support\Collection;
 
 trait HasSorts
 {
-    use AccessesRequest;
-
     /**
      * The query parameter to identify the sort to apply.
      *
@@ -127,14 +125,15 @@ trait HasSorts
      * Apply a sort to the query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  \Illuminate\Http\Request  $request
      * @return $this
      */
-    public function sort($builder)
+    public function sort($builder, $request)
     {
-        $sorts = $this->getSorts();
+        /** @var string */
         $key = $this->formatScope($this->getSortsKey());
-        $request = $this->getRequest();
 
+        $sorts = $this->getSorts();
         $applied = false;
 
         foreach ($sorts as $sort) {

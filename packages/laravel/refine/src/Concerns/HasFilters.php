@@ -83,13 +83,14 @@ trait HasFilters
      * Apply the filters to the query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  \Illuminate\Http\Request  $request
      * @return $this
      */
-    public function filter($builder)
+    public function filter($builder, $request)
     {
-        $request = $this->getRequest();
+        $filters = $this->getFilters();
 
-        foreach ($this->getFilters() as $filter) {
+        foreach ($filters as $filter) {
             $filter->apply($builder, $request);
         }
 
