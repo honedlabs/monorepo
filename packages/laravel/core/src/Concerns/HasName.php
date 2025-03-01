@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Illuminate\Support\Str;
+
 trait HasName
 {
     /**
@@ -77,7 +79,7 @@ trait HasName
             return null;
         }
 
-        return str($label)
+        return Str::of($label)
             ->snake()
             ->lower()
             ->toString();

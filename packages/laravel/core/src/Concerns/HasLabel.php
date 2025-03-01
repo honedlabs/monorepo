@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Illuminate\Support\Str;
+
 trait HasLabel
 {
     /**
@@ -77,7 +79,7 @@ trait HasLabel
             return null;
         }
 
-        return str($name)
+        return Str::of($name)
             ->afterLast('.')
             ->headline()
             ->lower()

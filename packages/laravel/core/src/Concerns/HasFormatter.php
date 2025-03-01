@@ -19,7 +19,7 @@ trait HasFormatter
     /**
      * Set the formatter for the instance.
      *
-     * @param  \Honed\Core\Contracts\Formats|null  $formatter
+     * @param  \Closure|\Honed\Core\Contracts\Formats|null  $formatter
      * @return $this
      */
     public function formatter($formatter)

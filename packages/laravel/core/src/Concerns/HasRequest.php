@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-
 trait HasRequest
 {
     /**
@@ -35,20 +32,5 @@ trait HasRequest
     public function getRequest()
     {
         return $this->request;
-    }
-
-    /**
-     * Safely retrieve a query parameter from the request.
-     *
-     * @param  string  $parameter
-     * @return mixed
-     */
-    public function getQueryParameter($parameter)
-    {
-        $param = $this->getRequest()->query($parameter);
-
-        return \is_array($param)
-            ? Arr::first(Arr::flatten($param))
-            : $param;
     }
 }

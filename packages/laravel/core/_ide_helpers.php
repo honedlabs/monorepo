@@ -11,6 +11,7 @@ namespace Illuminate\Http {
      * @method bool safeBoolean(string $key, bool $default = false) Get a safe boolean input value
      * @method ?\Illuminate\Support\Carbon safeDate(string $key, ?string $format = null, ?string $tz = null) Get a safe date input value
      * @method \Illuminate\Support\Collection safeArray(string $key, mixed $default = null, string $delimiter = ',') Get a safe array input value as a Collection
+     * @method mixed safeScoped(string $key, string $scope, mixed $default = null) Get a safe input value from the request with a scope
      */
     class Request {}
 }

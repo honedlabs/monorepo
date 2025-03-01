@@ -2,51 +2,59 @@
 
 declare(strict_types=1);
 
+use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasFormatter;
 use Honed\Core\Formatters\BooleanFormatter;
 use Honed\Core\Formatters\DateFormatter;
 use Honed\Core\Formatters\NumberFormatter;
 use Honed\Core\Formatters\StringFormatter;
 
-class FormatterTest
-{
-    use HasFormatter;
-}
-
 beforeEach(function () {
-    $this->test = new FormatterTest;
+    $this->test = new class
+    {
+        use Evaluable;
+        use HasFormatter;
+
+        protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+        {
+            return match ($parameterName) {
+                'formatter' => $this->formatter,
+                default => [],
+            };
+        }
+    };
 });
 
 it('sets', function () {
     expect($this->test->formatter(BooleanFormatter::make()))
-        ->toBeInstanceOf(FormatterTest::class)
+        ->toBe($this->test)
         ->hasFormatter()->toBeTrue();
 });
 
 it('sets boolean', function () {
     expect($this->test->formatBoolean())
-        ->toBeInstanceOf(FormatterTest::class)
+        ->toBe($this->test)
         ->getFormatter()->toBeInstanceOf(BooleanFormatter::class)
         ->hasFormatter()->toBeTrue();
 });
 
 it('sets date formatter', function () {
     expect($this->test->formatDate())
-        ->toBeInstanceOf(FormatterTest::class)
+        ->toBe($this->test)
         ->getFormatter()->toBeInstanceOf(DateFormatter::class)
         ->hasFormatter()->toBeTrue();
 });
 
 it('sets number formatter', function () {
     expect($this->test->formatNumber())
-        ->toBeInstanceOf(FormatterTest::class)
+        ->toBe($this->test)
         ->getFormatter()->toBeInstanceOf(NumberFormatter::class)
         ->hasFormatter()->toBeTrue();
 });
 
 it('sets string formatter', function () {
     expect($this->test->formatString())
-        ->toBeInstanceOf(FormatterTest::class)
+        ->toBe($this->test)
         ->getFormatter()->toBeInstanceOf(StringFormatter::class)
         ->hasFormatter()->toBeTrue();
 });

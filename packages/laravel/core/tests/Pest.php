@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Tests\Stubs\Status;
 use Honed\Core\Tests\TestCase;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 
 uses(TestCase::class)->in(__DIR__);
@@ -20,4 +21,11 @@ function product(?string $name = null): Product
         'status' => fake()->randomElement(Status::cases()),
         'created_at' => now()->subDays(fake()->randomNumber(2)),
     ]);
+}
+
+function generateRequest(string $param, mixed $value)
+{
+    return Request::create(
+        \sprintf('?%s=%s', $param, $value)
+    );
 }

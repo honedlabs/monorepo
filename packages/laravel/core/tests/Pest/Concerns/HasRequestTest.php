@@ -25,19 +25,3 @@ it('gets', function () {
     expect($this->test->request($this->request))
         ->getRequest()->toBe($this->request);
 });
-
-it('gets query parameter', function ($key, $value) {
-    $param = 'param';
-
-    $request = RequestFacade::create('?'.$param.$key.'='.$value);
-    expect($this->test)
-        ->request($request)
-        ->getQueryParameter($param)->toBe($value);
-})->with([
-    ['', 'value'],
-    ['[]', 'value'],
-    ['[][]', 'value'],
-    ['[1]', 'value'],
-    ['[key]', 'value'],
-    ['[key][1]', 'value'],
-]);

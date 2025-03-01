@@ -13,15 +13,17 @@ use Illuminate\Support\Str;
 
 final class CoreServiceProvider extends ServiceProvider
 {
+    const SCOPE_DELIMITER = ':';
+
     public function boot(): void
     {
-        $this->registerMacros();
+        $this->registerRequestMacros();
     }
 
     /**
      * Register the refine macros.
      */
-    protected function registerMacros(): void
+    protected function registerRequestMacros(): void
     {
         Request::macro('safe', function ($key, $default = null) {
             /** @var \Illuminate\Http\Request $this */
@@ -88,6 +90,14 @@ final class CoreServiceProvider extends ServiceProvider
             return collect(explode($delimiter, $values))
                 ->filter()
                 ->values();
+        });
+
+        Request::macro('safeScoped', function ($key, $scope, $default = null) {
+            /** @var \Illuminate\Http\Request $this */
+            return $this->safe(
+                \sprintf('%s%s%s', $scope, CoreServiceProvider::SCOPE_DELIMITER, $key),
+                $default
+            );
         });
     }
 }
