@@ -19,11 +19,11 @@ jobs:
           # - chart
           # - command
           # - core
-          - crumb
+          # - crumb
           # - flash
           # - lock
-          - modal
-          - nav
+          # - modal
+          # - nav
           - refine
           # - table
           # - upload

@@ -123,8 +123,7 @@ class Table extends Refine implements UrlRoutable
      */
     public static function make($before = null)
     {
-        return resolve(static::class)
-            ->before($before);
+        return resolve(static::class);
     }
 
     /**
