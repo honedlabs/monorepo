@@ -1,12 +1,12 @@
 {
-  "name": "@honed/action",
+  "name": "@honed/table",
   "private": false,
-  "version": "0.1.6",
+  "version": "0.1.0",
   "license": "MIT",
   "description": "-",
   "keywords": [
     "honed",
-    "action",
+    "table",
     "vue",
     "inertia"
   ],
@@ -29,9 +29,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/honedlabs/action.git"
+    "url": "https://github.com/honedlabs/table.git"
   },
-  "homepage": "https://github.com/honedlabs/action#readme",
+  "homepage": "https://github.com/honedlabs/table#readme",
   "files": [
     "dist"
   ],
@@ -49,7 +49,10 @@
   },
   "peerDependencies": {
     "vue": "^3.4.0",
+    "@vueuse/core": "^11.0.0||^12.0.0",
     "@inertiajs/vue3": "^1.2.0||^2.0.0",
+    "@honed/action": "^0.1.6",
+    "@honed/refine": "^0.1.2",
     "axios": "^1.2.0"
   },
   "devDependencies": {

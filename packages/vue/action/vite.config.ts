@@ -14,8 +14,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
-      name: ':package_name',
-      fileName: (format) => `index.${format === 'es' ? 'js' : 'umd.cjs'}`
+      name: '@honed/action',
+      formats: ['es', 'umd'],
+      fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
       external: ['vue', '@inertiajs/vue3', 'axios'],
