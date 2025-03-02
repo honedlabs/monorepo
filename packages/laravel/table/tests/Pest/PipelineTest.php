@@ -25,16 +25,20 @@ it('builds', function () {
 
         'missing' => 'test',
 
-        config('table.config.sorts') => '-price',
-
-        config('table.config.searches') => 'search term', // applied on name (col), description (property)
+        FixtureTable::SortsKey => '-price',
+        FixtureTable::SearchesKey => 'search+term',
     ]);
+
+    dd(FixtureTable::make()
+        ->request($request)
+        ->build()
+        ->getRecords()
+    );
 
     expect(FixtureTable::make()
         ->request($request)
         ->build()
-    )
-        ->getBuilder()->getQuery()->scoped(fn ($query) => $query
+    )->getFor()->getQuery()->scoped(fn ($query) => $query
         ->wheres->scoped(fn ($wheres) => $wheres
             ->toBeArray()
             ->toHaveCount(9)

@@ -25,6 +25,8 @@ use Honed\Table\Tests\Stubs\Status;
 
 class Table extends HonedTable
 {
+    const Endpoint = '/test';
+    
     const Delimiter = '|';
 
     const Paginator = 'simple';
@@ -51,9 +53,7 @@ class Table extends HonedTable
 
     const Duration = 10;
 
-    const Order = true;
-
-    const Cookie = 'example-table';
+    const CookieName = 'example-table';
 
     public $delimiter = self::Delimiter;
 
@@ -79,9 +79,7 @@ class Table extends HonedTable
 
     public $duration = self::Duration;
 
-    public $order = self::Order;
-
-    public $cookie = self::Cookie;
+    public $cookieName = self::CookieName;
 
     public function for()
     {

@@ -18,7 +18,7 @@ trait HasToggle
      *
      * @var bool|null
      */
-    protected $toggleable;
+    protected $toggle;
 
     /**
      * The query parameter for which columns to display.
@@ -49,6 +49,20 @@ trait HasToggle
     protected $duration;
 
     /**
+     * Set whether the table should allow the user to toggle which columns are
+     * displayed.
+     * 
+     * @param bool $toggleable
+     * @return $this
+     */
+    public function toggleable($toggleable = true)
+    {
+        $this->toggle = $toggleable;
+
+        return $this;
+    }
+
+    /**
      * Determine whether the table should allow the user to toggle which columns
      * are visible.
      * 
@@ -70,9 +84,10 @@ trait HasToggle
     /**
      * Set the query parameter for which columns to display.
      *
+     * @param string $columnsKey
      * @return $this
      */
-    public function columnsKey(string $columnsKey): static
+    public function columnsKey($columnsKey): static
     {
         $this->columnsKey = $columnsKey;
 
@@ -91,6 +106,19 @@ trait HasToggle
         }
 
         return $this->fallbackColumnsKey();
+    }
+
+    /**
+     * Set whether the table should remember the user preferences.
+     * 
+     * @param bool $remember
+     * @return $this
+     */
+    public function remember($remember = true)
+    {
+        $this->remember = $remember;
+
+        return $this;
     }
 
     /**
@@ -123,6 +151,19 @@ trait HasToggle
         }
 
         return $this->guessCookieName();
+    }
+
+    /**
+     * Set the cookie name to use for the table toggle.
+     * 
+     * @param string $cookieName
+     * @return $this
+     */
+    public function cookieName($cookieName)
+    {
+        $this->cookieName = $cookieName;
+
+        return $this;
     }
 
     /**

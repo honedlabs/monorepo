@@ -9,23 +9,25 @@ use Honed\Table\Filters\Filter;
 use Honed\Table\Actions\BulkAction;
 use Honed\Table\Actions\PageAction;
 use Honed\Table\Actions\InlineAction;
-use Illuminate\Contracts\Database\Query\Builder;
+use Honed\Table\Columns\KeyColumn;
+use Illuminate\Database\Eloquent\Builder;
 
 class {{ class }} extends Table
 {
     /* The database column(s) to use for searching */
     public $search = [];
+
     /* The number of records to show per page */
-    public $count = 10;
+    public $pagination = 10;
 
     /**
      * Define the database resource to use.
      * 
-     * @return \Illuminate\Contracts\Database\Query\Builder|class-string<\Illuminate\Database\Eloquent\Model>
+     * @return Builder|class-string<\Illuminate\Database\Eloquent\Model>
      */
-    public function resource(): Builder|string
+    public function resource()
     {
-        // return Model::query();
+        //
     }
 
     /**
@@ -33,10 +35,10 @@ class {{ class }} extends Table
      * 
      * @return array<int, \Honed\Table\Columns\BaseColumn>
      */
-    public function columns(): array
+    public function columns()
     {
         return [
-            Column::make('id')->hide()->asKey(),
+            KeyColumn::make('id'),
         ];
     }
 
@@ -45,7 +47,7 @@ class {{ class }} extends Table
      * 
      * @return array<int, \Honed\Table\Filters\BaseFilter>
      */
-    public function filters(): array
+    public function filters()
     {
         return [
 
