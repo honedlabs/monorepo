@@ -17,7 +17,7 @@ jobs:
         package:
           # - action
           # - chart
-          - command
+          # - command
           # - core
           # - crumb
           # - flash
@@ -25,7 +25,7 @@ jobs:
           # - modal
           # - nav
           # - refine
-          # - table
+          - table
           # - upload
 
     steps:
