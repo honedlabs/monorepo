@@ -29,12 +29,6 @@ it('builds', function () {
         FixtureTable::SearchesKey => 'search+term',
     ]);
 
-    dd(FixtureTable::make()
-        ->request($request)
-        ->build()
-        ->getRecords()
-    );
-
     expect(FixtureTable::make()
         ->request($request)
         ->build()
@@ -118,14 +112,14 @@ it('builds', function () {
         )
         )->toArray()->scoped(fn ($array) => $array
             ->{'config'}->toEqual([
-                'delimiter' => config('table.config.delimiter'),
                 'record' => 'id',
-                'records' => config('table.config.records'),
-                'sorts' => config('table.config.sorts'),
-                'searches' => config('table.config.searches'),
+                'delimiter' => FixtureTable::Delimiter,
+                'records' => FixtureTable::RecordsKey,
+                'sorts' => FixtureTable::SortsKey,
+                'searches' => FixtureTable::SearchesKey,
                 'columns' => FixtureTable::ColumnsKey,
                 'pages' => FixtureTable::PagesKey,
-                'endpoint' => config('table.endpoint'),
+                'endpoint' => FixtureTable::Endpoint,
                 'search' => 'search term'
             ])->{'actions'}->scoped(fn ($actions) => $actions
                 ->toHaveKeys([ 'hasInline', 'bulk', 'page'])

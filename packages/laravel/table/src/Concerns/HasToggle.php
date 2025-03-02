@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Honed\Table\Concerns;
 
 use Honed\Table\Columns\Column;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cookie;
 use Honed\Table\Contracts\ShouldRemember;
 use Honed\Table\Contracts\ShouldToggle;
+use Illuminate\Support\Facades\Cookie;
 
 trait HasToggle
 {
     /**
-     * Whether the table should allow the user to toggle which columns are 
+     * Whether the table should allow the user to toggle which columns are
      * displayed.
      *
      * @var bool|null
@@ -51,8 +50,8 @@ trait HasToggle
     /**
      * Set whether the table should allow the user to toggle which columns are
      * displayed.
-     * 
-     * @param bool $toggleable
+     *
+     * @param  bool  $toggleable
      * @return $this
      */
     public function toggleable($toggleable = true)
@@ -65,7 +64,7 @@ trait HasToggle
     /**
      * Determine whether the table should allow the user to toggle which columns
      * are visible.
-     * 
+     *
      * @return bool
      */
     public function isToggleable()
@@ -84,7 +83,7 @@ trait HasToggle
     /**
      * Set the query parameter for which columns to display.
      *
-     * @param string $columnsKey
+     * @param  string  $columnsKey
      * @return $this
      */
     public function columnsKey($columnsKey): static
@@ -96,7 +95,7 @@ trait HasToggle
 
     /**
      * Get the query parameter for which columns to display.
-     * 
+     *
      * @return string
      */
     public function getColumnsKey()
@@ -110,8 +109,8 @@ trait HasToggle
 
     /**
      * Set whether the table should remember the user preferences.
-     * 
-     * @param bool $remember
+     *
+     * @param  bool  $remember
      * @return $this
      */
     public function remember($remember = true)
@@ -123,7 +122,7 @@ trait HasToggle
 
     /**
      * Determine whether the table should remember the user preferences.
-     * 
+     *
      * @return bool
      */
     public function isRememberable()
@@ -141,7 +140,7 @@ trait HasToggle
 
     /**
      * Get the cookie name to use for the table toggle.
-     * 
+     *
      * @return string
      */
     public function getCookieName()
@@ -155,8 +154,8 @@ trait HasToggle
 
     /**
      * Set the cookie name to use for the table toggle.
-     * 
-     * @param string $cookieName
+     *
+     * @param  string  $cookieName
      * @return $this
      */
     public function cookieName($cookieName)
@@ -169,7 +168,7 @@ trait HasToggle
     /**
      * Guess the name of the cookie to use for remembering the columns to
      * display.
-     * 
+     *
      * @return string
      */
     public function guessCookieName()
@@ -184,8 +183,8 @@ trait HasToggle
     /**
      * Set the duration of the cookie to use for remembering the columns to
      * display.
-     * 
-     * @param int $seconds
+     *
+     * @param  int  $seconds
      * @return $this
      */
     public function duration($seconds)
@@ -198,7 +197,7 @@ trait HasToggle
     /**
      * Get the duration of the cookie to use for remembering the columns to
      * display.
-     * 
+     *
      * @return int
      */
     public function getDuration()
@@ -239,7 +238,7 @@ trait HasToggle
      * Get the toggled columns from the request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return array<int,string>|true
+     * @return array<int,string>|null
      */
     public function getToggledColumns($request)
     {
@@ -271,6 +270,7 @@ trait HasToggle
     {
         if (filled($params)) {
             $this->enqueueCookie($params);
+
             return $params;
         }
 
@@ -279,7 +279,7 @@ trait HasToggle
 
     /**
      * Get the query parameter for which columns to display.
-     * 
+     *
      * @return string
      */
     protected function fallbackColumnsKey()
@@ -289,7 +289,7 @@ trait HasToggle
 
     /**
      * Determine whether the table should remember the user preferences.
-     * 
+     *
      * @return bool
      */
     protected function fallbackRememberable()
@@ -300,7 +300,7 @@ trait HasToggle
     /**
      * Determine whether the table should allow the user to toggle which columns
      * are visible.
-     *  
+     *
      * @return bool
      */
     protected function fallbackToggleable()
@@ -308,11 +308,10 @@ trait HasToggle
         return (bool) config('table.toggle.enabled', false);
     }
 
-    
     /**
      * Get the duration of the cookie to use for remembering the columns to
      * display.
-     * 
+     *
      * @return int
      */
     protected function fallbackDuration()
@@ -322,8 +321,8 @@ trait HasToggle
 
     /**
      * Enqueue a new cookie with preference data.
-     * 
-     * @param array<int,string> $params
+     *
+     * @param  array<int,string>  $params
      * @return void
      */
     protected function enqueueCookie($params)
@@ -337,9 +336,9 @@ trait HasToggle
 
     /**
      * Retrieve the preference data from the cookie if it exists.
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @param array<int,string>|null $params
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array<int,string>|null  $params
      * @return array<int,string>|null
      */
     protected function dequeueCookie($request, $params)

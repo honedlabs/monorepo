@@ -4,44 +4,45 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use Honed\Refine\Refine;
-use Honed\Action\Handler;
-use Illuminate\Support\Arr;
-use Illuminate\Http\Request;
-use Honed\Table\Columns\Column;
-use Honed\Refine\Searches\Search;
-use Honed\Core\Concerns\Encodable;
-use Illuminate\Support\Facades\App;
-use Honed\Table\Concerns\HasColumns;
 use Honed\Action\Concerns\HasActions;
-use Honed\Table\Concerns\HasPagination;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Honed\Table\Concerns\HasTableBindings;
 use Honed\Action\Concerns\HasParameterNames;
+use Honed\Action\Handler;
 use Honed\Action\InlineAction;
+use Honed\Core\Concerns\Encodable;
+use Honed\Refine\Refine;
+use Honed\Refine\Searches\Search;
+use Honed\Table\Columns\Column;
+use Honed\Table\Concerns\HasColumns;
+use Honed\Table\Concerns\HasPagination;
+use Honed\Table\Concerns\HasTableBindings;
+use Honed\Table\Concerns\HasToggle;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- * 
+ *
  * @extends Refine<TModel, TBuilder>
  */
 class Table extends Refine implements UrlRoutable
 {
+    use Encodable;
+
+    use HasActions;
+
     use HasColumns;
     /**
      * @use HasPagination<TModel, TBuilder>
      */
     use HasPagination;
-    use Concerns\HasResource;
-    use Concerns\HasToggle;
     use HasParameterNames;
-    use Encodable;
-    use HasActions;
     use HasParameterNames;
     use HasTableBindings;
+    use HasToggle;
 
     /**
      * The unique identifier column for the table.
@@ -117,9 +118,9 @@ class Table extends Refine implements UrlRoutable
 
                 return $this;
 
-            default: 
+            default:
                 return parent::__call($method, $parameters);
-        };
+        }
     }
 
     /**
@@ -147,6 +148,7 @@ class Table extends Refine implements UrlRoutable
      * Get the unique identifier key for table records.
      *
      * @return string
+     *
      * @throws \RuntimeException
      */
     public function getRecordKey()
@@ -189,7 +191,7 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Get the records from the table.
-     * 
+     *
      * @return array<int,array<string,mixed>>
      */
     public function getRecords()
@@ -199,7 +201,7 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Get the pagination data from the table.
-     * 
+     *
      * @return array<string,mixed>
      */
     public function getPaginationData()
@@ -306,7 +308,6 @@ class Table extends Refine implements UrlRoutable
         return (bool) config('table.matches', false);
     }
 
-
     /**
      * Merge the column sorts with the defined sorts.
      *
@@ -346,13 +347,13 @@ class Table extends Refine implements UrlRoutable
     /**
      * Retrieve the records from the underlying builder resource.
      *
-     * @param TBuilder $builder
-     * @param \Illuminate\Http\Request $request
+     * @param  TBuilder  $builder
+     * @param  \Illuminate\Http\Request  $request
      * @param  array<int,\Honed\Table\Columns\Column>  $columns
      * @return void
      */
     protected function retrieveRecords($builder, $request, $columns)
-    {        
+    {
         [$records, $this->paginationData] = $this->paginate($builder, $request);
 
         $actions = $this->getInlineActions();
@@ -364,8 +365,8 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Create a record for the table.
-     * 
-     * @param  TModel $model
+     *
+     * @param  TModel  $model
      * @param  array<int,\Honed\Table\Columns\Column>  $columns
      * @param  array<int,\Honed\Action\InlineAction>  $actions
      * @return array<string,mixed>
@@ -445,10 +446,11 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
-     * Throw an exception if the table does not have a key column or key property 
+     * Throw an exception if the table does not have a key column or key property
      * defined.
      *
      * @return never
+     *
      * @throws \RuntimeException
      */
     protected static function throwMissingKeyException()

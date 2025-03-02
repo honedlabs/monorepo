@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ *
  * @template-covariant TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  */
 trait HasPagination
@@ -99,7 +100,7 @@ trait HasPagination
 
     /**
      * Retrieve the default pagination options for the table.
-     * 
+     *
      * @return int
      */
     public function getDefaultPagination()
@@ -123,7 +124,7 @@ trait HasPagination
 
     /**
      * Get the records per page options as an array.
-     * 
+     *
      * @return array<int,array<string,mixed>>
      */
     public function recordsPerPageToArray()
@@ -133,7 +134,7 @@ trait HasPagination
             $this->getRecordsPerPage()
         );
     }
-    
+
     /**
      * Set the query parameter for the page number.
      *
@@ -149,7 +150,7 @@ trait HasPagination
 
     /**
      * Get the query parameter for the page number.
-     * 
+     *
      * @return string
      */
     public function getPagesKey()
@@ -188,7 +189,6 @@ trait HasPagination
         return $this->fallbackRecordsKey();
     }
 
-    
     /**
      * Create the record per page options for the table.
      *
@@ -216,7 +216,7 @@ trait HasPagination
 
     /**
      * Get the query parameter for the page number.
-     * 
+     *
      * @return string
      */
     protected function fallbackPagesKey()
@@ -226,7 +226,7 @@ trait HasPagination
 
     /**
      * Get the query parameter for the number of records to show per page.
-     * 
+     *
      * @return string
      */
     protected function fallbackRecordsKey()
@@ -236,8 +236,8 @@ trait HasPagination
 
     /**
      * Determine if the paginator is a length-aware paginator.
-     * 
-     * @param string|'length-aware'|'simple'|'cursor'|'collection' $paginator
+     *
+     * @param  string|'length-aware'|'simple'|'cursor'|'collection'  $paginator
      * @return bool
      */
     protected static function isLengthAware($paginator)
@@ -251,8 +251,8 @@ trait HasPagination
 
     /**
      * Determine if the paginator is a simple paginator.
-     * 
-     * @param string|'length-aware'|'simple'|'cursor'|'collection' $paginator
+     *
+     * @param  string|'length-aware'|'simple'|'cursor'|'collection'  $paginator
      * @return bool
      */
     protected static function isSimple($paginator)
@@ -266,8 +266,8 @@ trait HasPagination
 
     /**
      * Determine if the paginator is a cursor paginator.
-     * 
-     * @param string|'length-aware'|'simple'|'cursor'|'collection' $paginator
+     *
+     * @param  string|'length-aware'|'simple'|'cursor'|'collection'  $paginator
      * @return bool
      */
     protected static function isCursor($paginator)
@@ -281,8 +281,8 @@ trait HasPagination
 
     /**
      * Determine if the paginator is a collection.
-     * 
-     * @param string|'length-aware'|'simple'|'cursor'|'collection' $paginator
+     *
+     * @param  string|'length-aware'|'simple'|'cursor'|'collection'  $paginator
      * @return bool
      */
     protected static function isCollection($paginator)
@@ -296,8 +296,8 @@ trait HasPagination
 
     /**
      * Get the pagination data for the length-aware paginator.
-     * 
-     * @param \Illuminate\Contracts\Pagination\LengthAwarePaginator<TModel> $paginator
+     *
+     * @param  \Illuminate\Contracts\Pagination\LengthAwarePaginator<TModel>  $paginator
      * @return array<string, mixed>
      */
     protected static function lengthAwarePaginator($paginator)
@@ -323,11 +323,11 @@ trait HasPagination
         $currentPage = $paginator->currentPage();
         $lastPage = $paginator->lastPage();
         $onEachSide = 2;
-        
+
         // Calculate window boundaries with balanced distribution
         $start = max(1, min($currentPage - $onEachSide, $lastPage - ($onEachSide * 2)));
         $end = min($lastPage, max($currentPage + $onEachSide, ($onEachSide * 2 + 1)));
-        
+
         return collect(range($start, $end))
             ->map(static fn ($page) => [
                 'url' => $paginator->url($page),
@@ -340,8 +340,8 @@ trait HasPagination
 
     /**
      * Get the pagination data for the simple paginator.
-     * 
-     * @param \Illuminate\Contracts\Pagination\Paginator<TModel> $paginator
+     *
+     * @param  \Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
      * @return array<string, mixed>
      */
     protected static function simplePaginator($paginator)
@@ -353,8 +353,8 @@ trait HasPagination
 
     /**
      * Get the pagination data for the cursor paginator.
-     * 
-     * @param \Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel> $paginator
+     *
+     * @param  \Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
      * @return array<string, mixed>
      */
     protected static function cursorPaginator($paginator)
@@ -368,8 +368,8 @@ trait HasPagination
 
     /**
      * Get the base metadata for the collection paginator, and all others.
-     * 
-     * @param \Illuminate\Support\Collection<int,TModel>|\Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel> $paginator
+     *
+     * @param  \Illuminate\Support\Collection<int,TModel>|\Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
      * @return array<string, mixed>
      */
     protected static function collectionPaginator($paginator)
@@ -381,7 +381,7 @@ trait HasPagination
 
     /**
      * Ensure that the pagination count is a valid option.
-     * 
+     *
      * @param  int  $count
      * @param  array<int,int>  $options
      * @return void
@@ -397,8 +397,8 @@ trait HasPagination
 
     /**
      * Get the number of records to show per page.
-     * 
-     * @param \Illuminate\Http\Request $request
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return int
      */
     protected function getCount($request)
@@ -421,10 +421,11 @@ trait HasPagination
 
     /**
      * Paginate the data.
-     * 
-     * @param TBuilder $builder
-     * @param \Illuminate\Http\Request $request
+     *
+     * @param  TBuilder  $builder
+     * @param  \Illuminate\Http\Request  $request
      * @return array{0: \Illuminate\Support\Collection<int,TModel>, 1: array<string,mixed>}
+     *
      * @throws \InvalidArgumentException
      */
     protected function paginate($builder, $request)
@@ -459,16 +460,17 @@ trait HasPagination
         }
 
         $paginationData = \call_user_func([static::class, $method], $data);
+
         return [
-            $data instanceof Collection ? $data : $data->getCollection(), 
+            $data instanceof Collection ? $data : $data->getCollection(),
             $paginationData,
         ];
     }
 
     /**
      * Throw an exception if the paginator is invalid.
-     * 
-     * @param string|'cursor'|'simple'|'length-aware'|'collection' $paginator
+     *
+     * @param  string|'cursor'|'simple'|'length-aware'|'collection'  $paginator
      * @return never
      */
     protected static function throwInvalidPaginatorException($paginator)

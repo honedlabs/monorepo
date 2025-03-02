@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
-use Honed\Core\Primitive;
-use Illuminate\Support\Str;
-use Honed\Core\Concerns\IsKey;
+use Honed\Core\Concerns\Allowable;
+use Honed\Core\Concerns\HasExtra;
+use Honed\Core\Concerns\HasFormatter;
 use Honed\Core\Concerns\HasIcon;
+use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasPlaceholder;
 use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\HasExtra;
-use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\IsActive;
 use Honed\Core\Concerns\IsHidden;
-use Honed\Core\Concerns\Allowable;
-use Honed\Core\Concerns\HasFormatter;
+use Honed\Core\Concerns\IsKey;
 use Honed\Core\Concerns\Transformable;
-use Honed\Core\Concerns\HasPlaceholder;
+use Honed\Core\Primitive;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * @extends Primitive<string, mixed>
@@ -88,7 +88,7 @@ class Column extends Primitive
         $value = Arr::get($model, $this->getName());
 
         return [
-            $this->serializeName() => $this->apply($value)
+            $this->serializeName() => $this->apply($value),
         ];
     }
 
