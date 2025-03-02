@@ -4,34 +4,44 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use Honed\Action\Concerns\HasActions;
-use Honed\Action\Concerns\HasParameterNames;
-use Honed\Action\Handler;
-use Honed\Core\Concerns\Encodable;
 use Honed\Refine\Refine;
-use Honed\Refine\Searches\Search;
-use Honed\Table\Columns\Column;
-use Illuminate\Contracts\Routing\UrlRoutable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
+use Honed\Action\Handler;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Honed\Table\Columns\Column;
+use Honed\Refine\Searches\Search;
+use Honed\Core\Concerns\Encodable;
 use Illuminate\Support\Facades\App;
+use Honed\Table\Concerns\HasColumns;
+use Honed\Action\Concerns\HasActions;
+use Honed\Table\Concerns\HasPagination;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Honed\Table\Concerns\HasTableBindings;
+use Honed\Action\Concerns\HasParameterNames;
+use Illuminate\Contracts\Routing\UrlRoutable;
 
 /**
- * @extends Refine<\Illuminate\Database\Eloquent\Model>
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ * 
+ * @extends Refine<TModel, TBuilder>
  */
 class Table extends Refine implements UrlRoutable
 {
-    use Concerns\HasColumns;
-    use Concerns\HasPagination;
+    use HasColumns;
+    /**
+     * @use HasPagination<TModel, TBuilder>
+     */
+    use HasPagination;
     use Concerns\HasResource;
     use Concerns\HasToggle;
     use HasParameterNames;
     use Encodable;
     use HasActions;
     use HasParameterNames;
-    use Concerns\HasTableBindings;
+    use HasTableBindings;
 
     /**
      * A unique identifier column for the table.
@@ -39,13 +49,6 @@ class Table extends Refine implements UrlRoutable
      * @var string|null
      */
     protected $key;
-
-    /**
-     * An optional closure to modify the builder before it is refined.
-     *
-     * @var \Closure|null
-     */
-    protected $modifier;
 
     /**
      * The endpoint to be used to handle table actions.
@@ -77,6 +80,7 @@ class Table extends Refine implements UrlRoutable
     public static function make($modifier = null)
     {
         return resolve(static::class)
+            //->before($modifier)
             ->modifier($modifier);
     }
 
@@ -88,7 +92,7 @@ class Table extends Refine implements UrlRoutable
      */
     public function getRecordKey()
     {
-        return $this->key
+        return $this->key // $this->getKey()
             ?? $this->getKeyColumn()?->getName()
             ?? static::throwMissingKeyException();
     }
@@ -102,31 +106,8 @@ class Table extends Refine implements UrlRoutable
     public function key($key)
     {
         $this->key = $key;
-        
-        return $this;
-    }
-
-    /**
-     * Set the resource modifier callback.
-     *
-     * @param  \Closure|null  $modifier
-     * @return $this
-     */
-    public function modifier($modifier)
-    {
-        $this->modifier = $modifier;
 
         return $this;
-    }
-
-    /**
-     * Get the resource modifier.
-     *
-     * @return \Closure|null
-     */
-    public function getModifier()
-    {
-        return $this->modifier;
     }
 
     /**
@@ -144,7 +125,7 @@ class Table extends Refine implements UrlRoutable
             return $this->endpoint();
         }
 
-        return $this->getFallbackEndpoint();
+        return $this->fallbackEndpoint();
     }
 
     /**
@@ -152,7 +133,7 @@ class Table extends Refine implements UrlRoutable
      *
      * @return string
      */
-    public function getFallbackEndpoint()
+    public function fallbackEndpoint()
     {
         return type(config('table.endpoint', '/actions'))->asString();
     }
@@ -168,7 +149,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    protected function getFallbackMatchesKey()
+    protected function fallbackMatchesKey()
     {
         return type(config('table.config.matches', 'match'))->asString();
     }
@@ -176,7 +157,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    protected function getFallbackCanMatch()
+    protected function fallbackCanMatch()
     {
         return (bool) config('table.matches', false);
     }
@@ -204,7 +185,7 @@ class Table extends Refine implements UrlRoutable
         return Handler::make(
             $this->getBuilder(),
             $this->getActions(),
-            $this->getKey()
+            $this->getRecordKey()
         )->handle($request);
     }
 
@@ -224,6 +205,7 @@ class Table extends Refine implements UrlRoutable
             'pagination' => $this->pagination = $args, // @phpstan-ignore-line
             'paginator' => $this->paginator = $args, // @phpstan-ignore-line
             'endpoint' => $this->endpoint = $args, // @phpstan-ignore-line
+            // 'modifier' => $this->modifier = $args, // @phpstan-ignore-line
             default => null,
         };
 
@@ -240,7 +222,7 @@ class Table extends Refine implements UrlRoutable
     {
         /** @var array<int,\Honed\Refine\Sorts\Sort> */
         $sorts = \array_map(
-            fn (Column $column) => $column->getSort(),
+            static fn (Column $column) => $column->getSort(),
             $this->getColumnSorts($columns)
         );
 
@@ -257,13 +239,47 @@ class Table extends Refine implements UrlRoutable
     {
         /** @var array<int,\Honed\Refine\Searches\Search> */
         $searches = \array_map(
-            fn (Column $column) => Search::make(
+            static fn (Column $column) => Search::make(
                 type($column->getName())->asString(),
                 $column->getLabel()
             ), $this->getColumnSearches($columns)
         );
 
         $this->addSearches($searches);
+    }
+
+    /**
+     * Toggle the columns that are displayed.
+     *
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @return array<int,\Honed\Table\Columns\Column>
+     */
+    public function toggleColumns($columns)
+    {
+        if (! $this->isToggleable()) {
+            return $columns;
+        }
+
+        $request = $this->getRequest();
+
+        $params = $request->safeArray();
+
+        $params = $params?->isEmpty()
+            ? null
+            : $params->toArray();
+
+        if ($this->isRememberable()) {
+            $params = $this->configureCookie($params, $request);
+        }
+
+        return \array_values(
+            \array_filter(
+                $columns,
+                fn (Column $column) => $column
+                    ->active($column->isDisplayed($params))
+                    ->isActive()
+            )
+        );
     }
 
     /**
@@ -301,7 +317,6 @@ class Table extends Refine implements UrlRoutable
         
         [$records, $this->paginationData] = $this->paginate($builder, $count);
 
-        // Get the inline actions once to prevent repeated filters
         $actions = $this->getInlineActions();
 
         $this->records = $records->map(
@@ -312,7 +327,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * Create a record for the table.
      * 
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  TModel $model
      * @param  array<int,\Honed\Table\Columns\Column>  $columns
      * @param  array<int,\Honed\Action\InlineAction>  $actions
      * @return array<string,mixed>
@@ -328,8 +343,11 @@ class Table extends Refine implements UrlRoutable
             ->toArray();
 
         $record = collect($columns)
-            ->mapWithKeys(fn (Column $column) => $this->formatColumn($column, $model))
-            ->toArray();
+            ->mapWithKeys(
+                static fn (Column $column) => [
+                    $column->getSerializedName() => Arr::get($model, $column->getName())
+                ]
+            )->toArray();
 
         return \array_merge($record, ['actions' => $actions]);
     }
@@ -348,16 +366,12 @@ class Table extends Refine implements UrlRoutable
         // If toggling is enabled, we need to determine which
         // columns are to be used from the request, cookie or by the
         // default state of each column.
-        $columns = $this->toggle($this->getColumns());
+        $columns = $this->toggleColumns($this->getColumns());
 
         // Before refining, merge the column sorts and searches
         // with the defined sorts and searches.
         $this->mergeSorts($columns);
         $this->mergeSearches($columns);
-
-        // Intermediate step allowing for table reuse with
-        // minor changes between them.
-        $this->evaluate($this->getModifier());
 
         // Execute the parent refine method to scope the builder
         // according to the given request.

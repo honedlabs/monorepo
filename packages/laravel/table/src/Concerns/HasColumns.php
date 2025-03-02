@@ -144,7 +144,7 @@ trait HasColumns
     /**
      * Get the columns as an array.
      *
-     * @return array<string,mixed>
+     * @return array<int,array<string,mixed>>
      */
     public function columnsToArray()
     {

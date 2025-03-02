@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
-use Honed\Core\Concerns\Allowable;
-use Honed\Core\Concerns\HasExtra;
-use Honed\Core\Concerns\HasFormatter;
+use Honed\Core\Primitive;
+use Illuminate\Support\Str;
+use Honed\Core\Concerns\IsKey;
 use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasPlaceholder;
 use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\HasExtra;
+use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\IsActive;
 use Honed\Core\Concerns\IsHidden;
-use Honed\Core\Concerns\IsKey;
+use Honed\Core\Concerns\Allowable;
+use Honed\Core\Concerns\HasFormatter;
 use Honed\Core\Concerns\Transformable;
-use Honed\Core\Primitive;
+use Honed\Core\Concerns\HasPlaceholder;
 
 /**
  * @extends Primitive<string, mixed>
@@ -66,6 +67,16 @@ class Column extends Primitive
     }
 
     /**
+     * Get the serialized name of the column.
+     *
+     * @return string
+     */
+    public function getSerializedName()
+    {
+        return Str::replace('.', '_', type($this->getName())->asString());
+    }
+
+    /**
      * Apply the column's transform and format value.
      *
      * @param  mixed  $value
@@ -95,7 +106,7 @@ class Column extends Primitive
     public function toArray()
     {
         return [
-            'name' => $this->getName(),
+            'name' => $this->getSerializedName(),
             'label' => $this->getLabel(),
             'type' => $this->getType(),
             'hidden' => $this->isHidden(),
