@@ -49,8 +49,8 @@ it('can set a cookie', function () {
         ->getCookie()->toBe($table->guessCookieName());
 });
 
-// it('toggles columns', function () {
-//     expect($this->table->build())
-//         ->getActiveColumns()->dd();
+it('toggles columns', function () {
+    expect($this->table->build())
+        ->getActiveColumns()->dd();
 
-// });
+});

@@ -18,6 +18,8 @@ trait HasColumns
     protected $columns;
 
     /**
+     * Merge a set of columns with the existing columns.
+     * 
      * @template T of \Honed\Table\Columns\Column
      *
      * @param  array<int,T>|Collection<int,T>  $columns

@@ -19,6 +19,7 @@ use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasFormatter;
 use Honed\Core\Concerns\Transformable;
 use Honed\Core\Concerns\HasPlaceholder;
+use Illuminate\Support\Arr;
 
 /**
  * @extends Primitive<string, mixed>
@@ -71,9 +72,24 @@ class Column extends Primitive
      *
      * @return string
      */
-    public function getSerializedName()
+    public function serializeName()
     {
         return Str::replace('.', '_', type($this->getName())->asString());
+    }
+
+    /**
+     * Get the value of the column to form a record.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return array<string,mixed>
+     */
+    public function forRecord($model)
+    {
+        $value = Arr::get($model, $this->getName());
+
+        return [
+            $this->serializeName() => $this->apply($value)
+        ];
     }
 
     /**
@@ -106,7 +122,7 @@ class Column extends Primitive
     public function toArray()
     {
         return [
-            'name' => $this->getSerializedName(),
+            'name' => $this->serializeName(),
             'label' => $this->getLabel(),
             'type' => $this->getType(),
             'hidden' => $this->isHidden(),

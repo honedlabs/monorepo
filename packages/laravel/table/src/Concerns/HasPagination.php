@@ -112,16 +112,6 @@ trait HasPagination
     }
 
     /**
-     * Get the fallback default pagination options for the table.
-     *
-     * @return int
-     */
-    protected function fallbackDefaultPagination()
-    {
-        return type(config('table.pagination.default', 10))->asInt();
-    }
-
-    /**
      * Get records per page options.
      *
      * @return array<int,\Honed\Table\PerPageRecord>
@@ -131,6 +121,19 @@ trait HasPagination
         return $this->recordsPerPage;
     }
 
+    /**
+     * Get the records per page options as an array.
+     * 
+     * @return array<int,array<string,mixed>>
+     */
+    public function recordsPerPageToArray()
+    {
+        return \array_map(
+            static fn (PerPageRecord $record) => $record->toArray(),
+            $this->getRecordsPerPage()
+        );
+    }
+    
     /**
      * Set the query parameter for the page number.
      *
@@ -159,16 +162,6 @@ trait HasPagination
     }
 
     /**
-     * Get the query parameter for the page number.
-     * 
-     * @return string
-     */
-    protected function fallbackPagesKey()
-    {
-        return type(config('table.config.pages', 'page'))->asString();
-    }
-
-    /**
      * Set the query parameter for the number of records to show per page.
      *
      * @param  string  $recordsKey
@@ -193,6 +186,42 @@ trait HasPagination
         }
 
         return $this->fallbackRecordsKey();
+    }
+
+    
+    /**
+     * Create the record per page options for the table.
+     *
+     * @param  array<int,int>  $pagination
+     * @param  int  $active
+     * @return void
+     */
+    public function createRecordsPerPage($pagination, $active)
+    {
+        $this->recordsPerPage = \array_map(
+            static fn (int $amount) => PerPageRecord::make($amount, $active),
+            $pagination
+        );
+    }
+
+    /**
+     * Get the fallback default pagination options for the table.
+     *
+     * @return int
+     */
+    protected function fallbackDefaultPagination()
+    {
+        return type(config('table.pagination.default', 10))->asInt();
+    }
+
+    /**
+     * Get the query parameter for the page number.
+     * 
+     * @return string
+     */
+    protected function fallbackPagesKey()
+    {
+        return type(config('table.config.pages', 'page'))->asString();
     }
 
     /**
@@ -348,21 +377,6 @@ trait HasPagination
         return [
             'empty' => $paginator->isEmpty(),
         ];
-    }
-
-        /**
-     * Create the record per page options for the table.
-     *
-     * @param  array<int,int>  $pagination
-     * @param  int  $active
-     * @return void
-     */
-    public function createRecordsPerPage($pagination, $active)
-    {
-        $this->recordsPerPage = \array_map(
-            static fn (int $amount) => PerPageRecord::make($amount, $active),
-            $pagination
-        );
     }
 
     /**

@@ -201,18 +201,18 @@ trait HasToggle
      * Use the columns cookie to determine which columns are active, or set the
      * cookie to the current columns.
      *
-     * @param  array<int,string>|null  $params
      * @param  \Illuminate\Http\Request  $request
+     * @param  array<int,string>|null  $params
      * @return array<int,string>|null
      */
-    public function configureCookie($params, $request)
+    public function configureCookie($request, $params)
     {
         if (filled($params)) {
             $this->enqueueCookie($params);
             return $params;
         }
 
-        return $this->dequeueCookie($params, $request);
+        return $this->dequeueCookie($request, $params);
     }
 
     /**
@@ -233,11 +233,11 @@ trait HasToggle
     /**
      * Retrieve the preference data from the cookie if it exists.
      * 
-     * @param array<int,string>|null $params
      * @param \Illuminate\Http\Request $request
+     * @param array<int,string>|null $params
      * @return array<int,string>|null
      */
-    protected function dequeueCookie($params, $request)
+    protected function dequeueCookie($request, $params)
     {
         $value = $request->cookie($this->getCookieName(), null);
 
@@ -247,5 +247,35 @@ trait HasToggle
 
         /** @var array<int,string>|null */
         return \json_decode($value, false);
+    }
+
+    /**
+     * Toggle the columns that are displayed.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @return array<int,\Honed\Table\Columns\Column>
+     */
+    public function toggleColumns($request, $columns)
+    {
+        if (! $this->isToggleable()) {
+            return $columns;
+        }
+
+        $key = $this->formatScope($this->getColumnsKey());
+        $params = $request->safeArray($key);
+
+        $params = $params?->isEmpty()
+            ? null
+            : $params->toArray();
+
+        if ($this->isRememberable()) {
+            $params = $this->configureCookie($request, $params);
+        }
+
+        return collect($columns)
+            ->filter(fn (Column $column) => $column->isDisplayed($params))
+            ->values()
+            ->all();
     }
 }
