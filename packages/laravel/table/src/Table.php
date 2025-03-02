@@ -89,6 +89,13 @@ class Table extends Refine implements UrlRoutable
 
                 return $this->addActions($actions);
 
+            case 'defaultPagination':
+                /** @var int $defaultPagination */
+                $defaultPagination = $parameters[0];
+                $this->defaultPagination = $defaultPagination;
+
+                return $this;
+
             case 'pagination':
                 /** @var int|array<int,int> $pagination */
                 $pagination = $parameters[0];
@@ -111,7 +118,7 @@ class Table extends Refine implements UrlRoutable
                 return $this;
 
             default: 
-                parent::__call($method, $parameters);
+                return parent::__call($method, $parameters);
         };
     }
 
@@ -123,7 +130,8 @@ class Table extends Refine implements UrlRoutable
      */
     public static function make($before = null)
     {
-        return resolve(static::class);
+        return resolve(static::class)
+            ->before($before);
     }
 
     /**
@@ -269,6 +277,14 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
+    public function fallbackDelimiter()
+    {
+        return type(config('table.delimiter', ','))->asString();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function fallbackSearchesKey()
     {
         return type(config('table.config.searches', 'search'))->asString();
@@ -328,39 +344,16 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
-     * Get the number of records to show per page.
-     * 
-     * @return int
-     */
-    protected function getCount()
-    {
-        $pagination = $this->getPagination();
-
-        if (! \is_array($pagination)) {
-            return $pagination;
-        }
-
-        $param = $this->formatScope($this->getRecordsKey());
-        $count = $this->getRequest()->safeInteger($param, 0);
-
-        $this->validatePagination($count, $pagination);
-        $this->createRecordsPerPage($pagination, $count);
-
-        return $count;
-    }
-
-    /**
      * Retrieve the records from the underlying builder resource.
      *
      * @param TBuilder $builder
+     * @param \Illuminate\Http\Request $request
      * @param  array<int,\Honed\Table\Columns\Column>  $columns
      * @return void
      */
-    protected function retrieveRecords($builder, $columns)
-    {
-        $count = $this->getCount();
-        
-        [$records, $this->paginationData] = $this->paginate($builder, $count);
+    protected function retrieveRecords($builder, $request, $columns)
+    {        
+        [$records, $this->paginationData] = $this->paginate($builder, $request);
 
         $actions = $this->getInlineActions();
 
@@ -411,7 +404,7 @@ class Table extends Refine implements UrlRoutable
         // Use the parent pipeline to perform refinement.
         parent::pipeline($builder, $request);
 
-        $this->retrieveRecords($builder, $columns);
+        $this->retrieveRecords($builder, $request, $columns);
     }
 
     /**

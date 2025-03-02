@@ -66,17 +66,6 @@ trait HasToggle
 
         return $this->fallbackToggleable();
     }
-    
-    /**
-     * Determine whether the table should allow the user to toggle which columns
-     * are visible.
-     *  
-     * @return bool
-     */
-    protected function fallbackToggleable()
-    {
-        return (bool) config('table.toggle.enabled', false);
-    }
 
     /**
      * Set the query parameter for which columns to display.
@@ -105,16 +94,6 @@ trait HasToggle
     }
 
     /**
-     * Get the query parameter for which columns to display.
-     * 
-     * @return string
-     */
-    protected function fallbackColumnsKey()
-    {
-        return type(config('table.config.columns', 'columns'))->asString();
-    }
-
-    /**
      * Determine whether the table should remember the user preferences.
      * 
      * @return bool
@@ -130,16 +109,6 @@ trait HasToggle
         }
 
         return $this->fallbackRememberable();
-    }
-
-    /**
-     * Determine whether the table should remember the user preferences.
-     * 
-     * @return bool
-     */
-    protected function fallbackRememberable()
-    {
-        return (bool) config('table.toggle.remember', false);
     }
 
     /**
@@ -172,6 +141,20 @@ trait HasToggle
     }
 
     /**
+     * Set the duration of the cookie to use for remembering the columns to
+     * display.
+     * 
+     * @param int $seconds
+     * @return $this
+     */
+    public function duration($seconds)
+    {
+        $this->duration = $seconds;
+
+        return $this;
+    }
+
+    /**
      * Get the duration of the cookie to use for remembering the columns to
      * display.
      * 
@@ -187,14 +170,52 @@ trait HasToggle
     }
 
     /**
-     * Get the duration of the cookie to use for remembering the columns to
-     * display.
-     * 
-     * @return int
+     * Toggle the columns that are displayed.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @return array<int,\Honed\Table\Columns\Column>
      */
-    protected function fallbackDuration()
+    public function toggleColumns($request, $columns)
     {
-        return type(config('table.toggle.duration', 15768000))->asInt();
+        if (! $this->isToggleable()) {
+            return $columns;
+        }
+
+        $params = $this->getToggledColumns($request);
+
+        if ($this->isRememberable()) {
+            $params = $this->configureCookie($request, $params);
+        }
+
+        return collect($columns)
+            ->filter(fn (Column $column) => $column->isDisplayed($params))
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Get the toggled columns from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array<int,string>|true
+     */
+    public function getToggledColumns($request)
+    {
+        /** @var string */
+        $key = $this->formatScope($this->getColumnsKey());
+
+        $columns = $request->safeArray($key, null, $this->getDelimiter());
+
+        if (\is_null($columns) || $columns->isEmpty()) {
+            return null;
+        }
+
+        return $columns
+            ->map(\trim(...))
+            ->filter()
+            ->values()
+            ->all();
     }
 
     /**
@@ -205,7 +226,7 @@ trait HasToggle
      * @param  array<int,string>|null  $params
      * @return array<int,string>|null
      */
-    public function configureCookie($request, $params)
+    protected function configureCookie($request, $params)
     {
         if (filled($params)) {
             $this->enqueueCookie($params);
@@ -213,6 +234,49 @@ trait HasToggle
         }
 
         return $this->dequeueCookie($request, $params);
+    }
+
+    /**
+     * Get the query parameter for which columns to display.
+     * 
+     * @return string
+     */
+    protected function fallbackColumnsKey()
+    {
+        return type(config('table.config.columns', 'columns'))->asString();
+    }
+
+    /**
+     * Determine whether the table should remember the user preferences.
+     * 
+     * @return bool
+     */
+    protected function fallbackRememberable()
+    {
+        return (bool) config('table.toggle.remember', false);
+    }
+
+    /**
+     * Determine whether the table should allow the user to toggle which columns
+     * are visible.
+     *  
+     * @return bool
+     */
+    protected function fallbackToggleable()
+    {
+        return (bool) config('table.toggle.enabled', false);
+    }
+
+    
+    /**
+     * Get the duration of the cookie to use for remembering the columns to
+     * display.
+     * 
+     * @return int
+     */
+    protected function fallbackDuration()
+    {
+        return type(config('table.toggle.duration', 15768000))->asInt();
     }
 
     /**
@@ -247,35 +311,5 @@ trait HasToggle
 
         /** @var array<int,string>|null */
         return \json_decode($value, false);
-    }
-
-    /**
-     * Toggle the columns that are displayed.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  array<int,\Honed\Table\Columns\Column>  $columns
-     * @return array<int,\Honed\Table\Columns\Column>
-     */
-    public function toggleColumns($request, $columns)
-    {
-        if (! $this->isToggleable()) {
-            return $columns;
-        }
-
-        $key = $this->formatScope($this->getColumnsKey());
-        $params = $request->safeArray($key);
-
-        $params = $params?->isEmpty()
-            ? null
-            : $params->toArray();
-
-        if ($this->isRememberable()) {
-            $params = $this->configureCookie($request, $params);
-        }
-
-        return collect($columns)
-            ->filter(fn (Column $column) => $column->isDisplayed($params))
-            ->values()
-            ->all();
     }
 }

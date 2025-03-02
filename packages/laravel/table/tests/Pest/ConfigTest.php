@@ -2,39 +2,77 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Refine;
-use Honed\Refine\Tests\Stubs\Product;
-use Honed\Table\Tests\Fixtures\Table;
+use Honed\Table\Tests\Fixtures\Table as FixtureTable;
+use Honed\Table\Table;
 
 beforeEach(function () {
-    $this->test = Table::make();
+    $this->test = FixtureTable::make();
 });
 
 it('has a sorts key', function () {
+    $sortsKey = 's';
+
+    // Class-based
     expect($this->test)
+        ->getSortsKey()->toBe(FixtureTable::SortsKey)
+        ->sortsKey($sortsKey)->toBe($this->test)
+        ->getSortsKey()->toBe($sortsKey);
+
+    // Anonymous
+    expect(Table::make())
         ->getSortsKey()->toBe(config('table.config.sorts'))
-        ->sortsKey('test')->toBe($this->test)
-        ->getSortsKey()->toBe('test');
+        ->sortsKey($sortsKey)->toBeInstanceOf(Table::class)
+        ->getSortsKey()->toBe($sortsKey);
 });
 
 it('has a searches key', function () {
+    $searchesKey = 's';
+
+    // Class-based
     expect($this->test)
+        ->getSearchesKey()->toBe(FixtureTable::SearchesKey)
+        ->searchesKey($searchesKey)->toBe($this->test)
+        ->getSearchesKey()->toBe($searchesKey);
+
+    // Anonymous
+    expect(Table::make())
         ->getSearchesKey()->toBe(config('table.config.searches'))
-        ->searchesKey('test')->toBe($this->test)
-        ->getSearchesKey()->toBe('test');
+        ->searchesKey($searchesKey)->toBeInstanceOf(Table::class)
+        ->getSearchesKey()->toBe($searchesKey);
 });
 
 it('can match', function () {
+    $canMatch = true;
+
+    // Class-based
     expect($this->test)
         ->canMatch()->toBe(config('table.matches'));
 
-    expect($this->test->match())->toBe($this->test)
-        ->canMatch()->toBeTrue();
+    expect($this->test->match($canMatch))
+        ->toBe($this->test)
+        ->canMatch()->toBe($canMatch);
+
+    // Anonymous
+    expect(Table::make())
+        ->canMatch()->toBe(config('table.matches'));
+
+    expect(Table::make()->match($canMatch))
+        ->toBeInstanceOf(Table::class)
+        ->canMatch()->toBe($canMatch);
 });
 
 it('has a delimiter', function () {
+    $delimiter = '|';
+
+    // Class-based
     expect($this->test)
+        ->getDelimiter()->toBe(FixtureTable::Delimiter)
+        ->delimiter($delimiter)->toBe($this->test)
+        ->getDelimiter()->toBe($delimiter);
+
+    // Anonymous
+    expect(Table::make())
         ->getDelimiter()->toBe(config('table.config.delimiter'))
-        ->delimiter('|')->toBe($this->test)
-        ->getDelimiter()->toBe('|');
+        ->delimiter($delimiter)->toBeInstanceOf(Table::class)
+        ->getDelimiter()->toBe($delimiter);
 });

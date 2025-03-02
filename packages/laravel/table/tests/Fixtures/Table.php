@@ -25,9 +25,21 @@ use Honed\Table\Tests\Stubs\Status;
 
 class Table extends HonedTable
 {
+    const Delimiter = '|';
+
+    const Paginator = 'simple';
+
     const Pagination = [10, 25, 50];
 
-    const DefaultPagination = 15;
+    const DefaultPagination = 25;
+
+    const PagesKey = 'p';
+
+    const RecordsKey = 'records';
+
+    const SearchesKey = 's';
+
+    const SortsKey = 'order';
 
     const Search = ['description'];
 
@@ -43,11 +55,21 @@ class Table extends HonedTable
 
     const Cookie = 'example-table';
 
-    const PagesKey = 'cursor';
+    public $delimiter = self::Delimiter;
 
     public $pagination = self::Pagination;
 
-    public $default = self::DefaultPagination;
+    public $paginator = self::Paginator;
+
+    public $defaultPagination = self::DefaultPagination;
+
+    public $pagesKey = self::PagesKey;
+
+    public $recordsKey = self::RecordsKey;
+
+    public $searchesKey = self::SearchesKey;
+
+    public $sortsKey = self::SortsKey;
 
     public $toggle = self::Toggle;
 
@@ -61,9 +83,7 @@ class Table extends HonedTable
 
     public $cookie = self::Cookie;
 
-    public $pagesKey = self::PagesKey;
-
-    public function resource()
+    public function for()
     {
         return Product::query()
             ->with(['seller', 'categories']);

@@ -104,8 +104,8 @@ trait HasPagination
      */
     public function getDefaultPagination()
     {
-        if (isset($this->default)) {
-            return $this->default;
+        if (isset($this->defaultPagination)) {
+            return $this->defaultPagination;
         }
 
         return $this->fallbackDefaultPagination();
@@ -396,15 +396,41 @@ trait HasPagination
     }
 
     /**
+     * Get the number of records to show per page.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return int
+     */
+    protected function getCount($request)
+    {
+        $pagination = $this->getPagination();
+
+        if (! \is_array($pagination)) {
+            return $pagination;
+        }
+
+        /** @var string */
+        $param = $this->formatScope($this->getRecordsKey());
+        $count = $request->safeInteger($param, 0);
+
+        $this->validatePagination($count, $pagination);
+        $this->createRecordsPerPage($pagination, $count);
+
+        return $count;
+    }
+
+    /**
      * Paginate the data.
      * 
      * @param TBuilder $builder
-     * @param int $count
+     * @param \Illuminate\Http\Request $request
      * @return array{0: \Illuminate\Support\Collection<int,TModel>, 1: array<string,mixed>}
      * @throws \InvalidArgumentException
      */
-    protected function paginate($builder, $count)
+    protected function paginate($builder, $request)
     {
+        $count = $this->getCount($request);
+
         $paginator = $this->getPaginator();
         $key = $this->getPagesKey();
 
