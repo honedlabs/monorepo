@@ -35,8 +35,6 @@ trait Allowable
     {
         $evaluated = (bool) $this->evaluate($this->allow, $parameters, $typed);
 
-        $this->allow = $evaluated;
-
         return $evaluated;
     }
 }
