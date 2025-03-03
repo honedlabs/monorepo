@@ -1,12 +1,12 @@
 {
-  "name": "@honed/flash",
+  "name": "@honed/toast",
   "private": false,
   "version": "0.1.0",
   "license": "MIT",
   "description": "-",
   "keywords": [
     "honed",
-    "flash",
+    "toast",
     "vue",
     "inertia"
   ],
@@ -29,9 +29,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/honedlabs/flash.git"
+    "url": "https://github.com/honedlabs/honed.git"
   },
-  "homepage": "https://github.com/honedlabs/flash#readme",
+  "homepage": "https://github.com/honedlabs/honed/tree/main/packages/vue/toast",
   "files": [
     "dist"
   ],

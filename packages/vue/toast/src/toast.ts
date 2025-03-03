@@ -1,33 +1,33 @@
 import type { Message } from "./inertia"
 import { resolver } from "./resolver"
 
-export const useFlash = (message: Message) => {
+export const toast = (message: Message) => {
     resolver.resolve(message)
 }
 
 export const success = (message: Message) => {
-    useFlash({
+    toast({
         ...message,
         type: 'success'
     })
 }
 
 export const error = (message: Message) => {
-    useFlash({
+    toast({
         ...message,
         type: 'error'
     })
 }
 
 export const info = (message: Message) => {
-    useFlash({
+    toast({
         ...message,
         type: 'info'
     })
 }
 
 export const warning = (message: Message) => {
-    useFlash({
+    toast({
         ...message,
         type: 'warning'
     })
