@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-if (!function_exists('flash')) {
+if (! function_exists('flash')) {
     /**
      * Flash a new message to the session.
-     * 
-     * @param string|\Honed\Flash\Message|null $message
-     * @param string|null $type
-     * @param string|null $title
-     * @param int|null $duration
-     * @param array<string,mixed> $meta
+     *
+     * @param  string|\Honed\Flash\Message|null  $message
+     * @param  string|null  $type
+     * @param  string|null  $title
+     * @param  int|null  $duration
+     * @param  array<string,mixed>  $meta
      * @return \Honed\Flash\Flash
      */
     function flash(

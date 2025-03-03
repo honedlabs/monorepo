@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Flash;
 
-use Honed\Core\Primitive;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Primitive;
 use Honed\Flash\Support\Parameters;
 
 /**
@@ -15,40 +14,38 @@ use Honed\Flash\Support\Parameters;
  */
 class Message extends Primitive
 {
-    use HasType;
     use HasMeta;
+    use HasType;
 
     /**
      * The message for the flash.
-     * 
+     *
      * @var string
      */
     protected $message;
 
     /**
      * The title for the flash.
-     * 
+     *
      * @var string|null
      */
     protected $title;
 
     /**
      * The duration for the flash.
-     * 
+     *
      * @var int|null
      */
     protected $duration;
-    
 
     /**
      * Create a new message instance.
-     * 
-     * @param string $message
-     * @param string|null $type
-     * @param string|null $title
-     * @param int|null $duration
-     * @param array<string,mixed> $meta
-     * 
+     *
+     * @param  string  $message
+     * @param  string|null  $type
+     * @param  string|null  $title
+     * @param  int|null  $duration
+     * @param  array<string,mixed>  $meta
      * @return static
      */
     public static function make(
@@ -68,9 +65,8 @@ class Message extends Primitive
 
     /**
      * Set the message.
-     * 
-     * @param string $message
-     * 
+     *
+     * @param  string  $message
      * @return $this
      */
     public function message($message)
@@ -82,7 +78,7 @@ class Message extends Primitive
 
     /**
      * Get the message.
-     * 
+     *
      * @return string
      */
     public function getMessage()
@@ -92,9 +88,8 @@ class Message extends Primitive
 
     /**
      * Set the title.
-     * 
-     * @param string|null $title
-     * 
+     *
+     * @param  string|null  $title
      * @return $this
      */
     public function title($title)
@@ -106,7 +101,7 @@ class Message extends Primitive
 
     /**
      * Get the title.
-     * 
+     *
      * @return string|null
      */
     public function getTitle()
@@ -116,7 +111,7 @@ class Message extends Primitive
 
     /**
      * Set the type to success.
-     * 
+     *
      * @return $this
      */
     public function success()
@@ -126,7 +121,7 @@ class Message extends Primitive
 
     /**
      * Set the type to error.
-     * 
+     *
      * @return $this
      */
     public function error()
@@ -136,7 +131,7 @@ class Message extends Primitive
 
     /**
      * Set the type to info.
-     * 
+     *
      * @return $this
      */
     public function info()
@@ -146,7 +141,7 @@ class Message extends Primitive
 
     /**
      * Set the type to warning.
-     * 
+     *
      * @return $this
      */
     public function warning()
@@ -156,9 +151,8 @@ class Message extends Primitive
 
     /**
      * Set the duration.
-     * 
-     * @param int|null $duration
-     * 
+     *
+     * @param  int|null  $duration
      * @return $this
      */
     public function duration($duration)
@@ -170,7 +164,7 @@ class Message extends Primitive
 
     /**
      * Get the duration.
-     * 
+     *
      * @return int|null
      */
     public function getDuration()
@@ -180,7 +174,7 @@ class Message extends Primitive
 
     /**
      * Get the duration.
-     * 
+     *
      * @return int|null
      */
     protected function fallbackDuration()
@@ -188,10 +182,10 @@ class Message extends Primitive
         /** @var int|null */
         return config('flash.duration', Parameters::DURATION);
     }
-    
+
     /**
      * Get the type.
-     * 
+     *
      * @return string|null
      */
     protected function fallbackType()

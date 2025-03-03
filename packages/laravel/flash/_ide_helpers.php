@@ -23,5 +23,3 @@ namespace Inertia {
      */
     class ResponseFactory {}
 }
-
-

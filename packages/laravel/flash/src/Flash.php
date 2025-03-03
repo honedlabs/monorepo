@@ -11,17 +11,16 @@ class Flash
 {
     public function __construct(
         protected Store $session
-    ) { }
+    ) {}
 
     /**
      * Flash a new message to the session.
-     * 
-     * @param string|\Honed\Flash\Message $message
-     * @param string|null $type
-     * @param string|null $title
-     * @param int|null $duration
-     * @param array<string,mixed> $meta
-     * 
+     *
+     * @param  string|\Honed\Flash\Message  $message
+     * @param  string|null  $type
+     * @param  string|null  $title
+     * @param  int|null  $duration
+     * @param  array<string,mixed>  $meta
      * @return $this
      */
     public function message(
@@ -32,9 +31,9 @@ class Flash
         $meta = []
     ) {
         if (! $message instanceof Message) {
-            $message = Message::make(...\func_get_args());
+            $message = Message::make($message, $type, $title, $duration, $meta);
         }
-        
+
         $this->session->flash(Parameters::PROP, $message->toArray());
 
         return $this;
@@ -42,12 +41,11 @@ class Flash
 
     /**
      * Flash a new success message to the session.
-     * 
-     * @param string $message
-     * @param string|null $title
-     * @param int|null $duration
-     * @param array<string,mixed> $meta
-     * 
+     *
+     * @param  string  $message
+     * @param  string|null  $title
+     * @param  int|null  $duration
+     * @param  array<string,mixed>  $meta
      * @return $this
      */
     public function success(
@@ -61,12 +59,11 @@ class Flash
 
     /**
      * Flash a new error message to the session.
-     * 
-     * @param string $message
-     * @param string|null $title
-     * @param int|null $duration
-     * @param array<string,mixed> $meta
-     * 
+     *
+     * @param  string  $message
+     * @param  string|null  $title
+     * @param  int|null  $duration
+     * @param  array<string,mixed>  $meta
      * @return $this
      */
     public function error(
@@ -80,12 +77,11 @@ class Flash
 
     /**
      * Flash a new info message to the session.
-     * 
-     * @param string $message
-     * @param string|null $title
-     * @param int|null $duration
-     * @param array<string,mixed> $meta
-     * 
+     *
+     * @param  string  $message
+     * @param  string|null  $title
+     * @param  int|null  $duration
+     * @param  array<string,mixed>  $meta
      * @return $this
      */
     public function info(
@@ -99,12 +95,11 @@ class Flash
 
     /**
      * Flash a new warning message to the session.
-     * 
-     * @param string $message
-     * @param string|null $title
-     * @param int|null $duration
-     * @param array<string,mixed> $meta
-     * 
+     *
+     * @param  string  $message
+     * @param  string|null  $title
+     * @param  int|null  $duration
+     * @param  array<string,mixed>  $meta
      * @return $this
      */
     public function warning(
