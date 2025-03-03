@@ -7,8 +7,8 @@ use Inertia\Testing\AssertableInertia as Assert;
 
 use function Pest\Laravel\get;
 
-it('shares via alias', function () {
-    get('/')->assertInertia(fn (Assert $page) => $page
+it('shares via middleware', function () {
+    get('/show')->assertInertia(fn (Assert $page) => $page
         ->has(Parameters::PROP)
         ->where(Parameters::PROP, [
             'message' => 'Hello World',
@@ -20,8 +20,8 @@ it('shares via alias', function () {
     );
 });
 
-it('shares via middleware', function () {
-    get('/show')->assertInertia(fn (Assert $page) => $page
+it('shares via middleware alias', function () {
+    get('/')->assertInertia(fn (Assert $page) => $page
         ->has(Parameters::PROP)
         ->where(Parameters::PROP, [
             'message' => 'Hello World',
