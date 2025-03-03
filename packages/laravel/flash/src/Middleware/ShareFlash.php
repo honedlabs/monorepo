@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Honed\Nav\Middleware;
+namespace Honed\Flash\Middleware;
 
 use Closure;
-use Honed\Nav\Facades\Nav;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
-class ShareNavigation
+class ShareFlash
 {
     /**
      * Handle the incoming request.

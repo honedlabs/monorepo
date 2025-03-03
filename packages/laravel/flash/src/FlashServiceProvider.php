@@ -22,16 +22,28 @@ class FlashServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->publishes([
-            __DIR__.'/../config/flash.php' => config_path('flash.php'),
-        ], 'flash-config');
-
         if ($this->app->runningInConsole()) {
-            $this->commands([
-                //
-            ]);
+            $this->publishes([
+                __DIR__.'/../config/flash.php' => config_path('flash.php'),
+            ], 'config');
         }
 
-        // RedirectResponse::macro('')
+        $this->registerRedirectResponseMacros();
     }
+
+    /**
+     * Register the redirect response macros.
+     */
+    protected function registerRedirectResponseMacros(): void
+    {
+        RedirectResponse::macro('flash', function () {
+            /** @var \Illuminate\Http\RedirectResponse $this */
+
+            return $this->with(
+                'flash',
+                $this->session->get('flash')
+            );
+        });
+    }
+    
 }
