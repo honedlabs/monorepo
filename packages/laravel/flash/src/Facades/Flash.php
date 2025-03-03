@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \Honed\Flash\Flash
+ * 
+ * @method static \Honed\Flash\Flash message(string $message, string|null $type = null, string|null $title = null, int|null $duration = null, array $meta = []) Flash a new message to the session.
+ * @method static \Honed\Flash\Flash success(string $message, string|null $title = null, int|null $duration = null, array $meta = []) Flash a new success message to the session.
+ * @method static \Honed\Flash\Flash error(string $message, string|null $title = null, int|null $duration = null, array $meta = []) Flash a new error message to the session.
+ * @method static \Honed\Flash\Flash info(string $message, string|null $title = null, int|null $duration = null, array $meta = []) Flash a new info message to the session.
+ * @method static \Honed\Flash\Flash warning(string $message, string|null $title = null, int|null $duration = null, array $meta = []) Flash a new warning message to the session.
  */
 class Flash extends Facade
 {

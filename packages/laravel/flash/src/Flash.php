@@ -16,7 +16,7 @@ class Flash
     /**
      * Flash a new message to the session.
      * 
-     * @param string $message
+     * @param string|\Honed\Flash\Message $message
      * @param string|null $type
      * @param string|null $title
      * @param int|null $duration
@@ -32,7 +32,7 @@ class Flash
         $meta = []
     ) {
         if (! $message instanceof Message) {
-            $message = Message::make(\func_get_args());
+            $message = Message::make(...\func_get_args());
         }
         
         $this->session->flash(Parameters::PROP, $message->toArray());

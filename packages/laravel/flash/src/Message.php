@@ -51,7 +51,7 @@ class Message extends Primitive
      * 
      * @return static
      */
-    public function make(
+    public static function make(
         $message,
         $type = null,
         $title = null,
