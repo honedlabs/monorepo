@@ -76,3 +76,29 @@ it('sets warning message', function () {
             'meta' => [],
         ]);
 });
+
+it('has helper methods', function () {
+    expect(flash()->success('Hello world'))
+        ->toBeInstanceOf(BaseFlash::class);
+
+    expect(Session::get(Parameters::PROP))
+        ->toEqual([
+            'message' => 'Hello world',
+            'type' => Parameters::SUCCESS,
+            'title' => null,
+            'duration' => config('flash.duration'),
+            'meta' => [],
+        ]);
+
+    expect(flash('Hello world', 'error'))
+        ->toBeInstanceOf(BaseFlash::class);
+
+    expect(Session::get(Parameters::PROP))
+        ->toEqual([
+            'message' => 'Hello world',
+            'type' => Parameters::ERROR,
+            'title' => null,
+            'duration' => config('flash.duration'),
+            'meta' => [],
+        ]);
+});

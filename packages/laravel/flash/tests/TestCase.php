@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Honed\Flash\Tests;
 
 use Honed\Flash\FlashServiceProvider;
+use Honed\Flash\Middleware\ShareFlash;
 use Honed\Flash\Tests\Stubs\Status;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
@@ -15,17 +17,28 @@ use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
+    /**
+     * Setup the test environment.
+     */
     protected function setUp(): void
     {
         parent::setUp();
 
         View::addLocation(__DIR__.'/Stubs');
         Inertia::setRootView('app');
+
+        $this->withoutExceptionHandling();
+
         config()->set('inertia.testing.ensure_pages_exist', false);
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
-
     }
 
+    /**
+     * Get the package providers.
+     * 
+     * @param \Illuminate\Foundation\Application $app
+     * @return array<int,class-string>
+     */
     protected function getPackageProviders($app)
     {
         return [
@@ -34,6 +47,11 @@ class TestCase extends Orchestra
         ];
     }
 
+    /**
+     * Define the database migrations.
+     * 
+     * @return void
+     */
     protected function defineDatabaseMigrations()
     {
         Schema::create('products', function (Blueprint $table) {
@@ -48,13 +66,35 @@ class TestCase extends Orchestra
         });
     }
 
+    /**
+     * Define the routes setup.
+     * 
+     * @param \Illuminate\Routing\Router $router
+     * @return void
+     */
     protected function defineRoutes($router)
     {
-        // $router->get('/', fn () => 'Hello World');
+        $router->middleware([\Inertia\Middleware::class])
+            ->group(function (Router $router) {
+                $router->middleware('flash')
+                    ->get('/', fn () => inertia('Index')->flash('Hello World'))
+                    ->name('index');
+
+                $router->middleware(ShareFlash::class)
+                    ->get('/show', fn () => inertia('Show')->flash('Hello World'))
+                    ->name('show');
+            });
     }
 
+    /**
+     * Define the environment setup.
+     * 
+     * @param \Illuminate\Foundation\Application $app
+     * @return void
+     */
     public function getEnvironmentSetUp($app)
     {
+        config()->set('flash', require __DIR__.'/../config/flash.php');
         config()->set('database.default', 'testing');
     }
 }

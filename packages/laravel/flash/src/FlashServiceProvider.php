@@ -8,6 +8,7 @@ use Honed\Flash\Facades\Flash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Response;
 use Inertia\ResponseFactory;
 
 class FlashServiceProvider extends ServiceProvider
@@ -70,6 +71,19 @@ class FlashServiceProvider extends ServiceProvider
     protected function registerInertiaMacros(): void
     {
         ResponseFactory::macro('flash', function (
+            string|Message $message,
+            ?string $type = null,
+            ?string $title = null,
+            ?int $duration = null,
+            array $meta = []
+        ) {
+            /** @var \Inertia\ResponseFactory $this */
+            Flash::message($message, $type, $title, $duration, $meta);
+
+            return $this;
+        });
+
+        Response::macro('flash', function (
             string|Message $message,
             ?string $type = null,
             ?string $title = null,
