@@ -10,7 +10,7 @@ export interface Message {
 }
 
 declare module "@inertiajs/vue3" {
-    export declare function usePage(): Page<{ toast: Message | null }>
+    export declare function usePage(): Page<{ flash: Message | null }>
 }
 
 export {}
