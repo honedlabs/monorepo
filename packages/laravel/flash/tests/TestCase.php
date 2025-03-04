@@ -34,8 +34,8 @@ class TestCase extends Orchestra
 
     /**
      * Get the package providers.
-     * 
-     * @param \Illuminate\Foundation\Application $app
+     *
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array<int,class-string>
      */
     protected function getPackageProviders($app)
@@ -48,7 +48,7 @@ class TestCase extends Orchestra
 
     /**
      * Define the database migrations.
-     * 
+     *
      * @return void
      */
     protected function defineDatabaseMigrations()
@@ -67,8 +67,8 @@ class TestCase extends Orchestra
 
     /**
      * Define the routes setup.
-     * 
-     * @param \Illuminate\Routing\Router $router
+     *
+     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
     protected function defineRoutes($router)
@@ -82,8 +82,8 @@ class TestCase extends Orchestra
 
     /**
      * Define the environment setup.
-     * 
-     * @param \Illuminate\Foundation\Application $app
+     *
+     * @param  \Illuminate\Foundation\Application  $app
      * @return void
      */
     public function getEnvironmentSetUp($app)

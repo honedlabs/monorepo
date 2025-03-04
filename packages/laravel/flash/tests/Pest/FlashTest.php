@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 use Honed\Flash\Facades\Flash;
-use Honed\Flash\Flash as BaseFlash;
+use Honed\Flash\FlashFactory;
 use Honed\Flash\Support\Parameters;
 use Illuminate\Support\Facades\Session;
 
 it('sets message', function () {
     expect(Flash::message('test', meta: ['test' => 'test']))
-        ->toBeInstanceOf(BaseFlash::class);
+        ->toBeInstanceOf(FlashFactory::class);
 
     expect(Session::get(Parameters::PROP))
         ->toEqual([
@@ -23,7 +23,7 @@ it('sets message', function () {
 
 it('sets success message', function () {
     expect(Flash::success('test'))
-        ->toBeInstanceOf(BaseFlash::class);
+        ->toBeInstanceOf(FlashFactory::class);
 
     expect(Session::get(Parameters::PROP))
         ->toEqual([
@@ -37,7 +37,7 @@ it('sets success message', function () {
 
 it('sets error message', function () {
     expect(Flash::error('test'))
-        ->toBeInstanceOf(BaseFlash::class);
+        ->toBeInstanceOf(FlashFactory::class);
 
     expect(Session::get(Parameters::PROP))
         ->toEqual([
@@ -51,7 +51,7 @@ it('sets error message', function () {
 
 it('sets info message', function () {
     expect(Flash::info('test'))
-        ->toBeInstanceOf(BaseFlash::class);
+        ->toBeInstanceOf(FlashFactory::class);
 
     expect(Session::get(Parameters::PROP))
         ->toEqual([
@@ -65,7 +65,7 @@ it('sets info message', function () {
 
 it('sets warning message', function () {
     expect(Flash::warning('test'))
-        ->toBeInstanceOf(BaseFlash::class);
+        ->toBeInstanceOf(FlashFactory::class);
 
     expect(Session::get(Parameters::PROP))
         ->toEqual([
@@ -79,7 +79,7 @@ it('sets warning message', function () {
 
 it('has helper methods', function () {
     expect(flash()->success('Hello world'))
-        ->toBeInstanceOf(BaseFlash::class);
+        ->toBeInstanceOf(FlashFactory::class);
 
     expect(Session::get(Parameters::PROP))
         ->toEqual([
@@ -91,7 +91,7 @@ it('has helper methods', function () {
         ]);
 
     expect(flash('Hello world', 'error'))
-        ->toBeInstanceOf(BaseFlash::class);
+        ->toBeInstanceOf(FlashFactory::class);
 
     expect(Session::get(Parameters::PROP))
         ->toEqual([

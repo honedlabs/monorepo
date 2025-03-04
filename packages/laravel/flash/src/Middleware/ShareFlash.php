@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace Honed\Flash\Middleware;
 
 use Closure;
-use Inertia\Inertia;
+use Honed\Flash\Support\Parameters;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
-use Honed\Flash\Support\Parameters;
+use Inertia\Inertia;
 
 class ShareFlash
 {
     public function __construct(
-        protected Store $session)
-    { }
-    
+        protected Store $session) {}
+
     /**
      * Handle the incoming request.
      *

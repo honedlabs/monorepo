@@ -7,7 +7,7 @@ namespace Honed\Flash;
 use Honed\Flash\Support\Parameters;
 use Illuminate\Session\Store;
 
-class Flash
+class FlashFactory
 {
     public function __construct(
         protected Store $session
