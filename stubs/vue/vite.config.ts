@@ -9,24 +9,23 @@ export default defineConfig({
 		insertTypesEntry: true,
 		include: ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 		outDir: "dist",
-	}),
-],
-build: {
-	lib: {
-		entry: resolve(__dirname, "src/index.ts"),
-		name: '@:vendor_slug/:package_slug',
-		formats: ['es', 'umd'],
-		fileName: (format) => `index.${format}.js`,
-	},
-	rollupOptions: {
-		external: ['vue', '@inertiajs/vue3', 'axios'],
-		output: {
-			globals: {
-				vue: 'Vue',
-				'@inertiajs/vue3': 'Inertia',
-				axios: 'axios',
+	})],
+	build: {
+		lib: {
+			entry: resolve(__dirname, "src/index.ts"),
+			name: '@:vendor_slug/:package_slug',
+			formats: ['es', 'umd'],
+			fileName: (format) => `index.${format}.js`,
+		},
+		rollupOptions: {
+			external: ['vue', '@inertiajs/vue3', 'axios'],
+			output: {
+				globals: {
+					vue: 'Vue',
+					'@inertiajs/vue3': 'Inertia',
+					axios: 'axios',
+				},
 			},
 		},
 	},
-},
 })

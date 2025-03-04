@@ -20,12 +20,12 @@ jobs:
           # - command
           # - core
           # - crumb
-          # - flash
+          - flash
           # - lock
           # - modal
           # - nav
           # - refine
-          - table
+          # - table
           # - upload
 
     steps:

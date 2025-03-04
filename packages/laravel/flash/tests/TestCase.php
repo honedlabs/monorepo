@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Honed\Flash\Tests;
 
 use Honed\Flash\FlashServiceProvider;
-use Honed\Flash\Tests\Stubs\Status;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 use Inertia\ServiceProvider as InertiaServiceProvider;
@@ -44,25 +41,6 @@ class TestCase extends Orchestra
             FlashServiceProvider::class,
             InertiaServiceProvider::class,
         ];
-    }
-
-    /**
-     * Define the database migrations.
-     *
-     * @return void
-     */
-    protected function defineDatabaseMigrations()
-    {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('public_id')->unique();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->string('status')->default(Status::Available->value);
-            $table->unsignedInteger('price')->default(0);
-            $table->boolean('best_seller')->default(false);
-            $table->timestamps();
-        });
     }
 
     /**
