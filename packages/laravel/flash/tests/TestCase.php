@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Flash\Tests;
 
 use Honed\Flash\FlashServiceProvider;
-use Honed\Flash\Middleware\ShareFlash;
 use Honed\Flash\Tests\Stubs\Status;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\Router;
@@ -74,15 +73,10 @@ class TestCase extends Orchestra
      */
     protected function defineRoutes($router)
     {
-        $router->middleware([\Inertia\Middleware::class])
+        $router->middleware(['flash', \Inertia\Middleware::class])
             ->group(function (Router $router) {
-                $router->middleware('flash')
-                    ->get('/', fn () => inertia('Index')->flash('Hello World'))
+                $router->get('/', fn () => inertia('Index')->flash('Hello World'))
                     ->name('index');
-
-                $router->middleware(ShareFlash::class)
-                    ->get('/show', fn () => inertia('Show')->flash('Hello World'))
-                    ->name('show');
             });
     }
 

@@ -13,8 +13,8 @@ use Honed\Flash\Support\Parameters;
 class ShareFlash
 {
     public function __construct(
-        protected Store $session
-    ) {}
+        protected Store $session)
+    { }
     
     /**
      * Handle the incoming request.
@@ -25,7 +25,7 @@ class ShareFlash
     {
         Inertia::share(
             Parameters::PROP,
-            $this->session->get(Parameters::PROP, null)
+            fn () => $this->session->get(Parameters::PROP, null)
         );
 
         return $next($request);
