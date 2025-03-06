@@ -8,11 +8,6 @@ beforeEach(function () {
     $this->test = new class
     {
         use HasAlias;
-
-        public function getAliasedName()
-        {
-            return $this->getAlias();
-        }
     };
 });
 

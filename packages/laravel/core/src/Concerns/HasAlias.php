@@ -14,13 +14,6 @@ trait HasAlias
     protected $alias;
 
     /**
-     * Get the aliased name for the instance.
-     *
-     * @return string
-     */
-    abstract public function getAliasedName();
-
-    /**
      * Set the alias for the instance.
      *
      * @param  string|null  $alias
