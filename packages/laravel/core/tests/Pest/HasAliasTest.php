@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\HasAlias;
 
-class AliasTest
-{
-    use HasAlias;
-}
-
 beforeEach(function () {
-    $this->test = new AliasTest;
+    $this->test = new class
+    {
+        use HasAlias;
+
+        public function getAliasedName()
+        {
+            return $this->getAlias();
+        }
+    };
 });
 
 it('is null by default', function () {
@@ -19,8 +22,8 @@ it('is null by default', function () {
 });
 
 it('sets', function () {
-    expect($this->test->alias('test'))
-        ->toBeInstanceOf(AliasTest::class)
+    expect($this->test)
+        ->alias('test')->toBe($this->test)
         ->hasAlias()->toBeTrue();
 });
 

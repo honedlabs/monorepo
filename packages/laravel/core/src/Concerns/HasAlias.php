@@ -7,9 +7,18 @@ namespace Honed\Core\Concerns;
 trait HasAlias
 {
     /**
+     * The alias to use to hide the underlying value.
+     *
      * @var string|null
      */
     protected $alias;
+
+    /**
+     * Get the aliased name for the instance.
+     *
+     * @return string
+     */
+    abstract public function getAliasedName();
 
     /**
      * Set the alias for the instance.
