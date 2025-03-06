@@ -18,7 +18,7 @@ class Filter extends Refiner
 {
     use HasScope;
     use Validatable;
-    use HasOptions
+    use HasOptions;
 
     const Is = '=';
 

@@ -4,14 +4,31 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Filters\Concerns;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 trait HasOptions
 {
     /**
-     * @var array<int,\Honed\Refine\Filters\Concerns\Option>|null
+     * The available options.
+     * 
+     * @var array<int,\Honed\Refine\Filters\Concerns\Option>
      */
-    protected $options;
+    protected $options = [];
+
+    /**
+     * Whether to restrict options to only those provided.
+     * 
+     * @var bool|null
+     */
+    protected $strict;
+
+    /**
+     * Whether to accept multiple values.
+     *
+     * @var bool
+     */
+    protected $multiple = false;
 
     /**
      * Set the options for the filter.
@@ -25,43 +42,50 @@ trait HasOptions
             $options = $options->all();
         }
 
+        
         $this->options = match (true) {
-            \is_string($options) && \is_a($options, \BackedEnum::class, true) => \array_map(
-                fn ($case) => Option::make($case->value, $case->name),
-                $options::cases()
-            ),
-            \array_is_list($o = $options) => \array_map(
-                fn ($value) => $value instanceof Option ? $value : Option::make($value),
-                $o
-            ),
-            default => \array_map(
-                fn ($value, $label) => Option::make($value, $label),
-                \array_keys($o),
-                $o,
-            ),
+            enum_exists($options) => $this->optionsEnumerated($options),
+            Arr::isAssoc($options) => $this->optionsAssociative($options),
+            default => $this->optionsList($options),
         };
 
         return $this;
     }
 
     /**
-     * Get the options.
+     * Restrict the options to only those provided.
      *
-     * @return array<int,\Honed\Refine\Filters\Concerns\Option>
+     * @param  bool  $strict
+     * @return $this
      */
-    public function getOptions()
+    public function strict($strict = true)
     {
-        return $this->options ?? [];
+        $this->strict = $strict;
+
+        return $this;
     }
 
     /**
-     * Determine if the filter has options.
+     * Allow any options to be used.
      *
-     * @return bool
+     * @param  bool  $restrict
+     * @return $this
      */
-    public function hasOptions()
+    public function lax($strict = false)
     {
-        return filled($this->options);
+        return $this->strict($strict);
+    }
+
+    /**
+     * Allow multiple options to be used.
+     *
+     * @return $this
+     */
+    public function multiple()
+    {
+        $this->multiple = true;
+
+        return $this;
     }
 
     /**
@@ -78,6 +102,46 @@ trait HasOptions
     }
 
     /**
+     * Determine if the filter has options.
+     *
+     * @return bool
+     */
+    public function hasOptions()
+    {
+        return filled($this->options);
+    }
+
+    /**
+     * Get the options.
+     *
+     * @return array<int,\Honed\Refine\Filters\Concerns\Option>
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Determine if only the options provided are allowed.
+     *
+     * @return bool
+     */
+    public function isStrict()
+    {
+        return $this->strict;
+    }
+
+    /**
+     * Determine if multiple options are allowed.
+     *
+     * @return bool
+     */
+    public function isMultiple()
+    {
+        return $this->multiple;
+    }
+
+    /**
      * Get the options as an array.
      *
      * @return array<int,mixed>
@@ -85,8 +149,51 @@ trait HasOptions
     public function optionsToArray()
     {
         return \array_map(
-            fn (Option $option) => $option->toArray(),
+            static fn (Option $option) => $option->toArray(),
             $this->getOptions()
         );
     }
+
+    /**
+     * Create options from an enum.
+     *
+     * @param  class-string<\BackedEnum>  $enum
+     * @return array<int,\Honed\Refine\Filters\Concerns\Option>
+     */
+    protected function optionsEnumerated($enum)
+    {
+        return \array_map(
+            static fn ($case) => Option::make($case->value, $case->name),
+            $enum::cases()
+        );
+    }
+
+    /**
+     * Create options from an associative array.
+     *
+     * @param  array<int,mixed>  $options
+     * @return array<int,\Honed\Refine\Filters\Concerns\Option>
+     */
+    protected function optionsAssociative($options)
+    {
+        return \array_map(
+            static fn ($value, $key) => Option::make($value, $key),
+            $options
+        );
+    }
+
+    /**
+     * Create options from a list.
+     *
+     * @param  array<int,mixed>  $options
+     * @return array<int,\Honed\Refine\Filters\Concerns\Option>
+     */
+    protected function optionsList($options)
+    {
+        return \array_map(
+            static fn ($value) => Option::make($value, $value),
+            $options
+        );
+    }
+
 }
