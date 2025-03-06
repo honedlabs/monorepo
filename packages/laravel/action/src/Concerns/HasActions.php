@@ -17,7 +17,14 @@ trait HasActions
      *
      * @var array<int,\Honed\Action\Action>|null
      */
-    public $actions;
+    protected $actions;
+
+    /**
+     * Whether the actions should be retrievable.
+     *
+     * @var bool
+     */
+    protected $withoutActions = false;
 
     /**
      * Retrieve the actions
@@ -26,6 +33,10 @@ trait HasActions
      */
     public function getActions()
     {
+        if ($this->isWithoutActions()) {
+            return [];
+        }
+
         return match (true) {
             isset($this->actions) => $this->actions,
             \method_exists($this, 'actions') => $this->actions(),
@@ -156,5 +167,27 @@ trait HasActions
             static fn (PageAction $action) => $action->toArray(),
             $this->getPageActions()
         );
+    }
+
+    /**
+     * Set the actions to not be retrieved.
+     *
+     * @return $this
+     */
+    public function withoutActions()
+    {
+        $this->withoutActions = true;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the actions should not be retrieved.
+     *
+     * @return bool
+     */
+    public function isWithoutActions()
+    {
+        return $this->withoutActions;
     }
 }
