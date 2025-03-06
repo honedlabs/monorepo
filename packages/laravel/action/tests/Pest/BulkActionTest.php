@@ -39,6 +39,13 @@ it('has array representation', function () {
         ]);
 });
 
+it('keeps selected', function () {
+    expect($this->action)
+        ->keepsSelected()->toBeFalse()
+        ->keepSelected()->toBe($this->action)
+        ->keepsSelected()->toBeTrue();
+});
+
 it('executes', function () {
     $product = product();
 
