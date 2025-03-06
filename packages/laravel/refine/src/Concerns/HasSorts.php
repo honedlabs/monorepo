@@ -51,7 +51,7 @@ trait HasSorts
             return $this->sortsKey;
         }
 
-        return $this->getFallbackSortsKey();
+        return $this->fallbackSortsKey();
     }
 
     /**
@@ -59,7 +59,7 @@ trait HasSorts
      *
      * @return string
      */
-    protected function getFallbackSortsKey()
+    protected function fallbackSortsKey()
     {
         return type(config('refine.config.sorts', 'sort'))->asString();
     }
@@ -164,7 +164,7 @@ trait HasSorts
         $sort?->handle(
             $builder,
             $sort->getDirection() ?? 'asc',
-            type($sort->getAttribute())->asString()
+            $sort->getName()
         );
     }
 

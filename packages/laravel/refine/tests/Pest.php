@@ -21,3 +21,14 @@ function product(?string $name = null): Product
         'created_at' => now()->subDays(fake()->randomNumber(2)),
     ]);
 }
+
+expect()->extend('toBeWhere', function($column, $value, $boolean = 'and') {
+    $this->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($order) => $order
+            ->{'column'}->toBe($column)
+            ->{'value'}->toBe($value)
+            ->{'operator'}->toBe('=')
+            ->{'boolean'}->toBe($boolean)
+        );
+});

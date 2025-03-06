@@ -22,7 +22,7 @@ class Search extends Refiner
      */
     public function getUniqueKey()
     {
-        return type($this->getAttribute())->asString();
+        return type($this->getName())->asString();
     }
 
     /**
@@ -52,7 +52,7 @@ class Search extends Refiner
             return false;
         }
 
-        $attribute = type($this->getAttribute())->asString();
+        $attribute = type($this->getName())->asString();
 
         $value = type($search)->asString();
 

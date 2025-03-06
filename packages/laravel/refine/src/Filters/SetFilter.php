@@ -76,7 +76,7 @@ class SetFilter extends Filter
             return false;
         }
 
-        $property = type($this->getAttribute())->asString();
+        $property = type($this->getName())->asString();
 
         if ($this->isMultiple()) {
             $this->handleMultiple(

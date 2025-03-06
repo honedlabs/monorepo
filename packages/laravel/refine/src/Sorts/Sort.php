@@ -49,7 +49,7 @@ class Sort extends Refiner
      */
     public function getUniqueKey()
     {
-        return \sprintf('%s.%s', $this->getAttribute(), $this->getDirection());
+        return \sprintf('%s.%s', $this->getName(), $this->getDirection());
     }
 
     /**
@@ -83,7 +83,7 @@ class Sort extends Refiner
         }
 
         /** @var string $attribute */
-        $attribute = $this->getAttribute();
+        $attribute = $this->getName();
 
         $direction = $this->getDirection() ?? 'asc';
 

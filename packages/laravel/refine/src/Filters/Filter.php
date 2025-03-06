@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Filters;
 
-use Honed\Core\Concerns\HasScope;
-use Honed\Core\Concerns\Validatable;
+use Closure;
 use Honed\Refine\Refiner;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Honed\Core\Concerns\HasScope;
+use Illuminate\Support\Collection;
+use Honed\Core\Concerns\Validatable;
+use Honed\Refine\Filters\Concerns\HasOptions;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 
 class Filter extends Refiner
 {
     use HasScope;
     use Validatable;
+    use HasOptions
 
     const Is = '=';
 
@@ -23,27 +28,209 @@ class Filter extends Refiner
 
     const LessThan = '<=';
 
-    const Exact = 'exact';
-
-    const Like = 'like';
-
-    const StartsWith = 'starts_with';
-
-    const EndsWith = 'ends_with';
+    /**
+     * The options for the filter.
+     *
+     * @var array<int,\Honed\Refine\Filters\Concerns\Option>|null
+     */
+    protected $options;
 
     /**
-     * The database filter to use.
-     *
-     * @var string
+     * Whether to restrict values to only the options provided.
+     * 
+     * @var bool|null
      */
-    protected $mode = self::Exact;
+    protected $strict;
+
+    /**
+     * The value type to interpret the query parameter as.
+     * 
+     * @var string|null
+     */
+    protected $as;
+
+    /**
+     * Whether to accept multiple values.
+     *
+     * @var bool
+     */
+    protected $multiple = false;
+
+    /**
+     * The statement, or callback, to use to resolve the filter.
+     *
+     * @var string|\Closure
+     */
+    protected $using = 'where';
+
+    /**
+     * 
+     */
+    protected $columnOrRelation = null;
 
     /**
      * The operator to use.
      *
      * @var string
      */
-    protected $operator = self::Is;
+    protected $operator = '=';
+
+    /**
+     * Set the options for the filter.
+     *
+     * @param  class-string<\BackedEnum>|array<int,mixed>|Collection<int,mixed>  $options
+     * @return $this
+     */
+    public function options($options)
+    {
+        if ($options instanceof Collection) {
+            $options = $options->all();
+        }
+
+    }
+
+    public function optionsEnumerated()
+
+    /**
+     * Register a closure to use as the filter statement.
+     * 
+     * @param  \Closure  $using
+     * @return $this
+     */
+    public function using(\Closure $using)
+    {
+        $this->using = $using;
+
+        return $this;
+    }
+
+    /**
+     * Register a clause to use as the filter statement.
+     * 
+     * @param  string|\Closure  $using
+     * @param  mixed  $column
+     * @param  mixed  $operator
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function statement(string|\Closure $statement, mixed $columnOrRelation = null, mixed $operator = '=', mixed $value = null)
+    {
+        if ($statement instanceof Closure) {
+            return $this->using($statement);
+        }
+
+        $this->using = $using;
+        $this->columnOrRelation = $columnOrRelation;
+
+        [$value, $operator] = $this->prepareValueAndOperator(
+            $value, $operator, func_num_args() === 3
+        );
+
+        // Validate the operator, which may be a closure
+
+        // using(fn ($builder, $value) => $builder->where('name', $value))
+        // using('where', '=', ':value')
+        // using('where', ':value')
+        // using('has', 'relation')
+        // using('whereHas', 'relation', fn ($query) => $query->where('quantity', '>=', 3))
+        // using('whereRelation', 'details.quantity', '>=', ':value')
+        // using('whereHasMorph', 'relation', 'type', fn ($query, $value) => $query->where('quantity', '>=', $value)) -> dont support
+    }
+
+    /**
+     * Prepare the value and operator for a where clause.
+     *
+     * @param  string  $value
+     * @param  string  $operator
+     * @param  bool  $useDefault
+     * @return array
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function prepareValueAndOperator($value, $operator, $useDefault = false)
+    {
+        if ($useDefault) {
+            return [$operator, '='];
+        } elseif ($this->invalidOperatorAndValue($operator, $value)) {
+            throw new \InvalidArgumentException('Illegal operator and value combination.');
+        }
+
+        return [$value, $operator];
+    }
+
+    /**
+     * Restrict the values to only the options provided.
+     *
+     * @param  bool  $strict
+     * @return $this
+     */
+    public function strict($strict = true)
+    {
+        $this->strict = $strict;
+
+        return $this;
+    }
+
+    /**
+     * Allow any values to be used.
+     *
+     * @param  bool  $restrict
+     * @return $this
+     */
+    public function lax($strict = false)
+    {
+        return $this->strict($strict);
+    }
+
+    /**
+     * Set the filter to accept multiple values.
+     */
+    public function multiple()
+    {
+        $this->multiple = true;
+        $this->type = 'select';
+        // $this->statement = 'where';
+
+        return $this;
+    }
+
+    /**
+     * Determine if the filter is strict.
+     *
+     * @return bool
+     */
+    public function isStrict()
+    {
+        return $this->strict;
+    }
+
+    /**
+     * Determine if the filter uses multiple values.
+     *
+     * @return bool
+     */
+    public function isMultiple()
+    {
+        return $this->multiple;
+    }
+
+    /**
+     * Interpret the request parameter.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $as
+     * @return mixed
+     */
+    public function interpret($request, $as)
+    {
+        return match ($this->as) {
+            'boolean' => $request->safeBoolean($as),
+            'integer' => $request->safeInt($as),
+            'float' => $request->safeFloat($as),
+            'string' => $request->safeString($as),
+            default => $request->safe($as),
+        };
+    }
 
     /**
      * {@inheritdoc}
@@ -60,7 +247,7 @@ class Filter extends Refiner
     {
         return \sprintf(
             '%s.%s.%s',
-            $this->getAttribute(),
+            $this->getName(),
             $this->getOperator(),
             $this->getMode(),
         );
@@ -95,8 +282,7 @@ class Filter extends Refiner
      */
     public function apply($builder, $request)
     {
-        /** @var string|int|float|null */
-        $value = $this->getRefiningValue($request);
+        $value = $this->interpret($request, $this->as);
 
         $this->value($value);
 
@@ -104,12 +290,13 @@ class Filter extends Refiner
             return false;
         }
 
-        /** @var string */
-        $attribute = $this->getAttribute();
-
-        $this->handle($builder, $value, $attribute);
+        $this->handle($builder, $value);
 
         return true;
+    }
+
+    public function applyBinding($builder, $value)
+    {
     }
 
     /**
@@ -117,21 +304,12 @@ class Filter extends Refiner
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  mixed  $value
-     * @param  string  $property
      * @return void
      */
-    public function handle($builder, $value, $property)
+    public function handle($builder, $value)
     {
-        $column = $builder->qualifyColumn($property);
-
-        if ($this->getMode() === self::Exact) {
-            $builder->where(
-                column: $column,
-                operator: $this->getOperator(),
-                value: $value,
-                boolean: 'and'
-            );
-
+        if (! ($this->hasQueryCallback() && ! $this->hasStatement())) {
+            $this->applyBinding($builder, $value);
             return;
         }
 
@@ -171,59 +349,6 @@ class Filter extends Refiner
         $key = $this->formatScope($this->getParameter());
 
         return $request->safe($key);
-    }
-
-    /**
-     * Set the mode for the filter.
-     *
-     * @param  string  $mode
-     * @return $this
-     */
-    public function mode($mode)
-    {
-        $this->mode = $mode;
-
-        return $this;
-    }
-
-    /**
-     * Set the mode to exact.
-     *
-     * @return $this
-     */
-    public function exact()
-    {
-        return $this->mode(self::Exact);
-    }
-
-    /**
-     * Set the mode to like.
-     *
-     * @return $this
-     */
-    public function like()
-    {
-        return $this->mode(self::Like);
-    }
-
-    /**
-     * Set the mode to starts with.
-     *
-     * @return $this
-     */
-    public function startsWith()
-    {
-        return $this->mode(self::StartsWith);
-    }
-
-    /**
-     * Set the mode to ends with.
-     *
-     * @return $this
-     */
-    public function endsWith()
-    {
-        return $this->mode(self::EndsWith);
     }
 
     /**
@@ -267,16 +392,6 @@ class Filter extends Refiner
     public function lt()
     {
         return $this->operator(self::LessThan);
-    }
-
-    /**
-     * Get the mode for the filter.
-     *
-     * @return string
-     */
-    public function getMode()
-    {
-        return $this->mode;
     }
 
     /**

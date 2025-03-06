@@ -12,4 +12,10 @@ namespace Honed\Refine {
      * @method $this searches(array<int, \Honed\Refine\Searches\Search>|\Illuminate\Support\Collection<int, \Honed\Refine\Searches\Search> $searches) Merge a set of searches with the existing searches.
      */
     class Refine {}
+
+    // class Sort {}
+
+    // class Filter {}
+
+    // class Search {}
 }

@@ -13,8 +13,6 @@ use Illuminate\Support\Collection;
  */
 trait HasFilters
 {
-    use HasRequest;
-
     /**
      * List of the filters.
      *
