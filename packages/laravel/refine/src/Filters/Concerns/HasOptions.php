@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Filters\Concerns;
 
+use BackedEnum;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -43,8 +44,11 @@ trait HasOptions
         }
 
         $this->options = match (true) {
-            \enum_exists($options) => $this->optionsEnumerated($options),
+            \is_string($options) && \enum_exists($options) => 
+                $this->optionsEnumerated($options),
+
             Arr::isAssoc($options) => $this->optionsAssociative($options),
+
             default => $this->optionsList($options),
         };
 
@@ -127,7 +131,21 @@ trait HasOptions
      */
     public function isStrict()
     {
-        return $this->strict;
+        if (isset($this->strict)) {
+            return $this->strict;
+        }
+
+        return $this->fallbackStrict();
+    }
+
+    /**
+     * Determine if only the options provided are allowed.
+     *
+     * @return bool
+     */
+    public function fallbackStrict()
+    {
+        return (bool) config('refine.strict', false);
     }
 
     /**
@@ -159,7 +177,7 @@ trait HasOptions
      * @param  class-string<\BackedEnum>  $enum
      * @return array<int,\Honed\Refine\Filters\Concerns\Option>
      */
-    protected function optionsEnumerated($enum)
+    public function optionsEnumerated($enum)
     {
         return \array_map(
             static fn ($case) => Option::make($case->value, $case->name),
@@ -173,11 +191,12 @@ trait HasOptions
      * @param  array<int,mixed>  $options
      * @return array<int,\Honed\Refine\Filters\Concerns\Option>
      */
-    protected function optionsAssociative($options)
+    public function optionsAssociative($options)
     {
         return \array_map(
             static fn ($value, $key) => Option::make($value, $key),
-            $options
+            \array_keys($options),
+            \array_values($options)
         );
     }
 
@@ -187,7 +206,7 @@ trait HasOptions
      * @param  array<int,mixed>  $options
      * @return array<int,\Honed\Refine\Filters\Concerns\Option>
      */
-    protected function optionsList($options)
+    public function optionsList($options)
     {
         return \array_map(
             static fn ($value) => Option::make($value, $value),
@@ -195,4 +214,46 @@ trait HasOptions
         );
     }
 
+    /**
+     * Activate the options and return the valid options.
+     * 
+     * @param  mixed  $value
+     * @return mixed
+     */
+    public function activateOptions($value)
+    {
+        $options = collect($this->getOptions())
+            ->filter(static fn (Option $option) => $option
+                ->active(static::shouldActivate($option, $value))
+                ->isActive()
+            )->values();
+
+        if ($this->isStrict()) {
+            $value = $options->map->getValue()->toArray();
+        }
+
+        if ($this->isMultiple()) {
+            return Arr::wrap($value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Determine if the option should be activated.
+     * 
+     * @param  \Honed\Refine\Filters\Concerns\Option  $option
+     * @param  mixed  $value
+     * @return bool
+     */
+    public static function shouldActivate($option, $value)
+    {
+        $optionValue = $option->getValue();
+        
+        if (\is_array($value)) {
+            return \in_array($optionValue, $value, true);
+        }
+
+        return $optionValue === $value;
+    }
 }

@@ -23,7 +23,7 @@ trait InterpretsRequest
     public function interpret($request, $key)
     {
         return match ($this->as) {
-            'array' => $request->safeArray($key),
+            'array' => $request->safeArray($key)->toArray(),
             'boolean' => $request->safeBoolean($key),
             'date' => $request->safeDate($key),
             'float' => $request->safeFloat($key),
@@ -50,12 +50,11 @@ trait InterpretsRequest
     /**
      * Set the request to interpret as an array.
      * 
-     * @param  string|null  $arrayAs
      * @return $this
      */
-    public function asArray($arrayAs = null)
+    public function asArray()
     {
-        return $this->as(['array', $arrayAs]);
+        return $this->as('array');
     }
 
     /**

@@ -41,13 +41,12 @@ expect()->extend('toBeOnlyWhere', function(string $column, mixed $value, string 
 });
 
 expect()->extend('toBeWhereIn', function(string $column, array $values, string $boolean = 'and') {
-    return $this->scoped(fn ($order) => $order
-        ->toBeArray()
+    return $this->toBeArray()
+        ->toHaveKeys(['type', 'column', 'values', 'boolean'])
         ->{'type'}->toBe('In')
         ->{'column'}->toBe($column)
-        ->{'values'}->toBe($values)
-        ->{'boolean'}->toBe($boolean)
-    );
+        ->{'values'}->toEqual($values)
+        ->{'boolean'}->toBe($boolean);
 });
 
 expect()->extend('toBeOnlyWhereIn', function(string $column, array $values, string $boolean = 'and') {

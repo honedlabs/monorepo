@@ -112,7 +112,7 @@ class Filter extends Refiner
     {
         $this->setMultiple();
         $this->asArray();
-        $this->type('set');
+        $this->type('select');
 
         return $this;
     }
@@ -141,7 +141,9 @@ class Filter extends Refiner
      */
     public function invalidValue($value)
     {
-        return ! $this->isActive() || ! $this->validate($value);
+        return ! $this->isActive() || 
+            ! $this->validate($value) ||
+            ($this->hasOptions() && empty($value));
     }
 
     /**
@@ -153,21 +155,27 @@ class Filter extends Refiner
      */
     public function apply($builder, $request)
     {
-        $key = $this->formatScope($this->getParameter());
+        $parameter = $this->getParameter();
+        $key = $this->formatScope($parameter);
         $value = $this->interpret($request, $key);
 
         $this->value($value);
+
+        if ($this->hasOptions()) {
+            $value = $this->activateOptions($value);
+        }
 
         if ($this->invalidValue($value)) {
             return false;
         }
 
+        // Execute appropriate handling strategy
         match (true) {
             $this->using instanceof Closure => $this->handleCallback($builder, $value),
             $this->using instanceof Refinement => $this->handleRefinement($builder, $value),
             default => $this->handle($builder, $value),
         };
-        
+
         return true;
     }
 
@@ -182,7 +190,7 @@ class Filter extends Refiner
     {
         $model = $builder->getModel();
 
-        $this->evaluate($this->getCallback(), [
+        $this->evaluate($this->using, [
             'builder' => $builder,
             'query' => $builder,
             'value' => $value,
