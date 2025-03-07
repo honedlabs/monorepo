@@ -13,12 +13,13 @@ use Honed\Core\Concerns\Validatable;
 use Honed\Refine\Filters\Concerns\HasOptions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
-
+use Honed\Refine\Concerns\InterpretsRequest;
 class Filter extends Refiner
 {
     use HasScope;
     use Validatable;
     use HasOptions;
+    use InterpretsRequest;
 
     const Is = '=';
 
@@ -89,7 +90,7 @@ class Filter extends Refiner
 
     }
 
-    public function optionsEnumerated()
+    // public function optionsEnumerated()
 
     /**
      * Register a closure to use as the filter statement.
@@ -156,62 +157,6 @@ class Filter extends Refiner
         }
 
         return [$value, $operator];
-    }
-
-    /**
-     * Restrict the values to only the options provided.
-     *
-     * @param  bool  $strict
-     * @return $this
-     */
-    public function strict($strict = true)
-    {
-        $this->strict = $strict;
-
-        return $this;
-    }
-
-    /**
-     * Allow any values to be used.
-     *
-     * @param  bool  $restrict
-     * @return $this
-     */
-    public function lax($strict = false)
-    {
-        return $this->strict($strict);
-    }
-
-    /**
-     * Set the filter to accept multiple values.
-     */
-    public function multiple()
-    {
-        $this->multiple = true;
-        $this->type = 'select';
-        // $this->statement = 'where';
-
-        return $this;
-    }
-
-    /**
-     * Determine if the filter is strict.
-     *
-     * @return bool
-     */
-    public function isStrict()
-    {
-        return $this->strict;
-    }
-
-    /**
-     * Determine if the filter uses multiple values.
-     *
-     * @return bool
-     */
-    public function isMultiple()
-    {
-        return $this->multiple;
     }
 
     /**

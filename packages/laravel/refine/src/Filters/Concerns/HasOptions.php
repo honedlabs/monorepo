@@ -42,9 +42,8 @@ trait HasOptions
             $options = $options->all();
         }
 
-        
         $this->options = match (true) {
-            enum_exists($options) => $this->optionsEnumerated($options),
+            \enum_exists($options) => $this->optionsEnumerated($options),
             Arr::isAssoc($options) => $this->optionsAssociative($options),
             default => $this->optionsList($options),
         };
