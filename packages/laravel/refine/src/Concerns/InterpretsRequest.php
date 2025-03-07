@@ -17,13 +17,11 @@ trait InterpretsRequest
      * Interpret the request.
      * 
      * @param  \Illuminate\Http\Request  $request
+     * @param  string  $key
      * @return mixed
      */
-    public function interpret($request)
+    public function interpret($request, $key)
     {
-        $key = $this->getAs();
-
-
         return match ($this->as) {
             'array' => $request->safeArray($key),
             'boolean' => $request->safeBoolean($key),

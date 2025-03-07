@@ -11,9 +11,9 @@ use Honed\Core\Concerns\HasScope;
 use Illuminate\Support\Collection;
 use Honed\Core\Concerns\Validatable;
 use Honed\Refine\Filters\Concerns\HasOptions;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Arr;
 use Honed\Refine\Concerns\InterpretsRequest;
+use Honed\Refine\Refinement;
+
 class Filter extends Refiner
 {
     use HasScope;
@@ -21,76 +21,12 @@ class Filter extends Refiner
     use HasOptions;
     use InterpretsRequest;
 
-    const Is = '=';
-
-    const Not = '!=';
-
-    const GreaterThan = '>=';
-
-    const LessThan = '<=';
-
-    /**
-     * The options for the filter.
-     *
-     * @var array<int,\Honed\Refine\Filters\Concerns\Option>|null
-     */
-    protected $options;
-
-    /**
-     * Whether to restrict values to only the options provided.
-     * 
-     * @var bool|null
-     */
-    protected $strict;
-
-    /**
-     * The value type to interpret the query parameter as.
-     * 
-     * @var string|null
-     */
-    protected $as;
-
-    /**
-     * Whether to accept multiple values.
-     *
-     * @var bool
-     */
-    protected $multiple = false;
-
     /**
      * The statement, or callback, to use to resolve the filter.
      *
-     * @var string|\Closure
+     * @var \Honed\Refine\Refinement|\Closure|null
      */
-    protected $using = 'where';
-
-    /**
-     * 
-     */
-    protected $columnOrRelation = null;
-
-    /**
-     * The operator to use.
-     *
-     * @var string
-     */
-    protected $operator = '=';
-
-    /**
-     * Set the options for the filter.
-     *
-     * @param  class-string<\BackedEnum>|array<int,mixed>|Collection<int,mixed>  $options
-     * @return $this
-     */
-    public function options($options)
-    {
-        if ($options instanceof Collection) {
-            $options = $options->all();
-        }
-
-    }
-
-    // public function optionsEnumerated()
+    protected $using;
 
     /**
      * Register a closure to use as the filter statement.
@@ -106,7 +42,7 @@ class Filter extends Refiner
     }
 
     /**
-     * Register a clause to use as the filter statement.
+     * Register a clause to use as the filter refinement.
      * 
      * @param  string|\Closure  $using
      * @param  mixed  $column
@@ -114,67 +50,15 @@ class Filter extends Refiner
      * @param  mixed  $value
      * @return $this
      */
-    public function statement(string|\Closure $statement, mixed $columnOrRelation = null, mixed $operator = '=', mixed $value = null)
+    public function refinement($statement, $columnOrRelation = null, $operator = '=', $value = null)
     {
         if ($statement instanceof Closure) {
             return $this->using($statement);
         }
 
-        $this->using = $using;
-        $this->columnOrRelation = $columnOrRelation;
+        $this->using = new Refinement(...func_get_args());
 
-        [$value, $operator] = $this->prepareValueAndOperator(
-            $value, $operator, func_num_args() === 3
-        );
-
-        // Validate the operator, which may be a closure
-
-        // using(fn ($builder, $value) => $builder->where('name', $value))
-        // using('where', '=', ':value')
-        // using('where', ':value')
-        // using('has', 'relation')
-        // using('whereHas', 'relation', fn ($query) => $query->where('quantity', '>=', 3))
-        // using('whereRelation', 'details.quantity', '>=', ':value')
-        // using('whereHasMorph', 'relation', 'type', fn ($query, $value) => $query->where('quantity', '>=', $value)) -> dont support
-    }
-
-    /**
-     * Prepare the value and operator for a where clause.
-     *
-     * @param  string  $value
-     * @param  string  $operator
-     * @param  bool  $useDefault
-     * @return array
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function prepareValueAndOperator($value, $operator, $useDefault = false)
-    {
-        if ($useDefault) {
-            return [$operator, '='];
-        } elseif ($this->invalidOperatorAndValue($operator, $value)) {
-            throw new \InvalidArgumentException('Illegal operator and value combination.');
-        }
-
-        return [$value, $operator];
-    }
-
-    /**
-     * Interpret the request parameter.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $as
-     * @return mixed
-     */
-    public function interpret($request, $as)
-    {
-        return match ($this->as) {
-            'boolean' => $request->safeBoolean($as),
-            'integer' => $request->safeInt($as),
-            'float' => $request->safeFloat($as),
-            'string' => $request->safeString($as),
-            default => $request->safe($as),
-        };
+        return $this;
     }
 
     /**
@@ -215,6 +99,8 @@ class Filter extends Refiner
     {
         return \array_merge(parent::toArray(), [
             'value' => $this->getValue(),
+            'options' => $this->optionsToArray(),
+            'multiple' => $this->isMultiple(),
         ]);
     }
 
@@ -227,7 +113,8 @@ class Filter extends Refiner
      */
     public function apply($builder, $request)
     {
-        $value = $this->interpret($request, $this->as);
+        $queryParameter = $this->formatScope($this->getParameter());
+        $value = $this->interpret($request, $queryParameter);
 
         $this->value($value);
 
@@ -240,10 +127,6 @@ class Filter extends Refiner
         return true;
     }
 
-    public function applyBinding($builder, $value)
-    {
-    }
-
     /**
      * Add the filter query scope to the builder.
      *
@@ -253,47 +136,26 @@ class Filter extends Refiner
      */
     public function handle($builder, $value)
     {
-        if (! ($this->hasQueryCallback() && ! $this->hasStatement())) {
-            $this->applyBinding($builder, $value);
+        if ($this->hasQueryCallback()) {
+
+            $this->applyQueryCallback($builder, $value);
+
             return;
         }
 
-        $operator = match (\mb_strtolower($operator = $this->getOperator())) {
-            '=', 'like' => 'LIKE',
-            '!=', 'not like' => 'NOT LIKE',
-            default => throw new \InvalidArgumentException("Invalid operator [{$operator}] provided for [{$property}] filter.")
-        };
+        if ($this->hasRefinement()) {
 
-        $sql = match ($this->getMode()) {
-            self::StartsWith => "{$column} {$operator} ?",
-            self::EndsWith => "{$column} {$operator} ?",
-            default => "LOWER({$column}) {$operator} ?",
-        };
+            $this->applyRefinement($builder, $value);
 
-        $bindings = match ($this->getMode()) {
-            self::StartsWith => ["{$value}%"], // @phpstan-ignore-line
-            self::EndsWith => ["%{$value}"], // @phpstan-ignore-line
-            default => ['%'.mb_strtolower((string) $value, 'UTF8').'%'], // @phpstan-ignore-line
-        };
+            return;
+        }
 
-        $builder->whereRaw(
-            sql: $sql,
-            bindings: $bindings,
-            boolean: 'and'
-        );
-    }
+        $statement = $this->getStatement();
+        $column = $this->getColumn();
+        $operator = $this->getOperator();
+        
 
-    /**
-     * Retrieve the filter value from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string|int|float|bool|null
-     */
-    public function getRefiningValue($request)
-    {
-        $key = $this->formatScope($this->getParameter());
-
-        return $request->safe($key);
+        $this->applyBinding($builder, $value);
     }
 
     /**
