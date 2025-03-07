@@ -28,6 +28,20 @@ trait HasSorts
     protected $sorts;
 
     /**
+     * Whether to not apply the sorts.
+     * 
+     * @var bool
+     */
+    protected $withoutSorting = false;
+
+    /**
+     * Whether to not provide the sorts when serializing.
+     * 
+     * @var bool
+     */
+    protected $withoutSorts = false;
+
+    /**
      * Set the query parameter to identify the sort to apply.
      *
      * @param  string  $sortsKey
@@ -125,18 +139,70 @@ trait HasSorts
     }
 
     /**
-     * Apply a sort to the query.
+     * Set the instance to not apply the sorts.
+     *
+     * @param  bool  $withoutSorting
+     * @return $this
+     */
+    public function withoutSorting($withoutSorting = true)
+    {
+        $this->withoutSorting = $withoutSorting;
+
+        return $this;
+    }
+
+    /**
+     * Set the instance to not provide the sorts when serializing.
+     *
+     * @param  bool  $withoutSorts
+     * @return $this
+     */
+    public function withoutSorts($withoutSorts = true)
+    {
+        $this->withoutSorts = $withoutSorts;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the instance should not apply the sorts.
+     *
+     * @return bool
+     */
+    public function isWithoutSorting()
+    {
+        return $this->withoutSorting;
+    }
+
+    /**
+     * Determine if the instance should not provide the sorts when serializing.
+     *
+     * @return bool
+     */
+    public function isWithoutSorts()
+    {
+        return $this->withoutSorts;
+    }
+
+    /**
+     * Apply the sort to the query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
      * @param  \Illuminate\Http\Request  $request
+     * @param  array<int, \Honed\Refine\Sort>  $additionalSorts
      * @return $this
      */
-    public function sort($builder, $request)
+    public function sort($builder, $request, $additionalSorts = [])
     {
+        if ($this->isWithoutSorting()) {
+            return $this;
+        }
+
         /** @var string */
         $key = $this->formatScope($this->getSortsKey());
 
-        $sorts = $this->getSorts();
+        $sorts = \array_merge($this->getSorts(), $additionalSorts);
+
         $applied = false;
 
         foreach ($sorts as $sort) {
@@ -159,26 +225,15 @@ trait HasSorts
      */
     protected function sortByDefault($builder, $sorts)
     {
-        $sort = $this->getDefaultSort($sorts);
+        $sort = Arr::first(
+            $sorts,
+            static fn (Sort $sort) => $sort->isDefault()
+        );
 
         $sort?->handle(
             $builder,
             $sort->getDirection() ?? 'asc',
             $sort->getName()
-        );
-    }
-
-    /**
-     * Find the default sort.
-     *
-     * @param  array<int, \Honed\Refine\Sorts\Sort>  $sorts
-     * @return \Honed\Refine\Sorts\Sort|null
-     */
-    protected function getDefaultSort($sorts)
-    {
-        return Arr::first(
-            $sorts,
-            static fn (Sort $sort) => $sort->isDefault()
         );
     }
 
@@ -189,6 +244,10 @@ trait HasSorts
      */
     public function sortsToArray()
     {
+        if ($this->isWithoutSorts()) {
+            return [];
+        }
+
         return \array_map(
             static fn (Sort $sort) => $sort->toArray(),
             $this->getSorts()

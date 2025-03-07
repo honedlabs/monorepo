@@ -14,25 +14,27 @@ beforeEach(function () {
 it('uses `where` by default', function () {
     $request = Request::create('/', 'GET', [$this->param => 'test']);
 
-    dd(
-        Product::query()
-            ->whereHas(
-                'details', 
-                fn ($query) => $query->where('quantity', '>=', 3)
-            )->toSql()
-    );
+    dd(Filter::make('name')->where('name', 'test'));
+    // dd(Product::query()->getModel()::class);
+    // dd(
+    //     Product::query()
+    //         ->whereHas(
+    //             'details', 
+    //             fn ($query) => $query->where('quantity', '>=', 3)
+    //         )->toSql()
+    // );
 
-    dd(
-        Product::query()
-            ->whereRelation('details', 'quantity', '>=', 3)
-            ->toSql()
-    );
+    // dd(
+    //     Product::query()
+    //         ->whereRelation('details', 'quantity', '>=', 3)
+    //         ->toSql()
+    // );
 
-    dd(
-        Product::query()
-            ->where('name', 'test')
-            ->toSql()
-    );
+    // dd(
+    //     Product::query()
+    //         ->where('name', 'test')
+    //         ->toSql()
+    // );
 
 
     // $filter = Filter::make('name');

@@ -6,14 +6,19 @@ namespace Honed\Refine\Filters;
 
 use Closure;
 use Honed\Refine\Refiner;
+use BadMethodCallException;
+use Honed\Refine\Refinement;
 use Illuminate\Http\Request;
 use Honed\Core\Concerns\HasScope;
 use Illuminate\Support\Collection;
 use Honed\Core\Concerns\Validatable;
-use Honed\Refine\Filters\Concerns\HasOptions;
+use Illuminate\Database\Eloquent\Builder;
 use Honed\Refine\Concerns\InterpretsRequest;
-use Honed\Refine\Refinement;
+use Honed\Refine\Filters\Concerns\HasOptions;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
+ */
 class Filter extends Refiner
 {
     use HasScope;
@@ -22,7 +27,7 @@ class Filter extends Refiner
     use InterpretsRequest;
 
     /**
-     * The statement, or callback, to use to resolve the filter.
+     * The refinement, or callback, to use to resolve the filter.
      *
      * @var \Honed\Refine\Refinement|\Closure|null
      */
@@ -72,21 +77,6 @@ class Filter extends Refiner
     /**
      * {@inheritdoc}
      */
-    public function getUniqueKey()
-    {
-        return \sprintf(
-            '%s.%s.%s',
-            $this->getName(),
-            $this->getOperator(),
-            $this->getMode(),
-        );
-    }
-
-    /**
-     * Determine if the filter is active.
-     *
-     * @return bool
-     */
     public function isActive()
     {
         return $this->hasValue();
@@ -118,6 +108,7 @@ class Filter extends Refiner
 
         $this->value($value);
 
+        // Hide the validation of query parameters
         if (! $this->isActive() || ! $this->validate($value)) {
             return false;
         }
@@ -136,17 +127,13 @@ class Filter extends Refiner
      */
     public function handle($builder, $value)
     {
-        if ($this->hasQueryCallback()) {
-
-            $this->applyQueryCallback($builder, $value);
-
+        if ($this->hasCallback()) {
+            $this->handleCallback($builder, $value);
             return;
         }
 
         if ($this->hasRefinement()) {
-
-            $this->applyRefinement($builder, $value);
-
+            $this->handleRefinement($builder, $value);
             return;
         }
 
@@ -159,55 +146,40 @@ class Filter extends Refiner
     }
 
     /**
-     * Set the operator for the filter.
-     *
-     * @param  string  $operator
-     * @return $this
+     * Use the callback to refine the builder.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  mixed  $value
+     * @return void
      */
-    public function operator($operator)
+    public function useCallback($builder, $value)
     {
-        $this->operator = $operator;
+        $model = $builder->getModel();
 
-        return $this;
+        $this->evaluate($this->getCallback(), [
+            'builder' => $builder,
+            'query' => $builder,
+            'value' => $value,
+        ], [
+            Builder::class => $builder,
+            $model::class => $model,
+        ]);
+
     }
 
     /**
-     * Set the operator to not.
-     *
-     * @return $this
+     * Dynamically handle calls to the class.
+     * 
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
      */
-    public function not()
+    public function __call($method, $parameters)
     {
-        return $this->operator(self::Not);
-    }
-
-    /**
-     * Set the operator to greater than.
-     *
-     * @return $this
-     */
-    public function gt()
-    {
-        return $this->operator(self::GreaterThan);
-    }
-
-    /**
-     * Set the operator to less than or equal to.
-     *
-     * @return $this
-     */
-    public function lt()
-    {
-        return $this->operator(self::LessThan);
-    }
-
-    /**
-     * Get the operator for the filter.
-     *
-     * @return string
-     */
-    public function getOperator()
-    {
-        return $this->operator;
+        try {
+            return parent::__call($method, $parameters);
+        } catch (BadMethodCallException $e) {
+            return $this->refinement($method, ...$parameters);
+        }
     }
 }

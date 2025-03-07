@@ -43,9 +43,7 @@ abstract class Refiner extends Primitive implements Refines
     }
 
     /**
-     * Get the parameter for the refiner.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getParameter()
     {
@@ -54,13 +52,6 @@ abstract class Refiner extends Primitive implements Refines
                 ->afterLast('.')
                 ->value();
     }
-
-    /**
-     * Determine if the refiner is currently being applied.
-     *
-     * @return bool
-     */
-    abstract public function isActive();
 
     /**
      * Get the refiner as an array.

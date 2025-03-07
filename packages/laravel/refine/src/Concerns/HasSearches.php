@@ -13,6 +13,13 @@ use Illuminate\Support\Collection;
 trait HasSearches
 {
     /**
+     * List of the searches.
+     *
+     * @var array<int,\Honed\Refine\Searches\Search>|null
+     */
+    protected $searches;
+
+    /**
      * The query parameter to identify the search string.
      *
      * @var string|null
@@ -41,109 +48,18 @@ trait HasSearches
     protected $term;
 
     /**
-     * List of the searches.
-     *
-     * @var array<int,\Honed\Refine\Searches\Search>|null
+     * Whether to not apply the searches.
+     * 
+     * @var bool
      */
-    protected $searches;
+    protected $withoutSearching = false;
 
     /**
-     * Set the query parameter to identify the search string.
-     *
-     * @param  string  $searchesKey
-     * @return $this
+     * Whether to not provide the searches when serializing.
+     * 
+     * @var bool
      */
-    public function searchesKey($searchesKey)
-    {
-        $this->searchesKey = $searchesKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the query parameter to identify the search string.
-     *
-     * @return string
-     */
-    public function getSearchesKey()
-    {
-        if (isset($this->searchesKey)) {
-            return $this->searchesKey;
-        }
-
-        return $this->fallbackSearchesKey();
-    }
-
-    /**
-     * Get the fallback query parameter to identify the search string.
-     *
-     * @return string
-     */
-    protected function fallbackSearchesKey()
-    {
-        return type(config('refine.config.searches', 'search'))->asString();
-    }
-
-    /**
-     * Get the query parameter to identify the columns to search on.
-     *
-     * @return string
-     */
-    public function getMatchesKey()
-    {
-        if (isset($this->matchesKey)) {
-            return $this->matchesKey;
-        }
-
-        return $this->fallbackMatchesKey();
-    }
-
-    /**
-     * Get the fallback query parameter to identify the columns to search on.
-     *
-     * @return string
-     */
-    protected function fallbackMatchesKey()
-    {
-        return type(config('refine.config.matches', 'match'))->asString();
-    }
-
-    /**
-     * Set whether the search columns can be toggled.
-     *
-     * @param  bool|null  $match
-     * @return $this
-     */
-    public function match($match = true)
-    {
-        $this->match = $match;
-
-        return $this;
-    }
-
-    /**
-     * Determine whether the search columns can be toggled.
-     *
-     * @return bool
-     */
-    public function canMatch()
-    {
-        if (isset($this->match)) {
-            return $this->match;
-        }
-
-        return $this->fallbackCanMatch();
-    }
-
-    /**
-     * Get the fallback value to determine whether the search columns can be toggled.
-     *
-     * @return bool
-     */
-    protected function fallbackCanMatch()
-    {
-        return (bool) config('refine.matches', false);
-    }
+    protected $withoutSearches = false;
 
     /**
      * Merge a set of searches with the existing searches.
@@ -203,6 +119,150 @@ trait HasSearches
     public function hasSearch()
     {
         return filled($this->getSearches());
+    }
+
+    /**
+     * Set the query parameter to identify the search string.
+     *
+     * @param  string  $searchesKey
+     * @return $this
+     */
+    public function searchesKey($searchesKey)
+    {
+        $this->searchesKey = $searchesKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the query parameter to identify the search string.
+     *
+     * @return string
+     */
+    public function getSearchesKey()
+    {
+        if (isset($this->searchesKey)) {
+            return $this->searchesKey;
+        }
+
+        return $this->fallbackSearchesKey();
+    }
+
+    /**
+     * Get the query parameter to identify the search string.
+     *
+     * @return string
+     */
+    protected function fallbackSearchesKey()
+    {
+        return type(config('refine.config.searches', 'search'))->asString();
+    }
+
+    /**
+     * Get the query parameter to identify the columns to search on.
+     *
+     * @return string
+     */
+    public function getMatchesKey()
+    {
+        if (isset($this->matchesKey)) {
+            return $this->matchesKey;
+        }
+
+        return $this->fallbackMatchesKey();
+    }
+
+    /**
+     * Get the query parameter to identify the columns to search on.
+     *
+     * @return string
+     */
+    protected function fallbackMatchesKey()
+    {
+        return type(config('refine.config.matches', 'match'))->asString();
+    }
+
+    /**
+     * Set whether the search columns can be toggled.
+     *
+     * @param  bool|null  $match
+     * @return $this
+     */
+    public function match($match = true)
+    {
+        $this->match = $match;
+
+        return $this;
+    }
+
+    /**
+     * Determine whether the search columns can be toggled.
+     *
+     * @return bool
+     */
+    public function canMatch()
+    {
+        if (isset($this->match)) {
+            return $this->match;
+        }
+
+        return $this->fallbackCanMatch();
+    }
+
+    /**
+     * Determine whether the search columns can be toggled.
+     *
+     * @return bool
+     */
+    protected function fallbackCanMatch()
+    {
+        return (bool) config('refine.matches', false);
+    }
+
+    /**
+     * Set the instance to not apply the searches.
+     *
+     * @param  bool  $withoutSearching
+     * @return $this
+     */
+    public function withoutSearching($withoutSearching = true)
+    {
+        $this->withoutSearching = $withoutSearching;
+
+        return $this;
+    }
+
+    /**
+     * Set the instance to not provide the searches when serializing.
+     *
+     * @param  bool  $withoutSearches
+     * @return $this
+     */
+    public function withoutSearches($withoutSearches = true)
+    {
+        $this->withoutSearches = $withoutSearches;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the instance should not apply the searches.
+     *
+     * @return bool
+     */
+    public function isWithoutSearching()
+    {
+        return $this->withoutSearching;
+    }
+
+    /**
+     * Determine if the instance should not provide the searches when serializing.
+     *
+     * @return bool
+     */
+    public function isWithoutSearches()
+    {
+        return $this->withoutSearches;
     }
 
     /**
@@ -272,6 +332,10 @@ trait HasSearches
      */
     public function search($builder, $request)
     {
+        if ($this->isWithoutSearching()) {
+            return $this;
+        }
+
         $columns = $this->getSearchColumns($request);
         $this->term = $this->getSearchTerm($request);
 
@@ -294,6 +358,10 @@ trait HasSearches
      */
     public function searchesToArray()
     {
+        if ($this->isWithoutSearches()) {
+            return [];
+        }
+
         return \array_map(
             static fn (Search $search) => $search->toArray(),
             $this->getSearches()

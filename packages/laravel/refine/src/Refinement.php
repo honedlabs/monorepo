@@ -57,10 +57,27 @@ class Refinement
         $this->value = $value;
     }
 
+    public function getStatement()
+    {
+        return $this->statement;
+    }
+
+    public function getColumnOrRelation()
+    {
+        return $this->columnOrRelation;
+    }
+    
+
     public function refine($builder, $value)
     {
-        $builder->{$this->statement}($this->columnOrRelation, $this->operator, $this->value);
+        $statement = $this->getStatement();
+        $columnOrRelation = $this->getColumnOrRelation();
 
+        $builder->{$statement}(
+            $columnOrRelation,
+            $this->operator,
+            $value // Use the passed $value instead of $this->value
+        );
     }
 
 
