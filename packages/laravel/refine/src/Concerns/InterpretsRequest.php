@@ -26,12 +26,11 @@ trait InterpretsRequest
             'array' => $request->safeArray($key),
             'boolean' => $request->safeBoolean($key),
             'date' => $request->safeDate($key),
-            'datetime' => $request->safeDateTime($key),
             'float' => $request->safeFloat($key),
             'integer' => $request->safeInteger($key),
             'string' => $request->safeString($key),
-            'time' => $request->safeTime($key),
-            default => $request->safe($this->as),
+            // 'time' => $request->safeTime($key),
+            default => $request->safe($key),
         };
     }
 
@@ -77,16 +76,6 @@ trait InterpretsRequest
     public function asDate()
     {
         return $this->as('date');
-    }
-
-    /**
-     * Set the request to interpret as a datetime.
-     * 
-     * @return $this
-     */
-    public function asDateTime()
-    {
-        return $this->as('datetime');
     }
 
     /**
@@ -147,5 +136,75 @@ trait InterpretsRequest
     public function getAs()
     {
         return $this->as;
-    } 
+    }
+
+    /**
+     * Determine if the filter interprets an array.
+     * 
+     * @return bool
+     */
+    public function interpretsArray()
+    {
+        return $this->as === 'array';
+    }
+
+    /**
+     * Determine if the filter interprets a boolean.
+     * 
+     * @return bool
+     */
+    public function interpretsBoolean()
+    {
+        return $this->as === 'boolean';
+    }
+
+    /**
+     * Determine if the filter interprets a date.
+     * 
+     * @return bool
+     */
+    public function interpretsDate()
+    {
+        return $this->as === 'date';
+    }
+
+    /**
+     * Determine if the filter interprets a float.
+     * 
+     * @return bool
+     */
+    public function interpretsFloat()
+    {
+        return $this->as === 'float';
+    }
+
+    /**
+     * Determine if the filter interprets an integer.
+     * 
+     * @return bool
+     */
+    public function interpretsInteger()
+    {
+        return $this->as === 'integer';
+    }
+
+    /**
+     * Determine if the filter interprets a string.
+     * 
+     * @return bool
+     */
+    public function interpretsString()
+    {
+        return $this->as === 'string';
+    }
+
+    /**
+     * Determine if the filter interprets a time.
+     * 
+     * @return bool
+     */
+    public function interpretsTime()
+    {
+        return $this->as === 'time';
+    }
 }

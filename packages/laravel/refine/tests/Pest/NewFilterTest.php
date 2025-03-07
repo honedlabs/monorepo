@@ -8,52 +8,109 @@ use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
     $this->builder = Product::query();
-    $this->param = 'name';
 });
+
+it('uses alias over name', function () {
+    $name = 'name';
+    $alias = 'alias';
+    $value = 'test';
+
+    $request = Request::create('/', 'GET', [$alias => $value]);
+
+    $filter = Filter::make($name)->alias($alias);
+
+    expect($filter->apply($this->builder, $request))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlyWhere($this->builder->qualifyColumn($name), $value);
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value);
+});
+
+it('scopes the filter query parameter', function () {
+    $name = 'name';
+    $alias = 'alias';
+    $scope = 'scope';
+    $value = 'value';
+
+    $filter = Filter::make($name)
+        ->alias($alias)
+        ->scope($scope);
+
+    $key = $filter->formatScope($alias);
+    $request = Request::create('/', 'GET', [$key => $value]);
+
+    expect($filter->apply($this->builder, $request))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlyWhere($this->builder->qualifyColumn($name), $value);
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value);
+});
+
+it('requires the parameter name to be present', function () {
+    $name = 'name';
+    $alias = 'alias';
+    $value = 'test';
+
+    $request = Request::create('/', 'GET', [$name => $value]);
+
+    $filter = Filter::make($name)->alias($alias);
+
+    expect($filter->apply($this->builder, $request))
+        ->toBeFalse();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeEmpty();
+
+    expect($filter)
+        ->isActive()->toBeFalse()
+        ->getValue()->toBeNull();
+});
+
 
 it('uses `where` by default', function () {
-    $request = Request::create('/', 'GET', [$this->param => 'test']);
+    $name = 'name';
+    $value = 'test';
 
-    dd(Filter::make('name')->where('name', 'test'));
-    // dd(Product::query()->getModel()::class);
-    // dd(
-    //     Product::query()
-    //         ->whereHas(
-    //             'details', 
-    //             fn ($query) => $query->where('quantity', '>=', 3)
-    //         )->toSql()
-    // );
+    $request = Request::create('/', 'GET', [$name => $value]);
 
-    // dd(
-    //     Product::query()
-    //         ->whereRelation('details', 'quantity', '>=', 3)
-    //         ->toSql()
-    // );
+    $filter = Filter::make($name);
 
-    // dd(
-    //     Product::query()
-    //         ->where('name', 'test')
-    //         ->toSql()
-    // );
+    expect($filter->apply($this->builder, $request))
+        ->toBeTrue();
 
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlyWhere($this->builder->qualifyColumn($name), $value);
 
-    // $filter = Filter::make('name');
-
-    // $filter = Filter
-
-    // expect($this->builder->getQuery()->wheres)
-    //     ->toBeArray()
-    //     ->toHaveCount(1)
-    //     ->{0}->scoped(fn ($order) => $order
-    //         ->{'column'}->toBe($this->builder->qualifyColumn('name'))
-    //         ->{'value'}->toBe('test')
-    //         ->{'operator'}->toBe('=')
-    //         ->{'boolean'}->toBe('and')
-    //     );
-
-    // expect($this->filter)
-    //     ->isActive()->toBeTrue()
-    //     ->getValue()->toBe('test');
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value);
 });
 
-// it
+it('can change the `where` operator', function () {
+    $name = 'price';
+    $value = 5;
+    $operator = '>';
+
+    $request = Request::create('/', 'GET', [$name => $value]);
+
+    $filter = Filter::make($name)
+        ->operator($operator);
+
+    expect($filter->apply($this->builder, $request))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlyWhere($this->builder->qualifyColumn($name), $value, $operator);
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value);
+});

@@ -23,7 +23,9 @@ class Filter extends Refiner
 {
     use HasScope;
     use Validatable;
-    use HasOptions;
+    use HasOptions {
+        multiple as protected setMultiple;
+    }
     use InterpretsRequest;
 
     /**
@@ -34,37 +36,11 @@ class Filter extends Refiner
     protected $using;
 
     /**
-     * Register a closure to use as the filter statement.
+     * The operator to use for the filter.
      * 
-     * @param  \Closure  $using
-     * @return $this
+     * @var string
      */
-    public function using(\Closure $using)
-    {
-        $this->using = $using;
-
-        return $this;
-    }
-
-    /**
-     * Register a clause to use as the filter refinement.
-     * 
-     * @param  string|\Closure  $using
-     * @param  mixed  $column
-     * @param  mixed  $operator
-     * @param  mixed  $value
-     * @return $this
-     */
-    public function refinement($statement, $columnOrRelation = null, $operator = '=', $value = null)
-    {
-        if ($statement instanceof Closure) {
-            return $this->using($statement);
-        }
-
-        $this->using = new Refinement(...func_get_args());
-
-        return $this;
-    }
+    protected $operator = '=';
 
     /**
      * {@inheritdoc}
@@ -95,76 +71,50 @@ class Filter extends Refiner
     }
 
     /**
-     * Filter the builder using the request.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    public function apply($builder, $request)
-    {
-        $queryParameter = $this->formatScope($this->getParameter());
-        $value = $this->interpret($request, $queryParameter);
-
-        $this->value($value);
-
-        // Hide the validation of query parameters
-        if (! $this->isActive() || ! $this->validate($value)) {
-            return false;
-        }
-
-        $this->handle($builder, $value);
-
-        return true;
-    }
-
-    /**
-     * Add the filter query scope to the builder.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  mixed  $value
-     * @return void
-     */
-    public function handle($builder, $value)
-    {
-        if ($this->hasCallback()) {
-            $this->handleCallback($builder, $value);
-            return;
-        }
-
-        if ($this->hasRefinement()) {
-            $this->handleRefinement($builder, $value);
-            return;
-        }
-
-        $statement = $this->getStatement();
-        $column = $this->getColumn();
-        $operator = $this->getOperator();
-        
-
-        $this->applyBinding($builder, $value);
-    }
-
-    /**
-     * Use the callback to refine the builder.
+     * Register a closure to use as the filter statement.
      * 
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  mixed  $value
-     * @return void
+     * @param  \Closure  $using
+     * @return $this
      */
-    public function useCallback($builder, $value)
+    public function using(\Closure $using)
     {
-        $model = $builder->getModel();
+        $this->using = $using;
 
-        $this->evaluate($this->getCallback(), [
-            'builder' => $builder,
-            'query' => $builder,
-            'value' => $value,
-        ], [
-            Builder::class => $builder,
-            $model::class => $model,
-        ]);
+        return $this;
+    }
 
+    /**
+     * Register a clause to use as the filter refinement.
+     * 
+     * @param  string|\Closure  $using
+     * @param  mixed  $column
+     * @param  mixed  $operator
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function refinement($statement, $columnOrRelation, $operator = '=', $value = null)
+    {
+        if ($statement instanceof Closure) {
+            return $this->using($statement);
+        }
+
+        $this->using = new Refinement(...func_get_args());
+
+        return $this;
+    }
+
+    /**
+     * Allow multiple values to be used.
+     * 
+     * @return $this
+     */
+    public function multiple()
+    {
+        $this->setMultiple();
+        $this->asArray();
+        $this->type('set');
+
+        return $this;
     }
 
     /**
@@ -181,5 +131,131 @@ class Filter extends Refiner
         } catch (BadMethodCallException $e) {
             return $this->refinement($method, ...$parameters);
         }
+    }
+
+    /**
+     * Determine if the value is invalid.
+     * 
+     * @param  mixed  $value
+     * @return bool
+     */
+    public function invalidValue($value)
+    {
+        return ! $this->isActive() || ! $this->validate($value);
+    }
+
+    /**
+     * Filter the builder using the request.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    public function apply($builder, $request)
+    {
+        $key = $this->formatScope($this->getParameter());
+        $value = $this->interpret($request, $key);
+
+        $this->value($value);
+
+        if ($this->invalidValue($value)) {
+            return false;
+        }
+
+        match (true) {
+            $this->using instanceof Closure => $this->handleCallback($builder, $value),
+            $this->using instanceof Refinement => $this->handleRefinement($builder, $value),
+            default => $this->handle($builder, $value),
+        };
+        
+        return true;
+    }
+
+    /**
+     * Handle the filter callback using a refiner.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  mixed  $value
+     * @return void
+     */
+    protected function handleCallback($builder, $value)
+    {
+        $model = $builder->getModel();
+
+        $this->evaluate($this->getCallback(), [
+            'builder' => $builder,
+            'query' => $builder,
+            'value' => $value,
+            'table' => $model->getTable(),
+            'options' => $this->getOptions(),
+        ], [
+            Builder::class => $builder,
+            $model::class => $model,
+        ]);
+    }
+
+    /**
+     * Handle the filter refinement using a custom refinement.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  mixed  $value
+     * @return void
+     */
+    protected function handleRefinement($builder, $value)
+    {
+        $this->using->refine($builder, $value);
+    }
+
+    /**
+     * Handle the filter using a default refinement.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  mixed  $value
+     * @return void
+     */
+    protected function handle($builder, $value)
+    {
+        $column = $builder->qualifyColumn($this->getName());
+        $operator = $this->getOperator();
+
+        $statement = match (true) {
+            \in_array($operator, 
+                ['like', 'not like', 'ilike', 'not ilike']
+            ) => $builder->whereRaw("{$column} {$operator} ?", ['%'.$value.'%']),
+
+            $this->isMultiple(),
+            $this->interpretsArray() => $builder->whereIn($column, $value),
+
+            $this->interpretsDate() => $builder->whereDate($column, $operator, $value),
+
+            $this->interpretsTime() => $builder->whereTime($column, $operator, $value),
+
+            default => $builder->where($column, $operator, $value),
+        };
+
+        $statement->toSql();
+    }
+
+    /**
+     * Get the operator to use for the filter.
+     * 
+     * @return string
+     */
+    public function getOperator()
+    {
+        return $this->operator;
+    }
+
+    /**
+     * Set the operator to use for the filter.
+     * 
+     * @param  string  $operator
+     * @return $this
+     */
+    public function operator($operator)
+    {
+        $this->operator = $operator;
+
+        return $this;
     }
 }

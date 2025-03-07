@@ -195,6 +195,10 @@ class Sort extends Refiner
      */
     public function getDescendingValue()
     {
+        if ($this->isSingularDirection()) {
+            return $this->getParameter();
+        }
+        
         return \sprintf('-%s', $this->getParameter());
     }
 
@@ -239,7 +243,7 @@ class Sort extends Refiner
      */
     public function isSingularDirection()
     {
-        return ! \is_null($this->only);
+        return isset($this->only);
     }
 
     /**

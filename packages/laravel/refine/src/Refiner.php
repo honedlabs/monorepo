@@ -48,7 +48,7 @@ abstract class Refiner extends Primitive implements Refines
     public function getParameter()
     {
         return $this->getAlias()
-            ?? Str::of(type($this->getName())->asString())
+            ?? Str::of($this->getName())
                 ->afterLast('.')
                 ->value();
     }
