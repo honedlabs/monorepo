@@ -11,11 +11,9 @@ use Honed\Refine\Refiner;
 class Sort extends Refiner
 {
     use IsDefault;
-    use HasQueryExpression;
-
-    const ASCENDING = 'asc';
-
-    const DESCENDING = 'desc';
+    use HasQueryExpression {
+        __call as queryCall;
+    }
 
     /**
      * The request direction of the sort.
@@ -51,13 +49,7 @@ class Sort extends Refiner
      */
     public function isActive()
     {
-        $isSorting = $this->getValue() === $this->getParameter();
-
-        if ($this->isSingularDirection()) {
-            return $isSorting && $this->getDirection() === $this->only;
-        }
-
-        return $isSorting;
+        return $this->getValue() === $this->getParameter();
     }
 
     /**
@@ -85,149 +77,14 @@ class Sort extends Refiner
         ];
     }
 
-    /**
-     * Apply the request to the builder.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $key
-     * @return bool
-     */
-    public function apply($builder, $request, $key)
-    {
-        [$this->value, $this->direction] = $this->getRefiningValue($request, $key);
-
-        if (! $this->isActive()) {
-            return false;
-        }
-
-        /** @var string $attribute */
-        $attribute = $this->getName();
-
-        $direction = $this->getDirection() ?? 'asc';
-
-        $this->handle($builder, $direction, $attribute);
-
-        return true;
-    }
-
-    /**
-     * Add the sort query scope to the builder.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  string  $direction
-     * @param  string  $property
-     * @return void
-     */
-    public function handle($builder, $direction, $property)
-    {
-        $builder->orderBy(
-            column: $builder->qualifyColumn($property),
-            direction: $direction,
-        );
-    }
-
-    /**
-     * Retrieve the sort value and direction from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $key
-     * @return array{0: string|null, 1: 'asc'|'desc'|null}
-     */
-    public function getRefiningValue($request, $key)
-    {
-        $sort = $request->safeString($key);
-
-        return match (true) {
-            $sort->isEmpty() => [null, null],
-            $sort->startsWith('-') => [$sort->after('-')->value(), self::DESCENDING],
-            default => [$sort->value(), self::ASCENDING],
-        };
-    }
-
-    /**
-     * Set the direction to use for the query parameter.
-     *
-     * @param  'asc'|'desc'|null  $direction
-     * @return $this
-     */
-    public function direction($direction = null)
-    {
-        $this->direction = $direction;
-
-        return $this;
-    }
-
-    /**
-     * Get the direction to use for the query parameter.
-     *
-     * @return 'asc'|'desc'|null
-     */
-    public function getDirection()
-    {
-        return $this->isSingularDirection() ? $this->only : $this->direction;
-    }
-
-    /**
-     * Get the next value to use for the query parameter.
-     *
-     * @return string|null
-     */
-    public function getNextDirection()
-    {
-        if ($this->isSingularDirection()) {
-            return $this->only === self::DESCENDING
-                ? $this->getDescendingValue()
-                : $this->getAscendingValue();
-        }
-
-        if ($this->isInverted()) {
-            return match (true) {
-                $this->direction === self::DESCENDING => $this->getAscendingValue(),
-                $this->direction === self::ASCENDING => null,
-                default => $this->getDescendingValue(),
-            };
-        }
-
-        return match (true) {
-            $this->direction === self::DESCENDING => null,
-            $this->direction === self::ASCENDING => $this->getDescendingValue(),
-            default => $this->getAscendingValue(),
-        };
-    }
-
-    /**
-     * Get the value for the sort indicating a descending direction.
-     *
-     * @return string
-     */
-    public function getDescendingValue()
-    {
-        if ($this->isSingularDirection()) {
-            return $this->getParameter();
-        }
-        
-        return \sprintf('-%s', $this->getParameter());
-    }
-
-    /**
-     * Get the value for the sort indicating an ascending direction.
-     *
-     * @return string
-     */
-    public function getAscendingValue()
-    {
-        return $this->getParameter();
-    }
-
-    /**
+        /**
      * Set the sort to be ascending.
      *
      * @return $this
      */
     public function asc()
     {
-        $this->only = self::ASCENDING;
+        $this->only = 'asc';
 
         return $this;
     }
@@ -239,7 +96,7 @@ class Sort extends Refiner
      */
     public function desc()
     {
-        $this->only = self::DESCENDING;
+        $this->only = 'desc';
 
         return $this;
     }
@@ -274,5 +131,153 @@ class Sort extends Refiner
     public function isInverted()
     {
         return $this->invert;
+    }
+
+    /**
+     * Retrieve the sort value and direction from a request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $key
+     * @return array{0: string|null, 1: 'asc'|'desc'|null}
+     */
+    public function prepareSortAndDirection($request, $key)
+    {
+        $sort = $request->safeString($key);
+
+        // The direction is determined by the presence of a preceding '-'
+        // character. Any values after that represent the sort parameter name.
+        return match (true) {
+            $sort->isEmpty() => [null, null],
+            $sort->startsWith('-') => [$sort->after('-')->value(), 'desc'],
+            default => [$sort->value(), 'asc'],
+        };
+    }
+
+
+    /**
+     * Get the direction to use for the query parameter.
+     *
+     * @return 'asc'|'desc'|null
+     */
+    public function getDirection()
+    {
+        return $this->isSingularDirection() ? $this->only : $this->direction;
+    }
+
+    /**
+     * Get the next value to use for the query parameter.
+     *
+     * @return string|null
+     */
+    public function getNextDirection()
+    {
+        // If the sort is singular, the next direction can only ever be the 
+        // direction it is singular in.
+        if ($this->isSingularDirection()) {
+            return $this->only === 'desc'
+                ? $this->getDescendingValue()
+                : $this->getAscendingValue();
+        }
+
+        // The sort is a FSM, the default being null -> asc -> desc -> null. The
+        // user can opt to invert this by calling the `invert` method, which will
+        // switch the direction of the sort to be null -> desc -> asc -> null.
+        if ($this->isInverted()) {
+            return match (true) {
+                $this->direction === 'desc' => $this->getAscendingValue(),
+                $this->direction === 'asc' => null,
+                default => $this->getDescendingValue(),
+            };
+        }
+
+        // If the sort is not inverted, we can use the default FSM to determine
+        // the next direction.
+        return match (true) {
+            $this->direction === 'desc' => null,
+            $this->direction === 'asc' => $this->getDescendingValue(),
+            default => $this->getAscendingValue(),
+        };
+    }
+
+    /**
+     * Get the value for the sort indicating a descending direction.
+     *
+     * @return string
+     */
+    public function getDescendingValue()
+    {
+        if ($this->isSingularDirection()) {
+            return $this->getParameter();
+        }
+        
+        return \sprintf('-%s', $this->getParameter());
+    }
+
+    /**
+     * Get the value for the sort indicating an ascending direction.
+     *
+     * @return string
+     */
+    public function getAscendingValue()
+    {
+        return $this->getParameter();
+    }
+
+    /**
+     * Order the builder using the request.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $key
+     * @return bool
+     */
+    public function apply($builder, $request, $key)
+    {
+        // We retrieve the sort name and direction by the presence of a 
+        // preceding '-' character. The key must be provided from the caller, as
+        // it needs to be scoped to the refiner possibly and the sort key is
+        // global.
+        [$value, $direction] = $this->prepareSortAndDirection($request, $key);
+
+        $this->value = $value;
+        $this->direction = $direction;
+
+        // The sort is active if the value is the same as the parameter. We do
+        // not need to check direction at this point, as for toggleable sorts
+        // it does not matter and singular sorts will have the direction 
+        // overridden.
+        if (! $this->isActive()) {
+            return false;
+        }
+
+        $column = $this->getName();
+
+        // If the sort is singular, we use the direction provided by it. This 
+        // negates the previous direction entirely, meaning that this sort is
+        // agnostic to any direction provided by the request.
+        if ($this->isSingularDirection()) {
+            $direction = $this->only;
+        }
+
+        // We allow for the developer to provide a custom query expression. This
+        // will only be executed if the sorts match.
+        if ($this->hasQueryExpression()) {
+            $bindings = [
+                'direction' => $direction,
+                'value' => $value,
+                'column' => $column,
+                'table' => $builder->getModel()->getTable(),
+            ];
+
+            $this->expressQuery($builder, $bindings);
+
+            return true;
+        }
+
+        // If there is no custom query expression, we use the default `orderBy`
+        // method.
+        $builder->orderBy($builder->qualifyColumn($column), $direction);
+
+        return true;
     }
 }

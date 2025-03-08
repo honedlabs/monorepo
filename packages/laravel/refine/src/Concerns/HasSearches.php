@@ -312,12 +312,12 @@ trait HasSearches
      * Get the search columns from the request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return array<int,string>|true
+     * @return array<int,string>|null
      */
-    public function getSearchColumns($request)
+    public function getMatches($request)
     {
-        if (! $this->canMatch()) {
-            return true;
+        if (! $this->isMatching()) {
+            return null;
         }
 
         /** @var string */
@@ -326,7 +326,7 @@ trait HasSearches
         $columns = $request->safeArray($key, null, $this->getDelimiter());
 
         if (\is_null($columns) || $columns->isEmpty()) {
-            return true;
+            return null;
         }
 
         return $columns
@@ -342,7 +342,7 @@ trait HasSearches
      * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
-    public function getSearchTerm($request)
+    public function getSearch($request)
     {
         /** @var string */
         $key = $this->formatScope($this->getSearchesKey());
@@ -379,8 +379,8 @@ trait HasSearches
             return $this;
         }
 
-        $columns = $this->getSearchColumns($request);
-        $this->term = $this->getSearchTerm($request);
+        $columns = $this->getMatches($request);
+        $this->term = $this->getSearch($request);
 
         $searches = $this->getSearches();
         $applied = false;

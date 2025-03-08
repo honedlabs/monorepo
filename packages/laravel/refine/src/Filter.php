@@ -104,6 +104,29 @@ class Filter extends Refiner
     }
 
     /**
+     * Get the operator to use for the filter.
+     * 
+     * @return string
+     */
+    public function getOperator()
+    {
+        return $this->operator;
+    }
+
+    /**
+     * Set the operator to use for the filter.
+     * 
+     * @param  string  $operator
+     * @return $this
+     */
+    public function operator($operator)
+    {
+        $this->operator = $operator;
+
+        return $this;
+    }
+
+    /**
      * Filter the builder using the request.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
@@ -169,29 +192,6 @@ class Filter extends Refiner
 
             default => $builder->where($column, $operator, $value),
         };
-    }
-
-    /**
-     * Get the operator to use for the filter.
-     * 
-     * @return string
-     */
-    public function getOperator()
-    {
-        return $this->operator;
-    }
-
-    /**
-     * Set the operator to use for the filter.
-     * 
-     * @param  string  $operator
-     * @return $this
-     */
-    public function operator($operator)
-    {
-        $this->operator = $operator;
-
-        return $this;
     }
 
     /**
