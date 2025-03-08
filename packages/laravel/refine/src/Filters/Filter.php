@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Honed\Core\Concerns\HasScope;
 use Illuminate\Support\Collection;
 use Honed\Core\Concerns\Validatable;
+use Honed\Refine\Concerns\HasQueryExpression;
 use Illuminate\Database\Eloquent\Builder;
 use Honed\Refine\Concerns\InterpretsRequest;
 use Honed\Refine\Filters\Concerns\HasOptions;
@@ -27,13 +28,9 @@ class Filter extends Refiner
         multiple as protected setMultiple;
     }
     use InterpretsRequest;
-
-    /**
-     * The refinement, or callback, to use to resolve the filter.
-     *
-     * @var \Honed\Refine\Refinement|\Closure|null
-     */
-    protected $using;
+    use HasQueryExpression {
+        __call as queryCall;
+    }
 
     /**
      * The operator to use for the filter.
@@ -71,39 +68,6 @@ class Filter extends Refiner
     }
 
     /**
-     * Register a closure to use as the filter statement.
-     * 
-     * @param  \Closure  $using
-     * @return $this
-     */
-    public function using(\Closure $using)
-    {
-        $this->using = $using;
-
-        return $this;
-    }
-
-    /**
-     * Register a clause to use as the filter refinement.
-     * 
-     * @param  string|\Closure  $using
-     * @param  mixed  $column
-     * @param  mixed  $operator
-     * @param  mixed  $value
-     * @return $this
-     */
-    public function refinement($statement, $columnOrRelation, $operator = '=', $value = null)
-    {
-        if ($statement instanceof Closure) {
-            return $this->using($statement);
-        }
-
-        $this->using = new Refinement(...func_get_args());
-
-        return $this;
-    }
-
-    /**
      * Allow multiple values to be used.
      * 
      * @return $this
@@ -115,22 +79,6 @@ class Filter extends Refiner
         $this->type('select');
 
         return $this;
-    }
-
-    /**
-     * Dynamically handle calls to the class.
-     * 
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        try {
-            return parent::__call($method, $parameters);
-        } catch (BadMethodCallException $e) {
-            return $this->refinement($method, ...$parameters);
-        }
     }
 
     /**
@@ -169,49 +117,12 @@ class Filter extends Refiner
             return false;
         }
 
-        // Execute appropriate handling strategy
         match (true) {
-            $this->using instanceof Closure => $this->handleCallback($builder, $value),
-            $this->using instanceof Refinement => $this->handleRefinement($builder, $value),
+            $this->hasQueryExpression() => $this->expressQuery($builder, ['value' => $value]),
             default => $this->handle($builder, $value),
         };
 
         return true;
-    }
-
-    /**
-     * Handle the filter callback using a refiner.
-     * 
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  mixed  $value
-     * @return void
-     */
-    protected function handleCallback($builder, $value)
-    {
-        $model = $builder->getModel();
-
-        $this->evaluate($this->using, [
-            'builder' => $builder,
-            'query' => $builder,
-            'value' => $value,
-            'table' => $model->getTable(),
-            'options' => $this->getOptions(),
-        ], [
-            Builder::class => $builder,
-            $model::class => $model,
-        ]);
-    }
-
-    /**
-     * Handle the filter refinement using a custom refinement.
-     * 
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  mixed  $value
-     * @return void
-     */
-    protected function handleRefinement($builder, $value)
-    {
-        $this->using->refine($builder, $value);
     }
 
     /**
@@ -229,7 +140,7 @@ class Filter extends Refiner
         $statement = match (true) {
             \in_array($operator, 
                 ['like', 'not like', 'ilike', 'not ilike']
-            ) => $builder->whereRaw("{$column} {$operator} ?", ['%'.$value.'%']),
+            ) => $builder->whereRaw("LOWER({$column}) {$operator} ?", ['%'.\mb_strtolower($value).'%']),
 
             $this->isMultiple(),
             $this->interpretsArray() => $builder->whereIn($column, $value),
@@ -240,8 +151,6 @@ class Filter extends Refiner
 
             default => $builder->where($column, $operator, $value),
         };
-
-        $statement->toSql();
     }
 
     /**
@@ -265,5 +174,21 @@ class Filter extends Refiner
         $this->operator = $operator;
 
         return $this;
+    }
+
+    /**
+     * Dynamically handle calls to the class.
+     * 
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        try {
+            return parent::__call($method, $parameters);
+        } catch (BadMethodCallException $e) {
+            return $this->queryCall($method, $parameters);
+        }
     }
 }
