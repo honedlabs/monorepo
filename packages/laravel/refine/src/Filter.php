@@ -12,6 +12,7 @@ use Honed\Refine\Concerns\HasDelimiter;
 use Honed\Refine\Concerns\HasQueryExpression;
 use Honed\Refine\Concerns\InterpretsRequest;
 use Honed\Refine\Concerns\HasOptions;
+use Honed\Refine\Contracts\Refines;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
@@ -135,7 +136,7 @@ class Filter extends Refiner
      * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
-    public function apply($builder, $request)
+    public function refine($builder, $request)
     {
         // We retrieve the parameter according to how the user specified it. As
         // the key is dynamic, we need to be given the scope from the caller to
@@ -181,8 +182,26 @@ class Filter extends Refiner
 
         // If there is no custom query expression, we use the default query
         // method. This depends on how the request interprets the value.
-        $column = $builder->qualifyColumn($this->getName());
+        $column = $this->getName();
         $operator = $this->getOperator();
+
+        $this->apply($builder, $column, $operator, $value);
+
+        return true;
+    }
+
+    /**
+     * Apply the filter to the builder.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  string  $column
+     * @param  string|null  $operator
+     * @param  mixed  $value
+     * @return void
+     */
+    public function apply($builder, $column, $operator, $value)
+    {
+        $column = $builder->qualifyColumn($column);
 
         match (true) {
             // If the operator is fuzzy, we do a whereRaw to make it simpler and
@@ -209,7 +228,6 @@ class Filter extends Refiner
             default => $builder->where($column, $operator, $value),
         };
 
-        return true;
     }
 
     /**

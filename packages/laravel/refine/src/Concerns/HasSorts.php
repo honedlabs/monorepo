@@ -211,12 +211,13 @@ trait HasSorts
         /** @var string */
         $key = $this->formatScope($this->getSortsKey());
 
+        /** @var array<int, \Honed\Refine\Sort> */
         $sorts = \array_merge($this->getSorts(), $sorts);
 
         $applied = false;
 
         foreach ($sorts as $sort) {
-            $applied |= $sort->apply($builder, $request, $key);
+            $applied |= $sort->refine($builder, $request, $key);
         }
 
         if (! $applied) {
@@ -240,10 +241,10 @@ trait HasSorts
             static fn (Sort $sort) => $sort->isDefault()
         );
 
-        $sort?->handle(
+        $sort?->apply(
             $builder,
+            $sort->getName(),
             $sort->getDirection() ?? 'asc',
-            $sort->getName()
         );
     }
 

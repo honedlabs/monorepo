@@ -92,6 +92,9 @@ trait HasQueryExpression
         // or relation reference. As we know this is a string, we should replace
         // any bindings if they exist. This is applicable to all expressions.
         $reference = $this->replaceBindings($reference, $bindings);
+        $operator = $this->replaceBindings($operator, $bindings);
+        $value = $this->replaceBindings($value, $bindings);
+        $optional = $this->replaceBindings($optional, $bindings);
 
         if ($numArgs === 2) {
             $builder->{$statement}($reference);
@@ -107,12 +110,10 @@ trait HasQueryExpression
             return;
         }
 
-
         // As it is not a closure, we need to determine whether the operator is 
         // an operator or refers to a value. If it is not an operator, then we
         // can assume we have been given a value and we can replace the bindings.
         if ($this->isOperator($operator, $builder)) {
-            $value = $this->replaceBindings($value, $bindings);
             $builder->{$statement}($reference, $operator, $value);
             return;
         }
@@ -120,13 +121,10 @@ trait HasQueryExpression
         // There is some cases which result in both the reference and operator
         // referring to the column / relation. 
         if ($this->isOperator($value, $builder) && $numArgs === 5) {
-            $operator = $this->replaceBindings($operator, $bindings);
-            $optional = $this->replaceBindings($optional, $bindings);
             $builder->{$statement}($reference, $operator, $value, $optional);
             return;
         }
 
-        $value = $this->replaceBindings($value, $bindings);
         $builder->{$statement}($reference, $operator, $value);
     }
 
@@ -155,12 +153,16 @@ trait HasQueryExpression
     /**
      * Replace the bindings in the reference.
      * 
-     * @param string $reference
+     * @param mixed $reference
      * @param array<string, mixed> $bindings
      * @return mixed
      */
     public function replaceBindings($reference, $bindings)
     {
+        if (! \is_string($reference)) {
+            return $reference;
+        }
+
         foreach ($bindings as $key => $value) {
             if ($reference === ':'.$key) {
                 return $value;
@@ -240,7 +242,7 @@ trait HasQueryExpression
         if ($this->invalidExpression($method)) {
             throw new \BadMethodCallException(
                 sprintf(
-                    'Call to method %s::%s() is not a support query expression', 
+                    'Call to method %s::%s() is not a supported query expression', 
                     static::class, $method
                 )
             );

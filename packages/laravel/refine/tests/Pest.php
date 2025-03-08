@@ -74,11 +74,10 @@ expect()->extend('toBeOnlySearch', function(string $column, string $boolean = 'a
 });
 
 expect()->extend('toBeOrder', function(string $column, string $direction = 'asc') {
-    return $this->scoped(fn ($order) => $order
-        ->toBeArray()
+    return $this->toBeArray()
+        ->toHaveKeys(['column', 'direction'])
         ->{'column'}->toBe($column)
-        ->{'direction'}->toBe($direction)
-    );
+        ->{'direction'}->toBe($direction);
 });
 
 expect()->extend('toBeOnlyOrder', function(string $column, string $direction = 'asc') {

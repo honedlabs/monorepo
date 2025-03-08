@@ -155,12 +155,13 @@ trait HasFilters
             return $this;
         }
 
+        /** @var array<int, \Honed\Refine\Filter> */
         $filters = \array_merge($this->getFilters(), $filters);
 
         foreach ($filters as $filter) {
             $filter->scope($this->getScope())
                 ->delimiter($this->getDelimiter())
-                ->apply($builder, $request);
+                ->refine($builder, $request);
         }
 
         return $this;

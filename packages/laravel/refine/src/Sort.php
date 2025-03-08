@@ -231,7 +231,7 @@ class Sort extends Refiner
      * @param  string  $key
      * @return bool
      */
-    public function apply($builder, $request, $key)
+    public function refine($builder, $request, $key)
     {
         // We retrieve the sort name and direction by the presence of a 
         // preceding '-' character. The key must be provided from the caller, as
@@ -240,7 +240,6 @@ class Sort extends Refiner
         [$value, $direction] = $this->prepareSortAndDirection($request, $key);
 
         $this->value = $value;
-        $this->direction = $direction;
 
         // The sort is active if the value is the same as the parameter. We do
         // not need to check direction at this point, as for toggleable sorts
@@ -249,6 +248,8 @@ class Sort extends Refiner
         if (! $this->isActive()) {
             return false;
         }
+
+        $this->direction = $direction;
 
         $column = $this->getName();
 
@@ -276,8 +277,23 @@ class Sort extends Refiner
 
         // If there is no custom query expression, we use the default `orderBy`
         // method.
-        $builder->orderBy($builder->qualifyColumn($column), $direction ?? 'asc');
+        $this->apply($builder, $column, $direction);
 
         return true;
+    }
+
+    /**
+     * Apply the sort to the builder.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  string  $column
+     * @param  string|null  $direction
+     * @return void
+     */
+    public function apply($builder, $column, $direction)
+    {
+        $column = $builder->qualifyColumn($column);
+
+        $builder->orderBy($column, $direction ?? 'asc');
     }
 }

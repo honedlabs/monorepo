@@ -383,13 +383,14 @@ trait HasSearches
         $columns = $this->getMatches($request);
         $this->term = $this->getSearch($request);
 
+        /** @var array<int, \Honed\Refine\Search> */
         $searches = \array_merge($this->getSearches(), $searches);
         $applied = false;
 
         foreach ($searches as $search) {
             $boolean = $applied ? 'or' : 'and';
 
-            $applied |= $search->apply($builder, $this->term, $columns, $boolean);
+            $applied |= $search->refine($builder, $this->term, $columns, $boolean);
         }
 
         return $this;

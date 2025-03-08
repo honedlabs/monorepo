@@ -29,7 +29,7 @@ trait InterpretsRequest
             'float' => $request->safeFloat($key),
             'integer' => $request->safeInteger($key),
             'string' => $request->safeString($key),
-            // 'time' => $request->safeTime($key),
+            'time' => $request->safeDate($key),
             default => $request->safe($key),
         };
     }
