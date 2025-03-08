@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Searches;
+namespace Honed\Refine;
 
 use Honed\Refine\Refiner;
 use Illuminate\Database\Eloquent\Builder;

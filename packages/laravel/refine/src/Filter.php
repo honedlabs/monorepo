@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Filters;
+namespace Honed\Refine;
 
 use Closure;
 use Honed\Refine\Refiner;
@@ -95,6 +95,20 @@ class Filter extends Refiner
     }
 
     /**
+     * Get the expression partials supported by the filter.
+     * 
+     * @return array<int,string>
+     */
+    public function expressions()
+    {
+        return [
+            'where',
+            'has',
+            'withWhere',
+        ];
+    }
+
+    /**
      * Filter the builder using the request.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
@@ -117,10 +131,19 @@ class Filter extends Refiner
             return false;
         }
 
-        match (true) {
-            $this->hasQueryExpression() => $this->expressQuery($builder, ['value' => $value]),
-            default => $this->handle($builder, $value),
-        };
+        if ($this->hasQueryExpression()) {
+            $bindings = [
+                'value' => $value,
+                'column' => $this->getName(),
+                'table' => $builder->getModel()->getTable(),
+            ];
+
+            $this->expressQuery($builder, $bindings);
+
+            return true;
+        }
+
+        $this->handle($builder, $value);
 
         return true;
     }
@@ -137,7 +160,7 @@ class Filter extends Refiner
         $column = $builder->qualifyColumn($this->getName());
         $operator = $this->getOperator();
 
-        $statement = match (true) {
+        match (true) {
             \in_array($operator, 
                 ['like', 'not like', 'ilike', 'not ilike']
             ) => $builder->whereRaw("LOWER({$column}) {$operator} ?", ['%'.\mb_strtolower($value).'%']),

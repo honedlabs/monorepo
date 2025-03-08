@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Sorts;
+namespace Honed\Refine;
 
 use Honed\Core\Concerns\IsDefault;
 use Honed\Refine\Refiner;

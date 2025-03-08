@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Filters\Concerns;
+namespace Honed\Refine\Concerns;
 
 use BackedEnum;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Honed\Refine\Option;
 
 trait HasOptions
 {
     /**
      * The available options.
      * 
-     * @var array<int,\Honed\Refine\Filters\Concerns\Option>
+     * @var array<int,\Honed\Refine\Option>
      */
     protected $options = [];
 
@@ -117,7 +118,7 @@ trait HasOptions
     /**
      * Get the options.
      *
-     * @return array<int,\Honed\Refine\Filters\Concerns\Option>
+     * @return array<int,\Honed\Refine\Option>
      */
     public function getOptions()
     {
@@ -175,7 +176,7 @@ trait HasOptions
      * Create options from an enum.
      *
      * @param  class-string<\BackedEnum>  $enum
-     * @return array<int,\Honed\Refine\Filters\Concerns\Option>
+     * @return array<int,\Honed\Refine\Option>
      */
     public function optionsEnumerated($enum)
     {
@@ -189,7 +190,7 @@ trait HasOptions
      * Create options from an associative array.
      *
      * @param  array<int,mixed>  $options
-     * @return array<int,\Honed\Refine\Filters\Concerns\Option>
+     * @return array<int,\Honed\Refine\Option>
      */
     public function optionsAssociative($options)
     {
@@ -204,7 +205,7 @@ trait HasOptions
      * Create options from a list.
      *
      * @param  array<int,mixed>  $options
-     * @return array<int,\Honed\Refine\Filters\Concerns\Option>
+     * @return array<int,\Honed\Refine\Option>
      */
     public function optionsList($options)
     {
@@ -242,7 +243,7 @@ trait HasOptions
     /**
      * Determine if the option should be activated.
      * 
-     * @param  \Honed\Refine\Filters\Concerns\Option  $option
+     * @param  \Honed\Refine\Option  $option
      * @param  mixed  $value
      * @return bool
      */

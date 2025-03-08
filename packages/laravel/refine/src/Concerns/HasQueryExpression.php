@@ -15,13 +15,12 @@ trait HasQueryExpression
      */
     protected $using;
 
-    // /**
-    //  * Provide a list of supported expressions. This will do a starts with check
-    //  * on the statement to determine if it is supported.
-    //  * 
-    //  * @return array<int,string>
-    //  */
-    // abstract public function supportedExpressions();
+    /**
+     * Provide a list of supported expression partials.
+     * 
+     * @return array<int,string>
+     */
+    abstract public function expressions();
 
     /**
      * Register the query expression to resolve the refiner.
@@ -30,9 +29,12 @@ trait HasQueryExpression
      * @param string|null $reference
      * @param mixed $operator
      * @param mixed $value 
+     * @param bool $optional
      * @return $this
+     * 
+     * @throws \BadMethodCallException
      */
-    public function using($statement, $reference = null, $operator = null, $value = null)
+    public function using($statement, $reference = null, $operator = null, $value = null, $optional = null)
     {
         if ($statement instanceof Closure) {
             $this->using = $statement;
@@ -41,7 +43,7 @@ trait HasQueryExpression
 
         if ($reference === null) {
             throw new BadMethodCallException(
-                'A column or relation reference is required.'
+                'A column or relation reference is required for all expressions.'
             );
         }
 
@@ -84,7 +86,7 @@ trait HasQueryExpression
         // and whether we need to replace bindings.
         $numArgs = \count($using);
 
-        [$statement, $reference, $operator, $value] = \array_pad($using, 4, null);
+        [$statement, $reference, $operator, $value, $optional] = \array_pad($using, 5, null);
 
         // If there are only 2 arguments, we have a query method and a column
         // or relation reference. As we know this is a string, we should replace
@@ -101,14 +103,30 @@ trait HasQueryExpression
         // may also not be a specific value, or operator. If it is a closure, we
         // need to rebind it as it may be requiring a binding injection.
         if ($operator instanceof Closure) {
-            $builder->{$statement}($reference, $this->rebindClosure($operator, $builder, $bindings));
+            $builder->{$statement}($reference, $this->rebindClosure($operator, $bindings));
             return;
         }
 
-        // As it is not a closure, we need to determine whether the operator is 
-        // an operator or refers to a value.
-        [$operator, $value] = $this->prepareOperator($operator, $value, $builder, $bindings);
 
+        // As it is not a closure, we need to determine whether the operator is 
+        // an operator or refers to a value. If it is not an operator, then we
+        // can assume we have been given a value and we can replace the bindings.
+        if ($this->isOperator($operator, $builder)) {
+            $value = $this->replaceBindings($value, $bindings);
+            $builder->{$statement}($reference, $operator, $value);
+            return;
+        }
+
+        // There is some cases which result in both the reference and operator
+        // referring to the column / relation. 
+        if ($this->isOperator($value, $builder) && $numArgs === 5) {
+            $operator = $this->replaceBindings($operator, $bindings);
+            $optional = $this->replaceBindings($optional, $bindings);
+            $builder->{$statement}($reference, $operator, $value, $optional);
+            return;
+        }
+
+        $value = $this->replaceBindings($value, $bindings);
         $builder->{$statement}($reference, $operator, $value);
     }
 
@@ -157,10 +175,23 @@ trait HasQueryExpression
         return $reference;
     }
 
-    public function rebindClosure($closure)
+    /**
+     * Rebind a builder closure with the bindings injected to closure arguments.
+     * 
+     * @param \Closure $closure
+     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     * @param array<string, mixed> $bindings
+     * @return \Closure
+     */
+    public function rebindClosure($closure, $bindings)
     {
-        dd($closure);
-        return fn ($builder) => $closure($builder, $this->value);
+        return fn ($builder) => $this->evaluate($closure, [
+            'builder' => $builder,
+            'query' => $builder,
+            ...$bindings,
+        ], [
+            Builder::class => $builder,
+        ]);
     }
 
     /**
@@ -171,32 +202,84 @@ trait HasQueryExpression
      * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
      * @return array<mixed, mixed>
      */
-    public function prepareOperator($operator, $value, $builder, $useDefault)
+    public function isOperator($operator, $builder)
     {
-        if ($operator && $this->invalidOperatorAndValue($operator, $value)) {
-            throw new InvalidArgumentException('Illegal operator and value combination.');
-        }
-
-        return [$value, $operator];
+        return \in_array($operator, $builder->getQuery()->operators);
     }
 
     /**
-     * Determine if the given operator and value combination is legal.
-     *
-     * Prevents using Null values with invalid operators.
-     *
-     * @param  string  $operator
-     * @param  mixed  $value
+     * Determine if the method is an invalid expression.
+     * 
+     * @param string $method
      * @return bool
      */
-    protected function invalidOperatorAndValue($operator, $value)
+    public function invalidExpression($method)
     {
-        return is_null($value) && in_array($operator, $this->operators) &&
-             ! in_array($operator, ['=', '<>', '!=']);
+        $expressions = $this->expressions();
+
+        if (empty($expressions)) {
+            return false;
+        }
+
+        // Check that the method starts with any of the given expressions.
+        foreach ($expressions as $expression) {
+            if (str_starts_with($method, $expression)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
+    /**
+     * Handle dynamic method calls to the builder.
+     * 
+     * @param string $method
+     * @param array<mixed> $parameters
+     * @return $this
+     * 
+     * @throws \BadMethodCallException
+     */
     public function __call($method, $parameters)
     {
+        if ($this->invalidExpression($method)) {
+            $this->throwInvalidExpressionException($method);
+        }
+
         return $this->using($method, ...$parameters);
+    }
+
+    /**
+     * Throw a bad method call exception for the given method if the expression
+     * is invalid.
+     * 
+     * @param string $method
+     * @return never
+     * 
+     * @throws \BadMethodCallException
+     */
+    protected static function throwInvalidExpressionException($method)
+    {
+        throw new \BadMethodCallException(
+            sprintf(
+                'Call to method %s::%s() is not a support query expression', 
+                static::class, $method
+            )
+        );
+    }
+
+    /**
+     * Throw a bad method call exception for the given method if no reference
+     * is provided.
+     * 
+     * @return never
+     * 
+     * @throws \BadMethodCallException
+     */
+    protected static function throwNoReferenceException($method)
+    {
+        throw new \BadMethodCallException(
+            'A column or relation reference is required for all expressions when not using a closure'
+        );
     }
 }

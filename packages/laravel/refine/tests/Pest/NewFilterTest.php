@@ -130,6 +130,10 @@ it('can use `like` operators', function () {
 
     expect($this->builder->getQuery()->wheres)
         ->toBeOnlySearch($this->builder->qualifyColumn($name));
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value);
 });
 
 it('can use dates', function () {
@@ -155,6 +159,10 @@ it('can use dates', function () {
             ->{'value'}->toBe($value->toDateString())
             ->{'boolean'}->toBe('and')
         );
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBeInstanceOf(Carbon::class);
 });
 
 it('can use times', function () {
@@ -180,9 +188,13 @@ it('can use times', function () {
             ->{'value'}->toBe($value->toDateTimeString())
             ->{'boolean'}->toBe('and')
         );
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value->toDateTimeString());
 });
 
-it('accepts a callback', function () {
+it('supports closures', function () {
     $name = 'name';
     $value = 'test';
 
@@ -196,34 +208,19 @@ it('accepts a callback', function () {
 
     expect($this->builder->getQuery()->wheres)
         ->toBeOnlyWhere($name, $value.'%', 'like');
-});
-
-it('can use `where` clause', function () {
-    $name = 'quantity';
-    $value = 10;
-
-    $request = Request::create('/', 'GET', [$name => $value]);
-    
-    $filter = Filter::make($name)
-        ->where($name, ':value');
-
-    expect($filter->apply($this->builder, $request))
-        ->toBeTrue();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toHaveOnlyWhere($name, $value);
 
     expect($filter)
         ->isActive()->toBeTrue()
         ->getValue()->toBe($value);
 });
 
-it('can use `has` clause', function () {
+
+it('supports reference only clauses (`has` method)', function () {
     $name = 'details';
     $filter = Filter::make($name)
-        ->whereHas('details');
+        ->has('details');
 
-    $request = Request::create('/', 'GET', [$name => 'false']);
+    $request = Request::create('/', 'GET', [$name => 'true']);
 
     expect($filter->apply($this->builder, $request))
         ->toBeTrue();
@@ -232,9 +229,101 @@ it('can use `has` clause', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
             ->{'type'}->toBe('Exists')
-        );    
+        );
+        
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe('true');
 });
 
-// it('can use `whereHas`')
+it('supports reference, explicit operator, value clauses (`where` method)', function () {
+    $name = 'quantity';
+    $value = 10;
+    $operator = '>=';
 
-// it('can use `whereRelation`')
+    $request = Request::create('/', 'GET', [$name => $value]);
+    
+    $filter = Filter::make($name)
+        ->where('quantity', $operator, ':value');
+
+    expect($filter->apply($this->builder, $request))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlyWhere($name, $value, $operator);
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value);
+});
+
+it('supports reference, implicit operator, value clauses (`whereRelation` method)', function () {
+    $name = 'quantity';
+    $value = 10;
+    $operator = '>=';
+
+    $request = Request::create('/', 'GET', [$name => $value]);
+    
+    $filter = Filter::make($name)
+        ->whereRelation('details', ':column', $operator, ':value');
+
+    expect($filter->apply($this->builder, $request))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($where) => $where
+            ->{'type'}->toBe('Exists')
+        );
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value);
+});
+
+it('supports reference, closure clauses (`whereHas` method)', function () {
+    $name = 'quantity';
+    $value = 10;
+
+    $request = Request::create('/', 'GET', [$name => $value]);
+    
+    // Rebinds closures
+    $filter = Filter::make($name)
+        ->whereHas('details', fn ($query, $value) => $query
+            ->where('quantity', '>=', $value)
+        );
+
+    expect($filter->apply($this->builder, $request))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($where) => $where
+            ->{'type'}->toBe('Exists')
+        );
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value);
+});
+
+it('supports binding names', function () {
+    $name = 'quantity';
+    $value = 10;
+    $operator = '>=';
+
+    $request = Request::create('/', 'GET', [$name => $value]);
+
+    $filter = Filter::make($name)
+        ->where(':table.:column', '>=', ':value');
+
+    expect($filter->apply($this->builder, $request))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlyWhere('products.quantity', $value, $operator);
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value);
+});
