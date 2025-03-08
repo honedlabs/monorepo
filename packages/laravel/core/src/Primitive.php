@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Honed\Core;
 
 use Honed\Core\Contracts\Makeable;
-use Illuminate\Support\Traits\Tappable;
-use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
 
 /**
  * @template TKey of string
@@ -41,7 +41,7 @@ abstract class Primitive implements \JsonSerializable, Arrayable, Makeable
     public function jsonSerialize(): mixed
     {
         return \array_filter(
-            $this->toArray(), 
+            $this->toArray(),
             static fn ($value) => ! empty($value)
         );
     }

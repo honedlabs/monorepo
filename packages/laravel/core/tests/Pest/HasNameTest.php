@@ -14,19 +14,13 @@ beforeEach(function () {
     $this->param = 'name';
 });
 
-it('is null by default', function () {
-    expect($this->test)
-        ->hasName()->toBeFalse();
-});
-
 it('sets', function () {
     expect($this->test->name($this->param))
         ->toBeInstanceOf(NameTest::class)
-        ->hasName()->toBeTrue();
+        ->getName()->toBe($this->param);
 });
 
 it('gets', function () {
     expect($this->test->name($this->param))
-        ->getName()->toBe($this->param)
-        ->hasName()->toBeTrue();
+        ->getName()->toBe($this->param);
 });

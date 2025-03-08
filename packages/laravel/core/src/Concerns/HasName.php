@@ -7,21 +7,19 @@ namespace Honed\Core\Concerns;
 trait HasName
 {
     /**
-     * @var string|null
+     * @var string
      */
     protected $name;
 
     /**
      * Set the name for the instance.
      *
-     * @param  string|null  $name
+     * @param  string  $name
      * @return $this
      */
     public function name($name)
     {
-        if (! \is_null($name)) {
-            $this->name = $name;
-        }
+        $this->name = $name;
 
         return $this;
     }
@@ -29,20 +27,10 @@ trait HasName
     /**
      * Get the name for the instance.
      *
-     * @return string|null
+     * @return string
      */
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Determine if the instance has an name set.
-     *
-     * @return bool
-     */
-    public function hasName()
-    {
-        return ! \is_null($this->name);
     }
 }

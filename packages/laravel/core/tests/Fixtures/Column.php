@@ -13,10 +13,10 @@ use Honed\Core\Tests\Stubs\Product;
 
 class Column extends Primitive
 {
-    use HasName;
-    use HasType;
     use HasDescription;
     use HasMeta;
+    use HasName;
+    use HasType;
 
     public static function make()
     {
@@ -66,5 +66,4 @@ class Column extends Primitive
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }
-
 }

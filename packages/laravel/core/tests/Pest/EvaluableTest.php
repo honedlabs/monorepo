@@ -1,8 +1,8 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Status;
-use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Tests\Fixtures\Column;
+use Honed\Core\Tests\Stubs\Product;
+use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 beforeEach(function () {
