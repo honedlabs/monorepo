@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filters\Concerns\Option;
+use Honed\Refine\Option;
 
 it('can create an option', function () {
     expect(Option::make('test', 'Test'))

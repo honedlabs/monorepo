@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Honed\Refine;
 
 use Honed\Core\Concerns\IsDefault;
+use Honed\Refine\Concerns\HasQueryExpression;
 use Honed\Refine\Refiner;
 
 class Sort extends Refiner
 {
     use IsDefault;
+    use HasQueryExpression;
 
     const ASCENDING = 'asc';
 
@@ -47,14 +49,6 @@ class Sort extends Refiner
     /**
      * {@inheritdoc}
      */
-    public function getUniqueKey()
-    {
-        return \sprintf('%s.%s', $this->getName(), $this->getDirection());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function isActive()
     {
         $isSorting = $this->getValue() === $this->getParameter();
@@ -64,6 +58,31 @@ class Sort extends Refiner
         }
 
         return $isSorting;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray()
+    {
+        return \array_merge(parent::toArray(), [
+            'direction' => $this->getDirection(),
+            'next' => $this->getNextDirection(),
+        ]);
+    }
+
+    /**
+     * Get the expression partials supported by the sort.
+     * 
+     * @return array<int,string>
+     */
+    public function expressions()
+    {
+        return [
+            'orderBy',
+            'latest',
+            'oldest',
+        ];
     }
 
     /**
@@ -124,17 +143,6 @@ class Sort extends Refiner
             $sort->startsWith('-') => [$sort->after('-')->value(), self::DESCENDING],
             default => [$sort->value(), self::ASCENDING],
         };
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toArray()
-    {
-        return \array_merge(parent::toArray(), [
-            'direction' => $this->getDirection(),
-            'next' => $this->getNextDirection(),
-        ]);
     }
 
     /**

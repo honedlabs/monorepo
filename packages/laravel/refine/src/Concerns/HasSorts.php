@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
-use Honed\Refine\Sorts\Sort;
+use Honed\Refine\Sort;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -23,7 +23,7 @@ trait HasSorts
     /**
      * List of the sorts.
      *
-     * @var array<int,\Honed\Refine\Sorts\Sort>|null
+     * @var array<int,\Honed\Refine\Sort>|null
      */
     protected $sorts;
 
@@ -81,7 +81,7 @@ trait HasSorts
     /**
      * Merge a set of sorts with the existing sorts.
      *
-     * @param  array<int, \Honed\Refine\Sorts\Sort>|\Illuminate\Support\Collection<int, \Honed\Refine\Sorts\Sort>  $sorts
+     * @param  array<int, \Honed\Refine\Sort>|\Illuminate\Support\Collection<int, \Honed\Refine\Sort>  $sorts
      * @return $this
      */
     public function addSorts($sorts)
@@ -98,7 +98,7 @@ trait HasSorts
     /**
      * Add a single sort to the list of sorts.
      *
-     * @param  \Honed\Refine\Sorts\Sort  $sort
+     * @param  \Honed\Refine\Sort  $sort
      * @return $this
      */
     public function addSort($sort)
@@ -111,7 +111,7 @@ trait HasSorts
     /**
      * Retrieve the sorts.
      *
-     * @return array<int,\Honed\Refine\Sorts\Sort>
+     * @return array<int,\Honed\Refine\Sort>
      */
     public function getSorts()
     {
@@ -220,7 +220,7 @@ trait HasSorts
      * Apply a default sort to the query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
-     * @param  array<int, \Honed\Refine\Sorts\Sort>  $sorts
+     * @param  array<int, \Honed\Refine\Sort>  $sorts
      * @return void
      */
     protected function sortByDefault($builder, $sorts)

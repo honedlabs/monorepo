@@ -20,14 +20,6 @@ class Search extends Refiner
     /**
      * {@inheritdoc}
      */
-    public function getUniqueKey()
-    {
-        return type($this->getName())->asString();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function isActive()
     {
         return $this->hasValue();

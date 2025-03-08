@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
-use Honed\Refine\Searches\Search;
+use Honed\Refine\Search;
 use Illuminate\Support\Collection;
 
 /**
@@ -15,7 +15,7 @@ trait HasSearches
     /**
      * List of the searches.
      *
-     * @var array<int,\Honed\Refine\Searches\Search>|null
+     * @var array<int,\Honed\Refine\Search>|null
      */
     protected $searches;
 
@@ -64,7 +64,7 @@ trait HasSearches
     /**
      * Merge a set of searches with the existing searches.
      *
-     * @param  array<int, \Honed\Refine\Searches\Search>|\Illuminate\Support\Collection<int, \Honed\Refine\Searches\Search>  $searches
+     * @param  array<int, \Honed\Refine\Search>|\Illuminate\Support\Collection<int, \Honed\Refine\Search>  $searches
      * @return $this
      */
     public function addSearches($searches)
@@ -81,7 +81,7 @@ trait HasSearches
     /**
      * Add a single search to the list of searches.
      *
-     * @param  \Honed\Refine\Searches\Search  $search
+     * @param  \Honed\Refine\Search  $search
      * @return $this
      */
     public function addSearch($search)
@@ -94,7 +94,7 @@ trait HasSearches
     /**
      * Retrieve the columns to be used for searching.
      *
-     * @return array<int,\Honed\Refine\Searches\Search>
+     * @return array<int,\Honed\Refine\Search>
      */
     public function getSearches()
     {

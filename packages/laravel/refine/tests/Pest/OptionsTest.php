@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filters\Filter;
+use Honed\Refine\Filter;
 use Honed\Refine\Tests\Stubs\Product;
 use Honed\Refine\Tests\Stubs\Status;
 use Illuminate\Support\Facades\Request;

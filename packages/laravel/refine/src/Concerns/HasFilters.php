@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Refine\Concerns;
 
 use Honed\Core\Concerns\HasRequest;
-use Honed\Refine\Filters\Filter;
+use Honed\Refine\Filter;
 use Illuminate\Support\Collection;
 
 /**
@@ -16,7 +16,7 @@ trait HasFilters
     /**
      * List of the filters.
      *
-     * @var array<int,\Honed\Refine\Filters\Filter>|null
+     * @var array<int,\Honed\Refine\Filter>|null
      */
     protected $filters;
 
@@ -37,7 +37,7 @@ trait HasFilters
     /**
      * Merge a set of filters with the existing filters.
      *
-     * @param  array<int, \Honed\Refine\Filters\Filter>|\Illuminate\Support\Collection<int, \Honed\Refine\Filters\Filter>  $filters
+     * @param  array<int, \Honed\Refine\Filter>|\Illuminate\Support\Collection<int, \Honed\Refine\Filter>  $filters
      * @return $this
      */
     public function addFilters($filters)
@@ -54,7 +54,7 @@ trait HasFilters
     /**
      * Add a single filter to the list of filters.
      *
-     * @param  \Honed\Refine\Filters\Filter  $filter
+     * @param  \Honed\Refine\Filter  $filter
      * @return $this
      */
     public function addFilter($filter)
@@ -67,7 +67,7 @@ trait HasFilters
     /**
      * Retrieve the filters.
      *
-     * @return array<int,\Honed\Refine\Filters\Filter>
+     * @return array<int,\Honed\Refine\Filter>
      */
     public function getFilters()
     {
@@ -145,7 +145,7 @@ trait HasFilters
      *
      * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
      * @param  \Illuminate\Http\Request  $request
-     * @param  array<int, \Honed\Refine\Filters\Filter>  $additionalFilters
+     * @param  array<int, \Honed\Refine\Filter>  $additionalFilters
      * @return $this
      */
     public function filter($builder, $request, $additionalFilters = [])

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Sorts\Sort;
+use Honed\Refine\Sort;
 use Honed\Refine\Tests\Stubs\Product;
 use Illuminate\Support\Facades\Request;
 

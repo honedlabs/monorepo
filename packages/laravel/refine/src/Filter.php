@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
-use Closure;
 use Honed\Refine\Refiner;
 use BadMethodCallException;
-use Honed\Refine\Refinement;
-use Illuminate\Http\Request;
 use Honed\Core\Concerns\HasScope;
-use Illuminate\Support\Collection;
 use Honed\Core\Concerns\Validatable;
 use Honed\Refine\Concerns\HasQueryExpression;
-use Illuminate\Database\Eloquent\Builder;
 use Honed\Refine\Concerns\InterpretsRequest;
-use Honed\Refine\Filters\Concerns\HasOptions;
+use Honed\Refine\Concerns\HasOptions;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
@@ -68,6 +63,20 @@ class Filter extends Refiner
     }
 
     /**
+     * Get the expression partials supported by the filter.
+     * 
+     * @return array<int,string>
+     */
+    public function expressions()
+    {
+        return [
+            'where',
+            'has',
+            'withWhere',
+        ];
+    }
+
+    /**
      * Allow multiple values to be used.
      * 
      * @return $this
@@ -92,20 +101,6 @@ class Filter extends Refiner
         return ! $this->isActive() || 
             ! $this->validate($value) ||
             ($this->hasOptions() && empty($value));
-    }
-
-    /**
-     * Get the expression partials supported by the filter.
-     * 
-     * @return array<int,string>
-     */
-    public function expressions()
-    {
-        return [
-            'where',
-            'has',
-            'withWhere',
-        ];
     }
 
     /**
