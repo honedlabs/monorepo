@@ -55,7 +55,7 @@ trait HasSearches
     protected $withoutSearching = false;
 
     /**
-     * Whether to not provide the searches when serializing.
+     * Whether to not provide the searches.
      * 
      * @var bool
      */
@@ -99,13 +99,13 @@ trait HasSearches
     public function getSearches()
     {
         return once(function () {
-            $methodSearches = method_exists($this, 'searches') ? $this->searches() : [];
-            $propertySearches = $this->searches ?? [];
+            $searches = \method_exists($this, 'searches') ? $this->searches() : [];
 
-            return collect($propertySearches)
-                ->merge($methodSearches)
+            $searches = \array_merge($searches, $this->searches ?? []);
+
+            return collect($searches)
                 ->filter(static fn (Search $search) => $search->isAllowed())
-                ->unique(static fn (Search $search) => $search->getUniqueKey())
+                // ->unique(static fn (Search $search) => $search->getUniqueKey())
                 ->values()
                 ->all();
         });
@@ -135,13 +135,23 @@ trait HasSearches
     }
 
     /**
+     * Determine if the searches key is set.
+     * 
+     * @return bool
+     */
+    public function hasSearchesKey()
+    {
+        return isset($this->searchesKey);
+    }
+
+    /**
      * Get the query parameter to identify the search string.
      *
      * @return string
      */
     public function getSearchesKey()
     {
-        if (isset($this->searchesKey)) {
+        if ($this->hasSearchesKey()) {
             return $this->searchesKey;
         }
 
@@ -149,7 +159,7 @@ trait HasSearches
     }
 
     /**
-     * Get the query parameter to identify the search string.
+     * Get the query parameter to identify the search string from the config.
      *
      * @return string
      */
@@ -159,13 +169,36 @@ trait HasSearches
     }
 
     /**
-     * Get the query parameter to identify the columns to search on.
+     * Set the query parameter to identify the columns to search.
+     *
+     * @param  string  $matchesKey
+     * @return $this
+     */
+    public function matchesKey($matchesKey)
+    {
+        $this->matchesKey = $matchesKey;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the matches key is set.
+     * 
+     * @return bool
+     */
+    public function hasMatchesKey()
+    {
+        return isset($this->matchesKey);
+    }
+
+    /**
+     * Get the query parameter to identify the columns to search.
      *
      * @return string
      */
     public function getMatchesKey()
     {
-        if (isset($this->matchesKey)) {
+        if ($this->hasMatchesKey()) {
             return $this->matchesKey;
         }
 
@@ -173,7 +206,7 @@ trait HasSearches
     }
 
     /**
-     * Get the query parameter to identify the columns to search on.
+     * Get the query parameter to identify the columns to search from the config.
      *
      * @return string
      */
@@ -196,25 +229,35 @@ trait HasSearches
     }
 
     /**
-     * Determine whether the search columns can be toggled.
-     *
+     * Determine if the matching value is set.
+     * 
      * @return bool
      */
-    public function canMatch()
+    public function hasMatch()
     {
-        if (isset($this->match)) {
-            return $this->match;
-        }
-
-        return $this->fallbackCanMatch();
+        return isset($this->match);
     }
 
     /**
-     * Determine whether the search columns can be toggled.
+     * Determine if matching is enabled
+     * 
+     * @return bool
+     */
+    public function isMatching()
+    {
+        if ($this->hasMatch()) {
+            return $this->match;
+        }
+
+        return $this->fallbackIsMatching();
+    }
+
+    /**
+     * Determine if matching is enabled from the config.
      *
      * @return bool
      */
-    protected function fallbackCanMatch()
+    protected function fallbackIsMatching()
     {
         return (bool) config('refine.matches', false);
     }
@@ -233,7 +276,17 @@ trait HasSearches
     }
 
     /**
-     * Set the instance to not provide the searches when serializing.
+     * Determine if the instance should not apply the searches.
+     *
+     * @return bool
+     */
+    public function isWithoutSearching()
+    {
+        return $this->withoutSearching;
+    }
+
+    /**
+     * Set the instance to not provide the searches.
      *
      * @param  bool  $withoutSearches
      * @return $this
@@ -246,17 +299,7 @@ trait HasSearches
     }
 
     /**
-     * Determine if the instance should not apply the searches.
-     *
-     * @return bool
-     */
-    public function isWithoutSearching()
-    {
-        return $this->withoutSearching;
-    }
-
-    /**
-     * Determine if the instance should not provide the searches when serializing.
+     * Determine if the instance should not provide the searches.
      *
      * @return bool
      */

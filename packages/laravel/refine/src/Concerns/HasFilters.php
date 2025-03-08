@@ -28,7 +28,7 @@ trait HasFilters
     protected $withoutFiltering = false;
 
     /**
-     * Whether to not provide the filters when serializing.
+     * Whether to provide the filters.
      * 
      * @var bool
      */
@@ -72,15 +72,16 @@ trait HasFilters
     public function getFilters()
     {
         return once(function () {
-            $methodFilters = method_exists($this, 'filters') ? $this->filters() : [];
-            $propertyFilters = $this->filters ?? [];
+            $filters = \method_exists($this, 'filters') ? $this->filters() : [];
+            
+            $filters = \array_merge($filters, $this->filters ?? []);
 
-            return collect($propertyFilters)
-                ->merge($methodFilters)
-                ->filter(static fn (Filter $filter) => $filter->isAllowed())
-                ->unique(static fn (Filter $filter) => $filter->getUniqueKey())
-                ->values()
-                ->all();
+            return \array_values(
+                \array_filter(
+                    $filters,
+                    static fn (Filter $filter) => $filter->isAllowed()
+                )
+            );
         });
     }
 
@@ -108,7 +109,17 @@ trait HasFilters
     }
 
     /**
-     * Set the instance to not provide the filters when serializing.
+     * Determine if the instance should not apply the filters.
+     *
+     * @return bool
+     */
+    public function isWithoutFiltering()
+    {
+        return $this->withoutFiltering;
+    }
+
+    /**
+     * Set the instance to not provide the filters.
      *
      * @param  bool  $withoutFilters
      * @return $this
@@ -118,16 +129,6 @@ trait HasFilters
         $this->withoutFilters = $withoutFilters;
 
         return $this;
-    }
-
-    /**
-     * Determine if the instance should not apply the filters.
-     *
-     * @return bool
-     */
-    public function isWithoutFiltering()
-    {
-        return $this->withoutFiltering;
     }
 
     /**
@@ -145,19 +146,21 @@ trait HasFilters
      *
      * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
      * @param  \Illuminate\Http\Request  $request
-     * @param  array<int, \Honed\Refine\Filter>  $additionalFilters
+     * @param  array<int, \Honed\Refine\Filter>  $filters
      * @return $this
      */
-    public function filter($builder, $request, $additionalFilters = [])
+    public function filter($builder, $request, $filters = [])
     {
         if ($this->isWithoutFiltering()) {
             return $this;
         }
 
-        $filters = \array_merge($this->getFilters(), $additionalFilters);
+        $filters = \array_merge($this->getFilters(), $filters);
 
         foreach ($filters as $filter) {
-            $filter->scope($this->getScope())->apply($builder, $request);
+            $filter->scope($this->getScope())
+                ->delimiter($this->getDelimiter())
+                ->apply($builder, $request);
         }
 
         return $this;

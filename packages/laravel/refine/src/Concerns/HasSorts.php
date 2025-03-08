@@ -14,18 +14,18 @@ use Illuminate\Support\Collection;
 trait HasSorts
 {
     /**
-     * The query parameter to identify the sort to apply.
-     *
-     * @var string|null
-     */
-    protected $sortsKey;
-
-    /**
      * List of the sorts.
      *
      * @var array<int,\Honed\Refine\Sort>|null
      */
     protected $sorts;
+
+    /**
+     * The query parameter to identify the sort to apply.
+     *
+     * @var string|null
+     */
+    protected $sortsKey;
 
     /**
      * Whether to not apply the sorts.
@@ -35,48 +35,11 @@ trait HasSorts
     protected $withoutSorting = false;
 
     /**
-     * Whether to not provide the sorts when serializing.
+     * Whether to not provide the sorts.
      * 
      * @var bool
      */
     protected $withoutSorts = false;
-
-    /**
-     * Set the query parameter to identify the sort to apply.
-     *
-     * @param  string  $sortsKey
-     * @return $this
-     */
-    public function sortsKey($sortsKey)
-    {
-        $this->sortsKey = $sortsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the query parameter to identify the sort to apply.
-     *
-     * @return string
-     */
-    public function getSortsKey()
-    {
-        if (isset($this->sortsKey)) {
-            return $this->sortsKey;
-        }
-
-        return $this->fallbackSortsKey();
-    }
-
-    /**
-     * Get the fallback query parameter to identify the sort to apply.
-     *
-     * @return string
-     */
-    protected function fallbackSortsKey()
-    {
-        return type(config('refine.config.sorts', 'sort'))->asString();
-    }
 
     /**
      * Merge a set of sorts with the existing sorts.
@@ -116,13 +79,13 @@ trait HasSorts
     public function getSorts()
     {
         return once(function () {
-            $methodSorts = method_exists($this, 'sorts') ? $this->sorts() : [];
-            $propertySorts = $this->sorts ?? [];
+            $sorts = \method_exists($this, 'sorts') ? $this->sorts() : [];
 
-            return collect($propertySorts)
-                ->merge($methodSorts)
+            $sorts = \array_merge($sorts, $this->sorts ?? []);
+
+            return collect($sorts)
                 ->filter(static fn (Sort $sort) => $sort->isAllowed())
-                ->unique(static fn (Sort $sort) => $sort->getUniqueKey())
+                // ->unique(static fn (Sort $sort) => $sort->())
                 ->values()
                 ->all();
         });
@@ -139,6 +102,53 @@ trait HasSorts
     }
 
     /**
+     * Set the query parameter to identify the sort to apply.
+     *
+     * @param  string  $sortsKey
+     * @return $this
+     */
+    public function sortsKey($sortsKey)
+    {
+        $this->sortsKey = $sortsKey;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the sorts key is set.
+     * 
+     * @return bool
+     */
+    public function hasSortsKey()
+    {
+        return isset($this->sortsKey);
+    }
+
+    /**
+     * Get the query parameter to identify the sort to apply.
+     *
+     * @return string
+     */
+    public function getSortsKey()
+    {
+        if ($this->hasSortsKey()) {
+            return $this->sortsKey;
+        }
+
+        return $this->fallbackSortsKey();
+    }
+
+    /**
+     * Get the query parameter to identify the sort to apply from the config.
+     *
+     * @return string
+     */
+    protected function fallbackSortsKey()
+    {
+        return type(config('refine.config.sorts', 'sort'))->asString();
+    }
+
+    /**
      * Set the instance to not apply the sorts.
      *
      * @param  bool  $withoutSorting
@@ -147,19 +157,6 @@ trait HasSorts
     public function withoutSorting($withoutSorting = true)
     {
         $this->withoutSorting = $withoutSorting;
-
-        return $this;
-    }
-
-    /**
-     * Set the instance to not provide the sorts when serializing.
-     *
-     * @param  bool  $withoutSorts
-     * @return $this
-     */
-    public function withoutSorts($withoutSorts = true)
-    {
-        $this->withoutSorts = $withoutSorts;
 
         return $this;
     }
@@ -175,7 +172,20 @@ trait HasSorts
     }
 
     /**
-     * Determine if the instance should not provide the sorts when serializing.
+     * Set the instance to not provide the sorts.
+     *
+     * @param  bool  $withoutSorts
+     * @return $this
+     */
+    public function withoutSorts($withoutSorts = true)
+    {
+        $this->withoutSorts = $withoutSorts;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the instance should not provide the sorts.
      *
      * @return bool
      */
@@ -189,10 +199,10 @@ trait HasSorts
      *
      * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
      * @param  \Illuminate\Http\Request  $request
-     * @param  array<int, \Honed\Refine\Sort>  $additionalSorts
+     * @param  array<int, \Honed\Refine\Sort>  $sorts
      * @return $this
      */
-    public function sort($builder, $request, $additionalSorts = [])
+    public function sort($builder, $request, $sorts = [])
     {
         if ($this->isWithoutSorting()) {
             return $this;
@@ -201,7 +211,7 @@ trait HasSorts
         /** @var string */
         $key = $this->formatScope($this->getSortsKey());
 
-        $sorts = \array_merge($this->getSorts(), $additionalSorts);
+        $sorts = \array_merge($this->getSorts(), $sorts);
 
         $applied = false;
 
@@ -210,7 +220,7 @@ trait HasSorts
         }
 
         if (! $applied) {
-            $this->sortByDefault($builder, $sorts);
+            $this->sortDefault($builder, $sorts);
         }
 
         return $this;
@@ -223,7 +233,7 @@ trait HasSorts
      * @param  array<int, \Honed\Refine\Sort>  $sorts
      * @return void
      */
-    protected function sortByDefault($builder, $sorts)
+    protected function sortDefault($builder, $sorts)
     {
         $sort = Arr::first(
             $sorts,
