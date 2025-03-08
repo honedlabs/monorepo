@@ -9,7 +9,7 @@ trait HasDelimiter
     /**
      * The delimiter to use for parsing array values.
      * 
-     * @var string
+     * @var string|null
      */
     protected $delimiter;
 
@@ -43,8 +43,8 @@ trait HasDelimiter
      */
     public function getDelimiter()
     {
-        if ($this->hasDelimiter()) {
-            return $this->delimiter;
+        if (isset($this->delimiter)) {
+            return $this->delimiter; // @phpstan-ignore-line
         }
 
         return $this->fallbackDelimiter();

@@ -276,7 +276,7 @@ class Sort extends Refiner
 
         // If there is no custom query expression, we use the default `orderBy`
         // method.
-        $builder->orderBy($builder->qualifyColumn($column), $direction);
+        $builder->orderBy($builder->qualifyColumn($column), $direction ?? 'asc');
 
         return true;
     }

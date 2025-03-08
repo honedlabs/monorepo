@@ -8,6 +8,7 @@ use Honed\Refine\Refiner;
 use BadMethodCallException;
 use Honed\Core\Concerns\HasScope;
 use Honed\Core\Concerns\Validatable;
+use Honed\Refine\Concerns\HasDelimiter;
 use Honed\Refine\Concerns\HasQueryExpression;
 use Honed\Refine\Concerns\InterpretsRequest;
 use Honed\Refine\Concerns\HasOptions;
@@ -17,12 +18,13 @@ use Honed\Refine\Concerns\HasOptions;
  */
 class Filter extends Refiner
 {
+    use HasDelimiter;
     use HasScope;
     use Validatable;
+    use InterpretsRequest;
     use HasOptions {
         multiple as protected setMultiple;
     }
-    use InterpretsRequest;
     use HasQueryExpression {
         __call as queryCall;
     }
@@ -135,20 +137,36 @@ class Filter extends Refiner
      */
     public function apply($builder, $request)
     {
+        // We retrieve the parameter according to how the user specified it. As
+        // the key is dynamic, we need to be given the scope from the caller to
+        // properly interpret the parameter.
         $parameter = $this->getParameter();
         $key = $this->formatScope($parameter);
         $value = $this->interpret($request, $key);
 
         $this->value($value);
 
+        // If the filter has options, we need to loop over them to set as active
+        // if the value is present. This can also override the value, as a 
+        // `strict` filter will only be active if the value is present in the
+        // options array. 
         if ($this->hasOptions()) {
             $value = $this->activateOptions($value);
         }
 
+        // The filter may be active, but the value may be invalid. This is done
+        // to hide the validation logic from the end-user. It is invalid if it is
+        // not active, fails a validation closure, or if the filter has options
+        // and the value is empty.
         if ($this->invalidValue($value)) {
             return false;
         }
 
+        // If the filter has a custom query expression, we use it over the default
+        // query method. The bindings are passed, but can be overriden with fixed
+        // values if needed. In this instance, it is assumed that the developer
+        // has called `asBoolean` on the filter and then can write a simple
+        // validation closure.
         if ($this->hasQueryExpression()) {
             $bindings = [
                 'value' => $value,
@@ -161,48 +179,51 @@ class Filter extends Refiner
             return true;
         }
 
-        $this->handle($builder, $value);
-
-        return true;
-    }
-
-    /**
-     * Handle the filter using a default refinement.
-     * 
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  mixed  $value
-     * @return void
-     */
-    protected function handle($builder, $value)
-    {
+        // If there is no custom query expression, we use the default query
+        // method. This depends on how the request interprets the value.
         $column = $builder->qualifyColumn($this->getName());
         $operator = $this->getOperator();
 
         match (true) {
+            // If the operator is fuzzy, we do a whereRaw to make it simpler and
+            // handle case sensitivity.
             \in_array($operator, 
                 ['like', 'not like', 'ilike', 'not ilike']
-            ) => $builder->whereRaw("LOWER({$column}) {$operator} ?", ['%'.\mb_strtolower($value).'%']),
+            ) => $builder->whereRaw("LOWER({$column}) {$operator} ?", ['%'.\mb_strtolower($value).'%']), // @phpstan-ignore-line
 
+            // The `whereIn` clause should be used if the filter is set to multiple,
+            // or if the filter interprets an array. Generally, both should be true
+            // as this case is likely when providing options and allowing multiple.
             $this->isMultiple(),
             $this->interpretsArray() => $builder->whereIn($column, $value),
 
-            $this->interpretsDate() => $builder->whereDate($column, $operator, $value),
+            // If the filter interprets a date, we use whereDate clause as this
+            // allows us to compare using the date strings.
+            $this->interpretsDate() => $builder->whereDate($column, $operator, $value), // @phpstan-ignore-line
 
-            $this->interpretsTime() => $builder->whereTime($column, $operator, $value),
+            // This compares a date time string to the column.
+            $this->interpretsTime() => $builder->whereTime($column, $operator, $value), // @phpstan-ignore-line
 
+            // Otherwise, we use a standard where clause - but, allow the operator
+            // to be overridden by the developer.
             default => $builder->where($column, $operator, $value),
         };
+
+        return true;
     }
 
     /**
      * Dynamically handle calls to the class.
      * 
      * @param  string  $method
-     * @param  array  $parameters
+     * @param  array<int,mixed>  $parameters
      * @return mixed
      */
     public function __call($method, $parameters)
     {
+        // Enable macros on the builder, if the call is not to a macro then
+        // we assume it is to a method on the builder. We validate this by 
+        // matching against the expressions.
         try {
             return parent::__call($method, $parameters);
         } catch (BadMethodCallException $e) {

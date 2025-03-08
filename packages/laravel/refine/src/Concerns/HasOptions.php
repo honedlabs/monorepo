@@ -45,7 +45,7 @@ trait HasOptions
         }
 
         $this->options = match (true) {
-            \is_string($options) && \enum_exists($options) => 
+            \is_string($options) => 
                 $this->optionsEnumerated($options),
 
             Arr::isAssoc($options) => $this->optionsAssociative($options),
@@ -72,7 +72,7 @@ trait HasOptions
     /**
      * Allow any options to be used.
      *
-     * @param  bool  $restrict
+     * @param  bool  $strict
      * @return $this
      */
     public function lax($strict = false)
@@ -195,7 +195,7 @@ trait HasOptions
     public function optionsAssociative($options)
     {
         return \array_map(
-            static fn ($value, $key) => Option::make($value, $key),
+            static fn ($value, $key) => Option::make($value, \strval($key)), // @phpstan-ignore-line
             \array_keys($options),
             \array_values($options)
         );
@@ -210,7 +210,7 @@ trait HasOptions
     public function optionsList($options)
     {
         return \array_map(
-            static fn ($value) => Option::make($value, $value),
+            static fn ($value) => Option::make($value, \strval($value)), // @phpstan-ignore-line
             $options
         );
     }

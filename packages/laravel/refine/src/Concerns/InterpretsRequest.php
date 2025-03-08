@@ -37,7 +37,7 @@ trait InterpretsRequest
     /**
      * Set the interpreter to use.
      * 
-     * @param  string|array{string,string}  $as
+     * @param  string $as
      * @return $this
      */
     public function as($as)
@@ -130,7 +130,7 @@ trait InterpretsRequest
     /**
      * Get the interpreter.
      * 
-     * @return string|array{string,string}|null
+     * @return string|null
      */
     public function getAs()
     {

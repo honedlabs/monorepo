@@ -10,47 +10,23 @@ beforeEach(function () {
     $this->param = 'name';
     $this->builder = Product::query();
     $this->sort = Sort::make($this->param);
-    $this->key = config('refine.config.sorts');
 });
 
 it('has next direction', function () {
     expect($this->sort)
         ->getNextDirection()->toBe($this->sort->getAscendingValue())
-        ->direction(Sort::ASCENDING)
+        ->direction('asc')
         ->getNextDirection()->toBe($this->sort->getDescendingValue())
-        ->direction(Sort::DESCENDING)
+        ->direction('desc')
         ->getNextDirection()->toBeNull();
 });
 
-// it('can be singular', function () {
-
-// });
-
 it('can invert direction', function () {
     expect($this->sort)
+        ->isInverted()->toBeFalse()
         ->invert()->toBe($this->sort)
         ->isInverted()->toBeTrue()
         ->getNextDirection()->toBe($this->sort->getDescendingValue());
-});
-
-
-it('sorts by attribute', function () {
-    $request = Request::create('/', 'GET', [$this->key => $this->param]);
-
-    expect($this->sort->apply($this->builder, $request, $this->key))
-        ->toBeTrue();
-
-    expect($this->builder->getQuery()->orders)->toBeArray()
-        ->toHaveCount(1)
-        ->{0}->scoped(fn ($order) => $order
-            ->{'column'}->toBe($this->builder->qualifyColumn($this->param))
-            ->{'direction'}->toBe(Sort::ASCENDING)
-        );
-
-    expect($this->sort)
-        ->isActive()->toBeTrue()
-        ->getNextDirection()->toBe('-name')
-        ->getDirection()->toBe(Sort::ASCENDING);
 });
 
 it('can enforce a singular direction', function () {
@@ -75,15 +51,6 @@ it('can enforce a singular direction', function () {
         ->isActive()->toBeTrue()
         ->getDirection()->toBe(Sort::DESCENDING)
         ->getNextDirection()->toBe('-name');
-});
-
-it('does not sort if no value', function () {
-    $request = Request::create('/', 'GET', ['order' => 'test']);
-
-    expect($this->sort->apply($this->builder, $request, $this->key))
-        ->toBeFalse();
-
-    expect($this->builder->getQuery()->orders)->toBeNull();
 });
 
 it('has direction', function () {

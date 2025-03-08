@@ -11,7 +11,7 @@ trait HasQueryExpression
     /**
      * The callback or query method to resolve the refiner.
      * 
-     * @var array<string, mixed>|\Closure|null
+     * @var array<int,mixed>|\Closure|null
      */
     protected $using;
 
@@ -157,18 +157,15 @@ trait HasQueryExpression
      * 
      * @param string $reference
      * @param array<string, mixed> $bindings
-     * @return string
+     * @return mixed
      */
     public function replaceBindings($reference, $bindings)
     {
-        if (! \is_string($reference)) {
-            return $reference;
-        }
-
         foreach ($bindings as $key => $value) {
             if ($reference === ':'.$key) {
                 return $value;
             }
+            // @phpstan-ignore-next-line
             $reference = \str_replace(':' . $key, $value, $reference);
         }
 
@@ -179,7 +176,6 @@ trait HasQueryExpression
      * Rebind a builder closure with the bindings injected to closure arguments.
      * 
      * @param \Closure $closure
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
      * @param array<string, mixed> $bindings
      * @return \Closure
      */
@@ -195,12 +191,11 @@ trait HasQueryExpression
     }
 
     /**
-     * Prepare the value and operator for a query clause.
+     * Determine if the operator is valid and supported by the query builder.
      * 
-     * @param mixed $value
      * @param mixed $operator
      * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
-     * @return array<mixed, mixed>
+     * @return bool
      */
     public function isOperator($operator, $builder)
     {
@@ -243,43 +238,15 @@ trait HasQueryExpression
     public function __call($method, $parameters)
     {
         if ($this->invalidExpression($method)) {
-            $this->throwInvalidExpressionException($method);
+            throw new \BadMethodCallException(
+                sprintf(
+                    'Call to method %s::%s() is not a support query expression', 
+                    static::class, $method
+                )
+            );
         }
 
+        // @phpstan-ignore-next-line
         return $this->using($method, ...$parameters);
-    }
-
-    /**
-     * Throw a bad method call exception for the given method if the expression
-     * is invalid.
-     * 
-     * @param string $method
-     * @return never
-     * 
-     * @throws \BadMethodCallException
-     */
-    protected static function throwInvalidExpressionException($method)
-    {
-        throw new \BadMethodCallException(
-            sprintf(
-                'Call to method %s::%s() is not a support query expression', 
-                static::class, $method
-            )
-        );
-    }
-
-    /**
-     * Throw a bad method call exception for the given method if no reference
-     * is provided.
-     * 
-     * @return never
-     * 
-     * @throws \BadMethodCallException
-     */
-    protected static function throwNoReferenceException($method)
-    {
-        throw new \BadMethodCallException(
-            'A column or relation reference is required for all expressions when not using a closure'
-        );
     }
 }

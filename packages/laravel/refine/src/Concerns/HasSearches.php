@@ -152,7 +152,7 @@ trait HasSearches
     public function getSearchesKey()
     {
         if ($this->hasSearchesKey()) {
-            return $this->searchesKey;
+            return type($this->searchesKey)->asString();
         }
 
         return $this->fallbackSearchesKey();
@@ -199,7 +199,7 @@ trait HasSearches
     public function getMatchesKey()
     {
         if ($this->hasMatchesKey()) {
-            return $this->matchesKey;
+            return type($this->matchesKey)->asString();
         }
 
         return $this->fallbackMatchesKey();
@@ -246,7 +246,7 @@ trait HasSearches
     public function isMatching()
     {
         if ($this->hasMatch()) {
-            return $this->match;
+            return (bool) $this->match;
         }
 
         return $this->fallbackIsMatching();
@@ -371,9 +371,10 @@ trait HasSearches
      *
      * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
      * @param  \Illuminate\Http\Request  $request
+     * @param  array<int, \Honed\Refine\Search>  $searches
      * @return $this
      */
-    public function search($builder, $request)
+    public function search($builder, $request, $searches = [])
     {
         if ($this->isWithoutSearching()) {
             return $this;
@@ -382,7 +383,7 @@ trait HasSearches
         $columns = $this->getMatches($request);
         $this->term = $this->getSearch($request);
 
-        $searches = $this->getSearches();
+        $searches = \array_merge($this->getSearches(), $searches);
         $applied = false;
 
         foreach ($searches as $search) {

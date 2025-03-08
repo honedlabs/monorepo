@@ -132,7 +132,7 @@ trait HasSorts
     public function getSortsKey()
     {
         if ($this->hasSortsKey()) {
-            return $this->sortsKey;
+            return type($this->sortsKey)->asString();
         }
 
         return $this->fallbackSortsKey();
