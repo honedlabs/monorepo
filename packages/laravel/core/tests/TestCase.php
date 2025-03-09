@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Tests;
 
-use Honed\Core\CoreServiceProvider;
 use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Database\Schema\Blueprint;
@@ -25,12 +24,6 @@ class TestCase extends Orchestra
         $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
     }
 
-    protected function getPackageProviders($app)
-    {
-        return [
-            CoreServiceProvider::class,
-        ];
-    }
 
     protected function defineDatabaseMigrations()
     {

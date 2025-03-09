@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Honed\Core\CoreServiceProvider;
 use Illuminate\Support\Str;
 
 trait HasScope
@@ -61,7 +60,7 @@ trait HasScope
             return $value;
         }
 
-        return \sprintf('%s%s%s', $this->getScope(), CoreServiceProvider::SCOPE_DELIMITER, $value);
+        return \sprintf('%s:%s', $this->getScope(), $value);
     }
 
     /**
@@ -73,7 +72,7 @@ trait HasScope
     public function decodeScope($value)
     {
         return Str::of($value)
-            ->after(CoreServiceProvider::SCOPE_DELIMITER)
+            ->after(':')
             ->toString();
     }
 }

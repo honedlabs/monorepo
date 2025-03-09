@@ -72,9 +72,6 @@
     },
     "extra": {
         "laravel": {
-            "providers": [
-                "Honed\\Core\\CoreServiceProvider"
-            ]
         }
     },
     "minimum-stability": "dev",
