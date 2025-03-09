@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
-use Honed\Refine\Refiner;
 use BadMethodCallException;
 use Honed\Core\Concerns\HasScope;
+use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
 use Honed\Refine\Concerns\HasDelimiter;
-use Honed\Refine\Concerns\HasQueryExpression;
-use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Refine\Concerns\HasOptions;
+use Honed\Refine\Concerns\HasQueryExpression;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
@@ -19,19 +18,19 @@ use Honed\Refine\Concerns\HasOptions;
 class Filter extends Refiner
 {
     use HasDelimiter;
-    use HasScope;
-    use Validatable;
-    use InterpretsRequest;
     use HasOptions {
         multiple as protected setMultiple;
     }
     use HasQueryExpression {
         __call as queryCall;
     }
+    use HasScope;
+    use InterpretsRequest;
+    use Validatable;
 
     /**
      * The operator to use for the filter.
-     * 
+     *
      * @var string
      */
     protected $operator = '=';
@@ -66,7 +65,7 @@ class Filter extends Refiner
 
     /**
      * Get the expression partials supported by the filter.
-     * 
+     *
      * @return array<int,string>
      */
     public function expressions()
@@ -80,7 +79,7 @@ class Filter extends Refiner
 
     /**
      * Allow multiple values to be used.
-     * 
+     *
      * @return $this
      */
     public function multiple()
@@ -94,20 +93,20 @@ class Filter extends Refiner
 
     /**
      * Determine if the value is invalid.
-     * 
+     *
      * @param  mixed  $value
      * @return bool
      */
     public function invalidValue($value)
     {
-        return ! $this->isActive() || 
+        return ! $this->isActive() ||
             ! $this->validate($value) ||
             ($this->hasOptions() && empty($value));
     }
 
     /**
      * Get the operator to use for the filter.
-     * 
+     *
      * @return string
      */
     public function getOperator()
@@ -117,7 +116,7 @@ class Filter extends Refiner
 
     /**
      * Set the operator to use for the filter.
-     * 
+     *
      * @param  string  $operator
      * @return $this
      */
@@ -147,9 +146,9 @@ class Filter extends Refiner
         $this->value($value);
 
         // If the filter has options, we need to loop over them to set as active
-        // if the value is present. This can also override the value, as a 
+        // if the value is present. This can also override the value, as a
         // `strict` filter will only be active if the value is present in the
-        // options array. 
+        // options array.
         if ($this->hasOptions()) {
             $value = $this->activateOptions($value);
         }
@@ -191,7 +190,7 @@ class Filter extends Refiner
 
     /**
      * Apply the filter to the builder.
-     * 
+     *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  string  $column
      * @param  string|null  $operator
@@ -201,15 +200,16 @@ class Filter extends Refiner
     public function apply($builder, $column, $operator, $value)
     {
         $column = $builder->qualifyColumn($column);
+        $operator = $operator ?? '=';
 
         match (true) {
             // If the operator is fuzzy, we do a whereRaw to make it simpler and
             // handle case sensitivity.
-            \in_array($operator, 
+            \in_array($operator,
                 ['like', 'not like', 'ilike', 'not ilike']
             ) => $builder->whereRaw(
-                \sprintf("LOWER(%s) %s ?", $column, \mb_strtoupper($operator, 'UTF8')),
-                ['%'.\mb_strtolower($value, 'UTF8').'%']
+                \sprintf('LOWER(%s) %s ?', $column, \mb_strtoupper($operator, 'UTF8')),
+                ['%'.\mb_strtolower(type($value)->asString(), 'UTF8').'%']
             ),
 
             // The `whereIn` clause should be used if the filter is set to multiple,
@@ -234,7 +234,7 @@ class Filter extends Refiner
 
     /**
      * Dynamically handle calls to the class.
-     * 
+     *
      * @param  string  $method
      * @param  array<int,mixed>  $parameters
      * @return mixed
@@ -242,7 +242,7 @@ class Filter extends Refiner
     public function __call($method, $parameters)
     {
         // Enable macros on the builder, if the call is not to a macro then
-        // we assume it is to a method on the builder. We validate this by 
+        // we assume it is to a method on the builder. We validate this by
         // matching against the expressions.
         try {
             return parent::__call($method, $parameters);

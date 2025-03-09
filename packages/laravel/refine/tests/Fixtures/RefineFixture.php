@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Tests\Fixtures;
 
-use Honed\Refine\Filters\BooleanFilter;
-use Honed\Refine\Filters\DateFilter;
 use Honed\Refine\Filter;
-use Honed\Refine\Filters\SetFilter;
 use Honed\Refine\Refine;
 use Honed\Refine\Search;
 use Honed\Refine\Sort;
@@ -64,7 +61,7 @@ class RefineFixture extends Refine
                 ->asc(),
 
             Sort::make('price'),
-            
+
             Sort::make('best_seller', 'Favourite')
                 ->alias('favourite'),
         ];

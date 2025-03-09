@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
+use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Refine\Search;
 use Illuminate\Support\Collection;
-use Honed\Core\Concerns\InterpretsRequest;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -50,14 +50,14 @@ trait HasSearches
 
     /**
      * Whether to not apply the searches.
-     * 
+     *
      * @var bool
      */
     protected $withoutSearching = false;
 
     /**
      * Whether to not provide the searches.
-     * 
+     *
      * @var bool
      */
     protected $withoutSearches = false;
@@ -137,7 +137,7 @@ trait HasSearches
 
     /**
      * Determine if the searches key is set.
-     * 
+     *
      * @return bool
      */
     public function hasSearchesKey()
@@ -184,7 +184,7 @@ trait HasSearches
 
     /**
      * Determine if the matches key is set.
-     * 
+     *
      * @return bool
      */
     public function hasMatchesKey()
@@ -231,7 +231,7 @@ trait HasSearches
 
     /**
      * Determine if the matching value is set.
-     * 
+     *
      * @return bool
      */
     public function hasMatch()
@@ -241,7 +241,7 @@ trait HasSearches
 
     /**
      * Determine if matching is enabled
-     * 
+     *
      * @return bool
      */
     public function isMatching()
@@ -336,7 +336,10 @@ trait HasSearches
         // We need to use a new instance of the interpreter class to avoid
         // the use of the `InterpretsRequest` trait on the `HasSearches` trait.
         // This trait allows us to receive stringable and arrayable objects.
-        $interpreter = new class { use InterpretsRequest; };
+        $interpreter = new class
+        {
+            use InterpretsRequest;
+        };
 
         // There are two values to look for in the request: the search term,
         // and a string delimited list of columns to search. We use the class
@@ -358,7 +361,6 @@ trait HasSearches
             ?->replace('+', ' ')->value();
 
         $this->term = $term;
-
 
         // We interpret the matches key as an array, and we pass in the
         // delimiter to split the strong on.

@@ -12,34 +12,35 @@ trait HasQueryExpression
 {
     /**
      * The callback or query method to resolve the refiner.
-     * 
+     *
      * @var array<int,mixed>|\Closure|null
      */
     protected $using;
 
     /**
      * Provide a list of supported expression partials.
-     * 
+     *
      * @return array<int,string>
      */
     abstract public function expressions();
 
     /**
      * Register the query expression to resolve the refiner.
-     * 
-     * @param string|\Closure $statement
-     * @param string|null $reference
-     * @param mixed $operator
-     * @param mixed $value 
-     * @param bool $optional
+     *
+     * @param  string|\Closure  $statement
+     * @param  string|null  $reference
+     * @param  mixed  $operator
+     * @param  mixed  $value
+     * @param  bool  $optional
      * @return $this
-     * 
+     *
      * @throws \BadMethodCallException
      */
     public function using($statement, $reference = null, $operator = null, $value = null, $optional = null)
     {
         if ($statement instanceof Closure) {
             $this->using = $statement;
+
             return $this;
         }
 
@@ -56,7 +57,7 @@ trait HasQueryExpression
 
     /**
      * Determine if the refiner has a query expression.
-     * 
+     *
      * @return bool
      */
     public function hasQueryExpression()
@@ -66,7 +67,7 @@ trait HasQueryExpression
 
     /**
      * Express the query on the builder.
-     * 
+     *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  array<string, mixed>  $bindings
      * @return void
@@ -80,10 +81,11 @@ trait HasQueryExpression
         // We will apply the bindings directly to the closure without rebinding.
         if ($using instanceof Closure) {
             $this->expressClosure($using, $builder, $bindings);
+
             return;
         }
 
-        // The behaviour of the expression is now dependent on the number of 
+        // The behaviour of the expression is now dependent on the number of
         // arguments, as it will determine whether the arguments can be closures
         // and whether we need to replace bindings.
         $numArgs = \count($using);
@@ -100,6 +102,7 @@ trait HasQueryExpression
 
         if ($numArgs === 2) {
             $builder->{$statement}($reference);
+
             return;
         }
 
@@ -109,21 +112,24 @@ trait HasQueryExpression
         // need to rebind it as it may be requiring a binding injection.
         if ($operator instanceof Closure) {
             $builder->{$statement}($reference, $this->rebindClosure($operator, $bindings));
+
             return;
         }
 
-        // As it is not a closure, we need to determine whether the operator is 
+        // As it is not a closure, we need to determine whether the operator is
         // an operator or refers to a value. If it is not an operator, then we
         // can assume we have been given a value and we can replace the bindings.
         if ($this->isOperator($operator, $builder)) {
             $builder->{$statement}($reference, $operator, $value);
+
             return;
         }
 
         // There is some cases which result in both the reference and operator
-        // referring to the column / relation. 
+        // referring to the column / relation.
         if ($this->isOperator($value, $builder) && $numArgs === 5) {
             $builder->{$statement}($reference, $operator, $value, $optional);
+
             return;
         }
 
@@ -132,7 +138,7 @@ trait HasQueryExpression
 
     /**
      * Express the callback on the builder.
-     * 
+     *
      * @param  \Closure  $closure
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  array<string, mixed>  $bindings
@@ -154,9 +160,9 @@ trait HasQueryExpression
 
     /**
      * Replace the bindings in the reference.
-     * 
-     * @param mixed $reference
-     * @param array<string, mixed> $bindings
+     *
+     * @param  mixed  $reference
+     * @param  array<string, mixed>  $bindings
      * @return mixed
      */
     public function replaceBindings($reference, $bindings)
@@ -170,7 +176,7 @@ trait HasQueryExpression
                 return $value;
             }
             // @phpstan-ignore-next-line
-            $reference = \str_replace(':' . $key, \strval($value), $reference);
+            $reference = \str_replace(':'.$key, \strval($value), $reference);
         }
 
         return $reference;
@@ -178,9 +184,9 @@ trait HasQueryExpression
 
     /**
      * Rebind a builder closure with the bindings injected to closure arguments.
-     * 
-     * @param \Closure $closure
-     * @param array<string, mixed> $bindings
+     *
+     * @param  \Closure  $closure
+     * @param  array<string, mixed>  $bindings
      * @return \Closure
      */
     public function rebindClosure($closure, $bindings)
@@ -196,9 +202,9 @@ trait HasQueryExpression
 
     /**
      * Determine if the operator is valid and supported by the query builder.
-     * 
-     * @param mixed $operator
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     *
+     * @param  mixed  $operator
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @return bool
      */
     public function isOperator($operator, $builder)
@@ -208,8 +214,8 @@ trait HasQueryExpression
 
     /**
      * Determine if the method is an invalid expression.
-     * 
-     * @param string $method
+     *
+     * @param  string  $method
      * @return bool
      */
     public function invalidExpression($method)
@@ -232,11 +238,11 @@ trait HasQueryExpression
 
     /**
      * Handle dynamic method calls to the builder.
-     * 
-     * @param string $method
-     * @param array<mixed> $parameters
+     *
+     * @param  string  $method
+     * @param  array<mixed>  $parameters
      * @return $this
-     * 
+     *
      * @throws \BadMethodCallException
      */
     public function __call($method, $parameters)
@@ -244,7 +250,7 @@ trait HasQueryExpression
         if ($this->invalidExpression($method)) {
             throw new \BadMethodCallException(
                 sprintf(
-                    'Call to method %s::%s() is not a supported query expression', 
+                    'Call to method %s::%s() is not a supported query expression',
                     static::class, $method
                 )
             );

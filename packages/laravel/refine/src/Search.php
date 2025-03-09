@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
-use Honed\Refine\Refiner;
-
 class Search extends Refiner
 {
     /**
@@ -29,7 +27,7 @@ class Search extends Refiner
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  string|null  $search
-     * @param  array<int,string>|null  $columns
+     * @param  array<int,mixed>|null  $columns
      * @param  string  $boolean
      * @return bool
      */

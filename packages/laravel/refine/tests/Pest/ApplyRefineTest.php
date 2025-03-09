@@ -9,8 +9,6 @@ use Honed\Refine\Filter;
 use Honed\Refine\Tests\Fixtures\RefineFixture;
 use Honed\Refine\Tests\Stubs\Product;
 use Honed\Refine\Tests\Stubs\Status;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
@@ -248,33 +246,3 @@ it('can select the search columns', function () {
         ->toBeOnlySearch($this->builder->qualifyColumn('description'));
 
 });
-
-// it('throws exception when no builder is set', function () {
-//     Refine::make('non-existent-class')->using($this->refiners)->getQuery();
-// })->throws(\InvalidArgumentException::class);
-
-// it('has array representation', function () {
-//     $refine = Refine::make(Product::class)
-//         ->request($this->request)
-//         ->using($this->refiners);
-
-//     expect($refine->refine()->toArray())
-//         ->toHaveKeys(['sorts', 'filters', 'config'])
-//         ->{'config'}->scoped(fn ($config) => $config
-//             ->{'delimiter'}->toBe(config('refine.delimiter'))
-//             ->{'search'}->toBe($this->term)
-//             ->{'searches'}->toBe(config('refine.searches_key'))
-//             ->{'sorts'}->toBe(config('refine.sorts_key'))
-//         );
-
-//     expect($refine->match()->refine()->toArray())
-//         ->toHaveKeys(['sorts', 'filters', 'searches', 'config'])
-//         ->{'searches'}->toHaveCount(2)
-//         ->{'config'}->scoped(fn ($config) => $config
-//             ->{'delimiter'}->toBe(config('refine.delimiter'))
-//             ->{'search'}->toBe($this->term)
-//             ->{'searches'}->toBe(config('refine.searches_key'))
-//             ->{'sorts'}->toBe(config('refine.sorts_key'))
-//             ->{'matches'}->toBe(config('refine.matches'))
-//         );
-// });
