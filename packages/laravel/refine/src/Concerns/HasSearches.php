@@ -6,6 +6,7 @@ namespace Honed\Refine\Concerns;
 
 use Honed\Refine\Search;
 use Illuminate\Support\Collection;
+use Honed\Core\Concerns\InterpretsRequest;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -309,54 +310,6 @@ trait HasSearches
     }
 
     /**
-     * Get the search columns from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array<int,string>|null
-     */
-    public function getMatches($request)
-    {
-        if (! $this->isMatching()) {
-            return null;
-        }
-
-        /** @var string */
-        $key = $this->formatScope($this->getMatchesKey());
-
-        $columns = $request->safeArray($key, null, $this->getDelimiter());
-
-        if (\is_null($columns) || $columns->isEmpty()) {
-            return null;
-        }
-
-        return $columns
-            ->map(\trim(...))
-            ->filter()
-            ->values()
-            ->all();
-    }
-
-    /**
-     * Get the search value from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string|null
-     */
-    public function getSearch($request)
-    {
-        /** @var string */
-        $key = $this->formatScope($this->getSearchesKey());
-
-        $param = $request->safeString($key);
-
-        if ($param->isEmpty()) {
-            return null;
-        }
-
-        return $param->replace('+', ' ')->value();
-    }
-
-    /**
      * Retrieve the search value.
      *
      * @return string|null
@@ -380,8 +333,36 @@ trait HasSearches
             return $this;
         }
 
-        $columns = $this->getMatches($request);
-        $this->term = $this->getSearch($request);
+        // We need to use a new instance of the interpreter class to avoid
+        // the use of the `InterpretsRequest` trait on the `HasSearches` trait.
+        // This trait allows us to receive stringable and arrayable objects.
+        $interpreter = new class { use InterpretsRequest; };
+
+        // There are two values to look for in the request: the search term,
+        // and a string delimited list of columns to search. We use the class
+        // scope to format the keys if necessary.
+        /** @var string */
+        $searchKey = $this->formatScope($this->getSearchesKey());
+
+        /** @var string */
+        $matchesKey = $this->formatScope($this->getMatchesKey());
+
+        /** @var string */
+        $delimiter = $this->getDelimiter();
+
+        // The client will send a search term as a string with spaces replaced
+        // with a `+` character. We need to replace the `+` with a space before
+        // we use the term, and this will ensure it syncs back with the form
+        // input.
+        $term = $interpreter->interpretStringable($request, $searchKey)
+            ?->replace('+', ' ')->value();
+
+        $this->term = $term;
+
+
+        // We interpret the matches key as an array, and we pass in the
+        // delimiter to split the strong on.
+        $columns = $interpreter->interpretArray($request, $matchesKey, $delimiter);
 
         /** @var array<int, \Honed\Refine\Search> */
         $searches = \array_merge($this->getSearches(), $searches);
@@ -390,7 +371,7 @@ trait HasSearches
         foreach ($searches as $search) {
             $boolean = $applied ? 'or' : 'and';
 
-            $applied |= $search->refine($builder, $this->term, $columns, $boolean);
+            $applied |= $search->refine($builder, $term, $columns, $boolean);
         }
 
         return $this;

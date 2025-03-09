@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
+use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\IsDefault;
 use Honed\Refine\Concerns\HasQueryExpression;
 use Honed\Refine\Refiner;
@@ -11,6 +12,7 @@ use Honed\Refine\Refiner;
 class Sort extends Refiner
 {
     use IsDefault;
+    use InterpretsRequest;
     use HasQueryExpression {
         __call as queryCall;
     }
@@ -142,11 +144,12 @@ class Sort extends Refiner
      */
     public function prepareSortAndDirection($request, $key)
     {
-        $sort = $request->safeString($key);
+        $sort = static::interpretStringable($request, $key);
 
         // The direction is determined by the presence of a preceding '-'
         // character. Any values after that represent the sort parameter name.
         return match (true) {
+            \is_null($sort),
             $sort->isEmpty() => [null, null],
             $sort->startsWith('-') => [$sort->after('-')->value(), 'desc'],
             default => [$sort->value(), 'asc'],

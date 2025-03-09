@@ -25,10 +25,10 @@ it('has a searches key', function () {
 
 it('can match', function () {
     expect($this->test)
-        ->canMatch()->toBe(config('refine.matches'));
+        ->isMatching()->toBe(config('refine.matches'));
 
     expect($this->test->match())->toBe($this->test)
-        ->canMatch()->toBeTrue();
+        ->isMatching()->toBeTrue();
 });
 
 it('has a delimiter', function () {
