@@ -166,7 +166,7 @@ trait HasSearches
      */
     protected function fallbackSearchesKey()
     {
-        return type(config('refine.config.searches', 'search'))->asString();
+        return type(config('refine.searches_key', 'search'))->asString();
     }
 
     /**
@@ -213,7 +213,7 @@ trait HasSearches
      */
     protected function fallbackMatchesKey()
     {
-        return type(config('refine.config.matches', 'match'))->asString();
+        return type(config('refine.matches_key', 'match'))->asString();
     }
 
     /**
@@ -260,7 +260,7 @@ trait HasSearches
      */
     protected function fallbackIsMatching()
     {
-        return (bool) config('refine.matches', false);
+        return (bool) config('refine.match', false);
     }
 
     /**

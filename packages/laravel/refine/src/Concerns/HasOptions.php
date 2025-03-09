@@ -232,7 +232,7 @@ trait HasOptions
         return match (true) {
             $this->isStrict() && $this->isMultiple() => $options->map->getValue()->all(),
             $this->isMultiple() => Arr::wrap($value),
-            $this->isStrict() => $options->first()?->getValue() ?? $value,
+            $this->isStrict() => $options->first()?->getValue(),
             default => $value
         };
     }

@@ -184,6 +184,7 @@ class Refine extends Primitive
      */
     public function using($refiners)
     {
+
         foreach ($refiners as $refiner) {
             match (true) {
                 $refiner instanceof Filter => $this->addFilter($refiner),

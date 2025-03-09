@@ -77,8 +77,8 @@ beforeEach(function () {
         'favourite' => '1',
         'oldest' => '2000-01-01',
         'newest' => '2001-01-01',
-        config('refine.config.sorts') => '-price',
-        config('refine.config.searches') => $this->term,
+        config('refine.sorts_key') => '-price',
+        config('refine.searches_key') => $this->term,
     ]);
 });
 
@@ -234,8 +234,8 @@ it('refines all with fixture', function () {
 
 it('can select the search columns', function () {
     $request = Request::create('/', 'GET', [
-        config('refine.config.searches') => 'search+term',
-        config('refine.config.matches') => 'description',
+        config('refine.searches_key') => 'search+term',
+        config('refine.matches_key') => 'description',
     ]);
 
     Refine::make($this->builder)
@@ -263,8 +263,8 @@ it('can select the search columns', function () {
 //         ->{'config'}->scoped(fn ($config) => $config
 //             ->{'delimiter'}->toBe(config('refine.delimiter'))
 //             ->{'search'}->toBe($this->term)
-//             ->{'searches'}->toBe(config('refine.config.searches'))
-//             ->{'sorts'}->toBe(config('refine.config.sorts'))
+//             ->{'searches'}->toBe(config('refine.searches_key'))
+//             ->{'sorts'}->toBe(config('refine.sorts_key'))
 //         );
 
 //     expect($refine->match()->refine()->toArray())
@@ -273,8 +273,8 @@ it('can select the search columns', function () {
 //         ->{'config'}->scoped(fn ($config) => $config
 //             ->{'delimiter'}->toBe(config('refine.delimiter'))
 //             ->{'search'}->toBe($this->term)
-//             ->{'searches'}->toBe(config('refine.config.searches'))
-//             ->{'sorts'}->toBe(config('refine.config.sorts'))
-//             ->{'matches'}->toBe(config('refine.config.matches'))
+//             ->{'searches'}->toBe(config('refine.searches_key'))
+//             ->{'sorts'}->toBe(config('refine.sorts_key'))
+//             ->{'matches'}->toBe(config('refine.matches'))
 //         );
 // });
