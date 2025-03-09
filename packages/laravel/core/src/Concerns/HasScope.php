@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 trait HasScope
 {
     /**
+     * The scope to use for the instance.
+     *
      * @var string|null
      */
     protected $scope;
@@ -45,7 +47,7 @@ trait HasScope
      */
     public function hasScope()
     {
-        return ! \is_null($this->scope);
+        return isset($this->scope);
     }
 
     /**

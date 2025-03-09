@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait HasMeta
 {
     /**
+     * The meta for the instance.
+     *
      * @var array<string,mixed>
      */
     protected array $meta = [];

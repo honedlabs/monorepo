@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait HasDescription
 {
     /**
+     * The description for the instance.
+     *
      * @var string|\Closure|null
      */
     protected $description;

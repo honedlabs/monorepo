@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait IsDefault
 {
     /**
+     * Whether the instance is the default.
+     *
      * @var bool
      */
     protected $default = false;

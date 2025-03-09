@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait HasRequest
 {
     /**
+     * The request on the instance.
+     *
      * @var \Illuminate\Http\Request
      */
     protected $request;

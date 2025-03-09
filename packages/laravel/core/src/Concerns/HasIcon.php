@@ -9,6 +9,8 @@ use Honed\Core\Contracts\Iconable;
 trait HasIcon
 {
     /**
+     * The icon for the instance.
+     *
      * @var string|\Honed\Core\Contracts\Iconable|\Closure|null
      */
     protected $icon;

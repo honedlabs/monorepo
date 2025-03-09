@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait Allowable
 {
     /**
+     * The allow condition for the instance.
+     *
      * @var \Closure|bool
      */
     protected $allow = true;

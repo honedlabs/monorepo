@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait HasName
 {
     /**
+     * The name for the instance.
+     *
      * @var string
      */
     protected $name;

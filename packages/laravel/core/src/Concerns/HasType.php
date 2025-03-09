@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait HasType
 {
     /**
+     * The type for the instance.
+     *
      * @var string
      */
     protected $type;

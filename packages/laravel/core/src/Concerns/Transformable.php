@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait Transformable
 {
     /**
+     * The transformer function for the instance.
+     *
      * @var \Closure|null
      */
     protected $transformer = null;

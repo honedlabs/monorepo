@@ -16,7 +16,7 @@ trait InterpretsRequest
      *
      * @var 'string'|'stringable'|'array'|'collection'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null
      */
-    public $as;
+    protected $as;
 
     /**
      * Interpret the query parameter.

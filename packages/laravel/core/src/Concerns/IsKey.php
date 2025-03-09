@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait IsKey
 {
     /**
+     * Whether the instance is the key.
+     *
      * @var bool
      */
     protected $key = false;

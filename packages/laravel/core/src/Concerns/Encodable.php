@@ -1,15 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Core\Concerns;
 
 trait Encodable
 {
     /**
+     * The encoding closure for the instance.
+     *
      * @var \Closure|null
      */
     protected static $encoder;
 
     /**
+     * The decoding closure for the instance.
+     *
      * @var \Closure|null
      */
     protected static $decoder;

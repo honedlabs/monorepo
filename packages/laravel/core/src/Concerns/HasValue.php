@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait HasValue
 {
     /**
+     * The value for the instance.
+     *
      * @var mixed
      */
     protected $value = null;

@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait IsActive
 {
     /**
+     * Whether the instance is active.
+     *
      * @var bool
      */
     protected $active = false;

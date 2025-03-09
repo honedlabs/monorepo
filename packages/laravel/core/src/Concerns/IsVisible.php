@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait IsVisible
 {
     /**
+     * Whether the instance is visible.
+     *
      * @var bool
      */
     protected $visible = true;

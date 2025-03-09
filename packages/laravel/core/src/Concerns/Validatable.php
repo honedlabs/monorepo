@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait Validatable
 {
     /**
+     * The validation function for the instance.
+     *
      * @var \Closure
      */
     protected $validator;

@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 trait HasLabel
 {
     /**
+     * The label for the instance.
+     *
      * @var string|\Closure|null
      */
     protected $label;

@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait IsHidden
 {
     /**
+     * Whether the instance is hidden.
+     *
      * @var bool
      */
     protected $hidden = false;

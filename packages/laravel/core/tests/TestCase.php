@@ -24,7 +24,6 @@ class TestCase extends Orchestra
         $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
     }
 
-
     protected function defineDatabaseMigrations()
     {
         Schema::create('products', function (Blueprint $table) {

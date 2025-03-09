@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait HasExtra
 {
     /**
+     * Extra data for the instance.
+     *
      * @var array<string,mixed>|\Closure
      */
     protected $extra = [];

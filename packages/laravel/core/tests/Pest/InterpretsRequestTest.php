@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Honed\Refine\Tests\Pest;
 
 use Carbon\Carbon;
+use Honed\Core\Concerns\InterpretsRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Stringable;
-use Honed\Core\Concerns\InterpretsRequest;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class
+    {
         use InterpretsRequest;
     };
 
@@ -203,8 +204,6 @@ it('interprets date', function ($param, $value, $expected) {
     ['', '2000-01-01', Carbon::class],
     ['[]', '2000-01-01', Carbon::class],
 ]);
-
-
 
 // it('interprets date', function ($param, $value, $expected) {
 //     $p = 'param';

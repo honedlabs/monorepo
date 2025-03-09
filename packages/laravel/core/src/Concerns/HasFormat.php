@@ -7,6 +7,8 @@ namespace Honed\Core\Concerns;
 trait HasFormat
 {
     /**
+     * The format for the instance.
+     *
      * @var string|\Closure|null
      */
     protected $format;
