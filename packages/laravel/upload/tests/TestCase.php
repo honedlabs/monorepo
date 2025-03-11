@@ -42,6 +42,7 @@ class TestCase extends Orchestra
      */
     public function getEnvironmentSetUp($app)
     {
+        config()->set('filesystems', require __DIR__.'/Fixtures/filesystems.php');
         config()->set('upload', require __DIR__.'/../config/upload.php');
         config()->set('database.default', 'testing');
     }

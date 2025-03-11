@@ -20,6 +20,9 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 
+/**
+ * @extends \Honed\Core\Primitive<string,mixed>
+ */
 class Upload extends Primitive
 {
     use Conditionable;
@@ -147,6 +150,7 @@ class Upload extends Primitive
      * Get the disk to use for uploading files from the config.
      *
      * @default 's3'
+     *
      * @return string
      */
     public static function fallbackDisk()
@@ -277,18 +281,23 @@ class Upload extends Primitive
      *
      * @return int
      */
-    public function getMinSize()
+    public function getMinSize(bool $convert = true)
     {
         $minSize = $this->minSize
             ?? static::fallbackMinSize();
 
-        return $this->convertSize($minSize);
+        if ($convert) {
+            return $this->convertSize($minSize);
+        }
+
+        return $minSize;
     }
 
     /**
      * Get the minimum file size to upload in bytes from the config.
      *
      * @default 0
+     *
      * @return int
      */
     public static function fallbackMinSize()
@@ -301,18 +310,23 @@ class Upload extends Primitive
      *
      * @return int
      */
-    public function getMaxSize()
+    public function getMaxSize(bool $convert = true)
     {
         $maxSize = $this->maxSize
             ?? static::fallbackMaxSize();
 
-        return $this->convertSize($maxSize);
+        if ($convert) {
+            return $this->convertSize($maxSize);
+        }
+
+        return $maxSize;
     }
 
     /**
      * Get the maximum file size to upload in bytes from the config.
      *
      * @default 1GB
+     *
      * @return int
      */
     public static function fallbackMaxSize()
@@ -325,7 +339,7 @@ class Upload extends Primitive
      *
      * @return int
      */
-    protected function convertSize(int $size)
+    public function convertSize(int $size)
     {
         return match ($this->getUnit()) {
             'kilobytes' => $size * 1024,
@@ -507,11 +521,10 @@ class Upload extends Primitive
         return $this;
     }
 
-
     /**
      * Get the path to store the file at.
      *
-     * @return string|null
+     * @return string|\Closure|null
      */
     public function getPath()
     {
@@ -579,12 +592,34 @@ class Upload extends Primitive
     }
 
     /**
+     * Set the input to accept multiple files.
+     *
+     * @return $this
+     */
+    public function multiple()
+    {
+        $this->multiple = true;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the input should accept multiple files.
+     *
+     * @return bool
+     */
+    public function isMultiple()
+    {
+        return $this->multiple;
+    }
+
+    /**
      * Get the defaults for form input fields.
      *
      * @param  string  $key
      * @return array<string,mixed>
      */
-    protected function getFormInputs($key)
+    public function getFormInputs($key)
     {
         return [
             'acl' => $this->getAccessControlList(),
@@ -598,7 +633,7 @@ class Upload extends Primitive
      * @param  string  $key
      * @return array<int,array<int|string,mixed>>
      */
-    protected function getOptions($key)
+    public function getOptions($key)
     {
         $options = [
             ['eq', '$acl', $this->getAccessControlList()],
@@ -620,7 +655,6 @@ class Upload extends Primitive
 
             $options[] = ['starts-with', '$Content-Type', $accepts];
         }
-
 
         return $options;
     }
@@ -661,7 +695,7 @@ class Upload extends Primitive
      */
     public function getBucket()
     {
-        return $this->getDiskConfig('bucket');
+        return type($this->getDiskConfig('bucket'))->asString();
     }
 
     /**
@@ -675,7 +709,7 @@ class Upload extends Primitive
         return Validator::make(
             $request->all(),
             $this->getValidationRules(),
-            [],
+            $this->getValidationMessages(),
             $this->getValidationAttributes(),
         )->validate();
     }
@@ -694,7 +728,31 @@ class Upload extends Primitive
             'name' => ['required', 'string', 'max:1024'],
             'type' => ['required', new OfType($this->getAccepted())],
             'size' => ['required', 'integer', 'min:'.$min, 'max:'.$max],
-            'meta' => ['nullable']
+            'meta' => ['nullable'],
+        ];
+    }
+
+    /**
+     * Get the validation messages for file uploads.
+     *
+     * @return array<string,string>
+     */
+    public function getValidationMessages()
+    {
+        $min = $this->getMinSize(false);
+        $max = $this->getMaxSize(false);
+
+        return [
+            'size.min' => \sprintf(
+                'The :attribute must be larger than %d %s.',
+                $min,
+                $min === 1 ? rtrim($this->getUnit(), 's') : $this->getUnit()
+            ),
+            'size.max' => \sprintf(
+                'The :attribute must be smaller than %d %s.',
+                $max,
+                $max === 1 ? rtrim($this->getUnit(), 's') : $this->getUnit()
+            ),
         ];
     }
 
@@ -720,7 +778,7 @@ class Upload extends Primitive
     public function create()
     {
         $request = $this->getRequest();
-        
+
         /**
          * @var array{name:string,type:string,size:int,meta:mixed}
          */
@@ -735,8 +793,6 @@ class Upload extends Primitive
             $this->getOptions($key),
             $this->getDuration()
         );
-
-        // dd($postObject);
 
         return response()->json([
             'code' => 200,
@@ -753,30 +809,46 @@ class Upload extends Primitive
      */
     public function buildStorageKey($validated)
     {
+        /** @var string */
         $filename = Arr::get($validated, 'name');
+
         $name = $this->getName();
 
         /** @var string */
         $validatedName = match (true) {
             $name === 'uuid' => Str::uuid()->toString(),
-            $name instanceof \Closure => $this->evaluate($name, [
-                'data' => $validated,
-                'validated' => $validated,
-                'name' => $filename,
-                'type' => Arr::get($validated, 'type'),
-                'size' => Arr::get($validated, 'size'),
-                'meta' => Arr::get($validated, 'meta'),
-            ]),
+            $name instanceof \Closure => type($this->evaluateValidated($name, $validated))->asString(),
             default => $filename,
         };
 
+        $path = $this->evaluateValidated($this->getPath(), $validated);
+
         return Str::of($validatedName)
             ->append(\pathinfo($filename, \PATHINFO_EXTENSION))
-            ->when($this->path,
+            ->when($path,
                 fn (Stringable $name) => $name
-                    ->prepend('/', $this->getPath())
+                    ->prepend('/', $path) // @phpstan-ignore-line
                     ->replace('//', '/'),
             )->toString();
+    }
+
+    /**
+     * Evaluate the closure using the validated data
+     *
+     * @param  \Closure|string|null  $closure
+     * @param  array{name:string,type:string,size:int,meta:mixed}  $validated
+     * @return string|null
+     */
+    protected function evaluateValidated($closure, $validated)
+    {
+        return $this->evaluate($closure, [
+            'data' => $validated,
+            'validated' => $validated,
+            'name' => Arr::get($validated, 'name'),
+            'type' => Arr::get($validated, 'type'),
+            'size' => Arr::get($validated, 'size'),
+            'meta' => Arr::get($validated, 'meta'),
+        ]);
     }
 
     /**
@@ -788,15 +860,14 @@ class Upload extends Primitive
     {
         // Format the types to be a comma separated string
         $accepts = implode(',', \array_map(
-            static fn (string $type) => \str_ends_with($type, '/') 
-                ? $type 
-                : $type.'*',
+            static fn (string $type) => \str_ends_with($type, '/')
+                ? $type.'*'
+                : $type,
             $this->getAccepted()
         ));
 
         return [
-            'type' => 'file',
-            'multiple' => $this->multiple,
+            'multiple' => $this->isMultiple(),
             'accept' => $accepts,
         ];
     }

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Upload\Upload;
-use Illuminate\Support\Str;
 
 it('has disk', function () {
     expect(Upload::make())
@@ -85,9 +84,50 @@ it('has duration', function () {
         ->getDuration()->toBe($fn(60));
 });
 
+it('has path', function () {
+    expect(Upload::make())
+        ->getPath()->toBeNull()
+        ->path('test')->toBeInstanceOf(Upload::class)
+        ->getPath()->toBe('test');
+});
+
+it('has name', function () {
+    expect(Upload::make())
+        ->getName()->toBeNull()
+        ->name('test')->toBeInstanceOf(Upload::class)
+        ->getName()->toBe('test');
+});
+
 it('has access control list', function () {
     expect(Upload::make())
         ->getAccessControlList()->toBe(config('upload.acl'))
         ->acl('private-read')->toBeInstanceOf(Upload::class)
         ->getAccessControlList()->toBe('private-read');
+});
+
+it('creates form inputs', function () {
+    $key = 'test';
+
+    expect(Upload::make()->getFormInputs($key))->toEqual([
+        'acl' => config('upload.acl'),
+        'key' => $key,
+    ]);
+});
+
+it('creates policy options', function () {
+    $key = 'test';
+
+    expect(Upload::make())
+        ->getOptions($key)->toBeArray()
+        ->toHaveCount(4);
+});
+
+it('has form attributes as array representation', function () {
+    expect(Upload::make())
+        ->multiple()->toBeInstanceOf(Upload::class)
+        ->accepts(['image/png', 'video/'])
+        ->toArray()->toEqual([
+            'multiple' => true,
+            'accept' => 'image/png,video/*',
+        ]);
 });
