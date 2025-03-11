@@ -15,18 +15,18 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - action
-          - chart
-          - command
-          - core
-          - crumb
-          - flash
-          - layout
-          - lock
-          - modal
-          - nav
-          - refine
-          - table
+          # - action
+          # - chart
+          # - command
+          # - core
+          # - crumb
+          # - flash
+          # - layout
+          # - lock
+          # - modal
+          # - nav
+          # - refine
+          # - table
           - upload
 
     steps:
