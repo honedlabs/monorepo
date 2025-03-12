@@ -25,8 +25,8 @@ jobs:
           # - lock
           # - modal
           # - nav
-          # - refine
-          # - table
+          - refine
+          - table
           - upload
 
     steps:
