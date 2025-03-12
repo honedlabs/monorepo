@@ -119,6 +119,15 @@ export function useRefine<
 		})),
 	);
 
+	const searches = computed(() =>
+		refinements.value.searches?.map((search) => ({
+			...search,
+			apply: (options: VisitOptions = {}) => applyMatch(search, options),
+			clear: (options: VisitOptions = {}) => applyMatch(search, options),
+			bind: () => bindMatch(search)
+		})),
+	);
+
 	/**
 	 * Converts an array parameter to a comma-separated string for URL parameters.
 	 */
@@ -152,6 +161,17 @@ export function useRefine<
 		return value;
 	}
 
+	/**
+	 * Pipe the given value through the given transforms.
+	 */
+	function pipe(value: any) {
+		return [delimitArray, stringValue, omitValue].reduce(
+			(result, transform) => transform(result),
+			value,
+		);
+	}
+
+		
 	/**
 	 * Toggle the presence of a value in an array.
 	 */
@@ -246,6 +266,24 @@ export function useRefine<
 	}
 
 	/**
+	 * Apply the given values in bulk.
+	 */
+	function apply(values: Record<string, any>, options: VisitOptions = {}) {
+		const data = Object.fromEntries(
+			Object.entries(values).map(([key, value]) => [
+				key,
+				pipe(value),
+			]),
+		);
+
+		router.reload({
+			...defaultOptions,
+			...options,
+			data,
+		});
+	}
+
+	/**
 	 * Applies the given filter.
 	 */
 	function applyFilter(
@@ -264,17 +302,12 @@ export function useRefine<
 			value = toggleValue(value, refiner.value);
 		}
 
-		value = [delimitArray, stringValue, omitValue].reduce(
-			(result, transform) => transform(result),
-			value,
-		);
-
 		console.log(value);
 		router.reload({
 			...defaultOptions,
 			...options,
 			data: {
-				[refiner.name]: value,
+				[refiner.name]: pipe(value),
 			},
 		});
 	}
@@ -325,6 +358,41 @@ export function useRefine<
 	}
 
 	/**
+	 * Applies the given match.
+	 */
+	function applyMatch(
+		value: Search | string,
+		options: VisitOptions = {},
+	) {
+		if (!refinements.value.config.matches) {
+			console.warn("Matches key is not set.");
+			return;
+		}
+
+		const refiner = typeof value === "string" ? getSearch(value) : value;
+
+		if (!refiner) {
+			console.warn(`Match [${value}] does not exist.`);
+			return;
+		}
+
+		const matches = toggleValue(
+			value,
+			currentSearches()
+				.filter(({ active }) => active)
+				.map(({ name }) => name),
+		);
+
+		router.reload({
+			...defaultOptions,
+			...options,
+			data: {
+				[refinements.value.config.matches]: delimitArray(matches),
+			},
+		});
+	}
+
+	/**
 	 * Clear the given filter.
 	 */
 	function clearFilter(filter: Filter | string, options: VisitOptions = {}) {
@@ -349,6 +417,24 @@ export function useRefine<
 	 */
 	function clearSearch(options: VisitOptions = {}) {
 		applySearch(undefined, options);
+	}
+
+	/**
+	 * Clear the matching columns.
+	 */
+	function clearMatch(options: VisitOptions = {}) {
+		if (!refinements.value.config.matches) {
+			console.warn("Matches key is not set.");
+			return;
+		}
+
+		router.reload({
+			...defaultOptions,
+			...options,
+			data: {
+				[refinements.value.config.matches]: null,
+			},
+		});
 	}
 
 	/**
@@ -432,14 +518,35 @@ export function useRefine<
 				applySearch(value, visitOptions);
 			}, debounce),
 			modelValue: refinements.value.config.search ?? "",
+			value: refinements.value.config.search ?? "",
 		};
 	}
 
+	/**
+	 * Binds a match to a checkbox.
+	 */
+		function bindMatch(match: Search | string, options: BindingOptions = {}) {
+			const refiner = typeof match === "string" ? getSearch(match) : match;
+	
+			if (!refiner) {
+				console.warn(`Match [${match}] does not exist.`);
+				return;
+			}
+	
+			const { debounce = 0, transform, ...visitOptions } = options;
+			return {
+				"onUpdate:modelValue": useDebounceFn((value: any) => {
+					applyMatch(value, visitOptions);
+				}, debounce),
+				modelValue: refiner.active,
+				value: refiner.active,
+			};
+		}
+
 	return {
-		// refinements,
 		filters,
 		sorts,
-		// searches,
+		searches,
 		getSort,
 		getFilter,
 		getSearch,
@@ -449,18 +556,21 @@ export function useRefine<
 		isSorting,
 		isFiltering,
 		isSearching,
+		apply,
 		applyFilter,
 		applySort,
 		applySearch,
+		applyMatch,
 		clearFilter,
 		clearSort,
 		clearSearch,
+		clearMatch,
 		reset,
 		bindFilter,
 		bindSort,
-		// bindMatch,
 		bindSearch,
-		/** Provide the helpers */
+		bindMatch,
+
 		stringValue,
 		omitValue,
 		toggleValue,
