@@ -55,42 +55,6 @@ trait HasOptions
     }
 
     /**
-     * Restrict the options to only those provided.
-     *
-     * @param  bool  $strict
-     * @return $this
-     */
-    public function strict($strict = true)
-    {
-        $this->strict = $strict;
-
-        return $this;
-    }
-
-    /**
-     * Allow any options to be used.
-     *
-     * @param  bool  $strict
-     * @return $this
-     */
-    public function lax($strict = false)
-    {
-        return $this->strict($strict);
-    }
-
-    /**
-     * Allow multiple options to be used.
-     *
-     * @return $this
-     */
-    public function multiple()
-    {
-        $this->multiple = true;
-
-        return $this;
-    }
-
-    /**
      * Create options from an enum.
      *
      * @param  class-string<\BackedEnum>  $enum
@@ -121,36 +85,6 @@ trait HasOptions
     public function getOptions()
     {
         return $this->options;
-    }
-
-    /**
-     * Determine if only the options provided are allowed.
-     *
-     * @return bool
-     */
-    public function isStrict()
-    {
-        return (bool) ($this->strict ?? static::fallbackStrict());
-    }
-
-    /**
-     * Determine if only the options provided are allowed.
-     *
-     * @return bool
-     */
-    public static function fallbackStrict()
-    {
-        return (bool) config('refine.strict', false);
-    }
-
-    /**
-     * Determine if multiple options are allowed.
-     *
-     * @return bool
-     */
-    public function isMultiple()
-    {
-        return $this->multiple;
     }
 
     /**
@@ -189,7 +123,8 @@ trait HasOptions
     public function optionsAssociative($options)
     {
         return \array_map(
-            static fn ($value, $key) => Option::make($value, \strval($key)), // @phpstan-ignore-line
+            // @phpstan-ignore-next-line
+            static fn ($value, $key) => Option::make($value, \strval($key)),
             \array_keys($options),
             \array_values($options)
         );
@@ -204,9 +139,76 @@ trait HasOptions
     public function optionsList($options)
     {
         return \array_map(
-            static fn ($value) => Option::make($value, \strval($value)), // @phpstan-ignore-line
+            // @phpstan-ignore-next-line
+            static fn ($value) => Option::make($value, \strval($value)),
             $options
         );
+    }
+
+    /**
+     * Restrict the options to only those provided.
+     *
+     * @param  bool  $strict
+     * @return $this
+     */
+    public function strict($strict = true)
+    {
+        $this->strict = $strict;
+
+        return $this;
+    }
+
+    /**
+     * Allow any options to be used.
+     *
+     * @param  bool  $lax
+     * @return $this
+     */
+    public function lax($lax = true)
+    {
+        return $this->strict(! $lax);
+    }
+
+    /**
+     * Determine if only the options provided are allowed.
+     *
+     * @return bool
+     */
+    public function isStrict()
+    {
+        return (bool) ($this->strict ?? static::fallbackStrict());
+    }
+
+    /**
+     * Determine if only the options provided are allowed.
+     *
+     * @return bool
+     */
+    public static function fallbackStrict()
+    {
+        return (bool) config('refine.strict', false);
+    }
+
+    /**
+     * Allow multiple options to be used.
+     *
+     * @return $this
+     */
+    public function multiple()
+    {
+        $this->multiple = true;
+
+        return $this;
+    }
+
+    /**
+     * Determine if multiple options are allowed.
+     *
+     * @return bool
+     */
+    public function isMultiple()
+    {
+        return $this->multiple;
     }
 
     /**
@@ -224,9 +226,13 @@ trait HasOptions
             )->values();
 
         return match (true) {
-            $this->isStrict() && $this->isMultiple() => $options->map->getValue()->all(),
+            $this->isStrict() && 
+                $this->isMultiple() => $options->map->getValue()->all(),
+
             $this->isMultiple() => Arr::wrap($value),
+
             $this->isStrict() => $options->first()?->getValue(),
+            
             default => $value
         };
     }
