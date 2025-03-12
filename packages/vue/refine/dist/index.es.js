@@ -50,7 +50,7 @@ function Y(l, u, o = {}) {
       var e;
       return ((e = r.value.sorts) == null ? void 0 : e.map((n) => ({
         ...n,
-        apply: (t = {}) => P(n, n.direction, t),
+        apply: (t = {}) => k(n, n.direction, t),
         clear: (t = {}) => D(t),
         bind: () => G(n)
       }))) ?? [];
@@ -118,7 +118,7 @@ function Y(l, u, o = {}) {
     var n;
     return e ? typeof e == "string" ? ((n = w()) == null ? void 0 : n.name) === e : e.active : !!w();
   }
-  function k(e) {
+  function U(e) {
     var n, t;
     return e ? typeof e == "string" ? (t = x()) == null ? void 0 : t.some((i) => i.name === e) : e.active : !!((n = x()) != null && n.length);
   }
@@ -146,7 +146,7 @@ function Y(l, u, o = {}) {
       }
     });
   }
-  function P(e, n = null, t = {}) {
+  function k(e, n = null, t = {}) {
     const i = typeof e == "string" ? A(e, n) : e;
     if (!i) {
       console.warn(`Sort [${e}] does not exist.`);
@@ -160,7 +160,7 @@ function Y(l, u, o = {}) {
       }
     });
   }
-  function W(e, n = {}) {
+  function P(e, n = {}) {
     e = [a, p].reduce(
       (t, i) => i(t),
       e
@@ -206,7 +206,7 @@ function Y(l, u, o = {}) {
     });
   }
   function B(e = {}) {
-    W(void 0, e);
+    P(void 0, e);
   }
   function H(e = {}) {
     if (!r.value.config.matches) {
@@ -247,12 +247,12 @@ function Y(l, u, o = {}) {
     }
     const i = t.value, {
       debounce: c = 250,
-      transform: b = (U) => U,
+      transform: b = (W) => W,
       ...h
     } = n;
     return {
-      "onUpdate:modelValue": j((U) => {
-        F(t, b(U), h);
+      "onUpdate:modelValue": j((W) => {
+        F(t, b(W), h);
       }, c),
       modelValue: i,
       value: i
@@ -268,7 +268,7 @@ function Y(l, u, o = {}) {
     return {
       onClick: j(() => {
         var h;
-        P(t, (h = w()) == null ? void 0 : h.direction, b);
+        k(t, (h = w()) == null ? void 0 : h.direction, b);
       }, i)
     };
   }
@@ -276,10 +276,9 @@ function Y(l, u, o = {}) {
     const { debounce: n = 700, transform: t, ...i } = e;
     return {
       "onUpdate:modelValue": j((c) => {
-        W(c, i);
+        P(c, i);
       }, n),
-      modelValue: r.value.config.search ?? "",
-      value: r.value.config.search ?? ""
+      modelValue: r.value.config.search ?? ""
     };
   }
   function R(e, n = {}) {
@@ -293,8 +292,7 @@ function Y(l, u, o = {}) {
       "onUpdate:modelValue": j((h) => {
         V(h, b);
       }, i),
-      modelValue: k(t),
-      value: k(t)
+      modelValue: U(t)
     };
   }
   return {
@@ -309,11 +307,11 @@ function Y(l, u, o = {}) {
     currentSearches: x,
     isFiltering: _,
     isSorting: q,
-    isSearching: k,
+    isSearching: U,
     apply: z,
     applyFilter: F,
-    applySort: P,
-    applySearch: W,
+    applySort: k,
+    applySearch: P,
     applyMatch: V,
     clearFilter: C,
     clearSort: D,

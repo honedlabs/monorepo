@@ -3,6 +3,16 @@ import { router } from "@inertiajs/vue3";
 import type { VisitOptions } from "@inertiajs/core";
 import { useDebounceFn } from "@vueuse/core";
 
+export type Direction = "asc" | "desc" | null;
+
+export interface Option {
+	label: string;
+	value: FilterValue;
+	active: boolean;
+}
+
+export type FilterValue = string | number | boolean | null;
+
 export interface Refiner {
 	name: string;
 	label: string;
@@ -11,50 +21,18 @@ export interface Refiner {
 	meta: Record<string, any>;
 }
 
-export type Direction = "asc" | "desc" | null;
-
 export interface Sort extends Refiner {
 	type: "sort" | string;
 	direction: Direction;
 	next: string | null;
 }
 
-export type FilterValue = string | number | boolean | null;
-
-export type KnownFilter = "filter" | "set" | "date" | "boolean" | string;
-
-export interface FilterRefiner extends Refiner {
-	type: KnownFilter | string;
-	value: FilterValue;
-}
-
-export interface Option {
-	label: string;
-	value: FilterValue;
-	active: boolean;
-}
-
-export interface SetFilterRefiner extends FilterRefiner {
-	type: "set";
+export interface Filter extends Refiner {
+	type: string;
 	multiple: boolean;
 	options: Option[];
+	value: FilterValue;
 }
-
-export interface DateFilterRefiner extends FilterRefiner {
-	type: "date";
-	value: string;
-}
-
-export interface BooleanFilterRefiner extends FilterRefiner {
-	type: "boolean";
-	value: boolean;
-}
-
-type Filter =
-	| SetFilterRefiner
-	| DateFilterRefiner
-	| BooleanFilterRefiner
-	| FilterRefiner;
 
 export interface Search extends Refiner {}
 
@@ -215,7 +193,7 @@ export function useRefine<
 	/**
 	 * The current filters.
 	 */
-	function currentFilters(): FilterRefiner[] {
+	function currentFilters(): Filter[] {
 		return refinements.value.filters?.filter(({ active }) => active) ?? [];
 	}
 
@@ -527,7 +505,6 @@ export function useRefine<
 				applySearch(value, visitOptions);
 			}, debounce),
 			modelValue: refinements.value.config.search ?? "",
-			value: refinements.value.config.search ?? "",
 		};
 	}
 
@@ -548,7 +525,6 @@ export function useRefine<
 				applyMatch(value, visitOptions);
 			}, debounce),
 			modelValue: isSearching(refiner),
-			value: isSearching(refiner),
 		};
 	}
 

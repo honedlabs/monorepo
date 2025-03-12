@@ -15,11 +15,6 @@ export declare interface BindingOptions extends VisitOptions {
     debounce?: number;
 }
 
-export declare interface BooleanFilterRefiner extends FilterRefiner {
-    type: "boolean";
-    value: boolean;
-}
-
 export declare interface Config {
     delimiter: string;
     search: string | null;
@@ -28,23 +23,16 @@ export declare interface Config {
     matches?: string;
 }
 
-export declare interface DateFilterRefiner extends FilterRefiner {
-    type: "date";
-    value: string;
-}
-
 export declare type Direction = "asc" | "desc" | null;
 
-declare type Filter = SetFilterRefiner | DateFilterRefiner | BooleanFilterRefiner | FilterRefiner;
-
-export declare interface FilterRefiner extends Refiner {
-    type: KnownFilter | string;
+export declare interface Filter extends Refiner {
+    type: string;
+    multiple: boolean;
+    options: Option_2[];
     value: FilterValue;
 }
 
 export declare type FilterValue = string | number | boolean | null;
-
-export declare type KnownFilter = "filter" | "set" | "date" | "boolean" | string;
 
 declare interface Option_2 {
     label: string;
@@ -71,12 +59,6 @@ export declare interface Refiner {
 export declare interface Search extends Refiner {
 }
 
-export declare interface SetFilterRefiner extends FilterRefiner {
-    type: "set";
-    multiple: boolean;
-    options: Option_2[];
-}
-
 export declare interface Sort extends Refiner {
     type: "sort" | string;
     direction: Direction;
@@ -84,7 +66,7 @@ export declare interface Sort extends Refiner {
 }
 
 export declare function useRefine<T extends object, K extends T[keyof T] extends Refine ? keyof T : never>(props: T, key: K, defaultOptions?: VisitOptions): {
-    filters: ComputedRef<({
+    filters: ComputedRef<    {
     apply: (value: T, options?: VisitOptions) => void;
     clear: (options?: VisitOptions) => void;
     bind: () => {
@@ -93,20 +75,6 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     value: unknown;
     } | undefined;
     type: string;
-    value: FilterValue;
-    name: string;
-    label: string;
-    active: boolean;
-    meta: Record<string, any>;
-    } | {
-    apply: (value: T, options?: VisitOptions) => void;
-    clear: (options?: VisitOptions) => void;
-    bind: () => {
-    "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
-    modelValue: unknown;
-    value: unknown;
-    } | undefined;
-    type: "set";
     multiple: boolean;
     options: Option_2[];
     value: FilterValue;
@@ -114,35 +82,7 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     label: string;
     active: boolean;
     meta: Record<string, any>;
-    } | {
-    apply: (value: T, options?: VisitOptions) => void;
-    clear: (options?: VisitOptions) => void;
-    bind: () => {
-    "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
-    modelValue: unknown;
-    value: unknown;
-    } | undefined;
-    type: "date";
-    value: string;
-    name: string;
-    label: string;
-    active: boolean;
-    meta: Record<string, any>;
-    } | {
-    apply: (value: T, options?: VisitOptions) => void;
-    clear: (options?: VisitOptions) => void;
-    bind: () => {
-    "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
-    modelValue: unknown;
-    value: unknown;
-    } | undefined;
-    type: "boolean";
-    value: boolean;
-    name: string;
-    label: string;
-    active: boolean;
-    meta: Record<string, any>;
-    })[]>;
+    }[]>;
     sorts: ComputedRef<    {
     apply: (options?: VisitOptions) => void;
     clear: (options?: VisitOptions) => void;
@@ -163,7 +103,6 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     bind: () => {
     "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
     modelValue: boolean;
-    value: boolean;
     } | undefined;
     name: string;
     label: string;
@@ -174,7 +113,7 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     getFilter: (name: string) => Filter | undefined;
     getSort: (name: string, direction?: Direction) => Sort | undefined;
     getSearch: (name: string) => Search | undefined;
-    currentFilters: () => FilterRefiner[];
+    currentFilters: () => Filter[];
     currentSort: () => Sort | undefined;
     currentSearches: () => Search[];
     isFiltering: (name?: Filter | string) => boolean;
@@ -201,12 +140,10 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     bindSearch: (options?: BindingOptions) => {
         "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
         modelValue: string;
-        value: string;
     };
     bindMatch: (match: Search | string, options?: BindingOptions) => {
         "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
         modelValue: boolean;
-        value: boolean;
     } | undefined;
     stringValue: (value: any) => any;
     omitValue: (value: any) => any;
