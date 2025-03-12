@@ -33,7 +33,7 @@ class Search extends Refiner
      */
     public function refine($builder, $search, $columns, $boolean = 'and')
     {
-        $shouldBeApplied = \is_null($columns) || 
+        $shouldBeApplied = \is_null($columns) ||
             \in_array($this->getParameter(), $columns);
 
         $this->value($shouldBeApplied ? $search : null);

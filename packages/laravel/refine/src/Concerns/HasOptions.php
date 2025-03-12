@@ -220,38 +220,18 @@ trait HasOptions
     public function activateOptions($value)
     {
         $options = collect($this->getOptions())
-            ->filter(static fn (Option $option) => $option
-                ->active(static::shouldActivate($option, $value))
-                ->isActive()
-            )->values();
+            ->filter(static fn (Option $option) => $option->activate($value))
+            ->values();
 
         return match (true) {
-            $this->isStrict() && 
+            $this->isStrict() &&
                 $this->isMultiple() => $options->map->getValue()->all(),
 
             $this->isMultiple() => Arr::wrap($value),
 
             $this->isStrict() => $options->first()?->getValue(),
-            
+
             default => $value
         };
-    }
-
-    /**
-     * Determine if the option should be activated.
-     *
-     * @param  \Honed\Refine\Option  $option
-     * @param  mixed  $value
-     * @return bool
-     */
-    public static function shouldActivate($option, $value)
-    {
-        $optionValue = $option->getValue();
-
-        if (\is_array($value)) {
-            return \in_array($optionValue, $value, true);
-        }
-
-        return $optionValue === $value;
     }
 }
