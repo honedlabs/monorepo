@@ -118,6 +118,7 @@ export function useBulk<T = any>() {
 				}
 			},
 			modelValue: allSelected.value,
+			value: allSelected.value,
 		};
 	}
 
