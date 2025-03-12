@@ -36,19 +36,25 @@ function j(l, u = 200, o = {}) {
 }
 function Y(l, u, o = {}) {
   const r = M(() => l[u]), d = M(
-    () => r.value.filters.map((e) => ({
-      ...e,
-      apply: (n, t = {}) => F(e, n, t),
-      clear: (n = {}) => C(e, n),
-      bind: () => E(e.name)
-    }))
+    () => {
+      var e;
+      return ((e = r.value.filters) == null ? void 0 : e.map((n) => ({
+        ...n,
+        apply: (t, i = {}) => F(n, t, i),
+        clear: (t = {}) => C(n, t),
+        bind: () => E(n.name)
+      }))) ?? [];
+    }
   ), s = M(
-    () => r.value.sorts.map((e) => ({
-      ...e,
-      apply: (n = {}) => P(e, e.direction, n),
-      clear: (n = {}) => D(n),
-      bind: () => G(e)
-    }))
+    () => {
+      var e;
+      return ((e = r.value.sorts) == null ? void 0 : e.map((n) => ({
+        ...n,
+        apply: (t = {}) => P(n, n.direction, t),
+        clear: (t = {}) => D(t),
+        bind: () => G(n)
+      }))) ?? [];
+    }
   ), S = M(
     () => {
       var e;
@@ -80,11 +86,13 @@ function Y(l, u, o = {}) {
     return n = Array.isArray(n) ? n : [n], n.includes(e) ? n.filter((t) => t !== e) : [...n, e];
   }
   function y(e) {
-    return r.value.filters.find((n) => n.name === e);
+    var n;
+    return (n = r.value.filters) == null ? void 0 : n.find((t) => t.name === e);
   }
   function A(e, n = null) {
-    return r.value.sorts.find(
-      (t) => t.name === e && t.direction === n
+    var t;
+    return (t = r.value.sorts) == null ? void 0 : t.find(
+      (i) => i.name === e && i.direction === n
     );
   }
   function T(e) {
@@ -92,10 +100,12 @@ function Y(l, u, o = {}) {
     return (n = r.value.searches) == null ? void 0 : n.find((t) => t.name === e);
   }
   function $() {
-    return r.value.filters.filter(({ active: e }) => e);
+    var e;
+    return ((e = r.value.filters) == null ? void 0 : e.filter(({ active: n }) => n)) ?? [];
   }
   function w() {
-    return r.value.sorts.find(({ active: e }) => e);
+    var e;
+    return (e = r.value.sorts) == null ? void 0 : e.find(({ active: n }) => n);
   }
   function x() {
     var e;
@@ -212,6 +222,7 @@ function Y(l, u, o = {}) {
     });
   }
   function J(e = {}) {
+    var n;
     f.reload({
       ...o,
       ...e,
@@ -219,7 +230,10 @@ function Y(l, u, o = {}) {
         [r.value.config.searches]: void 0,
         [r.value.config.sorts]: void 0,
         ...Object.fromEntries(
-          r.value.filters.map((n) => [n.name, void 0])
+          ((n = r.value.filters) == null ? void 0 : n.map((t) => [
+            t.name,
+            void 0
+          ])) ?? []
         ),
         ...r.value.config.matches ? { [r.value.config.matches]: void 0 } : {}
       }

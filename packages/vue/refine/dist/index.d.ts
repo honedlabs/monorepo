@@ -54,8 +54,8 @@ declare interface Option_2 {
 export { Option_2 as Option }
 
 export declare interface Refine {
-    sorts: Sort[];
-    filters: Filter[];
+    sorts?: Sort[];
+    filters?: Filter[];
     config: Config;
     searches?: Search[];
 }

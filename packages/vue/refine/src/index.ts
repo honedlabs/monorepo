@@ -67,8 +67,8 @@ export interface Config {
 }
 
 export interface Refine {
-	sorts: Sort[];
-	filters: Filter[];
+	sorts?: Sort[];
+	filters?: Filter[];
 	config: Config;
 	searches?: Search[];
 }
@@ -96,27 +96,29 @@ export function useRefine<
 	/**
 	 * The available filters.
 	 */
-	const filters = computed(() =>
-		refinements.value.filters.map((filter) => ({
-			...filter,
-			apply: (value: T, options: VisitOptions = {}) =>
-				applyFilter(filter, value, options),
-			clear: (options: VisitOptions = {}) => clearFilter(filter, options),
-			bind: () => bindFilter(filter.name),
-		})),
+	const filters = computed(
+		() =>
+			refinements.value.filters?.map((filter) => ({
+				...filter,
+				apply: (value: T, options: VisitOptions = {}) =>
+					applyFilter(filter, value, options),
+				clear: (options: VisitOptions = {}) => clearFilter(filter, options),
+				bind: () => bindFilter(filter.name),
+			})) ?? [],
 	);
 
 	/**
 	 * The available sorts.
 	 */
-	const sorts = computed(() =>
-		refinements.value.sorts.map((sort) => ({
-			...sort,
-			apply: (options: VisitOptions = {}) =>
-				applySort(sort, sort.direction, options),
-			clear: (options: VisitOptions = {}) => clearSort(options),
-			bind: () => bindSort(sort),
-		})),
+	const sorts = computed(
+		() =>
+			refinements.value.sorts?.map((sort) => ({
+				...sort,
+				apply: (options: VisitOptions = {}) =>
+					applySort(sort, sort.direction, options),
+				clear: (options: VisitOptions = {}) => clearSort(options),
+				bind: () => bindSort(sort),
+			})) ?? [],
 	);
 
 	const searches = computed(() =>
@@ -188,7 +190,7 @@ export function useRefine<
 	 * Gets a filter by name.
 	 */
 	function getFilter(name: string): Filter | undefined {
-		return refinements.value.filters.find((filter) => filter.name === name);
+		return refinements.value.filters?.find((filter) => filter.name === name);
 	}
 
 	/**
@@ -198,7 +200,7 @@ export function useRefine<
 		name: string,
 		direction: Direction = null,
 	): Sort | undefined {
-		return refinements.value.sorts.find(
+		return refinements.value.sorts?.find(
 			(sort) => sort.name === name && sort.direction === direction,
 		);
 	}
@@ -214,14 +216,14 @@ export function useRefine<
 	 * The current filters.
 	 */
 	function currentFilters(): FilterRefiner[] {
-		return refinements.value.filters.filter(({ active }) => active);
+		return refinements.value.filters?.filter(({ active }) => active) ?? [];
 	}
 
 	/**
 	 * The current sort.
 	 */
 	function currentSort(): Sort | undefined {
-		return refinements.value.sorts.find(({ active }) => active);
+		return refinements.value.sorts?.find(({ active }) => active);
 	}
 
 	/**
@@ -452,7 +454,10 @@ export function useRefine<
 				[refinements.value.config.searches]: undefined,
 				[refinements.value.config.sorts]: undefined,
 				...Object.fromEntries(
-					refinements.value.filters.map((filter) => [filter.name, undefined]),
+					refinements.value.filters?.map((filter) => [
+						filter.name,
+						undefined,
+					]) ?? [],
 				),
 				...(refinements.value.config.matches
 					? { [refinements.value.config.matches]: undefined }
