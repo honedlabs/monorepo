@@ -96,7 +96,8 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => $action instanceof InlineAction
+                static fn (Action $action) => 
+                    $action instanceof InlineAction
             )
         );
     }
@@ -111,7 +112,8 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => $action instanceof BulkAction && $action->isAllowed()
+                static fn (Action $action) => 
+                    $action instanceof BulkAction && $action->isAllowed()
             )
         );
     }
@@ -126,7 +128,8 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => $action instanceof PageAction && $action->isAllowed()
+                static fn (Action $action) => 
+                    $action instanceof PageAction && $action->isAllowed()
             )
         );
     }
@@ -168,6 +171,28 @@ trait HasActions
         return \array_map(
             static fn (PageAction $action) => $action->toArray(),
             $this->getPageActions()
+        );
+    }
+
+    /**
+     * Get the actions for a record.
+     *
+     * @param  array<string,mixed>  $named
+     * @param  array<class-string,mixed>  $typed
+     * @return array<int,mixed>
+     */
+    public function getRecordActions($named, $typed)
+    {
+        $allowed = \array_filter(
+            $this->getInlineActions(),
+            static fn (InlineAction $action) => 
+                $action->isAllowed($named, $typed)
+        );
+
+        return \array_map(
+            static fn (InlineAction $action) => 
+                $action->resolve($named, $typed)->toArray(),
+            $allowed
         );
     }
 
