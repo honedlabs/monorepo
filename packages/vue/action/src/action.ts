@@ -3,7 +3,7 @@ import { router } from "@inertiajs/vue3";
 
 export type Identifier = string | number;
 
-interface Route {
+export interface Route {
 	href: string;
 	method: Method;
 }
