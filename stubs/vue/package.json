@@ -29,9 +29,9 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/:github_organisation/:package_slug.git"
+		"url": "https://github.com/:github_organisation/honed.git"
 	},
-	"homepage": "https://github.com/:github_organisation/:package_slug#readme",
+	"homepage": "https://github.com/:github_organisation/honed/tree/main/packages/vue/:package_slug#readme",
 	"files": [
 		"dist"
 	],
@@ -60,9 +60,9 @@
 		"axios": "^1.2.0",
 		"jsdom": "^25.0.1",
 		"typescript": "~5.4.0",
-		"vite": "^5.4.11",
-		"vite-plugin-dts": "^4.3.0",
-		"vitest": "^2.1.5",
-		"vue-tsc": "^2.1.10"
+		"vite": "^6.2.1",
+		"vite-plugin-dts": "^4.5.3",
+		"vitest": "^3.0.8",
+		"vue-tsc": "^2.2.8"
 	}
 }

@@ -74,8 +74,8 @@ class TestCase extends Orchestra
     protected function defineRoutes($router)
     {
         $router->middleware([\Inertia\Middleware::class])
-            ->group(function (Router $router) {
-                // $router->get('/', fn () => inertia('Index')->flash('Hello World'))
+            ->group(function ($router) {
+                // $router->get('/', fn () => inertia('Index'))
                 //     ->name('index');
             });
     }
