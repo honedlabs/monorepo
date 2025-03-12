@@ -165,14 +165,14 @@ trait HasBulkActions
             : $handler;
 
         if ($this->isChunked()) {
-            $handlerWrapper = $this->wrapHandlerForChunking($handler);
+            $handler = $this->wrapHandlerForChunking($handler);
         } elseif ($type !== 'builder') {
             $builder = $builder->get();
         }
 
-        [$named, $typed] = $this->getEvaluationParameters($model::class, $builder);
+        [$named, $typed] = $this->getEvaluationParameters($model, $builder);
 
-        return $this->evaluate($handlerWrapper, $named, $typed);    }
+        return $this->evaluate($handler, $named, $typed);    }
 
     /**
      * Wrap the handler for chunking.
