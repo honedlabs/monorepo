@@ -51,6 +51,7 @@ it('is sortable', function () {
             ->getNextDirection()->toBe($this->param)
         )
         ->toArray()->{'sort'}->toBe([
+            'active' => false,
             'direction' => null,
             'next' => $this->param,
         ]);
