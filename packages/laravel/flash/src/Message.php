@@ -150,6 +150,17 @@ class Message extends Primitive
     }
 
     /**
+     * Get the type from the config.
+     *
+     * @return string|null
+     */
+    public static function fallbackType()
+    {
+        /** @var string|null */
+        return config('flash.type', null);
+    }
+
+    /**
      * Set the duration.
      *
      * @param  int|null  $duration
@@ -173,25 +184,14 @@ class Message extends Primitive
     }
 
     /**
-     * Get the duration.
+     * Get the duration from the config.
      *
      * @return int|null
      */
-    protected function fallbackDuration()
+    public static function fallbackDuration()
     {
         /** @var int|null */
         return config('flash.duration', Parameters::DURATION);
-    }
-
-    /**
-     * Get the type.
-     *
-     * @return string|null
-     */
-    protected function fallbackType()
-    {
-        /** @var string|null */
-        return config('flash.type', null);
     }
 
     /**
