@@ -114,8 +114,9 @@ it('has base active columns', function () {
 
 it('toggles column activity', function () {
     $key = $this->table->formatScope($this->table->getColumnsKey());
+
     $request = Request::create('/', 'GET', [
-        $key => \sprintf('%s%s%s', 'price', $this->table->getDelimiter(), 'created_at')
+        $key => \sprintf('%s%s%s', 'cost', $this->table->getDelimiter(), 'created_at')
     ]);
 
     expect($this->table->request($request)->build())

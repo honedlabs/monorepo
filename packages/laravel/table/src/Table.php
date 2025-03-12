@@ -62,6 +62,13 @@ class Table extends Refine implements UrlRoutable
     protected $endpoint;
 
     /**
+     * Whether the model should be serialized per record.
+     * 
+     * @var bool|null
+     */
+    protected $withAttributes;
+
+    /**
      * The table records.
      *
      * @var array<int,array<string,mixed>>
@@ -74,57 +81,6 @@ class Table extends Refine implements UrlRoutable
      * @var array<string,mixed>
      */
     protected $paginationData = [];
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __call($method, $parameters)
-    {
-        switch ($method) {
-            case 'columns':
-                /** @var array<int,\Honed\Table\Columns\Column> $columns */
-                $columns = $parameters[0];
-
-                return $this->addColumns($columns);
-
-            case 'actions':
-                /** @var array<int,\Honed\Action\Action> $actions */
-                $actions = $parameters[0];
-
-                return $this->addActions($actions);
-
-            case 'defaultPagination':
-                /** @var int $defaultPagination */
-                $defaultPagination = $parameters[0];
-                $this->defaultPagination = $defaultPagination;
-
-                return $this;
-
-            case 'pagination':
-                /** @var int|array<int,int> $pagination */
-                $pagination = $parameters[0];
-                $this->pagination = $pagination;
-
-                return $this;
-
-            case 'paginator':
-                /** @var string $paginator */
-                $paginator = $parameters[0];
-                $this->paginator = $paginator;
-
-                return $this;
-
-            case 'endpoint':
-                /** @var string $endpoint */
-                $endpoint = $parameters[0];
-                $this->endpoint = $endpoint;
-
-                return $this;
-
-            default:
-                return parent::__call($method, $parameters);
-        }
-    }
 
     /**
      * Create a new table instance.
@@ -158,7 +114,9 @@ class Table extends Refine implements UrlRoutable
     {
         return $this->key // $this->getKey()
             ?? $this->getKeyColumn()?->getName()
-            ?? static::throwMissingKeyException();
+            ?? throw new \RuntimeException(
+                'The table must have a key column or a key property defined.'
+            );
     }
 
     /**
@@ -200,6 +158,73 @@ class Table extends Refine implements UrlRoutable
     public static function fallbackEndpoint()
     {
         return type(config('table.endpoint', '/actions'))->asString();
+    }
+
+    /**
+     * Set whether the model should be serialized per record.
+     * 
+     * @param  bool|null  $withAttributes
+     * @return $this
+     */
+    public function withAttributes($withAttributes = true)
+    {
+        $this->withAttributes = $withAttributes;
+
+        return $this;
+    }
+
+    /**
+     * Get whether the model should be serialized per record.
+     * 
+     * @return bool|null
+     */
+    public function isWithAttributes()
+    {
+        return (bool) ($this->withAttributes 
+            ?? static::fallbackWithAttributes());
+    }
+
+    /**
+     * Get whether the model should be serialized per record from the config.
+     * 
+     * @return bool
+     */
+    public static function fallbackWithAttributes()
+    {
+        return (bool) config('table.with_attributes', false);
+    }
+
+        /**
+     * {@inheritdoc}
+     */
+    public static function fallbackDelimiter()
+    {
+        return type(config('table.delimiter', ','))->asString();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function fallbackSearchesKey()
+    {
+        return type(config('table.searches_key', 'search'))->asString();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function fallbackMatchesKey()
+    {
+        parent::fallbackMatchesKey();
+        return type(config('table.matches_key', 'match'))->asString();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function fallbackMatching()
+    {
+        return (bool) config('table.match', false);
     }
 
     /**
@@ -278,38 +303,6 @@ class Table extends Refine implements UrlRoutable
             'columns' => $this->getColumnsKey(),
             'pages' => $this->getPagesKey(),
         ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function fallbackDelimiter()
-    {
-        return type(config('table.delimiter', ','))->asString();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function fallbackSearchesKey()
-    {
-        return type(config('table.config.searches', 'search'))->asString();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function fallbackMatchesKey()
-    {
-        return type(config('table.config.matches', 'match'))->asString();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function fallbackIsMatching()
-    {
-        return (bool) config('table.config.match', false);
     }
 
     /**
@@ -429,17 +422,53 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
-     * Throw an exception if the table does not have a key column or key property
-     * defined.
-     *
-     * @return never
-     *
-     * @throws \RuntimeException
+     * {@inheritdoc}
      */
-    protected static function throwMissingKeyException()
+    public function __call($method, $parameters)
     {
-        throw new \RuntimeException(
-            'The table must have a key column or a key property defined.'
-        );
+        switch ($method) {
+            case 'columns':
+                /** @var array<int,\Honed\Table\Columns\Column> $columns */
+                $columns = $parameters[0];
+
+                return $this->addColumns($columns);
+
+            case 'actions':
+                /** @var array<int,\Honed\Action\Action> $actions */
+                $actions = $parameters[0];
+
+                return $this->addActions($actions);
+
+            case 'defaultPagination':
+                /** @var int $defaultPagination */
+                $defaultPagination = $parameters[0];
+                $this->defaultPagination = $defaultPagination;
+
+                return $this;
+
+            case 'pagination':
+                /** @var int|array<int,int> $pagination */
+                $pagination = $parameters[0];
+                $this->pagination = $pagination;
+
+                return $this;
+
+            case 'paginator':
+                /** @var string $paginator */
+                $paginator = $parameters[0];
+                $this->paginator = $paginator;
+
+                return $this;
+
+            case 'endpoint':
+                /** @var string $endpoint */
+                $endpoint = $parameters[0];
+                $this->endpoint = $endpoint;
+
+                return $this;
+
+            default:
+                return parent::__call($method, $parameters);
+        }
     }
 }
