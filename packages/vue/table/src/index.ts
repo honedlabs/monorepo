@@ -63,6 +63,7 @@ export interface Column<T extends Record<string, any>> {
 	class?: string;
 	meta?: Record<string, any>;
 	sort?: {
+		active: boolean;
 		direction: Direction;
 		next: string | null;
 	};
@@ -81,7 +82,7 @@ export interface Table<
 			: U extends "cursor"
 				? CursorPaginator
 				: CollectionPaginator;
-	columns: Column<T>[];
+	columns?: Column<T>[];
 	recordsPerPage: PerPageRecord[];
 	toggleable: boolean;
 	actions: {
@@ -90,6 +91,7 @@ export interface Table<
 		page: PageAction[];
 	};
 	config: Config;
+	meta: Record<string, any>;
 }
 
 export interface TableOptions<T extends Record<string, any>> {
@@ -125,28 +127,35 @@ export function useTable<
 	const config = computed(() => table.value.config);
 
 	/**
+	 * The metadata for the table.
+	 */
+	const meta = computed(() => table.value.meta);
+
+	/**
 	 * The heading columns for the table.
 	 */
-	const headings = computed(() =>
-		table.value.columns
-			.filter(({ active, hidden }) => active && !hidden)
-			.map((column) => ({
-				...column,
-				applySort: (options: VisitOptions = {}) => sortColumn(column, options),
-			})),
+	const headings = computed(
+		() =>
+			table.value.columns
+				?.filter(({ active, hidden }) => active && !hidden)
+				.map((column) => ({
+					...column,
+					isSorting: column.sort?.active,
+					toggleSort: (options: VisitOptions = {}) => sort(column, options),
+				})) ?? [],
 	);
 
 	/**
 	 * All of the table's columns
 	 */
-	const columns = computed(() =>
-		table.value.columns
-			.filter(({ hidden }) => !hidden)
-			.map((column) => ({
-				...column,
-				toggleColumn: (options: VisitOptions = {}) =>
-					toggleColumn(column, options),
-			})),
+	const columns = computed(
+		() =>
+			table.value.columns
+				?.filter(({ hidden }) => !hidden)
+				.map((column) => ({
+					...column,
+					toggle: (options: VisitOptions = {}) => toggle(column, options),
+				})) ?? [],
 	);
 
 	/**
@@ -281,11 +290,15 @@ export function useTable<
 		return record[config.value.record] as Identifier;
 	}
 
+	/**
+	 * Visit a page.
+	 */
 	function toPage(link: string, options: VisitOptions = {}) {
 		router.visit(link, {
+			preserveScroll: true,
+			preserveState: true,
 			...defaultOptions,
 			...options,
-			preserveState: true,
 			method: "get",
 		});
 	}
@@ -361,7 +374,7 @@ export function useTable<
 	/**
 	 * Apply a column sort.
 	 */
-	function sortColumn(column: Column<U>, options: VisitOptions = {}) {
+	function sort(column: Column<U>, options: VisitOptions = {}) {
 		if (!column.sort) {
 			return;
 		}
@@ -378,7 +391,7 @@ export function useTable<
 	/**
 	 * Toggle a column's visibility.
 	 */
-	function toggleColumn(column: Column<U>, options: VisitOptions = {}) {
+	function toggle(column: Column<U>, options: VisitOptions = {}) {
 		const params = refine.toggleValue(
 			column.name,
 			headings.value.map(({ name }) => name),
@@ -427,33 +440,62 @@ export function useTable<
 		};
 	}
 	return reactive({
+		/** Retrieve a record's identifier */
+		getRecordKey,
+		/** Table-specific metadata */
+		meta,
+		/** The heading columns for the table */
 		headings,
+		/** All of the table's columns */
 		columns,
+		/** The records of the table */
 		records,
+		/** The available bulk actions */
 		bulkActions,
+		/** The available page actions */
 		pageActions,
+		/** The available number of records to display per page */
 		rowsPerPage,
+		/** The current record per page item */
 		currentPage,
+		/** The pagination metadata */
 		paginator,
-		isPageSelected,
-		selectPage,
-		deselectPage,
+		/** Execute an inline action */
+		executeInlineAction,
+		/** Execute a bulk action */
+		executeBulkAction,
+		/** Execute a page action */
+		executePageAction,
+		/** Apply a new page by changing the number of records to display */
+		applyPage,
 		/** The current selection of records */
 		selection: bulk.selection,
 		/** Select the given records */
 		select: (record: U) => bulk.select(getRecordKey(record)),
 		/** Deselect the given records */
 		deselect: (record: U) => bulk.deselect(getRecordKey(record)),
+		/** Select records on the current page */
+		selectPage,
+		/** Deselect records on the current page */
+		deselectPage,
 		/** Toggle the selection of the given records */
 		toggle: (record: U) => bulk.toggle(getRecordKey(record)),
 		/** Determine if the given record is selected */
 		selected: (record: U) => bulk.selected(getRecordKey(record)),
+		/** Select all records */
+		selectAll: bulk.selectAll,
+		/** Deselect all records */
+		deselectAll: bulk.deselectAll,
+		/** Whether all records on the current page are selected */
+		isPageSelected,
 		/** Determine if any records are selected */
 		hasSelected: bulk.hasSelected,
+		/** Bind the given record to a checkbox */
+		bindCheckbox: (record: U) => bulk.bind(getRecordKey(record)),
 		/** Bind the select all checkbox to the current page */
 		bindPage,
-		/** Bind the given record to a checkbox */
-		bind: (record: U) => bulk.bind(getRecordKey(record)),
+		/** Bind select all records to the checkbox */
+		bindAll: bulk.bindAll,
 		/** Include the sorts, filters, and search query */
 		...refine,
 	});
