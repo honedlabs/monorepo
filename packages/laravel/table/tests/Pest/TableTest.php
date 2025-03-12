@@ -131,3 +131,35 @@ it('retrieves records', function () {
             ->{'actions'}->toHaveCount(2) // ID not divisible by 2
         );
 });
+
+it('retrieves records with attributes', function () {
+    $product = product();
+
+    $request = Request::create('/', 'GET');
+
+    $columns = $this->test->getColumns();
+
+    expect($this->test)
+        ->isWithAttributes()->toBeFalse()
+        ->withAttributes()->toBe($this->test)
+        ->isWithAttributes()->toBeTrue();
+
+    $this->test->retrieveRecords($product, $request, $columns);
+
+    $colKeys = \array_map(fn (Column $column) => $column->getParameter(), $columns);
+
+    $keys = \array_unique(
+        \array_merge(
+            $colKeys, 
+            \array_keys($product->toArray()), 
+            ['actions']
+        )
+    );
+
+    expect($this->test->getRecords())
+        ->{0}->scoped(fn ($record) => $record
+            ->toHaveKeys($keys)
+            ->toHaveCount(\count($keys))
+            ->{'actions'}->toHaveCount(2) // ID not divisible by 2
+        );
+});

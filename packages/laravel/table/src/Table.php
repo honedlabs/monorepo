@@ -321,7 +321,7 @@ class Table extends Refine implements UrlRoutable
         $actions = $this->getInlineActions();
 
         $this->records = $records->map(
-            static fn ($record) => static::createRecord($record, $columns, $actions)
+            fn ($record) => $this->createRecord($record, $columns, $actions)
         )->all();
     }
 
@@ -333,7 +333,7 @@ class Table extends Refine implements UrlRoutable
      * @param  array<int,\Honed\Action\InlineAction>  $actions
      * @return array<string,mixed>
      */
-    public static function createRecord($model, $columns, $actions)
+    public function createRecord($model, $columns, $actions)
     {
         [$named, $typed] = static::getModelParameters($model);
 
@@ -347,13 +347,21 @@ class Table extends Refine implements UrlRoutable
             )
         );
 
-        $record = Arr::mapWithKeys(
-            $columns,
-            fn (Column $column) => $column->createRecord($model),
-        );
+        $record = $this->isWithAttributes()
+            ? $model->toArray()
+            : [];
 
         /** @var array<string,mixed> */
-        return \array_merge($record, ['actions' => $actions]);
+        $record = \array_merge($record,
+            Arr::mapWithKeys(
+                $columns,
+                fn (Column $column) => $column->createRecord($model),
+            ), [
+                'actions' => $actions,
+            ]
+        );
+
+        return $record;
     }
 
     /**

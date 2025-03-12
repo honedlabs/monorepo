@@ -16,6 +16,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Attributes
+    |--------------------------------------------------------------------------
+    |
+    | By default, the table will not serialize the model attributes and opt to
+    | build the record up using the provided columns. If you would like to
+    | serialize the model attributes, and then use the columns to override the
+    | properties, you can set this to true.
+    |
+    */
+
+    'attributes' => false,
+
+    /*
+    |--------------------------------------------------------------------------
     | Delimiter
     |--------------------------------------------------------------------------
     |
