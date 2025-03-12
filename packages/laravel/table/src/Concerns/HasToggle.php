@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Illuminate\Support\Str;
-use Honed\Table\Columns\Column;
-use Illuminate\Support\Facades\Cookie;
-use Honed\Table\Contracts\ShouldToggle;
-use Honed\Table\Contracts\ShouldRemember;
 use Honed\Core\Concerns\InterpretsRequest;
+use Honed\Table\Columns\Column;
+use Honed\Table\Contracts\ShouldRemember;
+use Honed\Table\Contracts\ShouldToggle;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Str;
 
 trait HasToggle
 {
@@ -179,7 +179,6 @@ trait HasToggle
         return (bool) config('table.toggle.remember', false);
     }
 
-
     /**
      * Get the cookie name to use for the table toggle.
      *
@@ -293,13 +292,22 @@ trait HasToggle
      */
     public function toggleColumns($request, $columns)
     {
-        if (! $this->isToggleable()) {
-            return $columns;
+        if (! $this->isToggleable() || $this->isWithoutToggling()) {
+            return \array_values(
+                \array_filter(
+                    $columns,
+                    static fn (Column $column) => $column->display()
+                )
+            );
         }
 
-        $interpreter = new class { use InterpretsRequest; };
+        $interpreter = new class
+        {
+            use InterpretsRequest;
+        };
 
         $key = $this->getColumnsKey();
+
         /** @var array<int,string>|null */
         $params = $interpreter->interpretArray($request, $key, $this->getDelimiter());
 
@@ -307,15 +315,12 @@ trait HasToggle
             $params = $this->configureCookie($request, $params);
         }
 
-        return collect($columns)
-            ->filter(static function (Column $column) use ($params) {
-                $active = $column->isDisplayed($params);
-                $column->active($active);
-
-                return $active;
-            })
-            ->values()
-            ->all();
+        return \array_values(
+            \array_filter(
+                $columns,
+                static fn (Column $column) => $column->display($params)
+            )
+        );
     }
 
     /**
@@ -329,38 +334,15 @@ trait HasToggle
     protected function configureCookie($request, $params)
     {
         if (filled($params)) {
-            $this->enqueueCookie($params);
+            Cookie::queue(
+                $this->getCookieName(),
+                \json_encode($params),
+                $this->getDuration()
+            );
 
             return $params;
         }
 
-        return $this->dequeueCookie($request, $params);
-    }
-
-    /**
-     * Enqueue a new cookie with preference data.
-     *
-     * @param  array<int,string>  $params
-     * @return void
-     */
-    protected function enqueueCookie($params)
-    {
-        Cookie::queue(
-            $this->getCookieName(),
-            \json_encode($params),
-            $this->getDuration()
-        );
-    }
-
-    /**
-     * Retrieve the preference data from the cookie if it exists.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  array<int,string>|null  $params
-     * @return array<int,string>|null
-     */
-    protected function dequeueCookie($request, $params)
-    {
         $value = $request->cookie($this->getCookieName(), null);
 
         if (! \is_string($value)) {
