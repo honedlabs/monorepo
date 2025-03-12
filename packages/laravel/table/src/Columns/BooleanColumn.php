@@ -9,14 +9,14 @@ class BooleanColumn extends Column
     /**
      * The label to display when the value evaluates to true.
      *
-     * @var string|null
+     * @var string
      */
     protected $trueLabel = 'True';
 
     /**
      * The label to display when the value evaluates to false.
      *
-     * @var string|null
+     * @var string
      */
     protected $falseLabel = 'False';
 

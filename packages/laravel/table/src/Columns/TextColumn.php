@@ -43,7 +43,7 @@ class TextColumn extends Column
     public function formatValue($value)
     {
         if (\is_null($value)) {
-            return $this->getPlaceholder();
+            return $this->getFallback();
         }
 
         $value = type($value)->asString();

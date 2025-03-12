@@ -45,14 +45,15 @@ class DateColumn extends Column
     public function formatValue($value)
     {
         if (\is_null($value)) {
-            return $this->getPlaceholder();
+            return $this->getFallback();
         }
         
         if (! $value instanceof Carbon) {
             try {
+                // @phpstan-ignore-next-line
                 $value = Carbon::parse($value, $this->getTimezone());
             } catch (\InvalidArgumentException $e) {
-                return $this->getPlaceholder();
+                return $this->getFallback();
             }
         }
 
@@ -129,7 +130,8 @@ class DateColumn extends Column
      */
     public function getTimezone()
     {
-        return $this->timezone 
+        /** @var string|null */
+        return $this->timezone
             ?? config('app.timezone');
     }
 }

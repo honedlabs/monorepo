@@ -9,6 +9,7 @@ use Honed\Table\Columns\Column;
 use Illuminate\Support\Facades\Cookie;
 use Honed\Table\Contracts\ShouldToggle;
 use Honed\Table\Contracts\ShouldRemember;
+use Honed\Core\Concerns\InterpretsRequest;
 
 trait HasToggle
 {
@@ -296,7 +297,11 @@ trait HasToggle
             return $columns;
         }
 
-        $params = $this->getToggledColumns($request);
+        $interpreter = new class { use InterpretsRequest; };
+
+        $key = $this->getColumnsKey();
+        /** @var array<int,string>|null */
+        $params = $interpreter->interpretArray($request, $key, $this->getDelimiter());
 
         if ($this->isRememberable()) {
             $params = $this->configureCookie($request, $params);
@@ -309,30 +314,6 @@ trait HasToggle
 
                 return $active;
             })
-            ->values()
-            ->all();
-    }
-
-    /**
-     * Get the toggled columns from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array<int,string>|null
-     */
-    public function getToggledColumns($request)
-    {
-        /** @var string */
-        $key = $this->formatScope($this->getColumnsKey());
-
-        $columns = $request->safeArray($key, null, $this->getDelimiter());
-
-        if (\is_null($columns) || $columns->isEmpty()) {
-            return null;
-        }
-
-        return $columns
-            ->map(\trim(...))
-            ->filter()
             ->values()
             ->all();
     }
