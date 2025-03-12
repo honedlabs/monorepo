@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Action\Concerns;
 
 use Closure;
-use Illuminate\Support\Facades\App;
 use Honed\Action\Contracts\Actionable;
+use Illuminate\Support\Facades\App;
 
 trait HasAction
 {
@@ -24,14 +24,6 @@ trait HasAction
      * @return mixed
      */
     abstract public function execute($parameter);
-
-    /**
-     * Get the named and typed parameters to use for callable evaluation.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Model  $parameter
-     * @return array{array<string, mixed>,  array<class-string, mixed>}
-     */
-    abstract protected function getEvaluationParameters($parameter);
 
     /**
      * Set the action handler.
@@ -79,10 +71,10 @@ trait HasAction
 
         return match (true) {
             \is_string($action) => Closure::fromCallable([
-                type(App::make($action))->as(Actionable::class), 'handle'
+                type(App::make($action))->as(Actionable::class), 'handle',
             ]),
             $this instanceof Actionable => Closure::fromCallable([
-                $this, 'handle'
+                $this, 'handle',
             ]),
             default => $action,
         };
