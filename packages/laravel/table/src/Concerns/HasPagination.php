@@ -182,7 +182,6 @@ trait HasPagination
         return type(config('table.pages_key', 'page'))->asString();
     }
 
-
     /**
      * Set the query parameter for the number of records to show per page.
      *
@@ -207,7 +206,7 @@ trait HasPagination
     }
 
     /**
-     * Get the query parameter for the number of records to show per page from 
+     * Get the query parameter for the number of records to show per page from
      * the config.
      *
      * @return string

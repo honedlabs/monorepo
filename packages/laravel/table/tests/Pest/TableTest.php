@@ -22,7 +22,7 @@ it('has a sorts key', function () {
 
     // Anonymous
     expect(Table::make())
-        ->getSortsKey()->toBe(config('table.config.sorts'))
+        ->getSortsKey()->toBe(config('table.sorts_key'))
         ->sortsKey($sortsKey)->toBeInstanceOf(Table::class)
         ->getSortsKey()->toBe($sortsKey);
 });
@@ -38,7 +38,7 @@ it('has a searches key', function () {
 
     // Anonymous
     expect(Table::make())
-        ->getSearchesKey()->toBe(config('table.config.searches'))
+        ->getSearchesKey()->toBe(config('table.searches_key'))
         ->searchesKey($searchesKey)->toBeInstanceOf(Table::class)
         ->getSearchesKey()->toBe($searchesKey);
 });
@@ -48,7 +48,7 @@ it('can match', function () {
 
     // Class-based
     expect($this->test)
-        ->isMatching()->toBe(config('table.matches'));
+        ->isMatching()->toBe(config('table.match'));
 
     expect($this->test->match($matching))
         ->toBe($this->test)
@@ -56,7 +56,7 @@ it('can match', function () {
 
     // Anonymous
     expect(Table::make())
-        ->isMatching()->toBe(config('table.matches'));
+        ->isMatching()->toBe(config('table.match'));
 
     expect(Table::make()->match($matching))
         ->toBeInstanceOf(Table::class)
@@ -74,7 +74,7 @@ it('has a delimiter', function () {
 
     // Anonymous
     expect(Table::make())
-        ->getDelimiter()->toBe(config('table.config.delimiter'))
+        ->getDelimiter()->toBe(config('table.delimiter'))
         ->delimiter($delimiter)->toBeInstanceOf(Table::class)
         ->getDelimiter()->toBe($delimiter);
 });

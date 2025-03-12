@@ -35,13 +35,13 @@ class Table extends Refine implements UrlRoutable
     use Encodable;
     use HasActions;
     use HasColumns;
-
     use HasMeta;
 
     /**
      * @use HasPagination<TModel, TBuilder>
      */
     use HasPagination;
+
     use HasParameterNames;
     use HasParameterNames;
     use HasTableBindings;
@@ -63,7 +63,7 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Whether the model should be serialized per record.
-     * 
+     *
      * @var bool|null
      */
     protected $withAttributes;
@@ -162,7 +162,7 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Set whether the model should be serialized per record.
-     * 
+     *
      * @param  bool|null  $withAttributes
      * @return $this
      */
@@ -175,26 +175,26 @@ class Table extends Refine implements UrlRoutable
 
     /**
      * Get whether the model should be serialized per record.
-     * 
+     *
      * @return bool|null
      */
     public function isWithAttributes()
     {
-        return (bool) ($this->withAttributes 
+        return (bool) ($this->withAttributes
             ?? static::fallbackWithAttributes());
     }
 
     /**
      * Get whether the model should be serialized per record from the config.
-     * 
+     *
      * @return bool
      */
     public static function fallbackWithAttributes()
     {
-        return (bool) config('table.with_attributes', false);
+        return (bool) config('table.attributes', false);
     }
 
-        /**
+    /**
      * {@inheritdoc}
      */
     public static function fallbackDelimiter()
@@ -216,6 +216,7 @@ class Table extends Refine implements UrlRoutable
     public static function fallbackMatchesKey()
     {
         parent::fallbackMatchesKey();
+
         return type(config('table.matches_key', 'match'))->asString();
     }
 
