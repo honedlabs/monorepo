@@ -61,7 +61,7 @@ export declare interface PageAction extends Action {
     type: "page";
 }
 
-declare interface Route {
+export declare interface Route {
     href: string;
     method: Method;
 }
@@ -84,6 +84,7 @@ export declare function useBulk<T = any>(): {
     bindAll: () => {
         "onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
         modelValue: boolean;
+        value: boolean;
     };
 };
 

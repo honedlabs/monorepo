@@ -1,72 +1,73 @@
 import { ref as m, computed as f } from "vue";
-import { router as s } from "@inertiajs/vue3";
+import { router as v } from "@inertiajs/vue3";
 function y() {
   const e = m({
     all: !1,
     only: /* @__PURE__ */ new Set(),
     except: /* @__PURE__ */ new Set()
   });
-  function n() {
+  function a() {
     e.value.all = !0, e.value.only.clear(), e.value.except.clear();
   }
-  function a() {
+  function n() {
     e.value.all = !1, e.value.only.clear(), e.value.except.clear();
   }
   function u(...l) {
     l.forEach((t) => e.value.except.delete(t)), l.forEach((t) => e.value.only.add(t));
   }
-  function r(...l) {
+  function c(...l) {
     l.forEach((t) => e.value.except.add(t)), l.forEach((t) => e.value.only.delete(t));
   }
   function i(l, t) {
-    if (o(l) || t === !1)
-      return r(l);
-    if (!o(l) || t === !0)
+    if (r(l) || t === !1)
+      return c(l);
+    if (!r(l) || t === !0)
       return u(l);
   }
-  function o(l) {
+  function r(l) {
     return e.value.all ? !e.value.except.has(l) : e.value.only.has(l);
   }
-  const c = f(() => e.value.all && e.value.except.size === 0), v = f(() => e.value.only.size > 0 || c.value);
+  const o = f(() => e.value.all && e.value.except.size === 0), s = f(() => e.value.only.size > 0 || o.value);
   function d(l) {
     return {
       "onUpdate:modelValue": (t) => {
-        console.log("Checked:", t), t ? u(l) : r(l);
+        t ? u(l) : c(l);
       },
-      modelValue: o(l),
+      modelValue: r(l),
       value: l
     };
   }
   function p() {
     return {
       "onUpdate:modelValue": (l) => {
-        console.log("Checked:", l), l ? n() : a();
+        l ? a() : n();
       },
-      modelValue: c.value
+      modelValue: o.value,
+      value: o.value
     };
   }
   return {
-    allSelected: c,
+    allSelected: o,
     selection: e,
-    hasSelected: v,
-    selectAll: n,
-    deselectAll: a,
+    hasSelected: s,
+    selectAll: a,
+    deselectAll: n,
     select: u,
-    deselect: r,
+    deselect: c,
     toggle: i,
-    selected: o,
+    selected: r,
     bind: d,
     bindAll: p
   };
 }
-function g(e, n, a = {}, u = {}) {
-  return e.route ? (s.visit(e.route.href, {
+function A(e, a, n = {}, u = {}) {
+  return e.route ? (v.visit(e.route.href, {
     ...u,
     method: e.route.method
-  }), !0) : e.action && n ? (s.post(
-    n,
+  }), !0) : e.action && a ? (v.post(
+    a,
     {
-      ...a,
+      ...n,
       name: e.name,
       type: e.type
     },
@@ -74,6 +75,6 @@ function g(e, n, a = {}, u = {}) {
   ), !0) : !1;
 }
 export {
-  g as executeAction,
+  A as executeAction,
   y as useBulk
 };

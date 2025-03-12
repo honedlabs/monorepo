@@ -92,7 +92,6 @@ export function useBulk<T = any>() {
 	function bind(key: T) {
 		return {
 			"onUpdate:modelValue": (checked: boolean | "indeterminate") => {
-				console.log("Checked:", checked);
 				if (checked) {
 					select(key);
 				} else {
@@ -110,7 +109,6 @@ export function useBulk<T = any>() {
 	function bindAll() {
 		return {
 			"onUpdate:modelValue": (checked: boolean | "indeterminate") => {
-				console.log("Checked:", checked);
 				if (checked) {
 					selectAll();
 				} else {
