@@ -252,8 +252,10 @@ trait HasBulkActions
      * @param  mixed  $value
      * @return array{array<string, mixed>,  array<class-string, mixed>}
      */
-    protected function getEvaluationParameters($model, $value)
+    protected function getEvaluationParameters($model, $value = null)
     {
+        $value ??= $model;
+
         [$named, $typed] = static::getBuilderParameters($model, $value);
 
         $named = \array_merge($named, [
