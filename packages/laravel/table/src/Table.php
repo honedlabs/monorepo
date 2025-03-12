@@ -9,6 +9,7 @@ use Honed\Action\Concerns\HasParameterNames;
 use Honed\Action\Handler;
 use Honed\Action\InlineAction;
 use Honed\Core\Concerns\Encodable;
+use Honed\Core\Concerns\HasMeta;
 use Honed\Refine\Refine;
 use Honed\Refine\Searches\Search;
 use Honed\Table\Columns\Column;
@@ -43,6 +44,7 @@ class Table extends Refine implements UrlRoutable
     use HasParameterNames;
     use HasTableBindings;
     use HasToggle;
+    use HasMeta;
 
     /**
      * The unique identifier column for the table.
@@ -249,6 +251,7 @@ class Table extends Refine implements UrlRoutable
             'recordsPerPage' => $this->recordsPerPageToArray(),
             'toggleable' => $this->isToggleable(),
             'actions' => $this->actionsToArray(),
+            'meta' => $this->getMeta(),
         ]);
     }
 
@@ -392,7 +395,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    protected function pipeline($builder, $request)
+    protected function pipeline($builder, $request, $sorts = [], $filters = [], $searches = [])
     {
         $columns = $this->toggleColumns(
             $request,
@@ -403,7 +406,7 @@ class Table extends Refine implements UrlRoutable
         $this->mergeSearches($columns);
 
         // Use the parent pipeline to perform refinement.
-        parent::pipeline($builder, $request);
+        parent::pipeline($builder, $request, $sorts, null, $searches);
 
         $this->retrieveRecords($builder, $request, $columns);
     }

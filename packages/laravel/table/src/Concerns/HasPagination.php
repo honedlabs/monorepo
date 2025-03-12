@@ -67,7 +67,7 @@ trait HasPagination
             return $this->paginator;
         }
 
-        return $this->fallbackPaginator();
+        return static::fallbackPaginator();
     }
 
     /**
@@ -75,7 +75,7 @@ trait HasPagination
      *
      * @return 'cursor'|'simple'|'length-aware'|'collection'|string
      */
-    protected function fallbackPaginator()
+    public static function fallbackPaginator()
     {
         return type(config('table.paginator', 'length-aware'))->asString();
     }
@@ -95,7 +95,18 @@ trait HasPagination
             return $this->pagination();
         }
 
-        return $this->getDefaultPagination();
+        return static::fallbackPagination();
+    }
+
+    /**
+     * Retrieve the pagination options for the table from the config.
+     *
+     * @return int|array<int,int>
+     */
+    public static function fallbackPagination()
+    {
+        /** @var int|array<int,int> */
+        return config('table.pagination.options', 10);
     }
 
     /**

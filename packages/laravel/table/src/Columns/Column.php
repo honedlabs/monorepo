@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Table\Columns;
 
 use Honed\Core\Concerns\Allowable;
+use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasExtra;
-use Honed\Core\Concerns\HasFormatter;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
@@ -32,7 +32,6 @@ class Column extends Primitive
     use Concerns\IsSortable;
     use Concerns\IsToggleable;
     use HasExtra;
-    use HasFormatter;
     use HasIcon;
     use HasLabel;
     use HasMeta;
@@ -43,6 +42,7 @@ class Column extends Primitive
     use IsHidden;
     use IsKey;
     use Transformable;
+    use HasAlias;
 
     /**
      * Create a new column instance.
@@ -64,17 +64,20 @@ class Column extends Primitive
     public function setUp()
     {
         $this->active(true);
-        $this->type('default');
+        $this->type('column');
     }
 
     /**
-     * Get the serialized name of the column.
+     * Get the parameter for the column.
      *
      * @return string
      */
-    public function serializeName()
+    public function getParameter()
     {
-        return Str::replace('.', '_', type($this->getName())->asString());
+        return $this->getAlias()
+            ?? Str::of($this->getName())
+                ->replace('.', '_')
+                ->value();
     }
 
     /**
@@ -88,7 +91,7 @@ class Column extends Primitive
         $value = Arr::get($model, $this->getName());
 
         return [
-            $this->serializeName() => $this->apply($value),
+            $this->getParameter() => $this->apply($value),
         ];
     }
 
@@ -113,7 +116,7 @@ class Column extends Primitive
      */
     public function formatValue($value)
     {
-        return $this->format($value) ?? $this->getPlaceholder();
+        return $value ?? $this->getPlaceholder();
     }
 
     /**
@@ -122,7 +125,7 @@ class Column extends Primitive
     public function toArray()
     {
         return [
-            'name' => $this->serializeName(),
+            'name' => $this->getParameter(),
             'label' => $this->getLabel(),
             'type' => $this->getType(),
             'hidden' => $this->isHidden(),
