@@ -78,7 +78,6 @@ trait HasColumns
         return $this->withoutColumns;
     }
 
-
     /**
      * Get the columns for the table.
      *
