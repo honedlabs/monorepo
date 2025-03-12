@@ -48,7 +48,7 @@ trait HasBulkActions
 
     /**
      * Determine if the action should be chunked.
-     * 
+     *
      * @return bool
      */
     public function isChunked()
@@ -62,7 +62,7 @@ trait HasBulkActions
 
     /**
      * Determine if the action should be chunked from the config.
-     * 
+     *
      * @return bool
      */
     public static function fallbackChunked()
@@ -86,7 +86,7 @@ trait HasBulkActions
 
     /**
      * Determine if the action should chunk the records by id.
-     * 
+     *
      * @return bool
      */
     public function chunksById()
@@ -96,7 +96,7 @@ trait HasBulkActions
 
     /**
      * Determine if the action should chunk the records by id from the config.
-     * 
+     *
      * @return bool
      */
     public static function fallbackChunksById()
@@ -160,7 +160,7 @@ trait HasBulkActions
             static::throwInvalidHandlerReference();
         }
 
-        $handler = $type === 'model' 
+        $handler = $type === 'model'
             ? fn ($records) => $records->each($handler)
             : $handler;
 
@@ -172,7 +172,8 @@ trait HasBulkActions
 
         [$named, $typed] = $this->getEvaluationParameters($model, $builder);
 
-        return $this->evaluate($handler, $named, $typed);    }
+        return $this->evaluate($handler, $named, $typed);
+    }
 
     /**
      * Wrap the handler for chunking.
@@ -202,7 +203,7 @@ trait HasBulkActions
 
         foreach ($parameters as $parameter) {
             $name = $parameter->getName();
-            
+
             $typed = $parameter->getType();
 
             $type = $typed instanceof \ReflectionNamedType
@@ -229,7 +230,7 @@ trait HasBulkActions
      * Get the named and typed parameters to use for the bulk action.
      *
      * @param  class-string<\Illuminate\Database\Eloquent\Model>  $model
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Collection<\Illuminate\Database\Eloquent\Model>  $value
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Collection<int,\Illuminate\Database\Eloquent\Model>  $value
      * @return array{array<string, mixed>,  array<class-string, mixed>}
      */
     protected function getEvaluationParameters($model, $value)
@@ -250,9 +251,9 @@ trait HasBulkActions
 
     /**
      * Throw an exception if the handler references the builder.
-     * 
+     *
      * @return never
-     * 
+     *
      * @throws \RuntimeException
      */
     protected static function throwInvalidHandlerReference()

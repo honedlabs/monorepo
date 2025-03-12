@@ -96,8 +96,7 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => 
-                    $action instanceof InlineAction
+                static fn (Action $action) => $action instanceof InlineAction
             )
         );
     }
@@ -112,8 +111,7 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => 
-                    $action instanceof BulkAction && $action->isAllowed()
+                static fn (Action $action) => $action instanceof BulkAction && $action->isAllowed()
             )
         );
     }
@@ -128,8 +126,7 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => 
-                    $action instanceof PageAction && $action->isAllowed()
+                static fn (Action $action) => $action instanceof PageAction && $action->isAllowed()
             )
         );
     }
@@ -185,13 +182,11 @@ trait HasActions
     {
         $allowed = \array_filter(
             $this->getInlineActions(),
-            static fn (InlineAction $action) => 
-                $action->isAllowed($named, $typed)
+            static fn (InlineAction $action) => $action->isAllowed($named, $typed)
         );
 
         return \array_map(
-            static fn (InlineAction $action) => 
-                $action->resolve($named, $typed)->toArray(),
+            static fn (InlineAction $action) => $action->resolve($named, $typed)->toArray(),
             $allowed
         );
     }
