@@ -124,7 +124,7 @@ export function useRefine<
 			...search,
 			apply: (options: VisitOptions = {}) => applyMatch(search, options),
 			clear: (options: VisitOptions = {}) => applyMatch(search, options),
-			bind: () => bindMatch(search)
+			bind: () => bindMatch(search),
 		})),
 	);
 
@@ -171,7 +171,6 @@ export function useRefine<
 		);
 	}
 
-		
 	/**
 	 * Toggle the presence of a value in an array.
 	 */
@@ -183,6 +182,13 @@ export function useRefine<
 		}
 
 		return [...values, value];
+	}
+
+	/**
+	 * Gets a filter by name.
+	 */
+	function getFilter(name: string): Filter | undefined {
+		return refinements.value.filters.find((filter) => filter.name === name);
 	}
 
 	/**
@@ -198,24 +204,10 @@ export function useRefine<
 	}
 
 	/**
-	 * Gets a filter by name.
-	 */
-	function getFilter(name: string): Filter | undefined {
-		return refinements.value.filters.find((filter) => filter.name === name);
-	}
-
-	/**
 	 * Gets a search by name.
 	 */
 	function getSearch(name: string): Search | undefined {
 		return refinements.value.searches?.find((search) => search.name === name);
-	}
-
-	/**
-	 * The current sort.
-	 */
-	function currentSort(): Sort | undefined {
-		return refinements.value.sorts.find(({ active }) => active);
 	}
 
 	/**
@@ -226,6 +218,13 @@ export function useRefine<
 	}
 
 	/**
+	 * The current sort.
+	 */
+	function currentSort(): Sort | undefined {
+		return refinements.value.sorts.find(({ active }) => active);
+	}
+
+	/**
 	 * The current searches.
 	 */
 	function currentSearches(): Search[] {
@@ -233,36 +232,48 @@ export function useRefine<
 	}
 
 	/**
-	 * Whether the given sort is currently active.
-	 */
-	function isSorting(name?: string): boolean {
-		if (name) {
-			return currentSort()?.name === name;
-		}
-
-		return !!currentSort();
-	}
-
-	/**
 	 * Whether the given filter is currently active.
 	 */
-	function isFiltering(name?: string): boolean {
-		if (name) {
+	function isFiltering(name?: Filter | string): boolean {
+		if (!name) {
+			return !!currentFilters().length;
+		}
+
+		if (typeof name === "string") {
 			return currentFilters().some((filter) => filter.name === name);
 		}
 
-		return !!currentFilters().length;
+		return name.active;
+	}
+
+	/**
+	 * Whether the given sort is currently active.
+	 */
+	function isSorting(name?: Sort | string): boolean {
+		if (!name) {
+			return !!currentSort();
+		}
+
+		if (typeof name === "string") {
+			return currentSort()?.name === name;
+		}
+
+		return name.active;
 	}
 
 	/**
 	 * Whether the search is currently active, or on a given match.
 	 */
-	function isSearching(name?: string): boolean {
-		if (name) {
+	function isSearching(name?: Search | string): boolean {
+		if (!name) {
+			return !!currentSearches()?.length;
+		}
+
+		if (typeof name === "string") {
 			return currentSearches()?.some((search) => search.name === name);
 		}
 
-		return !!currentSearches()?.length;
+		return name.active;
 	}
 
 	/**
@@ -270,10 +281,7 @@ export function useRefine<
 	 */
 	function apply(values: Record<string, any>, options: VisitOptions = {}) {
 		const data = Object.fromEntries(
-			Object.entries(values).map(([key, value]) => [
-				key,
-				pipe(value),
-			]),
+			Object.entries(values).map(([key, value]) => [key, pipe(value)]),
 		);
 
 		router.reload({
@@ -302,7 +310,6 @@ export function useRefine<
 			value = toggleValue(value, refiner.value);
 		}
 
-		console.log(value);
 		router.reload({
 			...defaultOptions,
 			...options,
@@ -360,10 +367,7 @@ export function useRefine<
 	/**
 	 * Applies the given match.
 	 */
-	function applyMatch(
-		value: Search | string,
-		options: VisitOptions = {},
-	) {
+	function applyMatch(value: Search | string, options: VisitOptions = {}) {
 		if (!refinements.value.config.matches) {
 			console.warn("Matches key is not set.");
 			return;
@@ -525,36 +529,36 @@ export function useRefine<
 	/**
 	 * Binds a match to a checkbox.
 	 */
-		function bindMatch(match: Search | string, options: BindingOptions = {}) {
-			const refiner = typeof match === "string" ? getSearch(match) : match;
-	
-			if (!refiner) {
-				console.warn(`Match [${match}] does not exist.`);
-				return;
-			}
-	
-			const { debounce = 0, transform, ...visitOptions } = options;
-			return {
-				"onUpdate:modelValue": useDebounceFn((value: any) => {
-					applyMatch(value, visitOptions);
-				}, debounce),
-				modelValue: refiner.active,
-				value: refiner.active,
-			};
+	function bindMatch(match: Search | string, options: BindingOptions = {}) {
+		const refiner = typeof match === "string" ? getSearch(match) : match;
+
+		if (!refiner) {
+			console.warn(`Match [${match}] does not exist.`);
+			return;
 		}
+
+		const { debounce = 0, transform, ...visitOptions } = options;
+		return {
+			"onUpdate:modelValue": useDebounceFn((value: any) => {
+				applyMatch(value, visitOptions);
+			}, debounce),
+			modelValue: isSearching(refiner),
+			value: isSearching(refiner),
+		};
+	}
 
 	return {
 		filters,
 		sorts,
 		searches,
-		getSort,
 		getFilter,
+		getSort,
 		getSearch,
-		currentSort,
 		currentFilters,
+		currentSort,
 		currentSearches,
-		isSorting,
 		isFiltering,
+		isSorting,
 		isSearching,
 		apply,
 		applyFilter,

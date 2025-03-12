@@ -157,21 +157,38 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     active: boolean;
     meta: Record<string, any>;
     }[]>;
-    getSort: (name: string, direction?: Direction) => Sort | undefined;
+    searches: ComputedRef<    {
+    apply: (options?: VisitOptions) => void;
+    clear: (options?: VisitOptions) => void;
+    bind: () => {
+    "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
+    modelValue: boolean;
+    value: boolean;
+    } | undefined;
+    name: string;
+    label: string;
+    type: string;
+    active: boolean;
+    meta: Record<string, any>;
+    }[] | undefined>;
     getFilter: (name: string) => Filter | undefined;
+    getSort: (name: string, direction?: Direction) => Sort | undefined;
     getSearch: (name: string) => Search | undefined;
-    currentSort: () => Sort | undefined;
     currentFilters: () => FilterRefiner[];
+    currentSort: () => Sort | undefined;
     currentSearches: () => Search[];
-    isSorting: (name?: string) => boolean;
-    isFiltering: (name?: string) => boolean;
-    isSearching: (name?: string) => boolean;
+    isFiltering: (name?: Filter | string) => boolean;
+    isSorting: (name?: Sort | string) => boolean;
+    isSearching: (name?: Search | string) => boolean;
+    apply: (values: Record<string, any>, options?: VisitOptions) => void;
     applyFilter: (filter: Filter | string, value: any, options?: VisitOptions) => void;
     applySort: (sort: Sort | string, direction?: Direction, options?: VisitOptions) => void;
     applySearch: (value: string | null | undefined, options?: VisitOptions) => void;
+    applyMatch: (value: Search | string, options?: VisitOptions) => void;
     clearFilter: (filter: Filter | string, options?: VisitOptions) => void;
     clearSort: (options?: VisitOptions) => void;
     clearSearch: (options?: VisitOptions) => void;
+    clearMatch: (options?: VisitOptions) => void;
     reset: (options?: VisitOptions) => void;
     bindFilter: <T_1 extends unknown>(filter: Filter | string, options?: BindingOptions) => {
         "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
@@ -184,8 +201,13 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     bindSearch: (options?: BindingOptions) => {
         "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
         modelValue: string;
+        value: string;
     };
-    /** Provide the helpers */
+    bindMatch: (match: Search | string, options?: BindingOptions) => {
+        "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
+        modelValue: boolean;
+        value: boolean;
+    } | undefined;
     stringValue: (value: any) => any;
     omitValue: (value: any) => any;
     toggleValue: (value: any, values: any) => any;
