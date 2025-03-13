@@ -1,40 +1,53 @@
 import { usePage } from "@inertiajs/vue3";
 import { type Page } from "@inertiajs/core";
 
+const page = usePage() as Page<{ lock: Record<string, boolean> }>;
+
 declare module "@inertiajs/core" {
 	interface PageProps {
 		lock: Record<string, boolean>;
 	}
 }
 
-const page = usePage() as Page<{ lock: Record<string, boolean> }>;
+export interface Resource {
+	lock: Record<string, boolean>;
+}
 
-export function can(ability: string, resource: any = null): boolean {
+export type Permission<T extends Resource> = keyof T["lock"];
+
+export type Lock<T extends Resource = never> = T extends Resource
+	? Permission<T>
+	: string;
+
+export function can<T extends Resource = never>(
+	permission: Lock<T>,
+	resource: T extends Resource ? T : null = null as never,
+): boolean {
 	if (resource && "lock" in resource) {
-		return resource.lock[ability] ?? false;
+		return resource.lock[permission as string] ?? false;
 	}
 
-	return page.props.lock[ability] ?? false;
+	return page.props.lock[permission as string] ?? false;
 }
 
-export function canAny(
-	abilities: string | string[],
-	resource: any = null,
+export function canAny<T extends Resource = never>(
+	permissions: Lock<T> | Lock<T>[],
+	resource: T extends Resource ? T : null = null as never,
 ): boolean {
-	if (Array.isArray(abilities)) {
-		return abilities.some((ability) => can(ability, resource));
+	if (Array.isArray(permissions)) {
+		return permissions.some((permission) => can<T>(permission, resource));
 	}
 
-	return can(abilities, resource);
+	return can<T>(permissions, resource);
 }
 
-export function canAll(
-	abilities: string | string[],
-	resource: any = null,
+export function canAll<T extends Resource = never>(
+	permissions: Lock<T> | Lock<T>[],
+	resource: T extends Resource ? T : null = null as never,
 ): boolean {
-	if (Array.isArray(abilities)) {
-		return abilities.every((ability) => can(ability, resource));
+	if (Array.isArray(permissions)) {
+		return permissions.every((permission) => can<T>(permission, resource));
 	}
 
-	return can(abilities, resource);
+	return can<T>(permissions, resource);
 }
