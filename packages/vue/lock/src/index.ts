@@ -17,7 +17,10 @@ export function can(ability: string, resource: any = null): boolean {
 	return page.props.lock[ability] ?? false;
 }
 
-export function canAny(abilities: string | string[], resource: any = null): boolean {
+export function canAny(
+	abilities: string | string[],
+	resource: any = null,
+): boolean {
 	if (Array.isArray(abilities)) {
 		return abilities.some((ability) => can(ability, resource));
 	}
@@ -25,7 +28,10 @@ export function canAny(abilities: string | string[], resource: any = null): bool
 	return can(abilities, resource);
 }
 
-export function canAll(abilities: string | string[], resource: any = null): boolean {
+export function canAll(
+	abilities: string | string[],
+	resource: any = null,
+): boolean {
 	if (Array.isArray(abilities)) {
 		return abilities.every((ability) => can(ability, resource));
 	}
