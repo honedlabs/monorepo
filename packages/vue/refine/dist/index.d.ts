@@ -26,10 +26,10 @@ export declare interface Config {
 export declare type Direction = "asc" | "desc" | null;
 
 export declare interface Filter extends Refiner {
-    type: string;
-    multiple: boolean;
-    options: Option_2[];
+    type: "filter" | string;
     value: FilterValue;
+    options: Option_2[];
+    multiple: boolean;
 }
 
 export declare type FilterValue = string | number | boolean | null;
@@ -57,6 +57,7 @@ export declare interface Refiner {
 }
 
 export declare interface Search extends Refiner {
+    type: "search" | string;
 }
 
 export declare interface Sort extends Refiner {
@@ -74,9 +75,9 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     modelValue: unknown;
     } | undefined;
     type: string;
-    multiple: boolean;
-    options: Option_2[];
     value: FilterValue;
+    options: Option_2[];
+    multiple: boolean;
     name: string;
     label: string;
     active: boolean;
@@ -102,10 +103,11 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     bind: () => {
     "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
     modelValue: boolean;
+    value: string;
     } | undefined;
+    type: string;
     name: string;
     label: string;
-    type: string;
     active: boolean;
     meta: Record<string, any>;
     }[] | undefined>;
@@ -142,6 +144,7 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     bindMatch: (match: Search | string, options?: BindingOptions) => {
         "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
         modelValue: boolean;
+        value: string;
     } | undefined;
     stringValue: (value: any) => any;
     omitValue: (value: any) => any;

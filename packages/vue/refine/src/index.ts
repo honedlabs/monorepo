@@ -28,13 +28,15 @@ export interface Sort extends Refiner {
 }
 
 export interface Filter extends Refiner {
-	type: string;
-	multiple: boolean;
-	options: Option[];
+	type: "filter" | string;
 	value: FilterValue;
+	options: Option[];
+	multiple: boolean;
 }
 
-export interface Search extends Refiner {}
+export interface Search extends Refiner {
+	type: "search" | string;
+}
 
 export interface Config {
 	delimiter: string;
@@ -286,7 +288,7 @@ export function useRefine<
 			return;
 		}
 
-		if ("multiple" in refiner && refiner.multiple) {
+		if ("multiple" in refiner && refiner.multiple && value !== undefined) {
 			value = toggleValue(value, refiner.value);
 		}
 
@@ -416,7 +418,7 @@ export function useRefine<
 			...defaultOptions,
 			...options,
 			data: {
-				[refinements.value.config.matches]: null,
+				[refinements.value.config.matches]: undefined,
 			},
 		});
 	}
@@ -527,6 +529,7 @@ export function useRefine<
 				applyMatch(value, visitOptions);
 			}, debounce),
 			modelValue: isSearching(refiner),
+			value: refiner.name,
 		};
 	}
 

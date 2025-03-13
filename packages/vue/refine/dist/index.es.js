@@ -18,13 +18,13 @@ function N(l, u = {}) {
   };
   let S;
   return (a) => {
-    const p = I(l), m = I(u.maxWait);
-    return o && s(o), p <= 0 || m !== void 0 && m <= 0 ? (r && (s(r), r = null), Promise.resolve(a())) : new Promise((g, y) => {
-      d = u.rejectOnCancel ? y : g, S = a, m && !r && (r = setTimeout(() => {
+    const m = I(l), p = I(u.maxWait);
+    return o && s(o), m <= 0 || p !== void 0 && p <= 0 ? (r && (s(r), r = null), Promise.resolve(a())) : new Promise((g, y) => {
+      d = u.rejectOnCancel ? y : g, S = a, p && !r && (r = setTimeout(() => {
         o && s(o), r = null, g(S());
-      }, m)), o = setTimeout(() => {
+      }, p)), o = setTimeout(() => {
         r && s(r), r = null, g(a());
-      }, p);
+      }, m);
     });
   };
 }
@@ -72,12 +72,12 @@ function Y(l, u, o = {}) {
   function a(e) {
     return typeof e != "string" ? e : e.trim().replace(/\s+/g, "+");
   }
-  function p(e) {
+  function m(e) {
     if (!["", null, void 0, []].includes(e))
       return e;
   }
-  function m(e) {
-    return [v, a, p].reduce(
+  function p(e) {
+    return [v, a, m].reduce(
       (n, t) => t(n),
       e
     );
@@ -124,7 +124,7 @@ function Y(l, u, o = {}) {
   }
   function z(e, n = {}) {
     const t = Object.fromEntries(
-      Object.entries(e).map(([i, c]) => [i, m(c)])
+      Object.entries(e).map(([i, c]) => [i, p(c)])
     );
     f.reload({
       ...o,
@@ -138,11 +138,11 @@ function Y(l, u, o = {}) {
       console.warn(`Filter [${e}] does not exist.`);
       return;
     }
-    "multiple" in i && i.multiple && (n = g(n, i.value)), f.reload({
+    "multiple" in i && i.multiple && n !== void 0 && (n = g(n, i.value)), f.reload({
       ...o,
       ...t,
       data: {
-        [i.name]: m(n)
+        [i.name]: p(n)
       }
     });
   }
@@ -156,12 +156,12 @@ function Y(l, u, o = {}) {
       ...o,
       ...t,
       data: {
-        [r.value.config.sorts]: p(i.next)
+        [r.value.config.sorts]: m(i.next)
       }
     });
   }
   function P(e, n = {}) {
-    e = [a, p].reduce(
+    e = [a, m].reduce(
       (t, i) => i(t),
       e
     ), f.reload({
@@ -217,7 +217,7 @@ function Y(l, u, o = {}) {
       ...o,
       ...e,
       data: {
-        [r.value.config.matches]: null
+        [r.value.config.matches]: void 0
       }
     });
   }
@@ -294,7 +294,8 @@ function Y(l, u, o = {}) {
       "onUpdate:modelValue": j((h) => {
         V(h, b);
       }, i),
-      modelValue: U(t)
+      modelValue: U(t),
+      value: t.name
     };
   }
   return {
@@ -325,7 +326,7 @@ function Y(l, u, o = {}) {
     bindSearch: K,
     bindMatch: R,
     stringValue: a,
-    omitValue: p,
+    omitValue: m,
     toggleValue: g,
     delimitArray: v
   };
