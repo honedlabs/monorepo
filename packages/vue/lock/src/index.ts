@@ -1,17 +1,34 @@
 import { usePage } from "@inertiajs/vue3";
 import { type Page } from "@inertiajs/core";
 
-const page = usePage() as Page<{ auth: { abilities: Record<string, any> } }>;
+declare module "@inertiajs/core" {
+	interface PageProps {
+		lock: Record<string, boolean>;
+	}
+}
 
-export const can = (ability: string, resource: any = null): boolean =>
-	(resource
-		? page.props.auth.abilities[ability][resource]
-		: page.props.auth.abilities[ability]) ?? false;
+const page = usePage() as Page<{ lock: Record<string, boolean> }>;
 
-export const canAny = (
-	abilities: string | string[],
-	resource: any = null,
-): boolean =>
-	Array.isArray(abilities)
-		? abilities.some((ability) => can(ability, resource))
-		: can(abilities, resource);
+export function can(ability: string, resource: any = null): boolean {
+	if (resource && "lock" in resource) {
+		return resource.lock[ability] ?? false;
+	}
+
+	return page.props.lock[ability] ?? false;
+}
+
+export function canAny(abilities: string | string[], resource: any = null): boolean {
+	if (Array.isArray(abilities)) {
+		return abilities.some((ability) => can(ability, resource));
+	}
+
+	return can(abilities, resource);
+}
+
+export function canAll(abilities: string | string[], resource: any = null): boolean {
+	if (Array.isArray(abilities)) {
+		return abilities.every((ability) => can(ability, resource));
+	}
+
+	return can(abilities, resource);
+}
