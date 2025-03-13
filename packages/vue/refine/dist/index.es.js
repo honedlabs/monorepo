@@ -254,8 +254,7 @@ function Y(l, u, o = {}) {
       "onUpdate:modelValue": j((W) => {
         F(t, b(W), h);
       }, c),
-      modelValue: i,
-      value: i
+      modelValue: i
     };
   }
   function G(e, n = {}) {
@@ -275,9 +274,12 @@ function Y(l, u, o = {}) {
   function K(e = {}) {
     const { debounce: n = 700, transform: t, ...i } = e;
     return {
-      "onUpdate:modelValue": j((c) => {
-        P(c, i);
-      }, n),
+      "onUpdate:modelValue": j(
+        (c) => {
+          P(c, i);
+        },
+        n
+      ),
       modelValue: r.value.config.search ?? ""
     };
   }

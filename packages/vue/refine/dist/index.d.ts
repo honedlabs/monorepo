@@ -72,7 +72,6 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     bind: () => {
     "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
     modelValue: unknown;
-    value: unknown;
     } | undefined;
     type: string;
     multiple: boolean;
@@ -132,13 +131,12 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     bindFilter: <T_1 extends unknown>(filter: Filter | string, options?: BindingOptions) => {
         "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
         modelValue: T_1;
-        value: T_1;
     } | undefined;
     bindSort: (sort: Sort | string, options?: BindingOptions) => {
         onClick: PromisifyFn<() => void>;
     } | undefined;
     bindSearch: (options?: BindingOptions) => {
-        "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
+        "onUpdate:modelValue": PromisifyFn<(value: string | null | undefined) => void>;
         modelValue: string;
     };
     bindMatch: (match: Search | string, options?: BindingOptions) => {

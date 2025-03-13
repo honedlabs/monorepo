@@ -471,7 +471,6 @@ export function useRefine<
 				applyFilter(refiner, transform(value), visitOptions);
 			}, debounce),
 			modelValue: value,
-			value: value,
 		};
 	}
 
@@ -501,9 +500,12 @@ export function useRefine<
 		const { debounce = 700, transform, ...visitOptions } = options;
 
 		return {
-			"onUpdate:modelValue": useDebounceFn((value: any) => {
-				applySearch(value, visitOptions);
-			}, debounce),
+			"onUpdate:modelValue": useDebounceFn(
+				(value: string | null | undefined) => {
+					applySearch(value, visitOptions);
+				},
+				debounce,
+			),
 			modelValue: refinements.value.config.search ?? "",
 		};
 	}

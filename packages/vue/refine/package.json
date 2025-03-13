@@ -1,7 +1,7 @@
 {
   "name": "@honed/refine",
   "private": false,
-  "version": "0.2.2",
+  "version": "0.3.0",
   "license": "MIT",
   "description": "-",
   "keywords": [
@@ -42,9 +42,18 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js",
-      "default": "./dist/index.es.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.es.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.umd.js"
+      },
+      "default": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.es.js"
+      }
     }
   },
   "peerDependencies": {
