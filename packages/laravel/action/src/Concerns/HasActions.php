@@ -87,6 +87,28 @@ trait HasActions
     }
 
     /**
+     * Set the actions to not be retrieved.
+     *
+     * @return $this
+     */
+    public function withoutActions()
+    {
+        $this->withoutActions = true;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the actions should not be retrieved.
+     *
+     * @return bool
+     */
+    public function isWithoutActions()
+    {
+        return $this->withoutActions;
+    }
+
+    /**
      * Retrieve only the inline actions.
      *
      * @return array<int,\Honed\Action\InlineAction>
@@ -189,27 +211,5 @@ trait HasActions
             static fn (InlineAction $action) => $action->resolve($named, $typed)->toArray(),
             $allowed
         );
-    }
-
-    /**
-     * Set the actions to not be retrieved.
-     *
-     * @return $this
-     */
-    public function withoutActions()
-    {
-        $this->withoutActions = true;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the actions should not be retrieved.
-     *
-     * @return bool
-     */
-    public function isWithoutActions()
-    {
-        return $this->withoutActions;
     }
 }
