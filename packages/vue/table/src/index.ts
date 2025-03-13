@@ -113,6 +113,15 @@ export interface TableRecord<RecordType extends Record<string, any>> {
 	extra: (column: Column<RecordType> | string) => any;
 }
 
+export interface TableHeading<T extends Record<string, any>> extends Column<T> {
+	isSorting: boolean;
+	toggleSort: (options: VisitOptions) => void;
+}
+
+export interface TableColumn<T extends Record<string, any>> extends Column<T> {
+	toggle: (options: VisitOptions) => void;
+}
+
 export interface TableOptions<RecordType extends Record<string, any>> {
 	/**
 	 * Actions to be applied on a record in JavaScript.
@@ -212,10 +221,10 @@ export function useTable<
 			bind: () => bulk.bind(getRecordKey(record)),
 			/** Get the value of the record for the column */
 			value: (column: Column<RecordType> | string) =>
-				record[getColumnName(column)].value,
+				record[getColumnName(column)]?.value,
 			/** Get the extra data of the record for the column */
 			extra: (column: Column<RecordType> | string) =>
-				record[getColumnName(column)].extra,
+				record[getColumnName(column)]?.extra,
 		})),
 	);
 
