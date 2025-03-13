@@ -349,24 +349,22 @@ export function useRefine<
 	/**
 	 * Applies the given match.
 	 */
-	function applyMatch(value: Search | string, options: VisitOptions = {}) {
+	function applyMatch(search: Search | string, options: VisitOptions = {}) {
 		if (!refinements.value.config.matches) {
 			console.warn("Matches key is not set.");
 			return;
 		}
 
-		const refiner = typeof value === "string" ? getSearch(value) : value;
+		const refiner = typeof search === "string" ? getSearch(search) : search;
 
 		if (!refiner) {
-			console.warn(`Match [${value}] does not exist.`);
+			console.warn(`Match [${search}] does not exist.`);
 			return;
 		}
 
 		const matches = toggleValue(
-			value,
-			currentSearches()
-				.filter(({ active }) => active)
-				.map(({ name }) => name),
+			refiner.name,
+			currentSearches().map(({ name }) => name),
 		);
 
 		router.reload({
@@ -524,6 +522,7 @@ export function useRefine<
 		}
 
 		const { debounce = 0, transform, ...visitOptions } = options;
+
 		return {
 			"onUpdate:modelValue": useDebounceFn((value: any) => {
 				applyMatch(value, visitOptions);

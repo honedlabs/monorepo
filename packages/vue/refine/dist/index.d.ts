@@ -124,7 +124,7 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     applyFilter: (filter: Filter | string, value: any, options?: VisitOptions) => void;
     applySort: (sort: Sort | string, direction?: Direction, options?: VisitOptions) => void;
     applySearch: (value: string | null | undefined, options?: VisitOptions) => void;
-    applyMatch: (value: Search | string, options?: VisitOptions) => void;
+    applyMatch: (search: Search | string, options?: VisitOptions) => void;
     clearFilter: (filter: Filter | string, options?: VisitOptions) => void;
     clearSort: (options?: VisitOptions) => void;
     clearSearch: (options?: VisitOptions) => void;

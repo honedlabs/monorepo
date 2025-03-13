@@ -1,7 +1,7 @@
 {
   "name": "@honed/refine",
   "private": false,
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "MIT",
   "description": "-",
   "keywords": [
@@ -29,9 +29,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/honedlabs/refine.git"
+    "url": "https://github.com/honedlabs/honed.git"
   },
-  "homepage": "https://github.com/honedlabs/refine#readme",
+  "homepage": "https://github.com/honedlabs/honed/tree/main/packages/vue/refine#readme",
   "files": [
     "dist"
   ],
