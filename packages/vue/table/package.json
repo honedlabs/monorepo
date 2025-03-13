@@ -1,7 +1,7 @@
 {
   "name": "@honed/table",
   "private": false,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT",
   "description": "-",
   "keywords": [
@@ -29,9 +29,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/honedlabs/table.git"
+    "url": "https://github.com/honedlabs/honed.git"
   },
-  "homepage": "https://github.com/honedlabs/table#readme",
+  "homepage": "https://github.com/honedlabs/honed/tree/main/packages/vue/table#readme",
   "files": [
     "dist"
   ],
@@ -42,14 +42,23 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js",
-      "default": "./dist/index.es.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.es.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.umd.js"
+      },
+      "default": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.es.js"
+      }
     }
   },
   "peerDependencies": {
-    "@honed/action": "^0.2.0",
-    "@honed/refine": "^0.2.1",
+    "@honed/action": "^0.3.2",
+    "@honed/refine": "^0.3.0",
     "@inertiajs/vue3": "^1.2.0||^2.0.0",
     "@vueuse/core": "^11.0.0||^12.0.0",
     "axios": "^1.2.0",
