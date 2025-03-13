@@ -134,9 +134,9 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
             modelValue: unknown;
         } | undefined;
         type: string;
-        multiple: boolean;
-        options: Option_2[];
         value: FilterValue;
+        options: Option_2[];
+        multiple: boolean;
         name: string;
         label: string;
         active: boolean;
@@ -162,10 +162,11 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
         bind: () => {
             "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
             modelValue: boolean;
+            value: string;
         } | undefined;
+        type: string;
         name: string;
         label: string;
-        type: string;
         active: boolean;
         meta: Record<string, any>;
     }[] | undefined;
@@ -182,7 +183,7 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
     applyFilter: (filter: string | Filter, value: any, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     applySort: (sort: string | Sort, direction?: Direction | undefined, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     applySearch: (value: string | null | undefined, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
-    applyMatch: (value: string | Search, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
+    applyMatch: (search: string | Search, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     clearFilter: (filter: string | Filter, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     clearSort: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     clearSearch: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
@@ -202,6 +203,7 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
     bindMatch: (match: string | Search, options?: BindingOptions | undefined) => {
         "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
         modelValue: boolean;
+        value: string;
     } | undefined;
     stringValue: (value: any) => any;
     omitValue: (value: any) => any;

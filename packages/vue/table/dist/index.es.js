@@ -114,9 +114,9 @@ function ee(o, m, v = {}) {
       var e;
       return ((e = l.value.filters) == null ? void 0 : e.map((n) => ({
         ...n,
-        apply: (r, c = {}) => L(n, r, c),
-        clear: (r = {}) => N(n, r),
-        bind: () => a(n.name)
+        apply: (a, c = {}) => F(n, a, c),
+        clear: (a = {}) => N(n, a),
+        bind: () => r(n.name)
       }))) ?? [];
     }
   ), u = h(
@@ -124,8 +124,8 @@ function ee(o, m, v = {}) {
       var e;
       return ((e = l.value.sorts) == null ? void 0 : e.map((n) => ({
         ...n,
-        apply: (r = {}) => M(n, n.direction, r),
-        clear: (r = {}) => W(r),
+        apply: (a = {}) => M(n, n.direction, a),
+        clear: (a = {}) => W(a),
         bind: () => f(n)
       }))) ?? [];
     }
@@ -134,9 +134,9 @@ function ee(o, m, v = {}) {
       var e;
       return (e = l.value.searches) == null ? void 0 : e.map((n) => ({
         ...n,
-        apply: (r = {}) => U(n, r),
-        clear: (r = {}) => U(n, r),
-        bind: () => F(n)
+        apply: (a = {}) => U(n, a),
+        clear: (a = {}) => U(n, a),
+        bind: () => E(n)
       }));
     }
   );
@@ -152,26 +152,26 @@ function ee(o, m, v = {}) {
   }
   function k(e) {
     return [d, A, x].reduce(
-      (n, r) => r(n),
+      (n, a) => a(n),
       e
     );
   }
   function s(e, n) {
-    return n = Array.isArray(n) ? n : [n], n.includes(e) ? n.filter((r) => r !== e) : [...n, e];
+    return n = Array.isArray(n) ? n : [n], n.includes(e) ? n.filter((a) => a !== e) : [...n, e];
   }
   function p(e) {
     var n;
-    return (n = l.value.filters) == null ? void 0 : n.find((r) => r.name === e);
+    return (n = l.value.filters) == null ? void 0 : n.find((a) => a.name === e);
   }
   function j(e, n = null) {
-    var r;
-    return (r = l.value.sorts) == null ? void 0 : r.find(
+    var a;
+    return (a = l.value.sorts) == null ? void 0 : a.find(
       (c) => c.name === e && c.direction === n
     );
   }
   function C(e) {
     var n;
-    return (n = l.value.searches) == null ? void 0 : n.find((r) => r.name === e);
+    return (n = l.value.searches) == null ? void 0 : n.find((a) => a.name === e);
   }
   function z() {
     var e;
@@ -181,7 +181,7 @@ function ee(o, m, v = {}) {
     var e;
     return (e = l.value.sorts) == null ? void 0 : e.find(({ active: n }) => n);
   }
-  function w() {
+  function L() {
     var e;
     return ((e = l.value.searches) == null ? void 0 : e.filter(({ active: n }) => n)) ?? [];
   }
@@ -192,35 +192,35 @@ function ee(o, m, v = {}) {
     var n;
     return e ? typeof e == "string" ? ((n = g()) == null ? void 0 : n.name) === e : e.active : !!g();
   }
-  function P(e) {
-    var n, r;
-    return e ? typeof e == "string" ? (r = w()) == null ? void 0 : r.some((c) => c.name === e) : e.active : !!((n = w()) != null && n.length);
+  function V(e) {
+    var n, a;
+    return e ? typeof e == "string" ? (a = L()) == null ? void 0 : a.some((c) => c.name === e) : e.active : !!((n = L()) != null && n.length);
   }
   function G(e, n = {}) {
-    const r = Object.fromEntries(
-      Object.entries(e).map(([c, E]) => [c, k(E)])
+    const a = Object.fromEntries(
+      Object.entries(e).map(([c, P]) => [c, k(P)])
     );
     S.reload({
       ...v,
       ...n,
-      data: r
+      data: a
     });
   }
-  function L(e, n, r = {}) {
+  function F(e, n, a = {}) {
     const c = typeof e == "string" ? p(e) : e;
     if (!c) {
       console.warn(`Filter [${e}] does not exist.`);
       return;
     }
-    "multiple" in c && c.multiple && (n = s(n, c.value)), S.reload({
+    "multiple" in c && c.multiple && n !== void 0 && (n = s(n, c.value)), S.reload({
       ...v,
-      ...r,
+      ...a,
       data: {
         [c.name]: k(n)
       }
     });
   }
-  function M(e, n = null, r = {}) {
+  function M(e, n = null, a = {}) {
     const c = typeof e == "string" ? j(e, n) : e;
     if (!c) {
       console.warn(`Sort [${e}] does not exist.`);
@@ -228,7 +228,7 @@ function ee(o, m, v = {}) {
     }
     S.reload({
       ...v,
-      ...r,
+      ...a,
       data: {
         [l.value.config.sorts]: x(c.next)
       }
@@ -236,7 +236,7 @@ function ee(o, m, v = {}) {
   }
   function T(e, n = {}) {
     e = [A, x].reduce(
-      (r, c) => c(r),
+      (a, c) => c(a),
       e
     ), S.reload({
       ...v,
@@ -251,24 +251,25 @@ function ee(o, m, v = {}) {
       console.warn("Matches key is not set.");
       return;
     }
-    if (!(typeof e == "string" ? C(e) : e)) {
+    const a = typeof e == "string" ? C(e) : e;
+    if (!a) {
       console.warn(`Match [${e}] does not exist.`);
       return;
     }
-    const r = s(
-      e,
-      w().filter(({ active: c }) => c).map(({ name: c }) => c)
+    const c = s(
+      a.name,
+      L().map(({ name: P }) => P)
     );
     S.reload({
       ...v,
       ...n,
       data: {
-        [l.value.config.matches]: d(r)
+        [l.value.config.matches]: d(c)
       }
     });
   }
   function N(e, n = {}) {
-    L(e, void 0, n);
+    F(e, void 0, n);
   }
   function W(e = {}) {
     S.reload({
@@ -291,7 +292,7 @@ function ee(o, m, v = {}) {
       ...v,
       ...e,
       data: {
-        [l.value.config.matches]: null
+        [l.value.config.matches]: void 0
       }
     });
   }
@@ -304,8 +305,8 @@ function ee(o, m, v = {}) {
         [l.value.config.searches]: void 0,
         [l.value.config.sorts]: void 0,
         ...Object.fromEntries(
-          ((n = l.value.filters) == null ? void 0 : n.map((r) => [
-            r.name,
+          ((n = l.value.filters) == null ? void 0 : n.map((a) => [
+            a.name,
             void 0
           ])) ?? []
         ),
@@ -313,62 +314,63 @@ function ee(o, m, v = {}) {
       }
     });
   }
-  function a(e, n = {}) {
-    const r = typeof e == "string" ? p(e) : e;
-    if (!r) {
+  function r(e, n = {}) {
+    const a = typeof e == "string" ? p(e) : e;
+    if (!a) {
       console.warn(`Filter [${e}] does not exist.`);
       return;
     }
-    const c = r.value, {
-      debounce: E = 250,
+    const c = a.value, {
+      debounce: P = 250,
       transform: B = (H) => H,
       ...$
     } = n;
     return {
       "onUpdate:modelValue": q((H) => {
-        L(r, B(H), $);
-      }, E),
+        F(a, B(H), $);
+      }, P),
       modelValue: c
     };
   }
   function f(e, n = {}) {
-    const r = typeof e == "string" ? j(e) : e;
-    if (!r) {
+    const a = typeof e == "string" ? j(e) : e;
+    if (!a) {
       console.warn(`Sort [${e}] does not exist.`);
       return;
     }
-    const { debounce: c = 0, transform: E, ...B } = n;
+    const { debounce: c = 0, transform: P, ...B } = n;
     return {
       onClick: q(() => {
         var $;
-        M(r, ($ = g()) == null ? void 0 : $.direction, B);
+        M(a, ($ = g()) == null ? void 0 : $.direction, B);
       }, c)
     };
   }
-  function V(e = {}) {
-    const { debounce: n = 700, transform: r, ...c } = e;
+  function w(e = {}) {
+    const { debounce: n = 700, transform: a, ...c } = e;
     return {
       "onUpdate:modelValue": q(
-        (E) => {
-          T(E, c);
+        (P) => {
+          T(P, c);
         },
         n
       ),
       modelValue: l.value.config.search ?? ""
     };
   }
-  function F(e, n = {}) {
-    const r = typeof e == "string" ? C(e) : e;
-    if (!r) {
+  function E(e, n = {}) {
+    const a = typeof e == "string" ? C(e) : e;
+    if (!a) {
       console.warn(`Match [${e}] does not exist.`);
       return;
     }
-    const { debounce: c = 0, transform: E, ...B } = n;
+    const { debounce: c = 0, transform: P, ...B } = n;
     return {
       "onUpdate:modelValue": q(($) => {
         U($, B);
       }, c),
-      modelValue: P(r)
+      modelValue: V(a),
+      value: a.name
     };
   }
   return {
@@ -380,12 +382,12 @@ function ee(o, m, v = {}) {
     getSearch: C,
     currentFilters: z,
     currentSort: g,
-    currentSearches: w,
+    currentSearches: L,
     isFiltering: y,
     isSorting: K,
-    isSearching: P,
+    isSearching: V,
     apply: G,
-    applyFilter: L,
+    applyFilter: F,
     applySort: M,
     applySearch: T,
     applyMatch: U,
@@ -394,10 +396,10 @@ function ee(o, m, v = {}) {
     clearSearch: R,
     clearMatch: D,
     reset: t,
-    bindFilter: a,
+    bindFilter: r,
     bindSort: f,
-    bindSearch: V,
-    bindMatch: F,
+    bindSearch: w,
+    bindMatch: E,
     stringValue: A,
     omitValue: x,
     toggleValue: s,
@@ -414,38 +416,38 @@ function le(o, m, v = {}, l = {}) {
   const i = h(() => o[m]), u = X(), b = ee(o, m, l), d = h(() => i.value.config), A = h(() => i.value.meta), x = h(
     () => {
       var t;
-      return ((t = i.value.columns) == null ? void 0 : t.filter(({ active: a, hidden: f }) => a && !f).map((a) => {
+      return ((t = i.value.columns) == null ? void 0 : t.filter(({ active: r, hidden: f }) => r && !f).map((r) => {
         var f;
         return {
-          ...a,
-          isSorting: (f = a.sort) == null ? void 0 : f.active,
-          toggleSort: (V = {}) => U(a, V)
+          ...r,
+          isSorting: (f = r.sort) == null ? void 0 : f.active,
+          toggleSort: (w = {}) => U(r, w)
         };
       })) ?? [];
     }
   ), k = h(
     () => {
       var t;
-      return ((t = i.value.columns) == null ? void 0 : t.filter(({ hidden: a }) => !a).map((a) => ({
-        ...a,
-        toggle: (f = {}) => N(a, f)
+      return ((t = i.value.columns) == null ? void 0 : t.filter(({ hidden: r }) => !r).map((r) => ({
+        ...r,
+        toggle: (f = {}) => N(r, f)
       }))) ?? [];
     }
   ), s = h(
     () => i.value.records.map((t) => ({
-      record: (({ actions: a, ...f }) => f)(t),
+      record: (({ actions: r, ...f }) => f)(t),
       /** Perform this action when the record is clicked */
-      default: (a = {}) => {
+      default: (r = {}) => {
         const f = t.actions.find(
-          (V) => V.default
+          (w) => w.default
         );
-        f && G(f, t, a);
+        f && G(f, t, r);
       },
       /** The actions available for the record */
-      actions: t.actions.map((a) => ({
-        ...a,
+      actions: t.actions.map((r) => ({
+        ...r,
         /** Executes this action */
-        execute: (f = {}) => G(a, t, f)
+        execute: (f = {}) => G(r, t, f)
       })),
       /** Selects this record */
       select: () => u.select(y(t)),
@@ -458,57 +460,57 @@ function le(o, m, v = {}, l = {}) {
       /** Bind the record to a checkbox */
       bind: () => u.bind(y(t)),
       /** Get the value of the record for the column */
-      value: (a) => t[K(a)].value,
+      value: (r) => t[K(r)].value,
       /** Get the extra data of the record for the column */
-      extra: (a) => t[K(a)].extra
+      extra: (r) => t[K(r)].extra
     }))
   ), p = h(
     () => i.value.actions.bulk.map((t) => ({
       ...t,
       /** Executes this bulk action */
-      execute: (a = {}) => L(t, a)
+      execute: (r = {}) => F(t, r)
     }))
   ), j = h(
     () => i.value.actions.page.map((t) => ({
       ...t,
       /** Executes this page action */
-      execute: (a = {}) => M(t, a)
+      execute: (r = {}) => M(t, r)
     }))
   ), C = h(
     () => {
       var t;
-      return ((t = i.value.recordsPerPage) == null ? void 0 : t.map((a) => ({
-        ...a,
+      return ((t = i.value.recordsPerPage) == null ? void 0 : t.map((r) => ({
+        ...r,
         /** Changes the number of records to display per page */
-        apply: (f = {}) => T(a, f)
+        apply: (f = {}) => T(r, f)
       }))) ?? [];
     }
   ), z = h(
     () => {
       var t;
-      return (t = i.value.recordsPerPage) == null ? void 0 : t.find(({ active: a }) => a);
+      return (t = i.value.recordsPerPage) == null ? void 0 : t.find(({ active: r }) => r);
     }
   ), g = h(() => ({
     ...i.value.paginator,
     next: (t = {}) => {
-      "nextLink" in g.value && g.value.nextLink && P(g.value.nextLink, t);
+      "nextLink" in g.value && g.value.nextLink && V(g.value.nextLink, t);
     },
     previous: (t = {}) => {
-      "prevLink" in g.value && g.value.prevLink && P(g.value.prevLink, t);
+      "prevLink" in g.value && g.value.prevLink && V(g.value.prevLink, t);
     },
     first: (t = {}) => {
-      "firstLink" in g.value && g.value.firstLink && P(g.value.firstLink, t);
+      "firstLink" in g.value && g.value.firstLink && V(g.value.firstLink, t);
     },
     last: (t = {}) => {
-      "lastLink" in g.value && g.value.lastLink && P(g.value.lastLink, t);
+      "lastLink" in g.value && g.value.lastLink && V(g.value.lastLink, t);
     },
     ..."links" in i.value.paginator && i.value.paginator.links ? {
       links: i.value.paginator.links.map((t) => ({
         ...t,
-        navigate: (a = {}) => t.url && P(t.url, a)
+        navigate: (r = {}) => t.url && V(t.url, r)
       }))
     } : {}
-  })), w = h(
+  })), L = h(
     () => i.value.records.length > 0 && i.value.records.every(
       (t) => u.selected(y(t))
     )
@@ -519,28 +521,28 @@ function le(o, m, v = {}, l = {}) {
   function K(t) {
     return typeof t == "string" ? t : t.name;
   }
-  function P(t, a = {}) {
+  function V(t, r = {}) {
     S.visit(t, {
       preserveScroll: !0,
       preserveState: !0,
       ...l,
-      ...a,
+      ...r,
       method: "get"
     });
   }
-  function G(t, a, f = {}) {
-    var F, e;
+  function G(t, r, f = {}) {
+    var E, e;
     I(
       t,
       d.value.endpoint,
       {
         table: i.value.id,
-        id: y(a)
+        id: y(r)
       },
       f
-    ) || (e = (F = v.recordActions) == null ? void 0 : F[t.name]) == null || e.call(F, a);
+    ) || (e = (E = v.recordActions) == null ? void 0 : E[t.name]) == null || e.call(E, r);
   }
-  function L(t, a = {}) {
+  function F(t, r = {}) {
     I(
       t,
       d.value.endpoint,
@@ -550,46 +552,46 @@ function le(o, m, v = {}, l = {}) {
         only: Array.from(u.selection.value.only),
         except: Array.from(u.selection.value.except)
       },
-      a
+      r
     );
   }
-  function M(t, a = {}) {
+  function M(t, r = {}) {
     I(
       t,
       d.value.endpoint,
       {
         table: i.value.id
       },
-      a
+      r
     );
   }
-  function T(t, a = {}) {
+  function T(t, r = {}) {
     S.reload({
       ...l,
-      ...a,
+      ...r,
       data: {
         [d.value.records]: t.value,
         [d.value.pages]: void 0
       }
     });
   }
-  function U(t, a = {}) {
+  function U(t, r = {}) {
     t.sort && S.reload({
       ...l,
-      ...a,
+      ...r,
       data: {
         [d.value.sorts]: b.omitValue(t.sort.next)
       }
     });
   }
-  function N(t, a = {}) {
+  function N(t, r = {}) {
     const f = b.toggleValue(
       t.name,
-      x.value.map(({ name: V }) => V)
+      x.value.map(({ name: w }) => w)
     );
     S.reload({
       ...l,
-      ...a,
+      ...r,
       data: {
         [d.value.columns]: b.delimitArray(f)
       }
@@ -614,7 +616,7 @@ function le(o, m, v = {}, l = {}) {
       "onUpdate:modelValue": (t) => {
         t ? W() : R();
       },
-      modelValue: w.value
+      modelValue: L.value
     };
   }
   return Q({
@@ -641,7 +643,7 @@ function le(o, m, v = {}, l = {}) {
     /** Execute an inline action */
     executeInlineAction: G,
     /** Execute a bulk action */
-    executeBulkAction: L,
+    executeBulkAction: F,
     /** Execute a page action */
     executePageAction: M,
     /** Apply a new page by changing the number of records to display */
@@ -665,7 +667,7 @@ function le(o, m, v = {}, l = {}) {
     /** Deselect all records */
     deselectAll: u.deselectAll,
     /** Whether all records on the current page are selected */
-    isPageSelected: w,
+    isPageSelected: L,
     /** Determine if any records are selected */
     hasSelected: u.hasSelected,
     /** Bind the given record to a checkbox */
