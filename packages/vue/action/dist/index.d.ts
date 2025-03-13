@@ -76,7 +76,7 @@ export declare function useBulk<T = any>(): {
     deselect: (...records: T[]) => void;
     toggle: (record: T, force?: boolean) => void;
     selected: (record: T) => boolean;
-    bindCheckbox: (key: T) => {
+    bind: (key: T) => {
         "onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
         modelValue: boolean;
         value: T;

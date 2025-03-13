@@ -56,7 +56,7 @@ function y() {
     deselect: c,
     toggle: i,
     selected: r,
-    bindCheckbox: d,
+    bind: d,
     bindAll: p
   };
 }
