@@ -7,9 +7,9 @@ export declare interface Action {
     name: string;
     label: string;
     type: ActionType;
-    action?: boolean;
-    extra?: Record<string, unknown>;
     icon?: string;
+    extra?: Record<string, unknown>;
+    action?: boolean;
     confirm?: Confirm;
     route?: Route;
 }
@@ -76,7 +76,7 @@ export declare function useBulk<T = any>(): {
     deselect: (...records: T[]) => void;
     toggle: (record: T, force?: boolean) => void;
     selected: (record: T) => boolean;
-    bind: (key: T) => {
+    bindCheckbox: (key: T) => {
         "onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
         modelValue: boolean;
         value: T;

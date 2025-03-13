@@ -22,9 +22,9 @@ export interface Action {
 	name: string;
 	label: string;
 	type: ActionType;
-	action?: boolean;
-	extra?: Record<string, unknown>;
 	icon?: string;
+	extra?: Record<string, unknown>;
+	action?: boolean;
 	confirm?: Confirm;
 	route?: Route;
 }
@@ -42,6 +42,8 @@ export interface BulkAction extends Action {
 export interface PageAction extends Action {
 	type: "page";
 }
+
+export type ActionGroup = PageAction[];
 
 export interface InlineActionData extends Record<string, any> {
 	id: Identifier;

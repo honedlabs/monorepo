@@ -87,9 +87,9 @@ export function useBulk<T = any>() {
 	});
 
 	/**
-	 * Binds a checkbox's properties.
+	 * Binds a checkbox's properties to an individual record.
 	 */
-	function bind(key: T) {
+	function bindCheckbox(key: T) {
 		return {
 			"onUpdate:modelValue": (checked: boolean | "indeterminate") => {
 				if (checked) {
@@ -130,7 +130,7 @@ export function useBulk<T = any>() {
 		deselect,
 		toggle,
 		selected,
-		bind,
+		bindCheckbox,
 		bindAll,
 	};
 }
