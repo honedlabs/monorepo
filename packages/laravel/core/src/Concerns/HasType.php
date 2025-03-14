@@ -20,9 +20,7 @@ trait HasType
      */
     public function type(?string $type)
     {
-        if (! \is_null($type)) {
-            $this->type = $type;
-        }
+        $this->type = $type;
 
         return $this;
     }

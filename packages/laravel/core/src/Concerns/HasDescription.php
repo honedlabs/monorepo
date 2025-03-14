@@ -21,9 +21,7 @@ trait HasDescription
      */
     public function description($description)
     {
-        if (! \is_null($description)) {
-            $this->description = $description;
-        }
+        $this->description = $description;
 
         return $this;
     }
@@ -44,15 +42,13 @@ trait HasDescription
      * Evaluate the description for the instance.
      *
      * @param  array<string,mixed>  $parameters
-     * @param  array<string,mixed>  $typed
+     * @param  array<class-string,mixed>  $typed
      * @return string|null
      */
     public function resolveDescription($parameters = [], $typed = [])
     {
         /** @var string|null */
         $evaluated = $this->evaluate($this->description, $parameters, $typed);
-
-        $this->description = $evaluated;
 
         return $evaluated;
     }
@@ -64,6 +60,6 @@ trait HasDescription
      */
     public function hasDescription()
     {
-        return ! \is_null($this->description);
+        return isset($this->description);
     }
 }

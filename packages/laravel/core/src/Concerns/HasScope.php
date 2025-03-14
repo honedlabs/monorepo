@@ -23,9 +23,7 @@ trait HasScope
      */
     public function scope($scope)
     {
-        if (! \is_null($scope)) {
-            $this->scope = $scope;
-        }
+        $this->scope = $scope;
 
         return $this;
     }

@@ -37,8 +37,7 @@ it('resolves', function () {
     $product = product();
 
     expect($this->test->label(fn (Product $product) => $product->name))
-        ->resolveLabel(['product' => $product])->toBe($product->name)
-        ->getLabel()->toBe($product->name);
+        ->resolveLabel(['product' => $product])->toBe($product->name);
 });
 
 it('converts', function () {

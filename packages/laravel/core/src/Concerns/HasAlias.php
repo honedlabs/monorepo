@@ -21,9 +21,7 @@ trait HasAlias
      */
     public function alias($alias)
     {
-        if (! \is_null($alias)) {
-            $this->alias = $alias;
-        }
+        $this->alias = $alias;
 
         return $this;
     }
@@ -45,6 +43,6 @@ trait HasAlias
      */
     public function hasAlias()
     {
-        return ! \is_null($this->alias);
+        return isset($this->alias);
     }
 }

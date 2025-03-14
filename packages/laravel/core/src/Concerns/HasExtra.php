@@ -44,15 +44,13 @@ trait HasExtra
      * Evaluate the extra parameters for the instance.
      *
      * @param  array<string,mixed>  $parameters
-     * @param  array<string,mixed>  $typed
+     * @param  array<class-string,mixed>  $typed
      * @return array<string,mixed>
      */
     public function resolveExtra($parameters = [], $typed = [])
     {
         /** @var array<string,mixed>|null */
         $evaluated = $this->evaluate($this->extra, $parameters, $typed);
-
-        $this->extra = $evaluated;
 
         return $evaluated;
     }
@@ -64,6 +62,6 @@ trait HasExtra
      */
     public function hasExtra()
     {
-        return $this->extra instanceof \Closure || filled($this->extra);
+        return filled($this->extra);
     }
 }

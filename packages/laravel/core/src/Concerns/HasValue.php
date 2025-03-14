@@ -20,9 +20,7 @@ trait HasValue
      */
     public function value(mixed $value)
     {
-        if (! \is_null($value)) {
-            $this->value = $value;
-        }
+        $this->value = $value;
 
         return $this;
     }

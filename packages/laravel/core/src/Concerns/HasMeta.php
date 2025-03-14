@@ -21,9 +21,7 @@ trait HasMeta
      */
     public function meta($meta = null)
     {
-        if (! \is_null($meta)) {
-            $this->meta = $meta;
-        }
+        $this->meta = $meta;
 
         return $this;
     }

@@ -21,9 +21,7 @@ trait HasFormat
      */
     public function format($format)
     {
-        if (! \is_null($format)) {
-            $this->format = $format;
-        }
+        $this->format = $format;
 
         return $this;
     }
@@ -44,15 +42,13 @@ trait HasFormat
      * Evaluate the format for the instance.
      *
      * @param  array<string,mixed>  $parameters
-     * @param  array<string,mixed>  $typed
+     * @param  array<class-string,mixed>  $typed
      * @return string|null
      */
     public function resolveFormat($parameters = [], $typed = [])
     {
         /** @var string|null */
         $evaluated = $this->evaluate($this->format, $parameters, $typed);
-
-        $this->format = $evaluated;
 
         return $evaluated;
     }
@@ -64,6 +60,6 @@ trait HasFormat
      */
     public function hasFormat()
     {
-        return ! \is_null($this->format);
+        return isset($this->format);
     }
 }

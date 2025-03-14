@@ -29,7 +29,7 @@ trait Evaluable
      *
      * @param  T|\Closure(mixed...):T|object  $value
      * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
+     * @param  array<class-string, mixed>  $typed
      * @return T
      */
     public function evaluate($value, $named = [], $typed = [])

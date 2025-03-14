@@ -33,7 +33,7 @@ trait Validatable
      */
     public function validates()
     {
-        return ! \is_null($this->validator);
+        return isset($this->validator);
     }
 
     /**

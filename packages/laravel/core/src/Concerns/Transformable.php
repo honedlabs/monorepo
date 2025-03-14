@@ -33,7 +33,7 @@ trait Transformable
      */
     public function transforms()
     {
-        return ! \is_null($this->transformer);
+        return isset($this->transformer);
     }
 
     /**

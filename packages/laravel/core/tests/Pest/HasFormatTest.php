@@ -37,6 +37,5 @@ it('resolves', function () {
     $product = product();
 
     expect($this->test->format(fn (Product $product) => $product->name))
-        ->resolveFormat(['product' => $product])->toBe($product->name)
-        ->getFormat()->toBe($product->name);
+        ->resolveFormat(['product' => $product])->toBe($product->name);
 });

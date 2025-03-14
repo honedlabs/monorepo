@@ -83,7 +83,7 @@ trait HasRoute
         $method = \mb_strtoupper($method);
 
         if (! \in_array($method, self::ValidMethods)) {
-            throw new \InvalidArgumentException("The provided method [{$method}] is not a valid HTTP method.");
+            static::throwInvalidMethodException($method);
         }
 
         $this->method = $method;
@@ -111,7 +111,7 @@ trait HasRoute
      */
     public function hasRoute()
     {
-        return ! \is_null($this->route);
+        return isset($this->route);
     }
 
     /**
@@ -128,7 +128,7 @@ trait HasRoute
      * Retrieve the route for this instance, resolving any closures.
      *
      * @param  array<string,mixed>  $parameters
-     * @param  array<string,mixed>  $typed
+     * @param  array<class-string,mixed>  $typed
      * @return string|null
      */
     public function getRoute($parameters = [], $typed = [])
@@ -140,15 +140,13 @@ trait HasRoute
      * Evaluate the route for the instance.
      *
      * @param  array<string,mixed>  $parameters
-     * @param  array<string,mixed>  $typed
+     * @param  array<class-string,mixed>  $typed
      * @return string|null
      */
     public function resolveRoute(array $parameters = [], array $typed = [])
     {
         /** @var string|null */
         $evaluated = $this->evaluate($this->route, $parameters, $typed);
-
-        $this->route = $evaluated;
 
         return $evaluated;
     }
@@ -161,5 +159,21 @@ trait HasRoute
     public function getMethod()
     {
         return $this->method;
+    }
+
+    /**
+     * Throw an invalid route exception.
+     *
+     * @param  string  $method
+     * @return never
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected static function throwInvalidMethodException($method)
+    {
+        throw new \InvalidArgumentException(\sprintf(
+            'The provided method [%s] is not a valid HTTP method.',
+            $method
+        ));
     }
 }

@@ -39,8 +39,7 @@ it('gets route', function () {
 
 it('resolves route', function () {
     expect($this->test->route(fn (Product $product) => route($this->route, $product)))
-        ->resolveRoute(['product' => $this->param])->toBe(route($this->route, $this->param))
-        ->getRoute()->toBe(route($this->route, $this->param));
+        ->resolveRoute(['product' => $this->param])->toBe(route($this->route, $this->param));
 });
 
 it('sets url', function () {

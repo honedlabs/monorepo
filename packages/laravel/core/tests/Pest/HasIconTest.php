@@ -55,6 +55,5 @@ it('resolves', function () {
     $product = product();
 
     expect($this->test->icon(fn (Product $product) => $product->name))
-        ->resolveIcon(['product' => $product])->toBe($product->name)
-        ->getIcon()->toBe($product->name);
+        ->resolveIcon(['product' => $product])->toBe($product->name);
 });

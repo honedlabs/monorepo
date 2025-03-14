@@ -30,7 +30,7 @@ trait Allowable
      * Determine if the instance allows the given parameters.
      *
      * @param  array<string,mixed>  $parameters
-     * @param  array<string,mixed>  $typed
+     * @param  array<class-string,mixed>  $typed
      * @return bool
      */
     public function isAllowed($parameters = [], $typed = [])

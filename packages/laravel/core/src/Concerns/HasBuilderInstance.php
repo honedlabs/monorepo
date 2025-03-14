@@ -40,18 +40,20 @@ trait HasBuilderInstance
      */
     public function hasBuilder()
     {
-        return ! \is_null($this->builder);
+        return isset($this->builder);
     }
 
     /**
      * Get the builder instance.
      *
      * @return TBuilder<TModel>
+     *
+     * @throws \RuntimeException
      */
     public function getBuilder()
     {
         if (! $this->hasBuilder()) {
-            throw new \RuntimeException('Builder instance has not been set.');
+            static::throwMissingBuilderException();
         }
 
         return $this->builder;
@@ -74,9 +76,37 @@ trait HasBuilderInstance
         }
 
         if (! $query instanceof Builder) {
-            throw new \InvalidArgumentException('Expected a model class name or a query instance.');
+            static::throwInvalidBuilderException();
         }
 
         return $query;
+    }
+
+    /**
+     * Throw a missing builder exception.
+     *
+     * @return never
+     *
+     * @throws \RuntimeException
+     */
+    protected static function throwMissingBuilderException()
+    {
+        throw new \RuntimeException(
+            'Builder instance has not been set.'
+        );
+    }
+
+    /**
+     * Throw an invalid builder exception.
+     *
+     * @return never
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected static function throwInvalidBuilderException()
+    {
+        throw new \InvalidArgumentException(
+            'Expected a model class name or a query instance.'
+        );
     }
 }

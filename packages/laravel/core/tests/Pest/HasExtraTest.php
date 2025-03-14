@@ -41,6 +41,5 @@ it('resolves', function () {
     $product = product();
 
     expect($this->test->extra(fn (Product $product) => ['extra' => $product->name]))
-        ->resolveExtra(['product' => $product])->toEqual(['extra' => $product->name])
-        ->getExtra()->toEqual(['extra' => $product->name]);
+        ->resolveExtra(['product' => $product])->toEqual(['extra' => $product->name]);
 });

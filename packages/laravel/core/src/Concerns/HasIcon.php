@@ -23,9 +23,7 @@ trait HasIcon
      */
     public function icon($icon)
     {
-        if (! \is_null($icon)) {
-            $this->icon = $icon;
-        }
+        $this->icon = $icon;
 
         return $this;
     }
@@ -48,15 +46,13 @@ trait HasIcon
      * Evaluate the icon for the instance.
      *
      * @param  array<string,mixed>  $parameters
-     * @param  array<string,mixed>  $typed
+     * @param  array<class-string,mixed>  $typed
      * @return string|\Honed\Core\Contracts\Iconable|null
      */
     public function resolveIcon($parameters = [], $typed = [])
     {
         /** @var string|null */
         $evaluated = $this->evaluate($this->icon, $parameters, $typed);
-
-        $this->icon = $evaluated;
 
         return $evaluated;
     }
@@ -68,6 +64,6 @@ trait HasIcon
      */
     public function hasIcon()
     {
-        return ! \is_null($this->icon);
+        return isset($this->icon);
     }
 }

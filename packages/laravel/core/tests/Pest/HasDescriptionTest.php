@@ -37,6 +37,5 @@ it('resolves', function () {
     $product = product();
 
     expect($this->test->description(fn (Product $product) => $product->name))
-        ->resolveDescription(['product' => $product])->toBe($product->name)
-        ->getDescription()->toBe($product->name);
+        ->resolveDescription(['product' => $product])->toBe($product->name);
 });
