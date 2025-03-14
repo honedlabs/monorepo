@@ -19,6 +19,13 @@ trait InterpretsRequest
     protected $as;
 
     /**
+     * A subtype interpreter for array or collection values.
+     *
+     * @var 'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null
+     */
+    protected $subtype;
+
+    /**
      * Interpret the query parameter.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -32,8 +39,8 @@ trait InterpretsRequest
         return match ($this->as) {
             'string' => static::interpretString($request, $key),
             'stringable' => static::interpretStringable($request, $key),
-            'array' => static::interpretArray($request, $key, $delimiter),
-            'collection' => static::interpretCollection($request, $key, $delimiter),
+            'array' => static::interpretArray($request, $key, $delimiter, $this->subtype),
+            'collection' => static::interpretCollection($request, $key, $delimiter, $this->subtype),
             'boolean' => static::interpretBoolean($request, $key),
             'float' => static::interpretFloat($request, $key),
             'integer' => static::interpretInteger($request, $key),
@@ -42,6 +49,126 @@ trait InterpretsRequest
             'time' => static::interpretDate($request, $key, $timezone),
             default => static::interpretRaw($request, $key),
         };
+    }
+
+    /**
+     * Interpret the query parameter as an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string|null  $key
+     * @param  string  $delimiter
+     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
+     * @return array<int,mixed>|null
+     */
+    public static function interpretArray($request, $key = null, $delimiter = ',', $subtype = null)
+    {
+        $collection = static::interpretCollection($request, $key, $delimiter, $subtype);
+
+        return $collection?->toArray();
+    }
+
+    /**
+     * Interpret the query parameter as a boolean.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $key
+     * @return bool|null
+     */
+    public static function interpretBoolean($request, $key)
+    {
+        $value = static::interpretRaw($request, $key);
+
+        if (\is_null($value)) {
+            return null;
+        }
+
+        return \filter_var($value, \FILTER_VALIDATE_BOOLEAN);
+    }
+
+    /**
+     * Interpret the query parameter as a Collection instance.
+     *
+     * @template T of mixed
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $key
+     * @param  string  $delimiter
+     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
+     * @return \Illuminate\Support\Collection<int,mixed>|null
+     */
+    public static function interpretCollection($request, $key, $delimiter = ',', $subtype = null)
+    {
+        $value = static::interpretStringable($request, $key);
+
+        if (\is_null($value)) {
+            return null;
+        }
+
+        $collection = $value
+            ->explode($delimiter)
+            ->map(static fn ($v) => static::valueOf($v, $subtype))
+            ->values();
+
+        if ($collection->isEmpty()) {
+            return null;
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Interpret the query parameter as a date.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $key
+     * @param  DateTimeZone|string|int|null  $timezone
+     * @return \Carbon\Carbon|null
+     */
+    public static function interpretDate($request, $key, $timezone = null)
+    {
+        $value = static::interpretRaw($request, $key);
+
+        if (\is_null($value)) {
+            return null;
+        }
+
+        return static::dateOf($value, $timezone);
+    }
+
+    /**
+     * Interpret the query parameter as a float.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $key
+     * @return float|null
+     */
+    public static function interpretFloat($request, $key)
+    {
+        $value = static::interpretRaw($request, $key);
+
+        if (\is_null($value)) {
+            return null;
+        }
+
+        return \floatval($value);
+    }
+
+    /**
+     * Interpret the query parameter as an integer.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $key
+     * @return int|null
+     */
+    public static function interpretInteger($request, $key)
+    {
+        $value = static::interpretRaw($request, $key);
+
+        if (\is_null($value)) {
+            return null;
+        }
+
+        return \intval($value);
     }
 
     /**
@@ -67,24 +194,6 @@ trait InterpretsRequest
     }
 
     /**
-     * Interpret the query parameter as a Stringable instance.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $key
-     * @return \Illuminate\Support\Stringable|null
-     */
-    public static function interpretStringable($request, $key)
-    {
-        $value = static::interpretRaw($request, $key);
-
-        if (\is_null($value)) {
-            return null;
-        }
-
-        return Str::of($value)->trim();
-    }
-
-    /**
      * Interpret the query parameter as a string.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -103,57 +212,13 @@ trait InterpretsRequest
     }
 
     /**
-     * Interpret the query parameter as a Collection instance.
-     *
-     * @template T of mixed
+     * Interpret the query parameter as a Stringable instance.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $key
-     * @param  string  $delimiter
-     * @return \Illuminate\Support\Collection<int,mixed>|null
+     * @return \Illuminate\Support\Stringable|null
      */
-    public static function interpretCollection($request, $key, $delimiter = ',')
-    {
-        $value = static::interpretStringable($request, $key);
-
-        if (\is_null($value)) {
-            return null;
-        }
-
-        $collection = $value
-            ->explode($delimiter)
-            ->values();
-
-        if ($collection->isEmpty()) {
-            return null;
-        }
-
-        return $collection;
-    }
-
-    /**
-     * Interpret the query parameter as an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string|null  $key
-     * @param  string  $delimiter
-     * @return array<int,mixed>|null
-     */
-    public static function interpretArray($request, $key = null, $delimiter = ',')
-    {
-        $collection = static::interpretCollection($request, $key, $delimiter);
-
-        return $collection?->toArray();
-    }
-
-    /**
-     * Interpret the query parameter as a boolean.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $key
-     * @return bool|null
-     */
-    public static function interpretBoolean($request, $key)
+    public static function interpretStringable($request, $key)
     {
         $value = static::interpretRaw($request, $key);
 
@@ -161,69 +226,7 @@ trait InterpretsRequest
             return null;
         }
 
-        return \filter_var(
-            $value,
-            \FILTER_VALIDATE_BOOLEAN
-        );
-    }
-
-    /**
-     * Interpret the query parameter as an integer.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $key
-     * @return int|null
-     */
-    public static function interpretInteger($request, $key)
-    {
-        $value = static::interpretRaw($request, $key);
-
-        if (\is_null($value)) {
-            return null;
-        }
-
-        return \intval($value);
-    }
-
-    /**
-     * Interpret the query parameter as a float.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $key
-     * @return float|null
-     */
-    public static function interpretFloat($request, $key)
-    {
-        $value = static::interpretRaw($request, $key);
-
-        if (\is_null($value)) {
-            return null;
-        }
-
-        return \floatval($value);
-    }
-
-    /**
-     * Interpret the query parameter as a date.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $key
-     * @param  DateTimeZone|string|int|null  $timezone
-     * @return \Carbon\Carbon|null
-     */
-    public static function interpretDate($request, $key, $timezone = null)
-    {
-        $value = static::interpretRaw($request, $key);
-
-        if (\is_null($value)) {
-            return null;
-        }
-
-        try {
-            return Carbon::parse($value, $timezone);
-        } catch (InvalidFormatException $e) {
-            return null;
-        }
+        return Str::of($value)->trim();
     }
 
     /**
@@ -240,32 +243,15 @@ trait InterpretsRequest
     }
 
     /**
-     * Set the request to interpret as Stringable.
-     *
-     * @return $this
-     */
-    public function asStringable()
-    {
-        return $this->as('stringable');
-    }
-
-    /**
-     * Set the request to interpret as a Collection.
-     *
-     * @return $this
-     */
-    public function asCollection()
-    {
-        return $this->as('collection');
-    }
-
-    /**
      * Set the request to interpret as an array.
      *
+     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
      * @return $this
      */
-    public function asArray()
+    public function asArray($subtype = null)
     {
+        $this->subtype = $subtype;
+
         return $this->as('array');
     }
 
@@ -277,6 +263,39 @@ trait InterpretsRequest
     public function asBoolean()
     {
         return $this->as('boolean');
+    }
+
+    /**
+     * Set the request to interpret as a Collection.
+     *
+     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
+     * @return $this
+     */
+    public function asCollection($subtype = null)
+    {
+        $this->subtype = $subtype;
+
+        return $this->as('collection');
+    }
+
+    /**
+     * Set the request to interpret as a date.
+     *
+     * @return $this
+     */
+    public function asDate()
+    {
+        return $this->as('date');
+    }
+
+    /**
+     * Set the request to interpret as a datetime.
+     *
+     * @return $this
+     */
+    public function asDatetime()
+    {
+        return $this->as('datetime');
     }
 
     /**
@@ -310,23 +329,13 @@ trait InterpretsRequest
     }
 
     /**
-     * Set the request to interpret as a date.
+     * Set the request to interpret as Stringable.
      *
      * @return $this
      */
-    public function asDate()
+    public function asStringable()
     {
-        return $this->as('date');
-    }
-
-    /**
-     * Set the request to interpret as a datetime.
-     *
-     * @return $this
-     */
-    public function asDatetime()
-    {
-        return $this->as('datetime');
+        return $this->as('stringable');
     }
 
     /**
@@ -337,46 +346,6 @@ trait InterpretsRequest
     public function asTime()
     {
         return $this->as('time');
-    }
-
-    /**
-     * Get the interpreter.
-     *
-     * @return 'string'|'stringable'|'array'|'collection'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null
-     */
-    public function getAs()
-    {
-        return $this->as;
-    }
-
-    /**
-     * Determine if the request is interpreted as a raw value.
-     *
-     * @return bool
-     */
-    public function interpretsRaw()
-    {
-        return \is_null($this->as);
-    }
-
-    /**
-     * Determine if the request is interpreted as a Stringable.
-     *
-     * @return bool
-     */
-    public function interpretsStringable()
-    {
-        return $this->as === 'stringable';
-    }
-
-    /**
-     * Determine if the request is interpreted as a Collection.
-     *
-     * @return bool
-     */
-    public function interpretsCollection()
-    {
-        return $this->as === 'collection';
     }
 
     /**
@@ -400,33 +369,13 @@ trait InterpretsRequest
     }
 
     /**
-     * Determine if the request is interpreted as a float.
+     * Determine if the request is interpreted as a Collection.
      *
      * @return bool
      */
-    public function interpretsFloat()
+    public function interpretsCollection()
     {
-        return $this->as === 'float';
-    }
-
-    /**
-     * Determine if the request is interpreted as an integer.
-     *
-     * @return bool
-     */
-    public function interpretsInteger()
-    {
-        return $this->as === 'integer';
-    }
-
-    /**
-     * Determine if the request is interpreted as a string.
-     *
-     * @return bool
-     */
-    public function interpretsString()
-    {
-        return $this->as === 'string';
+        return $this->as === 'collection';
     }
 
     /**
@@ -450,6 +399,56 @@ trait InterpretsRequest
     }
 
     /**
+     * Determine if the request is interpreted as a float.
+     *
+     * @return bool
+     */
+    public function interpretsFloat()
+    {
+        return $this->as === 'float';
+    }
+
+    /**
+     * Determine if the request is interpreted as an integer.
+     *
+     * @return bool
+     */
+    public function interpretsInteger()
+    {
+        return $this->as === 'integer';
+    }
+
+    /**
+     * Determine if the request is interpreted as a raw value.
+     *
+     * @return bool
+     */
+    public function interpretsRaw()
+    {
+        return \is_null($this->as);
+    }
+
+    /**
+     * Determine if the request is interpreted as a string.
+     *
+     * @return bool
+     */
+    public function interpretsString()
+    {
+        return $this->as === 'string';
+    }
+
+    /**
+     * Determine if the request is interpreted as a Stringable.
+     *
+     * @return bool
+     */
+    public function interpretsStringable()
+    {
+        return $this->as === 'stringable';
+    }
+
+    /**
      * Determine if the request is interpreted as a time.
      *
      * @return bool
@@ -457,5 +456,82 @@ trait InterpretsRequest
     public function interpretsTime()
     {
         return $this->as === 'time';
+    }
+
+    /**
+     * Get the interpreter.
+     *
+     * @return 'string'|'stringable'|'array'|'collection'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null
+     */
+    public function getAs()
+    {
+        return $this->as;
+    }
+
+    /**
+     * Set the subtype interpreter.
+     *
+     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
+     * @return $this
+     */
+    public function subtype($subtype)
+    {
+        $this->subtype = $subtype;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the request has a subtype interpreter.
+     *
+     * @return bool
+     */
+    public function hasSubtype()
+    {
+        return isset($this->subtype);
+    }
+
+    /**
+     * Get the subtype interpreter.
+     *
+     * @return 'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null
+     */
+    public function getSubtype()
+    {
+        return $this->subtype;
+    }
+
+    /**
+     * Get the value as a specific type.
+     *
+     * @param  string  $value
+     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $type
+     * @return mixed
+     */
+    public static function valueOf($value, $type = null)
+    {
+        return match ($type) {
+            'string' => \strval($value),
+            'boolean' => \filter_var($value, \FILTER_VALIDATE_BOOLEAN),
+            'integer' => \intval($value),
+            'float' => \floatval($value),
+            'date', 'datetime', 'time' => static::dateOf($value),
+            default => $value,
+        };
+    }
+
+    /**
+     * Get the value as a date.
+     *
+     * @param  string  $value
+     * @return \Carbon\Carbon|null
+     */
+    public static function dateOf($value)
+    {
+        try {
+            return Carbon::parse($value);
+        } catch (InvalidFormatException $e) {
+            return null;
+        }
     }
 }

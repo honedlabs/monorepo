@@ -76,37 +76,33 @@ it('interprets raw', function ($param, $value, $expected) {
     ['[key]', 'value', 'value'],
 ]);
 
-it('interprets stringable', function ($param, $value, $expected) {
+it('interprets array', function ($param, $value, $expected) {
     $request = generateRequest($this->param.$param, $value);
 
-    if (\is_null($expected)) {
-        expect($this->test->interpretStringable($request, $this->param))
-            ->toBeNull();
-    } else {
-        expect($this->test->interpretStringable($request, $this->param))
-            ->toBeInstanceOf(Stringable::class)
-            ->toString()->toBe($expected);
-    }
+    expect($this->test->interpretArray($request, $this->param))
+        ->toBe($expected);
 })->with([
     ['', '', null],
-    ['', 'value', 'value'],
-    ['[]', 'value', 'value'],
-    ['[key]', 'value', 'value'],
-    ['', 5, '5'],
+    ['', 'value', ['value']],
+    ['[]', 'value', ['value']],
+    ['[key]', 'value', ['value']],
+    ['', 5, ['5']],
+    ['', '1,2,3', ['1', '2', '3']],
 ]);
 
-it('interprets string', function ($param, $value, $expected) {
+it('interprets boolean', function ($param, $value, $expected) {
     $request = generateRequest($this->param.$param, $value);
 
-    expect($this->test->interpretString($request, $this->param))
+    expect($this->test->interpretBoolean($request, $this->param))
         ->toBe($expected);
 
 })->with([
     ['', '', null],
-    ['', 'value', 'value'],
-    ['[]', 'value', 'value'],
-    ['[key]', 'value', 'value'],
-    ['', 5, '5'],
+    ['', 'value', false],
+    ['[]', 'yes', true],
+    ['[key]', 'yes', true],
+    ['', 'true', true],
+    ['', 'false', false],
 ]);
 
 it('interprets collection', function ($param, $value, $expected) {
@@ -129,64 +125,6 @@ it('interprets collection', function ($param, $value, $expected) {
     ['', '1,2,3', ['1', '2', '3']],
 ]);
 
-it('interprets array', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
-
-    expect($this->test->interpretArray($request, $this->param))
-        ->toBe($expected);
-})->with([
-    ['', '', null],
-    ['', 'value', ['value']],
-    ['[]', 'value', ['value']],
-    ['[key]', 'value', ['value']],
-    ['', 5, ['5']],
-    ['', '1,2,3', ['1', '2', '3']],
-]);
-
-it('interprets integer', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
-
-    expect($this->test->interpretInteger($request, $this->param))
-        ->toBe($expected);
-
-})->with([
-    ['', '', null],
-    ['', 'value', 0],
-    ['[]', 5, 5],
-    ['[key]', 5, 5],
-    ['', '5', 5],
-]);
-
-it('interprets float', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
-
-    expect($this->test->interpretFloat($request, $this->param))
-        ->toBe($expected);
-
-})->with([
-    ['', '', null],
-    ['', 'value', 0.0],
-    ['[]', 5, 5.0],
-    ['[key]', 5, 5.0],
-    ['', '5', 5.0],
-    ['', '5.5', 5.5],
-]);
-
-it('interprets boolean', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
-
-    expect($this->test->interpretBoolean($request, $this->param))
-        ->toBe($expected);
-
-})->with([
-    ['', '', null],
-    ['', 'value', false],
-    ['[]', 'yes', true],
-    ['[key]', 'yes', true],
-    ['', 'true', true],
-    ['', 'false', false],
-]);
-
 it('interprets date', function ($param, $value, $expected) {
     $request = generateRequest($this->param.$param, $value);
 
@@ -205,38 +143,84 @@ it('interprets date', function ($param, $value, $expected) {
     ['[]', '2000-01-01', Carbon::class],
 ]);
 
-// it('interprets date', function ($param, $value, $expected) {
-//     $p = 'param';
+it('interprets float', function ($param, $value, $expected) {
+    $request = generateRequest($this->param.$param, $value);
 
-//     if (\is_null($expected)) {
-//         expect(generateRequest($p.$param, $value)->safeDate($p))
-//             ->toBeNull();
-//     } else {
-//         expect(generateRequest($p.$param, $value)->safeDate($p))
-//             ->toBeInstanceOf($expected);
-//     }
-// })->with([
-//     ['', '', null],
-//     ['', 'value', null],
-//     ['', 1, null],
-//     ['', '2000-01-01', Carbon::class],
-//     ['[]', '2000-01-01', Carbon::class],
-// ]);
+    expect($this->test->interpretFloat($request, $this->param))
+        ->toBe($expected);
 
-// it('interprets array', function ($param, $value, $expected) {
-//     $p = 'param';
+})->with([
+    ['', '', null],
+    ['', 'value', 0.0],
+    ['[]', 5, 5.0],
+    ['[key]', 5, 5.0],
+    ['', '5', 5.0],
+    ['', '5.5', 5.5],
+]);
 
-//     if (\is_null($expected)) {
-//         expect(generateRequest($p.$param, $value)->safeArray($p))
-//             ->toBeNull();
-//     } else {
-//         expect(generateRequest($p.$param, $value)->safeArray($p))
-//             ->toBeInstanceOf(Collection::class)
-//             ->all()->toEqual($expected);
-//     }
-// })->with([
-//     ['', '', null],
-//     ['', 'value', ['value']],
-//     ['', '1', [1]],
-//     ['', 'true', [true]],
-// ]);
+it('interprets integer', function ($param, $value, $expected) {
+    $request = generateRequest($this->param.$param, $value);
+
+    expect($this->test->interpretInteger($request, $this->param))
+        ->toBe($expected);
+
+})->with([
+    ['', '', null],
+    ['', 'value', 0],
+    ['[]', 5, 5],
+    ['[key]', 5, 5],
+    ['', '5', 5],
+]);
+
+it('interprets string', function ($param, $value, $expected) {
+    $request = generateRequest($this->param.$param, $value);
+
+    expect($this->test->interpretString($request, $this->param))
+        ->toBe($expected);
+
+})->with([
+    ['', '', null],
+    ['', 'value', 'value'],
+    ['[]', 'value', 'value'],
+    ['[key]', 'value', 'value'],
+    ['', 5, '5'],
+]);
+
+it('interprets stringable', function ($param, $value, $expected) {
+    $request = generateRequest($this->param.$param, $value);
+
+    if (\is_null($expected)) {
+        expect($this->test->interpretStringable($request, $this->param))
+            ->toBeNull();
+    } else {
+        expect($this->test->interpretStringable($request, $this->param))
+            ->toBeInstanceOf(Stringable::class)
+            ->toString()->toBe($expected);
+    }
+})->with([
+    ['', '', null],
+    ['', 'value', 'value'],
+    ['[]', 'value', 'value'],
+    ['[key]', 'value', 'value'],
+    ['', 5, '5'],
+]);
+
+it('has subtype', function () {
+    expect($this->test)
+        ->hasSubtype()->toBeFalse()
+        ->subtype('string')->toBe($this->test)
+        ->hasSubtype()->toBeTrue()
+        ->getSubtype()->toBe('string');
+});
+
+it('interprets arrayables with subtype', function () {
+    $arr = \implode(',', [1, 2, 3]);
+
+    $request = generateRequest($this->param, $arr);
+
+    expect($this->test)
+        ->interpretArray($request, $this->param, ',', 'integer')->toBe([1, 2, 3])
+        ->interpretArray($request, $this->param, ',', 'float')->toBe([1.0, 2.0, 3.0])
+        ->interpretArray($request, $this->param, ',', 'string')->toBe(['1', '2', '3'])
+        ->interpretArray($request, $this->param, ',', 'boolean')->toBe([true, false, false]);
+});
