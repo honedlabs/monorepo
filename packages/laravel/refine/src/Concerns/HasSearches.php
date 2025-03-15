@@ -326,7 +326,10 @@ trait HasSearches
         // We need to use a new instance of the interpreter class to avoid
         // the use of the `InterpretsRequest` trait on the `HasSearches` trait.
         // This trait allows us to receive stringable and arrayable objects.
-        $interpreter = new class { use InterpretsRequest; };
+        $interpreter = new class
+        {
+            use InterpretsRequest;
+        };
 
         // There are two values to look for in the request: the search term,
         // and a string delimited list of columns to search. We use the class

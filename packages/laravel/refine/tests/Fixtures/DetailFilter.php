@@ -21,7 +21,7 @@ final class DetailFilter extends Filter
      * Register the query expression to resolve the filter.
      *
      * @param  \Illuminate\Database\Query\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  mixed $value
+     * @param  mixed  $value
      * @return void
      */
     public function using(Builder $builder, $value)

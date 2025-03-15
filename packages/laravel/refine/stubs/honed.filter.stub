@@ -24,7 +24,7 @@ final class {{ class }} extends Filter
      * @param  mixed $value
      * @return void
      */
-    public function using(Builder $builder, $value)
+    public function expression(Builder $builder, $value)
     {
         //
     }

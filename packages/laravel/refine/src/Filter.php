@@ -11,8 +11,8 @@ use Honed\Core\Concerns\HasScope;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
 use Honed\Refine\Concerns\HasDelimiter;
-use Honed\Refine\Concerns\HasOptions;
 use Honed\Refine\Concerns\HasExpression;
+use Honed\Refine\Concerns\HasOptions;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
@@ -20,16 +20,16 @@ use Honed\Refine\Concerns\HasExpression;
 class Filter extends Refiner
 {
     use HasDelimiter;
-    use HasOptions {
-        multiple as protected setMultiple;
-    }
     use HasExpression {
         __call as queryCall;
+    }
+    use HasMeta;
+    use HasOptions {
+        multiple as protected setMultiple;
     }
     use HasScope;
     use InterpretsRequest;
     use Validatable;
-    use HasMeta;
 
     /**
      * The operator to use for the filter.
@@ -105,7 +105,7 @@ class Filter extends Refiner
 
     /**
      * Set the filter to be for boolean values.
-     * 
+     *
      * @return $this
      */
     public function boolean()
@@ -181,7 +181,6 @@ class Filter extends Refiner
 
         return $this;
     }
-
 
     /**
      * Set the filter to be for string values.

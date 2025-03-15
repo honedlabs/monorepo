@@ -40,7 +40,7 @@ class Search extends Refiner
         // parameter is one of them. They are all active by default.
         $this->value($shouldBeApplied);
 
-        // We don't do the search if the column is not to be searched on, or if 
+        // We don't do the search if the column is not to be searched on, or if
         // there is no search term.
         if (! $this->isActive() || empty($search)) {
             return false;

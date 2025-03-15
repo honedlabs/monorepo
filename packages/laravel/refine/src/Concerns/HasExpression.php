@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Refine\Concerns;
 
 use Closure;
-use BadMethodCallException;
 use Illuminate\Database\Eloquent\Builder;
 
 trait HasExpression
@@ -33,10 +32,8 @@ trait HasExpression
      * @param  mixed  $value
      * @param  mixed  $optional
      * @return $this
-     *
-     * @throws \BadMethodCallException
      */
-    public function expression(
+    public function using(
         $expression,
         $reference = null,
         $operator = null,
@@ -61,8 +58,8 @@ trait HasExpression
      */
     public function getExpression()
     {
-        if (\method_exists($this, 'using')) {
-            return Closure::fromCallable([$this, 'using']);
+        if (\method_exists($this, 'expression')) {
+            return Closure::fromCallable([$this, 'expression']);
         }
 
         return $this->expression;
@@ -75,7 +72,7 @@ trait HasExpression
      */
     public function hasExpression()
     {
-        return isset($this->expression) || \method_exists($this, 'using');
+        return isset($this->expression) || \method_exists($this, 'expression');
     }
 
     /**
@@ -103,7 +100,7 @@ trait HasExpression
         // and whether we need to replace bindings.
         $numArgs = \count($expression);
 
-        [$statement, $reference, $operator, $value, $optional] 
+        [$statement, $reference, $operator, $value, $optional]
             = \array_pad($expression, 5, null);
 
         // If there are only 2 arguments, we have a query method and a column
@@ -247,6 +244,6 @@ trait HasExpression
         }
 
         // @phpstan-ignore-next-line
-        return $this->expression($method, ...$parameters);
+        return $this->using($method, ...$parameters);
     }
 }

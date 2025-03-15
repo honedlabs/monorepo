@@ -24,7 +24,7 @@ final class {{ class }} extends Sort
      * @param  'asc'|'desc'|null $direction
      * @return void
      */
-    public function using(Builder $builder, $direction)
+    public function expression(Builder $builder, $direction)
     {
         //
     }

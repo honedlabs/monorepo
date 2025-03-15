@@ -71,7 +71,7 @@ trait HasFilters
     public function getFilters()
     {
         return once(function () {
-            
+
             $filters = \method_exists($this, 'filters') ? $this->filters() : [];
 
             $filters = \array_merge($filters, $this->filters ?? []);
