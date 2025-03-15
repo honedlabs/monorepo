@@ -16,19 +16,13 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
-use Illuminate\Support\Traits\Conditionable;
-use Illuminate\Support\Traits\Macroable;
-use Illuminate\Support\Traits\Tappable;
 
 /**
  * @extends \Honed\Core\Primitive<string,mixed>
  */
-class Upload extends Primitive
+class Upload extends Primitive //implements Responsable
 {
-    use Conditionable;
     use HasRequest;
-    use Macroable;
-    use Tappable;
 
     /**
      * The disk to retrieve the S3 credentials from.
@@ -105,18 +99,29 @@ class Upload extends Primitive
      */
     public function __construct(Request $request)
     {
-        $this->request($request);
         parent::__construct();
+        $this->request($request);
     }
 
     /**
      * Create a new upload instance.
      *
-     * @return \Honed\Upload\Upload
+     * @return static
      */
     public static function make()
     {
         return resolve(static::class);
+    }
+
+    /**
+     * Create a new upload instance for the given disk.
+     *
+     * @param  string  $disk
+     * @return static
+     */
+    public static function into($disk)
+    {
+        return static::make()->disk($disk);
     }
 
     /**
@@ -139,17 +144,11 @@ class Upload extends Primitive
      */
     public function getDisk()
     {
-        if (isset($this->disk)) {
-            return $this->disk;
-        }
-
-        return static::fallbackDisk();
+        return $this->disk ?? static::fallbackDisk();
     }
 
     /**
      * Get the disk to use for uploading files from the config.
-     *
-     * @default 's3'
      *
      * @return string
      */
@@ -259,11 +258,7 @@ class Upload extends Primitive
      */
     public function getUnit()
     {
-        if (isset($this->unit)) {
-            return $this->unit;
-        }
-
-        return static::fallbackUnit();
+        return $this->unit ?? static::fallbackUnit();
     }
 
     /**
@@ -283,8 +278,7 @@ class Upload extends Primitive
      */
     public function getMinSize(bool $convert = true)
     {
-        $minSize = $this->minSize
-            ?? static::fallbackMinSize();
+        $minSize = $this->minSize ?? static::fallbackMinSize();
 
         if ($convert) {
             return $this->convertSize($minSize);
@@ -312,8 +306,7 @@ class Upload extends Primitive
      */
     public function getMaxSize(bool $convert = true)
     {
-        $maxSize = $this->maxSize
-            ?? static::fallbackMaxSize();
+        $maxSize = $this->maxSize ?? static::fallbackMaxSize();
 
         if ($convert) {
             return $this->convertSize($maxSize);
@@ -438,7 +431,7 @@ class Upload extends Primitive
     }
 
     /**
-     * Set the duration of the presigned URL.
+     * Set the expiry of the presigned URL.
      * If an integer is provided, it will be interpreted as the number of seconds.
      *
      * @param  \Carbon\Carbon|int|string|null  $expires
@@ -494,6 +487,7 @@ class Upload extends Primitive
             $duration instanceof Carbon => \sprintf(
                 '+%d seconds', \round(\abs($duration->diffInSeconds()))
             ),
+
             default => static::fallbackDuration(),
         };
     }
@@ -574,11 +568,7 @@ class Upload extends Primitive
      */
     public function getAccessControlList()
     {
-        if (isset($this->acl)) {
-            return $this->acl;
-        }
-
-        return static::fallbackAccessControlList();
+        return $this->acl ?? static::fallbackAccessControlList();
     }
 
     /**
