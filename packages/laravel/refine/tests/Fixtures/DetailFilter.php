@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace {{ namespace }};
+namespace Honed\Refine\Tests\Fixtures;
 
-use Honed\Refine\Sort;
+use Honed\Refine\Filter;
 use Illuminate\Database\Query\Builder;
 
-final class {{ class }} extends Sort
+final class DetailFilter extends Filter
 {
     /**
      * {@inheritdoc}
@@ -21,11 +21,11 @@ final class {{ class }} extends Sort
      * Register the query expression to resolve the filter.
      *
      * @param  \Illuminate\Database\Query\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  'asc'|'desc'|null $direction
+     * @param  mixed $value
      * @return void
      */
-    public function using(Builder $builder, $direction)
+    public function using(Builder $builder, $value)
     {
-        //
+        $builder->whereRelation('details', 'quantity', $value);
     }
 }

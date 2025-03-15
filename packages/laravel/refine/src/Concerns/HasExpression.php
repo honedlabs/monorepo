@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
-use BadMethodCallException;
 use Closure;
+use BadMethodCallException;
 use Illuminate\Database\Eloquent\Builder;
 
-trait HasQueryExpression
+trait HasExpression
 {
     /**
-     * The callback or query method to resolve the refiner.
+     * The expression to resolve the refiner.
      *
      * @var array<int,mixed>|\Closure|null
      */
-    protected $using;
+    protected $expression;
 
     /**
      * Provide a list of supported expression partials.
@@ -27,30 +27,45 @@ trait HasQueryExpression
     /**
      * Register the query expression to resolve the refiner.
      *
-     * @param  string|\Closure  $statement
+     * @param  string|\Closure  $expression
      * @param  string|null  $reference
      * @param  mixed  $operator
      * @param  mixed  $value
-     * @param  bool  $optional
+     * @param  mixed  $optional
      * @return $this
      *
      * @throws \BadMethodCallException
      */
-    public function using($statement, $reference = null, $operator = null, $value = null, $optional = null)
-    {
-        if ($statement instanceof Closure) {
-            $this->using = $statement;
+    public function expression(
+        $expression,
+        $reference = null,
+        $operator = null,
+        $value = null,
+        $optional = null
+    ) {
+        if ($expression instanceof Closure) {
+            $this->expression = $expression;
 
             return $this;
         }
 
-        if ($reference === null) {
-            static::throwMissingReferenceException();
-        }
-
-        $this->using = func_get_args();
+        $this->expression = \func_get_args();
 
         return $this;
+    }
+
+    /**
+     * Get the query expression.
+     *
+     * @return array<int,mixed>|\Closure|null
+     */
+    public function getExpression()
+    {
+        if (\method_exists($this, 'using')) {
+            return Closure::fromCallable([$this, 'using']);
+        }
+
+        return $this->expression;
     }
 
     /**
@@ -58,27 +73,27 @@ trait HasQueryExpression
      *
      * @return bool
      */
-    public function hasQueryExpression()
+    public function hasExpression()
     {
-        return isset($this->using);
+        return isset($this->expression) || \method_exists($this, 'using');
     }
 
     /**
-     * Express the query on the builder.
+     * Apply the expression on the builder.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  array<string, mixed>  $bindings
      * @return void
      */
-    public function expressQuery($builder, $bindings = [])
+    public function express($builder, $bindings = [])
     {
-        /** @var array<string, mixed>|\Closure $using */
-        $using = $this->using;
+        /** @var array<string, mixed>|\Closure $expression */
+        $expression = $this->getExpression();
 
         // If the expression is a direct closure, we evaluate it immediately.
         // We will apply the bindings directly to the closure without rebinding.
-        if ($using instanceof Closure) {
-            $this->expressClosure($using, $builder, $bindings);
+        if ($expression instanceof Closure) {
+            $this->rebindClosure($expression, $bindings)($builder);
 
             return;
         }
@@ -86,9 +101,10 @@ trait HasQueryExpression
         // The behaviour of the expression is now dependent on the number of
         // arguments, as it will determine whether the arguments can be closures
         // and whether we need to replace bindings.
-        $numArgs = \count($using);
+        $numArgs = \count($expression);
 
-        [$statement, $reference, $operator, $value, $optional] = \array_pad($using, 5, null);
+        [$statement, $reference, $operator, $value, $optional] 
+            = \array_pad($expression, 5, null);
 
         // If there are only 2 arguments, we have a query method and a column
         // or relation reference. As we know this is a string, we should replace
@@ -132,28 +148,6 @@ trait HasQueryExpression
         }
 
         $builder->{$statement}($reference, $operator, $value);
-    }
-
-    /**
-     * Express the callback on the builder.
-     *
-     * @param  \Closure  $closure
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  array<string, mixed>  $bindings
-     * @return void
-     */
-    public function expressClosure($closure, $builder, $bindings)
-    {
-        $model = $builder->getModel();
-
-        $this->evaluate($closure, [
-            'builder' => $builder,
-            'query' => $builder,
-            ...$bindings,
-        ], [
-            Builder::class => $builder,
-            $model::class => $model,
-        ]);
     }
 
     /**
@@ -246,42 +240,13 @@ trait HasQueryExpression
     public function __call($method, $parameters)
     {
         if ($this->invalidExpression($method)) {
-            static::throwInvalidExpression($method);
+            throw new \BadMethodCallException(\sprintf(
+                'Call to method %s::%s() is not a supported query expression',
+                static::class, $method,
+            ));
         }
 
         // @phpstan-ignore-next-line
-        return $this->using($method, ...$parameters);
-    }
-
-    /**
-     * Throw a missing reference exception.
-     *
-     * @return never
-     *
-     * @throws \BadMethodCallException
-     */
-    protected static function throwMissingReferenceException()
-    {
-        throw new BadMethodCallException(
-            'A column or relation reference is required for all expressions.'
-        );
-    }
-
-    /**
-     * Throw an invalid expression exception.
-     *
-     * @param  string  $method
-     * @return never
-     *
-     * @throws \BadMethodCallException
-     */
-    protected static function throwInvalidExpression($method)
-    {
-        throw new BadMethodCallException(
-            sprintf(
-                'Call to method %s::%s() is not a supported query expression',
-                static::class, $method
-            )
-        );
+        return $this->expression($method, ...$parameters);
     }
 }

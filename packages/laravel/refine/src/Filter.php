@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Honed\Refine;
 
 use BadMethodCallException;
+use Carbon\Carbon;
+use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasScope;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
 use Honed\Refine\Concerns\HasDelimiter;
 use Honed\Refine\Concerns\HasOptions;
-use Honed\Refine\Concerns\HasQueryExpression;
+use Honed\Refine\Concerns\HasExpression;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
@@ -21,12 +23,13 @@ class Filter extends Refiner
     use HasOptions {
         multiple as protected setMultiple;
     }
-    use HasQueryExpression {
+    use HasExpression {
         __call as queryCall;
     }
     use HasScope;
     use InterpretsRequest;
     use Validatable;
+    use HasMeta;
 
     /**
      * The operator to use for the filter.
@@ -52,18 +55,6 @@ class Filter extends Refiner
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function toArray()
-    {
-        return \array_merge(parent::toArray(), [
-            'value' => $this->getValue(),
-            'options' => $this->optionsToArray(),
-            'multiple' => $this->isMultiple(),
-        ]);
-    }
-
-    /**
      * Get the expression partials supported by the filter.
      *
      * @return array<int,string>
@@ -78,20 +69,6 @@ class Filter extends Refiner
     }
 
     /**
-     * Allow multiple values to be used.
-     *
-     * @return $this
-     */
-    public function multiple()
-    {
-        $this->setMultiple();
-        $this->asArray();
-        $this->type('select');
-
-        return $this;
-    }
-
-    /**
      * Determine if the value is invalid.
      *
      * @param  mixed  $value
@@ -99,8 +76,7 @@ class Filter extends Refiner
      */
     public function invalidValue($value)
     {
-        return ! $this->isActive() ||
-            ! $this->validate($value) ||
+        return ! $this->isActive() || ! $this->validate($value) ||
             ($this->hasOptions() && empty($value));
     }
 
@@ -123,6 +99,112 @@ class Filter extends Refiner
     public function operator($operator)
     {
         $this->operator = $operator;
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for boolean values.
+     * 
+     * @return $this
+     */
+    public function boolean()
+    {
+        $this->type('boolean');
+        $this->asBoolean();
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for date values.
+     *
+     * @return $this
+     */
+    public function date()
+    {
+        $this->type('date');
+        $this->asDate();
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for date time values.
+     *
+     * @return $this
+     */
+    public function dateTime()
+    {
+        $this->type('datetime');
+        $this->asDatetime();
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for float values.
+     *
+     * @return $this
+     */
+    public function float()
+    {
+        $this->type('float');
+        $this->asFloat();
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for integer values.
+     *
+     * @return $this
+     */
+    public function integer()
+    {
+        $this->type('integer');
+        $this->asInteger();
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for multiple values.
+     *
+     * @return $this
+     */
+    public function multiple()
+    {
+        $this->type('select');
+        $this->asArray();
+        $this->setMultiple();
+
+        return $this;
+    }
+
+
+    /**
+     * Set the filter to be for string values.
+     *
+     * @return $this
+     */
+    public function string()
+    {
+        $this->type('string');
+        $this->asString();
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for time values.
+     *
+     * @return $this
+     */
+    public function time()
+    {
+        $this->type('time');
+        $this->asTime();
 
         return $this;
     }
@@ -166,24 +248,19 @@ class Filter extends Refiner
         // values if needed. In this instance, it is assumed that the developer
         // has called `asBoolean` on the filter and then can write a simple
         // validation closure.
-        if ($this->hasQueryExpression()) {
+        if ($this->hasExpression()) {
             $bindings = [
                 'value' => $value,
                 'column' => $this->getName(),
                 'table' => $builder->getModel()->getTable(),
             ];
 
-            $this->expressQuery($builder, $bindings);
+            $this->express($builder, $bindings);
 
             return true;
         }
 
-        // If there is no custom query expression, we use the default query
-        // method. This depends on how the request interprets the value.
-        $column = $this->getName();
-        $operator = $this->getOperator();
-
-        $this->apply($builder, $column, $operator, $value);
+        $this->apply($builder, $this->getName(), $this->getOperator(), $value);
 
         return true;
     }
@@ -228,6 +305,25 @@ class Filter extends Refiner
             // to be overridden by the developer.
             default => $builder->where($column, $operator, $value),
         };
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        $value = $this->getValue();
+
+        if ($value instanceof Carbon) {
+            $value = $value->toIso8601String();
+        }
+
+        return \array_merge(parent::toArray(), [
+            'value' => $value,
+            'options' => $this->optionsToArray(),
+            'multiple' => $this->isMultiple(),
+            'meta' => $this->getMeta(),
+        ]);
     }
 
     /**

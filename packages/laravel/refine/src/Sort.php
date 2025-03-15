@@ -6,12 +6,12 @@ namespace Honed\Refine;
 
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\IsDefault;
-use Honed\Refine\Concerns\HasQueryExpression;
+use Honed\Refine\Concerns\HasExpression;
 use Illuminate\Support\Str;
 
 class Sort extends Refiner
 {
-    use HasQueryExpression {
+    use HasExpression {
         __call as queryCall;
     }
     use InterpretsRequest;
@@ -285,7 +285,7 @@ class Sort extends Refiner
 
         // We allow for the developer to provide a custom query expression. This
         // will only be executed if the sorts match.
-        if ($this->hasQueryExpression()) {
+        if ($this->hasExpression()) {
             $bindings = [
                 'direction' => $direction,
                 'value' => $value,
@@ -293,7 +293,7 @@ class Sort extends Refiner
                 'table' => $builder->getModel()->getTable(),
             ];
 
-            $this->expressQuery($builder, $bindings);
+            $this->express($builder, $bindings);
 
             return true;
         }

@@ -79,6 +79,7 @@ trait HasSorts
     public function getSorts()
     {
         return once(function () {
+            
             $sorts = \method_exists($this, 'sorts') ? $this->sorts() : [];
 
             $sorts = \array_merge($sorts, $this->sorts ?? []);

@@ -71,6 +71,7 @@ trait HasFilters
     public function getFilters()
     {
         return once(function () {
+            
             $filters = \method_exists($this, 'filters') ? $this->filters() : [];
 
             $filters = \array_merge($filters, $this->filters ?? []);
@@ -157,9 +158,12 @@ trait HasFilters
         /** @var array<int, \Honed\Refine\Filter> */
         $filters = \array_merge($this->getFilters(), $filters);
 
+        $scope = $this->getScope();
+        $delimiter = $this->getDelimiter();
+
         foreach ($filters as $filter) {
-            $filter->scope($this->getScope())
-                ->delimiter($this->getDelimiter())
+            $filter->scope($scope)
+                ->delimiter($delimiter)
                 ->refine($builder, $request);
         }
 
