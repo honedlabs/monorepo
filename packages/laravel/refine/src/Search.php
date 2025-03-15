@@ -19,7 +19,7 @@ class Search extends Refiner
      */
     public function isActive()
     {
-        return $this->hasValue();
+        return (bool) $this->value;
     }
 
     /**
@@ -33,18 +33,20 @@ class Search extends Refiner
      */
     public function refine($builder, $search, $columns, $boolean = 'and')
     {
-        $shouldBeApplied = \is_null($columns) ||
+        $shouldBeApplied = empty($columns) ||
             \in_array($this->getParameter(), $columns);
 
-        $this->value($shouldBeApplied ? $search : null);
+        // The search is active if there are columns to search on, and the
+        // parameter is one of them. They are all active by default.
+        $this->value($shouldBeApplied);
 
-        if (! $this->isActive()) {
+        // We don't do the search if the column is not to be searched on, or if 
+        // there is no search term.
+        if (! $this->isActive() || empty($search)) {
             return false;
         }
 
-        $value = type($search)->asString();
-
-        $this->apply($builder, $value, $this->getName(), $boolean);
+        $this->apply($builder, $search, $this->getName(), $boolean);
 
         return true;
     }
