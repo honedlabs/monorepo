@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Honed\Upload\Concerns;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 trait HasFileRules
 {
@@ -21,6 +23,27 @@ trait HasFileRules
      * @var array<int, string>
      */
     protected $accepting = [];
+
+    /**
+     * The maximum file size in bytes.
+     * 
+     * @var int|null
+     */
+    protected $maximum;
+
+    /**
+     * The minimum file size in bytes.
+     * 
+     * @var int|null
+     */
+    protected $minimum;
+
+    /**
+     * The expiry duration of the request in seconds.
+     * 
+     * @var int|null
+     */
+    protected $expires;
 
     /**
      * Set the rules for validating file uploads.
@@ -202,5 +225,89 @@ trait HasFileRules
     public static function fallbackMin()
     {
         return type(config('upload.min_size', 1))->asInt();
+    }
+
+    /**
+     * Set the expiry duration of the request in seconds.
+     * 
+     * @param int $seconds
+     * @return $this
+     */
+    public function expires($seconds)
+    {
+        $this->expires = $seconds;
+
+        return $this;
+    }
+
+    /**
+     * Get the expiry duration of the request in seconds.
+     * 
+     * @return int
+     */
+    public function getExpires()
+    {
+        return $this->expires ?? static::fallbackExpires();
+    }
+
+    /**
+     * Get the expiry duration of the request in seconds from the config.
+     * 
+     * @return int
+     */
+    public static function fallbackExpires()
+    {
+        return type(config('upload.expires', 5 * 60))->asInt();
+    }
+
+    /**
+     * Validate the incoming request.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return array<string, mixed>
+     */
+    public function validate($request)
+    {
+        [$name, $extension] = static::destructureFilename($request->input('name'));
+
+        /** @var array<string, mixed> */
+        $data = $request->merge([
+            'name' => $name,
+            'extension' => $extension,
+        ])->all();
+
+        return Validator::make(
+            $data,
+            $this->createRules($data),
+        )->validate();
+    }
+
+    public function createRules($data)
+    {
+        return [
+            'name' => ['required', 'string', 'max:1024'],
+            'extension' => ['required', 'string'],
+            'type' => ['required'],
+            'size' => ['required', 'integer', 'min:'.$min, 'max:'.$max],
+            'meta' => ['nullable'],
+        ];
+    }
+
+    /**
+     * Destructure the filename into its components.
+     * 
+     * @param string|null $filename
+     * @return array{string|null, string|null}
+     */
+    public static function destructureFilename($filename)
+    {
+        if (\is_null($filename)) {
+            return [null, null];
+        }
+
+        return [
+            \pathinfo($filename, PATHINFO_FILENAME),
+            \pathinfo($filename, PATHINFO_EXTENSION),
+        ];
     }
 }

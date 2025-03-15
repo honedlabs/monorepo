@@ -9,6 +9,7 @@ use Aws\S3\S3Client;
 use Carbon\Carbon;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Primitive;
+use Honed\Upload\Concerns\HasFileRules;
 use Honed\Upload\Rules\OfType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -16,6 +17,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
+use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
 /**
  * @extends \Honed\Core\Primitive<string,mixed>
@@ -23,6 +26,7 @@ use Illuminate\Support\Stringable;
 class Upload extends Primitive //implements Responsable
 {
     use HasRequest;
+    use HasFileRules;
 
     /**
      * The disk to retrieve the S3 credentials from.
