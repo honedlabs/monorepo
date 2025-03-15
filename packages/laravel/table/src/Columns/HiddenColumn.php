@@ -12,7 +12,6 @@ class HiddenColumn extends Column
     public function setUp()
     {
         parent::setUp();
-
         $this->type('hidden');
         $this->always();
         $this->hidden();

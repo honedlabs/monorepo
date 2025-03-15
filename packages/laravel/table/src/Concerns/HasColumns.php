@@ -27,9 +27,7 @@ trait HasColumns
     /**
      * Merge a set of columns with the existing columns.
      *
-     * @template T of \Honed\Table\Columns\Column
-     *
-     * @param  array<int,T>|Collection<int,T>  $columns
+     * @param  array<int,\Honed\Table\Columns\Column>|Collection<int,\Honed\Table\Columns\Column>  $columns
      * @return $this
      */
     public function addColumns($columns)
@@ -86,7 +84,9 @@ trait HasColumns
     public function getColumns()
     {
         return once(function () {
+
             $columns = \method_exists($this, 'columns') ? $this->columns() : [];
+            
             $columns = \array_merge($columns, $this->columns ?? []);
 
             return \array_values(
@@ -131,7 +131,7 @@ trait HasColumns
      */
     public function getColumnSorts($columns = null)
     {
-        $columns = $columns ?? $this->getColumns();
+        $columns ??= $this->getColumns();
 
         return \array_values(
             \array_filter(
@@ -149,7 +149,7 @@ trait HasColumns
      */
     public function getColumnSearches($columns = null)
     {
-        $columns = $columns ?? $this->getColumns();
+        $columns ??= $this->getColumns();
 
         return \array_values(
             \array_filter(
@@ -187,5 +187,17 @@ trait HasColumns
             static fn (Column $column) => $column->toArray(),
             $this->getColumns()
         );
+    }
+
+    /**
+     * Apply the columns to the builder.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @return void
+     */
+    public static function applyColumns($builder, $columns)
+    {
+
     }
 }

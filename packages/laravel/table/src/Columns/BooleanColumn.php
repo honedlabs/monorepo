@@ -26,7 +26,6 @@ class BooleanColumn extends Column
     public function setUp()
     {
         parent::setUp();
-        
         $this->type('boolean');
     }
 

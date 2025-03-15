@@ -28,7 +28,6 @@ class NumberColumn extends Column
     public function setUp()
     {
         parent::setUp();
-
         $this->type('number');
     }
 

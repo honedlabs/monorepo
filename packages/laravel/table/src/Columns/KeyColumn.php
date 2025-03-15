@@ -12,7 +12,6 @@ class KeyColumn extends Column
     public function setUp()
     {
         parent::setUp();
-
         $this->type('key');
         $this->hidden();
         $this->key();

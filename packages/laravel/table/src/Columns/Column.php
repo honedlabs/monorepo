@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
-use Honed\Core\Concerns\Allowable;
-use Honed\Core\Concerns\HasAlias;
-use Honed\Core\Concerns\HasExtra;
-use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\IsActive;
-use Honed\Core\Concerns\IsHidden;
-use Honed\Core\Concerns\IsKey;
-use Honed\Core\Concerns\Transformable;
 use Honed\Core\Primitive;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Honed\Core\Concerns\IsKey;
+use Honed\Core\Concerns\HasIcon;
+use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\HasAlias;
+use Honed\Core\Concerns\HasExtra;
+use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\IsActive;
+use Honed\Core\Concerns\IsHidden;
+use Honed\Core\Concerns\Allowable;
+use Honed\Core\Concerns\Transformable;
+use Honed\Table\Columns\Concerns\HasClass;
+use Honed\Table\Columns\Concerns\IsSortable;
+use Honed\Table\Columns\Concerns\IsSearchable;
+use Honed\Table\Columns\Concerns\IsToggleable;
 
 /**
  * @extends Primitive<string, mixed>
@@ -25,10 +29,10 @@ use Illuminate\Support\Str;
 class Column extends Primitive
 {
     use Allowable;
-    use Concerns\HasClass;
-    use Concerns\IsSearchable;
-    use Concerns\IsSortable;
-    use Concerns\IsToggleable;
+    use HasClass;
+    use IsSearchable;
+    use IsSortable;
+    use IsToggleable;
     use HasAlias;
     use HasExtra;
     use HasIcon;
@@ -41,18 +45,34 @@ class Column extends Primitive
     use Transformable;
 
     /**
+     * 
+     *
+     * @var \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void|null
+     */
+    protected $builder;
+
+    /**
      * The value to display when the column is empty.
      *
-     * @var string|null
+     * @var mixed
      */
     protected $fallback;
 
     /**
-     * How the column value is retrieved.
+     * Set a column using a callback or fixed value.
      *
-     * @var \Closure|null
+     * @var mixed
      */
     protected $using;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUp()
+    {
+        $this->active(true);
+        $this->type('column');
+    }
 
     /**
      * Create a new column instance.
@@ -69,18 +89,9 @@ class Column extends Primitive
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        $this->active(true);
-        $this->type('column');
-    }
-
-    /**
      * Set the fallback value for the column.
      *
-     * @param  string|null  $fallback
+     * @param  mixed  $fallback
      * @return $this
      */
     public function fallback($fallback)
@@ -93,7 +104,7 @@ class Column extends Primitive
     /**
      * Get the fallback value for the column.
      *
-     * @return string|null
+     * @return mixed
      */
     public function getFallback()
     {
@@ -103,7 +114,7 @@ class Column extends Primitive
     /**
      * Set how the column value is retrieved.
      *
-     * @param  \Closure|null  $using
+     * @param  mixed  $using
      * @return $this
      */
     public function using($using)
@@ -116,7 +127,7 @@ class Column extends Primitive
     /**
      * Get how the column value is retrieved.
      *
-     * @return \Closure|null
+     * @return mixed
      */
     public function getUsing()
     {
@@ -134,32 +145,6 @@ class Column extends Primitive
             ?? Str::of($this->getName())
                 ->replace('.', '_')
                 ->value();
-    }
-
-    /**
-     * Get the value of the column to form a record.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  array<string,mixed>  $named
-     * @param  array<class-string,mixed>  $typed
-     * @return array<string,mixed>
-     */
-    public function createRecord($model, $named, $typed)
-    {
-        $using = $this->getUsing();
-
-        $value = $using
-            ? $this->evaluate($using, $named, $typed)
-            : Arr::get($model, $this->getName());
-
-        $extra = $this->resolveExtra($named, $typed);
-
-        return [
-            $this->getParameter() => [
-                'value' => $this->apply($value),
-                'extra' => $extra,
-            ],
-        ];
     }
 
     /**
@@ -201,6 +186,30 @@ class Column extends Primitive
             'icon' => $this->getIcon(),
             'class' => $this->getClass(),
             'sort' => $this->isSortable() ? $this->sortToArray() : null,
+        ];
+    }
+
+    /**
+     * Get the value of the column to form a record.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  array<string,mixed>  $named
+     * @param  array<class-string,mixed>  $typed
+     * @return array<string,array{value: mixed, extra: mixed}>
+     */
+    public function createRecord($model, $named, $typed)
+    {
+        $using = $this->getUsing();
+
+        $value = $using
+            ? $this->evaluate($using, $named, $typed)
+            : Arr::get($model, $this->getName());
+
+        return [
+            $this->getParameter() => [
+                'value' => $this->apply($value),
+                'extra' => $this->resolveExtra($named, $typed),
+            ],
         ];
     }
 }

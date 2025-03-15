@@ -16,6 +16,7 @@ use Honed\Table\Concerns\HasColumns;
 use Honed\Table\Concerns\HasPagination;
 use Honed\Table\Concerns\HasTableBindings;
 use Honed\Table\Concerns\HasToggle;
+use Honed\Table\Concerns\Selects;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -42,9 +43,12 @@ class Table extends Refine implements UrlRoutable
     use HasPagination;
 
     use HasParameterNames;
-    use HasParameterNames;
     use HasTableBindings;
     use HasToggle;
+    /**
+     * @use Selects<TModel, TBuilder>
+     */
+    use Selects;
 
     /**
      * The unique identifier column for the table.
@@ -89,8 +93,7 @@ class Table extends Refine implements UrlRoutable
      */
     public static function make($before = null)
     {
-        return resolve(static::class)
-            ->before($before);
+        return resolve(static::class)->before($before);
     }
 
     /**
@@ -356,6 +359,8 @@ class Table extends Refine implements UrlRoutable
     protected function pipeline($builder, $request, $sorts = [], $filters = [], $searches = [])
     {
         $columns = $this->toggleColumns($request, $this->getColumns());
+
+        $this->applyColumns($builder, $columns);
 
         /** @var array<int,\Honed\Refine\Sort> */
         $sorts = \array_map(

@@ -35,7 +35,6 @@ class DateColumn extends Column
     public function setUp()
     {
         parent::setUp();
-
         $this->type('date');
     }
 
