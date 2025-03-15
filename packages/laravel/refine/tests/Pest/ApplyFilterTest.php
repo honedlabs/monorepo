@@ -9,50 +9,87 @@ use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
     $this->builder = Product::query();
+    $this->name = 'name';
+    $this->alias = 'alias';
+    $this->filter = Filter::make($this->name);
+    $this->value = 'value';
 });
 
-it('uses alias over name', function () {
-    $name = 'name';
-    $alias = 'alias';
-    $value = 'test';
+it('applies', function () {
+    // It should not apply if the name does not match.
+    $request = generate('random', $this->value);
 
-    $request = Request::create('/', 'GET', [$alias => $value]);
+    expect($this->filter->refine($this->builder, $request))
+        ->toBeFalse();
 
-    $filter = Filter::make($name)->alias($alias);
+    expect($this->builder->getQuery()->wheres)
+        ->toBeEmpty();
+
+    expect($this->filter)
+        ->isActive()->toBeFalse()
+        ->getValue()->toBeNull();
+        
+    // It should apply if the name matches the query parameter.
+    $request = generate($this->name, $this->value);
+
+    expect($this->filter->refine($this->builder, $request))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value);
+
+    expect($this->filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($this->value);
+});
+
+it('applies with alias', function () {
+    $filter = $this->filter->alias($this->alias);
+
+    // It should not apply if the alias does not match.
+    $request = Request::create('/', 'GET', [$this->name => $this->value]);
+
+    expect($this->filter->refine($this->builder, $request))
+        ->toBeFalse();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeEmpty();
+    
+    expect($this->filter)
+        ->isActive()->toBeFalse()
+        ->getValue()->toBeNull();
+
+    // It should apply if the alias matches.
+    $request = Request::create('/', 'GET', [$this->alias => $this->value]);
 
     expect($filter->refine($this->builder, $request))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($name), $value);
+        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value);
 
     expect($filter)
         ->isActive()->toBeTrue()
-        ->getValue()->toBe($value);
+        ->getValue()->toBe($this->value);
 });
 
-it('scopes the filter query parameter', function () {
-    $name = 'name';
-    $alias = 'alias';
+it('applies with scope', function () {
     $scope = 'scope';
-    $value = 'value';
 
-    $filter = Filter::make($name)
-        ->alias($alias)
-        ->scope($scope);
+    $this->filter->alias($this->alias)->scope($scope);
 
-    $key = $filter->formatScope($alias);
-    $request = Request::create('/', 'GET', [$key => $value]);
+    $key = $this->filter->formatScope($this->alias);
+    $request = Request::create('/', 'GET', [$key => $this->value]);
 
-    expect($filter->refine($this->builder, $request))
+    expect($this->filter->refine($this->builder, $request))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($name), $value);
+        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value);
 
-    expect($filter)
+    expect($this->filter)
         ->isActive()->toBeTrue()
-        ->getValue()->toBe($value);
+        ->getValue()->toBe($this->value);
 });
 
 it('requires the parameter name to be present', function () {

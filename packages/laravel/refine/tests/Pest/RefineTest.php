@@ -43,7 +43,7 @@ it('can match', function () {
         ->isMatching()->toBeTrue();
 });
 
-it('has a delimiter', function () {
+it('has delimiter', function () {
     expect($this->test)
         ->hasDelimiter()->toBeFalse()
         ->getDelimiter()->toBe(config('refine.delimiter'))
@@ -128,13 +128,13 @@ it('calls sorts', function () {
         ->getSorts()->toHaveCount(1);
 });
 
-it('has filters method', function () {
+it('calls filters', function () {
     expect($this->test)
         ->filters([Filter::make('name')])->toBe($this->test)
         ->getFilters()->toHaveCount(1);
 });
 
-it('has searches method', function () {
+it('calls searches', function () {
     expect($this->test)
         ->searches([Search::make('name')])->toBe($this->test)
         ->getSearches()->toHaveCount(1);
