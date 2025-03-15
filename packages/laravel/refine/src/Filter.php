@@ -101,8 +101,8 @@ class Filter extends Refiner
         $this->operator = $operator;
 
         return $this;
-    }
-
+    }   
+    
     /**
      * Set the filter to be for boolean values.
      *
@@ -175,7 +175,7 @@ class Filter extends Refiner
      */
     public function multiple()
     {
-        $this->type('select');
+        $this->type('multiple');
         $this->asArray();
         $this->setMultiple();
 

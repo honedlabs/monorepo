@@ -17,21 +17,19 @@ class RefineServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        if (! $this->app->runningInConsole()) {
-            return;
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../config/refine.php' => config_path('refine.php'),
+            ], 'config');
+    
+            $this->publishes([
+                __DIR__.'/../stubs' => base_path('stubs'),
+            ], 'stubs');
+    
+            $this->commands([
+                FilterMakeCommand::class,
+                SortMakeCommand::class,
+            ]);
         }
-
-        $this->publishes([
-            __DIR__.'/../config/refine.php' => config_path('refine.php'),
-        ], 'config');
-
-        $this->publishes([
-            __DIR__.'/../stubs' => base_path('stubs'),
-        ], 'stubs');
-
-        $this->commands([
-            FilterMakeCommand::class,
-            SortMakeCommand::class,
-        ]);
     }
 }

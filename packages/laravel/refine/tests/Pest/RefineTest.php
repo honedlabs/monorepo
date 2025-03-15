@@ -45,8 +45,10 @@ it('can match', function () {
 
 it('has a delimiter', function () {
     expect($this->test)
+        ->hasDelimiter()->toBeFalse()
         ->getDelimiter()->toBe(config('refine.delimiter'))
         ->delimiter('|')->toBe($this->test)
+        ->hasDelimiter()->toBeTrue()
         ->getDelimiter()->toBe('|');
 });
 

@@ -327,3 +327,97 @@ it('supports binding names', function () {
         ->isActive()->toBeTrue()
         ->getValue()->toBe($value);
 });
+
+it('applies lax', function () {
+    $builder = Product::query();
+
+    $filter = Filter::make('status')
+        ->options(['active' => 'Active', 'inactive' => 'Inactive'])
+        ->lax();
+
+    $value = 'indeterminate';
+
+    $request = Request::create('/', 'GET', ['status' => $value]);
+
+    expect($filter->refine($builder, $request))
+        ->toBeTrue();
+
+    expect($builder->getQuery()->wheres)
+        ->toBeOnlyWhere($builder->qualifyColumn('status'), $value);
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value)
+        ->getOptions()->each(fn ($option) => $option->isActive()->toBeFalse());
+});
+
+it('applies strict', function () {
+    $builder = Product::query();
+
+    $filter = Filter::make('status')
+        ->options(['active' => 'Active', 'inactive' => 'Inactive'])
+        ->strict();
+
+    $value = 'indeterminate';
+
+    $request = Request::create('/', 'GET', ['status' => $value]);
+
+    expect($filter->refine($builder, $request))
+        ->toBeFalse();
+
+    expect($builder->getQuery()->wheres)
+        ->toBeEmpty();
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value)
+        ->getOptions()->each(fn ($option) => $option->isActive()->toBeFalse())
+        ->optionsToArray()->toEqual([
+            [
+                'value' => 'active',
+                'label' => 'Active',
+                'active' => false,
+            ],
+            [
+                'value' => 'inactive',
+                'label' => 'Inactive',
+                'active' => false,
+            ],
+        ]);
+});
+
+it('applies multiple', function () {
+    $builder = Product::query();
+
+    $filter = Filter::make('status')
+        ->options(['active' => 'Active', 'inactive' => 'Inactive'])
+        ->multiple();
+
+    $value = ['active', 'inactive'];
+    $valueString = \implode(',', $value);
+
+    $request = Request::create('/', 'GET', ['status' => $valueString]);
+
+    expect($filter->refine($builder, $request))
+        ->toBeTrue();
+
+    expect($builder->getQuery()->wheres)
+        ->toBeOnlyWhereIn($builder->qualifyColumn('status'), $value);
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($value)
+        ->getOptions()->each(fn ($option) => $option->isActive()->toBeTrue())
+        ->optionsToArray()->toEqual([
+            [
+                'value' => 'active',
+                'label' => 'Active',
+                'active' => true,
+            ],
+            [
+                'value' => 'inactive',
+                'label' => 'Inactive',
+                'active' => true,
+            ],
+        ]);
+});
