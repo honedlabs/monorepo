@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Table\Concerns;
 
 use Honed\Table\Columns\Column;
+use Honed\Table\Contracts\ShouldSelect;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -40,13 +41,21 @@ trait IsSelectable
     }
 
     /**
-     * Whether to do column selection.
+     * Determine whether to do column selection.
      *
      * @return bool
      */
     public function isSelectable()
     {
-        return (bool) ($this->selectable ?? $this->fallbackSelectable());
+        if (isset($this->selectable)) {
+            return $this->selectable;
+        }
+
+        if ($this instanceof ShouldSelect) {
+            return true;
+        }
+
+        return static::fallbackSelectable();
     }
 
     /**

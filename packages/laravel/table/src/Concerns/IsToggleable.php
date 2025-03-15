@@ -14,12 +14,11 @@ use Illuminate\Support\Str;
 trait IsToggleable
 {
     /**
-     * Whether the table should allow the user to toggle which columns are
-     * displayed.
+     * Whether the table should allow for toggling which columns are visible.
      *
      * @var bool|null
      */
-    protected $toggle;
+    protected $toggleable;
 
     /**
      * The query parameter for which columns to display.
@@ -33,7 +32,7 @@ trait IsToggleable
      *
      * @var bool|null
      */
-    protected $remember;
+    protected $rememberable;
 
     /**
      * The name of the cookie to use for remembering the columns to display.
@@ -65,7 +64,7 @@ trait IsToggleable
      */
     public function toggleable($toggleable = true)
     {
-        $this->toggle = $toggleable;
+        $this->toggleable = $toggleable;
 
         return $this;
     }
@@ -78,8 +77,8 @@ trait IsToggleable
      */
     public function isToggleable()
     {
-        if (isset($this->toggle)) {
-            return $this->toggle;
+        if (isset($this->toggleable)) {
+            return $this->toggleable;
         }
 
         if ($this instanceof ShouldToggle) {
@@ -136,12 +135,12 @@ trait IsToggleable
     /**
      * Set whether the table should remember the user preferences.
      *
-     * @param  bool  $remember
+     * @param  bool  $rememberable
      * @return $this
      */
-    public function remember($remember = true)
+    public function rememberable($rememberable = true)
     {
-        $this->remember = $remember;
+        $this->rememberable = $rememberable;
 
         return $this;
     }
@@ -153,8 +152,8 @@ trait IsToggleable
      */
     public function isRememberable()
     {
-        if (isset($this->remember)) {
-            return (bool) $this->remember;
+        if (isset($this->rememberable)) {
+            return (bool) $this->rememberable;
         }
 
         if ($this instanceof ShouldRemember) {
@@ -331,10 +330,7 @@ trait IsToggleable
             return static::displayedColumns($columns);
         }
 
-        $interpreter = new class
-        {
-            use InterpretsRequest;
-        };
+        $interpreter = new class { use InterpretsRequest; };
 
         $key = $this->getColumnsKey();
         $delimiter = $this->getDelimiter();

@@ -36,13 +36,12 @@ class Table extends Refine implements UrlRoutable
     use HasActions;
     use HasColumns;
     use HasMeta;
+    use HasParameterNames;
 
     /**
      * @use HasPagination<TModel, TBuilder>
      */
     use HasPagination;
-
-    use HasParameterNames;
 
     use HasTableBindings;
     /**
@@ -102,15 +101,6 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function forwardBuilderCall($method, $parameters)
-    {
-        // Remove refine behaviour and prevent calling of the underlying builder.
-        return $this;
-    }
-
-    /**
      * Get the unique identifier key for table records.
      *
      * @return string
@@ -119,11 +109,22 @@ class Table extends Refine implements UrlRoutable
      */
     public function getRecordKey()
     {
-        return $this->key // $this->getKey()
-            ?? $this->getKeyColumn()?->getName()
-            ?? throw new \RuntimeException(
-                'The table must have a key column or a key property defined.'
-            );
+        if (isset($this->key)) {
+            return $this->key;
+        }
+
+        $column = Arr::first(
+            $this->getColumns(),
+            static fn (Column $column): bool => $column->isKey()
+        );
+
+        if ($column) {
+            return $column->getName();
+        }
+
+        throw new \RuntimeException(
+            'The table must have a key column or a key property defined.'
+        );
     }
 
     /**
@@ -168,40 +169,6 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
-     * Set whether the model should be serialized per record.
-     *
-     * @param  bool|null  $withAttributes
-     * @return $this
-     */
-    public function withAttributes($withAttributes = true)
-    {
-        $this->withAttributes = $withAttributes;
-
-        return $this;
-    }
-
-    /**
-     * Get whether the model should be serialized per record.
-     *
-     * @return bool|null
-     */
-    public function isWithAttributes()
-    {
-        return (bool) ($this->withAttributes
-            ?? static::fallbackWithAttributes());
-    }
-
-    /**
-     * Get whether the model should be serialized per record from the config.
-     *
-     * @return bool
-     */
-    public static function fallbackWithAttributes()
-    {
-        return (bool) config('table.attributes', false);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public static function fallbackDelimiter()
@@ -233,6 +200,40 @@ class Table extends Refine implements UrlRoutable
     public static function fallbackMatching()
     {
         return (bool) config('table.match', false);
+    }
+
+    /**
+     * Set whether the model should be serialized per record.
+     *
+     * @param  bool|null  $withAttributes
+     * @return $this
+     */
+    public function withAttributes($withAttributes = true)
+    {
+        $this->withAttributes = $withAttributes;
+
+        return $this;
+    }
+
+    /**
+     * Get whether the model should be serialized per record.
+     *
+     * @return bool|null
+     */
+    public function isWithAttributes()
+    {
+        return (bool) ($this->withAttributes 
+            ?? static::fallbackWithAttributes());
+    }
+
+    /**
+     * Get whether the model should be serialized per record from the config.
+     *
+     * @return bool
+     */
+    public static function fallbackWithAttributes()
+    {
+        return (bool) config('table.attributes', false);
     }
 
     /**
@@ -376,20 +377,39 @@ class Table extends Refine implements UrlRoutable
         /** @var array<int,\Honed\Refine\Sort> */
         $sorts = \array_map(
             static fn (Column $column) => $column->getSort(),
-            $this->getColumnSorts($columns)
+            \array_values(
+                \array_filter(
+                    $columns,
+                    static fn (Column $column) => $column->isSortable()
+                )
+            )
         );
 
         /** @var array<int,\Honed\Refine\Search> */
         $searches = \array_map(
-            static fn (Column $column) => Search::make($column->getName(), $column->getLabel())
-                ->alias($column->getParameter()),
-            $this->getColumnSearches($columns)
+            static fn (Column $column) => 
+                Search::make($column->getName(), $column->getLabel())
+                    ->alias($column->getParameter()),
+            \array_values(
+                \array_filter(
+                    $columns,
+                    static fn (Column $column) => $column->isSearchable()
+                )
+            )
         );
 
         // Use the parent pipeline to perform refinement.
         parent::pipeline($builder, $request, $sorts, [], $searches);
 
         $this->retrieveRecords($builder, $request, $columns);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function forwardBuilderCall($method, $parameters)
+    {
+        return $this;
     }
 
     /**
