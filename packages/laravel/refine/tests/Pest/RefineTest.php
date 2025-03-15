@@ -7,8 +7,13 @@ use Honed\Refine\Filter;
 use Honed\Refine\Refine;
 use Honed\Refine\Search;
 use Honed\Refine\Tests\Stubs\Product;
+use Illuminate\Auth\Access\Gate as AccessGate;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 
 beforeEach(function () {
     $this->test = Refine::make(Product::class);
@@ -154,6 +159,30 @@ it('is without searching', function () {
     expect($refine)
         ->getSearches()->toHaveCount(1)
         ->searchesToArray()->toBeEmpty();
+});
+
+it('evaluates named closure dependencies', function () {
+    $product = product();
+    $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
+
+    expect($this->test->request($request)->for(Product::query()))
+        ->evaluate(fn ($request) => $request->get('key'))->toBe('value')
+        // ->evaluate(fn ($route) => $route)->toBeInstanceOf(Route::class)
+        ->evaluate(fn ($builder) => $builder->getModel())->toBeInstanceOf(Product::class)
+        ->evaluate(fn ($query) => $query->getModel())->toBeInstanceOf(Product::class)
+        ->evaluate(fn ($product) => $product->getModel())->toBeInstanceOf(Product::class)
+        ->evaluate(fn ($products) => $products->getModel())->toBeInstanceOf(Product::class);
+});
+
+it('evaluates typed closure dependencies', function () {
+    $product = product();
+    $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
+
+    expect($this->test->request($request)->for(Product::query()))
+        ->evaluate(fn (Request $r) => $r->get('key'))->toBe('value')
+        ->evaluate(fn (Builder $b) => $b->getModel())->toBeInstanceOf(Product::class)
+        // ->evaluate(fn (Route $r) => $r)->toBeInstanceOf(Route::class)
+        ->evaluate(fn (Gate $g) => $g)->toBeInstanceOf(AccessGate::class);
 });
 
 it('calls sorts', function () {

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Tests;
 
-use Honed\Refine\RefineServiceProvider;
 use Honed\Refine\Tests\Stubs\Status;
-use Illuminate\Database\Schema\Blueprint;
+use Honed\Refine\Tests\Stubs\Product;
 use Illuminate\Support\Facades\Schema;
+use Honed\Refine\RefineServiceProvider;
+use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 
 class TestCase extends Orchestra
 {
@@ -50,6 +52,21 @@ class TestCase extends Orchestra
             $table->string('color')->nullable();
             $table->timestamps();
         });
+    }
+
+    /**
+     * Define the routes setup.
+     *
+     * @param  \Illuminate\Routing\Router  $router
+     * @return void
+     */
+    protected function defineRoutes($router)
+    {
+        $router->middleware([SubstituteBindings::class])
+            ->group(function ($router) {
+                $router->get('/{product}', fn (Product $product) => $product)
+                    ->name('products.show');
+            });
     }
 
     /**

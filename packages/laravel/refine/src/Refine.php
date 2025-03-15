@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace Honed\Refine;
 
 use Honed\Core\Concerns\HasParameterNames;
-use Honed\Core\Primitive;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
-use Honed\Core\Concerns\HasScope;
 use Honed\Core\Concerns\HasRequest;
-use Honed\Refine\Concerns\HasSorts;
-use Illuminate\Support\Facades\App;
+use Honed\Core\Concerns\HasScope;
+use Honed\Core\Primitive;
+use Honed\Refine\Concerns\HasDelimiter;
 use Honed\Refine\Concerns\HasFilters;
 use Honed\Refine\Concerns\HasSearches;
-use Honed\Refine\Concerns\HasDelimiter;
+use Honed\Refine\Concerns\HasSorts;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Traits\ForwardsCalls;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -35,7 +35,10 @@ class Refine extends Primitive
     /** @use HasFilters<TModel> */
     use HasFilters;
 
+    /** @use HasParameterNames<TModel, TBuilder> */
+    use HasParameterNames;
     use HasRequest;
+
     use HasScope;
 
     /** @use HasSearches<TModel> */
@@ -43,9 +46,6 @@ class Refine extends Primitive
 
     /** @use HasSorts<TModel> */
     use HasSorts;
-
-    /** @use HasParameterNames<TModel, TBuilder> */
-    use HasParameterNames;
 
     /**
      * Whether the refine pipeline has been run.
@@ -299,11 +299,10 @@ class Refine extends Primitive
             'request' => [$request],
             'route' => [$request->route()],
             'builder' => [$for],
-            'resource' => [$for],
             'query' => [$for],
             $singular => [$for],
             $plural => [$for],
-            default => [],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
 
@@ -315,14 +314,10 @@ class Refine extends Primitive
         $for = $this->getFor();
         $request = $this->getRequest();
 
-        [$model] = static::getParameterNames($for);
-
         return match ($parameterType) {
             Request::class => [$request],
             Route::class => [$request->route()],
             Builder::class => [$for],
-            Model::class => [$for],
-            $model => [$for],
             default => [App::make($parameterType)],
         };
     }
