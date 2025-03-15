@@ -34,11 +34,11 @@ trait HasBulkActions
     protected $chunkSize;
 
     /**
-     * Augment the builder query before performing any actions.
+     * Modify the builder query before performing any actions.
      *
      * @var \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void|null
      */
-    protected $augment;
+    protected $modify;
 
     /**
      * Set the action to chunk the records.
@@ -145,39 +145,26 @@ trait HasBulkActions
     }
 
     /**
-     * Set the augment closure to modify the query.
+     * Set the modify closure to modify the query.
      *
-     * @param  \Closure  $augment
+     * @param  \Closure  $modify
      * @return $this
      */
-    public function augment($augment)
+    public function modify($modify)
     {
-        $this->augment = $augment;
+        $this->modify = $modify;
 
         return $this;
     }
 
     /**
-     * Get the augment closure to modify the query.
+     * Get the modify closure to modify the query.
      *
      * @return \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void|null
      */
-    public function getAugment()
+    public function getModifier()
     {
-        return $this->augment;
-    }
-
-    /**
-     * Augment the builder query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @return void
-     */
-    protected function augmentBuilder($builder)
-    {
-        if (isset($this->augment)) {
-            \call_user_func($this->augment, $builder);
-        }
+        return $this->modify;
     }
 
     /**
@@ -205,7 +192,11 @@ trait HasBulkActions
             );
         }
 
-        $this->augmentBuilder($builder);
+        $modifier = $this->getModifier();
+
+        if ($modifier) {
+            $modifier($builder);
+        }
 
         $handler = $type === 'model'
             ? fn ($records) => $records->each($handler)

@@ -11,13 +11,12 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Concerns\HasType;
-use Honed\Core\Contracts\Resolves;
 use Honed\Core\Primitive;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
- * @extends \Honed\Core\Primitive<string,mixed>
+ * @extends Primitive<string,mixed>
  */
 abstract class Action extends Primitive
 {
@@ -64,6 +63,27 @@ abstract class Action extends Primitive
     }
 
     /**
+     * Resolve the action's closures to an array.
+     *
+     * @param  array<string,mixed>  $parameters
+     * @param  array<class-string,mixed>  $typed
+     * @return array<string,mixed>
+     */
+    public function resolveToArray($parameters = [], $typed = [])
+    {
+        return [
+            'name' => $this->getName(),
+            'label' => $this->resolveLabel($parameters, $typed),
+            'type' => $this->getType(),
+            'icon' => $this->resolveIcon($parameters, $typed),
+            'extra' => $this->resolveExtra($parameters, $typed),
+            'action' => $this->hasAction(),
+            'confirm' => $this->getConfirm()?->resolveToArray($parameters, $typed),
+            'route' => $this->routeToArray($parameters, $typed),
+        ];
+    }
+
+    /**
      * Get the array representation of the action's route if applicable.
      *
      * @param  array<string,mixed>  $parameters
@@ -80,29 +100,6 @@ abstract class Action extends Primitive
             'href' => $this->resolveRoute($parameters, $typed),
             'method' => $this->getMethod(),
         ];
-    }
-
-    /**
-     * Resolve the array using closure dependencies.
-     *
-     * @param  array<string,mixed>  $named
-     * @param  array<class-string,mixed>  $typed
-     * @return $this
-     */
-    public function resolveToArray($named = [], $typed = [])
-    {
-        return [
-            'name' => $this->getName(),
-            'label' => $this->resolveLabel($named, $typed),
-            'type' => $this->getType(),
-            'icon' => $this->resolveIcon($named, $typed),
-            'extra' => $this->resolveExtra($named, $typed),
-            'action' => $this->hasAction(),
-            'confirm' => $this->getConfirm()?->resolveToArray($named, $typed),
-            'route' => $this->routeToArray($named, $typed),
-        ];
-
-        return $this;
     }
 
     /**

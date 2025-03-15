@@ -6,13 +6,12 @@ namespace Honed\Action;
 
 use Honed\Core\Concerns\HasDescription;
 use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Contracts\Resolves;
 use Honed\Core\Primitive;
 
 /**
  * @extends Primitive<string,mixed>
  */
-class Confirm extends Primitive implements Resolves
+class Confirm extends Primitive
 {
     use HasDescription;
     use HasLabel;
@@ -49,9 +48,6 @@ class Confirm extends Primitive implements Resolves
      *
      * @param  string|\Closure|null  $label
      * @param  string|\Closure|null  $description
-     * @param  string  $dismiss
-     * @param  string  $submit
-     * @param  string|null  $intent
      * @return static
      */
     public static function make(
@@ -207,13 +203,20 @@ class Confirm extends Primitive implements Resolves
     }
 
     /**
-     * {@inheritdoc}
+     * Resolve the confirm's closures to an array.
+     *
+     * @param  array<string,mixed>  $parameters
+     * @param  array<class-string,mixed>  $typed
+     * @return array<string,mixed>
      */
-    public function resolve($parameters = [], $typed = [])
+    public function resolveToArray($parameters = [], $typed = [])
     {
-        $this->resolveLabel($parameters, $typed);
-        $this->resolveDescription($parameters, $typed);
-
-        return $this;
+        return [
+            'label' => $this->resolveLabel($parameters, $typed),
+            'description' => $this->resolveDescription($parameters, $typed),
+            'dismiss' => $this->getDismiss(),
+            'submit' => $this->getSubmit(),
+            'intent' => $this->getIntent(),
+        ];
     }
 }
