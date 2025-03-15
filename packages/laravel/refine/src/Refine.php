@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
-use Honed\Core\Concerns\HasRequest;
-use Honed\Core\Concerns\HasScope;
+use Honed\Core\Concerns\HasParameterNames;
 use Honed\Core\Primitive;
-use Honed\Refine\Concerns\HasDelimiter;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
+use Honed\Core\Concerns\HasScope;
+use Honed\Core\Concerns\HasRequest;
+use Honed\Refine\Concerns\HasSorts;
+use Illuminate\Support\Facades\App;
 use Honed\Refine\Concerns\HasFilters;
 use Honed\Refine\Concerns\HasSearches;
-use Honed\Refine\Concerns\HasSorts;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Honed\Refine\Concerns\HasDelimiter;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Support\Traits\ForwardsCalls;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -40,6 +43,9 @@ class Refine extends Primitive
 
     /** @use HasSorts<TModel> */
     use HasSorts;
+
+    /** @use HasParameterNames<TModel, TBuilder> */
+    use HasParameterNames;
 
     /**
      * Whether the refine pipeline has been run.
@@ -85,8 +91,7 @@ class Refine extends Primitive
      */
     public static function make($query = null)
     {
-        return resolve(static::class)
-            ->for(static::createBuilder($query));
+        return resolve(static::class)->for(static::createBuilder($query));
     }
 
     /**
@@ -101,18 +106,14 @@ class Refine extends Primitive
     {
         /** @var TBuilder|null */
         return match (true) {
-            $query instanceof Builder,
-            \is_null($query) => $query,
+            $query instanceof Builder, \is_null($query) => $query,
 
-            $query instanceof Model,
-            \class_exists($query) => $query::query(),
+            $query instanceof Model, \class_exists($query) => $query::query(),
 
-            default => throw new \InvalidArgumentException(
-                \sprintf(
-                    'The provided query [%s] cannot be resolved to a builder instance.',
-                    $query
-                )
-            ),
+            default => throw new \InvalidArgumentException(\sprintf(
+                'The provided query [%s] cannot be resolved to a builder instance.',
+                $query
+            )),
         };
     }
 
@@ -270,13 +271,60 @@ class Refine extends Primitive
      * @param  array<int, \Honed\Refine\Search>  $searches
      * @return void
      */
-    protected function pipeline($builder, $request, $sorts = [], $filters = [], $searches = [])
-    {
+    protected function pipeline(
+        $builder,
+        $request,
+        $sorts = [],
+        $filters = [],
+        $searches = []
+    ) {
         $this->beforeRefining($builder, $request);
         $this->search($builder, $request, $searches);
         $this->filter($builder, $request, $filters);
         $this->sort($builder, $request, $sorts);
         $this->afterRefining($builder, $request);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    {
+        $for = $this->getFor();
+        $request = $this->getRequest();
+
+        [$_, $singular, $plural] = static::getParameterNames($for);
+
+        return match ($parameterName) {
+            'request' => [$request],
+            'route' => [$request->route()],
+            'builder' => [$for],
+            'resource' => [$for],
+            'query' => [$for],
+            $singular => [$for],
+            $plural => [$for],
+            default => [],
+        };
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    {
+        $for = $this->getFor();
+        $request = $this->getRequest();
+
+        [$model] = static::getParameterNames($for);
+
+        return match ($parameterType) {
+            Request::class => [$request],
+            Route::class => [$request->route()],
+            Builder::class => [$for],
+            Model::class => [$for],
+            $model => [$for],
+            default => [App::make($parameterType)],
+        };
     }
 
     /**
