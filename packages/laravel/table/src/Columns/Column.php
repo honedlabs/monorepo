@@ -45,11 +45,11 @@ class Column extends Primitive
     use Transformable;
 
     /**
-     * 
+     * A closure to augment the builder.
      *
      * @var \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void|null
      */
-    protected $builder;
+    protected $augment;
 
     /**
      * The value to display when the column is empty.
@@ -86,6 +86,29 @@ class Column extends Primitive
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
+    }
+
+    /**
+     * Augment the builder for the column.
+     *
+     * @param  \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void  $augment
+     * @return $this
+     */
+    public function augment($augment)
+    {
+        $this->augment = $augment;
+
+        return $this;
+    }
+
+    /**
+     * Get the augment callback for the column.
+     *
+     * @return \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void|null
+     */
+    public function getAugment()
+    {
+        return $this->augment;
     }
 
     /**

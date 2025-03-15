@@ -11,7 +11,7 @@ use Honed\Table\Contracts\ShouldToggle;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 
-trait HasToggle
+trait IsToggleable
 {
     /**
      * Whether the table should allow the user to toggle which columns are
@@ -272,43 +272,13 @@ trait HasToggle
     }
 
     /**
-     * Toggle the columns that are displayed.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  array<int,\Honed\Table\Columns\Column>  $columns
-     * @return array<int,\Honed\Table\Columns\Column>
-     */
-    public function toggleColumns($request, $columns)
-    {
-        if (! $this->isToggleable() || $this->isWithoutToggling()) {
-            return $this->displayedColumns($columns);
-        }
-
-        $interpreter = new class
-        {
-            use InterpretsRequest;
-        };
-
-        $key = $this->getColumnsKey();
-
-        /** @var array<int,string>|null */
-        $params = $interpreter->interpretArray($request, $key, $this->getDelimiter());
-
-        if ($this->isRememberable()) {
-            $params = $this->configureCookie($request, $params);
-        }
-
-        return $this->displayedColumns($columns, $params);
-    }
-
-    /**
      * Get the columns that are displayed.
      *
      * @param  array<int,\Honed\Table\Columns\Column>  $columns
      * @param  array<int,string>|null  $params
      * @return array<int,\Honed\Table\Columns\Column>
      */
-    public function displayedColumns($columns, $params = null)
+    public static function displayedColumns($columns, $params = null)
     {
         return \array_values(
             \array_filter(
@@ -326,7 +296,7 @@ trait HasToggle
      * @param  array<int,string>|null  $params
      * @return array<int,string>|null
      */
-    protected function configureCookie($request, $params)
+    public function configureCookie($request, $params)
     {
         if (filled($params)) {
             Cookie::queue(
@@ -346,5 +316,36 @@ trait HasToggle
 
         /** @var array<int,string>|null */
         return \json_decode($value, false);
+    }
+
+    /**
+     * Toggle the columns that are displayed.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @return array<int,\Honed\Table\Columns\Column>
+     */
+    public function toggle($request, $columns)
+    {
+        if (! $this->isToggleable() || $this->isWithoutToggling()) {
+            return static::displayedColumns($columns);
+        }
+
+        $interpreter = new class
+        {
+            use InterpretsRequest;
+        };
+
+        $key = $this->getColumnsKey();
+        $delimiter = $this->getDelimiter();
+
+        /** @var array<int,string>|null */
+        $params = $interpreter->interpretArray($request, $key, $delimiter);
+
+        if ($this->isRememberable()) {
+            $params = $this->configureCookie($request, $params);
+        }
+
+        return static::displayedColumns($columns, $params);
     }
 }

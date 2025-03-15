@@ -15,8 +15,8 @@ use Honed\Table\Columns\Column;
 use Honed\Table\Concerns\HasColumns;
 use Honed\Table\Concerns\HasPagination;
 use Honed\Table\Concerns\HasTableBindings;
-use Honed\Table\Concerns\HasToggle;
-use Honed\Table\Concerns\Selects;
+use Honed\Table\Concerns\IsToggleable;
+use Honed\Table\Concerns\IsSelectable;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -43,12 +43,17 @@ class Table extends Refine implements UrlRoutable
     use HasPagination;
 
     use HasParameterNames;
+
     use HasTableBindings;
-    use HasToggle;
     /**
-     * @use Selects<TModel, TBuilder>
+     * @use IsToggleable<TModel, TBuilder>
      */
-    use Selects;
+    use IsToggleable;
+
+    /**
+     * @use IsSelectable<TModel, TBuilder>
+     */
+    use IsSelectable;
 
     /**
      * The unique identifier column for the table.
@@ -346,7 +351,8 @@ class Table extends Refine implements UrlRoutable
         /** @var array<string,mixed> */
         $row = Arr::mapWithKeys(
             $columns,
-            fn (Column $column) => $column->createRecord($model, $named, $typed),
+            static fn (Column $column) => 
+                $column->createRecord($model, $named, $typed),
         );
 
         /** @var array<string,mixed> */
@@ -356,8 +362,13 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    protected function pipeline($builder, $request, $sorts = [], $filters = [], $searches = [])
-    {
+    protected function pipeline(
+        $builder,
+        $request,
+        $sorts = [],
+        $filters = [],
+        $searches = []
+    ) {
         $columns = $this->toggleColumns($request, $this->getColumns());
 
         $this->applyColumns($builder, $columns);

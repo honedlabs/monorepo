@@ -190,14 +190,20 @@ trait HasColumns
     }
 
     /**
-     * Apply the columns to the builder.
+     * Augment the builder using the column callbacks.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  array<int,\Honed\Table\Columns\Column>  $columns
      * @return void
      */
-    public static function applyColumns($builder, $columns)
+    public static function augment($builder, $columns)
     {
+        foreach ($columns as $column) {
+            $callback = $column->getAugment();
 
+            if ($callback) {
+                $callback($builder);
+            }
+        }
     }
 }
