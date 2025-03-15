@@ -21,11 +21,11 @@ class RefineServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/refine.php' => config_path('refine.php'),
             ], 'config');
-    
+
             $this->publishes([
                 __DIR__.'/../stubs' => base_path('stubs'),
             ], 'stubs');
-    
+
             $this->commands([
                 FilterMakeCommand::class,
                 SortMakeCommand::class,

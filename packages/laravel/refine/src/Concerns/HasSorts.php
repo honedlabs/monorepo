@@ -117,16 +117,6 @@ trait HasSorts
     }
 
     /**
-     * Determine if the sorts key is set.
-     *
-     * @return bool
-     */
-    public function hasSortsKey()
-    {
-        return isset($this->sortsKey);
-    }
-
-    /**
      * Get the query parameter to identify the sort to apply.
      *
      * @return string

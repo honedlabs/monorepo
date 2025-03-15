@@ -138,16 +138,6 @@ trait HasSearches
     }
 
     /**
-     * Determine if the searches key is set.
-     *
-     * @return bool
-     */
-    public function hasSearchesKey()
-    {
-        return isset($this->searchesKey);
-    }
-
-    /**
      * Get the query parameter to identify the search.
      *
      * @return string
@@ -181,16 +171,6 @@ trait HasSearches
     }
 
     /**
-     * Determine if the matches key is set.
-     *
-     * @return bool
-     */
-    public function hasMatchesKey()
-    {
-        return isset($this->matchesKey);
-    }
-
-    /**
      * Get the query parameter to identify the columns to search.
      *
      * @return string
@@ -221,16 +201,6 @@ trait HasSearches
         $this->match = $match;
 
         return $this;
-    }
-
-    /**
-     * Determine if the matching value is set.
-     *
-     * @return bool
-     */
-    public function hasMatch()
-    {
-        return isset($this->match);
     }
 
     /**
@@ -376,7 +346,7 @@ trait HasSearches
      */
     public function searchesToArray()
     {
-        if ($this->isWithoutSearches()) {
+        if ($this->isWithoutSearches() || ! $this->isMatching()) {
             return [];
         }
 

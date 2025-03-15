@@ -101,8 +101,8 @@ class Filter extends Refiner
         $this->operator = $operator;
 
         return $this;
-    }   
-    
+    }
+
     /**
      * Set the filter to be for boolean values.
      *

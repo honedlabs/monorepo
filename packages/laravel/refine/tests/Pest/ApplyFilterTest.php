@@ -75,11 +75,24 @@ it('applies with alias', function () {
 
 it('applies with scope', function () {
     $scope = 'scope';
+    $filter = $this->filter->alias($this->alias)->scope($scope);
 
-    $this->filter->alias($this->alias)->scope($scope);
+    // It should not apply if the scope does not match.
+    $request = generate($this->alias, $this->value);
 
+    expect($filter->refine($this->builder, $request))
+        ->toBeFalse();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeEmpty();
+
+    expect($filter)
+        ->isActive()->toBeFalse()
+        ->getValue()->toBeNull();
+
+    // It should apply if the scope and alias match.
     $key = $this->filter->formatScope($this->alias);
-    $request = Request::create('/', 'GET', [$key => $this->value]);
+    $request = generate($key, $this->value);
 
     expect($this->filter->refine($this->builder, $request))
         ->toBeTrue();
@@ -92,97 +105,46 @@ it('applies with scope', function () {
         ->getValue()->toBe($this->value);
 });
 
-it('requires the parameter name to be present', function () {
-    $name = 'name';
-    $alias = 'alias';
-    $value = 'test';
-
-    $request = Request::create('/', 'GET', [$name => $value]);
-
-    $filter = Filter::make($name)->alias($alias);
-
-    expect($filter->refine($this->builder, $request))
-        ->toBeFalse();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toBeEmpty();
-
-    expect($filter)
-        ->isActive()->toBeFalse()
-        ->getValue()->toBeNull();
-});
-
-
-it('uses `where` by default', function () {
-    $name = 'name';
-    $value = 'test';
-
-    $request = Request::create('/', 'GET', [$name => $value]);
-
-    $filter = Filter::make($name);
-
-    expect($filter->refine($this->builder, $request))
-        ->toBeTrue();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($name), $value);
-
-    expect($filter)
-        ->isActive()->toBeTrue()
-        ->getValue()->toBe($value);
-});
-
-it('can change the `where` operator', function () {
-    $name = 'price';
-    $value = 5;
+it('applies with different operator', function () {
     $operator = '>';
 
-    $request = Request::create('/', 'GET', [$name => $value]);
+    $request = generate($this->name, $this->value);
 
-    $filter = Filter::make($name)
-        ->operator($operator);
-
-    expect($filter->refine($this->builder, $request))
-        ->toBeTrue();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($name), $value, $operator);
-
-    expect($filter)
-        ->isActive()->toBeTrue()
-        ->getValue()->toBe($value);
-});
-
-it('can use `like` operators', function () {
-    $name = 'name';
-    $value = 'test';
-
-    $request = Request::create('/', 'GET', [$name => $value]);
-
-    $filter = Filter::make($name)
-        ->operator('like');
+    $filter = $this->filter->operator($operator);
 
     expect($filter->refine($this->builder, $request))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch($this->builder->qualifyColumn($name));
+        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value, $operator);
 
     expect($filter)
         ->isActive()->toBeTrue()
-        ->getValue()->toBe($value);
+        ->getValue()->toBe($this->value);
 });
 
-it('can use dates', function () {
-    $name = 'created_at';
+it('applies with `like` operators', function () {
+    $request = generate($this->name, $this->value);
+
+    $filter = $this->filter->operator('like');
+
+    expect($filter->refine($this->builder, $request))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlySearch($this->builder->qualifyColumn($this->name));
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($this->value);
+});
+
+it('applies with date', function () {
     $value = Carbon::now();
-    $operator = '>=';
 
-    $request = Request::create('/', 'GET', [$name => $value->toDateTimeString()]);
+    $request = generate($this->name, $value->toIso8601String());
 
-    $filter = Filter::make($name)
-        ->operator($operator)
-        ->as('date');
+    $filter = $this->filter->date();
 
     expect($filter->refine($this->builder, $request))
         ->toBeTrue();
@@ -191,8 +153,8 @@ it('can use dates', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
             ->{'type'}->toBe('Date')
-            ->{'column'}->toBe($this->builder->qualifyColumn($name))
-            ->{'operator'}->toBe($operator)
+            ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
+            ->{'operator'}->toBe('=')
             ->{'value'}->toBe($value->toDateString())
             ->{'boolean'}->toBe('and')
         );
@@ -202,16 +164,37 @@ it('can use dates', function () {
         ->getValue()->toBeInstanceOf(Carbon::class);
 });
 
-it('can use times', function () {
-    $name = 'created_at';
+it('applies with datetime', function () {
     $value = Carbon::now();
-    $operator = '>=';
 
-    $request = Request::create('/', 'GET', [$name => $value->toDateTimeString()]);
+    $request = generate($this->name, $value->toIso8601String());
 
-    $filter = Filter::make($name)
-        ->operator($operator)
-        ->as('time');
+    $filter = $this->filter->datetime();
+
+    expect($filter->refine($this->builder, $request))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($where) => $where
+            ->{'type'}->toBe('Basic')
+            ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
+            ->{'operator'}->toBe('=')
+            ->{'value'}->toBeInstanceOf(Carbon::class)
+            ->{'boolean'}->toBe('and')
+        );
+
+    expect($filter)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBeInstanceOf(Carbon::class);
+});
+
+it('applies with time', function () {
+    $value = Carbon::now();
+
+    $request = generate($this->name, $value->toIso8601String());
+
+    $filter = $this->filter->time();
 
     expect($filter->refine($this->builder, $request))
         ->toBeTrue();
@@ -220,8 +203,8 @@ it('can use times', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
             ->{'type'}->toBe('Time')
-            ->{'column'}->toBe($this->builder->qualifyColumn($name))
-            ->{'operator'}->toBe($operator)
+            ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
+            ->{'operator'}->toBe('=')
             ->{'value'}->toBe($value->toTimeString())
             ->{'boolean'}->toBe('and')
         );
@@ -231,33 +214,27 @@ it('can use times', function () {
         ->getValue()->toBeInstanceOf(Carbon::class);
 });
 
-it('supports closures', function () {
-    $name = 'name';
-    $value = 'test';
+it('applies with expression', function () {
+    $request = generate($this->name, $this->value);
 
-    $request = Request::create('/', 'GET', [$name => $value]);
-
-    $filter = Filter::make($name)
-        ->using(fn ($builder, $value) => $builder->where($name, 'like', $value.'%'));
+    $filter = $this->filter->using(fn ($builder, $value) => $builder->where($this->name, 'like', $value.'%'));
 
     expect($filter->refine($this->builder, $request))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($name, $value.'%', 'like');
+        ->toBeOnlyWhere($this->name, $this->value.'%', 'like');
 
     expect($filter)
         ->isActive()->toBeTrue()
-        ->getValue()->toBe($value);
+        ->getValue()->toBe($this->value);
 });
 
 
-it('supports reference only clauses (`has` method)', function () {
-    $name = 'details';
-    $filter = Filter::make($name)
-        ->has('details');
+it('applies with `has` reference', function () {
+    $filter = $this->filter->has('details');
 
-    $request = Request::create('/', 'GET', [$name => 'true']);
+    $request = generate($this->name, 'true');
 
     expect($filter->refine($this->builder, $request))
         ->toBeTrue();
@@ -273,12 +250,12 @@ it('supports reference only clauses (`has` method)', function () {
         ->getValue()->toBe('true');
 });
 
-it('supports reference, explicit operator, value clauses (`where` method)', function () {
+it('applies with `where` reference', function () {
     $name = 'quantity';
     $value = 10;
     $operator = '>=';
 
-    $request = Request::create('/', 'GET', [$name => $value]);
+    $request = generate($name, $value);
     
     $filter = Filter::make($name)
         ->where('quantity', $operator, ':value');

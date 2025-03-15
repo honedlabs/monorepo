@@ -211,19 +211,6 @@ class Refine extends Primitive
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function toArray()
-    {
-        return [
-            'sorts' => $this->sortsToArray(),
-            'filters' => $this->filtersToArray(),
-            'config' => $this->configToArray(),
-            ...($this->isMatching() ? ['searches' => $this->searchesToArray()] : []),
-        ];
-    }
-
-    /**
      * Get the config for the refiner as an array.
      *
      * @return array<string,mixed>
@@ -235,7 +222,20 @@ class Refine extends Primitive
             'search' => $this->getTerm(),
             'searches' => $this->getSearchesKey(),
             'sorts' => $this->getSortsKey(),
-            ...($this->isMatching() ? ['matches' => $this->getMatchesKey()] : []),
+            'matches' => $this->getMatchesKey(),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return [
+            'sorts' => $this->sortsToArray(),
+            'filters' => $this->filtersToArray(),
+            'config' => $this->configToArray(),
+            'searches' => $this->searchesToArray(),
         ];
     }
 
