@@ -4,39 +4,46 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\HasBuilderInstance;
 use Honed\Core\Tests\Stubs\Product;
+use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Database\Eloquent\Builder;
-
-class BuilderInstanceTest
-{
-    use HasBuilderInstance;
-}
 
 beforeEach(function () {
     $this->builder = Product::query();
-    $this->test = new BuilderInstanceTest($this->builder);
+    $this->test = new class
+    {
+        use HasBuilderInstance;
+    };
 });
 
 it('sets', function () {
-    expect($this->test->builder($this->builder))
-        ->toBe($this->test)
+    expect($this->test)
+        ->builder($this->builder)->toBe($this->test)
         ->getBuilder()->toBe($this->builder);
 });
 
 it('gets', function () {
-    expect($this->test->builder($this->builder))
+    expect($this->test)
+        ->hasBuilder()->toBeFalse()
+        ->builder($this->builder)->toBe($this->test)
+        ->hasBuilder()->toBeTrue()
         ->getBuilder()->toBe($this->builder);
-
-    expect(fn () => (new BuilderInstanceTest)->getBuilder())
-        ->toThrow(\RuntimeException::class);
 });
+
+it('cannot retrieve without a builder', function () {
+    $this->test->getBuilder();
+})->throws(\RuntimeException::class);
 
 it('creates', function () {
-    expect(BuilderInstanceTest::createBuilder(Product::query()))
+    expect($this->test->createBuilder(Product::query()))
         ->toBeInstanceOf(Builder::class);
 
-    expect(BuilderInstanceTest::createBuilder(Product::class))
+    expect($this->test->createBuilder(Product::class))
         ->toBeInstanceOf(Builder::class);
 
-    expect(BuilderInstanceTest::createBuilder(product()))
+    expect($this->test->createBuilder(product()))
         ->toBeInstanceOf(Builder::class);
 });
+
+it('cannot create without a valid builder', function () {
+    $this->test->createBuilder(Status::cases());
+})->throws(\InvalidArgumentException::class);
