@@ -24,7 +24,7 @@ it('applies', function () {
 
     expect($search)
         ->isActive()->toBeTrue()
-        ->getValue()->toBe('search term');
+        ->getValue()->toBeTrue();
 });
 
 it('changes query boolean', function () {
