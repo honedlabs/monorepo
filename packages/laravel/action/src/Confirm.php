@@ -56,17 +56,11 @@ class Confirm extends Primitive implements Resolves
      */
     public static function make(
         $label = null,
-        $description = null,
-        $dismiss = null,
-        $submit = null,
-        $intent = null
+        $description = null
     ) {
         return resolve(static::class)
             ->label($label)
-            ->description($description)
-            ->dismiss($dismiss)
-            ->submit($submit)
-            ->intent($intent);
+            ->description($description);
     }
 
     /**
@@ -145,7 +139,7 @@ class Confirm extends Primitive implements Resolves
      */
     public function hasIntent()
     {
-        return ! \is_null($this->intent);
+        return isset($this->intent);
     }
 
     /**

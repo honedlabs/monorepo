@@ -19,7 +19,7 @@ use Illuminate\Support\Traits\ForwardsCalls;
 /**
  * @extends \Honed\Core\Primitive<string,mixed>
  */
-abstract class Action extends Primitive implements Resolves
+abstract class Action extends Primitive
 {
     use Allowable;
     use Concerns\HasAction;
@@ -66,30 +66,41 @@ abstract class Action extends Primitive implements Resolves
     /**
      * Get the array representation of the action's route if applicable.
      *
+     * @param  array<string,mixed>  $parameters
+     * @param  array<class-string,mixed>  $typed
      * @return array<string,mixed>|null
      */
-    public function routeToArray()
+    public function routeToArray($parameters = [], $typed = [])
     {
         if (! $this->hasRoute()) {
             return null;
         }
 
         return [
-            'href' => $this->getRoute(),
+            'href' => $this->resolveRoute($parameters, $typed),
             'method' => $this->getMethod(),
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * Resolve the array using closure dependencies.
+     *
+     * @param  array<string,mixed>  $named
+     * @param  array<class-string,mixed>  $typed
+     * @return $this
      */
-    public function resolve($parameters = [], $typed = [])
+    public function resolveToArray($named = [], $typed = [])
     {
-        $this->resolveLabel($parameters, $typed);
-        $this->resolveIcon($parameters, $typed);
-        $this->resolveExtra($parameters, $typed);
-        $this->resolveRoute($parameters, $typed);
-        $this->resolveConfirm($parameters, $typed);
+        return [
+            'name' => $this->getName(),
+            'label' => $this->resolveLabel($named, $typed),
+            'type' => $this->getType(),
+            'icon' => $this->resolveIcon($named, $typed),
+            'extra' => $this->resolveExtra($named, $typed),
+            'action' => $this->hasAction(),
+            'confirm' => $this->getConfirm()?->resolveToArray($named, $typed),
+            'route' => $this->routeToArray($named, $typed),
+        ];
 
         return $this;
     }
@@ -112,7 +123,7 @@ abstract class Action extends Primitive implements Resolves
     {
         return match ($parameterType) {
             Confirm::class => [$this->confirmInstance()],
-            default => [App::make($parameterType)], // Dependency injection
+            default => [App::make($parameterType)],
         };
     }
 }

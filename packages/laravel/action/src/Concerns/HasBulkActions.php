@@ -34,6 +34,13 @@ trait HasBulkActions
     protected $chunkSize;
 
     /**
+     * Augment the builder query before performing any actions.
+     *
+     * @var \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void|null
+     */
+    protected $augment;
+
+    /**
      * Set the action to chunk the records.
      *
      * @param  bool|null  $chunk
@@ -138,6 +145,42 @@ trait HasBulkActions
     }
 
     /**
+     * Set the augment closure to modify the query.
+     *
+     * @param  \Closure  $augment
+     * @return $this
+     */
+    public function augment($augment)
+    {
+        $this->augment = $augment;
+
+        return $this;
+    }
+
+    /**
+     * Get the augment closure to modify the query.
+     *
+     * @return \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void|null
+     */
+    public function getAugment()
+    {
+        return $this->augment;
+    }
+
+    /**
+     * Augment the builder query.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @return void
+     */
+    protected function augmentBuilder($builder)
+    {
+        if (isset($this->augment)) {
+            \call_user_func($this->augment, $builder);
+        }
+    }
+
+    /**
      * Execute the bulk action on the given query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
@@ -157,8 +200,12 @@ trait HasBulkActions
         $type = $this->getHandlerType($handler, $model);
 
         if ($type === 'builder' && $this->isChunked()) {
-            static::throwInvalidHandlerReference();
+            throw new \RuntimeException(
+                'A chunked handler cannot reference the builder.'
+            );
         }
+
+        $this->augmentBuilder($builder);
 
         $handler = $type === 'model'
             ? fn ($records) => $records->each($handler)
@@ -247,19 +294,5 @@ trait HasBulkActions
         ]);
 
         return [$named, $typed];
-    }
-
-    /**
-     * Throw an exception if the handler references the builder.
-     *
-     * @return never
-     *
-     * @throws \RuntimeException
-     */
-    protected static function throwInvalidHandlerReference()
-    {
-        throw new \RuntimeException(
-            'A chunked handler cannot reference the builder.'
-        );
     }
 }
