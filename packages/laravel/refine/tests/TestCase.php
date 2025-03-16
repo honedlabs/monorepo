@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Tests;
 
-use Honed\Refine\Tests\Stubs\Status;
-use Honed\Refine\Tests\Stubs\Product;
-use Illuminate\Support\Facades\Schema;
 use Honed\Refine\RefineServiceProvider;
+use Honed\Refine\Tests\Stubs\Product;
+use Honed\Refine\Tests\Stubs\Status;
 use Illuminate\Database\Schema\Blueprint;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Support\Facades\Schema;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

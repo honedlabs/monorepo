@@ -9,16 +9,22 @@ use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasQueryClosure;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Primitive;
-use Honed\Refine\Contracts\Refines;
 use Illuminate\Support\Str;
 
 /**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ * 
  * @extends Primitive<string, mixed>
+ * 
+ * @method bool refine(mixed ...$parameters)
+ * @method void defaultQuery(TBuilder $builder, mixed ...$parameters) Apply the default refiner query to the builder.
  */
-abstract class Refiner extends Primitive implements Refines
+abstract class Refiner extends Primitive
 {
     use Allowable;
     use HasAlias;
@@ -27,6 +33,8 @@ abstract class Refiner extends Primitive implements Refines
     use HasName;
     use HasType;
     use HasValue;
+    /** @use HasQueryClosure<TModel, TBuilder> */
+    use HasQueryClosure;    
 
     /**
      * Create a new refiner instance.
@@ -43,7 +51,16 @@ abstract class Refiner extends Primitive implements Refines
     }
 
     /**
-     * {@inheritdoc}
+     * Determine if the refiner is currently being applied.
+     *
+     * @return bool
+     */
+    abstract public function isActive();
+
+    /**
+     * Get the parameter for the refiner.
+     *
+     * @return string
      */
     public function getParameter()
     {

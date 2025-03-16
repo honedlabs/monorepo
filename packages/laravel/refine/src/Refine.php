@@ -37,8 +37,8 @@ class Refine extends Primitive
 
     /** @use HasParameterNames<TModel, TBuilder> */
     use HasParameterNames;
-    use HasRequest;
 
+    use HasRequest;
     use HasScope;
 
     /** @use HasSearches<TModel> */

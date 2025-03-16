@@ -11,18 +11,11 @@ use Honed\Core\Concerns\HasScope;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
 use Honed\Refine\Concerns\HasDelimiter;
-use Honed\Refine\Concerns\HasExpression;
 use Honed\Refine\Concerns\HasOptions;
 
-/**
- * @mixin \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
- */
 class Filter extends Refiner
 {
     use HasDelimiter;
-    use HasExpression {
-        __call as queryCall;
-    }
     use HasMeta;
     use HasOptions {
         multiple as protected setMultiple;
@@ -52,20 +45,6 @@ class Filter extends Refiner
     public function isActive()
     {
         return $this->hasValue();
-    }
-
-    /**
-     * Get the expression partials supported by the filter.
-     *
-     * @return array<int,string>
-     */
-    public function expressions()
-    {
-        return [
-            'where',
-            'has',
-            'withWhere',
-        ];
     }
 
     /**
@@ -217,63 +196,45 @@ class Filter extends Refiner
      */
     public function refine($builder, $request)
     {
-        // We retrieve the parameter according to how the user specified it. As
-        // the key is dynamic, we need to be given the scope from the caller to
-        // properly interpret the parameter.
         $parameter = $this->getParameter();
         $key = $this->formatScope($parameter);
         $value = $this->interpret($request, $key);
 
         $this->value($value);
 
-        // If the filter has options, we need to loop over them to set as active
-        // if the value is present. This can also override the value, as a
-        // `strict` filter will only be active if the value is present in the
-        // options array.
         if ($this->hasOptions()) {
             $value = $this->activateOptions($value);
         }
 
-        // The filter may be active, but the value may be invalid. This is done
-        // to hide the validation logic from the end-user. It is invalid if it is
-        // not active, fails a validation closure, or if the filter has options
-        // and the value is empty.
         if ($this->invalidValue($value)) {
             return false;
         }
 
-        // If the filter has a custom query expression, we use it over the default
-        // query method. The bindings are passed, but can be overriden with fixed
-        // values if needed. In this instance, it is assumed that the developer
-        // has called `asBoolean` on the filter and then can write a simple
-        // validation closure.
-        if ($this->hasExpression()) {
-            $bindings = [
-                'value' => $value,
-                'column' => $this->getName(),
-                'table' => $builder->getModel()->getTable(),
-            ];
+        $bindings = [
+            'value' => $value,
+            'column' => $this->getName(),
+            'table' => $builder->getModel()->getTable(),
+        ];
 
-            $this->express($builder, $bindings);
-
-            return true;
+        if (! $this->hasQueryClosure()) {
+            $this->queryClosure(\Closure::fromCallable([$this, 'defaultQuery']));
         }
 
-        $this->apply($builder, $this->getName(), $this->getOperator(), $value);
+        $this->modifyQuery($builder, $bindings);
 
         return true;
     }
 
     /**
-     * Apply the filter to the builder.
+     * Apply the default filter query to the builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  TBuilder  $builder
      * @param  string  $column
      * @param  string|null  $operator
      * @param  mixed  $value
      * @return void
      */
-    public function apply($builder, $column, $operator, $value)
+    public function defaultQuery($builder, $column, $operator, $value)
     {
         $column = $builder->qualifyColumn($column);
 
@@ -326,21 +287,17 @@ class Filter extends Refiner
     }
 
     /**
-     * Dynamically handle calls to the class.
-     *
-     * @param  string  $method
-     * @param  array<int,mixed>  $parameters
-     * @return mixed
+     * {@inheritdoc}
      */
     public function __call($method, $parameters)
     {
-        // Enable macros on the builder, if the call is not to a macro then
-        // we assume it is to a method on the builder. We validate this by
-        // matching against the expressions.
-        try {
-            return parent::__call($method, $parameters);
-        } catch (BadMethodCallException $e) {
-            return $this->queryCall($method, $parameters);
+        if ($method === 'query') {
+            /** @var \Closure(mixed...):void|null $query */
+            $query = $parameters[0];
+
+            return $this->queryClosure($query);
         }
+
+        return parent::__call($method, $parameters);
     }
 }

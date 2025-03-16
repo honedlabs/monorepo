@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
+use Honed\Core\Concerns\HasQueryClosure;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\IsDefault;
-use Honed\Refine\Concerns\HasExpression;
 use Illuminate\Support\Str;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ */
 class Sort extends Refiner
 {
-    use HasExpression {
-        __call as queryCall;
-    }
     use InterpretsRequest;
     use IsDefault;
 
@@ -249,71 +250,51 @@ class Sort extends Refiner
     /**
      * Order the builder using the request.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  TBuilder  $builder
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $key
      * @return bool
      */
     public function refine($builder, $request, $key)
     {
-        // We retrieve the sort name and direction by the presence of a
-        // preceding '-' character. The key must be provided from the caller, as
-        // it needs to be scoped to the refiner possibly and the sort key is
-        // global.
         [$value, $direction] = $this->prepareSortAndDirection($request, $key);
 
-        $this->value = $value;
+        $this->value($value);
 
-        // The sort is active if the value is the same as the parameter. We do
-        // not need to check direction at this point, as for toggleable sorts
-        // it does not matter and singular sorts will have the direction
-        // overridden.
         if (! $this->isActive()) {
             return false;
         }
 
-        $this->direction = $direction;
+        $this->direction($direction);
 
-        $column = $this->getName();
-
-        // If the sort is singular, we use the direction provided by it. This
-        // negates the previous direction entirely, meaning that this sort is
-        // agnostic to any direction provided by the request.
         if ($this->isSingularDirection()) {
             $direction = $this->only;
         }
 
-        // We allow for the developer to provide a custom query expression. This
-        // will only be executed if the sorts match.
-        if ($this->hasExpression()) {
-            $bindings = [
-                'direction' => $direction,
-                'value' => $value,
-                'column' => $column,
-                'table' => $builder->getModel()->getTable(),
-            ];
+        $bindings = [
+            'direction' => $direction,
+            'value' => $value,
+            'column' => $this->getName(),
+        ];
 
-            $this->express($builder, $bindings);
-
-            return true;
+        if (! $this->hasQueryClosure()) {
+            $this->queryClosure(\Closure::fromCallable([$this, 'defaultQuery']));
         }
 
-        // If there is no custom query expression, we use the default `orderBy`
-        // method.
-        $this->apply($builder, $column, $direction);
+        $this->modifyQuery($builder, $bindings);
 
         return true;
     }
 
     /**
-     * Apply the sort to the builder.
+     * Apply the default sort query scope to the builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  TBuilder  $builder
      * @param  string  $column
      * @param  'asc'|'desc'|null  $direction
      * @return void
      */
-    public function apply($builder, $column, $direction)
+    public function defaultQuery($builder, $column, $direction)
     {
         $column = $builder->qualifyColumn($column);
 
