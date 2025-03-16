@@ -7,29 +7,27 @@ namespace Honed\Core\Concerns;
 trait HasExtra
 {
     /**
-     * Extra data for the instance.
+     * Extra data.
      *
-     * @var array<string,mixed>|\Closure
+     * @var array<string,mixed>|\Closure(...mixed):array<string,mixed>
      */
     protected $extra = [];
 
     /**
-     * Set the extra for the instance.
+     * Set the extra data.
      *
-     * @param  array<string,mixed>|\Closure|null  $extra
+     * @param  array<string,mixed>|\Closure(...mixed):array<string,mixed>|null  $extra
      * @return $this
      */
     public function extra($extra)
     {
-        if (! \is_null($extra)) {
-            $this->extra = $extra;
-        }
+        $this->extra = $extra;
 
         return $this;
     }
 
     /**
-     * Get the extra for the instance.
+     * Get the extra data.
      *
      * @return array<string,mixed>
      */
@@ -41,7 +39,7 @@ trait HasExtra
     }
 
     /**
-     * Evaluate the extra parameters for the instance.
+     * Evaluate the extra parameters.
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<class-string,mixed>  $typed
@@ -56,7 +54,7 @@ trait HasExtra
     }
 
     /**
-     * Determine if the instance has a extra set.
+     * Determine if extra data is set.
      *
      * @return bool
      */

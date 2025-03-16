@@ -14,7 +14,7 @@ trait HasAlias
     protected $alias;
 
     /**
-     * Set the alias for the instance.
+     * Set the alias.
      *
      * @param  string|null  $alias
      * @return $this
@@ -27,7 +27,7 @@ trait HasAlias
     }
 
     /**
-     * Get the alias for the instance.
+     * Get the alias.
      *
      * @return string|null
      */
@@ -37,7 +37,7 @@ trait HasAlias
     }
 
     /**
-     * Determine if the instance has an alias set.
+     * Determine if an alias is set.
      *
      * @return bool
      */

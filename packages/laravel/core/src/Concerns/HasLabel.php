@@ -9,16 +9,16 @@ use Illuminate\Support\Str;
 trait HasLabel
 {
     /**
-     * The label for the instance.
+     * The label.
      *
-     * @var string|\Closure|null
+     * @var string|\Closure(...mixed):string|null
      */
     protected $label;
 
     /**
-     * Set the label for the instance.
+     * Set the label.
      *
-     * @param  string|\Closure|null  $label
+     * @param  string|\Closure(...mixed):string|null  $label
      * @return $this
      */
     public function label($label)
@@ -29,7 +29,7 @@ trait HasLabel
     }
 
     /**
-     * Get the label for the instance.
+     * Get the label.
      *
      * @return string|null
      */
@@ -41,7 +41,7 @@ trait HasLabel
     }
 
     /**
-     * Evaluate the label for the instance.
+     * Evaluate the label.
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<class-string,mixed>  $typed
@@ -56,7 +56,7 @@ trait HasLabel
     }
 
     /**
-     * Determine if the instance has a label set.
+     * Determine if a label is set.
      *
      * @return bool
      */

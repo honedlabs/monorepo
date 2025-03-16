@@ -18,24 +18,23 @@ trait HasRoute
     ];
 
     /**
-     * @var string|\Closure|null
+     * The route.
+     *
+     * @var string|\Closure(...mixed):string|null
      */
     protected $route;
 
     /**
-     * @var bool
-     */
-    protected $external = false;
-
-    /**
+     * The HTTP method for the route.
+     *
      * @var string
      */
     protected $method = Request::METHOD_GET;
 
     /**
-     * Set the route for this instance.
+     * Set the route.
      *
-     * @param  string|\Closure|null  $route
+     * @param  string|\Closure(...mixed):string|null  $route
      * @param  array<string,mixed>  $parameters
      * @return $this
      */
@@ -52,9 +51,9 @@ trait HasRoute
     }
 
     /**
-     * Set the url for this instance.
+     * Set the url.
      *
-     * @param  string|\Closure|null  $url
+     * @param  string|\Closure(...mixed):string|null  $url
      * @return $this
      */
     public function url($url)
@@ -69,39 +68,30 @@ trait HasRoute
     }
 
     /**
-     * Set the HTTP method for the route.
+     * Retrieve the route.
      *
-     * @param  string|null  $method
-     * @return $this
+     * @return string|null
      */
-    public function method($method)
+    public function getRoute()
     {
-        if (\is_null($method)) {
-            return $this;
-        }
-
-        $method = \mb_strtoupper($method);
-
-        if (! \in_array($method, self::ValidMethods)) {
-            static::throwInvalidMethodException($method);
-        }
-
-        $this->method = $method;
-
-        return $this;
+        return $this->route instanceof \Closure
+            ? $this->resolveRoute()
+            : $this->route;
     }
 
     /**
-     * Mark the route as being an external url.
+     * Resolve the route.
      *
-     * @param  string|null  $url
-     * @return $this
+     * @param  array<string,mixed>  $parameters
+     * @param  array<class-string,mixed>  $typed
+     * @return string|null
      */
-    public function external($url = null)
+    public function resolveRoute($parameters = [], $typed = [])
     {
-        $this->external = true;
+        /** @var string|null */
+        $evaluated = $this->evaluate($this->route, $parameters, $typed);
 
-        return $this->url($url);
+        return $evaluated;
     }
 
     /**
@@ -115,40 +105,31 @@ trait HasRoute
     }
 
     /**
-     * Determine if the route points to an external link.
+     * Set the HTTP method for the route.
      *
-     * @return bool
-     */
-    public function isExternal()
-    {
-        return $this->external;
-    }
-
-    /**
-     * Retrieve the route for this instance, resolving any closures.
+     * @param  string|null  $method
+     * @return $this
      *
-     * @param  array<string,mixed>  $parameters
-     * @param  array<class-string,mixed>  $typed
-     * @return string|null
+     * @throws \InvalidArgumentException
      */
-    public function getRoute($parameters = [], $typed = [])
+    public function method($method)
     {
-        return $this->evaluate($this->route, $parameters, $typed);
-    }
+        if (\is_null($method)) {
+            $method = '';
+        }
 
-    /**
-     * Evaluate the route for the instance.
-     *
-     * @param  array<string,mixed>  $parameters
-     * @param  array<class-string,mixed>  $typed
-     * @return string|null
-     */
-    public function resolveRoute(array $parameters = [], array $typed = [])
-    {
-        /** @var string|null */
-        $evaluated = $this->evaluate($this->route, $parameters, $typed);
+        $method = \mb_strtoupper($method);
 
-        return $evaluated;
+        if (! \in_array($method, self::ValidMethods)) {
+            throw new \InvalidArgumentException(\sprintf(
+                'The provided method [%s] is not a valid HTTP method.',
+                $method
+            ));
+        }
+
+        $this->method = $method;
+
+        return $this;
     }
 
     /**
@@ -159,21 +140,5 @@ trait HasRoute
     public function getMethod()
     {
         return $this->method;
-    }
-
-    /**
-     * Throw an invalid route exception.
-     *
-     * @param  string  $method
-     * @return never
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected static function throwInvalidMethodException($method)
-    {
-        throw new \InvalidArgumentException(\sprintf(
-            'The provided method [%s] is not a valid HTTP method.',
-            $method
-        ));
     }
 }

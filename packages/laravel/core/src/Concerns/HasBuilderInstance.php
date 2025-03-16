@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 trait HasBuilderInstance
 {
     /**
-     * The builder instance for the instance.
+     * The builder instance.
      *
      * @var TBuilder<TModel>|null
      */

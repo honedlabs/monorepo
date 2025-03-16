@@ -7,14 +7,14 @@ namespace Honed\Core\Concerns;
 trait IsActive
 {
     /**
-     * Whether the instance is active.
+     * Whether it is active.
      *
      * @var bool
      */
     protected $active = false;
 
     /**
-     * Set the instance as active.
+     * Set as active.
      *
      * @param  bool  $active
      * @return $this
@@ -27,7 +27,7 @@ trait IsActive
     }
 
     /**
-     * Set the instance as inactive.
+     * Set as inactive.
      *
      * @param  bool  $inactive
      * @return $this
@@ -38,7 +38,7 @@ trait IsActive
     }
 
     /**
-     * Determine if the instance is active.
+     * Determine if it is active.
      *
      * @return bool
      */

@@ -9,14 +9,14 @@ use Illuminate\Support\Str;
 trait HasScope
 {
     /**
-     * The scope to use for the instance.
+     * The scope to use.
      *
      * @var string|null
      */
     protected $scope;
 
     /**
-     * Set the scope for the instance.
+     * Set the scope.
      *
      * @param  string|null  $scope
      * @return $this
@@ -29,7 +29,7 @@ trait HasScope
     }
 
     /**
-     * Get the scope for the instance.
+     * Get the scope.
      *
      * @return string|null
      */
@@ -39,7 +39,7 @@ trait HasScope
     }
 
     /**
-     * Determine if the instance has an scope set.
+     * Determine if the scope is set.
      *
      * @return bool
      */
@@ -49,7 +49,7 @@ trait HasScope
     }
 
     /**
-     * Format a value using the scope for the instance.
+     * Format a value using the scope.
      *
      * @param  string  $value
      * @return string

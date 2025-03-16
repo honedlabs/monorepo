@@ -7,14 +7,14 @@ namespace Honed\Core\Concerns;
 trait Allowable
 {
     /**
-     * The allow condition for the instance.
+     * The allow condition.
      *
      * @var \Closure|bool
      */
     protected $allow = true;
 
     /**
-     * Set the allow condition for the instance.
+     * Set the allow condition.
      *
      * @param  \Closure|bool  $allow
      * @return $this
@@ -27,7 +27,7 @@ trait Allowable
     }
 
     /**
-     * Determine if the instance allows the given parameters.
+     * Determine if the parameters pass the allow condition.
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<class-string,mixed>  $typed

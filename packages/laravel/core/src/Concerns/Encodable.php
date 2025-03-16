@@ -7,21 +7,21 @@ namespace Honed\Core\Concerns;
 trait Encodable
 {
     /**
-     * The encoding closure for the instance.
+     * The encoding closure.
      *
      * @var \Closure|null
      */
     protected static $encoder;
 
     /**
-     * The decoding closure for the instance.
+     * The decoding closure.
      *
      * @var \Closure|null
      */
     protected static $decoder;
 
     /**
-     * Set the encoder for the instance.
+     * Set the encoder.
      *
      * @param  \Closure|null  $encoder
      * @return void
@@ -32,7 +32,7 @@ trait Encodable
     }
 
     /**
-     * Set the decoder for the instance.
+     * Set the decoder.
      *
      * @param  \Closure|null  $decoder
      * @return void
@@ -43,7 +43,7 @@ trait Encodable
     }
 
     /**
-     * Encode a value using the instance's encoder.
+     * Encode a value using the encoder.
      *
      * @return string
      */
@@ -55,7 +55,7 @@ trait Encodable
     }
 
     /**
-     * Decode a value using the instance's decoder.
+     * Decode a value using the decoder.
      *
      * @return string
      */

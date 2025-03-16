@@ -68,16 +68,9 @@ it('gets method', function () {
         ->getMethod()->toBe(Request::METHOD_POST);
 });
 
-it('validates method', function () {
-    expect($this->test->method(null))
-        ->toBeInstanceOf(RouteTest::class)
-        ->getMethod()->toBe(Request::METHOD_GET);
-
-    expect(fn () => $this->test->method('INVALID'))->toThrow(\InvalidArgumentException::class);
-});
-
-it('sets external', function () {
-    expect($this->test->external())
-        ->toBeInstanceOf(RouteTest::class)
-        ->isExternal()->toBeTrue();
-});
+it('validates method', function ($input) {
+    $this->test->method($input);
+})->throws(\InvalidArgumentException::class)->with([
+    [null],
+    ['INVALID'],
+]);

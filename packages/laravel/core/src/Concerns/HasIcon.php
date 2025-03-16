@@ -9,16 +9,16 @@ use Honed\Core\Contracts\Iconable;
 trait HasIcon
 {
     /**
-     * The icon for the instance.
+     * The icon.
      *
-     * @var string|\Honed\Core\Contracts\Iconable|\Closure|null
+     * @var string|\Honed\Core\Contracts\Iconable|\Closure(...mixed):string|\Honed\Core\Contracts\Iconable|null
      */
     protected $icon;
 
     /**
-     * Set the icon for the instance.
+     * Set the icon.
      *
-     * @param  string|Iconable|\Closure|null  $icon
+     * @param  string|\Honed\Core\Contracts\Iconable|\Closure(...mixed):string|\Honed\Core\Contracts\Iconable|null  $icon
      * @return $this
      */
     public function icon($icon)
@@ -29,7 +29,7 @@ trait HasIcon
     }
 
     /**
-     * Get the icon for the instance.
+     * Get the icon.
      *
      * @return string|null
      */
@@ -43,7 +43,7 @@ trait HasIcon
     }
 
     /**
-     * Evaluate the icon for the instance.
+     * Evaluate the icon.
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<class-string,mixed>  $typed
@@ -58,7 +58,7 @@ trait HasIcon
     }
 
     /**
-     * Determine if the instance has an icon set.
+     * Determine if an icon is set.
      *
      * @return bool
      */

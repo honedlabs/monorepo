@@ -7,16 +7,16 @@ namespace Honed\Core\Concerns;
 trait HasDescription
 {
     /**
-     * The description for the instance.
+     * The description.
      *
-     * @var string|\Closure|null
+     * @var string|\Closure(...mixed):string|null
      */
     protected $description;
 
     /**
-     * Set the description for the instance.
+     * Set the description.
      *
-     * @param  string|\Closure|null  $description
+     * @param  string|\Closure(...mixed):string|null  $description
      * @return $this
      */
     public function description($description)
@@ -27,7 +27,7 @@ trait HasDescription
     }
 
     /**
-     * Get the description for the instance.
+     * Get the description.
      *
      * @return string|null
      */
@@ -39,7 +39,7 @@ trait HasDescription
     }
 
     /**
-     * Evaluate the description for the instance.
+     * Evaluate the description.
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<class-string,mixed>  $typed
@@ -54,7 +54,7 @@ trait HasDescription
     }
 
     /**
-     * Determine if the instance has a description set.
+     * Determine if a description is set.
      *
      * @return bool
      */

@@ -14,11 +14,12 @@ trait HasType
     protected $type;
 
     /**
-     * Set the type for the instance.
+     * Set the type.
      *
+     * @param  string|null  $type
      * @return $this
      */
-    public function type(?string $type)
+    public function type($type)
     {
         $this->type = $type;
 
@@ -26,7 +27,7 @@ trait HasType
     }
 
     /**
-     * Get the type for the instance.
+     * Get the type.
      *
      * @return string|null
      */
@@ -36,7 +37,7 @@ trait HasType
     }
 
     /**
-     * Determine if the instance has an type set.
+     * Determine if the type is set.
      *
      * @return bool
      */

@@ -7,14 +7,14 @@ namespace Honed\Core\Concerns;
 trait Transformable
 {
     /**
-     * The transformer function for the instance.
+     * The transformer function.
      *
      * @var \Closure|null
      */
     protected $transformer = null;
 
     /**
-     * Set the transformer function for the instance.
+     * Set the transformer function.
      *
      * @param  \Closure  $transformer
      * @return $this
@@ -27,7 +27,7 @@ trait Transformable
     }
 
     /**
-     * Determine if the instance has a transformer function set.
+     * Determine if a transformer function is set.
      *
      * @return bool
      */

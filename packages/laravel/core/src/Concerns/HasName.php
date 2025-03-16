@@ -7,14 +7,14 @@ namespace Honed\Core\Concerns;
 trait HasName
 {
     /**
-     * The name for the instance.
+     * The name.
      *
      * @var string
      */
     protected $name;
 
     /**
-     * Set the name for the instance.
+     * Set the name.
      *
      * @param  string  $name
      * @return $this
@@ -27,7 +27,7 @@ trait HasName
     }
 
     /**
-     * Get the name for the instance.
+     * Get the name.
      *
      * @return string
      */

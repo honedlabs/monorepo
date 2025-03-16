@@ -7,14 +7,14 @@ namespace Honed\Core\Concerns;
 trait IsHidden
 {
     /**
-     * Whether the instance is hidden.
+     * Whether it is hidden.
      *
      * @var bool
      */
     protected $hidden = false;
 
     /**
-     * Set the instance as hidden.
+     * Set as hidden.
      *
      * @param  bool  $hidden
      * @return $this
@@ -27,7 +27,7 @@ trait IsHidden
     }
 
     /**
-     * Set the instance as shown.
+     * Set as shown.
      *
      * @param  bool  $shown
      * @return $this
@@ -38,7 +38,7 @@ trait IsHidden
     }
 
     /**
-     * Determine if the instance is hidden.
+     * Determine if it is hidden.
      *
      * @return bool
      */

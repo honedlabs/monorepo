@@ -16,9 +16,10 @@ trait HasValue
     /**
      * Set the value for the instance.
      *
+     * @param  mixed  $value
      * @return $this
      */
-    public function value(mixed $value)
+    public function value($value)
     {
         $this->value = $value;
 

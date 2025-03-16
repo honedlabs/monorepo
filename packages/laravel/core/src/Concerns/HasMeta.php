@@ -7,14 +7,14 @@ namespace Honed\Core\Concerns;
 trait HasMeta
 {
     /**
-     * The meta for the instance.
+     * The meta data.
      *
      * @var array<string,mixed>
      */
     protected array $meta = [];
 
     /**
-     * Get or set the meta for the instance.
+     * Get or set the meta.
      *
      * @param  array<string,mixed>|null  $meta
      * @return $this
@@ -27,7 +27,7 @@ trait HasMeta
     }
 
     /**
-     * Get the meta for the instance.
+     * Get the meta.
      *
      * @return array<string,mixed>
      */
@@ -37,7 +37,7 @@ trait HasMeta
     }
 
     /**
-     * Determine if the instance has meta set.
+     * Determine if meta is set.
      *
      * @return bool
      */
