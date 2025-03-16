@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 class Search extends Refiner
 {
     /**
@@ -92,11 +90,9 @@ class Search extends Refiner
     public function defaultQuery($builder, $value, $column, $boolean = 'and')
     {
         $column = $builder->qualifyColumn($column);
+        $sql = \sprintf('LOWER(%s) LIKE ?', $column);
+        $binding = ['%'.\mb_strtolower($value, 'UTF8').'%'];
 
-        $builder->whereRaw(
-            sql: "LOWER({$column}) LIKE ?",
-            bindings: ['%'.mb_strtolower($value, 'UTF8').'%'],
-            boolean: $boolean,
-        );
+        $builder->whereRaw($sql, $binding, $boolean);
     }
 }

@@ -32,14 +32,6 @@ class Filter extends Refiner
     protected $operator = '=';
 
     /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        $this->type('filter');
-    }
-
-    /**
      * Set the filter to be for boolean values.
      *
      * @return $this
@@ -145,6 +137,19 @@ class Filter extends Refiner
     }
 
     /**
+     * Set the operator to use for the filter.
+     *
+     * @param  string  $operator
+     * @return $this
+     */
+    public function operator($operator)
+    {
+        $this->operator = \mb_strtoupper($operator, 'UTF8');
+
+        return $this;
+    }
+
+    /**
      * Get the operator to use for the filter.
      *
      * @return string
@@ -155,16 +160,11 @@ class Filter extends Refiner
     }
 
     /**
-     * Set the operator to use for the filter.
-     *
-     * @param  string  $operator
-     * @return $this
+     * {@inheritdoc}
      */
-    public function operator($operator)
+    public function setUp()
     {
-        $this->operator = $operator;
-
-        return $this;
+        $this->type('filter');
     }
 
     /**
@@ -177,10 +177,14 @@ class Filter extends Refiner
 
     /**
      * {@inheritdoc}
+     * 
+     * @param  \Illuminate\Http\Request  $request
      */
-    public function getRequestValue($request, $key = null)
+    public function getRequestValue($request)
     {
-        return $this->interpret($request, $key);
+        $parameter = $this->getParameter();
+
+        return $this->interpret($request, $this->formatScope($parameter));
     }
 
     /**
@@ -191,7 +195,8 @@ class Filter extends Refiner
         if (! $this->hasOptions()) {
             return parent::transformParameter($value);
         }
-        return $value;
+
+        return $this->activateOptions($value);
     }
     
     /**
@@ -199,8 +204,7 @@ class Filter extends Refiner
      */
     public function invalidValue($value)
     {
-        return ! $this->isActive() || ! $this->validate($value) ||
-            ($this->hasOptions() && empty($value));
+        return ! $this->validate($value);
     }
 
     /**
@@ -208,127 +212,9 @@ class Filter extends Refiner
      */
     public function getBindings($value)
     {
-        return [
-            'value' => $value,
-            'column' => $this->getName(),
-        ];
-    }
-    
-
-    /**
-     * Filter the builder using the request.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string|null  $key
-     * @return bool
-     */
-    public function refine($builder, $request, $key = null)
-    {
-        $value = $this->getRequestParameter($request);
-
-        $value = $this->transformParameter($value);
-
-        if ($this->invalidValue($value)) {
-            return false;
-        }
-
-        $bindings = $this->getBindings($value);
-
-        if (! $this->hasQueryClosure()) {
-            $this->queryClosure(\Closure::fromCallable([$this, 'defaultQuery']));
-        }
-
-        $this->modifyQuery($builder, $bindings);
-
-        return true;
-
-
-
-        $parameter = $this->getParameter();
-        $key = $this->formatScope($parameter);
-        $value = $this->interpret($request, $key);
-
-        $this->value($value);
-
-        if ($this->hasOptions()) {
-            $value = $this->activateOptions($value);
-        }
-
-        if ($this->invalidValue($value)) {
-            return false;
-        }
-
-        $bindings = [
-            'value' => $value,
-            'column' => $this->getName(),
-            'table' => $builder->getModel()->getTable(),
-        ];
-
-        if (! $this->hasQueryClosure()) {
-            $this->queryClosure(\Closure::fromCallable([$this, 'defaultQuery']));
-        }
-
-        $this->modifyQuery($builder, $bindings);
-
-        return true;
-    }
-
-    /**
-     * Apply the default filter query to the builder.
-     *
-     * @param  TBuilder  $builder
-     * @param  string  $column
-     * @param  string|null  $operator
-     * @param  mixed  $value
-     * @return void
-     */
-    public function defaultQuery($builder, $column, $operator, $value)
-    {
-        $column = $builder->qualifyColumn($column);
-
-        match (true) {
-            static::isFuzzy($operator) =>
-                static::queryRaw($builder, $column, $operator, $value),
-
-            $this->isMultiple(),
-            $this->interpretsArray() => $builder->whereIn($column, $value),
-
-            $this->interpretsDate() => $builder->whereDate($column, $operator, $value), // @phpstan-ignore-line
-
-            $this->interpretsTime() => $builder->whereTime($column, $operator, $value), // @phpstan-ignore-line
-
-            default => $builder->where($column, $operator, $value),
-        };
-    }
-
-    /**
-     * Determine if the operator is fuzzy.
-     *
-     * @param  string  $operator
-     * @return bool
-     */
-    protected static function isFuzzy($operator)
-    {
-        return \in_array($operator, ['like', 'not like', 'ilike', 'not ilike']);
-    }
-
-    /**
-     * Query the builder using a raw SQL statement.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  mixed  $value
-     * @return void
-     */
-    protected static function queryRaw($builder, $column, $operator, $value)
-    {
-        $operator = \mb_strtoupper(type($operator)->asString(), 'UTF8');
-        $sql = \sprintf('LOWER(%s) %s ?', $column, $operator);
-        $binding = ['%'.\mb_strtolower(type($value)->asString(), 'UTF8').'%'];
-
-        $builder->whereRaw($sql, $binding);
+        return \array_merge(parent::getBindings($value), [
+            'operator' => $this->getOperator(),
+        ]);
     }
 
     /**
@@ -351,17 +237,50 @@ class Filter extends Refiner
     }
 
     /**
-     * {@inheritdoc}
+     * Apply the default filter query to the builder.
+     *
+     * @param  TBuilder  $builder
+     * @param  string  $column
+     * @param  string|null  $operator
+     * @param  mixed  $value
+     * @return void
      */
-    public function __call($method, $parameters)
+    public function defaultQuery($builder, $column, $operator, $value)
     {
-        if ($method === 'query') {
-            /** @var \Closure(mixed...):void|null $query */
-            $query = $parameters[0];
+        $column = $builder->qualifyColumn($column);
 
-            return $this->queryClosure($query);
-        }
+        match (true) {
+            \in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) =>
+                static::queryRaw($builder, $column, $operator, $value),
 
-        return parent::__call($method, $parameters);
+            $this->isMultiple() || $this->interpretsArray() =>
+                $builder->whereIn($column, $value),
+
+            $this->interpretsDate() => 
+                $builder->whereDate($column, $operator, $value),
+
+            $this->interpretsTime() =>
+                $builder->whereTime($column, $operator, $value),
+
+            default => $builder->where($column, $operator, $value),
+        };
+    }
+    
+    /**
+     * Query the builder using a raw SQL statement.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  mixed  $value
+     * @return void
+     */
+    protected static function queryRaw($builder, $column, $operator, $value)
+    {
+        $operator = \mb_strtoupper(type($operator)->asString(), 'UTF8');
+        $sql = \sprintf('LOWER(%s) %s ?', $column, $operator);
+        $binding = ['%'.\mb_strtolower(type($value)->asString(), 'UTF8').'%'];
+
+        $builder->whereRaw($sql, $binding);
     }
 }

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
-use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Refine\Search;
+use Honed\Core\Interpreter;
 use Illuminate\Support\Collection;
+use Honed\Core\Concerns\InterpretsRequest;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -61,6 +62,14 @@ trait HasSearches
      * @var bool
      */
     protected $withoutSearches = false;
+
+    /**
+     * Format a value using the scope.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    abstract public function formatScope($value);
 
     /**
      * Merge a set of searches with the existing searches.
@@ -310,21 +319,18 @@ trait HasSearches
         /** @var string */
         $matchesKey = $this->formatScope($this->getMatchesKey());
 
-        /** @var string */
-        $delimiter = $this->getDelimiter();
-
-        // The client will send a search term as a string with spaces replaced
-        // with a `+` character. We need to replace the `+` with a space before
-        // we use the term, and this will ensure it syncs back with the form
-        // input.
-        $term = $interpreter->interpretStringable($request, $searchKey)
-            ?->replace('+', ' ')->value();
+        $term = Interpreter::interpretStringable($request, $searchKey)
+            ?->replace('+', ' ')
+            ->value();
 
         $this->term = $term;
 
-        // We interpret the matches key as an array, and we pass in the
-        // delimiter to split the strong on.
-        $columns = $interpreter->interpretArray($request, $matchesKey, $delimiter);
+        $columns = Interpreter::interpretArray(
+            $request, 
+            $matchesKey, 
+            /** @var string */
+            $this->getDelimiter()
+        );
 
         /** @var array<int, \Honed\Refine\Search> */
         $searches = \array_merge($this->getSearches(), $searches);

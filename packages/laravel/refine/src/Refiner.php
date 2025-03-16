@@ -60,11 +60,10 @@ abstract class Refiner extends Primitive
     /**
      * Get the value for the refiner from the request.
      * 
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string|null  $key
+     * @param  \Illuminate\Http\Request|mixed  $request
      * @return mixed
      */
-    abstract public function getRequestValue($request, $key = null);
+    abstract public function getRequestValue($request);
 
     /**
      * Get the parameter for the refiner.
@@ -73,10 +72,19 @@ abstract class Refiner extends Primitive
      */
     public function getParameter()
     {
-        return $this->getAlias()
-            ?? Str::of($this->getName())
-                ->afterLast('.')
-                ->value();
+        return $this->getAlias() ?? $this->guessParameter();
+    }
+
+    /**
+     * Guess the parameter for the refiner.
+     * 
+     * @return string
+     */
+    public function guessParameter()
+    {
+        return Str::of($this->getName())
+            ->afterLast('.')
+            ->value();
     }
 
     /**
@@ -109,22 +117,26 @@ abstract class Refiner extends Primitive
      */
     public function getBindings($value)
     {
-        return [];
+        return [
+            'value' => $value,
+            'column' => $this->getName(),
+        ];
     }
 
     /**
      * Refine the builder using the request.
      * 
      * @param  TBuilder  $builder
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string|null  $key
+     * @param  \Illuminate\Http\Request|mixed  $requestValue
      * @return bool
      */
-    public function refine($builder, $request, $key = null)
+    public function refine($builder, $requestValue)
     {
-        $value = $this->getRequestValue($request, $key);
+        $value = $this->getRequestValue($requestValue);
 
         $value = $this->transformParameter($value);
+
+        $this->value($value);
 
         if (! $this->isActive() || $this->invalidValue($value)) {
             return false;
@@ -155,5 +167,20 @@ abstract class Refiner extends Primitive
             'active' => $this->isActive(),
             'meta' => $this->getMeta(),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __call($method, $parameters)
+    {
+        if ($method === 'query') {
+            /** @var \Closure(mixed...):void|null $query */
+            $query = $parameters[0];
+
+            return $this->queryClosure($query);
+        }
+
+        return parent::__call($method, $parameters);
     }
 }

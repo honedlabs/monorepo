@@ -28,6 +28,49 @@ trait HasDirection
     protected $invert = false;
     
     /**
+     * Set the direction.
+     * 
+     * @param 'asc'|'desc'|null $direction
+     * @return $this
+     */
+    public function direction($direction)
+    {
+        $this->direction = $direction;
+
+        return $this;
+    }
+
+    /**
+     * Get the direction.
+     * 
+     * @return 'asc'|'desc'|null
+     */
+    public function getDirection()
+    {
+        return $this->isFixed() ? $this->only : $this->direction;
+    }
+
+    /**
+     * Determine if the direction is ascending.
+     * 
+     * @return bool
+     */
+    public function isAscending()
+    {
+        return $this->direction === 'asc';
+    }
+
+    /**
+     * Determine if the direction is descending.
+     * 
+     * @return bool
+     */
+    public function isDescending()
+    {
+        return $this->direction === 'desc';
+    }
+
+    /**
      * Fix the direction to a single value.
      * 
      * @param  'asc'|'desc'|null  $direction
@@ -61,6 +104,16 @@ trait HasDirection
     }
 
     /**
+     * Determine if the direction is fixed.
+     * 
+     * @return bool
+     */
+    public function isFixed()
+    {
+        return isset($this->only);
+    }
+
+    /**
      * Invert the direction of the sort.
      * 
      * @param bool $invert
@@ -81,8 +134,5 @@ trait HasDirection
     public function isInverted()
     {
         return $this->invert;
-    }
-    
-
-    
+    }    
 }
