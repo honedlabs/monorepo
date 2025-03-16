@@ -31,7 +31,7 @@ trait InterpretsRequest
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $key
      * @param  string  $delimiter
-     * @param  DateTimeZone|string|int|null  $timezone
+     * @param  \DateTimeZone|string|int|null  $timezone
      * @return mixed
      */
     public function interpret($request, $key, $delimiter = ',', $timezone = null)
@@ -55,13 +55,17 @@ trait InterpretsRequest
      * Interpret the query parameter as an array.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  string|null  $key
+     * @param  string  $key
      * @param  string  $delimiter
      * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
      * @return array<int,mixed>|null
      */
-    public static function interpretArray($request, $key = null, $delimiter = ',', $subtype = null)
-    {
+    public static function interpretArray(
+        $request,
+        $key,
+        $delimiter = ',',
+        $subtype = null
+    ) {
         $collection = static::interpretCollection($request, $key, $delimiter, $subtype);
 
         return $collection?->toArray();
@@ -88,16 +92,18 @@ trait InterpretsRequest
     /**
      * Interpret the query parameter as a Collection instance.
      *
-     * @template T of mixed
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $key
      * @param  string  $delimiter
      * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
      * @return \Illuminate\Support\Collection<int,mixed>|null
      */
-    public static function interpretCollection($request, $key, $delimiter = ',', $subtype = null)
-    {
+    public static function interpretCollection(
+        $request,
+        $key,
+        $delimiter = ',',
+        $subtype = null
+    ) {
         $value = static::interpretStringable($request, $key);
 
         if (\is_null($value)) {
@@ -121,7 +127,7 @@ trait InterpretsRequest
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $key
-     * @param  DateTimeZone|string|int|null  $timezone
+     * @param  \DateTimeZone|string|int|null  $timezone
      * @return \Carbon\Carbon|null
      */
     public static function interpretDate($request, $key, $timezone = null)
@@ -132,7 +138,8 @@ trait InterpretsRequest
             return null;
         }
 
-        return static::dateOf($value, $timezone);
+        // @phpstan-ignore-next-line
+        return static::dateOf(\strval($value), $timezone);
     }
 
     /**
@@ -150,6 +157,7 @@ trait InterpretsRequest
             return null;
         }
 
+        // @phpstan-ignore-next-line
         return \floatval($value);
     }
 
@@ -168,6 +176,7 @@ trait InterpretsRequest
             return null;
         }
 
+        // @phpstan-ignore-next-line
         return \intval($value);
     }
 
@@ -208,6 +217,7 @@ trait InterpretsRequest
             return null;
         }
 
+        // @phpstan-ignore-next-line
         return \strval($value);
     }
 
@@ -226,7 +236,8 @@ trait InterpretsRequest
             return null;
         }
 
-        return Str::of($value)->trim();
+        // @phpstan-ignore-next-line
+        return Str::of(\strval($value))->trim();
     }
 
     /**
@@ -524,12 +535,13 @@ trait InterpretsRequest
      * Get the value as a date.
      *
      * @param  string  $value
+     * @param  \DateTimeZone|string|int|null  $timezone
      * @return \Carbon\Carbon|null
      */
-    public static function dateOf($value)
+    public static function dateOf($value, $timezone = null)
     {
         try {
-            return Carbon::parse($value);
+            return Carbon::parse($value, $timezone);
         } catch (InvalidFormatException $e) {
             return null;
         }
