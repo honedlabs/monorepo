@@ -9,6 +9,26 @@ use Illuminate\Foundation\Http\FormRequest;
 class Search extends Refiner
 {
     /**
+     * The query boolean to use for the search.
+     *
+     * @var string
+     */
+    protected $boolean = 'and';
+
+    /**
+     * Set the query boolean to use for the search.
+     *
+     * @param  'and'|'or'  $boolean
+     * @return $this
+     */
+    public function boolean($boolean)
+    {
+        $this->boolean = $boolean;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function setUp()

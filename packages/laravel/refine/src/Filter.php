@@ -40,49 +40,6 @@ class Filter extends Refiner
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function isActive()
-    {
-        return $this->hasValue();
-    }
-
-    /**
-     * Determine if the value is invalid.
-     *
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function invalidValue($value)
-    {
-        return ! $this->isActive() || ! $this->validate($value) ||
-            ($this->hasOptions() && empty($value));
-    }
-
-    /**
-     * Get the operator to use for the filter.
-     *
-     * @return string
-     */
-    public function getOperator()
-    {
-        return $this->operator;
-    }
-
-    /**
-     * Set the operator to use for the filter.
-     *
-     * @param  string  $operator
-     * @return $this
-     */
-    public function operator($operator)
-    {
-        $this->operator = $operator;
-
-        return $this;
-    }
-
-    /**
      * Set the filter to be for boolean values.
      *
      * @return $this
@@ -188,14 +145,106 @@ class Filter extends Refiner
     }
 
     /**
+     * Get the operator to use for the filter.
+     *
+     * @return string
+     */
+    public function getOperator()
+    {
+        return $this->operator;
+    }
+
+    /**
+     * Set the operator to use for the filter.
+     *
+     * @param  string  $operator
+     * @return $this
+     */
+    public function operator($operator)
+    {
+        $this->operator = $operator;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isActive()
+    {
+        return filled($this->getValue());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequestValue($request, $key = null)
+    {
+        return $this->interpret($request, $key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function transformParameter($value)
+    {
+        if (! $this->hasOptions()) {
+            return parent::transformParameter($value);
+        }
+        return $value;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function invalidValue($value)
+    {
+        return ! $this->isActive() || ! $this->validate($value) ||
+            ($this->hasOptions() && empty($value));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBindings($value)
+    {
+        return [
+            'value' => $value,
+            'column' => $this->getName(),
+        ];
+    }
+    
+
+    /**
      * Filter the builder using the request.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  \Illuminate\Http\Request  $request
+     * @param  string|null  $key
      * @return bool
      */
-    public function refine($builder, $request)
+    public function refine($builder, $request, $key = null)
     {
+        $value = $this->getRequestParameter($request);
+
+        $value = $this->transformParameter($value);
+
+        if ($this->invalidValue($value)) {
+            return false;
+        }
+
+        $bindings = $this->getBindings($value);
+
+        if (! $this->hasQueryClosure()) {
+            $this->queryClosure(\Closure::fromCallable([$this, 'defaultQuery']));
+        }
+
+        $this->modifyQuery($builder, $bindings);
+
+        return true;
+
+
+
         $parameter = $this->getParameter();
         $key = $this->formatScope($parameter);
         $value = $this->interpret($request, $key);
@@ -239,32 +288,47 @@ class Filter extends Refiner
         $column = $builder->qualifyColumn($column);
 
         match (true) {
-            // If the operator is fuzzy, we do a whereRaw to make it simpler and
-            // handle case sensitivity.
-            \in_array($operator,
-                ['like', 'not like', 'ilike', 'not ilike']
-            ) => $builder->whereRaw(
-                \sprintf('LOWER(%s) %s ?', $column, \mb_strtoupper(type($operator)->asString(), 'UTF8')),
-                ['%'.\mb_strtolower(type($value)->asString(), 'UTF8').'%']
-            ),
+            static::isFuzzy($operator) =>
+                static::queryRaw($builder, $column, $operator, $value),
 
-            // The `whereIn` clause should be used if the filter is set to multiple,
-            // or if the filter interprets an array. Generally, both should be true
-            // as this case is likely when providing options and allowing multiple.
             $this->isMultiple(),
             $this->interpretsArray() => $builder->whereIn($column, $value),
 
-            // If the filter interprets a date, we use whereDate clause as this
-            // allows us to compare using the date strings.
             $this->interpretsDate() => $builder->whereDate($column, $operator, $value), // @phpstan-ignore-line
 
-            // This compares a date time string to the column.
             $this->interpretsTime() => $builder->whereTime($column, $operator, $value), // @phpstan-ignore-line
 
-            // Otherwise, we use a standard where clause - but, allow the operator
-            // to be overridden by the developer.
             default => $builder->where($column, $operator, $value),
         };
+    }
+
+    /**
+     * Determine if the operator is fuzzy.
+     *
+     * @param  string  $operator
+     * @return bool
+     */
+    protected static function isFuzzy($operator)
+    {
+        return \in_array($operator, ['like', 'not like', 'ilike', 'not ilike']);
+    }
+
+    /**
+     * Query the builder using a raw SQL statement.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  mixed  $value
+     * @return void
+     */
+    protected static function queryRaw($builder, $column, $operator, $value)
+    {
+        $operator = \mb_strtoupper(type($operator)->asString(), 'UTF8');
+        $sql = \sprintf('LOWER(%s) %s ?', $column, $operator);
+        $binding = ['%'.\mb_strtolower(type($value)->asString(), 'UTF8').'%'];
+
+        $builder->whereRaw($sql, $binding);
     }
 
     /**
