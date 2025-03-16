@@ -70,6 +70,6 @@ class BulkAction extends Action
             return $this->queryClosure($query);
         }
 
-        parent::__call($method, $parameters);
+        return parent::__call($method, $parameters);
     }
 }
