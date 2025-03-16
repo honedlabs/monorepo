@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
-use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\IsDefault;
 use Honed\Refine\Concerns\HasDirection;
-use Illuminate\Support\Str;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ * 
+ * @extends Refiner<TModel, TBuilder>
  */
 class Sort extends Refiner
 {
@@ -80,7 +80,10 @@ class Sort extends Refiner
      */
     public function isActive()
     {
-        [$value, $direction] = \array_pad($this->getValue(), 2, null);
+        /** @var array{string|null, 'asc'|'desc'|null} */
+        $value = $this->getValue();
+
+        [$value, $direction] = \array_pad($value, 2, null);
 
         $active = $value === $this->getParameter();
 

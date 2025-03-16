@@ -55,15 +55,21 @@ abstract class Refiner extends Primitive
      *
      * @return bool
      */
-    abstract public function isActive();
+    public function isActive()
+    {
+        return filled($this->getValue());
+    }
 
     /**
      * Get the value for the refiner from the request.
      * 
-     * @param  \Illuminate\Http\Request|mixed  $request
+     * @param  \Illuminate\Http\Request|mixed  $value
      * @return mixed
      */
-    abstract public function getRequestValue($request);
+    public function getRequestValue($value)
+    {
+        return $value;
+    }
 
     /**
      * Get the parameter for the refiner.
@@ -145,6 +151,7 @@ abstract class Refiner extends Primitive
         $bindings = $this->getBindings($value);
 
         if (! $this->hasQueryClosure()) {
+            // @phpstan-ignore-next-line
             $this->queryClosure(Closure::fromCallable([$this, 'defaultQuery']));
         }
 

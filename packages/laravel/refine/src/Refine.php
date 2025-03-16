@@ -32,7 +32,7 @@ class Refine extends Primitive
     use ForwardsCalls;
     use HasDelimiter;
 
-    /** @use HasFilters<TModel> */
+    /** @use HasFilters<TModel, TBuilder> */
     use HasFilters;
 
     /** @use HasParameterNames<TModel, TBuilder> */
@@ -41,10 +41,10 @@ class Refine extends Primitive
     use HasRequest;
     use HasScope;
 
-    /** @use HasSearches<TModel> */
+    /** @use HasSearches<TModel, TBuilder> */
     use HasSearches;
 
-    /** @use HasSorts<TModel> */
+    /** @use HasSorts<TModel, TBuilder> */
     use HasSorts;
 
     /**
@@ -180,7 +180,7 @@ class Refine extends Primitive
     /**
      * Add the given filters or sorts to the refine pipeline.
      *
-     * @param  array<int, \Honed\Refine\Refiner>|\Illuminate\Support\Collection<int, \Honed\Refine\Refiner>  $refiners
+     * @param  array<int, \Honed\Refine\Refiner<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Refiner<TModel, TBuilder>>  $refiners
      * @return $this
      */
     public function using($refiners)
@@ -266,9 +266,9 @@ class Refine extends Primitive
      *
      * @param  TBuilder  $builder
      * @param  \Illuminate\Http\Request  $request
-     * @param  array<int, \Honed\Refine\Sort>  $sorts
-     * @param  array<int, \Honed\Refine\Filter>  $filters
-     * @param  array<int, \Honed\Refine\Search>  $searches
+     * @param  array<int, \Honed\Refine\Sort<TModel, TBuilder>>  $sorts
+     * @param  array<int, \Honed\Refine\Filter<TModel, TBuilder>>  $filters
+     * @param  array<int, \Honed\Refine\Search<TModel, TBuilder>>  $searches
      * @return void
      */
     protected function pipeline(
@@ -373,19 +373,19 @@ class Refine extends Primitive
                 return $this;
 
             case 'sorts':
-                /** @var array<int, \Honed\Refine\Sort> $args */
+                /** @var array<int, \Honed\Refine\Sort<TModel, TBuilder>> $args */
                 $args = $parameters[0];
 
                 return $this->addSorts($args);
 
             case 'filters':
-                /** @var array<int, \Honed\Refine\Filter> $args */
+                /** @var array<int, \Honed\Refine\Filter<TModel, TBuilder>> $args */
                 $args = $parameters[0];
 
                 return $this->addFilters($args);
 
             case 'searches':
-                /** @var array<int, \Honed\Refine\Search> $args */
+                /** @var array<int, \Honed\Refine\Search<TModel, TBuilder>> $args */
                 $args = $parameters[0];
 
                 return $this->addSearches($args);

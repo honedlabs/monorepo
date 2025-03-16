@@ -13,6 +13,12 @@ use Honed\Core\Concerns\Validatable;
 use Honed\Refine\Concerns\HasDelimiter;
 use Honed\Refine\Concerns\HasOptions;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ * 
+ * @extends Refiner<TModel, TBuilder>
+ */
 class Filter extends Refiner
 {
     use HasDelimiter;
@@ -169,22 +175,14 @@ class Filter extends Refiner
 
     /**
      * {@inheritdoc}
-     */
-    public function isActive()
-    {
-        return filled($this->getValue());
-    }
-
-    /**
-     * {@inheritdoc}
      * 
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $value
      */
-    public function getRequestValue($request)
+    public function getRequestValue($value)
     {
         $parameter = $this->getParameter();
 
-        return $this->interpret($request, $this->formatScope($parameter));
+        return $this->interpret($value, $this->formatScope($parameter));
     }
 
     /**
@@ -251,15 +249,17 @@ class Filter extends Refiner
 
         match (true) {
             \in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) =>
-                static::queryRaw($builder, $column, $operator, $value),
+                static::queryRaw($builder, $column, type($operator)->asString(), $value),
 
             $this->isMultiple() || $this->interpretsArray() =>
                 $builder->whereIn($column, $value),
 
             $this->interpretsDate() => 
+                // @phpstan-ignore-next-line
                 $builder->whereDate($column, $operator, $value),
 
             $this->interpretsTime() =>
+                // @phpstan-ignore-next-line
                 $builder->whereTime($column, $operator, $value),
 
             default => $builder->where($column, $operator, $value),
@@ -269,7 +269,7 @@ class Filter extends Refiner
     /**
      * Query the builder using a raw SQL statement.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  TBuilder  $builder
      * @param  string  $column
      * @param  string  $operator
      * @param  mixed  $value
@@ -277,9 +277,10 @@ class Filter extends Refiner
      */
     protected static function queryRaw($builder, $column, $operator, $value)
     {
-        $operator = \mb_strtoupper(type($operator)->asString(), 'UTF8');
+        $operator = \mb_strtoupper($operator, 'UTF8');
         $sql = \sprintf('LOWER(%s) %s ?', $column, $operator);
-        $binding = ['%'.\mb_strtolower(type($value)->asString(), 'UTF8').'%'];
+        // @phpstan-ignore-next-line
+        $binding = ['%'.\mb_strtolower(\strval($value), 'UTF8').'%'];
 
         $builder->whereRaw($sql, $binding);
     }

@@ -9,13 +9,14 @@ use Illuminate\Support\Collection;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  */
 trait HasFilters
 {
     /**
      * List of the filters.
      *
-     * @var array<int,\Honed\Refine\Filter>|null
+     * @var array<int,\Honed\Refine\Filter<TModel, TBuilder>>|null
      */
     protected $filters;
 
@@ -36,7 +37,7 @@ trait HasFilters
     /**
      * Merge a set of filters with the existing filters.
      *
-     * @param  array<int, \Honed\Refine\Filter>|\Illuminate\Support\Collection<int, \Honed\Refine\Filter>  $filters
+     * @param  array<int, \Honed\Refine\Filter<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Filter<TModel, TBuilder>>  $filters
      * @return $this
      */
     public function addFilters($filters)
@@ -53,7 +54,7 @@ trait HasFilters
     /**
      * Add a single filter to the list of filters.
      *
-     * @param  \Honed\Refine\Filter  $filter
+     * @param  \Honed\Refine\Filter<TModel, TBuilder>  $filter
      * @return $this
      */
     public function addFilter($filter)
@@ -66,7 +67,7 @@ trait HasFilters
     /**
      * Retrieve the filters.
      *
-     * @return array<int,\Honed\Refine\Filter>
+     * @return array<int,\Honed\Refine\Filter<TModel, TBuilder>>
      */
     public function getFilters()
     {
@@ -144,9 +145,9 @@ trait HasFilters
     /**
      * Apply the filters to the query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<TModel>  $builder
+     * @param  TBuilder  $builder
      * @param  \Illuminate\Http\Request  $request
-     * @param  array<int, \Honed\Refine\Filter>  $filters
+     * @param  array<int, \Honed\Refine\Filter<TModel, TBuilder>>  $filters
      * @return $this
      */
     public function filter($builder, $request, $filters = [])
@@ -155,7 +156,7 @@ trait HasFilters
             return $this;
         }
 
-        /** @var array<int, \Honed\Refine\Filter> */
+        /** @var array<int, \Honed\Refine\Filter<TModel, TBuilder>> */
         $filters = \array_merge($this->getFilters(), $filters);
 
         $scope = $this->getScope();
