@@ -20,13 +20,6 @@ class Search extends Refiner
     protected $boolean = 'and';
 
     /**
-     * Whether the search column is matched.
-     *
-     * @var bool
-     */
-    protected $matched = true;
-
-    /**
      * Set the query boolean to use for the search.
      *
      * @param  'and'|'or'  $boolean
@@ -50,42 +43,11 @@ class Search extends Refiner
     }
 
     /**
-     * Set the search column as matched.
-     *
-     * @param  bool  $matched
-     * @return $this
-     */
-    public function matched($matched = true)
-    {
-        $this->matched = $matched;
-
-        return $this;
-    }
-
-    /**
-     * Get whether the search column is matched.
-     *
-     * @return bool
-     */
-    public function isMatched()
-    {
-        return $this->matched;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function setUp()
     {
         $this->type('search');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isActive()
-    {
-        return parent::isActive() && $this->isMatched();
     }
 
     /**

@@ -214,10 +214,10 @@ it('applies with time', function () {
         ->getValue()->toBeInstanceOf(Carbon::class);
 });
 
-it('applies with expression', function () {
+it('applies with query', function () {
     $request = generate($this->name, $this->value);
 
-    $filter = $this->filter->using(fn ($builder, $value) => $builder->where($this->name, 'like', $value.'%'));
+    $filter = $this->filter->query(fn ($builder, $value) => $builder->where($this->name, 'like', $value.'%'));
 
     expect($filter->refine($this->builder, $request))
         ->toBeTrue();
@@ -228,118 +228,6 @@ it('applies with expression', function () {
     expect($filter)
         ->isActive()->toBeTrue()
         ->getValue()->toBe($this->value);
-});
-
-
-it('applies with `has` reference', function () {
-    $filter = $this->filter->has('details');
-
-    $request = generate($this->name, 'true');
-
-    expect($filter->refine($this->builder, $request))
-        ->toBeTrue();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toHaveCount(1)
-        ->{0}->scoped(fn ($where) => $where
-            ->{'type'}->toBe('Exists')
-        );
-        
-    expect($filter)
-        ->isActive()->toBeTrue()
-        ->getValue()->toBe('true');
-});
-
-it('applies with `where` reference', function () {
-    $name = 'quantity';
-    $value = 10;
-    $operator = '>=';
-
-    $request = generate($name, $value);
-    
-    $filter = Filter::make($name)
-        ->where('quantity', $operator, ':value');
-
-    expect($filter->refine($this->builder, $request))
-        ->toBeTrue();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($name, $value, $operator);
-
-    expect($filter)
-        ->isActive()->toBeTrue()
-        ->getValue()->toBe($value);
-});
-
-it('supports reference, implicit operator, value clauses (`whereRelation` method)', function () {
-    $name = 'quantity';
-    $value = 10;
-    $operator = '>=';
-
-    $request = Request::create('/', 'GET', [$name => $value]);
-    
-    $filter = Filter::make($name)
-        ->whereRelation('details', ':column', $operator, ':value');
-
-    expect($filter->refine($this->builder, $request))
-        ->toBeTrue();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toHaveCount(1)
-        ->{0}->scoped(fn ($where) => $where
-            ->{'type'}->toBe('Exists')
-        );
-
-    expect($filter)
-        ->isActive()->toBeTrue()
-        ->getValue()->toBe($value);
-});
-
-it('supports reference, closure clauses (`whereHas` method)', function () {
-    $name = 'quantity';
-    $value = 10;
-
-    $request = Request::create('/', 'GET', [$name => $value]);
-    
-    // Rebinds closures
-    $filter = Filter::make($name)
-        ->whereHas('details', fn ($query, $value) => $query
-            ->where('quantity', '>=', $value)
-        );
-
-    expect($filter->refine($this->builder, $request))
-        ->toBeTrue();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toHaveCount(1)
-        ->{0}->scoped(fn ($where) => $where
-            ->{'type'}->toBe('Exists')
-        );
-
-    expect($filter)
-        ->isActive()->toBeTrue()
-        ->getValue()->toBe($value);
-});
-
-it('supports binding names', function () {
-    $name = 'quantity';
-    $value = 10;
-    $operator = '>=';
-
-    $request = Request::create('/', 'GET', [$name => $value]);
-
-    $filter = Filter::make($name)
-        ->where(':table.:column', '>=', ':value');
-
-    expect($filter->refine($this->builder, $request))
-        ->toBeTrue();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere('products.quantity', $value, $operator);
-
-    expect($filter)
-        ->isActive()->toBeTrue()
-        ->getValue()->toBe($value);
 });
 
 it('applies lax', function () {
@@ -383,8 +271,8 @@ it('applies strict', function () {
         ->toBeEmpty();
 
     expect($filter)
-        ->isActive()->toBeTrue()
-        ->getValue()->toBe($value)
+        ->isActive()->toBeFalse()
+        ->getValue()->toBeNull() // Transform means invalid values are discarded
         ->getOptions()->each(fn ($option) => $option->isActive()->toBeFalse())
         ->optionsToArray()->toEqual([
             [

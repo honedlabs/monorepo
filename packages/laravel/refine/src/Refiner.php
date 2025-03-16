@@ -116,6 +116,10 @@ abstract class Refiner extends Primitive
     }
 
     /**
+     * 
+     */
+
+    /**
      * Get the bindings for the refiner closure.
      * 
      * @param  mixed  $value

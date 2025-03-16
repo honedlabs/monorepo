@@ -80,8 +80,12 @@ class Sort extends Refiner
      */
     public function isActive()
     {
-        /** @var array{string|null, 'asc'|'desc'|null} */
+        /** @var array{string|null, 'asc'|'desc'|null}|null */
         $value = $this->getValue();
+
+        if (\is_null($value)) {
+            return false;
+        }
 
         [$value, $direction] = \array_pad($value, 2, null);
 
@@ -98,7 +102,6 @@ class Sort extends Refiner
      * {@inheritdoc}
      * 
      * @param  array{string|null, 'asc'|'desc'|null}  $value
-     * @return array{string|null, 'asc'|'desc'|null}
      */
     public function getRequestValue($value)
     {
@@ -137,6 +140,24 @@ class Sort extends Refiner
         return \array_merge(parent::getBindings($value), [
             'direction' => $direction,
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     * 
+     * @param  array{string|null, 'asc'|'desc'|null}  $requestValue
+     */
+    public function refine($builder, $requestValue)
+    {
+        $applied = parent::refine($builder, $requestValue);
+
+        if ($applied) {
+            [$_, $direction] = $this->getValue();
+
+            $this->direction($direction);
+        }
+
+        return $applied;
     }
 
     /**

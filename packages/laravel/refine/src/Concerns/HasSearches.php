@@ -369,10 +369,10 @@ trait HasSearches
             $matched = empty($columns) || 
                 \in_array($search->getParameter(), $columns);
 
-            $applied |= $search
-                ->boolean($boolean)
-                ->matched($matched)
-                ->refine($builder, $term);
+            if ($matched) {
+                $applied |= $search->boolean($boolean)->refine($builder, $term);
+            }
+
         }
 
         return $this;
