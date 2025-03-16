@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 class Search extends Refiner
 {
     /**
@@ -40,13 +42,20 @@ class Search extends Refiner
         // parameter is one of them. They are all active by default.
         $this->value($shouldBeApplied);
 
+        
         // We don't do the search if the column is not to be searched on, or if
         // there is no search term.
         if (! $this->isActive() || empty($search)) {
             return false;
         }
 
-        $this->apply($builder, $search, $this->getName(), $boolean);
+        $bindings = [
+            'value' => $search,
+            'column' => $this->getName(),
+            'boolean' => $boolean,
+        ];
+
+        $this->defaultQuery($builder, $search, $this->getName(), $boolean);
 
         return true;
     }
@@ -60,7 +69,7 @@ class Search extends Refiner
      * @param  string  $boolean
      * @return void
      */
-    public function apply($builder, $value, $column, $boolean = 'and')
+    public function defaultQuery($builder, $value, $column, $boolean = 'and')
     {
         $column = $builder->qualifyColumn($column);
 
