@@ -34,16 +34,6 @@ trait HasBuilderInstance
     }
 
     /**
-     * Determine if the builder instance has been set.
-     *
-     * @return bool
-     */
-    public function hasBuilder()
-    {
-        return isset($this->builder);
-    }
-
-    /**
      * Get the builder instance.
      *
      * @return TBuilder<TModel>
@@ -59,6 +49,16 @@ trait HasBuilderInstance
         }
 
         return $this->builder;
+    }
+
+    /**
+     * Determine if the builder instance has been set.
+     *
+     * @return bool
+     */
+    public function hasBuilder()
+    {
+        return isset($this->builder);
     }
 
     /**
