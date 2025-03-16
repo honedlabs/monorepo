@@ -11,9 +11,13 @@ beforeEach(function () {
     $this->builder = Product::query();
     $this->name = 'name';
     $this->alias = 'alias';
-    $this->filter = Filter::make($this->name);
     $this->value = 'value';
+    $this->filter = Filter::make($this->name);
 });
+
+// it('does not apply', function () {
+
+// })
 
 it('applies', function () {
     // It should not apply if the name does not match.

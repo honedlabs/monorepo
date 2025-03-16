@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
-use BadMethodCallException;
 use Carbon\Carbon;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasScope;
@@ -16,7 +15,7 @@ use Honed\Refine\Concerns\HasOptions;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- * 
+ *
  * @extends Refiner<TModel, TBuilder>
  */
 class Filter extends Refiner
@@ -175,7 +174,7 @@ class Filter extends Refiner
 
     /**
      * {@inheritdoc}
-     * 
+     *
      * @param  \Illuminate\Http\Request  $value
      */
     public function getRequestValue($value)
@@ -196,7 +195,7 @@ class Filter extends Refiner
 
         return $this->activateOptions($value);
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -248,13 +247,11 @@ class Filter extends Refiner
         $column = $builder->qualifyColumn($column);
 
         match (true) {
-            \in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) =>
-                static::queryRaw($builder, $column, type($operator)->asString(), $value),
+            \in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) => static::queryRaw($builder, $column, type($operator)->asString(), $value),
 
-            $this->isMultiple() || $this->interpretsArray() =>
-                $builder->whereIn($column, $value),
+            $this->isMultiple() || $this->interpretsArray() => $builder->whereIn($column, $value),
 
-            $this->interpretsDate() => 
+            $this->interpretsDate() =>
                 // @phpstan-ignore-next-line
                 $builder->whereDate($column, $operator, $value),
 
@@ -265,7 +262,7 @@ class Filter extends Refiner
             default => $builder->where($column, $operator, $value),
         };
     }
-    
+
     /**
      * Query the builder using a raw SQL statement.
      *

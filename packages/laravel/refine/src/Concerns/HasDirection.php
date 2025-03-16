@@ -8,29 +8,29 @@ trait HasDirection
 {
     /**
      * The order direction.
-     * 
+     *
      * @var 'asc'|'desc'|null
      */
     protected $direction;
 
     /**
      * Indicate that only a single direction is allowed.
-     * 
+     *
      * @var 'asc'|'desc'|null
      */
     protected $only;
 
     /**
      * Whether the direction is inverted.
-     * 
+     *
      * @var bool
      */
     protected $invert = false;
-    
+
     /**
      * Set the direction.
-     * 
-     * @param 'asc'|'desc'|null $direction
+     *
+     * @param  'asc'|'desc'|null  $direction
      * @return $this
      */
     public function direction($direction)
@@ -42,7 +42,7 @@ trait HasDirection
 
     /**
      * Get the direction.
-     * 
+     *
      * @return 'asc'|'desc'|null
      */
     public function getDirection()
@@ -52,7 +52,7 @@ trait HasDirection
 
     /**
      * Determine if the direction is ascending.
-     * 
+     *
      * @return bool
      */
     public function isAscending()
@@ -62,7 +62,7 @@ trait HasDirection
 
     /**
      * Determine if the direction is descending.
-     * 
+     *
      * @return bool
      */
     public function isDescending()
@@ -72,7 +72,7 @@ trait HasDirection
 
     /**
      * Fix the direction to a single value.
-     * 
+     *
      * @param  'asc'|'desc'|null  $direction
      * @return $this
      */
@@ -85,7 +85,7 @@ trait HasDirection
 
     /**
      * Fix the direction to be ascending.
-     * 
+     *
      * @return $this
      */
     public function asc()
@@ -95,7 +95,7 @@ trait HasDirection
 
     /**
      * Fix the direction to be descending.
-     * 
+     *
      * @return $this
      */
     public function desc()
@@ -105,7 +105,7 @@ trait HasDirection
 
     /**
      * Determine if the direction is fixed.
-     * 
+     *
      * @return bool
      */
     public function isFixed()
@@ -115,8 +115,8 @@ trait HasDirection
 
     /**
      * Invert the direction of the sort.
-     * 
-     * @param bool $invert
+     *
+     * @param  bool  $invert
      * @return $this
      */
     public function invert($invert = true)
@@ -128,11 +128,11 @@ trait HasDirection
 
     /**
      * Determine if the direction is inverted.
-     * 
+     *
      * @return bool
      */
     public function isInverted()
     {
         return $this->invert;
-    }    
+    }
 }

@@ -7,34 +7,31 @@ use Honed\Refine\Tests\Stubs\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();
+    $this->name = 'name';
+    $this->sort = Sort::make($this->name);
 });
 
 it('does not apply', function () {
-    $name = 'name';
-
-    $sort = Sort::make($name);
-
-    expect($sort->refine($this->builder, ['other', 'asc']))
+    expect($this->sort->refine($this->builder, ['other', 'asc']))
         ->toBeFalse();
 
     expect($this->builder->getQuery()->orders)
         ->toBeEmpty();
 
-    expect($sort)
+    expect($this->sort)
         ->isActive()->toBeFalse()
         ->getDirection()->toBeNull()
-        ->getNextDirection()->toBe($name);
+        ->getNextDirection()->toBe($this->name);
 });
 
 it('applies alias', function () {
-    $name = 'name';
     $alias = 'alphabetical';
     
-    $sort = Sort::make($name)->alias($alias);
+    $sort = $this->sort->alias($alias);
     
     // Should not apply
 
-    expect($sort->refine($this->builder, [$name, 'asc']))
+    expect($sort->refine($this->builder, [$this->name, 'asc']))
         ->toBeFalse();
 
     expect($this->builder->getQuery()->orders)
@@ -51,7 +48,7 @@ it('applies alias', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn($name), 'asc');
+        ->toBeOnlyOrder($this->builder->qualifyColumn($this->name), 'asc');
 
     expect($sort)
         ->isActive()->toBeTrue()
@@ -60,18 +57,15 @@ it('applies alias', function () {
 });
 
 it('applies fixed direction', function () {
-    $name = 'name';
-    
-    $sort = Sort::make($name)
-        ->desc();
+    $sort = $this->sort->desc();
 
-    $descending = $name.'_desc';
+    $descending = $this->name.'_desc';
 
     expect($sort->refine($this->builder, [$descending, 'desc']))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn($name), 'desc');
+        ->toBeOnlyOrder($this->builder->qualifyColumn($this->name), 'desc');
 
     expect($sort)
         ->isFixed()->toBeTrue()
@@ -81,34 +75,32 @@ it('applies fixed direction', function () {
 });
 
 it('applies inverted direction', function () {
-    $name = 'name';
-    
-    $sort = Sort::make($name)->invert();
+    $sort = $this->sort->invert();
 
-    expect($sort->refine($this->builder, [$name, 'desc']))
+    expect($sort->refine($this->builder, [$this->name, 'desc']))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn($name), 'desc');
+        ->toBeOnlyOrder($this->builder->qualifyColumn($this->name), 'desc');
 
     expect($sort)
         ->isInverted()->toBeTrue()
         ->isActive()->toBeTrue()
         ->getDirection()->toBe('desc')
-        ->getNextDirection()->toBe($name);
+        ->getNextDirection()->toBe($this->name);
 });
 
 it('applies query', function () {
-    $name = 'name';
+    $column = 'created_at';
+    
+    $sort = $this->sort
+        ->query(fn ($builder, $direction) => $builder->orderBy($column, $direction));
 
-    $sort = Sort::make($name)
-        ->query(fn ($builder, $direction) => $builder->orderBy('created_at', $direction));
-
-    expect($sort->refine($this->builder, [$name, 'desc']))
+    expect($sort->refine($this->builder, [$this->name, 'desc']))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder('created_at', 'desc');
+        ->toBeOnlyOrder($column, 'desc');
     
     expect($sort)
         ->isActive()->toBeTrue();

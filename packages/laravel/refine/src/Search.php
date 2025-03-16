@@ -7,7 +7,7 @@ namespace Honed\Refine;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- * 
+ *
  * @extends Refiner<TModel, TBuilder>
  */
 class Search extends Refiner
@@ -34,7 +34,7 @@ class Search extends Refiner
 
     /**
      * Get the query boolean.
-     * 
+     *
      * @return 'and'|'or'
      */
     public function getBoolean()

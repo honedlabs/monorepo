@@ -10,13 +10,13 @@ use Honed\Refine\Concerns\HasDirection;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- * 
+ *
  * @extends Refiner<TModel, TBuilder>
  */
 class Sort extends Refiner
 {
-    use IsDefault;
     use HasDirection;
+    use IsDefault;
 
     /**
      * Get the value for the sort indicating an ascending direction.
@@ -69,6 +69,17 @@ class Sort extends Refiner
 
     /**
      * {@inheritdoc}
+     *
+     * @return array{string|null, 'asc'|'desc'|null}|null
+     */
+    public function getValue()
+    {
+        /** @var array{string|null, 'asc'|'desc'|null}|null */
+        return parent::getValue();
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function setUp()
     {
@@ -100,7 +111,7 @@ class Sort extends Refiner
 
     /**
      * {@inheritdoc}
-     * 
+     *
      * @param  array{string|null, 'asc'|'desc'|null}  $value
      */
     public function getRequestValue($value)
@@ -122,7 +133,7 @@ class Sort extends Refiner
         $parameter = parent::guessParameter();
 
         if ($this->isFixed()) {
-            $parameter = $parameter . '_' . $this->only;
+            $parameter = $parameter.'_'.$this->only;
         }
 
         return $parameter;
@@ -130,7 +141,7 @@ class Sort extends Refiner
 
     /**
      * {@inheritdoc}
-     * 
+     *
      * @param  array{string|null, 'asc'|'desc'|null}  $value
      */
     public function getBindings($value)
@@ -144,15 +155,17 @@ class Sort extends Refiner
 
     /**
      * {@inheritdoc}
-     * 
+     *
      * @param  array{string|null, 'asc'|'desc'|null}  $requestValue
      */
     public function refine($builder, $requestValue)
     {
         $applied = parent::refine($builder, $requestValue);
 
-        if ($applied) {
-            [$_, $direction] = $this->getValue();
+        $value = $this->getValue();
+
+        if ($applied && $value) {
+            [$_, $direction] = $value;
 
             $this->direction($direction);
         }

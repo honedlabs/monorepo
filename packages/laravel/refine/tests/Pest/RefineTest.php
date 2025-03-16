@@ -19,21 +19,21 @@ beforeEach(function () {
     $this->test = Refine::make(Product::class);
 });
 
-it('has a sorts key', function () {
+it('has sorts key', function () {
     expect($this->test)
         ->getSortsKey()->toBe(config('refine.sorts_key'))
         ->sortsKey('test')->toBe($this->test)
         ->getSortsKey()->toBe('test');
 });
 
-it('has a searches key', function () {
+it('has searches key', function () {
     expect($this->test)
         ->getSearchesKey()->toBe(config('refine.searches_key'))
         ->searchesKey('test')->toBe($this->test)
         ->getSearchesKey()->toBe('test');
 });
 
-it('has a matches key', function () {
+it('has matches key', function () {
     expect($this->test)
         ->getMatchesKey()->toBe(config('refine.matches_key'))
         ->matchesKey('test')->toBe($this->test)

@@ -46,14 +46,19 @@ it('applies', function () {
 
 it('applies boolean', function () {
     $name = 'name';
+    $term = 'search term';
 
-    $search = Search::make($name)
-        ->boolean('or');
+    $search = Search::make($name)->boolean('or');
 
     expect($search)
-        ->refine($this->builder, 'test')->toBeTrue()
+        ->refine($this->builder, $term)->toBeTrue()
         ->isActive()->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)->toBeArray()
         ->toBeOnlySearch($this->builder->qualifyColumn($name), 'or');
+
+    expect($search)
+        ->isActive()->toBeTrue()
+        ->getValue()->toBe($term)
+        ->getBoolean()->toBe('or');
 });

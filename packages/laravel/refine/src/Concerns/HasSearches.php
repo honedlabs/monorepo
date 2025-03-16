@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
-use Honed\Refine\Search;
 use Honed\Core\Interpreter;
+use Honed\Refine\Search;
 use Illuminate\Support\Collection;
 
 /**
@@ -366,7 +366,7 @@ trait HasSearches
         foreach ($searches as $search) {
             $boolean = $applied ? 'or' : 'and';
 
-            $matched = empty($columns) || 
+            $matched = empty($columns) ||
                 \in_array($search->getParameter(), $columns);
 
             if ($matched) {

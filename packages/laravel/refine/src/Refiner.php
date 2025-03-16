@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Honed\Refine;
 
 use Closure;
-use Honed\Core\Primitive;
-use Illuminate\Support\Str;
-use Honed\Core\Concerns\HasMeta;
-use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Concerns\HasValue;
-use Honed\Core\Concerns\Allowable;
+use Honed\Core\Concerns\HasMeta;
+use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasQueryClosure;
+use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\HasValue;
+use Honed\Core\Primitive;
+use Illuminate\Support\Str;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- * 
+ *
  * @extends Primitive<string, mixed>
- * 
+ *
  * @method void defaultQuery(TBuilder $builder, mixed ...$parameters) Apply the default refiner query to the builder.
  */
 abstract class Refiner extends Primitive
@@ -31,10 +31,11 @@ abstract class Refiner extends Primitive
     use HasLabel;
     use HasMeta;
     use HasName;
-    use HasType;
-    use HasValue;
     /** @use HasQueryClosure<TModel, TBuilder> */
-    use HasQueryClosure;    
+    use HasQueryClosure;
+    use HasType;
+
+    use HasValue;
 
     /**
      * Create a new refiner instance.
@@ -62,7 +63,7 @@ abstract class Refiner extends Primitive
 
     /**
      * Get the value for the refiner from the request.
-     * 
+     *
      * @param  \Illuminate\Http\Request|mixed  $value
      * @return mixed
      */
@@ -83,7 +84,7 @@ abstract class Refiner extends Primitive
 
     /**
      * Guess the parameter for the refiner.
-     * 
+     *
      * @return string
      */
     public function guessParameter()
@@ -95,7 +96,7 @@ abstract class Refiner extends Primitive
 
     /**
      * Transform the value for the refiner from the request.
-     * 
+     *
      * @param  mixed  $value
      * @return mixed
      */
@@ -106,7 +107,7 @@ abstract class Refiner extends Primitive
 
     /**
      * Determine if the value is invalid.
-     * 
+     *
      * @param  mixed  $value
      * @return bool
      */
@@ -116,12 +117,8 @@ abstract class Refiner extends Primitive
     }
 
     /**
-     * 
-     */
-
-    /**
      * Get the bindings for the refiner closure.
-     * 
+     *
      * @param  mixed  $value
      * @return array<string,mixed>
      */
@@ -135,7 +132,7 @@ abstract class Refiner extends Primitive
 
     /**
      * Refine the builder using the request.
-     * 
+     *
      * @param  TBuilder  $builder
      * @param  \Illuminate\Http\Request|mixed  $requestValue
      * @return bool
@@ -162,8 +159,9 @@ abstract class Refiner extends Primitive
         $this->modifyQuery($builder, $bindings);
 
         return true;
-        
+
     }
+
     /**
      * Get the refiner as an array.
      *
