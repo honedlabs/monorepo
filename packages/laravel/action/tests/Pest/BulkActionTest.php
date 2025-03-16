@@ -61,3 +61,14 @@ it('resolves to array', function () {
             ],
         ]);
 });
+
+it('calls query closure', function () {
+    $product = product();
+
+    $fn = fn ($query) => $query->where('id', $product->id);
+
+    expect(BulkAction::make('test'))
+        ->hasQueryClosure()->toBeFalse()
+        ->query($fn)->toBeInstanceOf(BulkAction::class)
+        ->hasQueryClosure()->toBeTrue();
+});
