@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Honed\Action\Concerns;
 
 use Honed\Action\Contracts\ShouldChunk;
+use Honed\Core\Concerns\HasQueryClosure;
 use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 use Illuminate\Support\Collection;
 
 trait HasBulkActions
 {
     use HasAction;
+
+    /** @use HasQueryClosure<\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>> */
+    use HasQueryClosure;
 
     /**
      * Whether the action should be chunked.
@@ -32,13 +36,6 @@ trait HasBulkActions
      * @var int|null
      */
     protected $chunkSize;
-
-    /**
-     * Modify the builder query before performing any actions.
-     *
-     * @var \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void|null
-     */
-    protected $modify;
 
     /**
      * Set the action to chunk the records.
@@ -145,29 +142,6 @@ trait HasBulkActions
     }
 
     /**
-     * Set the modify closure to modify the query.
-     *
-     * @param  \Closure  $modify
-     * @return $this
-     */
-    public function modify($modify)
-    {
-        $this->modify = $modify;
-
-        return $this;
-    }
-
-    /**
-     * Get the modify closure to modify the query.
-     *
-     * @return \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void|null
-     */
-    public function getModifier()
-    {
-        return $this->modify;
-    }
-
-    /**
      * Execute the bulk action on the given query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
@@ -192,11 +166,7 @@ trait HasBulkActions
             );
         }
 
-        $modifier = $this->getModifier();
-
-        if ($modifier) {
-            $modifier($builder);
-        }
+        $this->modifyQuery($builder);
 
         $handler = $type === 'model'
             ? fn ($records) => $records->each($handler)

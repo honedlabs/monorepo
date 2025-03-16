@@ -11,6 +11,7 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Concerns\HasType;
+use Honed\Core\Contracts\ResolvesArrayable;
 use Honed\Core\Primitive;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Traits\ForwardsCalls;
@@ -18,7 +19,7 @@ use Illuminate\Support\Traits\ForwardsCalls;
 /**
  * @extends Primitive<string,mixed>
  */
-abstract class Action extends Primitive
+abstract class Action extends Primitive implements ResolvesArrayable
 {
     use Allowable;
     use Concerns\HasAction;
@@ -35,7 +36,7 @@ abstract class Action extends Primitive
      * Create a new action instance.
      *
      * @param  string  $name
-     * @param  string|\Closure|null  $label
+     * @param  string|\Closure(mixed...):string|null  $label
      * @return static
      */
     public static function make($name, $label = null)
@@ -63,11 +64,7 @@ abstract class Action extends Primitive
     }
 
     /**
-     * Resolve the action's closures to an array.
-     *
-     * @param  array<string,mixed>  $parameters
-     * @param  array<class-string,mixed>  $typed
-     * @return array<string,mixed>
+     * {@inheritdoc}
      */
     public function resolveToArray($parameters = [], $typed = [])
     {
@@ -80,25 +77,6 @@ abstract class Action extends Primitive
             'action' => $this->hasAction(),
             'confirm' => $this->getConfirm()?->resolveToArray($parameters, $typed),
             'route' => $this->routeToArray($parameters, $typed),
-        ];
-    }
-
-    /**
-     * Get the array representation of the action's route if applicable.
-     *
-     * @param  array<string,mixed>  $parameters
-     * @param  array<class-string,mixed>  $typed
-     * @return array<string,mixed>|null
-     */
-    public function routeToArray($parameters = [], $typed = [])
-    {
-        if (! $this->hasRoute()) {
-            return null;
-        }
-
-        return [
-            'href' => $this->resolveRoute($parameters, $typed),
-            'method' => $this->getMethod(),
         ];
     }
 

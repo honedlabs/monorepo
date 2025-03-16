@@ -6,12 +6,13 @@ namespace Honed\Action;
 
 use Honed\Core\Concerns\HasDescription;
 use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Contracts\ResolvesArrayable;
 use Honed\Core\Primitive;
 
 /**
  * @extends Primitive<string,mixed>
  */
-class Confirm extends Primitive
+class Confirm extends Primitive implements ResolvesArrayable
 {
     use HasDescription;
     use HasLabel;
@@ -203,11 +204,7 @@ class Confirm extends Primitive
     }
 
     /**
-     * Resolve the confirm's closures to an array.
-     *
-     * @param  array<string,mixed>  $parameters
-     * @param  array<class-string,mixed>  $typed
-     * @return array<string,mixed>
+     * {@inheritdoc}
      */
     public function resolveToArray($parameters = [], $typed = [])
     {

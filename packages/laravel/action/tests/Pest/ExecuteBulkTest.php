@@ -121,7 +121,7 @@ it('modifies query', function () {
     $fn = fn (Collection $p) => $p->each(fn (Product $p) => $p->makeFree());
 
     $this->action
-        ->modify($modify)
+        ->query($modify)
         ->action($fn)
         ->execute(Product::query());
 
