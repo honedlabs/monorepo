@@ -141,4 +141,23 @@ trait HasRoute
     {
         return $this->method;
     }
+
+    /**
+     * Get the array representation of the route.
+     *
+     * @param  array<string,mixed>  $parameters
+     * @param  array<class-string,mixed>  $typed
+     * @return array<string,mixed>|null
+     */
+    public function routeToArray($parameters = [], $typed = [])
+    {
+        if (! $this->hasRoute()) {
+            return null;
+        }
+
+        return [
+            'href' => $this->resolveRoute($parameters, $typed),
+            'method' => $this->getMethod(),
+        ];
+    }
 }
