@@ -9,14 +9,14 @@ trait HasExtra
     /**
      * Extra data.
      *
-     * @var array<string,mixed>|\Closure(...mixed):array<string,mixed>
+     * @var array<string,mixed>|\Closure(mixed...):array<string,mixed>
      */
     protected $extra = [];
 
     /**
      * Set the extra data.
      *
-     * @param  array<string,mixed>|\Closure(...mixed):array<string,mixed>|null  $extra
+     * @param  array<string,mixed>|\Closure(mixed...):array<string,mixed>|null  $extra
      * @return $this
      */
     public function extra($extra)

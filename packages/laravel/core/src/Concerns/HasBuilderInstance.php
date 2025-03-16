@@ -8,22 +8,22 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  */
 trait HasBuilderInstance
 {
     /**
      * The builder instance.
      *
-     * @var TBuilder<TModel>|null
+     * @var TBuilder|null
      */
     protected $builder;
 
     /**
      * Set the builder instance.
      *
-     * @param  TBuilder<TModel>  $builder
+     * @param  TBuilder  $builder
      * @return $this
      */
     public function builder($builder)
@@ -36,7 +36,7 @@ trait HasBuilderInstance
     /**
      * Get the builder instance.
      *
-     * @return TBuilder<TModel>
+     * @return TBuilder
      *
      * @throws \RuntimeException
      */
@@ -64,8 +64,8 @@ trait HasBuilderInstance
     /**
      * Create a new builder instance.
      *
-     * @param  TModel|class-string<TModel>|TBuilder<TModel>  $query
-     * @return TBuilder<TModel>
+     * @param  TModel|class-string<TModel>|TBuilder  $query
+     * @return TBuilder
      */
     public static function createBuilder($query)
     {

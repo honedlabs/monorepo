@@ -9,21 +9,21 @@ trait Encodable
     /**
      * The encoding closure.
      *
-     * @var \Closure|null
+     * @var \Closure(mixed...):string|null
      */
     protected static $encoder;
 
     /**
      * The decoding closure.
      *
-     * @var \Closure|null
+     * @var \Closure(string):mixed|null
      */
     protected static $decoder;
 
     /**
      * Set the encoder.
      *
-     * @param  \Closure|null  $encoder
+     * @param  \Closure(mixed...):string|null  $encoder
      * @return void
      */
     public static function encoder($encoder = null)
@@ -34,7 +34,7 @@ trait Encodable
     /**
      * Set the decoder.
      *
-     * @param  \Closure|null  $decoder
+     * @param  \Closure(string):mixed|null  $decoder
      * @return void
      */
     public static function decoder($decoder = null)

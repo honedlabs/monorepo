@@ -9,14 +9,14 @@ trait HasDescription
     /**
      * The description.
      *
-     * @var string|\Closure(...mixed):string|null
+     * @var string|\Closure(mixed...):string|null
      */
     protected $description;
 
     /**
      * Set the description.
      *
-     * @param  string|\Closure(...mixed):string|null  $description
+     * @param  string|\Closure(mixed...):string|null  $description
      * @return $this
      */
     public function description($description)

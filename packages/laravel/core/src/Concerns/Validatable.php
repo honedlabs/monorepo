@@ -9,14 +9,14 @@ trait Validatable
     /**
      * The validation function.
      *
-     * @var \Closure
+     * @var \Closure(mixed):bool
      */
     protected $validator;
 
     /**
      * Set the validation function.
      *
-     * @param  \Closure  $validator
+     * @param  \Closure(mixed):bool  $validator
      * @return $this
      */
     public function validator($validator)

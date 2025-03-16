@@ -9,14 +9,14 @@ trait Transformable
     /**
      * The transformer function.
      *
-     * @var \Closure|null
+     * @var \Closure(mixed):mixed|null
      */
     protected $transformer = null;
 
     /**
      * Set the transformer function.
      *
-     * @param  \Closure  $transformer
+     * @param  \Closure(mixed):mixed  $transformer
      * @return $this
      */
     public function transformer($transformer)

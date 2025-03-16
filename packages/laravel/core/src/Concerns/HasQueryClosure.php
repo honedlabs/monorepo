@@ -16,14 +16,14 @@ trait HasQueryClosure
     /**
      * The query closure to modify the Eloquent builder.
      *
-     * @var \Closure(...mixed):void|null
+     * @var \Closure(mixed...):void|null
      */
     protected $query;
 
     /**
      * Set the query closure.
      *
-     * @param  \Closure(...mixed):void|null  $query
+     * @param  \Closure(mixed...):void|null  $query
      * @return $this
      */
     public function queryClosure($query)
@@ -36,7 +36,7 @@ trait HasQueryClosure
     /**
      * Get the query closure.
      *
-     * @return \Closure(...mixed):void|null
+     * @return \Closure(mixed...):void|null
      */
     public function getQueryClosure()
     {
@@ -79,7 +79,7 @@ trait HasQueryClosure
     /**
      * Rebind the query closure with the bindings injected to closure arguments.
      *
-     * @param  \Closure(...mixed):void  $closure
+     * @param  \Closure(mixed...):void  $closure
      * @param  array<string, mixed>  $bindings
      * @return \Closure(TBuilder):void
      */
