@@ -91,10 +91,6 @@ trait IsSelectable
      */
     public function getSelects()
     {
-        if (\method_exists($this, 'selects')) {
-            return $this->selects();
-        }
-
         return $this->selects;
     }
 

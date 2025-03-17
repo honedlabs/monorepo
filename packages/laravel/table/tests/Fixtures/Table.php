@@ -22,63 +22,10 @@ use Honed\Table\Tests\Stubs\Status;
 
 class Table extends HonedTable
 {
-    const Endpoint = '/test';
-
-    const Delimiter = '|';
-
-    const Paginator = 'simple';
-
-    const Pagination = [10, 25, 50];
-
-    const DefaultPagination = 25;
-
-    const PagesKey = 'p';
-
-    const RecordsKey = 'records';
-
-    const SearchesKey = 's';
-
-    const SortsKey = 'order';
-
-    const Search = ['description'];
-
-    const Toggle = true;
-
-    const Remember = true;
-
-    const ColumnsKey = 'cols';
-
-    const Duration = 10;
-
-    const CookieName = 'example-table';
-
-    public $endpoint = self::Endpoint;
-
-    public $delimiter = self::Delimiter;
-
-    public $pagination = self::Pagination;
-
-    public $paginator = self::Paginator;
-
-    public $defaultPagination = self::DefaultPagination;
-
-    public $pagesKey = self::PagesKey;
-
-    public $recordsKey = self::RecordsKey;
-
-    public $searchesKey = self::SearchesKey;
-
-    public $sortsKey = self::SortsKey;
-
-    public $toggle = self::Toggle;
-
-    public $remember = self::Remember;
-
-    public $columnsKey = self::ColumnsKey;
-
-    public $duration = self::Duration;
-
-    public $cookieName = self::CookieName;
+    public $toggleable = true;
+    public $remember = true;
+    public $selectable = true;
+    public $pagination = [10, 25, 50];
 
     public function for()
     {
@@ -138,16 +85,17 @@ class Table extends HonedTable
                 ->multiple(),
 
             Filter::make('status', 'Single')
-                ->alias('only')->enum(Status::class),
+                ->alias('only')
+                ->enum(Status::class),
 
             Filter::make('best_seller', 'Favourite')
-                ->asBoolean()
+                ->boolean()
                 ->alias('favourite'),
 
             Filter::make('created_at', 'Oldest')
                 ->alias('oldest')
-                ->operator('>=')
-                ->asDate(),
+                ->date()
+                ->operator('>='),
 
             Filter::make('created_at', 'Newest')
                 ->alias('newest')
@@ -160,12 +108,10 @@ class Table extends HonedTable
     {
         return [
             Sort::make('name', 'A-Z')
-                ->alias('name-desc')
                 ->desc()
                 ->default(),
 
             Sort::make('name', 'Z-A')
-                ->alias('name-asc')
                 ->asc(),
 
             Sort::make('price'),

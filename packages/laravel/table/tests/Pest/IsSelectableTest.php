@@ -16,7 +16,7 @@ beforeEach(function () {
 it('is selectable', function () {
     // Class-based
     expect($this->table)
-        ->isSelectable()->toBe(false)
+        ->isSelectable()->toBe(true)
         ->selectable(false)->toBe($this->table)
         ->isSelectable()->toBe(false);
 
@@ -49,13 +49,39 @@ it('sets select columns', function () {
         ->getSelects()->toBe(['name']);
 });
 
-it('does not select columns if not selectable', function () {
-
+describe('selects', function () {
+    beforeEach(function () {
+        $this->builder = Product::query();
+    });
 });
 
 it('selects columns from builder', function () {
+    $builder = Product::query();
 
+    $columns = $this->table->getColumns();
+
+    $this->table->select($builder, $columns);
+
+    $columnNames = \array_map(
+        static fn (Column $column) => $column->getName(), 
+        $columns
+    );
+
+    expect($builder->getQuery()->columns)
+        ->toHaveKeys($columnNames);
 });
+
+it('does not select columns if not selectable', function () {
+    $builder = Product::query();
+
+    $columns = $this->table->selectable(false)->getColumns();
+
+    $this->table->select($builder, $columns);
+
+    expect($builder->getQuery()->columns)
+        ->toBeEmpty();
+});
+
 
 it('selects columns from builder with added columns', function () {
 

@@ -6,18 +6,19 @@ use Honed\Table\Table;
 use Honed\Table\Columns\Column;
 use Illuminate\Support\Facades\Request;
 use Honed\Table\Tests\Fixtures\Table as FixtureTable;
+use Honed\Table\Tests\Stubs\Product;
 
 beforeEach(function () {
-    $this->test = FixtureTable::make();
+    $this->table = FixtureTable::make();
 });
 
 it('has a sorts key', function () {
     $sortsKey = 's';
 
     // Class-based
-    expect($this->test)
-        ->getSortsKey()->toBe(FixtureTable::SortsKey)
-        ->sortsKey($sortsKey)->toBe($this->test)
+    expect($this->table)
+        ->getSortsKey()->toBe(config('table.sorts_key'))
+        ->sortsKey($sortsKey)->toBe($this->table)
         ->getSortsKey()->toBe($sortsKey);
 
     // Anonymous
@@ -31,9 +32,9 @@ it('has a searches key', function () {
     $searchesKey = 's';
 
     // Class-based
-    expect($this->test)
-        ->getSearchesKey()->toBe(FixtureTable::SearchesKey)
-        ->searchesKey($searchesKey)->toBe($this->test)
+    expect($this->table)
+        ->getSearchesKey()->toBe(config('table.searches_key'))
+        ->searchesKey($searchesKey)->toBe($this->table)
         ->getSearchesKey()->toBe($searchesKey);
 
     // Anonymous
@@ -47,11 +48,11 @@ it('can match', function () {
     $matching = true;
 
     // Class-based
-    expect($this->test)
+    expect($this->table)
         ->isMatching()->toBe(config('table.match'));
 
-    expect($this->test->match($matching))
-        ->toBe($this->test)
+    expect($this->table->match($matching))
+        ->toBe($this->table)
         ->isMatching()->toBe($matching);
 
     // Anonymous
@@ -67,9 +68,9 @@ it('has a delimiter', function () {
     $delimiter = '|';
 
     // Class-based
-    expect($this->test)
-        ->getDelimiter()->toBe(FixtureTable::Delimiter)
-        ->delimiter($delimiter)->toBe($this->test)
+    expect($this->table)
+        ->getDelimiter()->toBe(config('table.delimiter'))
+        ->delimiter($delimiter)->toBe($this->table)
         ->getDelimiter()->toBe($delimiter);
 
     // Anonymous
@@ -83,27 +84,28 @@ it('has key', function () {
     $key = 'test';
 
     // Class-based
-    expect($this->test)
-        ->key($key)->toBe($this->test)
+    expect($this->table)
+        ->getRecordKey()->toBe('id')
+        ->key($key)->toBe($this->table)
         ->getRecordKey()->toBe($key);
 
     // Anonymous
     expect(Table::make())
         ->key($key)->toBeInstanceOf(Table::class)
         ->getRecordKey()->toBe($key);
-});
 
-it('errors if no key is set', function () {
-    Table::make()->getRecordKey();
-})->throws(\RuntimeException::class);
+    // Errors
+    expect(fn () => Table::make()->getRecordKey())
+        ->toThrow(\RuntimeException::class);
+});
 
 it('has endpoint', function () {
     $endpoint = '/other';
 
     // Class-based
-    expect($this->test)
-        ->getEndpoint()->toBe(FixtureTable::Endpoint)
-        ->endpoint($endpoint)->toBe($this->test)
+    expect($this->table)
+        ->getEndpoint()->toBe(config('table.endpoint'))
+        ->endpoint($endpoint)->toBe($this->table)
         ->getEndpoint()->toBe($endpoint);
 
     // Anonymous
@@ -113,23 +115,88 @@ it('has endpoint', function () {
         ->getEndpoint()->toBe($endpoint);
 });
 
-it('retrieves records', function () {
-    $product = product();
+it('has attributes', function () {
+    $attributes = true;
 
-    $request = Request::create('/', 'GET');
+    // Class-based
+    expect($this->table)
+        ->isWithAttributes()->toBe(config('table.attributes'))
+        ->withAttributes($attributes)->toBe($this->table)
+        ->isWithAttributes()->toBe($attributes);
 
-    $columns = $this->test->getColumns();
+    // Anonymous
+    expect(Table::make())
+        ->isWithAttributes()->toBe(config('table.attributes'))
+        ->withAttributes($attributes)->toBeInstanceOf(Table::class)
+        ->isWithAttributes()->toBe($attributes);
+});
 
-    $this->test->retrieveRecords($product, $request, $columns);
+it('has array representation', function () {
+    expect($this->table->toArray())
+        ->{'id'}->toBeString()
+        ->{'sorts'}->toHaveCount(4)
+        ->{'filters'}->toHaveCount(7)
+        ->{'searches'}->toBeEmpty()
+        ->{'columns'}->toHaveCount(9)
+        ->{'recordsPerPage'}->toHaveCount(3)
+        ->{'records'}->toBeEmpty()
+        ->{'paginator'}->not->toBeEmpty()
+        ->{'toggleable'}->toBeTrue()
+        ->{'actions'}->scoped(fn ($actions) => $actions
+            ->{'hasInline'}->toBeTrue()
+            ->{'bulk'}->toHaveCount(1)
+            ->{'page'}->toHaveCount(2)
+        )
+        ->{'config'}->toEqual([
+            'delimiter' => config('table.delimiter'),
+            'search' => null,
+            'searches' => config('table.searches_key'),
+            'sorts' => config('table.sorts_key'),
+            'matches' => config('table.matches_key'),
+            'endpoint' => config('table.endpoint'),
+            'record' => 'id',
+            'records' => config('table.records_key'),
+            'columns' => config('table.columns_key'),
+            'pages' => config('table.pages_key'),
+        ])
+        ->{'meta'}->toBeEmpty();
+});
 
-    $keys = [...array_map(fn (Column $column) => $column->getParameter(), $columns), 'actions'];
+it('has array representation using withouts', function () {
+    $this->table->withoutActions()
+        ->withoutSorts()
+        ->withoutFilters()
+        ->withoutSearches()
+        ->withoutColumns();
 
-    expect($this->test->getRecords())
-        ->{0}->scoped(fn ($record) => $record
-            ->toHaveKeys($keys)
-            ->toHaveCount(\count($keys))
-            ->{'actions'}->toHaveCount(2) // ID not divisible by 2
-        );
+    expect($this->table->toArray())
+        ->{'id'}->toBeNull()
+        ->{'sorts'}->toBeEmpty()
+        ->{'filters'}->toBeEmpty()
+        ->{'searches'}->toBeEmpty()
+        ->{'columns'}->toBeEmpty()
+        ->{'recordsPerPage'}->toHaveCount(3)
+        ->{'records'}->toBeEmpty()
+        ->{'paginator'}->not->toBeEmpty()
+        ->{'toggleable'}->toBeTrue()
+        ->{'actions'}->scoped(fn ($actions) => $actions
+            ->{'hasInline'}->toBeFalse()
+            ->{'bulk'}->toBeEmpty()
+            ->{'page'}->toBeEmpty()
+        )
+        ->{'config'}->toEqual([
+            'delimiter' => config('table.delimiter'),
+            'search' => null,
+            'searches' => config('table.searches_key'),
+            'sorts' => config('table.sorts_key'),
+            'matches' => config('table.matches_key'),
+            'endpoint' => config('table.endpoint'),
+            'record' => 'id',
+            'records' => config('table.records_key'),
+            'columns' => config('table.columns_key'),
+            'pages' => config('table.pages_key'),
+        ])
+        ->{'meta'}->toBeEmpty();
 });
 
 it('retrieves records with attributes', function () {
@@ -137,14 +204,14 @@ it('retrieves records with attributes', function () {
 
     $request = Request::create('/', 'GET');
 
-    $columns = $this->test->getColumns();
+    $columns = $this->table->getColumns();
 
-    expect($this->test)
+    expect($this->table)
         ->isWithAttributes()->toBeFalse()
-        ->withAttributes()->toBe($this->test)
+        ->withAttributes()->toBe($this->table)
         ->isWithAttributes()->toBeTrue();
 
-    $this->test->retrieveRecords($product, $request, $columns);
+    $this->table->retrieveRecords($product, $request, $columns);
 
     $colKeys = \array_map(fn (Column $column) => $column->getParameter(), $columns);
 
@@ -156,10 +223,91 @@ it('retrieves records with attributes', function () {
         )
     );
 
-    expect($this->test->getRecords())
+    expect($this->table->getRecords())
         ->{0}->scoped(fn ($record) => $record
             ->toHaveKeys($keys)
             ->toHaveCount(\count($keys))
             ->{'actions'}->toHaveCount(2) // ID not divisible by 2
         );
 });
+
+it('creates records', function () {
+    $product = product();
+
+    $columns = $this->table->getColumns();
+
+    $actions = $this->table->getInlineActions();
+
+    $names = \array_map(
+        static fn (Column $column) => $column->getParameter(), 
+        $columns
+    );
+
+    expect($this->table->createRecord($product, $columns, $actions))
+        ->toBeArray()
+        ->toHaveKeys([
+            ...$names,
+            'actions'
+        ])->{'actions'}->toHaveCount(3);
+
+    $product = product();
+
+    expect($this->table->createRecord($product, $columns, $actions))
+        ->toBeArray()
+        ->toHaveKeys([
+            ...$names,
+            'actions'
+        ])->{'actions'}->toHaveCount(2);
+});
+
+it('retrieves records', function () {
+    foreach (range(1, 100) as $i) {
+        product();
+    }
+
+    $builder = Product::query();
+
+    $request = Request::create('/', 'GET', [
+        config('table.pages_key') => 2,
+        config('table.records_key') => 25,
+    ]);
+
+    $columns = $this->table->getColumns();
+
+    $this->table->retrieveRecords($builder, $request, $columns);
+
+    expect($this->table)
+        ->getRecords()->toHaveCount(25)
+        ->getPaginationData()->toHaveKeys([
+            'empty',
+            'prevLink',
+            'nextLink',
+            'perPage',
+            'currentPage',
+            'total',
+            'from',
+            'to',
+            'firstLink',
+            'lastLink',
+            'links',
+        ]);
+});
+
+// it('retrieves records', function () {
+//     $product = product();
+
+//     $request = Request::create('/', 'GET');
+
+//     $columns = $this->table->getColumns();
+
+//     $this->table->retrieveRecords($product, $request, $columns);
+
+//     $keys = [...array_map(fn (Column $column) => $column->getParameter(), $columns), 'actions'];
+
+//     expect($this->table->getRecords())
+//         ->{0}->scoped(fn ($record) => $record
+//             ->toHaveKeys($keys)
+//             ->toHaveCount(\count($keys))
+//             ->{'actions'}->toHaveCount(2) // ID not divisible by 2
+//         );
+// });
