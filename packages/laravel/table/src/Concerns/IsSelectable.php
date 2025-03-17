@@ -22,7 +22,7 @@ trait IsSelectable
     protected $selectable;
 
     /**
-     * The columns to always have selected.
+     * The columns to always be selected.
      *
      * @var array<int,string>|null
      */
@@ -66,7 +66,7 @@ trait IsSelectable
      */
     public function fallbackSelectable()
     {
-        return (bool) config('table.selectable', false);
+        return (bool) config('table.select', false);
     }
 
     /**
@@ -91,6 +91,10 @@ trait IsSelectable
      */
     public function getSelects()
     {
+        if (\method_exists($this, 'selects')) {
+            return $this->selects();
+        }
+
         return $this->selects;
     }
 

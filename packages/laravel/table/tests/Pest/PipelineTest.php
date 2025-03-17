@@ -120,7 +120,8 @@ it('builds', function () {
                 'columns' => FixtureTable::ColumnsKey,
                 'pages' => FixtureTable::PagesKey,
                 'endpoint' => FixtureTable::Endpoint,
-                'search' => 'search term'
+                'search' => 'search term',
+                'matches' => 'match',
             ])->{'actions'}->scoped(fn ($actions) => $actions
                 ->toHaveKeys([ 'hasInline', 'bulk', 'page'])
                 ->{'hasInline'}->toBeTrue()
