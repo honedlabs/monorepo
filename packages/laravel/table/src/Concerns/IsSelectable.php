@@ -6,6 +6,7 @@ namespace Honed\Table\Concerns;
 
 use Honed\Table\Columns\Column;
 use Honed\Table\Contracts\ShouldSelect;
+use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -33,7 +34,7 @@ trait IsSelectable
      * @param  bool  $selectable
      * @return $this
      */
-    public function selectable($selectable)
+    public function selectable($selectable = true)
     {
         $this->selectable = $selectable;
 
@@ -74,9 +75,11 @@ trait IsSelectable
      * @param  array<int,string>  $selects
      * @return $this
      */
-    public function selects($selects)
+    public function selects(...$selects)
     {
-        $this->selects = $selects;
+        $selects = Arr::flatten($selects);
+
+        $this->selects = \array_merge($this->selects ?? [], $selects);
 
         return $this;
     }
@@ -94,11 +97,11 @@ trait IsSelectable
     /**
      * Apply the column selection to the builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  array<int,string>  $columns
+     * @param  TBuilder  $builder
+     * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $columns
      * @return void
      */
-    public function select($builder, $columns)
+    public function select($builder, $columns = [])
     {
         if (! $this->isSelectable()) {
             return;
@@ -110,13 +113,15 @@ trait IsSelectable
             \array_values(
                 \array_filter(
                     $columns,
-                    static fn (Column $column) => \is_null($column->getUsing())
+                    static fn (Column $column) => ! $column->hasAs()
                 )
             )
         );
 
         $selects = \array_merge($selects, $this->getSelects() ?? []);
 
-        $builder->select($selects);
+        if (filled($selects)) {
+            $builder->select($selects);
+        }
     }
 }

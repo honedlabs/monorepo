@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace Honed\Table\Concerns;
 
 use Honed\Table\Columns\Column;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ */
 trait HasColumns
 {
     /**
      * The columns to be used for the table.
      *
-     * @var array<int,\Honed\Table\Columns\Column>|null
+     * @var array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>|null
      */
     protected $columns;
 
@@ -27,7 +30,7 @@ trait HasColumns
     /**
      * Merge a set of columns with the existing columns.
      *
-     * @param  array<int,\Honed\Table\Columns\Column>|Collection<int,\Honed\Table\Columns\Column>  $columns
+     * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>|Collection<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $columns
      * @return $this
      */
     public function addColumns($columns)
@@ -44,7 +47,7 @@ trait HasColumns
     /**
      * Add a single column to the list of columns.
      *
-     * @param  \Honed\Table\Columns\Column  $column
+     * @param  \Honed\Table\Columns\Column<TModel, TBuilder>  $column
      * @return $this
      */
     public function addColumn($column)
@@ -79,7 +82,7 @@ trait HasColumns
     /**
      * Get the columns for the table.
      *
-     * @return array<int,\Honed\Table\Columns\Column>
+     * @return array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>
      */
     public function getColumns()
     {
@@ -128,18 +131,14 @@ trait HasColumns
     /**
      * Augment the builder using the column callbacks.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @param  TBuilder  $builder
+     * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $columns
      * @return void
      */
-    public static function augment($builder, $columns)
+    public static function applyColumns($builder, $columns)
     {
         foreach ($columns as $column) {
-            $callback = $column->getAugment();
-
-            if ($callback) {
-                $callback($builder);
-            }
+            $column->modifyQuery($builder);
         }
     }
 }

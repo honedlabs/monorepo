@@ -2,16 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Honed\Table\Columns\Concerns;
+namespace Honed\Table\Concerns;
 
-trait IsToggleable
+trait IsDisplayable
 {
     /**
+     * Set the instance to be always be displayed.
+     * 
      * @var bool
      */
     protected $always = false;
 
     /**
+     * Set the instance to be sometimes.
+     * 
      * @var bool
      */
     protected $sometimes = false;

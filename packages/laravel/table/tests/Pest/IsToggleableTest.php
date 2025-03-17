@@ -10,7 +10,7 @@ beforeEach(function () {
     $this->table = FixtureTable::make();
 });
 
-it('can toggle', function () {
+it('is toggleable', function () {
     // Class-based
     expect($this->table)
         ->isToggleable()->toBe(FixtureTable::Toggle)

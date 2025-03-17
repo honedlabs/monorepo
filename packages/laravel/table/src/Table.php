@@ -4,25 +4,28 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use Honed\Action\Concerns\HasActions;
-use Honed\Action\Concerns\HasParameterNames;
-use Honed\Action\Handler;
-use Honed\Core\Concerns\Encodable;
-use Honed\Core\Concerns\HasMeta;
 use Honed\Refine\Refine;
 use Honed\Refine\Search;
-use Honed\Table\Columns\Column;
-use Honed\Table\Concerns\HasColumns;
-use Honed\Table\Concerns\HasPagination;
-use Honed\Table\Concerns\HasTableBindings;
-use Honed\Table\Concerns\IsToggleable;
-use Honed\Table\Concerns\IsSelectable;
-use Illuminate\Contracts\Routing\UrlRoutable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
+use Honed\Action\Handler;
+use Honed\Core\Interpreter;
 use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
+use Honed\Table\Columns\Column;
+use Honed\Core\Concerns\HasMeta;
+use Honed\Core\Concerns\Encodable;
 use Illuminate\Support\Facades\App;
+use Honed\Table\Concerns\HasColumns;
+use Honed\Action\Concerns\HasActions;
+use Honed\Table\Concerns\IsSelectable;
+use Honed\Table\Concerns\IsToggleable;
+use Honed\Table\Concerns\HasPagination;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Honed\Table\Concerns\HasTableBindings;
+use Honed\Action\Concerns\HasParameterNames;
+use Honed\Action\InlineAction;
+use Illuminate\Contracts\Routing\UrlRoutable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -34,24 +37,21 @@ class Table extends Refine implements UrlRoutable
 {
     use Encodable;
     use HasActions;
+    
+    /** @use HasColumns<TModel, TBuilder> */
     use HasColumns;
     use HasMeta;
     use HasParameterNames;
 
-    /**
-     * @use HasPagination<TModel, TBuilder>
-     */
+    /** @use HasPagination<TModel, TBuilder> */
     use HasPagination;
 
     use HasTableBindings;
-    /**
-     * @use IsToggleable<TModel, TBuilder>
-     */
+
+    /** @use IsToggleable<TModel, TBuilder> */
     use IsToggleable;
 
-    /**
-     * @use IsSelectable<TModel, TBuilder>
-     */
+    /** @use IsSelectable<TModel, TBuilder> */
     use IsSelectable;
 
     /**
@@ -113,13 +113,13 @@ class Table extends Refine implements UrlRoutable
             return $this->key;
         }
 
-        $column = Arr::first(
+        $keyColumn = Arr::first(
             $this->getColumns(),
             static fn (Column $column): bool => $column->isKey()
         );
 
-        if ($column) {
-            return $column->getName();
+        if ($keyColumn) {
+            return $keyColumn->getName();
         }
 
         throw new \RuntimeException(
@@ -189,8 +189,6 @@ class Table extends Refine implements UrlRoutable
      */
     public static function fallbackMatchesKey()
     {
-        parent::fallbackMatchesKey();
-
         return type(config('table.matches_key', 'match'))->asString();
     }
 
@@ -288,8 +286,10 @@ class Table extends Refine implements UrlRoutable
     {
         $this->build();
 
+        $id = $this->isWithoutActions() ? null : $this->getRouteKey();
+
         return \array_merge(parent::toArray(), [
-            'id' => $this->getRouteKey(),
+            'id' => $id,
             'records' => $this->getRecords(),
             'paginator' => $this->getPaginationData(),
             'columns' => $this->columnsToArray(),
@@ -315,11 +315,51 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
+     * Toggle the columns that are displayed.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $columns
+     * @return array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>
+     */
+    public function toggle($request, $columns)
+    {
+        if (! $this->isToggleable() || $this->isWithoutToggling()) {
+            return \array_values(
+                \array_filter(
+                    $columns,
+                    static fn (Column $column) => $column->display()
+                )
+            );
+        }
+
+        $key = $this->getColumnsKey();
+
+        /** @var array<int,string>|null */
+        $params = Interpreter::interpretArray(
+            $request, 
+            $this->formatScope($key), 
+            $this->getDelimiter(), 
+            'string'
+        );
+
+        if ($this->isRememberable()) {
+            $params = $this->configureCookie($request, $params);
+        }
+
+        return \array_values(
+            \array_filter(
+                $columns,
+                static fn (Column $column) => $column->display($params)
+            )
+        );
+    }
+
+    /**
      * Retrieve the records from the underlying builder resource.
      *
      * @param  TBuilder  $builder
      * @param  \Illuminate\Http\Request  $request
-     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $columns
      * @return void
      */
     public function retrieveRecords($builder, $request, $columns)
@@ -337,7 +377,7 @@ class Table extends Refine implements UrlRoutable
      * Create a record for the table.
      *
      * @param  TModel  $model
-     * @param  array<int,\Honed\Table\Columns\Column>  $columns
+     * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $columns
      * @param  array<int,\Honed\Action\InlineAction>  $actions
      * @return array<string,mixed>
      */
@@ -345,7 +385,10 @@ class Table extends Refine implements UrlRoutable
     {
         [$named, $typed] = static::getModelParameters($model);
 
-        $actions = $this->getRecordActions($named, $typed);
+        $actions = \array_map(
+            static fn (InlineAction $action) => $action->resolveToArray($named, $typed),
+            $actions,
+        );
 
         $record = $this->isWithAttributes() ? $model->toArray() : [];
 
@@ -370,11 +413,9 @@ class Table extends Refine implements UrlRoutable
         $filters = [],
         $searches = []
     ) {
-        $columns = $this->toggleColumns($request, $this->getColumns());
+        $columns = $this->toggle($request, $this->getColumns());
 
-        $this->applyColumns($builder, $columns);
-
-        /** @var array<int,\Honed\Refine\Sort> */
+        /** @var array<int,\Honed\Refine\Sort<TModel, TBuilder>> */
         $sorts = \array_map(
             static fn (Column $column) => $column->getSort(),
             \array_values(
@@ -385,7 +426,7 @@ class Table extends Refine implements UrlRoutable
             )
         );
 
-        /** @var array<int,\Honed\Refine\Search> */
+        /** @var array<int,\Honed\Refine\Search<TModel, TBuilder>> */
         $searches = \array_map(
             static fn (Column $column) => 
                 Search::make($column->getName(), $column->getLabel())
@@ -398,9 +439,10 @@ class Table extends Refine implements UrlRoutable
             )
         );
 
-        // Use the parent pipeline to perform refinement.
         parent::pipeline($builder, $request, $sorts, [], $searches);
 
+        $this->select($builder, $columns);
+        $this->applyColumns($builder, $columns);
         $this->retrieveRecords($builder, $request, $columns);
     }
 
@@ -415,47 +457,11 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
-    {
-        $for = $this->getFor();
-        [$_, $singular, $plural] = $this->getParameterNames($for);
-
-        return match ($parameterName) {
-            'request' => [$this->getRequest()],
-            'builder' => [$for],
-            'resource' => [$for],
-            'query' => [$for],
-            $singular => [$for],
-            $plural => [$for],
-            default => [],
-        };
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
-    {
-        $for = $this->getFor();
-        [$model] = $this->getParameterNames($for);
-
-        return match ($parameterType) {
-            Request::class => [$this->getRequest()],
-            Builder::class => [$for],
-            Model::class => [$for],
-            $model => [$for],
-            default => [App::make($parameterType)],
-        };
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function __call($method, $parameters)
     {
         switch ($method) {
             case 'columns':
-                /** @var array<int,\Honed\Table\Columns\Column> $columns */
+                /** @var array<int,\Honed\Table\Columns\Column<TModel, TBuilder>> $columns */
                 $columns = $parameters[0];
 
                 return $this->addColumns($columns);

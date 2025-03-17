@@ -7,7 +7,6 @@ namespace Honed\Table\Columns;
 use Honed\Core\Primitive;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Honed\Core\Concerns\IsKey;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasType;
@@ -18,21 +17,24 @@ use Honed\Core\Concerns\IsActive;
 use Honed\Core\Concerns\IsHidden;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\Transformable;
-use Honed\Table\Columns\Concerns\HasClass;
+use Honed\Core\Concerns\HasQueryClosure;
+use Honed\Refine\Sort;
+use Honed\Table\Concerns\IsDisplayable;
+use Honed\Table\Concerns\HasClass;
 use Honed\Table\Columns\Concerns\IsSortable;
 use Honed\Table\Columns\Concerns\IsSearchable;
-use Honed\Table\Columns\Concerns\IsToggleable;
 
 /**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ *
  * @extends Primitive<string, mixed>
  */
 class Column extends Primitive
 {
     use Allowable;
     use HasClass;
-    use IsSearchable;
-    use IsSortable;
-    use IsToggleable;
+    use IsDisplayable;
     use HasAlias;
     use HasExtra;
     use HasIcon;
@@ -41,15 +43,16 @@ class Column extends Primitive
     use HasType;
     use IsActive;
     use IsHidden;
-    use IsKey;
     use Transformable;
+    /** @use HasQueryClosure<TModel, TBuilder> */
+    use HasQueryClosure;
 
     /**
-     * A closure to augment the builder.
-     *
-     * @var \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void|null
+     * Whether this column represents the record key.
+     * 
+     * @var bool
      */
-    protected $augment;
+    protected $key = false;
 
     /**
      * The value to display when the column is empty.
@@ -59,20 +62,26 @@ class Column extends Primitive
     protected $fallback;
 
     /**
-     * Set a column using a callback or fixed value.
+     * Set a column as a callback or fixed value.
      *
      * @var mixed
      */
-    protected $using;
+    protected $as;
 
     /**
-     * {@inheritdoc}
+     * The column sort.
+     * 
+     * @var \Honed\Refine\Sort<TModel, TBuilder>|null
      */
-    public function setUp()
-    {
-        $this->active(true);
-        $this->type('column');
-    }
+    protected $sort;
+
+    /**
+     * Whether to search on the column.
+     * 
+     * @var bool
+     */
+    protected $searchable = false;
+
 
     /**
      * Create a new column instance.
@@ -88,30 +97,31 @@ class Column extends Primitive
             ->label($label ?? static::makeLabel($name));
     }
 
+
     /**
-     * Augment the builder for the column.
+     * Set this column to represent the record key.
      *
-     * @param  \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void  $augment
+     * @param  bool  $key
      * @return $this
      */
-    public function augment($augment)
+    public function key($key = true)
     {
-        $this->augment = $augment;
+        $this->key = $key;
 
         return $this;
     }
 
     /**
-     * Get the augment callback for the column.
+     * Determine whether this column represents the record key.
      *
-     * @return \Closure(\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>):void|null
+     * @return bool
      */
-    public function getAugment()
+    public function isKey()
     {
-        return $this->augment;
+        return $this->key;
     }
 
-    /**
+        /**
      * Set the fallback value for the column.
      *
      * @param  mixed  $fallback
@@ -135,14 +145,23 @@ class Column extends Primitive
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setUp()
+    {
+        $this->active(true);
+        $this->type('column');
+    }
+
+    /**
      * Set how the column value is retrieved.
      *
-     * @param  mixed  $using
+     * @param  mixed  $as
      * @return $this
      */
-    public function using($using)
+    public function as($as)
     {
-        $this->using = $using;
+        $this->as = $as;
 
         return $this;
     }
@@ -152,9 +171,136 @@ class Column extends Primitive
      *
      * @return mixed
      */
-    public function getUsing()
+    public function getAs()
     {
-        return $this->using;
+        return $this->as;
+    }
+
+    /**
+     * Determine if the column has a retrieved value.
+     *
+     * @return bool
+     */
+    public function hasAs()
+    {
+        return isset($this->as);
+    }
+
+    /**
+     * Set the column as sortable.
+     *
+     * @param  \Honed\Refine\Sort<TModel, TBuilder>|string|bool  $sortable
+     * @param  string|null  $alias
+     * @param  bool  $default
+     * @return $this
+     */
+    public function sortable($sortable = true, $alias = null, $default = false)
+    {
+        if (! $sortable) {
+            return $this->disableSorting();
+        }
+
+        return $this->enableSorting($sortable, $alias, $default);
+    }
+
+    /**
+     * Determine if the column is sortable.
+     *
+     * @return bool
+     */
+    public function isSortable()
+    {
+        return isset($this->sort);
+    }
+
+    /**
+     * Get the sort instance.
+     *
+     * @return \Honed\Refine\Sort<TModel, TBuilder>|null
+     */
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
+        /**
+     * Disable sorting for the column.
+     *
+     * @return $this
+     */
+    protected function disableSorting()
+    {
+        $this->sort = null;
+
+        return $this;
+    }
+
+    /**
+     * Enable sorting for the column.
+     *
+     * @param  \Honed\Refine\Sort<TModel, TBuilder>|string|bool  $sortable
+     * @param  string|null  $alias
+     * @param  bool  $default
+     * @return $this
+     */
+    protected function enableSorting($sortable = true, $alias = null, $default = false)
+    {
+        $this->sort = match (true) {
+            $sortable instanceof Sort => $sortable,
+
+            \is_string($sortable) => Sort::make($sortable)
+                ->alias($alias ?? $this->getParameter())
+                ->default($default),
+
+            default => Sort::make($this->getName())
+                ->alias($alias ?? $this->getParameter())
+                ->default($default),
+        };
+
+        return $this;
+    }
+
+    /**
+     * Get the sort instance as an array.
+     *
+     * @return array<string,mixed>
+     */
+    public function sortToArray()
+    {
+        $sort = $this->getSort();
+
+        if (! $sort) {
+            return [];
+        }
+
+        return [
+            'active' => $sort->isActive(),
+            'direction' => $sort->getDirection(),
+            'next' => $sort->getNextDirection(),
+        ];
+    }
+
+    /**
+     * Set the column as searchable.
+     *
+     * @param  bool  $searchable
+     * @return $this
+     */
+    public function searchable($searchable = true)
+    {
+        $this->searchable = $searchable;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the column is searchable.
+     *
+     * @return bool
+     */
+    public function isSearchable()
+    {
+        return $this->searchable;
     }
 
     /**
@@ -222,10 +368,10 @@ class Column extends Primitive
      */
     public function createRecord($model, $named, $typed)
     {
-        $using = $this->getUsing();
+        $as = $this->getAs();
 
-        $value = $using
-            ? $this->evaluate($using, $named, $typed)
+        $value = $as
+            ? $this->evaluate($as, $named, $typed)
             : Arr::get($model, $this->getName());
 
         return [
