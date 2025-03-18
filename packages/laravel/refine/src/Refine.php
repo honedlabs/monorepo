@@ -15,6 +15,7 @@ use Honed\Refine\Concerns\HasSorts;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Traits\ForwardsCalls;
@@ -64,14 +65,14 @@ class Refine extends Primitive
     /**
      * A closure to be called before the refiners have been applied.
      *
-     * @var \Closure|null
+     * @var \Closure(TBuilder):void|null
      */
     protected $before;
 
     /**
      * A closure to be called after the refiners have been applied.
      *
-     * @var \Closure|null
+     * @var \Closure(TBuilder):void|null
      */
     protected $after;
 
