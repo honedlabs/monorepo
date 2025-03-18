@@ -85,7 +85,9 @@ it('refines anonymously', function () {
 
     expect($refine)
         ->request($this->request)->toBe($refine)
-        ->using($this->refiners)->toBe($refine)
+        ->getRequest()->toBe($this->request)
+        ->refiners($this->refiners)->toBe($refine)
+        ->getRefiners()->toHaveCount(11)
         ->hasSorts()->toBeTrue()
         ->hasFilters()->toBeTrue()
         ->hasSearch()->toBeTrue()
@@ -157,77 +159,74 @@ it('refines anonymously', function () {
 });
 
 it('refines all with fixture', function () {
-    expect(RefineFixture::make($this->builder))
-        ->toBeInstanceOf(RefineFixture::class)
-        ->request($this->request)->toBeInstanceOf(RefineFixture::class)
-        ->hasSorts()->toBeTrue()
-        ->hasFilters()->toBeTrue()
-        ->hasSearch()->toBeTrue()
-        ->refine()->toBeInstanceOf(RefineFixture::class);
+    $refine = RefineFixture::make($this->builder)
+        ->request($this->request)
+        ->refiners($this->refiners)
+        ->refine();
 
-    expect($this->builder->getQuery())
+    expect($refine->getFor()->getQuery())
         ->wheres->scoped(fn ($wheres) => $wheres
-        ->toBeArray()
-        ->toHaveCount(9)
-        ->toEqualCanonicalizing([
-            [
-                'type' => 'raw',
-                'sql' => "LOWER({$this->builder->qualifyColumn('name')}) LIKE ?",
-                'boolean' => 'and',
-            ],
-            [
-                'type' => 'raw',
-                'sql' => "LOWER({$this->builder->qualifyColumn('description')}) LIKE ?",
-                'boolean' => 'or',
-            ],
-            [
-                'type' => 'raw',
-                'sql' => "LOWER({$this->builder->qualifyColumn('name')}) LIKE ?",
-                'boolean' => 'and',
-            ],
-            [
-                'type' => 'Basic',
-                'column' => $this->builder->qualifyColumn('price'),
-                'operator' => '>=',
-                'value' => 100,
-                'boolean' => 'and',
-            ],
-            [
-                'type' => 'In',
-                'column' => $this->builder->qualifyColumn('status'),
-                'values' => [Status::Available->value, Status::Unavailable->value],
-                'boolean' => 'and',
-            ],
-            [
-                'type' => 'Basic',
-                'column' => $this->builder->qualifyColumn('status'),
-                'operator' => '=',
-                'value' => Status::ComingSoon->value,
-                'boolean' => 'and',
-            ],
-            [
-                'type' => 'Basic',
-                'column' => $this->builder->qualifyColumn('best_seller'),
-                'operator' => '=',
-                'value' => true,
-                'boolean' => 'and',
-            ],
-            [
-                'type' => 'Date',
-                'column' => $this->builder->qualifyColumn('created_at'),
-                'operator' => '>=',
-                'value' => '2000-01-01',
-                'boolean' => 'and',
-            ],
-            [
-                'type' => 'Date',
-                'column' => $this->builder->qualifyColumn('created_at'),
-                'operator' => '<=',
-                'value' => '2001-01-01',
-                'boolean' => 'and',
-            ],
-        ])
-    )->orders->toBeOnlyOrder($this->builder->qualifyColumn('price'), 'desc');
+            ->toBeArray()
+            ->toHaveCount(9)
+            ->toEqualCanonicalizing([
+                [
+                    'type' => 'raw',
+                    'sql' => "LOWER({$this->builder->qualifyColumn('name')}) LIKE ?",
+                    'boolean' => 'and',
+                ],
+                [
+                    'type' => 'raw',
+                    'sql' => "LOWER({$this->builder->qualifyColumn('description')}) LIKE ?",
+                    'boolean' => 'or',
+                ],
+                [
+                    'type' => 'raw',
+                    'sql' => "LOWER({$this->builder->qualifyColumn('name')}) LIKE ?",
+                    'boolean' => 'and',
+                ],
+                [
+                    'type' => 'Basic',
+                    'column' => $this->builder->qualifyColumn('price'),
+                    'operator' => '>=',
+                    'value' => 100,
+                    'boolean' => 'and',
+                ],
+                [
+                    'type' => 'In',
+                    'column' => $this->builder->qualifyColumn('status'),
+                    'values' => [Status::Available->value, Status::Unavailable->value],
+                    'boolean' => 'and',
+                ],
+                [
+                    'type' => 'Basic',
+                    'column' => $this->builder->qualifyColumn('status'),
+                    'operator' => '=',
+                    'value' => Status::ComingSoon->value,
+                    'boolean' => 'and',
+                ],
+                [
+                    'type' => 'Basic',
+                    'column' => $this->builder->qualifyColumn('best_seller'),
+                    'operator' => '=',
+                    'value' => true,
+                    'boolean' => 'and',
+                ],
+                [
+                    'type' => 'Date',
+                    'column' => $this->builder->qualifyColumn('created_at'),
+                    'operator' => '>=',
+                    'value' => '2000-01-01',
+                    'boolean' => 'and',
+                ],
+                [
+                    'type' => 'Date',
+                    'column' => $this->builder->qualifyColumn('created_at'),
+                    'operator' => '<=',
+                    'value' => '2001-01-01',
+                    'boolean' => 'and',
+                ],
+            ])
+        )->orders->toBeOnlyOrder($this->builder->qualifyColumn('price'), 'desc');
 });
 
 it('can select the search columns', function () {
@@ -236,13 +235,13 @@ it('can select the search columns', function () {
         config('refine.matches_key') => 'description',
     ]);
 
-    Refine::make($this->builder)
-        ->using($this->refiners)
+    $refine = Refine::make($this->builder)
+        ->refiners($this->refiners)
         ->request($request)
         ->match()
         ->refine();
 
-    expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch($this->builder->qualifyColumn('description'));
+    expect($refine->getFor()->getQuery()->wheres)
+        ->toBeOnlySearch($refine->getFor()->qualifyColumn('description'));
 
 });

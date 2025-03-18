@@ -50,11 +50,11 @@ trait HasSearches
     protected $term;
 
     /**
-     * Whether to not apply the searches.
+     * Whether to apply the searches.
      *
      * @var bool
      */
-    protected $withoutSearching = false;
+    protected $searching = true;
 
     /**
      * Whether to not provide the searches.
@@ -62,14 +62,6 @@ trait HasSearches
      * @var bool
      */
     protected $withoutSearches = false;
-
-    /**
-     * Format a value using the scope.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    abstract public function formatScope($value);
 
     /**
      * Merge a set of searches with the existing searches.
@@ -233,26 +225,26 @@ trait HasSearches
     }
 
     /**
-     * Set the instance to not apply the searches.
+     * Set the instance to apply the searches.
      *
-     * @param  bool  $withoutSearching
+     * @param  bool  $searching
      * @return $this
      */
-    public function withoutSearching($withoutSearching = true)
+    public function searching($searching = true)
     {
-        $this->withoutSearching = $withoutSearching;
+        $this->searching = $searching;
 
         return $this;
     }
 
     /**
-     * Determine if the instance should not apply the searches.
+     * Determine if the instance should apply the searches.
      *
      * @return bool
      */
-    public function isWithoutSearching()
+    public function isSearching()
     {
-        return $this->withoutSearching;
+        return $this->searching;
     }
 
     /**
@@ -279,6 +271,19 @@ trait HasSearches
     }
 
     /**
+     * Set the search term.
+     * 
+     * @param  string|null  $term
+     * @return $this
+     */
+    public function term($term)
+    {
+        $this->term = $term;
+
+        return $this;
+    }
+
+    /**
      * Retrieve the search value.
      *
      * @return string|null
@@ -286,40 +291,6 @@ trait HasSearches
     public function getTerm()
     {
         return $this->term;
-    }
-
-    /**
-     * Get the search term from a request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string|null
-     */
-    public function getSearchTerm($request)
-    {
-        $key = $this->formatScope($this->getSearchesKey());
-
-        $term = Interpreter::interpretStringable($request, $key);
-
-        if (\is_null($term) || $term->isEmpty()) {
-            return null;
-        }
-
-        return $term->replace('+', ' ')->value();
-    }
-
-    /**
-     * Get the search columns from a request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array<int,string>|null
-     */
-    public function getSearchColumns($request)
-    {
-        $key = $this->formatScope($this->getMatchesKey());
-        $delimiter = $this->getDelimiter();
-
-        /** @var array<int,string>|null */
-        return Interpreter::interpretArray($request, $key, $delimiter);
     }
 
     /**
@@ -337,44 +308,5 @@ trait HasSearches
             static fn (Search $search) => $search->toArray(),
             $this->getSearches()
         );
-    }
-
-    /**
-     * Apply a search to the query.
-     *
-     * @param  TBuilder  $builder
-     * @param  \Illuminate\Http\Request  $request
-     * @param  array<int, \Honed\Refine\Search<TModel, TBuilder>>  $searches
-     * @return $this
-     */
-    public function search($builder, $request, $searches = [])
-    {
-        if ($this->isWithoutSearching()) {
-            return $this;
-        }
-
-        $term = $this->getSearchTerm($request);
-        $columns = $this->getSearchColumns($request);
-
-        $this->term = $term;
-
-        /** @var array<int, \Honed\Refine\Search<TModel, TBuilder>> */
-        $searches = \array_merge($this->getSearches(), $searches);
-
-        $applied = false;
-
-        foreach ($searches as $search) {
-            $boolean = $applied ? 'or' : 'and';
-
-            $matched = empty($columns) ||
-                \in_array($search->getParameter(), $columns);
-
-            if ($matched) {
-                $applied |= $search->boolean($boolean)->refine($builder, $term);
-            }
-
-        }
-
-        return $this;
     }
 }

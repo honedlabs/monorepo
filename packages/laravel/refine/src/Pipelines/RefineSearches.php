@@ -13,20 +13,28 @@ final readonly class RefineSearches
 {
     /**
      * Apply the searches to the query.
+     * 
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+     * 
+     * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
+     * @return \Honed\Refine\Refine<TModel, TBuilder>
      */
     public function __invoke(Refine $refine, Closure $next): Refine
     {
-        if (! $refine->searching()) {
+        if (! $refine->isSearching()) {
             return $next($refine);
         }
 
         $request = $refine->getRequest();
 
-        $searchKey = $refine->formatScope($refine->getSearchesKey());
+        $searchesKey = $refine->formatScope($refine->getSearchesKey());
         $matchesKey = $refine->formatScope($refine->getMatchesKey());
         $delimiter = $refine->getDelimiter();
 
-        $term = $this->term($request, $searchKey);
+        $term = $this->term($request, $searchesKey);
+        $refine->term($term);
+
         $columns = $this->columns($request, $matchesKey, $delimiter);
 
         $for = $refine->getFor();
@@ -64,7 +72,7 @@ final readonly class RefineSearches
     /**
      * Get the search columns from a request.
      * 
-     * @return array<int,string>|null
+     * @return array<int,mixed>|null
      */
     public function columns(Request $request, string $key, string $delimiter): ?array
     {

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
+use Closure;
+use Honed\Core\Concerns\HasBuilderInstance;
 use Honed\Core\Concerns\HasParameterNames;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasScope;
@@ -12,6 +14,11 @@ use Honed\Refine\Concerns\HasDelimiter;
 use Honed\Refine\Concerns\HasFilters;
 use Honed\Refine\Concerns\HasSearches;
 use Honed\Refine\Concerns\HasSorts;
+use Honed\Refine\Pipelines\AfterRefining;
+use Honed\Refine\Pipelines\BeforeRefining;
+use Honed\Refine\Pipelines\RefineFilters;
+use Honed\Refine\Pipelines\RefineSearches;
+use Honed\Refine\Pipelines\RefineSorts;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -65,14 +72,14 @@ class Refine extends Primitive
     /**
      * A closure to be called before the refiners have been applied.
      *
-     * @var \Closure(TBuilder):void|null
+     * @var \Closure|null
      */
     protected $before;
 
     /**
      * A closure to be called after the refiners have been applied.
      *
-     * @var \Closure(TBuilder):void|null
+     * @var \Closure|null
      */
     protected $after;
 
@@ -143,48 +150,40 @@ class Refine extends Primitive
     }
 
     /**
-     * Execute a closure before refiners have been applied.
+     * Get the refiner to be executed before the refiners have been applied.
      *
-     * @param  TBuilder<TModel>  $builder
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
+     * @return \Closure|null
      */
-    protected function beforeRefining($builder, $request)
+    public function beforeRefiner()
     {
-        if (isset($this->before)) {
-            \call_user_func($this->before, $builder, $request);
-        }
-
         if (\method_exists($this, 'before')) {
-            \call_user_func([$this, 'before'], $builder, $request);
+            return Closure::fromCallable([$this, 'before']);
         }
+
+        return $this->before;
     }
 
     /**
-     * Execute a closure after refiners have been applied.
+     * Get the refiner to be executed after the refiners have been applied.
      *
-     * @param  TBuilder<TModel>  $builder
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
+     * @return \Closure|null
      */
-    protected function afterRefining($builder, $request)
+    public function afterRefiner()
     {
-        if (isset($this->after)) {
-            \call_user_func($this->after, $builder, $request);
+        if (\method_exists($this, 'after')) {
+            return Closure::fromCallable([$this, 'after']);
         }
 
-        if (\method_exists($this, 'after')) {
-            \call_user_func([$this, 'after'], $builder, $request);
-        }
+        return $this->after;
     }
 
     /**
-     * Add the given filters or sorts to the refine pipeline.
+     * Add the given refiners to be used.
      *
      * @param  array<int, \Honed\Refine\Refiner<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Refiner<TModel, TBuilder>>  $refiners
      * @return $this
      */
-    public function using($refiners)
+    public function refiners($refiners)
     {
         foreach ($refiners as $refiner) {
             match (true) {
@@ -201,13 +200,14 @@ class Refine extends Primitive
     /**
      * Set all refiners to not apply.
      *
+     * @param  bool  $refining
      * @return $this
      */
-    public function withoutRefining()
+    public function refining($refining = true)
     {
-        $this->withoutSearching();
-        $this->withoutFiltering();
-        $this->withoutSorting();
+        $this->searching($refining);
+        $this->filtering($refining);
+        $this->sorting($refining);
 
         return $this;
     }
@@ -252,10 +252,7 @@ class Refine extends Primitive
             return $this;
         }
 
-        $for = $this->getFor();
-        $request = $this->getRequest();
-
-        $this->pipeline($for, $request);
+        $this->pipeline();
 
         $this->refined = true;
 
@@ -265,25 +262,36 @@ class Refine extends Primitive
     /**
      * Execute the refiner pipeline.
      *
-     * @param  TBuilder  $builder
-     * @param  \Illuminate\Http\Request  $request
-     * @param  array<int, \Honed\Refine\Sort<TModel, TBuilder>>  $sorts
-     * @param  array<int, \Honed\Refine\Filter<TModel, TBuilder>>  $filters
-     * @param  array<int, \Honed\Refine\Search<TModel, TBuilder>>  $searches
      * @return void
      */
-    protected function pipeline(
-        $builder,
-        $request,
-        $sorts = [],
-        $filters = [],
-        $searches = []
-    ) {
-        $this->beforeRefining($builder, $request);
-        $this->search($builder, $request, $searches);
-        $this->filter($builder, $request, $filters);
-        $this->sort($builder, $request, $sorts);
-        $this->afterRefining($builder, $request);
+    protected function pipeline() 
+    {
+        App::make(Pipeline::class)
+            ->send($this)
+            ->through([
+                BeforeRefining::class,
+                RefineSearches::class,
+                RefineFilters::class,
+                RefineSorts::class,
+                AfterRefining::class
+            ]);
+    }
+
+    /**
+     * Forward a call to the builder.
+     *
+     * @param  string  $method
+     * @param  array<int, mixed>  $parameters
+     * @return mixed
+     */
+    protected function forwardBuilderCall($method, $parameters)
+    {
+        return $this->refine()
+            ->forwardDecoratedCallTo(
+                $this->getFor(),
+                $method,
+                $parameters
+            );
     }
 
     /**
@@ -321,23 +329,6 @@ class Refine extends Primitive
             Builder::class => [$for],
             default => [App::make($parameterType)],
         };
-    }
-
-    /**
-     * Forward a call to the builder.
-     *
-     * @param  string  $method
-     * @param  array<int, mixed>  $parameters
-     * @return mixed
-     */
-    protected function forwardBuilderCall($method, $parameters)
-    {
-        return $this->refine()
-            ->forwardDecoratedCallTo(
-                $this->getFor(),
-                $method,
-                $parameters
-            );
     }
 
     /**

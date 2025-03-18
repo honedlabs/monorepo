@@ -59,10 +59,10 @@ it('has delimiter', function () {
 
 it('can set as not refining', function () {
     expect($this->test)
-        ->withoutRefining()->toBe($this->test)
-        ->isWithoutFiltering()->toBeTrue()
-        ->isWithoutSorting()->toBeTrue()
-        ->isWithoutSearching()->toBeTrue();
+        ->refining(false)->toBe($this->test)
+        ->isFiltering()->toBeFalse()
+        ->isSorting()->toBeFalse()
+        ->isSearching()->toBeFalse();
 });
 
 it('has for method', function () {
@@ -90,9 +90,9 @@ it('is without filtering', function () {
     $refine = $this->test->filters([Filter::make($name)]);
 
     expect($refine)
-        ->isWithoutFiltering()->toBeFalse()
-        ->withoutFiltering()->toBe($refine)
-        ->isWithoutFiltering()->toBeTrue()
+        ->isFiltering()->toBeTrue()
+        ->filtering(false)->toBe($refine)
+        ->isFiltering()->toBeFalse()
         ->isWithoutFilters()->toBeFalse()
         ->withoutFilters()->toBe($refine)
         ->isWithoutFilters()->toBeTrue();
@@ -116,9 +116,9 @@ it('is without sorting', function () {
     $refine = $this->test->sorts([Sort::make($name)]);
 
     expect($refine)
-        ->isWithoutSorting()->toBeFalse()
-        ->withoutSorting()->toBe($refine)
-        ->isWithoutSorting()->toBeTrue()
+        ->isSorting()->toBeTrue()
+        ->sorting(false)->toBe($refine)
+        ->isSorting()->toBeFalse()
         ->isWithoutSorts()->toBeFalse()
         ->withoutSorts()->toBe($refine)
         ->isWithoutSorts()->toBeTrue();
@@ -141,9 +141,9 @@ it('is without searching', function () {
     $refine = $this->test->searches([Search::make($name)]);
 
     expect($refine)
-        ->isWithoutSearching()->toBeFalse()
-        ->withoutSearching()->toBe($refine)
-        ->isWithoutSearching()->toBeTrue()
+        ->isSearching()->toBeTrue()
+        ->searching(false)->toBe($refine)
+        ->isSearching()->toBeFalse()
         ->isWithoutSearches()->toBeFalse()
         ->withoutSearches()->toBe($refine)
         ->isWithoutSearches()->toBeTrue();
@@ -210,7 +210,7 @@ it('forwards calls to the builder', function () {
 });
 
 it('has array representation', function () {
-    $this->test->using([
+    $this->test->refiners([
         Filter::make('name'),
         Sort::make('name'),
         Search::make('name'),
@@ -229,7 +229,7 @@ it('has array representation', function () {
 });
 
 it('has array representation with matches', function () {
-    $this->test->using([
+    $this->test->refiners([
         Filter::make('name'),
         Sort::make('name'),
         Search::make('name'),

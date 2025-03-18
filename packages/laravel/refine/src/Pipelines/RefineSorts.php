@@ -12,11 +12,17 @@ use Illuminate\Http\Request;
 final readonly class RefineSorts
 {
     /**
-     * Apply the searches to the query.
+     * Apply the sorts refining logic.
+     * 
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+     * 
+     * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
+     * @return \Honed\Refine\Refine<TModel, TBuilder>
      */
     public function __invoke(Refine $refine, Closure $next): Refine
     {
-        if (! $refine->sorting()) {
+        if (! $refine->isSorting()) {
             return $next($refine);
         }
 
@@ -34,14 +40,12 @@ final readonly class RefineSorts
             $applied |= $sort->refine($for, $value);
         }
 
-        if (! $applied) {
-            $sort = $refine->getDefaultSort();
-
+        if (! $applied && $sort = $refine->getDefaultSort()) {
             [$_, $direction] = $value;
 
             $value = [$sort->getParameter(), $direction];
             
-            $sort?->refine($for, $value);
+            $sort->refine($for, $value);
         }
 
         return $next($refine);

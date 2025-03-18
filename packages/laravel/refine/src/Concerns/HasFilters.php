@@ -21,11 +21,11 @@ trait HasFilters
     protected $filters;
 
     /**
-     * Whether to not apply the filters.
+     * Whether to apply the filters.
      *
      * @var bool
      */
-    protected $withoutFiltering = false;
+    protected $filtering = true;
 
     /**
      * Whether to provide the filters.
@@ -97,26 +97,26 @@ trait HasFilters
     }
 
     /**
-     * Set the instance to not apply the filters.
+     * Set the instance to apply the filters.
      *
-     * @param  bool  $withoutFiltering
+     * @param  bool  $filtering
      * @return $this
      */
-    public function withoutFiltering($withoutFiltering = true)
+    public function filtering($filtering = true)
     {
-        $this->withoutFiltering = $withoutFiltering;
+        $this->filtering = $filtering;
 
         return $this;
     }
 
     /**
-     * Determine if the instance should not apply the filters.
+     * Determine if the instance should apply the filters.
      *
      * @return bool
      */
-    public function isWithoutFiltering()
+    public function isFiltering()
     {
-        return $this->withoutFiltering;
+        return $this->filtering;
     }
 
     /**
@@ -140,35 +140,6 @@ trait HasFilters
     public function isWithoutFilters()
     {
         return $this->withoutFilters;
-    }
-
-    /**
-     * Apply the filters to the query.
-     *
-     * @param  TBuilder  $builder
-     * @param  \Illuminate\Http\Request  $request
-     * @param  array<int, \Honed\Refine\Filter<TModel, TBuilder>>  $filters
-     * @return $this
-     */
-    public function filter($builder, $request, $filters = [])
-    {
-        if ($this->isWithoutFiltering()) {
-            return $this;
-        }
-
-        /** @var array<int, \Honed\Refine\Filter<TModel, TBuilder>> */
-        $filters = \array_merge($this->getFilters(), $filters);
-
-        $scope = $this->getScope();
-        $delimiter = $this->getDelimiter();
-
-        foreach ($filters as $filter) {
-            $filter->scope($scope)
-                ->delimiter($delimiter)
-                ->refine($builder, $request);
-        }
-
-        return $this;
     }
 
     /**

@@ -11,10 +11,16 @@ final readonly class RefineFilters
 {
     /**
      * Apply the filters to the query.
+     * 
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+     * 
+     * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
+     * @return \Honed\Refine\Refine<TModel, TBuilder>
      */
     public function __invoke(Refine $refine, Closure $next): Refine
     {
-        if (! $refine->filtering()) {
+        if (! $refine->isFiltering()) {
             return $next($refine);
         }
 
