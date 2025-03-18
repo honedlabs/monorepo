@@ -38,3 +38,18 @@ it('prompts for a sort name', function () {
         ->assertSuccessful();
 });
 
+it('makes searches', function () {
+    $this->artisan('make:search', [
+        'name' => 'NameSearch',
+    ])->assertSuccessful();
+
+    $this->assertFileExists(app_path('Refiners/NameSearch.php'));
+});
+
+it('prompts for a search name', function () {
+    $this->artisan('make:search')
+        ->expectsQuestion('What should the search be named?', 'NameSearch')
+        ->assertSuccessful();
+});
+
+
