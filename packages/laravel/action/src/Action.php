@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
+use Honed\Action\Concerns\HasAction;
+use Honed\Action\Concerns\HasConfirm;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasExtra;
 use Honed\Core\Concerns\HasIcon;
@@ -22,9 +24,9 @@ use Illuminate\Support\Traits\ForwardsCalls;
 abstract class Action extends Primitive implements ResolvesArrayable
 {
     use Allowable;
-    use Concerns\HasAction;
-    use Concerns\HasConfirm;
     use ForwardsCalls;
+    use HasAction;
+    use HasConfirm;
     use HasExtra;
     use HasIcon;
     use HasLabel;

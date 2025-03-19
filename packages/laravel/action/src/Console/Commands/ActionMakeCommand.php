@@ -70,7 +70,6 @@ class ActionMakeCommand extends GeneratorCommand
         /** @var string|null */
         $action = $this->option('action');
 
-
         if ($action && ! $model) {
             error('You must provide a model when specifying the action type.');
         }

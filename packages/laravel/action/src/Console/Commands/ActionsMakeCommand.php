@@ -6,16 +6,15 @@ namespace Honed\Action\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Finder\Finder;
-use Illuminate\Support\Collection;
 
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\select;
-use function Laravel\Prompts\suggest;
 
 #[AsCommand(name: 'make:actions')]
 class ActionsMakeCommand extends Command implements PromptsForMissingInput
@@ -57,13 +56,19 @@ class ActionsMakeCommand extends Command implements PromptsForMissingInput
         'destroy' => 'Destroy',
     ];
 
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
     public function handle()
     {
-        /** @var string*/
+        /** @var string */
         $model = $this->argument('model');
 
         if (! \in_array($model, $this->possibleModels())) {
             error('The model '.$model.' does not exist.');
+
             return 1;
         }
 
@@ -73,7 +78,7 @@ class ActionsMakeCommand extends Command implements PromptsForMissingInput
         foreach ($this->actions as $action => $verb) {
             $model = $this->argument('model');
 
-            $name = Str::of($path)
+            $name = Str::of($path ?? '')
                 ->append('/'.$model)
                 ->append('/'.$verb.$model)
                 ->replace('\\', '/')
@@ -87,24 +92,26 @@ class ActionsMakeCommand extends Command implements PromptsForMissingInput
                 '--action' => $action,
             ]);
         }
+
+        return 0;
     }
 
     /**
      * Get the console command arguments.
      *
-     * @return array
+     * @return array<int, array<int, mixed>>
      */
     protected function getArguments()
     {
         return [
-            ['model', InputArgument::REQUIRED, 'The model for the '. \strtolower($this->type)],
+            ['model', InputArgument::REQUIRED, 'The model for the '.\strtolower($this->type)],
         ];
     }
 
     /**
      * Prompt for missing input arguments using the returned questions.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     protected function promptForMissingArgumentsUsing()
     {
@@ -112,10 +119,9 @@ class ActionsMakeCommand extends Command implements PromptsForMissingInput
             'model' => fn () => select(
                 'What model should the '.strtolower($this->type).' be for?',
                 $this->possibleModels()
-            )
+            ),
         ];
     }
-
 
     /**
      * Get the console command options.

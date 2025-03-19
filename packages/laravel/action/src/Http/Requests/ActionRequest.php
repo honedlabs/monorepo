@@ -57,5 +57,5 @@ class ActionRequest extends FormRequest
     public function isPage(): bool
     {
         return $this->validated('type') === ActionFactory::Page;
-    } 
+    }
 }

@@ -8,7 +8,7 @@ use Honed\Action\Action;
 use Honed\Action\BulkAction;
 use Honed\Action\InlineAction;
 use Honed\Action\PageAction;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Arr;
 
 trait HasActions
 {
@@ -20,59 +20,38 @@ trait HasActions
     protected $actions;
 
     /**
-     * Whether actions are available.
+     * Whether to not provide inline actions.
      *
      * @var bool
      */
-    protected $withActions = true;
+    protected $withoutInlineActions = false;
 
     /**
-     * Whether inline actions are available.
+     * Whether to not provide bulk actions.
      *
      * @var bool
      */
-    protected $inline = true;
+    protected $withoutBulkActions = false;
 
     /**
-     * Whether bulk actions are available.
+     * Whether to not provide page actions.
      *
      * @var bool
      */
-    protected $bulk = true;
-
-    /**
-     * Whether page actions are available.
-     *
-     * @var bool
-     */
-    protected $page = true;
+    protected $withoutPageActions = false;
 
     /**
      * Merge a set of actions with the existing.
      *
-     * @param  array<int, \Honed\Action\Action>|\Illuminate\Support\Collection<int, \Honed\Action\Action>  $actions
+     * @param  iterable<int, \Honed\Action\Action>  ...$actions
      * @return $this
      */
-    public function addActions($actions)
+    public function withActions(...$actions)
     {
-        if ($actions instanceof Collection) {
-            $actions = $actions->all();
-        }
+        /** @var array<int, \Honed\Action\Action> */
+        $actions = Arr::flatten($actions);
 
         $this->actions = \array_merge($this->actions ?? [], $actions);
-
-        return $this;
-    }
-
-    /**
-     * Add a single action to the list of actions.
-     *
-     * @param  \Honed\Action\Action  $action
-     * @return $this
-     */
-    public function addAction($action)
-    {
-        $this->actions[] = $action;
 
         return $this;
     }
@@ -84,7 +63,7 @@ trait HasActions
      */
     public function getActions()
     {
-        if (! $this->usesActions()) {
+        if ($this->isWithoutActions()) {
             return [];
         }
 
@@ -104,26 +83,99 @@ trait HasActions
     }
 
     /**
-     * Set whether actions are available.
+     * Set the instance to not provide any actions.
      *
-     * @param  bool|array<int,string>  $withActions
+     * @param  bool  $withoutActions
      * @return $this
      */
-    public function withActions($withActions = true)
+    public function withoutActions($withoutActions = true)
     {
-        $this->withActions = $withActions;
+        $this->withoutInlineActions($withoutActions);
+        $this->withoutBulkActions($withoutActions);
+        $this->withoutPageActions($withoutActions);
 
         return $this;
     }
 
     /**
-     * Determine if the actions should not be retrieved.
+     * Determine if the instance should not provide any actions.
      *
      * @return bool
      */
     public function isWithoutActions()
     {
-        return $this->withActions === false;
+        return $this->isWithoutInlineActions() &&
+            $this->isWithoutBulkActions() &&
+            $this->isWithoutPageActions();
+    }
+
+    /**
+     * Set the instance to not provide inline actions.
+     *
+     * @param  bool  $withoutInlineActions
+     * @return $this
+     */
+    public function withoutInlineActions($withoutInlineActions = true)
+    {
+        $this->withoutInlineActions = $withoutInlineActions;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the instance should not provide inline actions.
+     *
+     * @return bool
+     */
+    public function isWithoutInlineActions()
+    {
+        return $this->withoutInlineActions;
+    }
+
+    /**
+     * Set the instance to not provide bulk actions.
+     *
+     * @param  bool  $withoutBulkActions
+     * @return $this
+     */
+    public function withoutBulkActions($withoutBulkActions = true)
+    {
+        $this->withoutBulkActions = $withoutBulkActions;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the instance should not provide bulk actions.
+     *
+     * @return bool
+     */
+    public function isWithoutBulkActions()
+    {
+        return $this->withoutBulkActions;
+    }
+
+    /**
+     * Set the instance to not provide page actions.
+     *
+     * @param  bool  $withoutPageActions
+     * @return $this
+     */
+    public function withoutPageActions($withoutPageActions = true)
+    {
+        $this->withoutPageActions = $withoutPageActions;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the instance should not provide page actions.
+     *
+     * @return bool
+     */
+    public function isWithoutPageActions()
+    {
+        return $this->withoutPageActions;
     }
 
     /**
@@ -133,6 +185,10 @@ trait HasActions
      */
     public function getInlineActions()
     {
+        if ($this->isWithoutInlineActions()) {
+            return [];
+        }
+
         return \array_values(
             \array_filter(
                 $this->getActions(),
@@ -148,6 +204,10 @@ trait HasActions
      */
     public function getBulkActions()
     {
+        if ($this->isWithoutBulkActions()) {
+            return [];
+        }
+
         return \array_values(
             \array_filter(
                 $this->getActions(),
@@ -163,6 +223,10 @@ trait HasActions
      */
     public function getPageActions()
     {
+        if ($this->isWithoutPageActions()) {
+            return [];
+        }
+
         return \array_values(
             \array_filter(
                 $this->getActions(),
