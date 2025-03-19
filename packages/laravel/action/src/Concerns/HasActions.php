@@ -20,11 +20,32 @@ trait HasActions
     protected $actions;
 
     /**
-     * Whether the actions should be retrievable.
+     * Whether actions are available.
      *
      * @var bool
      */
-    protected $withoutActions = false;
+    protected $withActions = true;
+
+    /**
+     * Whether inline actions are available.
+     *
+     * @var bool
+     */
+    protected $inline = true;
+
+    /**
+     * Whether bulk actions are available.
+     *
+     * @var bool
+     */
+    protected $bulk = true;
+
+    /**
+     * Whether page actions are available.
+     *
+     * @var bool
+     */
+    protected $page = true;
 
     /**
      * Merge a set of actions with the existing.
@@ -63,7 +84,7 @@ trait HasActions
      */
     public function getActions()
     {
-        if ($this->isWithoutActions()) {
+        if (! $this->usesActions()) {
             return [];
         }
 
@@ -83,14 +104,14 @@ trait HasActions
     }
 
     /**
-     * Set the actions to not be retrieved.
+     * Set whether actions are available.
      *
-     * @param  bool  $withoutActions
+     * @param  bool|array<int,string>  $withActions
      * @return $this
      */
-    public function withoutActions($withoutActions = true)
+    public function withActions($withActions = true)
     {
-        $this->withoutActions = $withoutActions;
+        $this->withActions = $withActions;
 
         return $this;
     }
@@ -102,7 +123,7 @@ trait HasActions
      */
     public function isWithoutActions()
     {
-        return $this->withoutActions;
+        return $this->withActions === false;
     }
 
     /**

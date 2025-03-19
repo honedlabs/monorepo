@@ -28,14 +28,12 @@ trait HasAction
     /**
      * Set the action handler.
      *
-     * @param  \Closure|class-string<\Honed\Action\Contracts\Actionable>|null  $action
+     * @param  \Closure|class-string<\Honed\Action\Contracts\Actionable>  $action
      * @return $this
      */
-    public function action($action = null)
+    public function action($action)
     {
-        if (! \is_null($action)) {
-            $this->action = $action;
-        }
+        $this->action = $action;
 
         return $this;
     }

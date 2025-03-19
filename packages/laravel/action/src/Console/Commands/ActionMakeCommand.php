@@ -45,12 +45,13 @@ class ActionMakeCommand extends GeneratorCommand
      * @var array<string,string>
      */
     protected $actions = [
-        'create' => 'Create',
-        'delete' => 'Delete',
-        'update' => 'Update',
-        'show' => 'Show',
         'index' => 'Index',
+        'create' => 'Create',
         'store' => 'Store',
+        'show' => 'Show',
+        'edit' => 'Edit',
+        'update' => 'Update',
+        'delete' => 'Delete',
         'destroy' => 'Destroy',
     ];
 
