@@ -30,14 +30,20 @@ it('makes with path', function () {
     foreach ($this->actions as $action) {
         $this->assertFileExists(app_path(\sprintf('Actions/Models/Product/%sProduct.php', $action)));
     }
-
-    $this->assertFileExists(app_path('Actions/Models/Product/ShowProduct.php'));
-    
 });
 
 it('promps for missing model', function () {
     $this->artisan('make:actions')
-        ->expectsQuestion('What is the name of the model?', 'Product')
+        ->expectsQuestion('What model should the actions be for?', 'Product')
         ->assertSuccessful();
+
+    foreach ($this->actions as $action) {
+        $this->assertFileExists(app_path(\sprintf('Actions/Product/%sProduct.php', $action)));
+    }    
 });
 
+it('errors when model does not exist', function () {
+    $this->artisan('make:actions')
+        ->expectsQuestion('What model should the actions be for?', 'Stock')
+        ->assertFailed();
+});

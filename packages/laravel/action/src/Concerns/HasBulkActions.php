@@ -9,11 +9,18 @@ use Honed\Core\Concerns\HasQueryClosure;
 use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 use Illuminate\Support\Collection;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ */
 trait HasBulkActions
 {
+    /**
+     * @use HasAction<TModel, TBuilder>
+     */
     use HasAction;
 
-    /** @use HasQueryClosure<\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>> */
+    /** @use HasQueryClosure<TModel, TBuilder> */
     use HasQueryClosure;
 
     /**
@@ -144,7 +151,7 @@ trait HasBulkActions
     /**
      * Execute the bulk action on the given query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  TBuilder  $builder
      * @return mixed
      *
      * @throws \RuntimeException
@@ -202,7 +209,7 @@ trait HasBulkActions
      * Determine if the handler type references the builder, collection, or model.
      *
      * @param  \Closure  $handler
-     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $model
+     * @param  class-string<TModel>  $model
      * @return 'builder'|'collection'|'model'|null
      */
     public function getHandlerType($handler, $model)
@@ -237,8 +244,8 @@ trait HasBulkActions
     /**
      * Get the named and typed parameters to use for the bulk action.
      *
-     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $model
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Collection<int,\Illuminate\Database\Eloquent\Model>  $value
+     * @param  class-string<TModel>  $model
+     * @param  TBuilder|\Illuminate\Database\Eloquent\Collection<int,TModel>  $value
      * @return array{array<string, mixed>,  array<class-string, mixed>}
      */
     protected function getEvaluationParameters($model, $value)

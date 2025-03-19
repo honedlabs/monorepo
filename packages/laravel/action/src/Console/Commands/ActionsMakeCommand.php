@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Honed\Action\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Collection;
 
@@ -19,7 +18,7 @@ use function Laravel\Prompts\select;
 use function Laravel\Prompts\suggest;
 
 #[AsCommand(name: 'make:actions')]
-class ActionsMakeCommand extends Command
+class ActionsMakeCommand extends Command implements PromptsForMissingInput
 {
     /**
      * The console command name.
@@ -60,6 +59,14 @@ class ActionsMakeCommand extends Command
 
     public function handle()
     {
+        /** @var string*/
+        $model = $this->argument('model');
+
+        if (! \in_array($model, $this->possibleModels())) {
+            error('The model '.$model.' does not exist.');
+            return 1;
+        }
+
         /** @var string|null */
         $path = $this->option('path');
 
@@ -102,35 +109,10 @@ class ActionsMakeCommand extends Command
     protected function promptForMissingArgumentsUsing()
     {
         return [
-            'model' => [
+            'model' => fn () => select(
                 'What model should the '.strtolower($this->type).' be for?',
-                match ($this->type) {
-                    'Cast' => 'E.g. Json',
-                    'Channel' => 'E.g. OrderChannel',
-                    'Console command' => 'E.g. SendEmails',
-                    'Component' => 'E.g. Alert',
-                    'Controller' => 'E.g. UserController',
-                    'Event' => 'E.g. PodcastProcessed',
-                    'Exception' => 'E.g. InvalidOrderException',
-                    'Factory' => 'E.g. PostFactory',
-                    'Job' => 'E.g. ProcessPodcast',
-                    'Listener' => 'E.g. SendPodcastNotification',
-                    'Mailable' => 'E.g. OrderShipped',
-                    'Middleware' => 'E.g. EnsureTokenIsValid',
-                    'Model' => 'E.g. Flight',
-                    'Notification' => 'E.g. InvoicePaid',
-                    'Observer' => 'E.g. UserObserver',
-                    'Policy' => 'E.g. PostPolicy',
-                    'Provider' => 'E.g. ElasticServiceProvider',
-                    'Request' => 'E.g. StorePodcastRequest',
-                    'Resource' => 'E.g. UserResource',
-                    'Rule' => 'E.g. Uppercase',
-                    'Scope' => 'E.g. TrendingScope',
-                    'Seeder' => 'E.g. UserSeeder',
-                    'Test' => 'E.g. UserTest',
-                    default => '',
-                },
-            ],
+                $this->possibleModels()
+            )
         ];
     }
 

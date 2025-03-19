@@ -5,11 +5,19 @@ declare(strict_types=1);
 namespace Honed\Action\Concerns;
 
 use Closure;
-use Honed\Action\Contracts\Actionable;
 use Illuminate\Support\Facades\App;
+use Honed\Action\Contracts\Actionable;
+use Honed\Core\Concerns\HasParameterNames;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ */
 trait HasAction
 {
+    /**
+     * @use HasParameterNames<TModel, TBuilder>
+     */
     use HasParameterNames;
 
     /**
@@ -20,7 +28,7 @@ trait HasAction
     /**
      * Execute the action handler using the provided data.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Model  $parameter
+     * @param  TModel|TBuilder  $parameter
      * @return mixed
      */
     abstract public function execute($parameter);

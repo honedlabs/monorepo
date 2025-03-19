@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Action\Concerns\HasParameterNames;
+use Honed\Core\Concerns\HasParameterNames;
 use Honed\Action\Http\Data\ActionData;
 use Honed\Action\Http\Data\BulkData;
 use Honed\Action\Http\Data\InlineData;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  */
 class Handler implements Makeable
 {
@@ -25,6 +25,9 @@ class Handler implements Makeable
      */
     use HasBuilderInstance;
 
+    /**
+     * @use HasParameterNames
+     */
     use HasParameterNames;
 
     /**
