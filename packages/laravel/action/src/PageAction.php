@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
+use Honed\Action\Concerns\HasAction;
 use Honed\Action\Concerns\HasBulkActions;
 
 class PageAction extends Action
 {
     use HasBulkActions;
+    use HasAction;
 
     /**
      * {@inheritdoc}

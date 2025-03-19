@@ -6,6 +6,7 @@ namespace Honed\Action;
 
 use Honed\Action\Concerns\HasAction;
 use Honed\Action\Concerns\HasConfirm;
+use Honed\Action\Contracts\Executes;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasExtra;
 use Honed\Core\Concerns\HasIcon;
@@ -21,11 +22,10 @@ use Illuminate\Support\Traits\ForwardsCalls;
 /**
  * @extends Primitive<string,mixed>
  */
-abstract class Action extends Primitive implements ResolvesArrayable
+abstract class Action extends Primitive implements ResolvesArrayable, Executes
 {
     use Allowable;
     use ForwardsCalls;
-    use HasAction;
     use HasConfirm;
     use HasExtra;
     use HasIcon;

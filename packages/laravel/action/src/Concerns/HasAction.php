@@ -22,14 +22,6 @@ trait HasAction
     protected $action;
 
     /**
-     * Execute the action handler using the provided data.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $parameter
-     * @return mixed
-     */
-    abstract public function execute($parameter);
-
-    /**
      * Set the action handler.
      *
      * @param  \Closure|class-string<\Honed\Action\Contracts\Actionable>  $action
