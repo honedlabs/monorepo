@@ -179,12 +179,14 @@ class Column extends Primitive
     {
         if (! $sort || $sort instanceof Sort) {
             $this->sort = $sort;
-        } else {
-            $name = \is_string($sort) ? $sort : $this->getName();
 
-            $this->sort = Sort::make($name, $this->getLabel())
-                ->alias($this->getParameter());
+            return $this;
         }
+
+        $name = \is_string($sort) ? $sort : $this->getName();
+
+        $this->sort = Sort::make($name, $this->getLabel())
+            ->alias($this->getParameter());
 
         return $this;
     }
@@ -208,7 +210,6 @@ class Column extends Primitive
     {
         return (bool) $this->sort;
     }
-    
 
     /**
      * Set the column as searchable.
@@ -288,44 +289,6 @@ class Column extends Primitive
     }
 
     /**
-     * Get the sort instance as an array.
-     *
-     * @return array<string,mixed>
-     */
-    public function sortToArray()
-    {
-        $sort = $this->getSort();
-
-        if (! $sort) {
-            return [];
-        }
-
-        return [
-            'active' => $sort->isActive(),
-            'direction' => $sort->getDirection(),
-            'next' => $sort->getNextDirection(),
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray()
-    {
-        return [
-            'name' => $this->getParameter(),
-            'label' => $this->getLabel(),
-            'type' => $this->getType(),
-            'hidden' => $this->isHidden(),
-            'active' => $this->isActive(),
-            'toggleable' => $this->isToggleable(),
-            'icon' => $this->getIcon(),
-            'class' => $this->getClass(),
-            'sort' => $this->sortToArray(),
-        ];
-    }
-
-    /**
      * Get the parameter for the column.
      *
      * @return string
@@ -362,26 +325,41 @@ class Column extends Primitive
         return $value ?? $this->getFallback();
     }
 
-    // This should not be here, move to pipeline
     /**
-     * Get the value of the column to form a record.
+     * Get the sort instance as an array.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  array<string,mixed>  $named
-     * @param  array<class-string,mixed>  $typed
-     * @return array<string,array{value: mixed, extra: mixed}>
+     * @return array<string,mixed>
      */
-    public function createRecord($model, $named = [], $typed = [])
+    public function sortToArray()
     {
-        $value = $this->hasValue()
-            ? $this->evaluate($this->getValue(), $named, $typed)
-            : Arr::get($model, $this->getName());
+        $sort = $this->getSort();
+
+        if (! $sort) {
+            return [];
+        }
 
         return [
-            $this->getParameter() => [
-                'value' => $this->apply($value),
-                'extra' => $this->resolveExtra($named, $typed),
-            ],
+            'active' => $sort->isActive(),
+            'direction' => $sort->getDirection(),
+            'next' => $sort->getNextDirection(),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return [
+            'name' => $this->getParameter(),
+            'label' => $this->getLabel(),
+            'type' => $this->getType(),
+            'hidden' => $this->isHidden(),
+            'active' => $this->isActive(),
+            'toggleable' => $this->isToggleable(),
+            'icon' => $this->getIcon(),
+            'class' => $this->getClass(),
+            'sort' => $this->sortToArray(),
         ];
     }
 }

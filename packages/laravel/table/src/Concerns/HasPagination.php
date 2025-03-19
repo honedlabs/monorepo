@@ -51,6 +51,13 @@ trait HasPagination
     protected $recordsKey;
 
     /**
+     * The number of page links to show either side of the current page.
+     *
+     * @var int|null
+     */
+    protected $window;
+
+    /**
      * The records per page options if dynamic.
      *
      * @var array<int,\Honed\Table\PerPageRecord>
@@ -58,17 +65,37 @@ trait HasPagination
     protected $recordsPerPage = [];
 
     /**
-     * Retrieve the default paginator for the table.
+     * Set the paginator type.
+     *
+     * @param 'cursor'|'simple'|'length-aware'|'collection'|string $paginator
+     * @return $this
+     */
+    public function withPaginator($paginator)
+    {
+        $this->paginator = $paginator;
+
+        return $this;
+    }
+
+    /**
+     * Get the paginator type.
      *
      * @return 'cursor'|'simple'|'length-aware'|'collection'|string
      */
     public function getPaginator()
     {
-        return $this->paginator ?? static::fallbackPaginator();
-    }
+        if (isset($this->paginator)) {
+            return $this->paginator;
+        }
 
+        if (\method_exists($this, 'paginator')) {
+            return $this->paginator();
+        }
+
+        return static::fallbackPaginator();
+    }
     /**
-     * Retrieve the default paginator for the table.
+     * Get the paginator type from the config.
      *
      * @return 'cursor'|'simple'|'length-aware'|'collection'|string
      */
@@ -78,7 +105,20 @@ trait HasPagination
     }
 
     /**
-     * Retrieve the pagination options for the table.
+     * Set the pagination options.
+     *
+     * @param int|array<int,int> $pagination
+     * @return $this
+     */
+    public function withPagination($pagination)
+    {
+        $this->pagination = $pagination;
+
+        return $this;
+    }
+
+    /**
+     * Get the pagination options.
      *
      * @return int|array<int,int>
      */
@@ -96,7 +136,7 @@ trait HasPagination
     }
 
     /**
-     * Retrieve the pagination options for the table from the config.
+     * Get the pagination options from the config.
      *
      * @return int|array<int,int>
      */
@@ -107,23 +147,184 @@ trait HasPagination
     }
 
     /**
-     * Retrieve the default pagination options for the table.
+     * Set the default pagination amount.
+     *
+     * @param int $defaultPagination
+     * @return $this
+     */
+    public function withDefaultPagination($defaultPagination)
+    {
+        $this->defaultPagination = $defaultPagination;
+
+        return $this;
+    }
+
+    /**
+     * Get the default pagination amount.
      *
      * @return int
      */
     public function getDefaultPagination()
     {
-        return $this->defaultPagination ?? static::fallbackDefaultPagination();
+        if (isset($this->defaultPagination)) {
+            return $this->defaultPagination;
+        }
+
+        if (\method_exists($this, 'defaultPagination')) {
+            return $this->defaultPagination();
+        }
+
+        return static::fallbackDefaultPagination();
     }
 
     /**
-     * Get the fallback default pagination options for the table from the config.
+     * Get the fallback default pagination amount from the config.
      *
      * @return int
      */
     public static function fallbackDefaultPagination()
     {
         return type(config('table.default_pagination', 10))->asInt();
+    }
+
+    /**
+     * Set the query parameter for the page number.
+     *
+     * @param  string  $pagesKey
+     * @return $this
+     */
+    public function withPagesKey($pagesKey)
+    {
+        $this->pagesKey = $pagesKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the query parameter for the page number.
+     *
+     * @return string
+     */
+    public function getPagesKey()
+    {
+        if (isset($this->pagesKey)) {
+            return $this->pagesKey;
+        }
+
+        if (\method_exists($this, 'pagesKey')) {
+            return $this->pagesKey();
+        }
+
+        return static::fallbackPagesKey();
+    }
+
+    /**
+     * Get the query parameter for the page number from the config.
+     *
+     * @return string
+     */
+    public static function fallbackPagesKey()
+    {
+        return type(config('table.pages_key', 'page'))->asString();
+    }
+
+    /**
+     * Set the query parameter for the number of records to show per page.
+     *
+     * @param  string  $recordsKey
+     * @return $this
+     */
+    public function withRecordsKey($recordsKey)
+    {
+        $this->recordsKey = $recordsKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the query parameter for the number of records to show per page.
+     *
+     * @return string
+     */
+    public function getRecordsKey()
+    {
+        if (isset($this->recordsKey)) {
+            return $this->recordsKey;
+        }
+
+        if (\method_exists($this, 'recordsKey')) {
+            return $this->recordsKey();
+        }
+
+        return static::fallbackRecordsKey();
+    }
+
+    /**
+     * Get the query parameter for the number of records to show per page from
+     * the config.
+     *
+     * @return string
+     */
+    public static function fallbackRecordsKey()
+    {
+        return type(config('table.records_key', 'rows'))->asString();
+    }
+
+    /**
+     * Set the number of page links to show either side of the current page.
+     *
+     * @param int $window
+     * @return $this
+     */
+    public function withWindow($window)
+    {
+        $this->window = $window;
+
+        return $this;
+    }
+
+    /**
+     * Get the number of page links to show either side of the current page.
+     *
+     * @return int
+     */
+    public function getWindow()
+    {
+        if (isset($this->window)) {
+            return $this->window;
+        }
+
+        if (\method_exists($this, 'window')) {
+            return $this->window();
+        }
+
+        return static::fallbackWindow();
+    }
+
+    /**
+     * Get the fallback number of page links to show either side of the current 
+     * page from the config.
+     *
+     * @return int
+     */
+    public static function fallbackWindow()
+    {
+        return type(config('table.window', 2))->asInt();
+    }
+
+    /**
+     * Create the record per page options for the table.
+     *
+     * @param  array<int,int>  $pagination
+     * @param  int  $active
+     * @return void
+     */
+    public function createRecordsPerPage($pagination, $active)
+    {
+        $this->recordsPerPage = \array_map(
+            static fn (int $amount) => PerPageRecord::make($amount, $active),
+            $pagination
+        );
     }
 
     /**
@@ -150,94 +351,12 @@ trait HasPagination
     }
 
     /**
-     * Set the query parameter for the page number.
-     *
-     * @param  string  $pagesKey
-     * @return $this
-     */
-    public function pagesKey($pagesKey)
-    {
-        $this->pagesKey = $pagesKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the query parameter for the page number.
-     *
-     * @return string
-     */
-    public function getPagesKey()
-    {
-        return $this->pagesKey ?? static::fallbackPagesKey();
-    }
-
-    /**
-     * Get the query parameter for the page number from the config.
-     *
-     * @return string
-     */
-    public static function fallbackPagesKey()
-    {
-        return type(config('table.pages_key', 'page'))->asString();
-    }
-
-    /**
-     * Set the query parameter for the number of records to show per page.
-     *
-     * @param  string  $recordsKey
-     * @return $this
-     */
-    public function recordsKey($recordsKey)
-    {
-        $this->recordsKey = $recordsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the query parameter for the number of records to show per page.
-     *
-     * @return string
-     */
-    public function getRecordsKey()
-    {
-        return $this->recordsKey ?? static::fallbackRecordsKey();
-    }
-
-    /**
-     * Get the query parameter for the number of records to show per page from
-     * the config.
-     *
-     * @return string
-     */
-    public static function fallbackRecordsKey()
-    {
-        return type(config('table.records_key', 'rows'))->asString();
-    }
-
-    /**
-     * Create the record per page options for the table.
-     *
-     * @param  array<int,int>  $pagination
-     * @param  int  $active
-     * @return void
-     */
-    public function createRecordsPerPage($pagination, $active)
-    {
-        $this->recordsPerPage = \array_map(
-            static fn (int $amount) => PerPageRecord::make($amount, $active),
-            $pagination
-        );
-    }
-
-    /**
      * Determine if the paginator is a length-aware paginator.
      *
      * @param  string  $paginator
      * @return bool
      */
-    protected static function isLengthAware($paginator)
+    public static function isLengthAware($paginator)
     {
         return \in_array($paginator, [
             'length-aware',
@@ -252,7 +371,7 @@ trait HasPagination
      * @param  string  $paginator
      * @return bool
      */
-    protected static function isSimple($paginator)
+    public static function isSimple($paginator)
     {
         return \in_array($paginator, [
             'simple',
@@ -267,7 +386,7 @@ trait HasPagination
      * @param  string  $paginator
      * @return bool
      */
-    protected static function isCursor($paginator)
+    public static function isCursor($paginator)
     {
         return \in_array($paginator, [
             'cursor',
@@ -282,7 +401,7 @@ trait HasPagination
      * @param  string  $paginator
      * @return bool
      */
-    protected static function isCollector($paginator)
+    public static function isCollector($paginator)
     {
         return \in_array($paginator, [
             'none',
@@ -297,7 +416,7 @@ trait HasPagination
      * @param  \Illuminate\Contracts\Pagination\LengthAwarePaginator<TModel>  $paginator
      * @return array<string, mixed>
      */
-    protected static function lengthAwarePaginator($paginator)
+    public function lengthAwarePaginator($paginator)
     {
         return \array_merge(static::simplePaginator($paginator), [
             'total' => $paginator->total(),
@@ -305,7 +424,7 @@ trait HasPagination
             'to' => $paginator->lastItem(),
             'firstLink' => $paginator->url(1),
             'lastLink' => $paginator->url($paginator->lastPage()),
-            'links' => static::createPaginatorLinks($paginator),
+            'links' => $this->createPaginatorLinks($paginator),
         ]);
     }
 
@@ -315,13 +434,12 @@ trait HasPagination
      * @param  \Illuminate\Contracts\Pagination\LengthAwarePaginator<TModel>  $paginator
      * @return array<int, array<string, mixed>>
      */
-    protected static function createPaginatorLinks($paginator)
+    public function createPaginatorLinks($paginator)
     {
         $currentPage = $paginator->currentPage();
         $lastPage = $paginator->lastPage();
-        $onEachSide = 2;
+        $onEachSide = $this->getWindow();
 
-        // Calculate window boundaries with balanced distribution
         $start = max(1, min($currentPage - $onEachSide, $lastPage - ($onEachSide * 2)));
         $end = min($lastPage, max($currentPage + $onEachSide, ($onEachSide * 2 + 1)));
 
@@ -341,7 +459,7 @@ trait HasPagination
      * @param  \Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
      * @return array<string, mixed>
      */
-    protected static function simplePaginator($paginator)
+    public static function simplePaginator($paginator)
     {
         return \array_merge(static::cursorPaginator($paginator), [
             'currentPage' => $paginator->currentPage(),
@@ -354,7 +472,7 @@ trait HasPagination
      * @param  \Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
      * @return array<string, mixed>
      */
-    protected static function cursorPaginator($paginator)
+    public static function cursorPaginator($paginator)
     {
         return \array_merge(static::collectionPaginator($paginator), [
             'prevLink' => $paginator->previousPageUrl(),
@@ -369,7 +487,7 @@ trait HasPagination
      * @param  \Illuminate\Support\Collection<int,TModel>|\Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
      * @return array<string, mixed>
      */
-    protected static function collectionPaginator($paginator)
+    public static function collectionPaginator($paginator)
     {
         return [
             'empty' => $paginator->isEmpty(),
@@ -383,7 +501,7 @@ trait HasPagination
      * @param  array<int,int>  $options
      * @return bool
      */
-    protected function invalidPagination($count, $options)
+    public function invalidPagination($count, $options)
     {
         return \is_null($count) || ! \in_array($count, $options);
     }
@@ -394,7 +512,7 @@ trait HasPagination
      * @param  \Illuminate\Http\Request  $request
      * @return int
      */
-    protected function getCount($request)
+    public function getCount($request)
     {
         $pagination = $this->getPagination();
 
@@ -432,7 +550,7 @@ trait HasPagination
      *
      * @throws \InvalidArgumentException
      */
-    protected function paginate($builder, $request)
+    public function paginate($builder, $request)
     {
         $count = $this->getCount($request);
 
