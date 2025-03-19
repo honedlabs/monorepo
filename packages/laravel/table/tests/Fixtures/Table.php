@@ -16,14 +16,14 @@ use Honed\Table\Columns\DateColumn;
 use Honed\Table\Columns\KeyColumn;
 use Honed\Table\Columns\NumberColumn;
 use Honed\Table\Columns\TextColumn;
-use Honed\Table\Table as HonedTable;
+use Honed\Table\Table as BaseTable;
 use Honed\Table\Tests\Stubs\Product;
 use Honed\Table\Tests\Stubs\Status;
 
-class Table extends HonedTable
+class Table extends BaseTable
 {
     public $toggleable = true;
-    public $remember = true;
+    public $rememberable = true;
     public $selectable = true;
     public $pagination = [10, 25, 50];
 

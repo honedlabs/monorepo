@@ -18,7 +18,7 @@ it('has paginator', function () {
 
     // Class-based
     expect($this->table)
-        ->getPaginator()->toBe(FixtureTable::Paginator)
+        ->getPaginator()->toBe(config('table.paginator'))
         ->paginator($paginator)->toBe($this->table)
         ->getPaginator()->toBe($paginator);
 
@@ -34,13 +34,13 @@ it('has pagination', function () {
 
     // Class based
     expect($this->table)
-        ->getPagination()->toEqual(FixtureTable::Pagination)
+        ->getPagination()->toEqual([10, 25, 50])
         ->pagination($pagination)->toBe($this->table)
         ->getPagination()->toEqual($pagination);
 
     // Anonymous
     expect(Table::make())
-        ->getPagination()->toBe(config('table.default_pagination'))
+        ->getPagination()->toBe(config('table.pagination'))
         ->pagination($pagination)->toBeInstanceOf(Table::class)
         ->getPagination()->toEqual($pagination);
 });
@@ -50,7 +50,7 @@ it('has default pagination', function () {
 
     // Class-based
     expect($this->table)
-        ->getDefaultPagination()->toBe(FixtureTable::DefaultPagination)
+        ->getDefaultPagination()->toBe(config('table.default_pagination'))
         ->defaultPagination($default)->toBe($this->table)
         ->getDefaultPagination()->toBe($default);
 
@@ -66,7 +66,7 @@ it('has pages key', function () {
 
     // Class-based
     expect($this->table)
-        ->getPagesKey()->toBe(FixtureTable::PagesKey)
+        ->getPagesKey()->toBe(config('table.pages_key'))
         ->pagesKey($pagesKey)->toBe($this->table)
         ->getPagesKey()->toBe($pagesKey);
 
@@ -82,7 +82,7 @@ it('has records key', function () {
 
     // Class-based
     expect($this->table)
-        ->getRecordsKey()->toBe(FixtureTable::RecordsKey)
+        ->getRecordsKey()->toBe(config('table.records_key'))
         ->recordsKey($recordsKey)->toBe($this->table)
         ->getRecordsKey()->toBe($recordsKey);
 
@@ -160,7 +160,7 @@ it('has length-aware paginator', function () {
 
 it('creates paginate records using default', function () {
     Request::create('/', 'GET', [
-        FixtureTable::RecordsKey => 1, // An invalid
+        config('table.records_key') => 1, // An invalid value
     ]);
 
     $table = FixtureTable::make()
@@ -170,13 +170,13 @@ it('creates paginate records using default', function () {
 
     expect($recordsPerPage)
         ->toBeArray()
-        ->toHaveCount(\count(FixtureTable::Pagination));
+        ->toHaveCount(\count($table->getPagination()));
 
     // Find the active one, which should be default.
     $active = collect($recordsPerPage)
         ->first(
-            fn (PerPageRecord $record) => $record->getValue() 
-                === FixtureTable::DefaultPagination
+            fn (PerPageRecord $record) => 
+                $record->getValue() === config('table.default_pagination')
         );
 
     expect($active)
@@ -184,10 +184,10 @@ it('creates paginate records using default', function () {
 });
 
 it('creates paginate records using dynamics', function () {
-    $pagination = Arr::last(FixtureTable::Pagination);
+    $pagination = Arr::last(config('table.pagination'));
 
     $request = Request::create('/', 'GET', [
-        FixtureTable::RecordsKey => $pagination,
+        config('table.records_key') => $pagination,
     ]);
 
     $table = FixtureTable::make()
@@ -198,7 +198,7 @@ it('creates paginate records using dynamics', function () {
 
     expect($recordsPerPage)
         ->toBeArray()
-        ->toHaveCount(\count(FixtureTable::Pagination));
+        ->toHaveCount(\count(config('table.pagination')));
 
     // Find the active one, which should be default.
     $active = collect($recordsPerPage)

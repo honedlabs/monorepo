@@ -1,10 +1,11 @@
 <?php
 
 use Honed\Table\Table;
+use Honed\Table\Columns\Column;
 use Honed\Table\Contracts\ShouldToggle;
+use Illuminate\Support\Facades\Request;
 use Honed\Table\Contracts\ShouldRemember;
 use Honed\Table\Tests\Fixtures\Table as FixtureTable;
-use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
     $this->table = FixtureTable::make();
@@ -13,7 +14,7 @@ beforeEach(function () {
 it('is toggleable', function () {
     // Class-based
     expect($this->table)
-        ->isToggleable()->toBe(FixtureTable::Toggle)
+        ->isToggleable()->toBe(true)
         ->toggleable(false)->toBe($this->table)
         ->isToggleable()->toBe(false);
 
@@ -39,7 +40,7 @@ it('has columns key', function () {
 
     // Class-based
     expect($this->table)
-        ->getColumnsKey()->toBe(FixtureTable::ColumnsKey)
+        ->getColumnsKey()->toBe(config('table.columns_key'))
         ->columnsKey($columnsKey)
         ->getColumnsKey()->toBe($columnsKey);
 
@@ -53,14 +54,14 @@ it('has columns key', function () {
 it('can remember', function () {
     // Class-based
     expect($this->table)
-        ->isRememberable()->toBe(FixtureTable::Remember)
-        ->remember(true)->toBe($this->table)
-        ->isRememberable()->toBe(true);
+        ->isRememberable()->toBe(true)
+        ->rememberable(false)->toBe($this->table)
+        ->isRememberable()->toBe(false);
 
     // Anonymous
     expect(Table::make())
         ->isRememberable()->toBe(config('table.remember'))
-        ->remember(true)->toBeInstanceOf(Table::class)
+        ->rememberable(true)->toBeInstanceOf(Table::class)
         ->isRememberable()->toBe(true);
 
     // Via interface
@@ -80,7 +81,7 @@ it('has cookie name', function () {
 
     // Class-based
     expect($this->table)
-        ->getCookieName()->toBe(FixtureTable::CookieName)
+        ->getCookieName()->toBe($this->table->guessCookieName())
         ->cookieName($cookieName)
         ->getCookieName()->toBe($cookieName);
         
@@ -96,20 +97,15 @@ it('has duration', function () {
 
     // Class-based
     expect($this->table)
-        ->getDuration()->toBe(FixtureTable::Duration)
-        ->duration($duration)
+        ->getDuration()->toBe(config('table.duration'))
+        ->duration($duration)->toBe($this->table)
         ->getDuration()->toBe($duration);
 
     // Anonymous
     expect(Table::make())
         ->getDuration()->toBe(config('table.duration'))
-        ->duration($duration)
+        ->duration($duration)->toBeInstanceOf(Table::class)
         ->getDuration()->toBe($duration);
-});
-
-it('has base active columns', function () {
-    expect($this->table->build())
-        ->getActiveColumns()->toHaveCount(7);
 });
 
 it('toggles column activity', function () {
@@ -119,8 +115,16 @@ it('toggles column activity', function () {
         $key => \sprintf('%s%s%s', 'cost', $this->table->getDelimiter(), 'created_at')
     ]);
 
-    expect($this->table->request($request)->build())
-        ->getActiveColumns()->toHaveCount(5);
+    $this->table->request($request)->build();
+
+    $columns = \array_values(
+        \array_filter(
+            $this->table->getColumns(),
+            static fn (Column $column) => $column->isActive()
+        )
+    );
+
+    expect($columns)->toHaveCount(5);
 });
 
 it('can disable toggling', function () {
@@ -132,5 +136,5 @@ it('can disable toggling', function () {
         ->isWithoutToggling()->toBeFalse()
         ->withoutToggling()->toBe($this->table)
         ->isWithoutToggling()->toBeTrue()
-        ->toggleColumns($request, $columns)->toHaveCount(7);
+        ->toggle($request, $columns)->toHaveCount(7);
 });

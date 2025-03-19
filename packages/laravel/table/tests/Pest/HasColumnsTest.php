@@ -3,26 +3,30 @@
 declare(strict_types=1);
 
 use Honed\Table\Columns\Column;
-use Honed\Table\Table as BaseTable;
-use Honed\Table\Tests\Fixtures\Table;
+use Honed\Table\Table;
+use Honed\Table\Tests\Fixtures\Table as FixtureTable;
 use Honed\Table\Columns\KeyColumn;
 
 beforeEach(function () {
-    $this->table = Table::make();
+    $this->table = FixtureTable::make();
 });
 
 it('has columns', function () {
+    // Class-based
     expect($this->table)
         ->hasColumns()->toBeTrue()
-        ->getColumns()->toHaveCount(9)
-        ->getActiveColumns()->toHaveCount(9);
+        ->getColumns()->toHaveCount(9);
 
-    expect(BaseTable::make())
-        ->columns([Column::make('id')->allow(false), Column::make('public_id')])
+    // Anonymous
+    expect(Table::make())
+        ->hasColumns()->toBeFalse()
+        ->columns([Column::make('id')->allow(false), Column::make('public_id')])->toBeInstanceOf(Table::class)
+        ->hasColumns()->toBeTrue()
         ->getColumns()->toHaveCount(1);
 });
 
 it('has sortable columns', function () {
+    // Class-based
     expect($this->table)
         ->getColumnSorts()->toHaveCount(2)
         ->each(fn ($column) => $column
@@ -30,7 +34,8 @@ it('has sortable columns', function () {
             ->isSortable()->toBeTrue()
         );
 
-    expect(BaseTable::make())
+    // Anonymous
+    expect(Table::make())
         ->getColumnSorts()->toBeEmpty();
 });
 
@@ -42,7 +47,7 @@ it('has searchable columns', function () {
             ->isSearchable()->toBeTrue()
         );
 
-    expect(BaseTable::make())
+    expect(Table::make())
         ->getColumnSearches()->toBeEmpty();
 });
 
@@ -52,7 +57,7 @@ it('has a key column', function () {
         ->getName()->toBe('id')
         ->isKey()->toBeTrue();
 
-    expect(BaseTable::make()->getKeyColumn())
+    expect(Table::make()->getKeyColumn())
         ->toBeNull();
 });
 

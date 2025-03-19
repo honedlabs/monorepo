@@ -25,7 +25,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Honed\Table\Concerns\HasTableBindings;
 use Honed\Action\Concerns\HasParameterNames;
 use Honed\Action\InlineAction;
+use Honed\Refine\Pipelines\AfterRefining;
+use Honed\Refine\Pipelines\BeforeRefining;
+use Honed\Refine\Pipelines\RefineFilters;
+use Honed\Refine\Pipelines\RefineSearches;
+use Honed\Refine\Pipelines\RefineSorts;
+use Honed\Table\Pipelines\ToggleColumns;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Pipeline\Pipeline;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -220,8 +227,7 @@ class Table extends Refine implements UrlRoutable
      */
     public function isWithAttributes()
     {
-        return (bool) ($this->withAttributes 
-            ?? static::fallbackWithAttributes());
+        return (bool) ($this->withAttributes ?? static::fallbackWithAttributes());
     }
 
     /**
@@ -406,13 +412,21 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    protected function pipeline(
-        $builder,
-        $request,
-        $sorts = [],
-        $filters = [],
-        $searches = []
-    ) {
+    protected function pipeline() {
+        App::make(Pipeline::class)
+            ->send($this)
+            ->through([
+                BeforeRefining::class,
+                ToggleColumns::class,
+                RefineSearches::class,
+                RefineFilters::class,
+                RefineSorts::class,
+                SelectColumns::class,
+                QueryColumns::class,
+                AfterRefining::class,
+                RetrieveRecords::class,
+            ])->thenReturn();
+
         $columns = $this->toggle($request, $this->getColumns());
 
         /** @var array<int,\Honed\Refine\Sort<TModel, TBuilder>> */

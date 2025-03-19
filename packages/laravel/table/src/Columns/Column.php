@@ -18,6 +18,7 @@ use Honed\Core\Concerns\IsHidden;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\Transformable;
 use Honed\Core\Concerns\HasQueryClosure;
+use Honed\Core\Concerns\HasValue;
 use Honed\Refine\Sort;
 use Honed\Table\Concerns\IsDisplayable;
 use Honed\Table\Concerns\HasClass;
@@ -44,6 +45,7 @@ class Column extends Primitive
     use IsActive;
     use IsHidden;
     use Transformable;
+    use HasValue;
     /** @use HasQueryClosure<TModel, TBuilder> */
     use HasQueryClosure;
 
@@ -62,13 +64,6 @@ class Column extends Primitive
     protected $fallback;
 
     /**
-     * Set a column as a callback or fixed value.
-     *
-     * @var mixed
-     */
-    protected $as;
-
-    /**
      * The column sort.
      * 
      * @var \Honed\Refine\Sort<TModel, TBuilder>|null
@@ -80,8 +75,21 @@ class Column extends Primitive
      * 
      * @var bool
      */
-    protected $searchable = false;
+    protected $search = false;
 
+    /**
+     * Whether to have a simple filter on the column.
+     * 
+     * @var bool
+     */
+    protected $filter = false;
+
+    /**
+     * How to select this column
+     * 
+     * @var string|bool|array<int,string>
+     */
+    protected $select = true;
 
     /**
      * Create a new column instance.
@@ -97,6 +105,13 @@ class Column extends Primitive
             ->label($label ?? static::makeLabel($name));
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function setUp()
+    {
+        $this->active(true);
+    }
 
     /**
      * Set this column to represent the record key.
@@ -121,7 +136,7 @@ class Column extends Primitive
         return $this->key;
     }
 
-        /**
+    /**
      * Set the fallback value for the column.
      *
      * @param  mixed  $fallback
@@ -145,62 +160,43 @@ class Column extends Primitive
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        $this->active(true);
-        $this->type('column');
-    }
-
-    /**
-     * Set how the column value is retrieved.
-     *
-     * @param  mixed  $as
-     * @return $this
-     */
-    public function as($as)
-    {
-        $this->as = $as;
-
-        return $this;
-    }
-
-    /**
-     * Get how the column value is retrieved.
-     *
-     * @return mixed
-     */
-    public function getAs()
-    {
-        return $this->as;
-    }
-
-    /**
-     * Determine if the column has a retrieved value.
-     *
+     * Determine if the column has a fallback value.
+     * 
      * @return bool
      */
-    public function hasAs()
+    public function hasFallback()
     {
-        return isset($this->as);
+        return isset($this->fallback);
     }
 
     /**
      * Set the column as sortable.
      *
      * @param  \Honed\Refine\Sort<TModel, TBuilder>|string|bool  $sortable
-     * @param  string|null  $alias
-     * @param  bool  $default
      * @return $this
      */
-    public function sortable($sortable = true, $alias = null, $default = false)
+    public function sort($sort = true)
     {
-        if (! $sortable) {
-            return $this->disableSorting();
+        if (! $sort || $sort instanceof Sort) {
+            $this->sort = $sort;
+        } else {
+            $name = \is_string($sort) ? $sort : $this->getName();
+
+            $this->sort = Sort::make($name, $this->getLabel())
+                ->alias($this->getParameter());
         }
 
-        return $this->enableSorting($sortable, $alias, $default);
+        return $this;
+    }
+
+    /**
+     * Get the sort.
+     *
+     * @return \Honed\Refine\Sort<TModel, TBuilder>|null
+     */
+    public function getSort()
+    {
+        return $this->sort;
     }
 
     /**
@@ -210,54 +206,85 @@ class Column extends Primitive
      */
     public function isSortable()
     {
-        return isset($this->sort);
+        return (bool) $this->sort;
     }
+    
 
     /**
-     * Get the sort instance.
+     * Set the column as searchable.
      *
-     * @return \Honed\Refine\Sort<TModel, TBuilder>|null
-     */
-    public function getSort()
-    {
-        return $this->sort;
-    }
-
-        /**
-     * Disable sorting for the column.
-     *
+     * @param  bool  $search
      * @return $this
      */
-    protected function disableSorting()
+    public function search($search = true)
     {
-        $this->sort = null;
+        $this->search = $search;
 
         return $this;
     }
 
     /**
-     * Enable sorting for the column.
+     * Determine if the column is searchable.
      *
-     * @param  \Honed\Refine\Sort<TModel, TBuilder>|string|bool  $sortable
-     * @param  string|null  $alias
-     * @param  bool  $default
+     * @return bool
+     */
+    public function isSearchable()
+    {
+        return $this->search;
+    }
+
+    /**
+     * Set the column as filterable.
+     *
+     * @param  bool  $filter
      * @return $this
      */
-    protected function enableSorting($sortable = true, $alias = null, $default = false)
+    public function filter($filter = true)
     {
-        $this->sort = match (true) {
-            $sortable instanceof Sort => $sortable,
+        $this->filter = $filter;
+    }
 
-            \is_string($sortable) => Sort::make($sortable)
-                ->alias($alias ?? $this->getParameter())
-                ->default($default),
+    /**
+     * Determine if the column is filterable.
+     *
+     * @return bool
+     */
+    public function isFilterable()
+    {
+        return $this->filter;
+    }
 
-            default => Sort::make($this->getName())
-                ->alias($alias ?? $this->getParameter())
-                ->default($default),
-        };
+    /**
+     * Set how to select this column.
+     * 
+     * @param  string|bool|array<int,string>  $select
+     * @return $this
+     */
+    public function select($select)
+    {
+        $this->select = $select;
 
         return $this;
+    }
+
+    /**
+     * Get the properties to select.
+     *
+     * @return string|bool|array<int,string>
+     */
+    public function getSelect()
+    {
+        return $this->select;
+    }
+
+    /**
+     * Determine if the column can be selected.
+     * 
+     * @return bool
+     */
+    public function isSelectable()
+    {
+        return (bool) $this->select;
     }
 
     /**
@@ -281,26 +308,21 @@ class Column extends Primitive
     }
 
     /**
-     * Set the column as searchable.
-     *
-     * @param  bool  $searchable
-     * @return $this
+     * {@inheritdoc}
      */
-    public function searchable($searchable = true)
+    public function toArray()
     {
-        $this->searchable = $searchable;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the column is searchable.
-     *
-     * @return bool
-     */
-    public function isSearchable()
-    {
-        return $this->searchable;
+        return [
+            'name' => $this->getParameter(),
+            'label' => $this->getLabel(),
+            'type' => $this->getType(),
+            'hidden' => $this->isHidden(),
+            'active' => $this->isActive(),
+            'toggleable' => $this->isToggleable(),
+            'icon' => $this->getIcon(),
+            'class' => $this->getClass(),
+            'sort' => $this->sortToArray(),
+        ];
     }
 
     /**
@@ -340,24 +362,7 @@ class Column extends Primitive
         return $value ?? $this->getFallback();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray()
-    {
-        return [
-            'name' => $this->getParameter(),
-            'label' => $this->getLabel(),
-            'type' => $this->getType(),
-            'hidden' => $this->isHidden(),
-            'active' => $this->isActive(),
-            'toggleable' => $this->isToggleable(),
-            'icon' => $this->getIcon(),
-            'class' => $this->getClass(),
-            'sort' => $this->isSortable() ? $this->sortToArray() : null,
-        ];
-    }
-
+    // This should not be here, move to pipeline
     /**
      * Get the value of the column to form a record.
      *
@@ -366,12 +371,10 @@ class Column extends Primitive
      * @param  array<class-string,mixed>  $typed
      * @return array<string,array{value: mixed, extra: mixed}>
      */
-    public function createRecord($model, $named, $typed)
+    public function createRecord($model, $named = [], $typed = [])
     {
-        $as = $this->getAs();
-
-        $value = $as
-            ? $this->evaluate($as, $named, $typed)
+        $value = $this->hasValue()
+            ? $this->evaluate($this->getValue(), $named, $typed)
             : Arr::get($model, $this->getName());
 
         return [
