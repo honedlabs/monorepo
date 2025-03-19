@@ -9,13 +9,14 @@ use Honed\Core\Interpret;
 use Honed\Refine\Refine;
 use Illuminate\Http\Request;
 
-final readonly class RefineSorts
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ */
+class RefineSorts
 {
     /**
      * Apply the sorts refining logic.
-     *
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
      *
      * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
      * @return \Honed\Refine\Refine<TModel, TBuilder>

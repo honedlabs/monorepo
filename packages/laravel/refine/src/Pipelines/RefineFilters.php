@@ -7,13 +7,14 @@ namespace Honed\Refine\Pipelines;
 use Closure;
 use Honed\Refine\Refine;
 
-final readonly class RefineFilters
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ */
+class RefineFilters
 {
     /**
      * Apply the filters to the query.
-     *
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
      *
      * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
      * @return \Honed\Refine\Refine<TModel, TBuilder>

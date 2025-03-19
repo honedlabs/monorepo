@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Refine\Concerns;
 
 use Honed\Refine\Filter;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -37,29 +37,15 @@ trait HasFilters
     /**
      * Merge a set of filters with the existing filters.
      *
-     * @param  array<int, \Honed\Refine\Filter<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Filter<TModel, TBuilder>>  $filters
+     * @param  array<int, \Honed\Refine\Filter<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Filter<TModel, TBuilder>>  ...$filters
      * @return $this
      */
-    public function addFilters($filters)
+    public function withFilters(...$filters)
     {
-        if ($filters instanceof Collection) {
-            $filters = $filters->all();
-        }
+        /** @var array<int, \Honed\Refine\Filter<TModel, TBuilder>> $filters */
+        $filters = Arr::flatten($filters);
 
         $this->filters = \array_merge($this->filters ?? [], $filters);
-
-        return $this;
-    }
-
-    /**
-     * Add a single filter to the list of filters.
-     *
-     * @param  \Honed\Refine\Filter<TModel, TBuilder>  $filter
-     * @return $this
-     */
-    public function addFilter($filter)
-    {
-        $this->filters[] = $filter;
 
         return $this;
     }

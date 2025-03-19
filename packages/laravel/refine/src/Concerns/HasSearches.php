@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Refine\Concerns;
 
 use Honed\Refine\Search;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -65,29 +65,15 @@ trait HasSearches
     /**
      * Merge a set of searches with the existing searches.
      *
-     * @param  array<int, \Honed\Refine\Search<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Search<TModel, TBuilder>>  $searches
+     * @param  array<int, \Honed\Refine\Search<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Search<TModel, TBuilder>>  ...$searches
      * @return $this
      */
-    public function addSearches($searches)
+    public function withSearches(...$searches)
     {
-        if ($searches instanceof Collection) {
-            $searches = $searches->all();
-        }
+        /** @var array<int, \Honed\Refine\Search<TModel, TBuilder>> $searches */
+        $searches = Arr::flatten($searches);
 
         $this->searches = \array_merge($this->searches ?? [], $searches);
-
-        return $this;
-    }
-
-    /**
-     * Add a single search to the list of searches.
-     *
-     * @param  \Honed\Refine\Search<TModel, TBuilder>  $search
-     * @return $this
-     */
-    public function addSearch($search)
-    {
-        $this->searches[] = $search;
 
         return $this;
     }

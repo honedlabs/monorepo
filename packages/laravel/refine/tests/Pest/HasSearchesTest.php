@@ -18,24 +18,24 @@ it('is empty by default', function () {
 
 it('adds searches', function () {
     expect($this->test)
-        ->addSearches([Search::make('name')])->toBe($this->test)
-        ->addSearches([Search::make('price')])->toBe($this->test)
+        ->withSearches([Search::make('name')])->toBe($this->test)
+        ->withSearches([Search::make('price')])->toBe($this->test)
+        ->hasSearches()->toBeTrue()
+        ->getSearches()->toHaveCount(2);
+});
+
+it('adds searches variadically', function () {
+    expect($this->test)
+        ->withSearches(Search::make('name'), Search::make('price'))->toBe($this->test)
         ->hasSearches()->toBeTrue()
         ->getSearches()->toHaveCount(2);
 });
 
 it('adds searches collection', function () {
     expect($this->test)
-        ->addSearches(collect([Search::make('name'), Search::make('price')]))->toBe($this->test)
+        ->withSearches(collect([Search::make('name'), Search::make('price')]))->toBe($this->test)
         ->hasSearches()->toBeTrue()
         ->getSearches()->toHaveCount(2);
-});
-
-it('adds search', function () {
-    expect($this->test)
-        ->addSearch(Search::make('name'))->toBe($this->test)
-        ->hasSearches()->toBeTrue()
-        ->getSearches()->toHaveCount(1);
 });
 
 it('has searches key', function () {
@@ -86,7 +86,7 @@ it('without searches', function () {
 
 it('searches to array', function () {
     expect($this->test)
-        ->addSearches([Search::make('name'), Search::make('price')])->toBe($this->test)
+        ->withSearches([Search::make('name'), Search::make('price')])->toBe($this->test)
         ->searchesToArray()->toBeEmpty();
 
     expect($this->test->match())
@@ -104,7 +104,7 @@ it('searches to array', function () {
 
 it('hides searches from serialization', function () {
     expect($this->test->match())
-        ->addSearches([Search::make('name')])->toBe($this->test)
+        ->withSearches([Search::make('name')])->toBe($this->test)
         ->searchesToArray()->toHaveCount(1)
         ->withoutSearches()->toBe($this->test)
         ->searchesToArray()->toBeEmpty();

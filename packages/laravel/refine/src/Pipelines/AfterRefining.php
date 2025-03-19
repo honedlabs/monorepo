@@ -7,7 +7,7 @@ namespace Honed\Refine\Pipelines;
 use Closure;
 use Honed\Refine\Refine;
 
-final readonly class AfterRefining
+class AfterRefining
 {
     /**
      * Apply the after refining logic.

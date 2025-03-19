@@ -6,7 +6,6 @@ namespace Honed\Refine\Concerns;
 
 use Honed\Refine\Sort;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -45,29 +44,15 @@ trait HasSorts
     /**
      * Merge a set of sorts with the existing sorts.
      *
-     * @param  array<int, \Honed\Refine\Sort<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Sort<TModel, TBuilder>>  $sorts
+     * @param  array<int, \Honed\Refine\Sort<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Sort<TModel, TBuilder>>  ...$sorts
      * @return $this
      */
-    public function addSorts($sorts)
+    public function withSorts(...$sorts)
     {
-        if ($sorts instanceof Collection) {
-            $sorts = $sorts->all();
-        }
+        /** @var array<int, \Honed\Refine\Sort<TModel, TBuilder>> $sorts */
+        $sorts = Arr::flatten($sorts);
 
         $this->sorts = \array_merge($this->sorts ?? [], $sorts);
-
-        return $this;
-    }
-
-    /**
-     * Add a single sort to the list of sorts.
-     *
-     * @param  \Honed\Refine\Sort<TModel, TBuilder>  $sort
-     * @return $this
-     */
-    public function addSort($sort)
-    {
-        $this->sorts[] = $sort;
 
         return $this;
     }

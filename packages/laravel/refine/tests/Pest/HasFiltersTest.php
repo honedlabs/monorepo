@@ -18,24 +18,24 @@ it('is empty by default', function () {
 
 it('adds filters', function () {
     expect($this->test)
-        ->addFilters([Filter::make('name')])->toBe($this->test)
-        ->addFilters([Filter::make('price')])->toBe($this->test)
+        ->withFilters([Filter::make('name')])->toBe($this->test)
+        ->withFilters([Filter::make('price')])->toBe($this->test)
+        ->hasFilters()->toBeTrue()
+        ->getFilters()->toHaveCount(2);
+});
+
+it('adds filters variadically', function () {
+    expect($this->test)
+        ->withFilters(Filter::make('name'), Filter::make('price'))->toBe($this->test)
         ->hasFilters()->toBeTrue()
         ->getFilters()->toHaveCount(2);
 });
 
 it('adds filters collection', function () {
     expect($this->test)
-        ->addFilters(collect([Filter::make('name'), Filter::make('price')]))->toBe($this->test)
+        ->withFilters(collect([Filter::make('name'), Filter::make('price')]))->toBe($this->test)
         ->hasFilters()->toBeTrue()
         ->getFilters()->toHaveCount(2);
-});
-
-it('adds filter', function () {
-    expect($this->test)
-        ->addFilter(Filter::make('name'))->toBe($this->test)
-        ->hasFilters()->toBeTrue()
-        ->getFilters()->toHaveCount(1);
 });
 
 it('is filtering', function () {
@@ -54,7 +54,7 @@ it('without filters', function () {
 
 it('filters to array', function () {
     expect($this->test)
-        ->addFilters([Filter::make('name'), Filter::make('price')])->toBe($this->test)
+        ->withFilters([Filter::make('name'), Filter::make('price')])->toBe($this->test)
         ->filtersToArray()->toHaveCount(2)
         ->each->scoped(fn ($filter) => $filter
             ->toHaveKeys([
@@ -72,7 +72,7 @@ it('filters to array', function () {
 
 it('hides filters from serialization', function () {
     expect($this->test)
-        ->addFilters([Filter::make('name')])->toBe($this->test)
+        ->withFilters([Filter::make('name')])->toBe($this->test)
         ->filtersToArray()->toHaveCount(1)
         ->withoutFilters()->toBe($this->test)
         ->filtersToArray()->toBeEmpty();

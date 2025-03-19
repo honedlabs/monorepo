@@ -9,13 +9,14 @@ use Honed\Core\Interpret;
 use Honed\Refine\Refine;
 use Illuminate\Http\Request;
 
-final readonly class RefineSearches
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ */
+class RefineSearches
 {
     /**
      * Apply the searches to the query.
-     *
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
      *
      * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
      * @return \Honed\Refine\Refine<TModel, TBuilder>
@@ -77,5 +78,6 @@ final readonly class RefineSearches
     public function columns(Request $request, string $key, string $delimiter): ?array
     {
         return Interpret::array($request, $key, $delimiter, 'string');
+
     }
 }

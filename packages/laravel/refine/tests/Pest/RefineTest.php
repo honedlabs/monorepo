@@ -105,7 +105,7 @@ it('forwards calls to the builder', function () {
 });
 
 it('has array representation', function () {
-    $this->test->refiners([
+    $this->test->with([
         Filter::make('name'),
         Sort::make('name'),
         Search::make('name'),
@@ -124,7 +124,7 @@ it('has array representation', function () {
 });
 
 it('has array representation with matches', function () {
-    $this->test->refiners([
+    $this->test->with([
         Filter::make('name'),
         Sort::make('name'),
         Search::make('name'),

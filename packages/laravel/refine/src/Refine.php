@@ -182,16 +182,24 @@ class Refine extends Primitive
      * @param  array<int, \Honed\Refine\Refiner<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Refiner<TModel, TBuilder>>  $refiners
      * @return $this
      */
-    public function refiners($refiners)
+    public function with($refiners)
     {
+        $sorts = [];
+        $filters = [];
+        $searches = [];
+
         foreach ($refiners as $refiner) {
             match (true) {
-                $refiner instanceof Filter => $this->addFilter($refiner),
-                $refiner instanceof Sort => $this->addSort($refiner),
-                $refiner instanceof Search => $this->addSearch($refiner),
+                $refiner instanceof Filter => $filters[] = $refiner,
+                $refiner instanceof Sort => $sorts[] = $refiner,
+                $refiner instanceof Search => $searches[] = $refiner,
                 default => null,
             };
         }
+
+        $this->withSorts($sorts);
+        $this->withFilters($filters);
+        $this->withSearches($searches);
 
         return $this;
     }
@@ -367,19 +375,19 @@ class Refine extends Primitive
                 /** @var array<int, \Honed\Refine\Sort<TModel, TBuilder>> $args */
                 $args = $parameters[0];
 
-                return $this->addSorts($args);
+                return $this->withSorts($args);
 
             case 'filters':
                 /** @var array<int, \Honed\Refine\Filter<TModel, TBuilder>> $args */
                 $args = $parameters[0];
 
-                return $this->addFilters($args);
+                return $this->withFilters($args);
 
             case 'searches':
                 /** @var array<int, \Honed\Refine\Search<TModel, TBuilder>> $args */
                 $args = $parameters[0];
 
-                return $this->addSearches($args);
+                return $this->withSearches($args);
 
             default:
                 return $this->forwardBuilderCall($method, $parameters);
