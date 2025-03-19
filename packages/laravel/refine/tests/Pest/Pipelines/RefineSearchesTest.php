@@ -3,22 +3,23 @@
 declare(strict_types=1);
 
 use Honed\Refine\Tests\Stubs\Product;
-use Honed\Refine\Pipelines\RefineFilters;
+use Honed\Refine\Pipelines\RefineSearches;
 use Honed\Refine\Refine;
-use Honed\Refine\Filter;
+use Honed\Refine\Search;
 use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
     $this->builder = Product::query();
-    $this->pipe = new RefineFilters();
+    $this->pipe = new RefineSearches();
     $this->closure = fn ($refine) => $refine;
 
-    $filters = [
-        Filter::make('price')->integer(),
+    $searches = [
+        Search::make('name'),
+        Search::make('description'),
     ];
 
     $this->refine = Refine::make($this->builder)
-        ->filters($filters);
+        ->searches($searches);
 
 });
 
@@ -33,11 +34,14 @@ it('does not refine', function () {
 
     expect($this->refine->getFor()->getQuery()->wheres)
         ->toBeEmpty();
+
+    expect($this->refine->getTerm())
+        ->toBeNull();
 });
 
 it('refines', function () {
     $request = Request::create('/', 'GET', [
-        'price' => 100
+        config('refine.searches_key') => 'search+value'
     ]);
 
     $this->refine->request($request);
@@ -47,15 +51,19 @@ it('refines', function () {
     $builder = $this->refine->getFor();
 
     expect($builder->getQuery()->wheres)
-        ->toBeOnlyWhere($builder->qualifyColumn('price'), 100);
+        ->{0}->toBeSearch($builder->qualifyColumn('name'), 'and')
+        ->{1}->toBeSearch($builder->qualifyColumn('description'), 'or');
+
+    expect($this->refine->getTerm())
+        ->toBe('search value');
 });
 
 it('disables', function () {
     $request = Request::create('/', 'GET', [
-        'price' => 100
+        config('refine.searches_key') => 'search+value'
     ]);
 
-    $this->refine->request($request)->filtering(false);
+    $this->refine->request($request)->searching(false);
 
     ($this->pipe)($this->refine, $this->closure);
 
@@ -63,6 +71,28 @@ it('disables', function () {
 
     expect($builder->getQuery()->wheres)
         ->toBeEmpty();
+
+    expect($this->refine->getTerm())
+        ->toBeNull();
+});
+
+it('refines with match', function () {
+    $request = Request::create('/', 'GET', [
+        config('refine.searches_key') => 'search+value',
+        config('refine.matches_key') => 'name'
+    ]);
+
+    $this->refine->request($request);
+
+    ($this->pipe)($this->refine, $this->closure);
+
+    $builder = $this->refine->getFor();
+
+    expect($builder->getQuery()->wheres)
+        ->toBeOnlySearch($builder->qualifyColumn('name'));
+
+    expect($this->refine->getTerm())
+        ->toBe('search value');
 });
 
 describe('scope', function () {
@@ -72,7 +102,7 @@ describe('scope', function () {
 
     it('does not refine', function () {
         $request = Request::create('/', 'GET', [
-            'price' => 100
+            'invalid' => 'search+value'
         ]);
 
         $this->refine->request($request);
@@ -83,11 +113,15 @@ describe('scope', function () {
 
         expect($builder->getQuery()->wheres)
             ->toBeEmpty();
+
+        expect($this->refine->getTerm())
+            ->toBeNull();
     });
 
     it('refines', function () {
         $request = Request::create('/', 'GET', [
-            $this->refine->formatScope('price') => 100
+            $this->refine->formatScope(config('refine.searches_key')) => 'search+value',
+            $this->refine->formatScope(config('refine.matches_key')) => 'description'
         ]);
 
         $this->refine->request($request);
@@ -97,6 +131,9 @@ describe('scope', function () {
         $builder = $this->refine->getFor();
 
         expect($builder->getQuery()->wheres)
-            ->toBeOnlyWhere($builder->qualifyColumn('price'), 100);
+            ->toBeOnlySearch($builder->qualifyColumn('description'));
+
+        expect($this->refine->getTerm())
+            ->toBe('search value');
     }); 
 });

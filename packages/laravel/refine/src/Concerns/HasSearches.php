@@ -120,7 +120,7 @@ trait HasSearches
      *
      * @return bool
      */
-    public function hasSearch()
+    public function hasSearches()
     {
         return filled($this->getSearches());
     }
@@ -209,9 +209,9 @@ trait HasSearches
      *
      * @return bool
      */
-    public function isMatching()
+    public function matches()
     {
-        return (bool) ($this->match ?? static::fallbackMatching());
+        return (bool) ($this->match ?? static::fallbackMatches());
     }
 
     /**
@@ -219,7 +219,7 @@ trait HasSearches
      *
      * @return bool
      */
-    public static function fallbackMatching()
+    public static function fallbackMatches()
     {
         return (bool) config('refine.match', false);
     }
@@ -300,7 +300,7 @@ trait HasSearches
      */
     public function searchesToArray()
     {
-        if ($this->isWithoutSearches() || ! $this->isMatching()) {
+        if ($this->isWithoutSearches() || ! $this->matches()) {
             return [];
         }
 
