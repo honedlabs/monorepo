@@ -30,6 +30,12 @@ use Honed\Refine\Pipelines\BeforeRefining;
 use Honed\Refine\Pipelines\RefineFilters;
 use Honed\Refine\Pipelines\RefineSearches;
 use Honed\Refine\Pipelines\RefineSorts;
+use Honed\Table\Pipelines\CleanupTable;
+use Honed\Table\Pipelines\MergeColumnFilters;
+use Honed\Table\Pipelines\MergeColumnSearches;
+use Honed\Table\Pipelines\Paginate;
+use Honed\Table\Pipelines\QueryColumns;
+use Honed\Table\Pipelines\SelectColumns;
 use Honed\Table\Pipelines\ToggleColumns;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Pipeline\Pipeline;
@@ -321,46 +327,6 @@ class Table extends Refine implements UrlRoutable
     }
 
     /**
-     * Toggle the columns that are displayed.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $columns
-     * @return array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>
-     */
-    public function toggle($request, $columns)
-    {
-        if (! $this->isToggleable() || $this->isWithoutToggling()) {
-            return \array_values(
-                \array_filter(
-                    $columns,
-                    static fn (Column $column) => $column->display()
-                )
-            );
-        }
-
-        $key = $this->getColumnsKey();
-
-        /** @var array<int,string>|null */
-        $params = Interpreter::interpretArray(
-            $request, 
-            $this->formatScope($key), 
-            $this->getDelimiter(), 
-            'string'
-        );
-
-        if ($this->isRememberable()) {
-            $params = $this->configureCookie($request, $params);
-        }
-
-        return \array_values(
-            \array_filter(
-                $columns,
-                static fn (Column $column) => $column->display($params)
-            )
-        );
-    }
-
-    /**
      * Retrieve the records from the underlying builder resource.
      *
      * @param  TBuilder  $builder
@@ -418,46 +384,17 @@ class Table extends Refine implements UrlRoutable
             ->through([
                 BeforeRefining::class,
                 ToggleColumns::class,
+                MergeColumnFilters::class,
+                MergeColumnSearches::class,
                 RefineSearches::class,
                 RefineFilters::class,
                 RefineSorts::class,
                 SelectColumns::class,
                 QueryColumns::class,
                 AfterRefining::class,
-                RetrieveRecords::class,
+                Paginate::class,
+                CleanupTable::class,
             ])->thenReturn();
-
-        $columns = $this->toggle($request, $this->getColumns());
-
-        /** @var array<int,\Honed\Refine\Sort<TModel, TBuilder>> */
-        $sorts = \array_map(
-            static fn (Column $column) => $column->getSort(),
-            \array_values(
-                \array_filter(
-                    $columns,
-                    static fn (Column $column) => $column->isSortable()
-                )
-            )
-        );
-
-        /** @var array<int,\Honed\Refine\Search<TModel, TBuilder>> */
-        $searches = \array_map(
-            static fn (Column $column) => 
-                Search::make($column->getName(), $column->getLabel())
-                    ->alias($column->getParameter()),
-            \array_values(
-                \array_filter(
-                    $columns,
-                    static fn (Column $column) => $column->isSearchable()
-                )
-            )
-        );
-
-        parent::pipeline($builder, $request, $sorts, [], $searches);
-
-        $this->select($builder, $columns);
-        $this->applyColumns($builder, $columns);
-        $this->retrieveRecords($builder, $request, $columns);
     }
 
     /**

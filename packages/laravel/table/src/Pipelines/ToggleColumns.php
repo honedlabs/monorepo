@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Honed\Table\Pipelines;
 
 use Closure;
+use Honed\Core\Interpret;
+use Honed\Table\Columns\Column;
 use Honed\Table\Table;
 
-final readonly class ToggleColumns
+class ToggleColumns
 {
     /**
-     * Apply the filters to the query.
+     * Toggle the columns that are displayed.
      * 
      * @template TModel of \Illuminate\Database\Eloquent\Model
      * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
@@ -21,13 +23,40 @@ final readonly class ToggleColumns
     public function __invoke(Table $table, Closure $next): Table
     {
         if (! $table->isToggleable() || $table->isWithoutToggling()) {
+            $table->cacheColumns(
+                \array_values(
+                    \array_filter(
+                        $table->getCachedColumns(),
+                        static fn (Column $column) => $column->display()
+                    )
+                )
+            );
+
             return $next($table);
         }
 
-        $key = $table->getColumnsKey();
+        $request = $table->getRequest();
+
+        $params = Interpret::array(
+            $request,
+            $table->formatScope($table->getColumnsKey()),
+            $table->getDelimiter(),
+            'string'
+        );
+
+        if ($table->isRememberable()) {
+            $params = $table->configureCookie($request, $params);
+        }
+
+        $table->cacheColumns(
+            \array_values(
+                \array_filter(
+                    $table->getCachedColumns(),
+                    static fn (Column $column) => $column->display($params)
+                )
+            )
+        );
 
         return $next($table);
-        
-        
     }
 }
