@@ -10,28 +10,24 @@ use Honed\Refine\Refine;
 beforeEach(function () {
     $this->builder = Product::query();
     $this->refine = Refine::make($this->builder);
+    $this->pipe = new BeforeRefining();
     $this->closure = fn ($refine) => $refine;
-    $this->fn = fn ($builder) => $builder->where('price', '>', 100);
 });
 
 it('does not refine before', function () {
-    $pipeline = new BeforeRefining();
-
-    $pipeline($this->refine, $this->closure);
+    ($this->pipe)($this->refine, $this->closure);
 
     expect($this->refine->getFor()->getQuery()->wheres)
         ->toBeEmpty();
 });
 
 it('refines before using property', function () {
-    $pipeline = new BeforeRefining();
+    $this->refine
+        ->before(fn ($builder) => $builder->where('price', '>', 100));
 
-    $refine = $this->refine
-        ->before($this->fn);
+    ($this->pipe)($this->refine, $this->closure);
 
-    $pipeline($refine, $this->closure);
-
-    expect($refine->getFor()->getQuery()->wheres)
+    expect($this->refine->getFor()->getQuery()->wheres)
         ->toBeOnlyWhere('price', 100, '>', 'and');
 });
 
@@ -39,9 +35,7 @@ it('refines before using method', function () {
     $refine = BeforeRefiningFixture::make()
         ->for($this->builder);
 
-    $pipeline = new BeforeRefining();
-
-    $pipeline($refine, $this->closure);
+    ($this->pipe)($refine, $this->closure);
 
     expect($refine->getFor()->getQuery()->wheres)
         ->toBeOnlyWhere('price', 100, '>', 'and');
