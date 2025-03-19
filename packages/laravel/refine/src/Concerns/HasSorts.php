@@ -44,7 +44,7 @@ trait HasSorts
     /**
      * Merge a set of sorts with the existing sorts.
      *
-     * @param  array<int, \Honed\Refine\Sort<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Sort<TModel, TBuilder>>  ...$sorts
+     * @param  iterable<int, \Honed\Refine\Sort<TModel, TBuilder>>  ...$sorts
      * @return $this
      */
     public function withSorts(...$sorts)

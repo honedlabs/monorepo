@@ -37,7 +37,7 @@ trait HasFilters
     /**
      * Merge a set of filters with the existing filters.
      *
-     * @param  array<int, \Honed\Refine\Filter<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Filter<TModel, TBuilder>>  ...$filters
+     * @param  iterable<int, \Honed\Refine\Filter<TModel, TBuilder>>  ...$filters
      * @return $this
      */
     public function withFilters(...$filters)

@@ -65,7 +65,7 @@ trait HasSearches
     /**
      * Merge a set of searches with the existing searches.
      *
-     * @param  array<int, \Honed\Refine\Search<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Search<TModel, TBuilder>>  ...$searches
+     * @param  iterable<int, \Honed\Refine\Search<TModel, TBuilder>>  ...$searches
      * @return $this
      */
     public function withSearches(...$searches)
