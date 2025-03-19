@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Refine;
 
 use Closure;
-use Honed\Core\Concerns\HasBuilderInstance;
 use Honed\Core\Concerns\HasParameterNames;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasScope;
@@ -264,7 +263,7 @@ class Refine extends Primitive
      *
      * @return void
      */
-    protected function pipeline() 
+    protected function pipeline()
     {
         App::make(Pipeline::class)
             ->send($this)
@@ -273,8 +272,8 @@ class Refine extends Primitive
                 RefineSearches::class,
                 RefineFilters::class,
                 RefineSorts::class,
-                AfterRefining::class
-            ]);
+                AfterRefining::class,
+            ])->thenReturn();
     }
 
     /**

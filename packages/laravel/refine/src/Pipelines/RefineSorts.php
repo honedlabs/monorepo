@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Refine\Pipelines;
 
 use Closure;
-use Honed\Core\Interpreter;
+use Honed\Core\Interpret;
 use Honed\Refine\Refine;
 use Illuminate\Http\Request;
 
@@ -13,10 +13,10 @@ final readonly class RefineSorts
 {
     /**
      * Apply the sorts refining logic.
-     * 
+     *
      * @template TModel of \Illuminate\Database\Eloquent\Model
      * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
-     * 
+     *
      * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
      * @return \Honed\Refine\Refine<TModel, TBuilder>
      */
@@ -27,6 +27,7 @@ final readonly class RefineSorts
         }
 
         $request = $refine->getRequest();
+        $for = $refine->getFor();
 
         $sortsKey = $refine->formatScope($refine->getSortsKey());
 
@@ -35,15 +36,15 @@ final readonly class RefineSorts
         $applied = false;
 
         foreach ($refine->getSorts() as $sort) {
-            $applied |= $sort->refine($refine->for, $value);
+            $applied |= $sort->refine($for, $value);
         }
 
         if (! $applied && $sort = $refine->getDefaultSort()) {
             [$_, $direction] = $value;
 
             $value = [$sort->getParameter(), $direction];
-            
-            $sort->refine($refine->for, $value);
+
+            $sort->refine($for, $value);
         }
 
         return $next($refine);
@@ -51,12 +52,12 @@ final readonly class RefineSorts
 
     /**
      * Get the sort name and direction from a request.
-     * 
+     *
      * @return array{string|null, 'asc'|'desc'|null}
      */
     public function nameAndDirection(Request $request, string $key): array
     {
-        $sort = Interpreter::interpretString($request, $key);
+        $sort = Interpret::string($request, $key);
 
         if (empty($sort)) {
             return [null, null];

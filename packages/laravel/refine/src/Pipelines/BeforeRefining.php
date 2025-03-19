@@ -11,10 +11,10 @@ final readonly class BeforeRefining
 {
     /**
      * Apply the before refining logic.
-     * 
+     *
      * @template TModel of \Illuminate\Database\Eloquent\Model
      * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
-     * 
+     *
      * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
      * @return \Honed\Refine\Refine<TModel, TBuilder>
      */

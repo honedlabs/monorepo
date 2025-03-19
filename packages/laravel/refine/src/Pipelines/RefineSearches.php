@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Refine\Pipelines;
 
 use Closure;
-use Honed\Core\Interpreter;
+use Honed\Core\Interpret;
 use Honed\Refine\Refine;
 use Illuminate\Http\Request;
 
@@ -13,10 +13,10 @@ final readonly class RefineSearches
 {
     /**
      * Apply the searches to the query.
-     * 
+     *
      * @template TModel of \Illuminate\Database\Eloquent\Model
      * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
-     * 
+     *
      * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
      * @return \Honed\Refine\Refine<TModel, TBuilder>
      */
@@ -44,7 +44,7 @@ final readonly class RefineSearches
         foreach ($searches as $search) {
             $boolean = $applied ? 'or' : 'and';
 
-            $matched = empty($columns) || 
+            $matched = empty($columns) ||
                 \in_array($search->getParameter(), $columns);
 
             if ($matched) {
@@ -60,7 +60,7 @@ final readonly class RefineSearches
      */
     public function term(Request $request, string $key): ?string
     {
-        $term = Interpreter::interpretString($request, $key);
+        $term = Interpret::string($request, $key);
 
         if (empty($term)) {
             return null;
@@ -71,13 +71,11 @@ final readonly class RefineSearches
 
     /**
      * Get the search columns from a request.
-     * 
-     * @return array<int,mixed>|null
+     *
+     * @return array<int,string>|null
      */
     public function columns(Request $request, string $key, string $delimiter): ?array
     {
-        return Interpreter::interpretArray($request, $key, $delimiter);
-        
-        
+        return Interpret::array($request, $key, $delimiter, 'string');
     }
 }

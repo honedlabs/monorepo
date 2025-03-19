@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
-use Honed\Core\Interpreter;
 use Honed\Refine\Search;
 use Illuminate\Support\Collection;
 
@@ -272,7 +271,7 @@ trait HasSearches
 
     /**
      * Set the search term.
-     * 
+     *
      * @param  string|null  $term
      * @return $this
      */

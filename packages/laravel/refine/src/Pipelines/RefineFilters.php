@@ -11,10 +11,10 @@ final readonly class RefineFilters
 {
     /**
      * Apply the filters to the query.
-     * 
+     *
      * @template TModel of \Illuminate\Database\Eloquent\Model
      * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
-     * 
+     *
      * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
      * @return \Honed\Refine\Refine<TModel, TBuilder>
      */
@@ -24,17 +24,18 @@ final readonly class RefineFilters
             return $next($refine);
         }
 
+        $request = $refine->getRequest();
+        $for = $refine->getFor();
+
         $scope = $refine->getScope();
         $delimiter = $refine->getDelimiter();
-
-        $request = $refine->getRequest();
 
         $filters = $refine->getFilters();
 
         foreach ($filters as $filter) {
             $filter->scope($scope)
                 ->delimiter($delimiter)
-                ->refine($refine->for, $request);
+                ->refine($for, $request);
         }
 
         return $next($refine);

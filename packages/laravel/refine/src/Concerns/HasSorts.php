@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
-use Honed\Core\Interpreter;
 use Honed\Refine\Sort;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
