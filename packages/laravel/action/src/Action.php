@@ -22,10 +22,11 @@ use Illuminate\Support\Traits\ForwardsCalls;
 /**
  * @extends Primitive<string,mixed>
  */
-abstract class Action extends Primitive implements ResolvesArrayable, Executes
+abstract class Action extends Primitive implements Executes, ResolvesArrayable
 {
     use Allowable;
     use ForwardsCalls;
+    use HasAction;
     use HasConfirm;
     use HasExtra;
     use HasIcon;

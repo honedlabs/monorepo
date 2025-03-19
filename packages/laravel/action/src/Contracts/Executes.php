@@ -14,4 +14,3 @@ interface Executes
      */
     public function execute($parameter);
 }
-

@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Action\Concerns\HasAction;
 use Honed\Action\Concerns\HasBulkActions;
 
 class BulkAction extends Action
 {
     use HasBulkActions;
-    use HasAction;
 
     /**
      * Whether the action keeps the records selected after successful execution.

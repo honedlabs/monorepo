@@ -17,6 +17,8 @@ trait HasAction
     use HasParameterNames;
 
     /**
+     * The action handler.
+     *
      * @var \Closure|class-string<\Honed\Action\Contracts\Actionable>|null
      */
     protected $action;

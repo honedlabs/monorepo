@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Action\Concerns\HasAction;
 use Honed\Core\Concerns\IsDefault;
 
 class InlineAction extends Action
 {
-    use HasAction;
     use IsDefault;
 
     /**
