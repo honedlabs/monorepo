@@ -21,18 +21,20 @@ class TransformRecords
      * Transform the records.
      * 
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
+     * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
      * @return \Honed\Table\Table<TModel, TBuilder>
      */
-    public function __invoke(Table $table, Closure $next): Table
+    public function __invoke($table, $next)
     {
         $actions = $table->getInlineActions();
         $columns = $table->getCachedColumns();
+        /** @var array<int,TModel> $records */
         $records = $table->getRecords();
         $serialize = $table->isWithAttributes();
 
         $table->setRecords(
             \array_map(
-                static fn (Model $record) => 
+                static fn ($record) => 
                     static::createRecord($record, $columns, $actions, $serialize),
                 $records
             )
@@ -51,26 +53,26 @@ class TransformRecords
      * @return array<string,mixed>
      */
     public static function createRecord(
-        $model, 
+        $record, 
         $columns, 
         $actions, 
         $serialize = false
     ) {
-        [$named, $typed] = Table::getModelParameters($model);
+        [$named, $typed] = Table::getModelParameters($record);
 
         $actions = \array_map(
             static fn (InlineAction $action) => $action->resolveToArray($named, $typed),
             $actions
         );
 
-        $record = $serialize ? $model->toArray() : [];
+        $entry = $serialize ? $record->toArray() : [];
 
         $row = Arr::mapWithKeys(
             $columns,
-            static function (Column $column) use ($model, $named, $typed) {
+            static function (Column $column) use ($record, $named, $typed) {
                 $value = $column->hasValue()
                     ? $column->evaluate($column->getValue(), $named, $typed)
-                    : Arr::get($model, $column->getName());
+                    : Arr::get($record, $column->getName());
 
                 return [
                     $column->getParameter() => [
@@ -81,6 +83,6 @@ class TransformRecords
             },
         );
 
-        return \array_merge($record, $row, ['actions' => $actions]);
+        return \array_merge($entry, $row, ['actions' => $actions]);
     }
 }

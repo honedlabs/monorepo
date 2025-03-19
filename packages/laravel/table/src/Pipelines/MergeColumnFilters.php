@@ -8,7 +8,6 @@ use Closure;
 use Honed\Refine\Filter;
 use Honed\Table\Table;
 use Honed\Table\Columns\Column;
-use Honed\Refine\Pipelines\RefineSorts as BaseRefineSorts;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -17,12 +16,13 @@ use Honed\Refine\Pipelines\RefineSorts as BaseRefineSorts;
 class MergeColumnFilters
 {
     /**
-     * Apply the sorts refining logic.
+     * Merge the column filters with the table.
      *
-     * @param  \Honed\Refine\Refine<TModel, TBuilder>  $table
-     * @return \Honed\Refine\Refine<TModel, TBuilder>
+     * @param  \Honed\Table\Table<TModel, TBuilder>  $table
+     * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
+     * @return \Honed\Table\Table<TModel, TBuilder>
      */
-    public function __invoke(Table $table, Closure $next): Table
+    public function __invoke($table, $next)
     {
         $columns = $table->getCachedColumns();
 
@@ -59,6 +59,7 @@ class MergeColumnFilters
             'boolean' => $filter->boolean(),
             'number' => $filter->integer(),
             'text' => $filter->string(),
+            default => null,
         };
 
         return $filter;

@@ -7,18 +7,20 @@ namespace Honed\Table\Pipelines;
 use Closure;
 use Honed\Table\Table;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ */
 class CleanupTable
 {
     /**
      * Cleanup the table.
      * 
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
-     * 
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
+     * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
      * @return \Honed\Table\Table<TModel, TBuilder>
      */
-    public function __invoke(Table $table, Closure $next): Table
+    public function __invoke($table, $next)
     {
         $table->flushCachedColumns();
         

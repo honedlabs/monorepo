@@ -12,16 +12,19 @@ use Honed\Refine\Pipelines\RefineSorts as BaseRefineSorts;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ * 
+ * @extends BaseRefineSorts<TModel, TBuilder>
  */
 class RefineSorts extends BaseRefineSorts
 {
     /**
      * Apply the sorts refining logic.
      *
-     * @param  \Honed\Refine\Refine<TModel, TBuilder>  $table
-     * @return \Honed\Refine\Refine<TModel, TBuilder>
+     * @param  \Honed\Table\Table<TModel, TBuilder>  $table
+     * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
+     * @return \Honed\Table\Table<TModel, TBuilder>
      */
-    public function __invoke(Table $table, Closure $next): Table
+    public function __invoke($table, $next)
     {
         if (! $table->isSorting()) {
             return $next($table);

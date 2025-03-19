@@ -20,7 +20,7 @@ use Honed\Core\Concerns\Transformable;
 use Honed\Core\Concerns\HasQueryClosure;
 use Honed\Core\Concerns\HasValue;
 use Honed\Refine\Sort;
-use Honed\Table\Concerns\IsDisplayable;
+use Honed\Table\Concerns\IsVisible;
 use Honed\Table\Concerns\HasClass;
 use Honed\Table\Columns\Concerns\IsSortable;
 use Honed\Table\Columns\Concerns\IsSearchable;
@@ -35,7 +35,7 @@ class Column extends Primitive
 {
     use Allowable;
     use HasClass;
-    use IsDisplayable;
+    use IsVisible;
     use HasAlias;
     use HasExtra;
     use HasIcon;
@@ -172,12 +172,18 @@ class Column extends Primitive
     /**
      * Set the column as sortable.
      *
-     * @param  \Honed\Refine\Sort<TModel, TBuilder>|string|bool  $sortable
+     * @param  \Honed\Refine\Sort<TModel, TBuilder>|string|bool  $sort
      * @return $this
      */
     public function sort($sort = true)
     {
-        if (! $sort || $sort instanceof Sort) {
+        if (! $sort) {
+            $this->sort = null;
+
+            return $this;
+        }
+
+        if ($sort instanceof Sort) {
             $this->sort = $sort;
 
             return $this;
@@ -243,6 +249,8 @@ class Column extends Primitive
     public function filter($filter = true)
     {
         $this->filter = $filter;
+
+        return $this;
     }
 
     /**

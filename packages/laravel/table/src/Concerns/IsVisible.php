@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-trait IsDisplayable
+trait IsVisible
 {
     /**
-     * Set the instance to be always be displayed.
+     * Set the instance to always be visible.
      * 
      * @var bool
      */
     protected $always = false;
 
     /**
-     * Set the instance to be sometimes.
+     * Set the instance to sometimes be visible.
      * 
      * @var bool
      */
     protected $sometimes = false;
 
     /**
-     * Set the column to always be shown; it's visibility cannot be toggled.
+     * Set the column to always be visible.
      *
      * @param  bool  $always
      * @return $this
@@ -34,9 +34,17 @@ trait IsDisplayable
     }
 
     /**
-     * Set the column to be shown sometimes; it's visibility can be toggled.
-     * The boolean provided indicates whether the column is visible
-     * to begin with - if false, the column will be shown initially.
+     * Determine if the column is always visible.
+     *
+     * @return bool
+     */
+    public function isAlways()
+    {
+        return $this->always;
+    }
+
+    /**
+     * Set the column to sometimes be visible.
      *
      * @param  bool  $sometimes
      * @return $this
@@ -49,17 +57,7 @@ trait IsDisplayable
     }
 
     /**
-     * Determine if the column is always shown.
-     *
-     * @return bool
-     */
-    public function isAlways()
-    {
-        return $this->always;
-    }
-
-    /**
-     * Determine if the column is hidden on initial load.
+     * Determine if the column is sometimes visible.
      *
      * @return bool
      */
@@ -84,9 +82,9 @@ trait IsDisplayable
      * @param  array<int,string>|null  $params
      * @return bool
      */
-    public function display($params = null)
+    public function visible($params = null)
     {
-        $active = $this->isDisplayed($params);
+        $active = $this->isVisible($params);
 
         $this->active($active);
 
@@ -99,7 +97,7 @@ trait IsDisplayable
      * @param  array<int,string>|null  $params
      * @return bool
      */
-    public function isDisplayed($params = null)
+    public function isVisible($params = null)
     {
         if (! $this->isToggleable()) {
             return true;

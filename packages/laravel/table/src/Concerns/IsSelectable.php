@@ -19,7 +19,7 @@ trait IsSelectable
      *
      * @var bool|null
      */
-    protected $selectable;
+    protected $select;
 
     /**
      * The columns to always be selected.
@@ -31,12 +31,12 @@ trait IsSelectable
     /**
      * Set whether to do column selection.
      *
-     * @param  bool  $selectable
+     * @param  bool  $select
      * @return $this
      */
-    public function selectable($selectable = true)
+    public function selectable($select = true)
     {
-        $this->selectable = $selectable;
+        $this->select = $select;
 
         return $this;
     }
@@ -50,6 +50,10 @@ trait IsSelectable
     {
         if (isset($this->selectable)) {
             return $this->selectable;
+        }
+
+        if (\method_exists($this, 'select')) {
+            return (bool) $this->select();
         }
 
         if ($this instanceof ShouldSelect) {
@@ -75,7 +79,7 @@ trait IsSelectable
      * @param  array<int,string>  $selects
      * @return $this
      */
-    public function selects(...$selects)
+    public function withSelects(...$selects)
     {
         $selects = Arr::flatten($selects);
 
@@ -91,37 +95,10 @@ trait IsSelectable
      */
     public function getSelects()
     {
-        return $this->selects;
-    }
+        $selects = \method_exists($this, 'selects') ? $this->selects() : [];
 
-    /**
-     * Apply the column selection to the builder.
-     *
-     * @param  TBuilder  $builder
-     * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $columns
-     * @return void
-     */
-    public function select($builder, $columns = [])
-    {
-        if (! $this->isSelectable()) {
-            return;
-        }
+        $selects = \array_merge($selects, $this->selects ?? []);
 
-        /** @var array<int,string> */
-        $selects = \array_map(
-            static fn (Column $column) => $column->getName(),
-            \array_values(
-                \array_filter(
-                    $columns,
-                    static fn (Column $column) => ! $column->hasAs()
-                )
-            )
-        );
-
-        $selects = \array_merge($selects, $this->getSelects() ?? []);
-
-        if (filled($selects)) {
-            $builder->select($selects);
-        }
+        return $selects;
     }
 }

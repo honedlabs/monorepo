@@ -94,7 +94,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * The table records.
      *
-     * @var array<int,array<string,mixed>>
+     * @var array<int,mixed>
      */
     protected $records = [];
 
@@ -218,7 +218,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * Get whether the model should be serialized per record.
      *
-     * @return bool|null
+     * @return bool
      */
     public function isWithAttributes()
     {
@@ -227,7 +227,7 @@ class Table extends Refine implements UrlRoutable
         }
 
         if (\method_exists($this, 'attributes')) {
-            return $this->attributes();
+            return (bool) $this->attributes();
         }
 
         return static::fallbackWithAttributes();
@@ -246,7 +246,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * Set the records for the table.
      *
-     * @param  mixed $records
+     * @param  array<int,mixed>  $records
      * @return void
      */
     public function setRecords($records)
@@ -257,7 +257,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * Get the records from the table.
      *
-     * @return array<int,array<string,mixed>>
+     * @return array<int,mixed>
      */
     public function getRecords()
     {
@@ -312,7 +312,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public static function fallbackMatching()
+    public static function fallbackMatches()
     {
         return (bool) config('table.match', false);
     }
@@ -328,7 +328,7 @@ class Table extends Refine implements UrlRoutable
         return Handler::make(
             $this->getFor(),
             $this->getActions(),
-            $this->getRecordKey()
+            $this->getKey()
         )->handle($request);
     }
 
@@ -370,7 +370,7 @@ class Table extends Refine implements UrlRoutable
     {
         return \array_merge(parent::configToArray(), [
             'endpoint' => $this->getEndpoint(),
-            'record' => $this->getRecordKey(),
+            'record' => $this->getKey(),
             'records' => $this->getRecordsKey(),
             'columns' => $this->getColumnsKey(),
             'pages' => $this->getPagesKey(),

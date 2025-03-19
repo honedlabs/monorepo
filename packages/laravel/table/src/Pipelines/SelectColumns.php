@@ -10,18 +10,20 @@ use Honed\Table\Columns\Column;
 use Honed\Table\Table;
 use Illuminate\Support\Arr;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ */
 class SelectColumns
 {
     /**
      * Select the columns to be displayed.
      * 
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
-     * 
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
+     * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
      * @return \Honed\Table\Table<TModel, TBuilder>
      */
-    public function __invoke(Table $table, Closure $next): Table
+    public function __invoke($table, $next)
     {
         if (! $table->isSelectable()) {
             return $next($table);
@@ -33,7 +35,9 @@ class SelectColumns
 
         foreach ($table->getCachedColumns() as $column) {
             if ($column->isSelectable()) {
-                $select[] = $column->getSelect();
+                $as = $column->getSelect();
+
+                $select[] = \is_bool($as) ? $column->getName() : $as;
             }
         }
 

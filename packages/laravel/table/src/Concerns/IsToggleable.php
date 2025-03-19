@@ -20,7 +20,7 @@ trait IsToggleable
      *
      * @var bool|null
      */
-    protected $toggleable;
+    protected $toggle;
 
     /**
      * The query parameter for which columns to display.
@@ -34,7 +34,7 @@ trait IsToggleable
      *
      * @var bool|null
      */
-    protected $rememberable;
+    protected $remember;
 
     /**
      * The name of the cookie to use for remembering the columns to display.
@@ -51,22 +51,22 @@ trait IsToggleable
     protected $duration;
 
     /**
-     * Whether the displayed columns should not be toggled.
+     * Whether the apply toggling.
      *
      * @var bool
      */
-    protected $withoutToggling = false;
+    protected $toggling = true;
 
     /**
      * Set whether the table should allow the user to toggle which columns are
      * displayed.
      *
-     * @param  bool  $toggleable
+     * @param  bool  $toggle
      * @return $this
      */
-    public function toggleable($toggleable = true)
+    public function toggleable($toggle = true)
     {
-        $this->toggleable = $toggleable;
+        $this->toggle = $toggle;
 
         return $this;
     }
@@ -79,8 +79,12 @@ trait IsToggleable
      */
     public function isToggleable()
     {
-        if (isset($this->toggleable)) {
-            return $this->toggleable;
+        if (isset($this->toggle)) {
+            return $this->toggle;
+        }
+
+        if (\method_exists($this, 'toggle')) {
+            return $this->toggle();
         }
 
         if ($this instanceof ShouldToggle) {
@@ -107,7 +111,7 @@ trait IsToggleable
      * @param  string  $columnsKey
      * @return $this
      */
-    public function columnsKey($columnsKey): static
+    public function withColumnsKey($columnsKey): static
     {
         $this->columnsKey = $columnsKey;
 
@@ -121,7 +125,15 @@ trait IsToggleable
      */
     public function getColumnsKey()
     {
-        return $this->columnsKey ?? static::fallbackColumnsKey();
+        if (isset($this->columnsKey)) {
+            return $this->columnsKey;
+        }
+
+        if (\method_exists($this, 'columnsKey')) {
+            return $this->columnsKey();
+        }
+
+        return static::fallbackColumnsKey();
     }
 
     /**
@@ -137,12 +149,12 @@ trait IsToggleable
     /**
      * Set whether the table should remember the user preferences.
      *
-     * @param  bool  $rememberable
+     * @param  bool  $remember
      * @return $this
      */
-    public function rememberable($rememberable = true)
+    public function rememberable($remember = true)
     {
-        $this->rememberable = $rememberable;
+        $this->remember = $remember;
 
         return $this;
     }
@@ -154,8 +166,12 @@ trait IsToggleable
      */
     public function isRememberable()
     {
-        if (isset($this->rememberable)) {
-            return (bool) $this->rememberable;
+        if (isset($this->remember)) {
+            return (bool) $this->remember;
+        }
+
+        if (\method_exists($this, 'remember')) {
+            return $this->remember();
         }
 
         if ($this instanceof ShouldRemember) {
@@ -177,26 +193,34 @@ trait IsToggleable
     }
 
     /**
+     * Set the cookie name to use for the table toggle.
+     *
+     * @param  string  $cookieName
+     * @return $this
+     */
+    public function withCookieName($cookieName)
+    {
+        $this->cookieName = $cookieName;
+
+        return $this;
+    }
+
+    /**
      * Get the cookie name to use for the table toggle.
      *
      * @return string
      */
     public function getCookieName()
     {
-        return $this->cookieName ?? static::guessCookieName();
-    }
+        if (isset($this->cookieName)) {
+            return $this->cookieName;
+        }
 
-    /**
-     * Set the cookie name to use for the table toggle.
-     *
-     * @param  string  $cookieName
-     * @return $this
-     */
-    public function cookieName($cookieName)
-    {
-        $this->cookieName = $cookieName;
+        if (\method_exists($this, 'cookieName')) {
+            return $this->cookieName();
+        }
 
-        return $this;
+        return static::guessCookieName();
     }
 
     /**
@@ -221,7 +245,7 @@ trait IsToggleable
      * @param  int  $seconds
      * @return $this
      */
-    public function duration($seconds)
+    public function withDuration($seconds)
     {
         $this->duration = $seconds;
 
@@ -236,7 +260,15 @@ trait IsToggleable
      */
     public function getDuration()
     {
-        return $this->duration ?? static::fallbackDuration();
+        if (isset($this->duration)) {
+            return $this->duration;
+        }
+
+        if (\method_exists($this, 'duration')) {
+            return $this->duration();
+        }
+
+        return static::fallbackDuration();
     }
 
     /**
@@ -253,23 +285,24 @@ trait IsToggleable
     /**
      * Set the columns to not be toggled.
      *
+     * @param  bool  $toggling
      * @return $this
      */
-    public function withoutToggling()
+    public function toggling($toggling = true)
     {
-        $this->withoutToggling = true;
+        $this->toggling = $toggling;
 
         return $this;
     }
 
     /**
-     * Determine if the columns should not be toggled.
+     * Determine if the columns should be toggled.
      *
      * @return bool
      */
-    public function isWithoutToggling()
+    public function isToggling()
     {
-        return $this->withoutToggling;
+        return $this->toggling;
     }
 
     /**
@@ -301,6 +334,4 @@ trait IsToggleable
         /** @var array<int,string>|null */
         return \json_decode($value, false);
     }
-
-
 }

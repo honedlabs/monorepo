@@ -19,9 +19,10 @@ class MergeColumnSearches
      * Apply the sorts refining logic.
      *
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
+     * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
      * @return \Honed\Table\Table<TModel, TBuilder>
      */
-    public function __invoke(Table $table, Closure $next): Table
+    public function __invoke($table, $next)
     {
         $columns = $table->getCachedColumns();
 
