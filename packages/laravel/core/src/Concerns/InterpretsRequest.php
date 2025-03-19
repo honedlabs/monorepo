@@ -58,7 +58,17 @@ trait InterpretsRequest
      * @param  string  $key
      * @param  string  $delimiter
      * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
-     * @return array<int,mixed>|null
+     * @return array<int,(
+     *     $subtype is null ? mixed : (
+     *         $subtype is 'string' ? string : (
+     *             $subtype is 'boolean' ? bool : (
+     *                 $subtype is 'integer' ? int : (
+     *                     $subtype is 'float' ? float : \Carbon\Carbon
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )>|null
      */
     public static function interpretArray(
         $request,
@@ -96,7 +106,17 @@ trait InterpretsRequest
      * @param  string  $key
      * @param  string  $delimiter
      * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
-     * @return \Illuminate\Support\Collection<int,mixed>|null
+     * @return \Illuminate\Support\Collection<int,(
+     *     $subtype is null ? mixed : (
+     *         $subtype is 'string' ? string : (
+     *             $subtype is 'boolean' ? bool : (
+     *                 $subtype is 'integer' ? int : (
+     *                     $subtype is 'float' ? float : \Carbon\Carbon
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )>|null
      */
     public static function interpretCollection(
         $request,
