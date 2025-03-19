@@ -47,7 +47,7 @@ class ActionsMakeCommand extends Command
      *
      * @var array<string,string>
      */
-    protected $actions = [
+    public $actions = [
         'index' => 'Index',
         'create' => 'Create',
         'store' => 'Store',
@@ -57,6 +57,30 @@ class ActionsMakeCommand extends Command
         'delete' => 'Delete',
         'destroy' => 'Destroy',
     ];
+
+    public function handle()
+    {
+        /** @var string|null */
+        $path = $this->option('path');
+
+        foreach ($this->actions as $action => $verb) {
+            $model = $this->argument('model');
+
+            $name = Str::of($path)
+                ->append('/'.$model)
+                ->append('/'.$verb.$model)
+                ->replace('\\', '/')
+                ->replace('//', '/')
+                ->trim('/')
+                ->value();
+
+            $this->call('make:action', [
+                'name' => $name,
+                '--model' => $this->argument('model'),
+                '--action' => $action,
+            ]);
+        }
+    }
 
     /**
      * Get the console command arguments.
@@ -118,9 +142,9 @@ class ActionsMakeCommand extends Command
      */
     protected function getOptions()
     {
-        parent::getOptions();
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the action already exists.'],
+            ['path', 'p', InputOption::VALUE_REQUIRED, 'Add an additional path to the actions directory.'],
         ];
     }
 

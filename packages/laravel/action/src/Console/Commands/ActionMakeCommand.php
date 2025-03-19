@@ -44,7 +44,7 @@ class ActionMakeCommand extends GeneratorCommand
      *
      * @var array<string,string>
      */
-    protected $actions = [
+    public $actions = [
         'index' => 'Index',
         'create' => 'Create',
         'store' => 'Store',
@@ -69,6 +69,7 @@ class ActionMakeCommand extends GeneratorCommand
         $model = $this->option('model');
         /** @var string|null */
         $action = $this->option('action');
+
 
         if ($action && ! $model) {
             error('You must provide a model when specifying the action type.');
@@ -144,6 +145,7 @@ class ActionMakeCommand extends GeneratorCommand
         }
 
         $stub = Str::of($action)
+            ->lower()
             ->prepend('/stubs/honed.action.')
             ->append('.stub')
             ->value();

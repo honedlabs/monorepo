@@ -36,15 +36,4 @@ return [
 
     /** The message to display when confirming the action */
     'submit' => 'Confirm',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Console
-    |--------------------------------------------------------------------------
-    |
-    | Set the path of where model actions should be stored.
-    |
-    */
-    
-    'path' => 'Actions'
 ];
