@@ -67,7 +67,7 @@ class Refine extends Primitive
      *
      * @var TBuilder|null
      */
-    protected $for;
+    public $for;
 
     /**
      * A closure to be called before the refiners have been applied.

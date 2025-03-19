@@ -27,7 +27,6 @@ final readonly class RefineFilters
         $scope = $refine->getScope();
         $delimiter = $refine->getDelimiter();
 
-        $for = $refine->getFor();
         $request = $refine->getRequest();
 
         $filters = $refine->getFilters();
@@ -35,7 +34,7 @@ final readonly class RefineFilters
         foreach ($filters as $filter) {
             $filter->scope($scope)
                 ->delimiter($delimiter)
-                ->refine($for, $request);
+                ->refine($refine->for, $request);
         }
 
         return $next($refine);

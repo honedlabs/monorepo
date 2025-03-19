@@ -32,12 +32,10 @@ final readonly class RefineSorts
 
         $value = $this->nameAndDirection($request, $sortsKey);
 
-        $for = $refine->getFor();
-
         $applied = false;
 
         foreach ($refine->getSorts() as $sort) {
-            $applied |= $sort->refine($for, $value);
+            $applied |= $sort->refine($refine->for, $value);
         }
 
         if (! $applied && $sort = $refine->getDefaultSort()) {
@@ -45,7 +43,7 @@ final readonly class RefineSorts
 
             $value = [$sort->getParameter(), $direction];
             
-            $sort->refine($for, $value);
+            $sort->refine($refine->for, $value);
         }
 
         return $next($refine);
