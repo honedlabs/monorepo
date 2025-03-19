@@ -517,7 +517,17 @@ trait InterpretsRequest
      *
      * @param  string  $value
      * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $type
-     * @return mixed
+     * @return (
+     *     $type is null ? mixed : (
+     *         $type is 'string' ? string : (
+     *             $type is 'boolean' ? bool : (
+     *                 $type is 'integer' ? int : (
+     *                     $type is 'float' ? float : \Carbon\Carbon
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )|null
      */
     public static function valueOf($value, $type = null)
     {

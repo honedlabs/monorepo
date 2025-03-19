@@ -7,14 +7,14 @@ namespace Honed\Core\Concerns;
 trait HasValue
 {
     /**
-     * The value for the instance.
+     * The value.
      *
      * @var mixed
      */
     protected $value = null;
 
     /**
-     * Set the value for the instance.
+     * Set the value.
      *
      * @param  mixed  $value
      * @return $this
@@ -27,7 +27,7 @@ trait HasValue
     }
 
     /**
-     * Get the value for the instance.
+     * Get the value.
      *
      * @return mixed
      */
@@ -37,7 +37,7 @@ trait HasValue
     }
 
     /**
-     * Determine if the instance has an value set.
+     * Determine if the value is set.
      *
      * @return bool
      */
