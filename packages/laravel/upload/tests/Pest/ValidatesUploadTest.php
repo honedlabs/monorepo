@@ -54,3 +54,16 @@ it('separates mimes and extensions', function () {
         ->getMimes()->toBe(['image/png'])
         ->getExtensions()->toBe(['.jpeg']); 
 });
+
+it('creates rules', function () {
+    expect($this->test->createRules())
+        ->toBeArray()
+        ->toHaveKeys([
+            'name',
+            'extension',
+            'size',
+            'type',
+            'meta',
+        ]);
+});
+
