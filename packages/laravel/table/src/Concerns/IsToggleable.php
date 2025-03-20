@@ -87,7 +87,7 @@ trait IsToggleable
             return $this->toggle();
         }
 
-        if ($this instanceof ShouldToggle) {
+        if ($this instanceof ShouldToggle || $this instanceof ShouldRemember) {
             return true;
         }
 
@@ -280,29 +280,6 @@ trait IsToggleable
     public static function fallbackDuration()
     {
         return type(config('table.duration', 15768000))->asInt();
-    }
-
-    /**
-     * Set the columns to not be toggled.
-     *
-     * @param  bool  $toggling
-     * @return $this
-     */
-    public function toggling($toggling = true)
-    {
-        $this->toggling = $toggling;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the columns should be toggled.
-     *
-     * @return bool
-     */
-    public function isToggling()
-    {
-        return $this->toggling;
     }
 
     /**

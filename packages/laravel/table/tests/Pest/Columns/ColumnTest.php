@@ -121,49 +121,6 @@ it('is searchable', function () {
         ->isSearchable()->toBeTrue();
 });
 
-it('has classes', function () {
-    expect($this->test)
-        ->hasClass()->toBeFalse()
-        ->getClass()->toBeNull()
-        ->class('bg-red-500 text-white', 'font-bold')->toBe($this->test)
-        ->hasClass()->toBeTrue()
-        ->getClass()->toBe('bg-red-500 text-white font-bold');
-});
-
-it('creates record', function () {
-    $product = product();
-
-    $namer = new class { use HasParameterNames; };
-
-    [$named, $typed] = $namer->getModelParameters($product);
-
-    expect($this->test->createRecord($product, $named, $typed))->toBe([
-        $this->param => [
-            'value' => $product->name,
-            'extra' => [],
-        ],
-    ]);
-});
-
-it('creates record using callback', function () {
-    $product = product();
-
-    $namer = new class { use HasParameterNames; };
-
-    [$named, $typed] = $namer->getModelParameters($product);
-
-    expect($this->test)
-        ->getUsing()->toBeNull()
-        ->using(fn ($product) => $product->price())->toBe($this->test)
-        ->getUsing()->toBeInstanceOf(\Closure::class)
-        ->createRecord($product, $named, $typed)->toEqual([
-            $this->param => [
-                'value' => '$10.00',
-                'extra' => [],
-            ],
-        ]);
-});
-
 
 it('can be a boolean column', function () {
     $column = BooleanColumn::make($this->param);

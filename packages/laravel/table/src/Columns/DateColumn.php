@@ -19,7 +19,7 @@ class DateColumn extends Column
      *
      * @var bool
      */
-    protected $diff = false;
+    protected $diffForHumans = false;
 
     /**
      * A format to use for the date.
@@ -62,7 +62,7 @@ class DateColumn extends Column
             }
         }
 
-        if ($this->isDiff()) {
+        if ($this->isDiffForHumans()) {
             return $value->diffForHumans();
         }
 
@@ -72,12 +72,12 @@ class DateColumn extends Column
     /**
      * Use diffForHumans to format the date.
      *
-     * @param  bool  $diff
+     * @param  bool  $diffForHumans
      * @return $this
      */
-    public function diff($diff = true)
+    public function diffForHumans($diffForHumans = true)
     {
-        $this->diff = $diff;
+        $this->diffForHumans = $diffForHumans;
 
         return $this;
     }
@@ -87,9 +87,9 @@ class DateColumn extends Column
      *
      * @return bool
      */
-    public function isDiff()
+    public function isDiffForHumans()
     {
-        return (bool) $this->diff;
+        return (bool) $this->diffForHumans;
     }
 
     /**
@@ -136,7 +136,6 @@ class DateColumn extends Column
     public function getTimezone()
     {
         /** @var string|null */
-        return $this->timezone
-            ?? config('app.timezone');
+        return $this->timezone ?? config('app.timezone');
     }
 }
