@@ -20,19 +20,39 @@ export declare interface Config {
     search: string | null;
     searches: string;
     sorts: string;
-    matches?: string;
+    matches: string;
 }
 
 export declare type Direction = "asc" | "desc" | null;
 
 export declare interface Filter extends Refiner {
-    type: "filter" | string;
+    type: FilterType;
     value: FilterValue;
     options: Option_2[];
     multiple: boolean;
 }
 
+export declare type FilterType = "boolean" | "date" | "datetime" | "filter" | "float" | "integer" | "multiple" | "string" | "time" | string;
+
 export declare type FilterValue = string | number | boolean | null;
+
+export declare interface HonedFilter extends Filter {
+    apply: (value: any, options: VisitOptions) => void;
+    clear: (options: VisitOptions) => void;
+    bind: () => void;
+}
+
+export declare interface HonedSearch extends Search {
+    apply: (options: VisitOptions) => void;
+    clear: (options: VisitOptions) => void;
+    bind: () => void;
+}
+
+export declare interface HonedSort extends Sort {
+    apply: (options: VisitOptions) => void;
+    clear: (options: VisitOptions) => void;
+    bind: () => void;
+}
 
 declare interface Option_2 {
     label: string;
@@ -42,9 +62,9 @@ declare interface Option_2 {
 export { Option_2 as Option }
 
 export declare interface Refine {
+    config: Config;
     sorts?: Sort[];
     filters?: Filter[];
-    config: Config;
     searches?: Search[];
 }
 
@@ -65,6 +85,8 @@ export declare interface Sort extends Refiner {
     direction: Direction;
     next: string | null;
 }
+
+export declare type UseRefine = typeof useRefine;
 
 export declare function useRefine<T extends object, K extends T[keyof T] extends Refine ? keyof T : never>(props: T, key: K, defaultOptions?: VisitOptions): {
     filters: ComputedRef<    {
@@ -114,9 +136,9 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     getFilter: (name: string) => Filter | undefined;
     getSort: (name: string, direction?: Direction) => Sort | undefined;
     getSearch: (name: string) => Search | undefined;
-    currentFilters: () => Filter[];
-    currentSort: () => Sort | undefined;
-    currentSearches: () => Search[];
+    currentFilters: ComputedRef<Filter[]>;
+    currentSort: ComputedRef<Sort | undefined>;
+    currentSearches: ComputedRef<Search[]>;
     isFiltering: (name?: Filter | string) => boolean;
     isSorting: (name?: Sort | string) => boolean;
     isSearching: (name?: Search | string) => boolean;
