@@ -22,10 +22,30 @@ use Honed\Table\Tests\Stubs\Status;
 
 class Table extends BaseTable
 {
-    public $toggleable = true;
-    public $rememberable = true;
-    public $selectable = true;
-    public $pagination = [10, 25, 50];
+    public function toggle()
+    {
+        return true;
+    }
+
+    public function remember()
+    {
+        return true;
+    }
+
+    public function select()
+    {
+        return true;
+    }
+
+    public function pagination()
+    {
+        return [10, 25, 50];
+    }
+
+    public function endpoint()
+    {
+        return '/table/actions';
+    }
 
     public function for()
     {

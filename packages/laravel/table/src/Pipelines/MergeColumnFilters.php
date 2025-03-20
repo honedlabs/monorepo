@@ -24,7 +24,7 @@ class MergeColumnFilters
      */
     public function __invoke($table, $next)
     {
-        $columns = $table->getCachedColumns();
+        $columns = $table->getColumns();
 
         /** @var array<int,\Honed\Refine\Filter<TModel, TBuilder>> */
         $filters = \array_map(

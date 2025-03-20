@@ -41,7 +41,7 @@ trait HasColumns
      * @param  iterable<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  ...$columns
      * @return $this
      */
-    public function addColumns(...$columns)
+    public function withColumns(...$columns)
     {
         $columns = Arr::flatten($columns);
 
@@ -49,7 +49,6 @@ trait HasColumns
 
         return $this;
     }
-
 
     /**
      * Get the columns for the table.

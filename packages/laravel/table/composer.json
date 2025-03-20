@@ -47,7 +47,6 @@
         "phpstan/extension-installer": "^1.4.3",
         "phpstan/phpstan-deprecation-rules": "^2.0.1",
         "phpstan/phpstan-phpunit": "^2.0.3",
-        "worksome/request-factories": "^3.3",
         "laravel/scout": "^10.11"
     },
     "scripts": {

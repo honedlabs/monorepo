@@ -24,7 +24,7 @@ class MergeColumnSearches
      */
     public function __invoke($table, $next)
     {
-        $columns = $table->getCachedColumns();
+        $columns = $table->getColumns();
 
         /** @var array<int,\Honed\Refine\Search<TModel, TBuilder>> */
         $searches = \array_map(
@@ -38,7 +38,7 @@ class MergeColumnSearches
                 )
             )
         );
-
+        
         $table->withSearches($searches);
 
         return $next($table);
