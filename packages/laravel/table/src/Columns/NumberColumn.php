@@ -50,7 +50,7 @@ class NumberColumn extends Column
         $abbreviate = $this->isAbbreviated();
 
         return match (true) {
-            ! \is_null($decimals) => \number_format((float) $value, $decimals),
+            isset($decimals) => \number_format((float) $value, $decimals),
             $abbreviate => Number::abbreviate((int) $value),
             default => $value,
         };
