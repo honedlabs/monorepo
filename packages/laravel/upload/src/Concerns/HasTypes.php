@@ -18,12 +18,14 @@ trait HasTypes
     /**
      * Set the file mime types and extensions.
      * 
-     * @param string $types
+     * @param iterable<string> ...$types
      * @return $this
      */
     public function types(...$types)
     {
-        $this->types = Arr::flatten($types);
+        $types = Arr::flatten($types);
+
+        $this->types = \array_merge($this->types, $types);
 
         return $this;
     }
@@ -43,12 +45,12 @@ trait HasTypes
      * 
      * @return array<int, string>
      */
-    public function getMimeTypes()
+    public function getMimes()
     {
         return \array_values(
             \array_filter(
                 $this->getTypes(),
-                static fn (string $type) => ! \str_starts_with($type, '.')
+                static fn ($type) => ! \str_starts_with($type, '.')
             )
         );
     }
@@ -58,12 +60,12 @@ trait HasTypes
      * 
      * @return array<int, string>
      */
-    public function getFileExtensions()
+    public function getExtensions()
     {
         return \array_values(
             \array_filter(
                 $this->getTypes(),
-                static fn (string $type) => \str_starts_with($type, '.')
+                static fn ($type) => \str_starts_with($type, '.')
             )
         );
     }

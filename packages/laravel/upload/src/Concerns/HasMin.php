@@ -29,10 +29,20 @@ trait HasMin
     /**
      * Get the minimum file size in bytes.
      * 
-     * @return int|null
+     * @return int
      */
     public function getMin()
     {
-        return $this->min;
+        return $this->min ?? static::getDefaultMin();
+    }
+
+    /**
+     * Get the default minimum file size in bytes.
+     * 
+     * @return int
+     */
+    public static function getDefaultMin()
+    {
+        return type(config('upload.min_size', 0))->asInt();
     }
 }

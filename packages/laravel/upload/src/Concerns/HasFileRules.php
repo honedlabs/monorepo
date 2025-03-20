@@ -20,7 +20,7 @@ trait HasFileRules
     /**
      * Set the rules for validating file uploads.
      * 
-     * @param array<int, \Honed\Upload\UploadRule> $rules
+     * @param iterable<\Honed\Upload\UploadRule> ...$rules
      * @return $this
      */
     public function rules(...$rules)
@@ -38,36 +38,6 @@ trait HasFileRules
     public function getRules()
     {
         return $this->rules;
-    }
-
-    /**
-     * Get the maximum file size in bytes from the config.
-     * 
-     * @return int
-     */
-    public static function fallbackMax()
-    {
-        return type(config('upload.max_size', 10 * (1024 ** 3)))->asInt();
-    }
-
-    /**
-     * Get the minimum file size in bytes from the config.
-     * 
-     * @return int
-     */
-    public static function fallbackMin()
-    {
-        return type(config('upload.min_size', 1))->asInt();
-    }
-
-    /**
-     * Get the expiry duration of the request in seconds from the config.
-     * 
-     * @return int
-     */
-    public static function fallbackExpires()
-    {
-        return type(config('upload.expires', 5 * 60))->asInt();
     }
 
     /**
@@ -96,7 +66,7 @@ trait HasFileRules
      * Destructure the filename into its components.
      * 
      * @param mixed $filename
-     * @return array{string|null, string|null}
+     * @return ($filename is string ? array{string, string} : array{null, null})
      */
     public static function destructureFilename($filename)
     {
@@ -106,7 +76,7 @@ trait HasFileRules
 
         return [
             \pathinfo($filename, PATHINFO_FILENAME),
-            \pathinfo($filename, PATHINFO_EXTENSION),
+            \mb_strtolower(\pathinfo($filename, PATHINFO_EXTENSION)),
         ];
     }
 

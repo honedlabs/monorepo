@@ -4,23 +4,25 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
-use Aws\S3\PostObjectV4;
-use Aws\S3\S3Client;
 use Carbon\Carbon;
-use Honed\Core\Concerns\HasRequest;
+use Aws\S3\S3Client;
+use Aws\S3\PostObjectV4;
 use Honed\Core\Primitive;
+use App\Upload\UploadRule;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Honed\Upload\Rules\OfType;
+use Honed\Upload\Concerns\HasMax;
+use Honed\Upload\Concerns\HasMin;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Stringable;
+use Honed\Core\Concerns\HasRequest;
+use Honed\Upload\Concerns\HasExpiry;
 use Honed\Upload\Concerns\HasExpires;
 use Honed\Upload\Concerns\HasFileRules;
 use Honed\Upload\Concerns\HasFileTypes;
-use Honed\Upload\Concerns\HasMax;
-use Honed\Upload\Concerns\HasMin;
-use Honed\Upload\Rules\OfType;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Support\Stringable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
@@ -29,9 +31,8 @@ use Illuminate\Contracts\Validation\ValidatesWhenResolved;
  */
 class Upload extends Primitive //implements Responsable
 {
-    use HasExpires;
+    use HasExpiry;
     use HasFileRules;
-    use HasFileTypes;
     use HasMax;
     use HasMin;
     use HasRequest;
@@ -58,6 +59,13 @@ class Upload extends Primitive //implements Responsable
     protected $name;
 
     /**
+     * Whether to use a UUID for the file name.
+     *
+     * @var bool|null
+     */
+    protected $uuid;
+
+    /**
      * The access control list to use for the file.
      *
      * @var string|null
@@ -65,18 +73,12 @@ class Upload extends Primitive //implements Responsable
     protected $acl;
 
     /**
-     * Set the file upload component to accept multiple files.
-     *
-     * @var bool
-     */
-    protected $multiple = false;
-
-    /**
      * Create a new upload instance.
      */
     public function __construct(Request $request)
     {
         parent::__construct();
+
         $this->request($request);
     }
 
@@ -98,7 +100,8 @@ class Upload extends Primitive //implements Responsable
      */
     public static function into($disk)
     {
-        return static::make()->disk($disk);
+        return static::make()
+            ->disk($disk);
     }
 
     /**
@@ -121,7 +124,7 @@ class Upload extends Primitive //implements Responsable
      */
     public function getDisk()
     {
-        return $this->disk ?? static::fallbackDisk();
+        return $this->disk ?? static::getDefaultDisk();
     }
 
     /**
@@ -129,53 +132,9 @@ class Upload extends Primitive //implements Responsable
      *
      * @return string
      */
-    public static function fallbackDisk()
+    public static function getDefaultDisk()
     {
         return type(config('upload.disk', 's3'))->asString();
-    }
-
-    /**
-     * Get the maximum file size to upload in bytes from the config.
-     *
-     * @default 1GB
-     *
-     * @return int
-     */
-    public static function fallbackMaxSize()
-    {
-        return type(config('upload.size.max', 1024 ** 3))->asInt();
-    }
-
-    /**
-     * Get the duration of the presigned URL.
-     *
-     * @return string
-     */
-    public function getDuration()
-    {
-        $duration = $this->duration;
-
-        return match (true) {
-            \is_string($duration) => $duration,
-
-            \is_int($duration) => \sprintf('+%d seconds', $duration),
-
-            $duration instanceof Carbon => \sprintf(
-                '+%d seconds', \round(\abs($duration->diffInSeconds()))
-            ),
-
-            default => static::fallbackDuration(),
-        };
-    }
-
-    /**
-     * Get the duration of the presigned URL from the config.
-     *
-     * @return string
-     */
-    public static function fallbackDuration()
-    {
-        return type(config('upload.expires', '+2 minutes'))->asString();
     }
 
     /**
@@ -293,7 +252,7 @@ class Upload extends Primitive //implements Responsable
             $accepts = \implode(',', \array_values(
                 \array_filter(
                     $accepts,
-                    static fn (string $type) => ! \str_starts_with($type, '.')
+                    static fn ($type) => ! \str_starts_with($type, '.')
                 )
             ));
 
@@ -415,13 +374,18 @@ class Upload extends Primitive //implements Responsable
     }
 
     /**
-     * Create a signed upload URL response.
+     * Create a presigned POST URL.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function create()
     {
         $request = $this->getRequest();
+
+        $rule = Arr::first(
+            $this->getRules(),
+            static fn (UploadRule $rule) => $rule->isMatching($validated['type'], $validated['extension']),
+        );
 
         /**
          * @var array{name:string,type:string,size:int,meta:mixed}
@@ -438,11 +402,10 @@ class Upload extends Primitive //implements Responsable
             $this->getDuration()
         );
 
-        return response()->json([
-            'code' => 200,
+        return [
             'attributes' => $postObject->getFormAttributes(),
             'inputs' => $postObject->getFormInputs(),
-        ]);
+        ];
     }
 
     /**
@@ -457,6 +420,8 @@ class Upload extends Primitive //implements Responsable
         $filename = Arr::get($validated, 'name');
 
         $name = $this->getName();
+
+        
 
         /** @var string */
         $validatedName = match (true) {

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Upload;
+namespace Honed\Upload;
 
 use Honed\Upload\Concerns\HasMax;
 use Honed\Upload\Concerns\HasMin;
-use Honed\Upload\Concerns\HasExpires;
+use Honed\Upload\Concerns\HasExpiry;
 use Honed\Upload\Concerns\HasTypes;
 
 class UploadRule
 {
-    use HasExpires;
+    use HasExpiry;
     use HasMax;
     use HasMin;
     use HasTypes;
@@ -24,7 +24,8 @@ class UploadRule
      */
     public static function make(...$types)
     {
-        return resolve(static::class)->types(...$types);
+        return resolve(static::class)
+            ->types(...$types);
     }
 
     /**
@@ -37,4 +38,9 @@ class UploadRule
     {
         return \count(\array_intersect($this->getTypes(), $types)) > 0;
     }
+
+    /**
+     * 
+     */
+    // public function validate()
 }

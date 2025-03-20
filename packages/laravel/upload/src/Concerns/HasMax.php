@@ -29,10 +29,20 @@ trait HasMax
     /**
      * Get the maximum file size in bytes.
      * 
-     * @return int|null
+     * @return int
      */
     public function getMax()
     {
-        return $this->max;
+        return $this->max ?? static::getDefaultMax();
+    }
+
+    /**
+     * Get the default maximum file size in bytes.
+     * 
+     * @return int
+     */
+    public static function getDefaultMax()
+    {
+        return type(config('upload.max_size', 10 * (1024 ** 3)))->asInt();
     }
 }
