@@ -20,6 +20,13 @@ class Search extends Refiner
     protected $boolean = 'and';
 
     /**
+     * Whether to use a full-text search.
+     *
+     * @var bool|null
+     */
+    protected $fullText;
+
+    /**
      * Set the query boolean to use for the search.
      *
      * @param  'and'|'or'  $boolean
@@ -40,6 +47,43 @@ class Search extends Refiner
     public function getBoolean()
     {
         return $this->boolean;
+    }
+
+    /**
+     * Set whether to use a full-text search.
+     *
+     * @param  bool|null  $fullText
+     * @return $this
+     */
+    public function fullText($fullText = true)
+    {
+        $this->fullText = $fullText;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the search is a full-text search.
+     *
+     * @return bool|null
+     */
+    public function isFullText()
+    {
+        if (isset($this->fullText)) {
+            return $this->fullText;
+        }
+
+        return static::isFullTextByDefault();
+    }
+
+    /**
+     * Determine if the search is a full-text search by default.
+     *
+     * @return bool
+     */
+    public static function isFullTextByDefault()
+    {
+        return config('refine.full_text', false);
     }
 
     /**

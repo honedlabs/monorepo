@@ -247,7 +247,8 @@ class Filter extends Refiner
         $column = $builder->qualifyColumn($column);
 
         match (true) {
-            \in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) => static::queryRaw($builder, $column, type($operator)->asString(), $value),
+            \in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) => 
+                static::queryRaw($builder, $column, type($operator)->asString(), $value),
 
             $this->isMultiple() || $this->interpretsArray() => $builder->whereIn($column, $value),
 

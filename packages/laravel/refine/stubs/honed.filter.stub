@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace {{ namespace }};
 
 use Honed\Refine\Filter;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -36,7 +36,7 @@ final class {{ class }} extends Filter
     /**
      * Register the query expression to resolve the filter.
      *
-     * @param  \Illuminate\Database\Query\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  mixed $value
      * @return void
      */

@@ -34,7 +34,6 @@ abstract class Refiner extends Primitive
     /** @use HasQueryClosure<TModel, TBuilder> */
     use HasQueryClosure;
     use HasType;
-
     use HasValue;
 
     /**

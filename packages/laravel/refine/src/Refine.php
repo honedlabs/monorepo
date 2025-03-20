@@ -49,10 +49,15 @@ class Refine extends Primitive
     use HasScope;
 
     /** @use HasSearches<TModel, TBuilder> */
-    use HasSearches;
+    use HasSearches {
+        getSearchesKey as protected getBaseSearchesKey;
+        getMatchesKey as protected getBaseMatchesKey;
+    }
 
     /** @use HasSorts<TModel, TBuilder> */
-    use HasSorts;
+    use HasSorts {
+        getSortsKey as protected getBaseSortsKey;
+    }
 
     /**
      * Whether the refine pipeline has been run.
@@ -87,6 +92,8 @@ class Refine extends Primitive
      */
     public function __construct(Request $request)
     {
+        parent::__construct();
+
         $this->request($request);
     }
 

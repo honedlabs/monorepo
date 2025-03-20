@@ -58,25 +58,32 @@ trait HasSorts
     }
 
     /**
+     * Define the sorts for the instance.
+     * 
+     * @return array<int,\Honed\Refine\Sort<TModel, TBuilder>>
+     */
+    public function sorts()
+    {
+        return [];
+    }
+
+    /**
      * Retrieve the sorts.
      *
      * @return array<int,\Honed\Refine\Sort<TModel, TBuilder>>
      */
     public function getSorts()
     {
-        return once(function () {
+        if ($this->isWithoutSorts()) {
+            return [];
+        }
 
-            $sorts = \method_exists($this, 'sorts') ? $this->sorts() : [];
-
-            $sorts = \array_merge($sorts, $this->sorts ?? []);
-
-            return \array_values(
-                \array_filter(
-                    $sorts,
-                    static fn (Sort $sort) => $sort->isAllowed()
-                )
-            );
-        });
+        return once(fn () => \array_values(
+            \array_filter(
+                \array_merge($this->sorts(), $this->sorts ?? []),
+                static fn (Sort $sort) => $sort->isAllowed()
+            )
+        ));
     }
 
     /**
@@ -123,29 +130,6 @@ trait HasSorts
     }
 
     /**
-     * Set the instance to apply the sorts.
-     *
-     * @param  bool  $sorting
-     * @return $this
-     */
-    public function sorting($sorting = true)
-    {
-        $this->sorting = $sorting;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the instance should apply the sorts.
-     *
-     * @return bool
-     */
-    public function isSorting()
-    {
-        return $this->sorting;
-    }
-
-    /**
      * Set the instance to not provide the sorts.
      *
      * @param  bool  $withoutSorts
@@ -188,10 +172,6 @@ trait HasSorts
      */
     public function sortsToArray()
     {
-        if ($this->isWithoutSorts()) {
-            return [];
-        }
-
         return \array_map(
             static fn (Sort $sort) => $sort->toArray(),
             $this->getSorts()

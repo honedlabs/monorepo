@@ -79,25 +79,32 @@ trait HasSearches
     }
 
     /**
+     * Define the searches for the instance.
+     * 
+     * @return array<int, \Honed\Refine\Search<TModel, TBuilder>>
+     */
+    public function searches()
+    {
+        return [];
+    }
+
+    /**
      * Retrieve the columns to be used for searching.
      *
      * @return array<int,\Honed\Refine\Search<TModel, TBuilder>>
      */
     public function getSearches()
     {
-        return once(function () {
+        if ($this->isWithoutSearches()) {
+            return [];
+        }
 
-            $searches = \method_exists($this, 'searches') ? $this->searches() : [];
-
-            $searches = \array_merge($searches, $this->searches ?? []);
-
-            return \array_values(
-                \array_filter(
-                    $searches,
-                    static fn (Search $search) => $search->isAllowed()
-                )
-            );
-        });
+        return once(fn () => \array_values(
+            \array_filter(
+                \array_merge($this->searches(), $this->searches ?? []),
+                static fn (Search $search) => $search->isAllowed()
+            )
+        ));
     }
 
     /**
@@ -210,29 +217,6 @@ trait HasSearches
     }
 
     /**
-     * Set the instance to apply the searches.
-     *
-     * @param  bool  $searching
-     * @return $this
-     */
-    public function searching($searching = true)
-    {
-        $this->searching = $searching;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the instance should apply the searches.
-     *
-     * @return bool
-     */
-    public function isSearching()
-    {
-        return $this->searching;
-    }
-
-    /**
      * Set the instance to not provide the searches.
      *
      * @param  bool  $withoutSearches
@@ -285,7 +269,7 @@ trait HasSearches
      */
     public function searchesToArray()
     {
-        if ($this->isWithoutSearches() || ! $this->matches()) {
+        if (! $this->matches()) {
             return [];
         }
 
