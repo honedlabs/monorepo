@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Upload\Concerns;
 
-use App\Upload\UploadRule;
+use Honed\Upload\UploadData;
+use Honed\Upload\UploadRule;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 trait HasFileRules
 {
@@ -25,7 +27,9 @@ trait HasFileRules
      */
     public function rules(...$rules)
     {
-        $this->rules = Arr::flatten($rules);
+        $rules = Arr::flatten($rules);
+
+        $this->rules = \array_merge($this->rules, $rules);
 
         return $this;
     }
@@ -44,22 +48,21 @@ trait HasFileRules
      * Validate the incoming request.
      * 
      * @param \Illuminate\Http\Request $request
-     * @return array<string, mixed>
+     * @param \Honed\Upload\UploadRule|null $rule
+     * @return \Honed\Upload\UploadData
+     * 
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function validate($request)
+    public function validate($request, $rule = null)
     {
-        [$name, $extension] = static::destructureFilename($request->input('name'));
+        $rules = $rule ? $rule->createRules() : $this->createRules();
 
-        /** @var array<string, mixed> */
-        $data = $request->merge([
-            'name' => $name,
-            'extension' => $extension,
-        ])->all();
-
-        return Validator::make(
-            $data,
-            $this->createRules($data),
+        $validated = Validator::make(
+            $request->all(),
+            $rules,
         )->validate();
+
+        return UploadData::from($validated);
     }
 
     /**
@@ -77,27 +80,6 @@ trait HasFileRules
         return [
             \pathinfo($filename, PATHINFO_FILENAME),
             \mb_strtolower(\pathinfo($filename, PATHINFO_EXTENSION)),
-        ];
-    }
-
-    public function createRules($data)
-    {
-        $type = Arr::get($data, 'type');
-        $extension = Arr::get($data, 'extension');
-
-        $rule = Arr::first(
-            $this->getRules(),
-            static fn (UploadRule $rule) => $rule->isMatching($type, $extension),
-        );
-
-        $min = $rule->getMin();
-        $max = $rule->getMax();
-        return [
-            'name' => ['required', 'string', 'max:1024'],
-            'extension' => ['required', 'string'],
-            'type' => ['required'],
-            'size' => ['required', 'integer', 'min:'.$min, 'max:'.$max],
-            'meta' => ['nullable'],
         ];
     }
 }

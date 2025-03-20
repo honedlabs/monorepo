@@ -4,18 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
-use Honed\Upload\Concerns\HasMax;
-use Honed\Upload\Concerns\HasMin;
-use Honed\Upload\Concerns\HasExpiry;
-use Honed\Upload\Concerns\HasTypes;
-
-class UploadRule
+class UploadRule extends UploadValidator
 {
-    use HasExpiry;
-    use HasMax;
-    use HasMin;
-    use HasTypes;
-
     /**
      * Create a new file rule instance.
      * 
@@ -25,7 +15,7 @@ class UploadRule
     public static function make(...$types)
     {
         return resolve(static::class)
-            ->types(...$types);
+            ->types($types);
     }
 
     /**
@@ -38,9 +28,4 @@ class UploadRule
     {
         return \count(\array_intersect($this->getTypes(), $types)) > 0;
     }
-
-    /**
-     * 
-     */
-    // public function validate()
 }

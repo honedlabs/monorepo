@@ -17,9 +17,11 @@ it('has rules', function () {
         ->rules(UploadRule::make('image/png'))->toBe($this->test)
         ->getRules()->toHaveCount(1)
         ->rules([UploadRule::make('image/jpeg')])->toBe($this->test)
-        ->getRules()->dd()->toHaveCount(2);
+        ->getRules()->toHaveCount(2);
 });
 
 it('validates', function () {
-    // $request = presignRequest()
+    $request = presignRequest('test.png', 'image/png', 1000);
+
+    $this->test->validate($request);
 });
