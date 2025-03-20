@@ -83,10 +83,6 @@ trait IsToggleable
             return $this->toggle;
         }
 
-        if (\method_exists($this, 'toggle')) {
-            return $this->toggle();
-        }
-
         if ($this instanceof ShouldToggle || $this instanceof ShouldRemember) {
             return true;
         }
@@ -129,10 +125,6 @@ trait IsToggleable
             return $this->columnsKey;
         }
 
-        if (\method_exists($this, 'columnsKey')) {
-            return $this->columnsKey();
-        }
-
         return static::fallbackColumnsKey();
     }
 
@@ -168,10 +160,6 @@ trait IsToggleable
     {
         if (isset($this->remember)) {
             return (bool) $this->remember;
-        }
-
-        if (\method_exists($this, 'remember')) {
-            return $this->remember();
         }
 
         if ($this instanceof ShouldRemember) {
@@ -216,10 +204,6 @@ trait IsToggleable
             return $this->cookieName;
         }
 
-        if (\method_exists($this, 'cookieName')) {
-            return $this->cookieName();
-        }
-
         return static::guessCookieName();
     }
 
@@ -262,10 +246,6 @@ trait IsToggleable
     {
         if (isset($this->duration)) {
             return $this->duration;
-        }
-
-        if (\method_exists($this, 'duration')) {
-            return $this->duration();
         }
 
         return static::fallbackDuration();

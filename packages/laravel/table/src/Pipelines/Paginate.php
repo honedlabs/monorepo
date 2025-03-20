@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Closure;
-use Honed\Action\InlineAction;
 use Honed\Core\Interpret;
-use Honed\Table\Columns\Column;
 use Honed\Table\Table;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -20,7 +15,7 @@ class Paginate
 {
     /**
      * Paginate the records.
-     * 
+     *
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
      * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
      * @return \Honed\Table\Table<TModel, TBuilder>
@@ -77,7 +72,7 @@ class Paginate
 
     /**
      * Get the per page value.
-     * 
+     *
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
      * @return int
      */
@@ -98,7 +93,7 @@ class Paginate
         }
 
         $table->createRecordsPerPage($pagination, $perPage);
-        
+
         return $perPage;
     }
 }

@@ -4,43 +4,37 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use Honed\Refine\Refine;
-use Honed\Refine\Search;
-use Honed\Action\Handler;
-use Honed\Core\Interpreter;
-use Illuminate\Support\Arr;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
-use Honed\Table\Columns\Column;
-use Honed\Core\Concerns\HasMeta;
-use Honed\Core\Concerns\Encodable;
-use Illuminate\Support\Facades\App;
-use Honed\Table\Concerns\HasColumns;
 use Honed\Action\Concerns\HasActions;
-use Honed\Table\Concerns\IsSelectable;
-use Honed\Table\Concerns\IsToggleable;
-use Honed\Table\Concerns\HasPagination;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Honed\Table\Concerns\HasTableBindings;
+use Honed\Action\Handler;
+use Honed\Core\Concerns\Encodable;
+use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasParameterNames;
-use Honed\Action\InlineAction;
 use Honed\Refine\Pipelines\AfterRefining;
 use Honed\Refine\Pipelines\BeforeRefining;
 use Honed\Refine\Pipelines\RefineFilters;
 use Honed\Refine\Pipelines\RefineSearches;
-use Honed\Table\Pipelines\RefineSorts;
+use Honed\Refine\Refine;
+use Honed\Table\Columns\Column;
+use Honed\Table\Concerns\HasColumns;
+use Honed\Table\Concerns\HasPagination;
+use Honed\Table\Concerns\HasTableBindings;
+use Honed\Table\Concerns\IsSelectable;
+use Honed\Table\Concerns\IsToggleable;
 use Honed\Table\Pipelines\CleanupTable;
-use Honed\Table\Pipelines\CreateRecords;
 use Honed\Table\Pipelines\MergeColumnFilters;
 use Honed\Table\Pipelines\MergeColumnSearches;
 use Honed\Table\Pipelines\Paginate;
 use Honed\Table\Pipelines\QueryColumns;
+use Honed\Table\Pipelines\RefineSorts;
 use Honed\Table\Pipelines\SelectColumns;
 use Honed\Table\Pipelines\ToggleColumns;
 use Honed\Table\Pipelines\TransformRecords;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -52,23 +46,25 @@ class Table extends Refine implements UrlRoutable
 {
     use Encodable;
     use HasActions;
-    
+
     /** @use HasColumns<TModel, TBuilder> */
     use HasColumns;
+
     use HasMeta;
-    /** @use HasParameterNames<TModel, TBuilder> */
-    use HasParameterNames;
 
     /** @use HasPagination<TModel, TBuilder> */
     use HasPagination;
 
-    use HasTableBindings;
+    /** @use HasParameterNames<TModel, TBuilder> */
+    use HasParameterNames;
 
-    /** @use IsToggleable<TModel, TBuilder> */
-    use IsToggleable;
+    use HasTableBindings;
 
     /** @use IsSelectable<TModel, TBuilder> */
     use IsSelectable;
+
+    /** @use IsToggleable<TModel, TBuilder> */
+    use IsToggleable;
 
     /**
      * The unique identifier column for the table.
@@ -141,10 +137,6 @@ class Table extends Refine implements UrlRoutable
     {
         if (isset($this->key)) {
             return $this->key;
-        }
-
-        if (\method_exists($this, 'key')) {
-            return $this->key();
         }
 
         $keyColumn = Arr::first(
@@ -380,7 +372,8 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    protected function pipeline() {
+    protected function pipeline()
+    {
         App::make(Pipeline::class)
             ->send($this)
             ->through([

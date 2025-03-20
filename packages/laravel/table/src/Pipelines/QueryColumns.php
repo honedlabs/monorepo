@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Closure;
 use Honed\Table\Table;
 
 /**
@@ -15,7 +14,7 @@ class QueryColumns
 {
     /**
      * Apply the column callbacks to the query.
-     * 
+     *
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
      * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
      * @return \Honed\Table\Table<TModel, TBuilder>
@@ -28,6 +27,6 @@ class QueryColumns
             $column->modifyQuery($for);
         }
 
-        return $next($table);        
+        return $next($table);
     }
 }

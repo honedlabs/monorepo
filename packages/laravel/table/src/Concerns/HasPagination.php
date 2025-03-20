@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Table\PerPageRecord;
 use Illuminate\Support\Collection;
 
@@ -67,7 +66,7 @@ trait HasPagination
     /**
      * Set the paginator type.
      *
-     * @param 'cursor'|'simple'|'length-aware'|'collection'|string $paginator
+     * @param  'cursor'|'simple'|'length-aware'|'collection'|string  $paginator
      * @return $this
      */
     public function withPaginator($paginator)
@@ -88,12 +87,9 @@ trait HasPagination
             return $this->paginator;
         }
 
-        if (\method_exists($this, 'paginator')) {
-            return $this->paginator();
-        }
-
         return static::fallbackPaginator();
     }
+
     /**
      * Get the paginator type from the config.
      *
@@ -107,7 +103,7 @@ trait HasPagination
     /**
      * Set the pagination options.
      *
-     * @param int|array<int,int> $pagination
+     * @param  int|array<int,int>  $pagination
      * @return $this
      */
     public function withPagination($pagination)
@@ -128,10 +124,6 @@ trait HasPagination
             return $this->pagination;
         }
 
-        if (\method_exists($this, 'pagination')) {
-            return $this->pagination();
-        }
-
         return static::fallbackPagination();
     }
 
@@ -149,7 +141,7 @@ trait HasPagination
     /**
      * Set the default pagination amount.
      *
-     * @param int $defaultPagination
+     * @param  int  $defaultPagination
      * @return $this
      */
     public function withDefaultPagination($defaultPagination)
@@ -168,10 +160,6 @@ trait HasPagination
     {
         if (isset($this->defaultPagination)) {
             return $this->defaultPagination;
-        }
-
-        if (\method_exists($this, 'defaultPagination')) {
-            return $this->defaultPagination();
         }
 
         return static::fallbackDefaultPagination();
@@ -211,10 +199,6 @@ trait HasPagination
             return $this->pagesKey;
         }
 
-        if (\method_exists($this, 'pagesKey')) {
-            return $this->pagesKey();
-        }
-
         return static::fallbackPagesKey();
     }
 
@@ -252,10 +236,6 @@ trait HasPagination
             return $this->recordsKey;
         }
 
-        if (\method_exists($this, 'recordsKey')) {
-            return $this->recordsKey();
-        }
-
         return static::fallbackRecordsKey();
     }
 
@@ -273,7 +253,7 @@ trait HasPagination
     /**
      * Set the number of page links to show either side of the current page.
      *
-     * @param int $window
+     * @param  int  $window
      * @return $this
      */
     public function withWindow($window)
@@ -294,15 +274,11 @@ trait HasPagination
             return $this->window;
         }
 
-        if (\method_exists($this, 'window')) {
-            return $this->window();
-        }
-
         return static::fallbackWindow();
     }
 
     /**
-     * Get the fallback number of page links to show either side of the current 
+     * Get the fallback number of page links to show either side of the current
      * page from the config.
      *
      * @return int

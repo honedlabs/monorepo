@@ -52,10 +52,6 @@ trait IsSelectable
             return $this->select;
         }
 
-        if (\method_exists($this, 'select')) {
-            return (bool) $this->select();
-        }
-
         if ($this instanceof ShouldSelect) {
             return true;
         }

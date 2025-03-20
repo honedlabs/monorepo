@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Closure;
-use Honed\Table\Table;
-use Honed\Table\Columns\Column;
 use Honed\Refine\Pipelines\RefineSorts as BaseRefineSorts;
+use Honed\Table\Columns\Column;
+use Honed\Table\Table;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- * 
+ *
  * @extends BaseRefineSorts<TModel, TBuilder>
  */
 class RefineSorts extends BaseRefineSorts
@@ -37,12 +36,13 @@ class RefineSorts extends BaseRefineSorts
 
         $value = $this->nameAndDirection($request, $sortsKey);
 
+        /** @var array<int,\Honed\Refine\Sort<TModel, TBuilder>> */
         $sorts = \array_merge($table->getSorts(),
             \array_map(
                 static fn (Column $column) => $column->getSort(),
                 \array_values(
                     \array_filter(
-                        $table->getColumns(), 
+                        $table->getColumns(),
                         static fn (Column $column) => $column->isSortable()
                     )
                 )

@@ -13,6 +13,7 @@ use Honed\Refine\Sort;
 use Honed\Table\Columns\BooleanColumn;
 use Honed\Table\Columns\Column;
 use Honed\Table\Columns\DateColumn;
+use Honed\Table\Columns\HiddenColumn;
 use Honed\Table\Columns\KeyColumn;
 use Honed\Table\Columns\NumberColumn;
 use Honed\Table\Columns\TextColumn;
@@ -22,30 +23,11 @@ use Honed\Table\Tests\Stubs\Status;
 
 class Table extends BaseTable
 {
-    public function toggle()
-    {
-        return true;
-    }
+    protected $toggle = true;
 
-    public function remember()
-    {
-        return true;
-    }
+    protected $remember = true;
 
-    public function select()
-    {
-        return true;
-    }
-
-    public function pagination()
-    {
-        return [10, 25, 50];
-    }
-
-    public function endpoint()
-    {
-        return '/table/actions';
-    }
+    protected $pagination = [10, 25, 50];
 
     public function for()
     {
@@ -60,9 +42,10 @@ class Table extends BaseTable
 
             TextColumn::make('name')
                 ->always()
-                ->searchable(),
+                ->search(),
 
             TextColumn::make('description')
+                ->filter()
                 ->fallback('-'),
 
             BooleanColumn::make('best_seller', 'Favourite')
@@ -75,17 +58,18 @@ class Table extends BaseTable
 
             NumberColumn::make('price')
                 ->alias('cost')
-                ->sortable(),
+                ->sort(),
 
             DateColumn::make('created_at')
                 ->sometimes()
-                ->sortable('col_created_at'),
+                ->sort(),
 
-            Column::make('public_id')
+            HiddenColumn::make('public_id')
                 ->hidden()
                 ->always(),
 
-            Column::make('updated_at')
+            DateColumn::make('updated_at')
+                ->filter()
                 ->allow(false),
         ];
     }

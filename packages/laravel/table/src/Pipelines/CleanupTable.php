@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Closure;
 use Honed\Table\Table;
 
 /**
@@ -15,7 +14,7 @@ class CleanupTable
 {
     /**
      * Cleanup the table.
-     * 
+     *
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
      * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
      * @return \Honed\Table\Table<TModel, TBuilder>
@@ -23,7 +22,7 @@ class CleanupTable
     public function __invoke($table, $next)
     {
         $table->flushCachedColumns();
-        
+
         return $next($table);
     }
 }

@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Closure;
 use Honed\Action\InlineAction;
 use Honed\Table\Columns\Column;
 use Honed\Table\Table;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 /**
@@ -19,7 +17,7 @@ class TransformRecords
 {
     /**
      * Transform the records.
-     * 
+     *
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
      * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
      * @return \Honed\Table\Table<TModel, TBuilder>
@@ -34,8 +32,7 @@ class TransformRecords
 
         $table->setRecords(
             \array_map(
-                static fn ($record) => 
-                    static::createRecord($record, $columns, $actions, $serialize),
+                static fn ($record) => static::createRecord($record, $columns, $actions, $serialize),
                 $records
             )
         );
@@ -45,7 +42,7 @@ class TransformRecords
 
     /**
      * Create a record for the table.
-     * 
+     *
      * @param  TModel  $record
      * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $columns
      * @param  array<int,\Honed\Action\InlineAction>  $actions
@@ -53,9 +50,9 @@ class TransformRecords
      * @return array<string,mixed>
      */
     public static function createRecord(
-        $record, 
-        $columns, 
-        $actions, 
+        $record,
+        $columns,
+        $actions,
         $serialize = false
     ) {
         [$named, $typed] = Table::getModelParameters($record);

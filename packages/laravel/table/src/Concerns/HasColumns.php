@@ -6,7 +6,6 @@ namespace Honed\Table\Concerns;
 
 use Honed\Table\Columns\Column;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -23,7 +22,7 @@ trait HasColumns
 
     /**
      * The cached columns to be used for pipelines.
-     * 
+     *
      * @var array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>
      */
     protected $cachedColumns = [];
@@ -64,7 +63,7 @@ trait HasColumns
         return once(function () {
 
             $columns = \method_exists($this, 'columns') ? $this->columns() : [];
-            
+
             $columns = \array_merge($columns, $this->columns ?? []);
 
             return \array_values(
@@ -88,7 +87,7 @@ trait HasColumns
 
     /**
      * Get the cached columns.
-     * 
+     *
      * @return array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>
      */
     public function getCachedColumns()
@@ -98,7 +97,7 @@ trait HasColumns
 
     /**
      * Set the cached columns.
-     * 
+     *
      * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $cachedColumns
      * @return $this
      */
@@ -111,14 +110,14 @@ trait HasColumns
 
     /**
      * Flush the cached columns.
-     * 
+     *
      * @return void
      */
     public function flushCachedColumns()
     {
         $this->cachedColumns = [];
     }
-    
+
     /**
      * Set the instance to not provide the columns.
      *

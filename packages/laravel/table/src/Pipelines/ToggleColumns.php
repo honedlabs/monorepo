@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Closure;
 use Honed\Core\Interpret;
 use Honed\Table\Columns\Column;
 use Honed\Table\Table;
@@ -17,7 +16,7 @@ class ToggleColumns
 {
     /**
      * Toggle the columns that are displayed.
-     * 
+     *
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
      * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
      * @return \Honed\Table\Table<TModel, TBuilder>
@@ -51,7 +50,7 @@ class ToggleColumns
 
     /**
      * Cache the columns to be displayed.
-     * 
+     *
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
      * @param  array<int,string>|null  $params
      * @return void

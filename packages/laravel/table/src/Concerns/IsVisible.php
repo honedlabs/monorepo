@@ -8,14 +8,14 @@ trait IsVisible
 {
     /**
      * Set the instance to always be visible.
-     * 
+     *
      * @var bool
      */
     protected $always = false;
 
     /**
      * Set the instance to sometimes be visible.
-     * 
+     *
      * @var bool
      */
     protected $sometimes = false;

@@ -4,26 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
-use Honed\Core\Primitive;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasExtra;
+use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasQueryClosure;
+use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\IsActive;
 use Honed\Core\Concerns\IsHidden;
-use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\Transformable;
-use Honed\Core\Concerns\HasQueryClosure;
-use Honed\Core\Concerns\HasValue;
+use Honed\Core\Primitive;
 use Honed\Refine\Sort;
-use Honed\Table\Concerns\IsVisible;
 use Honed\Table\Concerns\HasClass;
-use Honed\Table\Columns\Concerns\IsSortable;
-use Honed\Table\Columns\Concerns\IsSearchable;
+use Honed\Table\Concerns\IsVisible;
+use Illuminate\Support\Str;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -34,24 +31,25 @@ use Honed\Table\Columns\Concerns\IsSearchable;
 class Column extends Primitive
 {
     use Allowable;
-    use HasClass;
-    use IsVisible;
     use HasAlias;
+    use HasClass;
     use HasExtra;
     use HasIcon;
     use HasLabel;
     use HasName;
-    use HasType;
-    use IsActive;
-    use IsHidden;
-    use Transformable;
-    use HasValue;
     /** @use HasQueryClosure<TModel, TBuilder> */
     use HasQueryClosure;
+    use HasType;
+    use HasValue;
+    use IsActive;
+    use IsHidden;
+    use IsVisible;
+
+    use Transformable;
 
     /**
      * Whether this column represents the record key.
-     * 
+     *
      * @var bool
      */
     protected $key = false;
@@ -65,28 +63,28 @@ class Column extends Primitive
 
     /**
      * The column sort.
-     * 
+     *
      * @var \Honed\Refine\Sort<TModel, TBuilder>|null
      */
     protected $sort;
 
     /**
      * Whether to search on the column.
-     * 
+     *
      * @var bool
      */
     protected $search = false;
 
     /**
      * Whether to have a simple filter on the column.
-     * 
+     *
      * @var bool
      */
     protected $filter = false;
 
     /**
      * How to select this column
-     * 
+     *
      * @var string|bool|array<int,string>
      */
     protected $select = true;
@@ -161,7 +159,7 @@ class Column extends Primitive
 
     /**
      * Determine if the column has a fallback value.
-     * 
+     *
      * @return bool
      */
     public function hasFallback()
@@ -265,7 +263,7 @@ class Column extends Primitive
 
     /**
      * Set how to select this column.
-     * 
+     *
      * @param  string|bool|array<int,string>  $select
      * @return $this
      */
@@ -288,7 +286,7 @@ class Column extends Primitive
 
     /**
      * Determine if the column can be selected.
-     * 
+     *
      * @return bool
      */
     public function isSelectable()
@@ -377,7 +375,7 @@ class Column extends Primitive
     public function __call($method, $parameters)
     {
         if ($method === 'query') {
-            /** @var \Closure(TBuilder):void $query */
+            /** @var \Closure(mixed...):void $query */
             $query = $parameters[0];
 
             return $this->queryClosure($query);

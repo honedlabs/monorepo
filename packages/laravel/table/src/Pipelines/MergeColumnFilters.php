@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Closure;
 use Honed\Refine\Filter;
-use Honed\Table\Table;
 use Honed\Table\Columns\Column;
+use Honed\Table\Table;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -38,6 +37,7 @@ class MergeColumnFilters
         );
 
         $table->withFilters($filters);
+
         return $next($table);
     }
 

@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Closure;
-use Honed\Core\Interpret;
-use Honed\Table\Columns\Column;
 use Honed\Table\Table;
 use Illuminate\Support\Arr;
 
@@ -18,7 +15,7 @@ class SelectColumns
 {
     /**
      * Select the columns to be displayed.
-     * 
+     *
      * @param  \Honed\Table\Table<TModel, TBuilder>  $table
      * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
      * @return \Honed\Table\Table<TModel, TBuilder>
@@ -42,7 +39,7 @@ class SelectColumns
         }
 
         $selects = \array_unique(Arr::flatten($selects), SORT_STRING);
-        
+
         $for->select($selects);
 
         return $next($table);

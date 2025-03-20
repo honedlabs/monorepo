@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Closure;
 use Honed\Refine\Search;
-use Honed\Table\Table;
 use Honed\Table\Columns\Column;
+use Honed\Table\Table;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -28,9 +27,8 @@ class MergeColumnSearches
 
         /** @var array<int,\Honed\Refine\Search<TModel, TBuilder>> */
         $searches = \array_map(
-            static fn (Column $column) => 
-                Search::make($column->getName(), $column->getLabel())
-                    ->alias($column->getParameter()),
+            static fn (Column $column) => Search::make($column->getName(), $column->getLabel())
+                ->alias($column->getParameter()),
             \array_values(
                 \array_filter(
                     $columns,
@@ -38,7 +36,7 @@ class MergeColumnSearches
                 )
             )
         );
-        
+
         $table->withSearches($searches);
 
         return $next($table);
