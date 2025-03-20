@@ -3,11 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Refine\Search;
-use Honed\Table\Columns\BooleanColumn;
 use Honed\Table\Columns\Column;
-use Honed\Table\Columns\DateColumn;
-use Honed\Table\Columns\NumberColumn;
-use Honed\Table\Columns\TextColumn;
 use Honed\Table\Pipelines\MergeColumnSearches;
 use Honed\Table\Table;
 

@@ -35,14 +35,16 @@ class Paginate
 
         switch (true) {
             case $table->isLengthAware($paginator):
-                $records = $builder->paginate($perPage, pageName: $key);
+                $records = $builder->paginate($perPage, pageName: $key)
+                    ->withQueryString();
 
                 $table->setPaginationData($table->lengthAwarePaginator($records));
                 $table->setRecords($records->items());
 
                 break;
             case $table->isSimple($paginator):
-                $records = $builder->simplePaginate($perPage, pageName: $key);
+                $records = $builder->simplePaginate($perPage, pageName: $key)
+                    ->withQueryString();
 
                 $table->setPaginationData($table->simplePaginator($records));
                 $table->setRecords($records->items());

@@ -24,7 +24,8 @@ class ToggleColumns
      */
     public function __invoke($table, $next)
     {
-        if (! $table->isToggleable() || ! $table->isToggling()) {
+        if (! $table->isToggleable()) {
+
             static::cacheColumns($table);
 
             return $next($table);
@@ -60,7 +61,7 @@ class ToggleColumns
         $table->cacheColumns(
             \array_values(
                 \array_filter(
-                    $table->getCachedColumns(),
+                    $table->getColumns(),
                     static fn (Column $column) => $column->visible($params)
                 )
             )

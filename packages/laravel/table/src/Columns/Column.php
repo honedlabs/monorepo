@@ -269,7 +269,7 @@ class Column extends Primitive
      * @param  string|bool|array<int,string>  $select
      * @return $this
      */
-    public function select($select)
+    public function select($select = true)
     {
         $this->select = $select;
 
@@ -369,5 +369,20 @@ class Column extends Primitive
             'class' => $this->getClass(),
             'sort' => $this->sortToArray(),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __call($method, $parameters)
+    {
+        if ($method === 'query') {
+            /** @var \Closure(TBuilder):void $query */
+            $query = $parameters[0];
+
+            return $this->queryClosure($query);
+        }
+
+        parent::__call($method, $parameters);
     }
 }

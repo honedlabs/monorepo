@@ -48,8 +48,8 @@ trait IsSelectable
      */
     public function isSelectable()
     {
-        if (isset($this->selectable)) {
-            return $this->selectable;
+        if (isset($this->select)) {
+            return $this->select;
         }
 
         if (\method_exists($this, 'select')) {

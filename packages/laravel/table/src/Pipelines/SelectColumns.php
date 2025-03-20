@@ -31,19 +31,19 @@ class SelectColumns
 
         $for = $table->getFor();
 
-        $select = [];
+        $selects = [];
 
         foreach ($table->getCachedColumns() as $column) {
             if ($column->isSelectable()) {
                 $as = $column->getSelect();
 
-                $select[] = \is_bool($as) ? $column->getName() : $as;
+                $selects[] = \is_bool($as) ? $column->getName() : $as;
             }
         }
 
-        $select = \array_unique(Arr::flatten($select), SORT_STRING);
-
-        $for->select($select);
+        $selects = \array_unique(Arr::flatten($selects), SORT_STRING);
+        
+        $for->select($selects);
 
         return $next($table);
     }

@@ -76,6 +76,9 @@ return [
     /** The parameter name for the page number. */
     'pages_key' => 'page',
 
+    /** The number of links to show either side of the current page. */
+    'window' => 2,
+
     /*
     |--------------------------------------------------------------------------
     | Toggleable
