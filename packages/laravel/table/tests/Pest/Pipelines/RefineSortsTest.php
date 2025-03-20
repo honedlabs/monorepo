@@ -8,122 +8,121 @@ use Honed\Table\Table;
 use Honed\Refine\Sort;
 use Illuminate\Support\Facades\Request;
 
-// beforeEach(function () {
-//     $this->builder = Product::query();
-//     $this->pipe = new RefineSorts();
-//     $this->closure = fn ($refine) => $refine;
+beforeEach(function () {
+    $this->pipe = new RefineSorts();
+    $this->closure = fn ($refine) => $refine;
 
-//     $sorts = [
-//         Sort::make('name')
-//             ->default(),
+    $sorts = [
+        Sort::make('name')
+            ->default(),
         
-//         Sort::make('price'),
-//     ];
+        Sort::make('price'),
+    ];
 
-//     $this->table = Table::make($this->builder)
-//         ->sorts($sorts);
+    $this->table = Table::make()
+        ->withSorts($sorts)
+        ->for(Product::query());
+});
 
-// });
+it('does not refine', function () {
+    $this->pipe->__invoke($this->table, $this->closure);
 
-// it('does not refine', function () {
-//     $this->pipe->__invoke($this->table, $this->closure);
+    expect($this->table->getFor()->getQuery()->wheres)
+        ->toBeEmpty();
+});
 
-//     expect($this->table->getFor()->getQuery()->wheres)
-//         ->toBeEmpty();
-// });
+it('refines default', function () {
+    $request = Request::create('/', 'GET', [
+        'invalid' => 'test'
+    ]);
 
-// it('refines default', function () {
-//     $request = Request::create('/', 'GET', [
-//         'invalid' => 'test'
-//     ]);
+    $this->table->request($request);
 
-//     $this->table->request($request);
+    $this->pipe->__invoke($this->table, $this->closure);
 
-//     $this->pipe->__invoke($this->table, $this->closure);
+    $builder = $this->table->getFor();
 
-//     $builder = $this->table->getFor();
+    expect($builder->getQuery()->orders)
+        ->toBeOnlyOrder($builder->qualifyColumn('name'), 'asc');
+});
 
-//     expect($builder->getQuery()->orders)
-//         ->toBeOnlyOrder($builder->qualifyColumn('name'), 'asc');
-// });
+it('refines', function () {
+    $request = Request::create('/', 'GET', [
+        config('table.sorts_key') => 'price'
+    ]);
 
-// it('refines', function () {
-//     $request = Request::create('/', 'GET', [
-//         config('table.sorts_key') => 'price'
-//     ]);
+    $this->table->request($request);
 
-//     $this->table->request($request);
+    $this->pipe->__invoke($this->table, $this->closure);
 
-//     $this->pipe->__invoke($this->table, $this->closure);
+    $builder = $this->table->getFor();
 
-//     $builder = $this->table->getFor();
+    expect($builder->getQuery()->orders)
+        ->toBeOnlyOrder($builder->qualifyColumn('price'), 'asc');
+});
 
-//     expect($builder->getQuery()->orders)
-//         ->toBeOnlyOrder($builder->qualifyColumn('price'), 'asc');
-// });
+it('refines directionally', function () {
+    $request = Request::create('/', 'GET', [
+        config('table.sorts_key') => '-price'
+    ]);
 
-// it('refines directionally', function () {
-//     $request = Request::create('/', 'GET', [
-//         config('table.sorts_key') => '-price'
-//     ]);
+    $this->table->request($request);
 
-//     $this->table->request($request);
+    $this->pipe->__invoke($this->table, $this->closure);
 
-//     $this->pipe->__invoke($this->table, $this->closure);
+    $builder = $this->table->getFor();
 
-//     $builder = $this->table->getFor();
+    expect($builder->getQuery()->orders)
+        ->toBeOnlyOrder($builder->qualifyColumn('price'), 'desc');
+});
 
-//     expect($builder->getQuery()->orders)
-//         ->toBeOnlyOrder($builder->qualifyColumn('price'), 'desc');
-// });
+it('disables', function () {
+    $request = Request::create('/', 'GET', [
+        config('table.sorts_key') => 'price'
+    ]);
 
-// it('disables', function () {
-//     $request = Request::create('/', 'GET', [
-//         config('table.sorts_key') => 'price'
-//     ]);
+    $this->table->request($request)->sorting(false);
 
-//     $this->table->request($request)->sorting(false);
+    $this->pipe->__invoke($this->table, $this->closure);
 
-//     $this->pipe->__invoke($this->table, $this->closure);
+    $builder = $this->table->getFor();
 
-//     $builder = $this->table->getFor();
+    expect($builder->getQuery()->orders)
+        ->toBeEmpty();
+});
 
-//     expect($builder->getQuery()->orders)
-//         ->toBeEmpty();
-// });
+describe('scope', function () {
+    beforeEach(function () {
+        $this->table = $this->table->scope('scope');
+    });
 
-// describe('scope', function () {
-//     beforeEach(function () {
-//         $this->table = $this->table->scope('scope');
-//     });
+    it('refines default', function () {
+        $request = Request::create('/', 'GET', [
+            config('refine.sorts_key') => 'price'
+        ]);
 
-//     it('refines default', function () {
-//         $request = Request::create('/', 'GET', [
-//             config('refine.sorts_key') => 'price'
-//         ]);
+        $this->table->request($request);
 
-//         $this->table->request($request);
+        $this->pipe->__invoke($this->table, $this->closure);
 
-//         $this->pipe->__invoke($this->table, $this->closure);
+        $builder = $this->table->getFor();
 
-//         $builder = $this->table->getFor();
+        expect($builder->getQuery()->orders)
+            ->toBeOnlyOrder($builder->qualifyColumn('name'), 'asc');
+    });
 
-//         expect($builder->getQuery()->orders)
-//             ->toBeOnlyOrder($builder->qualifyColumn('name'), 'asc');
-//     });
+    it('refines', function () {
+        $request = Request::create('/', 'GET', [
+            $this->table->formatScope(config('table.sorts_key')) => 'price'
+        ]);
 
-//     it('refines', function () {
-//         $request = Request::create('/', 'GET', [
-//             $this->table->formatScope(config('table.sorts_key')) => 'price'
-//         ]);
+        $this->table->request($request);
 
-//         $this->table->request($request);
+        $this->pipe->__invoke($this->table, $this->closure);
 
-//         $this->pipe->__invoke($this->table, $this->closure);
+        $builder = $this->table->getFor();
 
-//         $builder = $this->table->getFor();
-
-//         expect($builder->getQuery()->orders)
-//             ->toBeOnlyOrder($builder->qualifyColumn('price'), 'asc');
-//     }); 
-// });
+        expect($builder->getQuery()->orders)
+            ->toBeOnlyOrder($builder->qualifyColumn('price'), 'asc');
+    }); 
+});

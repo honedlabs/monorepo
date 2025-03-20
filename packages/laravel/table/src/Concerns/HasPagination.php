@@ -356,7 +356,7 @@ trait HasPagination
      * @param  string  $paginator
      * @return bool
      */
-    public static function isLengthAware($paginator)
+    public function isLengthAware($paginator)
     {
         return \in_array($paginator, [
             'length-aware',
@@ -371,7 +371,7 @@ trait HasPagination
      * @param  string  $paginator
      * @return bool
      */
-    public static function isSimple($paginator)
+    public function isSimple($paginator)
     {
         return \in_array($paginator, [
             'simple',
@@ -386,7 +386,7 @@ trait HasPagination
      * @param  string  $paginator
      * @return bool
      */
-    public static function isCursor($paginator)
+    public function isCursor($paginator)
     {
         return \in_array($paginator, [
             'cursor',
@@ -401,7 +401,7 @@ trait HasPagination
      * @param  string  $paginator
      * @return bool
      */
-    public static function isCollector($paginator)
+    public function isCollector($paginator)
     {
         return \in_array($paginator, [
             'none',
@@ -418,7 +418,7 @@ trait HasPagination
      */
     public function lengthAwarePaginator($paginator)
     {
-        return \array_merge(static::simplePaginator($paginator), [
+        return \array_merge($this->simplePaginator($paginator), [
             'total' => $paginator->total(),
             'from' => $paginator->firstItem(),
             'to' => $paginator->lastItem(),
@@ -459,9 +459,9 @@ trait HasPagination
      * @param  \Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
      * @return array<string, mixed>
      */
-    public static function simplePaginator($paginator)
+    public function simplePaginator($paginator)
     {
-        return \array_merge(static::cursorPaginator($paginator), [
+        return \array_merge($this->cursorPaginator($paginator), [
             'currentPage' => $paginator->currentPage(),
         ]);
     }
@@ -472,9 +472,9 @@ trait HasPagination
      * @param  \Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
      * @return array<string, mixed>
      */
-    public static function cursorPaginator($paginator)
+    public function cursorPaginator($paginator)
     {
-        return \array_merge(static::collectionPaginator($paginator), [
+        return \array_merge($this->collectionPaginator($paginator), [
             'prevLink' => $paginator->previousPageUrl(),
             'nextLink' => $paginator->nextPageUrl(),
             'perPage' => $paginator->perPage(),
@@ -487,7 +487,7 @@ trait HasPagination
      * @param  \Illuminate\Support\Collection<int,TModel>|\Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
      * @return array<string, mixed>
      */
-    public static function collectionPaginator($paginator)
+    public function collectionPaginator($paginator)
     {
         return [
             'empty' => $paginator->isEmpty(),

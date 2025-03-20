@@ -57,6 +57,10 @@ trait HasColumns
      */
     public function getColumns()
     {
+        if ($this->isWithoutColumns()) {
+            return [];
+        }
+
         return once(function () {
 
             $columns = \method_exists($this, 'columns') ? $this->columns() : [];
@@ -145,10 +149,6 @@ trait HasColumns
      */
     public function columnsToArray()
     {
-        if ($this->isWithoutColumns()) {
-            return [];
-        }
-
         return \array_map(
             static fn (Column $column) => $column->toArray(),
             $this->getColumns()

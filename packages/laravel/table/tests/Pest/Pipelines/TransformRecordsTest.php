@@ -58,7 +58,7 @@ beforeEach(function () {
 
     $this->table->cacheColumns($this->columns);
 
-    $this->table->setRecords(Product::query()->get()->all());
+    $this->table->setRecords(Product::query()->orderBy('id')->get()->all());
 });
 
 it('transforms records', function () {
