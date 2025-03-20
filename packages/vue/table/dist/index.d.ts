@@ -105,6 +105,15 @@ export declare interface Table<RecordType extends Record<string, any> = any, Pag
     meta: Record<string, any>;
 }
 
+export declare interface TableColumn<T extends Record<string, any>> extends Column<T> {
+    toggle: (options: VisitOptions) => void;
+}
+
+export declare interface TableHeading<T extends Record<string, any>> extends Column<T> {
+    isSorting: boolean;
+    toggleSort: (options: VisitOptions) => void;
+}
+
 export declare interface TableOptions<RecordType extends Record<string, any>> {
     /**
      * Actions to be applied on a record in JavaScript.
@@ -114,7 +123,7 @@ export declare interface TableOptions<RecordType extends Record<string, any>> {
 
 export declare interface TableRecord<RecordType extends Record<string, any>> {
     record: RecordType;
-    default: (options: VisitOptions) => void;
+    default: (options?: VisitOptions) => void;
     actions: InlineAction[];
     select: () => void;
     deselect: () => void;
@@ -124,6 +133,8 @@ export declare interface TableRecord<RecordType extends Record<string, any>> {
     value: (column: Column<RecordType> | string) => any;
     extra: (column: Column<RecordType> | string) => any;
 }
+
+export declare type UseTable = typeof useTable;
 
 export declare function useTable<Props extends object, Key extends Props[keyof Props] extends Refine ? keyof Props : never, RecordType extends Record<string, any> = any, Paginator extends PaginatorKind = "length-aware">(props: Props, key: Key, tableOptions?: TableOptions<RecordType>, defaultOptions?: VisitOptions): {
     filters: {
@@ -135,6 +146,7 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
         } | undefined;
         type: string;
         value: FilterValue;
+        /** Selects this record */
         options: Option_2[];
         multiple: boolean;
         name: string;
@@ -161,7 +173,9 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
         clear: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
         bind: () => {
             "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
-            modelValue: boolean;
+            modelValue: boolean; /**
+            * The available bulk actions.
+            */
             value: string;
         } | undefined;
         type: string;
@@ -173,9 +187,9 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
     getFilter: (name: string) => Filter | undefined;
     getSort: (name: string, direction?: Direction | undefined) => Sort | undefined;
     getSearch: (name: string) => Search | undefined;
-    currentFilters: () => Filter[];
-    currentSort: () => Sort | undefined;
-    currentSearches: () => Search[];
+    currentFilters: Filter[];
+    currentSort: Sort | undefined;
+    currentSearches: Search[];
     isFiltering: (name?: string | Filter | undefined) => boolean;
     isSorting: (name?: string | Sort | undefined) => boolean;
     isSearching: (name?: string | Search | undefined) => boolean;
