@@ -62,7 +62,12 @@ class TransformRecords
 
         $actions = \array_map(
             static fn (InlineAction $action) => $action->resolveToArray($named, $typed),
-            $actions
+            \array_values(
+                \array_filter(
+                    $actions,
+                    static fn (InlineAction $action) => $action->isAllowed($named, $typed)
+                )
+            )
         );
 
         $entry = $serialize ? $record->toArray() : [];
