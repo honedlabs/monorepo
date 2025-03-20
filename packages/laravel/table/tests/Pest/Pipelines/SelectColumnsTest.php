@@ -16,7 +16,7 @@ beforeEach(function () {
 
     $this->table = Table::make()
         ->for(Product::query())
-        ->selectable(true)
+        ->select(true)
         ->cacheColumns([
             Column::make('name')
                 ->select(),
@@ -29,8 +29,8 @@ beforeEach(function () {
         ]);
 });
 
-it('selects only if selectable', function () {
-    $this->table->selectable(false);
+it('selects only if select', function () {
+    $this->table->select(false);
 
     $this->pipe->__invoke($this->table, $this->next);
 

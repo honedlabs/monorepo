@@ -34,7 +34,7 @@ trait IsSelectable
      * @param  bool  $select
      * @return $this
      */
-    public function selectable($select = true)
+    public function select($select = true)
     {
         $this->select = $select;
 
@@ -75,7 +75,7 @@ trait IsSelectable
      * @param  array<int,string>  $selects
      * @return $this
      */
-    public function withSelects(...$selects)
+    public function selects(...$selects)
     {
         $selects = Arr::flatten($selects);
 
@@ -91,10 +91,16 @@ trait IsSelectable
      */
     public function getSelects()
     {
-        $selects = \method_exists($this, 'selects') ? $this->selects() : [];
+        return $this->selects;
+    }
 
-        $selects = \array_merge($selects, $this->selects ?? []);
-
-        return $selects;
+    /**
+     * Determine if the table has any selected columns.
+     *
+     * @return bool
+     */
+    public function hasSelects()
+    {
+        return filled($this->getSelects());
     }
 }

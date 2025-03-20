@@ -15,7 +15,7 @@ beforeEach(function () {
 it('has paginator', function () {
     expect($this->table)
         ->getPaginator()->toBe(config('table.paginator'))
-        ->withPaginator('cursor')->toBe($this->table)
+        ->paginator('cursor')->toBe($this->table)
         ->getPaginator()->toBe('cursor')
         ->fallbackPaginator()->toBe(config('table.paginator'));
 });
@@ -23,7 +23,7 @@ it('has paginator', function () {
 it('has pagination', function () {
     expect($this->table)
         ->getPagination()->toBe(config('table.pagination'))
-        ->withPagination([5, 10, 20])->toBe($this->table)
+        ->pagination([5, 10, 20])->toBe($this->table)
         ->getPagination()->toEqual([5, 10, 20])
         ->fallbackPagination()->toBe(config('table.pagination'));
 });
@@ -31,7 +31,7 @@ it('has pagination', function () {
 it('has default pagination', function () {
     expect($this->table)
         ->getDefaultPagination()->toBe(config('table.default_pagination'))
-        ->withDefaultPagination(5)->toBe($this->table)
+        ->defaultPagination(5)->toBe($this->table)
         ->getDefaultPagination()->toBe(5)
         ->fallbackDefaultPagination()->toBe(config('table.default_pagination'));
 });
@@ -39,7 +39,7 @@ it('has default pagination', function () {
 it('has pages key', function () {
     expect($this->table)
         ->getPagesKey()->toBe(config('table.pages_key'))
-        ->withPagesKey('test')->toBe($this->table)
+        ->pagesKey('test')->toBe($this->table)
         ->getPagesKey()->toBe('test')
         ->fallbackPagesKey()->toBe(config('table.pages_key'));
 });
@@ -47,7 +47,7 @@ it('has pages key', function () {
 it('has records key', function () {
     expect($this->table)
         ->getRecordsKey()->toBe(config('table.records_key'))
-        ->withRecordsKey('test')->toBe($this->table)
+        ->recordsKey('test')->toBe($this->table)
         ->getRecordsKey()->toBe('test')
         ->fallbackRecordsKey()->toBe(config('table.records_key'));
 });
@@ -55,7 +55,7 @@ it('has records key', function () {
 it('has window', function () {
     expect($this->table)
         ->getWindow()->toBe(config('table.window'))
-        ->withWindow(5)->toBe($this->table)
+        ->window(5)->toBe($this->table)
         ->getWindow()->toBe(5)
         ->fallbackWindow()->toBe(config('table.window'));
 });

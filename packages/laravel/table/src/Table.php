@@ -119,7 +119,7 @@ class Table extends Refine implements UrlRoutable
      * @param  string  $key
      * @return $this
      */
-    public function withKey($key)
+    public function key($key)
     {
         $this->key = $key;
 
@@ -159,7 +159,7 @@ class Table extends Refine implements UrlRoutable
      * @param  string  $endpoint
      * @return $this
      */
-    public function withEndpoint($endpoint)
+    public function endpoint($endpoint)
     {
         $this->endpoint = $endpoint;
 
@@ -175,10 +175,6 @@ class Table extends Refine implements UrlRoutable
     {
         if (isset($this->endpoint)) {
             return $this->endpoint;
-        }
-
-        if (\method_exists($this, 'endpoint')) {
-            return $this->endpoint();
         }
 
         return static::fallbackEndpoint();
@@ -200,7 +196,7 @@ class Table extends Refine implements UrlRoutable
      * @param  bool|null  $attributes
      * @return $this
      */
-    public function withAttributes($attributes = true)
+    public function attributes($attributes = true)
     {
         $this->attributes = $attributes;
 
@@ -212,17 +208,13 @@ class Table extends Refine implements UrlRoutable
      *
      * @return bool
      */
-    public function isWithAttributes()
+    public function hasAttributes()
     {
         if (isset($this->attributes)) {
             return $this->attributes;
         }
 
-        if (\method_exists($this, 'attributes')) {
-            return (bool) $this->attributes();
-        }
-
-        return static::fallbackWithAttributes();
+        return static::fallbackAttributes();
     }
 
     /**
@@ -230,7 +222,7 @@ class Table extends Refine implements UrlRoutable
      *
      * @return bool
      */
-    public static function fallbackWithAttributes()
+    public static function fallbackAttributes()
     {
         return (bool) config('table.attributes', false);
     }
@@ -363,9 +355,9 @@ class Table extends Refine implements UrlRoutable
         return \array_merge(parent::configToArray(), [
             'endpoint' => $this->getEndpoint(),
             'record' => $this->getKey(),
-            'records' => $this->getRecordsKey(),
-            'columns' => $this->getColumnsKey(),
-            'pages' => $this->getPagesKey(),
+            'records' => $this->formatScope($this->getRecordsKey()),
+            'columns' => $this->formatScope($this->getColumnsKey()),
+            'pages' => $this->formatScope($this->getPagesKey()),
         ]);
     }
 

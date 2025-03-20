@@ -30,12 +30,12 @@ beforeEach(function () {
     ];
 
     $this->table = Table::make()
-        ->toggleable(true)
+        ->toggle(true)
         ->withColumns($this->columns);
 });
 
 it('toggles default if not toggleable', function () {
-    $this->table->toggleable(false);
+    $this->table->toggle(false);
 
     $this->pipe->__invoke($this->table, $this->next);
 
@@ -68,7 +68,7 @@ it('toggles using request', function () {
 });
 
 it('toggles using cookie', function () {
-    $this->table->rememberable(true);
+    $this->table->remember(true);
 
     $request = Request::create('/', 'GET', [
         config('table.columns_key') => 'description',

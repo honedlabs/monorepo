@@ -51,20 +51,13 @@ trait IsToggleable
     protected $duration;
 
     /**
-     * Whether the apply toggling.
-     *
-     * @var bool
-     */
-    protected $toggling = true;
-
-    /**
      * Set whether the table should allow the user to toggle which columns are
      * displayed.
      *
      * @param  bool  $toggle
      * @return $this
      */
-    public function toggleable($toggle = true)
+    public function toggle($toggle = true)
     {
         $this->toggle = $toggle;
 
@@ -107,7 +100,7 @@ trait IsToggleable
      * @param  string  $columnsKey
      * @return $this
      */
-    public function withColumnsKey($columnsKey): static
+    public function columnsKey($columnsKey): static
     {
         $this->columnsKey = $columnsKey;
 
@@ -144,7 +137,7 @@ trait IsToggleable
      * @param  bool  $remember
      * @return $this
      */
-    public function rememberable($remember = true)
+    public function remember($remember = true)
     {
         $this->remember = $remember;
 
@@ -186,7 +179,7 @@ trait IsToggleable
      * @param  string  $cookieName
      * @return $this
      */
-    public function withCookieName($cookieName)
+    public function cookieName($cookieName)
     {
         $this->cookieName = $cookieName;
 
@@ -229,7 +222,7 @@ trait IsToggleable
      * @param  int  $seconds
      * @return $this
      */
-    public function withDuration($seconds)
+    public function duration($seconds)
     {
         $this->duration = $seconds;
 

@@ -15,7 +15,7 @@ it('is toggleable', function () {
     // Class-based
     expect($this->table)
         ->isToggleable()->toBe(config('table.toggle'))
-        ->toggleable(true)->toBe($this->table)
+        ->toggle(true)->toBe($this->table)
         ->isToggleable()->toBe(true)
         ->fallbackToggleable()->toBe(config('table.toggle'));
 
@@ -25,14 +25,14 @@ it('is toggleable', function () {
 
     expect($class)
         ->isToggleable()->toBe(true)
-        ->toggleable(false)->toBe($class)
+        ->toggle(false)->toBe($class)
         ->isToggleable()->toBe(false);
 });
 
 it('has columns key', function () {
     expect($this->table)
         ->getColumnsKey()->toBe(config('table.columns_key'))
-        ->withColumnsKey('test')
+        ->columnsKey('test')
         ->getColumnsKey()->toBe('test')
         ->fallbackColumnsKey()->toBe(config('table.columns_key'));
 });
@@ -41,7 +41,7 @@ it('can remember', function () {
     // Class-based
     expect($this->table)
         ->isRememberable()->toBe(config('table.remember'))
-        ->rememberable(true)->toBe($this->table)
+        ->remember(true)->toBe($this->table)
         ->isRememberable()->toBe(true)
         ->fallbackRememberable()->toBe(config('table.remember'));
 
@@ -59,14 +59,14 @@ it('can remember', function () {
 it('has cookie name', function () {
     expect($this->table)
         ->getCookieName()->toBe($this->table->guessCookieName())
-        ->withCookieName('test')->toBe($this->table)
+        ->cookieName('test')->toBe($this->table)
         ->getCookieName()->toBe('test');
 });
 
 it('has duration', function () {
     expect($this->table)
         ->getDuration()->toBe(config('table.duration'))
-        ->withDuration(100)->toBe($this->table)
+        ->duration(100)->toBe($this->table)
         ->getDuration()->toBe(100)
         ->fallbackDuration()->toBe(config('table.duration'));
 });

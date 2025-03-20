@@ -105,7 +105,7 @@ it('is filterable', function () {
         ->isFilterable()->toBeTrue();
 });
 
-it('is selectable', function () {
+it('is select', function () {
     expect($this->test)
         ->isSelectable()->toBeTrue()
         ->select(false)->toBe($this->test)

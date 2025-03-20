@@ -28,7 +28,7 @@ class TransformRecords
         $columns = $table->getCachedColumns();
         /** @var array<int,TModel> $records */
         $records = $table->getRecords();
-        $serialize = $table->isWithAttributes();
+        $serialize = $table->hasAttributes();
 
         $table->setRecords(
             \array_map(

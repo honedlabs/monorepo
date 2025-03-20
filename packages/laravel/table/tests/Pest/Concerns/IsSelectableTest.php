@@ -11,10 +11,10 @@ beforeEach(function () {
     $this->table = Table::make();
 });
 
-it('is selectable', function () {
+it('is select', function () {
     expect($this->table)
         ->isSelectable()->toBe(config('table.select'))
-        ->selectable(true)->toBe($this->table)
+        ->select(true)->toBe($this->table)
         ->isSelectable()->toBe(true)
         ->fallbackSelectable()->toBe(config('table.select'));
 
@@ -24,15 +24,15 @@ it('is selectable', function () {
 
     expect($class)
         ->isSelectable()->toBe(true)
-        ->selectable(false)->toBe($class)
+        ->select(false)->toBe($class)
         ->isSelectable()->toBe(false);
 });
 
 it('selects columns', function () {
     expect($this->table)
         ->getSelects()->toBeEmpty()
-        ->withSelects('name')->toBe($this->table)
+        ->selects('name')->toBe($this->table)
         ->getSelects()->toBe(['name'])
-        ->withSelects(['description', 'price'])->toBe($this->table)
+        ->selects(['description', 'price'])->toBe($this->table)
         ->getSelects()->toBe(['name', 'description', 'price']);
 });

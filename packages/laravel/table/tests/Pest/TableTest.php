@@ -13,7 +13,7 @@ it('has key', function () {
     expect($this->table)
         ->withColumns(KeyColumn::make('id'))
         ->getKey()->toBe('id')
-        ->withKey('test')->toBe($this->table)
+        ->key('test')->toBe($this->table)
         ->getKey()->toBe('test');
 });
 
@@ -24,17 +24,17 @@ it('requires key', function () {
 it('has endpoint', function () {
     expect($this->table)
         ->getEndpoint()->toBe(config('table.endpoint'))
-        ->withEndpoint('/other')->toBe($this->table)
+        ->endpoint('/other')->toBe($this->table)
         ->getEndpoint()->toBe('/other')
         ->fallbackEndpoint()->toBe(config('table.endpoint'));
 });
 
 it('has attributes', function () {
     expect($this->table)
-        ->isWithAttributes()->toBe(config('table.attributes'))
-        ->withAttributes(true)->toBe($this->table)
-        ->isWithAttributes()->toBe(true)
-        ->fallbackWithAttributes()->toBe(config('table.attributes'));
+        ->hasAttributes()->toBe(config('table.attributes'))
+        ->attributes(true)->toBe($this->table)
+        ->hasAttributes()->toBe(true)
+        ->fallbackAttributes()->toBe(config('table.attributes'));
 });
 
 it('has records', function () {

@@ -69,7 +69,7 @@ trait HasPagination
      * @param  'cursor'|'simple'|'length-aware'|'collection'|string  $paginator
      * @return $this
      */
-    public function withPaginator($paginator)
+    public function paginator($paginator)
     {
         $this->paginator = $paginator;
 
@@ -106,7 +106,7 @@ trait HasPagination
      * @param  int|array<int,int>  $pagination
      * @return $this
      */
-    public function withPagination($pagination)
+    public function pagination($pagination)
     {
         $this->pagination = $pagination;
 
@@ -144,7 +144,7 @@ trait HasPagination
      * @param  int  $defaultPagination
      * @return $this
      */
-    public function withDefaultPagination($defaultPagination)
+    public function defaultPagination($defaultPagination)
     {
         $this->defaultPagination = $defaultPagination;
 
@@ -181,7 +181,7 @@ trait HasPagination
      * @param  string  $pagesKey
      * @return $this
      */
-    public function withPagesKey($pagesKey)
+    public function pagesKey($pagesKey)
     {
         $this->pagesKey = $pagesKey;
 
@@ -218,7 +218,7 @@ trait HasPagination
      * @param  string  $recordsKey
      * @return $this
      */
-    public function withRecordsKey($recordsKey)
+    public function recordsKey($recordsKey)
     {
         $this->recordsKey = $recordsKey;
 
@@ -256,7 +256,7 @@ trait HasPagination
      * @param  int  $window
      * @return $this
      */
-    public function withWindow($window)
+    public function window($window)
     {
         $this->window = $window;
 

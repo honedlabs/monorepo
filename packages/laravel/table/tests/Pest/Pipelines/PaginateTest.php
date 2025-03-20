@@ -46,7 +46,7 @@ it('paginates default', function () {
 });
 
 it('paginates simple', function () {
-    $this->table->withPaginator('simple');
+    $this->table->paginator('simple');
 
     $this->pipe->__invoke($this->table, $this->next);
 
@@ -65,7 +65,7 @@ it('paginates simple', function () {
 });
 
 it('paginates cursor', function () {
-    $this->table->withPaginator('cursor');
+    $this->table->paginator('cursor');
 
     $this->pipe->__invoke($this->table, $this->next);
 
@@ -83,7 +83,7 @@ it('paginates cursor', function () {
 });
 
 it('paginates collection', function () {
-    $this->table->withPaginator('collection');
+    $this->table->paginator('collection');
 
     $this->pipe->__invoke($this->table, $this->next);
 
@@ -98,7 +98,7 @@ it('paginates collection', function () {
 });
 
 it('paginate fails', function () {
-    $this->table->withPaginator('invalid');
+    $this->table->paginator('invalid');
 
     $this->pipe->__invoke($this->table, $this->next);
     
@@ -111,7 +111,7 @@ it('changes per page', function () {
         config('table.records_key') => $count
     ]);
 
-    $this->table->withPagination([10, 25, 50])->request($request);
+    $this->table->pagination([10, 25, 50])->request($request);
 
     $this->pipe->__invoke($this->table, $this->next);
 
@@ -129,7 +129,7 @@ it('changes per page with restrictions', function () {
         config('table.records_key') => $count
     ]);
 
-    $this->table->withPagination([10, 25, 50])->request($request);
+    $this->table->pagination([10, 25, 50])->request($request);
 
     $this->pipe->__invoke($this->table, $this->next);
 
@@ -147,8 +147,8 @@ it('changes default per page', function () {
         config('table.records_key') => 20
     ]);
 
-    $this->table->withPagination([10, 25, 50])
-        ->withDefaultPagination($count)
+    $this->table->pagination([10, 25, 50])
+        ->defaultPagination($count)
         ->request($request);
 
     $this->pipe->__invoke($this->table, $this->next);
@@ -176,7 +176,7 @@ it('preserves query string', function () {
 
 it('fails to paginate scope', function () {
     $this->table->scope('scope')
-        ->withPagination([10, 25, 50]);
+        ->pagination([10, 25, 50]);
 
     $request = Request::create('/', 'GET', [
         config('table.records_key') => 25,
@@ -201,7 +201,7 @@ it('fails to paginate scope', function () {
 
 it('paginates scope', function () {
     $this->table->scope('scope')
-        ->withPagination([10, 25, 50]);
+        ->pagination([10, 25, 50]);
 
     $request = Request::create('/', 'GET', [
         $this->table->formatScope(config('table.records_key')) => 25,

@@ -79,7 +79,7 @@ it('transforms records', function () {
 });
 
 it('uses attributes', function () {
-    $this->table->withAttributes(true);
+    $this->table->attributes(true);
 
     $this->pipe->__invoke($this->table, $this->next);
     
