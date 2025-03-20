@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
-class UploadRule extends UploadValidator
+use Honed\Upload\Concerns\ValidatesUpload;
+
+class UploadRule
 {
+    use ValidatesUpload;
+
     /**
      * Create a new file rule instance.
      * 
@@ -21,7 +25,7 @@ class UploadRule extends UploadValidator
     /**
      * Determine if the given type matches this rule.
      * 
-     * @param string $types
+     * @param mixed ...$types
      * @return bool
      */
     public function isMatching(...$types)

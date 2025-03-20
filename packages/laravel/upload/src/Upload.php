@@ -7,33 +7,30 @@ namespace Honed\Upload;
 use Carbon\Carbon;
 use Aws\S3\S3Client;
 use Aws\S3\PostObjectV4;
+use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Primitive;
 use Honed\Upload\UploadRule;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Honed\Upload\Rules\OfType;
-use Honed\Upload\Concerns\HasMax;
-use Honed\Upload\Concerns\HasMin;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Stringable;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Upload\Concerns\HasExpiry;
 use Honed\Upload\Concerns\HasExpires;
 use Honed\Upload\Concerns\HasFileRules;
 use Honed\Upload\Concerns\HasFileTypes;
+use Honed\Upload\Concerns\ValidatesUpload;
 use Honed\Upload\Contracts\AnonymizesName;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
 /**
  * @extends \Honed\Core\Primitive<string,mixed>
  */
-class Upload extends UploadValidator //implements Responsable
+class Upload extends Primitive implements Responsable
 {
-    use HasFileRules;
     use HasRequest;
+    use HasFileRules;
+    use ValidatesUpload;
 
     /**
      * The disk to retrieve the S3 credentials from.
@@ -289,6 +286,37 @@ class Upload extends UploadValidator //implements Responsable
     }
 
     /**
+     * Get the S3 client to use for uploading files.
+     *
+     * @return \Aws\S3\S3Client
+     */
+    public function getClient()
+    {
+        $disk = $this->getDisk();
+
+        return new S3Client([
+            'version' => 'latest',
+            'region' => config("filesystems.disks.{$disk}.region"),
+            'credentials' => [
+                'key' => config("filesystems.disks.{$disk}.key"),
+                'secret' => config("filesystems.disks.{$disk}.secret"),
+            ],
+        ]);
+    }
+
+    /**
+     * Get the S3 bucket to use for uploading files.
+     *
+     * @return string
+     */
+    public function getBucket()
+    {
+        $disk = $this->getDisk();
+
+        return type(config("filesystems.disks.{$disk}.bucket"))->asString();
+    }
+
+    /**
      * Get the defaults for form input fields.
      *
      * @param  string  $key
@@ -313,6 +341,7 @@ class Upload extends UploadValidator //implements Responsable
         $options = [
             ['eq', '$acl', $this->getACL()],
             ['eq', '$key', $key],
+            ['eq', '$bucket', $this->getBucket()],
             ['content-length-range', $this->getMin(), $this->getMax()],
         ];
 
@@ -326,67 +355,30 @@ class Upload extends UploadValidator //implements Responsable
     }
 
     /**
-     * Get the S3 client to use for uploading files.
-     *
-     * @param string $disk
-     * @return \Aws\S3\S3Client
-     */
-    public function getClient($disk)
-    {
-        $disk = $this->getDisk();
-
-        return new S3Client([
-            'version' => 'latest',
-            'region' => config("filesystems.disks.{$disk}.region"),
-            'credentials' => [
-                'key' => config("filesystems.disks.{$disk}.key"),
-                'secret' => config("filesystems.disks.{$disk}.secret"),
-            ],
-        ]);
-    }
-
-    /**
-     * Get the attributes for the request.
-     *
-     * @return array<string,string>
-     */
-    public function getValidationAttributes()
-    {
-        return [
-            'name' => 'file name',
-            'type' => 'file type',
-            'size' => 'file size',
-        ];
-    }
-
-    /**
      * Build the storage key path for the uploaded file.
      *
-     * @param  \Honed\Upload\UploadData $validated
+     * @param  \Honed\Upload\UploadData $data
      * @return string
      */
     public function createKey($data)
     {
-        /** @var string */
-        $filename = Arr::get($validated, 'name');
-
         $name = $this->getName();
 
-        /** @var string */
-        $validatedName = match (true) {
-            $name === 'uuid' => Str::uuid()->toString(),
-            $name instanceof \Closure => type($this->evaluateValidated($name, $validated))->asString(),
-            default => \pathinfo($filename, \PATHINFO_FILENAME),
+        $filename = match (true) {
+            $this->isAnonymized() => Str::uuid()->toString(),
+            $name instanceof \Closure => type($this->evaluateValidated($name, $data))->asString(),
+            default => $data->name,
         };
 
-        $path = $this->evaluateValidated($this->getPath(), $validated);
+        $path = $this->evaluateValidated($this->getPath(), $data);
 
-        return Str::of($validatedName)
-            ->append('.', \pathinfo($filename, \PATHINFO_EXTENSION))
-            ->when($path, fn (Stringable $name) => $name
-                    ->prepend($path, '/') // @phpstan-ignore-line
-                    ->replace('//', '/'),
-            )->toString();
+        return Str::of($filename)
+            ->append('.', $data->extension)
+            ->when($path, fn (Stringable $name, $path) => $name
+                ->prepend($path, '/')
+                ->replace('//', '/'),
+            )->trim('/')
+            ->value();
     }
 
     /**
@@ -413,18 +405,18 @@ class Upload extends UploadValidator //implements Responsable
     /**
      * Create a presigned POST URL using.
      *
+     * @param \Illuminate\Http\Request|null $request
      * @return array{attributes:array<string,mixed>,inputs:array<string,mixed>}
      * 
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function create()
+    public function create($request = null)
     {
-        $request = $this->getRequest();
+        $request ??= $this->getRequest();
 
-        [$name, $extension] = $this->destructureFilename($request->name);
+        [$name, $extension] = $this->destructureFilename($request->input('name'));
 
-        /** @var array<string, mixed> */
-        $data = $request->merge([
+        $request->merge([
             'name' => $name,
             'extension' => $extension,
         ])->all();
@@ -439,15 +431,9 @@ class Upload extends UploadValidator //implements Responsable
 
         $key = $this->createKey($validated);
 
-        $disk = $this->getDisk();
-
-        $client = $this->getClient($disk);
-
-        $bucket = $this->getBucket($disk);
-
         $postObject = new PostObjectV4(
-            $client,
-            $bucket,
+            $this->getClient(),
+            $this->getBucket(),
             $this->getFormInputs($key),
             $this->getOptions($key),
             $this->getExpiry()
@@ -457,5 +443,26 @@ class Upload extends UploadValidator //implements Responsable
             'attributes' => $postObject->getFormAttributes(),
             'inputs' => $postObject->getFormInputs(),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return [];
+    }
+
+    /**
+     * Create a response for the upload.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toResponse($request)
+    {
+        $presign = $this->create();
+
+        return response()->json($presign);
     }
 }

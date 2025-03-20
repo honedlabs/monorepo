@@ -6,6 +6,9 @@ namespace Honed\Upload;
 
 class UploadData
 {
+    /**
+     * Create a new upload data instance.
+     */
     public function __construct(
         public string $name,
         public string $extension,
@@ -18,15 +21,15 @@ class UploadData
      * Create a new upload data instance from the validated data.
      * 
      * @param array<string,mixed> $data
-     * @return static
+     * @return self
      */
     public static function from($data)
     {
-        return new static(
-            $data['name'],
-            $data['extension'],
-            $data['type'],
-            $data['size'],
+        return new self(
+            type($data['name'])->asString(),
+            type($data['extension'])->asString(),
+            type($data['type'])->asString(),
+            type($data['size'])->asInt(),
             $data['meta'],
         );
     }
