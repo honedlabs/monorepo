@@ -5,8 +5,6 @@ declare(strict_types=1);
 use Honed\Upload\Upload;
 use Illuminate\Validation\ValidationException;
 
-use function Pest\Laravel\post;
-
 beforeEach(function () {
     $this->upload = Upload::make()
         ->types('image/', '.png')

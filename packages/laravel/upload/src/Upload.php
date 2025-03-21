@@ -492,7 +492,7 @@ class Upload extends Primitive implements Responsable
      */
     public function toResponse($request)
     {
-        $presign = $this->create();
+        $presign = $this->create($request);
 
         return response()->json($presign);
     }

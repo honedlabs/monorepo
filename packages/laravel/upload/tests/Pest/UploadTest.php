@@ -6,6 +6,7 @@ use Honed\Upload\Contracts\AnonymizesName;
 use Honed\Upload\Upload;
 use Honed\Upload\UploadData;
 use Honed\Upload\UploadRule;
+use Illuminate\Http\JsonResponse;
 
 beforeEach(function () {
     $this->upload = Upload::make();
@@ -138,4 +139,28 @@ describe('key creation', function () {
             ->createKey($this->data)
             ->toBe('images/10/test.png');
     });
+});
+
+it('creates', function () {
+    $request = presignRequest('test.png', 'image/png', 1024);
+
+    expect($this->upload->create($request))
+        ->toBeArray()
+        ->toHaveKeys([
+            'attributes',
+            'inputs',
+        ]);
+});
+
+it('is response', function () {
+    $request = presignRequest('test.png', 'image/png', 1024);
+
+    expect($this->upload->toResponse($request))
+        ->toBeInstanceOf(JsonResponse::class);
+});
+
+it('has array representation', function () {
+    expect($this->upload->toArray())
+        ->toBeArray()
+        ->toBeEmpty();
 });
