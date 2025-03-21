@@ -49,7 +49,7 @@ abstract class Primitive implements \JsonSerializable, Arrayable
      *
      * @return void
      */
-    public function setUp() { }
+    public function setUp() {}
 
     /**
      * Handle dynamic method calls into the method.

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Core\Concerns\Evaluable;
-use Honed\Core\Concerns\HasQueryClosure;
+use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Contracts\DefinesQuery;
 use Honed\Core\Tests\Stubs\Product;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,22 +12,22 @@ beforeEach(function () {
     $this->test = new class
     {
         use Evaluable;
-        use HasQueryClosure;
+        use HasQuery;
     };
 });
 
 it('has query closure', function () {
     expect($this->test)
-        ->hasQueryClosure()->toBeFalse()
-        ->queryClosure(fn () => null)->toBe($this->test)
-        ->hasQueryClosure()->toBeTrue();
+        ->hasQuery()->toBeFalse()
+        ->query(fn () => null)->toBe($this->test)
+        ->hasQuery()->toBeTrue();
 });
 
 it('gets query closure', function () {
     expect($this->test)
-        ->getQueryClosure()->toBeNull()
-        ->queryClosure(fn () => null)->toBe($this->test)
-        ->getQueryClosure()->toBeInstanceOf(\Closure::class);
+        ->getQuery()->toBeNull()
+        ->query(fn () => null)->toBe($this->test)
+        ->getQuery()->toBeInstanceOf(\Closure::class);
 });
 
 it('modifies query', function () {
@@ -38,14 +38,14 @@ it('modifies query', function () {
 
     expect($builder->getQuery()->wheres)->toBeEmpty();
 
-    $this->test->queryClosure($fn)->modifyQuery($builder, ['value' => 1]);
+    $this->test->query($fn)->modifyQuery($builder, ['value' => 1]);
 
     expect($builder->getQuery()->wheres)
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
-        ->operator->toBe('=')
-        ->column->toBe('id')
-        ->value->toBe(1)
+            ->operator->toBe('=')
+            ->column->toBe('id')
+            ->value->toBe(1)
         );
 });
 
@@ -53,7 +53,7 @@ it('has query from method', function () {
     $test = new class implements DefinesQuery
     {
         use Evaluable;
-        use HasQueryClosure;
+        use HasQuery;
 
         public function usingQuery(Builder $b, int $value)
         {
@@ -62,8 +62,8 @@ it('has query from method', function () {
     };
 
     expect($test)
-        ->hasQueryClosure()->toBeTrue()
-        ->getQueryClosure()->toBeInstanceOf(\Closure::class);
+        ->hasQuery()->toBeTrue()
+        ->getQuery()->toBeInstanceOf(\Closure::class);
 
     $builder = Product::query();
     $test->modifyQuery($builder, ['value' => 1]);
@@ -71,8 +71,8 @@ it('has query from method', function () {
     expect($builder->getQuery()->wheres)
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
-        ->operator->toBe('=')
-        ->column->toBe('id')
-        ->value->toBe(1)
+            ->operator->toBe('=')
+            ->column->toBe('id')
+            ->value->toBe(1)
         );
 });

@@ -26,7 +26,7 @@ trait HasBuilderInstance
      *
      * @param  TBuilder|TModel|class-string<TModel>  $builder
      * @return $this
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public function builder($builder)
@@ -91,6 +91,6 @@ trait HasBuilderInstance
 
         throw new \InvalidArgumentException(
             'Expected a model class name or a query instance.'
-        );       
+        );
     }
 }

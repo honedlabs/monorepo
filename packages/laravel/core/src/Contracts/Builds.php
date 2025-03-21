@@ -12,7 +12,7 @@ interface Builds
 {
     /**
      * Define the database resource to use.
-     * 
+     *
      * @return TBuilder|TModel|class-string<TModel>
      */
     public function for();

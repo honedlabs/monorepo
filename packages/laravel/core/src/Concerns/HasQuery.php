@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  */
-trait HasQueryClosure
+trait HasQuery
 {
     /**
      * The query closure to modify the Eloquent builder.
@@ -28,7 +28,7 @@ trait HasQueryClosure
      * @param  \Closure(mixed...):void|null  $query
      * @return $this
      */
-    public function queryClosure($query)
+    public function query($query)
     {
         $this->query = $query;
 
@@ -40,7 +40,7 @@ trait HasQueryClosure
      *
      * @return \Closure(mixed...):void|null
      */
-    public function getQueryClosure()
+    public function getQuery()
     {
         if (isset($this->query)) {
             return $this->query;
@@ -58,7 +58,7 @@ trait HasQueryClosure
      *
      * @return bool
      */
-    public function hasQueryClosure()
+    public function hasQuery()
     {
         return isset($this->query) || $this instanceof DefinesQuery;
     }
@@ -71,13 +71,13 @@ trait HasQueryClosure
      */
     public function modifyQuery($builder, $bindings = [])
     {
-        $callback = $this->getQueryClosure();
+        $callback = $this->getQuery();
 
         if (\is_null($callback)) {
             return;
         }
 
-        $callback = $this->rebindQueryClosure($callback, $bindings);
+        $callback = $this->rebindQuery($callback, $bindings);
 
         $callback($builder);
     }
@@ -89,7 +89,7 @@ trait HasQueryClosure
      * @param  array<string, mixed>  $bindings
      * @return \Closure(TBuilder):void
      */
-    public function rebindQueryClosure($closure, $bindings)
+    public function rebindQuery($closure, $bindings)
     {
         return fn ($builder) => $this->evaluate($closure, [
             'builder' => $builder,

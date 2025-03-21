@@ -7,7 +7,4 @@ namespace Honed\Core\Contracts;
 /**
  * @method void usingQuery() Define a builder query closure.
  */
-interface DefinesQuery
-{
-
-}
+interface DefinesQuery {}

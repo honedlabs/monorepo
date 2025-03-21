@@ -27,7 +27,7 @@ class Column extends Primitive
     public function setUp()
     {
         parent::setUp();
-        
+
         $this->type('column');
         $this->name('Products');
     }
