@@ -23,7 +23,7 @@ class Filter extends Refiner
     use HasDelimiter;
     use HasMeta;
     use HasOptions {
-        multiple as protected setMultiple;
+        multiple as protected baseMultiple;
     }
     use HasScope;
     use InterpretsRequest;
@@ -67,7 +67,7 @@ class Filter extends Refiner
      *
      * @return $this
      */
-    public function dateTime()
+    public function datetime()
     {
         $this->type('datetime');
         $this->asDatetime();
@@ -82,7 +82,7 @@ class Filter extends Refiner
      */
     public function float()
     {
-        $this->type('float');
+        $this->type('number');
         $this->asFloat();
 
         return $this;
@@ -95,7 +95,7 @@ class Filter extends Refiner
      */
     public function integer()
     {
-        $this->type('integer');
+        $this->type('number');
         $this->asInteger();
 
         return $this;
@@ -110,19 +110,19 @@ class Filter extends Refiner
     {
         $this->type('multiple');
         $this->asArray();
-        $this->setMultiple();
+        $this->baseMultiple();
 
         return $this;
     }
 
     /**
-     * Set the filter to be for string values.
+     * Set the filter to be for text values.
      *
      * @return $this
      */
-    public function string()
+    public function text()
     {
-        $this->type('string');
+        $this->type('text');
         $this->asString();
 
         return $this;

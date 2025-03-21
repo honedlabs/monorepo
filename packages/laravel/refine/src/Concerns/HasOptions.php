@@ -176,7 +176,7 @@ trait HasOptions
      */
     public function isStrict()
     {
-        return (bool) ($this->strict ?? static::fallbackStrict());
+        return (bool) ($this->strict ?? static::isStrictByDefault());
     }
 
     /**
@@ -184,7 +184,7 @@ trait HasOptions
      *
      * @return bool
      */
-    public static function fallbackStrict()
+    public static function isStrictByDefault()
     {
         return (bool) config('refine.strict', false);
     }
