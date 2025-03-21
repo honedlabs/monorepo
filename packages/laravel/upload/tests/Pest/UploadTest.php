@@ -2,11 +2,18 @@
 
 declare(strict_types=1);
 
+use Honed\Upload\Contracts\AnonymizesName;
 use Honed\Upload\Upload;
+use Honed\Upload\UploadData;
 use Honed\Upload\UploadRule;
 
 beforeEach(function () {
     $this->upload = Upload::make();
+});
+
+it('has into shorthand', function () {
+    expect(Upload::into('r2'))
+        ->getDisk()->toBe('r2');
 });
 
 it('has disk', function () {
@@ -39,6 +46,21 @@ it('has name', function () {
         ->getName()->toBe('test');
 });
 
+it('anonymizes', function () {
+    expect($this->upload)
+        ->isAnonymized()->toBeFalse()
+        ->anonymize()->toBe($this->upload)
+        ->isAnonymized()->toBeTrue()
+        ->isAnonymizedByDefault()->toBeFalse();
+
+    $upload = new class extends Upload implements AnonymizesName {
+        public function __construct() {}
+    };
+
+    expect($upload)
+        ->isAnonymized()->toBeTrue();
+});
+
 it('has access control list', function () {
     expect(Upload::make())
         ->getACL()->toBe(config('upload.acl'))
@@ -56,19 +78,64 @@ it('has form inputs', function () {
 });
 
 it('has policy options', function () {
-    $key = 'test';
+    $key = 'test.png';
 
     expect(Upload::make())
         ->getOptions($key)->toBeArray()
         ->toHaveCount(4);
 });
 
-// it('has form attributes as array representation', function () {
-//     expect(Upload::make())
-//         ->multiple()->toBeInstanceOf(Upload::class)
-//         ->accepts(['image/png', 'video/'])
-//         ->toArray()->toEqual([
-//             'multiple' => true,
-//             'accept' => 'image/png,video/*',
-//         ]);
-// });
+it('has policy options with mime types', function () {
+    $key = 'test.png';
+
+    expect(Upload::make()->types('image/*'))
+        ->getOptions($key)->toBeArray()
+        ->toHaveCount(5);
+});
+
+it('destructures filenames', function () {
+    expect(Upload::destructureFilename('test.png'))
+        ->toBe(['test', 'png']);
+
+    expect(Upload::destructureFilename(null))
+        ->toBe([null, null]);
+});
+
+describe('key creation', function () {
+    beforeEach(function () {
+        $this->data = new UploadData(
+            'test',
+            'png',
+            'image/png',
+            1024,
+            ['publisher' => 10]
+        );
+    });
+
+    test('basic', function () {
+        expect($this->upload)
+            ->createKey($this->data)->toBe('test.png');
+    });
+
+    test('anonymized', function () {
+        expect($this->upload->anonymize())
+            ->createKey($this->data)->not->toBe('test.png');
+    });
+
+    test('closure', function () {
+        expect($this->upload->name(fn ($name, $meta) => $name . '-' . $meta['publisher']))
+            ->createKey($this->data)->toBe('test-10.png');
+    });
+
+    test('path', function () {
+        expect($this->upload->path('test'))
+            ->createKey($this->data)
+            ->toBe('test/test.png');
+    });
+
+    test('path closure', function () {
+        expect($this->upload->path(fn ($meta) => '/images/' . $meta['publisher'] . '/'))
+            ->createKey($this->data)
+            ->toBe('images/10/test.png');
+    });
+});
