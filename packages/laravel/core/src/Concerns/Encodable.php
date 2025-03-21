@@ -9,7 +9,7 @@ trait Encodable
     /**
      * The encoding closure.
      *
-     * @var \Closure(mixed...):string|null
+     * @var \Closure(mixed):string|null
      */
     protected static $encoder;
 
@@ -23,7 +23,7 @@ trait Encodable
     /**
      * Set the encoder.
      *
-     * @param  \Closure(mixed...):string|null  $encoder
+     * @param  \Closure(mixed):string|null  $encoder
      * @return void
      */
     public static function encoder($encoder = null)

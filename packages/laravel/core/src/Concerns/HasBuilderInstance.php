@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Honed\Core\Contracts\Builds;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,12 +24,14 @@ trait HasBuilderInstance
     /**
      * Set the builder instance.
      *
-     * @param  TBuilder  $builder
+     * @param  TBuilder|TModel|class-string<TModel>  $builder
      * @return $this
+     * 
+     * @throws \InvalidArgumentException
      */
     public function builder($builder)
     {
-        $this->builder = $builder;
+        $this->builder = $this->createBuilder($builder);
 
         return $this;
     }
@@ -39,16 +42,21 @@ trait HasBuilderInstance
      * @return TBuilder
      *
      * @throws \RuntimeException
+     * @throws \InvalidArgumentException
      */
     public function getBuilder()
     {
-        if (! $this->hasBuilder()) {
-            throw new \RuntimeException(
-                'Builder instance has not been set.'
-            );
+        if ($this->hasBuilder()) {
+            return $this->builder;
         }
 
-        return $this->builder;
+        if ($this instanceof Builds) {
+            return $this->builder ??= $this->createBuilder($this->for());
+        }
+
+        throw new \RuntimeException(
+            'Builder instance has not been set.'
+        );
     }
 
     /**
@@ -64,11 +72,15 @@ trait HasBuilderInstance
     /**
      * Create a new builder instance.
      *
-     * @param  TModel|class-string<TModel>|TBuilder  $query
+     * @param  TBuilder|TModel|class-string<TModel>  $query
      * @return TBuilder
      */
     public static function createBuilder($query)
     {
+        if ($query instanceof Builder) {
+            return $query;
+        }
+
         if ($query instanceof Model) {
             return $query::query();
         }
@@ -77,12 +89,8 @@ trait HasBuilderInstance
             return $query::query();
         }
 
-        if (! $query instanceof Builder) {
-            throw new \InvalidArgumentException(
-                'Expected a model class name or a query instance.'
-            );
-        }
-
-        return $query;
+        throw new \InvalidArgumentException(
+            'Expected a model class name or a query instance.'
+        );       
     }
 }

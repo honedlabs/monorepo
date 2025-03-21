@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Closure;
+use Honed\Core\Contracts\DefinesQuery;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -40,11 +42,15 @@ trait HasQueryClosure
      */
     public function getQueryClosure()
     {
-        if (\method_exists($this, 'query')) {
-            return \Closure::fromCallable([$this, 'query']);
+        if (isset($this->query)) {
+            return $this->query;
         }
 
-        return $this->query;
+        if ($this instanceof DefinesQuery) {
+            return Closure::fromCallable([$this, 'usingQuery']);
+        }
+
+        return null;
     }
 
     /**
@@ -54,7 +60,7 @@ trait HasQueryClosure
      */
     public function hasQueryClosure()
     {
-        return isset($this->query) || \method_exists($this, 'query');
+        return isset($this->query) || $this instanceof DefinesQuery;
     }
 
     /**
