@@ -48,6 +48,35 @@ it('has types', function () {
         ->getTypes()->toBe(['image/png', 'image/jpeg', 'image/gif']);
 });
 
+it('sets types to only images', function () {
+    expect($this->test->onlyImages())
+        ->getTypes()->toEqual([
+            'image/',
+        ]);
+});
+
+it('sets types to only videos', function () {
+    expect($this->test->onlyVideos())
+        ->getTypes()->toEqual([
+            'video/',
+        ]);
+});
+
+it('sets types to only audio', function () {
+    expect($this->test->onlyAudio())
+        ->getTypes()->toEqual([
+            'audio/',
+        ]);
+});
+
+it('sets types to only pdf', function () {
+    expect($this->test->onlyPdf())
+        ->getTypes()->toEqual([
+            'application/pdf',
+            '.pdf',
+        ]);
+});
+
 it('separates mimes and extensions', function () {
     expect($this->test)
         ->types('image/png', '.jpeg')->toBe($this->test)

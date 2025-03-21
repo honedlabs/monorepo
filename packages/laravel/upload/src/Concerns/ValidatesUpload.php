@@ -162,6 +162,46 @@ trait ValidatesUpload
     }
 
     /**
+     * Set the upload to only accept images.
+     * 
+     * @return $this
+     */
+    public function onlyImages()
+    {
+        return $this->types('image/');
+    }
+
+    /**
+     * Set the upload to only accept videos.
+     * 
+     * @return $this
+     */
+    public function onlyVideos()
+    {
+        return $this->types('video/');
+    }
+
+    /**
+     * Set the upload to only accept audio.
+     * 
+     * @return $this
+     */
+    public function onlyAudio()
+    {
+        return $this->types('audio/');
+    }
+
+    /**
+     * Set the upload to only accept PDF files.
+     * 
+     * @return $this
+     */
+    public function onlyPdf()
+    {
+        return $this->types('application/pdf', '.pdf');
+    }
+
+    /**
      * Get the accepted file mime types and extensions.
      * 
      * @return array<int, string>
@@ -221,7 +261,7 @@ trait ValidatesUpload
                     }
 
                     if (! \in_array($value, $extensions)) {
-                        $fail(__('upload.extension', [
+                        $fail(__('upload::messages.extension', [
                             'extensions' => \implode(', ', $extensions),
                         ]));
                     }
@@ -234,7 +274,7 @@ trait ValidatesUpload
                     $min = $this->getMin();
 
                     if ($value < $min) {
-                        $fail(__('upload.min_size', [
+                        $fail(__('upload::messages.min_size', [
                             'size' => Number::fileSize($min),
                         ]));
                     }
@@ -242,7 +282,7 @@ trait ValidatesUpload
                     $max = $this->getMax();
 
                     if ($value > $max) {
-                        $fail(__('upload.max_size', [
+                        $fail(__('upload::messages.max_size', [
                             'size' => Number::fileSize($max),
                         ]));
                     }
@@ -252,15 +292,19 @@ trait ValidatesUpload
                 'required',
                 'string',
                 function (string $attribute, mixed $value, \Closure $fail) {
-                    $types = $this->getTypes();
+                    $types = $this->getMimes();
 
                     if (! filled($types)) {
                         return;
                     }
 
-                    if (! \in_array($value, $types)) {
-                        $fail(__('upload.type'));
+                    foreach ($types as $type) {
+                        if (\str_starts_with($value, $type)) {
+                            return;
+                        }
                     }
+
+                    $fail(__('upload::messages.type'));
                 },
             ],
             'meta' => ['nullable'],

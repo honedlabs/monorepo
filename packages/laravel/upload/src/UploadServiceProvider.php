@@ -22,6 +22,7 @@ final class UploadServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'upload');
         
         if ($this->app->runningInConsole()) {
             $this->commands([
@@ -37,8 +38,8 @@ final class UploadServiceProvider extends ServiceProvider
             ], 'stubs');
 
             $this->publishes([
-                __DIR__.'/Lang' => lang_path()
-            ]);
+                __DIR__.'/../lang' => lang_path('vendor/upload'),
+            ], 'lang');
         }
     }
 }

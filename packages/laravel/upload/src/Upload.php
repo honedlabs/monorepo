@@ -15,13 +15,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Stringable;
 use Honed\Core\Concerns\HasRequest;
-use Honed\Upload\Concerns\HasExpiry;
-use Honed\Upload\Concerns\HasExpires;
-use Honed\Upload\Concerns\HasFileRules;
-use Honed\Upload\Concerns\HasFileTypes;
 use Honed\Upload\Concerns\ValidatesUpload;
 use Honed\Upload\Contracts\AnonymizesName;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * @extends \Honed\Core\Primitive<string,mixed>
@@ -29,7 +26,6 @@ use Illuminate\Contracts\Support\Responsable;
 class Upload extends Primitive implements Responsable
 {
     use HasRequest;
-    use HasFileRules;
     use ValidatesUpload;
 
     /**
@@ -403,6 +399,39 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
+     * Validate the incoming request.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param \Honed\Upload\UploadRule|null $rule
+     * @return \Honed\Upload\UploadData
+     * 
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function validate($request, $rule = null)
+    {
+        $rules = $rule ? $rule->createRules() : $this->createRules();
+
+        $validated = Validator::make(
+            $request->all(),
+            $rules,
+            [],
+            $this->getAttributes(),
+        )->validate();
+
+        return UploadData::from($validated);
+    }
+
+    public function getAttributes()
+    {
+        return [
+            'name' => 'file name',
+            'extension' => 'file extension',
+            'type' => 'file type',
+            'size' => 'file size',
+        ];
+    }
+
+    /**
      * Create a presigned POST URL using.
      *
      * @param \Illuminate\Http\Request|null $request
@@ -414,7 +443,8 @@ class Upload extends Primitive implements Responsable
     {
         $request ??= $this->getRequest();
 
-        [$name, $extension] = $this->destructureFilename($request->input('name'));
+        [$name, $extension] = 
+            static::destructureFilename($request->input('name'));
 
         $request->merge([
             'name' => $name,
@@ -464,5 +494,23 @@ class Upload extends Primitive implements Responsable
         $presign = $this->create();
 
         return response()->json($presign);
+    }
+
+    /**
+     * Destructure the filename into its components.
+     * 
+     * @param mixed $filename
+     * @return ($filename is string ? array{string, string} : array{null, null})
+     */
+    public static function destructureFilename($filename)
+    {
+        if (! \is_string($filename)) {
+            return [null, null];
+        }
+
+        return [
+            \pathinfo($filename, PATHINFO_FILENAME),
+            \mb_strtolower(\pathinfo($filename, PATHINFO_EXTENSION)),
+        ];
     }
 }

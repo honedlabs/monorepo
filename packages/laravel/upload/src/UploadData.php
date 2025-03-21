@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
+use Illuminate\Support\Arr;
+
 class UploadData
 {
     /**
@@ -30,7 +32,7 @@ class UploadData
             type($data['extension'])->asString(),
             type($data['type'])->asString(),
             type($data['size'])->asInt(),
-            $data['meta'],
+            Arr::get($data, 'meta', null),
         );
     }
 }

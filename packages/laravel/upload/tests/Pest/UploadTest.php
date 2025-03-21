@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Upload\Upload;
+use Honed\Upload\UploadRule;
 
 beforeEach(function () {
     $this->upload = Upload::make();
@@ -15,6 +16,14 @@ it('has disk', function () {
         ->getDisk()->toBe('r2');
 });
 
+it('has rules', function () {
+    expect($this->upload)
+        ->getRules()->toBeEmpty()
+        ->rules(UploadRule::make('image/png'))->toBe($this->upload)
+        ->getRules()->toHaveCount(1)
+        ->rules([UploadRule::make('image/jpeg')])->toBe($this->upload)
+        ->getRules()->toHaveCount(2);
+});
 
 it('has path', function () {
     expect(Upload::make())
@@ -37,7 +46,7 @@ it('has access control list', function () {
         ->getACL()->toBe('private-read');
 });
 
-it('creates form inputs', function () {
+it('has form inputs', function () {
     $key = 'test';
 
     expect(Upload::make()->getFormInputs($key))->toEqual([
@@ -46,7 +55,7 @@ it('creates form inputs', function () {
     ]);
 });
 
-it('creates policy options', function () {
+it('has policy options', function () {
     $key = 'test';
 
     expect(Upload::make())
