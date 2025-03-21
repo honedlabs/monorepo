@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasQueryClosure;
+use Honed\Core\Contracts\DefinesQuery;
 use Honed\Core\Tests\Stubs\Product;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -49,14 +50,14 @@ it('modifies query', function () {
 });
 
 it('has query from method', function () {
-    $test = new class
+    $test = new class implements DefinesQuery
     {
         use Evaluable;
         use HasQueryClosure;
 
-        public function query(Builder $b, int $value)
+        public function usingQuery(Builder $b, int $value)
         {
-            $b->where('id', $value);
+            $b->where('id', $value);   
         }
     };
 

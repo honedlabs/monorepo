@@ -20,38 +20,38 @@ beforeEach(function () {
 
 it('can set the interpreter', function () {
     expect($this->test)
-        ->getAs()->toBeNull()
+        ->interpretsAs()->toBeNull()
         ->interpretsRaw()->toBeTrue()
         ->asStringable()->toBe($this->test)
         ->interpretsStringable()->toBeTrue()
-        ->getAs()->toBe('stringable')
+        ->interpretsAs()->toBe('stringable')
         ->asCollection()->toBe($this->test)
         ->interpretsCollection()->toBeTrue()
-        ->getAs()->toBe('collection')
+        ->interpretsAs()->toBe('collection')
         ->asArray()->toBe($this->test)
         ->interpretsArray()->toBeTrue()
-        ->getAs()->toBe('array')
+        ->interpretsAs()->toBe('array')
         ->asBoolean()->toBe($this->test)
         ->interpretsBoolean()->toBeTrue()
-        ->getAs()->toBe('boolean')
+        ->interpretsAs()->toBe('boolean')
         ->asFloat()->toBe($this->test)
         ->interpretsFloat()->toBeTrue()
-        ->getAs()->toBe('float')
-        ->asInteger()->toBe($this->test)
-        ->interpretsInteger()->toBeTrue()
-        ->getAs()->toBe('integer')
+        ->interpretsAs()->toBe('float')
+        ->asInt()->toBe($this->test)
+        ->interpretsInt()->toBeTrue()
+        ->interpretsAs()->toBe('int')
         ->asString()->toBe($this->test)
         ->interpretsString()->toBeTrue()
-        ->getAs()->toBe('string')
+        ->interpretsAs()->toBe('string')
         ->asDate()->toBe($this->test)
         ->interpretsDate()->toBeTrue()
-        ->getAs()->toBe('date')
+        ->interpretsAs()->toBe('date')
         ->asDatetime()->toBe($this->test)
         ->interpretsDatetime()->toBeTrue()
-        ->getAs()->toBe('datetime')
+        ->interpretsAs()->toBe('datetime')
         ->asTime()->toBe($this->test)
         ->interpretsTime()->toBeTrue()
-        ->getAs()->toBe('time');
+        ->interpretsAs()->toBe('time');
 });
 
 it('interprets using interpreter', function () {
@@ -59,7 +59,7 @@ it('interprets using interpreter', function () {
 
     expect($this->test)
         ->interpret($request, $this->param)->toBe('5')
-        ->as('integer')->toBe($this->test)
+        ->as('int')->toBe($this->test)
         ->interpret($request, $this->param)->toBe(5);
 });
 
@@ -158,10 +158,10 @@ it('interprets float', function ($param, $value, $expected) {
     ['', '5.5', 5.5],
 ]);
 
-it('interprets integer', function ($param, $value, $expected) {
+it('interprets int', function ($param, $value, $expected) {
     $request = generateRequest($this->param.$param, $value);
 
-    expect($this->test->interpretInteger($request, $this->param))
+    expect($this->test->interpretInt($request, $this->param))
         ->toBe($expected);
 
 })->with([
@@ -219,7 +219,7 @@ it('interprets arrayables with subtype', function () {
     $request = generateRequest($this->param, $arr);
 
     expect($this->test)
-        ->interpretArray($request, $this->param, ',', 'integer')->toBe([1, 2, 3])
+        ->interpretArray($request, $this->param, ',', 'int')->toBe([1, 2, 3])
         ->interpretArray($request, $this->param, ',', 'float')->toBe([1.0, 2.0, 3.0])
         ->interpretArray($request, $this->param, ',', 'string')->toBe(['1', '2', '3'])
         ->interpretArray($request, $this->param, ',', 'boolean')->toBe([true, false, false]);

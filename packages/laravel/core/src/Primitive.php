@@ -6,15 +6,11 @@ namespace Honed\Core;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
-use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 
 /**
- * @template TKey of string
- * @template TValue of mixed
- *
- * @implements Arrayable<TKey,TValue>
+ * @implements Arrayable<string,mixed>
  */
 abstract class Primitive implements \JsonSerializable, Arrayable
 {
@@ -53,10 +49,7 @@ abstract class Primitive implements \JsonSerializable, Arrayable
      *
      * @return void
      */
-    public function setUp()
-    {
-        //
-    }
+    public function setUp() { }
 
     /**
      * Handle dynamic method calls into the method.

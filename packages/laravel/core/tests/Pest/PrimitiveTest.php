@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Honed\Core\Primitive;
 use Honed\Core\Tests\Fixtures\Column;
 
 beforeEach(function () {
@@ -11,15 +12,13 @@ beforeEach(function () {
 it('makes', function () {
     expect(Column::make())->toBeInstanceOf(Column::class)
         ->getType()->toBe('column')
-        ->getName()->toBe('Products')
-        ->getDescription()->toBeNull();
+        ->getName()->toBe('Products');
 });
 
 it('has array representation', function () {
     expect($this->test->toArray())->toEqual([
         'type' => 'column',
         'name' => 'Products',
-        'description' => null,
         'meta' => [],
     ]);
 });
@@ -29,4 +28,12 @@ it('serializes with removals', function () {
         'type' => 'column',
         'name' => 'Products',
     ]);
+});
+
+it('is macroable', function () {
+    $this->test->macro('test', function () {
+        return 'test';
+    });
+
+    expect($this->test->test())->toBe('test');
 });

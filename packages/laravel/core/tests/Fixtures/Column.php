@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Tests\Fixtures;
 
-use Honed\Core\Concerns\HasDescription;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasType;
@@ -13,7 +12,6 @@ use Honed\Core\Tests\Stubs\Product;
 
 class Column extends Primitive
 {
-    use HasDescription;
     use HasMeta;
     use HasName;
     use HasType;
@@ -28,6 +26,8 @@ class Column extends Primitive
      */
     public function setUp()
     {
+        parent::setUp();
+        
         $this->type('column');
         $this->name('Products');
     }
@@ -40,7 +40,6 @@ class Column extends Primitive
         return [
             'type' => $this->getType(),
             'name' => $this->getName(),
-            'description' => $this->getDescription(),
             'meta' => $this->getMeta(),
         ];
     }

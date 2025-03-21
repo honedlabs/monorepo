@@ -494,7 +494,7 @@ trait InterpretsRequest
      *
      * @return 'string'|'stringable'|'array'|'collection'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null
      */
-    public function getAs()
+    public function interpretsAs()
     {
         return $this->as;
     }
