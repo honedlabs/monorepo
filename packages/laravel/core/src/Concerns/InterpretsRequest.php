@@ -14,14 +14,14 @@ trait InterpretsRequest
     /**
      * The request interpreter.
      *
-     * @var 'string'|'stringable'|'array'|'collection'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null
+     * @var 'string'|'stringable'|'array'|'collection'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null
      */
     protected $as;
 
     /**
      * A subtype interpreter for array or collection values.
      *
-     * @var 'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null
+     * @var 'string'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null
      */
     protected $subtype;
 
@@ -43,7 +43,7 @@ trait InterpretsRequest
             'collection' => static::interpretCollection($request, $key, $delimiter, $this->subtype),
             'boolean' => static::interpretBoolean($request, $key),
             'float' => static::interpretFloat($request, $key),
-            'integer' => static::interpretInteger($request, $key),
+            'int' => static::interpretInt($request, $key),
             'date',
             'datetime',
             'time' => static::interpretDate($request, $key, $timezone),
@@ -57,12 +57,12 @@ trait InterpretsRequest
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $key
      * @param  string  $delimiter
-     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
+     * @param  'string'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null  $subtype
      * @return array<int,(
      *     $subtype is null ? mixed : (
      *         $subtype is 'string' ? string : (
      *             $subtype is 'boolean' ? bool : (
-     *                 $subtype is 'integer' ? int : (
+     *                 $subtype is 'int' ? int : (
      *                     $subtype is 'float' ? float : \Carbon\Carbon
      *                 )
      *             )
@@ -105,12 +105,12 @@ trait InterpretsRequest
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $key
      * @param  string  $delimiter
-     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
+     * @param  'string'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null  $subtype
      * @return \Illuminate\Support\Collection<int,(
      *     $subtype is null ? mixed : (
      *         $subtype is 'string' ? string : (
      *             $subtype is 'boolean' ? bool : (
-     *                 $subtype is 'integer' ? int : (
+     *                 $subtype is 'int' ? int : (
      *                     $subtype is 'float' ? float : \Carbon\Carbon
      *                 )
      *             )
@@ -182,13 +182,13 @@ trait InterpretsRequest
     }
 
     /**
-     * Interpret the query parameter as an integer.
+     * Interpret the query parameter as an int.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $key
      * @return int|null
      */
-    public static function interpretInteger($request, $key)
+    public static function interpretInt($request, $key)
     {
         $value = static::interpretRaw($request, $key);
 
@@ -263,7 +263,7 @@ trait InterpretsRequest
     /**
      * Set the interpreter to use.
      *
-     * @param  'string'|'stringable'|'array'|'collection'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $as
+     * @param  'string'|'stringable'|'array'|'collection'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null  $as
      * @return $this
      */
     public function as($as)
@@ -276,7 +276,7 @@ trait InterpretsRequest
     /**
      * Set the request to interpret as an array.
      *
-     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
+     * @param  'string'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null  $subtype
      * @return $this
      */
     public function asArray($subtype = null)
@@ -299,7 +299,7 @@ trait InterpretsRequest
     /**
      * Set the request to interpret as a Collection.
      *
-     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
+     * @param  'string'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null  $subtype
      * @return $this
      */
     public function asCollection($subtype = null)
@@ -340,13 +340,13 @@ trait InterpretsRequest
     }
 
     /**
-     * Set the request to interpret as an integer.
+     * Set the request to interpret as an int.
      *
      * @return $this
      */
-    public function asInteger()
+    public function asInt()
     {
-        return $this->as('integer');
+        return $this->as('int');
     }
 
     /**
@@ -440,13 +440,13 @@ trait InterpretsRequest
     }
 
     /**
-     * Determine if the request is interpreted as an integer.
+     * Determine if the request is interpreted as an int.
      *
      * @return bool
      */
-    public function interpretsInteger()
+    public function interpretsInt()
     {
-        return $this->as === 'integer';
+        return $this->as === 'int';
     }
 
     /**
@@ -492,7 +492,7 @@ trait InterpretsRequest
     /**
      * Get the interpreter.
      *
-     * @return 'string'|'stringable'|'array'|'collection'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null
+     * @return 'string'|'stringable'|'array'|'collection'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null
      */
     public function getAs()
     {
@@ -502,7 +502,7 @@ trait InterpretsRequest
     /**
      * Set the subtype interpreter.
      *
-     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $subtype
+     * @param  'string'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null  $subtype
      * @return $this
      */
     public function subtype($subtype)
@@ -525,7 +525,7 @@ trait InterpretsRequest
     /**
      * Get the subtype interpreter.
      *
-     * @return 'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null
+     * @return 'string'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null
      */
     public function getSubtype()
     {
@@ -536,12 +536,12 @@ trait InterpretsRequest
      * Get the value as a specific type.
      *
      * @param  string  $value
-     * @param  'string'|'boolean'|'integer'|'float'|'date'|'datetime'|'time'|null  $type
+     * @param  'string'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null  $type
      * @return (
      *     $type is null ? mixed : (
      *         $type is 'string' ? string : (
      *             $type is 'boolean' ? bool : (
-     *                 $type is 'integer' ? int : (
+     *                 $type is 'int' ? int : (
      *                     $type is 'float' ? float : \Carbon\Carbon
      *                 )
      *             )
@@ -554,7 +554,7 @@ trait InterpretsRequest
         return match ($type) {
             'string' => \strval($value),
             'boolean' => \filter_var($value, \FILTER_VALIDATE_BOOLEAN),
-            'integer' => \intval($value),
+            'int' => \intval($value),
             'float' => \floatval($value),
             'date', 'datetime', 'time' => static::dateOf($value),
             default => $value,

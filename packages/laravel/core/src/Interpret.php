@@ -14,7 +14,7 @@ class Interpret
         interpretCollection as collection;
         interpretDate as date;
         interpretFloat as float;
-        interpretInteger as integer;
+        interpretInt as int;
         interpretRaw as raw;
         interpretString as string;
         interpretStringable as stringable;
