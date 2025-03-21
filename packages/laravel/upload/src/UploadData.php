@@ -21,8 +21,8 @@ class UploadData
 
     /**
      * Create a new upload data instance from the validated data.
-     * 
-     * @param array<string,mixed> $data
+     *
+     * @param  array<string,mixed>  $data
      * @return self
      */
     public static function from($data)

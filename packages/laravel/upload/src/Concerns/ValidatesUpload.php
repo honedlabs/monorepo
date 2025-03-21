@@ -11,36 +11,36 @@ trait ValidatesUpload
 {
     /**
      * The expiry duration of the request in seconds.
-     * 
+     *
      * @var int|null
      */
     protected $expires;
 
     /**
      * The maximum file size in bytes.
-     * 
+     *
      * @var int|null
      */
     protected $max;
 
     /**
      * The minimum file size in bytes.
-     * 
+     *
      * @var int|null
      */
     protected $min;
 
     /**
      * List of the file mime types and extensions.
-     * 
+     *
      * @var array<int, string>
      */
     protected $types = [];
 
     /**
      * Set the expiry duration of the request in seconds.
-     * 
-     * @param int $seconds
+     *
+     * @param  int  $seconds
      * @return $this
      */
     public function expiresIn($seconds)
@@ -52,7 +52,7 @@ trait ValidatesUpload
 
     /**
      * Get the expiry duration of the request in seconds.
-     * 
+     *
      * @return int
      */
     public function getExpiry()
@@ -62,7 +62,7 @@ trait ValidatesUpload
 
     /**
      * Get the default expiry duration of the request in seconds.
-     * 
+     *
      * @return int
      */
     public static function getDefaultExpiry()
@@ -72,7 +72,7 @@ trait ValidatesUpload
 
     /**
      * Format the expiry duration of the request.
-     * 
+     *
      * @return string
      */
     public function formatExpiry()
@@ -82,8 +82,8 @@ trait ValidatesUpload
 
     /**
      * Set the maximum file size in bytes.
-     * 
-     * @param int $size
+     *
+     * @param  int  $size
      * @return $this
      */
     public function max($size)
@@ -95,7 +95,7 @@ trait ValidatesUpload
 
     /**
      * Get the maximum file size in bytes.
-     * 
+     *
      * @return int
      */
     public function getMax()
@@ -105,7 +105,7 @@ trait ValidatesUpload
 
     /**
      * Get the default maximum file size in bytes.
-     * 
+     *
      * @return int
      */
     public static function getDefaultMax()
@@ -115,8 +115,8 @@ trait ValidatesUpload
 
     /**
      * Set the minimum file size in bytes.
-     * 
-     * @param int $size
+     *
+     * @param  int  $size
      * @return $this
      */
     public function min($size)
@@ -128,7 +128,7 @@ trait ValidatesUpload
 
     /**
      * Get the minimum file size in bytes.
-     * 
+     *
      * @return int
      */
     public function getMin()
@@ -138,7 +138,7 @@ trait ValidatesUpload
 
     /**
      * Get the default minimum file size in bytes.
-     * 
+     *
      * @return int
      */
     public static function getDefaultMin()
@@ -148,8 +148,8 @@ trait ValidatesUpload
 
     /**
      * Set the file mime types and extensions.
-     * 
-     * @param iterable<string> ...$types
+     *
+     * @param  string|iterable<int,string>  ...$types
      * @return $this
      */
     public function types(...$types)
@@ -163,7 +163,7 @@ trait ValidatesUpload
 
     /**
      * Set the upload to only accept images.
-     * 
+     *
      * @return $this
      */
     public function onlyImages()
@@ -173,7 +173,7 @@ trait ValidatesUpload
 
     /**
      * Set the upload to only accept videos.
-     * 
+     *
      * @return $this
      */
     public function onlyVideos()
@@ -183,7 +183,7 @@ trait ValidatesUpload
 
     /**
      * Set the upload to only accept audio.
-     * 
+     *
      * @return $this
      */
     public function onlyAudio()
@@ -193,7 +193,7 @@ trait ValidatesUpload
 
     /**
      * Set the upload to only accept PDF files.
-     * 
+     *
      * @return $this
      */
     public function onlyPdf()
@@ -203,7 +203,7 @@ trait ValidatesUpload
 
     /**
      * Get the accepted file mime types and extensions.
-     * 
+     *
      * @return array<int, string>
      */
     public function getTypes()
@@ -213,7 +213,7 @@ trait ValidatesUpload
 
     /**
      * Get the file mime types.
-     * 
+     *
      * @return array<int, string>
      */
     public function getMimes()
@@ -228,7 +228,7 @@ trait ValidatesUpload
 
     /**
      * Get the file extensions.
-     * 
+     *
      * @return array<int, string>
      */
     public function getExtensions()
@@ -243,7 +243,7 @@ trait ValidatesUpload
 
     /**
      * Create the general rules for validating the presigned POST request.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function createRules()
@@ -253,7 +253,7 @@ trait ValidatesUpload
             'extension' => [
                 'required',
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail) {
+                function (string $attribute, string $value, \Closure $fail) {
                     $extensions = $this->getExtensions();
 
                     if (! filled($extensions)) {
@@ -270,7 +270,7 @@ trait ValidatesUpload
             'size' => [
                 'required',
                 'integer',
-                function (string $attribute, mixed $value, \Closure $fail) {
+                function (string $attribute, int $value, \Closure $fail) {
                     $min = $this->getMin();
 
                     if ($value < $min) {
@@ -291,7 +291,7 @@ trait ValidatesUpload
             'type' => [
                 'required',
                 'string',
-                function (string $attribute, mixed $value, \Closure $fail) {
+                function (string $attribute, string $value, \Closure $fail) {
                     $types = $this->getMimes();
 
                     if (! filled($types)) {

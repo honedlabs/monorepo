@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
-use Carbon\Carbon;
-use Aws\S3\S3Client;
 use Aws\S3\PostObjectV4;
-use Honed\Core\Concerns\Evaluable;
-use Honed\Core\Primitive;
-use Honed\Upload\UploadRule;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Support\Stringable;
+use Aws\S3\S3Client;
 use Honed\Core\Concerns\HasRequest;
+use Honed\Core\Primitive;
 use Honed\Upload\Concerns\ValidatesUpload;
 use Honed\Upload\Contracts\AnonymizesName;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 
 /**
  * @extends \Honed\Core\Primitive<string,mixed>
@@ -37,7 +34,7 @@ class Upload extends Primitive implements Responsable
 
     /**
      * Get the configuration rules for validating file uploads.
-     * 
+     *
      * @var array<int, \Honed\Upload\UploadRule>
      */
     protected $rules = [];
@@ -83,7 +80,7 @@ class Upload extends Primitive implements Responsable
     /**
      * Create a new upload instance.
      *
-     * @param string $disk
+     * @param  string  $disk
      * @return static
      */
     public static function make($disk = null)
@@ -138,8 +135,8 @@ class Upload extends Primitive implements Responsable
 
     /**
      * Set the rules for validating file uploads.
-     * 
-     * @param iterable<\Honed\Upload\UploadRule> ...$rules
+     *
+     * @param  iterable<\Honed\Upload\UploadRule>  ...$rules
      * @return $this
      */
     public function rules(...$rules)
@@ -153,7 +150,7 @@ class Upload extends Primitive implements Responsable
 
     /**
      * Get the rules for validating file uploads.
-     * 
+     *
      * @return array<int, \Honed\Upload\UploadRule>
      */
     public function getRules()
@@ -353,7 +350,7 @@ class Upload extends Primitive implements Responsable
     /**
      * Build the storage key path for the uploaded file.
      *
-     * @param  \Honed\Upload\UploadData $data
+     * @param  \Honed\Upload\UploadData  $data
      * @return string
      */
     public function createKey($data)
@@ -381,7 +378,7 @@ class Upload extends Primitive implements Responsable
      * Evaluate the closure using the validated data
      *
      * @param  \Closure|string|null  $closure
-     * @param  \Honed\Upload\UploadData $data
+     * @param  \Honed\Upload\UploadData  $data
      * @return string|null
      */
     protected function evaluateValidated($closure, $data)
@@ -394,17 +391,17 @@ class Upload extends Primitive implements Responsable
             'size' => $data->size,
             'meta' => $data->meta,
         ], [
-            UploadData::class => $data
+            UploadData::class => $data,
         ]);
     }
 
     /**
      * Validate the incoming request.
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @param \Honed\Upload\UploadRule|null $rule
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Honed\Upload\UploadRule|null  $rule
      * @return \Honed\Upload\UploadData
-     * 
+     *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function validate($request, $rule = null)
@@ -421,6 +418,11 @@ class Upload extends Primitive implements Responsable
         return UploadData::from($validated);
     }
 
+    /**
+     * Get the attributes for the validator.
+     *
+     * @return array<string,string>
+     */
     public function getAttributes()
     {
         return [
@@ -434,16 +436,16 @@ class Upload extends Primitive implements Responsable
     /**
      * Create a presigned POST URL using.
      *
-     * @param \Illuminate\Http\Request|null $request
+     * @param  \Illuminate\Http\Request|null  $request
      * @return array{attributes:array<string,mixed>,inputs:array<string,mixed>}
-     * 
+     *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function create($request = null)
     {
         $request ??= $this->getRequest();
 
-        [$name, $extension] = 
+        [$name, $extension] =
             static::destructureFilename($request->input('name'));
 
         $request->merge([
@@ -453,8 +455,7 @@ class Upload extends Primitive implements Responsable
 
         $rule = Arr::first(
             $this->getRules(),
-            static fn (UploadRule $rule) => 
-                $rule->isMatching($request->input('type'), $extension),
+            static fn (UploadRule $rule) => $rule->isMatching($request->input('type'), $extension),
         );
 
         $validated = $this->validate($request, $rule);
@@ -498,8 +499,8 @@ class Upload extends Primitive implements Responsable
 
     /**
      * Destructure the filename into its components.
-     * 
-     * @param mixed $filename
+     *
+     * @param  mixed  $filename
      * @return ($filename is string ? array{string, string} : array{null, null})
      */
     public static function destructureFilename($filename)

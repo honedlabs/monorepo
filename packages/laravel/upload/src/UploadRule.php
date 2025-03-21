@@ -12,8 +12,8 @@ class UploadRule
 
     /**
      * Create a new file rule instance.
-     * 
-     * @param string $types
+     *
+     * @param  string  $types
      * @return static
      */
     public static function make(...$types)
@@ -24,8 +24,8 @@ class UploadRule
 
     /**
      * Determine if the given type matches this rule.
-     * 
-     * @param mixed ...$types
+     *
+     * @param  mixed  ...$types
      * @return bool
      */
     public function isMatching(...$types)
