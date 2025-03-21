@@ -18,16 +18,16 @@ jobs:
           # - action
           # - chart
           # - command
-          # - core
-          - crumb
+          - core
+          # - crumb
           # - flash
           # - layout
           # - lock
           # - modal
-          - nav
+          # - nav
           # - refine
-          - table
-          # - upload
+          # - table
+          - upload
 
     steps:
       - name: Checkout
