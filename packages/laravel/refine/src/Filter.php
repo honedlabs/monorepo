@@ -76,6 +76,28 @@ class Filter extends Refiner
     }
 
     /**
+     * Set the filter to use options from an enum.
+     *
+     * @param  class-string<\BackedEnum>  $enum
+     * @param  bool  $multiple
+     * @return $this
+     */
+    public function enum($enum, $multiple = false)
+    {
+        $this->options($enum);
+
+        $backing = (new \ReflectionEnum($enum))
+            ->getBackingType()
+            ->getName();
+
+        $this->subtype($backing);
+
+        $this->multiple($multiple);
+
+        return $this;
+    }
+
+    /**
      * Set the filter to be for float values.
      *
      * @return $this

@@ -25,7 +25,7 @@ trait HasSorts
      *
      * @var string|null
      */
-    protected $sortsKey;
+    protected $sortKey;
 
     /**
      * Whether to apply the sorts.
@@ -99,12 +99,12 @@ trait HasSorts
     /**
      * Set the query parameter to identify the sort to apply.
      *
-     * @param  string  $sortsKey
+     * @param  string  $sortKey
      * @return $this
      */
-    public function sortsKey($sortsKey)
+    public function sortKey($sortKey)
     {
-        $this->sortsKey = $sortsKey;
+        $this->sortKey = $sortKey;
 
         return $this;
     }
@@ -114,19 +114,19 @@ trait HasSorts
      *
      * @return string
      */
-    public function getSortsKey()
+    public function getSortKey()
     {
-        return $this->sortsKey ?? static::fallbackSortsKey();
+        return $this->sortKey ?? static::getDefaultSortKey();
     }
 
     /**
-     * Get the query parameter to identify the sort to apply from the config.
+     * Get the default query parameter to identify the sort.
      *
      * @return string
      */
-    public static function fallbackSortsKey()
+    public static function getDefaultSortKey()
     {
-        return type(config('refine.sorts_key', 'sort'))->asString();
+        return type(config('refine.sort_key', 'sort'))->asString();
     }
 
     /**

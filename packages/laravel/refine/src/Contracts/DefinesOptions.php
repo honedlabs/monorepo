@@ -20,4 +20,11 @@ interface DefinesOptions
      * @return bool
      */
     public function restrictToOptions();
+
+    /**
+     * Define whether multiple options are allowed.
+     * 
+     * @return bool
+     */
+    public function allowsMultiple();
 }

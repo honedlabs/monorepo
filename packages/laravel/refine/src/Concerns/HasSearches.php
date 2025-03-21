@@ -25,7 +25,7 @@ trait HasSearches
      *
      * @var string|null
      */
-    protected $searchesKey;
+    protected $searchKey;
 
     /**
      * Whether the search columns can be toggled.
@@ -39,7 +39,7 @@ trait HasSearches
      *
      * @var string|null
      */
-    protected $matchesKey;
+    protected $matchKey;
 
     /**
      * The search term as a string without replacements.
@@ -120,12 +120,12 @@ trait HasSearches
     /**
      * Set the query parameter to identify the search string.
      *
-     * @param  string  $searchesKey
+     * @param  string  $searchKey
      * @return $this
      */
-    public function searchesKey($searchesKey)
+    public function searchKey($searchKey)
     {
-        $this->searchesKey = $searchesKey;
+        $this->searchKey = $searchKey;
 
         return $this;
     }
@@ -135,30 +135,30 @@ trait HasSearches
      *
      * @return string
      */
-    public function getSearchesKey()
+    public function getSearchKey()
     {
-        return $this->searchesKey ?? static::fallbackSearchesKey();
+        return $this->searchKey ?? static::getDefaultSearchKey();
     }
 
     /**
-     * Get the query parameter to identify the search from the config.
+     * Get the default query parameter to identify the search.
      *
      * @return string
      */
-    public static function fallbackSearchesKey()
+    public static function getDefaultSearchKey()
     {
-        return type(config('refine.searches_key', 'search'))->asString();
+        return type(config('refine.search_key', 'search'))->asString();
     }
 
     /**
      * Set the query parameter to identify the columns to search.
      *
-     * @param  string  $matchesKey
+     * @param  string  $matchKey
      * @return $this
      */
-    public function matchesKey($matchesKey)
+    public function matchKey($matchKey)
     {
-        $this->matchesKey = $matchesKey;
+        $this->matchKey = $matchKey;
 
         return $this;
     }
@@ -168,19 +168,19 @@ trait HasSearches
      *
      * @return string
      */
-    public function getMatchesKey()
+    public function getMatchKey()
     {
-        return $this->matchesKey ?? static::fallbackMatchesKey();
+        return $this->matchKey ?? static::getDefaultMatchKey();
     }
 
     /**
-     * Get the query parameter to identify the columns to search from the config.
+     * Get the default query parameter to identify the columns to search.
      *
      * @return string
      */
-    public static function fallbackMatchesKey()
+    public static function getDefaultMatchKey()
     {
-        return type(config('refine.matches_key', 'match'))->asString();
+        return type(config('refine.match_key', 'match'))->asString();
     }
 
     /**
@@ -201,9 +201,9 @@ trait HasSearches
      *
      * @return bool
      */
-    public function matches()
+    public function isMatching()
     {
-        return (bool) ($this->match ?? static::fallbackMatches());
+        return (bool) ($this->match ?? static::isMatchingByDefault());
     }
 
     /**
@@ -211,7 +211,7 @@ trait HasSearches
      *
      * @return bool
      */
-    public static function fallbackMatches()
+    public static function isMatchingByDefault()
     {
         return (bool) config('refine.match', false);
     }
@@ -269,7 +269,7 @@ trait HasSearches
      */
     public function searchesToArray()
     {
-        if (! $this->matches()) {
+        if (! $this->isMatching()) {
             return [];
         }
 

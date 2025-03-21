@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
+use Honed\Refine\Contracts\DefinesOptions;
 use Honed\Refine\Option;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -55,19 +56,6 @@ trait HasOptions
     }
 
     /**
-     * Create options from an enum.
-     *
-     * @param  class-string<\BackedEnum>  $enum
-     * @return $this
-     */
-    public function enum($enum)
-    {
-        $this->options($enum);
-
-        return $this;
-    }
-
-    /**
      * Determine if the filter has options.
      *
      * @return bool
@@ -84,7 +72,15 @@ trait HasOptions
      */
     public function getOptions()
     {
-        return $this->options;
+        if (isset($this->options)) {
+            return $this->options;
+        }
+
+        if ($this instanceof DefinesOptions) {
+            return $this->usingOptions();
+        }
+
+        return [];
     }
 
     /**
@@ -176,7 +172,15 @@ trait HasOptions
      */
     public function isStrict()
     {
-        return (bool) ($this->strict ?? static::isStrictByDefault());
+        if (isset($this->strict)) {
+            return $this->strict;
+        }
+
+        if ($this instanceof DefinesOptions) {
+            return $this->restrictToOptions();
+        }
+
+        return static::isStrictByDefault();
     }
 
     /**
@@ -208,9 +212,16 @@ trait HasOptions
      */
     public function isMultiple()
     {
-        return $this->multiple;
-    }
+        if (isset($this->multiple)) {
+            return $this->multiple;
+        }
 
+        if ($this instanceof DefinesOptions) {
+            return $this->allowsMultiple();
+        }
+
+        return false;
+    }
     /**
      * Activate the options and return the valid options.
      *

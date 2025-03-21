@@ -11,7 +11,7 @@ namespace Honed\Refine\Contracts;
 interface RefinesBefore
 {
     /**
-     * Register a callback to be applied before the refiners have been applied.
+     * Define a callback to be applied before the refiners have been applied.
      * 
      * @param TBuilder $builder
      * @return void

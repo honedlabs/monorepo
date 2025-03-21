@@ -118,7 +118,6 @@ class Search extends Refiner
         $column = $builder->qualifyColumn($column);
         $sql = \sprintf('LOWER(%s) LIKE ?', $column);
         $binding = ['%'.\mb_strtolower($value, 'UTF8').'%'];
-
         $builder->whereRaw($sql, $binding, $boolean);
     }
 }
