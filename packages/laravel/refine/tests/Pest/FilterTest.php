@@ -13,7 +13,15 @@ it('has operator', function () {
     expect($this->filter)
         ->getOperator()->toBe('=')
         ->operator('!=')->toBe($this->filter)
-        ->getOperator()->toBe('!=');
+        ->getOperator()->toBe('!=')
+        ->gt()->toBe($this->filter)
+        ->getOperator()->toBe('>')
+        ->gte()->toBe($this->filter)
+        ->getOperator()->toBe('>=')
+        ->lt()->toBe($this->filter)
+        ->getOperator()->toBe('<')
+        ->lte()->toBe($this->filter)
+        ->getOperator()->toBe('<=');
 });
 
 it('can be default', function () {

@@ -64,10 +64,9 @@ it('executes pipeline', function () {
                     'boolean' => 'and',
                 ],
                 [
-                    'type' => 'Basic',
+                    'type' => 'In',
                     'column' => $this->builder->qualifyColumn('status'),
-                    'operator' => '=',
-                    'value' => Status::ComingSoon->value,
+                    'values' => [Status::ComingSoon->value],
                     'boolean' => 'and',
                 ],
                 [
@@ -78,18 +77,18 @@ it('executes pipeline', function () {
                     'boolean' => 'and',
                 ],
                 [
-                    'type' => 'Date',
                     'column' => $this->builder->qualifyColumn('created_at'),
+                    'type' => 'Date',
+                    'boolean' => 'and',
                     'operator' => '>=',
                     'value' => '2000-01-01',
-                    'boolean' => 'and',
                 ],
                 [
-                    'type' => 'Date',
                     'column' => $this->builder->qualifyColumn('created_at'),
+                    'type' => 'Date',
+                    'boolean' => 'and',
                     'operator' => '<=',
                     'value' => '2001-01-01',
-                    'boolean' => 'and',
                 ],
             ])
         )->orders->toBeOnlyOrder($this->builder->qualifyColumn('price'), 'desc');
