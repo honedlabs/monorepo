@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
+use Honed\Core\Contracts\DefinesQuery;
+use Honed\Refine\Contracts\DefinesOptions;
 use Honed\Refine\Filter;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -13,7 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * @extends \Honed\Refine\Filter<TModel, TBuilder>
  */
-final class {{ class }} extends Filter
+final class {{ class }} extends Filter implements DefinesQuery
 {
     /**
      *  Create a new sort instance.
@@ -40,7 +42,7 @@ final class {{ class }} extends Filter
      * @param  mixed $value
      * @return void
      */
-    public function query(Builder $builder, $value)
+    public function query($builder, $value)
     {
         //
     }

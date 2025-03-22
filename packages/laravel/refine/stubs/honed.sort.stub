@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
+use Honed\Core\Contracts\DefinesQuery;
 use Honed\Refine\Sort;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * @extends \Honed\Refine\Sort<TModel, TBuilder>
  */
-final class {{ class }} extends Sort
+final class {{ class }} extends Sort implements DefinesQuery
 {
     /**
      *  Create a new sort instance.

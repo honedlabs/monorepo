@@ -43,7 +43,7 @@ final class TrashedFilter extends Filter implements DefinesOptions, DefinesQuery
      * @param  mixed  $value
      * @return void
      */
-    public function defineQuery(Builder $builder, $value)
+    public function defineQuery($builder, $value)
     {
         match ($value) {
             // @phpstan-ignore-next-line
