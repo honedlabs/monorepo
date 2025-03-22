@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
-use Closure;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasQueryClosure;
+use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Primitive;
@@ -31,8 +30,8 @@ abstract class Refiner extends Primitive
     use HasLabel;
     use HasMeta;
     use HasName;
-    /** @use HasQueryClosure<TModel, TBuilder> */
-    use HasQueryClosure;
+    /** @use HasQuery<TModel, TBuilder> */
+    use HasQuery;
     use HasType;
     use HasValue;
 
@@ -150,9 +149,9 @@ abstract class Refiner extends Primitive
 
         $bindings = $this->getBindings($value);
 
-        if (! $this->hasQueryClosure()) {
+        if (! $this->hasQuery()) {
             // @phpstan-ignore-next-line
-            $this->queryClosure(Closure::fromCallable([$this, 'defaultQuery']));
+            $this->query(\Closure::fromCallable([$this, 'defaultQuery']));
         }
 
         $this->modifyQuery($builder, $bindings);

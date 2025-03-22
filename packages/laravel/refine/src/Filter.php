@@ -118,7 +118,7 @@ class Filter extends Refiner
     public function integer()
     {
         $this->type('number');
-        $this->asInteger();
+        $this->asInt();
 
         return $this;
     }

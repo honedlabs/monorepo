@@ -21,13 +21,6 @@ trait HasFilters
     protected $filters;
 
     /**
-     * Whether to apply the filters.
-     *
-     * @var bool
-     */
-    protected $filtering = true;
-
-    /**
      * Whether to provide the filters.
      *
      * @var bool

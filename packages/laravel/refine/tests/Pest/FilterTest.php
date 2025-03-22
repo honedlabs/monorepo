@@ -19,56 +19,56 @@ it('has operator', function () {
 it('can be default', function () {
     expect($this->filter)
         ->getType()->toBe('filter')
-        ->getAs()->toBeNull();
+        ->interpretsAs()->toBeNull();
 });
 
 it('can be boolean', function () {
     expect($this->filter->boolean())
         ->getType()->toBe('boolean')
-        ->getAs()->toBe('boolean');
+        ->interpretsAs()->toBe('boolean');
 });
 
 it('can be date', function () {
     expect($this->filter->date())
         ->getType()->toBe('date')
-        ->getAs()->toBe('date');
+        ->interpretsAs()->toBe('date');
 });
 
 it('can be date time', function () {
     expect($this->filter->dateTime())
         ->getType()->toBe('datetime')
-        ->getAs()->toBe('datetime');
+        ->interpretsAs()->toBe('datetime');
 });
 
 it('can be float', function () {
     expect($this->filter->float())
-        ->getType()->toBe('float')
-        ->getAs()->toBe('float');
+        ->getType()->toBe('number')
+        ->interpretsAs()->toBe('float');
 });
 
 it('can be integer', function () {
     expect($this->filter->integer())
-        ->getType()->toBe('integer')
-        ->getAs()->toBe('integer');
+        ->getType()->toBe('number')
+        ->interpretsAs()->toBe('int');
 });
 
 it('can be array multiple', function () {
     expect($this->filter->multiple())
         ->getType()->toBe('multiple')
-        ->getAs()->toBe('array')
+        ->interpretsAs()->toBe('array')
         ->isMultiple()->toBeTrue();
 });
 
-it('can be string', function () {
+it('can be text', function () {
     expect($this->filter->string())
-        ->getType()->toBe('string')
-        ->getAs()->toBe('string');
+        ->getType()->toBe('text')
+        ->interpretsAs()->toBe('string');
 });
 
 it('can be time', function () {
     expect($this->filter->time())
         ->getType()->toBe('time')
-        ->getAs()->toBe('time');
+        ->interpretsAs()->toBe('time');
 });
 
 it('accepts options from list', function () {
@@ -132,9 +132,9 @@ it('can be strict', function () {
 it('can be multiple', function () {
     expect($this->filter)
         ->isMultiple()->toBeFalse()
-        ->getAs()->toBeNull()
+        ->interpretsAs()->toBeNull()
         ->multiple()->toBe($this->filter)
         ->isMultiple()->toBeTrue()
         ->getType()->toBe('multiple')
-        ->getAs()->toBe('array');
+        ->interpretsAs()->toBe('array');
 });

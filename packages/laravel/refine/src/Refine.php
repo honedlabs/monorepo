@@ -108,13 +108,18 @@ class Refine extends Primitive
     /**
      * Create a new refine instance.
      *
-     * @param  TModel|class-string<TModel>|TBuilder|null  $query
+     * @param  TModel|class-string<TModel>|TBuilder|null  $builder
      * @return static
      */
-    public static function make($query = null)
+    public static function make($builder = null)
     {
-        return resolve(static::class)
-            ->builder(static::createBuilder($query));
+        $refine = resolve(static::class);
+
+        if ($builder) {
+            return $refine->builder($builder);
+        }
+
+        return $refine;
     }
 
     /**

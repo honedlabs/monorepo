@@ -35,14 +35,18 @@ trait HasOptions
     /**
      * Set the options for the filter.
      *
-     * @param  class-string<\BackedEnum>|array<int,mixed>|Collection<int,mixed>  $options
+     * @param  class-string<\BackedEnum>|array<int,mixed>|Collection<int,mixed>  ...$options
      * @return $this
      */
-    public function options($options)
+    public function options(...$options)
     {
-        if ($options instanceof Collection) {
-            $options = $options->all();
+        $options = Arr::flatten($options);
+
+        if (\count($options) === 1 && \is_string($options[0])) {
+            $this->optionsEnumerated($options[0]);
         }
+
+
 
         $this->options = match (true) {
             \is_string($options) => $this->optionsEnumerated($options),
@@ -53,6 +57,17 @@ trait HasOptions
         };
 
         return $this;
+    }
+
+    public function createOptions($options)
+    {
+        $this->options = match (true) {
+            \is_string($options) => $this->optionsEnumerated($options),
+
+            Arr::isAssoc($options) => $this->optionsAssociative($options),
+
+            default => $this->optionsList($options),
+        };
     }
 
     /**
@@ -77,7 +92,7 @@ trait HasOptions
         }
 
         if ($this instanceof DefinesOptions) {
-            return $this->usingOptions();
+            return $this->options ??= $this->defineOptions();
         }
 
         return [];
@@ -172,15 +187,7 @@ trait HasOptions
      */
     public function isStrict()
     {
-        if (isset($this->strict)) {
-            return $this->strict;
-        }
-
-        if ($this instanceof DefinesOptions) {
-            return $this->restrictToOptions();
-        }
-
-        return static::isStrictByDefault();
+        return $this->strict ?? static::isStrictByDefault();
     }
 
     /**
@@ -212,15 +219,7 @@ trait HasOptions
      */
     public function isMultiple()
     {
-        if (isset($this->multiple)) {
-            return $this->multiple;
-        }
-
-        if ($this instanceof DefinesOptions) {
-            return $this->allowsMultiple();
-        }
-
-        return false;
+        return $this->multiple;
     }
     /**
      * Activate the options and return the valid options.

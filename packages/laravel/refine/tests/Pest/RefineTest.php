@@ -36,12 +36,6 @@ it('can set as not refining', function () {
         ->isSearching()->toBeFalse();
 });
 
-it('has for', function () {
-    expect($this->test)
-        ->for(Product::class)->toBe($this->test)
-        ->getFor()->toBeInstanceOf(Builder::class);
-});
-
 it('has before method', function () {
     expect($this->test)
         ->before(function () {
@@ -60,7 +54,7 @@ it('evaluates named closure dependencies', function () {
     $product = product();
     $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
 
-    expect($this->test->request($request)->for(Product::query()))
+    expect($this->test->request($request)->builder(Product::query()))
         ->evaluate(fn ($request) => $request->get('key'))->toBe('value')
         // ->evaluate(fn ($route) => $route)->toBeInstanceOf(Route::class)
         ->evaluate(fn ($builder) => $builder->getModel())->toBeInstanceOf(Product::class)
@@ -73,7 +67,7 @@ it('evaluates typed closure dependencies', function () {
     $product = product();
     $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
 
-    expect($this->test->request($request)->for(Product::query()))
+    expect($this->test->request($request)->builder(Product::query()))
         ->evaluate(fn (Request $r) => $r->get('key'))->toBe('value')
         ->evaluate(fn (Builder $b) => $b->getModel())->toBeInstanceOf(Product::class)
         // ->evaluate(fn (Route $r) => $r)->toBeInstanceOf(Route::class)

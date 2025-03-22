@@ -20,8 +20,8 @@ beforeEach(function () {
         'favourite' => '1',
         'oldest' => '2000-01-01',
         'newest' => '2001-01-01',
-        config('refine.sorts_key') => '-price',
-        config('refine.searches_key') => $this->term,
+        config('refine.sort_key') => '-price',
+        config('refine.search_key') => $this->term,
     ]);
 });
 
@@ -30,7 +30,7 @@ it('executes pipeline', function () {
         ->request($this->request)
         ->refine();
 
-    expect($refine->getFor()->getQuery())
+    expect($refine->getBuilder()->getQuery())
         ->wheres->scoped(fn ($wheres) => $wheres
             ->toBeArray()
             ->toHaveCount(9)
