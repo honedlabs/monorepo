@@ -46,7 +46,7 @@ trait HasBuilderInstance
      */
     public function getBuilder()
     {
-        if ($this->hasBuilder()) {
+        if (isset($this->builder)) {
             return $this->builder;
         }
 

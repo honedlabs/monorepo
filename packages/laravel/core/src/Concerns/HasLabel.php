@@ -35,9 +35,7 @@ trait HasLabel
      */
     public function getLabel()
     {
-        return $this->label instanceof \Closure
-            ? $this->resolveLabel()
-            : $this->label;
+        return $this->evaluate($this->label);
     }
 
     /**

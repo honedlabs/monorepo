@@ -34,18 +34,16 @@ trait HasRoute
     /**
      * Set the route.
      *
-     * @param  string|\Closure(...mixed):string|null  $route
+     * @param  string|\Closure(...mixed):string  $route
      * @param  array<string,mixed>  $parameters
      * @return $this
      */
     public function route($route, $parameters = [])
     {
-        if (! \is_null($route)) {
-            $this->route = match (true) {
-                \is_string($route) => route($route, $parameters, true),
-                $route instanceof \Closure => $route,
-            };
-        }
+        $this->route = match (true) {
+            $route instanceof \Closure => $route,
+            default => route($route, $parameters, true),
+        };
 
         return $this;
     }
@@ -58,11 +56,10 @@ trait HasRoute
      */
     public function url($url)
     {
-        if (! \is_null($url)) {
-            $this->route = $url instanceof \Closure
-                ? $url
-                : URL::to($url);
-        }
+        $this->route = match (true) {
+            $url instanceof \Closure => $url,
+            default => URL::to($url),
+        };
 
         return $this;
     }
@@ -74,9 +71,7 @@ trait HasRoute
      */
     public function getRoute()
     {
-        return $this->route instanceof \Closure
-            ? $this->resolveRoute()
-            : $this->route;
+        return $this->evaluate($this->route);
     }
 
     /**
@@ -156,7 +151,7 @@ trait HasRoute
         }
 
         return [
-            'href' => $this->resolveRoute($parameters, $typed),
+            'route' => $this->resolveRoute($parameters, $typed),
             'method' => $this->getMethod(),
         ];
     }

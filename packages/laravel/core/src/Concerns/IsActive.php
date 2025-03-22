@@ -27,17 +27,6 @@ trait IsActive
     }
 
     /**
-     * Set as inactive.
-     *
-     * @param  bool  $inactive
-     * @return $this
-     */
-    public function inactive($inactive = true)
-    {
-        return $this->active(! $inactive);
-    }
-
-    /**
      * Determine if it is active.
      *
      * @return bool

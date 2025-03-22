@@ -47,7 +47,7 @@ trait HasQuery
         }
 
         if ($this instanceof DefinesQuery) {
-            return Closure::fromCallable([$this, 'usingQuery']);
+            return Closure::fromCallable([$this, 'defineQuery']);
         }
 
         return null;

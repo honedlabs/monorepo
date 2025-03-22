@@ -35,11 +35,15 @@ trait HasIcon
      */
     public function getIcon()
     {
-        return match (true) {
-            $this->icon instanceof Icon => $this->icon->icon(),
-            $this->icon instanceof \Closure => $this->resolveIcon(),
-            default => $this->icon,
-        };
+        if ($this->icon instanceof Icon) {
+            return $this->icon->icon();
+        }
+
+        if (isset($this->icon)) {
+            return $this->evaluate($this->icon);
+        }
+
+        return null;
     }
 
     /**

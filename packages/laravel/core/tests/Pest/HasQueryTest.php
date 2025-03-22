@@ -55,7 +55,7 @@ it('has query from method', function () {
         use Evaluable;
         use HasQuery;
 
-        public function usingQuery(Builder $b, int $value)
+        public function defineQuery(Builder $b, int $value)
         {
             $b->where('id', $value);   
         }

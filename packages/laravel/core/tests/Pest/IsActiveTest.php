@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\IsActive;
 
-class ActiveTest
-{
-    use IsActive;
-}
-
 beforeEach(function () {
-    $this->test = new ActiveTest;
+    $this->test = new class {
+        use IsActive;
+    };
 });
 
 it('is false by default', function () {
@@ -19,13 +16,7 @@ it('is false by default', function () {
 });
 
 it('sets active', function () {
-    expect($this->test->active())
-        ->toBeInstanceOf(ActiveTest::class)
+    expect($this->test)
+        ->active()->toBe($this->test)
         ->isActive()->toBeTrue();
-});
-
-it('sets inactive', function () {
-    expect($this->test->inactive())
-        ->toBeInstanceOf(ActiveTest::class)
-        ->isActive()->toBeFalse();
 });
