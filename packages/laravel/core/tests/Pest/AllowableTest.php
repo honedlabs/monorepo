@@ -13,19 +13,16 @@ class AllowableTest
 }
 
 beforeEach(function () {
-    $this->test = new AllowableTest;
+    $this->test = new class {
+        use Allowable, Evaluable;
+    };
 });
 
-it('sets', function () {
-    expect($this->test->allow(false))
-        ->toBeInstanceOf(AllowableTest::class)
-        ->isAllowed()->toBeFalse();
-});
-
-it('checks', function () {
+it('accesses', function () {
     expect($this->test)
-        ->isAllowed()->toBeTrue();
-
-    expect($this->test->allow(fn (Product $product) => $product->id > 100))
+        ->isAllowed()->toBeTrue()
+        ->allow(false)->toBe($this->test)
+        ->isAllowed()->toBeFalse()
+        ->allow(fn (Product $product) => $product->id > 100)
         ->isAllowed(['product' => product()])->toBeFalse();
 });

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Core\Concerns\HasBuilderInstance;
+use Honed\Core\Contracts\Builds;
 use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,18 +16,25 @@ beforeEach(function () {
     };
 });
 
-it('sets', function () {
-    expect($this->test)
-        ->builder($this->builder)->toBe($this->test)
-        ->getBuilder()->toBe($this->builder);
-});
-
-it('gets', function () {
+it('accesses', function () {
     expect($this->test)
         ->hasBuilder()->toBeFalse()
-        ->builder($this->builder)->toBe($this->test)
-        ->hasBuilder()->toBeTrue()
-        ->getBuilder()->toBe($this->builder);
+        ->builder(Product::query())->toBe($this->test)
+        ->getBuilder()->toBeInstanceOf(Builder::class)
+        ->hasBuilder()->toBeTrue();
+});
+
+it('accesses via contract', function () {
+    $test = new class implements Builds {
+        use HasBuilderInstance;
+
+        public function for()
+        {
+            return Product::query();
+        }
+    };
+
+    expect($test->getBuilder())->toBeInstanceOf(Builder::class);
 });
 
 it('cannot retrieve without a builder', function () {

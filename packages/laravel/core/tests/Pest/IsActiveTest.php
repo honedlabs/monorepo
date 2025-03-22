@@ -10,13 +10,9 @@ beforeEach(function () {
     };
 });
 
-it('is false by default', function () {
+it('accesses', function () {
     expect($this->test)
-        ->isActive()->toBeFalse();
-});
-
-it('sets active', function () {
-    expect($this->test)
+        ->isActive()->toBeFalse()
         ->active()->toBe($this->test)
         ->isActive()->toBeTrue();
 });

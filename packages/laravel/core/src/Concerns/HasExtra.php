@@ -11,14 +11,14 @@ trait HasExtra
     /**
      * Extra data.
      *
-     * @var array<string,mixed>|\Closure(mixed...):array<string,mixed>|null
+     * @var array<string,mixed>|\Closure(mixed...):array<string,mixed>
      */
-    protected $extra;
+    protected $extra = [];
 
     /**
      * Set the extra data.
      *
-     * @param  array<string,mixed>|\Closure(mixed...):array<string,mixed>|null  $extra
+     * @param  array<string,mixed>|\Closure(mixed...):array<string,mixed>  $extra
      * @return $this
      */
     public function extra($extra)
@@ -35,15 +35,11 @@ trait HasExtra
      */
     public function getExtra()
     {
-        if (isset($this->extra)) {
-            return $this->evaluate($this->extra);
-        }
+        $extra = $this instanceof DefinesExtra
+            ? \Closure::fromCallable([$this, 'defineExtra'])
+            : $this->extra;
 
-        if ($this instanceof DefinesExtra) {
-            return \Closure::fromCallable([$this, 'defineExtra']);
-        }
-
-        return [];
+        return $this->evaluate($extra);
     }
 
     /**

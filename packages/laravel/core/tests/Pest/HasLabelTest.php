@@ -6,31 +6,23 @@ use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Tests\Stubs\Product;
 
-class LabelTest
-{
-    use Evaluable;
-    use HasLabel;
-}
-
 beforeEach(function () {
-    $this->test = new LabelTest;
+    $this->test = new class {
+        use Evaluable, HasLabel;
+    };
+
     $this->param = 'label';
 });
 
-it('sets', function () {
-    expect($this->test->label($this->param))
-        ->toBeInstanceOf(LabelTest::class)
-        ->hasLabel()->toBeTrue();
-});
-
-it('gets', function () {
-    expect($this->test->label($this->param))
+it('accesses', function () {
+    expect($this->test)
+        ->getLabel()->toBeNull()
+        ->hasLabel()->toBeFalse()
+        ->label($this->param)->toBe($this->test)
         ->getLabel()->toBe($this->param)
-        ->hasLabel()->toBeTrue();
-
-    expect($this->test->label(fn () => $this->param))
-        ->getLabel()->toBe($this->param)
-        ->hasLabel()->toBeTrue();
+        ->hasLabel()->toBeTrue()
+        ->label(fn () => $this->param)->toBe($this->test)
+        ->getLabel()->toBe($this->param);
 });
 
 it('resolves', function () {
@@ -41,6 +33,7 @@ it('resolves', function () {
 });
 
 it('converts', function () {
-    expect($this->test->makeLabel(null))->toBeNull();
-    expect($this->test->makeLabel('new-Label'))->toBe('New label');
+    expect($this->test)
+        ->makeLabel(null)->toBeNull()
+        ->makeLabel('new-label')->toBe('New label');
 });

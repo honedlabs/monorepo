@@ -5,8 +5,7 @@ declare(strict_types=1);
 use Honed\Core\Concerns\HasScope;
 
 beforeEach(function () {
-    $this->test = new class
-    {
+    $this->test = new class {
         use HasScope;
     };
     $this->param = 'scope';

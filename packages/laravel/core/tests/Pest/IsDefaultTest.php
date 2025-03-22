@@ -4,22 +4,16 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\IsDefault;
 
-class DefaultTest
-{
-    use IsDefault;
-}
 
 beforeEach(function () {
-    $this->test = new DefaultTest;
+    $this->test = new class {
+        use IsDefault;
+    };
 });
 
-it('is false by default', function () {
+it('accesses', function () {
     expect($this->test)
-        ->isDefault()->toBeFalse();
-});
-
-it('sets default', function () {
-    expect($this->test->default())
-        ->toBeInstanceOf(DefaultTest::class)
+        ->isDefault()->toBeFalse()
+        ->default()->toBe($this->test)
         ->isDefault()->toBeTrue();
 });

@@ -4,28 +4,17 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\HasValue;
 
-class ValueTest
-{
-    use HasValue;
-}
-
 beforeEach(function () {
-    $this->test = new ValueTest;
+    $this->test = new class {
+        use HasValue;
+    };
 });
 
-it('is null by default', function () {
+it('accesses', function () {
     expect($this->test)
-        ->hasValue()->toBeFalse();
-});
-
-it('sets', function () {
-    expect($this->test->value('test'))
-        ->toBeInstanceOf(ValueTest::class)
-        ->hasValue()->toBeTrue();
-});
-
-it('gets', function () {
-    expect($this->test->value('test'))
+        ->getValue()->toBeNull()
+        ->hasValue()->toBeFalse()
+        ->value('test')->toBe($this->test)
         ->getValue()->toBe('test')
         ->hasValue()->toBeTrue();
 });

@@ -5,23 +5,16 @@ declare(strict_types=1);
 use Honed\Core\Concerns\HasRequest;
 use Illuminate\Support\Facades\Request as RequestFacade;
 
-class RequestTest
-{
-    use HasRequest;
-}
-
 beforeEach(function () {
+    $this->test = new class {
+        use HasRequest;
+    };
     $this->request = RequestFacade::create('/');
-    $this->test = new RequestTest;
 });
 
-it('sets', function () {
-    expect($this->test->request($this->request))
-        ->toBeInstanceOf(RequestTest::class)
-        ->getRequest()->toBe($this->request);
-});
-
-it('gets', function () {
-    expect($this->test->request($this->request))
+it('accesses', function () {
+    expect($this->test)
+        ->getRequest()->toBeNull()
+        ->request($this->request)->toBe($this->test)
         ->getRequest()->toBe($this->request);
 });
