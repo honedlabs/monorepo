@@ -19,8 +19,6 @@ use Illuminate\Support\Str;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @extends Primitive<string, mixed>
- *
  * @method void defaultQuery(TBuilder $builder, mixed ...$parameters) Apply the default refiner query to the builder.
  */
 abstract class Refiner extends Primitive
@@ -30,8 +28,10 @@ abstract class Refiner extends Primitive
     use HasLabel;
     use HasMeta;
     use HasName;
+
     /** @use HasQuery<TModel, TBuilder> */
     use HasQuery;
+
     use HasType;
     use HasValue;
 

@@ -80,7 +80,7 @@ trait HasSearches
 
     /**
      * Define the searches for the instance.
-     * 
+     *
      * @return array<int, \Honed\Refine\Search<TModel, TBuilder>>
      */
     public function searches()

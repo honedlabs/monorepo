@@ -45,7 +45,7 @@ trait HasFilters
 
     /**
      * Define the filters for the instance.
-     * 
+     *
      * @return array<int,\Honed\Refine\Filter<TModel, TBuilder>>
      */
     public function filters()

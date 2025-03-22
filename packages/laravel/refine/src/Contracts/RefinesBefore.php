@@ -12,8 +12,8 @@ interface RefinesBefore
 {
     /**
      * Define a callback to be applied before the refiners have been applied.
-     * 
-     * @param TBuilder $builder
+     *
+     * @param  TBuilder  $builder
      * @return void
      */
     public function beforeRefining($builder);

@@ -29,8 +29,8 @@ class RefineSearches
         $refine->term($term);
 
         $columns = $this->columns(
-            $request, 
-            $refine->getMatchKey(), 
+            $request,
+            $refine->getMatchKey(),
             $refine->getDelimiter()
         );
 
@@ -53,9 +53,9 @@ class RefineSearches
 
     /**
      * The searches to use.
-     * 
+     *
      * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
-     * @return  array<int, \Honed\Refine\Search<TModel, TBuilder>>
+     * @return array<int, \Honed\Refine\Search<TModel, TBuilder>>
      */
     public function searches($refine)
     {

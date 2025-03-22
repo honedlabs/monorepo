@@ -23,7 +23,7 @@ final class TrashedFilter extends Filter implements DefinesOptions, DefinesQuery
      */
     public static function new()
     {
-        return resolve(static::class);
+        return resolve(self::class);
     }
 
     /**
@@ -40,22 +40,25 @@ final class TrashedFilter extends Filter implements DefinesOptions, DefinesQuery
      * Register the query expression to resolve the filter.
      *
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @param  mixed $value
+     * @param  mixed  $value
      * @return void
      */
     public function defineQuery(Builder $builder, $value)
     {
         match ($value) {
+            // @phpstan-ignore-next-line
             'with' => $builder->withTrashed(),
+            // @phpstan-ignore-next-line
             'only' => $builder->onlyTrashed(),
+            // @phpstan-ignore-next-line
             default => $builder->withoutTrashed(),
         };
     }
 
     /**
      * Define the options to be supplied by the refinement.
-     * 
-     * @return class-string<\BackedEnum>|array<int|string,mixed>
+     *
+     * @return array<string,mixed>
      */
     public function defineOptions()
     {
@@ -64,5 +67,5 @@ final class TrashedFilter extends Filter implements DefinesOptions, DefinesQuery
             'only' => 'Only deleted',
             'without' => 'Without deleted',
         ];
-    }    
+    }
 }

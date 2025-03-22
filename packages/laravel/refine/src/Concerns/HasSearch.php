@@ -51,10 +51,10 @@ trait HasSearch
      * @return void
      */
     public function searchPrecision(
-        $builder, 
-        $value, 
-        $column, 
-        $boolean = 'and', 
+        $builder,
+        $value,
+        $column,
+        $boolean = 'and',
         $operator = 'LIKE'
     ) {
         $sql = \sprintf('LOWER(%s) %s ?', $builder->qualifyColumn($column), $operator);
@@ -74,6 +74,7 @@ trait HasSearch
      */
     public function searchRecall($builder, $value, $column, $boolean = 'and')
     {
+        // @phpstan-ignore-next-line
         $builder->whereFullText($column, $value, $boolean);
     }
 }

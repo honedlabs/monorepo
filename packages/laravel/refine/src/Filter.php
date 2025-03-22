@@ -27,10 +27,12 @@ class Filter extends Refiner
         multiple as protected baseMultiple;
     }
     use HasScope;
+
     /**
      * @use HasSearch<TModel, TBuilder>
      */
     use HasSearch;
+
     use InterpretsRequest;
     use Validatable;
 
@@ -91,9 +93,10 @@ class Filter extends Refiner
     {
         $this->options($enum);
 
+        /** @var 'int'|'string'|null $backing */
         $backing = (new \ReflectionEnum($enum))
             ->getBackingType()
-            ->getName();
+            ?->getName();
 
         $this->subtype($backing);
         $this->multiple($multiple);
@@ -130,13 +133,14 @@ class Filter extends Refiner
     /**
      * Set the filter to be for multiple values.
      *
+     * @param  bool  $multiple
      * @return $this
      */
-    public function multiple()
+    public function multiple($multiple = true)
     {
         $this->type('multiple');
         $this->asArray();
-        $this->baseMultiple();
+        $this->baseMultiple($multiple);
 
         return $this;
     }
@@ -239,7 +243,7 @@ class Filter extends Refiner
     {
         return $this->operator('=');
     }
-    
+
     /**
      * Get the operator to use for the filter.
      *
@@ -333,14 +337,18 @@ class Filter extends Refiner
         $column = $builder->qualifyColumn($column);
 
         match (true) {
-            $this->isFullText() => 
-                $this->searchRecall($builder, $value, $column),
-    
-            \in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) => 
-                $this->searchPrecision($builder, $value, $column, operator: $operator),
+            $this->isFullText() && \is_string($value) => $this->searchRecall($builder, $value, $column),
 
-            $this->isMultiple() || $this->interpretsArray() => 
-                $builder->whereIn($column, $value),
+            \in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) &&
+                \is_string($value) => $this->searchPrecision(
+                    $builder,
+                    $value,
+                    $column,
+                    // @phpstan-ignore-next-line
+                    operator: $operator
+                ),
+
+            $this->isMultiple() || $this->interpretsArray() => $builder->whereIn($column, $value),
 
             $this->interpretsDate() =>
                 // @phpstan-ignore-next-line

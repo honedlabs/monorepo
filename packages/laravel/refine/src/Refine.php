@@ -22,7 +22,6 @@ use Honed\Refine\Pipelines\RefineFilters;
 use Honed\Refine\Pipelines\RefineSearches;
 use Honed\Refine\Pipelines\RefineSorts;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Routing\Route;
@@ -34,17 +33,15 @@ use Illuminate\Support\Traits\ForwardsCalls;
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  *
  * @mixin TBuilder
- *
- * @extends Primitive<string, mixed>
  */
 class Refine extends Primitive
 {
+    use ForwardsCalls;
+
     /**
      * @use HasBuilderInstance<TModel, TBuilder>
      */
     use HasBuilderInstance;
-
-    use ForwardsCalls;
     use HasDelimiter;
 
     /** @use HasFilters<TModel, TBuilder> */
@@ -134,8 +131,8 @@ class Refine extends Primitive
 
     /**
      * Register a callback to be executed before the refiners.
-     * 
-     * @param \Closure(TBuilder):void $callback
+     *
+     * @param  \Closure(TBuilder):void  $callback
      * @return $this
      */
     public function before($callback)
@@ -165,8 +162,8 @@ class Refine extends Primitive
 
     /**
      * Register a callback to be executed after the refiners.
-     * 
-     * @param \Closure(TBuilder):void $callback
+     *
+     * @param  \Closure(TBuilder):void  $callback
      * @return $this
      */
     public function after($callback)
@@ -239,7 +236,7 @@ class Refine extends Primitive
 
     /**
      * Get the scoped query parameter to identify the sort.
-     * 
+     *
      * @return string
      */
     public function getSortKey()
@@ -249,7 +246,7 @@ class Refine extends Primitive
 
     /**
      * Get the scoped query parameter to identify the search.
-     * 
+     *
      * @return string
      */
     public function getSearchKey()
@@ -259,7 +256,7 @@ class Refine extends Primitive
 
     /**
      * Get the scoped query parameter to identify the columns to search.
-     * 
+     *
      * @return string
      */
     public function getMatchKey()

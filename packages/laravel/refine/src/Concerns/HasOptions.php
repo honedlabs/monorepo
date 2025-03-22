@@ -35,15 +35,13 @@ trait HasOptions
     /**
      * Set the options for the filter.
      *
-     * @param  class-string<\BackedEnum>|array<int,mixed>|Collection<int,mixed>  $options
+     * @template TValue of bool|float|int|string|null|\Honed\Refine\Option
+     *
+     * @param  class-string<\BackedEnum>|array<int|string,TValue>|\Illuminate\Support\Collection<int|string,TValue>  $options
      * @return $this
      */
     public function options($options)
     {
-        if ($options instanceof Collection) {
-            $options = $options->all();
-        }
-
         $this->options = $this->createOptions($options);
 
         return $this;
@@ -52,11 +50,17 @@ trait HasOptions
     /**
      * Create options from a value.
      *
-     * @param  class-string<\BackedEnum>|array<int,mixed>|Collection<int,mixed>  $options
+     * @template TValue of bool|float|int|string|null|\Honed\Refine\Option
+     *
+     * @param  class-string<\BackedEnum>|array<int|string,TValue>|\Illuminate\Support\Collection<int|string,TValue>  $options
      * @return array<int,\Honed\Refine\Option>
      */
     public function createOptions($options)
     {
+        if ($options instanceof Collection) {
+            $options = $options->all();
+        }
+
         if (\is_string($options)) {
             return \array_map(
                 static fn ($case) => Option::make($case->value, $case->name),
@@ -66,17 +70,20 @@ trait HasOptions
 
         if (Arr::isAssoc($options)) {
             return \array_map(
+                // @phpstan-ignore-next-line
                 static fn ($value, $key) => Option::make($value, \strval($key)),
                 \array_keys($options),
                 \array_values($options)
             );
         }
 
-        return \array_map(
-            static fn ($value) => $value instanceof Option 
-                ? $value 
-                : Option::make($value, \strval($value)),
-            $options
+        return \array_values(
+            \array_map(
+                static fn ($value) => $value instanceof Option
+                    ? $value
+                    : Option::make($value, \strval($value)),
+                $options
+            )
         );
     }
 
@@ -92,7 +99,7 @@ trait HasOptions
         }
 
         if ($this instanceof DefinesOptions) {
-            return $this->options 
+            return $this->options
                 ??= $this->createOptions($this->defineOptions());
         }
 
@@ -169,11 +176,12 @@ trait HasOptions
     /**
      * Allow multiple options to be used.
      *
+     * @param  bool  $multiple
      * @return $this
      */
-    public function multiple()
+    public function multiple($multiple = true)
     {
-        $this->multiple = true;
+        $this->multiple = $multiple;
 
         return $this;
     }
@@ -187,6 +195,7 @@ trait HasOptions
     {
         return $this->multiple;
     }
+
     /**
      * Activate the options and return the valid options.
      *

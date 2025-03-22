@@ -14,6 +14,9 @@ use Honed\Refine\Concerns\HasSearch;
  */
 class Search extends Refiner
 {
+    /**
+     * @use HasSearch<TModel, TBuilder>
+     */
     use HasSearch;
 
     /**
@@ -77,7 +80,7 @@ class Search extends Refiner
     {
         if ($this->isFullText()) {
             $this->searchRecall($builder, $value, $column, $boolean);
-            
+
             return;
         }
 

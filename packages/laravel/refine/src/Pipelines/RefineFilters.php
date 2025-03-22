@@ -38,9 +38,9 @@ class RefineFilters
 
     /**
      * The filters to use.
-     * 
+     *
      * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
-     * @return  array<int, \Honed\Refine\Filter<TModel, TBuilder>>
+     * @return array<int, \Honed\Refine\Filter<TModel, TBuilder>>
      */
     public function filters($refine)
     {

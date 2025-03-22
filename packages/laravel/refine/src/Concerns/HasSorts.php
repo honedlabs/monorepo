@@ -59,7 +59,7 @@ trait HasSorts
 
     /**
      * Define the sorts for the instance.
-     * 
+     *
      * @return array<int,\Honed\Refine\Sort<TModel, TBuilder>>
      */
     public function sorts()

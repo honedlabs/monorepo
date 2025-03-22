@@ -26,7 +26,7 @@ class RefineSorts
         $builder = $refine->getBuilder();
 
         $value = $this->nameAndDirection(
-            $refine->getRequest(), 
+            $refine->getRequest(),
             $refine->getSortKey()
         );
 
@@ -49,9 +49,9 @@ class RefineSorts
 
     /**
      * The sorts to use.
-     * 
+     *
      * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
-     * @return  array<int, \Honed\Refine\Sort<TModel, TBuilder>>
+     * @return array<int, \Honed\Refine\Sort<TModel, TBuilder>>
      */
     public function sorts($refine)
     {

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 namespace Honed\Refine {
-    
+
     /**
      * @method \Illuminate\Contracts\Pagination\LengthAwarePaginator paginate(int|null $perPage = null, array $columns = ['*'], string $pageName = 'page', int|null $page = null) Paginate the given query.
      * @method \Illuminate\Database\Eloquent\Collection get(array|string $columns = ['*']) Execute the query as a "select" statement.

@@ -8,7 +8,7 @@ namespace Honed\Refine;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @extends Refiner<TModel, TBuilder>
+ * @extends Filter<TModel, TBuilder>
  */
 class BooleanFilter extends Filter
 {
