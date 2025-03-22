@@ -14,9 +14,9 @@ trait HasOptions
     /**
      * The available options.
      *
-     * @var array<int,\Honed\Refine\Option>
+     * @var array<int,\Honed\Refine\Option>|null
      */
-    protected $options = [];
+    protected $options;
 
     /**
      * Whether to restrict options to only those provided.
@@ -81,16 +81,6 @@ trait HasOptions
     }
 
     /**
-     * Determine if the filter has options.
-     *
-     * @return bool
-     */
-    public function hasOptions()
-    {
-        return filled($this->options);
-    }
-
-    /**
      * Get the options.
      *
      * @return array<int,\Honed\Refine\Option>
@@ -107,6 +97,16 @@ trait HasOptions
         }
 
         return [];
+    }
+
+    /**
+     * Determine if the filter has options.
+     *
+     * @return bool
+     */
+    public function hasOptions()
+    {
+        return filled($this->getOptions());
     }
 
     /**
