@@ -21,7 +21,11 @@ it('has operator', function () {
         ->lt()->toBe($this->filter)
         ->getOperator()->toBe('<')
         ->lte()->toBe($this->filter)
-        ->getOperator()->toBe('<=');
+        ->getOperator()->toBe('<=')
+        ->neq()->toBe($this->filter)
+        ->getOperator()->toBe('!=')
+        ->eq()->toBe($this->filter)
+        ->getOperator()->toBe('=');
 });
 
 it('can be default', function () {

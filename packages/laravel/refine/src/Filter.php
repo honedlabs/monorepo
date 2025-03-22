@@ -11,6 +11,7 @@ use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
 use Honed\Refine\Concerns\HasDelimiter;
 use Honed\Refine\Concerns\HasOptions;
+use Honed\Refine\Concerns\HasSearch;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -26,6 +27,10 @@ class Filter extends Refiner
         multiple as protected baseMultiple;
     }
     use HasScope;
+    /**
+     * @use HasSearch<TModel, TBuilder>
+     */
+    use HasSearch;
     use InterpretsRequest;
     use Validatable;
 
@@ -328,10 +333,14 @@ class Filter extends Refiner
         $column = $builder->qualifyColumn($column);
 
         match (true) {
+            $this->isFullText() => 
+                $this->searchRecall($builder, $value, $column),
+    
             \in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) => 
-                static::queryRaw($builder, $column, type($operator)->asString(), $value),
+                $this->searchPrecision($builder, $value, $column, operator: $operator),
 
-            $this->isMultiple() || $this->interpretsArray() => $builder->whereIn($column, $value),
+            $this->isMultiple() || $this->interpretsArray() => 
+                $builder->whereIn($column, $value),
 
             $this->interpretsDate() =>
                 // @phpstan-ignore-next-line
@@ -343,24 +352,5 @@ class Filter extends Refiner
 
             default => $builder->where($column, $operator, $value),
         };
-    }
-
-    /**
-     * Query the builder using a raw SQL statement.
-     *
-     * @param  TBuilder  $builder
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  mixed  $value
-     * @return void
-     */
-    protected static function queryRaw($builder, $column, $operator, $value)
-    {
-        $operator = \mb_strtoupper($operator, 'UTF8');
-        $sql = \sprintf('LOWER(%s) %s ?', $column, $operator);
-        // @phpstan-ignore-next-line
-        $binding = ['%'.\mb_strtolower(\strval($value), 'UTF8').'%'];
-
-        $builder->whereRaw($sql, $binding);
     }
 }

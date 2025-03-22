@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
+use Honed\Refine\Concerns\HasSearch;
+
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
@@ -12,19 +14,14 @@ namespace Honed\Refine;
  */
 class Search extends Refiner
 {
+    use HasSearch;
+
     /**
      * The query boolean to use for the search.
      *
      * @var 'and'|'or'
      */
     protected $boolean = 'and';
-
-    /**
-     * Whether to use a full-text search.
-     *
-     * @var bool|null
-     */
-    protected $fullText;
 
     /**
      * Set the query boolean to use for the search.
@@ -47,43 +44,6 @@ class Search extends Refiner
     public function getBoolean()
     {
         return $this->boolean;
-    }
-
-    /**
-     * Set whether to use a full-text search.
-     *
-     * @param  bool|null  $fullText
-     * @return $this
-     */
-    public function fullText($fullText = true)
-    {
-        $this->fullText = $fullText;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the search is a full-text search.
-     *
-     * @return bool|null
-     */
-    public function isFullText()
-    {
-        if (isset($this->fullText)) {
-            return $this->fullText;
-        }
-
-        return static::isFullTextByDefault();
-    }
-
-    /**
-     * Determine if the search is a full-text search by default.
-     *
-     * @return bool
-     */
-    public static function isFullTextByDefault()
-    {
-        return config('refine.full_text', false);
     }
 
     /**
@@ -115,9 +75,12 @@ class Search extends Refiner
      */
     public function defaultQuery($builder, $value, $column, $boolean = 'and')
     {
-        $column = $builder->qualifyColumn($column);
-        $sql = \sprintf('LOWER(%s) LIKE ?', $column);
-        $binding = ['%'.\mb_strtolower($value, 'UTF8').'%'];
-        $builder->whereRaw($sql, $binding, $boolean);
+        if ($this->isFullText()) {
+            $this->searchRecall($builder, $value, $column, $boolean);
+            
+            return;
+        }
+
+        $this->searchPrecision($builder, $value, $column, $boolean);
     }
 }

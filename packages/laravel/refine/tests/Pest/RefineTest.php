@@ -28,6 +28,17 @@ it('has delimiter', function () {
         ->getDelimiter()->toBe('|');
 });
 
+it('goes without refining', function () {
+    expect($this->test)
+        ->isWithoutSearches()->toBeFalse()
+        ->isWithoutFilters()->toBeFalse()
+        ->isWithoutSorts()->toBeFalse()
+        ->withoutRefining()->toBe($this->test)
+        ->isWithoutSearches()->toBeTrue()
+        ->isWithoutFilters()->toBeTrue()
+        ->isWithoutSorts()->toBeTrue();
+});
+
 it('refines before', function () {
     expect($this->test)
         ->before(fn () => $this->test)->toBe($this->test);
