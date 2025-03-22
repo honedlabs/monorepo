@@ -11,8 +11,6 @@ class DateFilter extends Filter
      */
     public function setUp()
     {
-        parent::setUp();
-
         $this->date();
     }
 }

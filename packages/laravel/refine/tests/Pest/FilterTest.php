@@ -23,50 +23,58 @@ it('can be default', function () {
 });
 
 it('can be boolean', function () {
-    expect($this->filter->boolean())
+    expect($this->filter)
+        ->boolean()->toBe($this->filter)
         ->getType()->toBe('boolean')
         ->interpretsAs()->toBe('boolean');
 });
 
 it('can be date', function () {
-    expect($this->filter->date())
+    expect($this->filter)
+        ->date()->toBe($this->filter)
         ->getType()->toBe('date')
         ->interpretsAs()->toBe('date');
 });
 
 it('can be date time', function () {
-    expect($this->filter->dateTime())
+    expect($this->filter)
+        ->datetime()->toBe($this->filter)
         ->getType()->toBe('datetime')
         ->interpretsAs()->toBe('datetime');
 });
 
 it('can be float', function () {
-    expect($this->filter->float())
+    expect($this->filter)
+        ->float()->toBe($this->filter)
         ->getType()->toBe('number')
         ->interpretsAs()->toBe('float');
 });
 
 it('can be integer', function () {
-    expect($this->filter->integer())
+    expect($this->filter)
+        ->int()->toBe($this->filter)
         ->getType()->toBe('number')
         ->interpretsAs()->toBe('int');
 });
 
 it('can be array multiple', function () {
-    expect($this->filter->multiple())
+    expect($this->filter)
+        ->multiple()->toBe($this->filter)
         ->getType()->toBe('multiple')
         ->interpretsAs()->toBe('array')
         ->isMultiple()->toBeTrue();
 });
 
 it('can be text', function () {
-    expect($this->filter->string())
+    expect($this->filter)
+        ->text()->toBe($this->filter)
         ->getType()->toBe('text')
         ->interpretsAs()->toBe('string');
 });
 
 it('can be time', function () {
-    expect($this->filter->time())
+    expect($this->filter)
+        ->time()->toBe($this->filter)
         ->getType()->toBe('time')
         ->interpretsAs()->toBe('time');
 });

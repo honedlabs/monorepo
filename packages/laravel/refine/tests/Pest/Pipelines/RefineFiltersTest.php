@@ -14,7 +14,7 @@ beforeEach(function () {
     $this->closure = fn ($refine) => $refine;
 
     $filters = [
-        Filter::make('price')->integer(),
+        Filter::make('price')->int(),
     ];
 
     $this->refine = Refine::make($this->builder)

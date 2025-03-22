@@ -10,14 +10,13 @@ namespace Honed\Refine;
  *
  * @extends Refiner<TModel, TBuilder>
  */
-class TextFilter extends Filter
+class NumberFilter extends Filter
 {
     /**
      * {@inheritdoc}
      */
     public function setUp()
     {
-        $this->operator('like');
-        $this->text();
+        $this->int();
     }
 }

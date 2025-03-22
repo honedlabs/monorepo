@@ -91,7 +91,6 @@ class Filter extends Refiner
             ->getName();
 
         $this->subtype($backing);
-
         $this->multiple($multiple);
 
         return $this;
@@ -115,7 +114,7 @@ class Filter extends Refiner
      *
      * @return $this
      */
-    public function integer()
+    public function int()
     {
         $this->type('number');
         $this->asInt();
@@ -176,6 +175,66 @@ class Filter extends Refiner
         return $this;
     }
 
+    /**
+     * Set the operator to be '>'
+     *
+     * @return $this
+     */
+    public function gt()
+    {
+        return $this->operator('>');
+    }
+
+    /**
+     * Set the operator to be '>='
+     *
+     * @return $this
+     */
+    public function gte()
+    {
+        return $this->operator('>=');
+    }
+
+    /**
+     * Set the operator to be '<'
+     *
+     * @return $this
+     */
+    public function lt()
+    {
+        return $this->operator('<');
+    }
+
+    /**
+     * Set the operator to be '<='
+     *
+     * @return $this
+     */
+    public function lte()
+    {
+        return $this->operator('<=');
+    }
+
+    /**
+     * Set the operator to be '!='
+     *
+     * @return $this
+     */
+    public function neq()
+    {
+        return $this->operator('!=');
+    }
+
+    /**
+     * Set the operator to be '='
+     *
+     * @return $this
+     */
+    public function eq()
+    {
+        return $this->operator('=');
+    }
+    
     /**
      * Get the operator to use for the filter.
      *

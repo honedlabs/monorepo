@@ -276,10 +276,10 @@ class Refine extends Primitive
     {
         return [
             'delimiter' => $this->getDelimiter(),
-            'search' => $this->getTerm(),
-            'sorts' => $this->getSortKey(),
-            'searches' => $this->getSearchKey(),
-            'matches' => $this->getMatchKey(),
+            'term' => $this->getTerm(),
+            'sort' => $this->getSortKey(),
+            'search' => $this->getSearchKey(),
+            'match' => $this->getMatchKey(),
         ];
     }
 

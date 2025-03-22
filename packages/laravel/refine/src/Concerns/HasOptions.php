@@ -35,39 +35,49 @@ trait HasOptions
     /**
      * Set the options for the filter.
      *
-     * @param  class-string<\BackedEnum>|array<int,mixed>|Collection<int,mixed>  ...$options
+     * @param  class-string<\BackedEnum>|array<int,mixed>|Collection<int,mixed>  $options
      * @return $this
      */
-    public function options(...$options)
+    public function options($options)
     {
-        $options = Arr::flatten($options);
-
-        if (\count($options) === 1 && \is_string($options[0])) {
-            $this->optionsEnumerated($options[0]);
+        if ($options instanceof Collection) {
+            $options = $options->all();
         }
 
-
-
-        $this->options = match (true) {
-            \is_string($options) => $this->optionsEnumerated($options),
-
-            Arr::isAssoc($options) => $this->optionsAssociative($options),
-
-            default => $this->optionsList($options),
-        };
+        $this->options = $this->createOptions($options);
 
         return $this;
     }
 
+    /**
+     * Create options from a value.
+     *
+     * @param  class-string<\BackedEnum>|array<int,mixed>|Collection<int,mixed>  $options
+     * @return array<int,\Honed\Refine\Option>
+     */
     public function createOptions($options)
     {
-        $this->options = match (true) {
-            \is_string($options) => $this->optionsEnumerated($options),
+        if (\is_string($options)) {
+            return \array_map(
+                static fn ($case) => Option::make($case->value, $case->name),
+                $options::cases()
+            );
+        }
 
-            Arr::isAssoc($options) => $this->optionsAssociative($options),
+        if (Arr::isAssoc($options)) {
+            return \array_map(
+                static fn ($value, $key) => Option::make($value, \strval($key)),
+                \array_keys($options),
+                \array_values($options)
+            );
+        }
 
-            default => $this->optionsList($options),
-        };
+        return \array_map(
+            static fn ($value) => $value instanceof Option 
+                ? $value 
+                : Option::make($value, \strval($value)),
+            $options
+        );
     }
 
     /**
@@ -92,7 +102,8 @@ trait HasOptions
         }
 
         if ($this instanceof DefinesOptions) {
-            return $this->options ??= $this->defineOptions();
+            return $this->options 
+                ??= $this->createOptions($this->defineOptions());
         }
 
         return [];
@@ -108,51 +119,6 @@ trait HasOptions
         return \array_map(
             static fn (Option $option) => $option->toArray(),
             $this->getOptions()
-        );
-    }
-
-    /**
-     * Create options from an enum.
-     *
-     * @param  class-string<\BackedEnum>  $enum
-     * @return array<int,\Honed\Refine\Option>
-     */
-    public function optionsEnumerated($enum)
-    {
-        return \array_map(
-            static fn ($case) => Option::make($case->value, $case->name),
-            $enum::cases()
-        );
-    }
-
-    /**
-     * Create options from an associative array.
-     *
-     * @param  array<int,mixed>  $options
-     * @return array<int,\Honed\Refine\Option>
-     */
-    public function optionsAssociative($options)
-    {
-        return \array_map(
-            // @phpstan-ignore-next-line
-            static fn ($value, $key) => Option::make($value, \strval($key)),
-            \array_keys($options),
-            \array_values($options)
-        );
-    }
-
-    /**
-     * Create options from a list.
-     *
-     * @param  array<int,mixed>  $options
-     * @return array<int,\Honed\Refine\Option>
-     */
-    public function optionsList($options)
-    {
-        return \array_map(
-            // @phpstan-ignore-next-line
-            static fn ($value) => Option::make($value, \strval($value)),
-            $options
         );
     }
 
@@ -229,7 +195,7 @@ trait HasOptions
      */
     public function activateOptions($value)
     {
-        $options = collect($this->getOptions())
+        $options = (new Collection($this->getOptions()))
             ->filter(static fn (Option $option) => $option->activate($value))
             ->values();
 
