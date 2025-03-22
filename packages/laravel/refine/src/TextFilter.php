@@ -17,7 +17,6 @@ class TextFilter extends Filter
      */
     public function setUp()
     {
-        $this->operator('LIKE');
         $this->text();
     }
 }
