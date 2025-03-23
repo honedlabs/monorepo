@@ -48,7 +48,7 @@ it('refines default', function () {
 
 it('refines', function () {
     $request = Request::create('/', 'GET', [
-        config('table.sorts_key') => 'price'
+        config('table.sort_key') => 'price'
     ]);
 
     $this->table->request($request);
@@ -63,7 +63,7 @@ it('refines', function () {
 
 it('refines directionally', function () {
     $request = Request::create('/', 'GET', [
-        config('table.sorts_key') => '-price'
+        config('table.sort_key') => '-price'
     ]);
 
     $this->table->request($request);
@@ -78,7 +78,7 @@ it('refines directionally', function () {
 
 it('disables', function () {
     $request = Request::create('/', 'GET', [
-        config('table.sorts_key') => 'price'
+        config('table.sort_key') => 'price'
     ]);
 
     $this->table->request($request)->sorting(false);
@@ -113,7 +113,7 @@ describe('scope', function () {
 
     it('refines', function () {
         $request = Request::create('/', 'GET', [
-            $this->table->formatScope(config('table.sorts_key')) => 'price'
+            $this->table->formatScope(config('table.sort_key')) => 'price'
         ]);
 
         $this->table->request($request);

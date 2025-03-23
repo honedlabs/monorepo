@@ -35,7 +35,6 @@ class ArrayColumn extends Column
     public function setUp()
     {
         parent::setUp();
-
         $this->type('array');
     }
 

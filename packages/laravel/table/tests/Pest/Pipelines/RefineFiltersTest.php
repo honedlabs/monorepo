@@ -95,7 +95,7 @@ it('merges as number', function () {
         ->getColumns()->toHaveCount(2);
 
     expect(collect($this->table->getFilters())->first())
-        ->getType()->toBe('integer')
+        ->getType()->toBe('number')
         ->getParameter()->toBe('price');
 });
 
@@ -112,7 +112,7 @@ it('merges as text', function () {
         ->getColumns()->toHaveCount(2);
 
     expect(collect($this->table->getFilters())->first())
-        ->getType()->toBe('string')
+        ->getType()->toBe('text')
         ->getParameter()->toBe('description');
 });
 

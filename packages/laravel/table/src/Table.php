@@ -282,7 +282,7 @@ class Table extends Refine implements UrlRoutable
      */
     public static function getDefaultSearchKey()
     {
-        return type(config('table.searches_key', 'search'))->asString();
+        return type(config('table.search_key', 'search'))->asString();
     }
 
     /**
@@ -290,7 +290,7 @@ class Table extends Refine implements UrlRoutable
      */
     public static function getDefaultMatchKey()
     {
-        return type(config('table.matches_key', 'match'))->asString();
+        return type(config('table.match_key', 'match'))->asString();
     }
 
     /**
@@ -355,9 +355,9 @@ class Table extends Refine implements UrlRoutable
         return \array_merge(parent::configToArray(), [
             'endpoint' => $this->getEndpoint(),
             'record' => $this->getKey(),
-            'records' => $this->formatScope($this->getRecordsKey()),
+            'records' => $this->formatScope($this->getRecordKey()),
             'columns' => $this->formatScope($this->getColumnsKey()),
-            'pages' => $this->formatScope($this->getPagesKey()),
+            'pages' => $this->formatScope($this->getPageKey()),
         ]);
     }
 

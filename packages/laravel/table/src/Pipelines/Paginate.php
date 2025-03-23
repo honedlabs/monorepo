@@ -25,7 +25,7 @@ class Paginate
         $perPage = $this->perPage($table);
 
         $paginator = $table->getPaginator();
-        $key = $table->formatScope($table->getPagesKey());
+        $key = $table->formatScope($table->getPageKey());
         $builder = $table->getBuilder();
 
         switch (true) {
@@ -84,7 +84,7 @@ class Paginate
             return $pagination;
         }
 
-        $key = $table->formatScope($table->getRecordsKey());
+        $key = $table->formatScope($table->getRecordKey());
 
         $perPage = Interpret::int($table->getRequest(), $key);
 

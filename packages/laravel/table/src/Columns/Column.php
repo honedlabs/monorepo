@@ -19,6 +19,7 @@ use Honed\Core\Primitive;
 use Honed\Refine\Sort;
 use Honed\Table\Concerns\HasClass;
 use Honed\Table\Concerns\IsVisible;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 /**
@@ -342,6 +343,34 @@ class Column extends Primitive
     public function formatValue($value)
     {
         return $value ?? $this->getFallback();
+    }
+
+    /**
+     * Create a record entry for the column.
+     *
+     * @param TModel $record
+     * @param  array<string,mixed>  $named
+     * @param  array<class-string,mixed>  $typed
+     * @return array{value:mixed, extra:array<string,mixed>}
+     */
+    public function createEntry($record, $named = [], $typed = [])
+    {
+        $valueUsing = $this->getValue();
+
+        $value = $this->apply((bool) $valueUsing
+            ? $this->evaluate($valueUsing, $named, $typed)
+            : Arr::get($record, $this->getName())
+        );
+
+        return [
+            $this->getParameter() => [
+                'value' => $value,
+                'extra' => $this->resolveExtra(
+                    \array_merge($named, ['value' => [$value]]),
+                    $typed,
+                ),
+            ],
+        ];
     }
 
     /**
