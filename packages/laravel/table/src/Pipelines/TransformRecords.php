@@ -30,7 +30,7 @@ class TransformRecords
         $table->setRecords(
             \array_map(
                 static fn ($record) => static::createRecord(
-                    $record, 
+                    $record,
                     $table->getCachedColumns(),
                     $table->getInlineActions(),
                     $table->hasAttributes()
@@ -56,13 +56,11 @@ class TransformRecords
         [$named, $typed] = Table::getModelParameters($record);
 
         $actions = \array_map(
-            static fn (InlineAction $action) => 
-                $action->resolveToArray($named, $typed),
+            static fn (InlineAction $action) => $action->resolveToArray($named, $typed),
             \array_values(
                 \array_filter(
                     $actions,
-                    static fn (InlineAction $action) => 
-                        $action->isAllowed($named, $typed)
+                    static fn (InlineAction $action) => $action->isAllowed($named, $typed)
                 )
             )
         );
@@ -71,8 +69,7 @@ class TransformRecords
 
         $row = Arr::mapWithKeys(
             $columns,
-            static fn (Column $column) => 
-                $column->createEntry($record, $named, $typed)
+            static fn (Column $column) => $column->createEntry($record, $named, $typed)
         );
 
         return \array_merge($entry, $row, ['actions' => $actions]);

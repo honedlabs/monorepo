@@ -35,8 +35,10 @@ class Column extends Primitive
     use HasIcon;
     use HasLabel;
     use HasName;
+
     /** @use HasQuery<TModel, TBuilder> */
     use HasQuery;
+
     use HasType;
     use HasValue;
     use IsActive;
@@ -193,11 +195,13 @@ class Column extends Primitive
     {
         if (! $sort) {
             $this->sort = null;
+
             return $this;
         }
 
         if ($sort instanceof Sort) {
             $this->sort = $sort;
+
             return $this;
         }
 
@@ -352,7 +356,7 @@ class Column extends Primitive
     /**
      * Create a record entry for the column.
      *
-     * @param TModel $record
+     * @param  TModel  $record
      * @param  array<string,mixed>  $named
      * @param  array<class-string,mixed>  $typed
      * @return array<string,array{value:mixed, extra:array<string,mixed>}>

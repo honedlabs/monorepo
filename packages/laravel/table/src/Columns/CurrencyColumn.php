@@ -49,8 +49,8 @@ class CurrencyColumn extends Column
         $value = (float) $value;
 
         return Number::currency(
-            $value, 
-            $this->getCurrency() ?? '', 
+            $value,
+            $this->getCurrency() ?? '',
             $this->getLocale()
         );
     }
@@ -62,6 +62,7 @@ class CurrencyColumn extends Column
      */
     public function cents()
     {
+        // @phpstan-ignore-next-line
         $this->transformer(fn ($value) => $value / 100);
 
         return $this;

@@ -6,7 +6,6 @@ namespace Honed\Table\Pipelines;
 
 use Honed\Refine\Pipelines\RefineSorts as BaseRefineSorts;
 use Honed\Table\Columns\Column;
-use Honed\Table\Table;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model

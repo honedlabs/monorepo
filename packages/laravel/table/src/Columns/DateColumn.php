@@ -47,8 +47,8 @@ class DateColumn extends Column
 
     /**
      * {@inheritdoc}
-     * 
-     * @param string|\Carbon\Carbon|null $value
+     *
+     * @param  string|\Carbon\Carbon|null  $value
      */
     public function formatValue($value)
     {

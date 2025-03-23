@@ -40,7 +40,7 @@ class BadgeColumn extends Column implements DefinesExtra
 
     /**
      * Define the extra data for the column.
-     * 
+     *
      * @param  int|string  $value
      * @return array<string,mixed>
      */

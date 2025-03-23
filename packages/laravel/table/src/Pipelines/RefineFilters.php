@@ -11,7 +11,7 @@ use Honed\Table\Columns\Column;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- * 
+ *
  * @extends BaseRefineFilters<TModel, TBuilder>
  */
 class RefineFilters extends BaseRefineFilters

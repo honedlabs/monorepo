@@ -51,7 +51,6 @@ class ArrayColumn extends Column
             return $this->getFallback();
         }
 
-
         if ($pluck = $this->getPluck()) {
             $value = Arr::pluck($value, $pluck);
         }

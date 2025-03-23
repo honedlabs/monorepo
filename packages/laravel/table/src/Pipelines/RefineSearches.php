@@ -11,7 +11,7 @@ use Honed\Table\Columns\Column;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- * 
+ *
  * @extends BaseRefineSearches<TModel, TBuilder>
  */
 class RefineSearches extends BaseRefineSearches
@@ -28,9 +28,8 @@ class RefineSearches extends BaseRefineSearches
 
         /** @var array<int,\Honed\Refine\Search<TModel, TBuilder>> */
         $searches = \array_map(
-            static fn (Column $column) => 
-                Search::make($column->getName(), $column->getLabel())
-                    ->alias($column->getParameter()),
+            static fn (Column $column) => Search::make($column->getName(), $column->getLabel())
+                ->alias($column->getParameter()),
             \array_values(
                 \array_filter(
                     $columns,
