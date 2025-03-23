@@ -17,6 +17,7 @@ class DescSort extends Sort
      */
     public function setUp()
     {
+        $this->type('desc');
         $this->desc();
     }
 }

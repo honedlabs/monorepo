@@ -17,6 +17,7 @@ class AscSort extends Sort
      */
     public function setUp()
     {
+        $this->type('asc');
         $this->asc();
     }
 }

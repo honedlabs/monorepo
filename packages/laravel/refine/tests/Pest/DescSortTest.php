@@ -8,5 +8,6 @@ it('has desc sort', function () {
     expect(DescSort::make('created_at'))
         ->toBeInstanceOf(DescSort::class)
         ->isFixed()->toBeTrue()
-        ->getDirection()->toBe('desc');
+        ->getDirection()->toBe('desc')
+        ->getType()->toBe('desc');
 });

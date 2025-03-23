@@ -14,8 +14,8 @@ it('has full text search', function () {
 it('applies full text', function () {
     $builder = Product::query();
 
-    expect(FullTextSearch::make('name')->refine($builder, 'test'))
-        ->toBeTrue();
+    expect(FullTextSearch::make('name'))
+        ->refine($builder, [true, 'test'])->toBeTrue();
 
     expect($builder->getQuery()->wheres)
         ->{0}->{'type'}->toBe('Fulltext');
