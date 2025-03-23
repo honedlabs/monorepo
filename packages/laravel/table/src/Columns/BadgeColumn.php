@@ -47,7 +47,7 @@ class BadgeColumn extends Column implements DefinesExtra
     public function defineExtra($value)
     {
         $variant = Arr::get(
-            $this->getMap() ?? [],
+            $this->getMap(),
             $value,
             $this->getDefault()
         );
@@ -73,11 +73,11 @@ class BadgeColumn extends Column implements DefinesExtra
     /**
      * Get the map to use to determine the badge variant.
      *
-     * @return array<string,string>|null
+     * @return array<string,string>
      */
     public function getMap()
     {
-        return $this->map;
+        return $this->map ?? [];
     }
 
     /**

@@ -65,18 +65,18 @@ it('builds class', function () {
                 // Search done on name (column) and description (property)
                 [
                     'type' => 'raw',
-                    'sql' => searchSql('name'),
+                    'sql' => searchSql('products.name'),
                     'boolean' => 'or',
                 ],
                 [
                     'type' => 'raw',
-                    'sql' => searchSql('description'),
+                    'sql' => searchSql('products.description'),
                     'boolean' => 'and',
                 ],
                 // Name where filter
                 [
                     'type' => 'raw',
-                    'sql' => searchSql('name'),
+                    'sql' => searchSql('products.name'),
                     'boolean' => 'and',
                 ],
                 // Price set filter
@@ -96,10 +96,9 @@ it('builds class', function () {
                 ],
                 // Only set filter
                 [
-                    'type' => 'Basic',
+                    'type' => 'In',
                     'column' => qualifyProduct('status'),
-                    'operator' => '=',
-                    'value' => Status::ComingSoon->value,
+                    'values' => [Status::ComingSoon->value],
                     'boolean' => 'and',
                 ],
                 // Favourite filter
@@ -140,13 +139,13 @@ it('builds class', function () {
                 'record' => 'id',
                 'delimiter' => config('table.delimiter'),
                 'records' => config('table.record_key'),
-                'sorts' => config('table.sort_key'),
-                'searches' => config('table.search_key'),
+                'sort' => config('table.sort_key'),
+                'search' => config('table.search_key'),
                 'columns' => config('table.column_key'),
                 'pages' => config('table.page_key'),
                 'endpoint' => config('table.endpoint'),
-                'search' => 'search term',
-                'matches' => 'match',
+                'term' => 'search term',
+                'match' => 'match',
             ])->{'actions'}->scoped(fn ($actions) => $actions
                 ->toHaveKeys([ 'hasInline', 'bulk', 'page'])
                 ->{'hasInline'}->toBeTrue()

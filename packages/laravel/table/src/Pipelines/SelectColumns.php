@@ -26,17 +26,17 @@ class SelectColumns
             return $next($table);
         }
 
-        $builder = $table->getBuilder();
-
         $selects = [];
 
         foreach ($table->getCachedColumns() as $column) {
-            $selects[] = $column->getSelect();
+            if ($column->isSelectable()) {
+                $selects[] = $column->getSelect();
+            }
         }
 
         $selects = \array_unique(Arr::flatten($selects), SORT_STRING);
 
-        $builder->select($selects);
+        $table->getBuilder()->select($selects);
 
         return $next($table);
     }

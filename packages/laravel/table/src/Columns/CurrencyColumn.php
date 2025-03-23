@@ -56,6 +56,18 @@ class CurrencyColumn extends Column
     }
 
     /**
+     * Set the transformer to convert the value from cents to dollars.
+     *
+     * @return $this
+     */
+    public function cents()
+    {
+        $this->transformer(fn ($value) => $value / 100);
+
+        return $this;
+    }
+
+    /**
      * Set the currency to use.
      *
      * @param  string  $currency

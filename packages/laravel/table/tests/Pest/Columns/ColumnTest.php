@@ -108,7 +108,7 @@ it('is select', function () {
         ->isSelectable()->toBeTrue()
         ->select(false)->toBe($this->test)
         ->isSelectable()->toBeFalse()
-        ->getSelect()->toBeFalse()
+        ->getSelect()->toBe($this->test->getName())
         ->select('test')->toBe($this->test)
         ->isSelectable()->toBeTrue()
         ->getSelect()->toBe('test');
