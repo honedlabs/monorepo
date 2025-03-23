@@ -8,15 +8,15 @@ namespace Honed\Refine;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @extends Filter<TModel, TBuilder>
+ * @extends Sort<TModel, TBuilder>
  */
-class TimeFilter extends Filter
+class DescSort extends Sort
 {
     /**
      * {@inheritdoc}
      */
     public function setUp()
     {
-        $this->time();
+        $this->desc();
     }
 }

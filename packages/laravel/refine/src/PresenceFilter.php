@@ -10,13 +10,13 @@ namespace Honed\Refine;
  *
  * @extends Filter<TModel, TBuilder>
  */
-class TimeFilter extends Filter
+class PresenceFilter extends Filter
 {
     /**
      * {@inheritdoc}
      */
     public function setUp()
     {
-        $this->time();
+        $this->presence();
     }
 }
