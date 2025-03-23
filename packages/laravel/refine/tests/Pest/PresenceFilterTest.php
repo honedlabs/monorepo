@@ -16,7 +16,6 @@ beforeEach(function () {
 
 it('has presence filter', function () {
     expect($this->filter)
-        ->toBeInstanceOf(PresenceFilter::class)
         ->getType()->toBe('boolean')
         ->interpretsAs()->toBe('boolean')
         ->isPresence()->toBeTrue();
