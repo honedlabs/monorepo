@@ -151,7 +151,7 @@ trait HasRoute
         }
 
         return [
-            'route' => $this->resolveRoute($parameters, $typed),
+            'url' => $this->resolveRoute($parameters, $typed),
             'method' => $this->getMethod(),
         ];
     }

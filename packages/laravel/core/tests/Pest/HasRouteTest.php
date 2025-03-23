@@ -78,7 +78,7 @@ it('validates method', function ($input) {
 it('gets route array', function () {
     expect($this->test->route($this->route, $this->param))
         ->routeToArray()->toBe([
-            'route' => route($this->route, $this->param),
+            'url' => route($this->route, $this->param),
             'method' => Request::METHOD_GET,
         ]);
 });
