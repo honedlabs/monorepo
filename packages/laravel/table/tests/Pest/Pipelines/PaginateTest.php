@@ -20,7 +20,7 @@ beforeEach(function () {
     $this->next = fn ($table) => $table;
 
     $this->table = Table::make()
-        ->for(Product::query());
+        ->builder(Product::query());
 });
 
 it('paginates default', function () {

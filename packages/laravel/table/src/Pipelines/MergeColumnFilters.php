@@ -57,8 +57,8 @@ class MergeColumnFilters
         match ($type) {
             'date' => $filter->date(),
             'boolean' => $filter->boolean(),
-            'number' => $filter->integer(),
-            'text' => $filter->string(),
+            'number' => $filter->int(),
+            'text' => $filter->text(),
             default => null,
         };
 

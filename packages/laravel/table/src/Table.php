@@ -280,7 +280,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public static function fallbackSearchesKey()
+    public static function getDefaultSearchKey()
     {
         return type(config('table.searches_key', 'search'))->asString();
     }
@@ -288,7 +288,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public static function fallbackMatchesKey()
+    public static function getDefaultMatchKey()
     {
         return type(config('table.matches_key', 'match'))->asString();
     }
@@ -296,7 +296,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public static function fallbackMatches()
+    public static function isMatchingByDefault()
     {
         return (bool) config('table.match', false);
     }
@@ -310,7 +310,7 @@ class Table extends Refine implements UrlRoutable
     public function handle($request)
     {
         return Handler::make(
-            $this->getFor(),
+            $this->getBuilder(),
             $this->getActions(),
             $this->getKey()
         )->handle($request);

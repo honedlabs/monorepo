@@ -10,11 +10,10 @@ use Honed\Core\Concerns\HasExtra;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasQueryClosure;
+use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\IsActive;
-use Honed\Core\Concerns\IsHidden;
 use Honed\Core\Concerns\Transformable;
 use Honed\Core\Primitive;
 use Honed\Refine\Sort;
@@ -25,8 +24,6 @@ use Illuminate\Support\Str;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- *
- * @extends Primitive<string, mixed>
  */
 class Column extends Primitive
 {
@@ -37,14 +34,12 @@ class Column extends Primitive
     use HasIcon;
     use HasLabel;
     use HasName;
-    /** @use HasQueryClosure<TModel, TBuilder> */
-    use HasQueryClosure;
+    /** @use HasQuery<TModel, TBuilder> */
+    use HasQuery;
     use HasType;
     use HasValue;
     use IsActive;
-    use IsHidden;
     use IsVisible;
-
     use Transformable;
 
     /**
@@ -53,6 +48,13 @@ class Column extends Primitive
      * @var bool
      */
     protected $key = false;
+
+    /**
+     * Whether this column is hidden.
+     *
+     * @var bool
+     */
+    protected $hidden = false;
 
     /**
      * The value to display when the column is empty.
@@ -135,6 +137,29 @@ class Column extends Primitive
     }
 
     /**
+     * Set the column as hidden.
+     *
+     * @param  bool  $hidden
+     * @return $this
+     */
+    public function hidden($hidden = true)
+    {
+        $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the column is hidden.
+     *
+     * @return bool
+     */
+    public function isHidden()
+    {
+        return $this->hidden;
+    }
+
+    /**
      * Set the fallback value for the column.
      *
      * @param  mixed  $fallback
@@ -158,16 +183,6 @@ class Column extends Primitive
     }
 
     /**
-     * Determine if the column has a fallback value.
-     *
-     * @return bool
-     */
-    public function hasFallback()
-    {
-        return isset($this->fallback);
-    }
-
-    /**
      * Set the column as sortable.
      *
      * @param  \Honed\Refine\Sort<TModel, TBuilder>|string|bool  $sort
@@ -177,13 +192,11 @@ class Column extends Primitive
     {
         if (! $sort) {
             $this->sort = null;
-
             return $this;
         }
 
         if ($sort instanceof Sort) {
             $this->sort = $sort;
-
             return $this;
         }
 
@@ -367,20 +380,5 @@ class Column extends Primitive
             'class' => $this->getClass(),
             'sort' => $this->sortToArray(),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __call($method, $parameters)
-    {
-        if ($method === 'query') {
-            /** @var \Closure(mixed...):void $query */
-            $query = $parameters[0];
-
-            return $this->queryClosure($query);
-        }
-
-        parent::__call($method, $parameters);
     }
 }

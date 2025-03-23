@@ -21,13 +21,13 @@ beforeEach(function () {
 
     $this->table = Table::make()
         ->withSorts($sorts)
-        ->for(Product::query());
+        ->builder(Product::query());
 });
 
 it('does not refine', function () {
     $this->pipe->__invoke($this->table, $this->closure);
 
-    expect($this->table->getFor()->getQuery()->wheres)
+    expect($this->table->getBuilder()->getQuery()->wheres)
         ->toBeEmpty();
 });
 
@@ -40,7 +40,7 @@ it('refines default', function () {
 
     $this->pipe->__invoke($this->table, $this->closure);
 
-    $builder = $this->table->getFor();
+    $builder = $this->table->getBuilder();
 
     expect($builder->getQuery()->orders)
         ->toBeOnlyOrder($builder->qualifyColumn('name'), 'asc');
@@ -55,7 +55,7 @@ it('refines', function () {
 
     $this->pipe->__invoke($this->table, $this->closure);
 
-    $builder = $this->table->getFor();
+    $builder = $this->table->getBuilder();
 
     expect($builder->getQuery()->orders)
         ->toBeOnlyOrder($builder->qualifyColumn('price'), 'asc');
@@ -70,7 +70,7 @@ it('refines directionally', function () {
 
     $this->pipe->__invoke($this->table, $this->closure);
 
-    $builder = $this->table->getFor();
+    $builder = $this->table->getBuilder();
 
     expect($builder->getQuery()->orders)
         ->toBeOnlyOrder($builder->qualifyColumn('price'), 'desc');
@@ -85,7 +85,7 @@ it('disables', function () {
 
     $this->pipe->__invoke($this->table, $this->closure);
 
-    $builder = $this->table->getFor();
+    $builder = $this->table->getBuilder();
 
     expect($builder->getQuery()->orders)
         ->toBeEmpty();
@@ -105,7 +105,7 @@ describe('scope', function () {
 
         $this->pipe->__invoke($this->table, $this->closure);
 
-        $builder = $this->table->getFor();
+        $builder = $this->table->getBuilder();
 
         expect($builder->getQuery()->orders)
             ->toBeOnlyOrder($builder->qualifyColumn('name'), 'asc');
@@ -120,7 +120,7 @@ describe('scope', function () {
 
         $this->pipe->__invoke($this->table, $this->closure);
 
-        $builder = $this->table->getFor();
+        $builder = $this->table->getBuilder();
 
         expect($builder->getQuery()->orders)
             ->toBeOnlyOrder($builder->qualifyColumn('price'), 'asc');

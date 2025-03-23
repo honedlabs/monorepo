@@ -41,6 +41,7 @@ class DateColumn extends Column
     public function setUp()
     {
         parent::setUp();
+        
         $this->type('date');
     }
 
@@ -66,7 +67,7 @@ class DateColumn extends Column
             return $value->diffForHumans();
         }
 
-        return $value->format($this->getFormat() ?? 'Y-m-d H:i:s');
+        return $value->format($this->getBuildermat() ?? 'Y-m-d H:i:s');
     }
 
     /**
@@ -110,7 +111,7 @@ class DateColumn extends Column
      *
      * @return string|null
      */
-    public function getFormat()
+    public function getBuildermat()
     {
         return $this->format;
     }

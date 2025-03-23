@@ -26,7 +26,7 @@ class SelectColumns
             return $next($table);
         }
 
-        $for = $table->getFor();
+        $builder = $table->getBuilder();
 
         $selects = [];
 
@@ -40,7 +40,7 @@ class SelectColumns
 
         $selects = \array_unique(Arr::flatten($selects), SORT_STRING);
 
-        $for->select($selects);
+        $builder->select($selects);
 
         return $next($table);
     }
