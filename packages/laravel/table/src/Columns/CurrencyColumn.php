@@ -12,7 +12,7 @@ use Illuminate\Support\Number;
  *
  * @extends Column<TModel, TBuilder>
  */
-class NumberColumn extends Column
+class CurrencyColumn extends Column
 {
     /**
      * The currency to use.
@@ -50,7 +50,7 @@ class NumberColumn extends Column
 
         return Number::currency(
             $value, 
-            $this->getCurrency(), 
+            $this->getCurrency() ?? '', 
             $this->getLocale()
         );
     }

@@ -43,13 +43,14 @@ class ArrayColumn extends Column
      */
     public function formatValue($value)
     {
-        if (\is_null($value) || ! \is_iterable($value)) {
-            return $this->getFallback();
-        }
-
         if ($value instanceof Arrayable) {
             $value = $value->toArray();
         }
+
+        if (\is_null($value) || ! \is_array($value)) {
+            return $this->getFallback();
+        }
+
 
         if ($pluck = $this->getPluck()) {
             $value = Arr::pluck($value, $pluck);

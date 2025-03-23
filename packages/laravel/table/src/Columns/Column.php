@@ -291,10 +291,14 @@ class Column extends Primitive
     /**
      * Get the properties to select.
      *
-     * @return string|bool|array<int,string>
+     * @return string|array<int,string>
      */
     public function getSelect()
     {
+        if (\is_bool($this->select)) {
+            return $this->getName();
+        }
+
         return $this->select;
     }
 
@@ -351,7 +355,7 @@ class Column extends Primitive
      * @param TModel $record
      * @param  array<string,mixed>  $named
      * @param  array<class-string,mixed>  $typed
-     * @return array{value:mixed, extra:array<string,mixed>}
+     * @return array<string,array{value:mixed, extra:array<string,mixed>}>
      */
     public function createEntry($record, $named = [], $typed = [])
     {

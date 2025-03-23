@@ -24,6 +24,9 @@ class TransformRecords
      */
     public function __invoke($table, $next)
     {
+        /** @var array<int,TModel> */
+        $records = $table->getRecords();
+
         $table->setRecords(
             \array_map(
                 static fn ($record) => static::createRecord(
@@ -32,7 +35,7 @@ class TransformRecords
                     $table->getInlineActions(),
                     $table->hasAttributes()
                 ),
-                $table->getRecords()
+                $records
             )
         );
 

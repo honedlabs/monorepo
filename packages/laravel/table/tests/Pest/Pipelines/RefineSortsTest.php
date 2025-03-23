@@ -20,8 +20,8 @@ beforeEach(function () {
     ];
 
     $this->table = Table::make()
-        ->withSorts($sorts)
-        ->builder(Product::query());
+        ->builder(Product::query())
+        ->withSorts($sorts);
 });
 
 it('does not refine', function () {
@@ -81,7 +81,7 @@ it('disables', function () {
         config('table.sort_key') => 'price'
     ]);
 
-    $this->table->request($request)->sorting(false);
+    $this->table->request($request)->withoutSorts();
 
     $this->pipe->__invoke($this->table, $this->closure);
 

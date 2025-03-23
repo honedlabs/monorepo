@@ -11,8 +11,8 @@ use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasParameterNames;
 use Honed\Refine\Pipelines\AfterRefining;
 use Honed\Refine\Pipelines\BeforeRefining;
-use Honed\Refine\Pipelines\RefineFilters;
-use Honed\Refine\Pipelines\RefineSearches;
+use Honed\Table\Pipelines\RefineFilters;
+use Honed\Table\Pipelines\RefineSearches;
 use Honed\Refine\Refine;
 use Honed\Table\Columns\Column;
 use Honed\Table\Concerns\HasColumns;
@@ -21,8 +21,6 @@ use Honed\Table\Concerns\HasTableBindings;
 use Honed\Table\Concerns\IsSelectable;
 use Honed\Table\Concerns\IsToggleable;
 use Honed\Table\Pipelines\CleanupTable;
-use Honed\Table\Pipelines\MergeColumnFilters;
-use Honed\Table\Pipelines\MergeColumnSearches;
 use Honed\Table\Pipelines\Paginate;
 use Honed\Table\Pipelines\QueryColumns;
 use Honed\Table\Pipelines\RefineSorts;
@@ -371,8 +369,6 @@ class Table extends Refine implements UrlRoutable
             ->through([
                 BeforeRefining::class,
                 ToggleColumns::class,
-                MergeColumnFilters::class,
-                MergeColumnSearches::class,
                 RefineSearches::class,
                 RefineFilters::class,
                 RefineSorts::class,
@@ -388,8 +384,8 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    protected function forwardBuilderCall($method, $parameters)
+    public function __call($method, $parameters)
     {
-        return $this;
+        return $this->macroCall($method, $parameters);
     }
 }

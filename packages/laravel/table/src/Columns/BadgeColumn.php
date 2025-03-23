@@ -41,14 +41,14 @@ class BadgeColumn extends Column implements DefinesExtra
     /**
      * Define the extra data for the column.
      * 
-     * @param  mixed  $record
+     * @param  int|string  $value
      * @return array<string,mixed>
      */
     public function defineExtra($value)
     {
         $variant = Arr::get(
             $this->getMap() ?? [],
-            // Arr,
+            $value,
             $this->getDefault()
         );
 
