@@ -61,7 +61,7 @@ function y() {
   };
 }
 function A(e, a, n = {}, u = {}) {
-  return e.route ? (v.visit(e.route.href, {
+  return e.route ? (v.visit(e.route.url, {
     ...u,
     method: e.route.method
   }), !0) : e.action && a ? (v.post(

@@ -4,7 +4,7 @@ import { router } from "@inertiajs/vue3";
 export type Identifier = string | number;
 
 export interface Route {
-	href: string;
+	url: string;
 	method: Method;
 }
 
@@ -75,7 +75,7 @@ export function executeAction<T extends ActionType = any>(
 	options: VisitOptions = {},
 ) {
 	if (action.route) {
-		router.visit(action.route.href, {
+		router.visit(action.route.url, {
 			...options,
 			method: action.route.method,
 		});

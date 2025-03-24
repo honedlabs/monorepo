@@ -62,7 +62,7 @@ export declare interface PageAction extends Action {
 }
 
 export declare interface Route {
-    href: string;
+    url: string;
     method: Method;
 }
 
