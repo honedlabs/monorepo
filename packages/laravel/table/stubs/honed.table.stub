@@ -25,14 +25,8 @@ use Honed\Table\Contracts\ShouldRemember;
  */
 final class {{ class }} extends Table implements Builds
 {
-    /* The database column(s) to use for searching */
-    public $search = [];
-
-    /* The number of records to show per page */
-    public $pagination = 10;
-
     /**
-     * Provide the instance with any necessary setup
+     * Provide the table with any necessary setup
      *
      * @return void
      */
@@ -54,7 +48,7 @@ final class {{ class }} extends Table implements Builds
     /**
      * Define the columns to apply.
      * 
-     * @return array<int, \Honed\Table\Columns\Column>
+     * @return array<int, \Honed\Table\Columns\Column<TModel, TBuilder>>
      */
     public function columns()
     {
