@@ -54,9 +54,7 @@ trait HasBuilderInstance
             return $this->builder ??= $this->createBuilder($this->for());
         }
 
-        throw new \RuntimeException(
-            'Builder instance has not been set.'
-        );
+        static::throwBuilderException();
     }
 
     /**
@@ -89,8 +87,36 @@ trait HasBuilderInstance
             return $query::query();
         }
 
-        throw new \InvalidArgumentException(
-            'Expected a model class name or a query instance.'
-        );
+        static::throwInvalidBuilderException();
     }
+
+    /**
+     * Throw a missing builder exception.
+     *
+     * @param  string  $message
+     * @return never
+     */
+    protected static function throwBuilderException()
+    {
+        throw new \RuntimeException(\sprintf(
+            'Builder instance has not been set for [%s].',
+            static::class
+        ));
+    }
+
+    /**
+     * Throw an invalid builder exception.
+     *
+     * @param  string  $message
+     * @return never
+     */
+    protected static function throwInvalidBuilderException()
+    {
+        throw new \InvalidArgumentException(\sprintf(
+            'No builder instance can be synthesized for [%s].',
+            static::class
+        ));
+    }
+    
 }
+

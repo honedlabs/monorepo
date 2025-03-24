@@ -51,8 +51,12 @@ trait HasExtra
      */
     public function resolveExtra($parameters = [], $typed = [])
     {
+        $extra = $this instanceof DefinesExtra
+            ? \Closure::fromCallable([$this, 'defineExtra'])
+            : $this->extra;
+
         /** @var array<string,mixed>|null */
-        $evaluated = $this->evaluate($this->extra, $parameters, $typed);
+        $evaluated = $this->evaluate($extra, $parameters, $typed);
 
         return $evaluated;
     }
