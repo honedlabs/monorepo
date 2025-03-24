@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Builder;
 final class {{ class }} extends Filter implements DefinesQuery
 {
     /**
-     *  Create a new sort instance.
+     *  Create a new filter instance.
      *
      * @return static
      */
@@ -28,7 +28,9 @@ final class {{ class }} extends Filter implements DefinesQuery
     }
 
     /**
-     * {@inheritdoc}
+     * Provide the filter with any necessary setup.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -42,7 +44,7 @@ final class {{ class }} extends Filter implements DefinesQuery
      * @param  mixed $value
      * @return void
      */
-    public function query($builder, $value)
+    public function defineQuery($builder, $value)
     {
         //
     }

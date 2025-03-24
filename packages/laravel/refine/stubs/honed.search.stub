@@ -27,7 +27,9 @@ final class {{ class }} extends Search implements DefinesQuery
     }
 
     /**
-     * {@inheritdoc}
+     * Provide the search with any necessary setup.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -41,7 +43,7 @@ final class {{ class }} extends Search implements DefinesQuery
      * @param  string $value
      * @return void
      */
-    public function query($builder, $value)
+    public function defineQuery($builder, $value)
     {
         //
     }

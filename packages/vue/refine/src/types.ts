@@ -1,4 +1,5 @@
 import type { VisitOptions } from "@inertiajs/core";
+import type { PromisifyFn } from "@vueuse/shared";
 
 export type Direction = "asc" | "desc" | null;
 
@@ -62,21 +63,36 @@ export interface Refine {
 }
 
 export interface HonedFilter extends Filter {
-	apply: (value: any, options: VisitOptions) => void;
-	clear: (options: VisitOptions) => void;
-	bind: () => void;
+	apply: (value: any, options?: VisitOptions) => void;
+	clear: (options?: VisitOptions) => void;
+	bind: () =>
+		| {
+				"onUpdate:modelValue": PromisifyFn<(value: any) => void>;
+				modelValue: unknown;
+		  }
+		| undefined;
 }
 
 export interface HonedSort extends Sort {
-	apply: (options: VisitOptions) => void;
-	clear: (options: VisitOptions) => void;
-	bind: () => void;
+	apply: (options?: VisitOptions) => void;
+	clear: (options?: VisitOptions) => void;
+	bind: () =>
+		| {
+				onClick: PromisifyFn<() => void>;
+		  }
+		| undefined;
 }
 
 export interface HonedSearch extends Search {
-	apply: (options: VisitOptions) => void;
-	clear: (options: VisitOptions) => void;
-	bind: () => void;
+	apply: (options?: VisitOptions) => void;
+	clear: (options?: VisitOptions) => void;
+	bind: () =>
+		| {
+				"onUpdate:modelValue": PromisifyFn<(value: any) => void>;
+				modelValue: boolean;
+				value: string;
+		  }
+		| undefined;
 }
 
 export interface BindingOptions extends VisitOptions {

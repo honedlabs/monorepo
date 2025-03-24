@@ -125,6 +125,7 @@ export function useRefine<
 	 * Toggle the presence of a value in an array.
 	 */
 	function toggleValue(value: any, values: any) {
+		console.log(value, values);
 		values = Array.isArray(values) ? values : [values];
 
 		if (values.includes(value)) {

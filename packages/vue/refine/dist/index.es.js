@@ -98,7 +98,7 @@ function Y(d, u, o = {}) {
     );
   }
   function j(e, n) {
-    return n = Array.isArray(n) ? n : [n], n.includes(e) ? n.filter((t) => t !== e) : [...n, e];
+    return console.log(e, n), n = Array.isArray(n) ? n : [n], n.includes(e) ? n.filter((t) => t !== e) : [...n, e];
   }
   function A(e) {
     var n;
@@ -247,12 +247,12 @@ function Y(d, u, o = {}) {
     }
     const i = t.value, {
       debounce: a = 250,
-      transform: b = (W) => W,
-      ...v
+      transform: v = (W) => W,
+      ...b
     } = n;
     return {
       "onUpdate:modelValue": V((W) => {
-        F(t, b(W), v);
+        F(t, v(W), b);
       }, a),
       modelValue: i
     };
@@ -263,11 +263,11 @@ function Y(d, u, o = {}) {
       console.warn(`Sort [${e}] does not exist.`);
       return;
     }
-    const { debounce: i = 0, transform: a, ...b } = n;
+    const { debounce: i = 0, transform: a, ...v } = n;
     return {
       onClick: V(() => {
-        var v;
-        $(t, (v = c.value) == null ? void 0 : v.direction, b);
+        var b;
+        $(t, (b = c.value) == null ? void 0 : b.direction, v);
       }, i)
     };
   }
@@ -289,10 +289,10 @@ function Y(d, u, o = {}) {
       console.warn(`Match [${e}] does not exist.`);
       return;
     }
-    const { debounce: i = 0, transform: a, ...b } = n;
+    const { debounce: i = 0, transform: a, ...v } = n;
     return {
-      "onUpdate:modelValue": V((v) => {
-        w(v, b);
+      "onUpdate:modelValue": V((b) => {
+        w(b, v);
       }, i),
       modelValue: U(t),
       value: t.name

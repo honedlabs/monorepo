@@ -37,21 +37,30 @@ export declare type FilterType = "boolean" | "date" | "datetime" | "filter" | "m
 export declare type FilterValue = string | number | boolean | null;
 
 export declare interface HonedFilter extends Filter {
-    apply: (value: any, options: VisitOptions) => void;
-    clear: (options: VisitOptions) => void;
-    bind: () => void;
+    apply: (value: any, options?: VisitOptions) => void;
+    clear: (options?: VisitOptions) => void;
+    bind: () => {
+        "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
+        modelValue: unknown;
+    } | undefined;
 }
 
 export declare interface HonedSearch extends Search {
-    apply: (options: VisitOptions) => void;
-    clear: (options: VisitOptions) => void;
-    bind: () => void;
+    apply: (options?: VisitOptions) => void;
+    clear: (options?: VisitOptions) => void;
+    bind: () => {
+        "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
+        modelValue: boolean;
+        value: string;
+    } | undefined;
 }
 
 export declare interface HonedSort extends Sort {
-    apply: (options: VisitOptions) => void;
-    clear: (options: VisitOptions) => void;
-    bind: () => void;
+    apply: (options?: VisitOptions) => void;
+    clear: (options?: VisitOptions) => void;
+    bind: () => {
+        onClick: PromisifyFn<() => void>;
+    } | undefined;
 }
 
 declare interface Option_2 {
