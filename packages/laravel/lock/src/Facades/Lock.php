@@ -7,12 +7,12 @@ namespace Honed\Lock\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Honed\Lock\Lock
+ * @see \Honed\Lock\Locker
  */
 class Lock extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Honed\Lock\Lock::class;
+        return \Honed\Lock\Locker::class;
     }
 }

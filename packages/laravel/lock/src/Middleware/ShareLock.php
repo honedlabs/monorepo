@@ -6,6 +6,7 @@ namespace Honed\Lock\Middleware;
 
 use Closure;
 use Honed\Lock\Facades\Lock;
+use Honed\Lock\Support\Parameters;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -19,8 +20,8 @@ class ShareLock
     public function handle(Request $request, Closure $next)
     {
         Inertia::share(
-            'lock',
-            fn () => null    
+            Parameters::PROP,
+            static fn () => Lock::generateLocks()
         );
 
         return $next($request);
