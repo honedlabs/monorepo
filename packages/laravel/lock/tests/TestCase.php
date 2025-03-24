@@ -11,10 +11,13 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Honed\Lock\Tests\Stubs\ProductController;
+use Illuminate\Database\Eloquent\Model;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Inertia\ServiceProvider as InertiaServiceProvider;
+use Orchestra\Testbench\Attributes\WithMigration;
 
+#[WithMigration]
 class TestCase extends Orchestra
 {
     protected function setUp(): void
@@ -23,9 +26,15 @@ class TestCase extends Orchestra
 
         View::addLocation(__DIR__.'/Stubs');
         Inertia::setRootView('app');
+
+        $this->artisan('migrate', [
+            '--realpath' => base_path('database/migrations'),
+        ]);
+
         config()->set('inertia.testing.ensure_pages_exist', false);
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
 
+        Model::unguard();
     }
 
     protected function getPackageProviders($app)

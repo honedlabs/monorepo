@@ -6,6 +6,8 @@ namespace Honed\Lock;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Arr;
 use Laravel\SerializableClosure\Support\ReflectionClosure;
 
 class Locker
@@ -27,12 +29,12 @@ class Locker
     /**
      * Set the abilities to use to generate the locks.
      * 
-     * @param  array<int,string>  $locks
+     * @param  iterable<int,string>  ...$locks
      * @return $this
      */
-    public function locks($locks)
+    public function locks(...$locks)
     {
-        $this->locks = $locks;
+        $this->locks = Arr::flatten($locks);
 
         return $this;
     }
@@ -98,12 +100,16 @@ class Locker
     /**
      * Get the abilities from the policy.
      * 
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>  $model
      * @return array<int,string>
      */
     public function getAbilitiesFromPolicy($model)
     {
         $policy = Gate::getPolicyFor($model);
+
+        if (! $policy) {
+            return [];
+        }
 
         $reflection = new \ReflectionClass($policy);
 
