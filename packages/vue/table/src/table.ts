@@ -106,11 +106,15 @@ export function useTable<
 			/** Bind the record to a checkbox */
 			bind: () => bulk.bind(getRecordKey(record)),
 			/** Get the value of the record for the column */
-			value: (column: Column<RecordType> | string) =>
-				record[getColumnName(column)]?.value,
+			value: (column: Column<RecordType> | string) => {
+				const name = getColumnName(column);
+				return name in record ? record[name].value : null;
+			},
 			/** Get the extra data of the record for the column */
-			extra: (column: Column<RecordType> | string) =>
-				record[getColumnName(column)]?.extra,
+			extra: (column: Column<RecordType> | string) => {
+				const name = getColumnName(column);
+				return name in record ? record[name].extra : null;
+			},
 		})),
 	);
 

@@ -464,13 +464,13 @@ function ae(o, m, d = {}, a = {}) {
       bind: () => u.bind(y(t)),
       /** Get the value of the record for the column */
       value: (l) => {
-        var s;
-        return (s = t[K(l)]) == null ? void 0 : s.value;
+        const s = K(l);
+        return s in t ? t[s].value : null;
       },
       /** Get the extra data of the record for the column */
       extra: (l) => {
-        var s;
-        return (s = t[K(l)]) == null ? void 0 : s.extra;
+        const s = K(l);
+        return s in t ? t[s].extra : null;
       }
     }))
   ), g = p(

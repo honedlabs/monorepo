@@ -173,15 +173,16 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
         clear: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
         bind: () => {
             "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
-            modelValue: boolean; /**
-            * The available bulk actions.
-            */
+            modelValue: boolean;
             value: string;
         } | undefined;
         type: string;
         name: string;
         label: string;
         active: boolean;
+        /**
+         * The available bulk actions.
+         */
         meta: Record<string, any>;
     }[] | undefined;
     getFilter: (name: string) => Filter | undefined;
@@ -293,9 +294,9 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
             value: Identifier;
         };
         /** Get the value of the record for the column */
-        value: (column: Column<RecordType> | string) => RecordType[string] | RecordType[number] | RecordType[symbol];
+        value: (column: Column<RecordType> | string) => RecordType[string] | RecordType[number] | RecordType[symbol] | null;
         /** Get the extra data of the record for the column */
-        extra: (column: Column<RecordType> | string) => Record<string, any>;
+        extra: (column: Column<RecordType> | string) => Record<string, any> | null;
     }[];
     bulkActions: {
         /** Executes this bulk action */
