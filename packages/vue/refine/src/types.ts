@@ -34,7 +34,6 @@ export interface Filter extends Refiner {
 	type: FilterType;
 	value: FilterValue;
 	options: Option[];
-	multiple: boolean;
 }
 
 export interface Sort extends Refiner {

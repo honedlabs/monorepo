@@ -352,7 +352,6 @@ class Filter extends Refiner
         return \array_merge(parent::toArray(), [
             'value' => $value,
             'options' => $this->optionsToArray(),
-            'multiple' => $this->isMultiple(),
             'meta' => $this->getMeta(),
         ]);
     }

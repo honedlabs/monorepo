@@ -125,7 +125,6 @@ export function useRefine<
 	 * Toggle the presence of a value in an array.
 	 */
 	function toggleValue(value: any, values: any) {
-		console.log(value, values);
 		values = Array.isArray(values) ? values : [values];
 
 		if (values.includes(value)) {
@@ -234,10 +233,6 @@ export function useRefine<
 		if (!refiner) {
 			console.warn(`Filter [${filter}] does not exist.`);
 			return;
-		}
-
-		if ("multiple" in refiner && refiner.multiple && value !== undefined) {
-			value = toggleValue(value, refiner.value);
 		}
 
 		router.reload({
@@ -447,7 +442,7 @@ export function useRefine<
 				},
 				debounce,
 			),
-			modelValue: refinements.value.config.search ?? "",
+			modelValue: refinements.value.config.term ?? "",
 		};
 	}
 

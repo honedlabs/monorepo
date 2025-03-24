@@ -29,7 +29,6 @@ export declare interface Filter extends Refiner {
     type: FilterType;
     value: FilterValue;
     options: Option_2[];
-    multiple: boolean;
 }
 
 export declare type FilterType = "boolean" | "date" | "datetime" | "filter" | "multiple" | "number" | "text" | "time" | string;
@@ -108,7 +107,6 @@ export declare function useRefine<T extends object, K extends T[keyof T] extends
     type: string;
     value: FilterValue;
     options: Option_2[];
-    multiple: boolean;
     name: string;
     label: string;
     active: boolean;
