@@ -1,6 +1,4 @@
 import type { VisitOptions } from "@inertiajs/core";
-import { PromisifyFn } from "@vueuse/core";
-import { ComputedRef } from "vue";
 
 export type Direction = "asc" | "desc" | null;
 
@@ -23,10 +21,9 @@ export type FilterType =
 	| "date"
 	| "datetime"
 	| "filter"
-	| "float"
-	| "integer"
 	| "multiple"
-	| "string"
+	| "number"
+	| "text"
 	| "time"
 	| string;
 
@@ -51,10 +48,10 @@ export interface Search extends Refiner {
 
 export interface Config {
 	delimiter: string;
-	search: string | null;
-	searches: string;
-	sorts: string;
-	matches: string;
+	term: string | null;
+	sort: string;
+	search: string;
+	match: string;
 }
 
 export interface Refine {

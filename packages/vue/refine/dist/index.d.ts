@@ -17,10 +17,10 @@ export declare interface BindingOptions extends VisitOptions {
 
 export declare interface Config {
     delimiter: string;
-    search: string | null;
-    searches: string;
-    sorts: string;
-    matches: string;
+    term: string | null;
+    sort: string;
+    search: string;
+    match: string;
 }
 
 export declare type Direction = "asc" | "desc" | null;
@@ -32,7 +32,7 @@ export declare interface Filter extends Refiner {
     multiple: boolean;
 }
 
-export declare type FilterType = "boolean" | "date" | "datetime" | "filter" | "float" | "integer" | "multiple" | "string" | "time" | string;
+export declare type FilterType = "boolean" | "date" | "datetime" | "filter" | "multiple" | "number" | "text" | "time" | string;
 
 export declare type FilterValue = string | number | boolean | null;
 

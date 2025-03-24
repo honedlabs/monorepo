@@ -195,7 +195,7 @@ export function useRefine<
 	 */
 	function isSearching(name?: Search | string): boolean {
 		if (!name) {
-			return !!refinements.value.config.search;
+			return !!refinements.value.config.term;
 		}
 
 		if (typeof name === "string") {
@@ -267,7 +267,7 @@ export function useRefine<
 			...defaultOptions,
 			...options,
 			data: {
-				[refinements.value.config.sorts]: omitValue(refiner.next),
+				[refinements.value.config.sort]: omitValue(refiner.next),
 			},
 		});
 	}
@@ -288,7 +288,7 @@ export function useRefine<
 			...defaultOptions,
 			...options,
 			data: {
-				[refinements.value.config.searches]: value,
+				[refinements.value.config.search]: value,
 			},
 		});
 	}
@@ -297,11 +297,6 @@ export function useRefine<
 	 * Applies the given match.
 	 */
 	function applyMatch(search: Search | string, options: VisitOptions = {}) {
-		if (!refinements.value.config.matches) {
-			console.warn("Matches key is not set.");
-			return;
-		}
-
 		const refiner = typeof search === "string" ? getSearch(search) : search;
 
 		if (!refiner) {
@@ -318,7 +313,7 @@ export function useRefine<
 			...defaultOptions,
 			...options,
 			data: {
-				[refinements.value.config.matches]: delimitArray(matches),
+				[refinements.value.config.match]: delimitArray(matches),
 			},
 		});
 	}
@@ -338,7 +333,7 @@ export function useRefine<
 			...defaultOptions,
 			...options,
 			data: {
-				[refinements.value.config.sorts]: undefined,
+				[refinements.value.config.sort]: undefined,
 			},
 		});
 	}
@@ -354,7 +349,7 @@ export function useRefine<
 	 * Clear the matching columns.
 	 */
 	function clearMatch(options: VisitOptions = {}) {
-		if (!refinements.value.config.matches) {
+		if (!refinements.value.config.match) {
 			console.warn("Matches key is not set.");
 			return;
 		}
@@ -363,7 +358,7 @@ export function useRefine<
 			...defaultOptions,
 			...options,
 			data: {
-				[refinements.value.config.matches]: undefined,
+				[refinements.value.config.match]: undefined,
 			},
 		});
 	}
@@ -376,9 +371,9 @@ export function useRefine<
 			...defaultOptions,
 			...options,
 			data: {
-				[refinements.value.config.searches]: undefined,
-				[refinements.value.config.sorts]: undefined,
-				[refinements.value.config.matches]: undefined,
+				[refinements.value.config.search]: undefined,
+				[refinements.value.config.sort]: undefined,
+				[refinements.value.config.match]: undefined,
 				...Object.fromEntries(
 					refinements.value.filters?.map((filter) => [
 						filter.name,

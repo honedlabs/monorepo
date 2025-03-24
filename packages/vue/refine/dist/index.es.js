@@ -1,29 +1,29 @@
 import { toValue as I, computed as g } from "vue";
-import { router as f } from "@inertiajs/vue3";
+import { router as s } from "@inertiajs/vue3";
 typeof WorkerGlobalScope < "u" && globalThis instanceof WorkerGlobalScope;
 const O = () => {
 };
 function L(d, u) {
   function o(...r) {
-    return new Promise((m, s) => {
-      Promise.resolve(d(() => u.apply(this, r), { fn: u, thisArg: this, args: r })).then(m).catch(s);
+    return new Promise((m, l) => {
+      Promise.resolve(d(() => u.apply(this, r), { fn: u, thisArg: this, args: r })).then(m).catch(l);
     });
   }
   return o;
 }
 function N(d, u = {}) {
   let o, r, m = O;
-  const s = (c) => {
+  const l = (c) => {
     clearTimeout(c), m(), m = O;
   };
   let S;
   return (c) => {
-    const y = I(d), l = I(u.maxWait);
-    return o && s(o), y <= 0 || l !== void 0 && l <= 0 ? (r && (s(r), r = null), Promise.resolve(c())) : new Promise((p, h) => {
-      m = u.rejectOnCancel ? h : p, S = c, l && !r && (r = setTimeout(() => {
-        o && s(o), r = null, p(S());
-      }, l)), o = setTimeout(() => {
-        r && s(r), r = null, p(c());
+    const y = I(d), f = I(u.maxWait);
+    return o && l(o), y <= 0 || f !== void 0 && f <= 0 ? (r && (l(r), r = null), Promise.resolve(c())) : new Promise((p, h) => {
+      m = u.rejectOnCancel ? h : p, S = c, f && !r && (r = setTimeout(() => {
+        o && l(o), r = null, p(S());
+      }, f)), o = setTimeout(() => {
+        r && l(r), r = null, p(c());
       }, y);
     });
   };
@@ -40,12 +40,12 @@ function Y(d, u, o = {}) {
       var e;
       return ((e = r.value.filters) == null ? void 0 : e.map((n) => ({
         ...n,
-        apply: (t, i = {}) => x(n, t, i),
+        apply: (t, i = {}) => F(n, t, i),
         clear: (t = {}) => C(n, t),
         bind: () => E(n.name)
       }))) ?? [];
     }
-  ), s = g(
+  ), l = g(
     () => {
       var e;
       return ((e = r.value.sorts) == null ? void 0 : e.map((n) => ({
@@ -60,12 +60,12 @@ function Y(d, u, o = {}) {
       var e;
       return (e = r.value.searches) == null ? void 0 : e.map((n) => ({
         ...n,
-        apply: (t = {}) => F(n, t),
-        clear: (t = {}) => F(n, t),
+        apply: (t = {}) => w(n, t),
+        clear: (t = {}) => w(n, t),
         bind: () => R(n)
       }));
     }
-  ), w = g(
+  ), x = g(
     () => {
       var e;
       return ((e = r.value.filters) == null ? void 0 : e.filter(({ active: n }) => n)) ?? [];
@@ -81,7 +81,7 @@ function Y(d, u, o = {}) {
       return ((e = r.value.searches) == null ? void 0 : e.filter(({ active: n }) => n)) ?? [];
     }
   );
-  function l(e) {
+  function f(e) {
     return Array.isArray(e) ? e.join(r.value.config.delimiter) : e;
   }
   function p(e) {
@@ -91,20 +91,20 @@ function Y(d, u, o = {}) {
     if (!["", null, void 0, []].includes(e))
       return e;
   }
-  function W(e) {
-    return [l, p, h].reduce(
+  function k(e) {
+    return [f, p, h].reduce(
       (n, t) => t(n),
       e
     );
   }
-  function M(e, n) {
+  function j(e, n) {
     return n = Array.isArray(n) ? n : [n], n.includes(e) ? n.filter((t) => t !== e) : [...n, e];
   }
-  function j(e) {
+  function A(e) {
     var n;
     return (n = r.value.filters) == null ? void 0 : n.find((t) => t.name === e);
   }
-  function A(e, n = null) {
+  function M(e, n = null) {
     var t;
     return (t = r.value.sorts) == null ? void 0 : t.find(
       (i) => i.name === e && i.direction === n
@@ -115,7 +115,7 @@ function Y(d, u, o = {}) {
     return (n = r.value.searches) == null ? void 0 : n.find((t) => t.name === e);
   }
   function _(e) {
-    return e ? typeof e == "string" ? w.value.some((n) => n.name === e) : e.active : !!w.value.length;
+    return e ? typeof e == "string" ? x.value.some((n) => n.name === e) : e.active : !!x.value.length;
   }
   function q(e) {
     var n;
@@ -123,117 +123,113 @@ function Y(d, u, o = {}) {
   }
   function U(e) {
     var n;
-    return e ? typeof e == "string" ? (n = y.value) == null ? void 0 : n.some((t) => t.name === e) : e.active : !!r.value.config.search;
+    return e ? typeof e == "string" ? (n = y.value) == null ? void 0 : n.some((t) => t.name === e) : e.active : !!r.value.config.term;
   }
   function z(e, n = {}) {
     const t = Object.fromEntries(
-      Object.entries(e).map(([i, a]) => [i, W(a)])
+      Object.entries(e).map(([i, a]) => [i, k(a)])
     );
-    f.reload({
+    s.reload({
       ...o,
       ...n,
       data: t
     });
   }
-  function x(e, n, t = {}) {
-    const i = typeof e == "string" ? j(e) : e;
+  function F(e, n, t = {}) {
+    const i = typeof e == "string" ? A(e) : e;
     if (!i) {
       console.warn(`Filter [${e}] does not exist.`);
       return;
     }
-    "multiple" in i && i.multiple && n !== void 0 && (n = M(n, i.value)), f.reload({
+    "multiple" in i && i.multiple && n !== void 0 && (n = j(n, i.value)), s.reload({
       ...o,
       ...t,
       data: {
-        [i.name]: W(n)
+        [i.name]: k(n)
       }
     });
   }
   function $(e, n = null, t = {}) {
-    const i = typeof e == "string" ? A(e, n) : e;
+    const i = typeof e == "string" ? M(e, n) : e;
     if (!i) {
       console.warn(`Sort [${e}] does not exist.`);
       return;
     }
-    f.reload({
+    s.reload({
       ...o,
       ...t,
       data: {
-        [r.value.config.sorts]: h(i.next)
+        [r.value.config.sort]: h(i.next)
       }
     });
   }
-  function k(e, n = {}) {
+  function P(e, n = {}) {
     e = [p, h].reduce(
       (t, i) => i(t),
       e
-    ), f.reload({
+    ), s.reload({
       ...o,
       ...n,
       data: {
-        [r.value.config.searches]: e
+        [r.value.config.search]: e
       }
     });
   }
-  function F(e, n = {}) {
-    if (!r.value.config.matches) {
-      console.warn("Matches key is not set.");
-      return;
-    }
+  function w(e, n = {}) {
     const t = typeof e == "string" ? T(e) : e;
     if (!t) {
       console.warn(`Match [${e}] does not exist.`);
       return;
     }
-    const i = M(
+    const i = j(
       t.name,
       y.value.map(({ name: a }) => a)
     );
-    f.reload({
+    s.reload({
       ...o,
       ...n,
       data: {
-        [r.value.config.matches]: l(i)
+        [r.value.config.match]: f(i)
       }
     });
   }
   function C(e, n = {}) {
-    x(e, void 0, n);
+    F(e, void 0, n);
   }
   function D(e = {}) {
-    f.reload({
+    s.reload({
       ...o,
       ...e,
       data: {
-        [r.value.config.sorts]: void 0
+        [r.value.config.sort]: void 0
       }
     });
   }
   function B(e = {}) {
-    k(void 0, e);
+    P(void 0, e);
   }
   function H(e = {}) {
-    if (!r.value.config.matches) {
+    if (!r.value.config.match) {
       console.warn("Matches key is not set.");
       return;
     }
-    f.reload({
+    s.reload({
       ...o,
       ...e,
       data: {
-        [r.value.config.matches]: void 0
+        [r.value.config.match]: void 0
       }
     });
   }
   function J(e = {}) {
     var n;
-    f.reload({
+    s.reload({
       ...o,
       ...e,
       data: {
-        [r.value.config.searches]: void 0,
-        [r.value.config.sorts]: void 0,
-        [r.value.config.matches]: void 0,
+        [r.value.config.search]: void 0,
+        [r.value.config.sort]: void 0,
+        [r.value.config.match]: void 0,
         ...Object.fromEntries(
           ((n = r.value.filters) == null ? void 0 : n.map((t) => [
             t.name,
@@ -244,25 +240,25 @@ function Y(d, u, o = {}) {
     });
   }
   function E(e, n = {}) {
-    const t = typeof e == "string" ? j(e) : e;
+    const t = typeof e == "string" ? A(e) : e;
     if (!t) {
       console.warn(`Filter [${e}] does not exist.`);
       return;
     }
     const i = t.value, {
       debounce: a = 250,
-      transform: b = (P) => P,
+      transform: b = (W) => W,
       ...v
     } = n;
     return {
-      "onUpdate:modelValue": V((P) => {
-        x(t, b(P), v);
+      "onUpdate:modelValue": V((W) => {
+        F(t, b(W), v);
       }, a),
       modelValue: i
     };
   }
   function G(e, n = {}) {
-    const t = typeof e == "string" ? A(e) : e;
+    const t = typeof e == "string" ? M(e) : e;
     if (!t) {
       console.warn(`Sort [${e}] does not exist.`);
       return;
@@ -280,7 +276,7 @@ function Y(d, u, o = {}) {
     return {
       "onUpdate:modelValue": V(
         (a) => {
-          k(a, i);
+          P(a, i);
         },
         n
       ),
@@ -296,7 +292,7 @@ function Y(d, u, o = {}) {
     const { debounce: i = 0, transform: a, ...b } = n;
     return {
       "onUpdate:modelValue": V((v) => {
-        F(v, b);
+        w(v, b);
       }, i),
       modelValue: U(t),
       value: t.name
@@ -304,22 +300,22 @@ function Y(d, u, o = {}) {
   }
   return {
     filters: m,
-    sorts: s,
+    sorts: l,
     searches: S,
-    getFilter: j,
-    getSort: A,
+    getFilter: A,
+    getSort: M,
     getSearch: T,
-    currentFilters: w,
+    currentFilters: x,
     currentSort: c,
     currentSearches: y,
     isFiltering: _,
     isSorting: q,
     isSearching: U,
     apply: z,
-    applyFilter: x,
+    applyFilter: F,
     applySort: $,
-    applySearch: k,
-    applyMatch: F,
+    applySearch: P,
+    applyMatch: w,
     clearFilter: C,
     clearSort: D,
     clearSearch: B,
@@ -331,8 +327,8 @@ function Y(d, u, o = {}) {
     bindMatch: R,
     stringValue: p,
     omitValue: h,
-    toggleValue: M,
-    delimitArray: l
+    toggleValue: j,
+    delimitArray: f
   };
 }
 export {
