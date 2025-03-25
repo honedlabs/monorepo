@@ -117,6 +117,4 @@ trait HasBuilderInstance
             static::class
         ));
     }
-    
 }
-
