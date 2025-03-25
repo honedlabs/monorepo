@@ -20,18 +20,16 @@ class FlashFactory
      * @param  string|null  $type
      * @param  string|null  $title
      * @param  int|null  $duration
-     * @param  array<string,mixed>  $meta
      * @return $this
      */
     public function message(
         $message,
         $type = null,
         $title = null,
-        $duration = null,
-        $meta = []
+        $duration = null
     ) {
         if (! $message instanceof Message) {
-            $message = Message::make($message, $type, $title, $duration, $meta);
+            $message = Message::make($message, $type, $title, $duration);
         }
 
         $this->session->flash(Parameters::PROP, $message->toArray());
@@ -51,10 +49,9 @@ class FlashFactory
     public function success(
         $message,
         $title = null,
-        $duration = null,
-        $meta = []
+        $duration = null
     ) {
-        return $this->message($message, Parameters::SUCCESS, $title, $duration, $meta);
+        return $this->message($message, Parameters::SUCCESS, $title, $duration);
     }
 
     /**
@@ -69,10 +66,9 @@ class FlashFactory
     public function error(
         $message,
         $title = null,
-        $duration = null,
-        $meta = []
+        $duration = null
     ) {
-        return $this->message($message, Parameters::ERROR, $title, $duration, $meta);
+        return $this->message($message, Parameters::ERROR, $title, $duration);
     }
 
     /**
@@ -87,10 +83,9 @@ class FlashFactory
     public function info(
         $message,
         $title = null,
-        $duration = null,
-        $meta = []
+        $duration = null
     ) {
-        return $this->message($message, Parameters::INFO, $title, $duration, $meta);
+        return $this->message($message, Parameters::INFO, $title, $duration);
     }
 
     /**
@@ -106,8 +101,7 @@ class FlashFactory
         $message,
         $title = null,
         $duration = null,
-        $meta = []
     ) {
-        return $this->message($message, Parameters::WARNING, $title, $duration, $meta);
+        return $this->message($message, Parameters::WARNING, $title, $duration);
     }
 }

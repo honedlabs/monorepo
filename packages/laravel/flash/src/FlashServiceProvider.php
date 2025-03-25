@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Flash;
 
+use Honed\Flash\Contracts\FlashMessage;
 use Honed\Flash\Facades\Flash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,8 @@ class FlashServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/flash.php', 'flash');
+
+        $this->app->bind(FlashMessage::class, config('flash.class', Message::class));
     }
 
     /**
