@@ -37,59 +37,59 @@ it('executes pipeline', function () {
             ->toEqualCanonicalizing([
                 [
                     'type' => 'raw',
-                    'sql' => "LOWER({$this->builder->qualifyColumn('name')}) LIKE ?",
+                    'sql' => "LOWER(name) LIKE ?",
                     'boolean' => 'and',
                 ],
                 [
                     'type' => 'raw',
-                    'sql' => "LOWER({$this->builder->qualifyColumn('description')}) LIKE ?",
+                    'sql' => "LOWER(description) LIKE ?",
                     'boolean' => 'or',
                 ],
                 [
                     'type' => 'raw',
-                    'sql' => "LOWER({$this->builder->qualifyColumn('name')}) LIKE ?",
+                    'sql' => "LOWER(name) LIKE ?",
                     'boolean' => 'and',
                 ],
                 [
                     'type' => 'Basic',
-                    'column' => $this->builder->qualifyColumn('price'),
+                    'column' => 'price',
                     'operator' => '>=',
                     'value' => 100,
                     'boolean' => 'and',
                 ],
                 [
                     'type' => 'In',
-                    'column' => $this->builder->qualifyColumn('status'),
+                    'column' => 'status',
                     'values' => [Status::Available->value, Status::Unavailable->value],
                     'boolean' => 'and',
                 ],
                 [
                     'type' => 'In',
-                    'column' => $this->builder->qualifyColumn('status'),
+                    'column' => 'status',
                     'values' => [Status::ComingSoon->value],
                     'boolean' => 'and',
                 ],
                 [
                     'type' => 'Basic',
-                    'column' => $this->builder->qualifyColumn('best_seller'),
+                    'column' => 'best_seller',
                     'operator' => '=',
                     'value' => true,
                     'boolean' => 'and',
                 ],
                 [
-                    'column' => $this->builder->qualifyColumn('created_at'),
+                    'column' => 'created_at',
                     'type' => 'Date',
                     'boolean' => 'and',
                     'operator' => '>=',
                     'value' => '2000-01-01',
                 ],
                 [
-                    'column' => $this->builder->qualifyColumn('created_at'),
+                    'column' => 'created_at',
                     'type' => 'Date',
                     'boolean' => 'and',
                     'operator' => '<=',
                     'value' => '2001-01-01',
                 ],
             ])
-        )->orders->toBeOnlyOrder($this->builder->qualifyColumn('price'), 'desc');
+        )->orders->toBeOnlyOrder('price', 'desc');
 });

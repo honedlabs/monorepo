@@ -40,7 +40,7 @@ it('applies', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value);
+        ->toBeOnlyWhere($this->name, $this->value);
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -70,7 +70,7 @@ it('applies with alias', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value);
+        ->toBeOnlyWhere($this->name, $this->value);
 
     expect($filter)
         ->isActive()->toBeTrue()
@@ -102,7 +102,7 @@ it('applies with scope', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value);
+        ->toBeOnlyWhere($this->name, $this->value);
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -120,7 +120,7 @@ it('applies with different operator', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value, $operator);
+        ->toBeOnlyWhere($this->name, $this->value, $operator);
 
     expect($filter)
         ->isActive()->toBeTrue()
@@ -136,7 +136,7 @@ it('applies with `like` operators', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch($this->builder->qualifyColumn($this->name));
+        ->toBeOnlySearch($this->name);
 
     expect($filter)
         ->isActive()->toBeTrue()
@@ -157,7 +157,7 @@ it('applies with date', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
             ->{'type'}->toBe('Date')
-            ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
+            ->{'column'}->toBe($this->name)
             ->{'operator'}->toBe('=')
             ->{'value'}->toBe($value->toDateString())
             ->{'boolean'}->toBe('and')
@@ -182,7 +182,7 @@ it('applies with datetime', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
             ->{'type'}->toBe('Basic')
-            ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
+            ->{'column'}->toBe($this->name)
             ->{'operator'}->toBe('=')
             ->{'value'}->toBeInstanceOf(Carbon::class)
             ->{'boolean'}->toBe('and')
@@ -207,7 +207,7 @@ it('applies with time', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
             ->{'type'}->toBe('Time')
-            ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
+            ->{'column'}->toBe($this->name)
             ->{'operator'}->toBe('=')
             ->{'value'}->toBe($value->toTimeString())
             ->{'boolean'}->toBe('and')
@@ -249,7 +249,7 @@ it('applies lax', function () {
         ->toBeTrue();
 
     expect($builder->getQuery()->wheres)
-        ->toBeOnlyWhere($builder->qualifyColumn('status'), $value);
+        ->toBeOnlyWhere('status', $value);
 
     expect($filter)
         ->isActive()->toBeTrue()
@@ -308,7 +308,7 @@ it('applies multiple', function () {
         ->toBeTrue();
 
     expect($builder->getQuery()->wheres)
-        ->toBeOnlyWhereIn($builder->qualifyColumn('status'), $value);
+        ->toBeOnlyWhereIn('status', $value);
 
     expect($filter)
         ->isActive()->toBeTrue()
@@ -326,4 +326,20 @@ it('applies multiple', function () {
                 'active' => true,
             ],
         ]);
+});
+
+it('applies with qualified column', function () {
+    $this->filter->qualify();
+
+    $request = Request::create('/', 'GET', [$this->name => 'value']);
+
+    expect($this->filter->refine($this->builder, $request))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), 'value');
+
+    expect($this->filter)
+        ->isQualified()->toBeTrue()
+        ->isActive()->toBeTrue();
 });

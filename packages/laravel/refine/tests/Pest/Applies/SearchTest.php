@@ -8,6 +8,7 @@ use Honed\Refine\Tests\Stubs\Product;
 beforeEach(function () {
     $this->builder = Product::query();
     $this->search = 'search term';
+    $this->name = 'name';
 
     $this->test = Search::make('name');
 });
@@ -29,7 +30,7 @@ it('applies', function () {
         ->refine($this->builder, [true, $this->search])->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch($this->builder->qualifyColumn('name'));
+        ->toBeOnlySearch('name');
 
     expect($this->test)
         ->isActive()->toBeTrue();
@@ -42,8 +43,8 @@ it('applies boolean', function () {
         ->refine($this->builder, [true, $this->search])->toBeTrue()
         ->isActive()->toBeTrue();
 
-    expect($this->builder->getQuery()->wheres)->toBeArray()
-        ->toBeOnlySearch($this->builder->qualifyColumn('name'), 'or');
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlySearch('name', 'or');
 
     expect($this->test)
         ->isActive()->toBeTrue()
@@ -75,3 +76,16 @@ it('does not apply if inactive', function () {
         ->isActive()->toBeFalse();
 });
 
+it('applies with qualified column', function () {
+    $this->test->qualify();
+
+    expect($this->test->refine($this->builder, [true, $this->search]))
+        ->toBeTrue();
+
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlySearch($this->builder->qualifyColumn($this->name));
+
+    expect($this->test)
+        ->isQualified()->toBeTrue()
+        ->isActive()->toBeTrue();
+});
