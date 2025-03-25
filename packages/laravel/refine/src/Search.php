@@ -131,6 +131,7 @@ class Search extends Refiner
 
         if ($this->isFullText()) {
             $this->searchRecall($builder, $value, $column, $boolean);
+
             return;
         }
 

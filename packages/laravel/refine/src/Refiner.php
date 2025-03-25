@@ -37,7 +37,7 @@ abstract class Refiner extends Primitive
 
     /**
      * Whether to qualify the column using the table name.
-     * 
+     *
      * @var bool
      */
     protected $qualify = false;

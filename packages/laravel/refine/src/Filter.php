@@ -373,7 +373,7 @@ class Filter extends Refiner
 
         match (true) {
             $this->isFullText() && \is_string($value) => $this->searchRecall(
-                $builder, 
+                $builder,
                 $value,
                 $column
             ),
@@ -387,7 +387,7 @@ class Filter extends Refiner
                     operator: $operator
                 ),
 
-            $this->isMultiple() || 
+            $this->isMultiple() ||
                 $this->interpretsArray() => $builder->whereIn($column, $value),
 
             $this->interpretsDate() =>
