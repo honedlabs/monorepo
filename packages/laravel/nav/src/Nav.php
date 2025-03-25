@@ -18,6 +18,13 @@ class Nav
     protected $items = [];
 
     /**
+     * The keys to retrieve for sharing.
+     *
+     * @var array<int,string>
+     */
+    protected $share = [];
+
+    /**
      * Set a navigation group under a given name.
      *
      * @param  string  $name
@@ -158,17 +165,21 @@ class Nav
     /**
      * Share the navigation items with Inertia.
      *
-     * @param  string|array<int,string>  $groups
+     * @param  iterable<int,string> ...$groups
      * @return $this
      */
     public function share(...$groups)
     {
-        Inertia::share(
-            Parameters::Prop,
-            $this->getToArray(...$groups)
-        );
+        $share = Arr::flatten($groups);
+
+        $this->share = \array_merge($this->share, $share);
 
         return $this;
+    }
+
+    public function getShared()
+    {
+        return $this->getToArray(...$this->share);
     }
 
     /**

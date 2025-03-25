@@ -82,7 +82,7 @@ abstract class NavBase extends Primitive
             default => Arr::get(
                 $parameters,
                 $parameterType,
-                fn () => App::make($parameterType),
+                fn () => [App::make($parameterType)],
             ),
         };
     }
