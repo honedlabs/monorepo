@@ -36,6 +36,13 @@ abstract class Refiner extends Primitive
     use HasValue;
 
     /**
+     * Whether to qualify the column using the table name.
+     * 
+     * @var bool
+     */
+    protected $qualify = false;
+
+    /**
      * Create a new refiner instance.
      *
      * @param  string  $name
@@ -47,6 +54,29 @@ abstract class Refiner extends Primitive
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
+    }
+
+    /**
+     * Set whether to qualify the column using the table name.
+     *
+     * @param  bool  $qualify
+     * @return $this
+     */
+    public function qualify($qualify = true)
+    {
+        $this->qualify = $qualify;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the refiner is qualified.
+     *
+     * @return bool
+     */
+    public function isQualified()
+    {
+        return $this->qualify;
     }
 
     /**

@@ -179,29 +179,6 @@ class Filter extends Refiner
     }
 
     /**
-     * Set the filter to respond only to presence values.
-     *
-     * @return $this
-     */
-    public function presence()
-    {
-        $this->boolean();
-        $this->presence = true;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the filter only responds to presence values.
-     *
-     * @return bool
-     */
-    public function isPresence()
-    {
-        return $this->presence;
-    }
-
-    /**
      * Set the operator to use for the filter.
      *
      * @param  string  $operator
@@ -282,6 +259,29 @@ class Filter extends Refiner
     public function getOperator()
     {
         return $this->operator;
+    }
+
+    /**
+     * Set the filter to respond only to presence values.
+     *
+     * @return $this
+     */
+    public function presence()
+    {
+        $this->boolean();
+        $this->presence = true;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the filter only responds to presence values.
+     *
+     * @return bool
+     */
+    public function isPresence()
+    {
+        return $this->presence;
     }
 
     /**
@@ -367,10 +367,16 @@ class Filter extends Refiner
      */
     public function defaultQuery($builder, $column, $operator, $value)
     {
-        $column = $builder->qualifyColumn($column);
+        if ($this->isQualified()) {
+            $column = $builder->qualifyColumn($column);
+        }
 
         match (true) {
-            $this->isFullText() && \is_string($value) => $this->searchRecall($builder, $value, $column),
+            $this->isFullText() && \is_string($value) => $this->searchRecall(
+                $builder, 
+                $value,
+                $column
+            ),
 
             \in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) &&
                 \is_string($value) => $this->searchPrecision(
@@ -381,7 +387,8 @@ class Filter extends Refiner
                     operator: $operator
                 ),
 
-            $this->isMultiple() || $this->interpretsArray() => $builder->whereIn($column, $value),
+            $this->isMultiple() || 
+                $this->interpretsArray() => $builder->whereIn($column, $value),
 
             $this->interpretsDate() =>
                 // @phpstan-ignore-next-line
