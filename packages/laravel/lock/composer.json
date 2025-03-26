@@ -38,10 +38,7 @@
     "autoload": {
         "psr-4": {
             "Honed\\Lock\\": "src/"
-        },
-        "files": [
-            "./helpers.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

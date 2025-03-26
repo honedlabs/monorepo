@@ -14,23 +14,7 @@ class LockServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/lock.php', 'lock'
-        );
-
         $this->registerMiddleware();
-    }
-
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/../config/lock.php' => config_path('lock.php'),
-            ], 'config');
-        }
     }
 
     /**
