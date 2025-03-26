@@ -8,7 +8,7 @@ use Honed\Flash\Support\Parameters;
 use Illuminate\Support\Facades\Session;
 
 it('sets message', function () {
-    expect(Flash::message('test', meta: ['test' => 'test']))
+    expect(Flash::message('test'))
         ->toBeInstanceOf(FlashFactory::class);
 
     expect(Session::get(Parameters::PROP))
@@ -17,7 +17,6 @@ it('sets message', function () {
             'type' => null,
             'title' => null,
             'duration' => config('flash.duration'),
-            'meta' => ['test' => 'test'],
         ]);
 });
 
@@ -31,7 +30,6 @@ it('sets success message', function () {
             'type' => Parameters::SUCCESS,
             'title' => null,
             'duration' => config('flash.duration'),
-            'meta' => [],
         ]);
 });
 
@@ -45,7 +43,6 @@ it('sets error message', function () {
             'type' => Parameters::ERROR,
             'title' => null,
             'duration' => config('flash.duration'),
-            'meta' => [],
         ]);
 });
 
@@ -59,7 +56,6 @@ it('sets info message', function () {
             'type' => Parameters::INFO,
             'title' => null,
             'duration' => config('flash.duration'),
-            'meta' => [],
         ]);
 });
 
@@ -73,7 +69,6 @@ it('sets warning message', function () {
             'type' => Parameters::WARNING,
             'title' => null,
             'duration' => config('flash.duration'),
-            'meta' => [],
         ]);
 });
 
@@ -87,7 +82,6 @@ it('has helper methods', function () {
             'type' => Parameters::SUCCESS,
             'title' => null,
             'duration' => config('flash.duration'),
-            'meta' => [],
         ]);
 
     expect(flash('Hello world', 'error'))
@@ -99,6 +93,5 @@ it('has helper methods', function () {
             'type' => Parameters::ERROR,
             'title' => null,
             'duration' => config('flash.duration'),
-            'meta' => [],
         ]);
 });

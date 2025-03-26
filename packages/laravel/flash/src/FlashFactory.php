@@ -43,7 +43,6 @@ class FlashFactory
      * @param  string  $message
      * @param  string|null  $title
      * @param  int|null  $duration
-     * @param  array<string,mixed>  $meta
      * @return $this
      */
     public function success(
@@ -60,7 +59,6 @@ class FlashFactory
      * @param  string  $message
      * @param  string|null  $title
      * @param  int|null  $duration
-     * @param  array<string,mixed>  $meta
      * @return $this
      */
     public function error(
@@ -77,7 +75,6 @@ class FlashFactory
      * @param  string  $message
      * @param  string|null  $title
      * @param  int|null  $duration
-     * @param  array<string,mixed>  $meta
      * @return $this
      */
     public function info(
@@ -94,7 +91,6 @@ class FlashFactory
      * @param  string  $message
      * @param  string|null  $title
      * @param  int|null  $duration
-     * @param  array<string,mixed>  $meta
      * @return $this
      */
     public function warning(

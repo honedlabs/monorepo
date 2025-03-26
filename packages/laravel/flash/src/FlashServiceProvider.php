@@ -21,7 +21,10 @@ class FlashServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/flash.php', 'flash');
 
-        $this->app->bind(FlashMessage::class, config('flash.class', Message::class));
+        /** @var class-string<\Honed\Flash\Contracts\FlashMessage> */
+        $implementation = config('flash.implementation', Message::class);
+
+        $this->app->bind(FlashMessage::class, $implementation);
     }
 
     /**
@@ -38,7 +41,6 @@ class FlashServiceProvider extends ServiceProvider
         $this->registerMiddlewareAlias();
         $this->registerRedirectResponseMacros();
         $this->registerInertiaMacros();
-
     }
 
     /**

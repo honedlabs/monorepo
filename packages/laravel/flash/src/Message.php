@@ -181,7 +181,7 @@ class Message extends Primitive implements FlashMessage
     /**
      * Get the duration.
      *
-     * @return int
+     * @return int|null
      */
     public function getDuration()
     {
@@ -206,7 +206,7 @@ class Message extends Primitive implements FlashMessage
     {
         return [
             'message' => $this->getMessage(),
-            'type' => $this->getType() ?? $this->fallbackType(),
+            'type' => $this->getType(),
             'title' => $this->getTitle(),
             'duration' => $this->getDuration(),
         ];

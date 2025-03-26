@@ -41,16 +41,9 @@ it('has title', function () {
 
 it('has duration', function () {
     expect($this->message)
-        ->getDuration()->toBeNull()
+        ->getDuration()->toBe(config('flash.duration'))
         ->duration(1000)->toBe($this->message)
         ->getDuration()->toBe(1000);
-});
-
-it('has meta', function () {
-    expect($this->message)
-        ->getMeta()->toBeEmpty()
-        ->meta(['test' => 'test'])->toBe($this->message)
-        ->getMeta()->toBe(['test' => 'test']);
 });
 
 it('has array representation', function () {
@@ -59,7 +52,6 @@ it('has array representation', function () {
         'type' => config('flash.type'),
         'title' => null,
         'duration' => config('flash.duration'),
-        'meta' => [],
     ]);
 });
 

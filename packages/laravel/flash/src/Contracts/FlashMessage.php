@@ -10,7 +10,7 @@ use Illuminate\Contracts\Support\Arrayable;
  * @extends Arrayable<string,mixed>
  */
 interface FlashMessage extends Arrayable
-{ 
+{
     /**
      * Set the message content.
      *
@@ -34,5 +34,4 @@ interface FlashMessage extends Arrayable
      * @return $this
      */
     public function duration($duration);
-    
 }

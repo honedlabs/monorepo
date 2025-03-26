@@ -12,8 +12,10 @@ use Inertia\Inertia;
 
 class ShareFlash
 {
-    public function __construct(
-        protected Store $session) {}
+    public function __construct(protected Store $session)
+    {
+        //
+    }
 
     /**
      * Handle the incoming request.

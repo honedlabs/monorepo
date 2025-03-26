@@ -41,5 +41,5 @@ return [
     |
     */
 
-    'class' => \Honed\Flash\Message::class,
+    'implementation' => \Honed\Flash\Message::class,
 ];

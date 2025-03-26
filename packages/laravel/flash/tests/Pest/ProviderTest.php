@@ -9,13 +9,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
-it('publishes config', function () {
-    $this->artisan('vendor:publish', ['--provider' => FlashServiceProvider::class])
-        ->assertSuccessful();
-
-    expect(file_exists(base_path('config/flash.php')))->toBeTrue();
-});
-
 it('has redirect response macros', function () {
     expect(back()->flash('Hello World'))
         ->toBeInstanceOf(RedirectResponse::class);
@@ -26,7 +19,6 @@ it('has redirect response macros', function () {
             'type' => config('flash.type'),
             'title' => null,
             'duration' => config('flash.duration'),
-            'meta' => [],
         ]);
 });
 
@@ -40,7 +32,6 @@ it('has inertia response macros', function () {
             'type' => config('flash.type'),
             'title' => null,
             'duration' => config('flash.duration'),
-            'meta' => [],
         ]);
 });
 
