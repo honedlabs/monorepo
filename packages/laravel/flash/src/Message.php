@@ -6,10 +6,10 @@ namespace Honed\Flash;
 
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Primitive;
-use Honed\Flash\Contracts\FlashMessage;
+use Honed\Flash\Contracts\Message as MessageContract;
 use Honed\Flash\Support\Parameters;
 
-class Message extends Primitive implements FlashMessage
+class Message extends Primitive implements MessageContract
 {
     use HasType {
         getType as protected getBaseType;
@@ -41,20 +41,14 @@ class Message extends Primitive implements FlashMessage
      *
      * @param  string  $message
      * @param  string|null  $type
-     * @param  string|null  $title
      * @param  int|null  $duration
      * @return static
      */
-    public static function make(
-        $message,
-        $type = null,
-        $title = null,
-        $duration = null,
-    ) {
+    public static function make($message, $type = null, $duration = null)
+    {
         return resolve(static::class)
             ->message($message)
             ->type($type)
-            ->title($title)
             ->duration($duration);
     }
 

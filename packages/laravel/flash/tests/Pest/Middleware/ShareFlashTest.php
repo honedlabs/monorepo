@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Flash\Support\Parameters;
-use Illuminate\Routing\Router;
 use Inertia\Testing\AssertableInertia as Assert;
 
 use function Pest\Laravel\get;

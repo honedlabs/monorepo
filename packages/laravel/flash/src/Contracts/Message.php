@@ -9,8 +9,18 @@ use Illuminate\Contracts\Support\Arrayable;
 /**
  * @extends Arrayable<string,mixed>
  */
-interface FlashMessage extends Arrayable
+interface Message extends Arrayable
 {
+    /**
+     * Create a new flash message.
+     *
+     * @param  string  $message
+     * @param  string|null  $type
+     * @param  int|null  $duration
+     * @return static
+     */
+    public static function make($message, $type = null, $duration = null);
+
     /**
      * Set the message content.
      *

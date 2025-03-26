@@ -4,32 +4,30 @@ declare(strict_types=1);
 
 namespace Honed\Flash;
 
+use Honed\Flash\Contracts\Message;
 use Honed\Flash\Support\Parameters;
 use Illuminate\Session\Store;
+use Illuminate\Support\Facades\App;
 
 class FlashFactory
 {
-    public function __construct(
-        protected Store $session
-    ) {}
+    public function __construct(protected Store $session)
+    {
+        //
+    }
 
     /**
      * Flash a new message to the session.
      *
-     * @param  string|\Honed\Flash\Message  $message
+     * @param  string|\Honed\Flash\Contracts\Message  $message
      * @param  string|null  $type
-     * @param  string|null  $title
      * @param  int|null  $duration
      * @return $this
      */
-    public function message(
-        $message,
-        $type = null,
-        $title = null,
-        $duration = null
-    ) {
+    public function message($message, $type = null, $duration = null)
+    {
         if (! $message instanceof Message) {
-            $message = Message::make($message, $type, $title, $duration);
+            $message = App::make(Message::class)->make($message, $type, $duration);
         }
 
         $this->session->flash(Parameters::PROP, $message->toArray());
@@ -41,63 +39,47 @@ class FlashFactory
      * Flash a new success message to the session.
      *
      * @param  string  $message
-     * @param  string|null  $title
      * @param  int|null  $duration
      * @return $this
      */
-    public function success(
-        $message,
-        $title = null,
-        $duration = null
-    ) {
-        return $this->message($message, Parameters::SUCCESS, $title, $duration);
+    public function success($message, $duration = null)
+    {
+        return $this->message($message, Parameters::SUCCESS, $duration);
     }
 
     /**
      * Flash a new error message to the session.
      *
      * @param  string  $message
-     * @param  string|null  $title
      * @param  int|null  $duration
      * @return $this
      */
-    public function error(
-        $message,
-        $title = null,
-        $duration = null
-    ) {
-        return $this->message($message, Parameters::ERROR, $title, $duration);
+    public function error($message, $duration = null)
+    {
+        return $this->message($message, Parameters::ERROR, $duration);
     }
 
     /**
      * Flash a new info message to the session.
      *
      * @param  string  $message
-     * @param  string|null  $title
      * @param  int|null  $duration
      * @return $this
      */
-    public function info(
-        $message,
-        $title = null,
-        $duration = null
-    ) {
-        return $this->message($message, Parameters::INFO, $title, $duration);
+    public function info($message, $duration = null)
+    {
+        return $this->message($message, Parameters::INFO, $duration);
     }
 
     /**
      * Flash a new warning message to the session.
      *
      * @param  string  $message
-     * @param  string|null  $title
      * @param  int|null  $duration
      * @return $this
      */
-    public function warning(
-        $message,
-        $title = null,
-        $duration = null,
-    ) {
-        return $this->message($message, Parameters::WARNING, $title, $duration);
+    public function warning($message, $duration = null)
+    {
+        return $this->message($message, Parameters::WARNING, $duration);
     }
 }
