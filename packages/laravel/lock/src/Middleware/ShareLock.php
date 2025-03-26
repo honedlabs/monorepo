@@ -21,7 +21,7 @@ class ShareLock
     {
         Inertia::share(
             Parameters::PROP,
-            static fn () => Lock::generateLocks()
+            static fn () => Lock::all()
         );
 
         return $next($request);

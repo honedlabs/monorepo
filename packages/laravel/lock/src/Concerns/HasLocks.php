@@ -17,7 +17,7 @@ trait HasLocks
      * 
      * @return array<string,bool>|$this
      */
-    public function defineLocks()
+    public function locks()
     {
         return $this;
     }
@@ -27,10 +27,10 @@ trait HasLocks
      * 
      * @return void
      */
-    public function initializeHasLocks(): void
+    public function initializeHasLocks()
     {
-        if (Lock::includesLocks() && ! $this->appendsLocks()) {
-            $this->appends[] = Parameters::APPENDS;
+        if (Lock::includesLocks() && ! $this->isLocking()) {
+            $this->appends[] = Parameters::PROP;
         }
     }
 
@@ -39,7 +39,7 @@ trait HasLocks
      * 
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function locks(): Attribute
+    public function lock(): Attribute
     {
         return Attribute::get(
             fn () => $this->getLocks()
@@ -53,15 +53,15 @@ trait HasLocks
      */
     public function getLocks()
     {
-        $locks = $this->defineLocks();
+        $lock = $this->locks();
 
-        if (\is_array($locks)) {
-            return $locks;
+        if (\is_array($lock)) {
+            return $lock;
         }
 
-        return collect(Lock::getAbilitiesFromPolicy($locks))
+        return collect(Lock::fromPolicy($lock))
             ->mapWithKeys(fn ($ability) => [
-                $ability => Gate::allows($ability, $locks)
+                $ability => Gate::allows($ability, $lock)
             ])
             ->toArray();
     }
@@ -71,9 +71,9 @@ trait HasLocks
      * 
      * @return bool
      */
-    public function appendsLocks()
+    public function isLocking()
     {
-        return \in_array(Parameters::APPENDS, $this->appends ?? []);
+        return \in_array(Parameters::PROP, $this->appends ?? []);
     }
 
     /**
@@ -83,8 +83,8 @@ trait HasLocks
      */
     public function withLocks()
     {
-        if (! $this->appendsLocks()) {
-            $this->appends[] = Parameters::APPENDS;
+        if (! $this->isLocking()) {
+            $this->appends[] = Parameters::PROP;
         }
 
         return $this;
@@ -98,7 +98,7 @@ trait HasLocks
     public function withoutLocks()
     {
         $this->appends = \array_values(
-            \array_diff($this->appends, [Parameters::APPENDS])
+            \array_diff($this->appends, [Parameters::PROP])
         );
 
         return $this;

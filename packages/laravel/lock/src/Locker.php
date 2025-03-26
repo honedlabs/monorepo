@@ -20,14 +20,21 @@ class Locker
     protected $locks = [];
 
     /**
+     * The method to use to retrieve the locks.
+     * 
+     * @var array<int,string>
+     */
+    protected $using;
+
+    /**
      * Whether to include the locks in the serialization of models.
      * 
      * @var bool
      */
-    protected $includeLocks = false;
+    protected $appends = false;
 
     /**
-     * Set the abilities to use to generate the locks.
+     * Set the abilities to include in the locks.
      * 
      * @param  iterable<int,string>  ...$locks
      * @return $this
@@ -40,7 +47,7 @@ class Locker
     }
 
     /**
-     * Get the abilities to use to generate the locks.
+     * Get the abilities to include in the locks.
      * 
      * @return array<int,string>
      */
@@ -50,14 +57,37 @@ class Locker
     }
 
     /**
-     * Set whether to include the locks when serializing models.
+     * Set the method to use to retrieve the locks.
      * 
-     * @param bool $includeLocks
+     * @param array<int,string> $using
      * @return $this
      */
-    public function includeLocks($includeLocks)
+    public function using($using)
     {
-        $this->includeLocks = $includeLocks;
+        $this->using = $using;
+
+        return $this;
+    }
+
+    /**
+     * Get the method to use to retrieve the locks.
+     * 
+     * @return array<int,string>
+     */
+    public function uses()
+    {
+        return $this->using;
+    }
+
+    /**
+     * Set whether to include the locks when serializing models.
+     * 
+     * @param bool $appends
+     * @return $this
+     */
+    public function appendToModels($appends = true)
+    {
+        $this->appends = $appends;
 
         return $this;
     }
@@ -67,9 +97,9 @@ class Locker
      * 
      * @return bool
      */
-    public function includesLocks()
+    public function appendsToModels()
     {
-        return $this->includeLocks;
+        return $this->appends;
     }
 
     /**
@@ -77,11 +107,13 @@ class Locker
      * 
      * @return array<string,bool>
      */
-    public function generateLocks()
+    public function all()
     {
         $locks = $this->getLocks();
 
-        return collect(Gate::abilities())
+        $abilities = $this->uses() ?? Gate::abilities();
+
+        return collect($abilities)
             ->filter(function (\Closure $closure, $ability) use ($locks) {
                 if (filled($locks) && ! \in_array($ability, $locks)) {
                     return false;
@@ -103,7 +135,7 @@ class Locker
      * @param  \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>  $model
      * @return array<int,string>
      */
-    public function getAbilitiesFromPolicy($model)
+    public function fromPolicy($model)
     {
         $policy = Gate::getPolicyFor($model);
 

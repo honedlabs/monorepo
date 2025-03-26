@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Honed\Lock\Facades\Lock;
 use Honed\Lock\Locker;
+use Honed\Lock\Tests\Stubs\Product;
+use Honed\Lock\Tests\Stubs\UserPolicy;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Gate;
 
@@ -37,13 +39,27 @@ it('generates selected locks', function () {
         ]);
 });
 
-it('gets abilities from policy', function () {
-    $this->artisan('make:policy', [
-        'name' => 'UserPolicy',
-        '--force' => true,
-        '--model' => User::class,
-    ])->assertSuccessful();
+it('gets abilities from policy', function () {    
+    Gate::policy(User::class, UserPolicy::class);
 
-    expect(Lock::getAbilitiesFromPolicy(User::class))->dd();
+    expect(Lock::getAbilitiesFromPolicy(User::class))->toEqual([
+        'viewAny',
+        'view',
+        'create',
+        'update',
+        'delete',
+        'restore',
+        'forceDelete',
+    ]);
 });
 
+it('get abilities from no policy', function () {
+    expect(Lock::getAbilitiesFromPolicy(Product::class))->toEqual([]);
+});
+
+it('includes locks', function () {
+    expect(Lock::includesLocks())->toBeFalse();
+    
+    expect(Lock::includeLocks())->toBeInstanceOf(Locker::class)
+        ->includesLocks()->toBeTrue();
+});
