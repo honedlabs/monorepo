@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Honed\Lock\Facades\Lock;
 use Honed\Lock\Locker;
-use Honed\Lock\Tests\Stubs\Product;
 use Honed\Lock\Tests\Stubs\UserPolicy;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Gate;

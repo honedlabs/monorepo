@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Honed\Lock\Tests;
 
-use Inertia\Inertia;
-use Honed\Lock\Tests\Stubs\Status;
 use Honed\Lock\LockServiceProvider;
 use Honed\Lock\Tests\Stubs\Product;
-use Illuminate\Foundation\Auth\User;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model;
 use Honed\Lock\Tests\Stubs\ProductPolicy;
+use Honed\Lock\Tests\Stubs\Status;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
-use Orchestra\Testbench\TestCase as Orchestra;
-use Orchestra\Testbench\Attributes\WithMigration;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 use Inertia\Middleware as HandlesInertiaRequests;
 use Inertia\ServiceProvider as InertiaServiceProvider;
+use Orchestra\Testbench\Attributes\WithMigration;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 #[WithMigration]
 class TestCase extends Orchestra
@@ -74,10 +74,10 @@ class TestCase extends Orchestra
             ->group(function () use ($router) {
                 $router->get('/', fn () => inertia('Home'));
                 $router->get('/{product}', fn (Product $product) => inertia('Product/Show', [
-                    'product' => $product
+                    'product' => $product,
                 ]))->name('product.show');
             }
-        );
+            );
     }
 
     public function getEnvironmentSetUp($app)

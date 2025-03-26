@@ -38,4 +38,3 @@ it('gets locks', function () {
     expect($this->product)
         ->getLocks()->toBeArray();
 });
-
