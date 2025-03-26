@@ -4,9 +4,11 @@ import { Page } from "@inertiajs/core";
 export interface Message {
 	message: string;
 	type?: "success" | "error" | "info" | "warning" | string;
-	title?: string | null;
 	duration?: number | null;
-	meta?: Record<string, any>;
+}
+
+export interface FlashMessage extends Message {
+	title?: string | null;
 }
 
 declare module "@inertiajs/vue3" {
