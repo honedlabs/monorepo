@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Lock\Tests\Stubs;
 
-use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Auth\User;
 
 class UserPolicy

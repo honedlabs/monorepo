@@ -14,7 +14,7 @@ trait HasLocks
 {
     /**
      * Define the locks this model has.
-     * 
+     *
      * @return array<string,bool>|$this
      */
     public function locks()
@@ -24,20 +24,18 @@ trait HasLocks
 
     /**
      * Initialize the locks trait for an instance.
-     * 
+     *
      * @return void
      */
     public function initializeHasLocks()
     {
-        if (Lock::includesLocks() && ! $this->isLocking()) {
+        if (Lock::appendsToModels() && ! $this->isLocking()) {
             $this->appends[] = Parameters::PROP;
         }
     }
 
     /**
      * Retrieve the locks this model has.
-     * 
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     public function lock(): Attribute
     {
@@ -48,7 +46,7 @@ trait HasLocks
 
     /**
      * Get the locks for the model.
-     * 
+     *
      * @return array<string,bool>
      */
     public function getLocks()
@@ -61,14 +59,14 @@ trait HasLocks
 
         return collect(Lock::fromPolicy($lock))
             ->mapWithKeys(fn ($ability) => [
-                $ability => Gate::allows($ability, $lock)
+                $ability => Gate::allows($ability, $lock),
             ])
             ->toArray();
     }
 
     /**
      * Determine if the model appends the locks.
-     * 
+     *
      * @return bool
      */
     public function isLocking()
@@ -78,7 +76,7 @@ trait HasLocks
 
     /**
      * Make available the locks to the model.
-     * 
+     *
      * @return $this
      */
     public function withLocks()
@@ -92,7 +90,7 @@ trait HasLocks
 
     /**
      * Make unavailable the locks from the model.
-     * 
+     *
      * @return $this
      */
     public function withoutLocks()

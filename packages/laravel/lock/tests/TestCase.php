@@ -7,15 +7,19 @@ namespace Honed\Lock\Tests;
 use Inertia\Inertia;
 use Honed\Lock\Tests\Stubs\Status;
 use Honed\Lock\LockServiceProvider;
+use Honed\Lock\Tests\Stubs\Product;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Honed\Lock\Tests\Stubs\ProductController;
 use Illuminate\Database\Eloquent\Model;
+use Honed\Lock\Tests\Stubs\ProductPolicy;
+use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Inertia\ServiceProvider as InertiaServiceProvider;
 use Orchestra\Testbench\Attributes\WithMigration;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Inertia\Middleware as HandlesInertiaRequests;
+use Inertia\ServiceProvider as InertiaServiceProvider;
 
 #[WithMigration]
 class TestCase extends Orchestra
@@ -35,6 +39,11 @@ class TestCase extends Orchestra
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
 
         Model::unguard();
+
+        Gate::policy(Product::class, ProductPolicy::class);
+
+        Gate::define('view', static fn (User $user) => $user->id === 1);
+        Gate::define('edit', static fn (User $user) => $user->id === 2);
     }
 
     protected function getPackageProviders($app)
@@ -61,10 +70,14 @@ class TestCase extends Orchestra
 
     protected function defineRoutes($router)
     {
-        $router->middleware([SubstituteBindings::class])->group(function () use ($router) {
-            $router->get('/products', [ProductController::class, 'index'])->name('products.index');
-            $router->get('/product/{product}', [ProductController::class, 'show'])->name('product.show');
-        });
+        $router->middleware([SubstituteBindings::class, HandlesInertiaRequests::class, 'lock'])
+            ->group(function () use ($router) {
+                $router->get('/', fn () => inertia('Home'));
+                $router->get('/{product}', fn (Product $product) => inertia('Product/Show', [
+                    'product' => $product
+                ]))->name('product.show');
+            }
+        );
     }
 
     public function getEnvironmentSetUp($app)

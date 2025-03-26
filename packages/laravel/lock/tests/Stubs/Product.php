@@ -16,12 +16,4 @@ class Product extends Model
     protected $casts = [
         'status' => Status::class,
     ];
-
-    public function defineLocks()
-    {
-        return [
-            'update' => true,
-            'delete' => true,
-        ];   
-    }
 }

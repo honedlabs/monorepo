@@ -13,36 +13,50 @@ beforeEach(function () {
     $this->user = user();
 
     $this->actingAs($this->user);
-    
-    Gate::define('view', function ($user) {
-        return $user->id === 1;
-    });
-
-    Gate::define('edit', function ($user) {
-        return $user->id === 2;
-    });
 });
 
-it('generates locks', function () {
-    expect(Lock::generateLocks())
+it('has locks', function () {
+    expect(Lock::locks())
+        ->getLocks()->toBeEmpty()
+        ->locks('view')->toBeInstanceOf(Locker::class)
+        ->getLocks()->toEqual(['view']);
+});
+
+it('has using', function () {
+    expect(Lock::uses())->toBeNull();
+
+    expect(Lock::using(['view', 'edit']))
+        ->toBeInstanceOf(Locker::class)
+        ->uses()->toEqual(['view', 'edit']);
+});
+
+it('appends', function () {
+    expect(Lock::appendsToModels())->toBeFalse();
+
+    expect(Lock::appendToModels())->toBeInstanceOf(Locker::class)
+        ->appendsToModels()->toBeTrue();
+});
+
+it('has all', function () {
+    expect(Lock::all())
         ->toEqual([
             'view' => true,
             'edit' => false,
         ]);
 });
 
-it('generates selected locks', function () {
+it('has all with inclusions', function () {
     expect(Lock::locks('view'))->toBeInstanceOf(Locker::class)
         ->getLocks()->toEqual(['view'])
-        ->generateLocks()->toEqual([
+        ->all()->toEqual([
             'view' => true,
         ]);
 });
 
-it('gets abilities from policy', function () {    
+it('gets abilities from policy', function () {
     Gate::policy(User::class, UserPolicy::class);
 
-    expect(Lock::getAbilitiesFromPolicy(User::class))->toEqual([
+    expect(Lock::fromPolicy(User::class))->toEqual([
         'viewAny',
         'view',
         'create',
@@ -51,15 +65,4 @@ it('gets abilities from policy', function () {
         'restore',
         'forceDelete',
     ]);
-});
-
-it('get abilities from no policy', function () {
-    expect(Lock::getAbilitiesFromPolicy(Product::class))->toEqual([]);
-});
-
-it('includes locks', function () {
-    expect(Lock::includesLocks())->toBeFalse();
-    
-    expect(Lock::includeLocks())->toBeInstanceOf(Locker::class)
-        ->includesLocks()->toBeTrue();
 });
