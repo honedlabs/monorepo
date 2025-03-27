@@ -169,6 +169,16 @@ trait ValidatesUpload
     }
 
     /**
+     * Get the accepted file mime types.
+     *
+     * @return array<int, string>
+     */
+    public function getMimeTypes()
+    {
+        return $this->mimeTypes;
+    }
+
+    /**
      * Set the accepted file extensions.
      *
      * @param  string|iterable<int,string>  ...$extensions
@@ -181,16 +191,6 @@ trait ValidatesUpload
         $this->extensions = \array_merge($this->extensions, $extensions);
 
         return $this;
-    }
-
-    /**
-     * Get the accepted file mime types.
-     *
-     * @return array<int, string>
-     */
-    public function getMimeTypes()
-    {
-        return $this->mimeTypes;
     }
 
     /**
@@ -211,7 +211,11 @@ trait ValidatesUpload
     public function createRules()
     {
         return [
-            'name' => ['required', 'string', 'max:1024'],
+            'name' => [
+                'required',
+                'string',
+                'max:1024',
+            ],
             'extension' => [
                 'required',
                 'string',
@@ -233,19 +237,19 @@ trait ValidatesUpload
                 'required',
                 'integer',
                 function (string $attribute, int $value, \Closure $fail) {
-                    $min = $this->getMin();
-
-                    if ($value < $min) {
-                        $fail(__('upload::messages.min_size', [
-                            'size' => Number::fileSize($min),
-                        ]));
-                    }
-
                     $max = $this->getMax();
 
                     if ($value > $max) {
                         $fail(__('upload::messages.max_size', [
                             'size' => Number::fileSize($max),
+                        ]));
+                    }
+
+                    $min = $this->getMin();
+
+                    if ($value < $min) {
+                        $fail(__('upload::messages.min_size', [
+                            'size' => Number::fileSize($min),
                         ]));
                     }
                 },
@@ -254,7 +258,7 @@ trait ValidatesUpload
                 'required',
                 'string',
                 function (string $attribute, string $value, \Closure $fail) {
-                    $types = $this->getMimes();
+                    $types = $this->getMimeTypes();
 
                     if (! filled($types)) {
                         return;
