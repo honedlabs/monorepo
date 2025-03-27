@@ -69,6 +69,31 @@ it('has access control list', function () {
         ->getACL()->toBe('private-read');
 });
 
+it('has returns', function () {
+    expect(Upload::make())
+        ->getReturns()->toBeNull()
+        ->returns('test')->toBeInstanceOf(Upload::class)
+        ->getReturns()->toBe('test');
+});
+
+it('has multiple', function () {
+    expect(Upload::make())
+        ->isMultiple()->toBeFalse()
+        ->multiple()->toBeInstanceOf(Upload::class)
+        ->isMultiple()->toBeTrue();
+});
+
+it('has message', function () {
+    expect($this->upload)
+        ->onlyMessage()->toBeFalse()
+        ->message()->toBe($this->upload)
+        ->onlyMessage()->toBeTrue()
+        ->toArray()->toHaveKeys([
+            'multiple',
+            'message',
+        ]);
+});
+
 it('has form inputs', function () {
     $key = 'test';
 
@@ -148,16 +173,5 @@ it('has array representation', function () {
             'extensions',
             'mimes',
             'size',
-        ]);
-});
-
-it('has message', function () {
-    expect($this->upload)
-        ->onlyMessage()->toBeFalse()
-        ->message()->toBe($this->upload)
-        ->onlyMessage()->toBeTrue()
-        ->toArray()->toHaveKeys([
-            'multiple',
-            'message',
         ]);
 });

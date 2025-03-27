@@ -29,12 +29,17 @@ class UploadRule
      */
     public function isMatching($mime, $extension)
     {
+        $mime = \is_string($mime) ? \mb_strtolower(\trim($mime)) : $mime;
+        $extension = \is_string($extension) ? \mb_strtolower(\trim($extension)) : $extension;
+
         if (\in_array($extension, $this->getExtensions())) {
             return true;
         }
 
-        if (\in_array($mime, $this->getMimeTypes())) {
-            return true;
+        foreach ($this->getMimeTypes() as $type) {
+            if (\is_string($mime) && \str_starts_with($mime, $type)) {
+                return true;
+            }
         }
 
         return false;

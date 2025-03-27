@@ -498,23 +498,25 @@ class Upload extends Primitive implements Responsable
      */
     public function createKey($data)
     {
-        $name = $this->getName();
+        return once(function () use ($data) {
+            $name = $this->getName();
 
-        $filename = match (true) {
-            $this->isAnonymized() => Str::uuid()->toString(),
-            isset($name) => $this->evaluate($name),
-            default => $data->name,
-        };
+            $filename = match (true) {
+                $this->isAnonymized() => Str::uuid()->toString(),
+                isset($name) => $this->evaluate($name),
+                default => $data->name,
+            };
 
-        $path = $this->evaluate($this->getPath());
+            $path = $this->evaluate($this->getPath());
 
-        return Str::of($filename)
-            ->append('.', $data->extension)
-            ->when($path, fn ($name, $path) => $name
-                ->prepend($path, '/')
-                ->replace('//', '/'),
-            )->trim('/')
-            ->value();
+            return Str::of($filename)
+                ->append('.', $data->extension)
+                ->when($path, fn ($name, $path) => $name
+                    ->prepend($path, '/')
+                    ->replace('//', '/'),
+                )->trim('/')
+                ->value();
+        });
     }
 
     /**
@@ -645,6 +647,7 @@ class Upload extends Primitive implements Responsable
 
         return match ($parameterName) {
             'data' => [$data],
+            'key' => [$data ? $this->createKey($data) : null],
             'name' => [$data?->name],
             'extension' => [$data?->extension],
             'type' => [$data?->type],

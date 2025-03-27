@@ -161,7 +161,10 @@ trait ValidatesUpload
      */
     public function mimes(...$types)
     {
-        $types = Arr::flatten($types);
+        $types = \array_map(
+            static fn ($type) => rtrim(\mb_strtolower(\trim($type, ' *')), '/').'/',
+            Arr::flatten($types)
+        );
 
         $this->mimeTypes = \array_merge($this->mimeTypes, $types);
 
@@ -186,7 +189,10 @@ trait ValidatesUpload
      */
     public function extensions(...$extensions)
     {
-        $extensions = Arr::flatten($extensions);
+        $extensions = \array_map(
+            static fn ($ext) => \mb_strtolower(\trim($ext, ' .')),
+            Arr::flatten($extensions)
+        );
 
         $this->extensions = \array_merge($this->extensions, $extensions);
 
