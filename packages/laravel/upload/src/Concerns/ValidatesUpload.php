@@ -31,11 +31,18 @@ trait ValidatesUpload
     protected $min;
 
     /**
-     * List of the file mime types and extensions.
+     * The accepted file mime types.
      *
      * @var array<int, string>
      */
-    protected $types = [];
+    protected $mimeTypes = [];
+
+    /**
+     * The accepted file extensions.
+     *
+     * @var array<int, string>
+     */
+    protected $extensions = [];
 
     /**
      * Set the expiry duration of the request in seconds.
@@ -143,102 +150,57 @@ trait ValidatesUpload
      */
     public static function getDefaultMin()
     {
-        return type(config('upload.min_size', 0))->asInt();
+        return type(config('upload.min_size', 1))->asInt();
     }
 
     /**
-     * Set the file mime types and extensions.
+     * Set the accepted file mime types.
      *
      * @param  string|iterable<int,string>  ...$types
      * @return $this
      */
-    public function types(...$types)
+    public function mimes(...$types)
     {
         $types = Arr::flatten($types);
 
-        $this->types = \array_merge($this->types, $types);
+        $this->mimeTypes = \array_merge($this->mimeTypes, $types);
 
         return $this;
     }
 
     /**
-     * Set the upload to only accept images.
+     * Set the accepted file extensions.
      *
+     * @param  string|iterable<int,string>  ...$extensions
      * @return $this
      */
-    public function onlyImages()
+    public function extensions(...$extensions)
     {
-        return $this->types('image/');
+        $extensions = Arr::flatten($extensions);
+
+        $this->extensions = \array_merge($this->extensions, $extensions);
+
+        return $this;
     }
 
     /**
-     * Set the upload to only accept videos.
-     *
-     * @return $this
-     */
-    public function onlyVideos()
-    {
-        return $this->types('video/');
-    }
-
-    /**
-     * Set the upload to only accept audio.
-     *
-     * @return $this
-     */
-    public function onlyAudio()
-    {
-        return $this->types('audio/');
-    }
-
-    /**
-     * Set the upload to only accept PDF files.
-     *
-     * @return $this
-     */
-    public function onlyPdf()
-    {
-        return $this->types('application/pdf', '.pdf');
-    }
-
-    /**
-     * Get the accepted file mime types and extensions.
+     * Get the accepted file mime types.
      *
      * @return array<int, string>
      */
-    public function getTypes()
+    public function getMimeTypes()
     {
-        return $this->types;
+        return $this->mimeTypes;
     }
 
     /**
-     * Get the file mime types.
-     *
-     * @return array<int, string>
-     */
-    public function getMimes()
-    {
-        return \array_values(
-            \array_filter(
-                $this->getTypes(),
-                static fn ($type) => ! \str_starts_with($type, '.')
-            )
-        );
-    }
-
-    /**
-     * Get the file extensions.
+     * Get the accepted file extensions.
      *
      * @return array<int, string>
      */
     public function getExtensions()
     {
-        return \array_values(
-            \array_filter(
-                $this->getTypes(),
-                static fn ($type) => \str_starts_with($type, '.')
-            )
-        );
+        return $this->extensions;
     }
 
     /**
