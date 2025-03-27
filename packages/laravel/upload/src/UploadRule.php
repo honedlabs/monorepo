@@ -23,8 +23,8 @@ class UploadRule
     /**
      * Determine if the given type matches this rule.
      *
-     * @param  string  $mime
-     * @param  string  $extension
+     * @param  mixed  $mime
+     * @param  mixed  $extension
      * @return bool
      */
     public function isMatching($mime, $extension)

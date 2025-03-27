@@ -6,7 +6,6 @@ namespace Honed\Upload;
 
 use Aws\S3\PostObjectV4;
 use Aws\S3\S3Client;
-use Honed\Core\Concerns\HasExtra;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Primitive;
 use Honed\Upload\Concerns\ValidatesUpload;
@@ -17,7 +16,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Number;
 use Illuminate\Support\Str;
-use Illuminate\Support\Stringable;
 
 class Upload extends Primitive implements Responsable
 {
@@ -375,34 +373,34 @@ class Upload extends Primitive implements Responsable
 
     /**
      * Create the upload message.
-     * 
+     *
      * @return string
      */
     public function getMessage()
     {
         $extensions = $this->getExtensions();
         $mimes = $this->getMimeTypes();
-        
+
         $numMimes = \count($mimes);
         $numExts = \count($extensions);
-        
+
         $typed = match (true) {
             $numExts > 0 && $numExts < 4 => \implode(', ', \array_map(
                 static fn ($ext) => \mb_strtoupper(\trim($ext)),
                 $extensions
             )),
-            
+
             $numMimes > 0 && $numMimes < 4 => \ucfirst(\implode(', ', \array_map(
                 static fn ($mime) => \trim($mime, ' /'),
                 $mimes
             ))),
-            
+
             $this->isMultiple() => 'Files',
-            
+
             default => 'A single file',
         };
-        
-        return $typed . ' up to ' . Number::fileSize($this->getMax());
+
+        return $typed.' up to '.Number::fileSize($this->getMax());
     }
 
     /**
@@ -472,7 +470,7 @@ class Upload extends Primitive implements Responsable
      * Get the policy condition options for the request.
      *
      * @param  string  $key
-     * @return array<int,array<string,mixed>>
+     * @return array<int,array<string|int,mixed>>
      */
     public function getOptions($key)
     {
@@ -483,7 +481,7 @@ class Upload extends Primitive implements Responsable
             ['content-length-range', $this->getMin(), $this->getMax()],
         ];
 
-        $mimes = $this->getMimes();
+        $mimes = $this->getMimeTypes();
 
         if (filled($mimes)) {
             $options[] = ['starts-with', '$Content-Type', \implode(',', $mimes)];
@@ -504,7 +502,7 @@ class Upload extends Primitive implements Responsable
 
         $filename = match (true) {
             $this->isAnonymized() => Str::uuid()->toString(),
-            isset($name) => type($this->evaluate($name))->asString(),
+            isset($name) => $this->evaluate($name),
             default => $data->name,
         };
 
@@ -577,6 +575,7 @@ class Upload extends Primitive implements Responsable
             'extension' => $extension,
         ])->all();
 
+        /** @var string|null */
         $type = $request->input('type');
 
         $rule = Arr::first(
@@ -584,22 +583,22 @@ class Upload extends Primitive implements Responsable
             static fn (UploadRule $rule) => $rule->isMatching($type, $extension),
         );
 
-        $validated = $this->validate($request, $rule);
+        $this->data = $this->validate($request, $rule);
 
-        $key = $this->createKey($validated);
+        $key = $this->createKey($this->data);
 
         $postObject = new PostObjectV4(
             $this->getClient(),
             $this->getBucket(),
             $this->getFormInputs($key),
             $this->getOptions($key),
-            $this->getExpiry()
+            $rule ? $rule->getExpiry() : $this->getExpiry()
         );
 
         return [
             'attributes' => $postObject->getFormAttributes(),
             'inputs' => $postObject->getFormInputs(),
-            'data' => $this->getReturns()
+            'data' => $this->getReturns(),
         ];
     }
 
@@ -608,20 +607,20 @@ class Upload extends Primitive implements Responsable
      */
     public function toArray()
     {
-        if ($this->onlyMessage()) {
-            return [
-                'multiple' => $this->isMultiple(),
-                'message' => $this->getMessage(),
-            ];
-        }
-
-        return [
-            'extensions' => $this->getExtensions(),
-            'mimes' => $this->getMimes(),
-            'max' => $this->getMax(),
+        $data = [
             'multiple' => $this->isMultiple(),
             'message' => $this->getMessage(),
         ];
+
+        if ($this->onlyMessage()) {
+            return $data;
+        }
+
+        return \array_merge($data, [
+            'extensions' => $this->getExtensions(),
+            'mimes' => $this->getMimeTypes(),
+            'size' => $this->getMax(),
+        ]);
     }
 
     /**
@@ -642,15 +641,15 @@ class Upload extends Primitive implements Responsable
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
-        $data = $this->getData();
+        $data = $this->data;
 
         return match ($parameterName) {
             'data' => [$data],
-            'name' => [$data->name],
-            'extension' => [$data->extension],
-            'type' => [$data->type],
-            'size' => [$data->size],
-            'meta' => [$data->meta],
+            'name' => [$data?->name],
+            'extension' => [$data?->extension],
+            'type' => [$data?->type],
+            'size' => [$data?->size],
+            'meta' => [$data?->meta],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
@@ -660,11 +659,10 @@ class Upload extends Primitive implements Responsable
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
-        $data = $this->getData();
+        if ($parameterType === UploadData::class && isset($this->data)) {
+            return [$this->data];
+        }
 
-        return match ($parameterType) {
-            UploadData::class => [$data],
-            default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
-        };
+        return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
     }
 }

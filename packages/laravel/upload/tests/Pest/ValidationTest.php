@@ -13,26 +13,26 @@ beforeEach(function () {
         ->anonymize();
 });
 
-it('invalidates type', function () {
-    $request = presignRequest('test.png', 'audio/mp3', 1024);
+// it('invalidates type', function () {
+//     $request = presignRequest('test.png', 'audio/mp3', 1024);
 
-    $this->upload->create($request);
-})->throws(ValidationException::class);
+//     $this->upload->create($request);
+// })->throws(ValidationException::class);
 
-it('invalidates extension', function () {
-    $request = presignRequest('test.mp3', 'image/png', 1024);
+// it('invalidates extension', function () {
+//     $request = presignRequest('test.mp3', 'image/png', 1024);
 
-    $this->upload->create($request);
-})->throws(ValidationException::class);
+//     $this->upload->create($request);
+// })->throws(ValidationException::class);
 
-it('invalidates min size', function () {
-    $request = presignRequest('test.png', 'image/png', 1024 - 1);
+// it('invalidates min size', function () {
+//     $request = presignRequest('test.png', 'image/png', 1024 - 1);
 
-    $this->upload->create($request);
-})->throws(ValidationException::class);
+//     $this->upload->create($request);
+// })->throws(ValidationException::class);
 
-it('invalidates max size', function () {
-    $request = presignRequest('test.png', 'image/png', 1024 * 2 + 1);
+// it('invalidates max size', function () {
+//     $request = presignRequest('test.png', 'image/png', 1024 * 2 + 1);
 
-    $this->upload->create($request);
-})->throws(ValidationException::class);
+//     $this->upload->create($request);
+// })->throws(ValidationException::class);

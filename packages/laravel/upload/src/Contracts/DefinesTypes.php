@@ -11,7 +11,6 @@ interface DefinesTypes
      */
     public function defineMimeTypes();
 
-
     /**
      * @return array<int, string>
      */

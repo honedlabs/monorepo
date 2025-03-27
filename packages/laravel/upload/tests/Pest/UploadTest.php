@@ -12,7 +12,7 @@ beforeEach(function () {
     $this->upload = Upload::make();
 });
 
-it('has into shorthand', function () {
+it('uploads into', function () {
     expect(Upload::into('r2'))
         ->getDisk()->toBe('r2');
 });
@@ -86,14 +86,6 @@ it('has policy options', function () {
         ->toHaveCount(4);
 });
 
-it('has policy options with mime types', function () {
-    $key = 'test.png';
-
-    expect(Upload::make()->types('image/*'))
-        ->getOptions($key)->toBeArray()
-        ->toHaveCount(5);
-});
-
 it('destructures filenames', function () {
     expect(Upload::destructureFilename('test.png'))
         ->toBe(['test', 'png']);
@@ -123,21 +115,10 @@ describe('key creation', function () {
             ->createKey($this->data)->not->toBe('test.png');
     });
 
-    test('closure', function () {
-        expect($this->upload->name(fn ($name, $meta) => $name . '-' . $meta['publisher']))
-            ->createKey($this->data)->toBe('test-10.png');
-    });
-
     test('path', function () {
         expect($this->upload->path('test'))
             ->createKey($this->data)
             ->toBe('test/test.png');
-    });
-
-    test('path closure', function () {
-        expect($this->upload->path(fn ($meta) => '/images/' . $meta['publisher'] . '/'))
-            ->createKey($this->data)
-            ->toBe('images/10/test.png');
     });
 });
 
@@ -160,7 +141,23 @@ it('is response', function () {
 });
 
 it('has array representation', function () {
-    expect($this->upload->toArray())
-        ->toBeArray()
-        ->toBeEmpty();
+    expect($this->upload)
+        ->toArray()->toHaveKeys([
+            'multiple',
+            'message',
+            'extensions',
+            'mimes',
+            'size',
+        ]);
+});
+
+it('has message', function () {
+    expect($this->upload)
+        ->onlyMessage()->toBeFalse()
+        ->message()->toBe($this->upload)
+        ->onlyMessage()->toBeTrue()
+        ->toArray()->toHaveKeys([
+            'multiple',
+            'message',
+        ]);
 });

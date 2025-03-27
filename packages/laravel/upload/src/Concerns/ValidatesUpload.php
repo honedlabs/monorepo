@@ -10,7 +10,7 @@ use Illuminate\Support\Number;
 trait ValidatesUpload
 {
     /**
-     * The expiry duration of the request in seconds.
+     * The expiry duration of the request in minutes.
      *
      * @var int|null
      */
@@ -45,20 +45,20 @@ trait ValidatesUpload
     protected $extensions = [];
 
     /**
-     * Set the expiry duration of the request in seconds.
+     * Set the expiry duration of the request in minutes.
      *
-     * @param  int  $seconds
+     * @param  int  $minutes
      * @return $this
      */
-    public function expiresIn($seconds)
+    public function expiresIn($minutes)
     {
-        $this->expires = $seconds;
+        $this->expires = $minutes;
 
         return $this;
     }
 
     /**
-     * Get the expiry duration of the request in seconds.
+     * Get the expiry duration of the request in minutes.
      *
      * @return int
      */
@@ -68,13 +68,13 @@ trait ValidatesUpload
     }
 
     /**
-     * Get the default expiry duration of the request in seconds.
+     * Get the default expiry duration of the request in minutes.
      *
      * @return int
      */
     public static function getDefaultExpiry()
     {
-        return type(config('upload.expires', 120))->asInt();
+        return type(config('upload.expires', 2))->asInt();
     }
 
     /**
@@ -84,7 +84,7 @@ trait ValidatesUpload
      */
     public function formatExpiry()
     {
-        return \sprintf('+%d seconds', \abs($this->getExpiry()));
+        return \sprintf('+%d minutes', \abs($this->getExpiry()));
     }
 
     /**
