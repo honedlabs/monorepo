@@ -308,7 +308,7 @@ class Upload extends Primitive implements Responsable
      * @param  mixed  $return
      * @return $this
      */
-    public function returns($return)
+    public function shouldReturn($return)
     {
         $this->returns = $return;
 

@@ -72,7 +72,7 @@ it('has access control list', function () {
 it('has returns', function () {
     expect(Upload::make())
         ->getReturns()->toBeNull()
-        ->returns('test')->toBeInstanceOf(Upload::class)
+        ->shouldReturn('test')->toBeInstanceOf(Upload::class)
         ->getReturns()->toBe('test');
 });
 

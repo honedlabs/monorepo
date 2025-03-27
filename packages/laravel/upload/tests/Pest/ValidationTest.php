@@ -12,7 +12,7 @@ beforeEach(function () {
         ->min(1024) // 1 KB
         ->max(1024 * 2) // 2KB
         ->path(fn (string $type) => \explode('/', $type)[0])
-        ->returns(fn ($key) => $key)
+        ->shouldReturn(fn ($key) => $key)
         ->anonymize();
 });
 
