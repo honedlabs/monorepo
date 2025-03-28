@@ -29,8 +29,6 @@ it('applies alias', function () {
     
     $sort = $this->sort->alias($alias);
     
-    // Should not apply
-
     expect($sort->refine($this->builder, [$this->name, 'asc']))
         ->toBeFalse();
 
@@ -48,7 +46,7 @@ it('applies alias', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->name, 'asc');
+        ->toBeOnlyOrder($this->builder->qualifyColumn($this->name), 'asc');
 
     expect($sort)
         ->isActive()->toBeTrue()
@@ -65,7 +63,7 @@ it('applies fixed direction', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->name, 'desc');
+        ->toBeOnlyOrder($this->builder->qualifyColumn($this->name), 'desc');
 
     expect($sort)
         ->isFixed()->toBeTrue()
@@ -81,7 +79,7 @@ it('applies inverted direction', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->name, 'desc');
+        ->toBeOnlyOrder($this->builder->qualifyColumn($this->name), 'desc');
 
     expect($sort)
         ->isInverted()->toBeTrue()
@@ -106,16 +104,14 @@ it('applies query', function () {
         ->isActive()->toBeTrue();
 });
 
-it('applies with qualified column', function () {
-    $this->sort->qualify();
-
-    expect($this->sort->refine($this->builder, [$this->name, 'asc']))
-        ->toBeTrue();
+it('applies with unqualified column', function () {
+    expect($this->sort->unqualify())
+        ->refine($this->builder, [$this->name, 'asc'])->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn($this->name), 'asc');
+        ->toBeOnlyOrder($this->name, 'asc');
 
     expect($this->sort)
-        ->isQualified()->toBeTrue()
+        ->isQualified()->toBeFalse()
         ->isActive()->toBeTrue();
 });

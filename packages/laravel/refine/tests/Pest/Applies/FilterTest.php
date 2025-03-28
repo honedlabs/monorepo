@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Carbon\Carbon;
 use Honed\Refine\Filter;
 use Honed\Refine\Tests\Stubs\Product;
+use Honed\Refine\Tests\Stubs\Status;
 use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
@@ -64,7 +65,7 @@ it('applies with alias', function () {
         ->refine($this->builder, $request)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->name, $this->value);
+        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value);
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -114,7 +115,7 @@ it('applies with different operator', function () {
         ->refine($this->builder, $request)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->name, $this->value, $operator);
+        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value, $operator);
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -128,7 +129,7 @@ it('applies with `like` operators', function () {
         ->refine($this->builder, $request)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch($this->name);
+        ->toBeOnlySearch($this->builder->qualifyColumn($this->name));
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -149,7 +150,7 @@ it('applies with date', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
             ->{'type'}->toBe('Date')
-            ->{'column'}->toBe($this->name)
+            ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
             ->{'operator'}->toBe('=')
             ->{'value'}->toBe($value->toDateString())
             ->{'boolean'}->toBe('and')
@@ -174,7 +175,7 @@ it('applies with datetime', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
             ->{'type'}->toBe('Basic')
-            ->{'column'}->toBe($this->name)
+            ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
             ->{'operator'}->toBe('=')
             ->{'value'}->toBeInstanceOf(Carbon::class)
             ->{'boolean'}->toBe('and')
@@ -199,7 +200,7 @@ it('applies with time', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
             ->{'type'}->toBe('Time')
-            ->{'column'}->toBe($this->name)
+            ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
             ->{'operator'}->toBe('=')
             ->{'value'}->toBe($value->toTimeString())
             ->{'boolean'}->toBe('and')
@@ -227,97 +228,61 @@ it('applies with query', function () {
 });
 
 it('applies lax', function () {
-    $builder = Product::query();
+    $value = 'invalid';
 
-    $filter = Filter::make('status')
-        ->options(['active' => 'Active', 'inactive' => 'Inactive'])
-        ->lax();
+    $request = Request::create('/', 'GET', [$this->name => $value]);
 
-    $value = 'indeterminate';
+    expect($this->filter->lax()->options(Status::class))
+        ->refine($this->builder, $request)->toBeTrue();
 
-    $request = Request::create('/', 'GET', ['status' => $value]);
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $value);
 
-    expect($filter->refine($builder, $request))
-        ->toBeTrue();
-
-    expect($builder->getQuery()->wheres)
-        ->toBeOnlyWhere($builder->qualifyColumn('status'), $value);
-
-    expect($filter)
+    expect($this->filter)
         ->isActive()->toBeTrue()
         ->getValue()->toBe($value)
         ->getOptions()->each(fn ($option) => $option->isActive()->toBeFalse());
 });
 
 it('applies strict', function () {
-    $builder = Product::query();
-
-    $filter = Filter::make('status')
-        ->options(['active' => 'Active', 'inactive' => 'Inactive'])
-        ->strict();
-
     $value = 'indeterminate';
 
-    $request = Request::create('/', 'GET', ['status' => $value]);
+    $request = Request::create('/', 'GET', [$this->name => $value]);
 
-    expect($filter->refine($builder, $request))
-        ->toBeFalse();
+    expect($this->filter->strict()->options(Status::class))
+        ->refine($this->builder, $request)->toBeFalse();
 
-    expect($builder->getQuery()->wheres)
+    expect($this->builder->getQuery()->wheres)
         ->toBeEmpty();
 
-    expect($filter)
+    expect($this->filter)
         ->isActive()->toBeFalse()
         ->getValue()->toBeNull() // Transform means invalid values are discarded
-        ->getOptions()->each(fn ($option) => $option->isActive()->toBeFalse())
-        ->optionsToArray()->toEqual([
-            [
-                'value' => 'active',
-                'label' => 'Active',
-                'active' => false,
-            ],
-            [
-                'value' => 'inactive',
-                'label' => 'Inactive',
-                'active' => false,
-            ],
-        ]);
+        ->getOptions()->each(fn ($option) => $option->isActive()->toBeFalse());
 });
 
 it('applies multiple', function () {
-    $builder = Product::query();
+    $value = [Status::Available->value, Status::Unavailable->value];
+    $values = \implode(',', $value);
 
-    $filter = Filter::make('status')
-        ->options(['active' => 'Active', 'inactive' => 'Inactive'])
-        ->multiple();
+    $request = Request::create('/', 'GET', [$this->name => $values]);
 
-    $value = ['active', 'inactive'];
-    $valueString = \implode(',', $value);
+    expect($this->filter->multiple()->options(Status::class))
+        ->refine($this->builder, $request)->toBeTrue();
 
-    $request = Request::create('/', 'GET', ['status' => $valueString]);
+    expect($this->builder->getQuery()->wheres)
+        ->toBeOnlyWhereIn($this->builder->qualifyColumn($this->name), $value);
 
-    expect($filter->refine($builder, $request))
-        ->toBeTrue();
-
-    expect($builder->getQuery()->wheres)
-        ->toBeOnlyWhereIn($builder->qualifyColumn('status'), $value);
-
-    expect($filter)
+    expect($this->filter)
         ->isActive()->toBeTrue()
-        ->getValue()->toBe($value)
-        ->getOptions()->each(fn ($option) => $option->isActive()->toBeTrue())
-        ->optionsToArray()->toEqual([
-            [
-                'value' => 'active',
-                'label' => 'Active',
-                'active' => true,
-            ],
-            [
-                'value' => 'inactive',
-                'label' => 'Inactive',
-                'active' => true,
-            ],
-        ]);
+        ->getValue()->toEqual($value)
+        ->getOptions()->scoped(fn ($options) => $options
+            ->toBeArray()
+            ->toHaveCount(3)
+            ->{0}->isActive()->toBeTrue()
+            ->{1}->isActive()->toBeTrue()
+            ->{2}->isActive()->toBeFalse()
+        );
 });
 
 it('applies with unqualified column', function () {
@@ -330,6 +295,5 @@ it('applies with unqualified column', function () {
         ->toBeOnlyWhere($this->name, 'value');
 
     expect($this->filter)
-        ->isQualified()->toBeTrue()
         ->isActive()->toBeTrue();
 });

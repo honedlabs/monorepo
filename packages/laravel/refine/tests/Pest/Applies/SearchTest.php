@@ -21,7 +21,6 @@ it('does not apply', function () {
         ->toBeEmpty();
 
     expect($this->test)
-        // Activity is independent of the search term
         ->isActive()->toBeTrue(); 
 });
 
@@ -30,7 +29,7 @@ it('applies', function () {
         ->refine($this->builder, [true, $this->search])->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch('name');
+        ->toBeOnlySearch($this->builder->qualifyColumn('name'));
 
     expect($this->test)
         ->isActive()->toBeTrue();
@@ -44,7 +43,7 @@ it('applies boolean', function () {
         ->isActive()->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch('name', 'or');
+        ->toBeOnlySearch($this->builder->qualifyColumn('name'), 'or');
 
     expect($this->test)
         ->isActive()->toBeTrue()
@@ -76,16 +75,14 @@ it('does not apply if inactive', function () {
         ->isActive()->toBeFalse();
 });
 
-it('applies with qualified column', function () {
-    $this->test->qualify();
-
-    expect($this->test->refine($this->builder, [true, $this->search]))
-        ->toBeTrue();
+it('applies with unqualified column', function () {
+    expect($this->test->unqualify())
+        ->refine($this->builder, [true, $this->search])->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch($this->builder->qualifyColumn($this->name));
+        ->toBeOnlySearch($this->name);
 
     expect($this->test)
-        ->isQualified()->toBeTrue()
+        ->isQualified()->toBeFalse()
         ->isActive()->toBeTrue();
 });

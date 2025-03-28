@@ -31,5 +31,5 @@ it('applies', function () {
         ->refine($this->builder, ['newest', 'asc'])->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder('created_at', 'asc');
+        ->toBeOnlyOrder($this->builder->qualifyColumn('created_at'), 'asc');
 });
