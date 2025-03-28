@@ -30,12 +30,12 @@ abstract class Refiner extends Primitive
     use HasMeta;
     use HasName;
 
+    use HasQualifier;
+
     /** @use HasQuery<TModel, TBuilder> */
     use HasQuery;
-
     use HasType;
     use HasValue;
-    use HasQualifier;
 
     /**
      * Create a new refiner instance.
