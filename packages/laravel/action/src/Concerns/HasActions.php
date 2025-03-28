@@ -77,10 +77,7 @@ trait HasActions
             return [];
         }
 
-        return \array_merge(
-            $this->actions ?? [],
-            $this->actions(),
-        );
+        return \array_merge($this->actions(), $this->actions ?? []);
     }
 
     /**
