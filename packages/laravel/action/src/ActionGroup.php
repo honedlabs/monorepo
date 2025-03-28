@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Honed\Action\Concerns\HasActions;
+use Honed\Action\Concerns\HasEndpoint;
 use Honed\Core\Primitive;
 
 class ActionGroup extends Primitive
 {
     use HasActions;
+    use HasEndpoint;
 
     /**
      * Create a new action group instance.
      *
-     * @param  \Honed\Action\PageAction  ...$actions
+     * @param  \Honed\Action\Action  ...$actions
      */
-    public static function make(...$actions): static
+    public static function make(...$actions)
     {
         return resolve(static::class)
             ->withActions($actions);
@@ -25,8 +27,11 @@ class ActionGroup extends Primitive
     /**
      * {@inheritdoc}
      */
-    public function toArray(): array
+    public function toArray()
     {
-        return $this->pageActionsToArray();
+        return [
+            'endpoint' => $this->getEndpoint(),
+            'actions' => $this->getActions(),
+        ];
     }
 }

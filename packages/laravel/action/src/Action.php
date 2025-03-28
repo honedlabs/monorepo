@@ -92,6 +92,10 @@ abstract class Action extends Primitive implements ResolvesArrayable
      */
     public function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
+        if (isset($this->parameters[$parameterName])) {
+            return [$this->parameters[$parameterName]];
+        }
+
         return match ($parameterName) {
             'confirm' => [$this->confirmInstance()],
             default => [],

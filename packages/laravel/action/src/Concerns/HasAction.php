@@ -24,14 +24,23 @@ trait HasAction
     protected $action;
 
     /**
+     * Optional parameters to pass to the Actionable handler.
+     *
+     * @var array<string,mixed>
+     */
+    protected $parameters = [];
+
+    /**
      * Set the action handler.
      *
      * @param  \Closure|class-string<\Honed\Action\Contracts\Actionable>  $action
+     * @param  array<string,mixed>  $parameters
      * @return $this
      */
-    public function action($action)
+    public function action($action, $parameters = [])
     {
         $this->action = $action;
+        $this->parameters = $parameters;
 
         return $this;
     }
@@ -55,6 +64,29 @@ trait HasAction
     {
         return isset($this->action) || $this instanceof Actionable;
     }
+
+    /**
+     * Set optional parameters to pass to the Actionable handler.
+     *
+     * @param  array<string,mixed>  $parameters
+     * @return $this
+     */
+    public function parameters($parameters)
+    {
+        $this->parameters = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * Get the parameters to pass to the Actionable handler.
+     *
+     * @return array<string,mixed>
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }   
 
     /**
      * Get the handler for the actionable class.
