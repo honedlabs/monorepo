@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Nav;
 
-use Honed\Nav\Support\Parameters;
 use Illuminate\Support\Arr;
-use Inertia\Inertia;
 
 class Nav
 {
@@ -35,7 +33,7 @@ class Nav
      */
     public function for($name, $items)
     {
-        if ($this->hasGroup($name)) {
+        if ($this->has($name)) {
             static::throwDuplicateGroupException($name);
         }
 
@@ -54,7 +52,7 @@ class Nav
      */
     public function add($name, $items)
     {
-        if (! $this->hasGroup($name)) {
+        if (! $this->has($name)) {
             static::throwMissingGroupException($name);
         }
 
@@ -72,23 +70,17 @@ class Nav
     /**
      * Determine if one or more navigation groups exist.
      *
-     * @param  string|array<int,string>  $groups
+     * @param  string  ...$groups
      * @return bool
      */
-    public function hasGroup($groups)
+    public function has(...$groups)
     {
-        $groups = Arr::wrap($groups);
-
-        if (empty($groups)) {
-            return true;
-        }
-
-        return empty(
-            \array_diff(
-                $groups,
-                \array_keys($this->items)
-            )
-        );
+        $groups = Arr::flatten($groups);
+        
+        return match(true) {
+            empty($groups) => !empty($this->items),
+            default => empty(array_diff($groups, array_keys($this->items))),
+        };
     }
 
     /**
@@ -101,13 +93,13 @@ class Nav
     {
         $groups = Arr::flatten($groups);
 
-        if (! $this->hasGroup($groups)) {
+        if (! $this->has($groups)) {
             static::throwMissingGroupException(implode(', ', $groups));
         }
 
         $keys = empty($groups) ? \array_keys($this->items) : $groups;
 
-        return $this->getGroups($keys);
+        return $this->groups($keys);
     }
 
     /**
@@ -116,11 +108,11 @@ class Nav
      * @param  array<int,string>  $keys
      * @return array<string,array<int,\Honed\Nav\NavBase>>
      */
-    protected function getGroups($keys)
+    public function groups($keys)
     {
         return \array_reduce(
             $keys,
-            fn (array $acc, string $key) => $acc + [$key => $this->getGroup($key)],
+            fn (array $acc, string $key) => $acc + [$key => $this->group($key)],
             []
         );
     }
@@ -131,7 +123,7 @@ class Nav
      * @param  string  $group
      * @return array<int,\Honed\Nav\NavBase>
      */
-    public function getGroup($group)
+    public function group($group)
     {
         /** @var array<int,\Honed\Nav\NavBase> */
         $items = Arr::get($this->items, $group);
@@ -144,31 +136,12 @@ class Nav
     }
 
     /**
-     * Get the navigation items as an array.
-     *
-     * @param  string|array<int,string>  $groups
-     * @return array<string,array<int,array<string,mixed>>>
-     */
-    public function getToArray(...$groups)
-    {
-        $groups = $this->get(...$groups);
-
-        return \array_map(
-            fn ($group) => \array_map(
-                fn (NavBase $item) => $item->toArray(),
-                $group
-            ),
-            $groups
-        );
-    }
-
-    /**
-     * Share the navigation items with Inertia.
+     * Add groups to the share list.
      *
      * @param  iterable<int,string> ...$groups
      * @return $this
      */
-    public function share(...$groups)
+    public function with(...$groups)
     {
         $share = Arr::flatten($groups);
 
@@ -177,9 +150,33 @@ class Nav
         return $this;
     }
 
-    public function getShared()
+    /**
+     * Get the shared navigation items.
+     *
+     * @return array<string,array<int,array<string,mixed>>>
+     */
+    public function shared()
     {
-        return $this->getToArray(...$this->share);
+        return $this->toArray($this->share);
+    }
+
+    /**
+     * Get the navigation items as an array.
+     *
+     * @param  string|array<int,string>  $groups
+     * @return array<string,array<int,array<string,mixed>>>
+     */
+    public function toArray(...$groups)
+    {
+        $groups = $this->get($groups);
+
+        return \array_map(
+            static fn ($group) => \array_map(
+                static fn (NavBase $item) => $item->toArray(),
+                $group
+            ),
+            $groups
+        );
     }
 
     /**
