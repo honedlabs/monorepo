@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Contracts;
 
-interface Icon
+interface HasIcon
 {
     /**
      * Get the icon.

@@ -54,13 +54,21 @@ it('can set the interpreter', function () {
         ->interpretsAs()->toBe('time');
 });
 
-it('interprets using interpreter', function () {
+it('interprets', function () {
     $request = generateRequest($this->param, '5');
 
     expect($this->test)
         ->interpret($request, $this->param)->toBe('5')
-        ->as('int')->toBe($this->test)
-        ->interpret($request, $this->param)->toBe(5);
+        ->as('array')->interpret($request, $this->param)->toEqual(['5'])
+        ->as('int')->interpret($request, $this->param)->toBe(5)
+        ->as('string')->interpret($request, $this->param)->toBe('5')
+        ->as('stringable')->interpret($request, $this->param)->toBeInstanceOf(Stringable::class)
+        ->as('float')->interpret($request, $this->param)->toBe(5.0)
+        ->as('boolean')->interpret($request, $this->param)->toBe(false)
+        ->as('collection')->interpret($request, $this->param)->toBeInstanceOf(Collection::class)
+        ->as('datetime')->interpret($request, $this->param)->toBeNull()
+        ->as('date')->interpret($request, $this->param)->toBeNull()
+        ->as('time')->interpret($request, $this->param)->toBeNull();
 });
 
 it('interprets raw', function ($param, $value, $expected) {

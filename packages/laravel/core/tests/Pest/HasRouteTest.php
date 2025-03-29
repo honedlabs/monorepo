@@ -75,7 +75,10 @@ it('validates method', function ($input) {
     ['INVALID'],
 ]);
 
-it('gets route array', function () {
+it('has array representation', function () {
+    expect($this->test)
+        ->routeToArray()->toBeNull();
+
     expect($this->test->route($this->route, $this->param))
         ->routeToArray()->toBe([
             'url' => route($this->route, $this->param),

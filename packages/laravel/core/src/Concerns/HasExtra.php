@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Honed\Core\Contracts\DefinesExtra;
+use Honed\Core\Contracts\HasExtra as HasExtraContract;
 
 trait HasExtra
 {
@@ -35,8 +35,8 @@ trait HasExtra
      */
     public function getExtra()
     {
-        $extra = $this instanceof DefinesExtra
-            ? \Closure::fromCallable([$this, 'defineExtra'])
+        $extra = $this instanceof HasExtraContract
+            ? \Closure::fromCallable([$this, 'extraAs'])
             : $this->extra;
 
         return $this->evaluate($extra);
@@ -51,8 +51,8 @@ trait HasExtra
      */
     public function resolveExtra($parameters = [], $typed = [])
     {
-        $extra = $this instanceof DefinesExtra
-            ? \Closure::fromCallable([$this, 'defineExtra'])
+        $extra = $this instanceof HasExtraContract
+            ? \Closure::fromCallable([$this, 'extraAs'])
             : $this->extra;
 
         /** @var array<string,mixed>|null */

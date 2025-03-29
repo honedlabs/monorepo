@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Honed\Core\Contracts\Icon;
+use Honed\Core\Contracts\HasIcon as HasIconContract;
 
 trait HasIcon
 {
@@ -39,7 +39,7 @@ trait HasIcon
             return null;
         }
 
-        return $this->icon instanceof Icon
+        return $this->icon instanceof HasIconContract
             ? $this->icon->icon()
             : $this->evaluate($this->icon);
     }
@@ -49,7 +49,7 @@ trait HasIcon
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<class-string,mixed>  $typed
-     * @return string|\Honed\Core\Contracts\Icon|null
+     * @return string|\Honed\Core\Contracts\HasIcon|null
      */
     public function resolveIcon($parameters = [], $typed = [])
     {

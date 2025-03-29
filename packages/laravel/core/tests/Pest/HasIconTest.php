@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Str;
-use Honed\Core\Contracts\Icon;
+use Honed\Core\Contracts\HasIcon as HasIconContract;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Tests\Stubs\Product;
 
-enum IconEnum implements Icon
+enum IconEnum implements HasIconContract
 {
     case Chevron;
 

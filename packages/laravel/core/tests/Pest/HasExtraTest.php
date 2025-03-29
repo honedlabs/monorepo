@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasExtra;
-use Honed\Core\Contracts\DefinesExtra;
+use Honed\Core\Contracts\HasExtra as HasExtraContract;
 use Honed\Core\Tests\Stubs\Product;
 
 beforeEach(function () {
@@ -26,10 +26,10 @@ it('accesses', function () {
 });
 
 it('accesses via contract', function () {
-    $test = new class implements DefinesExtra {
+    $test = new class implements HasExtraContract {
         use Evaluable, HasExtra;
 
-        public function defineExtra()
+        public function extraAs()
         {
             return ['key' => 'value'];
         }

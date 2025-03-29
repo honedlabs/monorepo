@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Closure;
-use Honed\Core\Contracts\DefinesQuery;
+use Honed\Core\Contracts\HasQuery as HasQueryContract;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -46,8 +46,8 @@ trait HasQuery
             return $this->query;
         }
 
-        if ($this instanceof DefinesQuery) {
-            return Closure::fromCallable([$this, 'defineQuery']);
+        if ($this instanceof HasQueryContract) {
+            return Closure::fromCallable([$this, 'queryAs']);
         }
 
         return null;
@@ -60,7 +60,7 @@ trait HasQuery
      */
     public function hasQuery()
     {
-        return isset($this->query) || $this instanceof DefinesQuery;
+        return isset($this->query) || $this instanceof HasQueryContract;
     }
 
     /**

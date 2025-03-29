@@ -37,13 +37,13 @@ trait InterpretsRequest
     public function interpret($request, $key, $delimiter = ',', $timezone = null)
     {
         return match ($this->as) {
-            'string' => static::interpretString($request, $key),
-            'stringable' => static::interpretStringable($request, $key),
             'array' => static::interpretArray($request, $key, $delimiter, $this->subtype),
             'collection' => static::interpretCollection($request, $key, $delimiter, $this->subtype),
             'boolean' => static::interpretBoolean($request, $key),
             'float' => static::interpretFloat($request, $key),
             'int' => static::interpretInt($request, $key),
+            'string' => static::interpretString($request, $key),
+            'stringable' => static::interpretStringable($request, $key),
             'date',
             'datetime',
             'time' => static::interpretDate($request, $key, $timezone),
