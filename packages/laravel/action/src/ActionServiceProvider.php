@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
+use Illuminate\Support\ServiceProvider;
 use Honed\Action\Console\Commands\ActionMakeCommand;
 use Honed\Action\Console\Commands\ActionsMakeCommand;
-use Illuminate\Support\ServiceProvider;
+use Honed\Action\Console\Commands\ActionGroupMakeCommand;
 
 class ActionServiceProvider extends ServiceProvider
 {

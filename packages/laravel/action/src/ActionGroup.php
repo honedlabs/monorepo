@@ -40,7 +40,6 @@ class ActionGroup extends Primitive implements UrlRoutable
             ->withActions($actions);
     }
 
-
     public function bindingClass()
     {
         return static::class;
