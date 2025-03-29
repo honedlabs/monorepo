@@ -6,7 +6,7 @@ namespace Honed\Nav;
 
 use Illuminate\Support\Arr;
 
-class Nav
+class NavFactory
 {
     /**
      * Keyed navigation groups.
