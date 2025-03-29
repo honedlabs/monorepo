@@ -6,7 +6,7 @@ namespace Honed\Layout;
 
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
-use Inertia\ResponseFactory;
+use Inertia\ResponseFactory as InertiaResponseFactory;
 
 class LayoutServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -15,8 +15,8 @@ class LayoutServiceProvider extends ServiceProvider implements DeferrableProvide
      */
     public function register(): void
     {
-        $this->app->extend(ResponseFactory::class, 
-            fn (ResponseFactory $factory) => new LayoutResponseFactory($factory)
+        $this->app->extend(InertiaResponseFactory::class, 
+            fn (InertiaResponseFactory $factory) => new ResponseFactory($factory)
         );
     }
 
@@ -28,7 +28,7 @@ class LayoutServiceProvider extends ServiceProvider implements DeferrableProvide
     public function provides(): array
     {
         return [
-            LayoutResponseFactory::class
+            ResponseFactory::class
         ];
     }
 }
