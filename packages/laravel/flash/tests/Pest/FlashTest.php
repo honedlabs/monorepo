@@ -14,7 +14,7 @@ it('sets message', function () {
     expect(Session::get(Parameters::PROP))
         ->toEqual([
             'message' => 'test',
-            'type' => null,
+            'type' => config('flash.type'),
             'title' => null,
             'duration' => config('flash.duration'),
         ]);

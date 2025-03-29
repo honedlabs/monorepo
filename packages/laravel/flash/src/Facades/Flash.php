@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Flash\Facades;
 
+use Honed\Flash\FlashFactory;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -17,8 +18,22 @@ use Illuminate\Support\Facades\Facade;
  */
 class Flash extends Facade
 {
+    /**
+     * Get the root object behind the facade.
+     *
+     * @return \Honed\Flash\FlashFactory
+     */
+    public static function getFacadeRoot()
+    {
+        // @phpstan-ignore-next-line
+        return parent::getFacadeRoot();
+    }
+
+    /**
+     * Get the registered name of the component.
+     */
     protected static function getFacadeAccessor(): string
     {
-        return \Honed\Flash\FlashFactory::class;
+        return FlashFactory::class;
     }
 }
