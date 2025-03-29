@@ -1,52 +1,10 @@
 <?php
 
-namespace Conquest\Chart;
+declare(strict_types=1);
 
-use Conquest\Core\Primitive;
+namespace Honed\Chart;
 
-class Chart extends Primitive
+class Chart
 {
-    // Assume a charttype
-
-    /**
-     * Chart::make(data,
-     *  type,
-     *  yAxis: Axis
-     *  xAxis: Axis
-     *  title,
-     *  tooltip,
-     *  animation:
-     * )
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    public static function make(
-
-    ): static {
-        return resolve(static::class, func_get_args());
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'title' => '',
-            'legend' => '',
-            'xAxis' => '',
-            'yAxis' => '',
-            'series' => '',
-            'tooltip' => '',
-            'toolbox' => '',
-            'visualMap' => '',
-
-        ];
-    }
-
-    /**
-     * Data can be of form
-     * [name => [values]]
-     * [values]
-     */
+    
 }

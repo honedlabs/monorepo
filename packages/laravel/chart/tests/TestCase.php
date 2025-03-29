@@ -1,64 +1,94 @@
 <?php
 
-namespace Conquest\Chart\Tests;
+declare(strict_types=1);
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+namespace Honed\Chart\Tests;
+
 use Illuminate\Support\Facades\View;
-use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Workbench\App\Providers\WorkbenchServiceProvider;
-
-use function Orchestra\Testbench\workbench_path;
+use Honed\Chart\ChartServiceProvider;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Inertia\ServiceProvider as InertiaServiceProvider;
+use Honed\Chart\Tests\Stubs\Status;
 
 class TestCase extends Orchestra
 {
-    use WithWorkbench;
-
+    /**
+     * Setup the test environment.
+     */
     protected function setUp(): void
     {
         parent::setUp();
 
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Conquest\\Chart\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
+        View::addLocation(__DIR__.'/Stubs');
+        Inertia::setRootView('app');
+
+        $this->withoutExceptionHandling();
+
+        config()->set('inertia.testing.ensure_pages_exist', false);
+        config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
+
     }
 
+    /**
+     * Get the package providers.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return array<int,class-string>
+     */
     protected function getPackageProviders($app)
     {
         return [
-            WorkbenchServiceProvider::class,
+            ChartServiceProvider::class,
+            InertiaServiceProvider::class,
         ];
     }
 
-    public function getEnvironmentSetUp($app)
+    /**
+     * Define the database migrations.
+     *
+     * @return void
+     */
+    protected function defineDatabaseMigrations()
     {
-        $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
-
-        $app['config']->set('view.paths', [
-            workbench_path('resources/views'),
-        ]);
-
-        $app['config']->set('database.default', 'testing');
-
-        $app['config']->set('inertia.testing.page_paths', [
-            workbench_path('resources/js/Pages'),
-        ]);
-
-        View::addLocation(__DIR__.'/../workbench/resources/views');
-
-        $app->usePublicPath(workbench_path('public'));
-        $app->useStoragePath(workbench_path('storage'));
-
-        $app['config']->set('vite.manifest_path', __DIR__.'../workbench/build/manifest.json');
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('public_id')->unique();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('status')->default(Status::Available->value);
+            $table->unsignedInteger('price')->default(0);
+            $table->boolean('best_seller')->default(false);
+            $table->timestamps();
+        });
     }
 
+    /**
+     * Define the routes setup.
+     *
+     * @param  \Illuminate\Routing\Router  $router
+     * @return void
+     */
     protected function defineRoutes($router)
     {
-        return require workbench_path('routes/web.php');
+        $router->middleware([\Inertia\Middleware::class])
+            ->group(function ($router) {
+                // $router->get('/', fn () => inertia('Index'))
+                //     ->name('index');
+            });
     }
 
-    // protected function resolveApplicationHttpKernel($app)
-    // {
-    //     $app->singleton('Illuminate\Contracts\Http\Kernel', 'Conquest\Relay\Tests\HttpKernel');
-    // }
+    /**
+     * Define the environment setup.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    public function getEnvironmentSetUp($app)
+    {
+        config()->set('chart', require __DIR__.'/../config/chart.php');
+        config()->set('database.default', 'testing');
+    }
 }

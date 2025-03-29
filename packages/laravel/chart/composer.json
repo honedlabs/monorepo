@@ -1,26 +1,25 @@
 {
-    "name": "conquest/chart",
-    "description": "Create backend-driven charts with a fluent interface for Apache eCharts.",
+    "name": "honed/chart",
+    "description": "Create server-driven charts with Inertia.JS",
     "keywords": [
-        "conquest",
+        "honed",
         "laravel",
         "chart",
-        "echarts",
-        "apache"
+        "inertia"
     ],
-    "homepage": "https://github.com/jdw5/conquest-chart",
+    "homepage": "https://github.com/honedlabs/chart",
     "license": "MIT",
     "authors": [
         {
             "name": "Joshua Wallace",
+            "homepage": "https://joshua-wallace.com",
             "email": "josh@joshua-wallace.com",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.2",
-        "conquest/core": "^0.6.0",
-        "honed/core": "^0.7.0",
+        "honed/core": "^0.21.0",
         "illuminate/contracts": "^11.0||^12.0",
         "illuminate/support": "^11.0||^12.0"
     },
@@ -34,22 +33,22 @@
         "phpstan/extension-installer": "^1.4.3",
         "phpstan/phpstan-deprecation-rules": "^2.0.1",
         "phpstan/phpstan-phpunit": "^2.0.3",
+        "inertiajs/inertia-laravel": "^1.2||^2.0",
         "pestphp/pest-plugin-laravel": "^3.0"
     },
     "autoload": {
         "psr-4": {
-            "Conquest\\Chart\\": "src/"
+            "Honed\\Chart\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Conquest\\Chart\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/"
+            "Honed\\Chart\\Tests\\": "tests/"
         }
     },
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
-        "clear": "@php vendor/bin/testbench package:purge-chart --ansi",
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": [
             "@composer run prepare",
@@ -64,7 +63,6 @@
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
         "format": "vendor/bin/pint",
-        "artisan": "@php ./vendor/bin/testbench",
         "check": [
             "@composer run analyse",
             "@composer run test",
@@ -80,6 +78,12 @@
     },
     "extra": {
         "laravel": {
+            "providers": [
+                "Honed\\Chart\\ChartServiceProvider"
+            ],
+            "aliases": {
+                "Chart": "Honed\\Chart\\Facades\\Chart"
+            }
         }
     },
     "minimum-stability": "dev",
