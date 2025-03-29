@@ -27,6 +27,7 @@ class ActionServiceProvider extends ServiceProvider
             $this->commands([
                 ActionMakeCommand::class,
                 ActionsMakeCommand::class,
+                ActionGroupMakeCommand::class,
             ]);
 
             $this->publishes([

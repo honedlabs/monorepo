@@ -18,11 +18,11 @@ it('has array representation', function () {
         ->toBeEmpty();
 });
 
-it('only has page actions', function () {
+it('has actions', function () {
     expect(ActionGroup::make())
         ->withActions([PageAction::make('create'), InlineAction::make('delete')])
         ->toBeInstanceOf(ActionGroup::class)
-        ->toArray()->toHaveCount(1);
+        ->toArray()->toHaveCount(2);
 });
 
 

@@ -45,9 +45,10 @@ trait HasEncoder
     /**
      * Encode a value using the encoder.
      *
+     * @param  mixed  $value
      * @return string
      */
-    public static function encode(mixed $value)
+    public static function encode($value)
     {
         return \is_null(static::$encoder)
             ? encrypt($value)
@@ -57,9 +58,10 @@ trait HasEncoder
     /**
      * Decode a value using the decoder.
      *
-     * @return string
+     * @param  string  $value
+     * @return mixed
      */
-    public static function decode(mixed $value)
+    public static function decode($value)
     {
         return \is_null(static::$decoder)
             ? decrypt($value)

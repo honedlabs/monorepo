@@ -21,7 +21,6 @@ use Illuminate\Support\Traits\ForwardsCalls;
 abstract class Action extends Primitive implements ResolvesArrayable
 {
     use Allowable;
-    use ForwardsCalls;
     use HasAction;
     use HasConfirm;
     use HasExtra;

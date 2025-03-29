@@ -67,6 +67,17 @@ class ActionFactory
     }
 
     /**
+     * Create a new action group.
+     *
+     * @param  \Honed\Action\Action  ...$actions
+     * @return \Honed\Action\ActionGroup
+     */
+    public function group(...$actions)
+    {
+        return ActionGroup::make(...$actions);
+    }
+
+    /**
      * Throw an invalid argument exception.
      *
      * @param  string  $type
