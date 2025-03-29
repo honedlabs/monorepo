@@ -91,7 +91,33 @@ class Axis extends Primitive
 
     public function toArray()
     {
+        return [
+            'type' => $this->getType(),
+            'label' => $this->getLabel(),
+            'position' => $this->getPosition(),
+            'labelFontSize' => null,
+            'labelColor' => null,
+            'labelMargin' => null,
+            'gridLine' => null,
+            'domainLine' => null,
+            'tickLine' => null,
+            'tickTextFontSize' => null,
+            'tickTextColor' => null,
+            'tickTextAlign' => null,
+            'tickTextAngle' => null,
+            'tickTextAlign' => null,
+            'tickTextWidth' => null,
+            'tickTextFitMode' => null,
+            'tickTextTrimType' => null,
+            'tickTextForceWordBreak' => null,
+            'numTicks' => null,
+            'minMaxTicksOnly' => null,
+            'tickValues' => null,
+            'tickTextHideOverlapping' => null,
+            'duration' => null,
 
+
+        ];
     }
     
 }

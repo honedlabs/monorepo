@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
+use Honed\Chart\Console\Commands\ChartMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 class ChartServiceProvider extends ServiceProvider
@@ -23,11 +24,11 @@ class ChartServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/chart.php' => config_path('chart.php'),
-        ], 'chart-config');
+        ], 'config');
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                //
+                ChartMakeCommand::class,
             ]);
         }
     }
