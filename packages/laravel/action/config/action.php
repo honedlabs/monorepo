@@ -9,7 +9,8 @@ return [
     | Endpoint
     |--------------------------------------------------------------------------
     |
-    | You can configure the fallback action to use when no action is selected.
+    | You can specify a global endpoint to handle all action requests
+    | when using the provided Route macro.
     |
     */
 
