@@ -41,7 +41,7 @@
             "Honed\\Nav\\": "src/"
         },
         "files": [
-            "./helpers.php"
+            "./src/helpers.php"
         ]
     },
     "autoload-dev": {

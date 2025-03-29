@@ -19,6 +19,20 @@ use Illuminate\Support\Facades\Facade;
  */
 class Nav extends Facade
 {
+    /**
+     * Get the root object behind the facade.
+     *
+     * @return \Honed\Nav\NavFactory
+     */
+    public static function getFacadeRoot()
+    {
+        // @phpstan-ignore-next-line
+        return parent::getFacadeRoot();
+    }
+
+    /**
+     * Get the registered name of the component.
+     */
     protected static function getFacadeAccessor(): string
     {
         return NavFactory::class;
