@@ -41,4 +41,3 @@ it('has layout for inertia response', function () {
         ->toHaveProperty(Parameters::PROP)
         ->{Parameters::PROP}->toBe('PageLayout');
 });
-

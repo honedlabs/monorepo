@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Layout\Tests;
 
-use Illuminate\Support\Facades\View;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Honed\Layout\LayoutServiceProvider;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Inertia\ServiceProvider as InertiaServiceProvider;
 use Honed\Layout\Tests\Stubs\Status;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
+use Inertia\ServiceProvider as InertiaServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

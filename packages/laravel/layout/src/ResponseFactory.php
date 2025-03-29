@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Layout;
 
-use Inertia\ResponseFactory as InertiaResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
+use Inertia\ResponseFactory as InertiaResponseFactory;
 
 class ResponseFactory extends InertiaResponseFactory
 {
     /**
-     * @param  array|Arrayable  $props
+     * Render the response.
+     *
+     * @param  array<string,mixed>|\Illuminate\Contracts\Support\Arrayable<string,mixed>  $props
      */
     public function render(string $component, $props = []): Response
     {

@@ -7,8 +7,8 @@ namespace Honed\Layout;
 use Honed\Layout\Testing\AssertableInertia;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
-use Inertia\ResponseFactory as InertiaResponseFactory;
 use Illuminate\Testing\TestResponse;
+use Inertia\ResponseFactory as InertiaResponseFactory;
 
 class LayoutServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -17,8 +17,8 @@ class LayoutServiceProvider extends ServiceProvider implements DeferrableProvide
      */
     public function register(): void
     {
-        $this->app->extend(InertiaResponseFactory::class, 
-            fn (InertiaResponseFactory $factory) => new ResponseFactory($factory)
+        $this->app->extend(InertiaResponseFactory::class,
+            fn (InertiaResponseFactory $factory) => new ResponseFactory
         );
 
         $this->registerTestingMacros();
@@ -32,17 +32,19 @@ class LayoutServiceProvider extends ServiceProvider implements DeferrableProvide
     public function provides(): array
     {
         return [
-            ResponseFactory::class
+            ResponseFactory::class,
         ];
     }
 
-        /**
-     * @throws ReflectionException|LogicException
+    /**
+     * Register the testing macros.
+     *
+     * @return void
      */
-    protected function registerTestingMacros(): void
+    protected function registerTestingMacros()
     {
         TestResponse::macro('assertInertia', function (?\Closure $callback = null) {
-            /** @var \Illuminate\Testing\TestResponse $this */
+            /** @var \Illuminate\Testing\TestResponse<\Symfony\Component\HttpFoundation\Response> $this */
             $assert = AssertableInertia::fromTestResponse($this);
 
             if (\is_null($callback)) {
@@ -55,7 +57,7 @@ class LayoutServiceProvider extends ServiceProvider implements DeferrableProvide
         });
 
         TestResponse::macro('inertiaPage', function () {
-            /** @var \Illuminate\Testing\TestResponse $this */
+            /** @var \Illuminate\Testing\TestResponse<\Symfony\Component\HttpFoundation\Response> $this */
             return AssertableInertia::fromTestResponse($this)->toArray();
         });
     }

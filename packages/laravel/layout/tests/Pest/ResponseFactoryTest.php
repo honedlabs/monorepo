@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Layout\ResponseFactory;
 use Honed\Layout\Response;
+use Honed\Layout\ResponseFactory;
 use Illuminate\Support\Facades\App;
 use Inertia\ResponseFactory as InertiaResponseFactory;
 
