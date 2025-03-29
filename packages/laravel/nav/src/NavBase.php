@@ -7,7 +7,6 @@ namespace Honed\Nav;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Primitive;
 use Illuminate\Http\Request;

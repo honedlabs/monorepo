@@ -15,7 +15,7 @@ class NavCategory extends NavGroup
 
     /**
      * Set the description of the category.
-     * 
+     *
      * @param  string  $description
      * @return $this
      */

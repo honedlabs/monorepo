@@ -8,69 +8,73 @@ use Inertia\Testing\AssertableInertia as Assert;
 use function Pest\Laravel\get;
 use Illuminate\Support\Facades\Request;
 
-it('shares a single group', function () {
+it('shares one group', function () {
     get('/')->assertInertia(fn (Assert $page) => $page
-        ->has(Parameters::Prop, 1)
-        ->where(Parameters::Prop.'.primary.0', [
-            'label' => 'Home',
-            'href' => url('/'),
-            'active' => true,
-            'icon' => null,
-        ])
-        ->where(Parameters::Prop.'.primary.1', [
-            'label' => 'About',
-            'href' => url('/about'),
-            'active' => false,
-            'icon' => null,
-        ])
-        ->where(Parameters::Prop.'.primary.2', [
-            'label' => 'Contact',
-            'href' => url('/contact'),
-            'active' => false,
-            'icon' => null,
-        ])
+        ->has(Parameters::PROP, fn (Assert $nav) => $nav
+            ->has('primary', fn (Assert $primary) => $primary
+                ->has(0, fn (Assert $item) => $item
+                    ->where('label', 'Home')
+                    ->where('url', url('/'))
+                    ->where('active', true)
+                    ->where('icon', null)
+                )
+                ->has(1, fn (Assert $item) => $item
+                    ->where('label', 'About')
+                    ->where('url', url('/about'))
+                    ->where('active', false)
+                    ->where('icon', null)
+                )
+                ->has(2, fn (Assert $item) => $item
+                    ->where('label', 'Contact')
+                    ->where('url', url('/contact'))
+                    ->where('active', false)
+                    ->where('icon', null)
+                )
+            )
+        )
     );
 });
 
 it('shares groups', function () {
-    $request = request()->create('/products');
-
-    Request::swap($request);
+    Request::swap(Request::create('/products'));
 
     get(route('products.index'))->assertInertia(fn (Assert $page) => $page
-        ->has(Parameters::Prop, 2)
-        ->has(Parameters::Prop.'.primary', 3)
-        ->has(Parameters::Prop.'.products', 1)
-        ->where(Parameters::Prop.'.primary.0', [
-            'label' => 'Home',
-            'href' => url('/'),
-            'active' => false,
-            'icon' => null,
-        ])
-        ->where(Parameters::Prop.'.primary.1', [
-            'label' => 'About',
-            'href' => url('/about'),
-            'active' => false,
-            'icon' => null,
-        ])
-        ->where(Parameters::Prop.'.primary.2', [
-            'label' => 'Contact',
-            'href' => url('/contact'),
-            'active' => false,
-            'icon' => null,
-        ])
-        ->where(Parameters::Prop.'.products.0', [
-            'label' => 'Products',
-            'icon' => null,
-            'items' => [
-                [
-                    'label' => 'All Products',
-                    'href' => url('/products'),
-                    'active' => true,
-                    'icon' => null,
-                ]
-            ]
-        ])
+        ->has(Parameters::PROP, fn (Assert $nav) => $nav
+            ->has('primary', fn (Assert $primary) => $primary
+                ->has(0, fn (Assert $item) => $item
+                    ->where('label', 'Home')
+                    ->where('url', url('/'))
+                    ->where('active', false)
+                    ->where('icon', null)
+                )
+                ->has(1, fn (Assert $item) => $item
+                    ->where('label', 'About')
+                    ->where('url', url('/about'))
+                    ->where('active', false)
+                    ->where('icon', null)
+                )
+                ->has(2, fn (Assert $item) => $item
+                    ->where('label', 'Contact')
+                    ->where('url', url('/contact'))
+                    ->where('active', false)
+                    ->where('icon', null)
+                )
+            )
+            ->has('products', fn (Assert $products) => $products
+                ->has(0, fn (Assert $item) => $item
+                    ->where('label', 'Products')
+                    ->where('icon', null)
+                    ->has('items', fn (Assert $items) => $items
+                        ->has(0, fn (Assert $item) => $item
+                            ->where('label', 'All Products')
+                            ->where('url', route('products.index'))
+                            ->where('active', true)
+                            ->where('icon', null)
+                        )
+                    )
+                )
+            )
+        )
     );
 });
 

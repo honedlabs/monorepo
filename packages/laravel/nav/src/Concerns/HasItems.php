@@ -19,14 +19,14 @@ trait HasItems
     /**
      * Set the navigation items.
      *
-     * @param  \Honed\Nav\NavBase>  ...$items
+     * @param  \Honed\Nav\NavBase  ...$items
      * @return $this
      */
     public function items(...$items)
     {
         /** @var array<int,\Honed\Nav\NavBase> $items */
         $items = Arr::flatten($items);
-        
+
         $this->items = $items;
 
         return $this;

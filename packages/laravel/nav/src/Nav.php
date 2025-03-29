@@ -70,15 +70,16 @@ class Nav
     /**
      * Determine if one or more navigation groups exist.
      *
-     * @param  string  ...$groups
+     * @param  string|iterable<int,string>  ...$groups
      * @return bool
      */
     public function has(...$groups)
     {
+        /** @var array<int,string> $groups */
         $groups = Arr::flatten($groups);
-        
-        return match(true) {
-            empty($groups) => !empty($this->items),
+
+        return match (true) {
+            empty($groups) => ! empty($this->items),
             default => empty(array_diff($groups, array_keys($this->items))),
         };
     }
@@ -86,11 +87,12 @@ class Nav
     /**
      * Retrieve navigation groups and their allowed items.
      *
-     * @param  string|array<int,string>  $groups
+     * @param  string|iterable<int,string>  ...$groups
      * @return array<string,array<int,\Honed\Nav\NavBase>>
      */
     public function get(...$groups)
     {
+        /** @var array<int,string> $groups */
         $groups = Arr::flatten($groups);
 
         if (! $this->has($groups)) {
@@ -138,7 +140,7 @@ class Nav
     /**
      * Add groups to the share list.
      *
-     * @param  iterable<int,string> ...$groups
+     * @param  string|iterable<int,string>  ...$groups
      * @return $this
      */
     public function with(...$groups)
@@ -163,12 +165,12 @@ class Nav
     /**
      * Get the navigation items as an array.
      *
-     * @param  string|array<int,string>  $groups
+     * @param  string|iterable<int,string>  ...$groups
      * @return array<string,array<int,array<string,mixed>>>
      */
     public function toArray(...$groups)
     {
-        $groups = $this->get($groups);
+        $groups = $this->get(...$groups);
 
         return \array_map(
             static fn ($group) => \array_map(
@@ -185,7 +187,7 @@ class Nav
      * @param  string  $group
      * @return never
      */
-    protected static function throwDuplicateGroupException($group)
+    public static function throwDuplicateGroupException($group)
     {
         throw new \InvalidArgumentException(
             \sprintf('There already exists a group with the name [%s].', $group)
@@ -198,7 +200,7 @@ class Nav
      * @param  string  $group
      * @return never
      */
-    protected static function throwMissingGroupException($group)
+    public static function throwMissingGroupException($group)
     {
         throw new \InvalidArgumentException(
             \sprintf('There is no group with the name [%s].', $group)
