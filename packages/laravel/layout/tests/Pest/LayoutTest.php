@@ -2,46 +2,19 @@
 
 declare(strict_types=1);
 
+use Honed\Layout\ResponseFactory;
+use Honed\Layout\Testing\AssertableInertia as Assert;
+use Inertia\Inertia;
+
 use function Pest\Laravel\get;
 
-use Honed\Layout\Response;
-use Honed\Layout\Support\Parameters;
-use Illuminate\Support\Facades\Request;
-
-it('has layout for response', function () {
-    $request = Request::create('/user/123', 'GET');
-
-    $user = ['name' => 'Jonathan'];
-    $response = (new Response('User/Edit', ['user' => $user], 'app', '123'));
-    expect($response)
-        ->getLayout()->toBeNull()
-        ->layout('PageLayout')->toBe($response)
-        ->getLayout()->toBe('PageLayout');
-
-    $page = $response->toResponse($request)
-        ->getOriginalContent()
-        ->getData();
-
-    expect($page['page'])
-        ->toBeArray()
-        ->toHaveKey(Parameters::PROP)
-        ->{Parameters::PROP}->toBe('PageLayout');
+it('extends response factory', function () {
+    expect(Inertia::getFacadeRoot())
+        ->toBeInstanceof(ResponseFactory::class);
 });
 
-it('has layout for inertia response', function () {
-    $request = Request::create('/user/123', 'GET');
-    $request->headers->set('X-Inertia', 'true');
-
-    $user = ['name' => 'Jonathan'];
-    $response = (new Response('User/Edit', ['user' => $user], 'app', '123'))
-        ->layout('PageLayout');
-
-    $page = $response->toResponse($request)
-        ->getData();
-
-    expect($page)
-        ->toBeObject()
-        ->toHaveProperty(Parameters::PROP)
-        ->{Parameters::PROP}->toBe('PageLayout');
+it('sends to response', function () {
+    get('/')->assertInertia(fn (Assert $page) => $page
+        ->layout('AppLayout')
+    );
 });
-

@@ -41,8 +41,8 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            LayoutServiceProvider::class,
             InertiaServiceProvider::class,
+            LayoutServiceProvider::class,
         ];
     }
 
