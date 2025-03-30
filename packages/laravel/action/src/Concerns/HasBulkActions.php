@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-use Honed\Core\Parameters;
-use Honed\Core\Concerns\HasQuery;
-use Illuminate\Support\Collection;
 use Honed\Action\Contracts\ShouldChunk;
+use Honed\Core\Concerns\HasQuery;
+use Honed\Core\Parameters;
 use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
+use Illuminate\Support\Collection;
 
 trait HasBulkActions
 {

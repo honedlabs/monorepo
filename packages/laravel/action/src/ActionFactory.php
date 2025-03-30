@@ -19,7 +19,7 @@ class ActionFactory
      * @param  string  $name
      * @param  string|\Closure|null  $label
      * @return \Honed\Action\Action
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public function new($type, $name, $label = null)
@@ -84,7 +84,7 @@ class ActionFactory
      *
      * @param  string  $type
      * @return never
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     protected static function throwInvalidArgumentException($type)

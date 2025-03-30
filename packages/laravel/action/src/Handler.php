@@ -168,14 +168,16 @@ class Handler
     public function resolveBulkAction($data)
     {
         $builder = $this->getBuilder();
-
         $key = $this->getKey($builder);
+
+        /** @var TBuilder $builder */
+        $builder = $data->all
+            ? $builder->whereNotIn($key, $data->except)
+            : $builder->whereIn($key, $data->only);
 
         return [
             $this->getAction($data->name, BulkAction::class),
-            $data->all
-                ? $builder->whereNotIn($key, $data->except)
-                : $builder->whereIn($key, $data->only),
+            $builder,
         ];
     }
 
@@ -214,7 +216,7 @@ class Handler
      *
      * @param  string  $type
      * @return never
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     public static function throwInvalidActionTypeException($type)

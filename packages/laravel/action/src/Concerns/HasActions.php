@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Honed\Action\Concerns;
 
 use Honed\Action\Action;
-use Illuminate\Support\Arr;
-use Honed\Action\BulkAction;
-use Honed\Action\PageAction;
 use Honed\Action\ActionGroup;
+use Honed\Action\BulkAction;
 use Honed\Action\InlineAction;
+use Honed\Action\PageAction;
 use Honed\Core\Parameters;
+use Illuminate\Support\Arr;
 
 trait HasActions
 {
@@ -89,7 +89,6 @@ trait HasActions
     /**
      * Disable all action types.
      *
-     * @param  bool  $without
      * @return $this
      */
     public function withoutActions(bool $without = true)
@@ -108,8 +107,8 @@ trait HasActions
      */
     public function isWithoutActions()
     {
-        return $this->isWithoutInlineActions() && 
-            $this->isWithoutBulkActions() && 
+        return $this->isWithoutInlineActions() &&
+            $this->isWithoutBulkActions() &&
             $this->isWithoutPageActions();
     }
 
@@ -215,7 +214,7 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => $action instanceof BulkAction && 
+                static fn (Action $action) => $action instanceof BulkAction &&
                     $action->isAllowed()
             )
         );
@@ -235,7 +234,7 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => $action instanceof PageAction && 
+                static fn (Action $action) => $action instanceof PageAction &&
                     $action->isAllowed()
             )
         );
@@ -243,8 +242,8 @@ trait HasActions
 
     /**
      * Get the inline actions as an array.
-     * 
-     * @param \Illuminate\Database\Eloquent\Model|null $model
+     *
+     * @param  \Illuminate\Database\Eloquent\Model|null  $model
      * @return array<int,mixed>
      */
     public function inlineActionsToArray($model = null)
@@ -267,7 +266,7 @@ trait HasActions
             )
         );
     }
-    
+
     /**
      * Get the bulk actions as an array.
      *

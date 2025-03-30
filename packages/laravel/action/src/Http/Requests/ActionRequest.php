@@ -7,7 +7,6 @@ namespace Honed\Action\Http\Requests;
 use Honed\Action\ActionFactory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
-use Illuminate\Validation\Rule;
 
 class ActionRequest extends FormRequest
 {
@@ -36,7 +35,7 @@ class ActionRequest extends FormRequest
 
     /**
      * Determine if the action is an inline action.
-     * 
+     *
      * @return bool
      */
     public function isInline()
@@ -46,7 +45,7 @@ class ActionRequest extends FormRequest
 
     /**
      * Determine if the action is a bulk action.
-     * 
+     *
      * @return bool
      */
     public function isBulk()
@@ -56,7 +55,7 @@ class ActionRequest extends FormRequest
 
     /**
      * Determine if the action is a page action.
-     * 
+     *
      * @return bool
      */
     public function isPage()

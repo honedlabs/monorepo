@@ -50,7 +50,7 @@ class ActionGroup extends Primitive implements UrlRoutable
 
     /**
      * {@inheritdoc}
-     * 
+     *
      * @param  string  $value
      * @return \Honed\Action\ActionGroup|null
      */
@@ -62,7 +62,7 @@ class ActionGroup extends Primitive implements UrlRoutable
 
     /**
      * {@inheritdoc}
-     * 
+     *
      * @param  string  $value
      * @return \Honed\Action\ActionGroup|null
      */

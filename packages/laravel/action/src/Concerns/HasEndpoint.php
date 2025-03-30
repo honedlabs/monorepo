@@ -70,11 +70,12 @@ trait HasEndpoint
     /**
      * Determine if the instance can execute server actions.
      *
-     * @param class-string $class
+     * @param  class-string  $class
      * @return bool
      */
     public function hasServerActions($class)
     {
+        // @phpstan-ignore-next-line
         return $this->execute && \is_subclass_of($this, $class);
     }
 }

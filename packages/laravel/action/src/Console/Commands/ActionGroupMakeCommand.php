@@ -75,11 +75,11 @@ class ActionGroupMakeCommand extends GeneratorCommand
     {
         return [
             [
-                'force', 
-                null, 
+                'force',
+                null,
                 InputOption::VALUE_NONE,
                 \sprintf(
-                    'Create the class even if the %s already exists', 
+                    'Create the class even if the %s already exists',
                     \strtolower($this->type)
                 ),
             ],

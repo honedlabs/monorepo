@@ -15,7 +15,7 @@ class ProductActions extends ActionGroup
     public function actions()
     {
         return [
-            PageAction::make('create')
+            PageAction::make('create'),
         ];
     }
 }

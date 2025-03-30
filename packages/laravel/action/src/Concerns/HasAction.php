@@ -80,7 +80,7 @@ trait HasAction
     public function getParameters()
     {
         return $this->parameters;
-    }   
+    }
 
     /**
      * Get the handler for the actionable class.
