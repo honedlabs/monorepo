@@ -15,19 +15,19 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          # - action
-          # - chart
+          - action
+          - chart
           # - command
-          - core
-          # - crumb
-          # - flash
-          # - layout
-          # - lock
+          # - core
+          - crumb
+          - flash
+          - layout
+          - lock
           # - modal
-          # - nav
-          # - refine
+          - nav
+          - refine
           # - table
-          # - upload
+          - upload
 
     steps:
       - name: Checkout
