@@ -7,14 +7,14 @@ namespace Honed\Action\Concerns;
 /**
  * @template TClass of \Honed\Core\Primitive
  */
-trait HasRouteBindings
+trait HasRouteBinding
 {
     /**
-     * Get the class to be used for route binding.
+     * Get the primitive class for binding.
      *
-     * @return string
+     * @return class-string<TClass>
      */
-    abstract public function bindingClass();
+    abstract public function primitive();
     
     /**
      * Get the value of the model's route key.
@@ -23,7 +23,7 @@ trait HasRouteBindings
      */
     public function getRouteKey()
     {
-        return ($this->bindingClass())::encode(static::class);
+        return static::encode(static::class);
     }
 
     /**
@@ -36,9 +36,9 @@ trait HasRouteBindings
     public function resolveRouteBinding($value, $field = null)
     {
         try {
-            $class = ($this->bindingClass())::decode($value);
+            $class = static::decode($value);
 
-            if (! \class_exists($class) || ! \is_subclass_of($class, $this->bindingClass())) {
+            if (! \class_exists($class) || ! \is_subclass_of($class, $this->primitive())) {
                 return null;
             }
 
@@ -49,6 +49,8 @@ trait HasRouteBindings
     }
 
     /**
+     * Retrieve the child class for a bound value.
+     * 
      * @param  string  $childType
      * @param  string  $value
      * @param  string|null  $field

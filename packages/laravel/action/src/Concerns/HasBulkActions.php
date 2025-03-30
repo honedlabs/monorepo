@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-use Honed\Action\Contracts\ShouldChunk;
+use Honed\Core\Parameters;
 use Honed\Core\Concerns\HasQuery;
-use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 use Illuminate\Support\Collection;
+use Honed\Action\Contracts\ShouldChunk;
+use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 
 trait HasBulkActions
 {
@@ -216,15 +217,15 @@ trait HasBulkActions
                 ? $typed->getName()
                 : null;
 
-            if (static::isBuilder($name, $type)) {
+            if (Parameters::isBuilder($name, $type)) {
                 return 'builder';
             }
 
-            if (static::isCollection($name, $type)) {
+            if (Parameters::isCollection($name, $type)) {
                 return 'collection';
             }
 
-            if (static::isModel($name, $type, $model)) {
+            if (Parameters::isModel($name, $type, $model)) {
                 return 'model';
             }
         }
@@ -241,7 +242,7 @@ trait HasBulkActions
      */
     protected function getEvaluationParameters($model, $value)
     {
-        [$named, $typed] = static::getBuilderParameters($model, $value);
+        [$named, $typed] = Parameters::builder($model, $value);
 
         $named = \array_merge($named, [
             'collection' => $value,

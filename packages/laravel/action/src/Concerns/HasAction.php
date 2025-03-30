@@ -6,16 +6,10 @@ namespace Honed\Action\Concerns;
 
 use Closure;
 use Honed\Action\Contracts\Actionable;
-use Honed\Core\Concerns\HasParameterNames;
 use Illuminate\Support\Facades\App;
 
 trait HasAction
 {
-    /**
-     * @use HasParameterNames<\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>>
-     */
-    use HasParameterNames;
-
     /**
      * The action handler.
      *

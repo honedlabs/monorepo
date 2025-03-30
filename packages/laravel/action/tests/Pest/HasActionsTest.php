@@ -16,7 +16,6 @@ beforeEach(function () {
 
 it('is empty by default', function () {
     expect($this->test)
-        ->hasActions()->toBeFalse()
         ->getActions()->toBeEmpty();
 });
 
@@ -25,54 +24,42 @@ it('adds actions', function () {
     expect($this->test)
         ->withActions([PageAction::make('view')])->toBe($this->test)
         ->withActions([InlineAction::make('edit')])->toBe($this->test)
-        ->hasActions()->toBeTrue()
         ->getActions()->toHaveCount(2);
 });
 
 it('adds actions variadically', function () {
     expect($this->test)
         ->withActions(PageAction::make('view'), InlineAction::make('edit'))->toBe($this->test)
-        ->hasActions()->toBeTrue()
         ->getActions()->toHaveCount(2);
 });
 
 it('adds actions collection', function () {
     expect($this->test)
         ->withActions(collect([PageAction::make('view'), InlineAction::make('edit')]))->toBe($this->test)
-        ->hasActions()->toBeTrue()
         ->getActions()->toHaveCount(2);
 });
 
 it('has inline actions', function () {
     expect($this->test)
-        ->hasActions()->toBeFalse()
         ->withActions([PageAction::make('create')])
-        ->hasActions()->toBeTrue()
         ->getInlineActions()->toHaveCount(0)
         ->withActions([InlineAction::make('create')])
-        ->hasActions()->toBeTrue()
         ->getInlineActions()->toHaveCount(1);
 });
 
 it('has bulk actions', function () {
     expect($this->test)
-        ->hasActions()->toBeFalse()
         ->withActions([PageAction::make('create')])
-        ->hasActions()->toBeTrue()
         ->getBulkActions()->toHaveCount(0)
         ->withActions([BulkAction::make('create')])
-        ->hasActions()->toBeTrue()
         ->getBulkActions()->toHaveCount(1);
 });
 
 it('has page actions', function () {
     expect($this->test)
-        ->hasActions()->toBeFalse()
         ->withActions([InlineAction::make('create')])
-        ->hasActions()->toBeTrue()
         ->getPageActions()->toHaveCount(0)
         ->withActions([PageAction::make('create')])
-        ->hasActions()->toBeTrue()
         ->getPageActions()->toHaveCount(1);
 });
 
@@ -93,9 +80,8 @@ describe('without', function () {
 
     test('all', function () {
         expect($this->test)
-            ->hasActions()->toBeTrue()
             ->withoutActions()->toBe($this->test)
-            ->hasActions()->toBeFalse();
+            ->getActions()->toBeEmpty();
     });
 
     test('inline', function () {

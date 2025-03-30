@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Honed\Action\Concerns;
 
 use Honed\Action\Action;
-use Honed\Action\BulkAction;
-use Honed\Action\InlineAction;
-use Honed\Action\PageAction;
 use Illuminate\Support\Arr;
+use Honed\Action\BulkAction;
+use Honed\Action\PageAction;
+use Honed\Action\ActionGroup;
+use Honed\Action\InlineAction;
 
 trait HasActions
 {
@@ -43,7 +44,7 @@ trait HasActions
     /**
      * Merge a set of actions with the existing.
      *
-     * @param  iterable<int, \Honed\Action\Action>|\Honed\Action\ActionGroup  ...$actions
+     * @param  \Honed\Action\Action|\Honed\Action\ActionGroup|iterable<int, \Honed\Action\Action|\Honed\Action\ActionGroup>  ...$actions
      * @return $this
      */
     public function withActions(...$actions)
@@ -59,7 +60,7 @@ trait HasActions
     /**
      * Define the actions for the instance.
      *
-     * @return array<int,\Honed\Action\Action>
+     * @return array<int,\Honed\Action\Action|\Honed\Action\ActionGroup>
      */
     public function actions()
     {
@@ -73,48 +74,33 @@ trait HasActions
      */
     public function getActions()
     {
-        if ($this->isWithoutActions()) {
-            return [];
-        }
+        $actions = \array_merge($this->actions(), $this->actions ?? []);
 
-        return \array_merge($this->actions(), $this->actions ?? []);
+        $actions = \array_merge(
+            [],
+            ...\array_map(
+                static fn (Action $action) => $action instanceof ActionGroup 
+                    ? $action->getActions() : [$action],
+                $actions
+            )
+        );
+
+        return $actions;
     }
 
     /**
-     * Determine if the instance has any actions.
+     * Disable all action types.
      *
-     * @return bool
-     */
-    public function hasActions()
-    {
-        return filled($this->getActions());
-    }
-
-    /**
-     * Set the instance to not provide any actions.
-     *
-     * @param  bool  $withoutActions
+     * @param  bool  $without
      * @return $this
      */
-    public function withoutActions($withoutActions = true)
+    public function withoutActions(bool $without = true)
     {
-        $this->withoutInlineActions($withoutActions);
-        $this->withoutBulkActions($withoutActions);
-        $this->withoutPageActions($withoutActions);
+        $this->withoutInlineActions($without);
+        $this->withoutBulkActions($without);
+        $this->withoutPageActions($without);
 
         return $this;
-    }
-
-    /**
-     * Determine if the instance should not provide any actions.
-     *
-     * @return bool
-     */
-    public function isWithoutActions()
-    {
-        return $this->isWithoutInlineActions() &&
-            $this->isWithoutBulkActions() &&
-            $this->isWithoutPageActions();
     }
 
     /**
