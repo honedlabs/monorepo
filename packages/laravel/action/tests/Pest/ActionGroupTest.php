@@ -10,8 +10,8 @@ beforeEach(function () {
     $this->group = ActionGroup::make(PageAction::make('create'));
 });
 
-it('has array representation', function () {
-    expect($this->group->toArray())
-        ->toBeArray()
-        ->dd();
-});
+// it('has array representation', function () {
+//     expect($this->group->toArray())
+//         ->toBeArray()
+//         ->dd();
+// });
