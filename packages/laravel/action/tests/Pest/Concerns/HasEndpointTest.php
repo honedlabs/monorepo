@@ -12,10 +12,16 @@ beforeEach(function () {
 
 it('has endpoint', function () {
     expect($this->test)
-        ->hasEndpoint()->toBeFalse()
         ->getEndpoint()->toBe(config('action.endpoint'))
         ->endpoint('/example')->toBe($this->test)
-        ->hasEndpoint()->toBeTrue()
         ->getEndpoint()->toBe('/example')
         ->getDefaultEndpoint()->toBe(config('action.endpoint'));
 });
+
+it('has server actions', function () {
+    expect($this->test)
+        ->hasServerActions()->toBeTrue()
+        ->shouldExecute(false)->toBe($this->test)
+        ->hasServerActions()->toBeFalse();
+});
+

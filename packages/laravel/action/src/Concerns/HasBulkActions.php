@@ -60,7 +60,7 @@ trait HasBulkActions
             return true;
         }
 
-        return (bool) ($this->chunk ?? static::fallbackChunked());
+        return (bool) ($this->chunk ?? static::isChunkedByDefault());
     }
 
     /**
@@ -68,7 +68,7 @@ trait HasBulkActions
      *
      * @return bool
      */
-    public static function fallbackChunked()
+    public static function isChunkedByDefault()
     {
         return (bool) config('action.chunk', false);
     }
@@ -94,7 +94,7 @@ trait HasBulkActions
      */
     public function chunksById()
     {
-        return (bool) ($this->chunkById ?? static::fallbackChunksById());
+        return (bool) ($this->chunkById ?? static::chunksByIdByDefault());
     }
 
     /**
@@ -102,7 +102,7 @@ trait HasBulkActions
      *
      * @return bool
      */
-    public static function fallbackChunksById()
+    public static function chunksByIdByDefault()
     {
         return (bool) config('action.chunk_by_id', true);
     }
@@ -127,7 +127,7 @@ trait HasBulkActions
      */
     public function getChunkSize()
     {
-        return $this->chunkSize ?? static::fallbackChunkSize();
+        return $this->chunkSize ?? static::getDefaultChunkSize();
     }
 
     /**
@@ -135,7 +135,7 @@ trait HasBulkActions
      *
      * @return int
      */
-    public static function fallbackChunkSize()
+    public static function getDefaultChunkSize()
     {
         return type(config('action.chunk_size', 1000))->asInt();
     }

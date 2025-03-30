@@ -14,6 +14,13 @@ trait HasEndpoint
     protected $endpoint;
 
     /**
+     * Whether the instance can execute server actions.
+     *
+     * @var bool
+     */
+    protected $execute = true;
+
+    /**
      * Set the endpoint to execute server actions.
      *
      * @param  string|null  $endpoint
@@ -48,12 +55,25 @@ trait HasEndpoint
     }
 
     /**
-     * Determine if the action has an endpoint.
+     * Set the instance to execute server actions.
+     *
+     * @param  bool  $execute
+     * @return $this
+     */
+    public function shouldExecute($execute = true)
+    {
+        $this->execute = $execute;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the instance can execute server actions.
      *
      * @return bool
      */
-    public function hasEndpoint(): bool
+    public function hasServerActions()
     {
-        return isset($this->endpoint);
+        return $this->execute;
     }
 }

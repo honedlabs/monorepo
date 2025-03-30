@@ -15,7 +15,7 @@ class ActionGroup extends Primitive implements UrlRoutable
     use HasActions;
     use HasEndpoint;
     /**
-     * @use \Honed\Action\Concerns\HasRouteBinding<static>
+     * @use \Honed\Action\Concerns\HasRouteBinding<\Honed\Action\ActionGroup>
      */
     use HasRouteBinding;
 
@@ -25,13 +25,6 @@ class ActionGroup extends Primitive implements UrlRoutable
      * @var \Illuminate\Database\Eloquent\Model|null
      */
     protected $for;
-
-    /**
-     * Whether to execute server actions.
-     *
-     * @var bool
-     */
-    protected $execute = false;
 
     /**
      * Create a new action group instance.
@@ -89,7 +82,9 @@ class ActionGroup extends Primitive implements UrlRoutable
             'page' => $this->pageActionsToArray(),
         ];
 
-        if ($this->shouldExecute()) {
+        if ($this->hasServerActions() && 
+            \is_subclass_of($this, $this->primitive())
+        ) {
             return \array_merge($actions, [
                 'id' => $this->getRouteKey(),
                 'endpoint' => $this->getEndpoint(),
