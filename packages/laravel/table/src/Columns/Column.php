@@ -17,7 +17,6 @@ use Honed\Core\Concerns\IsActive;
 use Honed\Core\Concerns\Transformable;
 use Honed\Core\Primitive;
 use Honed\Refine\Sort;
-use Honed\Table\Concerns\HasClass;
 use Honed\Table\Concerns\IsVisible;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -34,8 +33,10 @@ class Column extends Primitive
     use HasIcon;
     use HasLabel;
     use HasName;
+
     /** @use HasQuery<TModel, TBuilder> */
     use HasQuery;
+
     use HasType;
     use HasValue;
     use IsActive;
