@@ -16,7 +16,6 @@ use Honed\Core\Concerns\HasType;
 use Honed\Core\Contracts\ResolvesArrayable;
 use Honed\Core\Primitive;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Traits\ForwardsCalls;
 
 abstract class Action extends Primitive implements ResolvesArrayable
 {

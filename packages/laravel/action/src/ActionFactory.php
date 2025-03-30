@@ -19,6 +19,8 @@ class ActionFactory
      * @param  string  $name
      * @param  string|\Closure|null  $label
      * @return \Honed\Action\Action
+     * 
+     * @throws \InvalidArgumentException
      */
     public function new($type, $name, $label = null)
     {
@@ -69,7 +71,7 @@ class ActionFactory
     /**
      * Create a new action group.
      *
-     * @param  \Honed\Action\Action  ...$actions
+     * @param  \Honed\Action\Action|iterable<int, \Honed\Action\Action>  ...$actions
      * @return \Honed\Action\ActionGroup
      */
     public function group(...$actions)
@@ -82,6 +84,8 @@ class ActionFactory
      *
      * @param  string  $type
      * @return never
+     * 
+     * @throws \InvalidArgumentException
      */
     protected static function throwInvalidArgumentException($type)
     {

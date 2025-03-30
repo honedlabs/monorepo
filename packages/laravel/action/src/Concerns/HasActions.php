@@ -10,6 +10,7 @@ use Honed\Action\BulkAction;
 use Honed\Action\PageAction;
 use Honed\Action\ActionGroup;
 use Honed\Action\InlineAction;
+use Honed\Core\Parameters;
 
 trait HasActions
 {
@@ -52,7 +53,17 @@ trait HasActions
         /** @var array<int, \Honed\Action\Action> */
         $actions = Arr::flatten($actions);
 
-        $this->actions = \array_merge($this->actions ?? [], $actions);
+        $this->actions = \array_merge(
+            $this->actions ?? [],
+            Arr::flatten(
+                \array_map(
+                    static fn ($action) => $action instanceof ActionGroup 
+                        ? $action->getActions() 
+                        : [$action],
+                    $actions
+                )
+            )
+        );
 
         return $this;
     }
@@ -74,18 +85,7 @@ trait HasActions
      */
     public function getActions()
     {
-        $actions = \array_merge($this->actions(), $this->actions ?? []);
-
-        $actions = \array_merge(
-            [],
-            ...\array_map(
-                static fn (Action $action) => $action instanceof ActionGroup 
-                    ? $action->getActions() : [$action],
-                $actions
-            )
-        );
-
-        return $actions;
+        return \array_merge($this->actions(), $this->actions ?? []);
     }
 
     /**
@@ -101,6 +101,18 @@ trait HasActions
         $this->withoutPageActions($without);
 
         return $this;
+    }
+
+    /**
+     * Determine if the instance should not provide any actions.
+     *
+     * @return bool
+     */
+    public function isWithoutActions()
+    {
+        return $this->isWithoutInlineActions() && 
+            $this->isWithoutBulkActions() && 
+            $this->isWithoutPageActions();
     }
 
     /**
@@ -205,7 +217,8 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => $action instanceof BulkAction && $action->isAllowed()
+                static fn (Action $action) => $action instanceof BulkAction && 
+                    $action->isAllowed()
             )
         );
     }
@@ -224,11 +237,39 @@ trait HasActions
         return \array_values(
             \array_filter(
                 $this->getActions(),
-                static fn (Action $action) => $action instanceof PageAction && $action->isAllowed()
+                static fn (Action $action) => $action instanceof PageAction && 
+                    $action->isAllowed()
             )
         );
     }
 
+    /**
+     * Get the inline actions as an array.
+     * 
+     * @param \Illuminate\Database\Eloquent\Model|null $model
+     * @return array<int,mixed>
+     */
+    public function inlineActionsToArray($model = null)
+    {
+        $named = [];
+        $typed = [];
+
+        if ($model) {
+            [$named, $typed] = Parameters::model($model);
+        }
+
+        return \array_map(
+            static fn (InlineAction $action) => $action
+                ->resolveToArray($named, $typed),
+            \array_values(
+                \array_filter(
+                    $this->getInlineActions(),
+                    static fn (InlineAction $action) => $action->isAllowed($named, $typed)
+                )
+            )
+        );
+    }
+    
     /**
      * Get the bulk actions as an array.
      *
@@ -253,19 +294,5 @@ trait HasActions
             static fn (PageAction $action) => $action->toArray(),
             $this->getPageActions()
         );
-    }
-
-    /**
-     * Get the actions as an array.
-     *
-     * @return array<string,mixed>
-     */
-    public function actionsToArray()
-    {
-        return [
-            'hasInline' => filled($this->getInlineActions()),
-            'bulk' => $this->bulkActionsToArray(),
-            'page' => $this->pageActionsToArray(),
-        ];
     }
 }

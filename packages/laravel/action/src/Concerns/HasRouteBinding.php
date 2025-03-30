@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
+use Honed\Action\Concerns\HasEncoder;
+
 /**
  * @template TClass of \Honed\Core\Primitive
  */
 trait HasRouteBinding
 {
+    use HasEncoder;
+    
     /**
      * Get the primitive class for binding.
      *

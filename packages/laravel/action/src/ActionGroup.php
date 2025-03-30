@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Honed\Action\Concerns\HasActions;
-use Honed\Action\Concerns\HasEncoder;
 use Honed\Action\Concerns\HasEndpoint;
 use Honed\Action\Concerns\HasRouteBinding;
 use Honed\Core\Primitive;
@@ -15,7 +14,6 @@ class ActionGroup extends Primitive implements UrlRoutable
 {
     use HasActions;
     use HasEndpoint;
-    use HasEncoder;
     /**
      * @use \Honed\Action\Concerns\HasRouteBinding<static>
      */
@@ -24,7 +22,7 @@ class ActionGroup extends Primitive implements UrlRoutable
     /**
      * The model the inline actions should use to resolve.
      *
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var \Illuminate\Database\Eloquent\Model|null
      */
     protected $for;
 
@@ -38,36 +36,13 @@ class ActionGroup extends Primitive implements UrlRoutable
     /**
      * Create a new action group instance.
      *
-     * @param  \Honed\Action\Action  ...$actions
+     * @param  \Honed\Action\Action|iterable<int, \Honed\Action\Action>  ...$actions
      * @return static
      */
     public static function make(...$actions)
     {
         return resolve(static::class)
             ->withActions($actions);
-    }
-
-    /**
-     * Set the model the inline actions should be bound to.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @return $this
-     */
-    public function for($model)
-    {
-        $this->for = $model;
-
-        return $this;
-    }
-
-    /**
-     * Get the model the inline actions should use to resolve.
-     *
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function uses()
-    {
-        return $this->for;
     }
 
     /**
@@ -91,20 +66,36 @@ class ActionGroup extends Primitive implements UrlRoutable
     }
 
     /**
+     * Set the model the inline actions should be bound to.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return $this
+     */
+    public function for($model)
+    {
+        $this->for = $model;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray()
     {
+        $actions = [
+            'inline' => $this->inlineActionsToArray($this->for),
+            'bulk' => $this->bulkActionsToArray(),
+            'page' => $this->pageActionsToArray(),
+        ];
+
         if ($this->shouldExecute()) {
-            return [
+            return \array_merge($actions, [
                 'id' => $this->getRouteKey(),
                 'endpoint' => $this->getEndpoint(),
-                'actions' => $this->getActions(),
-            ];
+            ]);
         }
 
-        return [
-            'actions' => $this->getActions(),
-        ];
+        return $actions;
     }
 }

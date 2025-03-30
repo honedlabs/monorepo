@@ -16,7 +16,7 @@ class ActionRequest extends FormRequest
      *
      * @return array<string,array<int,mixed>>
      */
-    public function rules(): array
+    public function rules()
     {
         $regex = 'regex:/^[\w-]*$/';
 
@@ -36,24 +36,30 @@ class ActionRequest extends FormRequest
 
     /**
      * Determine if the action is an inline action.
+     * 
+     * @return bool
      */
-    public function isInline(): bool
+    public function isInline()
     {
         return $this->validated('type') === ActionFactory::Inline;
     }
 
     /**
      * Determine if the action is a bulk action.
+     * 
+     * @return bool
      */
-    public function isBulk(): bool
+    public function isBulk()
     {
         return $this->validated('type') === ActionFactory::Bulk;
     }
 
     /**
      * Determine if the action is a page action.
+     * 
+     * @return bool
      */
-    public function isPage(): bool
+    public function isPage()
     {
         return $this->validated('type') === ActionFactory::Page;
     }

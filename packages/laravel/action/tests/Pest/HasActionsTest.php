@@ -39,6 +39,12 @@ it('adds actions collection', function () {
         ->getActions()->toHaveCount(2);
 });
 
+it('adds action groups', function () {
+    expect($this->test)
+        ->withActions(ActionGroup::make(PageAction::make('view')))->toBe($this->test)
+        ->getActions()->toHaveCount(1);
+});
+
 it('has inline actions', function () {
     expect($this->test)
         ->withActions([PageAction::make('create')])
@@ -63,10 +69,31 @@ it('has page actions', function () {
         ->getPageActions()->toHaveCount(1);
 });
 
-it('has array representation', function () {
+it('has inline actions array representation', function () {
+    $product = product();
+
+    expect($this->test)
+        ->withActions([
+            InlineAction::make('create')
+                ->label(fn ($product) => $product->name)
+                ->allow(fn ($product) => $product->id % 2 === 1),
+            InlineAction::make('edit')
+                ->label(fn ($product) => $product->name)
+                ->allow(fn ($product) => $product->id % 2 === 0),
+        ])
+        ->inlineActionsToArray($product)->toHaveCount(1);
+});
+
+it('has bulk actions array representation', function () {
+    expect($this->test)
+        ->withActions([BulkAction::make('create')])
+        ->bulkActionsToArray()->toHaveCount(1);
+});
+
+it('has page actions array representation', function () {
     expect($this->test)
         ->withActions([PageAction::make('create')])
-        ->actionsToArray()->toHaveKeys(['hasInline', 'bulk', 'page']);
+        ->pageActionsToArray()->toHaveCount(1);
 });
 
 describe('without', function () {
@@ -80,8 +107,10 @@ describe('without', function () {
 
     test('all', function () {
         expect($this->test)
+            ->isWithoutActions()->toBeFalse()
             ->withoutActions()->toBe($this->test)
-            ->getActions()->toBeEmpty();
+            ->isWithoutActions()->toBeTrue()
+            ->getActions()->toHaveCount(3);
     });
 
     test('inline', function () {
