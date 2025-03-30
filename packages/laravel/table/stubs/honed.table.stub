@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace {{ namespace }};
 
 use Honed\Core\Contracts\Builds;
-use Honed\Actions\BulkAction;
-use Honed\Actions\PageAction;
-use Honed\Actions\InlineAction;
+use Honed\Action\BulkAction;
+use Honed\Action\PageAction;
+use Honed\Action\InlineAction;
 use Honed\Refine\Filter;
 use Honed\Refine\Sort;
 use Honed\Refine\Search;
@@ -16,6 +16,7 @@ use Honed\Table\Columns\KeyColumn;
 use Honed\Table\Table;
 use Honed\Table\Contracts\ShouldToggle;
 use Honed\Table\Contracts\ShouldRemember;
+use Honed\Table\Contracts\ShouldSelect;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -86,7 +87,7 @@ final class {{ class }} extends Table implements Builds
      * 
      * @return array<int, \Honed\Refine\Search<TModel, TBuilder>>
      */
-    protected function searches()
+    public function searches()
     {
         return [
             //

@@ -30,15 +30,12 @@ class Column extends Primitive
 {
     use Allowable;
     use HasAlias;
-    use HasClass;
     use HasExtra;
     use HasIcon;
     use HasLabel;
     use HasName;
-
     /** @use HasQuery<TModel, TBuilder> */
     use HasQuery;
-
     use HasType;
     use HasValue;
     use IsActive;
@@ -65,6 +62,13 @@ class Column extends Primitive
      * @var mixed
      */
     protected $fallback;
+
+    /**
+     * The class of the column header.
+     *
+     * @var string|null
+     */
+    protected $class;
 
     /**
      * The column sort.
@@ -183,6 +187,29 @@ class Column extends Primitive
     public function getFallback()
     {
         return $this->fallback;
+    }
+
+    /**
+     * Set the class for the column.
+     *
+     * @param  string  $class
+     * @return $this
+     */
+    public function class($class)
+    {
+        $this->class = $class;
+
+        return $this;
+    }
+
+    /**
+     * Get the class for the column.
+     *
+     * @return string|null
+     */
+    public function getClass()
+    {
+        return $this->class;
     }
 
     /**
@@ -374,7 +401,7 @@ class Column extends Primitive
             $this->getParameter() => [
                 'value' => $value,
                 'extra' => $this->resolveExtra(
-                    \array_merge($named, ['value' => [$value]]),
+                    \array_merge($named, ['value' => $value]),
                     $typed,
                 ),
             ],
