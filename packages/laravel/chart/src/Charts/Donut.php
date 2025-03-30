@@ -21,6 +21,9 @@ class Donut
             'showEmptySegments',
             'showBackground',
             'duration',
+            'emptySegmentAngle',
+            'backgroundAngleRange',
+            
         ];
     }
 }

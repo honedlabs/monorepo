@@ -22,14 +22,14 @@ class ChartServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->publishes([
-            __DIR__.'/../config/chart.php' => config_path('chart.php'),
-        ], 'config');
-
         if ($this->app->runningInConsole()) {
             $this->commands([
                 ChartMakeCommand::class,
             ]);
+
+            $this->publishes([
+                __DIR__.'/../config/chart.php' => config_path('chart.php'),
+            ], 'config');
         }
     }
 }

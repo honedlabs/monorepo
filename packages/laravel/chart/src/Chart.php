@@ -6,5 +6,10 @@ namespace Honed\Chart;
 
 class Chart
 {
-    
+    public function toArray()
+    {
+        return [
+            'data'
+        ];
+    }
 }

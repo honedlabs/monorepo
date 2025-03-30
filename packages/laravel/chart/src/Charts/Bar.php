@@ -18,6 +18,12 @@ class Bar
             'barMinHeight',
             'dataStep',
             'orientation'
+
+            /**
+             * StackedBar
+             */
+            'barWidth',
+            'barMaxWidth',
         ];
     }
 }
