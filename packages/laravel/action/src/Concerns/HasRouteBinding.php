@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Concerns;
 
 use Honed\Action\Concerns\HasEncoder;
+use Honed\Core\Primitive;
 
 /**
  * @template TClass of \Honed\Core\Primitive
@@ -60,7 +61,7 @@ trait HasRouteBinding
      * @param  string|null  $field
      * @return TClass|null
      */
-    public function resolveChildRouteBinding($childType, $value, $field)
+    public function resolveChildRouteBinding($childType, $value, $field = null)
     {
         return $this->resolveRouteBinding($value, $field);
     }

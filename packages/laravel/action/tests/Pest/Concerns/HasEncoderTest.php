@@ -8,6 +8,9 @@ beforeEach(function () {
     $this->test = new class {
         use HasEncoder;
     };
+    // Null the encoder and decoder as they are static
+    $this->test->encoder();
+    $this->test->decoder();
 });
 
 it('encodes using encrypter', function () {
