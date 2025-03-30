@@ -13,9 +13,6 @@ use Illuminate\Contracts\Routing\UrlRoutable;
 class ActionGroup extends Primitive implements UrlRoutable
 {
     use HasActions;
-    /** 
-     * @use \Honed\Action\Concerns\HasEncoder<\Honed\Action\ActionGroup> 
-     */
     use HasEncoder;
     use HasEndpoint;
 
@@ -53,14 +50,21 @@ class ActionGroup extends Primitive implements UrlRoutable
 
     /**
      * {@inheritdoc}
+     * 
+     * @param  string  $value
+     * @return \Honed\Action\ActionGroup|null
      */
     public function resolveRouteBinding($value, $field = null)
     {
+        /** @var \Honed\Action\ActionGroup|null */
         return $this->getPrimitive($value, ActionGroup::class);
     }
 
     /**
      * {@inheritdoc}
+     * 
+     * @param  string  $value
+     * @return \Honed\Action\ActionGroup|null
      */
     public function resolveChildRouteBinding($childType, $value, $field = null)
     {
@@ -94,9 +98,7 @@ class ActionGroup extends Primitive implements UrlRoutable
             'page' => $this->pageActionsToArray(),
         ];
 
-        if ($this->hasServerActions() && 
-            \is_subclass_of($this, $this->primitive())
-        ) {
+        if ($this->hasServerActions(ActionGroup::class)) {
             return \array_merge($actions, [
                 'id' => $this->getRouteKey(),
                 'endpoint' => $this->getEndpoint(),

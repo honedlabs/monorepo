@@ -17,7 +17,7 @@ trait HasActions
     /**
      * List of the actions.
      *
-     * @var array<int,\Honed\Action\Action>|null
+     * @var array<int,\Honed\Action\Action|\Honed\Action\ActionGroup>|null
      */
     protected $actions;
 
@@ -53,17 +53,7 @@ trait HasActions
         /** @var array<int, \Honed\Action\Action> */
         $actions = Arr::flatten($actions);
 
-        $this->actions = \array_merge(
-            $this->actions ?? [],
-            Arr::flatten(
-                \array_map(
-                    static fn ($action) => $action instanceof ActionGroup 
-                        ? $action->getActions() 
-                        : [$action],
-                    $actions
-                )
-            )
-        );
+        $this->actions = \array_merge($this->actions ?? [], $actions);
 
         return $this;
     }
@@ -85,7 +75,15 @@ trait HasActions
      */
     public function getActions()
     {
-        return \array_merge($this->actions(), $this->actions ?? []);
+        return \array_merge(
+            [],
+            ...\array_map(
+                static fn ($action) => $action instanceof ActionGroup
+                    ? $action->getActions()
+                    : [$action],
+                \array_merge($this->actions(), $this->actions ?? [])
+            )
+        );
     }
 
     /**

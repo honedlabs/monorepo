@@ -10,11 +10,6 @@ beforeEach(function () {
     $this->group = ActionGroup::make(PageAction::make('create'));
 });
 
-it('has primitive', function () {
-    expect($this->group)
-        ->primitive()->toBe(ActionGroup::class);
-});
-
 it('has route key name', function () {
     expect($this->group)
         ->getRouteKeyName()->toBe('action');
@@ -23,6 +18,22 @@ it('has route key name', function () {
 it('has model', function () {
     expect($this->group)
         ->for(product())->toBe($this->group);
+});
+
+it('resolves route binding', function () {
+    expect($this->group)
+        ->resolveRouteBinding($this->group->getRouteKey())
+        ->toBeNull();
+
+    $actions = ProductActions::make();
+
+    expect($actions)
+        ->resolveRouteBinding($actions->getRouteKey())
+        ->toBeInstanceOf(ProductActions::class);
+
+    expect($actions)
+        ->resolveChildRouteBinding(ProductActions::class, $actions->getRouteKey())
+        ->toBeInstanceOf(ProductActions::class);
 });
 
 it('has array representation', function () {

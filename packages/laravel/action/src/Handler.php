@@ -108,9 +108,9 @@ class Handler
 
         [$action, $query] = $this->resolveAction($type, $data);
 
-        abort_unless($action, 400);
+        abort_unless((bool) $action, 400);
 
-        abort_unless($query, 404);
+        abort_unless((bool) $query, 404);
 
         [$named, $typed] = Parameters::builder($query);
 

@@ -4,29 +4,26 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-/**
- * @template TClass of class-string<\Honed\Core\Primitive>
- */
 trait HasEncoder
 {
     /**
      * The encoding closure.
      *
-     * @var \Closure(TClass):string|null
+     * @var \Closure(mixed):string|null
      */
     protected static $encoder;
 
     /**
      * The decoding closure.
      *
-     * @var \Closure(string):TClass|null
+     * @var \Closure(string):mixed|null
      */
     protected static $decoder;
 
     /**
      * Set the encoder.
      *
-     * @param  (\Closure(TClass):string)|null  $encoder
+     * @param  (\Closure(mixed):string)|null  $encoder
      * @return void
      */
     public static function encoder($encoder = null)
@@ -37,7 +34,7 @@ trait HasEncoder
     /**
      * Set the decoder.
      *
-     * @param  (\Closure(string):TClass)|null  $decoder
+     * @param  (\Closure(string):mixed)|null  $decoder
      * @return void
      */
     public static function decoder($decoder = null)
@@ -48,7 +45,7 @@ trait HasEncoder
     /**
      * Encode a value using the encoder.
      *
-     * @param  TClass  $value
+     * @param  mixed  $value
      * @return string
      */
     public static function encode($value)
@@ -62,10 +59,11 @@ trait HasEncoder
      * Decode a value using the decoder.
      *
      * @param  string  $value
-     * @return TClass|null
+     * @return mixed
      */
     public static function decode($value)
     {
+        // @phpstan-ignore-next-line
         return isset(static::$decoder)
             ? \call_user_func(static::$decoder, $value)
             : decrypt($value);
@@ -75,14 +73,15 @@ trait HasEncoder
      * Decode and retrieve a primitive class.
      *
      * @param  string  $value
-     * @param  TClass  $class
-     * @return TClass|null
+     * @param  class-string  $class
+     * @return mixed
      */
     public static function getPrimitive($value, $class)
     {
         try {
             $primitive = static::decode($value);
 
+            // @phpstan-ignore-next-line
             if (\class_exists($primitive) && \is_subclass_of($primitive, $class)) {
                 return $primitive::make();
             }
