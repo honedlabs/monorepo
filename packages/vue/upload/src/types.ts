@@ -1,12 +1,12 @@
 export interface Upload {
-    multiple: boolean;
-    message: string;
+	multiple: boolean;
+	message: string;
 }
 
 export interface ExtendedUpload extends Upload {
-    extensions: string[];
-    mimes: string[];
-    size: number;
+	extensions: string[];
+	mimes: string[];
+	size: number;
 }
 
 export type UploadStatus = "pending" | "uploading" | "completed" | "error";
@@ -25,7 +25,7 @@ export interface UploadFile {
 }
 
 export interface Options<T = any> {
-    upload?: Upload | ExtendedUpload;
+	upload?: Upload | ExtendedUpload;
 	waited?: boolean;
 	meta?: Record<string, any>;
 	files?: UploadFile[];

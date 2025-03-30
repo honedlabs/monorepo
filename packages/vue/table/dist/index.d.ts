@@ -18,7 +18,7 @@ import { Visit } from '@inertiajs/core';
 import { VisitCallbacks } from '@inertiajs/core';
 import { VisitOptions } from '@inertiajs/core';
 
-export declare type AsRecord<RecordType extends Record<string, any>> = {
+export declare type AsRecord<RecordType extends Record<string, any> = any> = {
     [K in keyof RecordType]: {
         value: RecordType[K];
         extra: Record<string, any>;
@@ -29,10 +29,10 @@ export declare interface CollectionPaginator {
     empty: boolean;
 }
 
-export declare interface Column<T extends Record<string, any>> {
+export declare interface Column<T extends Record<string, any> = Record<string, any>> {
     name: keyof T;
     label: string;
-    type: "text" | "number" | "date" | "boolean" | "hidden" | "key" | string;
+    type: "array" | "badge" | "boolean" | "currency" | "date" | "hidden" | "key" | "number" | "text" | string;
     hidden: boolean;
     active: boolean;
     toggleable: boolean;
@@ -47,10 +47,10 @@ export declare interface Column<T extends Record<string, any>> {
 
 export declare interface Config extends Config_2 {
     endpoint: string;
+    key: string;
     record: string;
-    records: string;
-    columns: string;
-    pages: string;
+    column: string;
+    page: string;
 }
 
 export declare interface CursorPaginator extends CollectionPaginator {
@@ -105,23 +105,23 @@ export declare interface Table<RecordType extends Record<string, any> = any, Pag
     meta: Record<string, any>;
 }
 
-export declare interface TableColumn<T extends Record<string, any>> extends Column<T> {
+export declare interface TableColumn<T extends Record<string, any> = Record<string, any>> extends Column<T> {
     toggle: (options: VisitOptions) => void;
 }
 
-export declare interface TableHeading<T extends Record<string, any>> extends Column<T> {
+export declare interface TableHeading<T extends Record<string, any> = Record<string, any>> extends Column<T> {
     isSorting: boolean;
     toggleSort: (options: VisitOptions) => void;
 }
 
-export declare interface TableOptions<RecordType extends Record<string, any>> {
+export declare interface TableOptions<RecordType extends Record<string, any> = Record<string, any>> {
     /**
      * Actions to be applied on a record in JavaScript.
      */
     recordActions?: Record<string, (record: AsRecord<RecordType>) => void>;
 }
 
-export declare interface TableRecord<RecordType extends Record<string, any>> {
+export declare interface TableRecord<RecordType extends Record<string, any> = Record<string, any>> {
     record: RecordType;
     default: (options?: VisitOptions) => void;
     actions: InlineAction[];
@@ -145,10 +145,8 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
             modelValue: unknown;
         } | undefined;
         type: string;
-        value: FilterValue;
-        /** Selects this record */
+        value: FilterValue; /** Determine if the record is selected */
         options: Option_2[];
-        multiple: boolean;
         name: string;
         label: string;
         active: boolean;
@@ -180,9 +178,6 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
         name: string;
         label: string;
         active: boolean;
-        /**
-         * The available bulk actions.
-         */
         meta: Record<string, any>;
     }[] | undefined;
     getFilter: (name: string) => Filter | undefined;

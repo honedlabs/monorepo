@@ -32,8 +32,8 @@ export const useNav = (group?: keyof NavProps) => {
 	const nav = computed(() => page.props.nav);
 
 	if (group) {
-		return nav.value[group] ?? [];
+		return computed(() => nav.value[group] ?? []);
 	}
 
-	return nav.value;
+	return nav;
 };

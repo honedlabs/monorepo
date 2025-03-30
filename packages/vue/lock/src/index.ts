@@ -20,34 +20,34 @@ export type Lock<T extends Resource = never> = T extends Resource
 	: string;
 
 export function can<T extends Resource = never>(
-	permission: Lock<T>,
+	lock: Lock<T>,
 	resource: T extends Resource ? T : null = null as never,
 ): boolean {
 	if (resource && "lock" in resource) {
-		return resource.lock[permission as string] ?? false;
+		return resource.lock[lock as string] ?? false;
 	}
 
-	return page.props.lock[permission as string] ?? false;
+	return page.props.lock[lock as string] ?? false;
 }
 
 export function canAny<T extends Resource = never>(
-	permissions: Lock<T> | Lock<T>[],
+	locks: Lock<T> | Lock<T>[],
 	resource: T extends Resource ? T : null = null as never,
 ): boolean {
-	if (Array.isArray(permissions)) {
-		return permissions.some((permission) => can<T>(permission, resource));
+	if (Array.isArray(locks)) {
+		return locks.some((lock) => can<T>(lock, resource));
 	}
 
-	return can<T>(permissions, resource);
+	return can<T>(locks, resource);
 }
 
 export function canAll<T extends Resource = never>(
-	permissions: Lock<T> | Lock<T>[],
+	locks: Lock<T> | Lock<T>[],
 	resource: T extends Resource ? T : null = null as never,
 ): boolean {
-	if (Array.isArray(permissions)) {
-		return permissions.every((permission) => can<T>(permission, resource));
+	if (Array.isArray(locks)) {
+		return locks.every((lock) => can<T>(lock, resource));
 	}
 
-	return can<T>(permissions, resource);
+	return can<T>(locks, resource);
 }

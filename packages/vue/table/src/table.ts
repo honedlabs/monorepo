@@ -212,7 +212,7 @@ export function useTable<
 	 * Get the identifier of the record.
 	 */
 	function getRecordKey(record: AsRecord<RecordType>) {
-		return record[config.value.record].value as Identifier;
+		return record[config.value.key].value as Identifier;
 	}
 
 	/**
@@ -297,8 +297,8 @@ export function useTable<
 			...defaultOptions,
 			...options,
 			data: {
-				[config.value.records]: page.value,
-				[config.value.pages]: undefined,
+				[config.value.record]: page.value,
+				[config.value.page]: undefined,
 			},
 		});
 	}
@@ -315,7 +315,7 @@ export function useTable<
 			...defaultOptions,
 			...options,
 			data: {
-				[config.value.sorts]: refine.omitValue(column.sort.next),
+				[config.value.sort]: refine.omitValue(column.sort.next),
 			},
 		});
 	}
@@ -333,7 +333,7 @@ export function useTable<
 			...defaultOptions,
 			...options,
 			data: {
-				[config.value.columns]: refine.delimitArray(params),
+				[config.value.column]: refine.delimitArray(params),
 			},
 		});
 	}
@@ -386,6 +386,8 @@ export function useTable<
 		columns,
 		/** The records of the table */
 		records,
+		/** Whether the table has record actions */
+		hasInline: table.value.actions.hasInline,
 		/** The available bulk actions */
 		bulkActions,
 		/** The available page actions */

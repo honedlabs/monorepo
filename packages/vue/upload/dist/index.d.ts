@@ -1,17 +1,13 @@
-export declare interface BindingOptions {
-    accept?: string[];
-    multiple?: boolean;
+export declare interface ExtendedUpload extends Upload {
+    extensions: string[];
+    mimes: string[];
+    size: number;
 }
 
 export declare interface FormAttributes {
     action: string;
     method: "POST";
     enctype: "multipart/form-data";
-}
-
-export declare interface FormInputBinding {
-    multiple: boolean;
-    accept: string[];
 }
 
 export declare interface FormInputs {
@@ -24,9 +20,29 @@ export declare interface FormInputs {
     "X-Amz-Signature": string;
 }
 
-export declare interface PresignedResponse {
+export declare interface Options<T = any> {
+    upload?: Upload | ExtendedUpload;
+    waited?: boolean;
+    meta?: Record<string, any>;
+    files?: UploadFile[];
+    onStart?: (file: File) => void;
+    onError?: (error: Record<string, any>) => void;
+    onSuccess?: (data: T) => void;
+    onProgress?: (progress: number) => void;
+    onUploadError?: (error: Error) => void;
+    onUploadSuccess?: (data: T) => void;
+    onFinish?: () => void;
+}
+
+export declare interface Presign<T = any> {
     attributes: FormAttributes;
     inputs: FormInputs;
+    data: T;
+}
+
+export declare interface Upload {
+    multiple: boolean;
+    message: string;
 }
 
 export declare interface UploadFile {
@@ -42,22 +58,11 @@ export declare interface UploadFile {
     upload?: () => void;
 }
 
-export declare interface UploadOptions {
-    waited?: boolean;
-    meta?: Record<string, any>;
-    files?: UploadFile[];
-    onStart?: (file: File) => void;
-    onError?: (error: any) => void;
-    onPresign?: (data: any) => void;
-    onInvalid?: (error: any) => void;
-    onSuccess?: () => void;
-    onFinish?: () => void;
-    onProgress?: (progress: number) => void;
-}
-
 export declare type UploadStatus = "pending" | "uploading" | "completed" | "error";
 
-export declare const useUpload: (url: string, defaultOptions?: UploadOptions) => {
+export declare type UseUpload = typeof useUpload;
+
+export declare function useUpload<T = any>(url: string, uploadOptions?: Options<T>): {
     files: {
         id: number;
         name: string;
@@ -87,17 +92,17 @@ export declare const useUpload: (url: string, defaultOptions?: UploadOptions) =>
     add: (file: File) => void;
     remove: (identifier: number) => void;
     clear: () => void;
-    upload: (file: File, options?: Omit<UploadOptions, "waited" | "files">) => Promise<void>;
-    toSource: (file: File | string) => string;
-    bindInput: () => {
-        type: string;
-        multiple: boolean;
-        onChange: (event: Event) => void;
-    };
-    bindDrag: () => {
+    upload: (file: File, options?: Omit<Options<T>, "upload" | "waited" | "files">) => Promise<void>;
+    preview: (file: File | string) => string;
+    dragRegion: () => {
         ondragover: (e: DragEvent) => void;
         ondrop: (e: DragEvent) => void;
         ondragleave: (e: DragEvent) => void;
+    };
+    bind: () => {
+        type: string;
+        multiple: boolean;
+        onChange: (event: Event) => void;
     };
 };
 

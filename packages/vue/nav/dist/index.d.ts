@@ -1,3 +1,5 @@
+import { ComputedRef } from 'vue';
+
 declare interface NavBase {
     label: string;
     icon?: string;
@@ -16,7 +18,7 @@ declare type NavOption = NavGroup | NavItem;
 
 export declare type NavProps = Record<string, NavOption>;
 
-export declare const useNav: (group?: keyof NavProps) => NavOption | NavProps;
+export declare const useNav: (group?: keyof NavProps) => ComputedRef<NavProps> | ComputedRef<NavOption>;
 
 export { }
 

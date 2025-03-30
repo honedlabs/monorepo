@@ -10,10 +10,10 @@ export type Identifier = string | number;
 
 export interface Config extends RefineConfig {
 	endpoint: string;
+	key: string;
 	record: string;
-	records: string;
-	columns: string;
-	pages: string;
+	column: string;
+	page: string;
 }
 
 export type PaginatorKind = "cursor" | "length-aware" | "simple" | "collection";
@@ -52,10 +52,20 @@ export interface PerPageRecord {
 	active: boolean;
 }
 
-export interface Column<T extends Record<string, any>> {
+export interface Column<T extends Record<string, any> = Record<string, any>> {
 	name: keyof T;
 	label: string;
-	type: "text" | "number" | "date" | "boolean" | "hidden" | "key" | string;
+	type:
+		| "array"
+		| "badge"
+		| "boolean"
+		| "currency"
+		| "date"
+		| "hidden"
+		| "key"
+		| "number"
+		| "text"
+		| string;
 	hidden: boolean;
 	active: boolean;
 	toggleable: boolean;
@@ -68,7 +78,7 @@ export interface Column<T extends Record<string, any>> {
 	};
 }
 
-export type AsRecord<RecordType extends Record<string, any>> = {
+export type AsRecord<RecordType extends Record<string, any> = any> = {
 	[K in keyof RecordType]: {
 		value: RecordType[K];
 		extra: Record<string, any>;
@@ -100,7 +110,9 @@ export interface Table<
 	meta: Record<string, any>;
 }
 
-export interface TableRecord<RecordType extends Record<string, any>> {
+export interface TableRecord<
+	RecordType extends Record<string, any> = Record<string, any>,
+> {
 	record: RecordType;
 	default: (options?: VisitOptions) => void;
 	actions: InlineAction[];
@@ -113,16 +125,22 @@ export interface TableRecord<RecordType extends Record<string, any>> {
 	extra: (column: Column<RecordType> | string) => any;
 }
 
-export interface TableHeading<T extends Record<string, any>> extends Column<T> {
+export interface TableHeading<
+	T extends Record<string, any> = Record<string, any>,
+> extends Column<T> {
 	isSorting: boolean;
 	toggleSort: (options: VisitOptions) => void;
 }
 
-export interface TableColumn<T extends Record<string, any>> extends Column<T> {
+export interface TableColumn<
+	T extends Record<string, any> = Record<string, any>,
+> extends Column<T> {
 	toggle: (options: VisitOptions) => void;
 }
 
-export interface TableOptions<RecordType extends Record<string, any>> {
+export interface TableOptions<
+	RecordType extends Record<string, any> = Record<string, any>,
+> {
 	/**
 	 * Actions to be applied on a record in JavaScript.
 	 */

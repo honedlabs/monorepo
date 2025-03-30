@@ -1,21 +1,13 @@
 import { reactive, computed, ref } from "vue";
 import axios from "axios";
-import type {
-	Options,
-	UploadFile,
-	UploadStatus,
-	Presign,
+import type { Options, UploadFile, UploadStatus, Presign } from "./types";
 
-} from './types'
-
-export function useUpload<
-	T = any
->(
+export function useUpload<T = any>(
 	url: string,
 	uploadOptions: Options<T> = {},
 ) {
 	if (!url) {
-		throw new Error('A URL is required to use the uploader.');
+		throw new Error("A URL is required to use the uploader.");
 	}
 
 	/**
@@ -97,7 +89,7 @@ export function useUpload<
 	 */
 	async function upload(
 		file: File,
-		options: Omit<Options<T>, "upload" |"waited" | "files"> = {},
+		options: Omit<Options<T>, "upload" | "waited" | "files"> = {},
 	) {
 		function onEvent<K extends any = any>(
 			event: keyof Omit<Options<T>, "upload" | "waited" | "meta" | "files">,
@@ -105,7 +97,7 @@ export function useUpload<
 		) {
 			(uploadOptions?.[event] as ((arg?: K) => void) | undefined)?.(arg);
 			(options?.[event] as ((arg?: K) => void) | undefined)?.(arg);
-		};
+		}
 
 		onEvent<File>("onStart", file);
 
@@ -221,4 +213,4 @@ export function useUpload<
 		dragRegion,
 		bind,
 	});
-};
+}
