@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Honed\Action\Concerns\HasActions;
+use Honed\Action\Concerns\HasEncoder;
 use Honed\Action\Concerns\HasEndpoint;
-use Honed\Action\Concerns\HasRouteBinding;
 use Honed\Core\Primitive;
 use Illuminate\Contracts\Routing\UrlRoutable;
 
 class ActionGroup extends Primitive implements UrlRoutable
 {
     use HasActions;
-    use HasEndpoint;
-    /**
-     * @use \Honed\Action\Concerns\HasRouteBinding<\Honed\Action\ActionGroup>
+    /** 
+     * @use \Honed\Action\Concerns\HasEncoder<\Honed\Action\ActionGroup> 
      */
-    use HasRouteBinding;
+    use HasEncoder;
+    use HasEndpoint;
 
     /**
      * The model the inline actions should use to resolve.
@@ -39,26 +39,6 @@ class ActionGroup extends Primitive implements UrlRoutable
     }
 
     /**
-     * Get the primitive class for binding.
-     *
-     * @return class-string<\Honed\Action\ActionGroup>
-     */
-    public function primitive()
-    {
-        return ActionGroup::class;
-    }
-
-    /**
-     * Get the route key for the class.
-     * 
-     * @return string
-     */
-    public function getRouteKeyName()
-    {
-        return 'action';
-    }
-
-    /**
      * Set the model the inline actions should be bound to.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $model
@@ -69,6 +49,38 @@ class ActionGroup extends Primitive implements UrlRoutable
         $this->for = $model;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->getPrimitive($value, ActionGroup::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function resolveChildRouteBinding($childType, $value, $field = null)
+    {
+        return $this->resolveRouteBinding($value, $field);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRouteKeyName()
+    {
+        return 'action';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRouteKey()
+    {
+        return static::encode(static::class);
     }
 
     /**
