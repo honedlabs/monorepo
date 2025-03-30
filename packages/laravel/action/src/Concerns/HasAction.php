@@ -87,7 +87,7 @@ trait HasAction
      *
      * @return \Closure|null
      */
-    protected function getHandler()
+    public function getHandler()
     {
         $action = $this->getAction();
 
