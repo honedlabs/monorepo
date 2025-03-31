@@ -104,7 +104,7 @@ class Upload extends Primitive implements Responsable
     /**
      * Create a new upload instance.
      *
-     * @param  string  $disk
+     * @param  string|null  $disk
      * @return static
      */
     public static function make($disk = null)
@@ -127,12 +127,14 @@ class Upload extends Primitive implements Responsable
     /**
      * Set the disk to retrieve the S3 credentials from.
      *
-     * @param  string  $disk
+     * @param  string|null  $disk
      * @return $this
      */
     public function disk($disk)
     {
-        $this->disk = $disk;
+        if (filled($disk)) {
+            $this->disk = $disk;
+        }
 
         return $this;
     }
@@ -648,6 +650,7 @@ class Upload extends Primitive implements Responsable
         return match ($parameterName) {
             'data' => [$data],
             'key' => [$data ? $this->createKey($data) : null],
+            'bucket' => [$this->getBucket()],
             'name' => [$data?->name],
             'extension' => [$data?->extension],
             'type' => [$data?->type],

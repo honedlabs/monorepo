@@ -39,6 +39,20 @@ it('has min', function () {
         ->getDefaultMin()->toBe(config('upload.min_size'));
 });
 
+it('has mime types', function () {
+    expect($this->test)
+        ->getMimeTypes()->toBe(config('upload.mime_types'))
+        ->mimes('image/png')->toBe($this->test)
+        ->getMimeTypes()->toBe(['image/png'])
+        ->getDefaultMimeTypes()->toBe(config('upload.mime_types'));
+
+    // Ensure it adds/removes the end /
+});
+
+it('has extensions', function () {
+
+});
+
 it('creates rules', function () {
     expect($this->test->createRules())
         ->toBeArray()
