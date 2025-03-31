@@ -454,7 +454,7 @@ class Upload extends Primitive implements Responsable
             'key' => [$this->createKey($data)],
             'file' => [$this->createFilename($data).'.'.$data->extension],
             'filename' => [$this->createFilename($data)],
-            'folder' => [$this->createKey($data)],
+            'folder' => [$this->getFolder($this->createKey($data))],
             'name' => [$data->name],
             'extension' => [$data->extension],
             'type' => [$data->type],
