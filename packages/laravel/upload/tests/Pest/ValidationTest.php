@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use Honed\Upload\Events\PresignCreated;
+use Honed\Upload\Events\PresignFailed;
 use Honed\Upload\Upload;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Validation\ValidationException;
 
 beforeEach(function () {
@@ -14,6 +17,8 @@ beforeEach(function () {
         ->path(fn (string $type) => \explode('/', $type)[0])
         ->shouldReturn(fn ($key) => $key)
         ->anonymize();
+
+    Event::fake();
 });
 
 it('invalidates type', function () {
@@ -50,5 +55,7 @@ it('validates type', function () {
             'inputs',
             'data'
         ])->{'data'}->toBe($this->upload->getReturns());
+
+    Event::assertDispatched(PresignCreated::class);
 });
 

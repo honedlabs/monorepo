@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Number;
+use Illuminate\Validation\ValidationException;
 
 class Upload extends Primitive implements Responsable
 {
@@ -344,14 +345,20 @@ class Upload extends Primitive implements Responsable
             ),
         );
 
-        $validated = Validator::make(
-            $request->all(),
-            $rule?->createRules() ?? $this->createRules(),
-            [],
-            $this->getAttributes(),
-        )->validate();
+        try {
+            $validated = Validator::make(
+                $request->all(),
+                $rule?->createRules() ?? $this->createRules(),
+                [],
+                $this->getAttributes(),
+            )->validate();
+    
+            return [UploadData::from($validated), $rule];
+        } catch (ValidationException $e) {
+            $this->failedPresign($request);
 
-        return [UploadData::from($validated), $rule];
+            throw $e;
+        }
     }
 
     /**
@@ -392,6 +399,8 @@ class Upload extends Primitive implements Responsable
             $this->getOptions($key),
             $this->formatExpiry($rule ? $rule->getExpiry() : $this->getExpiry())
         );
+
+        static::createdPresign($data, $this->getDisk());
 
         return [
             'attributes' => $postObject->getFormAttributes(),
