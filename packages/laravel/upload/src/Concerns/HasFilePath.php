@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Upload\Concerns;
 
-use Illuminate\Support\Str;
 use Honed\Upload\Contracts\ShouldAnonymize;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 trait HasFilePath
 {
@@ -110,7 +111,7 @@ trait HasFilePath
 
     /**
      * Get the name, or method, of generating the name of the file to be stored.
-     * 
+     *
      * @return \Closure(mixed...):string|string|null
      */
     public function getName()
@@ -120,7 +121,7 @@ trait HasFilePath
 
     /**
      * Set whether to anonymize the file name using a UUID.
-     * 
+     *
      * @param  bool  $anonymize
      * @return $this
      */
@@ -133,7 +134,7 @@ trait HasFilePath
 
     /**
      * Determine whether the file name should be anonymized using a UUID.
-     * 
+     *
      * @return bool
      */
     public function isAnonymized()
@@ -141,17 +142,42 @@ trait HasFilePath
         if (isset($this->anonymize)) {
             return $this->anonymize;
         }
-        
+
         if ($this instanceof ShouldAnonymize) {
-            return $this->isAnonymizedByDefault();
+            return true;
         }
 
-        return false;
+        return $this->isAnonymizedByDefault();
+    }
+
+    /**
+     * Determine whether the file name should be anonymized using a UUID by default.
+     *
+     * @return bool
+     */
+    public function isAnonymizedByDefault()
+    {
+        return (bool) config('upload.anonymize', false);
+    }
+
+    /**
+     * Get the S3 client to use for uploading files.
+     *
+     * @return \Aws\S3\S3Client
+     */
+    public function getClient()
+    {
+        $disk = $this->getDisk();
+
+        /** @var \Illuminate\Filesystem\AwsS3V3Adapter */
+        $client = Storage::disk($disk);
+
+        return $client->getClient();
     }
 
     /**
      * Get the complete filename of the file to be stored.
-     * 
+     *
      * @param  \Honed\Upload\UploadData  $data
      * @return string
      */

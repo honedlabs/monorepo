@@ -5,24 +5,23 @@ declare(strict_types=1);
 namespace Honed\Upload;
 
 use Aws\S3\PostObjectV4;
-use Aws\S3\S3Client;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Primitive;
+use Honed\Upload\Concerns\DispatchesPresignEvents;
 use Honed\Upload\Concerns\HasFilePath;
 use Honed\Upload\Concerns\ValidatesUpload;
-use Honed\Upload\Contracts\ShouldAnonymize;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Number;
-use Illuminate\Support\Str;
 
 class Upload extends Primitive implements Responsable
 {
+    use DispatchesPresignEvents;
+    use HasFilePath;
     use HasRequest;
     use ValidatesUpload;
-    use HasFilePath;
 
     /**
      * The upload data to use from the request.
@@ -258,25 +257,6 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
-     * Get the S3 client to use for uploading files.
-     *
-     * @return \Aws\S3\S3Client
-     */
-    public function getClient()
-    {
-        $disk = $this->getDisk();
-
-        return new S3Client([
-            'version' => 'latest',
-            'region' => config("filesystems.disks.{$disk}.region"),
-            'credentials' => [
-                'key' => config("filesystems.disks.{$disk}.key"),
-                'secret' => config("filesystems.disks.{$disk}.secret"),
-            ],
-        ]);
-    }
-
-    /**
      * Get the S3 bucket to use for uploading files.
      *
      * @return string
@@ -329,24 +309,39 @@ class Upload extends Primitive implements Responsable
     /**
      * Validate the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Honed\Upload\UploadRule|null  $rule
-     * @return \Honed\Upload\UploadData
+     * @param  \Illuminate\Http\Request|null  $request
+     * @return array{\Honed\Upload\UploadData, \Honed\Upload\UploadRule|null}
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function validate($request, $rule = null)
+    public function validate($request)
     {
-        $rules = $rule ? $rule->createRules() : $this->createRules();
+        $request ??= $this->getRequest();
+
+        [$name, $extension] =
+            static::destructureFilename($request->input('name'));
+
+        $request->merge([
+            'name' => $name,
+            'extension' => $extension,
+        ])->all();
+
+        $rule = Arr::first(
+            $this->getRules(),
+            static fn (UploadRule $rule) => $rule->isMatching(
+                $request->input('type'),
+                $extension,
+            ),
+        );
 
         $validated = Validator::make(
             $request->all(),
-            $rules,
+            $rule?->createRules() ?? $this->createRules(),
             [],
             $this->getAttributes(),
         )->validate();
 
-        return UploadData::from($validated);
+        return [UploadData::from($validated), $rule];
     }
 
     /**
@@ -374,34 +369,18 @@ class Upload extends Primitive implements Responsable
      */
     public function create($request = null)
     {
-        $request ??= $this->getRequest();
+        [$data, $rule] = $this->validate($request);
 
-        [$name, $extension] =
-            static::destructureFilename($request->input('name'));
+        $this->data = $data;
 
-        $request->merge([
-            'name' => $name,
-            'extension' => $extension,
-        ])->all();
-
-        /** @var string|null */
-        $type = $request->input('type');
-
-        $rule = Arr::first(
-            $this->getRules(),
-            static fn (UploadRule $rule) => $rule->isMatching($type, $extension),
-        );
-
-        $this->data = $this->validate($request, $rule);
-
-        $key = $this->createKey($this->data);
+        $key = $this->createKey($data);
 
         $postObject = new PostObjectV4(
             $this->getClient(),
             $this->getBucket(),
             $this->getFormInputs($key),
             $this->getOptions($key),
-            $rule ? $rule->getExpiry() : $this->getExpiry()
+            $this->formatExpiry($rule ? $rule->getExpiry() : $this->getExpiry())
         );
 
         return [
@@ -455,6 +434,7 @@ class Upload extends Primitive implements Responsable
         return match ($parameterName) {
             'data' => [$data],
             'key' => [$data ? $this->createKey($data) : null],
+            'file' => [$data ? $this->createFilename($data).'.'.$data->extension : null],
             'filename' => [$data ? $this->createFilename($data) : null],
             'bucket' => [$this->getBucket()],
             'name' => [$data?->name],

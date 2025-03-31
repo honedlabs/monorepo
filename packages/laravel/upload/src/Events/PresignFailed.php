@@ -4,32 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Upload\Events;
 
+use Illuminate\Foundation\Events\Dispatchable;
+
 class PresignFailed
 {
-    /**
-     * The route instance.
-     *
-     * @var \Illuminate\Routing\Route
-     */
-    public $route;
-
-    /**
-     * The request instance.
-     *
-     * @var \Illuminate\Http\Request
-     */
-    public $request;
+    use Dispatchable;
 
     /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Routing\Route  $route
+     * @param  class-string<\Honed\Upload\Upload>  $upload
      * @param  \Illuminate\Http\Request  $request
      * @return void
      */
-    public function __construct($route, $request)
-    {
-        $this->route = $route;
-        $this->request = $request;
+    public function __construct(
+        public $upload,
+        public $request,
+    ) {
+        //
     }
 }

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Honed\Upload\Concerns\HasFilePath;
 use Honed\Upload\Contracts\ShouldAnonymize;
 use Honed\Upload\Upload;
 use Honed\Upload\UploadData;
