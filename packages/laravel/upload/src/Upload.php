@@ -8,8 +8,9 @@ use Aws\S3\PostObjectV4;
 use Aws\S3\S3Client;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Primitive;
+use Honed\Upload\Concerns\HasFilePath;
 use Honed\Upload\Concerns\ValidatesUpload;
-use Honed\Upload\Contracts\AnonymizesName;
+use Honed\Upload\Contracts\ShouldAnonymize;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -21,13 +22,7 @@ class Upload extends Primitive implements Responsable
 {
     use HasRequest;
     use ValidatesUpload;
-
-    /**
-     * The disk to retrieve the S3 credentials from.
-     *
-     * @var string|null
-     */
-    protected $disk;
+    use HasFilePath;
 
     /**
      * The upload data to use from the request.
@@ -42,27 +37,6 @@ class Upload extends Primitive implements Responsable
      * @var array<int, \Honed\Upload\UploadRule>
      */
     protected $rules = [];
-
-    /**
-     * The path prefix to store the file in
-     *
-     * @var string|\Closure(mixed...):string|null
-     */
-    protected $path;
-
-    /**
-     * The name of the file to be stored.
-     *
-     * @var string|\Closure(mixed...):string|null
-     */
-    protected $name;
-
-    /**
-     * Whether the file name should be anonymized using a UUID.
-     *
-     * @var bool|null
-     */
-    protected $anonymize;
 
     /**
      * The access control list to use for the file.
@@ -125,41 +99,6 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
-     * Set the disk to retrieve the S3 credentials from.
-     *
-     * @param  string|null  $disk
-     * @return $this
-     */
-    public function disk($disk)
-    {
-        if (filled($disk)) {
-            $this->disk = $disk;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get the S3 disk to use for uploading files.
-     *
-     * @return string
-     */
-    public function getDisk()
-    {
-        return $this->disk ?? static::getDefaultDisk();
-    }
-
-    /**
-     * Get the disk to use for uploading files from the config.
-     *
-     * @return string
-     */
-    public static function getDefaultDisk()
-    {
-        return type(config('upload.disk', 's3'))->asString();
-    }
-
-    /**
      * Set the rules for validating file uploads.
      *
      * @param  iterable<\Honed\Upload\UploadRule>  ...$rules
@@ -182,93 +121,6 @@ class Upload extends Primitive implements Responsable
     public function getRules()
     {
         return $this->rules;
-    }
-
-    /**
-     * Set the path to store the file at.
-     *
-     * @param  string|\Closure(mixed...):string  $path
-     * @return $this
-     */
-    public function path($path)
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    /**
-     * Get the path to store the file at.
-     *
-     * @return string|\Closure(mixed...):string|null
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * Set the name, or method, of generating the name of the file to be stored.
-     *
-     * @param  \Closure(mixed...):string|string  $name
-     * @return $this
-     */
-    public function name($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get the name, or method, of generating the name of the file to be stored.
-     *
-     * @return \Closure(mixed...):string|string|null
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set whether to anonymize the file name using a UUID.
-     *
-     * @param  bool  $anonymize
-     * @return $this
-     */
-    public function anonymize($anonymize = true)
-    {
-        $this->anonymize = $anonymize;
-
-        return $this;
-    }
-
-    /**
-     * Determine whether the file name should be anonymized using a UUID.
-     *
-     * @return bool
-     */
-    public function isAnonymized()
-    {
-        if (isset($this->anonymize)) {
-            return $this->anonymize;
-        }
-
-        if ($this instanceof AnonymizesName) {
-            return true;
-        }
-
-        return static::isAnonymizedByDefault();
-    }
-
-    /**
-     * Determine if the file name should be anonymized using a UUID by default.
-     *
-     * @return bool
-     */
-    public static function isAnonymizedByDefault()
-    {
-        return (bool) config('upload.anonymize', false);
     }
 
     /**
@@ -437,24 +289,6 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
-     * Destructure the filename into its components.
-     *
-     * @param  mixed  $filename
-     * @return ($filename is string ? array{string, string} : array{null, null})
-     */
-    public static function destructureFilename($filename)
-    {
-        if (! \is_string($filename)) {
-            return [null, null];
-        }
-
-        return [
-            \pathinfo($filename, PATHINFO_FILENAME),
-            \mb_strtolower(\pathinfo($filename, PATHINFO_EXTENSION)),
-        ];
-    }
-
-    /**
      * Get the defaults for form input fields.
      *
      * @param  string  $key
@@ -490,35 +324,6 @@ class Upload extends Primitive implements Responsable
         }
 
         return $options;
-    }
-
-    /**
-     * Build the storage key path for the uploaded file.
-     *
-     * @param  \Honed\Upload\UploadData  $data
-     * @return string
-     */
-    public function createKey($data)
-    {
-        return once(function () use ($data) {
-            $name = $this->getName();
-
-            $filename = match (true) {
-                $this->isAnonymized() => Str::uuid()->toString(),
-                isset($name) => $this->evaluate($name),
-                default => $data->name,
-            };
-
-            $path = $this->evaluate($this->getPath());
-
-            return Str::of($filename)
-                ->append('.', $data->extension)
-                ->when($path, fn ($name, $path) => $name
-                    ->prepend($path, '/')
-                    ->replace('//', '/'),
-                )->trim('/')
-                ->value();
-        });
     }
 
     /**
@@ -650,6 +455,7 @@ class Upload extends Primitive implements Responsable
         return match ($parameterName) {
             'data' => [$data],
             'key' => [$data ? $this->createKey($data) : null],
+            'filename' => [$data ? $this->createFilename($data) : null],
             'bucket' => [$this->getBucket()],
             'name' => [$data?->name],
             'extension' => [$data?->extension],

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Upload\Contracts\AnonymizesName;
+use Honed\Upload\Contracts\ShouldAnonymize;
 use Honed\Upload\Upload;
 use Honed\Upload\UploadData;
 use Honed\Upload\UploadRule;
@@ -54,7 +54,7 @@ it('anonymizes', function () {
         ->isAnonymized()->toBeTrue()
         ->isAnonymizedByDefault()->toBeFalse();
 
-    $upload = new class extends Upload implements AnonymizesName {
+    $upload = new class extends Upload implements ShouldAnonymize {
         public function __construct() {}
     };
 
