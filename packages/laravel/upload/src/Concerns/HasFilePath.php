@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Upload\Concerns;
 
+use Honed\Upload\Contracts\DefinesPath;
 use Honed\Upload\Contracts\ShouldAnonymize;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -93,7 +94,15 @@ trait HasFilePath
      */
     public function getPath()
     {
-        return $this->path;
+        if (isset($this->path)) {
+            return $this->path;
+        }
+
+        if ($this instanceof DefinesPath) {
+            return \Closure::fromCallable([$this, 'definePath']);
+        }
+
+        return null;
     }
 
     /**

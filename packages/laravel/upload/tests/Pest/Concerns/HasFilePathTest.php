@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 use Honed\Upload\Concerns\HasFilePath;
 use Honed\Upload\Contracts\ShouldAnonymize;
+use Honed\Upload\Tests\Fixtures\AvatarUpload;
 
 beforeEach(function () {
     $this->test = new class {
         use HasFilePath;
     };
+
+    $this->upload = AvatarUpload::make();
 });
 
 it('has disk', function () {
@@ -22,6 +25,11 @@ it('has path', function () {
     expect($this->test)
         ->getPath()->toBeNull()
         ->path('test')->toBe($this->test)
+        ->getPath()->toBe('test');
+
+    expect($this->upload)
+        ->getPath()->toBeInstanceOf(\closure::class)
+        ->path('test')->toBe($this->upload)
         ->getPath()->toBe('test');
 });
 
