@@ -1,80 +1,155 @@
-import { ref as m, computed as f } from "vue";
-import { router as v } from "@inertiajs/vue3";
-function y() {
-  const e = m({
+import { router as m } from "@inertiajs/vue3";
+import { computed as r, reactive as x, ref as h } from "vue";
+function p(l, a, o = {}, n = {}) {
+  return l.route ? (m.visit(l.route.url, {
+    ...n,
+    method: l.route.method
+  }), !0) : l.action && a ? (m.post(
+    a,
+    {
+      ...o,
+      name: l.name,
+      type: l.type
+    },
+    n
+  ), !0) : !1;
+}
+function g(l, a, o = {}) {
+  if (!l || !a || !l[a])
+    throw new Error(
+      "The action group must be provided with valid props and key."
+    );
+  const n = r(() => l[a]), v = r(
+    () => n.value.inline.map((t) => ({
+      ...t,
+      execute: (e, u = {}) => c(t, e, u)
+    }))
+  ), s = r(
+    () => n.value.bulk.map((t) => ({
+      ...t,
+      execute: (e, u = {}) => f(t, e, u)
+    }))
+  ), i = r(
+    () => n.value.page.map((t) => ({
+      ...t,
+      execute: (e = {}, u = {}) => d(t, e, u)
+    }))
+  );
+  function c(t, e, u = {}) {
+    p(
+      t,
+      n.value.endpoint,
+      {
+        ...e,
+        id: n.value.id,
+        name: t.name,
+        type: t.type
+      },
+      {
+        ...o,
+        ...u
+      }
+    );
+  }
+  function f(t, e, u = {}) {
+    p(
+      t,
+      n.value.endpoint,
+      {
+        ...e,
+        id: n.value.id
+      },
+      {
+        ...o,
+        ...u
+      }
+    );
+  }
+  function d(t, e = {}, u = {}) {
+    p(
+      t,
+      n.value.endpoint,
+      {
+        ...e,
+        id: n.value.id
+      },
+      {
+        ...o,
+        ...u
+      }
+    );
+  }
+  return x({
+    inline: v,
+    bulk: s,
+    page: i,
+    executeInlineAction: c,
+    executeBulkAction: f,
+    executePageAction: d
+  });
+}
+function b() {
+  const l = h({
     all: !1,
     only: /* @__PURE__ */ new Set(),
     except: /* @__PURE__ */ new Set()
   });
   function a() {
-    e.value.all = !0, e.value.only.clear(), e.value.except.clear();
+    l.value.all = !0, l.value.only.clear(), l.value.except.clear();
   }
-  function n() {
-    e.value.all = !1, e.value.only.clear(), e.value.except.clear();
+  function o() {
+    l.value.all = !1, l.value.only.clear(), l.value.except.clear();
   }
-  function u(...l) {
-    l.forEach((t) => e.value.except.delete(t)), l.forEach((t) => e.value.only.add(t));
+  function n(...e) {
+    e.forEach((u) => l.value.except.delete(u)), e.forEach((u) => l.value.only.add(u));
   }
-  function c(...l) {
-    l.forEach((t) => e.value.except.add(t)), l.forEach((t) => e.value.only.delete(t));
+  function v(...e) {
+    e.forEach((u) => l.value.except.add(u)), e.forEach((u) => l.value.only.delete(u));
   }
-  function i(l, t) {
-    if (r(l) || t === !1)
-      return c(l);
-    if (!r(l) || t === !0)
-      return u(l);
+  function s(e, u) {
+    if (i(e) || u === !1)
+      return v(e);
+    if (!i(e) || u === !0)
+      return n(e);
   }
-  function r(l) {
-    return e.value.all ? !e.value.except.has(l) : e.value.only.has(l);
+  function i(e) {
+    return l.value.all ? !l.value.except.has(e) : l.value.only.has(e);
   }
-  const o = f(() => e.value.all && e.value.except.size === 0), s = f(() => e.value.only.size > 0 || o.value);
-  function d(l) {
+  const c = r(() => l.value.all && l.value.except.size === 0), f = r(() => l.value.only.size > 0 || c.value);
+  function d(e) {
     return {
-      "onUpdate:modelValue": (t) => {
-        t ? u(l) : c(l);
+      "onUpdate:modelValue": (u) => {
+        u ? n(e) : v(e);
       },
-      modelValue: r(l),
-      value: l
+      modelValue: i(e),
+      value: e
     };
   }
-  function p() {
+  function t() {
     return {
-      "onUpdate:modelValue": (l) => {
-        l ? a() : n();
+      "onUpdate:modelValue": (e) => {
+        e ? a() : o();
       },
-      modelValue: o.value,
-      value: o.value
+      modelValue: c.value,
+      value: c.value
     };
   }
   return {
-    allSelected: o,
-    selection: e,
-    hasSelected: s,
+    allSelected: c,
+    selection: l,
+    hasSelected: f,
     selectAll: a,
-    deselectAll: n,
-    select: u,
-    deselect: c,
-    toggle: i,
-    selected: r,
+    deselectAll: o,
+    select: n,
+    deselect: v,
+    toggle: s,
+    selected: i,
     bind: d,
-    bindAll: p
+    bindAll: t
   };
 }
-function A(e, a, n = {}, u = {}) {
-  return e.route ? (v.visit(e.route.url, {
-    ...u,
-    method: e.route.method
-  }), !0) : e.action && a ? (v.post(
-    a,
-    {
-      ...n,
-      name: e.name,
-      type: e.type
-    },
-    u
-  ), !0) : !1;
-}
 export {
-  A as executeAction,
-  y as useBulk
+  p as executeAction,
+  g as useActions,
+  b as useBulk
 };

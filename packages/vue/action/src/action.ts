@@ -1,5 +1,6 @@
 import type { Method, VisitOptions } from "@inertiajs/core";
 import { router } from "@inertiajs/vue3";
+import { computed, reactive } from "vue";
 
 export type Identifier = string | number;
 
@@ -43,10 +44,16 @@ export interface PageAction extends Action {
 	type: "page";
 }
 
-export type ActionGroup = PageAction[];
+export interface ActionGroup {
+	id?: string;
+	endpoint?: string;
+	inline: InlineAction[];
+	bulk: BulkAction[];
+	page: PageAction[];
+}
 
 export interface InlineActionData extends Record<string, any> {
-	id: Identifier;
+	record: Identifier;
 }
 
 export interface BulkActionData extends Record<string, any> {
@@ -100,6 +107,125 @@ export function executeAction<T extends ActionType = any>(
 	return false;
 }
 
-// export const useActions = (actions:) => {
+export function useActions<
+	Props extends object,
+	Key extends Props[keyof Props] extends ActionGroup ? keyof Props : never,
+>(props: Props, key: Key, defaultOptions: VisitOptions = {}) {
+	if (!props || !key || !props[key]) {
+		throw new Error(
+			"The action group must be provided with valid props and key.",
+		);
+	}
 
+	const actions = computed(() => props[key] as ActionGroup);
+
+	/**
+	 * Get the inline actions.
+	 */
+	const inline = computed(() =>
+		actions.value.inline.map((action) => ({
+			...action,
+			execute: (data: InlineActionData, options: VisitOptions = {}) =>
+				executeInlineAction(action, data, options),
+		})),
+	);
+
+	/**
+	 * Get the bulk actions.
+	 */
+	const bulk = computed(() =>
+		actions.value.bulk.map((action) => ({
+			...action,
+			execute: (data: BulkActionData, options: VisitOptions = {}) =>
+				executeBulkAction(action, data, options),
+		})),
+	);
+
+	/**
+	 * Get the page actions.
+	 */
+	const page = computed(() =>
+		actions.value.page.map((action) => ({
+			...action,
+			execute: (data: Record<string, any> = {}, options: VisitOptions = {}) =>
+				executePageAction(action, data, options),
+		})),
+	);
+
+	/**
+	 * Execute an inline action.
+	 */
+	function executeInlineAction(
+		action: InlineAction,
+		data: InlineActionData,
+		options: VisitOptions = {},
+	) {
+		executeAction<"inline">(
+			action,
+			actions.value.endpoint,
+			{
+				...data,
+				id: actions.value.id,
+				name: action.name,
+				type: action.type,
+			},
+			{
+				...defaultOptions,
+				...options,
+			},
+		);
+	}
+
+	/**
+	 * Execute a bulk action.
+	 */
+	function executeBulkAction(
+		action: BulkAction,
+		data: BulkActionData,
+		options: VisitOptions = {},
+	) {
+		executeAction<"bulk">(
+			action,
+			actions.value.endpoint,
+			{
+				...data,
+				id: actions.value.id,
+			},
+			{
+				...defaultOptions,
+				...options,
+			},
+		);
+	}
+
+	/**
+	 * Execute a page action.
+	 */
+	function executePageAction(
+		action: PageAction,
+		data: Record<string, any> = {},
+		options: VisitOptions = {},
+	) {
+		executeAction<"page">(
+			action,
+			actions.value.endpoint,
+			{
+				...data,
+				id: actions.value.id,
+			},
+			{
+				...defaultOptions,
+				...options,
+			},
+		);
+	}
+
+	return reactive({
+		inline,
+		bulk,
+		page,
+		executeInlineAction,
+		executeBulkAction,
+		executePageAction,
+	});
 }
