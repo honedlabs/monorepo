@@ -1,8 +1,8 @@
 import { router as m } from "@inertiajs/vue3";
 import { computed as r, reactive as x, ref as h } from "vue";
-function p(l, a, o = {}, n = {}) {
+function p(l, a, o = {}, t = {}) {
   return l.route ? (m.visit(l.route.url, {
-    ...n,
+    ...t,
     method: l.route.method
   }), !0) : l.action && a ? (m.post(
     a,
@@ -11,39 +11,37 @@ function p(l, a, o = {}, n = {}) {
       name: l.name,
       type: l.type
     },
-    n
+    t
   ), !0) : !1;
 }
-function g(l, a, o = {}) {
+function b(l, a, o = {}) {
   if (!l || !a || !l[a])
     throw new Error(
       "The action group must be provided with valid props and key."
     );
-  const n = r(() => l[a]), v = r(
-    () => n.value.inline.map((t) => ({
-      ...t,
-      execute: (e, u = {}) => c(t, e, u)
+  const t = r(() => l[a]), v = r(
+    () => t.value.inline.map((n) => ({
+      ...n,
+      execute: (e, u = {}) => c(n, e, u)
     }))
   ), s = r(
-    () => n.value.bulk.map((t) => ({
-      ...t,
-      execute: (e, u = {}) => f(t, e, u)
+    () => t.value.bulk.map((n) => ({
+      ...n,
+      execute: (e, u = {}) => f(n, e, u)
     }))
   ), i = r(
-    () => n.value.page.map((t) => ({
-      ...t,
-      execute: (e = {}, u = {}) => d(t, e, u)
+    () => t.value.page.map((n) => ({
+      ...n,
+      execute: (e = {}, u = {}) => d(n, e, u)
     }))
   );
-  function c(t, e, u = {}) {
+  function c(n, e, u = {}) {
     p(
-      t,
-      n.value.endpoint,
+      n,
+      t.value.endpoint,
       {
         ...e,
-        id: n.value.id,
-        name: t.name,
-        type: t.type
+        id: t.value.id
       },
       {
         ...o,
@@ -51,13 +49,13 @@ function g(l, a, o = {}) {
       }
     );
   }
-  function f(t, e, u = {}) {
+  function f(n, e, u = {}) {
     p(
-      t,
-      n.value.endpoint,
+      n,
+      t.value.endpoint,
       {
         ...e,
-        id: n.value.id
+        id: t.value.id
       },
       {
         ...o,
@@ -65,13 +63,13 @@ function g(l, a, o = {}) {
       }
     );
   }
-  function d(t, e = {}, u = {}) {
+  function d(n, e = {}, u = {}) {
     p(
-      t,
-      n.value.endpoint,
+      n,
+      t.value.endpoint,
       {
         ...e,
-        id: n.value.id
+        id: t.value.id
       },
       {
         ...o,
@@ -88,7 +86,7 @@ function g(l, a, o = {}) {
     executePageAction: d
   });
 }
-function b() {
+function w() {
   const l = h({
     all: !1,
     only: /* @__PURE__ */ new Set(),
@@ -100,7 +98,7 @@ function b() {
   function o() {
     l.value.all = !1, l.value.only.clear(), l.value.except.clear();
   }
-  function n(...e) {
+  function t(...e) {
     e.forEach((u) => l.value.except.delete(u)), e.forEach((u) => l.value.only.add(u));
   }
   function v(...e) {
@@ -110,7 +108,7 @@ function b() {
     if (i(e) || u === !1)
       return v(e);
     if (!i(e) || u === !0)
-      return n(e);
+      return t(e);
   }
   function i(e) {
     return l.value.all ? !l.value.except.has(e) : l.value.only.has(e);
@@ -119,13 +117,13 @@ function b() {
   function d(e) {
     return {
       "onUpdate:modelValue": (u) => {
-        u ? n(e) : v(e);
+        u ? t(e) : v(e);
       },
       modelValue: i(e),
       value: e
     };
   }
-  function t() {
+  function n() {
     return {
       "onUpdate:modelValue": (e) => {
         e ? a() : o();
@@ -140,16 +138,16 @@ function b() {
     hasSelected: f,
     selectAll: a,
     deselectAll: o,
-    select: n,
+    select: t,
     deselect: v,
     toggle: s,
     selected: i,
     bind: d,
-    bindAll: t
+    bindAll: n
   };
 }
 export {
   p as executeAction,
-  g as useActions,
-  b as useBulk
+  b as useActions,
+  w as useBulk
 };

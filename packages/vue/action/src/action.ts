@@ -166,8 +166,6 @@ export function useActions<
 			{
 				...data,
 				id: actions.value.id,
-				name: action.name,
-				type: action.type,
 			},
 			{
 				...defaultOptions,
