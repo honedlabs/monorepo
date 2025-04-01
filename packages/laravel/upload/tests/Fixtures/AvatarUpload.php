@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Honed\Upload\Tests\Fixtures;
 
 use Honed\Upload\Upload;
-use Honed\Upload\Contracts\DefinesPath;
-use Honed\Upload\Contracts\DefinesTypes;
 
-final class AvatarUpload extends Upload implements DefinesPath
+final class AvatarUpload extends Upload
 {
     /**
      * Provide the upload with any necessary setup.
@@ -23,7 +21,7 @@ final class AvatarUpload extends Upload implements DefinesPath
     /**
      * {@inheritdoc}
      */
-    public function definePath()
+    public function locate()
     {
         return 'avatars';
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Upload\Concerns\HasFilePath;
+use Honed\Upload\Concerns\HasFile;
 use Honed\Upload\Contracts\ShouldAnonymize;
 use Honed\Upload\Upload;
 use Honed\Upload\UploadData;
@@ -34,11 +34,11 @@ it('has access control list', function () {
         ->getACL()->toBe('private-read');
 });
 
-it('has returns', function () {
+it('provides', function () {
     expect($this->upload)
-        ->getReturns()->toBeNull()
-        ->shouldReturn('test')->toBe($this->upload)
-        ->getReturns()->toBe('test');
+        ->getProvided()->toEqual([])
+        ->provide('test')->toBe($this->upload)
+        ->getProvided()->toBe('test');
 });
 
 it('has multiple', function () {
@@ -83,9 +83,9 @@ it('has form inputs', function () {
 it('has policy options', function () {
     $key = 'test.png';
 
-    expect(Upload::make())
+    expect($this->upload)
         ->getOptions($key)->toBeArray()
-        ->toHaveCount(4);
+        ->toHaveCount(5);
 });
 
 it('destructures filenames', function () {
@@ -117,8 +117,8 @@ describe('key creation', function () {
             ->createKey($this->data)->not->toBe('test.png');
     });
 
-    test('path', function () {
-        expect($this->upload->path('test'))
+    test('location', function () {
+        expect($this->upload->location('test'))
             ->createKey($this->data)
             ->toBe('test/test.png');
     });

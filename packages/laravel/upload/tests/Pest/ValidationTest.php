@@ -14,8 +14,8 @@ beforeEach(function () {
         ->extensions('png')
         ->min(1024) // 1 KB
         ->max(1024 * 2) // 2KB
-        ->path(fn (string $type) => \explode('/', $type)[0])
-        ->shouldReturn(fn ($key) => $key)
+        ->location(fn (string $type) => \explode('/', $type)[0])
+        ->provide(fn ($key) => $key)
         ->anonymize();
 
     Event::fake();
@@ -54,7 +54,7 @@ it('validates type', function () {
             'attributes',
             'inputs',
             'data'
-        ])->{'data'}->toBe($this->upload->getReturns());
+        ])->{'data'}->toBe($this->upload->getProvided());
 
     Event::assertDispatched(PresignCreated::class);
 });

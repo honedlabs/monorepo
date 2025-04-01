@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-use Honed\Upload\Concerns\HasFilePath;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Upload\Concerns\HasFile;
 use Honed\Upload\Contracts\ShouldAnonymize;
 use Honed\Upload\Tests\Fixtures\AvatarUpload;
 
 beforeEach(function () {
     $this->test = new class {
-        use HasFilePath;
+        use HasFile;
+        use Evaluable;
     };
 
     $this->upload = AvatarUpload::make();
@@ -21,16 +23,14 @@ it('has disk', function () {
         ->getDisk()->toBe('r2');
 });
 
-it('has path', function () {
+it('has location', function () {
     expect($this->test)
-        ->getPath()->toBeNull()
-        ->path('test')->toBe($this->test)
-        ->getPath()->toBe('test');
+        ->getLocation()->toBeNull()
+        ->location('test')->toBe($this->test)
+        ->getLocation()->toBe('test');
 
     expect($this->upload)
-        ->getPath()->toBeInstanceOf(\closure::class)
-        ->path('test')->toBe($this->upload)
-        ->getPath()->toBe('test');
+        ->getLocation()->toBe('avatars');
 });
 
 it('has name', function () {
@@ -48,7 +48,7 @@ it('anonymizes', function () {
         ->isAnonymizedByDefault()->toBeFalse();
 
     $test = new class implements ShouldAnonymize {
-        use HasFilePath;
+        use HasFile;
         
         public function __construct() {}
     };
@@ -57,9 +57,9 @@ it('anonymizes', function () {
         ->isAnonymized()->toBeTrue();
 });
 
-it('gets folder', function (string $path, ?string $expected) {
+it('gets folder', function (string $location, ?string $expected) {
     expect($this->test)
-        ->getFolder($path)->toBe($expected);
+        ->getFolder($location)->toBe($expected);
 })->with([
     ['test.txt', null],
     ['parent/test.txt', 'parent'],
