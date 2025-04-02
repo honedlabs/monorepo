@@ -17,6 +17,13 @@ class ActionGroup extends Primitive implements UrlRoutable
     use HasEndpoint;
 
     /**
+     * The model to be used to resolve inline actions.
+     *
+     * @var \Illuminate\Database\Eloquent\Model|null
+     */
+    protected $for;
+
+    /**
      * Create a new action group instance.
      *
      * @param  \Honed\Action\Action|iterable<int, \Honed\Action\Action>  ...$actions
@@ -26,6 +33,19 @@ class ActionGroup extends Primitive implements UrlRoutable
     {
         return resolve(static::class)
             ->withActions($actions);
+    }
+
+    /**
+     * Set the model to be used to resolve inline actions.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $for
+     * @return $this
+     */
+    public function for($for)
+    {
+        $this->for = $for;
+
+        return $this;
     }
 
     /**
@@ -73,7 +93,7 @@ class ActionGroup extends Primitive implements UrlRoutable
     public function toArray()
     {
         $actions = [
-            'inline' => $this->inlineActionsToArray(),
+            'inline' => $this->inlineActionsToArray($this->for),
             'bulk' => $this->bulkActionsToArray(),
             'page' => $this->pageActionsToArray(),
         ];
