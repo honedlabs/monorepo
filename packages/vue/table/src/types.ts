@@ -103,7 +103,7 @@ export interface Table<
 	recordsPerPage?: PerPageRecord[];
 	toggleable: boolean;
 	actions: {
-		hasInline: boolean;
+		inline: boolean;
 		bulk: BulkAction[];
 		page: PageAction[];
 	};

@@ -1,5 +1,5 @@
 import { computed, reactive } from "vue";
-import type { VisitOptions } from "@inertiajs/core";
+import type { Page, VisitOptions } from "@inertiajs/core";
 import { router } from "@inertiajs/vue3";
 import { useBulk, executeAction } from "@honed/action";
 import type { InlineAction, BulkAction, PageAction } from "@honed/action";
@@ -27,7 +27,9 @@ export function useTable<
 	defaultOptions: VisitOptions = {},
 ) {
 	if (!props || !key || !props[key]) {
-		throw new Error("Table has not been provided with valid props and key.");
+		throw new Error(
+			"The table has not been provided with valid props and key.",
+		);
 	}
 
 	defaultOptions = {
@@ -78,6 +80,13 @@ export function useTable<
 	const records = computed(() =>
 		table.value.records.map((record) => ({
 			record: (({ actions, ...rest }) => rest)(record),
+			/** The actions available for the record */
+			actions: record.actions.map((action: InlineAction) => ({
+				...action,
+				/** Executes this action */
+				execute: (options: VisitOptions = {}) =>
+					executeInlineAction(action, record, options),
+			})),
 			/** Perform this action when the record is clicked */
 			default: (options: VisitOptions = {}) => {
 				const defaultAction = record.actions.find(
@@ -88,13 +97,6 @@ export function useTable<
 					executeInlineAction(defaultAction, record, options);
 				}
 			},
-			/** The actions available for the record */
-			actions: record.actions.map((action: InlineAction) => ({
-				...action,
-				/** Executes this action */
-				execute: (options: VisitOptions = {}) =>
-					executeInlineAction(action, record, options),
-			})),
 			/** Selects this record */
 			select: () => bulk.select(getRecordKey(record)),
 			/** Deselects this record */
@@ -119,24 +121,22 @@ export function useTable<
 	);
 
 	/**
-	 * The available bulk actions.
+	 * Get the bulk actions.
 	 */
 	const bulkActions = computed(() =>
 		table.value.actions.bulk.map((action) => ({
 			...action,
-			/** Executes this bulk action */
 			execute: (options: VisitOptions = {}) =>
 				executeBulkAction(action, options),
 		})),
 	);
 
 	/**
-	 * The available page actions.
+	 * Get page actions.
 	 */
 	const pageActions = computed(() =>
 		table.value.actions.page.map((action) => ({
 			...action,
-			/** Executes this page action */
 			execute: (options: VisitOptions = {}) =>
 				executePageAction(action, options),
 		})),
@@ -149,7 +149,6 @@ export function useTable<
 		() =>
 			table.value.recordsPerPage?.map((page) => ({
 				...page,
-				/** Changes the number of records to display per page */
 				apply: (options: VisitOptions = {}) => applyPage(page, options),
 			})) ?? [],
 	);
@@ -247,10 +246,13 @@ export function useTable<
 			action,
 			config.value.endpoint,
 			{
-				table: table.value.id,
-				id: getRecordKey(record),
+				id: table.value.id,
+				record: getRecordKey(record),
 			},
-			options,
+			{
+				...defaultOptions,
+				...options,
+			},
 		);
 
 		if (!success) {
@@ -266,12 +268,22 @@ export function useTable<
 			action,
 			config.value.endpoint,
 			{
-				table: table.value.id,
+				id: table.value.id,
 				all: bulk.selection.value.all,
 				only: Array.from(bulk.selection.value.only),
 				except: Array.from(bulk.selection.value.except),
 			},
-			options,
+			{
+				...defaultOptions,
+				...options,
+				onSuccess: (page: Page) => {
+					defaultOptions.onSuccess?.(page);
+					options.onSuccess?.(page);
+					if (!action.keepSelected) {
+						bulk.deselectAll();
+					}
+				},
+			},
 		);
 	}
 
@@ -283,9 +295,12 @@ export function useTable<
 			action,
 			config.value.endpoint,
 			{
-				table: table.value.id,
+				id: table.value.id,
 			},
-			options,
+			{
+				...defaultOptions,
+				...options,
+			},
 		);
 	}
 
@@ -375,6 +390,7 @@ export function useTable<
 			modelValue: isPageSelected.value,
 		};
 	}
+
 	return reactive({
 		/** Retrieve a record's identifier */
 		getRecordKey,
@@ -387,7 +403,7 @@ export function useTable<
 		/** The records of the table */
 		records,
 		/** Whether the table has record actions */
-		hasInline: table.value.actions.hasInline,
+		inline: table.value.actions.inline,
 		/** The available bulk actions */
 		bulkActions,
 		/** The available page actions */
