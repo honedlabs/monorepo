@@ -8,7 +8,6 @@ use Honed\Action\ActionFactory;
 use Honed\Action\Testing\RequestFactory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Request;
 
 class ActionRequest extends FormRequest
 {
@@ -95,6 +94,6 @@ class ActionRequest extends FormRequest
      */
     public static function fake()
     {
-        return new RequestFactory;
+        return (new RequestFactory);
     }
 }
