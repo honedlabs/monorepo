@@ -31,8 +31,7 @@ class ActionGroup extends Primitive implements UrlRoutable
      */
     public static function make(...$actions)
     {
-        return resolve(static::class)
-            ->withActions($actions);
+        return resolve(static::class)->actions($actions);
     }
 
     /**
@@ -103,7 +102,7 @@ class ActionGroup extends Primitive implements UrlRoutable
     public function toArray()
     {
         $actions = [
-            'inline' => $this->inlineActionsToArray($this->for),
+            'inline' => $this->inlineActionsToArray($this->getResource()),
             'bulk' => $this->bulkActionsToArray(),
             'page' => $this->pageActionsToArray(),
         ];

@@ -5,10 +5,18 @@ declare(strict_types=1);
 use Honed\Action\PageAction;
 use Honed\Action\ActionGroup;
 use Honed\Action\InlineAction;
+use Honed\Action\Tests\Stubs\Product;
 use Honed\Action\Tests\Fixtures\ProductActions;
 
 beforeEach(function () {
     $this->group = ActionGroup::make(PageAction::make('create'));
+});
+
+it('has resource', function () {
+    expect($this->group)
+        ->getResource()->toBeNull()
+        ->resource(product())->toBe($this->group)
+        ->getResource()->toBeInstanceOf(Product::class);
 });
 
 it('has route key name', function () {
@@ -46,7 +54,7 @@ it('has array representation with server actions', function () {
         ->toHaveCount(5)
         ->toHaveKeys(['id', 'endpoint', 'inline', 'bulk', 'page']);
 
-    expect(ProductActions::make()->shouldExecute(false)->toArray())
+    expect(ProductActions::make()->shouldNotExecute()->toArray())
         ->toHaveCount(3)
         ->toHaveKeys(['inline', 'bulk', 'page']);
 });
@@ -54,8 +62,8 @@ it('has array representation with server actions', function () {
 it('has array representation with model', function () {
     $product = product();
 
-    expect($this->group->withActions(InlineAction::make('edit', fn ($record) => $record->name)))
-        ->for($product)->toBe($this->group)
+    expect($this->group->actions(InlineAction::make('edit', fn ($record) => $record->name)))
+        ->resource($product)->toBe($this->group)
         ->toArray()->scoped(fn ($group) => $group
             ->toBeArray()
             ->toHaveCount(3)

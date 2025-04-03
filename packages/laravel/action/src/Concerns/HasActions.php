@@ -17,9 +17,9 @@ trait HasActions
     /**
      * List of the actions.
      *
-     * @var array<int,\Honed\Action\Action|\Honed\Action\ActionGroup>|null
+     * @var array<int,\Honed\Action\Action|\Honed\Action\ActionGroup>
      */
-    protected $actions;
+    protected $actions = [];
 
     /**
      * Whether to provide inline actions.
@@ -53,7 +53,7 @@ trait HasActions
         /** @var array<int, \Honed\Action\Action> */
         $actions = Arr::flatten($actions);
 
-        $this->actions = \array_merge($this->actions ?? [], $actions);
+        $this->actions = \array_merge($this->actions, $actions);
 
         return $this;
     }
@@ -114,9 +114,39 @@ trait HasActions
     {
         $this->exceptInlineActions();
         $this->exceptBulkActions();
-        $this->exceptPage();
+        $this->exceptPageActions();
 
         return $this;
+    }
+
+    /**
+     * Determine if the instance has provided all actions.
+     *
+     * @return bool
+     */
+    public function hasAllActions()
+    {
+        return $this->inline && $this->bulk && $this->page;
+    }
+
+    /**
+     * Determine if the instance provides any actions.
+     *
+     * @return bool
+     */
+    public function hasActions()
+    {
+        return $this->inline || $this->bulk || $this->page;
+    }
+
+    /**
+     * Determine if the instance has not provided any actions.
+     *
+     * @return bool
+     */
+    public function hasNoActions()
+    {
+        return ! $this->hasActions();
     }
 
     /**
@@ -292,7 +322,7 @@ trait HasActions
      * @param  \Illuminate\Database\Eloquent\Model|null  $model
      * @return array<int,mixed>
      */
-    public function inlineToArray($model = null)
+    public function inlineActionsToArray($model = null)
     {
         $named = $typed = [];
 
@@ -306,8 +336,7 @@ trait HasActions
             \array_values(
                 \array_filter(
                     $this->getInlineActions(),
-                    static fn (InlineAction $action) =>
-                        $action->isAllowed($named, $typed)
+                    static fn (InlineAction $action) => $action->isAllowed($named, $typed)
                 )
             )
         );
@@ -318,7 +347,7 @@ trait HasActions
      *
      * @return array<int,mixed>
      */
-    public function bulkToArray()
+    public function bulkActionsToArray()
     {
         return \array_map(
             static fn (BulkAction $action) => $action->toArray(),
@@ -331,7 +360,7 @@ trait HasActions
      *
      * @return array<int,mixed>
      */
-    public function pageToArray()
+    public function pageActionsToArray()
     {
         return \array_map(
             static fn (PageAction $action) => $action->toArray(),

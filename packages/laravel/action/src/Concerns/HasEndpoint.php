@@ -50,7 +50,7 @@ trait HasEndpoint
      */
     public function getEndpoint()
     {
-        $endpoint = $this->endpoint ?? static::defineEndpoint();        
+        $endpoint = $this->endpoint ?? static::defineEndpoint();
 
         return $endpoint ?? static::getDefaultEndpoint();
     }
@@ -98,8 +98,10 @@ trait HasEndpoint
      */
     public function canExecuteServerActions($class)
     {
+        // dd($this);
+        // dd($this->execute, $class, static::class, \is_subclass_of(static::class, $class));
         // @phpstan-ignore-next-line
-        return $this->execute && \is_subclass_of($this, $class);
+        return $this->execute && \is_subclass_of($this::class, $class);
     }
 
     /**
