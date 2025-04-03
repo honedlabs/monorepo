@@ -21,7 +21,7 @@ class ActionGroup extends Primitive implements UrlRoutable
      *
      * @var \Illuminate\Database\Eloquent\Model|null
      */
-    protected $for;
+    protected $resource;
 
     /**
      * Create a new action group instance.
@@ -38,14 +38,24 @@ class ActionGroup extends Primitive implements UrlRoutable
     /**
      * Set the model to be used to resolve inline actions.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $for
+     * @param  \Illuminate\Database\Eloquent\Model  $resource
      * @return $this
      */
-    public function for($for)
+    public function resource($resource)
     {
-        $this->for = $for;
+        $this->resource = $resource;
 
         return $this;
+    }
+
+    /**
+     * Get the model to be used to resolve inline actions.
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function getResource()
+    {
+        return $this->resource;
     }
 
     /**
