@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Honed\Static;
+namespace Honed\Pages;
 
 use Illuminate\Support\ServiceProvider;
 
-class StaticServiceProvider extends ServiceProvider
+class PagesServiceProvider extends ServiceProvider
 {
     /**
      * Register services.

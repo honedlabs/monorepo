@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Honed\Static\Facades;
+namespace Honed\Pages\Facades;
 
+use Honed\Pages\PageRouter;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Honed\Static\Static
+ * @see \Honed\Pages\PageRouter
  */
-class Static extends Facade
+class Pages extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Honed\Static\Static::class;
+        return PageRouter::class;
     }
 }

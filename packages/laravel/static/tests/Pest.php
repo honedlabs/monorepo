@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Honed\Static\Tests\Stubs\Product;
-use Honed\Static\Tests\Stubs\Status;
-use Honed\Static\Tests\TestCase;
+use Honed\Pages\Tests\Stubs\Product;
+use Honed\Pages\Tests\Stubs\Status;
+use Honed\Pages\Tests\TestCase;
 use Illuminate\Support\Str;
 
 uses(TestCase::class)->in(__DIR__);

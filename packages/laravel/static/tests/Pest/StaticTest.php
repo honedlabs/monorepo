@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+use Honed\Pages\PagesRouter;
+use Honed\Pages\Facades\Pages;
+use Illuminate\Support\Facades\Route;
+
 it('tests', function () {
-    dd(config('inertia'));
+    // $router->routes();
+    dd(Pages::create(\realpath('tests/Stubs/js/Pages')));
+
+    // dd(Route::getRoutes());
 });

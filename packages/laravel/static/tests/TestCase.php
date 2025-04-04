@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Honed\Static\Tests;
+namespace Honed\Pages\Tests;
 
 use Illuminate\Support\Facades\View;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Honed\Static\StaticServiceProvider;
+use Honed\Pages\PagesServiceProvider;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Inertia\ServiceProvider as InertiaServiceProvider;
-use Honed\Static\Tests\Stubs\Status;
+use Honed\Pages\Tests\Stubs\Status;
 
 class TestCase extends Orchestra
 {
@@ -41,7 +41,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            StaticServiceProvider::class,
+            PagesServiceProvider::class,
             InertiaServiceProvider::class,
         ];
     }

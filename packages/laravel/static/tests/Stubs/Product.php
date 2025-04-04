@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Static\Tests\Stubs;
+namespace Honed\Pages\Tests\Stubs;
 
 use Illuminate\Database\Eloquent\Model;
 

@@ -37,12 +37,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Honed\\Static\\": "src/"
+            "Honed\\Pages\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Honed\\Static\\Tests\\": "tests/"
+            "Honed\\Pages\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -78,10 +78,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Honed\\Static\\StaticServiceProvider"
+                "Honed\\Pages\\PagesServiceProvider"
             ],
             "aliases": {
-                "Static": "Honed\\Static\\Facades\\Static"
+                "Pages": "Honed\\Pages\\Facades\\Pages"
             }
         }
     },
