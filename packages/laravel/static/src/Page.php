@@ -16,38 +16,54 @@ class Page
     protected $name;
 
     /**
-     * The path of the page.
+     * The path to the page from the pages directory as configured by
+     * createInertiaApp().
      * 
      * @var string
      */
     protected $path;
 
     /**
+     * The uri of the page to register.
+     * 
+     * @var string
+     */
+    protected $uri;
+
+    /**
      * Whether the page has substitute bindings.
      * 
-     * @var bool
+     * @var string|null
      */
-    protected $binding = false;
+    protected $binding = null;
 
+    /**
+     * Create a new page instance.
+     * 
+     * @param string $filename
+     */
     public function __construct($filename)
     {
-        $this->path = \implode('/', \array_map(
+        $directory = \pathinfo($filename, PATHINFO_DIRNAME);
+        $name = \pathinfo($filename, PATHINFO_FILENAME);
+
+        $this->name = $name;
+        $this->path = ($directory === '.' ? '' : $directory.'/').$name;
+
+        $uri = implode('/', array_map(
             fn ($segment) => Str::kebab($segment),
-            \explode('/', \pathinfo($filename, PATHINFO_DIRNAME))
+            explode('/', $directory)
         ));
 
-        $filename = \pathinfo($filename, PATHINFO_FILENAME);
+        $processedName = str_starts_with($name, '[')
+            ? '{'.($this->binding = Str::camel(trim($name, '[]'))).'}'
+            : Str::kebab($name);
 
-        if (\str_starts_with($filename, '[')) {
-            $this->binding = true;
-            $this->name = Str::camel(\trim($filename, '[]'));
-        } else {
-            $this->name = Str::kebab($filename);
-        }
+        $this->uri = trim("$uri/$processedName", '/.');
     }
 
     /**
-     * Get the name of the page.
+     * Get the name of the page file.
      * 
      * @return string
      */
@@ -57,7 +73,7 @@ class Page
     }
 
     /**
-     * Get the directory of the path of the page.
+     * Get the path to the file.
      * 
      * @return string
      */
@@ -67,11 +83,31 @@ class Page
     }
 
     /**
-     * Determine if the page substitutes bindings.
+     * Get the uri this page should be located at.
+     * 
+     * @return string
+     */
+    public function getUri()
+    {
+        return $this->uri;
+    }
+
+    /**
+     * Determine if the page has route model binding.
      * 
      * @return bool
      */
-    public function isBinding()
+    public function hasBinding()
+    {
+        return isset($this->binding);
+    }
+
+    /**
+     * Get the route model binding parameter.
+     * 
+     * @return string|null
+     */
+    public function getBinding()
     {
         return $this->binding;
     }
