@@ -93,7 +93,6 @@ class Modal implements Responsable
     {
         Inertia::share(['modal' => $this->component(), ...Arr::dot($this->props, 'modal.props.')]);
 
-        // render background component on first visit
         if (request()->header(Header::INERTIA) && request()->header(Header::PARTIAL_COMPONENT)) {
             return Inertia::render(request()->header(Header::PARTIAL_COMPONENT));
         }

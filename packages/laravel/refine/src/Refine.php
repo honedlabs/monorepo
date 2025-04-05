@@ -42,6 +42,7 @@ class Refine extends Primitive
      * @use HasBuilderInstance<TModel, TBuilder>
      */
     use HasBuilderInstance;
+
     use HasDelimiter;
 
     /** @use HasFilters<TModel, TBuilder> */
@@ -154,7 +155,7 @@ class Refine extends Primitive
         }
 
         if ($this instanceof RefinesBefore) {
-            return Closure::fromCallable([$this, 'beforeRefining']);
+            return \Closure::fromCallable([$this, 'beforeRefining']);
         }
 
         return null;
@@ -185,7 +186,7 @@ class Refine extends Primitive
         }
 
         if ($this instanceof RefinesAfter) {
-            return Closure::fromCallable([$this, 'afterRefining']);
+            return \Closure::fromCallable([$this, 'afterRefining']);
         }
 
         return null;
