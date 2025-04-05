@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Honed\Pages\Tests\Stubs\Product;
-use Honed\Pages\Tests\Stubs\Status;
-use Honed\Pages\Tests\TestCase;
+use Honed\Page\Tests\Stubs\Product;
+use Honed\Page\Tests\Stubs\Status;
+use Honed\Page\Tests\TestCase;
 use Illuminate\Support\Str;
 
 uses(TestCase::class)->in(__DIR__);
@@ -20,4 +20,19 @@ function product(?string $name = null): Product
         'status' => fake()->randomElement(Status::cases()),
         'created_at' => now()->subDays(fake()->randomNumber(2)),
     ]);
+}
+
+/**
+ * Get the URIs registered by the stubs.
+ */
+function registered()
+{
+    return [
+        '/',
+        'products',
+        'products/all',
+        'products/variants',
+        'products/variants/{productVariant}',
+        'products/{product}',
+    ];
 }

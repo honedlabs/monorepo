@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Pages;
+namespace Honed\Page;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PageRouter
 {
-    const DEFAULT_PAGE_NAME = 'index';
+    const DEFAULT_PAGE_NAME = 'index'; // Case insensitive
 
     /**
      * The path where the pages are located.
@@ -62,6 +62,16 @@ class PageRouter
     }
 
     /**
+     * Clear the pages path.
+     *
+     * @return $this
+     */
+    public function flushPath()
+    {
+        $this->path = null;
+    }
+
+    /**
      * Exclude the given files or folders from being registered as static pages.
      *
      * @param  string|iterable<int,string>  ...$patterns
@@ -85,6 +95,18 @@ class PageRouter
     public function getExcept()
     {
         return $this->except;
+    }
+
+    /**
+     * Clear the excluded files or folders.
+     *
+     * @return $this
+     */
+    public function flushExcept()
+    {
+        $this->except = [];
+
+        return $this;
     }
 
     /**
@@ -114,19 +136,29 @@ class PageRouter
     }
 
     /**
+     * Clear the included files or folders.
+     *
+     * @return $this
+     */
+    public function flushOnly()
+    {
+        $this->only = [];
+
+        return $this;
+    }
+
+    /**
      * Register the given directory as a static under the given URI.
      *
      * @param  string|null  $directory
      * @param  string  $uri
      * @param  string|false  $name
-     * @param  bool  $subdirectories
      * @return void
      */
     public function create(
         $directory = null,
         $uri = '/',
         $name = 'pages',
-        $subdirectories = true
     ) {
         $directory = \rtrim(\rtrim($this->getPath(), '/').'/'.\trim($directory ?? '', '/'), '/');
 
@@ -145,20 +177,19 @@ class PageRouter
      * Get all valid pages from the immediate given directory.
      *
      * @param  string  $directory
-     * @return array<int, \Honed\Pages\Page>
+     * @return array<int, \Honed\Page\Page>
      */
     protected function getPages($directory)
     {
         return \array_reduce(
             File::allFiles($directory),
             function (array $pages, SplFileInfo $file) {
-                if ($this->isPage($file)) {
+                if ($this->isValidPage($file)) {
                     $pages[] = new Page($file->getRelativePathname());
                 }
 
                 return $pages;
-            },
-            []
+            }, []
         );
     }
 
@@ -168,20 +199,67 @@ class PageRouter
      * @param  \Symfony\Component\Finder\SplFileInfo  $file
      * @return bool
      */
-    protected function isPage($file)
+    protected function isValidPage($file)
     {
         /** @var array<int, string> */
         $extensions = config('inertia.testing.page_extensions', []);
 
-        $isValidExtension = filled($extensions)
-            ? \in_array($file->getExtension(), $extensions)
-            : true;
+        return match (true) {
+            ! $file->isFile(),
 
-        return $file->isFile() &&
-            $isValidExtension &&
-            ! \str_starts_with($file->getFilename(), '_');
+            \str_starts_with($file->getFilename(), '_'),
+
+            filled($extensions) && ! \in_array($file->getExtension(), $extensions),
+
+            filled($this->getOnly()) && ! $this->matchesOnly($file),
+
+            filled($this->getExcept()) && $this->matchesExcept($file) => false,
+
+            default => true,
+        };
     }
 
+    /**
+     * Determine if the given file matches any of the given only patterns.
+     * 
+     * @param  \Symfony\Component\Finder\SplFileInfo  $file
+     * @return bool
+     */
+    protected function matchesOnly($file)
+    {
+        return (bool) Arr::first(
+            $this->getOnly(), 
+            fn ($pattern) => $this->isMatching($file, $pattern),
+            false
+        );
+    }
+
+    /**
+     * Determine if the given file matches any of the given except patterns.
+     * 
+     * @param  \Symfony\Component\Finder\SplFileInfo  $file
+     * @return bool
+     */
+    protected function matchesExcept($file)
+    {
+        return (bool) Arr::first(
+            $this->getExcept(), 
+            fn ($pattern) => $this->isMatching($file, $pattern),
+            false
+        );
+    }
+
+    /**
+     * Check if the given file matches the given pattern.
+     * 
+     * @param  \Symfony\Component\Finder\SplFileInfo  $file
+     * @param  string  $pattern
+     * @return bool
+     */
+    protected function isMatching($file, $pattern)
+    {
+        return Str::is($pattern, $file->getFilename());
+    }
     /**
      * Register the given page as a route.
      *

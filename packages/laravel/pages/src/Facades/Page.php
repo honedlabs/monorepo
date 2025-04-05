@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Honed\Pages\Facades;
+namespace Honed\Page\Facades;
 
-use Honed\Pages\PageRouter;
+use Honed\Page\PageRouter;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Honed\Pages\PageRouter
+ * @see \Honed\Page\PageRouter
  */
-class Pages extends Facade
+class Page extends Facade
 {
     protected static function getFacadeAccessor(): string
     {

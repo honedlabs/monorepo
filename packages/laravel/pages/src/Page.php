@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Pages;
+namespace Honed\Page;
 
 use Illuminate\Support\Str;
 

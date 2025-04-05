@@ -1,13 +1,13 @@
 {
-    "name": "honed/static",
+    "name": "honed/page",
     "description": "Use file-based routing in Inertia JS.",
     "keywords": [
         "honed",
         "laravel",
-        "static",
+        "page",
         "inertia"
     ],
-    "homepage": "https://github.com/honedlabs/static",
+    "homepage": "https://github.com/honedlabs/page",
     "license": "MIT",
     "authors": [
         {
@@ -37,12 +37,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Honed\\Pages\\": "src/"
+            "Honed\\Page\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Honed\\Pages\\Tests\\": "tests/"
+            "Honed\\Page\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -78,10 +78,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Honed\\Pages\\PagesServiceProvider"
+                "Honed\\Page\\PageServiceProvider"
             ],
             "aliases": {
-                "Pages": "Honed\\Pages\\Facades\\Pages"
+                "Page": "Honed\\Page\\Facades\\Page"
             }
         }
     },

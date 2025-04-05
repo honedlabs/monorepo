@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Pages\Tests\Stubs;
+namespace Honed\Page\Tests\Stubs;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;

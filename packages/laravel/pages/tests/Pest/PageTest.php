@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Pages\Page;
+use Honed\Page\Page;
 
 it('has root page', function () {
     expect(new Page('Index.vue'))
