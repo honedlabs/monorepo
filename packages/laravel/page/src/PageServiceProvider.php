@@ -13,15 +13,15 @@ class PageServiceProvider extends ServiceProvider
     /**
      * Bootstrap services.
      */
-    public function boot(): void 
+    public function boot(): void
     {
         /**
          * Register the pages macro for file-based routing.
          */
         Router::macro('pages', function (
             ?string $directory = null,
-            ?string $uri = '/',
-            ?string $name = 'pages',
+            string $uri = '/',
+            string|false $name = 'pages',
         ): void {
             Page::create($directory, $uri, $name);
         });

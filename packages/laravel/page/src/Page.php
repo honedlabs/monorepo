@@ -10,7 +10,7 @@ class Page
 {
     /**
      * The name of the page.
-     * 
+     *
      * @var string
      */
     protected $name;
@@ -51,7 +51,7 @@ class Page
 
     /**
      * Get the name of the page.
-     * 
+     *
      * @return string
      */
     public function getName()
@@ -81,7 +81,7 @@ class Page
 
     /**
      * Get the route name for the page.
-     * 
+     *
      * @return string
      */
     public function getRouteName()

@@ -81,6 +81,8 @@ class PageRouter
     public function flushPath()
     {
         $this->path = null;
+
+        return $this;
     }
 
     /**
@@ -255,14 +257,14 @@ class PageRouter
 
     /**
      * Determine if the given file matches any of the given only patterns.
-     * 
+     *
      * @param  \Symfony\Component\Finder\SplFileInfo  $file
      * @return bool
      */
     protected function matchesOnly($file)
     {
         return (bool) Arr::first(
-            $this->getOnly(), 
+            $this->getOnly(),
             fn ($pattern) => $this->isMatching($file, $pattern),
             false
         );
@@ -270,14 +272,14 @@ class PageRouter
 
     /**
      * Determine if the given file matches any of the given except patterns.
-     * 
+     *
      * @param  \Symfony\Component\Finder\SplFileInfo  $file
      * @return bool
      */
     protected function matchesExcept($file)
     {
         return (bool) Arr::first(
-            $this->getExcept(), 
+            $this->getExcept(),
             fn ($pattern) => $this->isMatching($file, $pattern),
             false
         );
@@ -285,7 +287,7 @@ class PageRouter
 
     /**
      * Check if the given file matches the given pattern.
-     * 
+     *
      * @param  \Symfony\Component\Finder\SplFileInfo  $file
      * @param  string  $pattern
      * @return bool
@@ -305,11 +307,11 @@ class PageRouter
 
         return Str::startsWith($name, $pattern) || Str::is($pattern, $name);
     }
-    
+
     /**
      * Register the given page as a route.
      *
-     * @param  \Honed\Pages\Page  $page
+     * @param  \Honed\Page\Page  $page
      * @param  string  $uri
      * @param  string|false  $name
      * @return void
@@ -318,19 +320,23 @@ class PageRouter
     {
         $pageUri = \trim($uri, '/').'/'.\trim($page->getUri(), '/');
 
-        $pageName = \trim($name, '.').'.'.\trim($page->getRouteName(), '.');
-
-        Route::match(
+        $route = Route::match(
             [Request::METHOD_GET, Request::METHOD_HEAD],
             $this->isDefault($page) ? Str::beforeLast($pageUri, '/') : $pageUri,
             fn () => inertia($page->getPath())
-        )->name($pageName);
+        );
+
+        if ($name) {
+            $route->name(
+                \trim($name, '.').'.'.\trim($page->getRouteName(), '.')
+            );
+        }
     }
 
     /**
      * Determine if the given page is the default page.
      *
-     * @param  \Honed\Pages\Page  $page
+     * @param  \Honed\Page\Page  $page
      * @return bool
      */
     protected function isDefault($page)
