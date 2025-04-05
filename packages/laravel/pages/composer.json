@@ -1,6 +1,6 @@
 {
     "name": "honed/page",
-    "description": "Use file-based routing in Inertia JS.",
+    "description": "File-based routing for server static pages in Inertia.",
     "keywords": [
         "honed",
         "laravel",

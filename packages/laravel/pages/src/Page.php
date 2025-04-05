@@ -10,7 +10,7 @@ class Page
 {
     /**
      * The name of the page.
-     *
+     * 
      * @var string
      */
     protected $name;
@@ -31,13 +31,6 @@ class Page
     protected $uri;
 
     /**
-     * Whether the page has substitute bindings.
-     *
-     * @var string|null
-     */
-    protected $binding = null;
-
-    /**
      * Create a new page instance.
      *
      * @param  string  $filename
@@ -45,26 +38,20 @@ class Page
     public function __construct($filename)
     {
         $directory = \pathinfo($filename, PATHINFO_DIRNAME);
-        $name = \pathinfo($filename, PATHINFO_FILENAME);
 
-        $this->name = $name;
-        $this->path = ($directory === '.' ? '' : $directory.'/').$name;
+        $this->name = \pathinfo($filename, PATHINFO_FILENAME);
 
-        $uri = \implode('/', \array_map(
-            fn ($segment) => Str::kebab($segment),
-            \explode('/', $directory)
+        $this->path = \trim(\rtrim($directory, './').'/'.$this->name, './');
+
+        $this->uri = \implode('/', \array_map(
+            Str::kebab(...),
+            \explode('/', $this->path)
         ));
-
-        $processedName = \str_starts_with($name, '[')
-            ? '{'.($this->binding = Str::camel(\trim($name, '[]'))).'}'
-            : Str::kebab($name);
-
-        $this->uri = \trim("$uri/$processedName", '/.');
     }
 
     /**
-     * Get the name of the page file.
-     *
+     * Get the name of the page.
+     * 
      * @return string
      */
     public function getName()
@@ -93,22 +80,15 @@ class Page
     }
 
     /**
-     * Determine if the page has route model binding.
-     *
-     * @return bool
+     * Get the route name for the page.
+     * 
+     * @return string
      */
-    public function hasBinding()
+    public function getRouteName()
     {
-        return isset($this->binding);
-    }
-
-    /**
-     * Get the route model binding parameter.
-     *
-     * @return string|null
-     */
-    public function getBinding()
-    {
-        return $this->binding;
+        return \implode('.', \array_map(
+            Str::kebab(...),
+            \explode('/', $this->getPath())
+        ));
     }
 }

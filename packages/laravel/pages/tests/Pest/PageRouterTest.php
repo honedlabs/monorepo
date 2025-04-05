@@ -47,6 +47,8 @@ it('creates routes', function () {
 
     $gets = Route::getRoutes()->get(Request::METHOD_GET);
 
+    dd(($gets['products/variants'])->getName());
+
     expect($gets)
         ->toBeArray()
         ->toHaveCount(\count(registered()) + 1) // The storage/{path} route
@@ -120,9 +122,13 @@ it('creates routes by subdirectory', function () {
     }
 });
 
-// it('names routes', function () {
+it('fails if the directory does not exist', function () {
+    Page::create('NonExistent');
+})->throws(\Error::class);
 
-// });
+it('fails if a file is provided', function () {
+    Page::create('Index.vue');
+})->throws(\Error::class);
 
 it('excludes patterns', function () {
     expect(Page::getFacadeRoot())

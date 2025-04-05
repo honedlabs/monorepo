@@ -319,15 +319,16 @@ class PageRouter
     {
         $pageUri = \trim($uri, '/').'/'.\trim($page->getUri(), '/');
 
-        // $pageName = $page->getName();
+        $pageName = $page->getName();
 
-        // $name = $name ? \trim($name,'.').'.'.\trim($page->getName(), '.') : null;
-
+        $name = $name ? \trim($name,'.').'.'.\trim($page->getName(), '.') : null;
+        
+        dd($name, $page->getPath());
         Route::match(
             [Request::METHOD_GET, Request::METHOD_HEAD],
             $this->isDefault($page) ? Str::beforeLast($pageUri, '/') : $pageUri,
-            $this->getClosure($page)
-        );
+            fn () => inertia($page->getPath())
+        )->name($name);
     }
 
     /**
@@ -339,25 +340,6 @@ class PageRouter
     protected function isDefault($page)
     {
         return \mb_strtolower($page->getName()) === static::DEFAULT_PAGE_NAME;
-    }
-
-    /**
-     * Get the closure for the given page.
-     *
-     * @param  \Honed\Pages\Page  $page
-     * @return \Closure
-     */
-    protected function getClosure($page)
-    {
-        $path = \rtrim($this->getPath(), '/').'/'.$page->getPath();
-
-        if ($page->hasBinding()) {
-            return fn ($parameter) => inertia($path, [
-                $page->getBinding() => $parameter,
-            ]);
-        }
-
-        return fn () => inertia($path);
     }
 
     /**

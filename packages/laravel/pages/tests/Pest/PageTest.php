@@ -9,30 +9,13 @@ it('has root page', function () {
         ->getName()->toBe('Index')
         ->getPath()->toBe('Index')
         ->getUri()->toBe('index')
-        ->hasBinding()->toBeFalse();
+        ->getRouteName()->toBe('index');
 });
 
 it('has nested page', function () {
-    expect(new Page('Products/Index.vue'))
-        ->getName()->toBe('Index')
-        ->getPath()->toBe('Products/Index')
-        ->getUri()->toBe('products/index')
-        ->getBinding()->toBeNull();
-});
-
-it('has page with binding', function () {
-    expect(new Page('Products/[Product].vue'))
-        ->getName()->toBe('[Product]')
-        ->getPath()->toBe('Products/[Product]')
-        ->getBinding()->toBe('product')
-        ->getUri()->toBe('products/{product}');
-});
-
-it('has nested page with binding', function () {
-    expect(new Page('Products/[Product]/[ProductCategory].vue'))
-        ->getName()->toBe('[ProductCategory]')
-        ->getPath()->toBe('Products/[Product]/[ProductCategory]')
-        // ->getBinding()->toBe(['product', 'productCategory'])
-        // ->getUri()->toBe('products/{product}/{productCategory}')
-        ;
+    expect(new Page('Products/Product.vue'))
+        ->getName()->toBe('Product')
+        ->getPath()->toBe('Products/Product')
+        ->getUri()->toBe('products/product')
+        ->getRouteName()->toBe('products.product');
 });
