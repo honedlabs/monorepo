@@ -11,12 +11,16 @@ export interface ExtendedUpload extends Upload {
 
 export type UploadStatus = "pending" | "uploading" | "completed" | "error";
 
-export interface UploadFile {
-	id: number;
-	name: string;
+export interface AsFile {
+	name?: string;
+	source: File | string;
 	size?: number;
 	type?: string;
 	extension?: string;
+}
+
+export interface UploadFile extends AsFile {
+	id: number;
 	progress?: number;
 	status?: UploadStatus;
 	source: File | string;
@@ -28,7 +32,7 @@ export interface Options<T = any> {
 	upload?: Upload | ExtendedUpload;
 	waited?: boolean;
 	meta?: Record<string, any>;
-	files?: UploadFile[];
+	files?: AsFile;
 	onStart?: (file: File) => void;
 	onError?: (error: Record<string, any>) => void;
 	onSuccess?: (data: T) => void;

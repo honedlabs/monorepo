@@ -317,8 +317,21 @@ export function useRefine<
 	/**
 	 * Clear the given filter.
 	 */
-	function clearFilter(filter: Filter | string, options: VisitOptions = {}) {
-		applyFilter(filter, undefined, options);
+	function clearFilter(filter?: Filter | string, options: VisitOptions = {}) {
+		if (filter) {
+			applyFilter(filter, undefined, options);
+			return;
+		}
+
+		const data = Object.fromEntries(
+			currentFilters.value.map(({ name }) => [name, undefined]),
+		);
+
+		router.reload({
+			...defaultOptions,
+			...options,
+			data,
+		});
 	}
 
 	/**

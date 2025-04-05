@@ -27,9 +27,7 @@ export function useTable<
 	defaultOptions: VisitOptions = {},
 ) {
 	if (!props || !key || !props[key]) {
-		throw new Error(
-			"The table has not been provided with valid props and key.",
-		);
+		throw new Error("Table has not been provided with valid props and key.");
 	}
 
 	defaultOptions = {
@@ -249,10 +247,7 @@ export function useTable<
 				id: table.value.id,
 				record: getRecordKey(record),
 			},
-			{
-				...defaultOptions,
-				...options,
-			},
+			options,
 		);
 
 		if (!success) {
@@ -274,10 +269,8 @@ export function useTable<
 				except: Array.from(bulk.selection.value.except),
 			},
 			{
-				...defaultOptions,
 				...options,
 				onSuccess: (page: Page) => {
-					defaultOptions.onSuccess?.(page);
 					options.onSuccess?.(page);
 					if (!action.keepSelected) {
 						bulk.deselectAll();
@@ -297,10 +290,7 @@ export function useTable<
 			{
 				id: table.value.id,
 			},
-			{
-				...defaultOptions,
-				...options,
-			},
+			options,
 		);
 	}
 

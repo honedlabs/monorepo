@@ -1,6 +1,6 @@
 import { reactive, computed, ref } from "vue";
 import axios from "axios";
-import type { Options, UploadFile, UploadStatus, Presign } from "./types";
+import type { Options, UploadFile, UploadStatus, Presign, AsFile } from "./types";
 
 export function useUpload<T = any>(
 	url: string,
@@ -19,7 +19,7 @@ export function useUpload<T = any>(
 	 * Ref containing the files
 	 */
 	const files = ref<UploadFile[]>(
-		(uploadOptions.files || []).map((file, i) => ({
+		(uploadOptions.files || []).map((file: AsFile, i: number) => ({
 			...file,
 			id: id.value++,
 			remove: () => remove(i),

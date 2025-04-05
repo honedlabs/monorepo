@@ -169,9 +169,6 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
     searches: {
         apply: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
         clear: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
-        /**
-         * Get the bulk actions.
-         */
         bind: () => {
             "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
             modelValue: boolean;
@@ -181,9 +178,6 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
         name: string;
         label: string;
         active: boolean;
-        /**
-         * Get page actions.
-         */
         meta: Record<string, any>;
     }[] | undefined;
     getFilter: (name: string) => Filter | undefined;
@@ -231,6 +225,9 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
         isSorting: boolean | undefined;
         toggleSort: (options?: VisitOptions) => void;
         name: keyof RecordType;
+        /**
+         * The heading columns for the table.
+         */
         label: string;
         type: string;
         hidden: boolean;
@@ -247,6 +244,9 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
     columns: {
         toggle: (options?: VisitOptions) => void;
         name: keyof RecordType;
+        /**
+         * The heading columns for the table.
+         */
         label: string;
         type: string;
         hidden: boolean;
@@ -290,9 +290,7 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
         selected: boolean;
         /** Bind the record to a checkbox */
         bind: () => {
-            "onUpdate:modelValue": (checked: boolean | "indeterminate") => void; /**
-            * The current number of records to display per page.
-            */
+            "onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
             modelValue: boolean;
             value: Identifier;
         };
@@ -359,9 +357,7 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
     isPageSelected: boolean;
     hasSelected: boolean;
     bindCheckbox: (record: AsRecord<RecordType>) => {
-        "onUpdate:modelValue": (checked: boolean | "indeterminate") => void; /**
-        * The current number of records to display per page.
-        */
+        "onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
         modelValue: boolean;
         value: Identifier;
     };
