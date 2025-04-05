@@ -50,7 +50,8 @@ class PageRouter
     }
 
     /**
-     * Get the path where your pages are located.
+     * Get the path where your pages are located, from a specified path or the
+     * inertia configuration file.
      *
      * @default 'resources/js/Pages'
      *
@@ -58,7 +59,18 @@ class PageRouter
      */
     public function getPath()
     {
-        return $this->path ?? resource_path('js/Pages');
+        if (isset($this->path)) {
+            return $this->path;
+        }
+
+        /** @var string|null */
+        $paths = config('inertia.testing.page_paths', null);
+
+        if ($paths) {
+            return $paths;
+        }
+
+        return resource_path('js/Pages');
     }
 
     /**
@@ -98,6 +110,17 @@ class PageRouter
     }
 
     /**
+     * Determine if there are files or folders that are excluded from being
+     * registered as static pages.
+     *
+     * @return bool
+     */
+    public function hasExcept()
+    {
+        return filled($this->except);
+    }
+
+    /**
      * Clear the excluded files or folders.
      *
      * @return $this
@@ -133,6 +156,17 @@ class PageRouter
     public function getOnly()
     {
         return $this->only;
+    }
+
+    /**
+     * Determine if there are files or folders that are included to be
+     * registered as static pages.
+     *
+     * @return bool
+     */
+    public function hasOnly()
+    {
+        return filled($this->only);
     }
 
     /**
@@ -211,9 +245,9 @@ class PageRouter
 
             filled($extensions) && ! \in_array($file->getExtension(), $extensions),
 
-            filled($this->getOnly()) && ! $this->matchesOnly($file),
+            $this->hasOnly() && ! $this->matchesOnly($file),
 
-            filled($this->getExcept()) && $this->matchesExcept($file) => false,
+            $this->hasExcept() && $this->matchesExcept($file) => false,
 
             default => true,
         };
@@ -258,8 +292,21 @@ class PageRouter
      */
     protected function isMatching($file, $pattern)
     {
-        return Str::is($pattern, $file->getFilename());
+        // Exclude all nested files
+        if ($pattern === '/') {
+            return ! empty($file->getRelativePath());
+        }
+
+        // Exclude specific directories
+        if (Str::contains($pattern, '/')) {
+            return Str::is($pattern, $file->getRelativePathname());
+        }
+
+        $name = $file->getFilename();
+
+        return Str::startsWith($name, $pattern) || Str::is($pattern, $name);
     }
+    
     /**
      * Register the given page as a route.
      *
