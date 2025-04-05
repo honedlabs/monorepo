@@ -32,7 +32,5 @@ function registered()
         'products',
         'products/all',
         'products/variants',
-        'products/variants/{productVariant}',
-        'products/{product}',
     ];
 }

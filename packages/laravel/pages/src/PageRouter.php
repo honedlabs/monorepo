@@ -292,7 +292,6 @@ class PageRouter
      */
     protected function isMatching($file, $pattern)
     {
-        // Exclude all nested files
         if ($pattern === '/') {
             return ! empty($file->getRelativePath());
         }
@@ -319,16 +318,13 @@ class PageRouter
     {
         $pageUri = \trim($uri, '/').'/'.\trim($page->getUri(), '/');
 
-        $pageName = $page->getName();
+        $pageName = \trim($name, '.').'.'.\trim($page->getRouteName(), '.');
 
-        $name = $name ? \trim($name,'.').'.'.\trim($page->getName(), '.') : null;
-        
-        dd($name, $page->getPath());
         Route::match(
             [Request::METHOD_GET, Request::METHOD_HEAD],
             $this->isDefault($page) ? Str::beforeLast($pageUri, '/') : $pageUri,
             fn () => inertia($page->getPath())
-        )->name($name);
+        )->name($pageName);
     }
 
     /**

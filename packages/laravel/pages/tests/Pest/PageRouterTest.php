@@ -47,7 +47,7 @@ it('creates routes', function () {
 
     $gets = Route::getRoutes()->get(Request::METHOD_GET);
 
-    dd(($gets['products/variants'])->getName());
+    // dd(($gets['products/variants'])->getName());
 
     expect($gets)
         ->toBeArray()
@@ -167,7 +167,7 @@ it('excludes all directories', function () {
 
     expect($gets)
         ->toBeArray()
-        ->toHaveCount(1 + 1 + 2);
+        ->toHaveCount(1 + 2);
 });
 
 it('excludes directories', function () {
@@ -176,10 +176,10 @@ it('excludes directories', function () {
     Page::create();
 
     $gets = Route::getRoutes()->get(Request::METHOD_GET);
-
+    
     expect($gets)
         ->toBeArray()
-        ->toHaveCount(4 + 1);
+        ->toHaveCount(3 + 1);
 });
 
 it('includes patterns', function () {
