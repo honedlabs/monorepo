@@ -50,16 +50,16 @@ class Page
         $this->name = $name;
         $this->path = ($directory === '.' ? '' : $directory.'/').$name;
 
-        $uri = implode('/', array_map(
+        $uri = \implode('/', \array_map(
             fn ($segment) => Str::kebab($segment),
-            explode('/', $directory)
+            \explode('/', $directory)
         ));
 
-        $processedName = str_starts_with($name, '[')
-            ? '{'.($this->binding = Str::camel(trim($name, '[]'))).'}'
+        $processedName = \str_starts_with($name, '[')
+            ? '{'.($this->binding = Str::camel(\trim($name, '[]'))).'}'
             : Str::kebab($name);
 
-        $this->uri = trim("$uri/$processedName", '/.');
+        $this->uri = \trim("$uri/$processedName", '/.');
     }
 
     /**

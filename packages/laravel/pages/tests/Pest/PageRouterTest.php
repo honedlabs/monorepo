@@ -58,3 +58,23 @@ it('creates routes', function () {
             );
     }
 });
+
+it('creates routes by subdirectory', function () {
+    Pages::create('Products');
+
+    expect(Route::getRoutes()->get(Request::METHOD_GET))
+        ->toBeArray()
+        ->toHaveCount(\count($this->routes));
+});
+
+it('names routes', function () {
+
+});
+
+it('excludes patterns', function () {
+
+});
+
+it('includes patterns', function () {
+
+});
