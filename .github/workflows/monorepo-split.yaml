@@ -25,6 +25,7 @@ jobs:
           - lock
           # - modal
           - nav
+          - page
           - refine
           - table
           - upload
