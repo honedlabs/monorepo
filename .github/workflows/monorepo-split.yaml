@@ -17,13 +17,13 @@ jobs:
         package:
           - action
           - chart
-          # - command
-          # - core
+          - command
+          - core
           - crumb
           - flash
           - layout
           - lock
-          # - modal
+          - modal
           - nav
           - page
           - refine
