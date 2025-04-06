@@ -8,13 +8,11 @@ beforeEach(function () {
     $this->test = new class {
         use HasName;
     };
-
-    $this->param = 'name';
 });
 
 it('accesses', function () {
     expect($this->test)
         ->getName()->toBeNull()
-        ->name($this->param)->toBe($this->test)
-        ->getName()->toBe($this->param);
+        ->name('name')->toBe($this->test)
+        ->getName()->toBe('name');
 });

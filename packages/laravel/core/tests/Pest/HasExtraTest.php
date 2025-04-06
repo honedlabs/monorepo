@@ -15,10 +15,8 @@ beforeEach(function () {
 
 it('accesses', function () {
     expect($this->test)
-        ->getExtra()->scoped(fn ($test) => $test
-            ->toBeArray()
-            ->toBeEmpty()
-        )
+        ->defineExtra()->toEqual([])
+        ->getExtra()->toEqual([])
         ->hasExtra()->toBeFalse()
         ->extra(['key' => 'value'])->toBe($this->test)
         ->getExtra()->toEqual(['key' => 'value'])

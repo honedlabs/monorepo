@@ -18,16 +18,32 @@ beforeEach(function () {
 
 it('accesses', function () {
     expect($this->test)
+        ->defineResource()->toBeNull()
         ->resource(Product::query())->toBe($this->test)
         ->getResource()->toBeInstanceOf(Builder::class)
         ->hasResource()->toBeTrue();
+});
+
+it('defines', function () {
+    $test = new class {
+        use HasResource;
+
+        public function defineResource()
+        {
+            return Product::query();
+        }
+    };
+
+    expect($test)
+        ->hasResource()->toBeTrue()
+        ->getResource()->toBeInstanceOf(Builder::class);
 });
 
 it('cannot retrieve without a builder', function () {
     $this->test->getResource();
 })->throws(\RuntimeException::class);
 
-it('has as builder', function () {
+it('converts to builder', function () {
     expect($this->test->asBuilder(Product::query()))
         ->toBeInstanceOf(Builder::class);
 

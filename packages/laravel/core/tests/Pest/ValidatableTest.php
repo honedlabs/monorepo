@@ -5,31 +5,46 @@ declare(strict_types=1);
 use Honed\Core\Concerns\Validatable;
 use Honed\Core\Tests\Stubs\Product;
 
-class ValidatableTest
-{
-    use Validatable;
-}
-
 beforeEach(function () {
-    $this->test = new ValidatableTest;
+    $this->test = new class {
+        use Validatable;
+    };
+
     $this->fn = fn (Product $product) => $product->id > 100;
-    $this->product = product();
 });
 
-it('passes by default', function () {
+it('accesses', function () {
     expect($this->test)
-        ->validate($this->product)->toBeTrue()
-        ->validates()->toBeFalse();
-});
-
-it('sets', function () {
-    expect($this->test->validator($this->fn))
-        ->toBeInstanceOf(ValidatableTest::class)
+        ->defineValidator()->toBeNull()
+        ->validates()->toBeFalse()
+        ->getValidator()->toBeNull()
+        ->validator($this->fn)->toBe($this->test)
+        ->getValidator()->toBeInstanceOf(\Closure::class)
         ->validates()->toBeTrue();
 });
 
 it('validates', function () {
-    expect($this->test->validator($this->fn))
-        ->validates()->toBeTrue()
-        ->validate($this->product)->toBeFalse();
+    $product = product();
+
+    expect($this->test)
+        ->validate($product)->toBeTrue()
+        ->validator($this->fn)->toBe($this->test)
+        ->validate($product)->toBeFalse();
 });
+
+it('defines', function () {
+    $test = new class {
+        use Validatable;
+
+        public function defineValidator()
+        {
+            return fn (Product $product) => $product->id === 1;
+        }
+    };
+
+    expect($test)
+        ->getValidator()->toBeInstanceOf(\Closure::class)
+        ->validates()->toBeTrue()
+        ->validate(product())->toBeTrue();
+});
+

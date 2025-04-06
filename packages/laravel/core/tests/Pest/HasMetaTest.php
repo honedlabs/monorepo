@@ -12,9 +12,25 @@ beforeEach(function () {
 
 it('accesses', function () {
     expect($this->test)
-        ->getMeta()->toBeEmpty()
+        ->defineMeta()->toEqual([])
+        ->getMeta()->toEqual([])
         ->hasMeta()->toBeFalse()
         ->meta(['name' => 'test'])->toBe($this->test)
         ->getMeta()->toBe(['name' => 'test'])
+        ->hasMeta()->toBeTrue();
+});
+
+it('defines', function () {
+    $test = new class {
+        use HasMeta;
+
+        public function defineMeta()
+        {
+            return ['name' => 'test'];
+        }
+    };
+
+    expect($test)
+        ->getMeta()->toEqual(['name' => 'test'])
         ->hasMeta()->toBeTrue();
 });

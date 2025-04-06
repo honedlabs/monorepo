@@ -19,8 +19,8 @@ it('accesses', function () {
         ->hasQuery()->toBeFalse()
         ->getQuery()->toBeNull()
         ->query(fn () => null)->toBe($this->test)
-        ->getQuery()->toBeInstanceOf(\Closure::class)
-        ->hasQuery()->toBeTrue();
+        ->hasQuery()->toBeTrue()
+        ->getQuery()->toBeInstanceOf(\Closure::class);
 });
 
 it('defines', function () {

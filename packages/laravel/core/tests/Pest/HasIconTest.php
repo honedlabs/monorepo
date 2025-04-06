@@ -28,6 +28,7 @@ beforeEach(function () {
 
 it('accesses', function () {
     expect($this->test)
+        ->defineIcon()->toBeNull()
         ->hasIcon()->toBeFalse()
         ->getIcon()->toBeNull()
         ->icon('icon')->toBe($this->test)
@@ -42,6 +43,21 @@ it('accesses contracts', function () {
         ->icon(IconEnum::Chevron)->toBe($this->test)
         ->getIcon()->toBe('chevron')
         ->hasIcon()->toBeTrue();
+});
+
+it('defines', function () {
+    $test = new class {
+        use Evaluable, HasIcon;
+        
+        public function defineIcon()
+        {
+            return 'icon';
+        }
+    };
+
+    expect($test)
+        ->hasIcon()->toBeTrue()
+        ->getIcon()->toBe('icon');
 });
 
 it('evaluates', function () {
