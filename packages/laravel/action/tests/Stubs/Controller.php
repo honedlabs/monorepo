@@ -22,8 +22,11 @@ class Controller extends BaseController
     {
         $builder = Product::query();
 
-        $response = Handler::make($builder, $this->getActions())
-            ->handle($request);
+        $response = Handler::make(
+            $builder,
+            $this->getActions(),
+            'public_id'
+        )->handle($request);
 
         return $response;
     }
@@ -33,6 +36,16 @@ class Controller extends BaseController
         return [
             InlineAction::make('update.name')
                 ->action(fn ($product) => $product->update(['name' => 'test'])),
+
+            InlineAction::make('show')
+                ->route(fn ($product) => route('products.show', $product->public_id)),
+
+            InlineAction::make('price.100')
+                ->action(function ($product) {
+                    $product->update(['price' => 100]);
+
+                    return inertia('Show');
+                }),
 
             InlineAction::make('update.description')
                 ->action(fn ($product) => $product->update(['description' => 'test']))

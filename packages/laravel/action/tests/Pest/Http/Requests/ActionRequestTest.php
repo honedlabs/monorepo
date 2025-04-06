@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-use Honed\Action\ActionFactory;
-use Honed\Action\Http\Requests\ActionRequest;
-use Honed\Action\Testing\RequestFactory;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Honed\Action\ActionFactory;
+use Honed\Action\Testing\RequestFactory;
+use Honed\Action\Http\Requests\ActionRequest;
 
 beforeEach(function () {
     $this->id = Str::uuid()->toString();
 });
 
 it('validates inline', function () {
-    $httpRequest = \Illuminate\Http\Request::create('/', 'POST', [
+    $httpRequest = Request::create('/', 'POST', [
         'id' => $this->id,
         'name' => 'edit',
-        'type' => ActionFactory::Inline,
+        'type' => ActionFactory::INLINE,
         'record' => '1',
     ]);
 
@@ -31,10 +32,10 @@ it('validates inline', function () {
 });
 
 it('validates bulk', function () {
-    $httpRequest = \Illuminate\Http\Request::create('/', 'POST', [
+    $httpRequest = Request::create('/', 'POST', [
         'id' => $this->id,
         'name' => 'edit',
-        'type' => ActionFactory::Bulk,
+        'type' => ActionFactory::BULK,
         'only' => [1, 2, 3],
         'all' => false,
         'except' => [],
@@ -52,10 +53,10 @@ it('validates bulk', function () {
 });
 
 it('validates page', function () {
-    $httpRequest = \Illuminate\Http\Request::create('/', 'POST', [
+    $httpRequest = Request::create('/', 'POST', [
         'id' => $this->id,
         'name' => 'edit',
-        'type' => ActionFactory::Page,
+        'type' => ActionFactory::PAGE,
     ]);
 
     $this->app->instance('request', $httpRequest);

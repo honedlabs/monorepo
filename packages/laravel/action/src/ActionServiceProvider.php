@@ -35,11 +35,11 @@ class ActionServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__.'/../config/action.php' => config_path('action.php'),
-            ], 'config');
+            ], 'action-config');
 
             $this->publishes([
                 __DIR__.'/../stubs' => base_path('stubs'),
-            ], 'stubs');
+            ], 'action-stubs');
         }
 
         // $this->registerRoutesMacro();

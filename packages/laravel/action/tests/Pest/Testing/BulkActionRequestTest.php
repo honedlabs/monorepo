@@ -35,7 +35,7 @@ it('has data', function () {
         ->getData()->scoped(fn ($data) => $data
             ->toBeArray()
             ->toHaveKeys(['type', 'only', 'except', 'all', 'id', 'name'])
-            ->{'type'}->toBe(ActionFactory::Bulk)
+            ->{'type'}->toBe(ActionFactory::BULK)
         )->data(['type' => 'test'])->toBe($this->request)
         ->getData()->scoped(fn ($data) => $data
             ->toBeArray()

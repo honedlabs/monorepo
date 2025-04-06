@@ -44,7 +44,7 @@ class ActionRequest extends FormRequest
      */
     public function isInline()
     {
-        return $this->validated('type') === ActionFactory::Inline;
+        return $this->validated('type') === ActionFactory::INLINE;
     }
 
     /**
@@ -54,7 +54,7 @@ class ActionRequest extends FormRequest
      */
     public function isBulk()
     {
-        return $this->validated('type') === ActionFactory::Bulk;
+        return $this->validated('type') === ActionFactory::BULK;
     }
 
     /**
@@ -64,7 +64,7 @@ class ActionRequest extends FormRequest
      */
     public function isPage()
     {
-        return $this->validated('type') === ActionFactory::Page;
+        return $this->validated('type') === ActionFactory::PAGE;
     }
 
     /**

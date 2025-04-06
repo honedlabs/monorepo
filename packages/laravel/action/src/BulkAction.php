@@ -19,10 +19,12 @@ class BulkAction extends Action
 
     /**
      * {@inheritdoc}
+     * 
+     * @return string
      */
-    public function setUp()
+    public function defineType()
     {
-        $this->type(ActionFactory::Bulk);
+        return ActionFactory::BULK;
     }
 
     /**

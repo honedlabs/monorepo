@@ -12,9 +12,11 @@ class PageAction extends Action
 
     /**
      * {@inheritdoc}
+     * 
+     * @return string
      */
-    public function setUp()
+    public function defineType()
     {
-        $this->type(ActionFactory::Page);
+        return ActionFactory::PAGE;
     }
 }

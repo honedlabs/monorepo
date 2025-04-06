@@ -24,18 +24,18 @@ it('can execute server actions', function () {
     $class = ActionGroup::class;
 
     expect($this->test)
-        ->canExecuteServerActions($class)->toBeFalse()
-        ->cannotExecuteServerActions($class)->toBeTrue()
+        ->isExecutable($class)->toBeFalse()
+        ->isNotExecutable($class)->toBeTrue()
         ->shouldExecute()->toBe($this->test)
-        ->canExecuteServerActions($class)->toBeFalse()
-        ->cannotExecuteServerActions($class)->toBeTrue();
+        ->isExecutable($class)->toBeFalse()
+        ->isNotExecutable($class)->toBeTrue();
 
     $actions = ProductActions::make();
     
     expect($actions)
-        ->canExecuteServerActions(ActionGroup::class)->toBeTrue()
-        ->cannotExecuteServerActions(ActionGroup::class)->toBeFalse()
+        ->isExecutable(ActionGroup::class)->toBeTrue()
+        ->isNotExecutable(ActionGroup::class)->toBeFalse()
         ->shouldNotExecute()->toBe($actions)
-        ->canExecuteServerActions(ActionGroup::class)->toBeFalse()
-        ->cannotExecuteServerActions(ActionGroup::class)->toBeTrue();
+        ->isExecutable(ActionGroup::class)->toBeFalse()
+        ->isNotExecutable(ActionGroup::class)->toBeTrue();
 });

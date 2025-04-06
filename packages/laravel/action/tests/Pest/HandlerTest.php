@@ -22,7 +22,7 @@ describe('inline', function () {
         $this->base = [
             'id' => $this->id,
             'name' => 'update',
-            'type' => ActionFactory::Inline,
+            'type' => ActionFactory::INLINE,
             'record' => 1,
         ];
     });
@@ -73,7 +73,7 @@ describe('bulk', function () {
         $this->base = [
             'id' => $this->id,
             'name' => 'update',
-            'type' => ActionFactory::Bulk,
+            'type' => ActionFactory::BULK,
             'all' => false,
             'except' => [],
             'only' => [],
@@ -160,7 +160,7 @@ describe('page', function () {
         $this->base = [
             'id' => $this->id,
             'name' => 'update',
-            'type' => ActionFactory::Page,
+            'type' => ActionFactory::PAGE,
         ];
     });
 

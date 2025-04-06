@@ -43,6 +43,16 @@ class BulkActionRequest extends FakeActionRequest
     }
 
     /**
+     * Create a new bulk action request.
+     *
+     * @return static
+     */
+    public static function make()
+    {
+        return resolve(static::class);
+    }
+
+    /**
      * Determine if all records should be included.
      *
      * @return bool
@@ -104,7 +114,7 @@ class BulkActionRequest extends FakeActionRequest
     public function getData()
     {
         return \array_merge([
-            'type' => ActionFactory::Bulk,
+            'type' => ActionFactory::BULK,
             'only' => $this->getOnly(),
             'except' => $this->getExcept(),
             'all' => $this->isAll(),

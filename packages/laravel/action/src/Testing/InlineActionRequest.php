@@ -44,7 +44,7 @@ class InlineActionRequest extends FakeActionRequest
     public function getData()
     {
         return \array_merge([
-            'type' => ActionFactory::Inline,
+            'type' => ActionFactory::INLINE,
             'record' => $this->getRecord(),
         ], parent::getData());
     }
