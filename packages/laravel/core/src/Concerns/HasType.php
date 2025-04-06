@@ -27,13 +27,23 @@ trait HasType
     }
 
     /**
+     * Define the type.
+     *
+     * @return string|null
+     */
+    public function defineType()
+    {
+        return null;
+    }
+
+    /**
      * Get the type.
      *
      * @return string|null
      */
     public function getType()
     {
-        return $this->type;
+        return $this->type ??= $this->defineType();
     }
 
     /**
@@ -43,6 +53,6 @@ trait HasType
      */
     public function hasType()
     {
-        return isset($this->type);
+        return isset($this->getType());
     }
 }

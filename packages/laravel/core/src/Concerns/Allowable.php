@@ -27,6 +27,16 @@ trait Allowable
     }
 
     /**
+     * Define the allow condition.
+     *
+     * @return \Closure(mixed...):bool|bool|null
+     */
+    public function defineAllow()
+    {
+        return null;
+    }
+
+    /**
      * Determine if the parameters pass the allow condition.
      *
      * @param  array<string,mixed>  $parameters
@@ -35,8 +45,8 @@ trait Allowable
      */
     public function isAllowed($parameters = [], $typed = [])
     {
-        $evaluated = (bool) $this->evaluate($this->allow, $parameters, $typed);
+        $allow = $this->allow ??= $this->defineAllow();
 
-        return $evaluated;
+        return (bool) $this->evaluate($allow, $parameters, $typed);
     }
 }

@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Honed\Core\Contracts\HasExtra as HasExtraContract;
-
 trait HasExtra
 {
     /**
      * Extra data.
      *
-     * @var array<string,mixed>|\Closure(mixed...):array<string,mixed>
+     * @var array<string,mixed>|\Closure(mixed...):array<string,mixed>|null
      */
-    protected $extra = [];
+    protected $extra;
 
     /**
      * Set the extra data.
@@ -29,36 +27,27 @@ trait HasExtra
     }
 
     /**
-     * Get the extra data.
+     * Define the extra data.
      *
-     * @return array<string,mixed>
+     * @return \Closure(mixed...):array<string,mixed>
      */
-    public function getExtra()
+    public function defineExtra()
     {
-        $extra = $this instanceof HasExtraContract
-            ? \Closure::fromCallable([$this, 'extraAs'])
-            : $this->extra;
-
-        return $this->evaluate($extra);
+        return [];
     }
 
     /**
-     * Evaluate the extra parameters.
+     * Get the extra data.
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<class-string,mixed>  $typed
      * @return array<string,mixed>
      */
-    public function resolveExtra($parameters = [], $typed = [])
+    public function getExtra($parameters = [], $typed = [])
     {
-        $extra = $this instanceof HasExtraContract
-            ? \Closure::fromCallable([$this, 'extraAs'])
-            : $this->extra;
+        $extra = $this->extra ??= $this->defineExtra();
 
-        /** @var array<string,mixed>|null */
-        $evaluated = $this->evaluate($extra, $parameters, $typed);
-
-        return $evaluated;
+        return $this->evaluate($extra, $parameters, $typed);
     }
 
     /**
@@ -68,6 +57,6 @@ trait HasExtra
      */
     public function hasExtra()
     {
-        return filled($this->extra);
+        return filled($this->getExtra());
     }
 }

@@ -27,13 +27,33 @@ trait Transformable
     }
 
     /**
+     * Define the transformer function.
+     *
+     * @return \Closure(mixed):mixed|null
+     */
+    public function defineTransformer()
+    {
+        return null;
+    }
+
+    /**
+     * Get the transformer function.
+     *
+     * @return \Closure(mixed):mixed|null
+     */
+    public function getTransformer()
+    {
+        return $this->transformer ??= $this->defineTransformer();
+    }
+
+    /**
      * Determine if a transformer function is set.
      *
      * @return bool
      */
     public function transforms()
     {
-        return isset($this->transformer);
+        return isset($this->getTransformer());
     }
 
     /**
@@ -44,8 +64,12 @@ trait Transformable
      */
     public function transform($value)
     {
-        return $this->transforms()
-            ? \call_user_func($this->transformer, $value)
-            : $value;
+        $transformer = $this->getTransformer();
+
+        if (! $transformer) {
+            return $value;
+        }
+
+        return $transformer($value);
     }
 }

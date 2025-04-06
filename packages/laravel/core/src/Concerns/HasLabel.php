@@ -31,26 +31,13 @@ trait HasLabel
     /**
      * Get the label.
      *
-     * @return string|null
-     */
-    public function getLabel()
-    {
-        return $this->evaluate($this->label);
-    }
-
-    /**
-     * Evaluate the label.
-     *
      * @param  array<string,mixed>  $parameters
      * @param  array<class-string,mixed>  $typed
      * @return string|null
      */
-    public function resolveLabel(array $parameters = [], array $typed = [])
+    public function getLabel($parameters = [], $typed = [])
     {
-        /** @var string|null */
-        $evaluated = $this->evaluate($this->label, $parameters, $typed);
-
-        return $evaluated;
+        return $this->evaluate($this->label, $parameters, $typed);
     }
 
     /**
@@ -71,7 +58,7 @@ trait HasLabel
      */
     public static function makeLabel($name)
     {
-        if (\is_null($name)) {
+        if (! \is_string($name)) {
             return null;
         }
 

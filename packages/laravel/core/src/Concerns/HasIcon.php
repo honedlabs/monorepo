@@ -29,34 +29,31 @@ trait HasIcon
     }
 
     /**
-     * Get the icon.
-     *
-     * @return string|null
+     * Define the icon.
+     * 
+     * @return string|\Honed\Core\Contracts\Icon|(\Closure(mixed...):string|\Honed\Core\Contracts\Icon)|null
      */
-    public function getIcon()
+    public function defineIcon()
     {
-        if (! isset($this->icon)) {
-            return null;
-        }
-
-        return $this->icon instanceof HasIconContract
-            ? $this->icon->icon()
-            : $this->evaluate($this->icon);
+        return null;
     }
 
     /**
-     * Evaluate the icon.
+     * Get the icon.
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<class-string,mixed>  $typed
-     * @return string|\Honed\Core\Contracts\HasIcon|null
+     * @return string|null
      */
-    public function resolveIcon($parameters = [], $typed = [])
+    public function getIcon($parameters = [], $typed = [])
     {
-        /** @var string|null */
-        $evaluated = $this->evaluate($this->icon, $parameters, $typed);
+        $icon = $this->icon ??= $this->defineIcon();
 
-        return $evaluated;
+        if ($icon instanceof HasIconContract) {
+            return $icon->icon();
+        }
+
+        return $this->evaluate($icon, $parameters, $typed);
     }
 
     /**
@@ -66,6 +63,6 @@ trait HasIcon
      */
     public function hasIcon()
     {
-        return isset($this->icon);
+        return isset($this->getIcon());
     }
 }

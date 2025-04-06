@@ -27,13 +27,33 @@ trait Validatable
     }
 
     /**
+     * Define the validation function.
+     *
+     * @return \Closure(mixed):bool|bool|null
+     */
+    public function defineValidator()
+    {
+        return null;
+    }
+
+    /**
+     * Get the validation function.
+     *
+     * @return \Closure(mixed):bool|bool|null
+     */
+    public function getValidator()
+    {
+        return $this->validator ??= $this->defineValidator();
+    }
+
+    /**
      * Determine if a validation function is set.
      *
      * @return bool
      */
     public function validates()
     {
-        return isset($this->validator);
+        return isset($this->getValidator());
     }
 
     /**
@@ -44,8 +64,12 @@ trait Validatable
      */
     public function validate($value)
     {
-        return $this->validates()
-            ? (bool) \call_user_func($this->validator, $value)
-            : true;
+        $validator = $this->getValidator();
+
+        if (! $validator) {
+            return true;
+        }
+
+        return (bool) $validator($value);
     }
 }

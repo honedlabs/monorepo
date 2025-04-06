@@ -11,7 +11,7 @@ trait HasValue
      *
      * @var mixed
      */
-    protected $value = null;
+    protected $value;
 
     /**
      * Set the value.
@@ -27,13 +27,23 @@ trait HasValue
     }
 
     /**
+     * Define the value.
+     *
+     * @return mixed
+     */
+    public function defineValue()
+    {
+        return null;
+    }
+
+    /**
      * Get the value.
      *
      * @return mixed
      */
     public function getValue()
     {
-        return $this->value;
+        return $this->value ??= $this->defineValue();
     }
 
     /**
@@ -43,6 +53,6 @@ trait HasValue
      */
     public function hasValue()
     {
-        return isset($this->value);
+        return isset($this->getValue());
     }
 }

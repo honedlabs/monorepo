@@ -9,12 +9,12 @@ trait HasMeta
     /**
      * The meta data.
      *
-     * @var array<string,mixed>
+     * @var array<string,mixed>|null
      */
-    protected array $meta = [];
+    protected $meta;
 
     /**
-     * Get or set the meta.
+     * Set the meta data.
      *
      * @param  array<string,mixed>|null  $meta
      * @return $this
@@ -27,13 +27,23 @@ trait HasMeta
     }
 
     /**
+     * Define the meta data.
+     *
+     * @return array<string,mixed>
+     */
+    public function defineMeta()
+    {
+        return [];
+    }
+
+    /**
      * Get the meta.
      *
      * @return array<string,mixed>
      */
     public function getMeta()
     {
-        return $this->meta;
+        return $this->meta ??= $this->defineMeta();
     }
 
     /**
@@ -43,6 +53,6 @@ trait HasMeta
      */
     public function hasMeta()
     {
-        return filled($this->meta);
+        return isset($this->getMeta());
     }
 }
