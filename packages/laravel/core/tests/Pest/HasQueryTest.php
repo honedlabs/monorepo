@@ -9,29 +9,38 @@ use Honed\Core\Tests\Stubs\Product;
 use Illuminate\Database\Eloquent\Builder;
 
 beforeEach(function () {
-    $this->test = new class
-    {
-        use Evaluable;
-        use HasQuery;
+    $this->test = new class {
+        use Evaluable, HasQuery;
     };
 });
 
-it('has query closure', function () {
+it('accesses', function () {
     expect($this->test)
         ->hasQuery()->toBeFalse()
+        ->getQuery()->toBeNull()
         ->query(fn () => null)->toBe($this->test)
+        ->getQuery()->toBeInstanceOf(\Closure::class)
         ->hasQuery()->toBeTrue();
 });
 
-it('gets query closure', function () {
-    expect($this->test)
-        ->getQuery()->toBeNull()
-        ->query(fn () => null)->toBe($this->test)
+it('defines', function () {
+    $test = new class {
+        use Evaluable, HasQuery;
+
+        public function defineQuery()
+        {
+            return fn ($builder) => $builder->where('id', 1);
+        }
+    };
+
+    expect($test)
+        ->hasQuery()->toBeTrue()
         ->getQuery()->toBeInstanceOf(\Closure::class);
 });
 
-it('modifies query', function () {
+it('modifies', function () {
     $builder = Product::query();
+
     $fn = fn ($builder, $value) => $builder->where('id', $value);
 
     $this->test->modifyQuery($builder, ['value' => 1]);
@@ -39,34 +48,6 @@ it('modifies query', function () {
     expect($builder->getQuery()->wheres)->toBeEmpty();
 
     $this->test->query($fn)->modifyQuery($builder, ['value' => 1]);
-
-    expect($builder->getQuery()->wheres)
-        ->toHaveCount(1)
-        ->{0}->scoped(fn ($where) => $where
-            ->operator->toBe('=')
-            ->column->toBe('id')
-            ->value->toBe(1)
-        );
-});
-
-it('has query from method', function () {
-    $test = new class implements HasQueryContract
-    {
-        use Evaluable;
-        use HasQuery;
-
-        public function queryAs(Builder $b, int $value)
-        {
-            $b->where('id', $value);   
-        }
-    };
-
-    expect($test)
-        ->hasQuery()->toBeTrue()
-        ->getQuery()->toBeInstanceOf(\Closure::class);
-
-    $builder = Product::query();
-    $test->modifyQuery($builder, ['value' => 1]);
 
     expect($builder->getQuery()->wheres)
         ->toHaveCount(1)

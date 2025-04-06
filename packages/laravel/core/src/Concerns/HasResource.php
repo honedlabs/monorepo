@@ -30,7 +30,7 @@ trait HasResource
      */
     public function resource($resource)
     {
-        $this->resource = $this->createResource($resource);
+        $this->resource = $this->asBuilder($resource);
 
         return $this;
     }
@@ -55,15 +55,13 @@ trait HasResource
      */
     public function getResource()
     {
-        if (isset($this->resource)) {
-            return $this->resource;
+        $resource = $this->resource ??= $this->defineResource();
+
+        if (! $resource) {
+            static::throwResourceException();
         }
 
-        if ($resource = $this->defineResource()) {
-            return $this->resource ??= $this->asBuilder($resource);
-        }
-
-        static::throwResourceException();
+        return $this->asBuilder($resource);
     }
 
     /**
@@ -73,7 +71,7 @@ trait HasResource
      */
     public function hasResource()
     {
-        return isset($this->getResource());
+        return filled($this->getResource());
     }
 
     /**

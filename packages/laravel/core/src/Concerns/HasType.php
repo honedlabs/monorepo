@@ -53,6 +53,6 @@ trait HasType
      */
     public function hasType()
     {
-        return isset($this->getType());
+        return filled($this->getType());
     }
 }

@@ -53,7 +53,7 @@ trait Transformable
      */
     public function transforms()
     {
-        return isset($this->getTransformer());
+        return filled($this->getTransformer());
     }
 
     /**

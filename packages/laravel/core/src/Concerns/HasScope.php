@@ -27,7 +27,7 @@ trait HasScope
 
         return $this;
     }
-    
+
     /**
      * Define the scope.
      *
@@ -55,7 +55,7 @@ trait HasScope
      */
     public function hasScope()
     {
-        return isset($this->getScope());
+        return filled($this->getScope());
     }
 
     /**

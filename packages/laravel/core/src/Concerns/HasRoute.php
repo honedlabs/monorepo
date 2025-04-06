@@ -27,7 +27,7 @@ trait HasRoute
     /**
      * The HTTP method for the route.
      *
-     * @var string
+     * @var string|null
      */
     protected $method;
 
@@ -95,7 +95,7 @@ trait HasRoute
      */
     public function hasRoute()
     {
-        return isset($this->getRoute());
+        return filled($this->getRoute());
     }
 
     /**
@@ -120,7 +120,7 @@ trait HasRoute
     /**
      * Define the HTTP method for the route.
      *
-     * @return string|null
+     * @return string
      */
     public function defineMethod()
     {
@@ -151,7 +151,7 @@ trait HasRoute
         }
 
         return [
-            'url' => $this->resolveRoute($parameters, $typed),
+            'url' => $this->getRoute($parameters, $typed),
             'method' => $this->getMethod(),
         ];
     }

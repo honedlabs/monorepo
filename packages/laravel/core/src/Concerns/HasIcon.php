@@ -30,7 +30,7 @@ trait HasIcon
 
     /**
      * Define the icon.
-     * 
+     *
      * @return string|\Honed\Core\Contracts\Icon|(\Closure(mixed...):string|\Honed\Core\Contracts\Icon)|null
      */
     public function defineIcon()
@@ -63,6 +63,6 @@ trait HasIcon
      */
     public function hasIcon()
     {
-        return isset($this->getIcon());
+        return filled($this->getIcon());
     }
 }

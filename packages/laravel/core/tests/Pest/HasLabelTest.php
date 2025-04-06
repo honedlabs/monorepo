@@ -10,29 +10,26 @@ beforeEach(function () {
     $this->test = new class {
         use Evaluable, HasLabel;
     };
-
-    $this->param = 'label';
 });
 
 it('accesses', function () {
     expect($this->test)
         ->getLabel()->toBeNull()
         ->hasLabel()->toBeFalse()
-        ->label($this->param)->toBe($this->test)
-        ->getLabel()->toBe($this->param)
-        ->hasLabel()->toBeTrue()
-        ->label(fn () => $this->param)->toBe($this->test)
-        ->getLabel()->toBe($this->param);
+        ->label('label')->toBe($this->test)
+        ->getLabel()->toBe('label')
+        ->hasLabel()->toBeTrue();
 });
 
-it('resolves', function () {
+it('evaluates', function () {
     $product = product();
 
-    expect($this->test->label(fn (Product $product) => $product->name))
-        ->resolveLabel(['product' => $product])->toBe($product->name);
+    expect($this->test)
+        ->label(fn (Product $product) => $product->name)->toBe($this->test)
+        ->getLabel(['product' => $product])->toBe($product->name);
 });
 
-it('converts', function () {
+it('makes', function () {
     expect($this->test)
         ->makeLabel(null)->toBeNull()
         ->makeLabel('new-label')->toBe('New label');

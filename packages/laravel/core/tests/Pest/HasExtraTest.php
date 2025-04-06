@@ -25,22 +25,26 @@ it('accesses', function () {
         ->hasExtra()->toBeTrue();
 });
 
-it('accesses via contract', function () {
-    $test = new class implements HasExtraContract {
+it('defines', function () {
+    $test = new class {
         use Evaluable, HasExtra;
 
-        public function extraAs()
+        public function defineExtra()
         {
             return ['key' => 'value'];
         }
     };
 
-    expect($test->getExtra())->toEqual(['key' => 'value']);
+    expect($test)
+        ->getExtra()->toEqual(['key' => 'value'])
+        ->hasExtra()->toBeTrue();
 });
 
-it('resolves', function () {
+
+it('evaluates', function () {
     $product = product();
 
-    expect($this->test->extra(fn (Product $product) => ['extra' => $product->name]))
-        ->resolveExtra(['product' => $product])->toEqual(['extra' => $product->name]);
+    expect($this->test)
+        ->extra(fn (Product $product) => ['extra' => $product->name])->toBe($this->test)
+        ->getExtra(['product' => $product])->toEqual(['extra' => $product->name]);
 });

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Honed\Core\Contracts\HasQuery as HasQueryContract;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -53,10 +52,6 @@ trait HasQuery
      */
     public function getQuery()
     {
-        if (isset($this->query)) {
-            return $this->query;
-        }
-
         return $this->query ??= $this->defineQuery();
     }
 
@@ -67,7 +62,7 @@ trait HasQuery
      */
     public function hasQuery()
     {
-        return isset($this->getQuery());
+        return filled($this->getQuery());
     }
 
     /**

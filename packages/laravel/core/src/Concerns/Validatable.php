@@ -53,7 +53,7 @@ trait Validatable
      */
     public function validates()
     {
-        return isset($this->getValidator());
+        return filled($this->getValidator());
     }
 
     /**

@@ -53,6 +53,6 @@ trait HasAlias
      */
     public function hasAlias()
     {
-        return isset($this->getAlias());
+        return filled($this->getAlias());
     }
 }

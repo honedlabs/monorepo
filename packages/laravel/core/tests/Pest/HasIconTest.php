@@ -24,27 +24,30 @@ beforeEach(function () {
     $this->test = new class {
         use Evaluable, HasIcon;
     };
-
-    $this->param = 'icon';
 });
 
 it('accesses', function () {
     expect($this->test)
         ->hasIcon()->toBeFalse()
-        ->icon($this->param)->toBe($this->test)
+        ->getIcon()->toBeNull()
+        ->icon('icon')->toBe($this->test)
+        ->getIcon()->toBe('icon')
         ->hasIcon()->toBeTrue();
 });
 
-it('accesses via contract', function () {
+it('accesses contracts', function () {
     expect($this->test)
+        ->hasIcon()->toBeFalse()
         ->getIcon()->toBeNull()
         ->icon(IconEnum::Chevron)->toBe($this->test)
-        ->getIcon()->toBe('chevron');
+        ->getIcon()->toBe('chevron')
+        ->hasIcon()->toBeTrue();
 });
 
-it('resolves', function () {
+it('evaluates', function () {
     $product = product();
 
-    expect($this->test->icon(fn (Product $product) => $product->name))
-        ->resolveIcon(['product' => $product])->toBe($product->name);
+    expect($this->test)
+        ->icon(fn (Product $product) => $product->name)->toBe($this->test)
+        ->getIcon(['product' => $product])->toBe($product->name);
 });

@@ -8,63 +8,44 @@ use Honed\Core\Tests\Stubs\Product;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Request;
 
-class RouteTest
-{
-    use Evaluable;
-    use HasRoute;
-}
-
 beforeEach(function () {
-    $this->test = new RouteTest;
-    $this->route = 'products.show';
-    $this->param = product();
-    $this->url = '/';
+    $this->test = new class {
+        use Evaluable, HasRoute;
+    };
 });
 
-it('sets route', function () {
-    expect($this->test->route($this->route, $this->param))
-        ->toBeInstanceOf(RouteTest::class)
-        ->hasRoute()->toBeTrue();
+it('accesses route', function () {
+    $product = product();
+
+    expect($this->test)
+        ->hasRoute()->toBeFalse()
+        ->getRoute()->toBeNull()
+        ->route('products.show', $product)->toBe($this->test)
+        ->hasRoute()->toBeTrue()
+        ->getRoute()->toBe(route('products.show', $product));
 });
 
-it('gets route', function () {
-    expect($this->test->route($this->route, $this->param))
-        ->getRoute()->toBe(route($this->route, $this->param))
-        ->hasRoute()->toBeTrue();
+it('evaluates route', function () {
+    $product = product();
 
-    expect($this->test->route(fn () => route($this->route, $this->param)))
-        ->getRoute()->toBe(route($this->route, $this->param))
-        ->hasRoute()->toBeTrue();
+    expect($this->test)
+        ->route(fn (Product $product) => route('products.show', $product))->toBe($this->test)
+        ->getRoute(['product' => $product])->toBe(route('products.show', $product));
 });
 
-it('resolves route', function () {
-    expect($this->test->route(fn (Product $product) => route($this->route, $product)))
-        ->resolveRoute(['product' => $this->param])->toBe(route($this->route, $this->param));
+it('accesses url', function () {
+    expect($this->test)
+        ->hasRoute()->toBeFalse()
+        ->getRoute()->toBeNull()
+        ->url('https://example.com')->toBe($this->test)
+        ->hasRoute()->toBeTrue()
+        ->getRoute()->toBe('https://example.com');
 });
 
-it('sets url', function () {
-    expect($this->test->url($this->url))
-        ->toBeInstanceOf(RouteTest::class)
-        ->hasRoute()->toBeTrue();
-});
-
-it('gets url', function () {
-    expect($this->test->url($this->url))
-        ->getRoute()->toBe(URL::to($this->url))
-        ->hasRoute()->toBeTrue();
-
-    expect($this->test->url(fn () => $this->url))
-        ->getRoute()->toBe($this->url)
-        ->hasRoute()->toBeTrue();
-});
-
-it('sets method', function () {
-    expect($this->test->method(Request::METHOD_POST))
-        ->toBeInstanceOf(RouteTest::class);
-});
-
-it('gets method', function () {
-    expect($this->test->method(Request::METHOD_POST))
+it('accesses method', function () {
+    expect($this->test)
+        ->getMethod()->toBe(Request::METHOD_GET)
+        ->method(Request::METHOD_POST)->toBe($this->test)
         ->getMethod()->toBe(Request::METHOD_POST);
 });
 
@@ -79,9 +60,12 @@ it('has array representation', function () {
     expect($this->test)
         ->routeToArray()->toBeNull();
 
-    expect($this->test->route($this->route, $this->param))
+    $product = product();
+
+    expect($this->test)
+        ->route('products.show', $product)->toBe($this->test)
         ->routeToArray()->toBe([
-            'url' => route($this->route, $this->param),
+            'url' => route('products.show', $product),
             'method' => Request::METHOD_GET,
         ]);
 });

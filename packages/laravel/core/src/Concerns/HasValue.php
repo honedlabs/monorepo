@@ -53,6 +53,6 @@ trait HasValue
      */
     public function hasValue()
     {
-        return isset($this->getValue());
+        return filled($this->getValue());
     }
 }
