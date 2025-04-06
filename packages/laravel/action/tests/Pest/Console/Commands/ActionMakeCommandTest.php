@@ -35,3 +35,10 @@ it('prompts', function () {
 
     $this->assertFileExists(app_path('Actions/StoreAction.php'));
 });
+
+// it('errors if action but no model', function () {
+//     $this->artisan('make:action', [
+//         'name' => 'TestAction',
+//         '--action' => 'update',
+//     ])->expectsQuestion('What model should this action be for? (Optional)', 'Product');
+// });

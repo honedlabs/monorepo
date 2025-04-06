@@ -54,6 +54,16 @@ class FakeActionRequest
     protected $data = [];
 
     /**
+     * Create a new fake action request.
+     *
+     * @return static
+     */
+    public static function make()
+    {
+        return resolve(static::class);
+    }
+
+    /**
      * Set the ID of the handler.
      *
      * @param  string  $id

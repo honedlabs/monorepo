@@ -46,7 +46,7 @@ class Handler
      * @param  string|null  $key
      * @return static
      */
-    public static function make($builder, $actions, $key = null)
+    public static function make($builder, $actions = [], $key = null)
     {
         return resolve(static::class)
             ->resource($builder)
@@ -133,7 +133,7 @@ class Handler
         /** @var TModel|TBuilder $query */
         $result = $action->execute($query);
 
-        if ($result instanceof Responsable || $result instanceof RedirectResponse) {
+        if ($this->isResponsable($result)) {
             return $result;
         }
 
@@ -226,6 +226,20 @@ class Handler
             static fn (Action $action) => $action instanceof $type
                 && $action->getName() === $name
         );
+    }
+
+    /**
+     * Determine if the result is a responsable or redirect response.
+     *
+     * @param  mixed  $result
+     * @return bool
+     */
+    protected function isResponsable($result)
+    {
+        return $result instanceof Responsable || 
+            $result instanceof RedirectResponse ||
+            $result instanceof \Inertia\Response ||
+            $result instanceof \Inertia\ResponseFactory;
     }
 
     /**

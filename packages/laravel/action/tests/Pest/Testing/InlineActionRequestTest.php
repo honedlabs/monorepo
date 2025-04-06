@@ -23,7 +23,8 @@ it('has data', function () {
             ->toBeArray()
             ->toHaveKeys(['type', 'record', 'id', 'name'])
             ->{'type'}->toBe(ActionFactory::INLINE)
-        )->data(['type' => 'test'])->toBe($this->request)
+        )
+        ->data(['type' => 'test'])->toBe($this->request)
         ->getData()->scoped(fn ($data) => $data
             ->toBeArray()
             ->toHaveKeys(['type', 'record', 'id', 'name'])

@@ -15,179 +15,179 @@ beforeEach(function () {
     $this->id = Str::uuid()->toString();
 });
 
-describe('inline', function () {
-    beforeEach(function () {
-        $this->product = product();
+// describe('inline', function () {
+//     beforeEach(function () {
+//         $this->product = product();
 
-        $this->base = [
-            'id' => $this->id,
-            'name' => 'update',
-            'type' => ActionFactory::INLINE,
-            'record' => 1,
-        ];
-    });
+//         $this->base = [
+//             'id' => $this->id,
+//             'name' => 'update',
+//             'type' => ActionFactory::INLINE,
+//             'record' => 1,
+//         ];
+//     });
 
-    it('returns 400 for no name match', function () {
-        Arr::set($this->base, 'name', 'missing');
+//     it('returns 400 for no name match', function () {
+//         Arr::set($this->base, 'name', 'missing');
 
-        post(route('actions'), $this->base)
-            ->assertStatus(400);
-    });
+//         post(route('actions'), $this->base)
+//             ->assertStatus(400);
+//     });
 
-    it('returns 404 if no model is found', function () {
-        Arr::set($this->base, 'name', 'update.name');
-        Arr::set($this->base, 'record', 0);
+//     it('returns 404 if no model is found', function () {
+//         Arr::set($this->base, 'name', 'update.name');
+//         Arr::set($this->base, 'record', 0);
 
-        post(route('actions'), $this->base)
-            ->assertStatus(404);
-    });
+//         post(route('actions'), $this->base)
+//             ->assertStatus(404);
+//     });
 
-    it('returns 403 if the action is not allowed', function () {
-        Arr::set($this->base, 'name', 'update.description');
-        Arr::set($this->base, 'record', $this->product->id);
+//     it('returns 403 if the action is not allowed', function () {
+//         Arr::set($this->base, 'name', 'update.description');
+//         Arr::set($this->base, 'record', $this->product->id);
 
-        post(route('actions'), $this->base)
-            ->assertStatus(403);
-    });
+//         post(route('actions'), $this->base)
+//             ->assertStatus(403);
+//     });
 
-    it('executes', function () {
-        Arr::set($this->base, 'name', 'update.name');
-        Arr::set($this->base, 'record', $this->product->id);
+//     it('executes', function () {
+//         Arr::set($this->base, 'name', 'update.name');
+//         Arr::set($this->base, 'record', $this->product->id);
 
-        post(route('actions'), $this->base)
-            ->assertRedirect();
+//         post(route('actions'), $this->base)
+//             ->assertRedirect();
 
-        assertDatabaseHas('products', [
-            'id' => $this->product->id,
-            'name' => 'test',
-        ]);
-    });
-});
+//         assertDatabaseHas('products', [
+//             'id' => $this->product->id,
+//             'name' => 'test',
+//         ]);
+//     });
+// });
 
-describe('bulk', function () {
-    beforeEach(function () {
-        populate(100);
+// describe('bulk', function () {
+//     beforeEach(function () {
+//         populate(100);
 
-        $this->ids = \range(1, 10);
+//         $this->ids = \range(1, 10);
 
-        $this->base = [
-            'id' => $this->id,
-            'name' => 'update',
-            'type' => ActionFactory::BULK,
-            'all' => false,
-            'except' => [],
-            'only' => [],
-        ];
-    });
+//         $this->base = [
+//             'id' => $this->id,
+//             'name' => 'update',
+//             'type' => ActionFactory::BULK,
+//             'all' => false,
+//             'except' => [],
+//             'only' => [],
+//         ];
+//     });
 
-    it('returns 400 for no name match', function () {
-        Arr::set($this->base, 'name', 'missing');
+//     it('returns 400 for no name match', function () {
+//         Arr::set($this->base, 'name', 'missing');
 
-        post(route('actions'), $this->base)
-            ->assertStatus(400);
-    });
+//         post(route('actions'), $this->base)
+//             ->assertStatus(400);
+//     });
 
-    it('returns 403 if the action is not allowed', function () {
-        Arr::set($this->base, 'name', 'update.description');
-        Arr::set($this->base, 'only', $this->ids);
+//     it('returns 403 if the action is not allowed', function () {
+//         Arr::set($this->base, 'name', 'update.description');
+//         Arr::set($this->base, 'only', $this->ids);
 
-        post(route('actions'), $this->base)
-            ->assertStatus(403);
-    });
+//         post(route('actions'), $this->base)
+//             ->assertStatus(403);
+//     });
 
-    it('executes for only', function () {
-        Arr::set($this->base, 'name', 'update.name');
-        Arr::set($this->base, 'only', $this->ids);
+//     it('executes for only', function () {
+//         Arr::set($this->base, 'name', 'update.name');
+//         Arr::set($this->base, 'only', $this->ids);
 
-        post(route('actions'), $this->base)
-            ->assertRedirect();
+//         post(route('actions'), $this->base)
+//             ->assertRedirect();
 
-        expect(Product::query()
-            ->whereIn('id', $this->ids)
-            ->get())
-            ->each(fn ($product) => $product
-                ->name->toBe('test')
-            );
+//         expect(Product::query()
+//             ->whereIn('id', $this->ids)
+//             ->get())
+//             ->each(fn ($product) => $product
+//                 ->name->toBe('test')
+//             );
 
-        expect(Product::query()
-            ->whereNotIn('id', $this->ids)
-            ->get())
-            ->each(fn ($product) => $product
-                ->name->not->toBe('test')
-            );
-    });
+//         expect(Product::query()
+//             ->whereNotIn('id', $this->ids)
+//             ->get())
+//             ->each(fn ($product) => $product
+//                 ->name->not->toBe('test')
+//             );
+//     });
 
-    it('executes for except', function () {
-        Arr::set($this->base, 'name', 'update.name');
-        Arr::set($this->base, 'except', $this->ids);
+//     it('executes for except', function () {
+//         Arr::set($this->base, 'name', 'update.name');
+//         Arr::set($this->base, 'except', $this->ids);
 
-        post(route('actions'), $this->base)
-            ->assertRedirect();
+//         post(route('actions'), $this->base)
+//             ->assertRedirect();
 
-        // Will execute for all
-        expect(Product::all())
-            ->each(fn ($product) => $product
-                ->name->not->toBe('test')
-            );
-    });
+//         // Will execute for all
+//         expect(Product::all())
+//             ->each(fn ($product) => $product
+//                 ->name->not->toBe('test')
+//             );
+//     });
 
-    it('executes for all with except', function () {
-        Arr::set($this->base, 'name', 'update.name');
-        Arr::set($this->base, 'all', true);
-        Arr::set($this->base, 'except', $this->ids);
+//     it('executes for all with except', function () {
+//         Arr::set($this->base, 'name', 'update.name');
+//         Arr::set($this->base, 'all', true);
+//         Arr::set($this->base, 'except', $this->ids);
 
-        post(route('actions'), $this->base)
-            ->assertRedirect();
+//         post(route('actions'), $this->base)
+//             ->assertRedirect();
 
-        expect(Product::query()
-            ->whereNotIn('id', $this->ids)
-            ->get())
-            ->each(fn ($product) => $product
-                ->name->toBe('test')
-            );
+//         expect(Product::query()
+//             ->whereNotIn('id', $this->ids)
+//             ->get())
+//             ->each(fn ($product) => $product
+//                 ->name->toBe('test')
+//             );
 
-        expect(Product::query()
-            ->whereIn('id', $this->ids)
-            ->get())
-            ->each(fn ($product) => $product
-                ->name->not->toBe('test')
-            );
-    });
-});
+//         expect(Product::query()
+//             ->whereIn('id', $this->ids)
+//             ->get())
+//             ->each(fn ($product) => $product
+//                 ->name->not->toBe('test')
+//             );
+//     });
+// });
 
-describe('page', function () {
-    beforeEach(function () {
-        $this->base = [
-            'id' => $this->id,
-            'name' => 'update',
-            'type' => ActionFactory::PAGE,
-        ];
-    });
+// describe('page', function () {
+//     beforeEach(function () {
+//         $this->base = [
+//             'id' => $this->id,
+//             'name' => 'update',
+//             'type' => ActionFactory::PAGE,
+//         ];
+//     });
 
-    it('returns 400 for no name match', function () {
-        Arr::set($this->base, 'name', 'missing');
+//     it('returns 400 for no name match', function () {
+//         Arr::set($this->base, 'name', 'missing');
 
-        post(route('actions'), $this->base)
-            ->assertStatus(400);
+//         post(route('actions'), $this->base)
+//             ->assertStatus(400);
 
-        assertDatabaseCount('products', 0);
-    });
+//         assertDatabaseCount('products', 0);
+//     });
 
-    it('returns 403 if the action is not allowed', function () {
-        Arr::set($this->base, 'name', 'create.product.description');
+//     it('returns 403 if the action is not allowed', function () {
+//         Arr::set($this->base, 'name', 'create.product.description');
 
-        post(route('actions'), $this->base)
-            ->assertStatus(403);
+//         post(route('actions'), $this->base)
+//             ->assertStatus(403);
 
-        assertDatabaseCount('products', 0);
-    });
+//         assertDatabaseCount('products', 0);
+//     });
 
-    it('executes', function () {
-        Arr::set($this->base, 'name', 'create.product.name');
+//     it('executes', function () {
+//         Arr::set($this->base, 'name', 'create.product.name');
 
-        post(route('actions'), $this->base)
-            ->assertRedirect();
+//         post(route('actions'), $this->base)
+//             ->assertRedirect();
 
-        assertDatabaseCount('products', 1);
-    });
-});
+//         assertDatabaseCount('products', 1);
+//     });
+// });

@@ -5,7 +5,8 @@ declare(strict_types=1);
 use Honed\Action\ActionGroup;
 use Honed\Action\Concerns\HasEncoder;
 use Honed\Action\Tests\Fixtures\ProductActions;
-use Honed\Action\Tests\Stubs\Status;
+use Honed\Action\Tests\Stubs\Product;
+use Illuminate\Database\Eloquent\Model;
 
 beforeEach(function () {
     $this->test = new class {
@@ -51,3 +52,9 @@ it('retrieves primitive', function () {
         ->getPrimitive($actions->getRouteKey(), ProductActions::class)
         ->toBeNull();
 });
+
+it('must have a make method', function () {
+    expect($this->test->getPrimitive(Product::class, Model::class))
+        ->toBeNull();
+});
+

@@ -43,16 +43,6 @@ class BulkActionRequest extends FakeActionRequest
     }
 
     /**
-     * Create a new bulk action request.
-     *
-     * @return static
-     */
-    public static function make()
-    {
-        return resolve(static::class);
-    }
-
-    /**
      * Determine if all records should be included.
      *
      * @return bool

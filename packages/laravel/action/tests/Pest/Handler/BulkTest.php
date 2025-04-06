@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use function Pest\Laravel\post;
 use Honed\Action\Http\Requests\ActionRequest;
 use Honed\Action\Testing\BulkActionRequest;
+use Honed\Action\Tests\Stubs\Product;
 
 beforeEach(function () {
     BulkActionRequest::shouldFill();
@@ -18,87 +19,113 @@ beforeEach(function () {
 it('executes the action', function () {
     $data = BulkActionRequest::make()
         ->all()
-        ->name('update.name')
+        ->name('update.description')
         ->getData();
 
     $response = post(route('actions'), $data);
     
     $response->assertRedirect();
+
+    expect(Product::all())
+        ->each(fn ($product) => $product
+            ->description->toBe('test')
+        );
 });
 
-// it('is 404 for no name match', function () {
-//     $data = BulkActionRequest::make()
-//         ->fill()
-//         ->record($this->product->getPublicId())
-//         ->name('missing')
-//         ->getData();
+it('is 404 for no name match', function () {
+    $data = BulkActionRequest::make()
+        ->all()
+        ->name('missing')
+        ->getData();
 
-//     $response = post(route('actions'), $data);
+    $response = post(route('actions'), $data);
 
-//     $response->assertNotFound();
-// }); 
+    $response->assertNotFound();
+}); 
 
-// it('is 404 if no model is found', function () {
-//     $data = BulkActionRequest::make()
-//         ->fill()
-//         ->record(Str::uuid()->toString())
-//         ->name('update.name')
-//         ->getData();
 
-//     $response = post(route('actions'), $data);
+it('is 403 if the action is not allowed', function () {
+    $data = BulkActionRequest::make()
+        ->all()
+        ->name('update.name')
+        ->getData();
 
-//     $response->assertNotFound();
-// });
+    $response = post(route('actions'), $data);
 
-// it('is 403 if the action is not allowed', function () {
-//     $data = BulkActionRequest::make()
-//         ->fill()
-//         ->record($this->product->getPublicId())
-//         ->name('update.description')
-//         ->getData();
+    $response->assertForbidden();
+});
 
-//     $response = post(route('actions'), $data);
+it('does not mix action types', function () {
+    $data = BulkActionRequest::make()
+        ->all()
+        ->name('create.product.name')
+        ->getData();
 
-//     $response->assertForbidden();
-// });
+    $response = post(route('actions'), $data);
 
-// it('does not mix action types', function () {
-//     $data = BulkActionRequest::make()
-//         ->fill()
-//         ->record($this->product->getPublicId())
-//         ->name('create.product.name')
-//         ->getData();
+    $response->assertNotFound();
+});
 
-//     $response = post(route('actions'), $data);
-
-//     $response->assertNotFound();
-// });
-
-// it('does not execute route actions', function () {
-//     $data = BulkActionRequest::make()
-//         ->fill()
-//         ->record($this->product->getPublicId())
-//         ->name('show')
-//         ->getData();
-
-//     $response = post(route('actions'), $data);
-
-//     $response->assertRedirect(); // Returns back
-// });
-
-// it('returns inertia response', function () {
-//     $data = BulkActionRequest::make()
-//         ->fill()
-//         ->record($this->product->getPublicId())
-//         ->name('price.100')
-//         ->getData();
+it('returns inertia response', function () {
+    $data = BulkActionRequest::make()
+        ->all()
+        ->name('price.50')
+        ->getData();
     
-//     $response = post(route('actions'), $data);
+    $response = post(route('actions'), $data);
 
-//     $response->assertInertia();
+    $response->assertInertia();
 
-//     $this->assertDatabaseHas('products', [
-//         'id' => $this->product->id,
-//         'price' => 100,
-//     ]);
-// });
+    expect(Product::all())
+        ->each(fn ($product) => $product
+            ->price->toBe(50)
+        );
+});
+
+it('applies only to selected records', function () {
+    $ids = [1, 2, 3, 4, 5];
+    $data = BulkActionRequest::make()
+        ->only($ids)
+        ->name('update.description')
+        ->getData();
+
+    $response = post(route('actions'), $data);
+
+    $response->assertRedirect();
+
+    expect(Product::query()->whereIn('id', $ids)->get())
+        ->each(fn ($product) => $product
+            ->description->toBe('test')
+        );
+
+    expect(Product::query()->whereNotIn('id', $ids)->get())
+        ->each(fn ($product) => $product
+            ->description->not->toBe('test')
+        );
+    
+
+});
+
+it('applies all excepted records', function () {
+    $ids = [1, 2];
+
+    $data = BulkActionRequest::make()
+        ->all()
+        ->except($ids)
+        ->name('update.description')
+        ->getData();
+
+    $response = post(route('actions'), $data);
+
+    $response->assertRedirect();
+
+    expect(Product::query()->whereIn('id', $ids)->get())
+        ->each(fn ($product) => $product
+            ->description->not->toBe('test')
+        );
+
+    expect(Product::query()->whereNotIn('id', $ids)->get())
+        ->each(fn ($product) => $product
+            ->description->toBe('test')
+        );
+});
