@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Action\Testing;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Honed\Action\Http\Requests\ActionRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
 
 class FakeActionRequest
@@ -41,7 +41,7 @@ class FakeActionRequest
 
     /**
      * Whether all action requests should fill by default.
-     * 
+     *
      * @var bool
      */
     protected static $shouldFill = false;
@@ -177,8 +177,8 @@ class FakeActionRequest
     {
         static::$shouldFill = $shouldFill;
     }
+
     /**
-     *
      * @param  array<string,mixed>  $data
      * @return $this
      */
@@ -218,7 +218,7 @@ class FakeActionRequest
 
     /**
      * Resolve the request and validate it.
-     * 
+     *
      * @return \Honed\Action\Http\Requests\ActionRequest
      */
     public function validate()

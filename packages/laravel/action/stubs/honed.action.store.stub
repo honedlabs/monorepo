@@ -8,7 +8,7 @@ use Honed\Action\Contracts\Actionable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-final class {{ class }} implements Actionable
+final class {{ class }} implements Action
 {
     /**
      * Handle the action.

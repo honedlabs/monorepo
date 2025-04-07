@@ -51,14 +51,14 @@ class Controller extends BaseController
             InlineAction::make('update.description')
                 ->action(fn ($product) => $product->update(['description' => 'test']))
                 ->allow(false),
-                
+
             BulkAction::make('update.name')
                 ->action(fn ($product) => $product->update(['name' => 'test']))
                 ->allow(false),
 
             BulkAction::make('update.description')
                 ->action(fn ($product) => $product->update(['description' => 'test'])),
-            
+
             BulkAction::make('price.50')
                 ->action(function (Collection $products) {
                     $products->each->update(['price' => 50]);

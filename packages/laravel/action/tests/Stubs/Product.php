@@ -26,8 +26,6 @@ class Product extends Model
 
     /**
      * Get the public ID of the product.
-     *
-     * @return string
      */
     public function getPublicId(): string
     {

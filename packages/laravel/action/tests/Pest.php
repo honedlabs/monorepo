@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Str;
 use Honed\Action\BulkAction;
-use Honed\Action\PageAction;
 use Honed\Action\InlineAction;
-use Honed\Action\Tests\TestCase;
-use Honed\Action\Tests\Stubs\Status;
+use Honed\Action\PageAction;
 use Honed\Action\Tests\Stubs\Product;
+use Honed\Action\Tests\Stubs\Status;
+use Honed\Action\Tests\TestCase;
+use Illuminate\Support\Str;
 
 uses(TestCase::class)->in(__DIR__);
 
@@ -50,7 +50,7 @@ function params(Product $product): array
 
 /**
  * Get the testing actions.
- * 
+ *
  * @return \Illuminate\Support\Collection<int,\Honed\Action\Action>
  */
 function actions()

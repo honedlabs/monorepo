@@ -89,6 +89,7 @@ class Handler
 
         return $this;
     }
+
     /**
      * Get the key to use for selecting records.
      *
@@ -134,6 +135,7 @@ class Handler
         $result = $action->execute($query);
 
         if ($this->isResponsable($result)) {
+            /** @var \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse */
             return $result;
         }
 
@@ -236,9 +238,8 @@ class Handler
      */
     protected function isResponsable($result)
     {
-        return $result instanceof Responsable || 
+        return $result instanceof Responsable ||
             $result instanceof RedirectResponse ||
-            $result instanceof \Inertia\Response ||
             $result instanceof \Inertia\ResponseFactory;
     }
 
