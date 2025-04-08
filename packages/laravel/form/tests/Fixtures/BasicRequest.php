@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Form\Tests\Fixtures;
 
-use Honed\Form\Concerns\Formable;
+use Honed\Form\Concerns\HasForm;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BasicRequest extends FormRequest
 {
-    use Formable;
+    use HasForm;
 
     /**
      * Get the validation rules that apply to the request.

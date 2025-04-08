@@ -6,15 +6,69 @@ use Honed\Form\Form;
 use Honed\Form\Tests\Fixtures\BasicRequest;
 use Illuminate\Support\Arr;
 
-it('tests', function () {
-    dd(
-        Form::make()
-            ->defaults('name'),
+beforeEach(function () {
+    $this->form = Form::make();
+});
 
-        Arr::accessible(product())
-    );
+it('has rules', function () {
+    $arr = [
+        'name' => 'required|string|min:1|max:255',
+    ];
 
-    
+    $request = new BasicRequest();
+
+    expect($this->form)
+        // Empty by default
+        ->getRules()->toEqual([])
+        // Accepts arrays
+        ->from($arr)->toBe($this->form)
+        ->getRules()->toEqual($arr)
+        // Accepts FormRequest instances
+        ->from($request)->toBe($this->form)
+        ->getRules()->toEqual($request->rules())
+        // Accepts class-strings
+        ->from(BasicRequest::class)->toBe($this->form)
+        ->getRules()->toEqual($request->rules());
+});
+
+it('has default', function () {
+    expect($this->form)
+        ->getDefaults()->toBe([])
+        ->defaults('name', 'Product Name')->toBe($this->form)
+        ->getDefaults()->toEqual(['name' => 'Product Name']);
+});
+
+it('has defaults', function () {
+    expect($this->form)
+        ->defaults(['name' => 'Product Name'])->toBe($this->form)
+        ->getDefaults()->toEqual(['name' => 'Product Name']);
+});
+
+it('has alias', function () {
+    expect($this->form)
+        ->getAliases()->toBe([])
+        ->alias('name', 'product_name')->toBe($this->form)
+        ->getAliases()->toEqual(['name' => 'product_name']);
+});
+
+it('has aliases', function () {
+    expect($this->form)
+        ->alias(['name' => 'product_name'])->toBe($this->form)
+        ->getAliases()->toEqual(['name' => 'product_name']);
+});
+
+it('has append', function () {
+    expect($this->form)
+        ->getAppends()->toBe([])
+        ->append('name', 'Product Name')->toBe($this->form)
+        ->getAppends()->toEqual(['name' => 'Product Name']);
+});
+
+it('has appends', function () {
+    expect($this->form)
+        ->getAppends()->toBe([])
+        ->appends(['name' => 'Product Name'])->toBe($this->form)
+        ->getAppends()->toEqual(['name' => 'Product Name']);
 });
 
 // return Form::make()

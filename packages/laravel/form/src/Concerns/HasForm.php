@@ -39,7 +39,7 @@ trait HasForm
      */
     public function formInstance()
     {
-        return $this->form ??= Form::make($this->rules());
+        return $this->form ??= Form::make($this->validationRules());
     }
 
     /**
@@ -63,7 +63,8 @@ trait HasForm
         // if ($this->fails()) {
 
         // }
-        return $this->formInstance()->transform($this->safe());
+        return $this->formInstance()
+            ->transform($this->safe());
     }
 
     /**
@@ -75,7 +76,8 @@ trait HasForm
     public function store($modelClass)
     {
 
-        return $modelClass::query()->create($this->getFormData());
+        return $modelClass::query()
+            ->create($this->getFormData());
     }
 
     /**
@@ -86,14 +88,15 @@ trait HasForm
      */
     public function update($model)
     {
-        return $model->query()->update($this->getFormData());
+        return $model->query()
+            ->update($this->getFormData());
     }
 
     /**
      * Use the form configuration to delete a model record.
      * 
      * @param TModel $model
-     * @return bool|null
+     * @return mixed
      */
     public function destroy($model)
     {
