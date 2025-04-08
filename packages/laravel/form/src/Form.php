@@ -6,10 +6,18 @@ namespace Honed\Form;
 
 use Honed\Form\Contracts\Form as ContractsForm;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 
 class Form
 {
+    /**
+     * The rules to use for the form.
+     * 
+     * @var array<string, mixed>
+     */
+    protected $rules = [];
+
     /**
      * The defaults to use for the form.
      * 
@@ -39,18 +47,33 @@ class Form
     protected $appends = [];
 
     /**
-     * Whether to supply the form structure alongside the data when serializing to JSON.
+     * Create a new form instance.
      * 
-     * @var bool
+     * @param array<string, mixed>|\Illuminate\Foundation\Http\FormRequest|class-string<\Illuminate\Foundation\Http\FormRequest> $rules
      */
-    protected $auto = false;
+    public static function make($rules = [])
+    {
+        return resolve(static::class)
+            ->from($rules);
+    }
 
     /**
-     * Create a new form instance.
+     * Get the form request rules to use to drive the form.
+     * 
+     * @param array<string, mixed>|\Illuminate\Foundation\Http\FormRequest|class-string<\Illuminate\Foundation\Http\FormRequest> $rules
+     * @return $this
      */
-    public static function make()
+    public function from($rules)
     {
-        return resolve(static::class);
+        if (\is_array($rules)) {
+            $this->rules = $rules;
+        } elseif ($rules instanceof FormRequest) {
+            $this->rules = $rules->rules();
+        } else {
+            $this->rules = (new $rules)->rules();
+        }
+
+        return $this;
     }
 
     /**
@@ -105,7 +128,6 @@ class Form
         }
         return $this;
     }
-
 
     /**
      * Get the defaults for the form.
@@ -194,5 +216,13 @@ class Form
     public function getAppends()
     {
         return $this->appends;
+    }
+
+    /**
+     * Create the defaults for the form.
+     */
+    public function create()
+    {
+        $defaults = $this->getDefaults();
     }
 }

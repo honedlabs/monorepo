@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Form;
 
+use Honed\Form\Console\Command\GenerateCommand;
 use Illuminate\Support\ServiceProvider;
 
 class FormServiceProvider extends ServiceProvider
@@ -27,7 +28,7 @@ class FormServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                //
+                GenerateCommand::class,
             ]);
         }
     }

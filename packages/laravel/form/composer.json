@@ -39,10 +39,7 @@
     "autoload": {
         "psr-4": {
             "Honed\\Form\\": "src/"
-        },
-        "files": [
-            "./helpers.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
@@ -83,10 +80,7 @@
         "laravel": {
             "providers": [
                 "Honed\\Form\\FormServiceProvider"
-            ],
-            "aliases": {
-                "Form": "Honed\\Form\\Facades\\Form"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",
