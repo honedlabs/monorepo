@@ -18,8 +18,7 @@ interface Handles
      * Decode and retrieve the actionable class.
      *
      * @param  string  $value
-     * @param  class-string<\Honed\Action\Contracts\Handles>  $class
      * @return mixed
      */
-    public static function getPrimitive($value, $class);
+    public static function makeFrom($value);
 }

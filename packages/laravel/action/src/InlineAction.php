@@ -13,8 +13,6 @@ class InlineAction extends Action
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
     public function defineType()
     {

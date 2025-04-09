@@ -74,7 +74,6 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
 
         if ($action && ! $model) {
             error('You must provide a model when specifying the action type.');
-            return;
         }
 
         return $model

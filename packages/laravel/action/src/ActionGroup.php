@@ -7,10 +7,11 @@ namespace Honed\Action;
 use Honed\Action\Concerns\HasActions;
 use Honed\Action\Concerns\HasEncoder;
 use Honed\Action\Concerns\HasEndpoint;
+use Honed\Action\Contracts\Handles;
 use Honed\Core\Primitive;
 use Illuminate\Contracts\Routing\UrlRoutable;
 
-class ActionGroup extends Primitive implements UrlRoutable
+class ActionGroup extends Primitive implements UrlRoutable, Handles
 {
     use HasActions;
     use HasEncoder;
@@ -36,6 +37,22 @@ class ActionGroup extends Primitive implements UrlRoutable
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function baseClass()
+    {
+        return ActionGroup::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRouteKeyName()
+    {
+        return 'action';
+    }
+
+    /**
      * Set the model to be used to resolve inline actions.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $resource
@@ -56,45 +73,6 @@ class ActionGroup extends Primitive implements UrlRoutable
     public function getResource()
     {
         return $this->resource;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param  string  $value
-     * @return static|null
-     */
-    public function resolveRouteBinding($value, $field = null)
-    {
-        /** @var static|null */
-        return static::getPrimitive($value, ActionGroup::class);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param  string  $value
-     * @return static|null
-     */
-    public function resolveChildRouteBinding($childType, $value, $field = null)
-    {
-        return $this->resolveRouteBinding($value, $field);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRouteKeyName()
-    {
-        return 'action';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRouteKey()
-    {
-        return static::encode(static::class);
     }
 
     /**

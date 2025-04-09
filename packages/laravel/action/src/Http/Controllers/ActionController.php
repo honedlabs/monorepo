@@ -31,10 +31,8 @@ class ActionController extends Controller
         /** @var string */
         $key = $request->validated('id');
 
-        $class = $this->actionClass();
-
         /** @var \Honed\Action\Contracts\Handles|null */
-        $action = $class::getPrimitive($key, $class);
+        $action = $this->baseClass()::makeFrom($key);
 
         abort_unless((bool) $action, 404);
 
@@ -44,9 +42,9 @@ class ActionController extends Controller
     /**
      * Get the class to use to handle the actions.
      * 
-     * @return class-string<\Honed\Core\Primitive>
+     * @return class-string<\Honed\Action\Contracts\Handles>
      */
-    public function actionClass()
+    public function baseClass()
     {
         return ActionGroup::class;
     }
