@@ -21,6 +21,7 @@ jobs:
           - core
           - crumb
           - flash
+          - form
           - layout
           - lock
           - modal
@@ -28,6 +29,7 @@ jobs:
           - page
           - refine
           - table
+          - typescript
           - upload
 
     steps:
