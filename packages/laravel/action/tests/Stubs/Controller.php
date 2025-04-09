@@ -6,7 +6,7 @@ namespace Honed\Action\Tests\Stubs;
 
 use Honed\Action\BulkAction;
 use Honed\Action\Handler;
-use Honed\Action\Http\Requests\ActionRequest;
+use Honed\Action\Http\Requests\InvokableRequest;
 use Honed\Action\InlineAction;
 use Honed\Action\PageAction;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,7 +20,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function __invoke(ActionRequest $request)
+    public function __invoke(InvokableRequest $request)
     {
         $builder = Product::query();
 

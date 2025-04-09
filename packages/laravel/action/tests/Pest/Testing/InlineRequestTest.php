@@ -3,23 +3,31 @@
 declare(strict_types=1);
 
 use Honed\Action\ActionFactory;
-use Honed\Action\Testing\PageActionRequest;
+use Honed\Action\Testing\InlineRequest;
 
 beforeEach(function () {
-    $this->request = new PageActionRequest();
+    $this->request = new InlineRequest();
 });
+
+it('has record', function () {
+    expect($this->request)
+        ->getRecord()->toBeNull()
+        ->record(1)->toBe($this->request)
+        ->getRecord()->toBe(1);
+});
+
 
 it('has data', function () {
     expect($this->request)
         ->getData()->scoped(fn ($data) => $data
             ->toBeArray()
-            ->toHaveKeys(['type', 'id', 'name'])
-            ->{'type'}->toBe(ActionFactory::PAGE)
+            ->toHaveKeys(['type', 'record', 'id', 'name'])
+            ->{'type'}->toBe(ActionFactory::INLINE)
         )
         ->data(['type' => 'test'])->toBe($this->request)
         ->getData()->scoped(fn ($data) => $data
             ->toBeArray()
-            ->toHaveKeys(['type', 'id', 'name'])
+            ->toHaveKeys(['type', 'record', 'id', 'name'])
             ->{'type'}->toBe('test')
         );
 });

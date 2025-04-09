@@ -31,7 +31,8 @@ class ActionGroup extends Primitive implements UrlRoutable
      */
     public static function make(...$actions)
     {
-        return resolve(static::class)->actions($actions);
+        return resolve(static::class)
+            ->actions($actions);
     }
 
     /**
@@ -48,7 +49,7 @@ class ActionGroup extends Primitive implements UrlRoutable
     }
 
     /**
-     * Get the model to be used to resolve inline actions.
+     * Get the resource to be used to resolve the actions.
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
@@ -66,7 +67,7 @@ class ActionGroup extends Primitive implements UrlRoutable
     public function resolveRouteBinding($value, $field = null)
     {
         /** @var static|null */
-        return $this->getPrimitive($value, ActionGroup::class);
+        return static::getPrimitive($value, ActionGroup::class);
     }
 
     /**
@@ -99,10 +100,21 @@ class ActionGroup extends Primitive implements UrlRoutable
     /**
      * {@inheritdoc}
      */
+    public function handle($request)
+    {
+        return Handler::make(
+            $this->getResource(),
+            $this->getActions()
+        )->handle($request);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function toArray()
     {
         $actions = [
-            'inline' => $this->inlineActionsToArray($this->getResource()),
+            'inline' => $this->inlineActionsToArray($this->getModel()),
             'bulk' => $this->bulkActionsToArray(),
             'page' => $this->pageActionsToArray(),
         ];

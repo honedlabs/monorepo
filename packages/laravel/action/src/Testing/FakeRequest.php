@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Action\Testing;
 
-use Honed\Action\Http\Requests\ActionRequest;
+use Honed\Action\Http\Requests\InvokableRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
 
-class FakeActionRequest
+class FakeRequest
 {
     /**
      * The ID of the handler.
@@ -219,14 +219,14 @@ class FakeActionRequest
     /**
      * Resolve the request and validate it.
      *
-     * @return \Honed\Action\Http\Requests\ActionRequest
+     * @return \Honed\Action\Http\Requests\InvokableRequest
      */
     public function validate()
     {
         app()->instance('request', $this->create());
 
-        /** @var \Honed\Action\Http\Requests\ActionRequest */
-        $request = app()->make(ActionRequest::class);
+        /** @var \Honed\Action\Http\Requests\InvokableRequest */
+        $request = app()->make(InvokableRequest::class);
 
         $request->setContainer(app());
         $request->validateResolved();

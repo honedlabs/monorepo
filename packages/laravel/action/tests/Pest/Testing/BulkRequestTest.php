@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use Honed\Action\ActionFactory;
-use Honed\Action\Testing\BulkActionRequest;
+use Honed\Action\Testing\BulkRequest;
 
 beforeEach(function () {
-    $this->request = new BulkActionRequest();
+    $this->request = new BulkRequest();
 });
 
 it('has all', function () {

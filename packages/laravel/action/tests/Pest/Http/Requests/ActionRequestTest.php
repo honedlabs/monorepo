@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Honed\Action\ActionFactory;
 use Honed\Action\Testing\RequestFactory;
-use Honed\Action\Http\Requests\ActionRequest;
+use Honed\Action\Http\Requests\InvokableRequest;
 
 beforeEach(function () {
     $this->id = Str::uuid()->toString();
@@ -21,7 +21,7 @@ it('validates inline', function () {
     ]);
 
     $this->app->instance('request', $httpRequest);
-    $request = $this->app->make(ActionRequest::class);
+    $request = $this->app->make(InvokableRequest::class);
     $request->setContainer($this->app);
 
     $request->validateResolved();
@@ -42,7 +42,7 @@ it('validates bulk', function () {
     ]);
 
     $this->app->instance('request', $httpRequest);
-    $request = $this->app->make(ActionRequest::class);
+    $request = $this->app->make(InvokableRequest::class);
     $request->setContainer($this->app);
 
     $request->validateResolved();
@@ -60,7 +60,7 @@ it('validates page', function () {
     ]);
 
     $this->app->instance('request', $httpRequest);
-    $request = $this->app->make(ActionRequest::class);
+    $request = $this->app->make(InvokableRequest::class);
     $request->setContainer($this->app);
 
     $request->validateResolved();
@@ -71,6 +71,6 @@ it('validates page', function () {
 });
 
 it('fakes', function () {
-    expect(ActionRequest::fake())
+    expect(InvokableRequest::fake())
         ->toBeInstanceOf(RequestFactory::class);
 });

@@ -6,7 +6,7 @@ namespace Honed\Action\Testing;
 
 use Honed\Action\ActionFactory;
 
-class InlineActionRequest extends FakeActionRequest
+class InlineRequest extends FakeRequest
 {
     /**
      * The ID of the record.

@@ -106,8 +106,8 @@ class Handler
     /**
      * Handle the incoming action request using the actions from the source, and the resource provided.
      *
-     * @param  \Honed\Action\Http\Requests\ActionRequest  $request
-     * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse|void
+     * @param  \Honed\Action\Http\Requests\InvokableRequest  $request
+     * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function handle($request)
     {

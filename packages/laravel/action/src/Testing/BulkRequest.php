@@ -6,7 +6,7 @@ namespace Honed\Action\Testing;
 
 use Honed\Action\ActionFactory;
 
-class BulkActionRequest extends FakeActionRequest
+class BulkRequest extends FakeRequest
 {
     /**
      * Whether to include all records.

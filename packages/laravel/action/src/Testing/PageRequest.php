@@ -6,7 +6,7 @@ namespace Honed\Action\Testing;
 
 use Honed\Action\ActionFactory;
 
-class PageActionRequest extends FakeActionRequest
+class PageRequest extends FakeRequest
 {
     /**
      * {@inheritdoc}

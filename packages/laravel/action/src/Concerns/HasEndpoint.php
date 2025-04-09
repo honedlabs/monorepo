@@ -7,6 +7,14 @@ namespace Honed\Action\Concerns;
 trait HasEndpoint
 {
     /**
+     * Handle the incoming action request.
+     * 
+     * @param \Honed\Action\Http\Requests\InvokableRequest $request
+     * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    abstract public function handle($request);
+
+    /**
      * The endpoint to execute server actions.
      *
      * @var string|null

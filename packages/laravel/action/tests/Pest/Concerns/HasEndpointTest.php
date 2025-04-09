@@ -9,6 +9,11 @@ use Honed\Action\Tests\Fixtures\ProductActions;
 beforeEach(function () {
     $this->test = new class {
         use HasEndpoint;
+
+        public function handle($request)
+        {
+            return $request;
+        }
     };
 });
 

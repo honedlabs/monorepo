@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Pest\Handler;
 
-use Honed\Action\Testing\PageActionRequest;
+use Honed\Action\Testing\PageRequest;
 use Honed\Action\Tests\Stubs\Product;
 
 use function Pest\Laravel\post;
 
 beforeEach(function () {
-    PageActionRequest::shouldFill();
+    PageRequest::shouldFill();
 });
 
 it('executes the action', function () {
-    $data = PageActionRequest::make()
+    $data = PageRequest::make()
         ->name('create.product.name')
         ->getData();
 
@@ -29,7 +29,7 @@ it('executes the action', function () {
 });
 
 it('is 404 for no name match', function () {
-    $data = PageActionRequest::make()
+    $data = PageRequest::make()
         ->name('missing')
         ->getData();
 
@@ -39,7 +39,7 @@ it('is 404 for no name match', function () {
 }); 
 
 it('is 403 if the action is not allowed', function () {
-    $data = PageActionRequest::make()
+    $data = PageRequest::make()
         ->name('create.product.description')
         ->getData();
 
@@ -49,7 +49,7 @@ it('is 403 if the action is not allowed', function () {
 });
 
 it('does not execute route actions', function () {
-    $data = PageActionRequest::make()
+    $data = PageRequest::make()
         ->name('create')
         ->getData();
 
@@ -60,7 +60,7 @@ it('does not execute route actions', function () {
 
 it('returns inertia response', function () {
     product();
-    $data = PageActionRequest::make()
+    $data = PageRequest::make()
         ->name('price.10')
         ->getData();
     

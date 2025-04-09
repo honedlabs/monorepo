@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 use Illuminate\Support\Str;
 use function Pest\Laravel\post;
-use Honed\Action\Http\Requests\ActionRequest;
+use Honed\Action\Http\Requests\InvokableRequest;
 
 beforeEach(function () {
     $this->product = product();
 });
 
 it('executes the action', function () {
-    $data = ActionRequest::fake()
+    $data = InvokableRequest::fake()
         ->inline()
         ->fill()
         ->record($this->product->id)
@@ -24,7 +24,7 @@ it('executes the action', function () {
 });
 
 it('is 404 for no name match', function () {
-    $data = ActionRequest::fake()
+    $data = InvokableRequest::fake()
         ->inline()
         ->fill()
         ->record($this->product->id)
@@ -37,7 +37,7 @@ it('is 404 for no name match', function () {
 }); 
 
 it('is 404 if no model is found', function () {
-    $data = ActionRequest::fake()
+    $data = InvokableRequest::fake()
         ->inline()
         ->fill()
         ->record(Str::uuid()->toString())
@@ -50,7 +50,7 @@ it('is 404 if no model is found', function () {
 });
 
 it('is 403 if the action is not allowed', function () {
-    $data = ActionRequest::fake()
+    $data = InvokableRequest::fake()
         ->inline()
         ->fill()
         ->record($this->product->id)
@@ -63,7 +63,7 @@ it('is 403 if the action is not allowed', function () {
 });
 
 it('does not mix action types', function () {
-    $data = ActionRequest::fake()
+    $data = InvokableRequest::fake()
         ->inline()
         ->fill()
         ->record($this->product->id)
@@ -76,7 +76,7 @@ it('does not mix action types', function () {
 });
 
 it('does not execute route actions', function () {
-    $data = ActionRequest::fake()
+    $data = InvokableRequest::fake()
         ->inline()
         ->fill()
         ->record($this->product->id)
@@ -89,7 +89,7 @@ it('does not execute route actions', function () {
 });
 
 it('returns inertia response', function () {
-    $data = ActionRequest::fake()
+    $data = InvokableRequest::fake()
         ->inline()
         ->fill()
         ->record($this->product->id)

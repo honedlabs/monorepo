@@ -7,6 +7,7 @@ namespace Honed\Action;
 use Honed\Action\Console\Commands\ActionGroupMakeCommand;
 use Honed\Action\Console\Commands\ActionMakeCommand;
 use Honed\Action\Console\Commands\ActionsMakeCommand;
+use Honed\Action\Http\Controllers\ActionController;
 use Honed\Action\Http\Controllers\InvokableController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -50,15 +51,17 @@ class ActionServiceProvider extends ServiceProvider
      */
     private function registerRoutesMacro(): void
     {
-        Router::macro('action', function () {
-            $endpoint = type(config('action.endpoint', '/actions'))->asString();
-
+        Router::macro('actions', function () {
             /** @var \Illuminate\Routing\Router $this */
-            $this->match(
-                ['post', 'patch', 'put'],
-                $endpoint,
-                InvokableController::class
-            )->name('actions');
+            $endpoint = type(config('action.endpoint', 'actions'))->asString();
+
+            $methods = ['post', 'patch', 'put'];
+
+            $this->match($methods, $endpoint, [ActionController::class, 'dispatch'])
+                ->name('actions');
+
+            $this->match($methods, $endpoint.'/{action}', [ActionController::class, 'invoke'])
+                ->name('actions.invoke');
         });
     }
 }
