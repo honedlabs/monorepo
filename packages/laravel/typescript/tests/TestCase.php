@@ -16,23 +16,6 @@ use Honed\Typescript\Tests\Stubs\Status;
 class TestCase extends Orchestra
 {
     /**
-     * Setup the test environment.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        View::addLocation(__DIR__.'/Stubs');
-        Inertia::setRootView('app');
-
-        $this->withoutExceptionHandling();
-
-        config()->set('inertia.testing.ensure_pages_exist', false);
-        config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
-
-    }
-
-    /**
      * Get the package providers.
      *
      * @param  \Illuminate\Foundation\Application  $app
@@ -42,7 +25,6 @@ class TestCase extends Orchestra
     {
         return [
             TypescriptServiceProvider::class,
-            InertiaServiceProvider::class,
         ];
     }
 
@@ -63,21 +45,6 @@ class TestCase extends Orchestra
             $table->boolean('best_seller')->default(false);
             $table->timestamps();
         });
-    }
-
-    /**
-     * Define the routes setup.
-     *
-     * @param  \Illuminate\Routing\Router  $router
-     * @return void
-     */
-    protected function defineRoutes($router)
-    {
-        $router->middleware([\Inertia\Middleware::class])
-            ->group(function ($router) {
-                // $router->get('/', fn () => inertia('Index'))
-                //     ->name('index');
-            });
     }
 
     /**

@@ -16,8 +16,12 @@
     backupStaticProperties="false"
 >
     <testsuites>
-        <testsuite name="Honed Typescript Test Suite">
-            <directory>tests</directory>
+        <testsuite name="Arch">
+            <file>tests/ArchTest.php</file>
+            <directory>tests/Arch</directory>
+        </testsuite>
+        <testsuite name="Test">
+            <directory>tests/Pest</directory>
         </testsuite>
     </testsuites>
     <logging>
