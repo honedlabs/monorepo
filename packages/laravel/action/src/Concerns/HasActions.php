@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  * 
  * @phpstan-require-extends \Honed\Core\Primitive
  */
@@ -22,14 +23,14 @@ trait HasActions
     /**
      * List of the actions.
      *
-     * @var array<int,\Honed\Action\Action|\Honed\Action\ActionGroup<TModel, \Illuminate\Database\Eloquent\Builder<TModel>>>
+     * @var array<int,\Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>>
      */
     protected $actions = [];
 
     /**
      * Merge a set of actions with the existing.
      *
-     * @param  \Honed\Action\Action|\Honed\Action\ActionGroup<TModel, \Illuminate\Database\Eloquent\Builder<TModel>>|iterable<int, \Honed\Action\Action|\Honed\Action\ActionGroup<TModel, \Illuminate\Database\Eloquent\Builder<TModel>>>  ...$actions
+     * @param  \Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>|iterable<int, \Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>>  ...$actions
      * @return $this
      */
     public function actions(...$actions)
@@ -45,7 +46,7 @@ trait HasActions
     /**
      * Define the actions for the instance.
      *
-     * @return array<int,\Honed\Action\Action|\Honed\Action\ActionGroup<TModel, \Illuminate\Database\Eloquent\Builder<TModel>>>
+     * @return array<int,\Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>>
      */
     public function defineActions()
     {

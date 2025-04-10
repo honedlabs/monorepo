@@ -14,7 +14,10 @@ class ActionController extends Controller
     /**
      * Find and execute the appropriate action from route binding.
      *
-     * @param  \Honed\Action\ActionGroup<\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>>  $action
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+     *
+     * @param  \Honed\Action\ActionGroup<TModel, TBuilder>  $action
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function invoke(InvokableRequest $request, ActionGroup $action)

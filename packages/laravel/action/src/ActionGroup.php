@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 class ActionGroup extends Primitive implements UrlRoutable, Handles
 {
     /**
-     * @use \Honed\Action\Concerns\HasActions<TModel>
+     * @use \Honed\Action\Concerns\HasActions<TModel, TBuilder>
      */
     use HasActions;
     use HasEncoder;
@@ -72,8 +72,6 @@ class ActionGroup extends Primitive implements UrlRoutable, Handles
     {
         return $this->model;
     }
-    
-    
 
     /**
      * The root parent class.
