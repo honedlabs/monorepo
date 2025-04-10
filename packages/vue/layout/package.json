@@ -1,7 +1,7 @@
 {
 	"name": "@honed/layout",
 	"private": false,
-	"version": "0.1.0",
+	"version": "0.1.2",
 	"license": "MIT",
 	"description": "-",
 	"keywords": [
@@ -40,22 +40,22 @@
 	"module": "./dist/index.es.js",
 	"types": "./dist/index.d.ts",
 	"exports": {
-	  ".": {
-		"types": "./dist/index.d.ts",
-		"import": {
-		  "types": "./dist/index.d.ts",
-		  "default": "./dist/index.es.js"
-		},
-		"require": {
-		  "types": "./dist/index.d.ts",
-		  "default": "./dist/index.umd.js"
-		},
-		"default": {
-		  "types": "./dist/index.d.ts",
-		  "default": "./dist/index.es.js"
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.es.js"
+			},
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.umd.js"
+			},
+			"default": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.es.js"
+			}
 		}
-	  }
-	},  
+	},
 	"peerDependencies": {
 		"vue": "^3.4.0",
 		"@inertiajs/vue3": "^1.2.0||^2.0.0"

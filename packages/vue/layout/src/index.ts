@@ -17,14 +17,14 @@ export async function createInertiaApp(props: CreateInertiaAppProps) {
 
 	const isServer = typeof window === "undefined";
 	const el = isServer ? null : document.getElementById(id);
-	const initialLayout = JSON.parse(el?.dataset.layout || "{}");
+	const initialPage = JSON.parse(el?.dataset.page || "{}");
 
 	const layoutResolve = async (name: string) => {
 		const page = await resolve(name);
 
-		const pageLayout = await layout(initialLayout);
+		const pageLayout = await layout(initialPage.layout);
 
-		page.default.layout = page.default.layout || pageLayout;
+		page.default.layout = page.default.layout || pageLayout.default;
 
 		return page.default;
 	};
