@@ -57,7 +57,7 @@ abstract class Primitive implements \JsonSerializable, Arrayable
     /**
      * Set the properties to include in the serialization.
      *
-     * @param  string|array<int, string>  ...$only
+     * @param  string|iterable<int, string>  ...$only
      * @return $this
      */
     public function only(...$only)
@@ -72,7 +72,7 @@ abstract class Primitive implements \JsonSerializable, Arrayable
     /**
      * Set the properties to exclude from the serialization.
      *
-     * @param  string|array<int, string>  ...$except
+     * @param  string|iterable<int, string>  ...$except
      * @return $this
      */
     public function except(...$except)
@@ -85,7 +85,7 @@ abstract class Primitive implements \JsonSerializable, Arrayable
     }
 
     /**
-     * Determine if the property exists.
+     * Determine if the property is included in the serialization.
      *
      * @param  string  $key
      * @return bool
@@ -97,6 +97,44 @@ abstract class Primitive implements \JsonSerializable, Arrayable
         }
 
         return ! \in_array($key, $this->except);
+    }
+
+    /**
+     * Determine if all the properties are included in the serialization.
+     *
+     * @param  string|iterable<int, string>  ...$keys
+     * @return bool
+     */
+    public function hasAll(...$keys)
+    {
+        $keys = Arr::flatten($keys);
+
+        foreach ($keys as $key) {
+            if (! $this->has($key)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Determine if any of the properties are included in the serialization.
+     *
+     * @param  string|iterable<int, string>  ...$keys
+     * @return bool
+     */
+    public function hasAny(...$keys)
+    {
+        $keys = Arr::flatten($keys);
+
+        foreach ($keys as $key) {
+            if ($this->has($key)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

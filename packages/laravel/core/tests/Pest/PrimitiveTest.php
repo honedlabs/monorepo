@@ -55,3 +55,15 @@ it('includes properties', function () {
         ->has('meta')->toBeTrue()
         ->has('misc')->toBeFalse();
 });
+
+it('has properties', function () {
+    expect($this->test)
+        ->hasAll('meta', 'misc')->toBeTrue()
+        ->hasAny('meta', 'misc')->toBeTrue()
+        ->except('meta')->toBe($this->test)
+        ->hasAll('meta', 'misc')->toBeFalse()
+        ->hasAny('meta', 'misc')->toBeTrue()
+        ->only('meta')->toBe($this->test)
+        ->hasAll('meta', 'misc')->toBeFalse()
+        ->hasAny('meta', 'misc')->toBeTrue();
+});
