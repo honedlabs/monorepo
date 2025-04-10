@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Primitive;
 use Honed\Core\Tests\Fixtures\Column;
 
 beforeEach(function () {
@@ -23,10 +22,11 @@ it('has array representation', function () {
     ]);
 });
 
-it('serializes with removals', function () {
+it('serializes', function () {
     expect($this->test->jsonSerialize())->toEqual([
         'type' => 'column',
         'name' => 'Products',
+        'meta' => [],
     ]);
 });
 
@@ -36,4 +36,22 @@ it('is macroable', function () {
     });
 
     expect($this->test->test())->toBe('test');
+});
+
+it('excludes properties', function () {
+    expect($this->test)
+        ->has('meta')->toBeTrue()
+        ->has('misc')->toBeTrue()
+        ->except('meta')->toBe($this->test)
+        ->has('meta')->toBeFalse()
+        ->has('misc')->toBeTrue();
+});
+
+it('includes properties', function () {
+    expect($this->test)
+        ->has('meta')->toBeTrue()
+        ->has('misc')->toBeTrue()
+        ->only('meta')->toBe($this->test)
+        ->has('meta')->toBeTrue()
+        ->has('misc')->toBeFalse();
 });

@@ -35,7 +35,7 @@ trait HasRoute
      * Set the route.
      *
      * @param  string|\Closure(...mixed):string  $route
-     * @param  array<string,mixed>  $parameters
+     * @param  mixed  $parameters
      * @return $this
      */
     public function route($route, $parameters = [])

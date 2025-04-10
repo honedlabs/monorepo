@@ -9,14 +9,14 @@ trait Allowable
     /**
      * The allow condition.
      *
-     * @var \Closure(mixed...):bool|bool
+     * @var \Closure(...mixed):bool|bool
      */
     protected $allow = true;
 
     /**
      * Set the allow condition.
      *
-     * @param  \Closure(mixed...):bool|bool  $allow
+     * @param  \Closure(...mixed):bool|bool  $allow
      * @return $this
      */
     public function allow($allow)
@@ -29,7 +29,7 @@ trait Allowable
     /**
      * Define the allow condition.
      *
-     * @return \Closure(mixed...):bool|bool|null
+     * @return \Closure(...mixed):bool|bool|null
      */
     public function defineAllow()
     {

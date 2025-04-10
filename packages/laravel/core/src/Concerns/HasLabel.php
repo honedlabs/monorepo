@@ -11,14 +11,14 @@ trait HasLabel
     /**
      * The label.
      *
-     * @var string|\Closure(mixed...):string|null
+     * @var string|\Closure(...mixed):string|null
      */
     protected $label;
 
     /**
      * Set the label.
      *
-     * @param  string|\Closure(mixed...):string|null  $label
+     * @param  string|\Closure(...mixed):string|null  $label
      * @return $this
      */
     public function label($label)

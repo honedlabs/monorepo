@@ -11,14 +11,14 @@ trait HasIcon
     /**
      * The icon.
      *
-     * @var string|\Honed\Core\Contracts\Icon|\Closure(mixed...):string|\Honed\Core\Contracts\Icon|null
+     * @var string|\Honed\Core\Contracts\Icon|\Closure(...mixed):string|\Honed\Core\Contracts\Icon|null
      */
     protected $icon;
 
     /**
      * Set the icon.
      *
-     * @param  string|\Honed\Core\Contracts\Icon|\Closure(mixed...):string|\Honed\Core\Contracts\Icon|null  $icon
+     * @param  string|\Honed\Core\Contracts\Icon|\Closure(...mixed):string|\Honed\Core\Contracts\Icon|null  $icon
      * @return $this
      */
     public function icon($icon)
@@ -31,7 +31,7 @@ trait HasIcon
     /**
      * Define the icon.
      *
-     * @return string|\Honed\Core\Contracts\Icon|(\Closure(mixed...):string|\Honed\Core\Contracts\Icon)|null
+     * @return string|\Honed\Core\Contracts\Icon|(\Closure(...mixed):string|\Honed\Core\Contracts\Icon)|null
      */
     public function defineIcon()
     {

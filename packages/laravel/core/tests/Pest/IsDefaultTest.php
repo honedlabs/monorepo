@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\IsDefault;
 
-
 beforeEach(function () {
     $this->test = new class {
         use IsDefault;

@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\Transformable;
 
-class TransformableTest
-{
-    use Transformable;
-}
-
 beforeEach(function () {
     $this->test = new class {
         use Transformable;

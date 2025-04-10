@@ -11,21 +11,21 @@ use Illuminate\Database\Eloquent\Builder;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @method static \Closure(mixed...):void|null defineQuery()
+ * @method static \Closure|null defineQuery()
  */
 trait HasQuery
 {
     /**
      * The query closure to modify the Eloquent builder.
      *
-     * @var \Closure(mixed...):void|null
+     * @var \Closure|null
      */
     protected $query;
 
     /**
      * Set the query closure.
      *
-     * @param  \Closure(mixed...):void|null  $query
+     * @param  \Closure|null  $query
      * @return $this
      */
     public function query($query)
@@ -38,7 +38,7 @@ trait HasQuery
     /**
      * Define the query closure.
      *
-     * @return \Closure(mixed...):void|null
+     * @return \Closure|null
      */
     public function defineQuery()
     {
@@ -48,7 +48,7 @@ trait HasQuery
     /**
      * Get the query closure.
      *
-     * @return \Closure(mixed...):void|null
+     * @return \Closure|null
      */
     public function getQuery()
     {
@@ -87,7 +87,7 @@ trait HasQuery
     /**
      * Rebind the query closure with the bindings injected to closure arguments.
      *
-     * @param  \Closure(mixed...):void  $closure
+     * @param  \Closure  $closure
      * @param  array<string, mixed>  $bindings
      * @return \Closure(TBuilder):void
      */
