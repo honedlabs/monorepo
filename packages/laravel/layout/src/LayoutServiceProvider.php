@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Honed\Layout;
 
 use Honed\Layout\Testing\AssertableInertia;
-use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Testing\TestResponse;
 use Inertia\ResponseFactory as InertiaResponseFactory;
 
-class LayoutServiceProvider extends ServiceProvider implements DeferrableProvider
+class LayoutServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -22,18 +21,6 @@ class LayoutServiceProvider extends ServiceProvider implements DeferrableProvide
         );
 
         $this->registerTestingMacros();
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array<int, string>
-     */
-    public function provides(): array
-    {
-        return [
-            ResponseFactory::class,
-        ];
     }
 
     /**
