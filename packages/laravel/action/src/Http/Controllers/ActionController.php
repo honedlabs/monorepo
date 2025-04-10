@@ -14,6 +14,7 @@ class ActionController extends Controller
     /**
      * Find and execute the appropriate action from route binding.
      *
+     * @param  \Honed\Action\ActionGroup<\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>>  $action
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function invoke(InvokableRequest $request, ActionGroup $action)
@@ -32,7 +33,7 @@ class ActionController extends Controller
         $key = $request->validated('id');
 
         /** @var \Honed\Action\Contracts\Handles|null */
-        $action = $this->baseClass()::makeFrom($key);
+        $action = $this->baseClass()::tryFrom($key);
 
         abort_unless((bool) $action, 404);
 
