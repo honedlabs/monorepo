@@ -27,7 +27,7 @@ class Response extends InertiaResponse
     /**
      * Set the persistent layout(s) for the response.
      *
-     * @param  string|\BackedEnum|\UnitEnum  $layout
+     * @param  string|\BackedEnum<string>|\UnitEnum  $layout
      * @return $this
      */
     public function layout($layout)
