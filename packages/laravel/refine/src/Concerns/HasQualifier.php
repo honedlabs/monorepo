@@ -19,9 +19,9 @@ trait HasQualifier
      * @param  bool  $qualify
      * @return $this
      */
-    public function qualifies($qualifies = true)
+    public function qualifies($qualify = true)
     {
-        $this->qualify = $qualifies;
+        $this->qualify = $qualify;
 
         return $this;
     }
