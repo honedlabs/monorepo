@@ -5,39 +5,61 @@ declare(strict_types=1);
 use Honed\Layout\Response;
 use Honed\Layout\Support\Parameters;
 use Illuminate\Support\Facades\Request;
+use Inertia\Support\Header;
+
+beforeEach(function () {
+    $this->response = (new Response('User/Edit', ['user' => ['name' => 'Jonathan']], 'app', '123'))
+        ->layout('PageLayout');
+});
+
+it('has layouted response', function () {
+    expect($this->response)
+        ->getLayout()->toBe('PageLayout')
+        ->getLayoutedComponent()->toBe('User/Edit'.Response::FORMATTER.'PageLayout');
+
+    expect(new Response('User/Edit', ['user' => ['name' => 'Jonathan']], 'app', '123'))
+        ->getLayout()->toBeNull()
+        ->getLayoutedComponent()->toBe('User/Edit');
+});
+
+it('checks partial with layout', function () {
+    $request = Request::create('/user/123', 'GET');
+
+    expect($this->response)
+        ->isPartial($request)->toBeFalse();
+        
+    $request->headers->set(Header::PARTIAL_COMPONENT, 'User/Edit'.Response::FORMATTER.'PageLayout');
+
+    expect($this->response)
+        ->isPartial($request)->toBeTrue();
+});
 
 it('has layout for response', function () {
     $request = Request::create('/user/123', 'GET');
 
-    $user = ['name' => 'Jonathan'];
-    $response = (new Response('User/Edit', ['user' => $user], 'app', '123'));
-    expect($response)
-        ->getLayout()->toBeNull()
-        ->layout('PageLayout')->toBe($response)
+    expect($this->response)
+        ->layout('PageLayout')->toBe($this->response)
         ->getLayout()->toBe('PageLayout');
 
     /** @var \Illuminate\Http\Response $response */
-    $response = $response->toResponse($request);
+    $response = $this->response->toResponse($request);
 
     expect($response->getOriginalContent()->getData()['page'])
         ->toBeArray()
-        ->toHaveKey(Parameters::PROP)
-        ->{Parameters::PROP}->toBe('PageLayout');
+        ->toHaveKey('component')
+        ->component->toBe('User/Edit'.Response::FORMATTER.'PageLayout');
 });
 
 it('has layout for inertia response', function () {
     $request = Request::create('/user/123', 'GET');
-    $request->headers->set('X-Inertia', 'true');
 
-    $user = ['name' => 'Jonathan'];
-    $response = (new Response('User/Edit', ['user' => $user], 'app', '123'))
-        ->layout('PageLayout');
+    $request->headers->set(Header::INERTIA, 'true');
 
     /** @var \Illuminate\Http\Response $response */
-    $page = $response->toResponse($request);
+    $page = $this->response->toResponse($request);
 
     expect($page->getData())
         ->toBeObject()
-        ->toHaveProperty(Parameters::PROP)
-        ->{Parameters::PROP}->toBe('PageLayout');
+        ->toHaveProperty('component')
+        ->component->toBe('User/Edit'.Response::FORMATTER.'PageLayout');
 });

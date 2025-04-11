@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Layout\Testing;
 
+use Honed\Layout\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
-use Inertia\Testing\AssertableInertia as InertiaAssert;
 use PHPUnit\Framework\Assert as PHPUnit;
+use Inertia\Testing\AssertableInertia as InertiaAssert;
 
 class AssertableInertia extends InertiaAssert
 {
@@ -16,7 +17,14 @@ class AssertableInertia extends InertiaAssert
      *
      * @var string|array<int,string>|null
      * */
-    private $layout;
+    protected $layout;
+
+    /**
+     * Change the visibility of the component.
+     * 
+     * @var string
+     */
+    protected $component;
 
     /**
      * Determine if the layout is the expected layout.
@@ -44,8 +52,10 @@ class AssertableInertia extends InertiaAssert
         // @phpstan-ignore-next-line
         $page = \json_decode(\json_encode($response->viewData('page')), true);
 
-        // @phpstan-ignore-next-line
-        $instance->layout = Arr::get($page, 'layout', null);
+        [$component, $layout] = Response::parseComponent(Arr::get($page, 'component'));
+        
+        $instance->component = $component;
+        $instance->layout = $layout;
 
         return $instance;
     }

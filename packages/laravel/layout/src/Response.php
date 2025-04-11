@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Layout;
 
-use Honed\Layout\Support\Parameters;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response as ResponseFactory;
 use Illuminate\Support\Str;
@@ -13,17 +13,19 @@ use Inertia\Support\Header;
 
 class Response extends InertiaResponse
 {
+    const FORMATTER = '@';
+
     /**
      * The persistent layouts to use for the response.
      *
-     * @var string|array<int,string>|null
+     * @var string|null
      */
     protected $layout;
 
     /**
      * Set the persistent layout(s) for the response.
      *
-     * @param  string|array<int,string>  $layout
+     * @param  string  $layout
      * @return $this
      */
     public function layout($layout)
@@ -36,7 +38,7 @@ class Response extends InertiaResponse
     /**
      * Get the persistent layout(s) for the response.
      *
-     * @return string|array<int,string>|null
+     * @return string|null
      */
     public function getLayout()
     {
@@ -53,17 +55,14 @@ class Response extends InertiaResponse
     {
         $props = $this->resolveProperties($request, $this->props);
 
-        $page = array_merge(
-            [
-                'component' => $this->component,
-                Parameters::PROP => $this->getLayout(),
-                'props' => $props,
-                'url' => Str::start(Str::after($request->fullUrl(), $request->getSchemeAndHttpHost()), '/'),
-                'version' => $this->version,
-                'clearHistory' => $this->clearHistory,
-                'encryptHistory' => $this->encryptHistory,
-            ],
-            $this->resolveMergeProps($request),
+        $page = \array_merge([
+            'component' => $this->getLayoutedComponent(),
+            'props' => $props,
+            'url' => Str::start(Str::after($request->fullUrl(), $request->getSchemeAndHttpHost()), '/'),
+            'version' => $this->version,
+            'clearHistory' => $this->clearHistory,
+            'encryptHistory' => $this->encryptHistory,
+        ], $this->resolveMergeProps($request),
             $this->resolveDeferredProps($request),
             $this->resolveCacheDirections($request),
         );
@@ -73,5 +72,38 @@ class Response extends InertiaResponse
         }
 
         return ResponseFactory::view($this->rootView, $this->viewData + ['page' => $page]);
+    }
+
+    /**
+     * Get the component with the layout applied.
+     * 
+     * @return string
+     */
+    public function getLayoutedComponent()
+    {
+        if ($layout = $this->getLayout()) {
+            return $this->component.self::FORMATTER.$layout;
+        }
+
+        return $this->component;
+    }
+
+    /**
+     * Get the component and the layout from an input.
+     * 
+     * @param  string  $component
+     * @return array{string, string|null}
+     */
+    public static function parseComponent($component)
+    {
+        return \explode(self::FORMATTER, $component, 2);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isPartial(Request $request): bool
+    {
+        return $request->header(Header::PARTIAL_COMPONENT) === $this->getLayoutedComponent();
     }
 }
