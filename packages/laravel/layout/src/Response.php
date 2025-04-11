@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Layout;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response as ResponseFactory;
 use Illuminate\Support\Str;
 use Inertia\Response as InertiaResponse;
@@ -76,7 +76,7 @@ class Response extends InertiaResponse
 
     /**
      * Get the component with the layout applied.
-     * 
+     *
      * @return string
      */
     public function getLayoutedComponent()
@@ -90,13 +90,15 @@ class Response extends InertiaResponse
 
     /**
      * Get the component and the layout from an input.
-     * 
+     *
      * @param  string  $component
      * @return array{string, string|null}
      */
     public static function parseComponent($component)
     {
-        return \explode(self::FORMATTER, $component, 2);
+        $parts = \explode(self::FORMATTER, $component, 2);
+
+        return [$parts[0], $parts[1] ?? null];
     }
 
     /**

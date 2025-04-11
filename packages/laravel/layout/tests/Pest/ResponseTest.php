@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Layout\Response;
-use Honed\Layout\Support\Parameters;
 use Illuminate\Support\Facades\Request;
 use Inertia\Support\Header;
 
@@ -27,7 +26,7 @@ it('checks partial with layout', function () {
 
     expect($this->response)
         ->isPartial($request)->toBeFalse();
-        
+
     $request->headers->set(Header::PARTIAL_COMPONENT, 'User/Edit'.Response::FORMATTER.'PageLayout');
 
     expect($this->response)
