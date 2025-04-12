@@ -5,12 +5,25 @@ declare(strict_types=1);
 namespace Honed\Action\Http\Requests;
 
 use Honed\Action\ActionFactory;
+use Honed\Action\Support\Constants;
 use Honed\Action\Testing\RequestFactory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 
 class InvokableRequest extends FormRequest
 {
+    /**
+     * The types of actions that can be used in the request.
+     *
+     * @var list<string>
+     */
+    protected $types = [
+        Constants::INLINE,
+        Constants::BULK,
+        Constants::PAGE,
+    ];
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,7 +35,7 @@ class InvokableRequest extends FormRequest
 
         return [
             'name' => ['required', 'string'],
-            'type' => ['required', 'in:inline,bulk,page'],
+            'type' => ['required', Rule::in($this->types)],
 
             'record' => ['exclude_unless:type,inline', 'required', $regex],
 

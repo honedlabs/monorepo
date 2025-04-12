@@ -14,11 +14,11 @@ beforeEach(function () {
     $this->group = ActionGroup::make(PageAction::make('create'));
 });
 
-it('has resource', function () {
+it('has model', function () {
     expect($this->group)
-        ->getResource()->toBeNull()
-        ->resource(product())->toBe($this->group)
-        ->getResource()->toBeInstanceOf(Product::class);
+        ->getModel()->toBeNull()
+        ->for(product())->toBe($this->group)
+        ->getModel()->toBeInstanceOf(Product::class);
 });
 
 it('has route key name', function () {

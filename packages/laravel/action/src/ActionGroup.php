@@ -8,6 +8,7 @@ use Honed\Action\Concerns\HasActions;
 use Honed\Action\Concerns\HasEncoder;
 use Honed\Action\Concerns\HasEndpoint;
 use Honed\Action\Contracts\Handles;
+use Honed\Action\Support\Constants;
 use Honed\Core\Concerns\HasResource;
 use Honed\Core\Primitive;
 use Illuminate\Contracts\Routing\UrlRoutable;
@@ -76,7 +77,7 @@ class ActionGroup extends Primitive implements UrlRoutable, Handles
     /**
      * The root parent class.
      * 
-     * @return class-string
+     * @return class-string<\Honed\Action\Contracts\Handles>
      */
     public static function baseClass()
     {
@@ -114,9 +115,9 @@ class ActionGroup extends Primitive implements UrlRoutable, Handles
     public function toArray()
     {
         $actions = [
-            'inline' => $this->inlineActionsToArray($this->getModel()),
-            'bulk' => $this->bulkActionsToArray(),
-            'page' => $this->pageActionsToArray(),
+            Constants::INLINE => $this->inlineActionsToArray($this->getModel()),
+            Constants::BULK => $this->bulkActionsToArray(),
+            Constants::PAGE => $this->pageActionsToArray(),
         ];
 
         if ($this->isExecutable(ActionGroup::class)) {
