@@ -30,7 +30,7 @@ it('executes pipeline', function () {
         ->request($this->request)
         ->refine();
 
-    expect($refine->getBuilder()->getQuery())
+    expect($refine->getResource()->getQuery())
         ->wheres->scoped(fn ($wheres) => $wheres
             ->toBeArray()
             ->toHaveCount(9)

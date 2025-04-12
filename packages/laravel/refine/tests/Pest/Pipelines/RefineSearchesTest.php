@@ -19,7 +19,7 @@ beforeEach(function () {
     ];
 
     $this->refine = Refine::make($this->builder)
-        ->withSearches($searches);
+        ->searches($searches);
 });
 
 it('does not refine', function () {
@@ -31,7 +31,7 @@ it('does not refine', function () {
 
     $this->pipe->__invoke($this->refine, $this->closure);
 
-    expect($this->refine->getBuilder()->getQuery()->wheres)
+    expect($this->refine->getResource()->getQuery()->wheres)
         ->toBeEmpty();
 
     expect($this->refine->getTerm())
@@ -47,7 +47,7 @@ it('refines', function () {
 
     $this->pipe->__invoke($this->refine, $this->closure);
 
-    $builder = $this->refine->getBuilder();
+    $builder = $this->refine->getResource();
 
     expect($builder->getQuery()->wheres)
         ->{0}->toBeSearch($this->builder->qualifyColumn('name'), 'and')
@@ -62,11 +62,11 @@ it('disables', function () {
         config('refine.search_key') => 'search+value'
     ]);
 
-    $this->refine->request($request)->withoutSearches();
+    $this->refine->request($request)->exceptSearches();
 
     $this->pipe->__invoke($this->refine, $this->closure);
 
-    $builder = $this->refine->getBuilder();
+    $builder = $this->refine->getResource();
 
     expect($builder->getQuery()->wheres)
         ->toBeEmpty();
@@ -85,7 +85,7 @@ it('refines with match', function () {
 
     $this->pipe->__invoke($this->refine, $this->closure);
 
-    $builder = $this->refine->getBuilder();
+    $builder = $this->refine->getResource();
 
     expect($builder->getQuery()->wheres)
         ->toBeOnlySearch($this->builder->qualifyColumn('name'));
@@ -109,7 +109,7 @@ describe('scope', function () {
 
         $this->pipe->__invoke($this->refine, $this->closure);
 
-        $builder = $this->refine->getBuilder();
+        $builder = $this->refine->getResource();
 
         expect($builder->getQuery()->wheres)
             ->toBeEmpty();
@@ -128,7 +128,7 @@ describe('scope', function () {
 
         $this->pipe->__invoke($this->refine, $this->closure);
 
-        $builder = $this->refine->getBuilder();
+        $builder = $this->refine->getResource();
 
         expect($builder->getQuery()->wheres)
             ->toBeOnlySearch($this->builder->qualifyColumn('description'));

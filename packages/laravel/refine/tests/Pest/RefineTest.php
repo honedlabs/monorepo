@@ -30,13 +30,15 @@ it('has delimiter', function () {
 
 it('goes without refining', function () {
     expect($this->test)
-        ->isWithoutSearches()->toBeFalse()
-        ->isWithoutFilters()->toBeFalse()
-        ->isWithoutSorts()->toBeFalse()
-        ->withoutRefining()->toBe($this->test)
-        ->isWithoutSearches()->toBeTrue()
-        ->isWithoutFilters()->toBeTrue()
-        ->isWithoutSorts()->toBeTrue();
+        ->providesSearches()->toBeTrue()
+        ->providesFilters()->toBeTrue()
+        ->providesSorts()->toBeTrue()
+        ->isRefinable()->toBeTrue()
+        ->isntRefinable()->toBeFalse()
+        ->exceptRefinements()->toBe($this->test)
+        ->onlyRefinements()->toBe($this->test)
+        ->isRefinable()->toBeTrue()
+        ->isntRefinable()->toBeFalse();
 });
 
 it('refines before', function () {
@@ -53,7 +55,7 @@ it('evaluates named closure dependencies', function () {
     $product = product();
     $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
 
-    expect($this->test->request($request)->builder(Product::query()))
+    expect($this->test->request($request)->resource(Product::query()))
         ->evaluate(fn ($request) => $request->get('key'))->toBe('value')
         // ->evaluate(fn ($route) => $route)->toBeInstanceOf(Route::class)
         ->evaluate(fn ($builder) => $builder->getModel())->toBeInstanceOf(Product::class)
@@ -66,7 +68,7 @@ it('evaluates typed closure dependencies', function () {
     $product = product();
     $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
 
-    expect($this->test->request($request)->builder(Product::query()))
+    expect($this->test->request($request)->resource(Product::query()))
         ->evaluate(fn (Request $r) => $r->get('key'))->toBe('value')
         ->evaluate(fn (Builder $b) => $b->getModel())->toBeInstanceOf(Product::class)
         // ->evaluate(fn (Route $r) => $r)->toBeInstanceOf(Route::class)
@@ -84,6 +86,7 @@ it('has array representation', function () {
         Filter::make('name'),
         Sort::make('name'),
         Search::make('name'),
+        product() // Misc class
     ]);
 
     expect($this->test->toArray())->toBeArray()
@@ -103,7 +106,7 @@ it('has array representation with matches', function () {
         Filter::make('name'),
         Sort::make('name'),
         Search::make('name'),
-    ])->match();
+    ])->matches();
 
     expect($this->test->toArray())->toBeArray()
         ->toHaveCount(4)
@@ -118,7 +121,7 @@ it('has array representation with matches', function () {
 });
 
 it('has array representation with scopes', function () {
-    $this->test->scope('name', 'John')->match();
+    $this->test->scope('name', 'John')->matches();
 
     expect($this->test->toArray())->toBeArray()
         ->{'config'}->toEqual([

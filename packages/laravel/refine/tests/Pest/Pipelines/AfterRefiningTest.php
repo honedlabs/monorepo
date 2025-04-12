@@ -18,7 +18,7 @@ beforeEach(function () {
 it('does not refine after', function () {
     $this->pipe->__invoke($this->refine, $this->closure);
 
-    expect($this->refine->getBuilder()->getQuery()->wheres)
+    expect($this->refine->getResource()->getQuery()->wheres)
         ->toBeEmpty();
 });
 
@@ -27,16 +27,16 @@ it('refines after using property', function () {
 
     $this->pipe->__invoke($refine, $this->closure);
 
-    expect($refine->getBuilder()->getQuery()->wheres)
+    expect($refine->getResource()->getQuery()->wheres)
         ->toBeOnlyWhere('price', 100, '>', 'and');
 });
 
 it('refines after using method', function () {
     $refine = AfterRefiningFixture::make()
-        ->builder($this->builder);
+        ->resource($this->builder);
     
     $this->pipe->__invoke($refine, $this->closure);
 
-    expect($refine->getBuilder()->getQuery()->wheres)
+    expect($refine->getResource()->getQuery()->wheres)
         ->toBeOnlyWhere('price', 100, '>', 'and');
 });

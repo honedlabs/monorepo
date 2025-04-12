@@ -18,36 +18,36 @@ it('is empty by default', function () {
 
 it('adds filters', function () {
     expect($this->test)
-        ->withFilters([Filter::make('name')])->toBe($this->test)
-        ->withFilters([Filter::make('price')])->toBe($this->test)
+        ->filters([Filter::make('name')])->toBe($this->test)
+        ->filters([Filter::make('price')])->toBe($this->test)
         ->hasFilters()->toBeTrue()
         ->getFilters()->toHaveCount(2);
 });
 
 it('adds filters variadically', function () {
     expect($this->test)
-        ->withFilters(Filter::make('name'), Filter::make('price'))->toBe($this->test)
+        ->filters(Filter::make('name'), Filter::make('price'))->toBe($this->test)
         ->hasFilters()->toBeTrue()
         ->getFilters()->toHaveCount(2);
 });
 
 it('adds filters collection', function () {
     expect($this->test)
-        ->withFilters(collect([Filter::make('name'), Filter::make('price')]))->toBe($this->test)
+        ->filters(collect([Filter::make('name'), Filter::make('price')]))->toBe($this->test)
         ->hasFilters()->toBeTrue()
         ->getFilters()->toHaveCount(2);
 });
 
-it('without filters', function () {
+it('provides filters', function () {
     expect($this->test)
-        ->isWithoutFilters()->toBeFalse()
-        ->withoutFilters()->toBe($this->test)
-        ->isWithoutFilters()->toBeTrue();
+        ->providesFilters()->toBeTrue()
+        ->exceptFilters()->toBe($this->test)
+        ->providesFilters()->toBeFalse();
 });
 
 it('filters to array', function () {
     expect($this->test)
-        ->withFilters([Filter::make('name'), Filter::make('price')])->toBe($this->test)
+        ->filters([Filter::make('name'), Filter::make('price')])->toBe($this->test)
         ->filtersToArray()->toHaveCount(2)
         ->each->scoped(fn ($filter) => $filter
             ->toHaveKeys([
@@ -64,8 +64,8 @@ it('filters to array', function () {
 
 it('hides filters from serialization', function () {
     expect($this->test)
-        ->withFilters([Filter::make('name')])->toBe($this->test)
+        ->filters([Filter::make('name')])->toBe($this->test)
         ->filtersToArray()->toHaveCount(1)
-        ->withoutFilters()->toBe($this->test)
+        ->exceptFilters()->toBe($this->test)
         ->filtersToArray()->toBeEmpty();
 });

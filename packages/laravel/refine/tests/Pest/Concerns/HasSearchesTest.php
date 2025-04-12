@@ -18,22 +18,22 @@ it('is empty by default', function () {
 
 it('adds searches', function () {
     expect($this->test)
-        ->withSearches([Search::make('name')])->toBe($this->test)
-        ->withSearches([Search::make('price')])->toBe($this->test)
+        ->searches([Search::make('name')])->toBe($this->test)
+        ->searches([Search::make('price')])->toBe($this->test)
         ->hasSearches()->toBeTrue()
         ->getSearches()->toHaveCount(2);
 });
 
 it('adds searches variadically', function () {
     expect($this->test)
-        ->withSearches(Search::make('name'), Search::make('price'))->toBe($this->test)
+        ->searches(Search::make('name'), Search::make('price'))->toBe($this->test)
         ->hasSearches()->toBeTrue()
         ->getSearches()->toHaveCount(2);
 });
 
 it('adds searches collection', function () {
     expect($this->test)
-        ->withSearches(collect([Search::make('name'), Search::make('price')]))->toBe($this->test)
+        ->searches(collect([Search::make('name'), Search::make('price')]))->toBe($this->test)
         ->hasSearches()->toBeTrue()
         ->getSearches()->toHaveCount(2);
 });
@@ -58,7 +58,7 @@ it('matches', function () {
     expect($this->test)
         ->isMatching()->toBe(config('refine.match'));
 
-    expect($this->test->match())->toBe($this->test)
+    expect($this->test->matches())->toBe($this->test)
         ->isMatching()->toBeTrue()
         ->isMatchingByDefault()->toBe(config('refine.match'));
 });
@@ -70,19 +70,19 @@ it('has term', function () {
         ->getTerm()->toBe('test');
 });
 
-it('without searches', function () {
+it('provides searches', function () {
     expect($this->test)
-        ->isWithoutSearches()->toBeFalse()
-        ->withoutSearches()->toBe($this->test)
-        ->isWithoutSearches()->toBeTrue();
+        ->providesSearches()->toBeTrue()
+        ->exceptSearches()->toBe($this->test)
+        ->providesSearches()->toBeFalse();
 });
 
 it('searches to array', function () {
     expect($this->test)
-        ->withSearches([Search::make('name'), Search::make('price')])->toBe($this->test)
+        ->searches([Search::make('name'), Search::make('price')])->toBe($this->test)
         ->searchesToArray()->toBeEmpty();
 
-    expect($this->test->match())
+    expect($this->test->matches())
         ->searchesToArray()->toHaveCount(2)
         ->each->scoped(fn ($search) => $search
             ->toHaveKeys([
@@ -96,9 +96,9 @@ it('searches to array', function () {
 });
 
 it('hides searches from serialization', function () {
-    expect($this->test->match())
-        ->withSearches([Search::make('name')])->toBe($this->test)
+    expect($this->test->matches())
+        ->searches([Search::make('name')])->toBe($this->test)
         ->searchesToArray()->toHaveCount(1)
-        ->withoutSearches()->toBe($this->test)
+        ->exceptSearches()->toBe($this->test)
         ->searchesToArray()->toBeEmpty();
 });

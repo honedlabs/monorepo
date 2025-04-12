@@ -27,45 +27,6 @@ it('has options', function () {
         );
 });
 
-it('defines options', function () {
-    $test = new class implements DefinesOptions {
-        use HasOptions;
-
-        public function defineOptions(): array
-        {
-            return [
-                'one' => 'One',
-                'two' => 'Two',
-                'three' => 'Three',
-            ];
-        }
-    };
-
-    expect($test)
-        ->hasOptions()->toBeTrue()
-        ->getOptions()->scoped(fn ($test) => $test
-            ->toBeArray()
-            ->toHaveCount(3)
-            ->sequence(
-                fn ($test) => $test
-                    ->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe('one')
-                    ->getLabel()->toBe('One')
-                    ->isActive()->toBeFalse(),
-                fn ($test) => $test
-                    ->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe('two')
-                    ->getLabel()->toBe('Two')
-                    ->isActive()->toBeFalse(),
-                fn ($test) => $test
-                    ->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe('three')
-                    ->getLabel()->toBe('Three')
-                    ->isActive()->toBeFalse(),
-            )
-        );
-});
-
 it('is strict', function () {
     expect($this->test)
         ->isStrict()->toBe(config('refine.strict'))

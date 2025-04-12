@@ -6,6 +6,7 @@ namespace Honed\Refine;
 
 use Honed\Core\Concerns\IsDefault;
 use Honed\Refine\Concerns\HasDirection;
+use Honed\Refine\Support\Constants;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -17,6 +18,14 @@ class Sort extends Refiner
 {
     use HasDirection;
     use IsDefault;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function defineType()
+    {
+        return Constants::SORT;
+    }
 
     /**
      * Get the value for the sort indicating an ascending direction.
@@ -55,7 +64,9 @@ class Sort extends Refiner
         $descending = $this->getDescendingValue();
 
         if ($this->isFixed()) {
-            return $this->fixed === 'desc' ? $ascending : $descending;
+            return $this->fixed === Constants::DESCENDING
+                ? $ascending
+                : $descending;
         }
 
         $inverted = $this->isInverted();
@@ -76,14 +87,6 @@ class Sort extends Refiner
     {
         /** @var array{string|null, 'asc'|'desc'|null}|null */
         return parent::getValue();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        $this->type('sort');
     }
 
     /**

@@ -18,22 +18,22 @@ it('is empty by default', function () {
 
 it('adds sorts', function () {
     expect($this->test)
-        ->withSorts([Sort::make('name')])->toBe($this->test)
-        ->withSorts([Sort::make('price')])->toBe($this->test)
+        ->sorts([Sort::make('name')])->toBe($this->test)
+        ->sorts([Sort::make('price')])->toBe($this->test)
         ->hasSorts()->toBeTrue()
         ->getSorts()->toHaveCount(2);
 });
 
 it('adds sorts variadically', function () {
     expect($this->test)
-        ->withSorts(Sort::make('name'), Sort::make('price'))->toBe($this->test)
+        ->sorts(Sort::make('name'), Sort::make('price'))->toBe($this->test)
         ->hasSorts()->toBeTrue()
         ->getSorts()->toHaveCount(2);
 });
 
 it('adds sorts collection', function () {
     expect($this->test)
-        ->withSorts(collect([Sort::make('name'), Sort::make('price')]))->toBe($this->test)
+        ->sorts(collect([Sort::make('name'), Sort::make('price')]))->toBe($this->test)
         ->hasSorts()->toBeTrue()
         ->getSorts()->toHaveCount(2);
 });
@@ -46,22 +46,22 @@ it('has sort key', function () {
         ->getDefaultSortKey()->toBe(config('refine.sort_key'));
 });
 
-it('without sorts', function () {
+it('provides sorts', function () {
     expect($this->test)
-        ->isWithoutSorts()->toBeFalse()
-        ->withoutSorts()->toBe($this->test)
-        ->isWithoutSorts()->toBeTrue();
+        ->providesSorts()->toBeTrue()
+        ->exceptSorts()->toBe($this->test)
+        ->providesSorts()->toBeFalse();
 });
 
 it('has no default sort', function () {
     expect($this->test)
-        ->withSorts([Sort::make('name')])->toBe($this->test)
+        ->sorts([Sort::make('name')])->toBe($this->test)
         ->getDefaultSort()->toBeNull();
 });
 
 it('has default sort', function () {
     expect($this->test)
-        ->withSorts([Sort::make('price'), Sort::make('name')->default()])->toBe($this->test)
+        ->sorts([Sort::make('price'), Sort::make('name')->default()])->toBe($this->test)
         ->getDefaultSort()->scoped(fn ($sort) => $sort
             ->not->toBeNull()
             ->getName()->toBe('name')
@@ -70,7 +70,7 @@ it('has default sort', function () {
 
 it('sorts to array', function () {
     expect($this->test)
-        ->withSorts([Sort::make('name'), Sort::make('price')])->toBe($this->test)
+        ->sorts([Sort::make('name'), Sort::make('price')])->toBe($this->test)
         ->sortsToArray()->toHaveCount(2)
         ->each->scoped(fn ($sort) => $sort
             ->toHaveKeys([
@@ -87,8 +87,8 @@ it('sorts to array', function () {
 
 it('hides sorts from serialization', function () {
     expect($this->test)
-        ->withSorts([Sort::make('name')])->toBe($this->test)
+        ->sorts([Sort::make('name')])->toBe($this->test)
         ->sortsToArray()->toHaveCount(1)
-        ->withoutSorts()->toBe($this->test)
+        ->exceptSorts()->toBe($this->test)
         ->sortsToArray()->toBeEmpty();
 });

@@ -15,6 +15,6 @@ it('has qualifier', function () {
         ->isQualifying()->toBeTrue()
         ->unqualify()->toBe($this->test)
         ->isQualifying()->toBeFalse()
-        ->qualify()->toBe($this->test)
+        ->qualifies()->toBe($this->test)
         ->isQualifying()->toBeTrue();
 });
