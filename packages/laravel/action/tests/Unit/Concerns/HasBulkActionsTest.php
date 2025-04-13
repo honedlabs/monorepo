@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use Honed\Action\Concerns\HasBulkActions;
-
 use Honed\Action\Contracts\ShouldChunk;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class
+    {
         use HasBulkActions;
     };
 });
@@ -19,7 +19,8 @@ it('chunks', function () {
         ->isChunked()->toBeTrue()
         ->isChunkedByDefault()->toBe(config('action.chunk'));
 
-    $test = new class implements ShouldChunk {
+    $test = new class implements ShouldChunk
+    {
         use HasBulkActions;
     };
 
@@ -42,5 +43,3 @@ it('has chunk size', function () {
         ->getChunkSize()->toBe(10)
         ->getDefaultChunkSize()->toBe(config('action.chunk_size'));
 });
-
-

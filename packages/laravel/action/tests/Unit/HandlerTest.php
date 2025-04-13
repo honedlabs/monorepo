@@ -15,7 +15,7 @@ it('sets actions', function () {
     expect($this->handler)
         ->getActions()->toBeEmpty()
         ->actions([
-            InlineAction::make('update')
+            InlineAction::make('update'),
         ])->getActions()->toHaveCount(1);
 });
 

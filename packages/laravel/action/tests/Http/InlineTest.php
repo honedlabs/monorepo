@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Str;
-use function Pest\Laravel\post;
-use Honed\Action\Http\Requests\InvokableRequest;
 use Honed\Action\Testing\InlineRequest;
 use Honed\Action\Tests\Fixtures\ProductActions;
+use Illuminate\Support\Str;
+
+use function Pest\Laravel\post;
 
 beforeEach(function () {
     $this->product = product();
@@ -23,7 +23,7 @@ it('executes the action', function () {
         ->getData();
 
     $response = post(route('actions'), $data);
-    
+
     $response->assertRedirect();
 
     $this->assertDatabaseHas('products', [
@@ -41,7 +41,7 @@ it('is 404 for no name match', function () {
     $response = post(route('actions'), $data);
 
     $response->assertNotFound();
-}); 
+});
 
 it('is 404 if no model is found', function () {
     $data = $this->request
@@ -93,11 +93,11 @@ it('returns inertia response', function () {
         ->record($this->product->id)
         ->name('price.100')
         ->getData();
-    
+
     $response = post(route('actions'), $data);
 
     $response->assertInertia();
-    
+
     $this->assertDatabaseHas('products', [
         'id' => $this->product->id,
         'price' => 100,

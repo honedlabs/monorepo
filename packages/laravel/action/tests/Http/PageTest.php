@@ -22,7 +22,7 @@ it('executes the action', function () {
         ->getData();
 
     $response = post(route('actions'), $data);
-    
+
     $response->assertRedirect();
 
     $this->assertDatabaseHas('products', [
@@ -39,7 +39,7 @@ it('is 404 for no name match', function () {
     $response = post(route('actions'), $data);
 
     $response->assertNotFound();
-}); 
+});
 
 it('is 404 if the action is not allowed', function () {
     // It's a 404 as the action when retrieved cannot be returned.
@@ -67,13 +67,12 @@ it('returns inertia response', function () {
     $data = $this->request
         ->name('price.10')
         ->getData();
-    
+
     $response = post(route('actions'), $data);
 
     $response->assertInertia();
-    
+
     expect(Product::all())
         ->toHaveCount(1)
         ->first()->price->toBe(10);
 });
-

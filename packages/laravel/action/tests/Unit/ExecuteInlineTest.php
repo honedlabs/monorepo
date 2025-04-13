@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Honed\Action\InlineAction;
 use Honed\Action\Support\Constants;
 use Honed\Action\Tests\Fixtures\DestroyAction;
-use Honed\Action\Tests\Stubs\Product;
 use Honed\Action\Tests\Fixtures\DestroyProduct;
+use Honed\Action\Tests\Stubs\Product;
 use Illuminate\Http\RedirectResponse;
 
 beforeEach(function () {

@@ -15,9 +15,9 @@ it('sets with instance', function () {
         ->toBe($this->test)
         ->hasConfirm()->toBeTrue()
         ->getConfirm()->scoped(fn ($confirm) => $confirm
-            ->getTitle()->toBe('name')
-            ->getDescription()->toBe('description')
-            ->getIntent()->toBe(Confirm::CONSTRUCTIVE)
+        ->getTitle()->toBe('name')
+        ->getDescription()->toBe('description')
+        ->getIntent()->toBe(Confirm::CONSTRUCTIVE)
         );
 });
 
@@ -29,9 +29,9 @@ it('sets with self-call', function () {
     )->toBe($this->test)
         ->hasConfirm()->toBeTrue()
         ->getConfirm()->scoped(fn ($confirm) => $confirm
-            ->getTitle()->toBe('name')
-            ->getDescription()->toBe('description')
-            ->getSubmit()->toBe('Accept')
+        ->getTitle()->toBe('name')
+        ->getDescription()->toBe('description')
+        ->getSubmit()->toBe('Accept')
         );
 });
 
@@ -40,8 +40,8 @@ it('sets with strings', function () {
         ->toBe($this->test)
         ->hasConfirm()->toBeTrue()
         ->getConfirm()->scoped(fn ($confirm) => $confirm
-            ->getTitle()->toBe('name')
-            ->getDescription()->toBe('description')
+        ->getTitle()->toBe('name')
+        ->getDescription()->toBe('description')
         );
 });
 

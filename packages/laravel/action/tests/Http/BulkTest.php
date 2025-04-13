@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Str;
-use function Pest\Laravel\post;
-use Honed\Action\Http\Requests\InvokableRequest;
 use Honed\Action\Testing\BulkRequest;
 use Honed\Action\Tests\Fixtures\ProductActions;
 use Honed\Action\Tests\Stubs\Product;
+
+use function Pest\Laravel\post;
 
 beforeEach(function () {
     foreach (range(1, 10) as $i) {
@@ -26,7 +25,7 @@ it('executes the action', function () {
         ->getData();
 
     $response = post(route('actions'), $data);
-    
+
     $response->assertRedirect();
 
     expect(Product::all())
@@ -44,8 +43,7 @@ it('is 404 for no name match', function () {
     $response = post(route('actions'), $data);
 
     $response->assertNotFound();
-}); 
-
+});
 
 it('is 404 if the action is not allowed', function () {
     // It's a 404 as the action when retrieved cannot be returned.
@@ -75,7 +73,7 @@ it('returns inertia response', function () {
         ->all()
         ->name('price.50')
         ->getData();
-    
+
     $response = post(route('actions'), $data);
 
     $response->assertInertia();
@@ -106,7 +104,6 @@ it('applies only to selected records', function () {
         ->each(fn ($product) => $product
             ->description->not->toBe('test')
         );
-    
 
 });
 

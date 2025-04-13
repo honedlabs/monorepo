@@ -6,7 +6,7 @@ use Honed\Action\Support\Constants;
 use Honed\Action\Testing\BulkRequest;
 
 beforeEach(function () {
-    $this->request = new BulkRequest();
+    $this->request = new BulkRequest;
 });
 
 it('has all', function () {
@@ -33,14 +33,14 @@ it('has except', function () {
 it('has data', function () {
     expect($this->request)
         ->getData()->scoped(fn ($data) => $data
-            ->toBeArray()
-            ->toHaveKeys(['type', 'only', 'except', 'all', 'id', 'name'])
-            ->{'type'}->toBe(Constants::BULK)
+        ->toBeArray()
+        ->toHaveKeys(['type', 'only', 'except', 'all', 'id', 'name'])
+        ->{'type'}->toBe(Constants::BULK)
         )
         ->data(['type' => 'test'])->toBe($this->request)
         ->getData()->scoped(fn ($data) => $data
-            ->toBeArray()
-            ->toHaveKeys(['type', 'only', 'except', 'all', 'id', 'name'])
-            ->{'type'}->toBe('test')
+        ->toBeArray()
+        ->toHaveKeys(['type', 'only', 'except', 'all', 'id', 'name'])
+        ->{'type'}->toBe('test')
         );
 });

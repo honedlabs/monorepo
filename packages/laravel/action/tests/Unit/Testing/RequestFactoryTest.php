@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Testing\RequestFactory;
-use Honed\Action\Testing\InlineRequest;
 use Honed\Action\Testing\BulkRequest;
+use Honed\Action\Testing\InlineRequest;
 use Honed\Action\Testing\PageRequest;
+use Honed\Action\Testing\RequestFactory;
 
 beforeEach(function () {
     $this->factory = RequestFactory::make();

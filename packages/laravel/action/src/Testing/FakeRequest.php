@@ -65,7 +65,7 @@ class FakeRequest
 
     /**
      * Create a new fake action request.
-     * 
+     *
      * @return static
      */
     public static function fake()

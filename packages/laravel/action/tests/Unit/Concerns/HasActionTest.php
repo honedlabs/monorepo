@@ -7,7 +7,8 @@ use Honed\Action\Contracts\Actionable;
 use Honed\Action\Tests\Fixtures\DestroyAction;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class
+    {
         use HasAction;
     };
 });
@@ -40,7 +41,8 @@ it('has handler', function () {
 });
 
 it('has actionable', function () {
-    $test = new class implements Actionable {
+    $test = new class implements Actionable
+    {
         use HasAction;
 
         public function handle()

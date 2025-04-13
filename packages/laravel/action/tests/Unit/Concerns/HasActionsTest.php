@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-use Honed\Action\BulkAction;
-use Honed\Action\PageAction;
 use Honed\Action\ActionGroup;
-use Honed\Action\InlineAction;
+use Honed\Action\BulkAction;
 use Honed\Action\Concerns\HasActions;
+use Honed\Action\InlineAction;
+use Honed\Action\PageAction;
 use Honed\Core\Primitive;
 
 beforeEach(function () {
-    $this->test = new class extends Primitive{
+    $this->test = new class extends Primitive
+    {
         use HasActions;
 
         public function toArray()

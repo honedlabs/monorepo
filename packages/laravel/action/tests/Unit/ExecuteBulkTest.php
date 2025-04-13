@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Honed\Action\BulkAction;
-use Illuminate\Support\Collection;
 use Honed\Action\Tests\Stubs\Product;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 beforeEach(function () {
     $this->action = BulkAction::make('test');
@@ -17,11 +17,11 @@ it('executes on builder', function () {
     $fn = fn (Builder $q) => $q->update(['name' => 'test']);
 
     $this->action->action($fn)->execute(Product::query());
-    
+
     $this->assertDatabaseHas('products', [
         'id' => $product->id,
         'name' => 'test',
-    ]); 
+    ]);
 });
 
 it('executes on model', function () {

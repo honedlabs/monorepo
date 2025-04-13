@@ -7,7 +7,8 @@ use Honed\Action\Concerns\HasEndpoint;
 use Honed\Action\Tests\Fixtures\ProductActions;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class
+    {
         use HasEndpoint;
 
         public function handle($request)
@@ -37,7 +38,7 @@ it('is executable', function () {
         ->isntExecutable($class)->toBeTrue();
 
     $actions = ProductActions::make();
-    
+
     expect($actions)
         ->isExecutable(ActionGroup::class)->toBeTrue()
         ->isntExecutable(ActionGroup::class)->toBeFalse()

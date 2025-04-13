@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-use function Pest\Laravel\post;
-use Honed\Action\Tests\Stubs\Product;
 use Honed\Action\Testing\InlineRequest;
 use Honed\Action\Tests\Fixtures\ProductActions;
-
-use Honed\Action\Http\Requests\InvokableRequest;
 use Honed\Action\Tests\Fixtures\RouteProductActions;
+use Honed\Action\Tests\Stubs\Product;
+
+use function Pest\Laravel\post;
 
 beforeEach(function () {
     $this->product = product();
@@ -26,7 +25,7 @@ it('executes the action', function () {
     $data = $this->request->getData();
 
     $response = post(route('actions.invoke', $this->actions), $data);
-    
+
     $response->assertRedirect();
 
     $this->assertDatabaseHas('products', [

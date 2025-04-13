@@ -6,7 +6,7 @@ use Honed\Action\Support\Constants;
 use Honed\Action\Testing\InlineRequest;
 
 beforeEach(function () {
-    $this->request = new InlineRequest();
+    $this->request = new InlineRequest;
 });
 
 it('has record', function () {
@@ -16,18 +16,17 @@ it('has record', function () {
         ->getRecord()->toBe(1);
 });
 
-
 it('has data', function () {
     expect($this->request)
         ->getData()->scoped(fn ($data) => $data
-            ->toBeArray()
-            ->toHaveKeys(['type', 'record', 'id', 'name'])
-            ->{'type'}->toBe(Constants::INLINE)
+        ->toBeArray()
+        ->toHaveKeys(['type', 'record', 'id', 'name'])
+        ->{'type'}->toBe(Constants::INLINE)
         )
         ->data(['type' => 'test'])->toBe($this->request)
         ->getData()->scoped(fn ($data) => $data
-            ->toBeArray()
-            ->toHaveKeys(['type', 'record', 'id', 'name'])
-            ->{'type'}->toBe('test')
+        ->toBeArray()
+        ->toHaveKeys(['type', 'record', 'id', 'name'])
+        ->{'type'}->toBe('test')
         );
 });

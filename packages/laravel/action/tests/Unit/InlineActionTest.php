@@ -2,11 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Action\ActionFactory;
 use Honed\Action\InlineAction;
-use Honed\Action\Tests\Fixtures\DestroyAction;
-use Honed\Action\Tests\Stubs\Product;
-use Symfony\Component\HttpFoundation\Request;
 
 beforeEach(function () {
     $this->test = InlineAction::make('test');

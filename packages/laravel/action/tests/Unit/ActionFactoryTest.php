@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Honed\Action\BulkAction;
-use Honed\Action\PageAction;
 use Honed\Action\ActionGroup;
-use Honed\Action\InlineAction;
+use Honed\Action\BulkAction;
 use Honed\Action\Facades\Action;
+use Honed\Action\InlineAction;
+use Honed\Action\PageAction;
 use Honed\Action\Support\Constants;
 
 it('makes bulk', function () {

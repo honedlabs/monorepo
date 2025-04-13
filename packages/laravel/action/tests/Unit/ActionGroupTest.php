@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Action\PageAction;
 use Honed\Action\ActionGroup;
-use Honed\Action\InlineAction;
-use Honed\Action\Tests\Stubs\Product;
-use Illuminate\Http\RedirectResponse;
+use Honed\Action\PageAction;
 use Honed\Action\Testing\RequestFactory;
 use Honed\Action\Tests\Fixtures\ProductActions;
+use Honed\Action\Tests\Stubs\Product;
+use Illuminate\Http\RedirectResponse;
 
 beforeEach(function () {
     $this->group = ActionGroup::make(PageAction::make('create'));
@@ -24,7 +23,7 @@ it('has model', function () {
 it('has route key name', function () {
     expect($this->group)
         ->getRouteKeyName()->toBe('action');
-});;
+});
 
 it('requires builder to handle requests', function () {
     $request = RequestFactory::page()

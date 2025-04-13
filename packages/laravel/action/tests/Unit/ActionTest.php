@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 use Honed\Action\Action;
 use Honed\Action\Confirm;
-use Illuminate\Support\Str;
 use Honed\Action\InlineAction;
 use Honed\Action\Support\Constants;
-use Honed\Action\Tests\Stubs\Product;
-use Symfony\Component\HttpFoundation\Request;
 use Honed\Action\Tests\Fixtures\DestroyAction;
+use Honed\Action\Tests\Stubs\Product;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Request;
 
 beforeEach(function () {
     // Using inline action for testing base class
-    $this->action = InlineAction::make('test'); 
+    $this->action = InlineAction::make('test');
 });
 
 it('has array representation', function () {
@@ -86,5 +86,3 @@ it('evaluates types', function () {
     expect($this->action->evaluate(fn (Product $product) => $product))
         ->toBeInstanceOf(Product::class);
 });
-
-

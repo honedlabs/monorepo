@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Action\ActionGroup;
-use Honed\Action\Concerns\HasRouteBinding;
 use Honed\Action\Tests\Fixtures\ProductActions;
 
 // beforeEach(function () {

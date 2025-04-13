@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 
 beforeEach(function () {
     FakeRequest::shouldFill(false);
-    
-    $this->request = new FakeRequest();
+
+    $this->request = new FakeRequest;
 });
 
 it('has id', function () {
@@ -48,13 +48,13 @@ it('fills', function () {
 it('has data', function () {
     expect($this->request)
         ->getData()->scoped(fn ($data) => $data
-            ->toBeArray()
-            ->toHaveKeys(['id', 'name'])
+        ->toBeArray()
+        ->toHaveKeys(['id', 'name'])
         )
         ->data(['test' => 'test'])->toBe($this->request)
         ->getData()->scoped(fn ($data) => $data
-            ->toBeArray()
-            ->toHaveKeys(['id', 'name', 'test'])
+        ->toBeArray()
+        ->toHaveKeys(['id', 'name', 'test'])
         );
 });
 
