@@ -124,12 +124,11 @@ class Handler
 
         [$action, $query] = $this->resolveAction($type, $data);
 
-        abort_unless((bool) $action, 404);
-
-        abort_unless((bool) $query, 404);
+        abort_unless($action && $query, 404);
 
         [$named, $typed] = Parameters::builder($query);
 
+        // Page, Bulk will already pass this. Additional check for Inline.
         abort_unless($action->isAllowed($named, $typed), 403);
 
         /** @var TModel|TBuilder $query */

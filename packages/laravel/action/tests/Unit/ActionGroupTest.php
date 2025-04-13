@@ -67,12 +67,12 @@ it('resolves route binding', function () {
         ->toBeInstanceOf(ProductActions::class);
 });
 
-// it('has array representation', function () {
-//     expect($this->group->toArray())
-//         ->toBeArray()
-//         ->toHaveCount(3)
-//         ->toHaveKeys(['inline', 'bulk', 'page']);
-// });
+it('has array representation', function () {
+    expect($this->group->toArray())
+        ->toBeArray()
+        ->toHaveCount(3)
+        ->toHaveKeys(['inline', 'bulk', 'page']);
+});
 
 it('has array representation with server actions', function () {
     expect(ProductActions::make()->for(product())->toArray())
@@ -80,28 +80,16 @@ it('has array representation with server actions', function () {
         ->toHaveCount(5)
         ->toHaveKeys(['id', 'endpoint', 'inline', 'bulk', 'page']);
 
-    // expect(ProductActions::make()->for(product())->executes(false)->toArray())
-    //     ->toHaveCount(3)
-    //     ->toHaveKeys(['inline', 'bulk', 'page']);
+    expect(ProductActions::make()->for(product())->executes(false)->toArray())
+        ->toHaveCount(3)
+        ->toHaveKeys(['inline', 'bulk', 'page']);
 });
 
-// it('has array representation with model', function () {
-//     $product = product();
+it('has array representation with model', function () {
+    $product = product();
 
-//     expect($this->group->actions(InlineAction::make('edit', fn ($record) => $record->name)))
-//         ->resource($product)->toBe($this->group)
-//         ->toArray()->scoped(fn ($group) => $group
-//             ->toBeArray()
-//             ->toHaveCount(3)
-//             ->toHaveKeys(['inline', 'bulk', 'page'])
-//             ->{'inline'}->scoped(fn ($actions) => $actions
-//                 ->toBeArray()
-//                 ->toHaveCount(1)
-//                 ->{0}->scoped(fn ($action) => $action
-//                     ->toBeArray()
-//                     ->toHaveKey('label')
-//                     ->{'label'}->toBe($product->name)
-//                 )
-//             )
-//         );
-// });
+    expect(ProductActions::make()->for($product)->toArray())
+        ->toBeArray()
+        ->toHaveCount(5)
+        ->toHaveKeys(['inline', 'bulk', 'page', 'id', 'endpoint']);
+});

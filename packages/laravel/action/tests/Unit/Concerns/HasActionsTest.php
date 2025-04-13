@@ -24,25 +24,41 @@ it('adds actions', function () {
     expect($this->test)
         ->actions([PageAction::make('view')])->toBe($this->test)
         ->actions([InlineAction::make('edit')])->toBe($this->test)
+        ->hasActions()->toBeTrue()
         ->getActions()->toHaveCount(2);
 });
 
 it('adds actions variadically', function () {
     expect($this->test)
         ->actions(PageAction::make('view'), InlineAction::make('edit'))->toBe($this->test)
+        ->hasActions()->toBeTrue()
         ->getActions()->toHaveCount(2);
 });
 
 it('adds actions collection', function () {
     expect($this->test)
         ->actions(collect([PageAction::make('view'), InlineAction::make('edit')]))->toBe($this->test)
+        ->hasActions()->toBeTrue()
         ->getActions()->toHaveCount(2);
 });
 
 it('adds action groups', function () {
     expect($this->test)
         ->actions(ActionGroup::make(PageAction::make('view')))->toBe($this->test)
+        ->hasActions()->toBeTrue()
         ->getActions()->toHaveCount(1);
+});
+
+it('provides actions', function () {
+    expect($this->test)
+        ->isActionable()->toBeTrue()
+        ->isntActionable()->toBeFalse()
+        ->exceptActions()->toBe($this->test)
+        ->isActionable()->toBeFalse()
+        ->isntActionable()->toBeTrue()
+        ->onlyActions()->toBe($this->test)
+        ->isActionable()->toBeTrue()
+        ->isntActionable()->toBeFalse();
 });
 
 it('provides inline actions', function () {

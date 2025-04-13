@@ -6,18 +6,21 @@ use Illuminate\Support\Str;
 use function Pest\Laravel\post;
 use Honed\Action\Http\Requests\InvokableRequest;
 use Honed\Action\Testing\BulkRequest;
+use Honed\Action\Tests\Fixtures\ProductActions;
 use Honed\Action\Tests\Stubs\Product;
 
 beforeEach(function () {
-    BulkRequest::shouldFill();
-
     foreach (range(1, 10) as $i) {
         product();
     }
+
+    $this->request = BulkRequest::make()
+        ->fill()
+        ->for(ProductActions::class);
 });
 
 it('executes the action', function () {
-    $data = BulkRequest::make()
+    $data = $this->request
         ->all()
         ->name('update.description')
         ->getData();
@@ -33,7 +36,7 @@ it('executes the action', function () {
 });
 
 it('is 404 for no name match', function () {
-    $data = BulkRequest::make()
+    $data = $this->request
         ->all()
         ->name('missing')
         ->getData();
@@ -44,19 +47,20 @@ it('is 404 for no name match', function () {
 }); 
 
 
-it('is 403 if the action is not allowed', function () {
-    $data = BulkRequest::make()
+it('is 404 if the action is not allowed', function () {
+    // It's a 404 as the action when retrieved cannot be returned.
+    $data = $this->request
         ->all()
         ->name('update.name')
         ->getData();
 
     $response = post(route('actions'), $data);
 
-    $response->assertForbidden();
+    $response->assertNotFound();
 });
 
 it('does not mix action types', function () {
-    $data = BulkRequest::make()
+    $data = $this->request
         ->all()
         ->name('create.product.name')
         ->getData();
@@ -67,7 +71,7 @@ it('does not mix action types', function () {
 });
 
 it('returns inertia response', function () {
-    $data = BulkRequest::make()
+    $data = $this->request
         ->all()
         ->name('price.50')
         ->getData();
@@ -84,7 +88,7 @@ it('returns inertia response', function () {
 
 it('applies only to selected records', function () {
     $ids = [1, 2, 3, 4, 5];
-    $data = BulkRequest::make()
+    $data = $this->request
         ->only($ids)
         ->name('update.description')
         ->getData();
@@ -109,7 +113,7 @@ it('applies only to selected records', function () {
 it('applies all excepted records', function () {
     $ids = [1, 2];
 
-    $data = BulkRequest::make()
+    $data = $this->request
         ->all()
         ->except($ids)
         ->name('update.description')

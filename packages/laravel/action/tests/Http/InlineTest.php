@@ -5,15 +5,19 @@ declare(strict_types=1);
 use Illuminate\Support\Str;
 use function Pest\Laravel\post;
 use Honed\Action\Http\Requests\InvokableRequest;
+use Honed\Action\Testing\InlineRequest;
+use Honed\Action\Tests\Fixtures\ProductActions;
 
 beforeEach(function () {
     $this->product = product();
+
+    $this->request = InlineRequest::fake()
+        ->for(ProductActions::class)
+        ->fill();
 });
 
 it('executes the action', function () {
-    $data = InvokableRequest::fake()
-        ->inline()
-        ->fill()
+    $data = $this->request
         ->record($this->product->id)
         ->name('update.name')
         ->getData();
@@ -21,12 +25,15 @@ it('executes the action', function () {
     $response = post(route('actions'), $data);
     
     $response->assertRedirect();
+
+    $this->assertDatabaseHas('products', [
+        'id' => $this->product->id,
+        'name' => 'test',
+    ]);
 });
 
 it('is 404 for no name match', function () {
-    $data = InvokableRequest::fake()
-        ->inline()
-        ->fill()
+    $data = $this->request
         ->record($this->product->id)
         ->name('missing')
         ->getData();
@@ -37,9 +44,7 @@ it('is 404 for no name match', function () {
 }); 
 
 it('is 404 if no model is found', function () {
-    $data = InvokableRequest::fake()
-        ->inline()
-        ->fill()
+    $data = $this->request
         ->record(Str::uuid()->toString())
         ->name('update.name')
         ->getData();
@@ -49,23 +54,20 @@ it('is 404 if no model is found', function () {
     $response->assertNotFound();
 });
 
-it('is 403 if the action is not allowed', function () {
-    $data = InvokableRequest::fake()
-        ->inline()
-        ->fill()
+it('is 404 if the action is not allowed', function () {
+    // It's a 404 as the action when retrieved cannot be returned.
+    $data = $this->request
         ->record($this->product->id)
         ->name('update.description')
         ->getData();
 
     $response = post(route('actions'), $data);
 
-    $response->assertForbidden();
+    $response->assertNotFound();
 });
 
 it('does not mix action types', function () {
-    $data = InvokableRequest::fake()
-        ->inline()
-        ->fill()
+    $data = $this->request
         ->record($this->product->id)
         ->name('create.product.name')
         ->getData();
@@ -76,9 +78,7 @@ it('does not mix action types', function () {
 });
 
 it('does not execute route actions', function () {
-    $data = InvokableRequest::fake()
-        ->inline()
-        ->fill()
+    $data = $this->request
         ->record($this->product->id)
         ->name('show')
         ->getData();
@@ -89,9 +89,7 @@ it('does not execute route actions', function () {
 });
 
 it('returns inertia response', function () {
-    $data = InvokableRequest::fake()
-        ->inline()
-        ->fill()
+    $data = $this->request
         ->record($this->product->id)
         ->name('price.100')
         ->getData();

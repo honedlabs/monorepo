@@ -98,7 +98,7 @@ class ActionGroup extends Primitive implements Handles, UrlRoutable
      */
     public function handle($request)
     {
-        if ($this->isntActionable()) {
+        if ($this->isntExecutable()) {
             abort(404);
         }
 
