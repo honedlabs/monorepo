@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Action\Http\Requests;
 
-use Honed\Action\ActionFactory;
 use Honed\Action\Support\Constants;
 use Honed\Action\Testing\RequestFactory;
 use Illuminate\Foundation\Http\FormRequest;
@@ -55,7 +54,7 @@ class InvokableRequest extends FormRequest
      */
     public function isInline()
     {
-        return $this->validated('type') === ActionFactory::INLINE;
+        return $this->validated('type') === Constants::INLINE;
     }
 
     /**
@@ -65,7 +64,7 @@ class InvokableRequest extends FormRequest
      */
     public function isBulk()
     {
-        return $this->validated('type') === ActionFactory::BULK;
+        return $this->validated('type') === Constants::BULK;
     }
 
     /**
@@ -75,7 +74,7 @@ class InvokableRequest extends FormRequest
      */
     public function isPage()
     {
-        return $this->validated('type') === ActionFactory::PAGE;
+        return $this->validated('type') === Constants::PAGE;
     }
 
     /**

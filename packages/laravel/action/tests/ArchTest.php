@@ -11,5 +11,5 @@ arch('it will not use debugging functions')
     ->each->not->toBeUsed();
 
 arch('strict types')
-    ->expect('src')
+    ->expect('Honed\Action')
     ->toUseStrictTypes();

@@ -6,7 +6,7 @@ use Honed\Action\Action;
 use Honed\Action\Confirm;
 use Illuminate\Support\Str;
 use Honed\Action\InlineAction;
-use Honed\Action\ActionFactory;
+use Honed\Action\Support\Constants;
 use Honed\Action\Tests\Stubs\Product;
 use Symfony\Component\HttpFoundation\Request;
 use Honed\Action\Tests\Fixtures\DestroyAction;
@@ -37,7 +37,7 @@ it('has array representation with route', function () {
         ->toEqual([
             'name' => 'test',
             'label' => 'Test',
-            'type' => ActionFactory::INLINE,
+            'type' => Constants::INLINE,
             'icon' => null,
             'extra' => [],
             'actionable' => false,
@@ -57,7 +57,7 @@ it('resolves to array', function () {
         ->toEqual([
             'name' => 'destroy',
             'label' => 'Destroy '.$product->name,
-            'type' => ActionFactory::INLINE,
+            'type' => Constants::INLINE,
             'icon' => null,
             'extra' => [],
             'actionable' => true,

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Honed\Action\ActionFactory;
+use Honed\Action\Support\Constants;
 use Honed\Action\Testing\RequestFactory;
 use Honed\Action\Http\Requests\InvokableRequest;
 
@@ -16,7 +16,7 @@ it('validates inline', function () {
     $httpRequest = Request::create('/', 'POST', [
         'id' => $this->id,
         'name' => 'edit',
-        'type' => ActionFactory::INLINE,
+        'type' => Constants::INLINE,
         'record' => '1',
     ]);
 
@@ -35,7 +35,7 @@ it('validates bulk', function () {
     $httpRequest = Request::create('/', 'POST', [
         'id' => $this->id,
         'name' => 'edit',
-        'type' => ActionFactory::BULK,
+        'type' => Constants::BULK,
         'only' => [1, 2, 3],
         'all' => false,
         'except' => [],
@@ -56,7 +56,7 @@ it('validates page', function () {
     $httpRequest = Request::create('/', 'POST', [
         'id' => $this->id,
         'name' => 'edit',
-        'type' => ActionFactory::PAGE,
+        'type' => Constants::PAGE,
     ]);
 
     $this->app->instance('request', $httpRequest);

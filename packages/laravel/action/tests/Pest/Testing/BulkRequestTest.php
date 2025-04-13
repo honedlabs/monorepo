@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Action\ActionFactory;
+use Honed\Action\Support\Constants;
 use Honed\Action\Testing\BulkRequest;
 
 beforeEach(function () {
@@ -35,7 +35,7 @@ it('has data', function () {
         ->getData()->scoped(fn ($data) => $data
             ->toBeArray()
             ->toHaveKeys(['type', 'only', 'except', 'all', 'id', 'name'])
-            ->{'type'}->toBe(ActionFactory::BULK)
+            ->{'type'}->toBe(Constants::BULK)
         )
         ->data(['type' => 'test'])->toBe($this->request)
         ->getData()->scoped(fn ($data) => $data

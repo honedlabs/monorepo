@@ -25,10 +25,11 @@ it('has endpoint', function () {
         ->getDefaultEndpoint()->toBe(config('action.endpoint'));
 });
 
-it('can execute server actions', function () {
+it('is executable', function () {
     $class = ActionGroup::class;
 
     expect($this->test)
+        ->isExecutable()->toBeTrue()
         ->isExecutable($class)->toBeFalse()
         ->isntExecutable($class)->toBeTrue()
         ->executes()->toBe($this->test)

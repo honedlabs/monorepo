@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-use Honed\Action\ActionFactory;
 use Honed\Action\InlineAction;
+use Honed\Action\Support\Constants;
 use Honed\Action\Tests\Fixtures\DestroyAction;
 use Honed\Action\Tests\Stubs\Product;
-use Symfony\Component\HttpFoundation\Request;
 use Honed\Action\Tests\Fixtures\DestroyProduct;
 use Illuminate\Http\RedirectResponse;
 
@@ -52,7 +51,7 @@ test('with handler', function () {
     expect($action)
         ->getName()->toBe('destroy')
         ->getLabel(...params($this->product))->toBe('Destroy '.$this->product->name)
-        ->getType()->toBe(ActionFactory::INLINE)
+        ->getType()->toBe(Constants::INLINE)
         ->isActionable()->toBeTrue();
 
     $action->execute($this->product);
