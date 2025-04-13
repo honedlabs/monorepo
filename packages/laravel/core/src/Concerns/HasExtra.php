@@ -57,6 +57,6 @@ trait HasExtra
      */
     public function hasExtra()
     {
-        return filled($this->getExtra());
+        return filled($this->extra) || filled($this->defineExtra());
     }
 }

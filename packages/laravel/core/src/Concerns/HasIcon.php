@@ -63,6 +63,6 @@ trait HasIcon
      */
     public function hasIcon()
     {
-        return filled($this->getIcon());
+        return isset($this->icon) || filled($this->defineIcon());
     }
 }
