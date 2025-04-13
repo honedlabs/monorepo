@@ -11,8 +11,6 @@ use Illuminate\Support\Str;
 use Inertia\Response as InertiaResponse;
 use Inertia\Support\Header;
 
-use function Illuminate\Support\enum_value;
-
 class Response extends InertiaResponse
 {
     const FORMATTER = '@';
@@ -33,7 +31,11 @@ class Response extends InertiaResponse
     public function layout($layout)
     {
         /** @var string */
-        $layout = enum_value($layout);
+        $layout = match (true) {
+            $layout instanceof \BackedEnum => $layout->value,
+            $layout instanceof \UnitEnum => $layout->name,
+            default => $layout,
+        };
 
         $this->layout = $layout;
 

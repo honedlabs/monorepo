@@ -6,9 +6,31 @@ use Honed\Layout\Response;
 use Illuminate\Support\Facades\Request;
 use Inertia\Support\Header;
 
+enum BackedLayout: string
+{
+    case PAGE = 'PageLayout';
+}
+
+enum UnitLayout
+{
+    case PageLayout;
+}
+
 beforeEach(function () {
     $this->response = (new Response('User/Edit', ['user' => ['name' => 'Jonathan']], 'app', '123'))
         ->layout('PageLayout');
+});
+
+it('has layout for backed enum', function () {
+    expect($this->response)
+        ->layout(BackedLayout::PAGE)->toBe($this->response)
+        ->getLayout()->toBe('PageLayout');
+});
+
+it('has layout for unit enum', function () {
+    expect($this->response)
+        ->layout(UnitLayout::PageLayout)->toBe($this->response)
+        ->getLayout()->toBe('PageLayout');
 });
 
 it('has layouted response', function () {

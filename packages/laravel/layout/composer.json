@@ -36,8 +36,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Honed\\Layout\\": "src/",
-            "Illuminate\\Support\\": "vendor/illuminate/support/src/Illuminate/Support"
+            "Honed\\Layout\\": "src/"
         }
     },
     "autoload-dev": {
