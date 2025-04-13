@@ -355,7 +355,9 @@ class Filter extends Refiner
     {
         $parameter = $this->getParameter();
 
-        return $this->interpret($value, $this->formatScope($parameter));
+        $value = $this->interpret($value, $this->formatScope($parameter));
+
+        return $value ?? $this->getDefault();
     }
 
     /**
