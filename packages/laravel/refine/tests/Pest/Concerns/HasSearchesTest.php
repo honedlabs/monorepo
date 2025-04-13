@@ -74,7 +74,9 @@ it('provides searches', function () {
     expect($this->test)
         ->providesSearches()->toBeTrue()
         ->exceptSearches()->toBe($this->test)
-        ->providesSearches()->toBeFalse();
+        ->providesSearches()->toBeFalse()
+        ->onlySearches()->toBe($this->test)
+        ->providesSearches()->toBeTrue();
 });
 
 it('searches to array', function () {

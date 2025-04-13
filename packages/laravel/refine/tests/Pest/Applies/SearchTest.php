@@ -76,7 +76,7 @@ it('does not apply if inactive', function () {
 });
 
 it('applies with unqualified column', function () {
-    expect($this->test->unqualify())
+    expect($this->test->qualifies(false))
         ->refine($this->builder, [true, $this->search])->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)

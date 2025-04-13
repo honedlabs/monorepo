@@ -21,8 +21,6 @@ class AscSort extends Sort
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
     public function defineType()
     {

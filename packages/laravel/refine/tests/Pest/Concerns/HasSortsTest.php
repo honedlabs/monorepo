@@ -50,7 +50,9 @@ it('provides sorts', function () {
     expect($this->test)
         ->providesSorts()->toBeTrue()
         ->exceptSorts()->toBe($this->test)
-        ->providesSorts()->toBeFalse();
+        ->providesSorts()->toBeFalse()
+        ->onlySorts()->toBe($this->test)
+        ->providesSorts()->toBeTrue();
 });
 
 it('has no default sort', function () {

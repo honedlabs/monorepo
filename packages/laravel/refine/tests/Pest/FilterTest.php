@@ -28,7 +28,7 @@ it('has operator', function () {
         ->getOperator()->toBe('=');
 });
 
-it('can be default', function () {
+it('can be raw', function () {
     expect($this->filter)
         ->getType()->toBe('filter')
         ->interpretsAs()->toBeNull();

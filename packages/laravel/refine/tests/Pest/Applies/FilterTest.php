@@ -288,7 +288,7 @@ it('applies multiple', function () {
 it('applies with unqualified column', function () {
     $request = Request::create('/', 'GET', [$this->name => 'value']);
 
-    expect($this->filter->unqualify()->refine($this->builder, $request))
+    expect($this->filter->qualifies(false)->refine($this->builder, $request))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)

@@ -24,7 +24,15 @@ class Constants
 
     const NUMBER_FILTER = 'number';
 
+    const SET_FILTER = 'multiple';
+
     const TEXT_FILTER = 'text';
 
+    const TIME_FILTER = 'time';
+
+    const TRASHED_FILTER = 'trashed';
+
     const CLAUSE_DELIMITER = '|';
+
+    const SEARCH = 'search';
 }

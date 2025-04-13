@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Refine;
 
 use Honed\Refine\Concerns\HasSearch;
+use Honed\Refine\Support\Constants;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -27,6 +28,16 @@ class Search extends Refiner
     protected $boolean = 'and';
 
     /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function defineType()
+    {
+        return Constants::SEARCH;
+    }
+
+    /**
      * Set the query boolean to use for the search.
      *
      * @param  'and'|'or'  $boolean
@@ -47,14 +58,6 @@ class Search extends Refiner
     public function getBoolean()
     {
         return $this->boolean;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        $this->type('search');
     }
 
     /**

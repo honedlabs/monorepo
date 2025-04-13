@@ -27,17 +27,6 @@ trait HasQualifier
     }
 
     /**
-     * Set whether to not qualify against the builder.
-     *
-     * @param  bool  $unqualify
-     * @return $this
-     */
-    public function unqualify($unqualify = true)
-    {
-        return $this->qualifies(! $unqualify);
-    }
-
-    /**
      * Get the qualifier.
      *
      * @return bool|string

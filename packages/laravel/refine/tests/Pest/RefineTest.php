@@ -81,6 +81,13 @@ it('forwards calls to the builder', function () {
         ->isRefined()->toBeTrue();
 });
 
+it('has macro', function () {
+    $this->test->macro('test', fn () => 'test');
+
+    expect($this->test)
+        ->test()->toBe('test');
+});
+
 it('has array representation', function () {
     $this->test->with([
         Filter::make('name'),

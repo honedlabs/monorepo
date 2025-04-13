@@ -42,7 +42,9 @@ it('provides filters', function () {
     expect($this->test)
         ->providesFilters()->toBeTrue()
         ->exceptFilters()->toBe($this->test)
-        ->providesFilters()->toBeFalse();
+        ->providesFilters()->toBeFalse()
+        ->onlyFilters()->toBe($this->test)
+        ->providesFilters()->toBeTrue();
 });
 
 it('filters to array', function () {

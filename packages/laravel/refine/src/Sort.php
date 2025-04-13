@@ -26,6 +26,8 @@ class Sort extends Refiner
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function defineType()
     {

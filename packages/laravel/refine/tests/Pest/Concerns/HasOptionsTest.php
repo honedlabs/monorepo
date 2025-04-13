@@ -44,6 +44,13 @@ it('is multiple', function () {
         ->isMultiple()->toBeTrue();
 });
 
+it('is single', function () {
+    expect($this->test)
+        ->isSingle()->toBeTrue()
+        ->single()->toBe($this->test)
+        ->isSingle()->toBeTrue();
+});
+
 it('creates options from enum', function () {
     expect($this->test)
         ->createOptions(Status::class)
