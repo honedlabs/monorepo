@@ -73,7 +73,7 @@ trait HasQualifier
         }
 
         if (\is_string($qualifier) && ! \str_contains($column, '.')) {
-            $column = $qualifier.'.'.$column;
+            $column = \rtrim($qualifier, '.').'.'.$column;
         }
 
         return $builder
