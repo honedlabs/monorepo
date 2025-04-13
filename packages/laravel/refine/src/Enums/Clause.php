@@ -6,14 +6,14 @@ namespace Honed\Refine\Enums;
 
 enum Clause: string
 {
-    case Is = 'is';
-    case IsNot = 'is not';
+    case Is = '=';
+    case IsNot = '!=';
     case Contains = 'contains';
-    case StartsWith = 'starts';
-    case EndsWith = 'ends';
+    case StartsWith = 'starts_with';
+    case EndsWith = 'ends_with';
     case Between = 'between';
     case In = 'in';
-    case NotIn = 'not in';
+    case NotIn = 'not_in';
     case GreaterThan = '>';
     case GreaterThanOrEqual = '>=';
     case LessThan = '<';

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine;
 
+use Honed\Refine\Support\Constants;
 use Illuminate\Support\Arr;
 
 /**
@@ -23,10 +24,12 @@ final class DataFilter extends Filter
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
-    public function setUp()
+    public function defineType()
     {
-        $this->type('data');
+        return Constants::DATA_FILTER;
     }
 
     /**
@@ -52,5 +55,15 @@ final class DataFilter extends Filter
     public function getClauses()
     {
         return $this->clauses;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequestValue($value)
+    {
+        $parameter = $this->getParameter();
+
+        return $this->interpret($value, $this->formatScope($parameter));
     }
 }

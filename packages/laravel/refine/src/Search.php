@@ -105,11 +105,11 @@ class Search extends Refiner
      *
      * @param  array{bool, string|null}  $value
      */
-    public function getBindings($value)
+    public function getBindings($value, $builder)
     {
         [$_, $term] = $value;
 
-        return \array_merge(parent::getBindings($term), [
+        return \array_merge(parent::getBindings($term, $builder), [
             'boolean' => $this->getBoolean(),
         ]);
     }
@@ -125,10 +125,6 @@ class Search extends Refiner
      */
     public function defaultQuery($builder, $value, $column, $boolean = 'and')
     {
-        if ($this->isQualifying()) {
-            $column = $builder->qualifyColumn($column);
-        }
-
         if ($this->isFullText()) {
             $this->searchRecall($builder, $value, $column, $boolean);
 
