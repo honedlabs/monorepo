@@ -95,7 +95,7 @@ trait HasRoute
      */
     public function hasRoute()
     {
-        return filled($this->getRoute());
+        return filled($this->route);
     }
 
     /**
