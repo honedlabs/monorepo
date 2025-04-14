@@ -42,21 +42,21 @@ class EmptyState extends Primitive
     /**
      * The message or state to display when the empty state is because of refiners.
      *
-     * @var string|\Closure(\Honed\Table\EmptyState):void
+     * @var string|(\Closure(\Honed\Table\EmptyState):\Honed\Table\EmptyState|void)|null
      */
     protected $refining;
 
     /**
      * The message or state to display when the empty state is because of filters.
      *
-     * @var string|\Closure(\Honed\Table\EmptyState):void
+     * @var string|(\Closure(\Honed\Table\EmptyState):\Honed\Table\EmptyState|void)|null
      */
     protected $filtering;
 
     /**
      * The message or state to display when the empty state is because of searching.
      *
-     * @var string|\Closure(\Honed\Table\EmptyState):void
+     * @var string|(\Closure(\Honed\Table\EmptyState):\Honed\Table\EmptyState|void)|null
      */
     protected $searching;
     
@@ -139,7 +139,7 @@ class EmptyState extends Primitive
     /**
      * Set the state to display when refining.
      * 
-     * @param  string|\Closure(\Honed\Table\EmptyState):void  $refining
+     * @param  string|(\Closure(\Honed\Table\EmptyState):\Honed\Table\EmptyState|void)  $refining
      * @return $this
      */
     public function whenRefining($refining)
@@ -152,7 +152,7 @@ class EmptyState extends Primitive
     /**
      * Get the state to display when refining.
      *
-     * @return string|\Closure(\Honed\Table\EmptyState):void
+     * @return string|(\Closure(\Honed\Table\EmptyState):\Honed\Table\EmptyState|void)|null
      */
     public function getRefiningState()
     {
@@ -162,7 +162,7 @@ class EmptyState extends Primitive
     /**
      * Set the state to display when filtering.
      * 
-     * @param  string|\Closure(\Honed\Table\EmptyState):void  $filtering
+     * @param  string|(\Closure(\Honed\Table\EmptyState):\Honed\Table\EmptyState|void)  $filtering
      * @return $this
      */
     public function whenFiltering($filtering)
@@ -175,7 +175,7 @@ class EmptyState extends Primitive
     /**
      * Get the state to display when filtering.
      *
-     * @return string|\Closure(\Honed\Table\EmptyState):void
+     * @return string|(\Closure(\Honed\Table\EmptyState):\Honed\Table\EmptyState|void)|null
      */
     public function getFilteringState()
     {
@@ -185,7 +185,7 @@ class EmptyState extends Primitive
     /**
      * Set the state to display when searching.
      * 
-     * @param  string|\Closure(\Honed\Table\EmptyState):void  $searching
+     * @param  string|(\Closure(\Honed\Table\EmptyState):\Honed\Table\EmptyState|void)  $searching
      * @return $this
      */
     public function whenSearching($searching)
@@ -198,7 +198,7 @@ class EmptyState extends Primitive
     /**
      * Get the state to display when searching.
      *
-     * @return string|\Closure(\Honed\Table\EmptyState):void
+     * @return string|(\Closure(\Honed\Table\EmptyState):\Honed\Table\EmptyState|void)|null
      */
     public function getSearchingState()
     {
@@ -211,9 +211,9 @@ class EmptyState extends Primitive
     public function toArray()
     {
         return [
-            'icon' => $this->getIcon(),
             'title' => $this->getTitle(),
             'message' => $this->getMessage(),
+            'icon' => $this->getIcon(),
             'label' => $this->getLabel(),
             'action' => $this->getAction(),
         ];

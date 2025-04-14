@@ -79,7 +79,7 @@ it('transforms records', function () {
 });
 
 it('serializes', function () {
-    $this->table->serialize(true);
+    $this->table->serializes(true);
 
     $this->pipe->__invoke($this->table, $this->next);
     
