@@ -20,6 +20,7 @@ use Honed\Table\Concerns\HasTableBindings;
 use Honed\Table\Concerns\IsSelectable;
 use Honed\Table\Concerns\IsToggleable;
 use Honed\Table\Pipelines\CleanupTable;
+use Honed\Table\Pipelines\CreateEmptyState;
 use Honed\Table\Pipelines\Paginate;
 use Honed\Table\Pipelines\QueryColumns;
 use Honed\Table\Pipelines\RefineFilters;
@@ -32,6 +33,8 @@ use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
+
+use function Illuminate\Support\enum_value;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -432,6 +435,7 @@ class Table extends Refine implements UrlRoutable
                 AfterRefining::class,
                 Paginate::class,
                 TransformRecords::class,
+                CreateEmptyState::class,
                 CleanupTable::class,
             ])->thenReturn();
     }
