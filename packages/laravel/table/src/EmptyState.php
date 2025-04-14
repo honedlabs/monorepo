@@ -9,7 +9,9 @@ use Honed\Core\Primitive;
 
 class EmptyState extends Primitive
 {
-    use HasIcon;
+    use HasIcon {
+        getIcon as getBaseIcon;
+    }
 
     /**
      * The title of the empty state.
@@ -78,7 +80,7 @@ class EmptyState extends Primitive
     /**
      * Set the title of the empty state.
      *
-     * @param  string  $title
+     * @param  string|null  $title
      * @return $this
      */
     public function title($title)
@@ -95,13 +97,23 @@ class EmptyState extends Primitive
      */
     public function getTitle()
     {
-        return $this->title;
+        return $this->title ?? static::getDefaultTitle();
+    }
+
+    /**
+     * Get the default title of the empty state from the config.
+     * 
+     * @return string
+     */
+    public static function getDefaultTitle()
+    {
+        return type(config('table.empty_state.title', 'No results found'))->asString();
     }
 
     /**
      * Set the message of the empty state.
      *
-     * @param  string  $message
+     * @param  string|null  $message
      * @return $this
      */
     public function message($message)
@@ -118,7 +130,38 @@ class EmptyState extends Primitive
      */
     public function getMessage()
     {
-        return $this->message;
+        return $this->message ?? static::getDefaultMessage();
+    }
+
+    /**
+     * Get the default message of the empty state from the config.
+     * 
+     * @return string
+     */
+    public static function getDefaultMessage()
+    {
+        return type(config('table.empty_state.message', 'There are no results to display.'))->asString();
+    }
+
+    /**
+     * Get the icon of the empty state.
+     *
+     * @return string|null
+     */
+    public function getIcon()
+    {
+        return $this->getBaseIcon() ?? static::getDefaultIcon();
+    }
+
+    /**
+     * Get the default icon of the empty state from the config.
+     * 
+     * @return string|null
+     */
+    public static function getDefaultIcon()
+    {
+        /** @var string|null */
+        return config('table.empty_state.icon', null);
     }
 
     /**
@@ -134,6 +177,26 @@ class EmptyState extends Primitive
         $this->action = $action;
 
         return $this;
+    }
+
+    /**
+     * Get the label of the empty state action.
+     *
+     * @return string|null
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * Get the action route of the empty state.
+     *
+     * @return string|null
+     */
+    public function getAction()
+    {
+        return $this->action;
     }
 
     /**
@@ -156,7 +219,17 @@ class EmptyState extends Primitive
      */
     public function getRefiningState()
     {
-        return $this->refining;
+        return $this->refining ?? static::getDefaultRefiningState();
+    }
+
+    /**
+     * Get the default state to display when refining.
+     * 
+     * @return string
+     */
+    public static function getDefaultRefiningState()
+    {
+        return type(config('table.empty_state.refining', 'There are no results matching your filters.'))->asString();
     }
 
     /**

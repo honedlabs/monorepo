@@ -7,6 +7,7 @@ namespace Honed\Table;
 use Honed\Action\Concerns\HasActions;
 use Honed\Action\Concerns\HasEncoder;
 use Honed\Action\Concerns\HasEndpoint;
+use Honed\Action\Contracts\Handles;
 use Honed\Action\Handler;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasParameterNames;
@@ -42,8 +43,9 @@ use function Illuminate\Support\enum_value;
  *
  * @extends Refine<TModel, TBuilder>
  */
-class Table extends Refine implements UrlRoutable
+class Table extends Refine implements UrlRoutable, Handles
 {
+    /** @use HasActions<TModel, TBuilder> */
     use HasActions;
 
     /** @use HasColumns<TModel, TBuilder> */
@@ -133,7 +135,7 @@ class Table extends Refine implements UrlRoutable
     /**
      * {@inheritdoc}
      */
-    public function baseClass()
+    public static function baseClass()
     {
         return Table::class;
     }
@@ -297,6 +299,7 @@ class Table extends Refine implements UrlRoutable
      * Set the empty state of the table.
      * 
      * @param  \Honed\Table\EmptyState|string|(\Closure(\Honed\Table\EmptyState):\Honed\Table\EmptyState|void)  $message
+     * @param  string|null  $title
      * @return $this
      */
     public function emptyState($message, $title = null)
@@ -409,7 +412,7 @@ class Table extends Refine implements UrlRoutable
             'page' => $this->getPageKey(),
         ]);
 
-        if ($this->isExecutable($this->baseClass())) {
+        if ($this->isExecutable(static::baseClass())) {
             $config = \array_merge($config, [
                 'endpoint' => $this->getEndpoint(),
             ]);
@@ -439,10 +442,7 @@ class Table extends Refine implements UrlRoutable
     {
         $this->build();
 
-        $id = $this->isWithoutActions() ? null : $this->getRouteKey();
-
-        return \array_merge(parent::toArray(), [
-            'id' => $id,
+        $table = \array_merge(parent::toArray(), [
             'records' => $this->getRecords(),
             'paginator' => $this->getPaginationData(),
             'columns' => $this->columnsToArray(),
@@ -451,6 +451,14 @@ class Table extends Refine implements UrlRoutable
             'actions' => $this->actionsToArray(),
             'meta' => $this->getMeta(),
         ]);
+
+        if ($this->isExecutable(static::baseClass())) {
+            $table = \array_merge($table, [
+                'id' => $this->getRouteKey(),
+            ]);
+        }
+
+        return $table;
     }
 
     /**

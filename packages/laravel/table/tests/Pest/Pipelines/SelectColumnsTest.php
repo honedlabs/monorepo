@@ -16,32 +16,32 @@ beforeEach(function () {
 
     $this->table = Table::make()
         ->builder(Product::query())
-        ->select(true)
+        ->selects(true)
         ->cacheColumns([
             Column::make('name')
-                ->select(),
+                ->selects(),
             Column::make('price')
-                ->select(['price', 'cost']),
+                ->selects(['price', 'cost']),
             Column::make('description')
-                ->select('description as content'),
+                ->selects('description as content'),
             Column::make('status')
-                ->select(false),
+                ->selects(false),
         ]);
 });
 
 it('selects only if select', function () {
-    $this->table->select(false);
+    $this->table->selects(false);
 
     $this->pipe->__invoke($this->table, $this->next);
 
-    expect($this->table->getBuilder()->getQuery()->columns)
+    expect($this->table->getResource()->getQuery()->columns)
         ->toBeEmpty();
 });
 
 it('selects', function () {
     $this->pipe->__invoke($this->table, $this->next);
 
-    expect($this->table->getBuilder()->getQuery()->columns)
+    expect($this->table->getResource()->getQuery()->columns)
         ->toEqual([
             'name',
             'price',

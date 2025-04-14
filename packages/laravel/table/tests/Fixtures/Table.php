@@ -43,10 +43,10 @@ class Table extends BaseTable implements Builds
 
             TextColumn::make('name')
                 ->always()
-                ->search(),
+                ->searches(),
 
             TextColumn::make('description')
-                ->filter()
+                ->filters()
                 ->fallback('-'),
 
             BooleanColumn::make('best_seller', 'Favourite')
@@ -59,18 +59,18 @@ class Table extends BaseTable implements Builds
 
             NumberColumn::make('price')
                 ->alias('cost')
-                ->sort(),
+                ->sorts(),
 
             DateColumn::make('created_at')
                 ->sometimes()
-                ->sort(),
+                ->sorts(),
 
             HiddenColumn::make('public_id')
                 ->hidden()
                 ->always(),
 
             DateColumn::make('updated_at')
-                ->filter()
+                ->filters()
                 ->allow(false),
         ];
     }

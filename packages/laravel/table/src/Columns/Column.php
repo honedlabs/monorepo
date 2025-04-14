@@ -218,9 +218,9 @@ class Column extends Primitive
      * @param  \Honed\Refine\Sort<TModel, TBuilder>|string|bool  $sort
      * @return $this
      */
-    public function sort($sort = true)
+    public function sorts($sort = true)
     {
-        if (! $sort || $sort instanceof Sort) {
+        if (!$sort || $sort instanceof Sort) {
             $this->sort = $sort;
 
             return $this;
@@ -260,7 +260,7 @@ class Column extends Primitive
      * @param  bool|string  $search
      * @return $this
      */
-    public function search($search = true)
+    public function searches($search = true)
     {
         $this->search = $search;
 
@@ -283,7 +283,7 @@ class Column extends Primitive
      * @param  bool  $filter
      * @return $this
      */
-    public function filter($filter = true)
+    public function filters($filter = true)
     {
         $this->filter = $filter;
 
@@ -306,7 +306,7 @@ class Column extends Primitive
      * @param  string|bool|array<int,string>  $select
      * @return $this
      */
-    public function select($select = true)
+    public function selects($select = true)
     {
         $this->select = $select;
 
@@ -394,7 +394,7 @@ class Column extends Primitive
         return [
             $this->getParameter() => [
                 'value' => $value,
-                'extra' => $this->resolveExtra(
+                'extra' => $this->getExtra(
                     \array_merge($named, ['value' => $value]),
                     $typed,
                 ),

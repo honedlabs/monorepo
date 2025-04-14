@@ -37,10 +37,9 @@ class BadgeColumn extends Column
     }
 
     /**
-     * Define the extra data for the column.
-     *
-     * @param  int|string  $value
-     * @return array<string,mixed>
+     * {@inheritdoc}
+     * 
+     * @return \Closure(mixed):array{variant:mixed}
      */
     public function defineExtra()
     {
