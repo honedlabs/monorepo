@@ -7,4 +7,6 @@ namespace Honed\Nav\Support;
 class Constants
 {
     const PROP = 'nav';
+
+    const PARENT = 'path';
 }

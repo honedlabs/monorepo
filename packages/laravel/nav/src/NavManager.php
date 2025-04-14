@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Nav;
 
 use Illuminate\Support\Arr;
+use Honed\Nav\Support\Constants;
 
 class NavManager
 {
@@ -211,9 +212,11 @@ class NavManager
      */
     public function keys()
     {
-        return $this->all
-            ? \array_diff(\array_keys($this->items), $this->except)
-            : \array_intersect(\array_keys($this->items), $this->only);
+        return \array_values(
+            $this->all
+                ? \array_diff(\array_keys($this->items), $this->except)
+                : \array_intersect(\array_keys($this->items), $this->only)
+        );
     }
 
     /**
@@ -239,7 +242,7 @@ class NavManager
      */
     public function search($term, $limit = 10, $caseSensitive = true, $delimiter = '/')
     {
-        $groups = $this->keys();
+        $groups = \array_keys($this->items);
 
         /** @var array<int,array<string,mixed>> $results */
         $results = [];
@@ -247,7 +250,7 @@ class NavManager
         foreach ($groups as $group) {
             $items = $this->group($group);
 
-            $this->process($items, '', $term, $caseSensitive, $delimiter, $results, $limit);
+            $this->process($items, null, $term, $caseSensitive, $delimiter, $results, $limit);
 
             if (\count($results) >= $limit) {
                 break;
@@ -261,7 +264,7 @@ class NavManager
      * Recursively process navigation items to search for matches.
      *
      * @param  array<int, \Honed\Nav\NavBase>  $items
-     * @param  string  $currentPath
+     * @param  string|null  $currentPath
      * @param  string  $term
      * @param  bool  $caseSensitive
      * @param  string  $delimiter
@@ -290,23 +293,25 @@ class NavManager
                 ? \strpos($label, $term) !== false
                 : \stripos($label, $term) !== false;
 
+            $path = !$currentPath ? $label : $currentPath.' '.$delimiter.' '.$label;
+
             if ($isMatch) {
                 // @phpstan-ignore-next-line
                 $results[] = \array_merge($item->toArray(), [
-                    'parent' => $currentPath
+                    Constants::PARENT => $path
                 ]);
             }
 
             if ($item instanceof NavGroup) {
-                $childPath = $currentPath === '' ? $label : $currentPath.$delimiter.$label;
                 $this->process(
                     $item->getItems(),
-                    $childPath,
+                    $path,
                     $term,
                     $caseSensitive,
                     $delimiter,
                     $results,
-                    $limit);
+                    $limit
+                );
             }
         }
     }

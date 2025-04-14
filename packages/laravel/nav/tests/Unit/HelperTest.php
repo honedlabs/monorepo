@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Nav\NavManager;
-use Honed\Nav\NavItem;
+use Honed\Nav\NavLink;
 
 it('has helper', function () {
     expect(nav())
@@ -11,7 +11,7 @@ it('has helper', function () {
 });
 
 it('has helper with group', function () {
-    expect(nav('primary', NavItem::make('Home', 'products.index')))
+    expect(nav('primary', NavLink::make('Home', 'products.index')))
         ->toBeInstanceOf(NavManager::class);
 
     expect(nav()->group('primary'))
