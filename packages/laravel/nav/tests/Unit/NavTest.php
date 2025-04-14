@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Nav\NavFactory;
+use Honed\Nav\NavManager;
 use Honed\Nav\NavItem;
 use Honed\Nav\Facades\Nav;
 
@@ -20,7 +20,7 @@ beforeEach(function () {
 it('defines a new group', function () {
     expect(Nav::for('example', [
         NavItem::make('Index', 'products.index')
-    ]))->toBeInstanceOf(NavFactory::class);
+    ]))->toBeInstanceOf(NavManager::class);
 
     expect(Nav::group('example'))
         ->toBeArray()
@@ -36,7 +36,7 @@ it('throws error when defining a group that already exists', function () {
 it('adds items to an existing group', function () {
     expect(Nav::add('menu', [
         NavItem::make('Index', 'products.index')
-    ]))->toBeInstanceOf(NavFactory::class);
+    ]))->toBeInstanceOf(NavManager::class);
 
     expect(Nav::group('menu'))
         ->toBeArray()

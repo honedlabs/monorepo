@@ -42,7 +42,7 @@ class NavItem extends NavBase
     public function toArray()
     {
         return \array_merge(parent::toArray(), [
-            'url' => $this->resolveRoute(),
+            'url' => $this->getRoute(),
             'active' => $this->isActive(),
         ]);
     }
@@ -70,12 +70,11 @@ class NavItem extends NavBase
     public function isActive()
     {
         $request = $this->getRequest();
-        $this->route = $this->resolveRoute();
 
         return (bool) match (true) {
             \is_string($this->active) => $request->route()?->named($this->active),
             $this->active instanceof \Closure => $this->evaluate($this->active),
-            default => $request->url() === $this->route,
+            default => $request->url() === $this->getRoute(),
         };
     }
 
