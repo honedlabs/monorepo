@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Nav;
 
-use Illuminate\Support\Arr;
 use Honed\Nav\Support\Constants;
+use Illuminate\Support\Arr;
 
 class NavManager
 {
@@ -293,12 +293,12 @@ class NavManager
                 ? \strpos($label, $term) !== false
                 : \stripos($label, $term) !== false;
 
-            $path = !$currentPath ? $label : $currentPath.' '.$delimiter.' '.$label;
+            $path = ! $currentPath ? $label : $currentPath.' '.$delimiter.' '.$label;
 
             if ($isMatch) {
                 // @phpstan-ignore-next-line
                 $results[] = \array_merge($item->toArray(), [
-                    Constants::PARENT => $path
+                    Constants::PARENT => $path,
                 ]);
             }
 
