@@ -35,8 +35,6 @@ use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 
-use function Illuminate\Support\enum_value;
-
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
@@ -207,16 +205,6 @@ class Table extends Refine implements UrlRoutable, Handles
     }
 
     /**
-     * Get the endpoint to be used for table actions from the config.
-     *
-     * @return string
-     */
-    public static function getDefaultEndpoint()
-    {
-        return type(config('table.endpoint', '/table'))->asString();
-    }
-
-    /**
      * Set whether the model attributes should serialized alongside columns.
      *
      * @param  bool|null  $serialize
@@ -366,6 +354,16 @@ class Table extends Refine implements UrlRoutable, Handles
     public function getColumnKey()
     {
         return $this->formatScope($this->getBaseColumnKey());
+    }
+
+    /**
+     * Get the endpoint to be used for table actions from the config.
+     *
+     * @return string
+     */
+    public static function getDefaultEndpoint()
+    {
+        return type(config('table.endpoint', '/table'))->asString();
     }
 
     /**

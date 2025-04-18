@@ -99,12 +99,12 @@ class Column extends Primitive
      */
     protected $select = true;
 
-    /**
-     * Whether the column is active.
-     *
-     * @var bool
-     */
-    protected $active = true;
+    // /**
+    //  * Whether it is active.
+    //  *
+    //  * @var bool
+    //  */
+    // protected $active = true;
 
     /**
      * Create a new column instance.
@@ -118,6 +118,11 @@ class Column extends Primitive
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
+    }
+
+    public function setUp()
+    {
+        $this->active(true);
     }
 
     /**

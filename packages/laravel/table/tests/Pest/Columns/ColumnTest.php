@@ -146,7 +146,7 @@ it('has array representation', function () {
             'icon' => null,
             'toggleable' => true,
             'active' => true,
-            'sort' => [],
+            'sort' => null,
             'class' => null,
         ]);
 });

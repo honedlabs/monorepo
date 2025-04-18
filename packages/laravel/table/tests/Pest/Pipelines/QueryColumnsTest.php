@@ -15,7 +15,7 @@ beforeEach(function () {
     $this->next = fn ($table) => $table;
 
     $this->table = Table::make()
-        ->builder(Product::query());
+        ->resource(Product::query());
 });
 
 it('does not modify by default', function () {

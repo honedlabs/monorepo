@@ -15,7 +15,7 @@ beforeEach(function () {
     $this->next = fn ($table) => $table;
 
     $this->table = Table::make()
-        ->builder(Product::query())
+        ->resource(Product::query())
         ->selects(true)
         ->cacheColumns([
             Column::make('name')

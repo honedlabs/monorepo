@@ -54,7 +54,7 @@ beforeEach(function () {
     ];
 
     $this->table = Table::make()
-        ->withActions($this->actions);
+        ->actions($this->actions);
 
     $this->table->cacheColumns($this->columns);
 

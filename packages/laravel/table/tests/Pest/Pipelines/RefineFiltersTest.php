@@ -21,7 +21,7 @@ beforeEach(function () {
     ];
 
     $this->table = Table::make()
-        ->builder(Product::query())
+        ->resource(Product::query())
         ->withColumns($columns);
 });
 

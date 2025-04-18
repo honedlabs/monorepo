@@ -20,7 +20,7 @@ beforeEach(function () {
     ];
 
     $this->table = Table::make()
-        ->builder(Product::query())
+        ->resource(Product::query())
         ->sorts($sorts);
 });
 
@@ -81,7 +81,7 @@ it('disables', function () {
         config('table.sort_key') => 'price'
     ]);
 
-    $this->table->request($request)->withoutSorts();
+    $this->table->request($request)->exceptSorts();
 
     $this->pipe->__invoke($this->table, $this->closure);
 
