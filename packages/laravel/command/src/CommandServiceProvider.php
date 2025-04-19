@@ -20,7 +20,7 @@ final class CommandServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),
-        ], 'stubs');
+        ], 'command-stubs');
 
         if ($this->app->runningInConsole()) {
             $this->commands([
