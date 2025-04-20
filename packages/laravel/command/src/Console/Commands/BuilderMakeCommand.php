@@ -89,7 +89,7 @@ class BuilderMakeCommand extends GeneratorCommand
     {
         return [
             'name' => [
-                'What should the '.strtolower($this->type).' be named?',
+                'What should the '.\mb_strtolower($this->type).' be named?',
                 'E.g. UserBuilder',
             ],
         ];

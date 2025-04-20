@@ -10,6 +10,12 @@ it('makes', function () {
 
     $this->assertFileExists(resource_path('js/Pages/Partials/ProductCard.vue'));
     $this->assertFileExists(resource_path('js/Pages/Partials/index.ts'));
+
+    $component = \file_get_contents(resource_path('js/Pages/Partials/ProductCard.vue'));
+    expect($component)->toContain('<script setup lang="ts">');
+
+    $index = \file_get_contents(resource_path('js/Pages/Partials/index.ts'));
+    expect($index)->toContain('export { default as ProductCard } from \'./ProductCard.vue\'');
 });
 
 it('prompts for a name', function () {
@@ -31,6 +37,12 @@ it('nests partials', function () {
 
     $this->assertFileExists(resource_path('js/Partials/Product/ProductCard.vue'));
     $this->assertFileExists(resource_path('js/Partials/Product/index.ts'));
+
+    $component = \file_get_contents(resource_path('js/Partials/Product/ProductCard.vue'));
+    expect($component)->toContain('<script setup lang="ts">');
+
+    $index = \file_get_contents(resource_path('js/Partials/Product/index.ts'));
+    expect($index)->toContain('export { default as ProductCard } from \'./ProductCard.vue\'');
 });
 
 it('can specify an extension', function () {
@@ -42,4 +54,7 @@ it('can specify an extension', function () {
 
     $this->assertFileExists(resource_path('js/Partials/utils.ts'));
     $this->assertFileExists(resource_path('js/Partials/index.ts'));
+
+    $index = \file_get_contents(resource_path('js/Partials/index.ts'));
+    expect($index)->toContain('export * from \'./utils\'');
 });

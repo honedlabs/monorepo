@@ -32,13 +32,22 @@ class PartialMakeCommand extends JsMakeCommand
     protected $type = 'Partial';
 
     /**
+     * The default extension for the partial.
+     *
+     * @var string
+     */
+    protected $extension = 'vue';
+
+    /**
      * Get the stub file for the generator.
      *
      * @return string
      */
     protected function getStub()
     {
-        return $this->resolveStubPath('/stubs/honed.partial.stub');
+        $ext = $this->getExtension();
+
+        return $this->resolveStubPath("/stubs/honed.partial.{$ext}.stub");
     }
 
     /**
@@ -49,6 +58,7 @@ class PartialMakeCommand extends JsMakeCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
+        dd($rootNamespace);
         return $rootNamespace.'\Partials';
     }
 
@@ -66,6 +76,23 @@ class PartialMakeCommand extends JsMakeCommand
     }
 
     /**
+     * Get the extension to use for the partial.
+     *
+     * @return string|null
+     */
+    protected function getExtension()
+    {
+        /** @var string|null $ext */
+        $extension = $this->option('extension');
+
+        if ($extension) {
+            return \trim($ext, '.');
+        }
+
+        return $this->extension;
+    }
+
+    /**
      * Prompt for missing input arguments using the returned questions.
      *
      * @return array<string,mixed>
@@ -74,7 +101,7 @@ class PartialMakeCommand extends JsMakeCommand
     {
         return [
             'name' => [
-                'What should the '.strtolower($this->type).' be named?',
+                'What should the '.\mb_strtolower($this->type).' be named?',
                 'E.g. UserCard',
             ],
         ];
