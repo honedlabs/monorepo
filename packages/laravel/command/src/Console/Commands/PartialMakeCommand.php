@@ -94,13 +94,45 @@ class PartialMakeCommand extends JsMakeCommand
      */
     public function handle()
     {
-        $name = $this->getNameInput();
-        // Replace the filename with index
-        $name = \str_replace($this->getExtension(), '', $name);
-        $path = $this->getPath('index');
+        $name = $this->qualifyClass($this->getNameInput());
+        $path = $this->getPath($name);
+        $file = $this->index($path);
 
-        dd($this->getNameInput());
+        $content = $this->files->get($file);
+
+        $name = Str::afterLast($name, '\\');
+
+        if ($content !== '') {
+            $content .= "\n";
+        }
+
+        $content .= match ($this->getExtension()) {
+            'ts', 'js' => "export * from './{$name}';",
+            default => "export { default as {$name} } from './{$name}.{$this->getExtension()}';",
+        };
+
+        $this->files->put($file, $content);
+
         return parent::handle();
+    }
+
+    /**
+     * Create a new index file.
+     * 
+     * @param string $file
+     * @return string
+     */
+    public function index($file)
+    {
+        $path = \str_replace(\pathinfo($file, PATHINFO_FILENAME), 'index', $file);
+        $path = \str_replace($this->getExtension(), 'ts', $path);
+
+        // Create or retrieve the index file.
+        if (! $this->files->exists($path)) {
+            $this->files->put($path, '');
+        }
+
+        return $path;
     }
 
     /**
