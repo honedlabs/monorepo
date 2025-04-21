@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Command\Console\Commands;
 
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 #[AsCommand(name: 'make:partial')]
 class PartialMakeCommand extends JsMakeCommand
@@ -67,7 +67,7 @@ class PartialMakeCommand extends JsMakeCommand
     /**
      * Get the extension to use for the partial.
      *
-     * @return string|null
+     * @return string
      */
     protected function getExtension()
     {
@@ -94,9 +94,24 @@ class PartialMakeCommand extends JsMakeCommand
      */
     public function handle()
     {
+        $created = parent::handle();
+
+        if (! \is_null($created)) {
+            return $created;
+        }
+
+        return $this->generateIndex();
+    }
+
+    /**
+     * Create an index file if it doesn't exist.
+     *
+     * @return null
+     */
+    protected function generateIndex()
+    {
         $name = $this->qualifyClass($this->getNameInput());
-        $path = $this->getPath($name);
-        $file = $this->index($path);
+        $file = $this->getIndexPath($this->getPath($name));
 
         $content = $this->files->get($file);
 
@@ -107,22 +122,22 @@ class PartialMakeCommand extends JsMakeCommand
         }
 
         $content .= match ($this->getExtension()) {
-            'ts', 'js' => "export * from './{$name}';",
+            'ts', 'js', 'jsx', 'tsx' => "export * from './{$name}';",
             default => "export { default as {$name} } from './{$name}.{$this->getExtension()}';",
         };
 
         $this->files->put($file, $content);
 
-        return parent::handle();
+        return null;
     }
 
     /**
      * Create a new index file.
-     * 
-     * @param string $file
+     *
+     * @param  string  $file
      * @return string
      */
-    public function index($file)
+    public function getIndexPath($file)
     {
         $path = \str_replace(\pathinfo($file, PATHINFO_FILENAME), 'index', $file);
         $path = \str_replace($this->getExtension(), 'ts', $path);
