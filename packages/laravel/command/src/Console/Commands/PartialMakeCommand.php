@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Command\Console\Commands;
 
-use Symfony\Component\Console\Attribute\AsCommand;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'make:partial')]
 class PartialMakeCommand extends JsMakeCommand
@@ -51,18 +52,6 @@ class PartialMakeCommand extends JsMakeCommand
     }
 
     /**
-     * Get the default namespace for the class.
-     *
-     * @param  string  $rootNamespace
-     * @return string
-     */
-    protected function getDefaultNamespace($rootNamespace)
-    {
-        dd($rootNamespace);
-        return $rootNamespace.'\Partials';
-    }
-
-    /**
      * Get the console command options
      *
      * @return array<int,array<int,mixed>>
@@ -82,14 +71,36 @@ class PartialMakeCommand extends JsMakeCommand
      */
     protected function getExtension()
     {
-        /** @var string|null $ext */
+        /** @var string|null $extension */
         $extension = $this->option('extension');
 
         if ($extension) {
-            return \trim($ext, '.');
+            return \trim($extension, '.');
         }
 
         return $this->extension;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFileExtension()
+    {
+        return '.'.$this->getExtension();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handle()
+    {
+        $name = $this->getNameInput();
+        // Replace the filename with index
+        $name = \str_replace($this->getExtension(), '', $name);
+        $path = $this->getPath('index');
+
+        dd($this->getNameInput());
+        return parent::handle();
     }
 
     /**
@@ -105,5 +116,25 @@ class PartialMakeCommand extends JsMakeCommand
                 'E.g. UserCard',
             ],
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getPath($name)
+    {
+        $name = Str::replaceFirst($this->rootNamespace(), '', $name);
+        $name = \str_replace('\\', '/', $name);
+
+        $partial = \pathinfo($name, PATHINFO_FILENAME);
+        $path = \pathinfo($name, PATHINFO_DIRNAME);
+
+        if ($path !== '.') {
+            $path = $path.'/Partials/'.$partial;
+        } else {
+            $path = 'Partials/'.$partial;
+        }
+
+        return resource_path('js/Pages/'.$path.$this->getFileExtension());
     }
 }

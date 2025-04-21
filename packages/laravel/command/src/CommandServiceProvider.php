@@ -9,6 +9,7 @@ use Honed\Command\Console\Commands\ConcernMakeCommand;
 use Honed\Command\Console\Commands\ContractMakeCommand;
 use Honed\Command\Console\Commands\ModalMakeCommand;
 use Honed\Command\Console\Commands\PageMakeCommand;
+use Honed\Command\Console\Commands\PartialMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 final class CommandServiceProvider extends ServiceProvider
@@ -28,6 +29,7 @@ final class CommandServiceProvider extends ServiceProvider
                 ConcernMakeCommand::class,
                 ContractMakeCommand::class,
                 PageMakeCommand::class,
+                PartialMakeCommand::class,
                 ModalMakeCommand::class,
             ]);
         }

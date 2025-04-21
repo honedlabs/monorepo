@@ -5,7 +5,8 @@ interface Props {
 
 }
 
-const { } = defineProps<Props>()
+const {  } = defineProps<Props>()
+
 </script>
 
 <template>
