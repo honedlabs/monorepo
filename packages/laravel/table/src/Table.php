@@ -286,7 +286,7 @@ class Table extends Refine implements UrlRoutable, Handles
     /**
      * Set the empty state of the table.
      * 
-     * @param  \Honed\Table\EmptyState|string|(\Closure(\Honed\Table\EmptyState):\Honed\Table\EmptyState|void)  $message
+     * @param  \Honed\Table\EmptyState|string|\Closure  $message
      * @param  string|null  $title
      * @return $this
      */

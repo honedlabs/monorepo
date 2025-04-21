@@ -21,6 +21,22 @@ class CreateEmptyState
      */
     public function __invoke($table, $next)
     {
+        // Get the empty state and run it through the defaults.
+        $state = $table->getEmptyState();
+        $table->defineEmptyState($state);
+
+        // $isSearching = $table->isSearching();
+        // $isFiltering = $table->isFiltering();
+        // $isRefining = $isSearching || $isFiltering;
+
+        // if ($isSearching && $searching = $table->getSearchingState()) {
+        //     $searching($state);
+        // } else if ($isFiltering && $filtering = $table->getFilteringState()) {
+        //     $filtering($state);
+        // } else if ($isRefining && $refining = $table->getRefiningState()) {
+        //     $refining($state);
+        // }
+        
         return $next($table);
     }
 }

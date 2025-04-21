@@ -66,7 +66,7 @@ it('builds class', function () {
                 [
                     'type' => 'raw',
                     'sql' => searchSql('products.name'),
-                    'boolean' => 'or',
+                    'boolean' => 'or', // <- this fails
                 ],
                 [
                     'type' => 'raw',

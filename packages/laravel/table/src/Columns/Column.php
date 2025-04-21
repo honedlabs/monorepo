@@ -225,16 +225,16 @@ class Column extends Primitive
      */
     public function sorts($sort = true)
     {
-        if (!$sort || $sort instanceof Sort) {
+        if ( ! $sort) {
+            $this->sort = null;
+        } else if ($sort instanceof Sort) {
             $this->sort = $sort;
-
-            return $this;
+        } else {
+            $name = \is_string($sort) ? $sort : $this->getName();
+    
+            $this->sort = Sort::make($name, $this->getLabel())
+                ->alias($this->getParameter());
         }
-
-        $name = \is_string($sort) ? $sort : $this->getName();
-
-        $this->sort = Sort::make($name, $this->getLabel())
-            ->alias($this->getParameter());
 
         return $this;
     }

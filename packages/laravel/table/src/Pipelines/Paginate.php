@@ -61,10 +61,8 @@ class Paginate
 
                 break;
             default:
-                throw new \InvalidArgumentException(\sprintf(
-                    'The provided paginator [%s] is invalid.',
-                    $paginator
-                ));
+                static::throwInvalidPaginator($paginator);
+
         }
 
         return $next($table);
@@ -93,5 +91,19 @@ class Paginate
         $table->createRecordsPerPage($pagination, $perPage);
 
         return $perPage;
+    }
+
+    /**
+     * Throw an exception if the paginator is not valid.
+     *
+     * @param  string  $paginator
+     * @return never
+     */
+    public function throwInvalidPaginator($paginator)
+    {
+        throw new \InvalidArgumentException(\sprintf(
+            'The provided paginator [%s] is invalid.',
+            $paginator
+        ));
     }
 }
