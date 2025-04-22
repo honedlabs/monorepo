@@ -9,6 +9,8 @@ trait IsDefault
     /**
      * Whether it is the default.
      *
+     * @default false
+     *
      * @var bool
      */
     protected $default = false;

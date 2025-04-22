@@ -9,6 +9,8 @@ trait IsActive
     /**
      * Whether it is active.
      *
+     * @default false
+     *
      * @var bool
      */
     protected $active = false;

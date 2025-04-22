@@ -9,6 +9,8 @@ trait Validatable
     /**
      * The validation function.
      *
+     * @default null
+     *
      * @var \Closure(mixed):bool
      */
     protected $validator;

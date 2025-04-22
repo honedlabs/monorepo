@@ -9,6 +9,8 @@ trait Transformable
     /**
      * The transformer function.
      *
+     * @default null
+     *
      * @var \Closure(mixed):mixed|null
      */
     protected $transformer = null;

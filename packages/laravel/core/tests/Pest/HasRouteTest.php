@@ -49,6 +49,13 @@ it('accesses method', function () {
         ->getMethod()->toBe(Request::METHOD_POST);
 });
 
+it('accesses external', function () {
+    expect($this->test)
+        ->isExternal()->toBeFalse()
+        ->external()->toBe($this->test)
+        ->isExternal()->toBeTrue();
+});
+
 it('validates method', function ($input) {
     $this->test->method($input);
 })->throws(\InvalidArgumentException::class)->with([
@@ -67,5 +74,6 @@ it('has array representation', function () {
         ->routeToArray()->toBe([
             'url' => route('products.show', $product),
             'method' => Request::METHOD_GET,
+            'external' => false,
         ]);
 });

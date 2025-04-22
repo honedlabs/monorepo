@@ -9,6 +9,8 @@ trait Allowable
     /**
      * The allow condition.
      *
+     * @default true
+     *
      * @var \Closure(...mixed):bool|bool
      */
     protected $allow = true;

@@ -16,7 +16,7 @@ trait HasResource
     /**
      * The builder instance.
      *
-     * @var TBuilder|null
+     * @var TBuilder|mixed|null
      */
     protected $resource;
 

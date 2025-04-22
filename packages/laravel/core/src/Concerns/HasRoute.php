@@ -32,6 +32,15 @@ trait HasRoute
     protected $method;
 
     /**
+     * Whether the route is external, and not within the application.
+     *
+     * @default false
+     *
+     * @var bool
+     */
+    protected $external = false;
+
+    /**
      * Set the route.
      *
      * @param  string|\Closure(...mixed):string  $route
@@ -138,6 +147,29 @@ trait HasRoute
     }
 
     /**
+     * Set whether the route is external.
+     *
+     * @param  bool  $external
+     * @return $this
+     */
+    public function external($external = true)
+    {
+        $this->external = $external;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the route is external.
+     *
+     * @return bool
+     */
+    public function isExternal()
+    {
+        return $this->external;
+    }
+
+    /**
      * Get the array representation of the route.
      *
      * @param  array<string,mixed>  $parameters
@@ -153,6 +185,7 @@ trait HasRoute
         return [
             'url' => $this->getRoute($parameters, $typed),
             'method' => $this->getMethod(),
+            'external' => $this->isExternal(),
         ];
     }
 
