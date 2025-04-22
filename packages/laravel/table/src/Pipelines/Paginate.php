@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Honed\Table\Table;
 use Honed\Core\Interpret;
 use Honed\Table\Exceptions\InvalidPaginatorException;
+use Honed\Table\Table;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model

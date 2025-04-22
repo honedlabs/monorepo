@@ -24,7 +24,7 @@ it('is selectable', function () {
 
     expect($class)
         ->isSelectable()->toBe(true)
-        ->selects(false)->toBe($class)
+        ->select(false)->toBe($class)
         ->isSelectable()->toBe(false);
 });
 

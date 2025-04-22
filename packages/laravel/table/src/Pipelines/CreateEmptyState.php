@@ -32,18 +32,18 @@ class CreateEmptyState
 
         if ($isSearching && $searching = $state->getSearchingState()) {
             $this->apply($searching, $state);
-        } else if ($isFiltering && $filtering = $state->getFilteringState()) {
+        } elseif ($isFiltering && $filtering = $state->getFilteringState()) {
             $this->apply($filtering, $state);
-        } else if ($isRefining && $refining = $state->getRefiningState()) {
+        } elseif ($isRefining && $refining = $state->getRefiningState()) {
             $this->apply($refining, $state);
         }
-        
+
         return $next($table);
     }
 
     /**
      * Apply the state to the empty state.
-     * 
+     *
      * @param  string|\Closure  $state
      * @param  \Honed\Table\EmptyState  $emptyState
      * @return void
@@ -52,7 +52,7 @@ class CreateEmptyState
     {
         if (\is_string($state)) {
             $emptyState->message($state);
-            
+
             return;
         }
 

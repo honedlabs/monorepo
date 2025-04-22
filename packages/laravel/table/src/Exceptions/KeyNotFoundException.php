@@ -10,8 +10,8 @@ class KeyNotFoundException extends \Exception
 {
     /**
      * Create a new key not found exception.
-     * 
-     * @param  \Honed\Table\Table<\Illuminate\Database\Eloquent\Model, \>|class-string  $table
+     *
+     * @param  \Honed\Table\Table|class-string<\Honed\Table\Table>  $table
      */
     public function __construct($table)
     {
@@ -25,10 +25,10 @@ class KeyNotFoundException extends \Exception
 
     /**
      * Throw a new key not found exception.
-     * 
-     * @param  string  $table
+     *
+     * @param  class-string<\Honed\Table\Table>  $table
      * @return never
-     * 
+     *
      * @throws \Honed\Table\Exceptions\KeyNotFoundException
      */
     public static function throw($table)

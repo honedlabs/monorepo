@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Table\Exceptions;
 
-use Honed\Table\Table;
 use InvalidArgumentException;
 
 class InvalidPaginatorException extends InvalidArgumentException
 {
     /**
      * Create a new invalid paginator exception.
-     * 
+     *
      * @param  string  $paginator
      */
     public function __construct($paginator)
@@ -26,10 +25,10 @@ class InvalidPaginatorException extends InvalidArgumentException
 
     /**
      * Throw a new invalid paginator exception.
-     * 
+     *
      * @param  string  $paginator
      * @return never
-     * 
+     *
      * @throws \Honed\Table\Exceptions\InvalidPaginatorException
      */
     public static function throw($paginator)

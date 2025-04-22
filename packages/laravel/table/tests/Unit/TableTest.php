@@ -13,7 +13,7 @@ beforeEach(function () {
 
 it('has key', function () {
     expect($this->table)
-        ->withColumns(KeyColumn::make('id'))
+        ->columns(KeyColumn::make('id'))
         ->getKey()->toBe('id')
         ->key('test')->toBe($this->table)
         ->getKey()->toBe('test');

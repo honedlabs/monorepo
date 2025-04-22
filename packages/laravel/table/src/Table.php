@@ -37,12 +37,12 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 
 /**
- * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
  * @extends Refine<TModel, TBuilder>
  */
-class Table extends Refine implements UrlRoutable, Handles
+class Table extends Refine implements Handles, UrlRoutable
 {
     /** @use HasActions<TModel, TBuilder> */
     use HasActions;
@@ -51,9 +51,7 @@ class Table extends Refine implements UrlRoutable, Handles
     use HasColumns;
 
     use HasEncoder;
-
     use HasEndpoint;
-
     use HasMeta;
 
     /** @use HasPagination<TModel, TBuilder> */
@@ -69,6 +67,7 @@ class Table extends Refine implements UrlRoutable, Handles
 
     /** @use IsSelectable<TModel, TBuilder> */
     use IsSelectable;
+
     /** @use IsToggleable<TModel, TBuilder> */
     use IsToggleable {
         getColumnKey as protected getBaseColumnKey;
@@ -87,13 +86,6 @@ class Table extends Refine implements UrlRoutable, Handles
      * @var bool|null
      */
     protected $serialize;
-
-    /**
-     * The driver to use for the table.
-     *
-     * @var 'eloquent'|'array'|'object'
-     */
-    protected $driver = 'eloquent';
 
     /**
      * The table records.
@@ -250,29 +242,6 @@ class Table extends Refine implements UrlRoutable, Handles
     }
 
     /**
-     * Set the driver to use for the table.
-     *
-     * @param  'eloquent'|'array'|'object'  $driver
-     * @return $this
-     */
-    public function driver($driver)
-    {
-        $this->driver = $driver;
-
-        return $this;
-    }
-
-    /**
-     * Get the driver to use for the table.
-     *
-     * @return 'eloquent'|'array'|'object'
-     */
-    public function getDriver()
-    {
-        return $this->driver;
-    }
-
-    /**
      * Set the records for the table.
      *
      * @param  array<int,mixed>  $records
@@ -316,7 +285,7 @@ class Table extends Refine implements UrlRoutable, Handles
 
     /**
      * Set the empty state of the table.
-     * 
+     *
      * @param  \Honed\Table\EmptyState|string|\Closure  $message
      * @param  string|null  $title
      * @return $this
@@ -348,7 +317,7 @@ class Table extends Refine implements UrlRoutable, Handles
 
     /**
      * Define the empty state of the table.
-     * 
+     *
      * @param  \Honed\Table\EmptyState  $emptyState
      * @return void|\Honed\Table\EmptyState
      */
@@ -486,7 +455,6 @@ class Table extends Refine implements UrlRoutable, Handles
                 'empty' => $this->getEmptyState()->toArray(),
             ]);
         }
-
 
         if ($this->isExecutable(static::baseClass())) {
             return \array_merge($table, [
