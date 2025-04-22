@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace {{ namespace }};
 
 use Honed\Action\Contracts\Actionable;
+use Inertia\Inertia;
 
 final class {{ class }} implements Actionable
 {
@@ -13,7 +14,7 @@ final class {{ class }} implements Actionable
      */
     public function handle({{ model }} ${{ modelVariable }}): \Inertia\Response
     {
-        return inertia('{{ model }}/Show', [
+        return Inertia::render('{{ model }}/Show', [
             '{{ modelVariable }}' => ${{ modelVariable }},
         ]);
     }
