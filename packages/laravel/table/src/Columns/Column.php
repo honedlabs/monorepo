@@ -440,7 +440,7 @@ class Column extends Primitive
             'type' => $this->getType(),
             'hidden' => $this->isHidden(),
             'active' => $this->isActive(),
-            'toggleable' => $this->isToggleable(),
+            'toggles' => $this->isToggleable(),
             'icon' => $this->getIcon(),
             'class' => $this->getClass(),
             'sort' => $this->sortToArray(),

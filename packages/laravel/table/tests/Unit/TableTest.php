@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Honed\Table\Table;
 use Honed\Table\Columns\KeyColumn;
+use Honed\Table\EmptyState;
 use Honed\Table\Exceptions\KeyNotFoundException;
 use Honed\Table\Tests\Fixtures\Table as FixturesTable;
 
@@ -63,7 +64,21 @@ it('has pagination data', function () {
 
     expect($this->table)
         ->getPaginationData()->not->toBeEmpty();
+});
 
+it('has empty state', function () {
+    expect($this->table)
+        ->getEmptyState()->toBeInstanceOf(EmptyState::class)
+        ->emptyState('string')->toBe($this->table)
+        ->getEmptyState()->scoped(fn ($state) => $state
+            ->getMessage()->toBe('string')
+        )->emptyState(fn ($state) => $state->message('closure'))->toBe($this->table)
+        ->getEmptyState()->scoped(fn ($state) => $state
+            ->getMessage()->toBe('closure')
+        )->emptyState(EmptyState::make('title'))->toBe($this->table)
+        ->getEmptyState()->scoped(fn ($state) => $state
+            ->getTitle()->toBe('title')
+        );
 });
 
 it('overrides refine fallbacks', function () {
@@ -75,11 +90,6 @@ it('overrides refine fallbacks', function () {
 });
 
 it('is url routable', function () {
-    // $key = $this->table->encode($this->table);
-
-    // expect($this->table)
-    //     ->getRouteKey()->toBe($key);
-
     expect($this->table)
         ->getRouteKeyName()->toBe('table');
 

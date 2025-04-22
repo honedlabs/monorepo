@@ -299,7 +299,7 @@ class Table extends Refine implements Handles, UrlRoutable
         } elseif ($message instanceof \Closure) {
             $message($emptyState);
         } else {
-            $this->emptyState = $emptyState;
+            $this->emptyState = $message;
         }
 
         return $this;

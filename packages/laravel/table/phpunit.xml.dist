@@ -19,11 +19,14 @@
         <testsuite name="Arch">
             <file>tests/ArchTest.php</file>
         </testsuite>
-        <testsuite name="Unit">
-            <directory>tests/Unit</directory>
-        </testsuite>
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
+        </testsuite>
+        <testsuite name="Http">
+            <directory>tests/Http</directory>
+        </testsuite>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
         </testsuite>
     </testsuites>
     <logging>
