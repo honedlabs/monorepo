@@ -25,18 +25,36 @@ class CreateEmptyState
         $state = $table->getEmptyState();
         $table->defineEmptyState($state);
 
-        // $isSearching = $table->isSearching();
-        // $isFiltering = $table->isFiltering();
-        // $isRefining = $isSearching || $isFiltering;
+        $isSearching = $table->isSearching();
+        $isFiltering = $table->isFiltering();
+        $isRefining = $isSearching || $isFiltering;
 
-        // if ($isSearching && $searching = $table->getSearchingState()) {
-        //     $searching($state);
-        // } else if ($isFiltering && $filtering = $table->getFilteringState()) {
-        //     $filtering($state);
-        // } else if ($isRefining && $refining = $table->getRefiningState()) {
-        //     $refining($state);
-        // }
+        if ($isSearching && $searching = $state->getSearchingState()) {
+            $this->apply($searching, $state);
+        } else if ($isFiltering && $filtering = $state->getFilteringState()) {
+            $this->apply($filtering, $state);
+        } else if ($isRefining && $refining = $state->getRefiningState()) {
+            $this->apply($refining, $state);
+        }
         
         return $next($table);
+    }
+
+    /**
+     * Apply the state to the empty state.
+     * 
+     * @param  string|\Closure  $state
+     * @param  \Honed\Table\EmptyState  $emptyState
+     * @return void
+     */
+    protected function apply($state, $emptyState)
+    {
+        if (\is_string($state)) {
+            $emptyState->message($state);
+            
+            return;
+        }
+
+        $state($emptyState);
     }
 }

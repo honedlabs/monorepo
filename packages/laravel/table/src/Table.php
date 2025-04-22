@@ -88,6 +88,13 @@ class Table extends Refine implements UrlRoutable, Handles
     protected $serialize;
 
     /**
+     * The driver to use for the table.
+     *
+     * @var 'eloquent'|'array'|'object'
+     */
+    protected $driver = 'eloquent';
+
+    /**
      * The table records.
      *
      * @var array<int,mixed>
@@ -239,6 +246,29 @@ class Table extends Refine implements UrlRoutable, Handles
     public static function isSerializedByDefault()
     {
         return (bool) config('table.serialize', false);
+    }
+
+    /**
+     * Set the driver to use for the table.
+     *
+     * @param  'eloquent'|'array'|'object'  $driver
+     * @return $this
+     */
+    public function driver($driver)
+    {
+        $this->driver = $driver;
+
+        return $this;
+    }
+
+    /**
+     * Get the driver to use for the table.
+     *
+     * @return 'eloquent'|'array'|'object'
+     */
+    public function getDriver()
+    {
+        return $this->driver;
     }
 
     /**
