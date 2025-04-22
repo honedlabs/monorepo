@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Action\Exceptions;
 
-use InvalidArgumentException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class InvalidActionException extends InvalidArgumentException
+class InvalidActionException extends BadRequestHttpException
 {
     /**
      * Create a new invalid action exception.
