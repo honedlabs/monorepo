@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Honed\Table\Table;
 use Honed\Table\Columns\KeyColumn;
+use Honed\Table\Exceptions\KeyNotFoundException;
 use Honed\Table\Tests\Fixtures\Table as FixturesTable;
 
 beforeEach(function () {
@@ -20,7 +21,7 @@ it('has key', function () {
 
 it('requires key', function () {
     $this->table->getKey();
-})->throws(\RuntimeException::class);
+})->throws(KeyNotFoundException::class);
 
 it('has endpoint', function () {
     expect($this->table)

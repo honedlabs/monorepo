@@ -11,7 +11,7 @@ class KeyNotFoundException extends \Exception
     /**
      * Create a new key not found exception.
      * 
-     * @param  \Honed\Table\Table<TModel, TBuilder>|class-string  $table
+     * @param  \Honed\Table\Table<\Illuminate\Database\Eloquent\Model, \>|class-string  $table
      */
     public function __construct($table)
     {

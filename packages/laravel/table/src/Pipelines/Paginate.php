@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Honed\Core\Interpret;
 use Honed\Table\Table;
+use Honed\Core\Interpret;
+use Honed\Table\Exceptions\InvalidPaginatorException;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -61,7 +62,7 @@ class Paginate
 
                 break;
             default:
-                static::throwInvalidPaginator($paginator);
+                InvalidPaginatorException::throw($paginator);
 
         }
 
@@ -91,19 +92,5 @@ class Paginate
         $table->createRecordsPerPage($pagination, $perPage);
 
         return $perPage;
-    }
-
-    /**
-     * Throw an exception if the paginator is not valid.
-     *
-     * @param  string  $paginator
-     * @return never
-     */
-    public function throwInvalidPaginator($paginator)
-    {
-        throw new \InvalidArgumentException(\sprintf(
-            'The provided paginator [%s] is invalid.',
-            $paginator
-        ));
     }
 }
