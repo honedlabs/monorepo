@@ -1,9 +1,9 @@
 {
 	"name": "@honed/nav",
 	"private": false,
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"license": "MIT",
-	"description": "-",
+	"description": "Create server-driven navigation for your Inertia.js application.",
 	"keywords": [
 		"honed",
 		"nav",
