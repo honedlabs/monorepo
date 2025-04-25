@@ -12,6 +12,7 @@ use Honed\Command\Console\Commands\InvokableMakeCommand;
 use Honed\Command\Console\Commands\ModalMakeCommand;
 use Honed\Command\Console\Commands\PageMakeCommand;
 use Honed\Command\Console\Commands\PartialMakeCommand;
+use Honed\Command\Console\Commands\QueryMakeCommand;
 use Honed\Command\Console\Commands\ServiceMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,6 +37,7 @@ class CommandServiceProvider extends ServiceProvider
                 ModalMakeCommand::class,
                 PageMakeCommand::class,
                 PartialMakeCommand::class,
+                QueryMakeCommand::class,
                 ServiceMakeCommand::class,
             ]);
         }

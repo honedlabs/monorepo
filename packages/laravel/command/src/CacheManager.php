@@ -6,6 +6,10 @@ namespace Honed\Command;
 
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * @template TParameter = mixed
+ * @template TReturn = mixed
+ */
 abstract class CacheManager
 {
     /**
@@ -18,16 +22,18 @@ abstract class CacheManager
     /**
      * Define the key of the cache.
      * 
-     * @return string|list<string>
+     * @param TParameter $parameter
+     * @return string|array<int,string|int>
      */
-    abstract public function key();
+    abstract public function key($parameter);
 
     /**
      * Define the value of the cache.
      * 
-     * @return mixed
+     * @param TParameter $parameter
+     * @return TReturn
      */
-    abstract public function value();
+    abstract public function value($parameter);
 
     /**
      * Define the duration of the cache.
@@ -52,11 +58,12 @@ abstract class CacheManager
     /**
      * Get the key of the cache.
      * 
+     * @param TParameter $parameter
      * @return string
      */
-    public function getKey()
+    public function getKey($parameter)
     {
-        $key = $this->key();
+        $key = $this->key($parameter);
 
         if (\is_array($key)) {
             $key = \implode('.', $key);
@@ -68,63 +75,68 @@ abstract class CacheManager
 
     /**
      * Get the value of the cache.
+     * 
+     * @param TParameter $parameter
+     * @return TReturn
      */
-    public static function get()
+    public static function get($parameter = null)
     {
-        return resolve(static::class)->retrieve();
-
+        return resolve(static::class)->retrieve($parameter);
     }
 
     /**
      * Retrieve the cache value.
      * 
-     * @return mixed
+     * @param TParameter $parameter
+     * @return TReturn
      */
-    public function retrieve()
+    public function retrieve($parameter)
     {
         $duration = $this->getDuration();
 
-        $key = $this->getKey();
+        $key = $this->getKey($parameter);
 
         return match (true) {
             \is_array($duration) => Cache::flexible(
                 $key,
                 $duration,
-                fn () => $this->value()
+                fn () => $this->value($parameter)
             ),
 
             $duration > 0 => Cache::remember(
                 $key,
                 $duration,
-                fn () => $this->value()
+                fn () => $this->value($parameter)
             ),
 
-            $duration < 0 => $this->value(),
+            $duration < 0 => $this->value($parameter),
 
             default => Cache::rememberForever(
                 $key,
-                fn () => $this->value()
+                fn () => $this->value($parameter)
             ),
         };
     }
 
     /**
      * Forget the cache value.
+     * 
+     * @param TParameter $parameter
+     * @return void
      */
-    public static function forget()
+    public static function forget($parameter = null)
     {
-        return resolve(static::class)->flush();
+        resolve(static::class)->flush($parameter);
     }
 
     /**
      * Flush all caches under the same namespace.
+     * 
+     * @param TParameter $parameter
+     * @return void
      */
-    public function flush()
+    public function flush($parameter)
     {
-        if ($this->getDuration() < 0) {
-            return;
-        }
-
-        Cache::forget($this->getKey());
+        Cache::forget($this->getKey($parameter));
     }
 }

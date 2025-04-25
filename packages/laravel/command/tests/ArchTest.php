@@ -12,3 +12,12 @@ arch('commands')
     ->expect('Honed\Command\Console\Commands')
     ->toBeClasses()
     ->toExtend(Command::class);
+
+arch('concerns')
+    ->expect('Honed\Command\Concerns')
+    ->toBeTraits();
+
+arch('attributes')
+    ->expect('Honed\Command\Attributes')
+    ->toBeClasses()
+    ->toExtend(\Attribute::class);
