@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+class {{ class }}
+{
+    /**
+     * Execute the class as a function.
+     */
+    public function __invoke(): void
+    {
+        //
+    }
+}

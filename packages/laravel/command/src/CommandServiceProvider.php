@@ -7,13 +7,14 @@ namespace Honed\Command;
 use Honed\Command\Console\Commands\BuilderMakeCommand;
 use Honed\Command\Console\Commands\ConcernMakeCommand;
 use Honed\Command\Console\Commands\ContractMakeCommand;
+use Honed\Command\Console\Commands\InvokableMakeCommand;
 use Honed\Command\Console\Commands\ModalMakeCommand;
 use Honed\Command\Console\Commands\PageMakeCommand;
 use Honed\Command\Console\Commands\PartialMakeCommand;
 use Honed\Command\Console\Commands\ServiceMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
-final class CommandServiceProvider extends ServiceProvider
+class CommandServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.
@@ -29,6 +30,7 @@ final class CommandServiceProvider extends ServiceProvider
                 BuilderMakeCommand::class,
                 ConcernMakeCommand::class,
                 ContractMakeCommand::class,
+                InvokableMakeCommand::class,
                 ModalMakeCommand::class,
                 PageMakeCommand::class,
                 PartialMakeCommand::class,
