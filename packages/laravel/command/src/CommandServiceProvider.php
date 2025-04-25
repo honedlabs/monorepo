@@ -15,6 +15,7 @@ use Honed\Command\Console\Commands\PageMakeCommand;
 use Honed\Command\Console\Commands\PartialMakeCommand;
 use Honed\Command\Console\Commands\QueryMakeCommand;
 use Honed\Command\Console\Commands\ServiceMakeCommand;
+use Honed\Command\Console\Commands\SessionMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 class CommandServiceProvider extends ServiceProvider
@@ -41,6 +42,7 @@ class CommandServiceProvider extends ServiceProvider
                 PartialMakeCommand::class,
                 QueryMakeCommand::class,
                 ServiceMakeCommand::class,
+                SessionMakeCommand::class,
             ]);
         }
     }

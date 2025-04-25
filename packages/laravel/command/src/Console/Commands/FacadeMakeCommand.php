@@ -74,6 +74,7 @@ class FacadeMakeCommand extends GeneratorCommand
     protected function getOptions()
     {
         return [
+            ['class', 'c', InputOption::VALUE_REQUIRED, 'The underlying class of the facade'],
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the facade already exists'],
         ];
     }

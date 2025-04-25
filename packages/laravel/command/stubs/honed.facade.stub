@@ -6,7 +6,6 @@ use Honed\Crumb\CrumbFactory;
 use Illuminate\Support\Facades\Facade;
 use {{ objectNamespace }}
 
-
 /**
  * @see \{{ objectNamespace }}
  */

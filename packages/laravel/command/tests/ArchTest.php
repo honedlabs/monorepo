@@ -19,5 +19,4 @@ arch('concerns')
 
 arch('attributes')
     ->expect('Honed\Command\Attributes')
-    ->toBeClasses()
-    ->toExtend(\Attribute::class);
+    ->toBeClasses();

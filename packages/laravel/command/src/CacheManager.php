@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Command;
 
+use Illuminate\Container\Container;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 /**
  * @template TParameter = mixed
@@ -15,9 +18,23 @@ abstract class CacheManager
     /**
      * The duration of the cache.
      *
-     * @var int|list{int, int}
+     * @var int|array{int, int}
      */
     protected $duration = 0;
+
+    /**
+     * The default namespace where caches reside.
+     *
+     * @var string
+     */
+    public static $namespace = 'App\\Caches\\';
+
+    /**
+     * How to resolve the cache name for the given class name.
+     *
+     * @var (\Closure(class-string):class-string<\Honed\Command\CacheManager>)|null
+     */
+    protected static $cacheNameResolver;
 
     /**
      * Define the key of the cache.
@@ -48,7 +65,7 @@ abstract class CacheManager
     /**
      * Get the duration of the cache.
      *
-     * @return int|list{int, int}
+     * @return int|array{int, int}
      */
     public function getDuration()
     {
@@ -93,27 +110,25 @@ abstract class CacheManager
     {
         $duration = $this->getDuration();
 
-        $key = $this->getKey($parameter);
-
         return match (true) {
             \is_array($duration) => Cache::flexible(
-                $key,
-                $duration,
-                fn () => $this->value($parameter)
-            ),
-
-            $duration > 0 => Cache::remember(
-                $key,
+                $this->getKey($parameter),
                 $duration,
                 fn () => $this->value($parameter)
             ),
 
             $duration < 0 => $this->value($parameter),
 
-            default => Cache::rememberForever(
-                $key,
+            $duration > 0 => Cache::remember(
+                $this->getKey($parameter),
+                $duration,
                 fn () => $this->value($parameter)
             ),
+
+            default => Cache::rememberForever(
+                $this->getKey($parameter),
+                fn () => $this->value($parameter)
+            )
         };
     }
 
@@ -140,13 +155,86 @@ abstract class CacheManager
     }
 
     /**
-     * Get the cache manager for a model.
+     * Get the cache manager for a class.
      *
-     * @param  class-string  $model
-     * @return static|null
+     * @param  class-string  $class
+     * @return \Honed\Command\CacheManager
      */
-    public static function cacheFor($model)
+    public static function cacheForModel($class)
     {
-        return null;
+        $cache = static::resolveCacheName($class);
+
+        return new $cache;
+    }
+
+    /**
+     * Get the table name for the given model name.
+     *
+     * @param  class-string  $className
+     * @return class-string<\Honed\Command\CacheManager>
+     */
+    public static function resolveCacheName($className)
+    {
+        $resolver = static::$cacheNameResolver ?? function (string $className) {
+            $appNamespace = static::appNamespace();
+
+            $className = Str::startsWith($className, $appNamespace.'Models\\')
+                ? Str::after($className, $appNamespace.'Models\\')
+                : Str::after($className, $appNamespace);
+
+            /** @var class-string<\Honed\Command\CacheManager> */
+            return static::$namespace.$className.'Cache';
+        };
+
+        return $resolver($className);
+    }
+
+    /**
+     * Get the application namespace for the application.
+     *
+     * @return string
+     */
+    protected static function appNamespace()
+    {
+        try {
+            return Container::getInstance()
+                ->make(Application::class)
+                ->getNamespace();
+        } catch (\Throwable) {
+            return 'App\\';
+        }
+    }
+
+    /**
+     * Specify the default namespace that contains the application's model tables.
+     *
+     * @param  string  $namespace
+     * @return void
+     */
+    public static function useNamespace($namespace)
+    {
+        static::$namespace = $namespace;
+    }
+
+    /**
+     * Specify the callback that should be invoked to guess the name of a model table.
+     *
+     * @param  \Closure(class-string):class-string<\Honed\Command\CacheManager>  $callback
+     * @return void
+     */
+    public static function guessCacheNamesUsing($callback)
+    {
+        static::$cacheNameResolver = $callback;
+    }
+
+    /**
+     * Flush the cache's global configuration state.
+     *
+     * @return void
+     */
+    public static function flushState()
+    {
+        static::$cacheNameResolver = null;
+        static::$namespace = 'App\\Caches\\';
     }
 }

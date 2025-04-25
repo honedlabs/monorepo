@@ -9,20 +9,20 @@ use Honed\Command\Attributes\Cache;
 
 /**
  * @template TCache of \Honed\Command\CacheManager
- * @template TReturn of mixed = mixed
+ * @template TReturn = mixed
  */
-trait HasCache 
+trait HasCache
 {
     /**
      * The cache manager instance.
-     * 
+     *
      * @var class-string<TCache>
      */
     protected static $cache;
 
     /**
      * Get the cache manager instance.
-     * 
+     *
      * @return TCache
      */
     public static function cache()
@@ -33,7 +33,7 @@ trait HasCache
 
     /**
      * Get the cached value for this class.
-     * 
+     *
      * @return TReturn
      */
     public function cached()
@@ -43,7 +43,7 @@ trait HasCache
 
     /**
      * Forget the cached value for this class.
-     * 
+     *
      * @return void
      */
     public function forgetCached()
@@ -59,11 +59,11 @@ trait HasCache
     protected static function newCache()
     {
         if (isset(static::$cache)) {
-            return new static::$cache();
+            return new static::$cache;
         }
 
         if ($cache = static::getCacheAttribute()) {
-            return new $cache();
+            return new $cache;
         }
 
         return null;

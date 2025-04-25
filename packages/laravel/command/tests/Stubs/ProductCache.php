@@ -7,7 +7,7 @@ namespace Honed\Command\Tests\Stubs;
 use Honed\Command\CacheManager;
 
 /**
- * @extends \Honed\Command\CacheManager<\Honed\Command\Tests\Stubs\Product>
+ * @extends \Honed\Command\CacheManager<\Honed\Command\Tests\Stubs\Product, array{name: string}>
  */
 class ProductCache extends CacheManager
 {
