@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Command\Console\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\GeneratorCommand;
-use Symfony\Component\Console\Input\InputOption;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 #[AsCommand(name: 'make:facade')]
 class FacadeMakeCommand extends GeneratorCommand
@@ -107,9 +107,9 @@ class FacadeMakeCommand extends GeneratorCommand
 
     /**
      * Replace the object for the given stub.
-     * 
-     * @param string $stub
-     * @param string|null $class
+     *
+     * @param  string  $stub
+     * @param  string|null  $class
      * @return $this
      */
     protected function replaceObject(&$stub, $class)
@@ -126,8 +126,8 @@ class FacadeMakeCommand extends GeneratorCommand
 
         foreach ($searches as $search) {
             $stub = \str_replace(
-                $search, 
-                [$object, $objectClass, $objectNamespace], 
+                $search,
+                [$object, $objectClass, $objectNamespace],
                 $stub
             );
         }
@@ -137,8 +137,8 @@ class FacadeMakeCommand extends GeneratorCommand
 
     /**
      * Get the class basename of the object.
-     * 
-     * @param string|null $class
+     *
+     * @param  string|null  $class
      * @return string
      */
     protected function getObject($class)
@@ -154,8 +154,8 @@ class FacadeMakeCommand extends GeneratorCommand
 
     /**
      * Get the namespace of the object.
-     * 
-     * @param string|null $class
+     *
+     * @param  string|null  $class
      * @return string
      */
     protected function getObjectNamespace($class)
@@ -171,8 +171,8 @@ class FacadeMakeCommand extends GeneratorCommand
 
     /**
      * Get the object for the given class.
-     * 
-     * @param string|null $class
+     *
+     * @param  string|null  $class
      * @return string
      */
     protected function getObjectClass($class)
@@ -186,15 +186,18 @@ class FacadeMakeCommand extends GeneratorCommand
 
     /**
      * Replace all double line breaks with a single line break.
-     * 
-     * @param string $stub
+     *
+     * @param  string  &$stub
+     *
+     * @param-out string|null $stub
+     *
      * @return $this
      */
     protected function replaceDoubleLineBreaks(&$stub)
     {
         // Replace 3 or more newlines with 2 to preserve single blank lines
-        $stub = preg_replace('/\n{3,}/', "\n\n", $stub);
-        $stub = preg_replace('/(\r\n){3,}/', "\r\n\r\n", $stub);
+        $stub = preg_replace('/\n{3,}/', "\n\n", (string) $stub);
+        $stub = preg_replace('/(\r\n){3,}/', "\r\n\r\n", (string) $stub);
 
         return $this;
     }

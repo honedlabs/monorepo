@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Command\Console\Commands;
 
+use Honed\Command\Concerns\HasFacade;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,6 +12,8 @@ use Symfony\Component\Console\Input\InputOption;
 #[AsCommand(name: 'make:session')]
 class SessionMakeCommand extends GeneratorCommand
 {
+    use HasFacade;
+
     /**
      * The console command name.
      *
@@ -67,16 +70,30 @@ class SessionMakeCommand extends GeneratorCommand
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function buildClass($name)
+    {
+        $class = parent::buildClass($name);
+
+        $this->buildFacade($name);
+
+        return $class;
+    }
+
+    /**
      * Get the console command options
      *
      * @return array<int,array<int,mixed>>
      */
     protected function getOptions()
     {
-        return [
-            ['facade', 's', InputOption::VALUE_REQUIRED, 'Create a facade for the session'],
-            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the session already exists'],
-        ];
+        return \array_merge(
+            $this->facadeOption(),
+            [
+                ['force', null, InputOption::VALUE_NONE, 'Create the class even if the session already exists'],
+            ]
+        );
     }
 
     /**

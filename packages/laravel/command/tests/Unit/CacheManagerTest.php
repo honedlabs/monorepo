@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Honed\Command\CacheManager;
+use Honed\Command\Tests\Stubs\Product;
 use Honed\Command\Tests\Stubs\ProductCache;
 use Illuminate\Support\Facades\Cache;
 
@@ -38,3 +40,27 @@ it('flushes value', function () {
     expect(Cache::has($this->cache->getKey($this->product)))
         ->toBeFalse();
 });
+
+it('resolves cache model', function () {
+    ProductCache::guessCacheNamesUsing(function ($class) {
+        return $class.'Cache';
+    });
+
+    expect(ProductCache::resolveCacheName(Product::class))
+        ->toBe('Honed\\Command\\Tests\\Stubs\\ProductCache');
+
+    expect(ProductCache::cacheForModel(Product::class))
+        ->toBeInstanceOf(ProductCache::class);
+
+    ProductCache::flushState();
+});
+
+it('uses namespace', function () {
+    ProductCache::useNamespace('');
+
+    expect(ProductCache::resolveCacheName(Product::class))
+        ->toBe('Honed\\Command\\Tests\\Stubs\\ProductCache');
+
+    ProductCache::flushState();
+});
+

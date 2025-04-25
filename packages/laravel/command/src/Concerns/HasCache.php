@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Command\Concerns;
 
-use Honed\Command\CacheManager;
 use Honed\Command\Attributes\Cache;
+use Honed\Command\CacheManager;
 
 /**
  * @template TCache of \Honed\Command\CacheManager
