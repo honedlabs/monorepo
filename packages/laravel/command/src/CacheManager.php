@@ -14,30 +14,30 @@ abstract class CacheManager
 {
     /**
      * The duration of the cache.
-     * 
+     *
      * @var int|list{int, int}
      */
     protected $duration = 0;
 
     /**
      * Define the key of the cache.
-     * 
-     * @param TParameter $parameter
+     *
+     * @param  TParameter  $parameter
      * @return string|array<int,string|int>
      */
     abstract public function key($parameter);
 
     /**
      * Define the value of the cache.
-     * 
-     * @param TParameter $parameter
+     *
+     * @param  TParameter  $parameter
      * @return TReturn
      */
     abstract public function value($parameter);
 
     /**
      * Define the duration of the cache.
-     * 
+     *
      * @return int|null
      */
     public function duration()
@@ -47,7 +47,7 @@ abstract class CacheManager
 
     /**
      * Get the duration of the cache.
-     * 
+     *
      * @return int|list{int, int}
      */
     public function getDuration()
@@ -57,8 +57,8 @@ abstract class CacheManager
 
     /**
      * Get the key of the cache.
-     * 
-     * @param TParameter $parameter
+     *
+     * @param  TParameter  $parameter
      * @return string
      */
     public function getKey($parameter)
@@ -72,11 +72,10 @@ abstract class CacheManager
         return $key;
     }
 
-
     /**
      * Get the value of the cache.
-     * 
-     * @param TParameter $parameter
+     *
+     * @param  TParameter  $parameter
      * @return TReturn
      */
     public static function get($parameter = null)
@@ -86,8 +85,8 @@ abstract class CacheManager
 
     /**
      * Retrieve the cache value.
-     * 
-     * @param TParameter $parameter
+     *
+     * @param  TParameter  $parameter
      * @return TReturn
      */
     public function retrieve($parameter)
@@ -120,8 +119,8 @@ abstract class CacheManager
 
     /**
      * Forget the cache value.
-     * 
-     * @param TParameter $parameter
+     *
+     * @param  TParameter  $parameter
      * @return void
      */
     public static function forget($parameter = null)
@@ -131,8 +130,8 @@ abstract class CacheManager
 
     /**
      * Flush all caches under the same namespace.
-     * 
-     * @param TParameter $parameter
+     *
+     * @param  TParameter  $parameter
      * @return void
      */
     public function flush($parameter)
