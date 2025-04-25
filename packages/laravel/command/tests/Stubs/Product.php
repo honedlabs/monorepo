@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasCache;
+    // use HasCache;
 
     protected $guarded = [];
 

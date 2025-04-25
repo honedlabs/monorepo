@@ -138,4 +138,15 @@ abstract class CacheManager
     {
         Cache::forget($this->getKey($parameter));
     }
+
+    /**
+     * Get the cache manager for a model.
+     *
+     * @param  class-string  $model
+     * @return static|null
+     */
+    public static function cacheFor($model)
+    {
+        return null;
+    }
 }
