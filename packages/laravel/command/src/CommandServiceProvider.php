@@ -8,6 +8,7 @@ use Honed\Command\Console\Commands\BuilderMakeCommand;
 use Honed\Command\Console\Commands\CacheMakeCommand;
 use Honed\Command\Console\Commands\ConcernMakeCommand;
 use Honed\Command\Console\Commands\ContractMakeCommand;
+use Honed\Command\Console\Commands\FacadeMakeCommand;
 use Honed\Command\Console\Commands\InvokableMakeCommand;
 use Honed\Command\Console\Commands\ModalMakeCommand;
 use Honed\Command\Console\Commands\PageMakeCommand;
@@ -33,6 +34,7 @@ class CommandServiceProvider extends ServiceProvider
                 CacheMakeCommand::class,
                 ConcernMakeCommand::class,
                 ContractMakeCommand::class,
+                FacadeMakeCommand::class,
                 InvokableMakeCommand::class,
                 ModalMakeCommand::class,
                 PageMakeCommand::class,
