@@ -1,20 +1,19 @@
 <?php
 
-namespace {{ namespace }}
+namespace {{ namespace }};
 
-use Honed\Crumb\CrumbFactory;
 use Illuminate\Support\Facades\Facade;
-use {{ objectNamespace }}
+{{ objectNamespace }}
 
 /**
- * @see \{{ objectNamespace }}
+ * @see {{ objectClass }}
  */
 class {{ class }} extends Facade
 {
     /**
      * Get the root object behind the facade.
      *
-     * @return \{{ objectNamespace }}
+     * @return {{ objectClass }}
      */
     public static function getFacadeRoot()
     {
@@ -29,6 +28,6 @@ class {{ class }} extends Facade
      */
     protected static function getFacadeAccessor(): string
     {
-        return {{ objectClass }}::class;
+        return {{ object }};
     }
 }

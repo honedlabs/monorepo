@@ -25,3 +25,15 @@ it('prompts for a name', function () {
 
     $this->assertFileExists(app_path('Facades/UserSession.php'));
 });
+
+it('accepts an underlying class', function () {
+    $this->artisan('make:facade', [
+        'name' => 'UserSession',
+        '--force' => true,
+        '--class' => '\\Honed\\Command\\Tests\\Stubs\\ProductCache',
+    ])->assertSuccessful();
+
+    $this->assertFileExists(app_path('Facades/UserSession.php'));
+    $this->assertStringContainsString('use Honed\Command\Tests\Stubs\ProductCache;', file_get_contents(app_path('Facades/UserSession.php')));
+});
+

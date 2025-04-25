@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Command\Console\Commands;
 
+use Illuminate\Support\Str;
 use Illuminate\Console\GeneratorCommand;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'make:facade')]
 class FacadeMakeCommand extends GeneratorCommand
@@ -56,6 +57,30 @@ class FacadeMakeCommand extends GeneratorCommand
     }
 
     /**
+     * Get the FQCN of the underlying class.
+     *
+     * @return string|null
+     */
+    protected function getUnderlyingClass()
+    {
+        /** @var string|null */
+        $class = $this->option('class');
+
+        if (! $class) {
+            return null;
+        }
+
+        if (Str::endsWith($class, '.php')) {
+            $class = Str::substr($class, 0, -4);
+        }
+
+        return Str::of($class)
+            ->replace('/', '\\')
+            ->studly()
+            ->toString();
+    }
+
+    /**
      * Get the default namespace for the class.
      *
      * @param  string  $rootNamespace
@@ -64,6 +89,114 @@ class FacadeMakeCommand extends GeneratorCommand
     protected function getDefaultNamespace($rootNamespace)
     {
         return $rootNamespace.'\Facades';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function buildClass($name)
+    {
+        $stub = $this->files->get($this->getStub());
+        $class = $this->getUnderlyingClass();
+
+        return $this->replaceNamespace($stub, $name)
+            ->replaceObject($stub, $class)
+            ->replaceDoubleLineBreaks($stub)
+            ->replaceClass($stub, $name);
+    }
+
+    /**
+     * Replace the object for the given stub.
+     * 
+     * @param string $stub
+     * @param string|null $class
+     * @return $this
+     */
+    protected function replaceObject(&$stub, $class)
+    {
+        $searches = [
+            ['DummyObject', 'DummyObjectClass', 'DummyObjectNamespace'],
+            ['{{ object }}', '{{ objectClass }}', '{{ objectNamespace }}'],
+            ['{{object}}', '{{objectClass}}', '{{objectNamespace}}'],
+        ];
+
+        $object = $this->getObject($class);
+        $objectClass = $this->getObjectClass($class);
+        $objectNamespace = $this->getObjectNamespace($class);
+
+        foreach ($searches as $search) {
+            $stub = \str_replace(
+                $search, 
+                [$object, $objectClass, $objectNamespace], 
+                $stub
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the class basename of the object.
+     * 
+     * @param string|null $class
+     * @return string
+     */
+    protected function getObject($class)
+    {
+        if (! $class) {
+            return '';
+        }
+
+        $class = \class_basename($class);
+
+        return "{$class}::class";
+    }
+
+    /**
+     * Get the namespace of the object.
+     * 
+     * @param string|null $class
+     * @return string
+     */
+    protected function getObjectNamespace($class)
+    {
+        if (! $class) {
+            return '';
+        }
+
+        $class = ltrim($class, '\\/');
+
+        return "use {$class};";
+    }
+
+    /**
+     * Get the object for the given class.
+     * 
+     * @param string|null $class
+     * @return string
+     */
+    protected function getObjectClass($class)
+    {
+        if (! $class) {
+            return '';
+        }
+
+        return Str::start($class, '\\');
+    }
+
+    /**
+     * Replace all double line breaks with a single line break.
+     * 
+     * @param string $stub
+     * @return $this
+     */
+    protected function replaceDoubleLineBreaks(&$stub)
+    {
+        // Replace 3 or more newlines with 2 to preserve single blank lines
+        $stub = preg_replace('/\n{3,}/', "\n\n", $stub);
+        $stub = preg_replace('/(\r\n){3,}/', "\r\n\r\n", $stub);
+
+        return $this;
     }
 
     /**
@@ -90,6 +223,10 @@ class FacadeMakeCommand extends GeneratorCommand
             'name' => [
                 'What should the '.strtolower($this->type).' be named?',
                 'E.g. UserSession',
+            ],
+            'class' => [
+                'What should the underlying class of the facade be?',
+                'E.g. App\\Sessions\\UserSession',
             ],
         ];
     }
