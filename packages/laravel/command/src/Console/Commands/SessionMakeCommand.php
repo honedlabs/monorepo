@@ -12,8 +12,6 @@ use Symfony\Component\Console\Input\InputOption;
 #[AsCommand(name: 'make:session')]
 class SessionMakeCommand extends GeneratorCommand
 {
-    use HasFacade;
-
     /**
      * The console command name.
      *
@@ -76,7 +74,14 @@ class SessionMakeCommand extends GeneratorCommand
     {
         $class = parent::buildClass($name);
 
-        $this->buildFacade($name);
+        $name = ($this->qualifyClass($this->getNameInput()));
+
+        $this->call('make:facade', [
+            'name' => \class_basename($name),
+            '--class' => $name,
+            // @phpstan-ignore-next-line
+            '--force' => $this->hasOption('force') && (bool) $this->option('force'),
+        ]);
 
         return $class;
     }
@@ -88,12 +93,10 @@ class SessionMakeCommand extends GeneratorCommand
      */
     protected function getOptions()
     {
-        return \array_merge(
-            $this->facadeOption(),
-            [
-                ['force', null, InputOption::VALUE_NONE, 'Create the class even if the session already exists'],
-            ]
-        );
+        return [
+            ['facade', 'f', InputOption::VALUE_NONE, 'Create a facade for the session'],
+            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the session already exists'],
+        ];
     }
 
     /**

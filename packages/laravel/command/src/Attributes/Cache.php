@@ -17,5 +17,5 @@ class Cache
      */
     public function __construct(
         public string $cache
-    ) {}
+    ) { }
 }
