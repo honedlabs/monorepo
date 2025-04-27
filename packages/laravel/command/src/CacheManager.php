@@ -164,7 +164,7 @@ abstract class CacheManager
     {
         $cache = static::resolveCacheName($class);
 
-        return new $cache;
+        return resolve($cache);
     }
 
     /**

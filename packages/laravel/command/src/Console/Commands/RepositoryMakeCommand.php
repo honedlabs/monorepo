@@ -42,12 +42,7 @@ class RepositoryMakeCommand extends GeneratorCommand
 
         $model = $this->option('model');
 
-        if ($model) {
-            //      // $this->useModel($stub, $model);
-            return $this->replaceModel($stub, $model);
-        }
-
-        return $stub;
+        return $model ? $this->replaceModel($stub, $model) : $stub;
     }
 
     /**

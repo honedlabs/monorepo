@@ -54,11 +54,11 @@ trait HasCache
     protected static function newCache()
     {
         if (isset(static::$cache)) {
-            return new static::$cache;
+            return resolve(static::$cache);
         }
 
         if ($cache = static::getCacheAttribute()) {
-            return new $cache;
+            return resolve($cache);
         }
 
         return null;
