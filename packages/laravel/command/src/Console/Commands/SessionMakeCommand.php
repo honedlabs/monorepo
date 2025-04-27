@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Command\Console\Commands;
 
-use Honed\Command\Concerns\HasFacade;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;

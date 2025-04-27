@@ -13,10 +13,10 @@ class ProductRepository extends Repository
 {
     /**
      * Create a new repository instance.
-     * 
-     * @param  TModel $product
+     *
+     * @param  TModel  $product
      */
     public function __construct(
         protected Product $product
-    ) { }
+    ) {}
 }

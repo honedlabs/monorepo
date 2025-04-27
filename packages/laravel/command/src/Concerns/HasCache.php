@@ -10,16 +10,11 @@ use Honed\Command\CacheManager;
 /**
  * @template TCache of \Honed\Command\CacheManager
  * @template TReturn = mixed
+ *
+ * @property string $cache
  */
 trait HasCache
 {
-    /**
-     * The cache manager instance.
-     *
-     * @var class-string<TCache>
-     */
-    protected static $cache;
-
     /**
      * Get the cache manager instance.
      *

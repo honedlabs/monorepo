@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Command\Console\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\GeneratorCommand;
-use Symfony\Component\Console\Input\InputOption;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 #[AsCommand(name: 'make:repository')]
 class RepositoryMakeCommand extends GeneratorCommand
@@ -43,7 +43,7 @@ class RepositoryMakeCommand extends GeneratorCommand
         $model = $this->option('model');
 
         if ($model) {
-            // $this->useModel($stub, $model);
+            //      // $this->useModel($stub, $model);
             return $this->replaceModel($stub, $model);
         }
 
@@ -87,16 +87,15 @@ class RepositoryMakeCommand extends GeneratorCommand
             array_keys($replace), array_values($replace), $stub
         );
 
-        return preg_replace(
-            vsprintf('/use %s;[\r\n]+use %s;/', [
-                preg_quote($namespacedModel, '/'),
-                preg_quote($namespacedModel, '/'),
+        /** @var string */
+        return \preg_replace(
+            \vsprintf('/use %s;[\r\n]+use %s;/', [
+                \preg_quote($namespacedModel, '/'),
+                \preg_quote($namespacedModel, '/'),
             ]),
             "use {$namespacedModel};",
             $stub
         );
-
-        return $this;
     }
 
     /**
@@ -107,8 +106,8 @@ class RepositoryMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         return $this->option('model')
-            ? $this->resolveStubPath('/stubs/honed.repository.model.stub')
-            : $this->resolveStubPath('/stubs/honed.repository.stub');
+        ? $this->resolveStubPath('/stubs/honed.repository.model.stub')
+        : $this->resolveStubPath('/stubs/honed.repository.stub');
     }
 
     /**
@@ -120,8 +119,8 @@ class RepositoryMakeCommand extends GeneratorCommand
     protected function resolveStubPath($stub)
     {
         return file_exists($customPath = $this->laravel->basePath(\trim($stub, '/')))
-            ? $customPath
-            : __DIR__.'/../../..'.$stub;
+        ? $customPath
+        : __DIR__.'/../../..'.$stub;
     }
 
     /**

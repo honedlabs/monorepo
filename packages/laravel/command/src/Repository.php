@@ -34,7 +34,7 @@ abstract class Repository
     {
         $repository = static::resolveRepositoryName($class);
 
-        return new $repository;
+        return resolve($repository);
     }
 
     /**

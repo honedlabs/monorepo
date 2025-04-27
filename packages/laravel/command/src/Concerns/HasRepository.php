@@ -9,18 +9,13 @@ use Honed\Command\Repository;
 
 /**
  * @template TRepository of \Honed\Command\Repository
- * 
+ *
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
+ *
+ * @property string $repository
  */
 trait HasRepository
 {
-    /**
-     * The repository manager instance.
-     *
-     * @var class-string<TRepository>
-     */
-    protected static $repository;
-
     /**
      * Get the repository manager instance.
      *
@@ -40,11 +35,11 @@ trait HasRepository
     protected static function newRepository()
     {
         if (isset(static::$repository)) {
-            return new static::$repository;
+            return resolve(static::$repository);
         }
 
         if ($repository = static::getRepositoryAttribute()) {
-            return new $repository;
+            return resolve($repository);
         }
 
         return null;

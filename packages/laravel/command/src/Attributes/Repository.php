@@ -17,5 +17,5 @@ class Repository
      */
     public function __construct(
         public string $repository
-    ) { }
+    ) {}
 }
