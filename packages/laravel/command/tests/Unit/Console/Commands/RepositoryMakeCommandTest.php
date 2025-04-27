@@ -25,3 +25,13 @@ it('prompts for a name', function () {
 
     $this->assertFileExists(app_path('Repositories/UserRepository.php'));
 });
+
+it('has model stub', function () {
+    $this->artisan('make:repository', [
+        'name' => 'UserRepository',
+        '--force' => true,
+        '--model' => 'App\\Models\\User',
+    ])->assertSuccessful();
+
+    $this->assertFileExists(app_path('Repositories/UserRepository.php'));
+});

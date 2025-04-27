@@ -1,0 +1,11 @@
+<?php
+
+namespace {{ namespace }};
+
+use Honed\Command\Repository;
+
+class {{ class }} extends Repository
+{
+    public function __construct(
+    ) { }
+}
