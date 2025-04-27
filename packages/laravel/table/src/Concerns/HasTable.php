@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Honed\Table\Attributes\UseTable;
+use Honed\Table\Attributes\Table as TableAttribute;
 use Honed\Table\Table;
 
 /**
  * @template TTable of \Honed\Table\Table
+ * 
+ * @property string $tableClass
  */
 trait HasTable
 {
     /**
-     * The table instance.
-     *
-     * @var class-string<\Honed\Table\Table>|null
-     */
-    protected static $table;
-
-    /**
-     * Get a new factory instance for the model.
+     * Get the table instance for the model.
      *
      * @param  \Closure|null  $before
      * @return TTable
@@ -32,17 +27,18 @@ trait HasTable
     }
 
     /**
-     * Create a new factory instance for the model.
+     * Create a new table instance for the model.
      *
+     * @param \Closure|null $before
      * @return TTable|null
      */
     protected static function newTable($before = null)
     {
-        if (isset(static::$table)) {
-            return static::$table::make($before);
+        if (isset(static::$tableClass)) {
+            return static::$tableClass::make($before);
         }
 
-        if ($table = static::getUseTableAttribute()) {
+        if ($table = static::getTableAttribute()) {
             return $table::make($before);
         }
 
@@ -50,19 +46,21 @@ trait HasTable
     }
 
     /**
-     * Get the table from the UseTable class attribute.
+     * Get the table from the Table class attribute.
      *
      * @return class-string<\Honed\Table\Table>|null
      */
-    protected static function getUseTableAttribute()
+    protected static function getTableAttribute()
     {
         $attributes = (new \ReflectionClass(static::class))
-            ->getAttributes(UseTable::class);
+            ->getAttributes(TableAttribute::class);
 
         if ($attributes !== []) {
-            $useTable = $attributes[0]->newInstance();
+            $table = $attributes[0]->newInstance();
 
-            return $useTable->tableClass;
+            return $table->table;
         }
+
+        return null;
     }
 }
