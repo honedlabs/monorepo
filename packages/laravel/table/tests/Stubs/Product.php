@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Table\Tests\Stubs;
 
+use Honed\Table\Attributes\Table;
+use Honed\Table\Concerns\HasTable;
+use Honed\Table\Tests\Fixtures\Table as FixturesTable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Scout\Searchable;
 
+#[Table(FixturesTable::class)]
 class Product extends Model
 {
-    protected $guarded = [];
-
+    use HasTable;
     use Searchable;
+    
+    protected $guarded = [];
 
     protected $casts = [
         'status' => Status::class,
