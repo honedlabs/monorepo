@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Honed\Action\Http\Controllers;
 
 use Honed\Action\ActionGroup;
-use Illuminate\Routing\Controller;
-use Honed\Action\Http\Requests\InvokableRequest;
-use Honed\Action\Http\Requests\DispatchableRequest;
 use Honed\Action\Exceptions\CouldNotResolveHandlerException;
-use Illuminate\Support\Facades\Cache;
+use Honed\Action\Http\Requests\DispatchableRequest;
+use Honed\Action\Http\Requests\InvokableRequest;
+use Illuminate\Routing\Controller;
 
 class ActionController extends Controller
 {
@@ -21,7 +20,7 @@ class ActionController extends Controller
      *
      * @param  \Honed\Action\ActionGroup<TModel, TBuilder>  $action
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
-     * 
+     *
      * @throws \Honed\Action\Exceptions\ActionNotFoundException
      * @throws \Honed\Action\Exceptions\ActionNotAllowedException
      * @throws \Honed\Action\Exceptions\InvalidActionException

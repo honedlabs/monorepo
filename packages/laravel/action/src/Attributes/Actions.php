@@ -12,10 +12,10 @@ class Actions
     /**
      * Create a new attribute instance.
      *
-     * @param  class-string<\Honed\Action\ActionGroup>  $actionGroup
+     * @param  class-string<\Honed\Action\ActionGroup>  $actions
      * @return void
      */
     public function __construct(
         public string $actions
-    ) { }
+    ) {}
 }

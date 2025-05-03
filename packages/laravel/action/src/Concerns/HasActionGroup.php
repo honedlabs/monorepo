@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-use Honed\Action\Attributes\Actions;
 use Honed\Action\ActionGroup;
+use Honed\Action\Attributes\Actions;
 
 /**
  * @template TActions of \Honed\Action\ActionGroup
- * 
+ *
  * @property string $actions
  */
 trait HasActionGroup
@@ -21,7 +21,7 @@ trait HasActionGroup
      */
     public static function actions()
     {
-        return static::newActions() 
+        return static::newActions()
             ?? ActionGroup::actionsForModel(static::class);
     }
 

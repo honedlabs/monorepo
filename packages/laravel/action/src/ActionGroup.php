@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Core\Primitive;
-use Illuminate\Support\Str;
-use Honed\Action\Contracts\Handles;
-use Honed\Action\Support\Constants;
-use Honed\Core\Concerns\HasResource;
 use Honed\Action\Concerns\HasActions;
 use Honed\Action\Concerns\HasEncoder;
 use Honed\Action\Concerns\HasEndpoint;
-use Illuminate\Contracts\Routing\UrlRoutable;
+use Honed\Action\Contracts\Handles;
+use Honed\Action\Support\Constants;
+use Honed\Core\Concerns\HasResource;
+use Honed\Core\Primitive;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Support\Str;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -52,7 +52,7 @@ class ActionGroup extends Primitive implements Handles, UrlRoutable
     /**
      * How to resolve the action group for the given model name.
      *
-     * @var (\Closure(class-string):class-string<\Honed\Table\Table>)|null
+     * @var (\Closure(class-string):class-string<\Honed\Action\ActionGroup>)|null
      */
     protected static $actionGroupNameResolver;
 
@@ -136,23 +136,22 @@ class ActionGroup extends Primitive implements Handles, UrlRoutable
      * @template TClass of \Illuminate\Database\Eloquent\Model
      *
      * @param  class-string<TClass>  $modelName
-     * @param \Closure|null $before
-     * @return \Honed\Table\Table<TClass>
+     * @return \Honed\Action\ActionGroup<TClass>
      */
-    public static function tableForModel($modelName, $before = null)
+    public static function actionsForModel($modelName)
     {
-        $table = static::resolveTableName($modelName);
+        $table = static::resolveActionGroupName($modelName);
 
-        return $table::make($before);
+        return $table::make();
     }
 
     /**
      * Get the table name for the given model name.
      *
      * @param  class-string  $className
-     * @return class-string<\Honed\Table\Table>
+     * @return class-string<\Honed\Action\ActionGroup>
      */
-    public static function resolveTableName($className)
+    public static function resolveActionGroupName($className)
     {
         $resolver = static::$actionGroupNameResolver ?? function (string $className) {
             $appNamespace = static::appNamespace();
