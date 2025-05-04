@@ -6,7 +6,7 @@ use Honed\Table\Table;
 use Honed\Table\Columns\KeyColumn;
 use Honed\Table\EmptyState;
 use Honed\Table\Exceptions\KeyNotFoundException;
-use Honed\Table\Tests\Fixtures\Table as FixturesTable;
+use Honed\Table\Tests\Stubs\ProductTable;
 
 beforeEach(function () {
     $this->table = Table::make();
@@ -97,15 +97,15 @@ it('is url routable', function () {
         ->resolveRouteBinding($this->table->getRouteKey())
         ->toBeNull();
 
-    $table = FixturesTable::make();
+    $table = ProductTable::make();
 
     expect($table)
         ->resolveRouteBinding($table->getRouteKey())
-        ->toBeInstanceOf(FixturesTable::class);
+        ->toBeInstanceOf(ProductTable::class);
 
     expect($table)
         ->resolveChildRouteBinding(null, $table->getRouteKey())
-        ->toBeInstanceOf(FixturesTable::class);
+        ->toBeInstanceOf(ProductTable::class);
 });
 
 it('calls macro', function () {

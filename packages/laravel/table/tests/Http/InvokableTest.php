@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 use Honed\Action\Testing\InlineRequest;
-use Honed\Table\Tests\Fixtures\Table;
+use Honed\Table\Tests\Stubs\ProductTable;
 
 use function Pest\Laravel\post;
 
 beforeEach(function () {
     $this->product = product();
 
-    $this->table = Table::make();
+    $this->table = ProductTable::make();
 
     $this->request = InlineRequest::fake()
         ->for($this->table)
@@ -32,13 +32,13 @@ it('executes the action', function () {
     ]);
 });
 
-// it('does not execute non-existent action', function () {
-//     $data = $this->request
-//         ->record($this->product->id)
-//         ->name('create')
-//         ->getData();
+it('does not execute non-existent action', function () {
+    $data = $this->request
+        ->record($this->product->id)
+        ->name('create')
+        ->getData();
 
-//     $response = post(route('table.invoke', $this->table->getRouteKey()), $data);
+    $response = post(route('table.invoke', $this->table->getRouteKey()), $data);
 
-//     $response->assertNotFound();
-// });
+    $response->assertNotFound();
+});

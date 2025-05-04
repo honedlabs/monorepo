@@ -6,13 +6,12 @@ namespace Honed\Table\Tests\Stubs;
 
 use Honed\Table\Attributes\Table;
 use Honed\Table\Concerns\HasTable;
-use Honed\Table\Tests\Fixtures\Table as FixturesTable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Scout\Searchable;
 
-#[Table(FixturesTable::class)]
+#[Table(ProductTable::class)]
 class Product extends Model
 {
     use HasTable;
