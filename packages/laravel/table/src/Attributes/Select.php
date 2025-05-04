@@ -17,5 +17,5 @@ class Select
      */
     public function __construct(
         public string|array $select
-    ) { }
+    ) {}
 }

@@ -17,5 +17,5 @@ class Pagination
      */
     public function __construct(
         public int|array $pagination = 10
-    ) { }
+    ) {}
 }

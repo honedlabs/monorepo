@@ -17,7 +17,7 @@ class Product extends Model
 {
     use HasTable;
     use Searchable;
-    
+
     protected $guarded = [];
 
     protected $casts = [
