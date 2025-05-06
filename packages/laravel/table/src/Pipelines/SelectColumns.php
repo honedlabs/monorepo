@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Honed\Table\Columns\Column;
 use Honed\Table\Table;
 use Illuminate\Support\Arr;
 

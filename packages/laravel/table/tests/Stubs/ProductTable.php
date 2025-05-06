@@ -18,8 +18,6 @@ use Honed\Table\Columns\KeyColumn;
 use Honed\Table\Columns\NumberColumn;
 use Honed\Table\Columns\TextColumn;
 use Honed\Table\Table;
-use Honed\Table\Tests\Stubs\Product;
-use Honed\Table\Tests\Stubs\Status;
 
 class ProductTable extends Table
 {

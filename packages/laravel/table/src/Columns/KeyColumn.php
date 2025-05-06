@@ -19,6 +19,11 @@ class KeyColumn extends Column
     /**
      * {@inheritdoc}
      */
+    protected $qualify = true;
+
+    /**
+     * {@inheritdoc}
+     */
     public function defineType()
     {
         return 'key';

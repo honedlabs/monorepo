@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Category extends Model
 {
     use HasTable;
-    
+
     protected $guarded = [];
 
     public function products(): BelongsToMany

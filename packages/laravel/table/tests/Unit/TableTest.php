@@ -6,6 +6,7 @@ use Honed\Table\Table;
 use Honed\Table\Columns\KeyColumn;
 use Honed\Table\EmptyState;
 use Honed\Table\Exceptions\KeyNotFoundException;
+use Honed\Table\Tests\Stubs\Product;
 use Honed\Table\Tests\Stubs\ProductTable;
 
 beforeEach(function () {
@@ -106,6 +107,29 @@ it('is url routable', function () {
     expect($table)
         ->resolveChildRouteBinding(null, $table->getRouteKey())
         ->toBeInstanceOf(ProductTable::class);
+});
+
+it('resolves cache model', function () {
+    ProductTable::guessTableNamesUsing(function ($class) {
+        return $class.'Table';
+    });
+
+    expect(ProductTable::resolveTableName(Product::class))
+        ->toBe('Honed\\Table\\Tests\\Stubs\\ProductTable');
+
+    expect(ProductTable::tableForModel(Product::class))
+        ->toBeInstanceOf(ProductTable::class);
+
+    ProductTable::flushState();
+});
+
+it('uses namespace', function () {
+    ProductTable::useNamespace('');
+
+    expect(ProductTable::resolveTableName(Product::class))
+        ->toBe('Honed\\Table\\Tests\\Stubs\\ProductTable');
+
+    ProductTable::flushState();
 });
 
 it('calls macro', function () {

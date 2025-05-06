@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Illuminate\Console\Command;
 
-
 arch()->preset()->php();
 
 arch()->preset()->security();
@@ -20,7 +19,7 @@ arch('strict types')
 arch('attributes')
     ->expect('Honed\Table\Attributes')
     ->toBeClasses();
-    // ->toExtend(\Attribute::class);
+// ->toExtend(\Attribute::class);
 
 arch('concerns')
     ->expect('Honed\Table\Concerns')

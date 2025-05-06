@@ -44,7 +44,6 @@ class TableServiceProvider extends ServiceProvider
     {
         Router::macro('table', function () {
             /** @var \Illuminate\Routing\Router $this */
-
             $endpoint = \trim(
                 type(config('table.endpoint', '/table'))->asString(),
                 '/'
