@@ -16,6 +16,10 @@ arch('strict types')
     ->expect('Honed\Action')
     ->toUseStrictTypes();
 
+arch('attributes')
+    ->expect('Honed\Action\Attributes')
+    ->toExtend(\Attribute::class);
+
 arch('concerns')
     ->expect('Honed\Action\Concerns')
     ->toBeTraits();

@@ -86,7 +86,7 @@ class InlineActionMakeCommand extends GeneratorCommand
         return [
             'name' => [
                 'What should the '.strtolower($this->type).' be named?',
-                'E.g. View',
+                'E.g. ViewAction',
             ],
         ];
     }

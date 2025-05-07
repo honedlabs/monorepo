@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Action\Console\Commands\ActionGroupMakeCommand;
-use Honed\Action\Console\Commands\ActionMakeCommand;
-use Honed\Action\Console\Commands\ActionsMakeCommand;
-use Honed\Action\Http\Controllers\ActionController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
+use Honed\Action\Http\Controllers\ActionController;
+use Honed\Action\Console\Commands\ActionMakeCommand;
+use Honed\Action\Console\Commands\ActionsMakeCommand;
+use Honed\Table\Console\Commands\BulkActionMakeCommand;
+use Honed\Table\Console\Commands\PageActionMakeCommand;
+use Honed\Action\Console\Commands\ActionGroupMakeCommand;
+use Honed\Table\Console\Commands\InlineActionMakeCommand;
 
 class ActionServiceProvider extends ServiceProvider
 {
@@ -26,11 +29,16 @@ class ActionServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->registerRoutesMacro();
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 ActionMakeCommand::class,
                 ActionsMakeCommand::class,
                 ActionGroupMakeCommand::class,
+                InlineActionMakeCommand::class,
+                BulkActionMakeCommand::class,
+                PageActionMakeCommand::class,
             ]);
 
             $this->publishes([
@@ -41,8 +49,6 @@ class ActionServiceProvider extends ServiceProvider
                 __DIR__.'/../stubs' => base_path('stubs'),
             ], 'action-stubs');
         }
-
-        $this->registerRoutesMacro();
     }
 
     /**
