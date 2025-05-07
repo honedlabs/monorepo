@@ -12,7 +12,6 @@ class {{ class }} implements Actionable
      */
     public function handle({{ model }} ${{ modelVariable }}): \Inertia\Response
     {
-        // @phpstan-ignore-next-line
         return Inertia::render('{{ model }}/Edit', [
             '{{ modelVariable }}' => ${{ modelVariable }},
         ]);
