@@ -44,11 +44,11 @@ trait HasActionGroup
     }
 
     /**
-     * Get the table from the Table class attribute.
+     * Get the actions from the Actions class attribute.
      *
-     * @return class-string<\Honed\Table\Table>|null
+     * @return class-string<\Honed\Action\ActionGroup>|null
      */
-    protected static function getTableAttribute()
+    protected static function getActionsAttribute()
     {
         $attributes = (new \ReflectionClass(static::class))
             ->getAttributes(Actions::class);

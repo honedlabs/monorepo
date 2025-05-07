@@ -19,7 +19,6 @@ arch('strict types')
 arch('attributes')
     ->expect('Honed\Action\Attributes')
     ->toBeClasses();
-// ->toExtend(\Attribute::class);
 
 arch('concerns')
     ->expect('Honed\Action\Concerns')
