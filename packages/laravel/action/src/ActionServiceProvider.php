@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Illuminate\Routing\Router;
-use Illuminate\Support\ServiceProvider;
-use Honed\Action\Http\Controllers\ActionController;
+use Honed\Action\Console\Commands\ActionGroupMakeCommand;
 use Honed\Action\Console\Commands\ActionMakeCommand;
 use Honed\Action\Console\Commands\ActionsMakeCommand;
-use Honed\Table\Console\Commands\BulkActionMakeCommand;
-use Honed\Table\Console\Commands\PageActionMakeCommand;
-use Honed\Action\Console\Commands\ActionGroupMakeCommand;
-use Honed\Table\Console\Commands\InlineActionMakeCommand;
+use Honed\Action\Console\Commands\BulkActionMakeCommand;
+use Honed\Action\Console\Commands\InlineActionMakeCommand;
+use Honed\Action\Console\Commands\PageActionMakeCommand;
+use Honed\Action\Http\Controllers\ActionController;
+use Illuminate\Routing\Router;
+use Illuminate\Support\ServiceProvider;
 
 class ActionServiceProvider extends ServiceProvider
 {
