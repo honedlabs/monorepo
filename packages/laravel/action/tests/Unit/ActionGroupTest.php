@@ -66,6 +66,28 @@ it('resolves route binding', function () {
         ->toBeInstanceOf(ProductActions::class);
 });
 
+it('resolves action group', function () {
+    ActionGroup::useNamespace('');
+
+    ProductActions::guessActionGroupNamesUsing(function ($class) {
+        return $class.'Actions';
+    });
+
+    expect(ProductActions::resolveActionGroupName(Product::class))
+        ->toBe('Honed\\Action\\Tests\\Stubs\\ProductActions');
+
+    ProductActions::flushState();
+});
+
+it('uses namespace', function () {
+    ActionGroup::useNamespace('');
+
+    expect(ProductActions::resolveActionGroupName(Product::class))
+        ->toBe('Honed\\Action\\Tests\\Stubs\\ProductActions');
+
+    ProductActions::flushState();
+});
+
 it('has array representation', function () {
     expect($this->group->toArray())
         ->toBeArray()
