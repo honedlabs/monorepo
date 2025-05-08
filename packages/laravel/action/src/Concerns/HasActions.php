@@ -102,9 +102,19 @@ trait HasActions
      *
      * @return bool
      */
-    public function isntActionable()
+    public function isNotActionable()
     {
         return ! $this->isActionable();
+    }
+
+    /**
+     * Determine if the instance does not provide any actions.
+     *
+     * @return bool
+     */
+    public function isntActionable()
+    {
+        return $this->isNotActionable();
     }
 
     /**
