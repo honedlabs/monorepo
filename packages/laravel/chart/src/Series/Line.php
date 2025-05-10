@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Charts;
+namespace Honed\Chart\Series;
 
-use Honed\Chart\Concerns\HasAnimationDuration;
+use Honed\Chart\Series;
 use Honed\Chart\Concerns\HasColor;
-use Honed\Chart\Concerns\HasCurveType;
 use Honed\Chart\Concerns\HasLines;
+use Honed\Chart\Concerns\HasCurveType;
+use Honed\Chart\Concerns\ExcludesFromDomainCalculation;
+use Honed\Chart\Support\Constants;
 
-class Line
+class Line extends Series
 {
     use HasColor;
-    use HasAnimationDuration;
     use HasLines;
     use HasCurveType;
+    use ExcludesFromDomainCalculation;
 
     /**
      * Whether to interpolate missing data.
@@ -44,23 +46,26 @@ class Line
      */
     protected static $defaultFallback;
 
-    public function toArray()
+    /**
+     * Whether to highlight the line on hover.
+     * 
+     * @var bool|null
+     */
+    protected $highlight;
+
+    /**
+     * Whether to highlight the line on hover by default.
+     * 
+     * @var bool|null
+     */
+    protected static $defaultHighlight;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getType()
     {
-        return \array_filter([
-            'color' => $this->getColor(),
-            'curveType' => $this->getCurveType(),
-            'lineWidth' => $this->getLineWidth(),
-            // 'lineDashArray' => $this->getLineDashArray(),
-            'fallbackValue' => $this->getFallback(),
-            'highlightOnHover' => $this->isHighlightingOnHover(),
-            'cursor',
-            'interpolateMissingData' => $this->isInterpolating(),
-            'id',
-            'duration',
-    
-            'keys',
-            'data'
-        ], static fn ($value) => ! \is_null($value));
+        return Constants::LINE_CHART;
     }
 
     /**
@@ -129,5 +134,59 @@ class Line
     public static function useFallback($value)
     {
         static::$defaultFallback = $value;
+    }
+
+    /**
+     * Set whether to highlight the line on hover.
+     * 
+     * @param bool $highlight
+     * @return $this
+     */
+    public function highlight($highlight = true)
+    {
+        $this->highlight = $highlight;
+
+        return $this;
+    }
+
+    /**
+     * Get whether to highlight the line on hover.
+     * 
+     * @return bool
+     */
+    public function isHighlightingOnHover()
+    {
+        return $this->highlight ?? static::$defaultHighlight;
+    }
+
+    /**
+     * Set whether to highlight the line on hover by default.
+     * 
+     * @param bool $highlight
+     * @return void
+     */
+    public static function shouldHighlight($highlight = true)
+    {
+        static::$defaultHighlight = $highlight;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return \array_filter([
+            'keys' => $this->getKey(),
+            'color' => $this->getColor(),
+            'curveType' => $this->getCurveType(),
+            'lineWidth' => $this->getLineWidth(),
+            // 'lineDashArray' => $this->getDashSequence(),
+            'fallbackValue' => $this->getFallback(),
+            'highlight' => $this->isHighlightingOnHover(),
+            'interpolateMissingData' => $this->isInterpolating(),
+            'id' => $this->getId(),
+            'excludeFromDomainCalculation' => $this->isExcludedFromDomain(),
+            'duration' => $this->getAnimationDuration(),
+        ], static fn ($value) => ! \is_null($value));
     }
 }

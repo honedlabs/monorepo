@@ -21,11 +21,18 @@ trait HasLines
     protected static $defaultLineWidth = 2;
 
     /**
-     * The dashed line.
+     * The dashes of the line.
      * 
-     * @var bool|null
+     * @var array|null
      */
-    protected $dashed;
+    protected $dashes;
+
+    /**
+     * The default dashes of the line.
+     * 
+     * @var array
+     */
+    protected static $defaultDashes;
 
     /**
      * Set the lineWidth of the animation.

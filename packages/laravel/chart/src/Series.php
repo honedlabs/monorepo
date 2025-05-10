@@ -2,17 +2,96 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Charts;
+namespace Honed\Chart;
 
-class Series
+use Honed\Chart\Concerns\HasAnimationDuration;
+use Honed\Core\Primitive;
+
+abstract class Series extends Primitive
 {
+    use HasAnimationDuration;
+
     /**
-     * The key of 
+     * The key(s) of the data to be used for the series.
+     * 
+     * @var string|array<int, string>|null
      */
     protected $key;
-    
-    public function toArray()
+
+    /**
+     * The id to be used for rerieving the data record id.
+     * 
+     * @var string|null
+     */
+    protected $id;
+
+    /**
+     * Create a new series instance.
+     * 
+     * @return static
+     */
+    public static function make()
     {
-        
+        return resolve(static::class);
     }
+
+    /**
+     * Get the type of the series.
+     * 
+     * @return string
+     */
+    abstract public function getType();
+
+    /**
+     * Set the key(s) of the data to be used for the series.
+     * 
+     * @param string|array<int, string>|null $key
+     * @return $this
+     */
+    public function key($key)
+    {
+        $this->key = $key;
+
+        return $this;
+    }
+
+    /**
+     * Get the key(s) of the data to be used for the series.
+     * 
+     * @return string|array<int, string>
+     */
+    public function getKey()
+    {
+        $key = $this->key;
+
+        if (is_null($key)) {
+            MissingSeriesKeyException::throw();
+        }
+
+        return $key;
+    }
+
+    /**
+     * Set the id to be used for rerieving the data record id.
+     * 
+     * @param string|null $id
+     * @return $this
+     */
+    public function id($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id to be used for rerieving the data record id.
+     * 
+     * @return string|null
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    
 }
