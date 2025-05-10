@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Concerns;
 
+use Illuminate\Support\Str;
+
 trait HasColor
 {
     /**
      * The color to use.
      * 
-     * @var string|null
+     * @var string|array<int,string>|null
      */
     protected $color;
 
@@ -27,33 +29,48 @@ trait HasColor
     }
 
     /**
+     * Set the colour to use.
+     * 
+     * @param string $colour
+     * @return $this
+     */
+    public function colour($colour)
+    {
+        return $this->color($colour);
+    }
+
+    /**
      * Get the color to use.
      * 
      * @return string|null
      */
     public function getColor()
     {
-        return $this->color;
+        if (\is_array($this->color)) {
+            return \array_map($this->normalizeColor(...), $this->color);
+        }
+
+        return $this->normalizeColor($this->color);
     }
 
     /**
-     * Set the color to use.
-     * 
-     * @param string $color
-     * @return $this
-     */
-    public function colour($color)
-    {
-        return $this->color($color);
-    }
-
-    /**
-     * Get the color to use.
+     * Get the colour to use.
      * 
      * @return string|null
      */
     public function getColour()
     {
         return $this->getColor();
+    }
+
+    /**
+     * Normalize the colour to a valid format.
+     * 
+     * @param string $color
+     * @return string
+     */
+    protected function normalizeColor($color)
+    {
+        return Str::start($color, '#');
     }
 }

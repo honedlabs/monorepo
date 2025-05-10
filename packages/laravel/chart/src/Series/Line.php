@@ -84,7 +84,7 @@ class Line extends Series
     /**
      * Get whether to interpolate missing data.
      * 
-     * @return bool
+     * @return bool|null
      */
     public function isInterpolating()
     {
@@ -152,7 +152,7 @@ class Line extends Series
     /**
      * Get whether to highlight the line on hover.
      * 
-     * @return bool
+     * @return bool|null
      */
     public function isHighlightingOnHover()
     {
@@ -180,7 +180,7 @@ class Line extends Series
                 'color' => $this->getColor(),
                 'curveType' => $this->getCurveType(),
                 'lineWidth' => $this->getLineWidth(),
-                // 'lineDashArray' => $this->getDashSequence(),
+                'lineDashArray' => $this->getDashes(),
                 'fallbackValue' => $this->getFallback(),
                 'highlight' => $this->isHighlightingOnHover(),
                 'interpolateMissingData' => $this->isInterpolating(),

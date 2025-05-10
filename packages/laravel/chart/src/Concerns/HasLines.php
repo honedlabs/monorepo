@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Concerns;
 
+use Illuminate\Support\Arr;
+
 trait HasLines
 {
     /**
@@ -23,32 +25,42 @@ trait HasLines
     /**
      * The dashes of the line.
      * 
-     * @var array|null
+     * @var array<int,int>|null
      */
     protected $dashes;
 
     /**
      * The default dashes of the line.
      * 
-     * @var array
+     * @var array<int,int>|null
      */
     protected static $defaultDashes;
 
     /**
-     * Set the lineWidth of the animation.
+     * Set the line width thickness.
      * 
-     * @param int|null $lineWidth
+     * @param int|null $thickness
      * @return $this
      */
-    public function lineWidth($lineWidth)
+    public function lineWidth($thickness)
     {
-        $this->lineWidth = $lineWidth;
+        $this->lineWidth = $thickness;
 
         return $this;
     }
 
     /**
-     * Get the lineWidth of the animation.
+     * Set the line width thickness.
+     * 
+     * @param int $thickness
+     * @return $this
+     */
+    public function thickness($thickness)
+    {
+        return $this->lineWidth($thickness);
+    }
+    /**
+     * Get the line width thickness.
      * 
      * @return int|null
      */
@@ -58,13 +70,47 @@ trait HasLines
     }
 
     /**
-     * Set the default lineWidth of the animation.
+     * Set the default line width thickness.
      * 
-     * @param int $lineWidth
+     * @param int $thickness
      * @return void
      */
-    public static function useLineWidth($lineWidth)
+    public static function useLineWidth($thickness)
     {
-        static::$defaultLineWidth = $lineWidth;
+        static::$defaultLineWidth = $thickness;
+    }
+
+    /**
+     * Set the dashed line configuration.
+     * 
+     * @param int|array<int,int> $dashes
+     * @return $this
+     */
+    public function dashes($dashes)
+    {
+        $this->dashes = Arr::wrap($dashes);
+
+        return $this;
+    }
+
+    /**
+     * Get the dashed line configuration.
+     * 
+     * @return array<int,int>|null
+     */
+    public function getDashes()
+    {
+        return $this->dashes ?? static::$defaultDashes;
+    }
+
+    /**
+     * Set the default dashed line configuration.
+     * 
+     * @param int|array<int,int> $dashes
+     * @return void
+     */
+    public static function useDashes($dashes)
+    {
+        static::$defaultDashes = Arr::wrap($dashes);
     }
 }

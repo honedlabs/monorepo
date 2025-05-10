@@ -14,9 +14,9 @@ class Name extends Chart
      * 
      * @return string
      */
-    public function defineName()
+    public function defineLabel()
     {
-
+        return 'chart';
     }
 
     /**
