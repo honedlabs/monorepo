@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Honed\Action\ActionGroup;
 use Honed\Action\PageAction;
 use Honed\Action\Testing\RequestFactory;
-use Honed\Action\Tests\Fixtures\ProductActions;
+use Honed\Action\Tests\Stubs\ProductActions;
 use Honed\Action\Tests\Stubs\Product;
 use Illuminate\Http\RedirectResponse;
 
@@ -75,6 +75,9 @@ it('resolves action group', function () {
 
     expect(ProductActions::resolveActionGroupName(Product::class))
         ->toBe('Honed\\Action\\Tests\\Stubs\\ProductActions');
+
+    expect(ProductActions::actionGroupForModel(Product::class))
+        ->toBeInstanceOf(ProductActions::class);
 
     ProductActions::flushState();
 });

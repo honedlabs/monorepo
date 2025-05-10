@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Action\Concerns\HasActionGroup;
-use Honed\Action\Tests\Fixtures\ProductActions;
+use Honed\Action\Tests\Stubs\ProductActions;
 use Honed\Action\Tests\Stubs\Product;
 use Illuminate\Database\Eloquent\Model;
 
