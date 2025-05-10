@@ -175,18 +175,17 @@ class Line extends Series
      */
     public function toArray()
     {
-        return \array_filter([
-            'keys' => $this->getKey(),
-            'color' => $this->getColor(),
-            'curveType' => $this->getCurveType(),
-            'lineWidth' => $this->getLineWidth(),
-            // 'lineDashArray' => $this->getDashSequence(),
-            'fallbackValue' => $this->getFallback(),
-            'highlight' => $this->isHighlightingOnHover(),
-            'interpolateMissingData' => $this->isInterpolating(),
-            'id' => $this->getId(),
-            'excludeFromDomainCalculation' => $this->isExcludedFromDomain(),
-            'duration' => $this->getAnimationDuration(),
-        ], static fn ($value) => ! \is_null($value));
+        return $this->filterUndefined(
+            \array_merge(parent::toArray(), [
+                'color' => $this->getColor(),
+                'curveType' => $this->getCurveType(),
+                'lineWidth' => $this->getLineWidth(),
+                // 'lineDashArray' => $this->getDashSequence(),
+                'fallbackValue' => $this->getFallback(),
+                'highlight' => $this->isHighlightingOnHover(),
+                'interpolateMissingData' => $this->isInterpolating(),
+                'excludeFromDomainCalculation' => $this->isExcludedFromDomain(),
+            ])
+        );
     }
 }

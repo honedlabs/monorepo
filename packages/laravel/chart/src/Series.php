@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Core\Primitive;
+use Honed\Chart\Concerns\HasAnimationDuration;
+use Honed\Chart\Exceptions\MissingSeriesKeyException;
 
 abstract class Series extends Primitive
 {
@@ -59,6 +60,8 @@ abstract class Series extends Primitive
      * Get the key(s) of the data to be used for the series.
      * 
      * @return string|array<int, string>
+     * 
+     * @throws \Honed\Chart\Exceptions\MissingSeriesKeyException
      */
     public function getKey()
     {
@@ -93,5 +96,30 @@ abstract class Series extends Primitive
     {
         return $this->id;
     }
-    
+
+    /**
+     * Filter any potential undefined values from the array.
+     * 
+     * @param array<string, mixed> $array
+     * @return array<string, mixed>
+     */
+    public function filterUndefined($array)
+    {
+        return \array_filter(
+            $array,
+            static fn ($value) => ! \is_null($value)
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return [
+            'keys' => $this->getKey(),
+            'id' => $this->getId(),
+            'duration' => $this->getAnimationDuration(),
+        ];
+    }
 }
