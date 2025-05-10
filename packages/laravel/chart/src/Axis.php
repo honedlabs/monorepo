@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
+use Honed\Chart\Concerns\FiltersUndefined;
 use Honed\Core\Primitive;
 use Honed\Chart\Concerns\HasColor;
 use Honed\Chart\Exceptions\InvalidAxisException;
@@ -11,6 +12,7 @@ use Honed\Chart\Exceptions\InvalidAxisException;
 class Axis extends Primitive
 {
     use HasColor;
+    use FiltersUndefined;
 
     /**
      * The display label for this axis.
@@ -150,7 +152,7 @@ class Axis extends Primitive
 
     public function toArray()
     {
-        return [
+        return $this->filterUndefined([
             'type' => $this->getType(),
             'label' => $this->getLabel(),
             'position' => $this->getPosition(),
@@ -174,9 +176,7 @@ class Axis extends Primitive
             'tickValues' => null,
             'tickTextHideOverlapping' => null,
             'duration' => null,
-
-
-        ];
+        ]);
     }
     
 }

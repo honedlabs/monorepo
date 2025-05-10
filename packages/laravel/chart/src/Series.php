@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
+use Honed\Chart\Concerns\FiltersUndefined;
 use Honed\Core\Primitive;
 use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Chart\Exceptions\MissingSeriesKeyException;
@@ -11,6 +12,7 @@ use Honed\Chart\Exceptions\MissingSeriesKeyException;
 abstract class Series extends Primitive
 {
     use HasAnimationDuration;
+    use FiltersUndefined;
 
     /**
      * The key(s) of the data to be used for the series.
@@ -95,20 +97,6 @@ abstract class Series extends Primitive
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Filter any potential undefined values from the array.
-     * 
-     * @param array<string, mixed> $array
-     * @return array<string, mixed>
-     */
-    public function filterUndefined($array)
-    {
-        return \array_filter(
-            $array,
-            static fn ($value) => ! \is_null($value)
-        );
     }
 
     /**

@@ -7,7 +7,11 @@ namespace Honed\Chart;
 use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Core\Primitive;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
+/**
+ * @template TData of mixed = mixed
+ */
 class Chart extends Primitive
 {
     use HasAnimationDuration;
@@ -22,14 +26,14 @@ class Chart extends Primitive
     /**
      * The data of the chart.
      * 
-     * @var iterable<int, mixed>
+     * @var iterable<int, TData>
      */
     protected $data = [];
 
     /**
      * Create a new chart instance.
      * 
-     * @param iterable<int, mixed> $data
+     * @param iterable<int, TData> $data
      * @return static
      */
     public static function make($data = [])
@@ -41,7 +45,7 @@ class Chart extends Primitive
     /**
      * Set the data of the chart.
      * 
-     * @param iterable<int, mixed> $data
+     * @param iterable<int, TData> $data
      * @return $this
      */
     public function data($data)
@@ -54,7 +58,7 @@ class Chart extends Primitive
     /**
      * Define the data of the chart.
      * 
-     * @return iterable<int, mixed>
+     * @return iterable<int, TData>
      */
     public function defineData()
     {
@@ -64,11 +68,21 @@ class Chart extends Primitive
     /**
      * Get the data of the chart.
      * 
-     * @return iterable<int, mixed>
+     * @return iterable<int, TData>
      */
     public function getData()
     {
-        return $this->data ??= $this->defineData();
+        $this->data ??= $this->defineData();
+
+        if (\is_null($this->data)) {
+            MissingDataException::throw();
+        }
+
+        if ($this->data instanceof Collection) {
+            $this->data = $this->data->all();
+        }
+
+        return $this->data;
     }
 
     /**
@@ -116,7 +130,43 @@ class Chart extends Primitive
 
     // Legend
 
+    public function legend()
+    {
+        $this->legend = true;
+
+        return $this;
+    }
+
+    public function defineLegend()
+    {
+        return true;
+    }
+
+    public function getLegend()
+    {
+        return $this->legend;
+    }
+
     // Tooltip
+
+    public function tooltip()
+    {
+        $this->tooltip = true;
+
+        return $this;
+    }
+
+    public function defineTooltip()
+    {
+        return true;
+    }
+
+    public function getTooltip()
+    {
+        
+    }
+    
+    
 
     /**
      * {@inheritDoc}
