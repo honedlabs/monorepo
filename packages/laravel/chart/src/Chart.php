@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
+use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Core\Primitive;
 use Illuminate\Support\Arr;
 
 class Chart extends Primitive
 {
+    use HasAnimationDuration;
+
     /**
      * The series of the chart.
      * 
@@ -49,13 +52,23 @@ class Chart extends Primitive
     }
 
     /**
+     * Define the data of the chart.
+     * 
+     * @return iterable<int, mixed>
+     */
+    public function defineData()
+    {
+        return [];
+    }
+
+    /**
      * Get the data of the chart.
      * 
      * @return iterable<int, mixed>
      */
     public function getData()
     {
-        return $this->data;
+        return $this->data ??= $this->defineData();
     }
 
     /**
@@ -74,13 +87,23 @@ class Chart extends Primitive
     }
 
     /**
+     * Define the series of the chart.
+     * 
+     * @return array<int, \Honed\Chart\Series>
+     */
+    public function defineSeries()
+    {
+        return [];
+    }
+
+    /**
      * Get the series of the chart.
      * 
      * @return array<int, \Honed\Chart\Series>
      */
     public function getSeries()
     {
-        return $this->series;
+        return \array_merge($this->defineSeries(), $this->series);
     }
 
     /**
@@ -89,7 +112,10 @@ class Chart extends Primitive
     public function toArray()
     {
         return [
-            'data'
+            'data' => $this->getFilteredData(),
+            'series' => $this->seriesToArray(),
+            'tooltip' => $this->getTooltip(),
+            'duration' => $this->getAnimationDuration(),
         ];
     }
 }

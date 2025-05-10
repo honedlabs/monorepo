@@ -72,12 +72,7 @@ class ChartMakeCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            [
-                'force', 
-                'f', 
-                InputOption::VALUE_NONE, 
-                'Create the class even if the '.\strtolower($this->type).' already exists'
-            ],
+            ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the '.strtolower($this->type).' already exists'],
         ];
     }
 
@@ -91,7 +86,7 @@ class ChartMakeCommand extends GeneratorCommand
         return [
             'name' => [
                 'What should the '.strtolower($this->type).' be named?',
-                'E.g. OrderChart',
+                'E.g. UserChart',
             ],
         ];
     }

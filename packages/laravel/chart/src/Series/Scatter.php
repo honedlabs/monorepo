@@ -2,13 +2,43 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Charts;
+namespace Honed\Chart\Series;
 
-class Scatter
+use Honed\Chart\Concerns\ExcludesFromDomainCalculation;
+use Honed\Chart\Concerns\HasColor;
+use Honed\Chart\Series;
+use Honed\Chart\Support\Constants;
+
+class Scatter extends Series
 {
+    use HasColor;
+    use ExcludesFromDomainCalculation;
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getType(): string
+    {
+        return Constants::SCATTER_CHART;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function toArray()
     {
+        return $this->filterUndefined(
+            \array_merge(parent::toArray(), [
+                'color' => $this->getColor(),
+                'size' => $this->getSize(),
+                // 'sizeScale',
+                // 'sizeRange',
+                'shape' => $this->getShape(),
+                'label',
+                'excludeFromDomainCalculation' => $this->isExcludedFromDomainCalculation(),
+
+            ])
+        );
         return [
             'color',
             'size',
