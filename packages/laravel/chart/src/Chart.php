@@ -72,6 +72,14 @@ class Chart extends Primitive
     }
 
     /**
+     * Set the dependent data of the chart.
+     */
+    public function dependent()
+    {
+        
+    }
+
+    /**
      * Set the series of the chart.
      * 
      * @param \Honed\Chart\Series|iterable<int, \Honed\Chart\Series> ...$series

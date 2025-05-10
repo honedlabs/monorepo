@@ -14,8 +14,14 @@ class Area extends Series
 {
     use HasColor;
     use HasCurveType;
-    // use HasOpacity;
     use ExcludesFromDomainCalculation;
+
+    /**
+     * The opacity of the area.
+     * 
+     * @var int
+     */
+    protected $opacity = 100;
 
     /**
      * Whether to always show an area if the pixel height is less than 1.
@@ -38,6 +44,29 @@ class Area extends Series
     {
         return Constants::AREA_CHART;
     }
+
+    /**
+     * Set the opacity of the area.
+     * 
+     * @param int $opacity
+     * @return $this
+     */
+    public function opacity($opacity)
+    {
+        $this->opacity = $opacity;
+
+        return $this;
+    }
+
+    /**
+     * Get the opacity of the area.
+     * 
+     * @return float
+     */
+    public function getOpacity()
+    {
+        return $this->opacity / 100;
+    }    
 
     /**
      * Set whether to always show an area if the pixel height is less than 1.
@@ -80,7 +109,7 @@ class Area extends Series
                 'color' => $this->getColor(),
                 'curveType' => $this->getCurveType(),
                 // 'baseline' => $this->getBaseline(),
-                // 'opacity' => $this->getOpacity(),
+                'opacity' => $this->getOpacity(),
                 'minHeight1Px' => $this->isFlooring(),
                 'excludeFromDomainCalculation' => $this->isExcludedFromDomain(),
             ])

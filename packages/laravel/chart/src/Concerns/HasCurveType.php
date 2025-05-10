@@ -25,7 +25,7 @@ trait HasCurveType
     /**
      * Set the curve type.
      * 
-     * @param \Honed\Chart\Enums\CurveType|string $curveType
+     * @param string|\Honed\Chart\Enums\CurveType $curveType
      * @return $this
      */
     public function curveType($curveType)

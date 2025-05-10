@@ -36,7 +36,7 @@ trait ExcludesFromDomainCalculation
     /**
      * Get whether to exclude the series from the domain calculation.
      * 
-     * @return bool
+     * @return bool|null
      */
     public function isExcludedFromDomain()
     {
