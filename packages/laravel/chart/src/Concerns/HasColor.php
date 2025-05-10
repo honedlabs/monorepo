@@ -46,6 +46,10 @@ trait HasColor
      */
     public function getColor()
     {
+        if (is_null($this->color)) {
+            return null;
+        }
+
         if (\is_array($this->color)) {
             return \array_map($this->normalizeColor(...), $this->color);
         }

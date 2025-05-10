@@ -89,7 +89,7 @@ trait HasStroke
      * @param string $colour
      * @return $this
      */
-    public function colour($colour)
+    public function strokeColour($colour)
     {
         $this->strokeColor = $colour;
 
@@ -117,7 +117,7 @@ trait HasStroke
      * 
      * @return string|null
      */
-    public function getColour()
+    public function getStrokeColour()
     {
         return $this->getStrokeColor();
     }
@@ -142,6 +142,17 @@ trait HasStroke
     public static function useStrokeColour($colour)
     {
         static::useStrokeColor($colour);
+    }
+
+    /**
+     * Flush the state of the stroke.
+     * 
+     * @return void
+     */
+    public static function flushStrokeState()
+    {
+        static::$defaultStroke = null;
+        static::$defaultStrokeColor = null;
     }
 
     /**

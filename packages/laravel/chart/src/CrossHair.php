@@ -69,6 +69,16 @@ class CrossHair implements Arrayable, JsonSerializable
     protected static $defaultSnap;
 
     /**
+     * Create a new crosshair instance.
+     * 
+     * @return static
+     */
+    public static function make()
+    {
+        return resolve(static::class);
+    }
+
+    /**
      * Set whether to hide the crosshair when far from the pointer.
      * 
      * @param bool $hide
@@ -88,7 +98,7 @@ class CrossHair implements Arrayable, JsonSerializable
      */
     public function hides()
     {
-        return $this->hide;
+        return $this->hide ?? static::$defaultHide;
     }
 
     /**
@@ -122,7 +132,7 @@ class CrossHair implements Arrayable, JsonSerializable
      */
     public function getHideDistance()
     {
-        return $this->hideAt;
+        return $this->hideAt ?? static::$defaultHideAt;
     }
 
     /**
@@ -157,18 +167,32 @@ class CrossHair implements Arrayable, JsonSerializable
      */
     public function snaps()
     {
-        return $this->snap;
+        return $this->snap ?? static::$defaultSnap;
     }
 
     /**
      * Set whether to snap the crosshair to the nearest value by default.
      * 
      * @param bool $snap
-     * @return $this
+     * @return void
      */
     public static function shouldSnap($snap = true)
     {
         static::$defaultSnap = $snap;
+    }
+
+    /**
+     * Flush the state of the crosshair.
+     * 
+     * @return void
+     */
+    public static function flushState()
+    {
+        static::$defaultHide = null;
+        static::$defaultHideAt = null;
+        static::$defaultSnap = null;
+        static::flushStrokeState();
+        static::flushAnimationDurationState();
     }
 
     /**

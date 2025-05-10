@@ -16,9 +16,9 @@ trait HasAnimationDuration
     /**
      * The default duration of the animation.
      * 
-     * @var int
+     * @var int|null
      */
-    protected static $defaultDuration = 600;
+    protected static $defaultDuration;
 
     /**
      * Set the duration of the animation.
@@ -55,11 +55,21 @@ trait HasAnimationDuration
     }
 
     /**
+     * Flush the state of the animation duration.
+     * 
+     * @return void
+     */
+    public static function flushAnimationDurationState()
+    {
+        static::$defaultDuration = null;
+    }
+
+    /**
      * Get the duration of the animation as an array.
      * 
      * @return array<string, mixed>
      */
-    public function durationToArray()
+    public function animationDurationToArray()
     {
         return [
             'duration' => $this->getDuration()
