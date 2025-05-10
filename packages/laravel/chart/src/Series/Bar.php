@@ -6,6 +6,7 @@ namespace Honed\Chart\Charts;
 
 use Honed\Chart\Concerns\ExcludesFromDomainCalculation;
 use Honed\Chart\Concerns\HasColor;
+use Honed\Chart\Concerns\HasOrientation;
 use Honed\Chart\Series;
 use Honed\Chart\Enums\Orientation;
 use Honed\Chart\Support\Constants;
@@ -14,6 +15,7 @@ class Bar extends Series
 {
     use HasColor;
     use ExcludesFromDomainCalculation;
+    use HasOrientation;
 
     /**
      * The type of the bar series.
@@ -21,20 +23,6 @@ class Bar extends Series
      * @var 'grouped'|'stacked'
      */
     protected $type = 'grouped';
-
-    /**
-     * The orientation of the bar series.
-     * 
-     * @var string|null
-     */
-    protected $orientation;
-
-    /**
-     * The default orientation of the bar series.
-     * 
-     * @var string|null
-     */
-    protected static $defaultOrientation;
 
     /**
      * Whether to round the corners of the bar segement.
@@ -114,44 +102,6 @@ class Bar extends Series
     public function getType()
     {
         return Constants::BAR_CHART;
-    }
-
-    /**
-     * Set the orientation of the bar.
-     * 
-     * @param string|\Honed\Chart\Enums\Orientation $orientation
-     * @return $this
-     */
-    public function orientation($orientation)
-    {
-        if (! $orientation instanceof Orientation) {
-            $orientation = Orientation::tryFrom($orientation);
-        }
-
-        $this->orientation = $orientation?->value;
-
-        return $this;
-    }
-
-    /**
-     * Get the orientation of the bar.
-     * 
-     * @return string|null
-     */
-    public function getOrientation()
-    {
-        return $this->orientation ?? static::$defaultOrientation;
-    }
-
-    /**
-     * Set the default orientation of the bar.
-     * 
-     * @param string $orientation
-     * @return void
-     */
-    public static function useOrientation($orientation)
-    {
-        static::$defaultOrientation = $orientation;
     }
 
     /**

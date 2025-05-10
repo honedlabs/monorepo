@@ -76,7 +76,7 @@ class Chart extends Primitive
      */
     public function dependent()
     {
-        
+
     }
 
     /**
@@ -113,6 +113,10 @@ class Chart extends Primitive
     {
         return \array_merge($this->defineSeries(), $this->series);
     }
+
+    // Legend
+
+    // Tooltip
 
     /**
      * {@inheritDoc}

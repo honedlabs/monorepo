@@ -6,5 +6,8 @@ namespace Honed\Chart\Charts;
 
 class Donut extends Pie
 {
-    
+    /**
+     * {@inheritdoc}
+     */
+    protected $arcWidth = 50;
 }
