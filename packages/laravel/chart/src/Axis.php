@@ -27,13 +27,46 @@ class Axis extends Primitive
     protected $type;
 
     /**
+     * Whether to show the grid lines.
      * 
+     * @var bool|null
      */
     protected $grid;
 
-    protected $line;
+    /**
+     * Whether to show the grid lines by default.
+     * 
+     * @var bool|null
+     */
+    protected static $defaultGrid;
 
+    /**
+     * Whether to show the domain lines.
+     * 
+     * @var bool|null
+     */
+    protected $domain;
+
+    /**
+     * Whether to show the domain lines by default.
+     * 
+     * @var bool|null
+     */
+    protected static $defaultDomain;
+
+    /**
+     * Whether to show the tick lines.
+     * 
+     * @var bool|null
+     */
     protected $ticks;
+
+    /**
+     * Whether to show the tick lines by default.
+     * 
+     * @var bool|null
+     */
+    protected static $defaultTicks;
 
     public static function make()
     {

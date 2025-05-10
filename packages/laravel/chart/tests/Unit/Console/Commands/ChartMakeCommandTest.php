@@ -10,16 +10,16 @@ beforeEach(function () {
 
 it('makes charts', function () {
     $this->artisan('make:chart', [
-        'name' => 'OrderChart',
+        'name' => 'UserChart',
     ])->assertSuccessful();
 
-    $this->assertFileExists(app_path('Charts/OrderChart.php'));
+    $this->assertFileExists(app_path('Charts/UserChart.php'));
 });
 
 it('prompts for a chart name', function () {
     $this->artisan('make:chart')
-        ->expectsQuestion('What should the chart be named?', 'OrderChart')
+        ->expectsQuestion('What should the chart be named?', 'UserChart')
         ->assertSuccessful();
 
-    $this->assertFileExists(app_path('Charts/OrderChart.php'));
+    $this->assertFileExists(app_path('Charts/UserChart.php'));
 });
