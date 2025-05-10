@@ -26,6 +26,35 @@ class CrossHair implements Arrayable, JsonSerializable
     use ExcludesFromDomainCalculation;
 
     /**
+     * Whether to hide the crosshair when far from the pointer.
+     * 
+     * @var bool|null
+     */
+    protected $hide;
+
+    /**
+     * Whether to hide the crosshair when far from the pointer by default.
+     * 
+     * @var bool|null
+     */
+    protected static $defaultHide;
+
+    /**
+     * The distance from the pointer at which the crosshair is hidden.
+     * 
+     * @var int|null
+     */
+    protected $hideAt;
+
+    /**
+     * The distance from the pointer at which the crosshair is hidden by 
+     * default.
+     * 
+     * @var int|null
+     */
+    protected static $defaultHideAt;
+
+    /**
      * Whether to snap the crosshair to the nearest value.
      * 
      * @var bool|null
@@ -38,6 +67,75 @@ class CrossHair implements Arrayable, JsonSerializable
      * @var bool|null
      */
     protected static $defaultSnap;
+
+    /**
+     * Set whether to hide the crosshair when far from the pointer.
+     * 
+     * @param bool $hide
+     * @return $this
+     */
+    public function hide($hide = true)
+    {
+        $this->hide = $hide;
+
+        return $this;
+    }
+
+    /**
+     * Get whether to hide the crosshair when far from the pointer.
+     * 
+     * @return bool|null
+     */
+    public function hides()
+    {
+        return $this->hide;
+    }
+
+    /**
+     * Set whether to hide the crosshair when far from the pointer by default.
+     * 
+     * @param bool $hide
+     * @return void
+     */
+    public static function shouldHide($hide = true)
+    {
+        static::$defaultHide = $hide;
+    }
+
+    /**
+     * Set the distance from the pointer at which the crosshair is hidden.
+     * 
+     * @param int $pixels
+     * @return $this
+     */
+    public function hideAt($pixels)
+    {
+        $this->hideAt = $pixels;
+
+        return $this;
+    }
+
+    /**
+     * Get the distance from the pointer at which the crosshair is hidden.
+     * 
+     * @return int|null
+     */
+    public function getHideDistance()
+    {
+        return $this->hideAt;
+    }
+
+    /**
+     * Set the distance from the pointer at which the crosshair is hidden by 
+     * default.
+     * 
+     * @param int $pixels
+     * @return void
+     */
+    public static function useHideDistance($pixels)
+    {
+        static::$defaultHideAt = $pixels;
+    }
 
     /**
      * Set whether to snap the crosshair to the nearest value.
@@ -89,8 +187,8 @@ class CrossHair implements Arrayable, JsonSerializable
         return $this->filterUndefined([
             ...$this->colorToArray(),
             ...$this->strokeToArray(),
-            'hideWhenFarFromPointer' => null,
-            'hideWhenFarFromPointerDistance' => null,
+            'hideWhenFarFromPointer' => $this->hides(),
+            'hideWhenFarFromPointerDistance' => $this->getHideDistance(),
             'snapToData' => $this->snaps(),
             ...$this->animationDurationToArray(),
             ...$this->excludeFromDomainToArray(),
