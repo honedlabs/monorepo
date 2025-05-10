@@ -40,9 +40,6 @@ class Axis extends Primitive
         return new self;
     }
 
-
-
-
     /**
      * Set the display label for this axis.
      * 
@@ -74,7 +71,7 @@ class Axis extends Primitive
      * 
      * @throws \Honed\Chart\Exceptions\InvalidAxisException
      */
-    public function for($type)
+    public function type($type)
     {
         if (! in_array($type, ['x', 'y'])) {
             InvalidAxisException::throw($type);
@@ -84,6 +81,20 @@ class Axis extends Primitive
 
         return $this;
     }
+
+    /**
+     * Set which axis this is for.
+     * 
+     * @param 'x'|'y' $type
+     * @return $this
+     * 
+     * @throws \Honed\Chart\Exceptions\InvalidAxisException
+     */
+    public function for($type)
+    {
+        return $this->type($type);
+    }
+
     /**
      * Set the axis to be for the X axis.
      * 

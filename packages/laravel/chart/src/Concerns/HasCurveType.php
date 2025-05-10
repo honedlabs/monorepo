@@ -34,7 +34,7 @@ trait HasCurveType
             $curveType = CurveType::tryFrom($curveType);
         }
 
-        $this->curveType = $curveType->value;
+        $this->curveType = $curveType?->value;
 
         return $this;
     }
