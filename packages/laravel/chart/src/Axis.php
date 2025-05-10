@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
+use Honed\Chart\Concerns\ExcludesFromDomainCalculation;
 use Honed\Chart\Concerns\FiltersUndefined;
+use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Core\Primitive;
 use Honed\Chart\Concerns\HasColor;
 use Honed\Chart\Exceptions\InvalidAxisException;
@@ -13,13 +15,8 @@ class Axis extends Primitive
 {
     use HasColor;
     use FiltersUndefined;
-
-    /**
-     * The display label for this axis.
-     * 
-     * @var string|null
-     */
-    protected $label;
+    use ExcludesFromDomainCalculation;
+    use HasAnimationDuration;
 
     /**
      * The type of the axis.
@@ -27,6 +24,20 @@ class Axis extends Primitive
      * @var 'x'|'y'
      */
     protected $type;
+
+    /**
+     * Whether to extend the axis domain line to be full width or height.
+     * 
+     * @var bool|null
+     */
+    protected $fullSize;
+
+    /**
+     * The display label for this axis.
+     * 
+     * @var string|null
+     */
+    protected $label;
 
     /**
      * Whether to show the grid lines.
@@ -70,32 +81,16 @@ class Axis extends Primitive
      */
     protected static $defaultTicks;
 
-    public static function make()
-    {
-        return new self;
-    }
-
     /**
-     * Set the display label for this axis.
+     * Create a new axis.
      * 
      * @param string|null $label
-     * @return $this
+     * @return static
      */
-    public function label($label)
+    public static function make($label = null)
     {
-        $this->label = $label;
-
-        return $this;
-    }
-
-    /**
-     * Get the display label for this axis.
-     * 
-     * @return string|null
-     */
-    public function getLabel()
-    {
-        return $this->label;
+        return resolve(static::class)
+            ->label($label);
     }
 
     /**
@@ -154,8 +149,15 @@ class Axis extends Primitive
     {
         return $this->filterUndefined([
             'type' => $this->getType(),
-            'label' => $this->getLabel(),
             'position' => $this->getPosition(),
+            ...$this->getLabel()?->toArray(),
+            'fullSize' => $this->isFullSize(),
+            'gridLine' => $this->isGrid(),
+            'domainLine' => $this->isDomain(),
+            ...$this->getTick()?->toArray(),
+            ...$this->excludeFromDomainToArray(),
+            ...$this->animationDurationToArray(),
+            
             'labelFontSize' => null,
             'labelColor' => null,
             'labelMargin' => null,

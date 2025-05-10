@@ -31,6 +31,11 @@ class Chart extends Primitive
     protected $data = [];
 
     /**
+     * The colors to use for the chart series.
+     */
+    protected $colors;
+
+    /**
      * Create a new chart instance.
      * 
      * @param iterable<int, TData> $data
