@@ -25,8 +25,15 @@ class Line
             'lineDashArray',
             'fallbackValue',
             'highlightOnHover',
+            'cursor',
             'interpolateMissingData',
+            'id',
+            'xScale',
+            'yScale',
             'duration',
+            
+            'keys'
+            'data'
         ];
     }
 }

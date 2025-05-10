@@ -12,9 +12,18 @@ class Area
         return [
             'color',
             'curveType',
+            'baseline',
             'opacity',
+            'cursor',
             'minHeight1Px',
+            'id',
+            'xScale',
+            'yScale',
+            'excludeFromDomainCalculation',
             'duration',
+
+            'keys',
+            'data'
         ];
     }
 }

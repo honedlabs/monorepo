@@ -10,14 +10,21 @@ class Bar
     {
         return [
             'color',
-            'roundedCorners',
             'groupWidth',
             'groupMaxWidth',
+            'dataStep',
             'groupPadding',
             'barPadding',
             'barMinHeight',
-            'dataStep',
-            'orientation'
+            'roundedCorners',
+            'orientation',
+            'id',
+            'xScale',
+            'yScale',
+            'duration',
+
+            'keys',
+            'data',
 
             /**
              * StackedBar

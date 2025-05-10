@@ -10,20 +10,26 @@ class Donut
     {
         return [
             'value',
-            'centralLabel',
-            'centralSubLabel',
+            'id',
             'angleRange',
+            'padAngle',
+            'cornerRadiys',
+            'color',
             'radius',
             'arcWidth',
-            'color',
-            'cornerRadius',
-            'padAngle',
+            'centralLabel',
+            'centralSubLabel',
+            'centralSubLabelWrap',
             'showEmptySegments',
-            'showBackground',
-            'duration',
             'emptySegmentAngle',
+            'showBackground',
             'backgroundAngleRange',
-            
+            'centralLabelOffsetX',
+            'centralLabelOffsetY',
+            'duration',
+
+            'keys',
+            'data'
         ];
     }
 }
