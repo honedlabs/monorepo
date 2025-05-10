@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Concerns\ExcludesFromDomainCalculation;
-use Honed\Chart\Concerns\FiltersUndefined;
-use Honed\Chart\Concerns\HasAnimationDuration;
-use Honed\Chart\Concerns\HasColor;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Traits\Macroable;
 use JsonSerializable;
+use Honed\Chart\Concerns\HasColor;
+use Honed\Chart\Concerns\HasStroke;
+use Illuminate\Support\Traits\Macroable;
+use Honed\Chart\Concerns\FiltersUndefined;
+use Illuminate\Contracts\Support\Arrayable;
+use Honed\Chart\Concerns\HasAnimationDuration;
+use Honed\Chart\Concerns\ExcludesFromDomainCalculation;
 
 /**
  * @implements \Illuminate\Contracts\Support\Arrayable<string, mixed>

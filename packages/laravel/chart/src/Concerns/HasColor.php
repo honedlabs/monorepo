@@ -73,4 +73,16 @@ trait HasColor
     {
         return Str::start($color, '#');
     }
+
+    /**
+     * Get the color as an array.
+     * 
+     * @return array<string, mixed>
+     */
+    public function colorToArray()
+    {
+        return [
+            'color' => $this->getColor()
+        ];
+    }
 }

@@ -177,14 +177,13 @@ class Line extends Series
     {
         return $this->filterUndefined(
             \array_merge(parent::toArray(), [
-                'color' => $this->getColor(),
-                'curveType' => $this->getCurveType(),
-                'lineWidth' => $this->getLineWidth(),
-                'lineDashArray' => $this->getDashes(),
+                ...$this->colorToArray(),
+                ...$this->curveTypeToArray(),
+                ...$this->linesToArray(),
                 'fallbackValue' => $this->getFallback(),
                 'highlight' => $this->isHighlightingOnHover(),
                 'interpolateMissingData' => $this->isInterpolating(),
-                'excludeFromDomainCalculation' => $this->isExcludedFromDomain(),
+                ...$this->excludeFromDomainToArray(),
             ])
         );
     }

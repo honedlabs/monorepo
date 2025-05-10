@@ -53,4 +53,16 @@ trait HasAnimationDuration
     {
         static::$defaultDuration = $duration;
     }
+
+    /**
+     * Get the duration of the animation as an array.
+     * 
+     * @return array<string, mixed>
+     */
+    public function durationToArray()
+    {
+        return [
+            'duration' => $this->getDuration()
+        ];
+    }
 }

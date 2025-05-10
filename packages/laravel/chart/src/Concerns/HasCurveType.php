@@ -59,4 +59,16 @@ trait HasCurveType
     {
         static::$defaultCurveType = $curveType;
     }
+
+    /**
+     * Get the curve type as an array.
+     * 
+     * @return array<string, mixed>
+     */
+    public function curveTypeToArray()
+    {
+        return [
+            'curveType' => $this->getCurveType()
+        ];
+    }
 }

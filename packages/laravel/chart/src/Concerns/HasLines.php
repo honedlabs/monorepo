@@ -113,4 +113,17 @@ trait HasLines
     {
         static::$defaultDashes = Arr::wrap($dashes);
     }
+
+    /**
+     * Get the line configuration as an array.
+     * 
+     * @return array<string, mixed>
+     */
+    public function linesToArray()
+    {
+        return [
+            'lineWidth' => $this->getLineWidth(),
+            'lineDashArray' => $this->getDashes(),
+        ];
+    }
 }
