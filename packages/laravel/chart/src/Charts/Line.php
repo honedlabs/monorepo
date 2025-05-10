@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Charts;
 
+use Honed\Chart\Concerns\HasAnimationDuration;
+use Honed\Chart\Concerns\HasColor;
+use Honed\Chart\Concerns\HasLines;
+
 class Line
 {
-    protected $thickness;
-
-    protected $dashed;
+    use HasColor;
+    use HasAnimationDuration;
+    use HasLines;
 
     protected $curve;
 
@@ -31,8 +35,8 @@ class Line
             'xScale',
             'yScale',
             'duration',
-            
-            'keys'
+
+            'keys',
             'data'
         ];
     }

@@ -1,0 +1,62 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Honed\Chart\Concerns;
+
+use Honed\Chart\Enums\CurveType;
+
+trait HasCurveType
+{
+    /**
+     * The type of curve to use.
+     * 
+     * @var string|null
+     */
+    protected $curveType;
+
+    /**
+     * The default curve type.
+     * 
+     * @var string|null
+     */
+    protected static $defaultCurveType;
+
+    /**
+     * Set the curve type.
+     * 
+     * @param \Honed\Chart\Enums\CurveType|string $curveType
+     * @return $this
+     */
+    public function curveType($curveType)
+    {
+        if (! $curveType instanceof CurveType) {
+            $curveType = CurveType::tryFrom($curveType);
+        }
+
+        $this->curveType = $curveType->value;
+
+        return $this;
+    }
+
+    /**
+     * Get the curve type.
+     * 
+     * @return string|null
+     */
+    public function getCurveType()
+    {
+        return $this->curveType ?? static::$defaultCurveType;
+    }
+
+    /**
+     * Set the default curve type.
+     * 
+     * @param string $curveType
+     * @return void
+     */
+    public static function useCurveType($curveType)
+    {
+        static::$defaultCurveType = $curveType;
+    }
+}

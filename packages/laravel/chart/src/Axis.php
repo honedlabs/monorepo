@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Concerns\HasColor;
 use Honed\Core\Primitive;
+use Honed\Chart\Concerns\HasColor;
+use Honed\Chart\Exceptions\InvalidAxisException;
 
 class Axis extends Primitive
 {
@@ -66,15 +67,31 @@ class Axis extends Primitive
     }
 
     /**
+     * Set which axis this is for.
+     * 
+     * @param 'x'|'y' $type
+     * @return $this
+     * 
+     * @throws \Honed\Chart\Exceptions\InvalidAxisException
+     */
+    public function for($type)
+    {
+        if (! in_array($type, ['x', 'y'])) {
+            InvalidAxisException::throw($type);
+        }
+
+        $this->type = $type;
+
+        return $this;
+    }
+    /**
      * Set the axis to be for the X axis.
      * 
      * @return $this
      */
     public function x()
     {
-        $this->type = 'x';
-
-        return $this;
+        return $this->for('x');
     }
 
     /**
@@ -84,9 +101,7 @@ class Axis extends Primitive
      */
     public function y()
     {
-        $this->type = 'y';
-
-        return $this;
+        return $this->for('y');
     }
 
     public function toArray()

@@ -9,6 +9,14 @@ class Sankey
     public function toArray()
     {
         return [
+            'heightNormalizationCoefficient',
+            'exitTransitionType',
+            'enterTransitionType',
+            'highlightSubtreeOnHover',
+            'highlightDuration',
+            'highlightDelay',
+            'iterations',
+            
             'labelBackground',
             'labelFit',
             'labelTrimMode',

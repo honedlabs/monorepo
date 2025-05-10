@@ -12,19 +12,25 @@ class Scatter
         return [
             'color',
             'size',
+            'sizeScale',
             'sizeRange',
-            'labelHideOverlapping',
-            'size',
-            'duration',
+            'shape',
             'label',
-            'labelPosition',
+            'labelColor',
+            'labelHideOverlapping',
+            'cursor',
             'labelTextBrightnessRatio',
             'labelPosition',
-            'labelColor',
-            'sizeRange',
             'strokeColor',
             'strokeWidth',
-            'shape'
+            'id',
+            'xScale',
+            'yScale',
+            'excludeFromDomainCalculation',
+            'duration',
+
+            'keys',
+            'data'
         ];
     }
 }
