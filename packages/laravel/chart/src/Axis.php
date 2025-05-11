@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Concerns\ExcludesFromDomainCalculation;
-use Honed\Chart\Concerns\FiltersUndefined;
-use Honed\Chart\Concerns\HasAnimationDuration;
+use JsonSerializable;
 use Honed\Core\Primitive;
 use Honed\Chart\Concerns\HasColor;
+use Honed\Chart\Concerns\FiltersUndefined;
+use Illuminate\Contracts\Support\Arrayable;
+use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Chart\Exceptions\InvalidAxisException;
+use Honed\Chart\Concerns\ExcludesFromDomainCalculation;
 
-class Axis extends Primitive
+/**
+ * @implements \Illuminate\Contracts\Support\Arrayable<string, mixed>
+ */
+class Axis implements Arrayable, JsonSerializable
 {
     use HasColor;
     use FiltersUndefined;
@@ -21,7 +26,7 @@ class Axis extends Primitive
     /**
      * The type of the axis.
      * 
-     * @var 'x'|'y'
+     * @var 'x'|'y'|null
      */
     protected $type;
 
@@ -91,18 +96,28 @@ class Axis extends Primitive
      * 
      * @param 'x'|'y' $type
      * @return $this
-     * 
-     * @throws \Honed\Chart\Exceptions\InvalidAxisException
      */
     public function type($type)
     {
-        if (! in_array($type, ['x', 'y'])) {
-            InvalidAxisException::throw($type);
-        }
-
         $this->type = $type;
 
         return $this;
+    }
+
+    /**
+     * Get the type of the axis.
+     * 
+     * @return 'x'|'y'
+     * 
+     * @throws \Honed\Chart\Exceptions\InvalidAxisException
+     */
+    public function getType()
+    {
+        if (! in_array($this->type, ['x', 'y'])) {
+            InvalidAxisException::throw($this->type);
+        }
+
+        return $this->type;
     }
 
     /**
@@ -138,6 +153,31 @@ class Axis extends Primitive
         return $this->type('y');
     }
 
+    /**
+     * Flush the state of the axis.
+     * 
+     * @return void
+     */
+    public static function flushState()
+    {
+        static::$defaultGrid = null;
+        static::$defaultDomain = null;
+
+        static::flushAnimationDurationState();
+        static::flushExcludeFromDomainCalculationState();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize(): mixed
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function toArray()
     {
         return $this->filterUndefined([
@@ -178,5 +218,4 @@ class Axis extends Primitive
     {
         dd($name);
     }
-
 }

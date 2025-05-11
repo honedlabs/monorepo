@@ -3,6 +3,7 @@
 namespace Honed\Chart;
 
 use Honed\Chart\Concerns\FiltersUndefined;
+use Honed\Chart\Concerns\HasPadding;
 use Honed\Chart\Concerns\HasWidth;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
@@ -18,6 +19,7 @@ class Tick implements Arrayable, JsonSerializable
     use Macroable;
     use Conditionable;
     use HasWidth;
+    use HasPadding;
     use FiltersUndefined;
 
     /**
@@ -47,20 +49,6 @@ class Tick implements Arrayable, JsonSerializable
      * @var string|null
      */
     protected static $defaultAlign;
-
-    /**
-     * The rotation of the text in degrees
-     * 
-     * @var int|null
-     */
-    protected $rotation;
-
-    /**
-     * The rotation of the text in degrees by default.
-     * 
-     * @var int|null
-     */
-    protected static $defaultRotation;
 
     /**
      * 
@@ -97,6 +85,34 @@ class Tick implements Arrayable, JsonSerializable
      * @var array<int, mixed>|null
      */
     protected $values;
+
+    /**
+     * The rotation of the text in degrees
+     * 
+     * @var int|null
+     */
+    protected $rotation;
+
+    /**
+     * The rotation of the text in degrees by default.
+     * 
+     * @var int|null
+     */
+    protected static $defaultRotation;
+
+    /**
+     * Whether overlapping labels should be hidden.
+     * 
+     * @var bool|null
+     */
+    protected $overlap;
+
+    /**
+     * Whether overlapping labels should be hidden by default.
+     * 
+     * @var bool|null
+     */
+    protected static $defaultOverlap;
 
     /**
      * Set whether the tick line should be shown.
@@ -168,6 +184,107 @@ class Tick implements Arrayable, JsonSerializable
     public function getValues()
     {
         return $this->values;
+    }
+
+    /**
+     * Set the rotation of the text.
+     * 
+     * @param int $degrees
+     * @return $this
+     */
+    public function rotation($degrees)
+    {
+        $this->rotation = $degrees;
+
+        return $this;
+    }
+
+    /**
+     * Set the rotation of the text.
+     * 
+     * @param int $degrees
+     * @return $this
+     */
+    public function rotate($degrees)
+    {
+        return $this->rotation($degrees);
+    }
+
+    /**
+     * Set the rotation of the text.
+     * 
+     * @param int $degrees
+     * @return $this
+     */
+    public function angle($degrees)
+    {
+        return $this->rotation($degrees);
+    }
+
+    /**
+     * Get the rotation of the text.
+     * 
+     * @return int|null
+     */
+    public function getRotation()
+    {
+        return $this->rotation ?? static::$defaultRotation;
+    }
+
+    /**
+     * Set the rotation of the text by default.
+     * 
+     * @param int $degrees
+     * @return void
+     */
+    public static function useRotation($degrees)
+    {
+        static::$defaultRotation = $degrees;
+    }
+
+    /**
+     * Set whether overlapping labels should be hidden.
+     * 
+     * @param bool $hide
+     * @return $this
+     */
+    public function overlap($hide = true)
+    {
+        $this->overlap = $hide;
+
+        return $this;
+    }
+
+    /**
+     * Set whether overlapping labels should be hidden.
+     * 
+     * @param bool $hide
+     * @return $this
+     */
+    public function hideOverlaps($hide = true)
+    {
+        return $this->overlap($hide);
+    }
+
+    /**
+     * Get whether overlapping labels should be hidden.
+     * 
+     * @return bool|null
+     */
+    public function hidesOverlapping()
+    {
+        return $this->overlap ?? static::$defaultOverlap;
+    }
+
+    /**
+     * Set whether overlapping labels should be hidden by default.
+     * 
+     * @param bool $hide
+     * @return void
+     */
+    public static function shouldHideOverlaps($hide = true)
+    {
+        static::$defaultOverlap = $hide;
     }
 
     /**

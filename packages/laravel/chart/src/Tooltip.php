@@ -263,11 +263,15 @@ class Tooltip implements Arrayable, JsonSerializable
     /**
      * Set the horizontal shift of the tooltip.
      * 
-     * @param int $shift
+     * @param int|null $shift
      * @return $this
      */
     public function horizontalShift($shift)
     {
+        if (is_null($shift)) {
+            return $this;
+        }
+
         if ($shift < 0) {
             $this->horizontalPosition(Position::Left);
         } else {
@@ -292,11 +296,15 @@ class Tooltip implements Arrayable, JsonSerializable
     /**
      * Set the vertical shift of the tooltip.
      * 
-     * @param int $shift
+     * @param int|null $shift
      * @return $this
      */
     public function verticalShift($shift)
     {
+        if (is_null($shift)) {
+            return $this;
+        }
+
         if ($shift < 0) {
             $this->verticalPosition(Position::Top);
         } else {
@@ -321,11 +329,11 @@ class Tooltip implements Arrayable, JsonSerializable
     /**
      * Set the horizontal and vertical shifts of the tooltip.
      * 
-     * @param int $x
-     * @param int $y
+     * @param int|null $x
+     * @param int|null $y
      * @return $this
      */
-    public function shift($x, $y)
+    public function shift($x = null, $y = null)
     {
         return $this->horizontalShift($x)->verticalShift($y);
 

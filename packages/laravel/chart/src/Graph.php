@@ -10,11 +10,10 @@ class Graph
     public function toArray()
     {
         return [
-            'color',
-            'curveType',
-            'opacity',
-            'minHeight1Px',
-            'duration',
+            'data' => [
+                'nodes',
+                'links',
+            ]
         ];
     }
 }
