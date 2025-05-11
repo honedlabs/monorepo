@@ -173,6 +173,17 @@ class Line extends Series
     /**
      * {@inheritdoc}
      */
+    public static function flushState()
+    {
+        parent::flushState();
+        static::$defaultInterpolate = null;
+        static::$defaultFallback = null;
+        static::$defaultHighlight = null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function toArray()
     {
         return $this->filterUndefined(

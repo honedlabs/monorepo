@@ -40,7 +40,9 @@ trait HasFont
      */
     public function getFontSize()
     {
-        return $this->fontSize ?? static::$defaultFontSize;
+        $font = $this->fontSize ?? static::$defaultFontSize;
+
+        return $font;
     }
 
     /**

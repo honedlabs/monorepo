@@ -90,6 +90,7 @@ trait HasColor
     }
 
     /**
+     * Get the colour configuration as an array.
      * 
      * @return array<string, mixed>
      */

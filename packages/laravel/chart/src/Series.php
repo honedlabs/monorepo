@@ -100,6 +100,16 @@ abstract class Series extends Primitive
     }
 
     /**
+     * Flush the state of the series.
+     * 
+     * @return void
+     */
+    public static function flushState()
+    {
+        static::flushAnimationDurationState();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray()
@@ -107,7 +117,7 @@ abstract class Series extends Primitive
         return [
             'keys' => $this->getKey(),
             'id' => $this->getId(),
-            'duration' => $this->getAnimationDuration(),
+            ...$this->animationDurationToArray(),
         ];
     }
 }

@@ -125,7 +125,7 @@ class Axis extends Primitive
      */
     public function x()
     {
-        return $this->for('x');
+        return $this->type('x');
     }
 
     /**
@@ -135,7 +135,7 @@ class Axis extends Primitive
      */
     public function y()
     {
-        return $this->for('y');
+        return $this->type('y');
     }
 
     public function toArray()
@@ -143,11 +143,11 @@ class Axis extends Primitive
         return $this->filterUndefined([
             'type' => $this->getType(),
             'position' => $this->getPosition(),
-            ...$this->getLabel()?->toArray(),
+            ...($this->getLabel()?->toArray() ?? []),
             'fullSize' => $this->isFullSize(),
             'gridLine' => $this->isGrid(),
             'domainLine' => $this->isDomain(),
-            ...$this->getTick()?->toArray(),
+            ...($this->getTick()?->toArray() ?? []),
             ...$this->excludeFromDomainToArray(),
             ...$this->animationDurationToArray(),
 
@@ -171,7 +171,6 @@ class Axis extends Primitive
             'minMaxTicksOnly' => null,
             'tickValues' => null,
             'tickTextHideOverlapping' => null,
-            'duration' => null,
         ]);
     }
 

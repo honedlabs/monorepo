@@ -5,6 +5,7 @@ namespace Honed\Chart;
 use Honed\Chart\Concerns\FiltersUndefined;
 use Honed\Chart\Concerns\HasWidth;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use JsonSerializable;
@@ -32,6 +33,34 @@ class Tick implements Arrayable, JsonSerializable
      * @var bool|null
      */
     protected static $defaultLine;
+
+    /**
+     * How to align the tick with respect to the marker.
+     * 
+     * @var string|null
+     */
+    protected $align;
+
+    /**
+     * How to align the tick with respect to the marker by default.
+     * 
+     * @var string|null
+     */
+    protected static $defaultAlign;
+
+    /**
+     * The rotation of the text in degrees
+     * 
+     * @var int|null
+     */
+    protected $rotation;
+
+    /**
+     * The rotation of the text in degrees by default.
+     * 
+     * @var int|null
+     */
+    protected static $defaultRotation;
 
     /**
      * 
@@ -109,7 +138,7 @@ class Tick implements Arrayable, JsonSerializable
      * @param bool $show
      * @return void
      */
-    public static function shouldShowLine(bool $show = true)
+    public static function shouldShowLine($show = true)
     {
         static::$defaultLine = $show;
     }
@@ -117,11 +146,15 @@ class Tick implements Arrayable, JsonSerializable
     /**
      * Set the tick values to use.
      * 
-     * @param array<int, mixed> $values
+     * @param iterable<int, mixed> $values
      * @return $this
      */
-    public function values(array $values)
+    public function values($values)
     {
+        if ($values instanceof Collection) {
+            $values = $values->all();
+        }
+
         $this->values = $values;
 
         return $this;
@@ -145,6 +178,19 @@ class Tick implements Arrayable, JsonSerializable
     public static function flushState()
     {
         static::$defaultLine = null;
+        static::$defaultAlign = null;
+    }
+
+    /**
+     * Get the colour configuration as an array.
+     * 
+     * @return array<string, mixed>
+     */
+    public function colorToArray()
+    {
+        return [
+            'tickTextColor' => $this->getColor()
+        ];
     }
 
     /**
@@ -162,18 +208,20 @@ class Tick implements Arrayable, JsonSerializable
     {
         return $this->filterUndefined([
             'tickLine' => $this->showsLine(),
-            'tickTextFontSize' => $this->getFontSize(),
-            'tickTextColor' => $this->getColor(),
-            'tickTextAngle' => $this->getRotation(),
-            'tickTextAlign',
-            'tickTextWidth' => $this->getWidth(),
-            'tickTextFitMode',
-            'tickTextTrimType',
-            'tickTextForceWordBreak',
-            'numTicks' => $this->getQuantity(),
             'minMaxTicksOnly' => $this->isMinMax(),
+            'minMaxTicksOnlyWhenWidthIsLess',
             'tickValues' => $this->getValues(),
+            'numTicks' => $this->getQuantity(),
+            'tickTextFitMode' => $this->getFitMode(),
+            'tickTextWidth' => $this->getWidth(),
+            'tickTextForceWordBreak' => $this->breaks(),
+            'tickTextTrimType' => $this->getTrimType(),
+            'tickTextFontSize' => $this->getFontSize(),
+            'tickTextAlign',
+            ...$this->colorToArray(),
+            'tickTextAngle' => $this->getRotation(),
             'tickTextHideOverlapping' => $this->hidesOverlapping(),
+            'tickPadding' => $this->getPadding(),
         ]);
     }
 }
