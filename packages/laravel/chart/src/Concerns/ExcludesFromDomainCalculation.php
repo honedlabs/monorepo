@@ -38,7 +38,7 @@ trait ExcludesFromDomainCalculation
      * 
      * @return bool|null
      */
-    public function isExcludedFromDomain()
+    public function excludesFromDomain()
     {
         return $this->excludeFromDomainCalculation 
             ?? static::$defaultExcludeFromDomainCalculation;
@@ -56,6 +56,16 @@ trait ExcludesFromDomainCalculation
     }
 
     /**
+     * Flush the state of the exclude from domain calculation.
+     * 
+     * @return void
+     */
+    public static function flushExcludeFromDomainCalculationState()
+    {
+        static::$defaultExcludeFromDomainCalculation = null;
+    }
+
+    /**
      * Get whether to exclude the series from the domain calculation as an 
      * array.
      * 
@@ -64,7 +74,7 @@ trait ExcludesFromDomainCalculation
     public function excludeFromDomainToArray()
     {
         return [
-            'excludeFromDomainCalculation' => $this->isExcludedFromDomain()
+            'excludeFromDomainCalculation' => $this->excludesFromDomain()
         ];
     }
 }

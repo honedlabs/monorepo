@@ -193,6 +193,7 @@ class CrossHair implements Arrayable, JsonSerializable
         static::$defaultSnap = null;
         static::flushStrokeState();
         static::flushAnimationDurationState();
+        static::flushExcludeFromDomainCalculationState();
     }
 
     /**

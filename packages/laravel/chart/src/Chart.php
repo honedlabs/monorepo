@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Core\Primitive;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Honed\Chart\Concerns\HasAnimationDuration;
+use Honed\Chart\Exceptions\MissingDataException;
 
 /**
  * @template TData of mixed = mixed
@@ -74,6 +75,8 @@ class Chart extends Primitive
      * Get the data of the chart.
      * 
      * @return iterable<int, TData>
+     * 
+     * @throws \Honed\Chart\Exceptions\MissingDataException
      */
     public function getData()
     {

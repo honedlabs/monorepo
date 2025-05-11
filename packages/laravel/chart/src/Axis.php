@@ -10,6 +10,7 @@ use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Core\Primitive;
 use Honed\Chart\Concerns\HasColor;
 use Honed\Chart\Exceptions\InvalidAxisException;
+use Illuminate\Support\Traits\ForwardsCalls;
 
 class Axis extends Primitive
 {
@@ -35,7 +36,7 @@ class Axis extends Primitive
     /**
      * The display label for this axis.
      * 
-     * @var string|null
+     * @var \Honed\Chart\Label|null
      */
     protected $label;
 
@@ -70,16 +71,9 @@ class Axis extends Primitive
     /**
      * Whether to show the tick lines.
      * 
-     * @var bool|null
+     * @var \Honed\Chart\Tick|null
      */
-    protected $ticks;
-
-    /**
-     * Whether to show the tick lines by default.
-     * 
-     * @var bool|null
-     */
-    protected static $defaultTicks;
+    protected $tick;
 
     /**
      * Create a new axis.
@@ -180,5 +174,10 @@ class Axis extends Primitive
             'duration' => null,
         ]);
     }
-    
+
+    public function __get($name)
+    {
+        dd($name);
+    }
+
 }

@@ -79,7 +79,17 @@ trait HasColor
     }
 
     /**
-     * Get the color as an array.
+     * Normalize the colour to a valid format.
+     * 
+     * @param string $colour
+     * @return string
+     */
+    protected function normalizeColour($colour)
+    {
+        return $this->normalizeColor($colour);
+    }
+
+    /**
      * 
      * @return array<string, mixed>
      */
@@ -88,5 +98,15 @@ trait HasColor
         return [
             'color' => $this->getColor()
         ];
+    }
+
+    /**
+     * Get the colour configuration as an array.
+     * 
+     * @return array<string, mixed>
+     */
+    public function colourToArray()
+    {
+        return $this->colorToArray();
     }
 }
