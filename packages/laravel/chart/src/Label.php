@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
+use Honed\Chart\Concerns\FiltersUndefined;
 use JsonSerializable;
 use Honed\Chart\Concerns\HasColor;
 use Honed\Chart\Concerns\HasFont;
@@ -13,6 +14,7 @@ class Label implements Arrayable, JsonSerializable
 {
     use HasFont;
     use HasColor;
+    use FiltersUndefined;
 
     /**
      * The label to display.
@@ -52,24 +54,16 @@ class Label implements Arrayable, JsonSerializable
         return $this->toArray();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function toArray()
     {
-
-    }
-
-    /**
-     * Get the color configuration as an array.
-     * 
-     * @return array<string, mixed>
-     */
-    public function colorToArray()
-    {
-        return [
+        return $this->filterUndefined([
             'label' => $this->getLabel(),
             'labelFontSize' => $this->getFontSize(),
             'labelColor' => $this->getColor(),
             'labelMargin' => $this->getMargin(),
-        ];
-    }
-    
+        ]);
+    }    
 }

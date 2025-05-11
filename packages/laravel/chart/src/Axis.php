@@ -10,7 +10,6 @@ use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Core\Primitive;
 use Honed\Chart\Concerns\HasColor;
 use Honed\Chart\Exceptions\InvalidAxisException;
-use Illuminate\Support\Traits\ForwardsCalls;
 
 class Axis extends Primitive
 {
@@ -151,6 +150,7 @@ class Axis extends Primitive
             ...$this->getTick()?->toArray(),
             ...$this->excludeFromDomainToArray(),
             ...$this->animationDurationToArray(),
+
             
             'labelFontSize' => null,
             'labelColor' => null,

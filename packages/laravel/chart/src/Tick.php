@@ -56,11 +56,11 @@ class Tick implements Arrayable, JsonSerializable
     protected $number;
 
     /**
-     * Whether to only display the maximum and minimum ticks.
+     * Whether to only display the minimum and maximum ticks.
      * 
      * @var bool|null
      */
-    protected $maxMin;
+    protected $minMax;
 
     /**
      * The tick values to use.
@@ -164,8 +164,8 @@ class Tick implements Arrayable, JsonSerializable
             'tickLine' => $this->showsLine(),
             'tickTextFontSize' => $this->getFontSize(),
             'tickTextColor' => $this->getColor(),
-            'tickTextAlign',
             'tickTextAngle' => $this->getRotation(),
+            'tickTextAlign',
             'tickTextWidth' => $this->getWidth(),
             'tickTextFitMode',
             'tickTextTrimType',

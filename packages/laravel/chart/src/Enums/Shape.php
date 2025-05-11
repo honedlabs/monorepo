@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Enums;
 
-enum BulletShape: string
+enum Shape: string
 {
     case Circle = 'circle';
     case Cross = 'cross';

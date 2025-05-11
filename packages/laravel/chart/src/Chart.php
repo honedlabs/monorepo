@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
+use Honed\Chart\Concerns\FiltersUndefined;
 use Honed\Core\Primitive;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -15,7 +16,15 @@ use Honed\Chart\Exceptions\MissingDataException;
  */
 class Chart extends Primitive
 {
+    use FiltersUndefined;
     use HasAnimationDuration;
+
+    /**
+     * The data of the chart.
+     * 
+     * @var iterable<int, TData>
+     */
+    protected $data = [];
 
     /**
      * The series of the chart.
@@ -25,11 +34,18 @@ class Chart extends Primitive
     protected $series = [];
 
     /**
-     * The data of the chart.
+     * The domain of the chart.
      * 
-     * @var iterable<int, TData>
+     * @var array{int|float, int|float}
      */
-    protected $data = [];
+    protected $domain;
+
+    /**
+     * The range of the chart.
+     * 
+     * @var array{int|float, int|float}
+     */
+    protected $range;
 
     /**
      * The legend of the chart.
@@ -105,14 +121,6 @@ class Chart extends Primitive
         }
 
         return $this->data;
-    }
-
-    /**
-     * Set the dependent data of the chart.
-     */
-    public function dependent()
-    {
-
     }
 
     /**

@@ -6,12 +6,14 @@ namespace Honed\Chart\Series;
 
 use Honed\Chart\Concerns\ExcludesFromDomainCalculation;
 use Honed\Chart\Concerns\HasColor;
+use Honed\Chart\Concerns\HasStroke;
 use Honed\Chart\Series;
 use Honed\Chart\Support\Constants;
 
 class Scatter extends Series
 {
     use HasColor;
+    use HasStroke;
     use ExcludesFromDomainCalculation;
 
     /**
@@ -31,11 +33,18 @@ class Scatter extends Series
             \array_merge(parent::toArray(), [
                 'color' => $this->getColor(),
                 'size' => $this->getSize(),
+                // ...$this->shapeToArray(),
                 // 'sizeScale',
                 // 'sizeRange',
                 'shape' => $this->getShape(),
                 'label',
-                'excludeFromDomainCalculation' => $this->isExcludedFromDomainCalculation(),
+                'labelColor',
+                'labelHideOverlapping',
+                'labelTextBrightnessRatio',
+                'labelPosition',
+                ...$this->strokeToArray(),
+                ...$this->excludeFromDomainToArray(),
+                ...$this->animationDurationToArray(),
 
             ])
         );
