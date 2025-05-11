@@ -166,6 +166,16 @@ class Tooltip implements Arrayable, JsonSerializable
     }
 
     /**
+     * Get the horizontal placement of the tooltip.
+     * 
+     * @return string|null
+     */
+    public function getHorizontalPosition()
+    {
+        return $this->horizontalPosition;
+    }
+
+    /**
      * Set the horizontal placement of the tooltip.
      * 
      * @param string|\Honed\Chart\Enums\Position $position
@@ -215,6 +225,16 @@ class Tooltip implements Arrayable, JsonSerializable
     }
 
     /**
+     * Get the vertical placement of the tooltip.
+     * 
+     * @return string|null
+     */
+    public function getVerticalPosition()
+    {
+        return $this->verticalPosition;
+    }
+
+    /**
      * Set the vertical placement of the tooltip.
      * 
      * @param string|\Honed\Chart\Enums\Position $position
@@ -240,6 +260,121 @@ class Tooltip implements Arrayable, JsonSerializable
         return $this->verticalPosition($position);
     }
 
+    /**
+     * Set the horizontal shift of the tooltip.
+     * 
+     * @param int $shift
+     * @return $this
+     */
+    public function horizontalShift($shift)
+    {
+        if ($shift < 0) {
+            $this->horizontalPosition(Position::Left);
+        } else {
+            $this->horizontalPosition(Position::Right);
+        }
+
+        $this->horizontalShift = abs($shift);
+
+        return $this;
+    }
+
+    /**
+     * Get the horizontal shift of the tooltip.
+     * 
+     * @return int|null
+     */
+    public function getHorizontalShift()
+    {
+        return $this->horizontalShift;
+    }
+
+    /**
+     * Set the vertical shift of the tooltip.
+     * 
+     * @param int $shift
+     * @return $this
+     */
+    public function verticalShift($shift)
+    {
+        if ($shift < 0) {
+            $this->verticalPosition(Position::Top);
+        } else {
+            $this->verticalPosition(Position::Bottom);
+        }
+
+        $this->verticalShift = abs($shift);
+
+        return $this;
+    }
+
+    /**
+     * Get the vertical shift of the tooltip.
+     * 
+     * @return int|null
+     */
+    public function getVerticalShift()
+    {
+        return $this->verticalShift;
+    }
+
+    /**
+     * Set the horizontal and vertical shifts of the tooltip.
+     * 
+     * @param int $x
+     * @param int $y
+     * @return $this
+     */
+    public function shift($x, $y)
+    {
+        return $this->horizontalShift($x)->verticalShift($y);
+
+    }
+
+    /**
+     * Shift the tooltip to the left.
+     * 
+     * @param int $shift
+     * @return $this
+     */
+    public function shiftLeft($shift)
+    {
+        return $this->horizontalShift(-$shift);
+    }
+
+    /**
+     * Shift the tooltip to the right.
+     * 
+     * @param int $shift
+     * @return $this
+     */
+    public function shiftRight($shift)
+    {
+        return $this->horizontalShift($shift);
+    }
+    
+    /**
+     * Shift the tooltip up.
+     * 
+     * @param int $shift
+     * @return $this
+     */
+    public function shiftUp($shift)
+    {
+        return $this->verticalShift(-$shift);
+    }
+
+    /**
+     * Shift the tooltip down.
+     * 
+     * @param int $shift
+     * @return $this
+     */
+    public function shiftDown($shift)
+    {
+        return $this->verticalShift($shift);
+    }
+    
     /**
      * Flush the state of the tooltip.
      * 
@@ -267,10 +402,10 @@ class Tooltip implements Arrayable, JsonSerializable
         return $this->filterUndefined([
             'followCursor' => $this->follows(),
             'allowHover' => $this->hovers(),
-            'horizontalPlacement',
-            'horizontalShift',
-            'verticalPlacement',
-            'verticalShift',
+            'horizontalPlacement' => $this->getHorizontalPosition(),
+            'horizontalShift' => $this->getHorizontalShift(),
+            'verticalPlacement' => $this->getVerticalPosition(),
+            'verticalShift' => $this->getVerticalShift(),
         ]);
     }
 }
