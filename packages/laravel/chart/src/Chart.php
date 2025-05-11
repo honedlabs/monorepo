@@ -32,6 +32,20 @@ class Chart extends Primitive
     protected $data = [];
 
     /**
+     * The legend of the chart.
+     * 
+     * @var \Honed\Chart\Legend|null
+     */
+    protected $legend;
+
+    /**
+     * The tooltip of the chart.
+     * 
+     * @var \Honed\Chart\Tooltip|null
+     */
+    protected $tooltip;
+
+    /**
      * The colors to use for the chart series.
      */
     protected $colors;
@@ -136,8 +150,11 @@ class Chart extends Primitive
         return \array_merge($this->defineSeries(), $this->series);
     }
 
-    // Legend
-
+    /**
+     * Set the legend to be used for the chart.
+     * 
+     * @return $this
+     */
     public function legend()
     {
         $this->legend = true;
@@ -145,18 +162,31 @@ class Chart extends Primitive
         return $this;
     }
 
+    /**
+     * Define the legend to be used for the chart.
+     * 
+     * @return \Honed\Chart\Legend|null
+     */
     public function defineLegend()
     {
-        return true;
+        //
     }
 
+    /**
+     * Get the legend to be used for the chart.
+     * 
+     * @return \Honed\Chart\Legend|null
+     */
     public function getLegend()
     {
-        return $this->legend;
+        return $this->legend ??= $this->defineLegend();
     }
 
-    // Tooltip
-
+    /**
+     * Set the tooltip to be used for the chart.
+     * 
+     * @return $this
+     */
     public function tooltip()
     {
         $this->tooltip = true;
@@ -164,17 +194,25 @@ class Chart extends Primitive
         return $this;
     }
 
+    /**
+     * Define the tooltip to be used for the chart.
+     * 
+     * @return \Honed\Chart\Tooltip|null
+     */
     public function defineTooltip()
     {
-        return true;
+        //
     }
 
+    /**
+     * Get the tooltip to be used for the chart.
+     * 
+     * @return \Honed\Chart\Tooltip|null
+     */
     public function getTooltip()
     {
-        
+        return $this->tooltip ??= $this->defineTooltip();
     }
-    
-    
 
     /**
      * {@inheritDoc}

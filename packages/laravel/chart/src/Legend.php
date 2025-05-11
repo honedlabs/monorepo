@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
+use Honed\Chart\Concerns\HasBulletShape;
 use Honed\Chart\Concerns\HasColor;
 use Honed\Chart\Concerns\HasOrientation;
 use Illuminate\Contracts\Support\Arrayable;
@@ -15,6 +16,7 @@ class Legend implements Arrayable, JsonSerializable
     use Macroable;
     use HasColor;
     use HasOrientation;
+    use HasBulletShape;
 
     // The labels as a string property to extract from data
 
@@ -26,7 +28,13 @@ class Legend implements Arrayable, JsonSerializable
     public function toArray()
     {
         return [
-            'items'
+            'items',
+            'labelFontSize',
+            'labelMaxWidht',
+            'bulletSize',
+            ...$this->bulletShapeToArray(),
+            'orientation',
+
         ];
     }
 }

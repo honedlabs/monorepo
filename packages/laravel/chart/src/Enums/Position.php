@@ -16,7 +16,7 @@ enum Position: string
      * 
      * @return bool
      */
-    public function isValidHorizontal()
+    public function isHorizontal()
     {
         return $this === self::Left || $this === self::Right;
     }
@@ -26,7 +26,7 @@ enum Position: string
      * 
      * @return bool
      */
-    public function isValidVertical()
+    public function isVertical()
     {
         return $this === self::Top || $this === self::Bottom;
     }

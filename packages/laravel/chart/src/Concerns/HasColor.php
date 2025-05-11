@@ -50,8 +50,8 @@ trait HasColor
             return null;
         }
 
-        if (\is_array($this->color)) {
-            return \array_map($this->normalizeColor(...), $this->color);
+        if (is_array($this->color)) {
+            return array_map($this->normalizeColor(...), $this->color);
         }
 
         return $this->normalizeColor($this->color);
