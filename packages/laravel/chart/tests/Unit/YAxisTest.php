@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\XAxis;
 use Honed\Chart\YAxis;
 
 it('has y axis', function () {

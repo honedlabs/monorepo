@@ -51,7 +51,7 @@ trait HasPadding
      */
     public function getPadding()
     {
-        return $this->padding;
+        return $this->padding ?? static::$defaultPadding;
     }
 
     /**
@@ -63,5 +63,28 @@ trait HasPadding
     public static function usePadding($pixels)
     {
         static::$defaultPadding = $pixels;
+    }
+
+    /**
+     * Flush the state of the padding.
+     * 
+     * @return void
+     */
+    public static function flushPaddingState()
+    {
+        static::$defaultPadding = null;
+    }
+
+    /**
+     * Get whether to exclude the series from the domain calculation as an 
+     * array.
+     * 
+     * @return array<string, mixed>
+     */
+    public function paddingToArray()
+    {
+        return [
+            'padding' => $this->getPadding()
+        ];
     }
 }
