@@ -7,7 +7,7 @@ namespace Honed\Chart;
 use JsonSerializable;
 use Honed\Chart\Concerns\HasColor;
 use Honed\Chart\Concerns\FiltersUndefined;
-use Honed\Chart\Concerns\HasBulletShape;
+use Honed\Chart\Concerns\HasShape;
 use Illuminate\Contracts\Support\Arrayable;
 
 /**
@@ -17,7 +17,7 @@ class LegendItem implements Arrayable, JsonSerializable
 {
     use FiltersUndefined;
     use HasColor;
-    use HasBulletShape;
+    use HasShape;
 
     /**
      * {@inheritdoc}
@@ -33,7 +33,7 @@ class LegendItem implements Arrayable, JsonSerializable
     public function toArray()
     {
         return $this->filterUndefined([
-            'name' => $this->label,
+            // 'name' => $this->label,
             ...$this->colorToArray(),
             'shape',
             'inactive',

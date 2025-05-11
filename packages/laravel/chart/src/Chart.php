@@ -159,6 +159,72 @@ class Chart extends Primitive
     }
 
     /**
+     * Set the domain of the chart.
+     * 
+     * @param array{int|float, int|float} $domain
+     * @return $this
+     */
+    public function domain($domain)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * Define the domain of the chart.
+     * 
+     * @return array{int|float, int|float}
+     */
+    public function defineDomain()
+    {
+        return [];
+    }
+
+    /**
+     * Get the domain of the chart.
+     * 
+     * @return array{int|float, int|float}|null
+     */
+    public function getDomain()
+    {
+        return $this->domain ??= $this->defineDomain() ?: null;
+    }
+
+    /**
+     * Set the range of the chart.
+     * 
+     * @param array{int|float, int|float} $range
+     * @return $this
+     */
+    public function range($range)
+    {
+        $this->range = $range;
+
+        return $this;
+    }
+
+    /**
+     * Define the range of the chart.
+     * 
+     * @return array{int|float, int|float}
+     */
+    public function defineRange()
+    {
+        return [];
+    }
+
+    /**
+     * Get the range of the chart.
+     * 
+     * @return array{int|float, int|float}|null
+     */
+    public function getRange()
+    {
+        return $this->range ??= $this->defineRange() ?: null;
+    }
+
+    /**
      * Set the legend to be used for the chart.
      * 
      * @return $this
@@ -227,11 +293,18 @@ class Chart extends Primitive
      */
     public function toArray()
     {
-        return [
+        return $this->filterUndefined([
             'data' => $this->getFilteredData(),
+            'yDomain' => $this->getDomain(),
+            'yDomain' => $this->getRange(),
             'series' => $this->seriesToArray(),
-            'tooltip' => $this->getTooltip(),
             'duration' => $this->getAnimationDuration(),
-        ];
+            'xAxis' => $this->getXAxis()?->toArray(),
+            'yAxis' => $this->getYAxis()?->toArray(),
+            'crosshair' => $this->getCrosshair()?->toArray(),
+            'tooltip' => $this->getTooltip()?->toArray(),
+            'legend' => $this->getLegend()?->toArray(),
+            ...$this->animationDurationToArray()
+        ]);
     }
 }

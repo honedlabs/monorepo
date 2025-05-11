@@ -86,7 +86,7 @@ class Line extends Series
      * 
      * @return bool|null
      */
-    public function isInterpolating()
+    public function interpolates()
     {
         return $this->interpolate ?? static::$defaultInterpolate;
     }
@@ -154,7 +154,7 @@ class Line extends Series
      * 
      * @return bool|null
      */
-    public function isHighlightingOnHover()
+    public function highlights()
     {
         return $this->highlight ?? static::$defaultHighlight;
     }
@@ -181,8 +181,8 @@ class Line extends Series
                 ...$this->curveTypeToArray(),
                 ...$this->linesToArray(),
                 'fallbackValue' => $this->getFallback(),
-                'highlight' => $this->isHighlightingOnHover(),
-                'interpolateMissingData' => $this->isInterpolating(),
+                'highlight' => $this->highlights(),
+                'interpolateMissingData' => $this->interpolates(),
                 ...$this->excludeFromDomainToArray(),
             ])
         );

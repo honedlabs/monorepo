@@ -7,6 +7,7 @@ namespace Honed\Chart;
 use Honed\Chart\Concerns\HasBulletShape;
 use Honed\Chart\Concerns\HasColor;
 use Honed\Chart\Concerns\HasOrientation;
+use Honed\Chart\Concerns\HasShape;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Macroable;
 use JsonSerializable;
@@ -16,7 +17,7 @@ class Legend implements Arrayable, JsonSerializable
     use Macroable;
     use HasColor;
     use HasOrientation;
-    use HasBulletShape;
+    use HasShape;
 
     // The labels as a string property to extract from data
 
@@ -32,7 +33,7 @@ class Legend implements Arrayable, JsonSerializable
             'labelFontSize',
             'labelMaxWidht',
             'bulletSize',
-            ...$this->bulletShapeToArray(),
+            // ...$this->bulletShapeToArray(),
             'orientation',
 
         ];
