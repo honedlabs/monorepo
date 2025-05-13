@@ -4,8 +4,12 @@ includes:
 parameters:
     level: 9
     paths:
-        - src
         - config
+        - database
+        - src
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
+    ignoreErrors:
+        - '#Trait .+ is used zero times and is not analysed#'
+        - '#Called env\(\) outside of the config directory which returns null when the config is cached, use config\(\).#'

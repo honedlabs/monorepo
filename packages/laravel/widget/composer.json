@@ -43,7 +43,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Honed\\Widget\\Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/"
         }
     },
     "scripts": {
