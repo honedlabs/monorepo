@@ -6,8 +6,17 @@ namespace Honed\Widget;
 
 abstract class Widget
 {
+    /**
+     * The unique name of the widget across your application's widgets.
+     * 
+     * @var string|null
+     */
+    protected $name;
 
-    // name
+    public function getName()
+    {
+        return null;
+    }
 
     // scope
 
@@ -16,5 +25,10 @@ abstract class Widget
     // Retrieval
 
     //
+
+    public static function register()
+    {
+        //
+    }
     
 }

@@ -4,7 +4,7 @@ namespace {{ namespace }};
 
 class {{ class }}
 {
-    public function handle()
+    public function retrieve()
     {
         //
     }

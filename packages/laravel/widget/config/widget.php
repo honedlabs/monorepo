@@ -18,14 +18,14 @@ return [
     
     /*
     |--------------------------------------------------------------------------
-    | Default Widget Store
+    | Default Widget Driver
     |--------------------------------------------------------------------------
     |
-    | Here you will specify the default store that Widget should use when
+    | Here you will specify the default driver that Widget should use when
     | storing and resolving widget values. Widget ships with the
     | ability to store widget values in an in-memory array or database.
     |
-    | Supported: "array", "database"
+    | Supported: "array", "cache", "cookie", "database"
     |
     */
 
@@ -33,12 +33,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Pennant Stores
+    | Widget Drivers
     |--------------------------------------------------------------------------
     |
-    | Here you may configure each of the stores that should be available to
-    | Pennant. These stores shall be used to store resolved feature flag
-    | values - you may configure as many as your application requires.
+    | Here you may configure each of the drivers that should be available to
+    | Widget. These drivers shall be used to store resolved widget values - 
+    | you may configure as many as your application requires.
     |
     */
 
