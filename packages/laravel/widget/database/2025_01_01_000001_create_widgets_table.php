@@ -17,7 +17,6 @@ return new class extends WidgetMigration
             $table->id();
             $table->string('name');
             $table->string('scope');
-            $table->text('value');
             $table->timestamps();
 
             $table->unique(['name', 'scope']);

@@ -1,6 +1,20 @@
 <?php
 
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Inertia Retrieval
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure how you would like Inertia.JS to retrieve dynamic 
+    | data from the server, and pass it to your pages by default. The 
+    |
+    | Supported: "sync", "defer", "lazy"
+    |
+    */
+
+    'inertia' => 'sync',
     
     /*
     |--------------------------------------------------------------------------

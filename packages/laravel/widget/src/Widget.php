@@ -4,7 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Widget;
 
-class Widget
+abstract class Widget
 {
+
+    // name
+
+    // scope
+
+    // isStatic
+
+    // Retrieval
+
+    //
     
 }
