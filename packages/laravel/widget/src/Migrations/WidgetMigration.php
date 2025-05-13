@@ -17,7 +17,9 @@ abstract class WidgetMigration extends Migration
     {
         $connection = config('widget.drivers.database.connection');
 
-        return ($connection === null || $connection === 'null') ? config('database.default') : $connection;
+        return ($connection === null || $connection === 'null') 
+            ? config('database.default') 
+            : $connection;
     }
 
     /**

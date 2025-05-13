@@ -36,12 +36,12 @@ return [
 
         'cache' => [
             'driver' => 'cache',
-            'expiration' => null // Forever
+            'expiration' => null
         ],
 
         'cookie' => [
             'driver' => 'cookie',
-            'expiration' => 60 * 24 * 30, // 30 days
+            'expiration' => 60 * 24 * 30
         ],
 
         'database' => [
