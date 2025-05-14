@@ -6,6 +6,9 @@ namespace Honed\Widget\Contracts;
 
 interface Driver
 {
-    public function store(string $name);
-    
+    public function get(string $widget, string $scope): mixed;
+
+    public function set(string $widget, string $scope, mixed $value): void;
+
+    public function delete(string $widget, string $scope): void;   
 }

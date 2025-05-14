@@ -4,7 +4,7 @@ namespace Honed\Widget\Exceptions;
 
 use InvalidArgumentException;
 
-class InvalidDriverException extends InvalidArgumentException
+class UndefinedDriverException extends InvalidArgumentException
 {
     /**
      * Throw an exception if the driver is not supported.
@@ -13,7 +13,7 @@ class InvalidDriverException extends InvalidArgumentException
      */
     public function __construct($driver)
     {
-        parent::__construct("Driver [{$driver}] is not supported.");
+        parent::__construct("Driver [{$driver}] is not defined.");
     }
 
     public static function throw($driver)

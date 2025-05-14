@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace Honed\Widget;
 
+use Honed\Widget\Drivers\Decorator;
 use Honed\Widget\Drivers\ArrayDriver;
 use Honed\Widget\Drivers\CacheDriver;
 use Honed\Widget\Drivers\CookieDriver;
 use Honed\Widget\Drivers\DatabaseDriver;
 use Illuminate\Contracts\Container\Container;
+use Honed\Widget\Exceptions\InvalidDriverException;
+use Honed\Widget\Exceptions\UndefinedDriverException;
 
+/**
+ * @mixin \Honed\Widget\Drivers\Decorator
+ */
 class WidgetManager
 {
     /**
@@ -65,12 +71,24 @@ class WidgetManager
     }
 
     /**
+     * Flush the driver caches.
+     *
+     * @return void
+     */
+    public function flushCache()
+    {
+        foreach ($this->drivers as $driver) {
+            $driver->flushCache();
+        }
+    }
+
+    /**
      * Attempt to get the driver from the local cache.
      *
      * @param  string  $name
      * @return \Honed\Widget\Drivers\Decorator
      */
-    protected function get($name)
+    public function get($name)
     {
         return $this->drivers[$name] ?? $this->resolve($name);
     }
@@ -81,14 +99,15 @@ class WidgetManager
      * @param  string  $name
      * @return \Honed\Widget\Drivers\Decorator
      *
-     * @throws \InvalidArgumentException
+     * @throws \Honed\Widget\Exceptions\UndefinedDriverException
+     * @throws \Honed\Widget\Exceptions\InvalidDriverException
      */
     protected function resolve($name)
     {
         $config = $this->getConfig($name);
 
         if (is_null($config)) {
-            throw new InvalidArgumentException("Pennant store [{$name}] is not defined.");
+            UndefinedDriverException::throw($name);
         }
 
         if (isset($this->customCreators[$config['driver']])) {
@@ -99,7 +118,7 @@ class WidgetManager
             if (method_exists($this, $driverMethod)) {
                 $driver = $this->{$driverMethod}($config, $name);
             } else {
-                throw new InvalidArgumentException("Driver [{$config['driver']}] is not supported.");
+                InvalidDriverException::throw($config['driver']);
             }
         }
 
@@ -108,7 +127,6 @@ class WidgetManager
             $driver,
             $this->defaultScopeResolver($name),
             $this->container,
-            new Collection
         );
     }
 
@@ -145,10 +163,11 @@ class WidgetManager
     /**
      * Create an instance of the database driver.
      *
+     * @param array $config
      * @param string $name
      * @return \Honed\Widget\Drivers\DatabaseDriver
      */
-    public function createDatabaseDriver(array $config, $name)
+    public function createDatabaseDriver($config, $name)
     {
         return new DatabaseDriver(
             $this->container['db'],
@@ -173,15 +192,42 @@ class WidgetManager
     }
 
     /**
-     * Flush the driver caches.
+     * The default scope resolver.
      *
+     * @param  string  $driver
+     * @return callable(): mixed
+     */
+    protected function defaultScopeResolver($driver)
+    {
+        return function () use ($driver) {
+            if (isset($this->defaultScopeResolver)) {
+                return call_user_func($this->defaultScopeResolver, $driver);
+            }
+
+            return $this->container['auth']->guard()->user();
+        };
+    }
+
+    /**
+     * Set the default scope resolver.
+     *
+     * @param  (callable(string): mixed)  $resolver
      * @return void
      */
-    public function flushCache()
+    public function resolveScopeUsing($resolver)
     {
-        foreach ($this->drivers as $driver) {
-            $driver->flushCache();
-        }
+        $this->defaultScopeResolver = $resolver;
+    }
+
+    /**
+     * Get the driver configuration.
+     *
+     * @param string $name
+     * @return array
+     */
+    public function getConfig($name)
+    {
+        return $this->container['config']["widget.drivers.{$name}"];
     }
 
     /**
@@ -206,13 +252,62 @@ class WidgetManager
     }
 
     /**
-     * Get the driver configuration.
+     * Unset the given driver instances.
      *
-     * @param string $name
-     * @return array
+     * @param  array|string|null  $name
+     * @return $this
      */
-    public function getConfig($name)
+    public function forgetDriver($name = null)
     {
-        return $this->container['config']["widget.drivers.{$name}"];
+        $name ??= $this->getDefaultDriver();
+
+        foreach ((array) $name as $driverName) {
+            if (isset($this->drivers[$driverName])) {
+                unset($this->drivers[$driverName]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Forget all of the resolved driver instances.
+     *
+     * @return $this
+     */
+    public function forgetDrivers()
+    {
+        $this->drivers = [];
+
+        return $this;
+    }
+
+    /**
+     * Set the container instance used by the manager.
+     *
+     * @param  \Illuminate\Container\Container  $container
+     * @return $this
+     */
+    public function setContainer($container)
+    {
+        $this->container = $container;
+
+        foreach ($this->drivers as $driver) {
+            $driver->setContainer($container);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Dynamically call the default driver instance.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->driver()->$method(...$parameters);
     }
 }
