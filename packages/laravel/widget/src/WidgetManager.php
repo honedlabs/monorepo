@@ -20,6 +20,20 @@ class WidgetManager
     protected $container;
 
     /**
+     * The array of resolved Widget drivers.
+     * 
+     * @var array<string, \Honed\Widget\Drivers\Decorator>
+     */
+    protected $drivers = [];
+
+    /**
+     * The default scope resolver.
+     * 
+     * @var (callable(string):mixed)|null
+     */
+    protected $defaultScopeResolver;
+
+    /**
      * Whether the Eloquent "morph map" should be used when serializing
      * the widget.
      * 
@@ -38,10 +52,34 @@ class WidgetManager
     }
 
     /**
-     * Resolve the given store.
+     * Get a Widget driver instance by name.
+     * 
+     * @param string|null $name
+     * @return \Honed\Widget\Drivers\Decorator
+     */
+    public function driver($name = null)
+    {
+        $name = $name ?? $this->getDefaultDriver();
+
+        return $this->drivers[$name] = $this->get($name);
+    }
+
+    /**
+     * Attempt to get the driver from the local cache.
      *
      * @param  string  $name
-     * @return \Laravel\Pennant\Drivers\Decorator
+     * @return \Honed\Widget\Drivers\Decorator
+     */
+    protected function get($name)
+    {
+        return $this->drivers[$name] ?? $this->resolve($name);
+    }
+
+    /**
+     * Resolve the given driver.
+     *
+     * @param  string  $name
+     * @return \Honed\Widget\Drivers\Decorator
      *
      * @throws \InvalidArgumentException
      */
@@ -119,6 +157,31 @@ class WidgetManager
             $name,
             []
         );
+    }
+
+    /**
+     * Specify that the Eloquent morph map should be used when serializing.
+     *
+     * @param  bool  $value
+     * @return $this
+     */
+    public function useMorphMap($value = true)
+    {
+        $this->useMorphMap = $value;
+
+        return $this;
+    }
+
+    /**
+     * Flush the driver caches.
+     *
+     * @return void
+     */
+    public function flushCache()
+    {
+        foreach ($this->drivers as $driver) {
+            $driver->flushCache();
+        }
     }
 
     /**
