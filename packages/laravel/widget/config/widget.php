@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'default' => env('WIDGET_DRIVER', 'database'),
+    'default' => env('WIDGET_DRIVER', 'database'), // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig
 
     /*
     |--------------------------------------------------------------------------

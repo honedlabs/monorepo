@@ -6,5 +6,6 @@ namespace Honed\Widget\Contracts;
 
 interface Driver
 {
+    public function store(string $name);
     
 }

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Widget;
 
-use Honed\Widget\Commands\WidgetMakeCommand;
 use Illuminate\Support\ServiceProvider;
+use Honed\Widget\Commands\WidgetCacheCommand;
+use Honed\Widget\Commands\WidgetMakeCommand;
 
 class WidgetServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,8 @@ class WidgetServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->optimizes(WidgetCacheCommand::class);
+
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
 

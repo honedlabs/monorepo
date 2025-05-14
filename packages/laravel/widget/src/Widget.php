@@ -33,16 +33,12 @@ abstract class Widget
         return $this->name ?? $this->getName() ?? static::class;
     }
 
-    // scope
-
-    // isStatic
-
-    // Retrieval
-
-    public function getValue()
-    {
-        
-    }
+    /**
+     * Retrieve the value of the widget.
+     * 
+     * @return mixed
+     */
+    abstract public function getValue();
 
     //
 

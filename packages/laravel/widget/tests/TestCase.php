@@ -12,9 +12,12 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Inertia\ServiceProvider as InertiaServiceProvider;
 use Honed\Widget\Tests\Stubs\Status;
+use Orchestra\Testbench\Concerns\WithWorkbench;
 
 class TestCase extends Orchestra
 {
+    use WithWorkbench;
+
     /**
      * Setup the test environment.
      */
@@ -44,40 +47,6 @@ class TestCase extends Orchestra
             WidgetServiceProvider::class,
             InertiaServiceProvider::class,
         ];
-    }
-
-    /**
-     * Define the database migrations.
-     *
-     * @return void
-     */
-    protected function defineDatabaseMigrations()
-    {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('public_id')->unique();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->string('status')->default(Status::Available->value);
-            $table->unsignedInteger('price')->default(0);
-            $table->boolean('best_seller')->default(false);
-            $table->timestamps();
-        });
-    }
-
-    /**
-     * Define the routes setup.
-     *
-     * @param  \Illuminate\Routing\Router  $router
-     * @return void
-     */
-    protected function defineRoutes($router)
-    {
-        $router->middleware([\Inertia\Middleware::class])
-            ->group(function ($router) {
-                // $router->get('/', fn () => inertia('Index'))
-                //     ->name('index');
-            });
     }
 
     /**
