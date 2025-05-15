@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use Honed\Widget\Tests\Stubs\Product;
 use Honed\Widget\Tests\Stubs\Status;
-use Honed\Widget\Tests\TestCase;
 use Illuminate\Support\Str;
+use Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
 

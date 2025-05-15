@@ -75,9 +75,9 @@ class DatabaseDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function get($widget, $scope)
+    public function get($scope, $group = null)
     {
-        if ($record = $this->retrieve($widget, $scope)) {
+        if ($record = $this->retrieve($scope, $group)) {
 
         }
         
@@ -90,12 +90,12 @@ class DatabaseDriver implements Driver
      * @param  mixed  $scope
      * @return object|null
      */
-    protected function retrieve($widget, $scope)
+    protected function retrieve($scope, $group = null)
     {
         return $this->newQuery()
-            ->where('name', $widget)
             ->where('scope', Widget::serializeScope($scope))
-            ->first();
+            ->where('group', $group)
+            ->get();
     }
 
     /**

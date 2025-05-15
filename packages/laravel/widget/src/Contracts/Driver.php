@@ -6,9 +6,50 @@ namespace Honed\Widget\Contracts;
 
 interface Driver
 {
-    public function get(string $widget, string $scope): mixed;
+    /**
+     * Get all widgets for a given scope and group.
+     * 
+     * @param string $scope
+     * @param string|null $group
+     * @return mixed
+     */
+    public function get($scope, $group = null);
 
-    public function set(string $widget, string $scope, mixed $value): void;
+    /**
+     * Determine if a widget exists for a given scope, widget name and group.
+     * 
+     * @param string $widget
+     * @param string $scope
+     * @param string|null $group
+     * @return bool
+     */
+    public function exists($widget, $scope, $group = null);
 
-    public function delete(string $widget, string $scope): void;   
+    /**
+     * Set a widget for a given scope, widget name and group.
+     * 
+     * @param string $widget
+     * @param string $scope
+     * @param string|null $group
+     * @return void
+     */
+    public function set($widget, $scope, $group = null);
+
+    /**
+     * Delete a widget for a given scope, widget name and group.
+     * 
+     * @param string $widget
+     * @param string $scope
+     * @param string|null $group
+     * @return void
+     */
+    public function delete($widget, $scope, $group = null);
+
+    /**
+     * Purge all widgets by name from storage.
+     * 
+     * @param string|iterable<int, string> ...$widgets
+     * @return void
+     */
+    public function purge(...$widgets);
 }

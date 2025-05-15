@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Widget;
 
+use Honed\Widget\Contracts\SerializesScope;
 use Honed\Widget\Drivers\Decorator;
 use Honed\Widget\Drivers\ArrayDriver;
 use Honed\Widget\Drivers\CacheDriver;
 use Honed\Widget\Drivers\CookieDriver;
 use Honed\Widget\Drivers\DatabaseDriver;
+use Honed\Widget\Exceptions\CannotSerializeScopeException;
 use Illuminate\Contracts\Container\Container;
 use Honed\Widget\Exceptions\InvalidDriverException;
 use Honed\Widget\Exceptions\UndefinedDriverException;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Honed\Widget\Drivers\Decorator
@@ -35,7 +38,7 @@ class WidgetManager
     /**
      * The registered custom drivers.
      *
-     * @var array
+     * @var array<string, \Closure(\Illuminate\Contracts\Container\Container, array<string, mixed>):mixed>
      */
     protected $customDrivers = [];
 
@@ -117,15 +120,18 @@ class WidgetManager
             UndefinedDriverException::throw($name);
         }
 
-        if (isset($this->customDrivers[$config['driver']])) {
+        /** @var string */
+        $driver = $config['driver'];
+
+        if (isset($this->customDrivers[$driver])) {
             $driver = $this->callCustomDriver($config);
         } else {
-            $driverMethod = 'create'.ucfirst($config['driver']).'Driver';
+            $driverMethod = 'create'.ucfirst($driver).'Driver';
 
             if (method_exists($this, $driverMethod)) {
                 $driver = $this->{$driverMethod}($config, $name);
             } else {
-                InvalidDriverException::throw($config['driver']);
+                InvalidDriverException::throw($driver);
             }
         }
 
@@ -140,11 +146,12 @@ class WidgetManager
     /**
      * Call a custom driver.
      *
-     * @param array<string, callable> $config
+     * @param array<string, mixed> $config
      * @return mixed
      */
     protected function callCustomDriver($config)
     {
+        /** @var string */
         $driver = $config['driver'];
 
         return $this->customDrivers[$driver]($this->container, $config);
@@ -160,7 +167,7 @@ class WidgetManager
         /** @var \Illuminate\Contracts\Events\Dispatcher */
         $events = $this->container->get('events');
 
-        return new ArrayDriver($events, []);
+        return new ArrayDriver($events);
     }
 
     /**
@@ -204,7 +211,7 @@ class WidgetManager
     /**
      * Create an instance of the database driver.
      *
-     * @param array $config
+     * @param array<string, mixed> $config
      * @param string $name
      * @return \Honed\Widget\Drivers\DatabaseDriver
      */
@@ -225,6 +232,26 @@ class WidgetManager
             $config,
             $name
         );
+    }
+
+    /**
+     * Serialize the given scope for storage.
+     *
+     * @param  mixed  $scope
+     * @return string
+     * 
+     * @throws \Honed\Widget\Exceptions\CannotSerializeScopeException
+     */
+    public function serializeScope($scope)
+    {
+        return match (true) {
+            $scope instanceof SerializesScope => $scope->serializeScope(),
+            is_string($scope) => $scope,
+            is_numeric($scope) => (string) $scope,
+            $scope instanceof Model && $this->useMorphMap => $scope->getMorphClass().'|'.$scope->getKey(),
+            $scope instanceof Model && ! $this->useMorphMap => $scope::class.'|'.$scope->getKey(),
+            default => CannotSerializeScopeException::throw()
+        };
     }
 
     /**
@@ -253,7 +280,10 @@ class WidgetManager
                 return call_user_func($this->defaultScopeResolver, $driver);
             }
 
-            return $this->container['auth']->guard()->user();
+            /** @var \Illuminate\Auth\AuthManager */
+            $auth = $this->container->get('auth');
+
+            return $auth->guard()->user();
         };
     }
 
@@ -272,13 +302,14 @@ class WidgetManager
      * Get the driver configuration.
      *
      * @param string $name
-     * @return array
+     * @return array<string, mixed>|null
      */
     public function getConfig($name)
     {
         /** @var \Illuminate\Config\Repository */
         $config = $this->container->get('config');
 
+        /** @var array<string, mixed> */
         return $config->get("widget.drivers.{$name}");
     }
 
@@ -292,6 +323,7 @@ class WidgetManager
         /** @var \Illuminate\Config\Repository */
         $config = $this->container->get('config');
 
+        /** @var string */
         return $config->get('widget.default') ?? 'database';
     }
 
@@ -312,7 +344,7 @@ class WidgetManager
     /**
      * Unset the given driver instances.
      *
-     * @param  array|string|null  $name
+     * @param  string|array<int, string>|null  $name
      * @return $this
      */
     public function forgetDriver($name = null)
@@ -344,7 +376,7 @@ class WidgetManager
      * Register a custom driver creator Closure.
      *
      * @param  string  $driver
-     * @param  \Closure  $callback
+     * @param  \Closure(\Illuminate\Contracts\Container\Container, array<string, mixed>):mixed  $callback
      * @return $this
      */
     public function extend($driver, $callback)
@@ -375,7 +407,7 @@ class WidgetManager
      * Dynamically call the default driver instance.
      *
      * @param  string  $method
-     * @param  array<mixed></mixed>  $parameters
+     * @param  array<array-key, mixed>  $parameters
      * @return mixed
      */
     public function __call($method, $parameters)
