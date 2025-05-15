@@ -8,6 +8,7 @@ use Honed\Widget\Contracts\Driver;
 use Illuminate\Cache\CacheManager;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Config\Repository;
+
 class CacheDriver implements Driver
 {
     /**
@@ -45,5 +46,13 @@ class CacheDriver implements Driver
         $this->events = $events;
         $this->config = $config;
     }
+
+    /**
+     * Cache key is: group.scope
+     * 
+     * Value is [
+     *  widget => order,
+     * ]
+     */
     
 }

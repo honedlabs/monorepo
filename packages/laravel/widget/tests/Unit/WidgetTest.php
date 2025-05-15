@@ -7,4 +7,8 @@ use Workbench\App\Models\User;
 it('tests', function () {
     dd(User::query()->get());
     expect(true)->toBeTrue();
+
+    // Widget::for($user)->get();
+
+    // Widget::for($user)->inertia();
 });

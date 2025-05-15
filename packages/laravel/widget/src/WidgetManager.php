@@ -15,6 +15,7 @@ use Illuminate\Contracts\Container\Container;
 use Honed\Widget\Exceptions\InvalidDriverException;
 use Honed\Widget\Exceptions\UndefinedDriverException;
 use Illuminate\Database\Eloquent\Model;
+use Inertia\Inertia;
 
 /**
  * @mixin \Honed\Widget\Drivers\Decorator
@@ -401,6 +402,35 @@ class WidgetManager
         }
 
         return $this;
+    }
+
+    /**
+     * Get the widgets for an inertia page.
+     * 
+     * @param string|null $scope
+     * @param string|null $group
+     * @return mixed
+     */
+    public function inertia($scope = null, $group = null)
+    {
+        return match ($this->getInertia()) {
+            'defer' => Inertia::defer(fn () => $this->driver()->get($scope, $group), 'widgets'),
+            'lazy' => Inertia::lazy(fn () => $this->driver()->get($scope, $group)),
+            default => $this->driver()->get($scope, $group),
+        };
+    }
+
+    /**
+     * Get the inertia retrieval method.
+     * 
+     * @return string
+     */
+    protected function getInertia()
+    {
+        /** @var \Illuminate\Contracts\Config\Repository */
+        $config = $this->container->get('config');
+
+        return $config->get('widget.inertia') ?? 'sync';
     }
 
     /**

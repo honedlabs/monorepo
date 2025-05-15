@@ -35,5 +35,13 @@ class CookieDriver implements Driver
         $this->cookies = $cookies;
         // $this->config = $config;
     }
+
+    /**
+     * Cookie name is: group.scope
+     * 
+     * Value is [
+     *  widget => order,
+     * ]
+     */
     
 }

@@ -67,10 +67,8 @@ class Decorator implements Driver
     /**
      * {@inheritdoc}
      */
-    public function get(string $widget, string $scope): mixed
+    public function get($scope, $group = null)
     {
-        $widget = $this->resolveWidget($widget);
-
         $scope = $this->resolveScope($scope);
 
         $item = null;
@@ -83,7 +81,7 @@ class Decorator implements Driver
     /**
      * {@inheritdoc}
      */
-    public function set(string $widget, string $scope, mixed $value): void
+    public function set($widget, $scope, $group = null)
     {
         $widget = $this->resolveWidget($widget);
 
@@ -98,7 +96,7 @@ class Decorator implements Driver
     /**
      * {@inheritdoc}
      */
-    public function delete(string $widget, string $scope): void
+    public function delete($widget, $scope, $group = null)
     {
         $widget = $this->resolveWidget($widget);
 
