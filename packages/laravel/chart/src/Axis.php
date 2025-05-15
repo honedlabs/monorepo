@@ -4,22 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use JsonSerializable;
-use Honed\Core\Primitive;
 use Honed\Chart\Concerns\HasColor;
-use Honed\Chart\Concerns\FiltersUndefined;
-use Illuminate\Contracts\Support\Arrayable;
 use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Chart\Exceptions\InvalidAxisException;
 use Honed\Chart\Concerns\ExcludesFromDomainCalculation;
 
-/**
- * @implements \Illuminate\Contracts\Support\Arrayable<string, mixed>
- */
-class Axis implements Arrayable, JsonSerializable
+class Axis extends ChartComponent
 {
     use HasColor;
-    use FiltersUndefined;
     use ExcludesFromDomainCalculation;
     use HasAnimationDuration;
 
@@ -170,17 +162,9 @@ class Axis implements Arrayable, JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize(): mixed
+    public function representation()
     {
-        return $this->toArray();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray()
-    {
-        return $this->filterUndefined([
+        return [
             'type' => $this->getType(),
             'position' => $this->getPosition(),
             ...($this->getLabel()?->toArray() ?? []),
@@ -211,7 +195,7 @@ class Axis implements Arrayable, JsonSerializable
             'minMaxTicksOnly' => null,
             'tickValues' => null,
             'tickTextHideOverlapping' => null,
-        ]);
+        ];
     }
 
     public function __get($name)

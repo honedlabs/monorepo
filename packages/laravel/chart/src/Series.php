@@ -29,6 +29,13 @@ abstract class Series extends Primitive
     protected $id;
 
     /**
+     * Whether to display the series as a sparkline.
+     * 
+     * @var bool|null
+     */
+    protected $sparkline;
+
+    /**
      * Create a new series instance.
      * 
      * @return static
@@ -97,6 +104,29 @@ abstract class Series extends Primitive
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set whether to display the series as a sparkline.
+     * 
+     * @param bool|null $sparkline
+     * @return $this
+     */
+    public function sparkline($sparkline)
+    {
+        $this->sparkline = $sparkline;
+
+        return $this;
+    }
+
+    /**
+     * Get whether to display the series is a sparkline.
+     * 
+     * @return bool|null
+     */
+    public function isSparkline()
+    {
+        return $this->sparkline;
     }
 
     /**

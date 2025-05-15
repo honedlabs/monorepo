@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Concerns\FiltersUndefined;
-use Honed\Core\Primitive;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Honed\Chart\Concerns\HasAnimationDuration;
@@ -14,9 +12,8 @@ use Honed\Chart\Exceptions\MissingDataException;
 /**
  * @template TData of mixed = mixed
  */
-class Chart extends Primitive
+class Chart extends ChartComponent
 {
-    use FiltersUndefined;
     use HasAnimationDuration;
 
     /**
@@ -291,9 +288,17 @@ class Chart extends Primitive
     /**
      * {@inheritDoc}
      */
-    public function toArray()
+    public static function flushState()
     {
-        return $this->filterUndefined([
+        //
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function representation()
+    {
+        return [
             'data' => $this->getFilteredData(),
             'yDomain' => $this->getDomain(),
             'yDomain' => $this->getRange(),
@@ -305,6 +310,6 @@ class Chart extends Primitive
             'tooltip' => $this->getTooltip()?->toArray(),
             'legend' => $this->getLegend()?->toArray(),
             ...$this->animationDurationToArray()
-        ]);
+        ];
     }
 }
