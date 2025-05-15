@@ -184,7 +184,7 @@ class WidgetManager
         /** @var \Illuminate\Contracts\Events\Dispatcher */
         $events = $this->container->get('events');
 
-        /** @var \Illuminate\Config\Repository */
+        /** @var \Illuminate\Contracts\Config\Repository */
         $config = $this->container->get('config');
 
         return new CacheDriver($cache, $events, $config);
@@ -203,7 +203,7 @@ class WidgetManager
         /** @var \Illuminate\Contracts\Events\Dispatcher */
         $events = $this->container->get('events');
 
-        /** @var \Illuminate\Config\Repository */
+        /** @var \Illuminate\Contracts\Config\Repository */
         $config = $this->container->get('config');
 
         return new CookieDriver($cookies, $events, $config);
@@ -224,7 +224,7 @@ class WidgetManager
         /** @var \Illuminate\Contracts\Events\Dispatcher */
         $events = $this->container->get('events');
 
-        /** @var \Illuminate\Config\Repository */
+        /** @var \Illuminate\Contracts\Config\Repository */
         $config = $this->container->get('config');
 
         return new DatabaseDriver(
@@ -281,7 +281,7 @@ class WidgetManager
                 return call_user_func($this->defaultScopeResolver, $driver);
             }
 
-            /** @var \Illuminate\Auth\AuthManager */
+            /** @var \Illuminate\Contracts\Auth\Factory */
             $auth = $this->container->get('auth');
 
             return $auth->guard()->user();
@@ -307,7 +307,7 @@ class WidgetManager
      */
     public function getConfig($name)
     {
-        /** @var \Illuminate\Config\Repository */
+        /** @var \Illuminate\Contracts\Config\Repository */
         $config = $this->container->get('config');
 
         /** @var array<string, mixed> */
@@ -321,7 +321,7 @@ class WidgetManager
      */
     public function getDefaultDriver()
     {
-        /** @var \Illuminate\Config\Repository */
+        /** @var \Illuminate\Contracts\Config\Repository */
         $config = $this->container->get('config');
 
         /** @var string */
@@ -336,7 +336,7 @@ class WidgetManager
      */
     public function setDefaultDriver($name)
     {
-        /** @var \Illuminate\Config\Repository */
+        /** @var \Illuminate\Contracts\Config\Repository */
         $config = $this->container->get('config');
 
         $config->set('widget.default', $name);

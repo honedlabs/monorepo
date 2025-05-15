@@ -81,16 +81,15 @@ class Decorator implements Driver
     /**
      * {@inheritdoc}
      */
-    public function set($widget, $scope, $group = null)
+    public function set($widget, $scope, $group = null, $order = 0)
     {
         $widget = $this->resolveWidget($widget);
 
         $scope = $this->resolveScope($scope);
 
-        $this->driver->set($widget, $scope, $value);
+        $this->driver->set($widget, $scope, $group, $order);
 
         Event::dispatch(new WidgetUpdated($widget, $scope));
-
     }
 
     /**
@@ -105,6 +104,24 @@ class Decorator implements Driver
         $this->driver->delete($widget, $scope);
 
         Event::dispatch(new WidgetDeleted($widget, $scope));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exists($widget, $scope, $group = null)
+    {
+        $widget = $this->resolveWidget($widget);
+
+        $scope = $this->resolveScope($scope);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function purge(...$widgets)
+    {
+        $this->driver->purge(...$widgets);
     }
 
     /**
@@ -151,7 +168,6 @@ class Decorator implements Driver
 
         return $this;
     }
-
 
     /**
      * Dynamically create a pending feature interaction.

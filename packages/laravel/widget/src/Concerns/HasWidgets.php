@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Widget\Concerns;
 
-use Honed\Widget\Attributes\Widgets;
-use Honed\Widget\Facades\Widget;
+use Honed\Widget\Attributes\Widgets as WidgetsAttribute;
+use Honed\Widget\Facades\Widgets;
 use Illuminate\Support\Arr;
 
 trait HasWidgets
@@ -19,7 +17,7 @@ trait HasWidgets
     public function widgets($driver = null)
     {
         $widgets = [
-            ...Widget::driver($driver)->for($this),
+            ...Widgets::driver($driver)->for($this),
             ...$this->getWidgets(),
             ...$this->getWidgetsAttribute(),
         ];

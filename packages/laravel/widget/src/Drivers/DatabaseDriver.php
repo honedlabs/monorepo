@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Honed\Widget\Drivers;
 
 use Honed\Widget\Contracts\Driver;
-use Honed\Widget\Facades\Widget;
+use Honed\Widget\Facades\Widgets;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Support\Carbon;
 
 class DatabaseDriver implements Driver
 {
@@ -77,26 +78,73 @@ class DatabaseDriver implements Driver
      */
     public function get($scope, $group = null)
     {
-        if ($record = $this->retrieve($scope, $group)) {
-
-        }
-        
-    }
-
-    /**
-     * Retrieve the value for the given widget and scope from storage.
-     *
-     * @param  string  $widget
-     * @param  mixed  $scope
-     * @return object|null
-     */
-    protected function retrieve($scope, $group = null)
-    {
         return $this->newQuery()
-            ->where('scope', Widget::serializeScope($scope))
+            ->where('scope', Widgets::serializeScope($scope))
             ->where('group', $group)
             ->get();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exists($widget, $scope, $group = null)
+    {
+        return $this->newQuery()
+            ->where('widget', $widget)
+            ->where('scope', Widgets::serializeScope($scope))
+            ->where('group', $group)
+            ->exists();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function set($widget, $scope, $group = null, $order = 0)
+    {
+        $this->newQuery()
+            ->upsert([
+                'group' => $group,
+                'name' => $widget,
+                'scope' => Widgets::serializeScope($scope),
+                'order' => $order,
+                self::CREATED_AT => $now = Carbon::now(),
+                self::UPDATED_AT => $now,
+            ], [
+                'group',
+                'name',
+                'scope'
+            ], [
+                'order',
+                self::UPDATED_AT,
+            ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function update($widget, $scope, $group = null, $order = 0)
+    {
+        return (bool) $this->newQuery()
+            ->where('name', $widget)
+            ->where('scope', Widgets::serializeScope($scope))
+            ->where('group', $group)
+            ->update([
+                'order' => $order,
+                self::UPDATED_AT => Carbon::now(),
+            ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete($widget, $scope, $group = null)
+    {
+        return (bool) $this->newQuery()
+            ->where('name', $widget)
+            ->where('scope', Widgets::serializeScope($scope))
+            
+    }
+    
 
     /**
      * Create a new table query.

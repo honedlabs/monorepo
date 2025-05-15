@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Widget\Commands;
 
 use Illuminate\Console\GeneratorCommand;

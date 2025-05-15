@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Illuminate\Console\Command;
 
 arch('it will not use debugging functions')
@@ -25,11 +23,12 @@ arch('contracts')
     ->expect('Honed\Widget\Contracts')
     ->toBeInterfaces();
 
+arch('drivers')
+    ->expect('Honed\Widget\Drivers')
+    ->toImplement('Honed\Widget\Contracts\Driver');
+    
 arch('events')
     ->expect('Honed\Widget\Events')
     ->toBeClasses();
 
-arch('drivers')
-    ->expect('Honed\Widget\Drivers')
-    ->toImplement('Honed\Widget\Contracts\Driver');
     

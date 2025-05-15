@@ -31,9 +31,21 @@ interface Driver
      * @param string $widget
      * @param string $scope
      * @param string|null $group
+     * @param int $order
      * @return void
      */
-    public function set($widget, $scope, $group = null);
+    public function set($widget, $scope, $group = null, $order = 0);
+
+    /**
+     * Update the order of a widget for a given scope, widget name and group.
+     * 
+     * @param string $widget
+     * @param string $scope
+     * @param string|null $group
+     * @param int $order
+     * @return bool
+     */
+    public function update($widget, $scope, $group = null, $order = 0);
 
     /**
      * Delete a widget for a given scope, widget name and group.
@@ -51,5 +63,5 @@ interface Driver
      * @param string|iterable<int, string> ...$widgets
      * @return void
      */
-    public function purge(...$widgets);
+    // public function purge(...$widgets);
 }
