@@ -53,10 +53,7 @@ class CacheDriver implements Driver
      */
     public function get($scope, $group = null)
     {
-        return $this->cache->(
-            $this->key($scope, $group), 
-            fn () => 
-        )
+        return [];
     }
 
     /**
@@ -64,7 +61,7 @@ class CacheDriver implements Driver
      */
     public function exists($widget, $scope, $group = null)
     {
-        return $this->cache->has($this->key($scope, $group, $widget));
+
     }
 
     /**
@@ -72,7 +69,7 @@ class CacheDriver implements Driver
      */
     public function set($widget, $scope, $group = null, $order = 0)
     {
-        
+
     }
 
     /**
@@ -89,7 +86,7 @@ class CacheDriver implements Driver
     public function delete($widget, $scope, $group = null)
     {
 
-    }
+    } 
 
     public function getDuration()
     {

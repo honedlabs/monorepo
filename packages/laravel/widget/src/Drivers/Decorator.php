@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Widget\Drivers;
 
 use Honed\Widget\Contracts\Driver;
@@ -71,11 +69,11 @@ class Decorator implements Driver
     {
         $scope = $this->resolveScope($scope);
 
-        $item = null;
+        $this->driver->get($scope, $group);
 
         // Event::dispatch(new WidgetRetrieved($widget, $scope, $item));
 
-        return $item;
+        return null;
     }
 
     /**
@@ -90,6 +88,23 @@ class Decorator implements Driver
         $this->driver->set($widget, $scope, $group, $order);
 
         Event::dispatch(new WidgetUpdated($widget, $scope));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function update($widget, $scope, $group = null, $order = 0)
+    {
+        $widget = $this->resolveWidget($widget);
+
+        $scope = $this->resolveScope($scope);
+
+        $outcome = $this->driver->update($widget, $scope, $group, $order);
+
+        Event::dispatch(new WidgetUpdated($widget, $scope));
+        
+        return $outcome;
+
     }
 
     /**
@@ -116,13 +131,13 @@ class Decorator implements Driver
         $scope = $this->resolveScope($scope);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function purge(...$widgets)
-    {
-        $this->driver->purge(...$widgets);
-    }
+    // /**
+    //  * {@inheritdoc}
+    //  */
+    // public function purge(...$widgets)
+    // {
+    //     $this->driver->purge(...$widgets);
+    // }
 
     /**
      * Retrieve the widget's name.

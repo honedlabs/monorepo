@@ -11,7 +11,7 @@ interface Driver
      * 
      * @param string $scope
      * @param string|null $group
-     * @return mixed
+     * @return array<int,mixed>
      */
     public function get($scope, $group = null);
 

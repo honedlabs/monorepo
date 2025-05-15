@@ -11,7 +11,7 @@ use Workbench\App\Models\User;
  *
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<TModel>
  */
-class UserFactory extends \Orchestra\Testbench\Factories\UserFactory
+class UserFactory extends \Workbench\Database\Factories\UserFactory
 {
     /**
      * The name of the factory's corresponding model.

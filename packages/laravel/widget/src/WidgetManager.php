@@ -408,10 +408,12 @@ class WidgetManager
      */
     public function inertia($scope = null, $group = null)
     {
+        $callback = fn () => $this->driver()->get($scope, $group);
+
         return match ($this->getInertia()) {
-            'defer' => Inertia::defer(fn () => $this->driver()->get($scope, $group), 'widgets'),
-            'lazy' => Inertia::lazy(fn () => $this->driver()->get($scope, $group)),
-            default => $this->driver()->get($scope, $group),
+            'defer' => Inertia::defer($callback, 'widgets'),
+            'lazy' => Inertia::lazy($callback),
+            default => $callback(),
         };
     }
 
