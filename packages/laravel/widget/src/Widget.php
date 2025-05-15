@@ -39,9 +39,7 @@ abstract class Widget
      */
     public function name()
     {
-        return $this->name 
-            ?? $this->getName() 
-            ?? $this->guessWidgetName();
+        return $this->name ?? $this->getName() ?? $this->guessWidgetName();
     }
 
     /**
@@ -65,6 +63,7 @@ abstract class Widget
      * Set the callback to guess the widget name.
      * 
      * @param callable(static):string $callback
+     * @return void
      */
     public static function guessWidgetNameUsing($callback)
     {
@@ -77,12 +76,4 @@ abstract class Widget
      * @return mixed
      */
     abstract public function getValue();
-
-    //
-
-    public static function register()
-    {
-        //
-    }
-    
 }

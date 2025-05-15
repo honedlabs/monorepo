@@ -4,6 +4,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Group Prefix
+    |--------------------------------------------------------------------------
+    |
+    | Here you can specify the default prefix to be used to group widgets for
+    | different purposes. By default, widgets are not grouped and so have no
+    | prefix.
+    |
+    */
+    'group' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | Inertia Retrieval
     |--------------------------------------------------------------------------
     |
@@ -29,7 +41,7 @@ return [
     |
     */
 
-    'default' => env('WIDGET_DRIVER', 'database'), // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig
+    'default' => env('WIDGET_DRIVER', 'database'), 
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +67,7 @@ return [
 
         'cookie' => [
             'driver' => 'cookie',
-            'expiration' => 60 * 24 * 30
+            'expiration' => 60 * 24 * 365
         ],
 
         'database' => [

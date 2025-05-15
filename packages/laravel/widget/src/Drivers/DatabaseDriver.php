@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Widget\Drivers;
 
 use Honed\Widget\Contracts\Driver;
+use Honed\Widget\Facades\Widget;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Connection;
@@ -69,6 +70,32 @@ class DatabaseDriver implements Driver
         $this->events = $events;
         $this->config = $config;
         $this->name = $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($widget, $scope)
+    {
+        if ($record = $this->retrieve($widget, $scope)) {
+
+        }
+        
+    }
+
+    /**
+     * Retrieve the value for the given widget and scope from storage.
+     *
+     * @param  string  $widget
+     * @param  mixed  $scope
+     * @return object|null
+     */
+    protected function retrieve($widget, $scope)
+    {
+        return $this->newQuery()
+            ->where('name', $widget)
+            ->where('scope', Widget::serializeScope($scope))
+            ->first();
     }
 
     /**

@@ -15,10 +15,12 @@ abstract class WidgetMigration extends Migration
      */
     public function getConnection()
     {
+        /** @var string|null */
         $connection = config('widget.drivers.database.connection');
 
+        // @phpstan-ignore-next-line return.type
         return ($connection === null || $connection === 'null') 
-            ? config('database.default') 
+            ? config('database.default')
             : $connection;
     }
 
@@ -29,6 +31,7 @@ abstract class WidgetMigration extends Migration
      */
     public function getTable()
     {
+        /** @var string */
         return config('widget.drivers.database.table', 'widgets');
     }
 }

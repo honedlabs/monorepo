@@ -33,6 +33,13 @@ class WidgetManager
     protected $drivers = [];
 
     /**
+     * The registered custom drivers.
+     *
+     * @var array
+     */
+    protected $customDrivers = [];
+
+    /**
      * The default scope resolver.
      * 
      * @var (callable(string):mixed)|null
@@ -110,8 +117,8 @@ class WidgetManager
             UndefinedDriverException::throw($name);
         }
 
-        if (isset($this->customCreators[$config['driver']])) {
-            $driver = $this->callCustomCreator($config);
+        if (isset($this->customDrivers[$config['driver']])) {
+            $driver = $this->callCustomDriver($config);
         } else {
             $driverMethod = 'create'.ucfirst($config['driver']).'Driver';
 
@@ -131,13 +138,29 @@ class WidgetManager
     }
 
     /**
+     * Call a custom driver.
+     *
+     * @param array<string, callable> $config
+     * @return mixed
+     */
+    protected function callCustomDriver($config)
+    {
+        $driver = $config['driver'];
+
+        return $this->customDrivers[$driver]($this->container, $config);
+    }
+
+    /**
      * Create an instance of the array driver.
      *
      * @return \Honed\Widget\Drivers\ArrayDriver
      */
     public function createArrayDriver()
     {
-        return new ArrayDriver($this->container['events'], []);
+        /** @var \Illuminate\Contracts\Events\Dispatcher */
+        $events = $this->container->get('events');
+
+        return new ArrayDriver($events, []);
     }
 
     /**
@@ -147,7 +170,16 @@ class WidgetManager
      */
     public function createCacheDriver()
     {
-        return new CacheDriver($this->container['cache'], $this->container['config']);
+        /** @var \Illuminate\Cache\CacheManager */
+        $cache = $this->container->get('cache');
+
+        /** @var \Illuminate\Contracts\Events\Dispatcher */
+        $events = $this->container->get('events');
+
+        /** @var \Illuminate\Config\Repository */
+        $config = $this->container->get('config');
+
+        return new CacheDriver($cache, $events, $config);
     }
     
     /**
@@ -157,7 +189,16 @@ class WidgetManager
      */
     public function createCookieDriver()
     {
-        return new CookieDriver($this->container['cookie'], $this->container['config']);
+        /** @var \Illuminate\Cookie\CookieJar */
+        $cookies = $this->container->get('cookie');
+
+        /** @var \Illuminate\Contracts\Events\Dispatcher */
+        $events = $this->container->get('events');
+
+        /** @var \Illuminate\Config\Repository */
+        $config = $this->container->get('config');
+
+        return new CookieDriver($cookies, $events, $config);
     }
 
     /**
@@ -169,12 +210,20 @@ class WidgetManager
      */
     public function createDatabaseDriver($config, $name)
     {
+        /** @var \Illuminate\Database\DatabaseManager */
+        $db = $this->container->get('db');
+
+        /** @var \Illuminate\Contracts\Events\Dispatcher */
+        $events = $this->container->get('events');
+
+        /** @var \Illuminate\Config\Repository */
+        $config = $this->container->get('config');
+
         return new DatabaseDriver(
-            $this->container['db'],
-            $this->container['events'],
-            $this->container['config'],
-            $name,
-            []
+            $db,
+            $events,
+            $config,
+            $name
         );
     }
 
@@ -227,7 +276,10 @@ class WidgetManager
      */
     public function getConfig($name)
     {
-        return $this->container['config']["widget.drivers.{$name}"];
+        /** @var \Illuminate\Config\Repository */
+        $config = $this->container->get('config');
+
+        return $config->get("widget.drivers.{$name}");
     }
 
     /**
@@ -237,7 +289,10 @@ class WidgetManager
      */
     public function getDefaultDriver()
     {
-        return $this->container['config']->get('widget.default') ?? 'database';
+        /** @var \Illuminate\Config\Repository */
+        $config = $this->container->get('config');
+
+        return $config->get('widget.default') ?? 'database';
     }
 
     /**
@@ -248,7 +303,10 @@ class WidgetManager
      */
     public function setDefaultDriver($name)
     {
-        $this->container['config']->set('widget.default', $name);
+        /** @var \Illuminate\Config\Repository */
+        $config = $this->container->get('config');
+
+        $config->set('widget.default', $name);
     }
 
     /**
@@ -283,6 +341,20 @@ class WidgetManager
     }
 
     /**
+     * Register a custom driver creator Closure.
+     *
+     * @param  string  $driver
+     * @param  \Closure  $callback
+     * @return $this
+     */
+    public function extend($driver, $callback)
+    {
+        $this->customDrivers[$driver] = $callback->bindTo($this, $this);
+
+        return $this;
+    }
+
+    /**
      * Set the container instance used by the manager.
      *
      * @param  \Illuminate\Container\Container  $container
@@ -303,7 +375,7 @@ class WidgetManager
      * Dynamically call the default driver instance.
      *
      * @param  string  $method
-     * @param  array  $parameters
+     * @param  array<mixed></mixed>  $parameters
      * @return mixed
      */
     public function __call($method, $parameters)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget\Exceptions;
 
 use InvalidArgumentException;
@@ -7,15 +9,25 @@ use InvalidArgumentException;
 class InvalidDriverException extends InvalidArgumentException
 {
     /**
-     * Throw an exception if the driver is not supported.
+     * Create a new invalid driver exception.
      * 
      * @param  string  $driver
      */
     public function __construct($driver)
     {
-        parent::__construct("Driver [{$driver}] is not supported.");
+        parent::__construct(
+            "Driver [{$driver}] is not supported.",
+        );
     }
 
+    /**
+     * Throw a new invalid driver exception.
+     *
+     * @param  string  $driver
+     * @return never
+     * 
+     * @throws static
+     */
     public static function throw($driver)
     {
         throw new self($driver);

@@ -30,7 +30,6 @@ class Decorator implements Driver
      */
     protected $driver;
 
-
     /**
      * The default scope resolver.
      *
@@ -81,6 +80,9 @@ class Decorator implements Driver
         return $item;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function set(string $widget, string $scope, mixed $value): void
     {
         $widget = $this->resolveWidget($widget);
@@ -93,6 +95,9 @@ class Decorator implements Driver
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete(string $widget, string $scope): void
     {
         $widget = $this->resolveWidget($widget);
@@ -102,7 +107,6 @@ class Decorator implements Driver
         $this->driver->delete($widget, $scope);
 
         Event::dispatch(new WidgetDeleted($widget, $scope));
-
     }
 
     /**
