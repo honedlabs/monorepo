@@ -5,7 +5,7 @@ namespace Honed\Widget\Concerns;
 use Honed\Widget\Facades\Widgets;
 use Honed\Widget\WidgetManager;
 
-trait Keys
+trait HasWidgetKeys
 {
     /**
      * Create the key identifier for the widget.

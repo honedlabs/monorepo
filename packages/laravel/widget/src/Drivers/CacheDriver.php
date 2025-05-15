@@ -2,6 +2,7 @@
 
 namespace Honed\Widget\Drivers;
 
+use Honed\Widget\Concerns\HasWidgetKeys;
 use Honed\Widget\Contracts\Driver;
 use Illuminate\Cache\CacheManager;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -9,6 +10,8 @@ use Illuminate\Config\Repository;
 
 class CacheDriver implements Driver
 {
+    use HasWidgetKeys;
+
     /**
      * The cache manager.
      *
@@ -43,6 +46,59 @@ class CacheDriver implements Driver
         $this->cache = $cache;
         $this->events = $events;
         $this->config = $config;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($scope, $group = null)
+    {
+        return $this->cache->(
+            $this->key($scope, $group), 
+            fn () => 
+        )
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exists($widget, $scope, $group = null)
+    {
+        return $this->cache->has($this->key($scope, $group, $widget));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function set($widget, $scope, $group = null, $order = 0)
+    {
+        
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function update($widget, $scope, $group = null, $order = 0)
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete($widget, $scope, $group = null)
+    {
+
+    }
+
+    public function getDuration()
+    {
+        return $this->config->get('widget.cache.duration');
+    }
+
+    public function getPrefix()
+    {
+        return $this->config->get('widget.cache.prefix');
     }
 
     /**

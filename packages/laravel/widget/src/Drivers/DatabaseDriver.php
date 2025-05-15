@@ -142,7 +142,8 @@ class DatabaseDriver implements Driver
         return (bool) $this->newQuery()
             ->where('name', $widget)
             ->where('scope', Widgets::serializeScope($scope))
-            
+            ->where('group', $group)
+            ->delete();
     }
     
 

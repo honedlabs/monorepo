@@ -73,24 +73,15 @@ class WidgetManager
      * 
      * @param string|null $name
      * @return \Honed\Widget\Drivers\Decorator
+     * 
+     * @throws \Honed\Widget\Exceptions\UndefinedDriverException
+     * @throws \Honed\Widget\Exceptions\InvalidDriverException
      */
     public function driver($name = null)
     {
-        $name = $name ?? $this->getDefaultDriver();
+        $name = $name ?: $this->getDefaultDriver();
 
         return $this->drivers[$name] = $this->get($name);
-    }
-
-    /**
-     * Flush the driver caches.
-     *
-     * @return void
-     */
-    public function flushCache()
-    {
-        foreach ($this->drivers as $driver) {
-            $driver->flushCache();
-        }
     }
 
     /**
@@ -98,6 +89,9 @@ class WidgetManager
      *
      * @param  string  $name
      * @return \Honed\Widget\Drivers\Decorator
+     * 
+     * @throws \Honed\Widget\Exceptions\UndefinedDriverException
+     * @throws \Honed\Widget\Exceptions\InvalidDriverException
      */
     public function get($name)
     {
@@ -130,6 +124,7 @@ class WidgetManager
             $driverMethod = 'create'.ucfirst($driver).'Driver';
 
             if (method_exists($this, $driverMethod)) {
+                /** @var \Honed\Widget\Contracts\Driver */
                 $driver = $this->{$driverMethod}($config, $name);
             } else {
                 InvalidDriverException::throw($driver);
@@ -148,7 +143,7 @@ class WidgetManager
      * Call a custom driver.
      *
      * @param array<string, mixed> $config
-     * @return mixed
+     * @return \Honed\Widget\Contracts\Driver
      */
     protected function callCustomDriver($config)
     {
@@ -236,6 +231,19 @@ class WidgetManager
     }
 
     /**
+     * Specify that the Eloquent morph map should be used when serializing.
+     *
+     * @param  bool  $value
+     * @return $this
+     */
+    public function useMorphMap($value = true)
+    {
+        $this->useMorphMap = $value;
+
+        return $this;
+    }
+
+    /**
      * Serialize the given scope for storage.
      *
      * @param  mixed  $scope
@@ -253,19 +261,6 @@ class WidgetManager
             $scope instanceof Model && ! $this->useMorphMap => $scope::class.'|'.$scope->getKey(),
             default => CannotSerializeScopeException::throw()
         };
-    }
-
-    /**
-     * Specify that the Eloquent morph map should be used when serializing.
-     *
-     * @param  bool  $value
-     * @return $this
-     */
-    public function useMorphMap($value = true)
-    {
-        $this->useMorphMap = $value;
-
-        return $this;
     }
 
     /**
@@ -442,6 +437,6 @@ class WidgetManager
      */
     public function __call($method, $parameters)
     {
-        return $this->driver()->$method(...$parameters);
+        return $this->driver()->{$method}(...$parameters);
     }
 }
