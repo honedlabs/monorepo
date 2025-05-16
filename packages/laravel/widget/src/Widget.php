@@ -77,4 +77,9 @@ abstract class Widget
     {
         static::$guessWidgetNameUsing = $callback;
     }
+
+    public static function register()
+    {
+        //
+    }
 }

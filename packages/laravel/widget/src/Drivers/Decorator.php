@@ -162,6 +162,16 @@ class Decorator implements Driver
     }
 
     /**
+     * Retrieve the default scope.
+     *
+     * @return mixed
+     */
+    protected function defaultScope()
+    {
+        return ($this->defaultScopeResolver)();
+    }
+
+    /**
      * Get the underlying driver instance.
      * 
      * @return \Honed\Widget\Contracts\Driver
@@ -197,6 +207,6 @@ class Decorator implements Driver
             return $this->macroCall($name, $parameters);
         }
 
-        // Forward to the driver
+        return $this->driver->{$name}(...$parameters);
     }
 }
