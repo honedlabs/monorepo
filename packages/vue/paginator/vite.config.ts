@@ -7,15 +7,26 @@ export default defineConfig({
       exclude: ["src/test/**"],
       rollupTypes: true,
       insertTypesEntry: true,
-      include: ["src/**/*.ts", "src/**/*.d.ts"],
+      include: ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
       outDir: "dist",
     }),
   ],
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
-      name: ':package_name',
-      fileName: (format) => `index.${format === 'es' ? 'js' : 'umd.cjs'}`
+      name: '@honed/paginator',
+      formats: ['es', 'umd'],
+      fileName: (format) => `index.${format}.js`,
+    },
+    rollupOptions: {
+      external: ['vue', '@inertiajs/vue3', 'axios'],
+      output: {
+        globals: {
+          vue: 'Vue',
+          '@inertiajs/vue3': 'Inertia',
+          axios: 'axios',
+        },
+      },
     },
   },
 })
