@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Widget\Drivers;
 
 use Honed\Widget\Contracts\Driver;
-use Illuminate\Config\Repository;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Support\Facades\Cookie;

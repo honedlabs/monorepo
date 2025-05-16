@@ -6,7 +6,7 @@ namespace Honed\Widget\Drivers;
 
 use Honed\Widget\Contracts\Driver;
 use Honed\Widget\Facades\Widgets;
-use Illuminate\Config\Repository;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
@@ -24,7 +24,7 @@ class DatabaseDriver implements Driver
     /**
      * The user configuration.
      *
-     * @var \Illuminate\Config\Repository
+     * @var \Illuminate\Contracts\Config\Repository
      */
     protected $config;
 

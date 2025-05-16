@@ -22,6 +22,14 @@ abstract class Widget
      */
     protected static $guessWidgetNameUsing;
 
+
+    /**
+     * Retrieve the value of the widget.
+     * 
+     * @return mixed
+     */
+    abstract public function getValue();
+
     /**
      * Get the name of the widget to be used.
      * 
@@ -69,11 +77,4 @@ abstract class Widget
     {
         static::$guessWidgetNameUsing = $callback;
     }
-
-    /**
-     * Retrieve the value of the widget.
-     * 
-     * @return mixed
-     */
-    abstract public function getValue();
 }

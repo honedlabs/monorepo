@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
-it('', function () {
+use Honed\Widget\Facades\Widgets;
+use Honed\Widget\WidgetManager;
 
+it('tests', function () {
+    // Widgets::for
 });

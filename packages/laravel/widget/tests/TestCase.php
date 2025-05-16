@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Orchestra\Testbench\Attributes\WithMigration;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 
-#[WithMigration]
 class TestCase extends Orchestra
 {
     use WithWorkbench;
+    use RefreshDatabase;
 }

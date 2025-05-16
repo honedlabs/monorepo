@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Widget\Exceptions;
 
 use Honed\Widget\Contracts\SerializesScope;
@@ -11,8 +9,6 @@ class CannotSerializeScopeException extends RuntimeException
 {
     /**
      * Create a new invalid scope exception.
-     * 
-     * @param  string  $driver
      */
     public function __construct()
     {

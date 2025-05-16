@@ -6,7 +6,7 @@ use Honed\Widget\Concerns\HasWidgetKeys;
 use Honed\Widget\Contracts\Driver;
 use Illuminate\Cache\CacheManager;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Config\Repository;
+use Illuminate\Contracts\Config\Repository;
 
 class CacheDriver implements Driver
 {
@@ -29,7 +29,7 @@ class CacheDriver implements Driver
     /**
      * The user configuration.
      *
-     * @var \Illuminate\Config\Repository
+     * @var \Illuminate\Contracts\Config\Repository
      */
     protected $config;
 

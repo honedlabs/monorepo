@@ -150,6 +150,7 @@ class WidgetManager
         /** @var string */
         $driver = $config['driver'];
 
+        /** @var \Honed\Widget\Contracts\Driver */
         return $this->customDrivers[$driver]($this->container, $config);
     }
 
@@ -257,8 +258,8 @@ class WidgetManager
             $scope instanceof SerializesScope => $scope->serializeScope(),
             is_string($scope) => $scope,
             is_numeric($scope) => (string) $scope,
-            $scope instanceof Model && $this->useMorphMap => $scope->getMorphClass().'|'.$scope->getKey(),
-            $scope instanceof Model && ! $this->useMorphMap => $scope::class.'|'.$scope->getKey(),
+            $scope instanceof Model && $this->useMorphMap => $scope->getMorphClass().'|'.$scope->getKey(), // @phpstan-ignore binaryOp.invalid
+            $scope instanceof Model && ! $this->useMorphMap => $scope::class.'|'.$scope->getKey(), // @phpstan-ignore binaryOp.invalid
             default => CannotSerializeScopeException::throw()
         };
     }
@@ -427,6 +428,7 @@ class WidgetManager
         /** @var \Illuminate\Contracts\Config\Repository */
         $config = $this->container->get('config');
 
+        /** @var string */
         return $config->get('widget.inertia') ?? 'sync';
     }
 

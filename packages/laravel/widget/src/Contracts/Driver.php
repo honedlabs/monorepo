@@ -9,7 +9,7 @@ interface Driver
     /**
      * Get all widgets for a given scope and group.
      * 
-     * @param string $scope
+     * @param string|null $scope
      * @param string|null $group
      * @return array<int,mixed>
      */
