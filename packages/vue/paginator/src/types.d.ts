@@ -1,10 +1,10 @@
-export type Pagination = 'length-aware' | 'cursor' | 'simple'
+import type { 
+    BasePaginator, 
+    BasePaginatorResource,
+    BasePaginatorMeta
+} from './base';
 
-interface BasePaginator<T> {
-    data: T[];
-    next_page_url: string | null;
-    prev_page_url: string | null;
-}
+export type Pagination = 'length-aware' | 'cursor' | 'simple'
 
 export interface PaginatorLink {
     url: string | null | undefined;
@@ -12,17 +12,13 @@ export interface PaginatorLink {
     active: boolean;
 }
 
-export interface SimplePaginatorMeta {
+export interface SimplePaginatorMeta extends BasePaginatorMeta {
     current_page: number;
     from: number;
-    path: string;
-    per_page: number;
     to: number;
 }
 
-export interface CursorPaginatorMeta {
-    path: string;
-    per_page: number;
+export interface CursorPaginatorMeta extends BasePaginatorMeta {
     next_cursor: string | null;
     prev_cursor: string | null;
 }
@@ -34,45 +30,32 @@ export interface PaginatorMeta extends SimplePaginatorMeta {
 }
 
 declare global {
-    interface SimplePaginatorResource<T = Record<string, any>> {
-        data: T[];
+    interface SimplePaginatorResource<T = Record<string, any>> extends BasePaginatorResource<T> {
         links: {
-            first: string | null;
-            next: string | null;
-            prev: string | null;
+            first: string;
+            next: string | null; //
+            prev: string | null; //
         };
-        meta: {
-            current_page: number;
-            from: number;
-            path: string;
-            per_page: number;
-            to: number;
-        };
+        meta: SimplePaginatorMeta;
     }
 
     interface SimplePaginator<T = Record<string, any>> extends BasePaginator<T>, SimplePaginatorMeta {
         first_page_url: string;
     }
 
-    interface CursorPaginatorResource<T = Record<string, any>> {
-        data: T[];
-        links: {
-            prev: string | null;
-            next: string | null;
-        };
+    interface CursorPaginatorResource<T = Record<string, any>> extends BasePaginatorResource<T> {
         meta: CursorPaginatorMeta;
     }
 
     interface CursorPaginator<T = Record<string, any>> extends BasePaginator<T>, CursorPaginatorMeta { }
 
-    interface PaginatorResource<T = Record<string, any>> {
-        data: T[];
+    interface PaginatorResource<T = Record<string, any>> extends BasePaginatorResource<T> {
         meta: PaginatorMeta;
         links: {
-            first: string;
+            first: string; //
             last: string;
-            prev: string | null;
-            next: string | null;
+            prev: string | null; //
+            next: string | null; //
         };
     }
 

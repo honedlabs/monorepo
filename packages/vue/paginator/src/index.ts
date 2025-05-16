@@ -1,4 +1,7 @@
 export type * from './types';
-export { useSimplePaginator } from './simple'
-export { useCursorPaginator } from './cursor'
-export { usePaginator } from './length-aware'
+
+export { usePaginator, type UsePaginator } from './length-aware'
+
+export { useSimplePaginator, type UseSimplePaginator } from './simple'
+
+export { useCursorPaginator, type UseCursorPaginator } from './cursor'
