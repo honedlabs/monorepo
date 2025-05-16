@@ -1,20 +1,23 @@
 export type Pagination = 'length-aware' | 'cursor' | 'simple'
 
+interface BasePaginator<T> {
+    data: T[];
+    next_page_url: string | null;
+    prev_page_url: string | null;
+}
+
 export interface PaginatorLink {
     url: string | null | undefined;
     label: string;
     active: boolean;
 }
 
-export interface PaginatorMeta {
+export interface SimplePaginatorMeta {
     current_page: number;
     from: number;
-    last_page: number;
-    links: PaginatorLink[];
     path: string;
     per_page: number;
     to: number;
-    total: number;
 }
 
 export interface CursorPaginatorMeta {
@@ -24,30 +27,61 @@ export interface CursorPaginatorMeta {
     prev_cursor: string | null;
 }
 
-export interface PaginatorLinks<T extends Pagination = 'length-aware'> {
-    first: T extends 'cursor' ? null : string;
-    last: T extends 'cursor' ? null : string;
-    prev: T extends 'cursor' ? null : string;
-    next: T extends 'cursor' ? null : string;
+export interface PaginatorMeta extends SimplePaginatorMeta {
+    last_page: number;
+    links: PaginatorLink[];
+    total: number;
 }
 
 declare global {
-    export interface PaginatorResponse<T> {
+    export interface SimplePaginatorResource<T> {
         data: T[];
-        meta: PaginatorMeta;
-        links: PaginatorLinks;
+        links: {
+            first: string | null;
+            next: string | null;
+        };
+        meta: {
+            current_page: number;
+            from: number;
+            path: string;
+            per_page: number;
+            to: number;
+        };
     }
 
-    export type LengthAwarePaginatorResponse<T> = PaginatorResponse<T>;
+    export interface SimplePaginator<T> extends BasePaginator<T>, SimplePaginatorMeta {
+        first_page_url: string;
+    }
 
-    export interface Paginator<T> extends PaginatorMeta {
+    export interface CursorPaginatorResource<T> {
         data: T[];
+        links: {
+            prev: string | null;
+            next: string | null;
+        };
+        meta: CursorPaginatorMeta;
+    }
+
+    export interface CursorPaginator<T> extends BasePaginator<T>, CursorPaginatorMeta { }
+
+    export interface PaginatorResource<T> {
+        data: T[];
+        meta: PaginatorMeta;
+        links: {
+            first: string;
+            last: string;
+            prev: string | null;
+            next: string | null;
+        };
+    }
+
+    export interface Paginator<T> extends BasePaginator<T>, PaginatorMeta {
         first_page_url: string;
         last_page_url: string;
         links: PaginatorLink[];
-        next_page_url: string | null;
-        prev_page_url: string | null;
     }
+
+    export type LengthAwarePaginatorResource<T> = PaginatorResource<T>;
 
     export type LengthAwarePaginator<T> = Paginator<T>;
 }
