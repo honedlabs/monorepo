@@ -1,7 +1,7 @@
 {
   "name": "@honed/paginator",
   "private": false,
-  "version": "0.2.0",
+  "version": "0.1.0",
   "license": "MIT",
   "description": "Type-safe Laravel pagination metadata for Vue 3 with Inertia.",
   "keywords": [
