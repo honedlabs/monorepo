@@ -1,3 +1,8 @@
+import { computed, reactive } from 'vue';
+import { router } from "@inertiajs/vue3";
+import type { VisitOptions } from "@inertiajs/core";
+
+
 export type Pagination = 'length-aware' | 'cursor' | 'simple'
 
 interface BasePaginator<T> {
@@ -34,11 +39,12 @@ export interface PaginatorMeta extends SimplePaginatorMeta {
 }
 
 declare global {
-    export interface SimplePaginatorResource<T> {
+    export interface SimplePaginatorResource<T = Record<string, any>> {
         data: T[];
         links: {
             first: string | null;
             next: string | null;
+            prev: string | null;
         };
         meta: {
             current_page: number;
@@ -49,11 +55,11 @@ declare global {
         };
     }
 
-    export interface SimplePaginator<T> extends BasePaginator<T>, SimplePaginatorMeta {
+    export interface SimplePaginator<T = Record<string, any>> extends BasePaginator<T>, SimplePaginatorMeta {
         first_page_url: string;
     }
 
-    export interface CursorPaginatorResource<T> {
+    export interface CursorPaginatorResource<T = Record<string, any>> {
         data: T[];
         links: {
             prev: string | null;
@@ -62,9 +68,9 @@ declare global {
         meta: CursorPaginatorMeta;
     }
 
-    export interface CursorPaginator<T> extends BasePaginator<T>, CursorPaginatorMeta { }
+    export interface CursorPaginator<T = Record<string, any>> extends BasePaginator<T>, CursorPaginatorMeta { }
 
-    export interface PaginatorResource<T> {
+    export interface PaginatorResource<T = Record<string, any>> {
         data: T[];
         meta: PaginatorMeta;
         links: {
@@ -75,15 +81,15 @@ declare global {
         };
     }
 
-    export interface Paginator<T> extends BasePaginator<T>, PaginatorMeta {
+    export interface Paginator<T = Record<string, any>> extends BasePaginator<T>, PaginatorMeta {
         first_page_url: string;
         last_page_url: string;
         links: PaginatorLink[];
     }
 
-    export type LengthAwarePaginatorResource<T> = PaginatorResource<T>;
+    export type LengthAwarePaginatorResource<T = Record<string, any>> = PaginatorResource<T>;
 
-    export type LengthAwarePaginator<T> = Paginator<T>;
+    export type LengthAwarePaginator<T = Record<string, any>> = Paginator<T>;
 }
 
 export interface PaginatorItem {
@@ -97,64 +103,125 @@ export interface PaginatorItem {
     isSeparator: boolean;
 }
 
-export const usePaginator = <T>(data: Paginator<T> | PaginatorMeta) => {
-    const meta = (data as Paginator<T>).meta ?? (data as PaginatorMeta);
+export function useSimplePaginator<
+    TData = Record<string, any>,
+    TProps extends Record<string, any> = Record<string, any>
+>(
+    paginated: TProps | SimplePaginator<TData> | SimplePaginatorResource<TData>,
+    key: keyof TProps | null = null,
+    options: VisitOptions = {}
+) {
+    type PaginatedType = SimplePaginator<TData> | SimplePaginatorResource<TData>;
     
-    const links = (meta.links ?? data.links!).map((link) => {
-        return {
-            ...link,
-            url: link.url ? decodeURIComponent(link.url!) : null,
-        };
-    });
-    
-    const items = links.map((link, index) => {
-        return {
-            url: link.url,
-            label: link.label,
-            isPage: !isNaN(+link.label),
-            isPrevious: index === 0,
-            isNext: index === links.length - 1,
-            isCurrent: link.active,
-            isSeparator: link.label == "...",
-            isActive: !!link.url && !link.active,
-        };
-    }) as PaginatorItem[];
-    
-    const pages: PaginatorItem[] = items.filter(
-        (item) => item.isPage || item.isSeparator
+    const source = computed<PaginatedType>(() => key 
+        ? (paginated as TProps)[key] as unknown as PaginatedType
+        : paginated as PaginatedType
     );
-    
-    const current = items.find((item) => item.isCurrent);
-    const previous = items.find((item) => item.isPrevious)!;
-    const next = items.find((item) => item.isNext)!;
-    
-    const first = {
-        ...items[1],
-        isActive: items[1].url !== current?.url,
-        label: "&laquo;",
-    };
-    
-    const last = {
-        ...items[items.length - 1],
-        isActive: items[items.length - 1].url !== current?.url,
-        label: "&raquo;",
-    };
-    
-    const from = meta.from;
-    const to = meta.to;
-    const total = meta.total;
-    const itemsPerPage = meta.per_page;
-    
-    return {
-        pages,
-        items,
-        previous,
-        next,
+
+    const isResource = computed(() => 
+        source.value && typeof source.value === 'object' && 'meta' in source.value
+    );
+
+    const defaultOptions = {
+        ...options,
+        ...(isResource.value ? {
+            only: [...((options.only ?? []) as string[]), key as string],
+        } : {}),
+    }
+
+    const data = computed(() => source.value.data);
+
+    const current = computed(() => 
+        isResource.value 
+            ? (source.value as SimplePaginatorResource<TData>).meta.current_page 
+            : (source.value as SimplePaginator<TData>).current_page
+    );    
+
+    const next = computed(() => 
+        isResource.value 
+            ? (source.value as SimplePaginatorResource<TData>).links.next 
+            : (source.value as SimplePaginator<TData>).next_page_url
+    );
+
+    const previous = computed(() => 
+        isResource.value 
+            ? (source.value as SimplePaginatorResource<TData>).links.prev 
+            : (source.value as SimplePaginator<TData>).prev_page_url
+    );
+
+    const first = computed(() => 
+        isResource.value 
+            ? (source.value as SimplePaginatorResource<TData>).links.first 
+            : (source.value as SimplePaginator<TData>).first_page_url
+    );
+
+    const perPage = computed(() => 
+        isResource.value 
+            ? (source.value as SimplePaginatorResource<TData>).meta.per_page 
+            : (source.value as SimplePaginator<TData>).per_page
+    );
+
+    const from = computed(() => 
+        isResource.value 
+            ? (source.value as SimplePaginatorResource<TData>).meta.from 
+            : (source.value as SimplePaginator<TData>).from
+    );
+
+    const to = computed(() => 
+        isResource.value 
+            ? (source.value as SimplePaginatorResource<TData>).meta.to 
+            : (source.value as SimplePaginator<TData>).to
+    );
+
+    function navigate(url: string | null | undefined, options: VisitOptions = {}) {
+        if (!url) 
+            return;
+
+        router.get(url, {}, {
+            ...defaultOptions,
+            ...options,
+        });
+    }
+
+    function toFirst(options: VisitOptions = {}) {
+        const url = first.value;
+        navigate(url, {
+            ...options,
+        });
+    }
+
+    function toNext(options: VisitOptions = {}) {
+        const url = next.value;
+        navigate(url, options);
+    }
+
+    function toPrevious(options: VisitOptions = {}) {
+        const url = previous.value;
+        navigate(url, options);
+    }
+
+
+    return reactive({
+        data,
+        current,
         first,
-        last,
-        total,
-        from,
+        next,
+        previous,
         to,
-        itemsPerPage,
-    };
-};
+        perPage,
+        from,
+        navigate,
+        toFirst,
+        toNext,
+        toPrevious,
+    });
+}
+
+export function usePaginator<T>(data: Paginator<T> | PaginatorMeta) { 
+    
+}
+
+export function useCursorPaginator() {
+
+}
+

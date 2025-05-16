@@ -3,7 +3,7 @@
   "private": false,
   "version": "0.2.0",
   "license": "MIT",
-  "description": "Type-safe Laravel pagination metadata for Vue 3.",
+  "description": "Type-safe Laravel pagination metadata for Vue 3 with Inertia.",
   "keywords": [
     "honed",
     "paginator",
@@ -57,7 +57,9 @@
     }
   },
   "peerDependencies": {
-    "vue": "^3.4.0"
+    "vue": "^3.4.0",
+    "@inertiajs/vue3": "^1.2.0||^2.0.0",
+    "axios": "^1.2.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
