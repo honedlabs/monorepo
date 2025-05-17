@@ -16,13 +16,9 @@ trait HasWidgets
      */
     public function widgets($driver = null)
     {
-        $widgets = [
-            ...Widgets::driver($driver)->for($this),
-            ...$this->getWidgets(),
-            ...$this->getWidgetsAttribute(),
-        ];
-
-        return $this->createWidgets($widgets);
+        $widgets = Widgets::driver($driver)->for($this);
+        
+        return $widgets;
     }
 
     /**
@@ -33,25 +29,6 @@ trait HasWidgets
      */
     public function getWidgets()
     {
-        return [];
-    }
-
-    /**
-     * Get the cache from the Cache class attribute.
-     *
-     * @return array<int, class-string<\Honed\Widget\Widget>>
-     */
-    protected static function getWidgetsAttribute()
-    {
-        $attributes = (new \ReflectionClass(static::class))
-            ->getAttributes(Widgets::class);
-
-        if ($attributes !== []) {
-            $widgets = $attributes[0]->newInstance();
-
-            return Arr::wrap($widgets->widgets);
-        }
-
         return [];
     }
 

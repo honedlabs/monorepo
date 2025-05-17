@@ -44,6 +44,16 @@ class WidgetServiceProvider extends ServiceProvider
 
         $this->mergeConfigFrom(__DIR__.'/../config/widget.php', 'widget');
 
+        App::macro('getCachedWidgetsPath', function () {
+            /** @var \Illuminate\Foundation\Application $this */
+            return $this->normalizeCachePath('APP_WIDGETS_CACHE', 'cache/widgets.php');
+        });
+
+        App::macro('widgetsAreCached', function () {
+            /** @var \Illuminate\Foundation\Application $this */
+            return $this->files->exists($this->getCachedWidgetsPath());
+        });
+
         $this->booting(function () {
             $widgets = $this->getWidgets();
 
@@ -62,16 +72,6 @@ class WidgetServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        App::macro('getCachedWidgetsPath', function () {
-            /** @var \Illuminate\Foundation\Application $this */
-            return $this->normalizeCachePath('APP_WIDGETS_CACHE', 'cache/widgets.php');
-        });
-
-        App::macro('widgetsAreCached', function () {
-            /** @var \Illuminate\Foundation\Application $this */
-            return $this->files->exists($this->getCachedWidgetsPath());
-        });
-
         $this->optimizes(WidgetCacheCommand::class);
 
         if ($this->app->runningInConsole()) {

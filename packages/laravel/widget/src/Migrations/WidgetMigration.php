@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Widget\Migrations;
 
 use Illuminate\Database\Migrations\Migration;

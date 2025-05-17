@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Widget;
 
 use Illuminate\Support\Str;
@@ -35,7 +33,7 @@ abstract class Widget
      * 
      * @return string|null
      */
-    public function getName()
+    public function name()
     {
         return null;
     }
@@ -45,9 +43,9 @@ abstract class Widget
      * 
      * @return string
      */
-    public function name()
+    public function getName()
     {
-        return $this->name ?? $this->getName() ?? $this->guessWidgetName();
+        return $this->name ?? $this->name() ?? $this->guessWidgetName();
     }
 
     /**

@@ -3,12 +3,9 @@
 namespace Honed\Widget;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Reflector;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use ReflectionClass;
-use ReflectionException;
-use ReflectionMethod;
 use SplFileInfo;
 use Symfony\Component\Finder\Finder;
 
@@ -34,61 +31,38 @@ class DiscoverWidgets
             return [];
         }
 
-        $widgets = new Collection(static::getWidgetEvents(
-            Finder::create()->files()->in($widgetPath), $basePath
-        ));
+        $files = Finder::create()->files()->in($widgetPath);
 
-        $discoveredEvents = [];
+        /** @var array<int, \Honed\Widget\Widget> $widgets */
+        $widgets = [];
 
-        foreach ($widgets as $widget => $events) {
-            foreach ($events as $event) {
-                if (! isset($discoveredEvents[$event])) {
-                    $discoveredEvents[$event] = [];
-                }
+        foreach ($files as $file) {
+            $widget = static::classFromFile($file, $basePath);
 
-                $discoveredEvents[$event][] = $listener;
+            if (static::invalidWidget($widget)) {
+                continue;
             }
+
+            /** @var \Honed\Widget\Widget $widget */
+            $widget = App::make($widget);
+
+            $widgets[$widget->getName()] = $widget;
         }
 
-        return $discoveredEvents;
+        return $widgets;
     }
 
     /**
-     * Get all of the listeners and their corresponding events.
-     *
-     * @param  iterable<string, SplFileInfo>  $listeners
-     * @param  string  $basePath
-     * @return array
+     * Determine if the widget is invalid.
+     * 
+     * @param  class-string  $widget
+     * @return bool
      */
-    protected static function getListenerEvents($listeners, $basePath)
+    protected static function invalidWidget($widget)
     {
-        $listenerEvents = [];
-
-        foreach ($listeners as $listener) {
-            try {
-                $listener = new ReflectionClass(
-                    static::classFromFile($listener, $basePath)
-                );
-            } catch (ReflectionException) {
-                continue;
-            }
-
-            if (! $listener->isInstantiable()) {
-                continue;
-            }
-
-            foreach ($listener->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-                if ((! Str::is('handle*', $method->name) && ! Str::is('__invoke', $method->name)) ||
-                    ! isset($method->getParameters()[0])) {
-                    continue;
-                }
-
-                $listenerEvents[$listener->name.'@'.$method->name] =
-                                Reflector::getParameterClassNames($method->getParameters()[0]);
-            }
-        }
-
-        return array_filter($listenerEvents);
+        return ! class_exists($widget) 
+            || ! is_subclass_of($widget, Widget::class)
+            || ! (new ReflectionClass($widget))->isInstantiable();
     }
 
     /**
