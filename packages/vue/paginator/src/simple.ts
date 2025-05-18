@@ -2,6 +2,7 @@ import { computed, reactive } from "vue";
 import { router } from "@inertiajs/vue3";
 import type { VisitOptions } from "@inertiajs/core";
 import { useBasePaginator } from "./base";
+import type { SimplePaginator, SimplePaginatorResource } from "./types";
 
 export function useSimplePaginator<
 	Data extends Record<string, any>,

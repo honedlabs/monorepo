@@ -1,9 +1,9 @@
 {
   "name": "@honed/paginator",
   "private": false,
-  "version": "0.1.1",
+  "version": "0.1.4",
   "license": "MIT",
-  "description": "Lightweight paginator for handling Laravel pagination with Vue 3 and Inertia.",
+  "description": "Lightweight wrapper for handling Laravel pagination with Vue 3 and Inertia.",
   "keywords": [
     "honed",
     "paginator",

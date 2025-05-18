@@ -1,6 +1,7 @@
 import { computed, reactive } from "vue";
-import type { VisitOptions } from "@inertiajs/core";
 import { useSimplePaginator } from "./simple";
+import type { VisitOptions } from "@inertiajs/core";
+import type { Paginator, PaginatorResource } from "./types";
 
 export function usePaginator<
 	Data extends Record<string, any>,
@@ -34,10 +35,12 @@ export function usePaginator<
 		(paginator.isResource
 			? (paginator.source as unknown as PaginatorResource<Data>).meta.links
 			: (paginator.source as unknown as Paginator<Data>).links
-		).map((link) => ({
-			...link,
-			get: () => paginator.navigate(link.url),
-		})),
+		)
+			.slice(1, -1)
+			.map((link) => ({
+				...link,
+				get: () => paginator.navigate(link.url),
+			})),
 	);
 
 	/**

@@ -1,6 +1,7 @@
 import { computed, reactive } from "vue";
 import type { VisitOptions } from "@inertiajs/core";
 import { useBasePaginator } from "./base";
+import type { CursorPaginator, CursorPaginatorResource } from "./types";
 
 export function useCursorPaginator<
 	Data extends Record<string, any>,

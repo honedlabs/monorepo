@@ -1,6 +1,7 @@
 import { computed, reactive } from "vue";
 import { router } from "@inertiajs/vue3";
 import type { VisitOptions } from "@inertiajs/core";
+import type { SimplePaginator, SimplePaginatorResource } from "./types";
 
 export interface BasePaginator<T> {
 	data: T[];
@@ -47,11 +48,18 @@ export function useBasePaginator<
 		return dataOrProps as SimplePaginator<Data>;
 	});
 
+	if (!source.value) {
+		throw new Error("You must supply a valid paginator source.");
+	}
+
 	/**
 	 * Check if the pagination comes from a resource paginator or query paginator.
 	 */
 	const isResource = computed(
-		() => typeof source.value === "object" && "meta" in source.value,
+		() =>
+			source.value !== null &&
+			typeof source.value === "object" &&
+			"meta" in source.value,
 	);
 
 	const defaultOptions = {

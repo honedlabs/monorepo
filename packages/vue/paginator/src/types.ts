@@ -29,53 +29,51 @@ export interface PaginatorMeta extends SimplePaginatorMeta {
 	total: number;
 }
 
-declare global {
-	interface SimplePaginatorResource<T = Record<string, any>>
-		extends BasePaginatorResource<T> {
-		links: {
-			first: string;
-			next: string | null;
-			prev: string | null;
-		};
-		meta: SimplePaginatorMeta;
-	}
-
-	interface SimplePaginator<T = Record<string, any>>
-		extends BasePaginator<T>,
-			SimplePaginatorMeta {
-		first_page_url: string;
-	}
-
-	interface CursorPaginatorResource<T = Record<string, any>>
-		extends BasePaginatorResource<T> {
-		meta: CursorPaginatorMeta;
-	}
-
-	interface CursorPaginator<T = Record<string, any>>
-		extends BasePaginator<T>,
-			CursorPaginatorMeta {}
-
-	interface PaginatorResource<T = Record<string, any>>
-		extends BasePaginatorResource<T> {
-		meta: PaginatorMeta;
-		links: {
-			first: string;
-			last: string;
-			prev: string | null;
-			next: string | null;
-		};
-	}
-
-	interface Paginator<T = Record<string, any>>
-		extends BasePaginator<T>,
-			PaginatorMeta {
-		first_page_url: string;
-		last_page_url: string;
-		links: PaginatorLink[];
-	}
-
-	type LengthAwarePaginatorResource<T = Record<string, any>> =
-		PaginatorResource<T>;
-
-	type LengthAwarePaginator<T = Record<string, any>> = Paginator<T>;
+export interface SimplePaginatorResource<T = Record<string, any>>
+	extends BasePaginatorResource<T> {
+	links: {
+		first: string;
+		next: string | null;
+		prev: string | null;
+	};
+	meta: SimplePaginatorMeta;
 }
+
+export interface SimplePaginator<T = Record<string, any>>
+	extends BasePaginator<T>,
+		SimplePaginatorMeta {
+	first_page_url: string;
+}
+
+export interface CursorPaginatorResource<T = Record<string, any>>
+	extends BasePaginatorResource<T> {
+	meta: CursorPaginatorMeta;
+}
+
+export interface CursorPaginator<T = Record<string, any>>
+	extends BasePaginator<T>,
+		CursorPaginatorMeta {}
+
+export interface PaginatorResource<T = Record<string, any>>
+	extends BasePaginatorResource<T> {
+	meta: PaginatorMeta;
+	links: {
+		first: string;
+		last: string;
+		prev: string | null;
+		next: string | null;
+	};
+}
+
+export interface Paginator<T = Record<string, any>>
+	extends BasePaginator<T>,
+		PaginatorMeta {
+	first_page_url: string;
+	last_page_url: string;
+	links: PaginatorLink[];
+}
+
+export type LengthAwarePaginatorResource<T = Record<string, any>> =
+	PaginatorResource<T>;
+
+export type LengthAwarePaginator<T = Record<string, any>> = Paginator<T>;
