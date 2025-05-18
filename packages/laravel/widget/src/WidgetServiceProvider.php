@@ -5,6 +5,7 @@ namespace Honed\Widget;
 use Illuminate\Support\ServiceProvider;
 use Honed\Widget\Commands\WidgetCacheCommand;
 use Honed\Widget\Commands\WidgetClearCommand;
+use Honed\Widget\Commands\WidgetListCommand;
 use Honed\Widget\Commands\WidgetMakeCommand;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\LazyCollection;
@@ -80,6 +81,7 @@ class WidgetServiceProvider extends ServiceProvider
             $this->commands([
                 WidgetCacheCommand::class,
                 WidgetClearCommand::class,
+                WidgetListCommand::class,
                 WidgetMakeCommand::class,
             ]);
         }

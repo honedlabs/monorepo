@@ -3,8 +3,10 @@
 namespace Honed\Widget\Drivers;
 
 use Honed\Widget\Contracts\Driver;
+use Honed\Widget\Contracts\WidgetScopeable;
 use Honed\Widget\Events\WidgetDeleted;
 use Honed\Widget\Events\WidgetUpdated;
+use Honed\Widget\ScopedWidgetRetrieval;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Traits\Macroable;
 
@@ -67,8 +69,6 @@ class Decorator implements Driver
      */
     public function get($scope, $group = null)
     {
-        $scope = $this->resolveScope($scope);
-
         $this->driver->get($scope, $group);
 
         // Event::dispatch(new WidgetRetrieved($widget, $scope, $item));
@@ -101,7 +101,7 @@ class Decorator implements Driver
 
         $outcome = $this->driver->update($widget, $scope, $group, $order);
 
-        Event::dispatch(new WidgetUpdated($widget, $scope));
+        Event::dispatch(new WidgetUpdated($widget, $scope, $group, $order));
         
         return $outcome;
 
@@ -116,7 +116,7 @@ class Decorator implements Driver
 
         $scope = $this->resolveScope($scope);
 
-        $this->driver->delete($widget, $scope);
+        $this->driver->delete($widget, $scope, $group);
 
         Event::dispatch(new WidgetDeleted($widget, $scope));
     }
@@ -137,7 +137,18 @@ class Decorator implements Driver
     // public function purge(...$widgets)
     // {
     //     $this->driver->purge(...$widgets);
-    // }
+    // 
+
+    /**
+     * Retrieve the widget's class.
+     * 
+     * @param string $name
+     * @return \Honed\Widget\Contracts\Widget
+     */
+    public function instance($name)
+    {
+        $this->container->make($name);
+    }
 
     /**
      * Retrieve the widget's name.
@@ -149,16 +160,29 @@ class Decorator implements Driver
     {
         return $this->resolveWidget($widget);
     }
-    
+
     /**
-     * Retrieve the widget's class.
+     * Resolve the widget by name.
      * 
-     * @param string $name
-     * @return \Honed\Widget\Contracts\Widget
+     * @param string $widget
+     * @return string
      */
-    public function instance($name)
+    protected function resolveWidget($widget)
     {
-        $this->container->make($name);
+        // return $this->
+    }
+
+    /**
+     * Resolve the scope.
+     *
+     * @param  mixed  $scope
+     * @return mixed
+     */
+    protected function resolveScope($scope)
+    {
+        return $scope instanceof WidgetScopeable
+            ? $scope->toWidgetIdentifier($this->name)
+            : $scope;
     }
 
     /**
@@ -207,6 +231,10 @@ class Decorator implements Driver
             return $this->macroCall($name, $parameters);
         }
 
-        return $this->driver->{$name}(...$parameters);
+        return tap(new ScopedWidgetRetrieval($this), function ($retrieval) use ($name) {
+            if ($name !== 'for' && ($scope = ($this->defaultScopeResolver)()) !== null) {
+                $retrieval->for($scope);
+            }
+        })->{$name}(...$parameters);
     }
 }
