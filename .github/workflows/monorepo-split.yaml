@@ -29,9 +29,8 @@ jobs:
           - page
           - refine
           - table
-          - typescript
           - upload
-
+          - widget
     steps:
       - name: Checkout
         uses: actions/checkout@v4
