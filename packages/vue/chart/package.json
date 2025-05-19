@@ -3,12 +3,12 @@
 	"private": false,
 	"version": "0.1.0",
 	"license": "MIT",
-	"description": "-",
+	"description": "Create server-driven charts with Vue 3 and Unovis.",
 	"keywords": [
 		"honed",
 		"chart",
 		"vue",
-		"inertia"
+		"unovis"
 	],
 	"scripts": {
 		"dev": "vite",
@@ -49,9 +49,8 @@
 	},
 	"peerDependencies": {
 		"vue": "^3.4.0",
-		"@vueuse/core": "^11.0.0||^12.0.0",
-		"@inertiajs/vue3": "^1.2.0||^2.0.0",
-		"axios": "^1.2.0"
+		"@unovis/vue": "^1.5.0",
+		"@unovis/ts": "^1.5.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",

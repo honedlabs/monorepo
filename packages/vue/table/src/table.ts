@@ -218,7 +218,7 @@ export function useTable<
 	function getColumnName(column: Column<RecordType> | string) {
 		return typeof column === "string" ? column : column.name;
 	}
-
+	
 	/**
 	 * Visit a page.
 	 */

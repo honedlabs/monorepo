@@ -1,10 +1,12 @@
 import { DefineComponent } from "vue";
 import { createInertiaApp as inertiaApp } from "@inertiajs/vue3";
 
+const FORMATTER = "@";
+
 type CreateInertiaAppParameters = Parameters<typeof inertiaApp>[0];
 
 export interface CreateInertiaAppProps extends CreateInertiaAppParameters {
-	layout: (
+	resolveLayout: (
 		name: string | null,
 	) =>
 		| DefineComponent
@@ -13,20 +15,24 @@ export interface CreateInertiaAppProps extends CreateInertiaAppParameters {
 }
 
 export async function createInertiaApp(props: CreateInertiaAppProps) {
-	const { id = "app", resolve, layout, ...rest } = props;
-
-	const isServer = typeof window === "undefined";
-	const el = isServer ? null : document.getElementById(id);
-	const initialPage = JSON.parse(el?.dataset.page || "{}");
+	const { id = "app", resolve, resolveLayout, ...rest } = props;
 
 	const layoutResolve = async (name: string) => {
-		const page = await resolve(name);
+		const [pageName, layoutName] = name.split(FORMATTER);
 
-		const pageLayout = await layout(initialPage.layout);
+		const page = await Promise.resolve(resolve(pageName)).then(
+			(p) => p.default || p,
+		);
 
-		page.default.layout = page.default.layout || pageLayout.default;
+		if (layoutName) {
+			const layout = await Promise.resolve(resolveLayout(layoutName)).then(
+				(l) => l.default || l,
+			);
 
-		return page.default;
+			page.layout = page.layout || layout;
+		}
+
+		return page;
 	};
 
 	return inertiaApp({ ...rest, id, resolve: layoutResolve });

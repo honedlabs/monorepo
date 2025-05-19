@@ -1,9 +1,18 @@
-import { createInertiaApp as p } from "@inertiajs/vue3";
-async function f(o) {
-  const { id: a = "app", resolve: n, layout: r, ...s } = o, e = typeof window > "u" ? null : document.getElementById(a), l = JSON.parse((e == null ? void 0 : e.dataset.page) || "{}");
-  return p({ ...s, id: a, resolve: async (u) => {
-    const t = await n(u), i = await r(l.layout);
-    return t.default.layout = t.default.layout || i.default, t.default;
+import { createInertiaApp as u } from "@inertiajs/vue3";
+const y = "@";
+async function f(r) {
+  const { id: s = "app", resolve: n, resolveLayout: l, ...c } = r;
+  return u({ ...c, id: s, resolve: async (i) => {
+    const [p, a] = i.split(y), t = await Promise.resolve(n(p)).then(
+      (e) => e.default || e
+    );
+    if (a) {
+      const e = await Promise.resolve(l(a)).then(
+        (o) => o.default || o
+      );
+      t.layout = t.layout || e;
+    }
+    return t;
   } });
 }
 export {

@@ -9,7 +9,7 @@ export declare function createInertiaApp(props: CreateInertiaAppProps): Promise<
 declare type CreateInertiaAppParameters = Parameters<typeof createInertiaApp_2>[0];
 
 export declare interface CreateInertiaAppProps extends CreateInertiaAppParameters {
-    layout: (name: string | null) => DefineComponent | Promise<DefineComponent> | {
+    resolveLayout: (name: string | null) => DefineComponent | Promise<DefineComponent> | {
         default: DefineComponent;
     };
 }
