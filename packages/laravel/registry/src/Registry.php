@@ -14,6 +14,9 @@ class Registry implements Jsonable
 
     protected $schema;
     
+    /**
+     * {@inheritdoc}
+     */
     public function toJson($options = 0)
     {
         return json_encode($this, $options);
