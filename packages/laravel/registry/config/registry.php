@@ -7,4 +7,5 @@ return [
 
     'homepage' => env('REGISTRY_HOMEPAGE', config('APP_URL')),
 
+    'author' => env('REGISTRY_AUTHOR'),
 ];

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Registry;
 
 use Illuminate\Support\ServiceProvider;
+use Honed\Registry\Commands\RegistryMakeCommand;
 
 class RegistryServiceProvider extends ServiceProvider
 {
@@ -27,11 +28,11 @@ class RegistryServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             // $this->offerPublishing();
-            
+
             $this->commands([
                 // RegistryBuildCommand::class,
                 // RegisteryClearCommand::class
-                // RegisterMakeCommand:class
+                RegistryMakeCommand::class,
             ]);
         }
     }

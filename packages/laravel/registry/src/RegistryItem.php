@@ -57,11 +57,35 @@ class RegistryItem
      */
     protected $registryDependencies = [];
 
-
+    /**
+     * The main payload of the registry item. This is an array of files that are part of the registry item. Each file is an object with a path, content, type, and target.
+     * 
+     * @var array<int, \Honed\Registry\RegistryFile>
+     */
+    protected $files = [];
 
     /**
+     * The tailwind configuration for the registry item. This is an object with a config property. Use cssVars for Tailwind v4 projects..
      * 
+     * @var array<int, string>
      */
+    protected $tailwind = [];
+
+    /**
+     * The css variables for the registry item. This will be merged with the project's css variables.
+     * 
+     * @var array<int, string>
+     */
+    protected $cssVars = [];
+
+    /**
+     * CSS definitions to be added to the project's CSS file. Supports at-rules, selectors, nested rules, utilities, layers, and more.
+     * 
+     * @var array<int, string>
+     */
+    protected $css = [];
+
+    // Requires name and type
 
     // name (of the json file)
     // title
