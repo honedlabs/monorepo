@@ -9,6 +9,8 @@ use Illuminate\Support\ServiceProvider;
 use Honed\Registry\Commands\RegistryMakeCommand;
 use Honed\Registry\Commands\RegistryBuildCommand;
 use Honed\Registry\Commands\RegistryClearCommand;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 
 class RegistryServiceProvider extends ServiceProvider
 {
@@ -55,6 +57,12 @@ class RegistryServiceProvider extends ServiceProvider
         App::macro('hasRegistry', function () {
             /** @var \Illuminate\Foundation\Application $this */
             return $this->files->exists($this->getRegistryPath());
+        });
+
+        Router::macro('registry', function (string $name, string $registry) {
+            /** @var \Illuminate\Routing\Router $this */
+            return $this->get($name);
+            
         });
     }
     
