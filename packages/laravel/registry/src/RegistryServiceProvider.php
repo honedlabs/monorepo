@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Registry;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Honed\Registry\Commands\RegistryMakeCommand;
+use Honed\Registry\Commands\RegistryBuildCommand;
+use Honed\Registry\Commands\RegistryClearCommand;
 
 class RegistryServiceProvider extends ServiceProvider
 {
@@ -22,18 +25,53 @@ class RegistryServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->registerMacros();
+
+        if ($this->app->runningInConsole()) {
+            $this->offerPublishing();
+
+            $this->optimizes(RegistryBuildCommand::class);
+
+            $this->commands([
+                RegistryBuildCommand::class,
+                RegistryClearCommand::class,
+                RegistryMakeCommand::class,
+            ]);
+        }
+    }
+
+    /**
+     * Register the macros for the package.
+     *
+     * @return void
+     */
+    protected function registerMacros()
+    {
+        App::macro('getRegistryPath', function () {
+            /** @var \Illuminate\Foundation\Application $this */
+            return $this->normalizeCachePath('APP_REGISTRY_CACHE', 'cache/registry.json');
+        });
+
+        App::macro('hasRegistry', function () {
+            /** @var \Illuminate\Foundation\Application $this */
+            return $this->files->exists($this->getRegistryPath());
+        });
+    }
+    
+
+    /**
+     * Register the publishing for the package.
+     *
+     * @return void
+     */
+    protected function offerPublishing()
+    {
         $this->publishes([
             __DIR__.'/../config/registry.php' => config_path('registry.php'),
         ], 'registry-config');
 
-        if ($this->app->runningInConsole()) {
-            // $this->offerPublishing();
-
-            $this->commands([
-                // RegistryBuildCommand::class,
-                // RegisteryClearCommand::class
-                RegistryMakeCommand::class,
-            ]);
-        }
+        $this->publishes([
+            __DIR__.'/../stubs' => base_path('stubs'),
+        ], 'registry-stubs');
     }
 }

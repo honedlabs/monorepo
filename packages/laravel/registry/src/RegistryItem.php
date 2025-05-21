@@ -85,6 +85,14 @@ class RegistryItem
      */
     protected $css = [];
 
+    // meta
+
+    // docs
+
+    //categories
+
+    // extends
+
     // Requires name and type
 
     // name (of the json file)
@@ -97,5 +105,5 @@ class RegistryItem
 
     // categories
 
-    public function 
+    // public function 
 }

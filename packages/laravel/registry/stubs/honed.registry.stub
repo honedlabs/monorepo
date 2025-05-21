@@ -1,0 +1,26 @@
+<?php
+
+namespace {{ namespace }};
+
+class {{ class }}
+{
+    public function name()
+    {
+        //
+    }
+
+    public function description()
+    {
+        
+    }
+
+    public function type()
+    {
+        //
+    }
+
+    public function files()
+    {
+
+    }
+}
