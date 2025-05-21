@@ -26,8 +26,12 @@ class RegistryServiceProvider extends ServiceProvider
         ], 'registry-config');
 
         if ($this->app->runningInConsole()) {
+            // $this->offerPublishing();
+            
             $this->commands([
-                //
+                // RegistryBuildCommand::class,
+                // RegisteryClearCommand::class
+                // RegisterMakeCommand:class
             ]);
         }
     }

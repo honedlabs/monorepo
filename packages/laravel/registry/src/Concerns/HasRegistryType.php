@@ -7,14 +7,14 @@ use Honed\Registry\Enums\RegistryType;
 trait HasRegistryType
 {
     /**
-     * The type of the registry component.
+     * The type of the item. This is used to determine the type and target path of the item when resolved for a project.
      * 
      * @var string|\Honed\Registry\Enums\RegistryType
      */
     protected $type;
 
     /**
-     * Set the type of the registry component.
+     * Set the type of the registry item.
      * 
      * @param string|\Honed\Registry\Enums\RegistryType $type
      * @return $this
@@ -27,7 +27,7 @@ trait HasRegistryType
     }
 
     /**
-     * Get the type of the registry instance.
+     * Get the type of the registry item.
      * 
      * @return string
      */
