@@ -22,8 +22,5 @@ class BooleanFilter extends Filter
     /**
      * {@inheritdoc}
      */
-    public function defineType()
-    {
-        return Constants::BOOLEAN_FILTER;
-    }
+    protected $type = Constants::BOOLEAN_FILTER;
 }

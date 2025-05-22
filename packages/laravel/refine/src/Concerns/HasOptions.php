@@ -25,6 +25,13 @@ trait HasOptions
     protected $strict;
 
     /**
+     * Whether to restrict options to only those provided by default.
+     *
+     * @var bool
+     */
+    protected static $useStrict = false;
+
+    /**
      * Whether to accept multiple values.
      *
      * @var bool
@@ -173,13 +180,15 @@ trait HasOptions
     }
 
     /**
-     * Determine if only the options provided are allowed.
+     * Indicate that the the options should be strict, and only the options 
+     * provided are allowed.
      *
-     * @return bool
+     * @param  bool  $strict
+     * @return void
      */
-    public static function isStrictByDefault()
+    public static function shouldBeStrict($strict = true)
     {
-        return (bool) config('refine.strict', false);
+        static::$useStrict = $strict;
     }
 
     /**

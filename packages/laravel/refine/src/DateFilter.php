@@ -22,8 +22,5 @@ class DateFilter extends Filter
     /**
      * {@inheritdoc}
      */
-    public function defineType()
-    {
-        return Constants::DATE_FILTER;
-    }
+    protected $type = Constants::DATE_FILTER;
 }

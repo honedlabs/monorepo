@@ -1,24 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Refine\Concerns;
 
 use Honed\Refine\Search;
 use Illuminate\Support\Arr;
 
-/**
- * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- *
- * @phpstan-require-extends \Honed\Core\Primitive
- */
 trait HasSearches
 {
     /**
      * List of the searches.
      *
-     * @var array<int,\Honed\Refine\Search<TModel, TBuilder>>
+     * @var array<int,\Honed\Refine\Search>
      */
     protected $searches = [];
 
@@ -53,12 +45,12 @@ trait HasSearches
     /**
      * Merge a set of searches with the existing searches.
      *
-     * @param  \Honed\Refine\Search<TModel, TBuilder>|iterable<int, \Honed\Refine\Search<TModel, TBuilder>>  ...$searches
+     * @param  \Honed\Refine\Search|iterable<int, \Honed\Refine\Search>  ...$searches
      * @return $this
      */
     public function searches(...$searches)
     {
-        /** @var array<int, \Honed\Refine\Search<TModel, TBuilder>> $searches */
+        /** @var array<int, \Honed\Refine\Search> $searches */
         $searches = Arr::flatten($searches);
 
         $this->searches = \array_merge($this->searches, $searches);
@@ -69,7 +61,7 @@ trait HasSearches
     /**
      * Define the searches for the instance.
      *
-     * @return array<int, \Honed\Refine\Search<TModel, TBuilder>>
+     * @return array<int, \Honed\Refine\Search>
      */
     public function defineSearches()
     {
@@ -79,7 +71,7 @@ trait HasSearches
     /**
      * Retrieve the columns to be used for searching.
      *
-     * @return array<int,\Honed\Refine\Search<TModel, TBuilder>>
+     * @return array<int,\Honed\Refine\Search>
      */
     public function getSearches()
     {
@@ -212,36 +204,6 @@ trait HasSearches
     public static function isMatchingByDefault()
     {
         return (bool) config('refine.match', false);
-    }
-
-    /**
-     * Set the instance to not provide the searches.
-     *
-     * @return $this
-     */
-    public function exceptSearches()
-    {
-        return $this->except('searches');
-    }
-
-    /**
-     * Set the instance to provide only searches.
-     *
-     * @return $this
-     */
-    public function onlySearches()
-    {
-        return $this->only('searches');
-    }
-
-    /**
-     * Determine if the instance provides the searches.
-     *
-     * @return bool
-     */
-    public function providesSearches()
-    {
-        return $this->has('searches');
     }
 
     /**

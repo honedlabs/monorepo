@@ -22,8 +22,5 @@ class DescSort extends Sort
     /**
      * {@inheritdoc}
      */
-    public function defineType()
-    {
-        return Constants::DESCENDING;
-    }
+    protected $type = Constants::DESCENDING;
 }

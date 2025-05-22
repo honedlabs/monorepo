@@ -22,8 +22,5 @@ class AscSort extends Sort
     /**
      * {@inheritdoc}
      */
-    public function defineType()
-    {
-        return Constants::ASCENDING;
-    }
+    protected $type = Constants::ASCENDING;
 }
