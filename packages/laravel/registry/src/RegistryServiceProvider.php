@@ -9,6 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use Honed\Registry\Commands\RegistryMakeCommand;
 use Honed\Registry\Commands\RegistryBuildCommand;
 use Honed\Registry\Commands\RegistryClearCommand;
+use Honed\Registry\Commands\RegistryItemMakeCommand;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,7 @@ class RegistryServiceProvider extends ServiceProvider
             $this->commands([
                 RegistryBuildCommand::class,
                 RegistryClearCommand::class,
+                RegistryItemMakeCommand::class,
                 RegistryMakeCommand::class,
             ]);
         }
@@ -62,10 +64,8 @@ class RegistryServiceProvider extends ServiceProvider
         Router::macro('registry', function (string $name, string $registry) {
             /** @var \Illuminate\Routing\Router $this */
             return $this->get($name);
-            
         });
     }
-    
 
     /**
      * Register the publishing for the package.

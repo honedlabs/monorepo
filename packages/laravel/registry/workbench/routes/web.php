@@ -1,8 +1,10 @@
 <?php
 
+use Honed\Registry\Registry;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('r')
-    ->group(function () {
-        // CustomRegistry::serve();
-    });
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Registry::serve();

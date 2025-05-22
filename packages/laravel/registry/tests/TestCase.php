@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Inertia\ServiceProvider as InertiaServiceProvider;
 use Honed\Registry\Tests\Stubs\Status;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 
 class TestCase extends Orchestra
 {
     use WithWorkbench;
+    use RefreshDatabase;
 
     /**
      * Define the environment setup.

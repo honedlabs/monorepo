@@ -9,5 +9,7 @@ return [
 
     'author' => env('REGISTRY_AUTHOR'),
 
+    'registry_path' => env('REGISTRY_PATH', 'registry'),
+
     'path' => resource_path('js/registry'),
 ];

@@ -40,6 +40,11 @@ trait HasRegistryType
         return $this->type;
     }
 
+    public function getTypeAttribute()
+    {
+        $attributes = (new \ReflectionClass($this))->getAttributes();
+    }
+
     /**
      * Register as a block.
      * 

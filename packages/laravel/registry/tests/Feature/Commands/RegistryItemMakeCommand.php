@@ -9,19 +9,19 @@ beforeEach(function () {
 });
 
 it('makes', function () {
-    $this->artisan('registry:make', [
-        'name' => 'AppRegistry',
+    $this->artisan('registry:item', [
+        'name' => 'Button',
         '--force' => true,
     ])->assertSuccessful();
 
-    $this->assertFileExists(app_path('Registry/AppRegistry.php'));
+    $this->assertFileExists(app_path('Registry/Items/Button.php'));
 });
 
 it('registrys for a name', function () {
-    $this->artisan('registry:make', [
+    $this->artisan('registry:item', [
         '--force' => true,
-    ])->expectsQuestion('What should the registry be named?', 'AppRegistry')
+    ])->expectsQuestion('What should the registry be named?', 'Button')
         ->assertSuccessful();
 
-    $this->assertFileExists(app_path('Registry/AppRegistry.php'));
+    $this->assertFileExists(app_path('Registry/Items/Button.php'));
 });

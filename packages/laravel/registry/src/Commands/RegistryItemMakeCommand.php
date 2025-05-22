@@ -8,29 +8,29 @@ use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-#[AsCommand(name: 'registry:make')]
-class RegistryMakeCommand extends GeneratorCommand
+#[AsCommand(name: 'registry:item')]
+class RegistryItemMakeCommand extends GeneratorCommand
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'registry:make';
+    protected $name = 'registry:item';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new registry.';
+    protected $description = 'Create a new registry item.';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Registry';
+    protected $type = 'Registry item';
 
     /**
      * Get the stub file for the generator.
@@ -39,7 +39,7 @@ class RegistryMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return $this->resolveStubPath('/stubs/honed.registry.stub');
+        return $this->resolveStubPath('/stubs/honed.registry-item.stub');
     }
 
     /**
@@ -63,7 +63,7 @@ class RegistryMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Registries';
+        return $rootNamespace.'\Registry\Items';
     }
 
     /**
@@ -74,7 +74,7 @@ class RegistryMakeCommand extends GeneratorCommand
     protected function getOptions()
     {
         return [
-            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the registry already exists'],
+            ['force', null, InputOption::VALUE_NONE, 'Create the item even if the registry item already exists'],
         ];
     }
 
@@ -88,7 +88,7 @@ class RegistryMakeCommand extends GeneratorCommand
         return [
             'name' => [
                 'What should the '.strtolower($this->type).' be named?',
-                'E.g. AppRegistry',
+                'E.g. Button',
             ],
         ];
     }

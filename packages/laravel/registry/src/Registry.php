@@ -5,21 +5,23 @@ declare(strict_types=1);
 namespace Honed\Registry;
 
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 class Registry implements Jsonable
 {
     /**
      * The name of the registry.
      * 
-     * @var string
+     * @var string|null
      */
     protected $name;
 
     /**
      * The homepage of the registry.
      * 
-     * @var string
+     * @var string|null
      */
     protected $homepage;
 
@@ -56,6 +58,17 @@ class Registry implements Jsonable
     {
         /** @var string */
         return config('registry.name');
+    }
+
+    /**
+     * Get the default path of the registry json file from the config.
+     * 
+     * @return string
+     */
+    public function defaultPath()
+    {
+        /** @var string */
+        return Str::finish(config('registry.registry_path'), '.json');
     }
 
     /**
@@ -141,12 +154,26 @@ class Registry implements Jsonable
      */
     public function toJson($options = 0)
     {
-        return json_encode($this, $options);
+        return json_encode([
+            'Hello' => 'World',
+        ], $options);
     }
 
-    public static function serve()
+    /**
+     * Serve the registry as a route.
+     * 
+     * @param string|null $path
+     * @return \Illuminate\Routing\Route
+     */
+    public static function serve($path = null)
     {
-        return Route::get('/');
+        $registry = App::make(static::class);
+        
+        $path ??= $registry->defaultPath();
+
+        return Route::get($path, function () use ($registry) {
+            return response()->json($registry);
+        });
     }
 
     // public function toArray()
