@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-interface TableExporter extends FromQuery, WithHeadings, WithMapping, WithEvents
+interface ExportsTable extends FromQuery, WithHeadings, WithMapping, WithEvents
 {
     /**
      * Set the columns to be used for the export.

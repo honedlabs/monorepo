@@ -6,7 +6,7 @@ namespace Honed\Table;
 
 use Honed\Table\Commands\ColumnMakeCommand;
 use Honed\Table\Commands\TableMakeCommand;
-use Honed\Table\Contracts\TableExporter;
+use Honed\Table\Contracts\ExportsTable;
 use Honed\Table\Http\Controllers\TableController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -25,7 +25,7 @@ class TableServiceProvider extends ServiceProvider
         /** @var string */
         $exporter = config('table.exporter');
 
-        $this->app->bind(TableExporter::class, $exporter);
+        $this->app->bind(ExportsTable::class, $exporter);
     }
 
     /**
@@ -35,8 +35,7 @@ class TableServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerRouterMacros();
-        // $this->registerActionMacros();
+        $this->registerMacros();
 
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
@@ -69,7 +68,7 @@ class TableServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerRouterMacros()
+    protected function registerMacros()
     {
         Router::macro('table', function () {
             /** @var \Illuminate\Routing\Router $this */

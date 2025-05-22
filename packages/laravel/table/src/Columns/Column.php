@@ -216,7 +216,7 @@ class Column extends Primitive
     {
         static::$useFallback = $default;
     }
-    
+
     /**
      * Set the class for the column.
      *
@@ -404,7 +404,7 @@ class Column extends Primitive
      *
      * @return bool
      */
-    public function isSelectable()
+    public function selects()
     {
         return (bool) $this->select;
     }
@@ -437,6 +437,16 @@ class Column extends Primitive
     public function dontExport()
     {
         return $this->doNotExport();
+    }
+
+    /**
+     * Determine if this column is exportable.
+     * 
+     * @return bool
+     */
+    public function exports()
+    {
+        return (bool) $this->export;
     }
 
     /**
@@ -502,6 +512,16 @@ class Column extends Primitive
                 ),
             ],
         ];
+    }
+
+    /**
+     * Flush the column's global configuration state.
+     * 
+     * @return void
+     */
+    public static function flushState()
+    {
+        static::$useFallback = null;
     }
 
     /**

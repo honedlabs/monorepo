@@ -2,7 +2,7 @@
 
 namespace Honed\Table\Exports;
 
-use Honed\Table\Contracts\TableExporter;
+use Honed\Table\Contracts\ExportsTable;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class TableExport implements TableExporter, WithStrictNullComparison, ShouldAutoSize
+class TableExport implements ExportsTable, WithStrictNullComparison, ShouldAutoSize
 {
     use Exportable;
 
