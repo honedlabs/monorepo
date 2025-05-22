@@ -22,11 +22,25 @@ trait HasPagination
     protected $paginator;
 
     /**
+     * The default paginator to use.
+     *
+     * @var 'cursor'|'simple'|'length-aware'|'collection'|string|null
+     */
+    protected static $defaultPaginator;
+
+    /**
      * The pagination options.
      *
      * @var int|array<int,int>|null
      */
     protected $pagination;
+
+    /**
+     * The default number of records per page.
+     *
+     * @var int|array<int,int>|null
+     */
+    protected static $defaultPerPage;
 
     /**
      * The default pagination amount if pagination is an array.

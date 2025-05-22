@@ -41,7 +41,7 @@ class TableExport implements TableExporter, WithStrictNullComparison
 
     public function map($row): array
     {
-        //
+        return [];
     }
 
     public function headings(): array
