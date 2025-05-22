@@ -17,7 +17,7 @@ class PerPage
      */
     public function __construct(
         public int|array $perPage
-    ) {}
+    ) { }
 
     /**
      * Get the number of records per page.

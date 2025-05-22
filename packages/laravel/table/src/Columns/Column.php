@@ -71,7 +71,7 @@ class Column extends Primitive
      *
      * @var mixed
      */
-    protected static $defaultFallback;
+    protected static $useFallback;
 
     /**
      * The class of the column header.
@@ -88,9 +88,9 @@ class Column extends Primitive
     protected $sort;
 
     /**
-     * Whether to search on the column.
+     * The database columns to search on.
      *
-     * @var bool|string
+     * @var bool|string|array<int, string>
      */
     protected $search = false;
 
@@ -109,6 +109,13 @@ class Column extends Primitive
     protected $select = true;
 
     /**
+     * How this column should be exported.
+     *
+     * @var bool|array<int,string>
+     */
+    protected $export = true;
+
+    /**
      * Create a new column instance.
      *
      * @param  string  $name
@@ -122,6 +129,9 @@ class Column extends Primitive
             ->label($label ?? static::makeLabel($name));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         $this->active(true);
@@ -193,21 +203,20 @@ class Column extends Primitive
      */
     public function getFallback()
     {
-        return $this->fallback ?? $this->defaultFallback;
+        return $this->fallback ?? static::$useFallback;
     }
 
     /**
      * Set the default fallback value for the column.
      *
      * @param  mixed  $default
-     * @return $this
+     * @return void
      */
     public function useFallback($default)
     {
-        static::$defaultFallback = $default;
-
-        return $this;
+        static::$useFallback = $default;
     }
+    
     /**
      * Set the class for the column.
      *
@@ -239,19 +248,28 @@ class Column extends Primitive
      */
     public function sort($sort = true)
     {
-        if (! $sort) {
-            $this->sort = null;
-        } elseif ($sort instanceof Sort) {
-            $this->sort = $sort;
-        } else {
-            $name = \is_string($sort) ? $sort : $this->getName();
-
-            $this->sort = Sort::make($name, $this->getLabel())
-                ->qualifies($this->getQualifier())
-                ->alias($this->getParameter());
-        }
+        $this->sort = match (true) {
+            ! $sort => null,
+            $sort instanceof Sort => $sort,
+            default => $this->newSort($sort),
+        };
 
         return $this;
+    }
+
+    /**
+     * Create a new sort instance using the column properties.
+     *
+     * @param  string|bool  $sort
+     * @return \Honed\Refine\Sort<TModel, TBuilder>
+     */
+    protected function newSort($sort)
+    {
+        $sort = \is_string($sort) ? $sort : $this->getName();
+
+        return Sort::make($sort, $this->getLabel())
+            ->qualifies($this->getQualifier())
+            ->alias($this->getParameter());
     }
 
     /**
@@ -269,7 +287,7 @@ class Column extends Primitive
      *
      * @return bool
      */
-    public function isSortable()
+    public function sorts()
     {
         return (bool) $this->sort;
     }
@@ -277,7 +295,7 @@ class Column extends Primitive
     /**
      * Set the column as searchable.
      *
-     * @param  bool|string  $search
+     * @param  bool|string|array<int, string>  $search
      * @return $this
      */
     public function search($search = true)
@@ -288,11 +306,25 @@ class Column extends Primitive
     }
 
     /**
+     * Get the search columns.
+     *
+     * @return bool|string|array<int, string>
+     */
+    public function getSearch()
+    {
+        if (! $this->search) {
+            return false;
+        }
+
+        return $this->search;
+    }
+
+    /**
      * Determine if the column is searchable.
      *
      * @return bool
      */
-    public function isSearchable()
+    public function searches()
     {
         return (bool) $this->search;
     }
@@ -315,7 +347,7 @@ class Column extends Primitive
      *
      * @return bool
      */
-    public function isFilterable()
+    public function filters()
     {
         return $this->filter;
     }
@@ -331,6 +363,26 @@ class Column extends Primitive
         $this->select = $select;
 
         return $this;
+    }
+
+    /**
+     * Set the column to not be selectable.
+     *
+     * @return $this
+     */
+    public function doNotSelect()
+    {
+        return $this->select(false);
+    }
+
+    /**
+     * Set the column to not be selectable.
+     *
+     * @return $this
+     */
+    public function dontSelect()
+    {
+        return $this->doNotSelect();
     }
 
     /**
@@ -355,6 +407,36 @@ class Column extends Primitive
     public function isSelectable()
     {
         return (bool) $this->select;
+    }
+
+    /**
+     * @
+     */
+    public function export($export = true)
+    {
+        $this->export = $export;
+
+        return $this;
+    }
+
+    /**
+     * Set the column to not be exportable.
+     *
+     * @return $this
+     */
+    public function doNotExport()
+    {
+        return $this->export(false);
+    }
+
+    /**
+     * Set the column to not be exportable.
+     *
+     * @return $this
+     */
+    public function dontExport()
+    {
+        return $this->doNotExport();
     }
 
     /**

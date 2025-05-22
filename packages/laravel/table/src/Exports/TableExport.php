@@ -6,29 +6,30 @@ use Honed\Table\Contracts\TableExporter;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class TableExport implements TableExporter, WithStrictNullComparison
+class TableExport implements TableExporter, WithStrictNullComparison, ShouldAutoSize
 {
     use Exportable;
 
     /**
      * The query to export.
      * 
-     * @var \Illuminate\Database\Eloquent\Builder
+     * @var \Honed\Table\Table
      */
-    protected $query;
+    protected $table;
 
     /**
      * Create a new table export instance.
      * 
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \Honed\Table\Table  $table
      * @return static
      */
-    public function __construct($query)
+    public function __construct($table)
     {
-        $this->query = $query;
+        $this->table = $table;
     }
 
     /**

@@ -17,7 +17,7 @@ class Table
      */
     public function __construct(
         public string $table
-    ) {}
+    ) { }
 
     /**
      * Get the table class.

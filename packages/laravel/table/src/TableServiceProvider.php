@@ -35,7 +35,8 @@ class TableServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->register();
+        $this->registerRouterMacros();
+        // $this->registerActionMacros();
 
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
@@ -64,11 +65,11 @@ class TableServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the macros for the package.
+     * Register the router macros for the package.
      *
      * @return void
      */
-    protected function registerMacros()
+    protected function registerRouterMacros()
     {
         Router::macro('table', function () {
             /** @var \Illuminate\Routing\Router $this */
