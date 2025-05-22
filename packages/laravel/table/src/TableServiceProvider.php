@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use Honed\Table\Console\Commands\ColumnMakeCommand;
-use Honed\Table\Console\Commands\TableMakeCommand;
+use Honed\Table\Commands\ColumnMakeCommand;
+use Honed\Table\Commands\TableMakeCommand;
 use Honed\Table\Contracts\TableExporter;
 use Honed\Table\Http\Controllers\TableController;
 use Illuminate\Routing\Router;
@@ -13,7 +13,12 @@ use Illuminate\Support\ServiceProvider;
 
 class TableServiceProvider extends ServiceProvider
 {
-    public function register(): void
+    /**
+     * Register any application services
+     * 
+     * @return void
+     */
+    public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/table.php', 'table');
 
@@ -25,8 +30,10 @@ class TableServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap the application services.
+     * 
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
         $this->register();
 
@@ -66,9 +73,9 @@ class TableServiceProvider extends ServiceProvider
         Router::macro('table', function () {
             /** @var \Illuminate\Routing\Router $this */
 
-            /** @var string */
+            /** @var string $endpoint */
             $endpoint = config('table.endpoint', '/table');
-            
+
             $endpoint = \trim($endpoint, '/');
 
             $methods = ['post', 'patch', 'put'];

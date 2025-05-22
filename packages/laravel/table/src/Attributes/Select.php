@@ -18,4 +18,14 @@ class Select
     public function __construct(
         public string|array $select
     ) {}
+
+    /**
+     * Get the select value.
+     * 
+     * @return string|array<int, string>
+     */
+    public function getSelect()
+    {
+        return $this->select;
+    }
 }

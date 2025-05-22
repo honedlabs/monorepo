@@ -7,25 +7,25 @@ namespace Honed\Table\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Table
+class PerPage
 {
     /**
      * Create a new attribute instance.
      *
-     * @param  class-string<\Honed\Table\Table>  $table
+     * @param  int|array<int, int>  $perPage
      * @return void
      */
     public function __construct(
-        public string $table
+        public int|array $perPage
     ) {}
 
     /**
-     * Get the table class.
+     * Get the number of records per page.
      * 
-     * @return class-string<\Honed\Table\Table>
+     * @return int|array<int, int>
      */
-    public function getTable()
+    public function getPerPage()
     {
-        return $this->table;
+        return $this->perPage;
     }
 }

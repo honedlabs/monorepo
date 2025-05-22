@@ -108,13 +108,6 @@ class Column extends Primitive
      */
     protected $select = true;
 
-    // /**
-    //  * Whether it is active.
-    //  *
-    //  * @var bool
-    //  */
-    // protected $active = true;
-
     /**
      * Create a new column instance.
      *
@@ -244,7 +237,7 @@ class Column extends Primitive
      * @param  \Honed\Refine\Sort<TModel, TBuilder>|string|bool  $sort
      * @return $this
      */
-    public function sorts($sort = true)
+    public function sort($sort = true)
     {
         if (! $sort) {
             $this->sort = null;
@@ -287,7 +280,7 @@ class Column extends Primitive
      * @param  bool|string  $search
      * @return $this
      */
-    public function searches($search = true)
+    public function search($search = true)
     {
         $this->search = $search;
 
@@ -310,7 +303,7 @@ class Column extends Primitive
      * @param  bool  $filter
      * @return $this
      */
-    public function filters($filter = true)
+    public function filter($filter = true)
     {
         $this->filter = $filter;
 
@@ -333,7 +326,7 @@ class Column extends Primitive
      * @param  bool|string|array<int,string>  $select
      * @return $this
      */
-    public function selects($select = true)
+    public function select($select = true)
     {
         $this->select = $select;
 
