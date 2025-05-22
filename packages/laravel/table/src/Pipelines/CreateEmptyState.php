@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
-use Honed\Table\EmptyState;
 use Honed\Table\Table;
 
 /**
@@ -55,8 +54,6 @@ class CreateEmptyState
 
             return;
         }
-
-        // dd($state($emptyState), $state(EmptyState::make()));
 
         $state($emptyState);
     }

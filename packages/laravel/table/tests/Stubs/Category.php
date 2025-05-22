@@ -12,6 +12,8 @@ class Category extends Model
 {
     use HasTable;
 
+    public static $tableClass = ProductTable::class;
+
     protected $guarded = [];
 
     public function products(): BelongsToMany

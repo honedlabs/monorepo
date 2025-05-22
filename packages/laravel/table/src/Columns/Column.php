@@ -67,6 +67,13 @@ class Column extends Primitive
     protected $fallback;
 
     /**
+     * The default fallback value for the columns.
+     *
+     * @var mixed
+     */
+    protected static $defaultFallback;
+
+    /**
      * The class of the column header.
      *
      * @var string|null
@@ -193,9 +200,21 @@ class Column extends Primitive
      */
     public function getFallback()
     {
-        return $this->fallback;
+        return $this->fallback ?? $this->defaultFallback;
     }
 
+    /**
+     * Set the default fallback value for the column.
+     *
+     * @param  mixed  $default
+     * @return $this
+     */
+    public function useFallback($default)
+    {
+        static::$defaultFallback = $default;
+
+        return $this;
+    }
     /**
      * Set the class for the column.
      *

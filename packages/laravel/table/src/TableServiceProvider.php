@@ -6,6 +6,7 @@ namespace Honed\Table;
 
 use Honed\Table\Console\Commands\ColumnMakeCommand;
 use Honed\Table\Console\Commands\TableMakeCommand;
+use Honed\Table\Contracts\TableExporter;
 use Honed\Table\Http\Controllers\TableController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -15,39 +16,60 @@ class TableServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/table.php', 'table');
+
+        /** @var string */
+        $exporter = config('table.exporter');
+
+        $this->app->bind(TableExporter::class, $exporter);
     }
 
+    /**
+     * Bootstrap the application services.
+     */
     public function boot(): void
     {
+        $this->register();
+
         if ($this->app->runningInConsole()) {
+            $this->offerPublishing();
+
             $this->commands([
                 TableMakeCommand::class,
                 ColumnMakeCommand::class,
             ]);
-
-            $this->publishes([
-                __DIR__.'/../stubs' => base_path('stubs'),
-            ], 'stubs');
-
-            $this->publishes([
-                __DIR__.'/../config/table.php' => config_path('table.php'),
-            ], 'config');
         }
-
-        $this->registerRoutesMacro();
     }
 
     /**
-     * Register the route macro for the Table class.
+     * Register the publishing for the package.
+     *
+     * @return void
      */
-    private function registerRoutesMacro(): void
+    protected function offerPublishing()
+    {
+        $this->publishes([
+            __DIR__.'/../stubs' => base_path('stubs'),
+        ], 'stubs');
+
+        $this->publishes([
+            __DIR__.'/../config/table.php' => config_path('table.php'),
+        ], 'config');
+    }
+
+    /**
+     * Register the macros for the package.
+     *
+     * @return void
+     */
+    protected function registerMacros()
     {
         Router::macro('table', function () {
             /** @var \Illuminate\Routing\Router $this */
-            $endpoint = \trim(
-                type(config('table.endpoint', '/table'))->asString(),
-                '/'
-            );
+
+            /** @var string */
+            $endpoint = config('table.endpoint', '/table');
+            
+            $endpoint = \trim($endpoint, '/');
 
             $methods = ['post', 'patch', 'put'];
 
