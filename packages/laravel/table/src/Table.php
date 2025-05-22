@@ -94,6 +94,7 @@ class Table extends Refine implements Handles, UrlRoutable
      */
     protected $serialize;
 
+
     /**
      * The empty state of the table.
      *
@@ -249,17 +250,7 @@ class Table extends Refine implements Handles, UrlRoutable
             return $this->serialize;
         }
 
-        return static::isSerializedByDefault();
-    }
-
-    /**
-     * Get whether the model should be serialized per record from the config.
-     *
-     * @return bool
-     */
-    public static function isSerializedByDefault()
-    {
-        return (bool) config('table.serialize', false);
+        return false; // TODO
     }
 
     /**
@@ -311,7 +302,7 @@ class Table extends Refine implements Handles, UrlRoutable
      * @param  string|null  $title
      * @return $this
      */
-    public function emptyState($message, $title = null)
+    public function withEmptyState($message, $title = null)
     {
         $emptyState = $this->getEmptyState();
 
@@ -342,7 +333,7 @@ class Table extends Refine implements Handles, UrlRoutable
      * @param  \Honed\Table\EmptyState  $emptyState
      * @return void
      */
-    public function defineEmptyState($emptyState)
+    public function emptyState($emptyState)
     {
         //
     }
@@ -375,18 +366,9 @@ class Table extends Refine implements Handles, UrlRoutable
             return true;
         }
 
-        return static::isSelectableByDefault();
+        return false; // TODO
     }
 
-    /**
-     * Whether to do column selection by default.
-     *
-     * @return bool
-     */
-    public function isSelectableByDefault()
-    {
-        return (bool) config('table.select', false);
-    }
 
     /**
      * Set the columns to always have selected.
@@ -443,48 +425,6 @@ class Table extends Refine implements Handles, UrlRoutable
     public function getColumnKey()
     {
         return $this->formatScope($this->getBaseColumnKey());
-    }
-
-    /**
-     * Get the endpoint to be used for table actions from the config.
-     *
-     * @return string
-     */
-    public static function getDefaultEndpoint()
-    {
-        return type(config('table.endpoint', '/table'))->asString();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getDefaultDelimiter()
-    {
-        return type(config('table.delimiter', ','))->asString();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getDefaultSearchKey()
-    {
-        return type(config('table.search_key', 'search'))->asString();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getDefaultMatchKey()
-    {
-        return type(config('table.match_key', 'match'))->asString();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function isMatchingByDefault()
-    {
-        return (bool) config('table.match', false);
     }
 
     /**
