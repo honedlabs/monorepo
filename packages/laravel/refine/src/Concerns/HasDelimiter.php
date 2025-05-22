@@ -27,32 +27,20 @@ trait HasDelimiter
     }
 
     /**
-     * Determine if the delimiter is set.
-     *
-     * @return bool
-     */
-    public function hasDelimiter()
-    {
-        return isset($this->delimiter);
-    }
-
-    /**
      * Get the delimiter.
      *
      * @return string
      */
     public function getDelimiter()
     {
-        return $this->delimiter ?? static::getDefaultDelimiter();
+        return $this->delimiter ?? static::$delimiter;
     }
 
     /**
-     * Get the default delimiter.
-     *
-     * @return string
+     * Set the delimiter to use by default.
      */
-    public static function getDefaultDelimiter()
+    public static function useDelimiter($delimiter)
     {
-        return type(config('refine.delimiter', ','))->asString();
+        static::$delimiter = $delimiter;
     }
 }
