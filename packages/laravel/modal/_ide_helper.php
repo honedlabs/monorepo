@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Inertia {
     /**
      * @method \Honed\Modal\Modal modal(string $component, array|\Illuminate\Contracts\Support\Arrayable $props = [])

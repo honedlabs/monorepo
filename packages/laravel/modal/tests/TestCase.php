@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Modal\Tests;
 
 use Honed\Modal\ModalServiceProvider;
@@ -11,10 +9,13 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\ServiceProvider as InertiaServiceProvider;
+use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
 
 class TestCase extends TestbenchTestCase
 {
+    use WithWorkbench;
+
     protected function setUp(): void
     {
         parent::setUp();

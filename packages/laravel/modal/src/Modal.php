@@ -22,20 +22,6 @@ class Modal implements Responsable
     use RespondsWithInertia;
 
     /**
-     * The modal component to display.
-     *
-     * @var string
-     */
-    protected $component;
-
-    /**
-     * The props to pass to the modal.
-     *
-     * @var array<string, mixed>
-     */
-    protected $props;
-
-    /**
      * The route to display the modal on if not coming from an Inertia page.
      *
      * @var string
@@ -57,28 +43,9 @@ class Modal implements Responsable
      */
     public function __construct($component, $props = [])
     {
-        $this->component = $component;
-
+        $this->setComponent($component);
+        $this->props($props);
         $this->newRequest();
-
-        $this->with($props);
-    }
-
-    /**
-     * Set the props for the response.
-     *
-     * @param  array<string, mixed>|\Illuminate\Contracts\Support\Arrayable<string, mixed>  $props
-     * @return $this
-     */
-    public function with($props)
-    {
-        if ($props instanceof Arrayable) {
-            $props = $props->toArray();
-        }
-
-        $this->props = $props;
-
-        return $this;
     }
 
     /**
@@ -110,6 +77,16 @@ class Modal implements Responsable
     }
 
     /**
+     * Get the base URL for the modal.
+     *
+     * @return string
+     */
+    public function getBaseUrl(): string
+    {
+        return $this->baseURL;
+    }
+
+    /**
      * Register middleware to exclude when dispatching the base URL request.
      *
      * @param  class-string|iterable<int, class-string>  $middleware
@@ -123,6 +100,16 @@ class Modal implements Responsable
     }
 
     /**
+     * Get the excluded middleware to exclude when dispatching the base request.
+     * 
+     * @return array<int, class-string>
+     */
+    public static function getExcludedMiddleware()
+    {
+        return static::$excludeMiddleware;
+    }
+
+    /**
      * Render the modal on the base URL.
      *
      * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Support\Responsable
@@ -130,8 +117,8 @@ class Modal implements Responsable
     public function render()
     {
         Inertia::share([
-            'modal' => $this->component(),
-            ...Arr::dot($this->props, 'modal.props.'),
+            ModalHeader::PROP => $this->component(),
+            ...Arr::dot($this->props, ModalHeader::PROP.'.props.'),
         ]);
 
         if ($this->isPartial()) {
@@ -156,27 +143,6 @@ class Modal implements Responsable
         App::instance('request', $request);
 
         return $this->handleRoute($request, $baseRoute);
-    }
-
-    /**
-     * Determine if the current request is an Inertia request.
-     *
-     * @return bool
-     */
-    public function isInertiaRequest()
-    {
-        return (bool) $this->request->header(Header::INERTIA);
-    }
-
-    /**
-     * Get the partial component from the request.
-     *
-     * @return string|null
-     */
-    public function getRequestPartialComponent()
-    {
-        /** @var string|null */
-        return $this->request->header(Header::PARTIAL_COMPONENT);
     }
 
     /**
@@ -206,7 +172,7 @@ class Modal implements Responsable
             'component' => $this->component,
             'baseURL' => $this->baseURL,
             'redirectURL' => $this->getRedirectUrl(),
-            'key' => request()->header(ModalHeader::KEY, Str::uuid()->toString()),
+            'key' => $this->request->header(ModalHeader::KEY, Str::uuid()->toString()),
             'nonce' => Str::uuid()->toString(),
         ];
     }
@@ -216,39 +182,9 @@ class Modal implements Responsable
      */
     public function getRedirectUrl(): string
     {
-        return request()->header(ModalHeader::REDIRECT)
-            ?? $this->getInertiaReferer(request())
+        return $this->request->header(ModalHeader::REDIRECT)
+            ?? $this->getReferer()
             ?? $this->getBaseUrl();
-    }
-
-    /**
-     * Get the base URL for the modal.
-     *
-     * @return string
-     */
-    public function getBaseUrl(): string
-    {
-        return $this->baseURL;
-    }
-
-    /**
-     * Get the referer URL from the request if it is a valid Inertia request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string|null
-     */
-    protected function getInertiaReferer($request)
-    {
-        $referer = $request->headers->get('referer');
-
-        if ($request->header(Header::INERTIA) 
-                && $referer
-                && $referer !== url()->current()
-        ) {
-            return $referer;
-        }
-
-        return null;
     }
 
     /**
