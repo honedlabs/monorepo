@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Honed\Core\Contracts\WithTransformer;
+
 trait Transformable
 {
     /**
@@ -29,23 +31,21 @@ trait Transformable
     }
 
     /**
-     * Define the transformer function.
-     *
-     * @return \Closure(mixed):mixed|null
-     */
-    public function defineTransformer()
-    {
-        return null;
-    }
-
-    /**
      * Get the transformer function.
      *
      * @return \Closure(mixed):mixed|null
      */
     public function getTransformer()
     {
-        return $this->transformer ??= $this->defineTransformer();
+        if (isset($this->transformer)) {
+            return $this->transformer;
+        }
+
+        if ($this instanceof WithTransformer) {
+            return $this->transformer = \Closure::fromCallable([$this, 'transformUsing']);
+        }
+
+        return null;
     }
 
     /**

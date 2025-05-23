@@ -29,16 +29,6 @@ trait Allowable
     }
 
     /**
-     * Define the allow condition.
-     *
-     * @return \Closure(...mixed):bool|bool|null
-     */
-    public function defineAllow()
-    {
-        return null;
-    }
-
-    /**
      * Determine if the parameters pass the allow condition.
      *
      * @param  array<string,mixed>  $parameters

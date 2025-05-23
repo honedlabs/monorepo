@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  */
 trait HasResource
 {
@@ -28,7 +28,7 @@ trait HasResource
      *
      * @throws \InvalidArgumentException
      */
-    public function resource($resource)
+    public function withResource($resource)
     {
         $this->resource = $this->asBuilder($resource);
 
@@ -40,7 +40,7 @@ trait HasResource
      *
      * @return TBuilder|TModel|class-string<TModel>|null
      */
-    public function defineResource()
+    public function resource()
     {
         return null;
     }
@@ -55,7 +55,7 @@ trait HasResource
      */
     public function getResource()
     {
-        $resource = $this->resource ??= $this->defineResource();
+        $resource = $this->resource ??= $this->resource();
 
         if (! $resource) {
             static::throwResourceException();

@@ -9,14 +9,14 @@ trait HasName
     /**
      * The name.
      *
-     * @var string
+     * @var string|null
      */
     protected $name;
 
     /**
      * Set the name.
      *
-     * @param  string  $name
+     * @param  string|null  $name
      * @return $this
      */
     public function name($name)
@@ -29,10 +29,20 @@ trait HasName
     /**
      * Get the name.
      *
-     * @return string
+     * @return string|null
      */
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Determine if the name is set.
+     *
+     * @return bool
+     */
+    public function hasName()
+    {
+        return filled($this->getName());
     }
 }

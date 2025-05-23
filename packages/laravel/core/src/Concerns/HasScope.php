@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 
 trait HasScope
 {
+    const SCOPE_SEPARATOR = ':';
+
     /**
      * The scope to use.
      *
@@ -29,23 +31,13 @@ trait HasScope
     }
 
     /**
-     * Define the scope.
-     *
-     * @return string|null
-     */
-    public function defineScope()
-    {
-        return null;
-    }
-
-    /**
      * Get the scope.
      *
      * @return string|null
      */
     public function getScope()
     {
-        return $this->scope ??= $this->defineScope();
+        return $this->scope;
     }
 
     /**
@@ -66,11 +58,13 @@ trait HasScope
      */
     public function formatScope($value)
     {
-        if (! $this->hasScope()) {
+        $scope = $this->getScope();
+
+        if (! $scope) {
             return $value;
         }
 
-        return \sprintf('%s:%s', $this->getScope(), $value);
+        return \sprintf('%s%s%s', $scope, self::SCOPE_SEPARATOR, $value);
     }
 
     /**
@@ -82,7 +76,7 @@ trait HasScope
     public function decodeScope($value)
     {
         return Str::of($value)
-            ->after(':')
+            ->after(self::SCOPE_SEPARATOR)
             ->toString();
     }
 }

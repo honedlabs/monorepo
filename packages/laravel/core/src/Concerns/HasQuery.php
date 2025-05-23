@@ -8,10 +8,8 @@ use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- *
- * @method static \Closure|null defineQuery()
+ * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  */
 trait HasQuery
 {
@@ -33,16 +31,6 @@ trait HasQuery
         $this->query = $query;
 
         return $this;
-    }
-
-    /**
-     * Define the query closure.
-     *
-     * @return \Closure|null
-     */
-    public function defineQuery()
-    {
-        return null;
     }
 
     /**

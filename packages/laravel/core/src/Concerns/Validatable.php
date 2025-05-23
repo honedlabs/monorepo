@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Honed\Core\Contracts\WithValidator;
+
 trait Validatable
 {
     /**
@@ -29,23 +31,21 @@ trait Validatable
     }
 
     /**
-     * Define the validation function.
-     *
-     * @return \Closure(mixed):bool|bool|null
-     */
-    public function defineValidator()
-    {
-        return null;
-    }
-
-    /**
      * Get the validation function.
      *
      * @return \Closure(mixed):bool|bool|null
      */
     public function getValidator()
     {
-        return $this->validator ??= $this->defineValidator();
+        if (isset($this->validator)) {
+            return $this->validator;
+        }
+
+        if ($this instanceof WithValidator) {
+            return $this->validator = \Closure::fromCallable([$this, 'validateUsing']);
+        }
+
+        return null;
     }
 
     /**

@@ -27,23 +27,13 @@ trait HasMeta
     }
 
     /**
-     * Define the meta data.
-     *
-     * @return array<string,mixed>
-     */
-    public function defineMeta()
-    {
-        return [];
-    }
-
-    /**
      * Get the meta.
      *
      * @return array<string,mixed>
      */
     public function getMeta()
     {
-        return $this->meta ??= $this->defineMeta();
+        return $this->meta;
     }
 
     /**
