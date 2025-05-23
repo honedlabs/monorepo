@@ -3,7 +3,6 @@
 namespace Honed\Refine;
 
 use Honed\Refine\Concerns\HasDirection;
-use Honed\Refine\Support\Constants;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -87,7 +86,7 @@ class Sort extends Refiner
         $descending = $this->getDescendingValue();
 
         if ($this->isFixed()) {
-            return $this->fixed === Constants::DESCENDING
+            return $this->fixed === 'desc'
                 ? $ascending
                 : $descending;
         }
