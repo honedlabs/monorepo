@@ -2,10 +2,10 @@
 
 namespace Honed\Refine;
 
-use Honed\Refine\Console\Commands\FilterMakeCommand;
-use Honed\Refine\Console\Commands\RefineMakeCommand;
-use Honed\Refine\Console\Commands\SearchMakeCommand;
-use Honed\Refine\Console\Commands\SortMakeCommand;
+use Honed\Refine\Commands\FilterMakeCommand;
+use Honed\Refine\Commands\RefineMakeCommand;
+use Honed\Refine\Commands\SearchMakeCommand;
+use Honed\Refine\Commands\SortMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 class RefineServiceProvider extends ServiceProvider
