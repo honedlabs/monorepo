@@ -2,7 +2,6 @@
 
 namespace Honed\Refine\Contracts;
 
-
 interface FromOptions
 {
     /**

@@ -7,6 +7,7 @@ use Honed\Core\Concerns\HasParameterNames;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasResource;
 use Honed\Core\Concerns\HasScope;
+use Honed\Core\Parameters;
 use Honed\Core\Primitive;
 use Honed\Refine\Concerns\HasDelimiter;
 use Honed\Refine\Concerns\HasFilters;
@@ -37,7 +38,6 @@ class Refine extends Primitive
     use ForwardsCalls;
     use HasDelimiter;
     use HasFilters;
-    use HasParameterNames;
     use HasRequest;
 
     /**
@@ -323,7 +323,7 @@ class Refine extends Primitive
         $resource = $this->getResource();
         $request = $this->getRequest();
 
-        [$_, $singular, $plural] = static::getParameterNames($resource);
+        [$_, $singular, $plural] = Parameters::names($resource);
 
         return match ($parameterName) {
             'request' => [$request],
