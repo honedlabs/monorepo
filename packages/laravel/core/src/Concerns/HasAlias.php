@@ -27,23 +27,13 @@ trait HasAlias
     }
 
     /**
-     * Define the alias.
-     *
-     * @return string|null
-     */
-    public function defineAlias()
-    {
-        return null;
-    }
-
-    /**
      * Get the alias.
      *
      * @return string|null
      */
     public function getAlias()
     {
-        return $this->alias ??= $this->defineAlias();
+        return $this->alias;
     }
 
     /**

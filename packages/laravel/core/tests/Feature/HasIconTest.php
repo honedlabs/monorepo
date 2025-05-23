@@ -8,18 +8,6 @@ use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Tests\Stubs\Product;
 
-enum IconEnum implements HasIconContract
-{
-    case Chevron;
-
-    public function icon(): string
-    {
-        return Str::of($this->name)
-            ->lower()
-            ->value();
-    }
-}
-
 beforeEach(function () {
     $this->test = new class {
         use Evaluable, HasIcon;

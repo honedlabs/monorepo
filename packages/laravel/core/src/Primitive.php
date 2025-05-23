@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core;
 
 use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Contracts\WithoutNullValues;
 use Illuminate\Support\Traits\Tappable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Conditionable;
@@ -27,6 +28,15 @@ abstract class Primitive implements \JsonSerializable
     }
 
     /**
+     * Get the instance as an array.
+     *
+     * @param  array<string,mixed>  $named
+     * @param  array<class-string,mixed>  $typed
+     * @return array<string,mixed>
+     */
+    abstract public function toArray($named = [], $typed = []);
+
+    /**
      * Provide the instance with any necessary setup.
      *
      * @return void
@@ -43,7 +53,16 @@ abstract class Primitive implements \JsonSerializable
      */
     public function jsonSerialize(): mixed
     {
-        return $this->toArray();
+        $array = $this->toArray();
+
+        if ($this instanceof WithoutNullValues) {
+            return \array_filter(
+                $array,
+                static fn ($value) => ! is_null($value)
+            );
+        }
+
+        return $array;
     }
 
     /**
