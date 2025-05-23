@@ -1,17 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Refine;
 
 use Honed\Refine\Concerns\HasDirection;
 use Honed\Refine\Support\Constants;
 
 /**
- * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @extends Refiner<TModel, TBuilder>
+ * @extends \Honed\Refine\Refiner<TModel, TBuilder>
  */
 class Sort extends Refiner
 {
@@ -26,13 +24,8 @@ class Sort extends Refiner
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
-    public function defineType()
-    {
-        return Constants::SORT;
-    }
+    protected $type = 'sort';
 
     /**
      * Set as the default.
@@ -225,8 +218,8 @@ class Sort extends Refiner
      * @param  'asc'|'desc'|null  $direction
      * @return void
      */
-    public function defaultQuery($builder, $column, $direction)
+    public function queryAs($builder, $column, $direction)
     {
-        $builder->orderBy($column, $direction ?? Constants::ASCENDING);
+        $builder->orderBy($column, $direction ?? 'asc');
     }
 }

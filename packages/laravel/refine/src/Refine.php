@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Refine;
 
 use Closure;
@@ -29,8 +27,8 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
- * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
+ * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
  * @mixin TBuilder
  */
@@ -38,13 +36,8 @@ class Refine extends Primitive
 {
     use ForwardsCalls;
     use HasDelimiter;
-
-    /** @use \Honed\Refine\Concerns\HasFilters<TModel, TBuilder> */
     use HasFilters;
-
-    /** @use \Honed\Core\Concerns\HasParameterNames<TModel, TBuilder> */
     use HasParameterNames;
-
     use HasRequest;
 
     /**
@@ -53,16 +46,12 @@ class Refine extends Primitive
     use HasResource;
 
     use HasScope;
-
-    /** @use \Honed\Refine\Concerns\HasSearches<TModel, TBuilder> */
     use HasSearches {
-        getSearchKey as protected getBaseSearchKey;
-        getMatchKey as protected getBaseMatchKey;
+        getSearchKey as protected baseSearchKey;
+        getMatchKey as protected baseMatchKey;
     }
-
-    /** @use \Honed\Refine\Concerns\HasSorts<TModel, TBuilder> */
     use HasSorts {
-        getSortKey as protected getBaseSortKey;
+        getSortKey as protected baseSortKey;
     }
 
     /**
@@ -188,7 +177,7 @@ class Refine extends Primitive
     /**
      * Add the given refiners to be used.
      *
-     * @param  array<int, \Honed\Refine\Refiner<TModel, TBuilder>>|\Illuminate\Support\Collection<int, \Honed\Refine\Refiner<TModel, TBuilder>>  $refiners
+     * @param  array<int, \Honed\Refine\Refiner>|\Illuminate\Support\Collection<int, \Honed\Refine\Refiner>  $refiners
      * @return $this
      */
     public function with($refiners)
@@ -206,56 +195,11 @@ class Refine extends Primitive
             };
         }
 
-        $this->sorts($sorts);
-        $this->filters($filters);
-        $this->searches($searches);
+        $this->withSorts($sorts);
+        $this->withFilters($filters);
+        $this->withSearches($searches);
 
         return $this;
-    }
-
-    /**
-     * Determine if the instance provides refinements.
-     *
-     * @return bool
-     */
-    public function isRefinable()
-    {
-        return $this->hasAny('filters', 'searches', 'sorts');
-    }
-
-    /**
-     * Determine if the instance does not provide any refinements.
-     *
-     * @return bool
-     */
-    public function isntRefinable()
-    {
-        return ! $this->isRefinable();
-    }
-
-    /**
-     * Set the instance to not provide any refinements.
-     *
-     * @return $this
-     */
-    public function exceptRefinements()
-    {
-        $this->except('filters', 'searches', 'sorts');
-
-        return $this;
-    }
-
-    /**
-     * Set the instance to only provide refinements.
-     *
-     * @return $this
-     */
-    public function onlyRefinements()
-    {
-        $this->only('filters', 'searches', 'sorts');
-
-        return $this;
-
     }
 
     /**
@@ -265,7 +209,7 @@ class Refine extends Primitive
      */
     public function getSortKey()
     {
-        return $this->formatScope($this->getBaseSortKey());
+        return $this->formatScope($this->baseSortKey());
     }
 
     /**
@@ -275,7 +219,7 @@ class Refine extends Primitive
      */
     public function getSearchKey()
     {
-        return $this->formatScope($this->getBaseSearchKey());
+        return $this->formatScope($this->baseSearchKey());
     }
 
     /**
@@ -285,11 +229,11 @@ class Refine extends Primitive
      */
     public function getMatchKey()
     {
-        return $this->formatScope($this->getBaseMatchKey());
+        return $this->formatScope($this->baseMatchKey());
     }
 
     /**
-     * Get the config for the refiner as an array.
+     * Get the config for the refine as an array.
      *
      * @return array<string,mixed>
      */
@@ -328,7 +272,10 @@ class Refine extends Primitive
             return $this;
         }
 
-        $this->pipeline();
+        App::make(Pipeline::class)
+            ->send($this)
+            ->through($this->pipelines())
+            ->thenReturn();
 
         $this->refined = true;
 
@@ -338,19 +285,17 @@ class Refine extends Primitive
     /**
      * Execute the refiner pipeline.
      *
-     * @return void
+     * @return array<int, class-string>
      */
-    protected function pipeline()
+    protected function pipelines()
     {
-        App::make(Pipeline::class)
-            ->send($this)
-            ->through([
-                BeforeRefining::class,
-                RefineSearches::class,
-                RefineFilters::class,
-                RefineSorts::class,
-                AfterRefining::class,
-            ])->thenReturn();
+        return [
+            BeforeRefining::class,
+            RefineSearches::class,
+            RefineFilters::class,
+            RefineSorts::class,
+            AfterRefining::class,
+        ];
     }
 
     /**
@@ -416,7 +361,7 @@ class Refine extends Primitive
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
-            return parent::__call($method, $parameters);
+            return parent::macroCall($method, $parameters);
         }
 
         return $this->forwardBuilderCall($method, $parameters);

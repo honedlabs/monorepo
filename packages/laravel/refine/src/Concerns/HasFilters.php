@@ -27,7 +27,7 @@ trait HasFilters
      * Set whether the filters should be applied.
      *
      * @param  bool  $filter
-     * @return static
+     * @return $this
      */
     public function filter($filter = true)
     {
