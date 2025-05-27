@@ -199,7 +199,7 @@ class Export extends Action
      * @param  callable  $callback
      * @return $this
      */
-    public function on($event, $callback)
+    public function event($event, $callback)
     {
         $this->events[$event] = $callback;
 

@@ -56,11 +56,11 @@ class TableServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),
-        ], 'stubs');
+        ], 'table-stubs');
 
         $this->publishes([
             __DIR__.'/../config/table.php' => config_path('table.php'),
-        ], 'config');
+        ], 'table-config');
     }
 
     /**

@@ -94,6 +94,12 @@ class Table extends Refine implements Handles, UrlRoutable
      */
     protected $serialize;
 
+    /**
+     * Whether the model attributes should be serialized by default.
+     *
+     * @var bool
+     */
+    protected static $shouldSerialize = false;
 
     /**
      * The empty state of the table.
@@ -108,6 +114,13 @@ class Table extends Refine implements Handles, UrlRoutable
      * @var bool|null
      */
     protected $select;
+
+    /**
+     * Whether to do column selection by default.
+     * 
+     * @var bool
+     */
+    protected static $shouldSelect = false;
 
     /**
      * The columns to always be selected.
@@ -504,7 +517,7 @@ class Table extends Refine implements Handles, UrlRoutable
     }
 
     /**
-     * Flush the table's global configuration state.
+     * Flush the table class global configuration state.
      *
      * @return void
      */
@@ -512,6 +525,8 @@ class Table extends Refine implements Handles, UrlRoutable
     {
         static::$tableNameResolver = null;
         static::$namespace = 'App\\Tables\\';
+        static::$shouldSerialize = false;
+        static::$shouldSelect = false;
     }
 
     /**

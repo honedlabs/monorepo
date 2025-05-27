@@ -95,13 +95,6 @@ class Column extends Primitive
     protected $search = false;
 
     /**
-     * Whether to have a simple filter on the column.
-     *
-     * @var bool
-     */
-    protected $filter = false;
-
-    /**
      * How to select this column
      *
      * @var string|bool|array<int,string>
@@ -114,6 +107,20 @@ class Column extends Primitive
      * @var bool|array<int,string>
      */
     protected $export = true;
+
+    /**
+     * The format to export the column in.
+     * 
+     * @var string|null
+     */
+    protected $exportFormat;
+
+    /**
+     * The style to export the column in.
+     * 
+     * @var array<string,mixed>|(\Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)|null
+     */
+    protected $exportStyle;
 
     /**
      * Create a new column instance.
@@ -330,29 +337,6 @@ class Column extends Primitive
     }
 
     /**
-     * Set the column as filterable.
-     *
-     * @param  bool  $filter
-     * @return $this
-     */
-    public function filter($filter = true)
-    {
-        $this->filter = $filter;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the column is filterable.
-     *
-     * @return bool
-     */
-    public function filters()
-    {
-        return $this->filter;
-    }
-
-    /**
      * Set how to select this column.
      *
      * @param  bool|string|array<int,string>  $select
@@ -410,11 +394,37 @@ class Column extends Primitive
     }
 
     /**
-     * @
+     * Set whether, and how, the column should be exported.
+     * 
+     * @param  bool|(\Closure(mixed, TModel):mixed)  $as
+     * @param  string|null  $format
+     * @param  array<string,mixed>|(\Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)|null  $style
+     * @return $this
      */
-    public function export($export = true)
+    public function export($as = true, $format = null, $style = null)
     {
-        $this->export = $export;
+        $this->export = $as;
+
+        if ($format) {
+            $this->exportFormat($format);
+        }
+
+        if ($style) {
+            $this->exportStyle($style);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Register the callback to be used to export the content of a column.
+     * 
+     * @param  \Closure(mixed, TModel):mixed  $callback
+     * @return $this
+     */
+    public function exportUsing($callback)
+    {
+        $this->export = $callback;
 
         return $this;
     }
@@ -437,6 +447,16 @@ class Column extends Primitive
     public function dontExport()
     {
         return $this->doNotExport();
+    }
+
+    /**
+     * Get the exporter for the column.
+     * 
+     * @return bool|\Closure(mixed, TModel):mixed|null
+     */
+    public function getExporter()
+    {
+        return $this->export;
     }
 
     /**
