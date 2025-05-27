@@ -36,7 +36,7 @@ it('evaluates class-typed parameters', function () {
 });
 
 it('evaluates invokable objects', function () {
-    $invokable = new class
+    $invokable = new class()
     {
         public function __invoke()
         {

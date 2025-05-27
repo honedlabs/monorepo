@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Closure;
 use Honed\Core\Contracts\WithAllowance;
 
 trait Allowable
@@ -30,7 +31,7 @@ trait Allowable
 
     /**
      * Get the allow condition callback.
-     * 
+     *
      * @return (\Closure(...mixed):bool)|bool
      */
     public function getAllowCallback()
@@ -40,7 +41,7 @@ trait Allowable
         }
 
         if ($this instanceof WithAllowance) {
-            return $this->allow = \Closure::fromCallable([$this, 'allowUsing']);
+            return $this->allow = Closure::fromCallable([$this, 'allowUsing']);
         }
 
         return true;

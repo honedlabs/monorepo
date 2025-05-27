@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+use function array_fill_keys;
+use function in_array;
+
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
@@ -71,7 +74,7 @@ trait HasParameterNames
      * Retrieve the named and typed parameters for a builder.
      *
      * @param  class-string<TModel>|TModel|TBuilder  $model
-     * @param  TModel|TBuilder|\Illuminate\Database\Eloquent\Collection<int,TModel>|null  $value
+     * @param  TModel|TBuilder|DatabaseCollection<int,TModel>|null  $value
      * @return array{array<string, mixed>, array<class-string,mixed>}
      */
     public static function getBuilderParameters($model, $value = null)
@@ -80,12 +83,12 @@ trait HasParameterNames
 
         [$model, $singular, $plural] = static::getParameterNames($model);
 
-        $named = \array_fill_keys(
+        $named = array_fill_keys(
             ['model', 'record', 'query', 'builder', 'records', $singular, $plural],
             $value
         );
 
-        $typed = \array_fill_keys(
+        $typed = array_fill_keys(
             [Model::class, Builder::class, $model],
             $value
         );
@@ -97,7 +100,7 @@ trait HasParameterNames
      * Retrieve the named and typed parameters for a model.
      *
      * @param  class-string<TModel>|TModel|TBuilder  $model
-     * @param  TModel|TBuilder|\Illuminate\Database\Eloquent\Collection<int,TModel>|null  $value
+     * @param  TModel|TBuilder|DatabaseCollection<int,TModel>|null  $value
      * @return array{array<string, mixed>, array<class-string,mixed>}
      */
     public static function getModelParameters($model, $value = null)
@@ -106,12 +109,12 @@ trait HasParameterNames
 
         [$model, $singular] = static::getParameterNames($model);
 
-        $named = \array_fill_keys(
+        $named = array_fill_keys(
             ['model', 'record', $singular],
             $value
         );
 
-        $typed = \array_fill_keys(
+        $typed = array_fill_keys(
             [Model::class, $model],
             $value
         );
@@ -128,7 +131,7 @@ trait HasParameterNames
      */
     public static function isBuilder($name, $type)
     {
-        return \in_array($name, ['builder', 'query']) ||
+        return in_array($name, ['builder', 'query']) ||
             $type === Builder::class;
     }
 
@@ -141,8 +144,8 @@ trait HasParameterNames
      */
     public static function isCollection($name, $type)
     {
-        return \in_array($name, ['collection', 'records']) ||
-            \in_array($type, [DatabaseCollection::class, Collection::class]);
+        return in_array($name, ['collection', 'records']) ||
+            in_array($type, [DatabaseCollection::class, Collection::class]);
     }
 
     /**
@@ -157,7 +160,7 @@ trait HasParameterNames
     {
         [$model, $singular, $plural] = static::getParameterNames($model);
 
-        return \in_array($name, ['model', 'record', $singular, $plural]) ||
-            \in_array($type, [Model::class, $model]);
+        return in_array($name, ['model', 'record', $singular, $plural]) ||
+            in_array($type, [Model::class, $model]);
     }
 }

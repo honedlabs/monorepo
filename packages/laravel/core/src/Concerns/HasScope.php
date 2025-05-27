@@ -6,9 +6,11 @@ namespace Honed\Core\Concerns;
 
 use Illuminate\Support\Str;
 
+use function sprintf;
+
 trait HasScope
 {
-    const SCOPE_SEPARATOR = ':';
+    public const SCOPE_SEPARATOR = ':';
 
     /**
      * The scope to use.
@@ -64,7 +66,7 @@ trait HasScope
             return $value;
         }
 
-        return \sprintf('%s%s%s', $scope, self::SCOPE_SEPARATOR, $value);
+        return sprintf('%s%s%s', $scope, self::SCOPE_SEPARATOR, $value);
     }
 
     /**

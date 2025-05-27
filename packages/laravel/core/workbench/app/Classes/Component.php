@@ -5,9 +5,7 @@ namespace Workbench\App\Classes;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasType;
-use Honed\Core\Contracts\WithoutNullValues;
 use Honed\Core\Primitive;
-use Honed\Core\Tests\Stubs\Product;
 use Workbench\App\Models\User;
 
 class Component extends Primitive
@@ -15,11 +13,6 @@ class Component extends Primitive
     use HasMeta;
     use HasName;
     use HasType;
-
-    public static function make()
-    {
-        return resolve(static::class);
-    }
 
     /**
      * {@inheritdoc}
@@ -29,6 +22,11 @@ class Component extends Primitive
         parent::setUp();
         $this->type('component');
         $this->name('Products');
+    }
+
+    public static function make()
+    {
+        return resolve(static::class);
     }
 
     /**

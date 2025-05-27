@@ -3,11 +3,11 @@
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasExtra;
 use Honed\Core\Contracts\WithExtra;
-use Honed\Core\Tests\Stubs\Product;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use Evaluable, HasExtra;
     };
 
@@ -23,7 +23,6 @@ it('sets', function () {
         ->hasExtra()->toBeTrue();
 });
 
-
 it('evaluates', function () {
     expect($this->test)
         ->extra(fn (User $user) => ['id' => $user->id])->toBe($this->test)
@@ -31,7 +30,8 @@ it('evaluates', function () {
 });
 
 it('has contract', function () {
-    $test = new class implements WithExtra{
+    $test = new class() implements WithExtra
+    {
         use Evaluable, HasExtra;
 
         public function extraUsing(User $user)
@@ -44,5 +44,3 @@ it('has contract', function () {
         ->getExtra(['user' => $this->user])->toEqual(['id' => $this->user->id])
         ->hasExtra()->toBeTrue();
 });
-
-

@@ -3,7 +3,8 @@
 use Honed\Core\Concerns\HasAlias;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use HasAlias;
     };
 });

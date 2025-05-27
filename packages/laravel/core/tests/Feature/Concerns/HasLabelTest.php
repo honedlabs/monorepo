@@ -5,7 +5,8 @@ use Honed\Core\Concerns\HasLabel;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use Evaluable, HasLabel;
     };
 

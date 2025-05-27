@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = new class
+    $this->test = new class()
     {
         use HasResource;
     };
@@ -25,7 +25,8 @@ it('sets', function () {
 });
 
 it('defines', function () {
-    $test = new class {
+    $test = new class()
+    {
         use HasResource;
 
         public function resource()

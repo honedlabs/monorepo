@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Closure;
 use Honed\Core\Contracts\WithValidator;
 
 trait Validatable
@@ -13,14 +14,14 @@ trait Validatable
      *
      * @default null
      *
-     * @var \Closure(mixed):bool
+     * @var Closure(mixed):bool
      */
     protected $validator;
 
     /**
      * Set the validation function.
      *
-     * @param  \Closure(mixed):bool  $validator
+     * @param  Closure(mixed):bool  $validator
      * @return $this
      */
     public function validator($validator)
@@ -33,7 +34,7 @@ trait Validatable
     /**
      * Get the validation function.
      *
-     * @return \Closure(mixed):bool|bool|null
+     * @return Closure(mixed):bool|bool|null
      */
     public function getValidator()
     {
@@ -42,7 +43,7 @@ trait Validatable
         }
 
         if ($this instanceof WithValidator) {
-            return $this->validator = \Closure::fromCallable([$this, 'validateUsing']);
+            return $this->validator = Closure::fromCallable([$this, 'validateUsing']);
         }
 
         return null;
@@ -72,6 +73,6 @@ trait Validatable
             return true;
         }
 
-        return (bool) ($validator instanceof \Closure ? $validator($value) : $validator);
+        return (bool) ($validator instanceof Closure ? $validator($value) : $validator);
     }
 }

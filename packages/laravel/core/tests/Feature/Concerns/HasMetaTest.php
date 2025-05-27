@@ -3,7 +3,8 @@
 use Honed\Core\Concerns\HasMeta;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use HasMeta;
     };
 });

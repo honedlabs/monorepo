@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Closure;
+use Honed\Core\Exceptions\InvalidMethodException;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Request;
-use Honed\Core\Exceptions\InvalidMethodException;
+
+use function in_array;
+use function mb_strtoupper;
 
 trait HasRoute
 {
@@ -42,7 +46,7 @@ trait HasRoute
     {
         $this->route = match (true) {
             ! $route => null,
-            $route instanceof \Closure => $route,
+            $route instanceof Closure => $route,
             default => route($route, $parameters, true),
         };
 
@@ -58,7 +62,7 @@ trait HasRoute
     public function url($url)
     {
         $this->route = match (true) {
-            $url instanceof \Closure => $url,
+            $url instanceof Closure => $url,
             default => URL::to($url),
         };
 
@@ -93,11 +97,11 @@ trait HasRoute
      * @param  string|null  $method
      * @return $this
      *
-     * @throws \Honed\Core\Exceptions\InvalidMethodException
+     * @throws InvalidMethodException
      */
     public function method($method)
     {
-        $method = \mb_strtoupper($method ?? '');
+        $method = mb_strtoupper($method ?? '');
 
         if ($this->invalidMethod($method)) {
             InvalidMethodException::throw($method);
@@ -106,23 +110,6 @@ trait HasRoute
         $this->method = $method;
 
         return $this;
-    }
-
-    /**
-     * Determine if the HTTP method is invalid.
-     *
-     * @param  string  $method
-     * @return bool
-     */
-    protected function invalidMethod($method)
-    {
-        return ! \in_array($method, [
-            Request::METHOD_GET,
-            Request::METHOD_POST,
-            Request::METHOD_PUT,
-            Request::METHOD_DELETE,
-            Request::METHOD_PATCH,
-        ]);
     }
 
     /**
@@ -178,5 +165,22 @@ trait HasRoute
             'method' => $this->getMethod(),
             'external' => $this->isExternal(),
         ];
+    }
+
+    /**
+     * Determine if the HTTP method is invalid.
+     *
+     * @param  string  $method
+     * @return bool
+     */
+    protected function invalidMethod($method)
+    {
+        return ! in_array($method, [
+            Request::METHOD_GET,
+            Request::METHOD_POST,
+            Request::METHOD_PUT,
+            Request::METHOD_DELETE,
+            Request::METHOD_PATCH,
+        ]);
     }
 }

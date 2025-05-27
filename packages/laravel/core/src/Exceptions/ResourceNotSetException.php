@@ -8,7 +8,7 @@ class ResourceNotSetException extends RuntimeException
 {
     /**
      * Create a new resource not set exception.
-     * 
+     *
      * @param  class-string  $class
      */
     public function __construct($class)

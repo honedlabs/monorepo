@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Honed\Core;
 
+use BadMethodCallException;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Contracts\WithoutNullValues;
-use Illuminate\Support\Traits\Tappable;
-use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
+use JsonSerializable;
 
-abstract class Primitive implements \JsonSerializable
+use function array_filter;
+
+abstract class Primitive implements JsonSerializable
 {
-    use Evaluable;
     use Conditionable;
+    use Evaluable;
     use Macroable {
         __call as macroCall;
     }
@@ -28,6 +32,30 @@ abstract class Primitive implements \JsonSerializable
     }
 
     /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array<int,mixed>  $parameters
+     * @return mixed
+     *
+     * @throws BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->macroCall($method, $parameters);
+    }
+
+    /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    final public function setUp()
+    {
+        //
+    }
+
+    /**
      * Get the instance as an array.
      *
      * @param  array<string,mixed>  $named
@@ -37,45 +65,21 @@ abstract class Primitive implements \JsonSerializable
     abstract public function toArray($named = [], $typed = []);
 
     /**
-     * Provide the instance with any necessary setup.
-     *
-     * @return void
-     */
-    public function setUp()
-    {
-        //
-    }
-
-    /**
      * Serialize the instance
      *
      * @return array<string,mixed>
      */
-    public function jsonSerialize(): mixed
+    final public function jsonSerialize(): mixed
     {
         $array = $this->toArray();
 
         if ($this instanceof WithoutNullValues) {
-            return \array_filter(
+            return array_filter(
                 $array,
                 static fn ($value) => ! is_null($value)
             );
         }
 
         return $array;
-    }
-
-    /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array<int,mixed>  $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        return $this->macroCall($method, $parameters);
     }
 }

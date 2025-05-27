@@ -8,6 +8,11 @@ use Closure;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use ReflectionFunction;
 use ReflectionNamedType;
+use ReflectionParameter;
+
+use function array_key_exists;
+use function count;
+use function is_object;
 
 /**
  * Taken from FilamentPHP
@@ -27,14 +32,14 @@ trait Evaluable
      *
      * @template T
      *
-     * @param  T|\Closure(mixed...):T|object  $value
+     * @param  T|Closure(mixed...):T|object  $value
      * @param  array<string, mixed>  $named
      * @param  array<class-string, mixed>  $typed
      * @return T
      */
     public function evaluate($value, $named = [], $typed = [])
     {
-        if (\is_object($value) && method_exists($value, '__invoke')) {
+        if (is_object($value) && method_exists($value, '__invoke')) {
             $value = $value->__invoke(...); // @phpstan-ignore-line
         }
 
@@ -54,7 +59,7 @@ trait Evaluable
     /**
      * Resolve a closure dependency for evaluation.
      *
-     * @param  \ReflectionParameter  $parameter
+     * @param  ReflectionParameter  $parameter
      * @param  array<string,mixed>  $named
      * @param  array<string,mixed>  $typed
      * @return mixed
@@ -63,20 +68,20 @@ trait Evaluable
     {
         $parameterName = $parameter->getName();
 
-        if (\array_key_exists($parameterName, $named)) {
+        if (array_key_exists($parameterName, $named)) {
             return value($named[$parameterName]);
         }
 
         $typedParameterClassName = $this->getTypedReflectionParameterClassName($parameter);
 
-        if (filled($typedParameterClassName) && \array_key_exists($typedParameterClassName, $typed)) {
+        if (filled($typedParameterClassName) && array_key_exists($typedParameterClassName, $typed)) {
             return value($typed[$typedParameterClassName]);
         }
 
         // Dependencies are wrapped in an array to differentiate between null and no value.
         $defaultWrappedDependencyByName = $this->resolveDefaultClosureDependencyForEvaluationByName($parameterName);
 
-        if (\count($defaultWrappedDependencyByName)) {
+        if (count($defaultWrappedDependencyByName)) {
             // Unwrap the dependency if it was resolved.
             return $defaultWrappedDependencyByName[0];
         }
@@ -85,7 +90,7 @@ trait Evaluable
             // Dependencies are wrapped in an array to differentiate between null and no value.
             $defaultWrappedDependencyByType = $this->resolveDefaultClosureDependencyForEvaluationByType($typedParameterClassName);
 
-            if (\count($defaultWrappedDependencyByType)) {
+            if (count($defaultWrappedDependencyByType)) {
                 // Unwrap the dependency if it was resolved.
                 return $defaultWrappedDependencyByType[0];
             }
@@ -140,7 +145,7 @@ trait Evaluable
     /**
      * Retrieve the typed reflection parameter class name.
      *
-     * @param  \ReflectionParameter  $parameter
+     * @param  ReflectionParameter  $parameter
      * @return string|null
      */
     protected function getTypedReflectionParameterClassName($parameter)

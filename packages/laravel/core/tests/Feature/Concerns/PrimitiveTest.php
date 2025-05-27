@@ -16,10 +16,10 @@ it('makes', function () {
 it('has array representation', function () {
     expect($this->test)
         ->toArray()->toEqual([
-        'type' => 'component',
-        'name' => 'Products',
-        'meta' => null,
-    ]);
+            'type' => 'component',
+            'name' => 'Products',
+            'meta' => null,
+        ]);
 });
 
 it('serializes', function () {
@@ -28,13 +28,13 @@ it('serializes', function () {
 });
 
 it('serializes without null values', function () {
-    $test = new class extends Component implements WithoutNullValues { };
+    $test = new class() extends Component implements WithoutNullValues {};
 
     expect($test)
         ->jsonSerialize()->toEqual([
-        'type' => 'component',
-        'name' => 'Products',
-    ]);
+            'type' => 'component',
+            'name' => 'Products',
+        ]);
 });
 
 it('is macroable', function () {

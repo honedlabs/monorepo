@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Models\User;
-use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Concerns\Evaluable;
-use Honed\Core\Tests\Stubs\Product;
-use Illuminate\Support\Facades\URL;
-use Symfony\Component\HttpFoundation\Request;
+use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Exceptions\InvalidMethodException;
+use Symfony\Component\HttpFoundation\Request;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use Evaluable, HasRoute;
     };
 

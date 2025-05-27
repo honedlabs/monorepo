@@ -4,10 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use const FILTER_VALIDATE_BOOLEAN;
+
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
+use DateTimeZone;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+
+use function filter_var;
+use function is_array;
+use function is_null;
 
 trait InterpretsRequest
 {
@@ -24,32 +31,6 @@ trait InterpretsRequest
      * @var 'string'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null
      */
     protected $subtype;
-
-    /**
-     * Interpret the query parameter.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $key
-     * @param  string  $delimiter
-     * @param  \DateTimeZone|string|int|null  $timezone
-     * @return mixed
-     */
-    public function interpret($request, $key, $delimiter = ',', $timezone = null)
-    {
-        return match ($this->as) {
-            'array' => static::interpretArray($request, $key, $delimiter, $this->subtype),
-            'collection' => static::interpretCollection($request, $key, $delimiter, $this->subtype),
-            'boolean' => static::interpretBoolean($request, $key),
-            'float' => static::interpretFloat($request, $key),
-            'int' => static::interpretInt($request, $key),
-            'string' => static::interpretString($request, $key),
-            'stringable' => static::interpretStringable($request, $key),
-            'date',
-            'datetime',
-            'time' => static::interpretDate($request, $key, $timezone),
-            default => static::interpretRaw($request, $key),
-        };
-    }
 
     /**
      * Interpret the query parameter as an array.
@@ -92,11 +73,11 @@ trait InterpretsRequest
     {
         $value = static::interpretRaw($request, $key);
 
-        if (\is_null($value)) {
+        if (is_null($value)) {
             return null;
         }
 
-        return \filter_var($value, \FILTER_VALIDATE_BOOLEAN);
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -126,7 +107,7 @@ trait InterpretsRequest
     ) {
         $value = static::interpretStringable($request, $key);
 
-        if (\is_null($value)) {
+        if (is_null($value)) {
             return null;
         }
 
@@ -147,19 +128,19 @@ trait InterpretsRequest
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $key
-     * @param  \DateTimeZone|string|int|null  $timezone
-     * @return \Carbon\Carbon|null
+     * @param  DateTimeZone|string|int|null  $timezone
+     * @return Carbon|null
      */
     public static function interpretDate($request, $key, $timezone = null)
     {
         $value = static::interpretRaw($request, $key);
 
-        if (\is_null($value)) {
+        if (is_null($value)) {
             return null;
         }
 
         // @phpstan-ignore-next-line
-        return static::dateOf(\strval($value), $timezone);
+        return static::dateOf((string) $value, $timezone);
     }
 
     /**
@@ -173,12 +154,12 @@ trait InterpretsRequest
     {
         $value = static::interpretRaw($request, $key);
 
-        if (\is_null($value)) {
+        if (is_null($value)) {
             return null;
         }
 
         // @phpstan-ignore-next-line
-        return \floatval($value);
+        return (float) $value;
     }
 
     /**
@@ -192,12 +173,12 @@ trait InterpretsRequest
     {
         $value = static::interpretRaw($request, $key);
 
-        if (\is_null($value)) {
+        if (is_null($value)) {
             return null;
         }
 
         // @phpstan-ignore-next-line
-        return \intval($value);
+        return (int) $value;
     }
 
     /**
@@ -215,7 +196,7 @@ trait InterpretsRequest
 
         $value = $request->query($key, null);
 
-        if (\is_array($value)) {
+        if (is_array($value)) {
             return Arr::first(Arr::flatten($value));
         }
 
@@ -233,12 +214,12 @@ trait InterpretsRequest
     {
         $value = static::interpretRaw($request, $key);
 
-        if (\is_null($value)) {
+        if (is_null($value)) {
             return null;
         }
 
         // @phpstan-ignore-next-line
-        return \strval($value);
+        return (string) $value;
     }
 
     /**
@@ -252,12 +233,83 @@ trait InterpretsRequest
     {
         $value = static::interpretRaw($request, $key);
 
-        if (\is_null($value)) {
+        if (is_null($value)) {
             return null;
         }
 
         // @phpstan-ignore-next-line
-        return Str::of(\strval($value))->trim();
+        return Str::of((string) $value)->trim();
+    }
+
+    /**
+     * Get the value as a specific type.
+     *
+     * @param  string  $value
+     * @param  'string'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null  $type
+     * @return (
+     *     $type is null ? mixed : (
+     *         $type is 'string' ? string : (
+     *             $type is 'boolean' ? bool : (
+     *                 $type is 'int' ? int : (
+     *                     $type is 'float' ? float : \Carbon\Carbon
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )|null
+     */
+    public static function valueOf($value, $type = null)
+    {
+        return match ($type) {
+            'string' => (string) $value,
+            'boolean' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+            'int' => (int) $value,
+            'float' => (float) $value,
+            'date', 'datetime', 'time' => static::dateOf($value),
+            default => $value,
+        };
+    }
+
+    /**
+     * Get the value as a date.
+     *
+     * @param  string  $value
+     * @param  DateTimeZone|string|int|null  $timezone
+     * @return Carbon|null
+     */
+    public static function dateOf($value, $timezone = null)
+    {
+        try {
+            return Carbon::parse($value, $timezone);
+        } catch (InvalidFormatException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Interpret the query parameter.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $key
+     * @param  string  $delimiter
+     * @param  DateTimeZone|string|int|null  $timezone
+     * @return mixed
+     */
+    public function interpret($request, $key, $delimiter = ',', $timezone = null)
+    {
+        return match ($this->as) {
+            'array' => static::interpretArray($request, $key, $delimiter, $this->subtype),
+            'collection' => static::interpretCollection($request, $key, $delimiter, $this->subtype),
+            'boolean' => static::interpretBoolean($request, $key),
+            'float' => static::interpretFloat($request, $key),
+            'int' => static::interpretInt($request, $key),
+            'string' => static::interpretString($request, $key),
+            'stringable' => static::interpretStringable($request, $key),
+            'date',
+            'datetime',
+            'time' => static::interpretDate($request, $key, $timezone),
+            default => static::interpretRaw($request, $key),
+        };
     }
 
     /**
@@ -456,7 +508,7 @@ trait InterpretsRequest
      */
     public function interpretsRaw()
     {
-        return \is_null($this->as);
+        return is_null($this->as);
     }
 
     /**
@@ -530,50 +582,5 @@ trait InterpretsRequest
     public function getSubtype()
     {
         return $this->subtype;
-    }
-
-    /**
-     * Get the value as a specific type.
-     *
-     * @param  string  $value
-     * @param  'string'|'boolean'|'int'|'float'|'date'|'datetime'|'time'|null  $type
-     * @return (
-     *     $type is null ? mixed : (
-     *         $type is 'string' ? string : (
-     *             $type is 'boolean' ? bool : (
-     *                 $type is 'int' ? int : (
-     *                     $type is 'float' ? float : \Carbon\Carbon
-     *                 )
-     *             )
-     *         )
-     *     )
-     * )|null
-     */
-    public static function valueOf($value, $type = null)
-    {
-        return match ($type) {
-            'string' => \strval($value),
-            'boolean' => \filter_var($value, \FILTER_VALIDATE_BOOLEAN),
-            'int' => \intval($value),
-            'float' => \floatval($value),
-            'date', 'datetime', 'time' => static::dateOf($value),
-            default => $value,
-        };
-    }
-
-    /**
-     * Get the value as a date.
-     *
-     * @param  string  $value
-     * @param  \DateTimeZone|string|int|null  $timezone
-     * @return \Carbon\Carbon|null
-     */
-    public static function dateOf($value, $timezone = null)
-    {
-        try {
-            return Carbon::parse($value, $timezone);
-        } catch (InvalidFormatException $e) {
-            return null;
-        }
     }
 }

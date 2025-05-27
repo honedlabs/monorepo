@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = new class
+    $this->test = new class()
     {
         use HasParameterNames;
     };

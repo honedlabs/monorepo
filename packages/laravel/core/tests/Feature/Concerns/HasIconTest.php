@@ -1,11 +1,12 @@
 <?php
 
-use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasIcon;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use Evaluable, HasIcon;
     };
 });

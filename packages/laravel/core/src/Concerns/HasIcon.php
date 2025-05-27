@@ -2,6 +2,9 @@
 
 namespace Honed\Core\Concerns;
 
+use BackedEnum;
+use UnitEnum;
+
 trait HasIcon
 {
     /**
@@ -14,14 +17,14 @@ trait HasIcon
     /**
      * Set the icon.
      *
-     * @param  string|\BackedEnum|\UnitEnum|null  $icon
+     * @param  string|BackedEnum|UnitEnum|null  $icon
      * @return $this
      */
     public function icon($icon)
     {
         $this->icon = match (true) {
-            $icon instanceof \BackedEnum => $icon->value,
-            $icon instanceof \UnitEnum => $icon->name,
+            $icon instanceof BackedEnum => $icon->value,
+            $icon instanceof UnitEnum => $icon->name,
             default => $icon
         };
 

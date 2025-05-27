@@ -1,12 +1,13 @@
 <?php
 
-use Workbench\App\Models\User;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Contracts\WithAllowance;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use Allowable, Evaluable;
     };
 
@@ -27,7 +28,8 @@ it('evaluates', function () {
 });
 
 it('has contract', function () {
-    $test = new class implements WithAllowance {
+    $test = new class() implements WithAllowance
+    {
         use Allowable, Evaluable;
 
         /**

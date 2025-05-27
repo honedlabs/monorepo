@@ -3,7 +3,8 @@
 use Honed\Core\Concerns\HasValue;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use HasValue;
     };
 });

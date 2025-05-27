@@ -2,6 +2,7 @@
 
 namespace Honed\Core\Concerns;
 
+use Closure;
 use Honed\Core\Contracts\WithQuery;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Builder;
@@ -44,7 +45,7 @@ trait HasQuery
         }
 
         if ($this instanceof WithQuery) {
-            return $this->query = \Closure::fromCallable([$this, 'queryUsing']);
+            return $this->query = Closure::fromCallable([$this, 'queryUsing']);
         }
 
         return null;

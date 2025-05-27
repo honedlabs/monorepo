@@ -8,8 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Stringable;
 
+use function implode;
+use function is_null;
+use function sprintf;
+
 beforeEach(function () {
-    $this->test = new class
+    $this->test = new class()
     {
         use InterpretsRequest;
     };
@@ -71,7 +75,7 @@ it('interprets', function () {
 });
 
 it('interprets raw', function ($param, $value, $expected) {
-    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
+    $request = Request::create(sprintf('?%s=%s', 'p'.$param, $value));
 
     expect($this->test->interpretRaw($request, 'p'))
         ->toBe($expected);
@@ -84,7 +88,7 @@ it('interprets raw', function ($param, $value, $expected) {
 ]);
 
 it('interprets array', function ($param, $value, $expected) {
-    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
+    $request = Request::create(sprintf('?%s=%s', 'p'.$param, $value));
 
     expect($this->test->interpretArray($request, 'p'))
         ->toBe($expected);
@@ -98,7 +102,7 @@ it('interprets array', function ($param, $value, $expected) {
 ]);
 
 it('interprets boolean', function ($param, $value, $expected) {
-    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
+    $request = Request::create(sprintf('?%s=%s', 'p'.$param, $value));
 
     expect($this->test->interpretBoolean($request, 'p'))
         ->toBe($expected);
@@ -113,9 +117,9 @@ it('interprets boolean', function ($param, $value, $expected) {
 ]);
 
 it('interprets collection', function ($param, $value, $expected) {
-    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
+    $request = Request::create(sprintf('?%s=%s', 'p'.$param, $value));
 
-    if (\is_null($expected)) {
+    if (is_null($expected)) {
         expect($this->test->interpretCollection($request, 'p'))
             ->toBeNull();
     } else {
@@ -133,9 +137,9 @@ it('interprets collection', function ($param, $value, $expected) {
 ]);
 
 it('interprets date', function ($param, $value, $expected) {
-    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
+    $request = Request::create(sprintf('?%s=%s', 'p'.$param, $value));
 
-    if (\is_null($expected)) {
+    if (is_null($expected)) {
         expect($this->test->interpretDate($request, 'p'))
             ->toBeNull();
     } else {
@@ -151,7 +155,7 @@ it('interprets date', function ($param, $value, $expected) {
 ]);
 
 it('interprets float', function ($param, $value, $expected) {
-    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
+    $request = Request::create(sprintf('?%s=%s', 'p'.$param, $value));
 
     expect($this->test->interpretFloat($request, 'p'))
         ->toBe($expected);
@@ -166,7 +170,7 @@ it('interprets float', function ($param, $value, $expected) {
 ]);
 
 it('interprets int', function ($param, $value, $expected) {
-    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
+    $request = Request::create(sprintf('?%s=%s', 'p'.$param, $value));
 
     expect($this->test->interpretInt($request, 'p'))
         ->toBe($expected);
@@ -180,7 +184,7 @@ it('interprets int', function ($param, $value, $expected) {
 ]);
 
 it('interprets string', function ($param, $value, $expected) {
-    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
+    $request = Request::create(sprintf('?%s=%s', 'p'.$param, $value));
 
     expect($this->test->interpretString($request, 'p'))
         ->toBe($expected);
@@ -194,9 +198,9 @@ it('interprets string', function ($param, $value, $expected) {
 ]);
 
 it('interprets stringable', function ($param, $value, $expected) {
-    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
+    $request = Request::create(sprintf('?%s=%s', 'p'.$param, $value));
 
-    if (\is_null($expected)) {
+    if (is_null($expected)) {
         expect($this->test->interpretStringable($request, 'p'))
             ->toBeNull();
     } else {
@@ -221,7 +225,7 @@ it('has subtype', function () {
 });
 
 it('interprets arrayables with subtype', function () {
-    $arr = \implode(',', [1, 2, 3]);
+    $arr = implode(',', [1, 2, 3]);
 
     $request = Request::create('/', Request::METHOD_GET, [
         'p' => $arr,

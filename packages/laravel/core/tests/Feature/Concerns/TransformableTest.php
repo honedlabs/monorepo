@@ -6,7 +6,8 @@ use Honed\Core\Concerns\Transformable;
 use Honed\Core\Contracts\WithTransformer;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use Transformable;
     };
 
@@ -18,7 +19,7 @@ it('sets', function () {
         ->getTransformer()->toBeNull()
         ->transforms()->toBeFalse()
         ->transformer($this->fn)->toBe($this->test)
-        ->getTransformer()->toBeInstanceOf(\Closure::class)
+        ->getTransformer()->toBeInstanceOf(Closure::class)
         ->transforms()->toBeTrue();
 });
 
@@ -30,7 +31,8 @@ it('transforms', function () {
 });
 
 it('has contract', function () {
-    $test = new class implements WithTransformer{
+    $test = new class() implements WithTransformer
+    {
         use Transformable;
 
         public function transformUsing($value)
@@ -40,8 +42,7 @@ it('has contract', function () {
     };
 
     expect($test)
-        ->getTransformer()->toBeInstanceOf(\Closure::class)
+        ->getTransformer()->toBeInstanceOf(Closure::class)
         ->transforms()->toBeTrue()
         ->transform(2)->toBe(4);
 });
-

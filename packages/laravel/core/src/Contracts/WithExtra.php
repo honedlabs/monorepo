@@ -9,4 +9,3 @@ interface WithExtra
 {
     //
 }
-
