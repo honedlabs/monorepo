@@ -1,7 +1,11 @@
 <?php
 
+use Workbench\App\Enums\Status;
+
 test('enum_value', function () {
     expect(enum_value('value'))->toBe('value');
+
+    expect(enum_value(Status::Available))->toBe(0);
 });
 
 test('attempt', function () {
@@ -10,4 +14,3 @@ test('attempt', function () {
         ->{0}->toBeNull()
         ->{1}->toBeInstanceOf(Exception::class);
 });
-

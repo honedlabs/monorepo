@@ -9,6 +9,13 @@
 
 # Core
 
+<p>
+    <a href="https://github.com/honedlabs/core/actions"><img src="https://github.com/honedlabs/core/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
+    <!-- <a href="https://github.com/honedlabs/core/actions"><img src="https://github.com/honedlabs/core/actions/workflows/tests.yml/badge.svg" alt="Test coverage"></a> -->
+    <a href="https://packagist.org/packages/honed/core"><img src="https://img.shields.io/packagist/dt/honed/core" alt="Total Downloads"></a>
+    <a href="https://packagist.org/packages/honed/core"><img src="https://img.shields.io/packagist/v/honed/core" alt="Latest Stable Version"></a>
+</p>
+
 **Core** provides composable building blocks to develop serializable classes for PHP, as well as generic helpers for your applications.
 
 ## Installation
