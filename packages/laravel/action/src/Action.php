@@ -54,7 +54,7 @@ abstract class Action extends Primitive implements ResolvesArrayable
     /**
      * Set the route.
      *
-     * @param  string|\Closure(...mixed):string  $route
+     * @param  string|\Closure(mixed...):string  $route
      * @param  mixed  $parameters
      * @return $this
      */
