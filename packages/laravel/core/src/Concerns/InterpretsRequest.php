@@ -194,6 +194,7 @@ trait InterpretsRequest
 
         $value = $request->query($key, null);
 
+        // @phpstan-ignore-next-line
         if (is_array($value)) {
             return Arr::first(Arr::flatten($value));
         }

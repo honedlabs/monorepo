@@ -32,6 +32,7 @@ class ActionServiceProvider extends ServiceProvider
         $this->registerRoutesMacro();
 
         if ($this->app->runningInConsole()) {
+            
             $this->offerPublishing();
 
             $this->commands([

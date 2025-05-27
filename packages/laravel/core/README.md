@@ -1,4 +1,4 @@
-> **Caution:** This package is currently under development and not ready for production use. v1.0.0 will be production ready.
+> **Caution:** This package is currently under development and not ready for production use. Tag v1.0.0 will indicate a stable release.
 
 <a href="https://honed.dev/core">
   <picture>
@@ -10,7 +10,7 @@
 # Core
 
 <p>
-    <a href="https://github.com/honedlabs/core/actions"><img src="https://github.com/honedlabs/core/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://github.com/honedlabs/core/actions"><img src="https://github.com/honedlabs/core/actions/workflows/run-tests.yml/badge.svg" alt="Build Status"></a>
     <!-- <a href="https://github.com/honedlabs/core/actions"><img src="https://github.com/honedlabs/core/actions/workflows/tests.yml/badge.svg" alt="Test coverage"></a> -->
     <a href="https://packagist.org/packages/honed/core"><img src="https://img.shields.io/packagist/dt/honed/core" alt="Total Downloads"></a>
     <a href="https://packagist.org/packages/honed/core"><img src="https://img.shields.io/packagist/v/honed/core" alt="Latest Stable Version"></a>
@@ -32,7 +32,7 @@ composer require honed/core
 
 ## Documentation
 
-For more information on what is provided by **Core**, please refer to the [documentation](https://honed.dev/core).
+Please refer to the [documentation](https://honed.dev/core) for the usage of the package.
 
 ## License
 
