@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Honed\Core\Concerns\HasName;
 
 beforeEach(function () {
@@ -10,9 +8,11 @@ beforeEach(function () {
     };
 });
 
-it('accesses', function () {
+it('sets', function () {
     expect($this->test)
         ->getName()->toBeNull()
+        ->hasName()->toBeFalse()
         ->name('name')->toBe($this->test)
-        ->getName()->toBe('name');
+        ->getName()->toBe('name')
+        ->hasName()->toBeTrue();
 });

@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 use Honed\Core\Concerns\Validatable;
 use Honed\Core\Tests\Stubs\Product;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->test = new class {
@@ -11,25 +10,24 @@ beforeEach(function () {
     };
 
     $this->fn = fn (Product $product) => $product->id > 100;
+
+    $this->user = User::factory()->create();
 });
 
-it('accesses', function () {
+it('sets', function () {
     expect($this->test)
-        ->defineValidator()->toBeNull()
-        ->validates()->toBeFalse()
         ->getValidator()->toBeNull()
-        ->validator($this->fn)->toBe($this->test)
-        ->getValidator()->toBeInstanceOf(\Closure::class)
-        ->validates()->toBeTrue();
+        ->validate($this->user)->toBeTrue()
+        ->validator(true)->toBe($this->test)
+        ->validate($this->user)->toBeTrue()
+        ->getValidator()->toBeTrue();
 });
 
-it('validates', function () {
-    $product = product();
-
+it('evaluates', function () {
     expect($this->test)
-        ->validate($product)->toBeTrue()
+        ->validate($this->user)->toBeTrue()
         ->validator($this->fn)->toBe($this->test)
-        ->validate($product)->toBeFalse();
+        ->validate($this->user)->toBeFalse();
 });
 
 it('defines', function () {

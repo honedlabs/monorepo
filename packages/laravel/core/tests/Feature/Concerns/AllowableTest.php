@@ -28,7 +28,7 @@ it('evaluates', function () {
         ->isAllowed(['user' => $this->user])->toBeFalse();
 });
 
-it('has contracts', function () {
+it('has contract', function () {
     $test = new class implements WithAllowance {
         use Allowable, Evaluable;
 

@@ -1,18 +1,18 @@
 <?php
 
-declare(strict_types=1);
-
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Tests\Stubs\Product;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->test = new class {
         use Evaluable, HasLabel;
     };
+
+    $this->user = User::factory()->create();
 });
 
-it('accesses', function () {
+it('sets', function () {
     expect($this->test)
         ->getLabel()->toBeNull()
         ->hasLabel()->toBeFalse()
@@ -22,11 +22,9 @@ it('accesses', function () {
 });
 
 it('evaluates', function () {
-    $product = product();
-
     expect($this->test)
-        ->label(fn (Product $product) => $product->name)->toBe($this->test)
-        ->getLabel(['product' => $product])->toBe($product->name);
+        ->label(fn (User $user) => $user->email)->toBe($this->test)
+        ->getLabel(['user' => $this->user])->toBe($this->user->email);
 });
 
 it('makes', function () {

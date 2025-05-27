@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Honed\Core\Concerns\IsDefault;
 
 beforeEach(function () {
@@ -10,7 +8,7 @@ beforeEach(function () {
     };
 });
 
-it('accesses', function () {
+it('sets', function () {
     expect($this->test)
         ->isDefault()->toBeFalse()
         ->default()->toBe($this->test)

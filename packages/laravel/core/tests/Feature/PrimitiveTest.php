@@ -1,33 +1,29 @@
 <?php
 
-declare(strict_types=1);
-
-use Honed\Core\Tests\Fixtures\Column;
+use Workbench\App\Classes\Component;
 
 beforeEach(function () {
-    $this->test = Column::make();
+    $this->test = Component::make();
 });
 
 it('makes', function () {
-    expect(Column::make())->toBeInstanceOf(Column::class)
-        ->getType()->toBe('column')
+    expect(Component::make())->toBeInstanceOf(Component::class)
+        ->getType()->toBe('Component')
         ->getName()->toBe('Products');
 });
 
 it('has array representation', function () {
-    expect($this->test->toArray())->toEqual([
-        'type' => 'column',
+    expect($this->test)
+        ->toArray()->toEqual([
+        'type' => 'Component',
         'name' => 'Products',
         'meta' => [],
     ]);
 });
 
 it('serializes', function () {
-    expect($this->test->jsonSerialize())->toEqual([
-        'type' => 'column',
-        'name' => 'Products',
-        'meta' => [],
-    ]);
+    expect($this->test)
+        ->jsonSerialize()->toEqual($this->test->toArray());
 });
 
 it('is macroable', function () {
@@ -35,35 +31,6 @@ it('is macroable', function () {
         return 'test';
     });
 
-    expect($this->test->test())->toBe('test');
-});
-
-it('excludes properties', function () {
     expect($this->test)
-        ->has('meta')->toBeTrue()
-        ->has('misc')->toBeTrue()
-        ->except('meta')->toBe($this->test)
-        ->has('meta')->toBeFalse()
-        ->has('misc')->toBeTrue();
-});
-
-it('includes properties', function () {
-    expect($this->test)
-        ->has('meta')->toBeTrue()
-        ->has('misc')->toBeTrue()
-        ->only('meta')->toBe($this->test)
-        ->has('meta')->toBeTrue()
-        ->has('misc')->toBeFalse();
-});
-
-it('has properties', function () {
-    expect($this->test)
-        ->hasAll('meta', 'misc')->toBeTrue()
-        ->hasAny('meta', 'misc')->toBeTrue()
-        ->except('meta')->toBe($this->test)
-        ->hasAll('meta', 'misc')->toBeFalse()
-        ->hasAny('meta', 'misc')->toBeTrue()
-        ->only('meta')->toBe($this->test)
-        ->hasAll('meta', 'misc')->toBeFalse()
-        ->hasAny('meta', 'misc')->toBeTrue();
+        ->test()->toBe('test');
 });

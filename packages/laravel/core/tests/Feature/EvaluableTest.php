@@ -1,12 +1,13 @@
 <?php
 
-use Honed\Core\Tests\Fixtures\Column;
 use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Workbench\App\Classes\Component;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = Column::make();
+    $this->test = Component::make();
 });
 
 it('evaluates a closure', function () {
@@ -27,10 +28,12 @@ it('evaluates named parameters', function () {
 });
 
 it('evaluates class-typed parameters', function () {
-    $product = product();
-    $fn = fn (Product $product) => $product->name;
+    $user = User::factory()->create();
+
+    $fn = fn (User $user) => $user->email;
+
     expect($this->test)
-        ->evaluate($fn, [], [Product::class => $product])->toBe($product->name);
+        ->evaluate($fn, [], [User::class => $user])->toBe($user->email);
 });
 
 it('evaluates invokable objects', function () {
@@ -54,19 +57,21 @@ it('resolves fallback parameter values', function () {
 });
 
 it('resolves default parameter values by type', function () {
-    $product = product();
-    $fn = fn (Product $p) => $p->description;
+    $user = User::factory()->create();
+
+    $fn = fn (User $user) => $user->email;
 
     expect($this->test)
-        ->evaluate($fn)->toBe($product->description);
+        ->evaluate($fn)->toBe($user->email);
 });
 
 it('resolves default parameter values by name', function () {
-    $product = product();
-    $fn = fn ($product) => $product->description;
+    $user = User::factory()->create();
+
+    $fn = fn ($user) => $user->email;
 
     expect($this->test)
-        ->evaluate($fn)->toBe($product->description);
+        ->evaluate($fn)->toBe($user->email);
 });
 
 it('fails if it cannot find a binding', function () {

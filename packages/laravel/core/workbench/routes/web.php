@@ -1,14 +1,14 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Product;
 use Illuminate\Support\Facades\Route;
+use Workbench\App\Models\User;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/{product}', fn (Product $product) => response()->json($product))
-    ->name('products.show');
+Route::get('/users', fn () => User::all())
+    ->name('users.index');
 
-// Route::get('/{status}', fn (Status $status) => response()->json($status))
-//     ->name('statuses.show');
+Route::get('/users/{user}', fn (User $user) => response()->json($user))
+    ->name('users.show');

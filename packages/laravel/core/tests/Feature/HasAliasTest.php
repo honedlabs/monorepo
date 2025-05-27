@@ -10,27 +10,11 @@ beforeEach(function () {
     };
 });
 
-it('accesses', function () {
+it('sets', function () {
     expect($this->test)
-        ->defineAlias()->toBeNull()
         ->hasAlias()->toBeFalse()
         ->getAlias()->toBeNull()
         ->alias('test')->toBe($this->test)
         ->getAlias()->toBe('test')
         ->hasAlias()->toBeTrue();
-});
-
-it('defines', function () {
-    $test = new class {
-        use HasAlias;
-
-        public function defineAlias()
-        {
-            return 'test';
-        }
-    };
-
-    expect($test)
-        ->hasAlias()->toBeTrue()
-        ->getAlias()->toBe('test');
 });

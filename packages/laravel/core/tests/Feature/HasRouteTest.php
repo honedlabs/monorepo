@@ -7,30 +7,29 @@ use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Tests\Stubs\Product;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Request;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->test = new class {
         use Evaluable, HasRoute;
     };
+
+    $this->user = User::factory()->create();
 });
 
 it('accesses route', function () {
-    $product = product();
-
     expect($this->test)
         ->hasRoute()->toBeFalse()
         ->getRoute()->toBeNull()
-        ->route('products.show', $product)->toBe($this->test)
+        ->route('users.show', $this->user)->toBe($this->test)
         ->hasRoute()->toBeTrue()
-        ->getRoute()->toBe(route('products.show', $product));
+        ->getRoute()->toBe(route('users.show', $this->user));
 });
 
 it('evaluates route', function () {
-    $product = product();
-
     expect($this->test)
-        ->route(fn (Product $product) => route('products.show', $product))->toBe($this->test)
-        ->getRoute(['product' => $product])->toBe(route('products.show', $product));
+        ->route(fn (User $user) => route('users.show', $user))->toBe($this->test)
+        ->getRoute(['user' => $this->user])->toBe(route('users.show', $this->user));
 });
 
 it('accesses url', function () {
@@ -67,12 +66,10 @@ it('has array representation', function () {
     expect($this->test)
         ->routeToArray()->toBeNull();
 
-    $product = product();
-
     expect($this->test)
-        ->route('products.show', $product)->toBe($this->test)
+        ->route('users.show', $this->user)->toBe($this->test)
         ->routeToArray()->toBe([
-            'url' => route('products.show', $product),
+            'url' => route('users.show', $this->user),
             'method' => Request::METHOD_GET,
             'external' => false,
         ]);

@@ -49,16 +49,6 @@ trait Validatable
     }
 
     /**
-     * Determine if a validation function is set.
-     *
-     * @return bool
-     */
-    public function validates()
-    {
-        return filled($this->getValidator());
-    }
-
-    /**
      * Determine if the argument passes the validation function.
      *
      * @param  mixed  $value  The value to validate.
