@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Console\Commands;
+namespace Honed\Action\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;

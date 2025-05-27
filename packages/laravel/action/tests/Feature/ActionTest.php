@@ -24,7 +24,7 @@ it('has implicit route bindings', function () {
 
     $this->action->route('products.show', '{product}');
 
-    expect($this->action->resolveToArray($named, $typed))
+    expect($this->action->toArray($named, $typed))
         ->toHaveKey('route')
         ->{'route'}->scoped(fn ($route) => $route
             ->toHaveKey('url')
@@ -69,7 +69,7 @@ it('has array representation with route', function () {
 it('resolves to array', function () {
     $product = product();
 
-    expect((new DestroyAction)->resolveToArray(...params($product)))
+    expect((new DestroyAction)->toArray(...params($product)))
         ->toEqual([
             'name' => 'destroy',
             'label' => 'Destroy '.$product->name,

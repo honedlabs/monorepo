@@ -2,35 +2,35 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Console\Commands;
+namespace Honed\Action\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-#[AsCommand(name: 'make:action-group')]
-class ActionGroupMakeCommand extends GeneratorCommand
+#[AsCommand(name: 'make:bulk-action')]
+class BulkActionMakeCommand extends GeneratorCommand
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:action-group';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a new action group class.';
+    protected $name = 'make:bulk-action';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Action Group';
+    protected $description = 'Create a new bulk action class';
+
+    /**
+     * The type of class being generated.
+     *
+     * @var string
+     */
+    protected $type = 'Bulk Action';
 
     /**
      * Get the stub file for the generator.
@@ -39,7 +39,7 @@ class ActionGroupMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return $this->resolveStubPath('/stubs/honed.action-group.stub');
+        return $this->resolveStubPath('/stubs/honed.action.bulk.stub');
     }
 
     /**
@@ -63,26 +63,16 @@ class ActionGroupMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Actions\Groups';
+        return $rootNamespace.'\Actions\Bulk';
     }
 
     /**
-     * Get the console command options
-     *
      * @return array<int,array<int,mixed>>
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
-            [
-                'force',
-                null,
-                InputOption::VALUE_NONE,
-                \sprintf(
-                    'Create the class even if the %s already exists',
-                    \strtolower($this->type)
-                ),
-            ],
+            ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the bulk action already exists'],
         ];
     }
 
@@ -95,8 +85,8 @@ class ActionGroupMakeCommand extends GeneratorCommand
     {
         return [
             'name' => [
-                'What should the '.strtolower($this->type).' be named?',
-                'E.g. UserActions',
+                'What should the '.\strtolower($this->type).' be named?',
+                'E.g. DeleteAction',
             ],
         ];
     }
