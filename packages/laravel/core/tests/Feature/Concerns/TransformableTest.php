@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Core\Concerns\Transformable;
+use Honed\Core\Contracts\WithTransformer;
 
 beforeEach(function () {
     $this->test = new class {
@@ -12,9 +13,8 @@ beforeEach(function () {
     $this->fn = fn ($v) => $v * 2;
 });
 
-it('accesses', function () {
+it('sets', function () {
     expect($this->test)
-        ->defineTransformer()->toBeNull()
         ->getTransformer()->toBeNull()
         ->transforms()->toBeFalse()
         ->transformer($this->fn)->toBe($this->test)
@@ -29,13 +29,13 @@ it('transforms', function () {
         ->transform(2)->toBe(4);
 });
 
-it('defines', function () {
-    $test = new class {
+it('has contract', function () {
+    $test = new class implements WithTransformer{
         use Transformable;
 
-        public function defineTransformer()
+        public function transformUsing($value)
         {
-            return fn ($v) => $v * 2;
+            return $value * 2;
         }
     };
 

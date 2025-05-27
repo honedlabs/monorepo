@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Honed\Core\Concerns\IsActive;
 
 beforeEach(function () {
@@ -10,7 +8,7 @@ beforeEach(function () {
     };
 });
 
-it('accesses', function () {
+it('sets', function () {
     expect($this->test)
         ->isActive()->toBeFalse()
         ->active()->toBe($this->test)

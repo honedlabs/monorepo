@@ -1,12 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasQuery;
-use Honed\Core\Contracts\HasQuery as HasQueryContract;
-use Honed\Core\Tests\Stubs\Product;
-use Illuminate\Database\Eloquent\Builder;
+use Honed\Core\Contracts\WithQuery;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->test = new class {
@@ -14,22 +11,22 @@ beforeEach(function () {
     };
 });
 
-it('accesses', function () {
+it('sets', function () {
     expect($this->test)
-        ->hasQuery()->toBeFalse()
         ->getQuery()->toBeNull()
+        ->hasQuery()->toBeFalse()
         ->query(fn () => null)->toBe($this->test)
-        ->hasQuery()->toBeTrue()
-        ->getQuery()->toBeInstanceOf(\Closure::class);
+        ->getQuery()->toBeInstanceOf(\Closure::class)
+        ->hasQuery()->toBeTrue();
 });
 
-it('defines', function () {
-    $test = new class {
+it('has contract', function () {
+    $test = new class implements WithQuery {
         use Evaluable, HasQuery;
 
-        public function defineQuery()
+        public function queryUsing($builder)
         {
-            return fn ($builder) => $builder->where('id', 1);
+            return $builder->where('id', 1);
         }
     };
 
@@ -39,7 +36,7 @@ it('defines', function () {
 });
 
 it('modifies', function () {
-    $builder = Product::query();
+    $builder = User::query();
 
     $fn = fn ($builder, $value) => $builder->where('id', $value);
 

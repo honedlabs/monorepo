@@ -78,6 +78,16 @@ trait HasRoute
     }
 
     /**
+     * Determine if a route is set.
+     *
+     * @return bool
+     */
+    public function hasRoute()
+    {
+        return filled($this->route);
+    }
+
+    /**
      * Set the HTTP method for the route.
      *
      * @param  string|null  $method

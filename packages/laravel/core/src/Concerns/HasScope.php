@@ -75,8 +75,12 @@ trait HasScope
      */
     public function decodeScope($value)
     {
-        return Str::of($value)
-            ->after(self::SCOPE_SEPARATOR)
-            ->toString();
+        if ($this->hasScope()) {
+            return Str::of($value)
+                ->after(self::SCOPE_SEPARATOR)
+                ->toString();
+        }
+
+        return $value;
     }
 }

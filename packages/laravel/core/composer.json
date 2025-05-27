@@ -34,7 +34,10 @@
     "autoload": {
         "psr-4": {
             "Honed\\Core\\": "src/"
-        }
+        },
+        "files": [
+            "./src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

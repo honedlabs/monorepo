@@ -1,11 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Refine\Tests\Pest;
 
 use Carbon\Carbon;
 use Honed\Core\Concerns\InterpretsRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Stringable;
 
@@ -14,8 +13,6 @@ beforeEach(function () {
     {
         use InterpretsRequest;
     };
-
-    $this->param = 'param';
 });
 
 it('can set the interpreter', function () {
@@ -55,26 +52,28 @@ it('can set the interpreter', function () {
 });
 
 it('interprets', function () {
-    $request = generateRequest($this->param, '5');
+    $request = Request::create('/', Request::METHOD_GET, [
+        'p' => '5',
+    ]);
 
     expect($this->test)
-        ->interpret($request, $this->param)->toBe('5')
-        ->as('array')->interpret($request, $this->param)->toEqual(['5'])
-        ->as('int')->interpret($request, $this->param)->toBe(5)
-        ->as('string')->interpret($request, $this->param)->toBe('5')
-        ->as('stringable')->interpret($request, $this->param)->toBeInstanceOf(Stringable::class)
-        ->as('float')->interpret($request, $this->param)->toBe(5.0)
-        ->as('boolean')->interpret($request, $this->param)->toBe(false)
-        ->as('collection')->interpret($request, $this->param)->toBeInstanceOf(Collection::class)
-        ->as('datetime')->interpret($request, $this->param)->toBeNull()
-        ->as('date')->interpret($request, $this->param)->toBeNull()
-        ->as('time')->interpret($request, $this->param)->toBeNull();
+        ->interpret($request, 'p')->toBe('5')
+        ->as('array')->interpret($request, 'p')->toEqual(['5'])
+        ->as('int')->interpret($request, 'p')->toBe(5)
+        ->as('string')->interpret($request, 'p')->toBe('5')
+        ->as('stringable')->interpret($request, 'p')->toBeInstanceOf(Stringable::class)
+        ->as('float')->interpret($request, 'p')->toBe(5.0)
+        ->as('boolean')->interpret($request, 'p')->toBe(false)
+        ->as('collection')->interpret($request, 'p')->toBeInstanceOf(Collection::class)
+        ->as('datetime')->interpret($request, 'p')->toBeNull()
+        ->as('date')->interpret($request, 'p')->toBeNull()
+        ->as('time')->interpret($request, 'p')->toBeNull();
 });
 
 it('interprets raw', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
+    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
 
-    expect($this->test->interpretRaw($request, $this->param))
+    expect($this->test->interpretRaw($request, 'p'))
         ->toBe($expected);
 
 })->with([
@@ -85,9 +84,9 @@ it('interprets raw', function ($param, $value, $expected) {
 ]);
 
 it('interprets array', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
+    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
 
-    expect($this->test->interpretArray($request, $this->param))
+    expect($this->test->interpretArray($request, 'p'))
         ->toBe($expected);
 })->with([
     ['', '', null],
@@ -99,9 +98,9 @@ it('interprets array', function ($param, $value, $expected) {
 ]);
 
 it('interprets boolean', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
+    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
 
-    expect($this->test->interpretBoolean($request, $this->param))
+    expect($this->test->interpretBoolean($request, 'p'))
         ->toBe($expected);
 
 })->with([
@@ -114,13 +113,13 @@ it('interprets boolean', function ($param, $value, $expected) {
 ]);
 
 it('interprets collection', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
+    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
 
     if (\is_null($expected)) {
-        expect($this->test->interpretCollection($request, $this->param))
+        expect($this->test->interpretCollection($request, 'p'))
             ->toBeNull();
     } else {
-        expect($this->test->interpretCollection($request, $this->param))
+        expect($this->test->interpretCollection($request, 'p'))
             ->toBeInstanceOf(Collection::class)
             ->all()->toEqual($expected);
     }
@@ -134,13 +133,13 @@ it('interprets collection', function ($param, $value, $expected) {
 ]);
 
 it('interprets date', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
+    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
 
     if (\is_null($expected)) {
-        expect($this->test->interpretDate($request, $this->param))
+        expect($this->test->interpretDate($request, 'p'))
             ->toBeNull();
     } else {
-        expect($this->test->interpretDate($request, $this->param))
+        expect($this->test->interpretDate($request, 'p'))
             ->toBeInstanceOf(Carbon::class);
     }
 })->with([
@@ -152,9 +151,9 @@ it('interprets date', function ($param, $value, $expected) {
 ]);
 
 it('interprets float', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
+    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
 
-    expect($this->test->interpretFloat($request, $this->param))
+    expect($this->test->interpretFloat($request, 'p'))
         ->toBe($expected);
 
 })->with([
@@ -167,9 +166,9 @@ it('interprets float', function ($param, $value, $expected) {
 ]);
 
 it('interprets int', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
+    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
 
-    expect($this->test->interpretInt($request, $this->param))
+    expect($this->test->interpretInt($request, 'p'))
         ->toBe($expected);
 
 })->with([
@@ -181,9 +180,9 @@ it('interprets int', function ($param, $value, $expected) {
 ]);
 
 it('interprets string', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
+    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
 
-    expect($this->test->interpretString($request, $this->param))
+    expect($this->test->interpretString($request, 'p'))
         ->toBe($expected);
 
 })->with([
@@ -195,13 +194,13 @@ it('interprets string', function ($param, $value, $expected) {
 ]);
 
 it('interprets stringable', function ($param, $value, $expected) {
-    $request = generateRequest($this->param.$param, $value);
+    $request = Request::create(\sprintf('?%s=%s', 'p'.$param, $value));
 
     if (\is_null($expected)) {
-        expect($this->test->interpretStringable($request, $this->param))
+        expect($this->test->interpretStringable($request, 'p'))
             ->toBeNull();
     } else {
-        expect($this->test->interpretStringable($request, $this->param))
+        expect($this->test->interpretStringable($request, 'p'))
             ->toBeInstanceOf(Stringable::class)
             ->toString()->toBe($expected);
     }
@@ -224,11 +223,13 @@ it('has subtype', function () {
 it('interprets arrayables with subtype', function () {
     $arr = \implode(',', [1, 2, 3]);
 
-    $request = generateRequest($this->param, $arr);
+    $request = Request::create('/', Request::METHOD_GET, [
+        'p' => $arr,
+    ]);
 
     expect($this->test)
-        ->interpretArray($request, $this->param, ',', 'int')->toBe([1, 2, 3])
-        ->interpretArray($request, $this->param, ',', 'float')->toBe([1.0, 2.0, 3.0])
-        ->interpretArray($request, $this->param, ',', 'string')->toBe(['1', '2', '3'])
-        ->interpretArray($request, $this->param, ',', 'boolean')->toBe([true, false, false]);
+        ->interpretArray($request, 'p', ',', 'int')->toBe([1, 2, 3])
+        ->interpretArray($request, 'p', ',', 'float')->toBe([1.0, 2.0, 3.0])
+        ->interpretArray($request, 'p', ',', 'string')->toBe(['1', '2', '3'])
+        ->interpretArray($request, 'p', ',', 'boolean')->toBe([true, false, false]);
 });

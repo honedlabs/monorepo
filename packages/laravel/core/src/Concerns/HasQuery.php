@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Core\Concerns;
 
 use Honed\Core\Contracts\WithQuery;
@@ -39,7 +37,7 @@ trait HasQuery
      *
      * @return (\Closure(TBuilder, ...mixed):TBuilder)|void|null
      */
-    public function getQueryCallback()
+    public function getQuery()
     {
         if (isset($this->query)) {
             return $this->query;
@@ -48,6 +46,8 @@ trait HasQuery
         if ($this instanceof WithQuery) {
             return $this->query = \Closure::fromCallable([$this, 'queryUsing']);
         }
+
+        return null;
     }
 
     /**

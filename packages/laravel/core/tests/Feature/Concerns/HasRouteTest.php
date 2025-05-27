@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\Evaluable;
+use Workbench\App\Models\User;
 use Honed\Core\Concerns\HasRoute;
+use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Tests\Stubs\Product;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Request;
-use Workbench\App\Models\User;
+use Honed\Core\Exceptions\InvalidMethodException;
 
 beforeEach(function () {
     $this->test = new class {
@@ -17,7 +18,7 @@ beforeEach(function () {
     $this->user = User::factory()->create();
 });
 
-it('accesses route', function () {
+it('sets route', function () {
     expect($this->test)
         ->hasRoute()->toBeFalse()
         ->getRoute()->toBeNull()
@@ -32,7 +33,7 @@ it('evaluates route', function () {
         ->getRoute(['user' => $this->user])->toBe(route('users.show', $this->user));
 });
 
-it('accesses url', function () {
+it('sets url', function () {
     expect($this->test)
         ->hasRoute()->toBeFalse()
         ->getRoute()->toBeNull()
@@ -41,14 +42,14 @@ it('accesses url', function () {
         ->getRoute()->toBe('https://example.com');
 });
 
-it('accesses method', function () {
+it('sets method', function () {
     expect($this->test)
         ->getMethod()->toBe(Request::METHOD_GET)
         ->method(Request::METHOD_POST)->toBe($this->test)
         ->getMethod()->toBe(Request::METHOD_POST);
 });
 
-it('accesses external', function () {
+it('sets external', function () {
     expect($this->test)
         ->isExternal()->toBeFalse()
         ->external()->toBe($this->test)
@@ -57,7 +58,7 @@ it('accesses external', function () {
 
 it('validates method', function ($input) {
     $this->test->method($input);
-})->throws(\InvalidArgumentException::class)->with([
+})->throws(InvalidMethodException::class)->with([
     [null],
     ['INVALID'],
 ]);

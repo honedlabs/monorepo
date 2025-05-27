@@ -10,4 +10,14 @@ class TestCase extends Orchestra
 {
     use WithWorkbench;
     use RefreshDatabase;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->withoutExceptionHandling();
+    }
 }

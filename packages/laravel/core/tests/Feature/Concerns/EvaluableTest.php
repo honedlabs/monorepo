@@ -1,6 +1,5 @@
 <?php
 
-use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Workbench\App\Classes\Component;

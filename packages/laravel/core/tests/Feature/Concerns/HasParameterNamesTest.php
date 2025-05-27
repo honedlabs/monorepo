@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 use Honed\Core\Concerns\HasParameterNames;
-use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->test = new class
@@ -16,30 +14,35 @@ beforeEach(function () {
     };
 
     $this->names = [
-        Product::class,
-        'product',
-        'products',
+        User::class,
+        'user',
+        'users',
     ];
 });
 
 it('gets names from builder', function () {
-    expect($this->test->getParameterNames(Product::query()))->toBe($this->names);
+    expect($this->test)
+        ->getParameterNames(User::query())->toBe($this->names);
 });
 
 it('gets names from model', function () {
-    expect($this->test->getParameterNames(product()))->toBe($this->names);
+    expect($this->test)
+        ->getParameterNames(User::factory()->create())->toBe($this->names);
 });
 
 it('gets names from class name', function () {
-    expect($this->test->getParameterNames(Product::class))->toBe($this->names);
+    expect($this->test)
+        ->getParameterNames(User::class)->toBe($this->names);
 });
 
 it('gets singular name', function () {
-    expect($this->test->getSingularName(Product::class))->toBe($this->names[1]);
+    expect($this->test)
+        ->getSingularName(User::class)->toBe($this->names[1]);
 });
 
 it('gets plural name', function () {
-    expect($this->test->getPluralName(Product::class))->toBe($this->names[2]);
+    expect($this->test)
+        ->getPluralName(User::class)->toBe($this->names[2]);
 });
 
 it('checks if builder parameter', function () {
@@ -58,32 +61,32 @@ it('checks if collection parameter', function () {
 
 it('checks if model parameter', function () {
     expect($this->test)
-        ->isModel('model', Status::class, Product::class)->toBeTrue()
-        ->isModel('status', Product::class, Product::class)->toBeTrue()
-        ->isModel('status', Status::class, Product::class)->toBeFalse();
+        ->isModel('model', Status::class, User::class)->toBeTrue()
+        ->isModel('status', User::class, User::class)->toBeTrue()
+        ->isModel('status', Status::class, User::class)->toBeFalse();
 });
 
 it('gets builder parameters', function () {
-    $product = product();
+    $user = User::factory()->create();
 
-    $named = ['model', 'record', 'query', 'builder', 'products', 'product'];
+    $named = ['model', 'record', 'query', 'builder', 'users', 'user'];
 
-    $typed = [Model::class, Builder::class, Product::class];
+    $typed = [Model::class, Builder::class, User::class];
 
-    expect($this->test->getBuilderParameters(Product::class, $product))
+    expect($this->test->getBuilderParameters(User::class, $user))
         ->toBeArray()
         ->toHaveCount(2)
         ->{0}->toHaveKeys($named)
         ->{1}->toHaveKeys($typed);
 });
 it('gets model parameters', function () {
-    $product = product();
+    $user = User::factory()->create();
 
-    $named = ['model', 'record', 'product'];
+    $named = ['model', 'record', 'user'];
 
-    $typed = [Model::class, Product::class];
+    $typed = [Model::class, User::class];
 
-    expect($this->test->getModelParameters(Product::class, $product))
+    expect($this->test->getModelParameters(User::class, $user))
         ->toBeArray()
         ->toHaveCount(2)
         ->{0}->toHaveKeys($named)

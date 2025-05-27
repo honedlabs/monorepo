@@ -1,25 +1,25 @@
 <?php
 
-declare(strict_types=1);
-
 use Honed\Core\Concerns\HasResource;
-use Honed\Core\Contracts\Builds;
+use Honed\Core\Exceptions\InvalidResourceException;
+use Honed\Core\Exceptions\ResourceNotSetException;
 use Honed\Core\Tests\Stubs\Product;
 use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Database\Eloquent\Builder;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->builder = Product::query();
     $this->test = new class
     {
         use HasResource;
     };
+
+    $this->builder = User::query();
 });
 
-it('accesses', function () {
+it('sets', function () {
     expect($this->test)
-        ->defineResource()->toBeNull()
-        ->resource(Product::query())->toBe($this->test)
+        ->withResource(User::query())->toBe($this->test)
         ->getResource()->toBeInstanceOf(Builder::class)
         ->hasResource()->toBeTrue();
 });
@@ -28,9 +28,9 @@ it('defines', function () {
     $test = new class {
         use HasResource;
 
-        public function defineResource()
+        public function resource()
         {
-            return Product::query();
+            return User::query();
         }
     };
 
@@ -39,21 +39,21 @@ it('defines', function () {
         ->getResource()->toBeInstanceOf(Builder::class);
 });
 
-it('cannot retrieve without a builder', function () {
+it('requires builder', function () {
     $this->test->getResource();
-})->throws(\RuntimeException::class);
+})->throws(ResourceNotSetException::class);
 
 it('converts to builder', function () {
-    expect($this->test->asBuilder(Product::query()))
+    expect($this->test->throughBuilder(Product::query()))
         ->toBeInstanceOf(Builder::class);
 
-    expect($this->test->asBuilder(Product::class))
+    expect($this->test->throughBuilder(Product::class))
         ->toBeInstanceOf(Builder::class);
 
-    expect($this->test->asBuilder(product()))
+    expect($this->test->throughBuilder(User::factory()->create()))
         ->toBeInstanceOf(Builder::class);
 });
 
 it('cannot create without a valid builder', function () {
-    $this->test->asBuilder(Status::cases());
-})->throws(\InvalidArgumentException::class);
+    $this->test->throughBuilder(Status::cases());
+})->throws(InvalidResourceException::class);

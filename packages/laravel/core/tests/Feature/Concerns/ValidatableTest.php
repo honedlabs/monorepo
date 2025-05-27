@@ -1,15 +1,15 @@
 <?php
 
-use Honed\Core\Concerns\Validatable;
-use Honed\Core\Tests\Stubs\Product;
 use Workbench\App\Models\User;
+use Honed\Core\Concerns\Validatable;
+use Honed\Core\Contracts\WithValidator;
 
 beforeEach(function () {
     $this->test = new class {
         use Validatable;
     };
 
-    $this->fn = fn (Product $product) => $product->id > 100;
+    $this->fn = fn (User $user) => $user->id > 100;
 
     $this->user = User::factory()->create();
 });
@@ -30,19 +30,19 @@ it('evaluates', function () {
         ->validate($this->user)->toBeFalse();
 });
 
-it('defines', function () {
-    $test = new class {
+it('has contract', function () {
+    $test = new class implements WithValidator {
         use Validatable;
 
-        public function defineValidator()
+        public function validateUsing(User $user)
         {
-            return fn (Product $product) => $product->id === 1;
+            return $user->id === 1;
         }
     };
 
     expect($test)
         ->getValidator()->toBeInstanceOf(\Closure::class)
         ->validates()->toBeTrue()
-        ->validate(product())->toBeTrue();
+        ->validate($this->user)->toBeTrue();
 });
 

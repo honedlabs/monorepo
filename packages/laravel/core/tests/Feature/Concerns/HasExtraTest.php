@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasExtra;
 use Honed\Core\Contracts\WithExtra;
@@ -18,7 +16,7 @@ beforeEach(function () {
 
 it('sets', function () {
     expect($this->test)
-        ->getExtra()->toEqual([])
+        ->getExtra()->toBeNull()
         ->hasExtra()->toBeFalse()
         ->extra(['key' => 'value'])->toBe($this->test)
         ->getExtra()->toEqual(['key' => 'value'])

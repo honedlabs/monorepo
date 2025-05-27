@@ -8,8 +8,9 @@ use Honed\Core\Concerns\HasType;
 use Honed\Core\Contracts\WithoutNullValues;
 use Honed\Core\Primitive;
 use Honed\Core\Tests\Stubs\Product;
+use Workbench\App\Models\User;
 
-class Component extends Primitive implements WithoutNullValues
+class Component extends Primitive
 {
     use HasMeta;
     use HasName;
@@ -26,8 +27,7 @@ class Component extends Primitive implements WithoutNullValues
     public function setUp()
     {
         parent::setUp();
-
-        $this->type('column');
+        $this->type('component');
         $this->name('Products');
     }
 
@@ -49,7 +49,7 @@ class Component extends Primitive implements WithoutNullValues
     public function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return match ($parameterName) {
-            'product' => [Product::query()->first()],
+            'user' => [User::query()->first()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
@@ -60,7 +60,7 @@ class Component extends Primitive implements WithoutNullValues
     public function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
         return match ($parameterType) {
-            Product::class => [Product::query()->first()],
+            User::class => [User::query()->first()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }

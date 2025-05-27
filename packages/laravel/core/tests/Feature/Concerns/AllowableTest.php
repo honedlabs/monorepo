@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Workbench\App\Models\User;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\Evaluable;

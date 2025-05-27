@@ -10,7 +10,7 @@ beforeEach(function () {
 
 it('sets', function () {
     expect($this->test)
-        ->getMeta()->toEqual([])
+        ->getMeta()->toBeNull()
         ->hasMeta()->toBeFalse()
         ->meta(['name' => 'test'])->toBe($this->test)
         ->getMeta()->toBe(['name' => 'test'])
