@@ -13,5 +13,7 @@ it('sets', function () {
     expect($this->test)
         ->isActive()->toBeFalse()
         ->active()->toBe($this->test)
-        ->isActive()->toBeTrue();
+        ->isActive()->toBeTrue()
+        ->inactive()->toBe($this->test)
+        ->isActive()->toBeFalse();
 });

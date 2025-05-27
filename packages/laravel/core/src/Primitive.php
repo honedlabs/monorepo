@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\Core;
 
 use BadMethodCallException;
@@ -50,7 +48,7 @@ abstract class Primitive implements JsonSerializable
      *
      * @return void
      */
-    final public function setUp()
+    public function setUp()
     {
         //
     }
@@ -69,7 +67,7 @@ abstract class Primitive implements JsonSerializable
      *
      * @return array<string,mixed>
      */
-    final public function jsonSerialize(): mixed
+    public function jsonSerialize(): mixed
     {
         $array = $this->toArray();
 

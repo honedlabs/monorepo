@@ -21,5 +21,5 @@ arch('contracts')
     ->toBeInterfaces();
 
 arch('exceptions')
-        ->expect('Honed\Core\Exceptions')
-        ->toExtend(Exception::class);
+    ->expect('Honed\Core\Exceptions')
+    ->toExtend(Exception::class);
