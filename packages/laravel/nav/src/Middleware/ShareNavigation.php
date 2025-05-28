@@ -22,10 +22,7 @@ class ShareNavigation
     {
         Nav::only(...$groups);
 
-        Inertia::share(
-            Constants::PROP,
-            static fn () => Nav::data(),
-        );
+        Inertia::share('nav', static fn () => Nav::data());
 
         return $next($request);
     }

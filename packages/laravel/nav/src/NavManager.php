@@ -48,7 +48,7 @@ class NavManager
      */
     public function for($name, $items)
     {
-        if ($this->has($name)) {
+        if ($this->has($name) && $this->debugs()) {
             static::throwDuplicateGroupException($name);
         }
 
@@ -333,6 +333,16 @@ class NavManager
             ),
             $groups
         );
+    }
+
+    /**
+     * Determine if debug mode is enabled.
+     *
+     * @return bool
+     */
+    protected function debugs()
+    {
+        return (bool) config('nav.debug', false);
     }
 
     /**

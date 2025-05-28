@@ -13,7 +13,7 @@ class NavCategory extends NavGroup
     /**
      * {@inheritDoc}
      */
-    public function toArray()
+    public function toArray($named = [], $typed = [])
     {
         return \array_merge(parent::toArray(), [
             'description' => $this->getDescription(),

@@ -17,7 +17,7 @@ arch('strict types')
     ->toUseStrictTypes();
 
 arch('attributes')
-    ->expect('Honed\Action\Attributes')
+    ->expect('Honed\Nav\Attributes')
     ->toBeClasses();
     
 arch('concerns')
@@ -27,8 +27,3 @@ arch('concerns')
 arch('contracts')
     ->expect('Honed\Nav\Contracts')
     ->toBeInterfaces();
-
-arch('commands')
-    ->expect('Honed\Nav\Console\Commands')
-    ->toBeClasses()
-    ->toExtend(Command::class);

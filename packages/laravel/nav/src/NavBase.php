@@ -19,18 +19,48 @@ abstract class NavBase extends Primitive
     use Allowable;
     use HasIcon;
     use HasLabel;
-    use HasRequest;
+
+    /**
+     * The application request.
+     * 
+     * @var \Illuminate\Http\Request
+     */
+    protected $request;
 
     public function __construct(Request $request)
     {
+        $this->request = $request;
+
         parent::__construct();
-        $this->request($request);
+    }
+
+    /**
+     * Set the application request.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return $this
+     */
+    public function request($request)
+    {
+        $this->request = $request;
+
+        return $this;
+    }
+    
+    /**
+     * Get the application request.
+     * 
+     * @return \Illuminate\Http\Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function toArray()
+    public function toArray($named = [], $typed = [])
     {
         return [
             'label' => $this->getLabel(),
