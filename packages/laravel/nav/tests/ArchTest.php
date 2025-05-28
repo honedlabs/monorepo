@@ -16,6 +16,10 @@ arch('strict types')
     ->expect('Honed\Nav')
     ->toUseStrictTypes();
 
+arch('attributes')
+    ->expect('Honed\Action\Attributes')
+    ->toBeClasses();
+    
 arch('concerns')
     ->expect('Honed\Nav\Concerns')
     ->toBeTraits();
