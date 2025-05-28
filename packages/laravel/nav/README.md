@@ -24,12 +24,24 @@
 
 > **Requires [Laravel 11+](https://laravel.com/docs/releases).**
 
-> **Requires [Inertia.js 1.2+](https://inertiajs.com/), if using middleware.**
+> **Requires [Inertia.js 1.2+](https://inertiajs.com/server-side-setup), if using middleware.**
 
 Get started with the package by requiring it in your PHP project using [Composer](https://getcomposer.org/).
 
 ```bash
 composer require honed/nav
+```
+
+## Companion
+
+> **Requires [Vue.js 3.4+](https://vuejs.org/about/releases.html).**
+
+> **Requires [Inertia.js 1.2+](https://inertiajs.com/client-side-setup)**
+
+Get started with the [companion package](https://github.com/honedlabs/nav-vue) by installing it as a node dependency via [NPM](https://npmjs.com).
+
+```bash
+npm install @honed/nav
 ```
 
 ## Documentation
