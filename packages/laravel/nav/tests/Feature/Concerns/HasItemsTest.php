@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use Honed\Nav\Concerns\HasItems;
-use Honed\Nav\NavGroup;
 use Honed\Nav\NavLink;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use HasItems;
     };
 });
@@ -53,4 +53,3 @@ it('has array representation', function () {
             ],
         ]);
 });
-

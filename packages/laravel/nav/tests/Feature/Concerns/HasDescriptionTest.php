@@ -5,7 +5,8 @@ declare(strict_types=1);
 use Honed\Nav\Concerns\HasDescription;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use HasDescription;
     };
 });

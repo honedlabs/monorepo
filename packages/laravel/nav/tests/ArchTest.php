@@ -17,10 +17,10 @@ arch('strict types')
 arch('attributes')
     ->expect('Honed\Nav\Attributes')
     ->toBeClasses();
-    
+
 arch('concerns')
-    ->expect('Honed\Nav\Concerns')
-    ->toBeTraits();
+        ->expect('Honed\Nav\Concerns')
+        ->toBeTraits();
 
 arch('contracts')
     ->expect('Honed\Nav\Contracts')

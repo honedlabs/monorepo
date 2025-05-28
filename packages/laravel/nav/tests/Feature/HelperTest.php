@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Nav\NavManager;
 use Honed\Nav\NavLink;
+use Honed\Nav\NavManager;
 
 it('has helper', function () {
     expect(nav())

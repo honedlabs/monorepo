@@ -7,12 +7,14 @@ namespace Honed\Nav;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Primitive;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
+
+use function get_class;
+use function is_object;
 
 abstract class NavBase extends Primitive
 {
@@ -22,8 +24,8 @@ abstract class NavBase extends Primitive
 
     /**
      * The application request.
-     * 
-     * @var \Illuminate\Http\Request
+     *
+     * @var Request
      */
     protected $request;
 
@@ -36,8 +38,8 @@ abstract class NavBase extends Primitive
 
     /**
      * Set the application request.
-     * 
-     * @param \Illuminate\Http\Request $request
+     *
+     * @param  Request  $request
      * @return $this
      */
     public function request($request)
@@ -46,11 +48,11 @@ abstract class NavBase extends Primitive
 
         return $this;
     }
-    
+
     /**
      * Get the application request.
-     * 
-     * @return \Illuminate\Http\Request
+     *
+     * @return Request
      */
     public function getRequest()
     {
@@ -101,8 +103,8 @@ abstract class NavBase extends Primitive
 
         $parameters = Arr::mapWithKeys(
             $request->route()?->parameters() ?? [],
-            static fn ($value) => \is_object($value)
-                ? [\get_class($value) => [$value]]
+            static fn ($value) => is_object($value)
+                ? [get_class($value) => [$value]]
                 : [],
         );
 

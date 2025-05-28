@@ -6,6 +6,8 @@ namespace Honed\Nav\Exceptions;
 
 use RuntimeException;
 
+use function implode;
+
 class MissingGroupException extends RuntimeException
 {
     /**
@@ -15,7 +17,7 @@ class MissingGroupException extends RuntimeException
      */
     public function __construct($name)
     {
-        $name = \implode(', ', (array) $name);
+        $name = implode(', ', (array) $name);
 
         parent::__construct(
             "The navigation group name(s) [{$name}] does not exist."

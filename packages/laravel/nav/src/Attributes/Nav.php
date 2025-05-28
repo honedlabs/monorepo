@@ -14,11 +14,11 @@ class Nav
      */
     public function __construct(
         public string $group
-    ) { }
+    ) {}
 
     /**
      * Get the group name.
-     * 
+     *
      * @return string
      */
     public function getGroup()

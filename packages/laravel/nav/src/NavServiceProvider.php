@@ -9,11 +9,14 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
+use function is_file;
+use function is_string;
+
 class NavServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
-     * 
+     *
      * @return void
      */
     public function register()
@@ -26,7 +29,7 @@ class NavServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
-     * 
+     *
      * @return void
      */
     public function boot()
@@ -42,7 +45,7 @@ class NavServiceProvider extends ServiceProvider
 
     /**
      * Register the middleware alias.
-     * 
+     *
      * @return void
      */
     protected function registerMiddleware()
@@ -64,7 +67,7 @@ class NavServiceProvider extends ServiceProvider
 
     /**
      * Register the navs.
-     * 
+     *
      * @return void
      */
     protected function registerNavigation()
@@ -76,7 +79,7 @@ class NavServiceProvider extends ServiceProvider
             return;
         }
 
-        if (\is_string($files) && ! \is_file($files)) {
+        if (is_string($files) && ! is_file($files)) {
             return;
         }
 

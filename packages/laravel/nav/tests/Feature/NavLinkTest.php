@@ -3,42 +3,38 @@
 declare(strict_types=1);
 
 use Honed\Nav\NavLink;
-use Honed\Nav\Tests\Stubs\Product;
 use Illuminate\Routing\Route;
+use Workbench\App\Models\User;
 
 use function Pest\Laravel\get;
 
-beforeEach(function () {
-    $this->label = 'Home';
-});
-
 it('makes', function () {
-    get(route('products.index'));
-    expect(NavLink::make($this->label, 'products.index'))
+    get(route('users.index'));
+    expect(NavLink::make('Home', 'users.index'))
         ->toBeInstanceOf(NavLink::class)
-        ->getLabel()->toBe($this->label)
-        ->getRoute()->toBe(route('products.index'))
+        ->getLabel()->toBe('Home')
+        ->getRoute()->toBe(route('users.index'))
         ->toArray()->toEqual([
-            'label' => $this->label,
-            'url' => route('products.index'),
+            'label' => 'Home',
+            'url' => route('users.index'),
             'active' => true,
             'icon' => null,
         ]);
 });
 
-it('sets active state', function (string|\Closure|null $condition, bool $expected) {
-    $product = product();
+it('sets active state', function (string|Closure|null $condition, bool $expected) {
+    $product = User::factory()->create();
 
-    get(route('products.show', $product));
+    get(route('users.show', $product));
 
-    $item = NavLink::make($this->label, 'products.show', $product)
+    $item = NavLink::make('Home', 'users.show', $product)
         ->active($condition);
 
     expect($item)->toBeInstanceOf(NavLink::class)
         ->isActive()->toBe($expected)
         ->toArray()->toEqual([
-            'label' => $this->label,
-            'url' => route('products.show', $product),
+            'label' => 'Home',
+            'url' => route('users.show', $product),
             'active' => $expected,
             'icon' => null,
         ]);
@@ -46,9 +42,9 @@ it('sets active state', function (string|\Closure|null $condition, bool $expecte
     'other route' => ['status.*', false],
     'all' => ['*', true],
     'item route' => [null, true],
-    'wildcard' => ['products.*', true],
-    'typed parameter product' => fn () => [fn (Product $p) => request()->url() === route('products.show', $p), true],
-    'named parameter product' => fn () => [fn ($product) => request()->url() === route('products.show', $product), true],
-    'typed parameter route' => fn () => [fn (Route $r) => $r->getName() === 'products.show', true],
-    'named parameter route' => fn () => [fn ($route) => $route->getName() === 'products.show', true],
+    'wildcard' => ['users.*', true],
+    'typed parameter user' => fn () => [fn (User $p) => request()->url() === route('users.show', $p), true],
+    'named parameter user' => fn () => [fn ($user) => request()->url() === route('users.show', $user), true],
+    'typed parameter route' => fn () => [fn (Route $r) => $r->getName() === 'users.show', true],
+    'named parameter route' => fn () => [fn ($route) => $route->getName() === 'users.show', true],
 ]);

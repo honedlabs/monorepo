@@ -9,7 +9,7 @@ return [
     | Debug
     |--------------------------------------------------------------------------
     |
-    | When debug mode is enabled, runtime exceptions will be thrown if you 
+    | When debug mode is enabled, runtime exceptions will be thrown if you
     | attempt to do undesirable actions - such as duplicating a navigation
     | group namespace.
     */
