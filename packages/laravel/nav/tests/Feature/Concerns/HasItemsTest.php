@@ -15,8 +15,8 @@ beforeEach(function () {
 it('adds items', function () {
     expect($this->test)
         ->items([
-            NavLink::make('Home', 'products.index'),
-            NavLink::make('Products', 'products.index')->allow(false),
+            NavLink::make('Home', 'users.index'),
+            NavLink::make('Products', 'users.index')->allow(false),
         ])->toBe($this->test)
         ->getItems()->toHaveCount(1);
 });
@@ -24,8 +24,8 @@ it('adds items', function () {
 it('adds items variadically', function () {
     expect($this->test)
         ->items(
-            NavLink::make('Home', 'products.index'),
-            NavLink::make('Products', 'products.index')
+            NavLink::make('Home', 'users.index'),
+            NavLink::make('Products', 'users.index')
         )->toBe($this->test)
         ->getItems()->toHaveCount(2);
 });
@@ -33,8 +33,8 @@ it('adds items variadically', function () {
 it('adds items collection', function () {
     expect($this->test)
         ->items([
-            NavLink::make('Home', 'products.index'),
-            NavLink::make('Products', 'products.index'),
+            NavLink::make('Home', 'users.index'),
+            NavLink::make('Products', 'users.index'),
         ])->toBe($this->test)
         ->getItems()->toHaveCount(2);
 });
@@ -42,13 +42,13 @@ it('adds items collection', function () {
 it('has array representation', function () {
     expect($this->test)
         ->items([
-            NavLink::make('Home', 'products.index'),
+            NavLink::make('Home', 'users.index'),
         ])->toBe($this->test)
         ->itemsToArray()->toEqual([
             [
                 'label' => 'Home',
                 'icon' => null,
-                'url' => route('products.index'),
+                'url' => route('users.index'),
                 'active' => false,
             ],
         ]);

@@ -21,7 +21,7 @@ it('has array representation', function () {
 it('has array representation with items', function () {
     expect($this->group)
         ->items([
-            NavLink::make('Home', 'products.index'),
+            NavLink::make('Home', 'users.index'),
         ])->toArray()->toEqual([
             'label' => 'Dashboard',
             'icon' => null,
@@ -29,7 +29,7 @@ it('has array representation with items', function () {
                 [
                     'label' => 'Home',
                     'icon' => null,
-                    'url' => route('products.index'),
+                    'url' => route('users.index'),
                     'active' => false,
                 ],
             ],

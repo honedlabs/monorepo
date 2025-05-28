@@ -11,7 +11,6 @@
 
 <p>
     <a href="https://github.com/honedlabs/nav/actions"><img src="https://github.com/honedlabs/nav/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
-    <!-- <a href="https://github.com/honedlabs/nav/actions"><img src="https://github.com/honedlabs/nav/actions/workflows/tests.yml/badge.svg" alt="Test coverage"></a> -->
     <a href="https://packagist.org/packages/honed/nav"><img src="https://img.shields.io/packagist/dt/honed/nav" alt="Total Downloads"></a>
     <a href="https://packagist.org/packages/honed/nav"><img src="https://img.shields.io/packagist/v/honed/nav" alt="Latest Stable Version"></a>
 </p>
@@ -24,7 +23,7 @@
 
 > **Requires [Laravel 11+](https://laravel.com/docs/releases).**
 
-> **Requires [Inertia.js 1.2+](https://inertiajs.com/server-side-setup), if using middleware.**
+> **Requires [Inertia.js 1.2+](https://inertiajs.com/server-side-setup)**
 
 Get started with the package by requiring it in your PHP project using [Composer](https://getcomposer.org/).
 

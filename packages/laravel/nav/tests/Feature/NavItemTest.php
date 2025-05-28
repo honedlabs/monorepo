@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Honed\Nav\NavItem;
 
 beforeEach(function () {
-    $this->item = NavItem::make('Home', 'products.index');
+    $this->item = NavItem::make('Home', 'users.index');
 });
 
 it('has description', function () {
@@ -13,7 +13,7 @@ it('has description', function () {
         ->description('Test')->toBe($this->item)
         ->toArray()->toEqual([
             'label' => 'Home',
-            'url' => route('products.index'),
+            'url' => route('users.index'),
             'description' => 'Test',
             'icon' => null,
             'active' => false,

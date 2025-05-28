@@ -8,10 +8,20 @@ namespace Workbench\App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Workbench\Database\Factories\UserFactory;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    /**
+     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\UserFactory>
+     */
+    use HasFactory;
+    use Notifiable;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static $factory = UserFactory::class;
 
     /**
      * The attributes that are mass assignable.

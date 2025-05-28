@@ -23,18 +23,18 @@ it('makes', function () {
 });
 
 it('sets active state', function (string|Closure|null $condition, bool $expected) {
-    $product = User::factory()->create();
+    $user = User::factory()->create();
 
-    get(route('users.show', $product));
+    get(route('users.show', $user));
 
-    $item = NavLink::make('Home', 'users.show', $product)
+    $item = NavLink::make('Home', 'users.show', $user)
         ->active($condition);
 
     expect($item)->toBeInstanceOf(NavLink::class)
         ->isActive()->toBe($expected)
         ->toArray()->toEqual([
             'label' => 'Home',
-            'url' => route('users.show', $product),
+            'url' => route('users.show', $user),
             'active' => $expected,
             'icon' => null,
         ]);

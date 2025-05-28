@@ -9,15 +9,14 @@ use Honed\Nav\NavLink;
 Nav::for('primary', [
     NavLink::make('Home', '/'),
     NavLink::make('About', '/about'),
-    NavLink::make('Contact', '/contact'),
-    NavLink::make('Dashboard', '/dashboard')
+    NavLink::make('Contact', '/contact')
         ->allow(false),
 
 ]);
 
-Nav::for('products', [
-    NavGroup::make('Products')->items([
-        NavLink::make('All Products', 'products.index')
-            ->active('products.*'),
+Nav::for('users', [
+    NavGroup::make('Users')->items([
+        NavLink::make('All Users', 'users.index')
+            ->active('users.*'),
     ]),
 ]);

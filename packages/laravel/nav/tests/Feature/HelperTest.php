@@ -11,7 +11,7 @@ it('has helper', function () {
 });
 
 it('has helper with group', function () {
-    expect(nav('primary', NavLink::make('Home', 'products.index')))
+    expect(nav('primary', NavLink::make('Home', 'users.index')))
         ->toBeInstanceOf(NavManager::class);
 
     expect(nav()->group('primary'))

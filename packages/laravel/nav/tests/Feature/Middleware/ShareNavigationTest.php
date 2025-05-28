@@ -35,7 +35,7 @@ it('shares one group', function () {
 });
 
 it('shares groups', function () {
-    get(route('products.index'))->assertInertia(fn (Assert $page) => $page
+    get(route('users.index'))->assertInertia(fn (Assert $page) => $page
         ->has(Constants::PROP, fn (Assert $nav) => $nav
             ->has('primary', fn (Assert $primary) => $primary
                 ->has(0, fn (Assert $item) => $item
@@ -57,14 +57,14 @@ it('shares groups', function () {
                     ->where('icon', null)
                 )
             )
-            ->has('products', fn (Assert $products) => $products
+            ->has('users', fn (Assert $users) => $users
                 ->has(0, fn (Assert $item) => $item
                     ->where('label', 'Products')
                     ->where('icon', null)
                     ->has('items', fn (Assert $items) => $items
                         ->has(0, fn (Assert $item) => $item
                             ->where('label', 'All Products')
-                            ->where('url', route('products.index'))
+                            ->where('url', route('users.index'))
                             ->where('active', true)
                             ->where('icon', null)
                         )
@@ -98,14 +98,14 @@ it('shares with nesting', function () {
                     ->where('icon', null)
                 )
             )
-            ->has('products', fn (Assert $products) => $products
+            ->has('users', fn (Assert $users) => $users
                 ->has(0, fn (Assert $item) => $item
                     ->where('label', 'Products')
                     ->where('icon', null)
                     ->has('items', fn (Assert $items) => $items
                         ->has(0, fn (Assert $item) => $item
                             ->where('label', 'All Products')
-                            ->where('url', route('products.index'))
+                            ->where('url', route('users.index'))
                             ->where('active', false)
                             ->where('icon', null)
                         )

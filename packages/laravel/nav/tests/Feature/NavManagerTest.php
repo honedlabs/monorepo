@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
+use Honed\Nav\Exceptions\DuplicateGroupException;
+use Honed\Nav\Exceptions\MissingGroupException;
 use Honed\Nav\Facades\Nav;
 use Honed\Nav\NavLink;
 use Honed\Nav\NavManager;
-use Honed\Nav\Support\Constants;
 
 use function Pest\Laravel\get;
 
@@ -13,14 +14,14 @@ beforeEach(function () {
     get('/'); // Must always have a request to test navs
 
     Nav::for('menu', [
-        NavLink::make('Home', 'products.index'),
+        NavLink::make('Home', 'users.index'),
         NavLink::make('About', '/about')->allow(false),
     ]);
 });
 
 it('defines a new group', function () {
     expect(Nav::for('example', [
-        NavLink::make('Index', 'products.index'),
+        NavLink::make('Index', 'users.index'),
     ]))->toBeInstanceOf(NavManager::class);
 
     expect(Nav::group('example'))
@@ -30,13 +31,13 @@ it('defines a new group', function () {
 
 it('throws error when defining a group that already exists', function () {
     Nav::for('primary', [
-        NavLink::make('Index', 'products.index')]
+        NavLink::make('Index', 'users.index')]
     );
-})->throws(InvalidArgumentException::class);
+})->throws(DuplicateGroupException::class);
 
 it('adds items to an existing group', function () {
     expect(Nav::add('menu', [
-        NavLink::make('Index', 'products.index'),
+        NavLink::make('Index', 'users.index'),
     ]))->toBeInstanceOf(NavManager::class);
 
     expect(Nav::group('menu'))
@@ -46,9 +47,9 @@ it('adds items to an existing group', function () {
 
 it('cannot add to a non-existent group', function () {
     Nav::add('fake', [
-        NavLink::make('Index', 'products.index'),
+        NavLink::make('Index', 'users.index'),
     ]);
-})->throws(InvalidArgumentException::class);
+})->throws(MissingGroupException::class);
 
 it('checks if it has a group', function () {
     expect(Nav::has('primary'))->toBeTrue();
@@ -77,19 +78,19 @@ it('retrieves all groups', function () {
     expect(Nav::all())
         ->toBeArray()
         ->toHaveCount(3)
-        ->toHaveKeys(['primary', 'products', 'menu'])
+        ->toHaveKeys(['primary', 'users', 'menu'])
         ->{'menu'}->toHaveCount(1)
         ->{'primary'}->toHaveCount(3)
-        ->{'products'}->toHaveCount(1);
+        ->{'users'}->toHaveCount(1);
 });
 
 it('cannot retrieve a non-existent group', function () {
     Nav::get('fake');
-})->throws(InvalidArgumentException::class);
+})->throws(MissingGroupException::class);
 
 it('retrieves select groups', function () {
     Nav::for('example', [
-        NavLink::make('Index', 'products.index'),
+        NavLink::make('Index', 'users.index'),
     ]);
 
     expect(Nav::get('primary', 'example'))
@@ -113,12 +114,12 @@ it('can select only a subset of groups', function () {
 it('can exclude a subset of groups', function () {
     expect(Nav::except('primary', 'example'))
         ->toBeInstanceOf(NavManager::class)
-        ->keys()->toEqual(['products', 'menu'])
+        ->keys()->toEqual(['users', 'menu'])
         ->data()->scoped(fn ($data) => $data
         ->toBeArray()
         ->toHaveCount(2)
-        ->toHaveKeys(['products', 'menu'])
-        ->{'products'}->toHaveCount(1)
+        ->toHaveKeys(['users', 'menu'])
+        ->{'users'}->toHaveCount(1)
         ->{'menu'}->toHaveCount(1)
         );
 });
@@ -134,8 +135,8 @@ it('can search for an item', function () {
             'path',
             'url',
             'active',
-            Constants::PARENT,
-        ])->{Constants::PARENT}->toBe('Products / All Products')
+            'path',
+        ])->{'path'}->toBe('Users / All Users')
         );
 
     expect(Nav::search('all', caseSensitive: true))
