@@ -11,7 +11,6 @@ Nav::for('primary', [
     NavLink::make('About', '/about'),
     NavLink::make('Contact', '/contact')
         ->allow(false),
-
 ]);
 
 Nav::for('users', [

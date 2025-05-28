@@ -14,7 +14,7 @@ beforeEach(function () {
     get('/'); // Must always have a request to test navs
 
     Nav::for('menu', [
-        NavLink::make('Home', 'users.index'),
+        NavLink::make('Users', 'users.index'),
         NavLink::make('About', '/about')->allow(false),
     ]);
 });
@@ -71,7 +71,7 @@ it('retrieves a group', function () {
         ->toBeArray()
         ->toHaveCount(1)
         ->toHaveKeys(['primary'])
-        ->{'primary'}->toHaveCount(3);
+        ->{'primary'}->toHaveCount(2);
 });
 
 it('retrieves all groups', function () {
@@ -80,7 +80,7 @@ it('retrieves all groups', function () {
         ->toHaveCount(3)
         ->toHaveKeys(['primary', 'users', 'menu'])
         ->{'menu'}->toHaveCount(1)
-        ->{'primary'}->toHaveCount(3)
+        ->{'primary'}->toHaveCount(2)
         ->{'users'}->toHaveCount(1);
 });
 
@@ -107,7 +107,7 @@ it('can select only a subset of groups', function () {
         ->toBeArray()
         ->toHaveCount(1)
         ->toHaveKeys(['primary'])
-        ->{'primary'}->toHaveCount(3)
+        ->{'primary'}->toHaveCount(2)
         );
 });
 
@@ -146,7 +146,7 @@ it('can search for an item', function () {
 it('can limit the number of results', function () {
     expect(Nav::search(''))
         ->toBeArray()
-        ->toHaveCount(6);
+        ->toHaveCount(5);
 
     expect(Nav::search('', limit: 3))
         ->toBeArray()

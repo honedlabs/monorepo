@@ -3,5 +3,5 @@
 declare(strict_types=1);
 
 return [
-    \Inertia\ServiceProvider::class,
+    Inertia\ServiceProvider::class,
 ];

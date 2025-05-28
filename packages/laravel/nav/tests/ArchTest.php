@@ -19,8 +19,8 @@ arch('attributes')
     ->toBeClasses();
 
 arch('concerns')
-        ->expect('Honed\Nav\Concerns')
-        ->toBeTraits();
+    ->expect('Honed\Nav\Concerns')
+    ->toBeTraits();
 
 arch('contracts')
     ->expect('Honed\Nav\Contracts')

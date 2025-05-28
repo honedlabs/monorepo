@@ -13,7 +13,7 @@ Route::middleware('nav:primary')
         Route::get('/contact', fn () => inertia('Contact'))
             ->name('contact.show');
 
-        Route::middleware('nav:products')
+        Route::middleware('nav:users')
             ->get('/about', fn () => inertia('About'))
             ->name('about.show');
     });
