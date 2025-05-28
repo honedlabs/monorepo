@@ -53,6 +53,28 @@ class Message extends Primitive implements MessageContract
     }
 
     /**
+     * Get the default type.
+     *
+     * @return string|null
+     */
+    public static function getDefaultType()
+    {
+        /** @var string|null */
+        return config('flash.type', null);
+    }
+
+    /**
+     * Get the default duration.
+     *
+     * @return int|null
+     */
+    public static function getDefaultDuration()
+    {
+        /** @var int|null */
+        return config('flash.duration', Parameters::DURATION);
+    }
+
+    /**
      * Set the message.
      *
      * @param  string  $message
@@ -106,17 +128,6 @@ class Message extends Primitive implements MessageContract
     public function getType()
     {
         return $this->getBaseType() ?? $this->getDefaultType();
-    }
-
-    /**
-     * Get the default type.
-     *
-     * @return string|null
-     */
-    public static function getDefaultType()
-    {
-        /** @var string|null */
-        return config('flash.type', null);
     }
 
     /**
@@ -183,20 +194,9 @@ class Message extends Primitive implements MessageContract
     }
 
     /**
-     * Get the default duration.
-     *
-     * @return int|null
-     */
-    public static function getDefaultDuration()
-    {
-        /** @var int|null */
-        return config('flash.duration', Parameters::DURATION);
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function toArray()
+    public function toArray($named = [], $typed = [])
     {
         return [
             'message' => $this->getMessage(),

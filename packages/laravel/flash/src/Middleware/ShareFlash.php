@@ -20,7 +20,7 @@ class ShareFlash
     /**
      * Handle the incoming request.
      *
-     * @return \Closure
+     * @return Closure
      */
     public function handle(Request $request, Closure $next)
     {

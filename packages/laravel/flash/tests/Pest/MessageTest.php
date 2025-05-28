@@ -54,4 +54,3 @@ it('has array representation', function () {
         'duration' => config('flash.duration'),
     ]);
 });
-

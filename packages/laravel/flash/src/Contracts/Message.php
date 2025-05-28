@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Flash\Contracts;
 
-use Illuminate\Contracts\Support\Arrayable;
-
 /**
- * @extends Arrayable<string,mixed>
+ * @method toArray($named = [], $typed = [])
  */
-interface Message extends Arrayable
+interface Message
 {
     /**
      * Create a new flash message.

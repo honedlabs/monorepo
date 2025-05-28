@@ -8,7 +8,7 @@ use Honed\Flash\FlashFactory;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Honed\Flash\FlashFactory
+ * @see FlashFactory
  *
  * @method static \Honed\Flash\FlashFactory message(string|\Honed\Flash\Contracts\Message $message, string|null $type = null, int|null $duration = null) Flash a new message to the session.
  * @method static \Honed\Flash\FlashFactory success(string $message, int|null $duration = null) Flash a new success message to the session.
@@ -21,7 +21,7 @@ class Flash extends Facade
     /**
      * Get the root object behind the facade.
      *
-     * @return \Honed\Flash\FlashFactory
+     * @return FlashFactory
      */
     public static function getFacadeRoot()
     {

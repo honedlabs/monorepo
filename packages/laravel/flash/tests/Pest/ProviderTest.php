@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-use Inertia\ResponseFactory;
 use Honed\Flash\Support\Parameters;
-use Honed\Flash\FlashServiceProvider;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use Inertia\ResponseFactory;
 
 it('has redirect response macros', function () {
     expect(back()->flash('Hello World'))
@@ -34,5 +32,3 @@ it('has inertia response macros', function () {
             'duration' => config('flash.duration'),
         ]);
 });
-
-

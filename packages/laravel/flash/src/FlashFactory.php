@@ -19,7 +19,7 @@ class FlashFactory
     /**
      * Flash a new message to the session.
      *
-     * @param  string|\Honed\Flash\Contracts\Message  $message
+     * @param  string|Message  $message
      * @param  string|null  $type
      * @param  int|null  $duration
      * @return $this

@@ -21,7 +21,7 @@ class FlashServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/flash.php', 'flash');
 
-        /** @var class-string<\Honed\Flash\Contracts\Message> */
+        /** @var class-string<MessageContract> */
         $implementation = config('flash.implementation', Message::class);
 
         $this->app->bind(MessageContract::class, $implementation);
@@ -61,7 +61,7 @@ class FlashServiceProvider extends ServiceProvider
             ?string $type = null,
             ?int $duration = null,
         ) {
-            /** @var \Illuminate\Http\RedirectResponse $this */
+            /** @var RedirectResponse $this */
             Flash::message($message, $type, $duration);
 
             return $this;
@@ -78,7 +78,7 @@ class FlashServiceProvider extends ServiceProvider
             ?string $type = null,
             ?int $duration = null,
         ) {
-            /** @var \Inertia\ResponseFactory $this */
+            /** @var ResponseFactory $this */
             Flash::message($message, $type, $duration);
 
             return $this;
@@ -89,7 +89,7 @@ class FlashServiceProvider extends ServiceProvider
             ?string $type = null,
             ?int $duration = null,
         ) {
-            /** @var \Inertia\ResponseFactory $this */
+            /** @var ResponseFactory $this */
             Flash::message($message, $type, $duration);
 
             return $this;

@@ -30,6 +30,18 @@ class TestCase extends Orchestra
     }
 
     /**
+     * Define the environment setup.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    public function getEnvironmentSetUp($app)
+    {
+        config()->set('flash', require __DIR__.'/../config/flash.php');
+        config()->set('database.default', 'testing');
+    }
+
+    /**
      * Get the package providers.
      *
      * @param  \Illuminate\Foundation\Application  $app
@@ -46,7 +58,7 @@ class TestCase extends Orchestra
     /**
      * Define the routes setup.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param  Router  $router
      * @return void
      */
     protected function defineRoutes($router)
@@ -56,17 +68,5 @@ class TestCase extends Orchestra
                 $router->get('/', fn () => inertia('Index')->flash('Hello World'))
                     ->name('index');
             });
-    }
-
-    /**
-     * Define the environment setup.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    public function getEnvironmentSetUp($app)
-    {
-        config()->set('flash', require __DIR__.'/../config/flash.php');
-        config()->set('database.default', 'testing');
     }
 }

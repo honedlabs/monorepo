@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Flash\FlashFactory;
-use Honed\Flash\FlashItem;
 use Honed\Flash\Support\Parameters;
 use Illuminate\Support\Facades\Session;
 

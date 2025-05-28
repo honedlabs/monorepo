@@ -6,15 +6,15 @@ namespace Honed\Flash\Support;
 
 class Parameters
 {
-    const PROP = 'flash';
+    public const PROP = 'flash';
 
-    const SUCCESS = 'success';
+    public const SUCCESS = 'success';
 
-    const ERROR = 'error';
+    public const ERROR = 'error';
 
-    const INFO = 'info';
+    public const INFO = 'info';
 
-    const WARNING = 'warning';
+    public const WARNING = 'warning';
 
-    const DURATION = 3000;
+    public const DURATION = 3000;
 }
