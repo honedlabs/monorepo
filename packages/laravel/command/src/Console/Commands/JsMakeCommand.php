@@ -7,6 +7,8 @@ namespace Honed\Command\Console\Commands;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 
+use function trim;
+
 abstract class JsMakeCommand extends GeneratorCommand
 {
     /**
@@ -17,7 +19,7 @@ abstract class JsMakeCommand extends GeneratorCommand
      */
     protected function resolveStubPath($stub)
     {
-        return file_exists($customPath = $this->laravel->basePath(\trim($stub, '/')))
+        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
             : __DIR__.'/../../..'.$stub;
     }

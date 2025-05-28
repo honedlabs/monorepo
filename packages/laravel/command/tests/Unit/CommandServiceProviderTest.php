@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\File;
 use Honed\Command\CommandServiceProvider;
+use Illuminate\Support\Facades\File;
 
 it('publishes stubs', function () {
     $path = base_path('stubs');

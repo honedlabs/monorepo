@@ -9,6 +9,10 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
+use function class_basename;
+use function str_replace;
+use function trim;
+
 #[AsCommand(name: 'make:facade')]
 class FacadeMakeCommand extends GeneratorCommand
 {
@@ -51,7 +55,7 @@ class FacadeMakeCommand extends GeneratorCommand
      */
     protected function resolveStubPath($stub)
     {
-        return file_exists($customPath = $this->laravel->basePath(\trim($stub, '/')))
+        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
             : __DIR__.'/../../..'.$stub;
     }
@@ -125,7 +129,7 @@ class FacadeMakeCommand extends GeneratorCommand
         $objectNamespace = $this->getObjectNamespace($class);
 
         foreach ($searches as $search) {
-            $stub = \str_replace(
+            $stub = str_replace(
                 $search,
                 [$object, $objectClass, $objectNamespace],
                 $stub
@@ -147,7 +151,7 @@ class FacadeMakeCommand extends GeneratorCommand
             return '';
         }
 
-        $class = \class_basename($class);
+        $class = class_basename($class);
 
         return "{$class}::class";
     }
@@ -224,7 +228,7 @@ class FacadeMakeCommand extends GeneratorCommand
     {
         return [
             'name' => [
-                'What should the '.strtolower($this->type).' be named?',
+                'What should the '.mb_strtolower($this->type).' be named?',
                 'E.g. UserSession',
             ],
             'class' => [

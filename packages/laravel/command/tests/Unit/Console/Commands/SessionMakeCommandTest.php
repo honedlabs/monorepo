@@ -37,4 +37,3 @@ it('has facade option', function () {
     $this->assertFileExists(app_path('Sessions/UserSession.php'));
     $this->assertFileExists(app_path('Facades/UserSession.php'));
 });
-

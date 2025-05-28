@@ -9,6 +9,10 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
+use function preg_quote;
+use function preg_replace;
+use function vsprintf;
+
 #[AsCommand(name: 'make:repository')]
 class RepositoryMakeCommand extends GeneratorCommand
 {
@@ -84,10 +88,10 @@ class RepositoryMakeCommand extends GeneratorCommand
         );
 
         /** @var string */
-        return \preg_replace(
-            \vsprintf('/use %s;[\r\n]+use %s;/', [
-                \preg_quote($namespacedModel, '/'),
-                \preg_quote($namespacedModel, '/'),
+        return preg_replace(
+            vsprintf('/use %s;[\r\n]+use %s;/', [
+                preg_quote($namespacedModel, '/'),
+                preg_quote($namespacedModel, '/'),
             ]),
             "use {$namespacedModel};",
             $stub
@@ -152,7 +156,7 @@ class RepositoryMakeCommand extends GeneratorCommand
     {
         return [
             'name' => [
-                'What should the '.strtolower($this->type).' be named?',
+                'What should the '.mb_strtolower($this->type).' be named?',
                 'E.g. UserRepository',
             ],
         ];

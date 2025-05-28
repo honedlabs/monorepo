@@ -73,7 +73,7 @@ class PageMakeCommand extends JsMakeCommand
     {
         return [
             'name' => [
-                'What should the '.strtolower($this->type).' be named?',
+                'What should the '.mb_strtolower($this->type).' be named?',
                 'E.g. Index',
             ],
         ];

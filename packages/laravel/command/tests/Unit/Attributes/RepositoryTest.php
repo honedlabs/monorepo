@@ -15,4 +15,3 @@ it('has attribute', function () {
     expect(Product::class)
         ->toHaveAttribute(Repository::class);
 });
-

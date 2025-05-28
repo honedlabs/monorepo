@@ -8,6 +8,14 @@ use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
+use function class_basename;
+use function file_get_contents;
+use function in_array;
+use function mb_strtolower;
+use function sprintf;
+use function str_replace;
+use function trim;
+
 #[AsCommand(name: 'make:builder')]
 class BuilderMakeCommand extends GeneratorCommand
 {
@@ -50,7 +58,7 @@ class BuilderMakeCommand extends GeneratorCommand
      */
     protected function resolveStubPath($stub)
     {
-        return file_exists($customPath = $this->laravel->basePath(\trim($stub, '/')))
+        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
             : __DIR__.'/../../..'.$stub;
     }
@@ -88,7 +96,7 @@ class BuilderMakeCommand extends GeneratorCommand
     {
         return [
             'name' => [
-                'What should the '.\mb_strtolower($this->type).' be named?',
+                'What should the '.mb_strtolower($this->type).' be named?',
                 'E.g. UserBuilder',
             ],
         ];
@@ -127,7 +135,7 @@ class BuilderMakeCommand extends GeneratorCommand
 
         if (! $model) {
             $model = '\\Illuminate\\Database\\Eloquent\\Model';
-        } elseif (\in_array($model, $this->possibleModels())) {
+        } elseif (in_array($model, $this->possibleModels())) {
             $model = '\\'.$this->qualifyModel($model);
         } else {
             $this->error('The model '.$model.' does not exist.');
@@ -135,7 +143,7 @@ class BuilderMakeCommand extends GeneratorCommand
             return $this;
         }
 
-        $stub = \str_replace($searches, $model, $stub);
+        $stub = str_replace($searches, $model, $stub);
 
         return $this;
     }
@@ -151,12 +159,12 @@ class BuilderMakeCommand extends GeneratorCommand
         /** @var string|null */
         $model = $this->option('model');
 
-        if (! $model || ! \in_array($model, $this->possibleModels())) {
+        if (! $model || ! in_array($model, $this->possibleModels())) {
             return $this;
         }
 
         $path = app_path('Models/'.$model.'.php');
-        $stub = \file_get_contents($path);
+        $stub = file_get_contents($path);
 
         if (! $stub) {
             $this->error('The model '.$model.' does not exist.');
@@ -165,14 +173,14 @@ class BuilderMakeCommand extends GeneratorCommand
         }
 
         // Add use statement for the builder
-        $stub = \str_replace(
+        $stub = str_replace(
             "use Illuminate\Database\Eloquent\Model;\n",
             "use Illuminate\Database\Eloquent\Model;\nuse ".$name.";\n",
             $stub
         );
 
         // Find the end of the model class by the last closing brace
-        $classEnd = strrpos($stub, '}');
+        $classEnd = mb_strrpos($stub, '}');
 
         if ($classEnd) {
             $inserts = $this->getInserts($name, $model);
@@ -200,24 +208,24 @@ class BuilderMakeCommand extends GeneratorCommand
      */
     protected function getInserts($name, $model)
     {
-        $generic = \sprintf(
+        $generic = sprintf(
             '%s<\\%s>',
             $name,
             $this->qualifyModel($model)
         );
 
-        $eloquentDocBlock = \sprintf(
+        $eloquentDocBlock = sprintf(
             "\n\t/**\n\t * Create a new %s query builder for the model.\n\t *\n\t * @return \\%s\n\t */",
             $model,
             $generic
         );
 
-        $newEloquentBuilder = \sprintf(
+        $newEloquentBuilder = sprintf(
             "\n\tpublic function newEloquentBuilder(\$query)\n\t{\n\t\treturn new %s(\$query);\n\t}\n",
-            \class_basename($name)
+            class_basename($name)
         );
 
-        $queryDocBlock = \sprintf(
+        $queryDocBlock = sprintf(
             "\n\t/**\n\t * Begin querying the model.\n\t *\n\t * @return \\%s\n\t */",
             $generic
         );

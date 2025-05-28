@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Honed\Command\Tests\Stubs\Product;
 use Honed\Command\Tests\Stubs\ProductRepository;
 
-
 it('resolves repository model', function () {
     ProductRepository::guessRepositoryNamesUsing(function ($class) {
         return $class.'Repository';

@@ -8,6 +8,8 @@ use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
+use function trim;
+
 #[AsCommand(name: 'make:contract')]
 class ContractMakeCommand extends GeneratorCommand
 {
@@ -50,7 +52,7 @@ class ContractMakeCommand extends GeneratorCommand
      */
     protected function resolveStubPath($stub)
     {
-        return file_exists($customPath = $this->laravel->basePath(\trim($stub, '/')))
+        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
             : __DIR__.'/../../..'.$stub;
     }
@@ -87,7 +89,7 @@ class ContractMakeCommand extends GeneratorCommand
     {
         return [
             'name' => [
-                'What should the '.strtolower($this->type).' be named?',
+                'What should the '.mb_strtolower($this->type).' be named?',
                 'E.g. Cacheable',
             ],
         ];

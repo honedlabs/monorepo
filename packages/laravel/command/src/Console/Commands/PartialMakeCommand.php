@@ -8,6 +8,12 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
+use function is_null;
+use function mb_strtolower;
+use function pathinfo;
+use function str_replace;
+use function trim;
+
 #[AsCommand(name: 'make:partial')]
 class PartialMakeCommand extends JsMakeCommand
 {
@@ -38,6 +44,39 @@ class PartialMakeCommand extends JsMakeCommand
      * @var string
      */
     protected $extension = 'vue';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handle()
+    {
+        $created = parent::handle();
+
+        if (! is_null($created)) {
+            return $created;
+        }
+
+        return $this->generateIndex();
+    }
+
+    /**
+     * Create a new index file.
+     *
+     * @param  string  $file
+     * @return string
+     */
+    public function getIndexPath($file)
+    {
+        $path = str_replace(pathinfo($file, PATHINFO_FILENAME), 'index', $file);
+        $path = str_replace($this->getExtension(), 'ts', $path);
+
+        // Create or retrieve the index file.
+        if (! $this->files->exists($path)) {
+            $this->files->put($path, '');
+        }
+
+        return $path;
+    }
 
     /**
      * Get the stub file for the generator.
@@ -75,7 +114,7 @@ class PartialMakeCommand extends JsMakeCommand
         $extension = $this->option('extension');
 
         if ($extension) {
-            return \trim($extension, '.');
+            return trim($extension, '.');
         }
 
         return $this->extension;
@@ -87,20 +126,6 @@ class PartialMakeCommand extends JsMakeCommand
     protected function getFileExtension()
     {
         return '.'.$this->getExtension();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle()
-    {
-        $created = parent::handle();
-
-        if (! \is_null($created)) {
-            return $created;
-        }
-
-        return $this->generateIndex();
     }
 
     /**
@@ -132,25 +157,6 @@ class PartialMakeCommand extends JsMakeCommand
     }
 
     /**
-     * Create a new index file.
-     *
-     * @param  string  $file
-     * @return string
-     */
-    public function getIndexPath($file)
-    {
-        $path = \str_replace(\pathinfo($file, PATHINFO_FILENAME), 'index', $file);
-        $path = \str_replace($this->getExtension(), 'ts', $path);
-
-        // Create or retrieve the index file.
-        if (! $this->files->exists($path)) {
-            $this->files->put($path, '');
-        }
-
-        return $path;
-    }
-
-    /**
      * Prompt for missing input arguments using the returned questions.
      *
      * @return array<string,mixed>
@@ -159,7 +165,7 @@ class PartialMakeCommand extends JsMakeCommand
     {
         return [
             'name' => [
-                'What should the '.\mb_strtolower($this->type).' be named?',
+                'What should the '.mb_strtolower($this->type).' be named?',
                 'E.g. UserCard',
             ],
         ];
@@ -171,10 +177,10 @@ class PartialMakeCommand extends JsMakeCommand
     protected function getPath($name)
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
-        $name = \str_replace('\\', '/', $name);
+        $name = str_replace('\\', '/', $name);
 
-        $partial = \pathinfo($name, PATHINFO_FILENAME);
-        $path = \pathinfo($name, PATHINFO_DIRNAME);
+        $partial = pathinfo($name, PATHINFO_FILENAME);
+        $path = pathinfo($name, PATHINFO_DIRNAME);
 
         if ($path !== '.') {
             $path = $path.'/Partials/'.$partial;

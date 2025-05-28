@@ -36,4 +36,3 @@ it('accepts an underlying class', function () {
     $this->assertFileExists(app_path('Facades/UserSession.php'));
     $this->assertStringContainsString('use Honed\Command\Tests\Stubs\ProductCache;', file_get_contents(app_path('Facades/UserSession.php')));
 });
-

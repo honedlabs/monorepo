@@ -8,6 +8,9 @@ use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
+use function class_basename;
+use function trim;
+
 #[AsCommand(name: 'make:session')]
 class SessionMakeCommand extends GeneratorCommand
 {
@@ -50,7 +53,7 @@ class SessionMakeCommand extends GeneratorCommand
      */
     protected function resolveStubPath($stub)
     {
-        return file_exists($customPath = $this->laravel->basePath(\trim($stub, '/')))
+        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
             : __DIR__.'/../../..'.$stub;
     }
@@ -76,7 +79,7 @@ class SessionMakeCommand extends GeneratorCommand
         $name = ($this->qualifyClass($this->getNameInput()));
 
         $this->call('make:facade', [
-            'name' => \class_basename($name),
+            'name' => class_basename($name),
             '--class' => $name,
             '--force' => (bool) $this->option('force'),
         ]);
@@ -106,7 +109,7 @@ class SessionMakeCommand extends GeneratorCommand
     {
         return [
             'name' => [
-                'What should the '.strtolower($this->type).' be named?',
+                'What should the '.mb_strtolower($this->type).' be named?',
                 'E.g. UserSession',
             ],
         ];

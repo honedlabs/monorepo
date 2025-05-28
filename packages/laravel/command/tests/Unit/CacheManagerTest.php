@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Command\CacheManager;
 use Honed\Command\Tests\Stubs\Product;
 use Honed\Command\Tests\Stubs\ProductCache;
 use Illuminate\Support\Facades\Cache;
@@ -63,4 +62,3 @@ it('uses namespace', function () {
 
     ProductCache::flushState();
 });
-
