@@ -1,10 +1,10 @@
 > **Caution:** This package is currently under development and not ready for production use. Tag v1.0.0 will indicate a stable release.
 
 <a href="https://honed.dev/nav">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="art/header-dark.png">
-    <img alt="" src="art/header-light.png">
-  </picture>
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="art/header-dark.png">
+        <img alt="" src="art/header-light.png">
+    </picture>
 </a>
 
 # Nav
@@ -16,13 +16,15 @@
     <a href="https://packagist.org/packages/honed/nav"><img src="https://img.shields.io/packagist/v/honed/nav" alt="Latest Stable Version"></a>
 </p>
 
-**Nav** provides composable building blocks to develop serializable classes for PHP, as well as generic helpers for your applications.
+**Nav** provides a simple way to define and authorize navigation routes in Laravel on your backend, and then share them to your frontend.
 
 ## Installation
 
 > **Requires [PHP 8.2+](https://php.net/releases/)**
 
 > **Requires [Laravel 11+](https://laravel.com/docs/releases).**
+
+> **Requires [Inertia.js 1.2+](https://inertiajs.com/), if using middleware.**
 
 Get started with the package by requiring it in your PHP project using [Composer](https://getcomposer.org/).
 

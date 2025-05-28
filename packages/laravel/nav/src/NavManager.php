@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Nav;
 
-use Honed\Nav\Support\Constants;
 use Illuminate\Support\Arr;
+use Honed\Nav\Support\Constants;
+use Honed\Nav\Exceptions\MissingGroupException;
+use Honed\Nav\Exceptions\DuplicateGroupException;
 
 class NavManager
 {
@@ -44,12 +46,12 @@ class NavManager
      * @param  array<int,\Honed\Nav\NavBase>  $items
      * @return $this
      *
-     * @throws \InvalidArgumentException
+     * @throws \Honed\Nav\Exceptions\DuplicateGroupException
      */
     public function for($name, $items)
     {
         if ($this->has($name) && $this->debugs()) {
-            static::throwDuplicateGroupException($name);
+            DuplicateGroupException::throw($name);
         }
 
         /** @var array<int,\Honed\Nav\NavBase> $items */
@@ -64,11 +66,13 @@ class NavManager
      * @param  string  $name
      * @param  array<int,\Honed\Nav\NavBase>  $items
      * @return $this
+
+     * @throws \Honed\Nav\Exceptions\MissingGroupException
      */
     public function add($name, $items)
     {
         if (! $this->has($name)) {
-            static::throwMissingGroupException($name);
+            MissingGroupException::throw($name);
         }
 
         /** @var array<int,\Honed\Nav\NavBase> $current */
@@ -134,14 +138,16 @@ class NavManager
      *
      * @param  string|iterable<int,string>  ...$groups
      * @return array<string,array<int,\Honed\Nav\NavBase>>
+
+     * @throws \Honed\Nav\Exceptions\MissingGroupException
      */
     public function get(...$groups)
     {
         /** @var array<int,string> $groups */
         $groups = Arr::flatten($groups);
 
-        if (! $this->has($groups)) {
-            static::throwMissingGroupException(\implode(', ', $groups));
+        if (! $this->has($groups) && $this->debugs()) {
+            MissingGroupException::throw($groups);
         }
 
         $keys = empty($groups) ? \array_keys($this->items) : $groups;
@@ -296,9 +302,8 @@ class NavManager
             $path = ! $currentPath ? $label : $currentPath.' '.$delimiter.' '.$label;
 
             if ($isMatch) {
-                // @phpstan-ignore-next-line
                 $results[] = \array_merge($item->toArray(), [
-                    Constants::PARENT => $path,
+                    'path' => $path,
                 ]);
             }
 
@@ -343,41 +348,5 @@ class NavManager
     protected function debugs()
     {
         return (bool) config('nav.debug', false);
-    }
-
-    /**
-     * Throw an exception for a duplicate group.
-     *
-     * @param  string  $group
-     * @return never
-     *
-     * @throws \InvalidArgumentException
-     */
-    public static function throwDuplicateGroupException($group)
-    {
-        throw new \InvalidArgumentException(
-            \sprintf(
-                'There already exists a group with the name [%s].',
-                $group
-            )
-        );
-    }
-
-    /**
-     * Throw an exception for a missing group.
-     *
-     * @param  string  $group
-     * @return never
-     *
-     * @throws \InvalidArgumentException
-     */
-    public static function throwMissingGroupException($group)
-    {
-        throw new \InvalidArgumentException(
-            \sprintf(
-                'There is no group with the name [%s].',
-                $group
-            )
-        );
     }
 }

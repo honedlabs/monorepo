@@ -10,7 +10,7 @@ beforeEach(function () {
     };
 });
 
-it('accesses', function () {
+it('sets', function () {
     expect($this->test)
         ->getDescription()->toBeNull()
         ->hasDescription()->toBeFalse()
