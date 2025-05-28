@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Flash\FlashFactory;
-use Honed\Flash\Support\Parameters;
 use Illuminate\Support\Facades\Session;
 
 it('has helper', function () {
@@ -15,7 +14,7 @@ it('has helper with group', function () {
     expect(flash('A message'))
         ->toBeInstanceOf(FlashFactory::class);
 
-    expect(Session::get(Parameters::PROP))
+    expect(Session::get('flash'))
         ->toEqual([
             'message' => 'A message',
             'type' => config('flash.type'),

@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace Honed\Flash;
 
 use Honed\Flash\Contracts\Message;
-use Honed\Flash\Support\Parameters;
 use Illuminate\Session\Store;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
 class FlashFactory
 {
-    public function __construct(protected Store $session)
-    {
-        //
-    }
+    public function __construct(
+        protected Store $session,
+    ) {}
 
     /**
      * Flash a new message to the session.
@@ -30,7 +29,7 @@ class FlashFactory
             $message = App::make(Message::class)->make($message, $type, $duration);
         }
 
-        $this->session->flash(Parameters::PROP, $message->toArray());
+        $this->session->flash($this->getProperty(), $message->toArray());
 
         return $this;
     }
@@ -44,7 +43,7 @@ class FlashFactory
      */
     public function success($message, $duration = null)
     {
-        return $this->message($message, Parameters::SUCCESS, $duration);
+        return $this->message($message, 'success', $duration);
     }
 
     /**
@@ -56,7 +55,7 @@ class FlashFactory
      */
     public function error($message, $duration = null)
     {
-        return $this->message($message, Parameters::ERROR, $duration);
+        return $this->message($message, 'error', $duration);
     }
 
     /**
@@ -68,7 +67,7 @@ class FlashFactory
      */
     public function info($message, $duration = null)
     {
-        return $this->message($message, Parameters::INFO, $duration);
+        return $this->message($message, 'info', $duration);
     }
 
     /**
@@ -80,6 +79,32 @@ class FlashFactory
      */
     public function warning($message, $duration = null)
     {
-        return $this->message($message, Parameters::WARNING, $duration);
+        return $this->message($message, 'warning', $duration);
+    }
+
+    /**
+     * Get the property name that will be used to share the flash messages with
+     * Inertia.
+     *
+     * @return string
+     */
+    public function getProperty()
+    {
+        /** @var string */
+        return Config::get('flash.property', 'flash');
+    }
+
+    /**
+     * Set the property name that will be used to share the flash messages with
+     * Inertia.
+     *
+     * @param  string  $property
+     * @return $this
+     */
+    public function property($property)
+    {
+        Config::set('flash.property', $property);
+
+        return $this;
     }
 }

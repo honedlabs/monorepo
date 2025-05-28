@@ -7,7 +7,6 @@ namespace Honed\Flash;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Primitive;
 use Honed\Flash\Contracts\Message as MessageContract;
-use Honed\Flash\Support\Parameters;
 
 class Message extends Primitive implements MessageContract
 {
@@ -71,7 +70,7 @@ class Message extends Primitive implements MessageContract
     public static function getDefaultDuration()
     {
         /** @var int|null */
-        return config('flash.duration', Parameters::DURATION);
+        return config('flash.duration', 3000);
     }
 
     /**
@@ -137,7 +136,7 @@ class Message extends Primitive implements MessageContract
      */
     public function success()
     {
-        return $this->type(Parameters::SUCCESS);
+        return $this->type('success');
     }
 
     /**
@@ -147,7 +146,7 @@ class Message extends Primitive implements MessageContract
      */
     public function error()
     {
-        return $this->type(Parameters::ERROR);
+        return $this->type('error');
     }
 
     /**
@@ -157,7 +156,7 @@ class Message extends Primitive implements MessageContract
      */
     public function info()
     {
-        return $this->type(Parameters::INFO);
+        return $this->type('info');
     }
 
     /**
@@ -167,7 +166,7 @@ class Message extends Primitive implements MessageContract
      */
     public function warning()
     {
-        return $this->type(Parameters::WARNING);
+        return $this->type('warning');
     }
 
     /**

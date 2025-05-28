@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Flash\Message;
-use Honed\Flash\Support\Parameters;
 
 beforeEach(function () {
     $this->message = Message::make('Hello World');
@@ -23,13 +22,13 @@ it('has type', function () {
         ->type('other')->toBe($this->message)
         ->getType()->toBe('other')
         ->success()->toBe($this->message)
-        ->getType()->toBe(Parameters::SUCCESS)
+        ->getType()->toBe('success')
         ->error()->toBe($this->message)
-        ->getType()->toBe(Parameters::ERROR)
+        ->getType()->toBe('error')
         ->info()->toBe($this->message)
-        ->getType()->toBe(Parameters::INFO)
+        ->getType()->toBe('info')
         ->warning()->toBe($this->message)
-        ->getType()->toBe(Parameters::WARNING);
+        ->getType()->toBe('warning');
 });
 
 it('has title', function () {

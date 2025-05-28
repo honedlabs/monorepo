@@ -23,6 +23,8 @@
 
 > **Requires [Laravel 11+](https://laravel.com/docs/releases).**
 
+> **Requires [Inertia.js 1.2+](https://inertiajs.com/server-side-setup)**
+
 Get started with the package by requiring it in your PHP project using [Composer](https://getcomposer.org/).
 
 ```bash

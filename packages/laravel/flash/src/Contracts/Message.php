@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Flash\Contracts;
 
-/**
- * @method toArray($named = [], $typed = [])
- */
 interface Message
 {
     /**
@@ -42,4 +39,13 @@ interface Message
      * @return $this
      */
     public function duration($duration);
+
+    /**
+     * Get the array representation of the message.
+     *
+     * @param  array<string,mixed>  $named
+     * @param  array<string,mixed>  $typed
+     * @return array<string,mixed>
+     */
+    public function toArray($named = [], $typed = []);
 }

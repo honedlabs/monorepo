@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Honed\Flash\FlashFactory error(string $message, int|null $duration = null) Flash a new error message to the session.
  * @method static \Honed\Flash\FlashFactory info(string $message, int|null $duration = null) Flash a new info message to the session.
  * @method static \Honed\Flash\FlashFactory warning(string $message, int|null $duration = null) Flash a new warning message to the session.
+ * @method static \Honed\Flash\FlashFactory property(string $property) Set the property name that will be used to share the flash messages with Inertia.
+ * @method static string getProperty() Get the property name that will be used to share the flash messages with Inertia.
  */
 class Flash extends Facade
 {
