@@ -7,7 +7,7 @@ namespace Honed\Nav\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
-class Navigate
+class Nav
 {
     /**
      * Create a new attribute instance.
