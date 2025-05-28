@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 arch()->preset()->php();
 
 arch()->preset()->security();
@@ -10,7 +12,7 @@ arch('it will not use debugging functions')
 
 arch('strict types')
     ->expect('Honed\Core')
-    ->not->toUseStrictTypes();
+    ->toUseStrictTypes();
 
 arch('concerns')
     ->expect('Honed\Core\Concerns')

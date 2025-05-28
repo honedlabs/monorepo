@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Core\Concerns;
 
 use Closure;
 use Honed\Core\Exceptions\InvalidMethodException;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
 
 use function in_array;
+use function is_string;
 use function mb_strtoupper;
 
 trait HasRoute
@@ -45,6 +49,7 @@ trait HasRoute
         $this->route = match (true) {
             ! $route => null,
             $route instanceof Closure => $route,
+            $this->isRouteBound($parameters) => fn ($model) => route($route, $model, true),
             default => route($route, $parameters, true),
         };
 
@@ -163,6 +168,19 @@ trait HasRoute
             'method' => $this->getMethod(),
             'external' => $this->isExternal(),
         ];
+    }
+
+    /**
+     * Determine if the parameters are a route bound.
+     *
+     * @param  mixed  $parameters
+     * @return bool
+     */
+    protected function isRouteBound($parameters)
+    {
+        return is_string($parameters)
+            && Str::startsWith($parameters, '{')
+            && Str::endsWith($parameters, '}');
     }
 
     /**

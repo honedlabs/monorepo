@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\HasResource;
 use Honed\Core\Exceptions\InvalidResourceException;
 use Honed\Core\Exceptions\ResourceNotSetException;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\Validatable;
 use Honed\Core\Contracts\WithValidator;
 use Workbench\App\Models\User;

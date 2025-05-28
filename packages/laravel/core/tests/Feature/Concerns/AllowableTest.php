@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Contracts\WithAllowance;

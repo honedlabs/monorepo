@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Workbench\App\Enums\Status;
 
 test('enum_value', function () {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Classes;
 
 use Honed\Core\Concerns\HasMeta;

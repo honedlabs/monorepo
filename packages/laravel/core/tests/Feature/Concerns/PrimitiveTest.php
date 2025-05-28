@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Core\Contracts\WithoutNullValues;
 use Workbench\App\Classes\Component;
 

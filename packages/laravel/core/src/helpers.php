@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 if (! function_exists('enum_value')) {
     /**
      * Return a scalar value for the given value that might be an enum.
