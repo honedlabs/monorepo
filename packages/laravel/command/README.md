@@ -15,7 +15,7 @@
     <a href="https://packagist.org/packages/honed/command"><img src="https://img.shields.io/packagist/v/honed/command" alt="Latest Stable Version"></a>
 </p>
 
-**Command** provides a plethora of generator commands and classes to accelerate your development workflow.
+**Command** provides a plethora of generator commands and utility classes to accelerate your development workflow.
 
 ## Installation
 

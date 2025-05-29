@@ -30,9 +30,16 @@ abstract class CacheManager
     /**
      * The duration of the cache.
      *
+     * @var int|array{int, int}|null
+     */
+    protected $duration;
+
+    /**
+     * The default duration of the cache.
+     *
      * @var int|array{int, int}
      */
-    protected $duration = 0;
+    protected static $useDuration = 0;
 
     /**
      * How to resolve the cache name for the given class name.
@@ -164,7 +171,9 @@ abstract class CacheManager
      */
     public function getDuration()
     {
-        return $this->duration() ?? $this->duration;
+        return $this->duration()
+            ?? $this->duration
+            ?? static::$useDuration;
     }
 
     /**
