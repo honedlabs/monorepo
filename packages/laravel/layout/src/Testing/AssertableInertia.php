@@ -10,6 +10,9 @@ use Illuminate\Testing\TestResponse;
 use Inertia\Testing\AssertableInertia as InertiaAssert;
 use PHPUnit\Framework\Assert as PHPUnit;
 
+use function json_decode;
+use function json_encode;
+
 class AssertableInertia extends InertiaAssert
 {
     /**
@@ -27,6 +30,28 @@ class AssertableInertia extends InertiaAssert
     protected $component;
 
     /**
+     * Create an assertable inertia instance from a test response.
+     *
+     * @param  TestResponse<\Symfony\Component\HttpFoundation\Response>  $response
+     */
+    public static function fromTestResponse(TestResponse $response): self
+    {
+        /** @var AssertableInertia */
+        $instance = parent::fromTestResponse($response);
+
+        // @phpstan-ignore-next-line
+        $page = json_decode(json_encode($response->viewData('page')), true);
+
+        /** @phpstan-ignore-next-line */
+        [$component, $layout] = Response::parseComponent(Arr::get($page, 'component'));
+
+        $instance->component = $component;
+        $instance->layout = $layout;
+
+        return $instance;
+    }
+
+    /**
      * Determine if the layout is the expected layout.
      *
      * @param  string|array<int,string>|null  $layout
@@ -37,27 +62,5 @@ class AssertableInertia extends InertiaAssert
         PHPUnit::assertSame($layout, $this->layout, 'Unexpected Inertia page layout.');
 
         return $this;
-    }
-
-    /**
-     * Create an assertable inertia instance from a test response.
-     *
-     * @param  \Illuminate\Testing\TestResponse<\Symfony\Component\HttpFoundation\Response>  $response
-     */
-    public static function fromTestResponse(TestResponse $response): self
-    {
-        /** @var \Honed\Layout\Testing\AssertableInertia */
-        $instance = parent::fromTestResponse($response);
-
-        // @phpstan-ignore-next-line
-        $page = \json_decode(\json_encode($response->viewData('page')), true);
-
-        /** @phpstan-ignore-next-line */
-        [$component, $layout] = Response::parseComponent(Arr::get($page, 'component'));
-
-        $instance->component = $component;
-        $instance->layout = $layout;
-
-        return $instance;
     }
 }

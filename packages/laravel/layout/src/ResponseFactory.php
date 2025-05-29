@@ -12,7 +12,7 @@ class ResponseFactory extends InertiaResponseFactory
     /**
      * Render the response.
      *
-     * @param  array<string,mixed>|\Illuminate\Contracts\Support\Arrayable<string,mixed>  $props
+     * @param  array<string,mixed>|Arrayable<string,mixed>  $props
      */
     public function render(string $component, $props = []): Response
     {

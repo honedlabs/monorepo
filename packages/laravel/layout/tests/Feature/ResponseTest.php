@@ -62,7 +62,7 @@ it('has layout for response', function () {
         ->layout('PageLayout')->toBe($this->response)
         ->getLayout()->toBe('PageLayout');
 
-    /** @var \Illuminate\Http\Response $response */
+    /** @var Illuminate\Http\Response $response */
     $response = $this->response->toResponse($request);
 
     expect($response->getOriginalContent()->getData()['page'])
@@ -76,7 +76,7 @@ it('has layout for inertia response', function () {
 
     $request->headers->set(Header::INERTIA, 'true');
 
-    /** @var \Illuminate\Http\Response $response */
+    /** @var Illuminate\Http\Response $response */
     $page = $this->response->toResponse($request);
 
     expect($page->getData())

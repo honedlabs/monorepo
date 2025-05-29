@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Layout;
 
+use BackedEnum;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response as ResponseFactory;
 use Illuminate\Support\Str;
 use Inertia\Response as InertiaResponse;
 use Inertia\Support\Header;
+use UnitEnum;
+
+use function array_merge;
+use function explode;
 
 class Response extends InertiaResponse
 {
-    const FORMATTER = '@';
+    public const FORMATTER = '@';
 
     /**
      * The persistent layouts to use for the response.
@@ -23,17 +28,30 @@ class Response extends InertiaResponse
     protected $layout;
 
     /**
+     * Get the component and the layout from an input.
+     *
+     * @param  string  $component
+     * @return array{string, string|null}
+     */
+    public static function parseComponent($component)
+    {
+        $parts = explode(self::FORMATTER, $component, 2);
+
+        return [$parts[0], $parts[1] ?? null];
+    }
+
+    /**
      * Set the persistent layout(s) for the response.
      *
-     * @param  string|\BackedEnum<string>|\UnitEnum  $layout
+     * @param  string|BackedEnum<string>|UnitEnum  $layout
      * @return $this
      */
     public function layout($layout)
     {
         /** @var string */
         $layout = match (true) {
-            $layout instanceof \BackedEnum => $layout->value,
-            $layout instanceof \UnitEnum => $layout->name,
+            $layout instanceof BackedEnum => $layout->value,
+            $layout instanceof UnitEnum => $layout->name,
             default => $layout,
         };
 
@@ -55,14 +73,14 @@ class Response extends InertiaResponse
     /**
      * Create an HTTP response that represents the object.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function toResponse($request)
     {
         $props = $this->resolveProperties($request, $this->props);
 
-        $page = \array_merge([
+        $page = array_merge([
             'component' => $this->getLayoutedComponent(),
             'props' => $props,
             'url' => Str::start(Str::after($request->fullUrl(), $request->getSchemeAndHttpHost()), '/'),
@@ -93,19 +111,6 @@ class Response extends InertiaResponse
         }
 
         return $this->component;
-    }
-
-    /**
-     * Get the component and the layout from an input.
-     *
-     * @param  string  $component
-     * @return array{string, string|null}
-     */
-    public static function parseComponent($component)
-    {
-        $parts = \explode(self::FORMATTER, $component, 2);
-
-        return [$parts[0], $parts[1] ?? null];
     }
 
     /**
