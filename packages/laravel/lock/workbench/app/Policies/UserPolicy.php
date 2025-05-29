@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\Lock\Tests\Stubs;
+namespace Workbench\App\Policies;
 
-use Illuminate\Foundation\Auth\User;
+use Workbench\App\Models\User;
 
 class UserPolicy
 {
@@ -13,15 +13,15 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, User $model): bool
+    public function view(User $user, User $authed): bool
     {
-        return false;
+        return $authed->id % 2 === 0;
     }
 
     /**
@@ -29,38 +29,38 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, User $model): bool
+    public function update(User $user, User $authed): bool
     {
-        return false;
+        return $authed->id % 2 !== 0;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, User $model): bool
+    public function delete(User $user, User $authed): bool
     {
-        return false;
+        return $authed->id % 2 === 0;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, User $model): bool
+    public function restore(User $user, User $authed): bool
     {
-        return false;
+        return $authed->id % 2 !== 0;
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, User $model): bool
+    protected function forceDelete(User $user, User $authed): bool
     {
-        return false;
+        return $authed->id % 2 === 0;
     }
 }

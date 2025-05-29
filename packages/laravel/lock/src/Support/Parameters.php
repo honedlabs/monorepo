@@ -6,7 +6,7 @@ namespace Honed\Lock\Support;
 
 class Parameters
 {
-    const PROP = 'lock';
+    public const PROP = 'lock';
 
-    const APPENDS = 'locks';
+    public const APPENDS = 'locks';
 }

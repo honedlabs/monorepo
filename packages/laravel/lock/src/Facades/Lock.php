@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Lock\Facades;
 
+use Honed\Lock\Locker;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Honed\Lock\Locker
- *
  * @method static \Honed\Lock\Locker locks(iterable<int,string> ...$locks) Set the abilities to include in the locks.
  * @method static array<int,string> getLocks() Get the abilities to include in the locks.
  * @method static \Honed\Lock\Locker using(array<int,string> $using) Set the method to use to retrieve the locks.
@@ -17,11 +16,29 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool appendsToModels() Determine if the locks should be included when serializing models.
  * @method static array<string,bool> all() Get locks from gate abilities.
  * @method static array<int,string> fromPolicy(\Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model> $model) Get the abilities from the policy.
+ *
+ * @see Locker
  */
 class Lock extends Facade
 {
-    protected static function getFacadeAccessor(): string
+    /**
+     * Get the root object behind the facade.
+     *
+     * @return Locker
+     */
+    public static function getFacadeRoot()
     {
-        return \Honed\Lock\Locker::class;
+        // @phpstan-ignore-next-line
+        return parent::getFacadeRoot();
+    }
+
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return Locker::class;
     }
 }

@@ -1,11 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Lock\Concerns;
 
 use Honed\Lock\Facades\Lock;
 use Honed\Lock\Support\Parameters;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Gate;
+
+use function array_diff;
+use function array_values;
+use function in_array;
+use function is_array;
 
 /**
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
@@ -53,7 +60,7 @@ trait HasLocks
     {
         $lock = $this->locks();
 
-        if (\is_array($lock)) {
+        if (is_array($lock)) {
             return $lock;
         }
 
@@ -71,7 +78,7 @@ trait HasLocks
      */
     public function isLocking()
     {
-        return \in_array(Parameters::PROP, $this->appends ?? []);
+        return in_array(Parameters::PROP, $this->appends ?? []);
     }
 
     /**
@@ -95,8 +102,8 @@ trait HasLocks
      */
     public function withoutLocks()
     {
-        $this->appends = \array_values(
-            \array_diff($this->appends, [Parameters::PROP])
+        $this->appends = array_values(
+            array_diff($this->appends, [Parameters::PROP])
         );
 
         return $this;

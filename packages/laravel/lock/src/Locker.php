@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Lock;
 
+use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 use Laravel\SerializableClosure\Support\ReflectionClosure;
+use ReflectionClass;
+use ReflectionMethod;
+
+use function array_map;
+use function in_array;
 
 class Locker
 {
@@ -113,8 +119,8 @@ class Locker
 
         /** @var array<string,bool> */
         return collect($abilities)
-            ->filter(function (\Closure $closure, $ability) use ($locks) {
-                if (filled($locks) && ! \in_array($ability, $locks)) {
+            ->filter(function (Closure $closure, $ability) use ($locks) {
+                if (filled($locks) && ! in_array($ability, $locks)) {
                     return false;
                 }
 
@@ -122,7 +128,7 @@ class Locker
 
                 return $reflection->getNumberOfParameters() === 1;
             })
-            ->mapWithKeys(static fn (\Closure $closure, $ability) => [
+            ->mapWithKeys(static fn (Closure $closure, $ability) => [
                 $ability => Gate::check($ability),
             ])
             ->toArray();
@@ -143,11 +149,11 @@ class Locker
         }
 
         /** @phpstan-ignore-next-line */
-        $reflection = new \ReflectionClass($policy);
+        $reflection = new ReflectionClass($policy);
 
-        return \array_map(
-            static fn (\ReflectionMethod $method) => $method->getName(),
-            $reflection->getMethods(\ReflectionMethod::IS_PUBLIC)
+        return array_map(
+            static fn (ReflectionMethod $method) => $method->getName(),
+            $reflection->getMethods(ReflectionMethod::IS_PUBLIC)
         );
     }
 }
