@@ -28,6 +28,7 @@ jobs:
           - nav
           - page
           - refine
+          - registry
           - table
           - upload
           - widget
