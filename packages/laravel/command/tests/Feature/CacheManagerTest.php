@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Cache;
-use Workbench\App\Caches\UserCache;
+use Illuminate\Support\Str;
 use Workbench\App\Models\User;
+use Workbench\App\Caches\UserCache;
+use Illuminate\Support\Facades\Cache;
 
 beforeEach(function () {
     $this->cache = new UserCache();
@@ -41,25 +42,25 @@ it('flushes value', function () {
         ->toBeFalse();
 });
 
-// it('resolves cache model', function () {
-//     UserCache::guessCacheNamesUsing(function ($class) {
-//         return $class.'Cache';
-//     });
+it('resolves cache model', function () {
+    UserCache::guessCacheNamesUsing(function ($class) {
+        return Str::replaceLast('Models', 'Caches', $class).'Cache';
+    });
 
-//     expect(UserCache::resolveCacheName(User::class))
-//         ->toBe(UserCache::class);
+    expect(UserCache::resolveCacheName(User::class))
+        ->toBe(UserCache::class);
 
-//     expect(UserCache::cacheForModel(User::class))
-//         ->toBeInstanceOf(UserCache::class);
+    expect(UserCache::cacheForModel(User::class))
+        ->toBeInstanceOf(UserCache::class);
 
-//     UserCache::flushState();
-// });
+    UserCache::flushState();
+});
 
-// it('uses namespace', function () {
-//     UserCache::useNamespace('');
+it('uses namespace', function () {
+    UserCache::useNamespace('');
 
-//     expect(UserCache::resolveCacheName(User::class))
-//         ->toBe(UserCache::class);
+    expect(UserCache::resolveCacheName(User::class))
+        ->toBe('Models\\UserCache');
 
-//     UserCache::flushState();
-// });
+    UserCache::flushState();
+});
