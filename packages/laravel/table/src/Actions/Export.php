@@ -3,11 +3,8 @@
 namespace Honed\Table\Actions;
 
 use Honed\Action\Action;
-use Honed\Action\ActionGroup;
-use Honed\Action\InlineAction;
 use Honed\Table\Contracts\ExportsTable;
 use Illuminate\Support\Facades\App;
-use Maatwebsite\Excel\Events\BeforeImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class Export extends Action
@@ -111,12 +108,7 @@ class Export extends Action
      */
     protected static $useSelected = true;
 
-    public function bulk()
-    {
-
-    }
-
-    public function page()
+    public function all()
     {
 
     }

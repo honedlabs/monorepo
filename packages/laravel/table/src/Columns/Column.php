@@ -19,6 +19,7 @@ use Honed\Core\Primitive;
 use Honed\Refine\Concerns\HasQualifier;
 use Honed\Refine\Sort;
 use Honed\Table\Concerns\IsVisible;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -446,7 +447,7 @@ class Column extends Primitive
      */
     public function dontExport()
     {
-        return $this->doNotExport();
+        return $this->export(false);
     }
 
     /**
@@ -533,6 +534,43 @@ class Column extends Primitive
             ],
         ];
     }
+
+    public function count()
+    {
+        // $this->query(fn (Builder $query) => $query->withCount())
+    }
+
+    public function exists()
+    {
+
+    }
+
+    public function avg()
+    {
+
+    }
+
+    public function average()
+    {
+
+    }
+
+    public function sum()
+    {
+
+    }
+
+    public function min()
+    {
+
+    }
+
+    public function max()
+    {
+
+    }
+    
+
 
     /**
      * Flush the column's global configuration state.

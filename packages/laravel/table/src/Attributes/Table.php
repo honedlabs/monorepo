@@ -16,7 +16,7 @@ class Table
      * @return void
      */
     public function __construct(
-        public string $table
+        public string $name
     ) { }
 
     /**
@@ -26,6 +26,6 @@ class Table
      */
     public function getTable()
     {
-        return $this->table;
+        return $this->name;
     }
 }
