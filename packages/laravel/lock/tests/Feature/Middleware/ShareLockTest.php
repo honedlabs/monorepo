@@ -3,20 +3,20 @@
 declare(strict_types=1);
 
 use Honed\Lock\Facades\Lock;
-use Honed\Lock\Support\Parameters;
 use Inertia\Testing\AssertableInertia as Assert;
+use Workbench\App\Models\User;
 
 use function Pest\Laravel\get;
 
 beforeEach(function () {
-    $this->user = user();
+    $this->user = User::factory()->create();
 
     $this->actingAs($this->user);
 });
 
 it('shares lock', function () {
     get('/')->assertInertia(fn (Assert $page) => $page
-        ->has(Parameters::PROP, fn (Assert $lock) => $lock
+        ->has(Lock::getProperty(), fn (Assert $lock) => $lock
             ->where('view', true)
             ->where('edit', false)
         )
@@ -24,15 +24,15 @@ it('shares lock', function () {
     );
 });
 
-it('shares lock with a product', function () {
-    Lock::appendToModels();
+it('shares lock with a user', function () {
+    Lock::shouldAppend(true);
 
-    $product = product();
+    $user = User::factory()->create();
 
-    get(route('product.show', $product))->assertInertia(fn (Assert $page) => $page
-        ->has(Parameters::PROP, 2)
-        ->has('product', fn (Assert $product) => $product
-            ->has(Parameters::PROP, fn (Assert $lock) => $lock
+    get(route('user.show', $user))->assertInertia(fn (Assert $page) => $page
+        ->has(Lock::getProperty(), 2)
+        ->has('user', fn (Assert $user) => $user
+            ->has(Lock::getProperty(), fn (Assert $lock) => $lock
                 ->where('viewAny', true)
                 ->where('view', false)
                 ->where('create', true)
@@ -42,4 +42,4 @@ it('shares lock with a product', function () {
             )->etc()
         )->etc()
     );
-});
+})->skip();

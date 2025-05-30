@@ -14,14 +14,16 @@ beforeEach(function () {
     $this->actingAs($this->user);
 });
 
-it('has locks', function () {
-    expect(Lock::locks())
-        ->getLocks()->toBeEmpty()
-        ->locks('view')->toBeInstanceOf(Locker::class)
-        ->getLocks()->toEqual(['view']);
+it('sets abilities', function () {
+    expect(Lock::abilities())
+        ->getAbilities()->toBeEmpty()
+        ->abilities('view')->toBeInstanceOf(Locker::class)
+        ->getAbilities()->toEqual(['view'])
+        ->ability('edit')->toBeInstanceOf(Locker::class)
+        ->getAbilities()->toEqual(['view', 'edit']);
 });
 
-it('has using', function () {
+it('sets using', function () {
     expect(Lock::uses())->toBeNull();
 
     expect(Lock::using(['view', 'edit']))
@@ -30,10 +32,11 @@ it('has using', function () {
 });
 
 it('appends', function () {
-    expect(Lock::appendsToModels())->toBeFalse();
+    expect(Lock::appendsLocks())->toBeFalse();
 
-    expect(Lock::appendToModels())->toBeInstanceOf(Locker::class)
-        ->appendsToModels()->toBeTrue();
+    Lock::shouldAppend();
+
+    expect(Lock::appendsLocks())->toBeTrue();
 });
 
 it('has all', function () {
@@ -45,8 +48,8 @@ it('has all', function () {
 });
 
 it('has all with inclusions', function () {
-    expect(Lock::locks('view'))->toBeInstanceOf(Locker::class)
-        ->getLocks()->toEqual(['view'])
+    expect(Lock::abilities('view'))->toBeInstanceOf(Locker::class)
+        ->getAbilities()->toEqual(['view'])
         ->all()->toEqual([
             'view' => true,
         ]);
@@ -55,7 +58,7 @@ it('has all with inclusions', function () {
 // it('gets abilities from policy', function () {
 //     Gate::policy(User::class, UserPolicy::class);
 
-//     expect(Lock::fromPolicy(User::class))->toEqual([
+//     expect(Lock::abilitiesFromPolicy(User::class))->toEqual([
 //         'viewAny',
 //         'view',
 //         'create',

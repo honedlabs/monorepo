@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Lock;
 
+use Honed\Lock\Contracts\Lockable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,6 +17,15 @@ class LockServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        /**
+         * @var class-string<Lockable>
+         */
+        $locker = config('lock.implementation', Locker::class);
+
+        $this->app->singleton($locker);
+
+        $this->app->bind(Lockable::class, $locker);
+
         $this->registerMiddleware();
     }
 

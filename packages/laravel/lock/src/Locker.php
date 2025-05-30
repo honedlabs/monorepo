@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Honed\Lock;
 
 use Closure;
+use Honed\Lock\Contracts\Lockable;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Laravel\SerializableClosure\Support\ReflectionClosure;
 use ReflectionClass;
@@ -14,56 +16,92 @@ use ReflectionMethod;
 use function array_map;
 use function in_array;
 
-class Locker
+class Locker implements Lockable
 {
     /**
      * The abilities to use to generate the locks.
      *
      * @var array<int,string>
      */
-    protected $locks = [];
+    protected $abilities = [];
 
     /**
      * The method to use to retrieve the locks.
      *
-     * @var array<int,string>
+     * @var array<int,string>|(Closure(mixed...):array<int,string>)|null
      */
     protected $using;
 
     /**
-     * Whether to include the locks in the serialization of models.
+     * Whether to append the locks to the model.
      *
      * @var bool
      */
-    protected $appends = false;
+    protected $append = false;
 
     /**
-     * Set the abilities to include in the locks.
+     * Set the abilities to include in the abilities.
      *
-     * @param  iterable<int,string>  ...$locks
+     * @param  iterable<int,string>  ...$abilities
      * @return $this
      */
-    public function locks(...$locks)
+    public function abilities(...$abilities)
     {
-        $this->locks = Arr::flatten($locks);
+        $this->abilities = Arr::flatten($abilities);
 
         return $this;
     }
 
     /**
-     * Get the abilities to include in the locks.
+     * Set an ability to include in the abilities.
      *
-     * @return array<int,string>
+     * @param  string  $ability
+     * @return $this
      */
-    public function getLocks()
+    public function ability($ability)
     {
-        return $this->locks;
+        $this->abilities[] = $ability;
+
+        return $this;
     }
 
     /**
-     * Set the method to use to retrieve the locks.
+     * Get the abilities to include in the abilities.
      *
-     * @param  array<int,string>  $using
+     * @return array<int,string>
+     */
+    public function getAbilities()
+    {
+        return $this->abilities;
+    }
+
+    /**
+     * Get the abilities from the policy.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>  $model
+     * @return array<int,string>
+     */
+    public function abilitiesFromPolicy($model)
+    {
+        $policy = Gate::getPolicyFor($model);
+
+        if (! $policy) {
+            return [];
+        }
+
+        /** @phpstan-ignore-next-line */
+        $reflection = new ReflectionClass($policy);
+
+        return array_map(
+            static fn (ReflectionMethod $method) => $method->getName(),
+            $reflection->getMethods(ReflectionMethod::IS_PUBLIC)
+        );
+    }
+
+    /**
+     * Set the method to use to retrieve the abilities.
+     *
+     * @param  array<int,string>|Closure(mixed...):array<int,string>  $using
      * @return $this
      */
     public function using($using)
@@ -74,46 +112,27 @@ class Locker
     }
 
     /**
-     * Get the method to use to retrieve the locks.
+     * Get the method to use to retrieve the abilities.
      *
      * @return array<int,string>|null
      */
     public function uses()
     {
+        if ($this->using instanceof Closure) {
+            return ($this->using)();
+        }
+
         return $this->using;
     }
 
     /**
-     * Set whether to include the locks when serializing models.
-     *
-     * @param  bool  $appends
-     * @return $this
-     */
-    public function appendToModels($appends = true)
-    {
-        $this->appends = $appends;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the locks should be included when serializing models.
-     *
-     * @return bool
-     */
-    public function appendsToModels()
-    {
-        return $this->appends;
-    }
-
-    /**
-     * Get locks from gate abilities.
+     * Get abilities from gate abilities.
      *
      * @return array<string,bool>
      */
     public function all()
     {
-        $locks = $this->getLocks();
+        $locks = $this->getAbilities();
 
         $abilities = $this->uses() ?? Gate::abilities();
 
@@ -131,29 +150,38 @@ class Locker
             ->mapWithKeys(static fn (Closure $closure, $ability) => [
                 $ability => Gate::check($ability),
             ])
-            ->toArray();
+            ->all();
     }
 
     /**
-     * Get the abilities from the policy.
+     * Set whether to append the abilities to the model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>  $model
-     * @return array<int,string>
+     * @param  bool  $append
+     * @return void
      */
-    public function fromPolicy($model)
+    public function shouldAppend($append = true)
     {
-        $policy = Gate::getPolicyFor($model);
+        $this->append = $append;
+    }
 
-        if (! $policy) {
-            return [];
-        }
+    /**
+     * Determine if the locks should be appended to the model.
+     *
+     * @return bool
+     */
+    public function appendsLocks()
+    {
+        return $this->append;
+    }
 
-        /** @phpstan-ignore-next-line */
-        $reflection = new ReflectionClass($policy);
-
-        return array_map(
-            static fn (ReflectionMethod $method) => $method->getName(),
-            $reflection->getMethods(ReflectionMethod::IS_PUBLIC)
-        );
+    /**
+     * Get the property name to serialize as when sharing via inertia.
+     *
+     * @return string
+     */
+    public function getProperty()
+    {
+        /** @var string */
+        return Config::get('lock.property', 'lock');
     }
 }
