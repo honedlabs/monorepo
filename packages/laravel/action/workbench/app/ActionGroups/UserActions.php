@@ -30,8 +30,9 @@ class UserActions extends ActionGroup
      *
      * @return array<int,\Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>>
      */
-    public function defineActions()
+    public function actions()
     {
+        /** @var array<int,\Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>> */
         return [
             InlineAction::make('update.name')
                 ->action(fn ($product) => $product->update(['name' => 'test'])),

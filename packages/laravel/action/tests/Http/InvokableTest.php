@@ -3,20 +3,19 @@
 declare(strict_types=1);
 
 use Workbench\App\Models\User;
-use Honed\Action\Tests\Stubs\Product;
 use Honed\Action\Testing\InlineRequest;
 use Workbench\App\ActionGroups\UserActions;
 
 use function Pest\Laravel\post;
 
 beforeEach(function () {
-    $this->product = User::factory()->create();
+    $this->user = User::factory()->create();
 
     $this->actions = UserActions::make();
 
     $this->request = InlineRequest::fake()
         ->for($this->actions)
-        ->record($this->product->id)
+        ->record($this->user->id)
         ->name('update.name')
         ->fill();
 });
@@ -28,17 +27,17 @@ it('executes the action', function () {
 
     $response->assertRedirect();
 
-    $this->assertDatabaseHas('products', [
-        'id' => $this->product->id,
+    $this->assertDatabaseHas('users', [
+        'id' => $this->user->id,
         'name' => 'test',
     ]);
 });
 
 it('does not execute non-existent action', function () {
-    $key = UserActions::encode(Product::class);
+    $key = UserActions::encode(User::class);
 
     $data = $this->request
-        ->record($this->product->id)
+        ->record($this->user->id)
         ->name('update.name')
         ->getData();
 

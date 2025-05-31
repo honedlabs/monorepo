@@ -8,10 +8,8 @@ use Honed\Core\Parameters;
 use Illuminate\Support\Str;
 use Honed\Action\InlineAction;
 use Workbench\App\Models\User;
-use Honed\Action\Support\Constants;
-use Honed\Action\Tests\Stubs\Product;
 use Symfony\Component\HttpFoundation\Request;
-use Honed\Action\Tests\Fixtures\DestroyAction;
+use Workbench\App\Actions\Inline\DestroyAction;
 
 beforeEach(function () {
     // Using inline action for testing base class
@@ -54,7 +52,7 @@ it('has array representation with route', function () {
         ->toEqual([
             'name' => 'test',
             'label' => 'Test',
-            'type' => Constants::INLINE,
+            'type' => 'inline',
             'icon' => null,
             'extra' => null,
             'actionable' => false,
@@ -63,6 +61,7 @@ it('has array representation with route', function () {
             'route' => [
                 'url' => route('users.index'),
                 'method' => Request::METHOD_GET,
+                'external' => false,
             ],
         ]);
 });
@@ -70,11 +69,13 @@ it('has array representation with route', function () {
 it('resolves to array', function () {
     $user = User::factory()->create();
 
-    expect((new DestroyAction)->toArray(...Parameters::model($user)))
+    [$named, $typed] = Parameters::model($user);
+
+    expect((new DestroyAction)->toArray($named, $typed))
         ->toEqual([
             'name' => 'destroy',
             'label' => 'Destroy '.$user->name,
-            'type' => Constants::INLINE,
+            'type' => 'inline',
             'icon' => null,
             'extra' => null,
             'actionable' => true,
@@ -95,11 +96,11 @@ it('evaluates names', function () {
 });
 
 it('evaluates types', function () {
-    expect($this->action->evaluate(fn (Confirm $c) => $c->title('test')))
+    expect($this->action->evaluate(fn (Confirm $confirm) => $confirm->title('test')))
         ->toBeInstanceOf(Confirm::class)
         ->getTitle()->toBe('test');
 
     // Dependency injection
-    expect($this->action->evaluate(fn (Product $user) => $user))
-        ->toBeInstanceOf(Product::class);
+    expect($this->action->evaluate(fn (User $user) => $user))
+        ->toBeInstanceOf(User::class);
 });

@@ -65,7 +65,7 @@ class ActionGroup extends Primitive implements Handles, UrlRoutable
     public static function make(...$actions)
     {
         return resolve(static::class)
-            ->actions($actions);
+            ->withActions($actions);
     }
 
     /**
@@ -222,9 +222,9 @@ class ActionGroup extends Primitive implements Handles, UrlRoutable
     public function toArray($named = [], $typed = [])
     {
         $actions = [
-            Constants::INLINE => $this->inlineActionsToArray($this->getModel()),
-            Constants::BULK => $this->bulkActionsToArray(),
-            Constants::PAGE => $this->pageActionsToArray(),
+            'inline' => $this->inlineActionsToArray($this->getModel()),
+            'bulk' => $this->bulkActionsToArray(),
+            'page' => $this->pageActionsToArray(),
         ];
 
         if ($this->isExecutable(ActionGroup::class)) {

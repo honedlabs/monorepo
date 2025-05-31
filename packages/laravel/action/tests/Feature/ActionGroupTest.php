@@ -5,10 +5,9 @@ declare(strict_types=1);
 use Honed\Action\PageAction;
 use Honed\Action\ActionGroup;
 use Workbench\App\Models\User;
-use Honed\Action\Tests\Stubs\Product;
 use Illuminate\Http\RedirectResponse;
 use Honed\Action\Testing\RequestFactory;
-use Honed\Action\Tests\Stubs\ProductActions;
+use Workbench\App\ActionGroups\UserActions;
 
 beforeEach(function () {
     $this->group = ActionGroup::make(PageAction::make('create'));
@@ -42,13 +41,13 @@ it('handles requests with model', function () {
         ->name('create.user.name')
         ->validate();
 
-    expect(Product::query()->count())->toBe(0);
+    expect(User::query()->count())->toBe(0);
 
-    expect(ProductActions::make())
+    expect(UserActions::make())
         ->handle($request)
         ->toBeInstanceOf(RedirectResponse::class);
 
-    expect(Product::query()->count())->toBe(1);
+    expect(User::query()->count())->toBe(1);
 });
 
 it('resolves route binding', function () {
@@ -56,40 +55,40 @@ it('resolves route binding', function () {
         ->resolveRouteBinding($this->group->getRouteKey())
         ->toBeNull();
 
-    $actions = ProductActions::make();
+    $actions = UserActions::make();
 
     expect($actions)
         ->resolveRouteBinding($actions->getRouteKey())
-        ->toBeInstanceOf(ProductActions::class);
+        ->toBeInstanceOf(UserActions::class);
 
     expect($actions)
-        ->resolveChildRouteBinding(ProductActions::class, $actions->getRouteKey())
-        ->toBeInstanceOf(ProductActions::class);
+        ->resolveChildRouteBinding(UserActions::class, $actions->getRouteKey())
+        ->toBeInstanceOf(UserActions::class);
 });
 
 it('resolves action group', function () {
     ActionGroup::useNamespace('');
 
-    ProductActions::guessActionGroupNamesUsing(function ($class) {
+    UserActions::guessActionGroupNamesUsing(function ($class) {
         return $class.'Actions';
     });
 
-    expect(ProductActions::resolveActionGroupName(Product::class))
-        ->toBe('Honed\\Action\\Tests\\Stubs\\ProductActions');
+    expect(UserActions::resolveActionGroupName(User::class))
+        ->toBe('Honed\\Action\\Tests\\Stubs\\UserActions');
 
-    expect(ProductActions::actionGroupForModel(Product::class))
-        ->toBeInstanceOf(ProductActions::class);
+    expect(UserActions::actionGroupForModel(User::class))
+        ->toBeInstanceOf(UserActions::class);
 
-    ProductActions::flushState();
+    UserActions::flushState();
 });
 
 it('uses namespace', function () {
     ActionGroup::useNamespace('');
 
-    expect(ProductActions::resolveActionGroupName(Product::class))
-        ->toBe('Honed\\Action\\Tests\\Stubs\\ProductActions');
+    expect(UserActions::resolveActionGroupName(User::class))
+        ->toBe('Honed\\Action\\Tests\\Stubs\\UserActions');
 
-    ProductActions::flushState();
+    UserActions::flushState();
 });
 
 it('has array representation', function () {
@@ -100,12 +99,12 @@ it('has array representation', function () {
 });
 
 it('has array representation with server actions', function () {
-    expect(ProductActions::make()->for(User::factory()->create())->toArray())
+    expect(UserActions::make()->for(User::factory()->create())->toArray())
         ->toBeArray()
         ->toHaveCount(5)
         ->toHaveKeys(['id', 'endpoint', 'inline', 'bulk', 'page']);
 
-    expect(ProductActions::make()->for(User::factory()->create())->executes(false)->toArray())
+    expect(UserActions::make()->for(User::factory()->create())->executes(false)->toArray())
         ->toHaveCount(3)
         ->toHaveKeys(['inline', 'bulk', 'page']);
 });
@@ -113,7 +112,7 @@ it('has array representation with server actions', function () {
 it('has array representation with model', function () {
     $user = User::factory()->create();
 
-    expect(ProductActions::make()->for($user)->toArray())
+    expect(UserActions::make()->for($user)->toArray())
         ->toBeArray()
         ->toHaveCount(5)
         ->toHaveKeys(['inline', 'bulk', 'page', 'id', 'endpoint']);

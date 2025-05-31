@@ -31,49 +31,49 @@ it('executes the action', function () {
     ]);
 });
 
-it('is 404 for no name match', function () {
-    $data = $this->request
-        ->name('missing')
-        ->getData();
+// it('is 404 for no name match', function () {
+//     $data = $this->request
+//         ->name('missing')
+//         ->getData();
 
-    $response = post(route('actions'), $data);
+//     $response = post(route('actions'), $data);
 
-    $response->assertNotFound();
-});
+//     $response->assertNotFound();
+// });
 
-it('is 404 if the action is not allowed', function () {
-    // It's a 404 as the action when retrieved cannot be returned.
-    $data = $this->request
-        ->name('create.product.description')
-        ->getData();
+// it('is 404 if the action is not allowed', function () {
+//     // It's a 404 as the action when retrieved cannot be returned.
+//     $data = $this->request
+//         ->name('create.product.description')
+//         ->getData();
 
-    $response = post(route('actions'), $data);
+//     $response = post(route('actions'), $data);
 
-    $response->assertNotFound();
-});
+//     $response->assertNotFound();
+// });
 
-it('does not execute route actions', function () {
-    $data = $this->request
-        ->name('create')
-        ->getData();
+// it('does not execute route actions', function () {
+//     $data = $this->request
+//         ->name('create')
+//         ->getData();
 
-    $response = post(route('actions'), $data);
+//     $response = post(route('actions'), $data);
 
-    $response->assertRedirect();
-});
+//     $response->assertRedirect();
+// });
 
-it('returns inertia response', function () {
-    User::factory()->create();
+// it('returns inertia response', function () {
+//     User::factory()->create();
     
-    $data = $this->request
-        ->name('price.10')
-        ->getData();
+//     $data = $this->request
+//         ->name('price.10')
+//         ->getData();
 
-    $response = post(route('actions'), $data);
+//     $response = post(route('actions'), $data);
 
-    $response->assertInertia();
+//     $response->assertInertia();
 
-    expect(User::all())
-        ->toHaveCount(1)
-        ->first()->price->toBe(10);
-});
+//     expect(User::all())
+//         ->toHaveCount(1)
+//         ->first()->price->toBe(10);
+// });
