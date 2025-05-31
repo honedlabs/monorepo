@@ -1,16 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Honed\Action\Attributes\ActionGroup;
+use Honed\Action\Concerns\HasActionGroup;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Workbench\App\ActionGroups\UserActions;
+use Workbench\Database\Factories\UserFactory;
 
+#[ActionGroup(UserActions::class)]
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    /**
+     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\UserFactory>
+     */
+    use HasFactory;
+
+    use Notifiable;
+
+    /**
+     * @use \Honed\Action\Concerns\HasActionGroup<\Workbench\App\ActionGroups\UserActions>
+     */
+    use HasActionGroup;
+
+    /**
+     * The factory for the model.
+     *
+     * @return class-string<\Illuminate\Database\Eloquent\Factories\Factory>
+     */
+    protected static $factory = UserFactory::class;
 
     /**
      * The attributes that are mass assignable.

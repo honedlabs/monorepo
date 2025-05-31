@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 it('validates inline', function () {
     $httpRequest = Request::create('/', 'POST', [
         'name' => 'edit',
-        'type' => Constants::INLINE,
+        'type' => 'inline',
         'record' => '1',
     ]);
 
@@ -28,7 +28,7 @@ it('validates inline', function () {
 it('validates bulk', function () {
     $httpRequest = Request::create('/', 'POST', [
         'name' => 'edit',
-        'type' => Constants::BULK,
+        'type' => 'bulk',
         'only' => [1, 2, 3],
         'all' => false,
         'except' => [],
@@ -48,7 +48,7 @@ it('validates bulk', function () {
 it('validates page', function () {
     $httpRequest = Request::create('/', 'POST', [
         'name' => 'edit',
-        'type' => Constants::PAGE,
+        'type' => 'page',
     ]);
 
     $this->app->instance('request', $httpRequest);

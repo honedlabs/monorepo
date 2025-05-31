@@ -8,6 +8,11 @@ beforeEach(function () {
     $this->test = InlineAction::make('test');
 });
 
+it('has inline type', function () {
+    expect($this->test)
+        ->getType()->toBe('inline');
+});
+
 it('has default', function () {
     expect($this->test)
         ->isDefault()->toBeFalse()

@@ -63,7 +63,7 @@ class ActionGroupMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Actions\Groups';
+        return $rootNamespace.'\ActionGroups';
     }
 
     /**

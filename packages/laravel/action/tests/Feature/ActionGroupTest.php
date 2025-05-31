@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-use Honed\Action\ActionGroup;
 use Honed\Action\PageAction;
-use Honed\Action\Testing\RequestFactory;
-use Honed\Action\Tests\Stubs\ProductActions;
+use Honed\Action\ActionGroup;
+use Workbench\App\Models\User;
 use Honed\Action\Tests\Stubs\Product;
 use Illuminate\Http\RedirectResponse;
+use Honed\Action\Testing\RequestFactory;
+use Honed\Action\Tests\Stubs\ProductActions;
 
 beforeEach(function () {
     $this->group = ActionGroup::make(PageAction::make('create'));
@@ -16,8 +17,8 @@ beforeEach(function () {
 it('has model', function () {
     expect($this->group)
         ->getModel()->toBeNull()
-        ->for(product())->toBe($this->group)
-        ->getModel()->toBeInstanceOf(Product::class);
+        ->for(User::factory()->create())->toBe($this->group)
+        ->getModel()->toBeInstanceOf(User::class);
 });
 
 it('has route key name', function () {
@@ -38,7 +39,7 @@ it('handles requests with model', function () {
 
     $request = RequestFactory::page()
         ->fill()
-        ->name('create.product.name')
+        ->name('create.user.name')
         ->validate();
 
     expect(Product::query()->count())->toBe(0);
@@ -99,20 +100,20 @@ it('has array representation', function () {
 });
 
 it('has array representation with server actions', function () {
-    expect(ProductActions::make()->for(product())->toArray())
+    expect(ProductActions::make()->for(User::factory()->create())->toArray())
         ->toBeArray()
         ->toHaveCount(5)
         ->toHaveKeys(['id', 'endpoint', 'inline', 'bulk', 'page']);
 
-    expect(ProductActions::make()->for(product())->executes(false)->toArray())
+    expect(ProductActions::make()->for(User::factory()->create())->executes(false)->toArray())
         ->toHaveCount(3)
         ->toHaveKeys(['inline', 'bulk', 'page']);
 });
 
 it('has array representation with model', function () {
-    $product = product();
+    $user = User::factory()->create();
 
-    expect(ProductActions::make()->for($product)->toArray())
+    expect(ProductActions::make()->for($user)->toArray())
         ->toBeArray()
         ->toHaveCount(5)
         ->toHaveKeys(['inline', 'bulk', 'page', 'id', 'endpoint']);

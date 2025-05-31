@@ -63,7 +63,7 @@ it('does not execute route actions', function () {
 });
 
 it('returns inertia response', function () {
-    product();
+    User::factory()->create();
     $data = $this->request
         ->name('price.10')
         ->getData();

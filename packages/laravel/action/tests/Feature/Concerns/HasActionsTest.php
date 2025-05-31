@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-use Honed\Action\ActionGroup;
-use Honed\Action\BulkAction;
-use Honed\Action\Concerns\HasActions;
-use Honed\Action\InlineAction;
-use Honed\Action\PageAction;
 use Honed\Core\Primitive;
+use Honed\Action\BulkAction;
+use Honed\Action\PageAction;
+use Honed\Action\ActionGroup;
+use Honed\Action\InlineAction;
+use Workbench\App\Models\User;
+use Honed\Action\Concerns\HasActions;
 
 beforeEach(function () {
     $this->test = new class extends Primitive
@@ -123,18 +124,18 @@ it('has page actions', function () {
 });
 
 it('has inline actions array representation', function () {
-    $product = product();
+    $user = User::factory()->create();
 
     expect($this->test)
         ->actions([
             InlineAction::make('create')
-                ->label(fn ($product) => $product->name)
-                ->allow(fn ($product) => $product->id % 2 === 1),
+                ->label(fn ($user) => $user->name)
+                ->allow(fn ($user) => $user->id % 2 === 1),
             InlineAction::make('edit')
-                ->label(fn ($product) => $product->name)
-                ->allow(fn ($product) => $product->id % 2 === 0),
+                ->label(fn ($user) => $user->name)
+                ->allow(fn ($user) => $user->id % 2 === 0),
         ])
-        ->inlineActionsToArray($product)->toHaveCount(1);
+        ->inlineActionsToArray($user)->toHaveCount(1);
 });
 
 it('has bulk actions array representation', function () {

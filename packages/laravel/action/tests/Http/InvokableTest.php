@@ -10,7 +10,7 @@ use Honed\Action\Tests\Stubs\Product;
 use function Pest\Laravel\post;
 
 beforeEach(function () {
-    $this->product = product();
+    $this->product = User::factory()->create();
 
     $this->actions = ProductActions::make();
 

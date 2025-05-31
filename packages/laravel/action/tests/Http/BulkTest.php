@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Testing\BulkRequest;
-use Honed\Action\Tests\Stubs\ProductActions;
-use Honed\Action\Tests\Stubs\Product;
-
+use Workbench\App\Models\User;
 use function Pest\Laravel\post;
 
+use Honed\Action\Testing\BulkRequest;
+use Workbench\App\ActionGroups\UserActions;
+
 beforeEach(function () {
-    foreach (range(1, 10) as $i) {
-        product();
-    }
+    User::factory()->count(10)->create();
 
     $this->request = BulkRequest::make()
         ->fill()
-        ->for(ProductActions::class);
+        ->for(UserActions::class);
 });
 
 it('executes the action', function () {
@@ -28,8 +26,8 @@ it('executes the action', function () {
 
     $response->assertRedirect();
 
-    expect(Product::all())
-        ->each(fn ($product) => $product
+    expect(User::all())
+        ->each(fn ($user) => $user
             ->description->toBe('test')
         );
 });
@@ -60,7 +58,7 @@ it('is 404 if the action is not allowed', function () {
 it('does not mix action types', function () {
     $data = $this->request
         ->all()
-        ->name('create.product.name')
+        ->name('create.user.name')
         ->getData();
 
     $response = post(route('actions'), $data);
@@ -78,8 +76,8 @@ it('returns inertia response', function () {
 
     $response->assertInertia();
 
-    expect(Product::all())
-        ->each(fn ($product) => $product
+    expect(User::all())
+        ->each(fn ($user) => $user
             ->price->toBe(50)
         );
 });
@@ -95,13 +93,13 @@ it('applies only to selected records', function () {
 
     $response->assertRedirect();
 
-    expect(Product::query()->whereIn('id', $ids)->get())
-        ->each(fn ($product) => $product
+    expect(User::query()->whereIn('id', $ids)->get())
+        ->each(fn ($user) => $user
             ->description->toBe('test')
         );
 
-    expect(Product::query()->whereNotIn('id', $ids)->get())
-        ->each(fn ($product) => $product
+    expect(User::query()->whereNotIn('id', $ids)->get())
+        ->each(fn ($user) => $user
             ->description->not->toBe('test')
         );
 
@@ -120,13 +118,13 @@ it('applies all excepted records', function () {
 
     $response->assertRedirect();
 
-    expect(Product::query()->whereIn('id', $ids)->get())
-        ->each(fn ($product) => $product
+    expect(User::query()->whereIn('id', $ids)->get())
+        ->each(fn ($user) => $user
             ->description->not->toBe('test')
         );
 
-    expect(Product::query()->whereNotIn('id', $ids)->get())
-        ->each(fn ($product) => $product
+    expect(User::query()->whereNotIn('id', $ids)->get())
+        ->each(fn ($user) => $user
             ->description->toBe('test')
         );
 });
