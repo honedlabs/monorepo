@@ -10,7 +10,8 @@ beforeEach(function () {
 
 it('has bulk type', function () {
     expect($this->action)
-        ->getType()->toBe('bulk');
+        ->getType()->toBe('bulk')
+        ->isBulk()->toBeTrue();
 });
 
 it('keeps selected', function () {

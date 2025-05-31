@@ -53,14 +53,8 @@ it('adds action groups', function () {
 
 it('provides actions', function () {
     expect($this->test)
-        ->isActionable()->toBeTrue()
-        ->isntActionable()->toBeFalse()
-        ->exceptActions()->toBe($this->test)
-        ->isActionable()->toBeFalse()
-        ->isntActionable()->toBeTrue()
-        ->onlyActions()->toBe($this->test)
-        ->isActionable()->toBeTrue()
-        ->isntActionable()->toBeFalse();
+        ->showsActions()->toBeTrue()
+        ->hidesActions()->toBeFalse();
 });
 
 it('provides inline actions', function () {

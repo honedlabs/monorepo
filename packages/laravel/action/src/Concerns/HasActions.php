@@ -109,6 +109,41 @@ trait HasActions
     }
 
     /**
+     * Set whether the instance should provide actions.
+     *
+     * @param  bool  $show
+     * @return $this
+     */
+    public function showActions($show = true)
+    {
+        $this->inline = $show;
+        $this->bulk = $show;
+        $this->page = $show;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the instance provides any actions.
+     *
+     * @return bool
+     */
+    public function showsActions()
+    {
+        return $this->inline || $this->bulk || $this->page;
+    }
+
+    /**
+     * Determine if the instance hides all actions.
+     *
+     * @return bool
+     */
+    public function hidesActions()
+    {
+        return ! $this->showsActions();
+    }
+    
+    /**
      * Set whether the instance should provide inline actions.
      *
      * @param  bool  $show

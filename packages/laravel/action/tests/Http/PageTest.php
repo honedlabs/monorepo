@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Pest\Handler;
 
+use Workbench\App\Models\User;
 use Honed\Action\Testing\PageRequest;
-use Honed\Action\Tests\Stubs\ProductActions;
-use Honed\Action\Tests\Stubs\Product;
+use Workbench\App\ActionGroups\UserActions;
 
 use function Pest\Laravel\post;
 
 beforeEach(function () {
     $this->request = PageRequest::fake()
-        ->for(ProductActions::class)
+        ->for(UserActions::class)
         ->fill();
 });
 
@@ -64,6 +64,7 @@ it('does not execute route actions', function () {
 
 it('returns inertia response', function () {
     User::factory()->create();
+    
     $data = $this->request
         ->name('price.10')
         ->getData();
@@ -72,7 +73,7 @@ it('returns inertia response', function () {
 
     $response->assertInertia();
 
-    expect(Product::all())
+    expect(User::all())
         ->toHaveCount(1)
         ->first()->price->toBe(10);
 });

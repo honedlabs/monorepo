@@ -10,7 +10,8 @@ beforeEach(function () {
 
 it('has inline type', function () {
     expect($this->test)
-        ->getType()->toBe('inline');
+        ->getType()->toBe('inline')
+        ->isInline()->toBeTrue();
 });
 
 it('has default', function () {

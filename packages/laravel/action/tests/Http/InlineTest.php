@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 use Illuminate\Support\Str;
 use Workbench\App\Models\User;
-use function Pest\Laravel\post;
-
 use Honed\Action\Testing\InlineRequest;
 use Workbench\App\ActionGroups\UserActions;
+
+use function Pest\Laravel\post;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
