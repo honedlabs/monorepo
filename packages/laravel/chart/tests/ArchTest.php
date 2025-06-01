@@ -30,6 +30,10 @@ arch('commands')
     ->toBeClasses()
     ->toExtend(Command::class);
 
+arch('enums')
+    ->expect('Honed\Chart\Enums')
+    ->toBeEnums();
+
 arch('exceptions')
     ->expect('Honed\Chart\Exceptions')
     ->toExtend(\Exception::class);
