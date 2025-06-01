@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Honed\Core\Concerns\Evaluable;
 use Honed\Upload\Concerns\HasFile;
 use Honed\Upload\Contracts\ShouldAnonymize;
-use Honed\Upload\Tests\Fixtures\AvatarUpload;
+use Workbench\App\Uploads\AvatarUpload;
 
 beforeEach(function () {
     $this->test = new class()
