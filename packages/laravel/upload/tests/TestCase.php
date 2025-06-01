@@ -11,6 +11,19 @@ use Orchestra\Testbench\TestCase as Orchestra;
 class TestCase extends Orchestra
 {
     /**
+     * Define the environment setup.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    public function getEnvironmentSetUp($app)
+    {
+        config()->set('filesystems', require __DIR__.'/Fixtures/filesystems.php');
+        config()->set('upload', require __DIR__.'/../config/upload.php');
+        config()->set('database.default', 'testing');
+    }
+
+    /**
      * Get the package providers.
      *
      * @param  \Illuminate\Foundation\Application  $app
@@ -32,18 +45,5 @@ class TestCase extends Orchestra
     protected function defineRoutes($router)
     {
         $router->post('/upload', [Controller::class, 'upload']);
-    }
-
-    /**
-     * Define the environment setup.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    public function getEnvironmentSetUp($app)
-    {
-        config()->set('filesystems', require __DIR__.'/Fixtures/filesystems.php');
-        config()->set('upload', require __DIR__.'/../config/upload.php');
-        config()->set('database.default', 'testing');
     }
 }
