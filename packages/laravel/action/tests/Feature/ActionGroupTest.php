@@ -6,6 +6,7 @@ use Honed\Action\ActionGroup;
 use Honed\Action\PageAction;
 use Honed\Action\Testing\RequestFactory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Workbench\App\ActionGroups\UserActions;
 use Workbench\App\Models\User;
 
@@ -38,7 +39,7 @@ it('handles requests with model', function () {
 
     $request = RequestFactory::page()
         ->fill()
-        ->name('create.user.name')
+        ->name('create.name')
         ->validate();
 
     expect(User::query()->count())->toBe(0);
@@ -67,14 +68,16 @@ it('resolves route binding', function () {
 });
 
 it('resolves action group', function () {
-    ActionGroup::useNamespace('');
-
     UserActions::guessActionGroupNamesUsing(function ($class) {
-        return $class.'Actions';
+        return Str::of($class)
+            ->afterLast('\\')
+            ->prepend('Workbench\\App\\ActionGroups\\')
+            ->append('Actions')
+            ->value();
     });
 
     expect(UserActions::resolveActionGroupName(User::class))
-        ->toBe('Honed\\Action\\Tests\\Stubs\\UserActions');
+        ->toBe(UserActions::class);
 
     expect(UserActions::actionGroupForModel(User::class))
         ->toBeInstanceOf(UserActions::class);
@@ -86,7 +89,11 @@ it('uses namespace', function () {
     ActionGroup::useNamespace('');
 
     expect(UserActions::resolveActionGroupName(User::class))
-        ->toBe('Honed\\Action\\Tests\\Stubs\\UserActions');
+        ->toBe(Str::of(UserActions::class)
+            ->afterLast('\\')
+            ->prepend('Models\\')
+            ->value()
+        );
 
     UserActions::flushState();
 });

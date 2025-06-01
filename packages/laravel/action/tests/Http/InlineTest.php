@@ -69,7 +69,7 @@ it('is 403 if the action is not allowed', function () {
 it('does not mix action types', function () {
     $data = $this->request
         ->record($this->user->id)
-        ->name('create.user.name')
+        ->name('create.name')
         ->getData();
 
     $response = post(route('actions'), $data);
