@@ -34,7 +34,7 @@ class ActionServiceProvider extends ServiceProvider
     {
 
         if ($this->app->runningInConsole()) {
-            
+
             $this->offerPublishing();
 
             $this->commands([
@@ -70,20 +70,7 @@ class ActionServiceProvider extends ServiceProvider
     private function registerRoutesMacro(): void
     {
         Router::macro('actions', function () {
-            /** @var \Illuminate\Routing\Router $this */
-            $endpoint = type(config('action.endpoint', '/actions'))->asString();
-
-            $methods = ['post', 'patch', 'put'];
-
-            $this->match($methods, $endpoint, [ActionController::class, 'dispatch'])
-                ->name('actions');
-
-            $this->match($methods, $endpoint.'/{action}', [ActionController::class, 'invoke'])
-                ->name('actions.invoke');
-        });
-
-        Route::macro('actions', function () {
-            /** @var \Illuminate\Routing\Router $this */
+            /** @var Router $this */
             $endpoint = type(config('action.endpoint', '/actions'))->asString();
 
             $methods = ['post', 'patch', 'put'];

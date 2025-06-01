@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Models\User;
 use Honed\Action\Testing\InlineRequest;
 use Workbench\App\ActionGroups\UserActions;
+use Workbench\App\Models\User;
 
 use function Pest\Laravel\post;
 

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Action\Http\Requests\InvokableRequest;
-use Honed\Action\Support\Constants;
 use Honed\Action\Testing\RequestFactory;
 use Illuminate\Http\Request;
 

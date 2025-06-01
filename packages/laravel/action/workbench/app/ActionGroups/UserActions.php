@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\ActionGroups;
 
 use Honed\Action\ActionGroup;
-use Honed\Action\InlineAction;
 use Honed\Action\BulkAction;
+use Honed\Action\InlineAction;
 use Honed\Action\PageAction;
+use Workbench\App\Models\User;
 
 /**
  * @template TModel of \Workbench\App\Models\User = \Workbench\App\Models\User
@@ -22,71 +25,48 @@ class UserActions extends ActionGroup
      */
     public function setUp()
     {
-        //
+        $this->withResource(User::class);
     }
 
     /**
      * Define the available actions.
      *
-     * @return array<int,\Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>>
+     * @return array<int,\Honed\Action\Action|ActionGroup<TModel, TBuilder>>
      */
     public function actions()
     {
-        /** @var array<int,\Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>> */
+        /** @var array<int,\Honed\Action\Action|ActionGroup<TModel, TBuilder>> */
         return [
-            InlineAction::make('update.name')
-                ->action(fn ($product) => $product->update(['name' => 'test'])),
-
             InlineAction::make('show')
-                ->route(fn ($product) => route('products.show', $product->public_id)),
+                ->route(fn ($user) => route('users.show', $user)),
 
-            InlineAction::make('price.100')
-                ->action(function ($product) {
-                    $product->update(['price' => 100]);
-
-                    return inertia('Show');
-                }),
+            InlineAction::make('update.name')
+                ->action(fn ($user) => $user->update(['name' => 'test'])),
 
             InlineAction::make('update.description')
-                ->action(fn ($product) => $product->update(['description' => 'test']))
+                ->action(fn ($user) => $user->update(['name' => 'description']))
                 ->allow(false),
 
             BulkAction::make('update.name')
-                ->action(fn ($product) => $product->update(['name' => 'test']))
+                ->action(fn ($user) => $user->update(['name' => 'test']))
                 ->allow(false),
 
             BulkAction::make('update.description')
-                ->action(fn ($product) => $product->update(['description' => 'test'])),
-
-            BulkAction::make('price.50')
-                ->action(function (Collection $products) {
-                    $products->each->update(['price' => 50]);
-
-                    return inertia('Show');
-                }),
-
-            PageAction::make('create.product.name')
-                ->action(fn () => Product::create([
-                    'name' => 'name',
-                    'description' => 'name',
-                ])),
-
-            PageAction::make('create.product.description')
-                ->action(fn () => Product::create([
-                    'name' => 'description',
-                    'description' => 'description',
-                ]))
-                ->allow(false),
+                ->action(fn ($user) => $user->update(['name' => 'description'])),
 
             PageAction::make('create')
-                ->route('products.create'),
+                ->route('users.create'),
 
-            PageAction::make('price.10')
-                ->action(function (Builder $builder) {
-                    $builder->update(['price' => 10]);
+            PageAction::make('create.name')
+                ->action(fn () => User::factory()->create([
+                    'name' => 'name',
+                ])),
 
-                    return inertia('Show');
-                }),
+            PageAction::make('create.description')
+                ->action(fn () => User::factory()->create([
+                    'name' => 'description',
+                ]))
+                ->allow(false),
         ];
     }
 }

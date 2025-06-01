@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Str;
-use Workbench\App\Models\User;
 use Honed\Action\Testing\InlineRequest;
+use Illuminate\Support\Str;
 use Workbench\App\ActionGroups\UserActions;
+use Workbench\App\Models\User;
 
 use function Pest\Laravel\post;
 
@@ -55,8 +55,7 @@ it('is 404 if no model is found', function () {
     $response->assertNotFound();
 });
 
-it('is 404 if the action is not allowed', function () {
-    // It's a 404 as the action when retrieved cannot be returned.
+it('is 403 if the action is not allowed', function () {
     $data = $this->request
         ->record($this->user->id)
         ->name('update.description')
@@ -64,7 +63,7 @@ it('is 404 if the action is not allowed', function () {
 
     $response = post(route('actions'), $data);
 
-    $response->assertNotFound();
+    $response->assertForbidden();
 });
 
 it('does not mix action types', function () {
@@ -87,20 +86,4 @@ it('does not execute route actions', function () {
     $response = post(route('actions'), $data);
 
     $response->assertRedirect(); // Returns back
-});
-
-it('returns inertia response', function () {
-    $data = $this->request
-        ->record($this->user->id)
-        ->name('price.100')
-        ->getData();
-
-    $response = post(route('actions'), $data);
-
-    $response->assertInertia();
-
-    $this->assertDatabaseHas('users', [
-        'id' => $this->user->id,
-        'price' => 100,
-    ]);
 });

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Honed\Action\Confirm;
 use Honed\Action\InlineAction;
+use Honed\Core\Parameters;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
@@ -55,12 +56,14 @@ it('resolves to array', function () {
         ->destructive()
     );
 
-    // expect($test->getConfirm()->toArray(...params($user)))
-    //     ->toEqual([
-    //         'title' => \sprintf('Delete %s', $user->name),
-    //         'description' => \sprintf('Are you sure you want to delete %s?', $user->name),
-    //         'intent' => Confirm::DESTRUCTIVE,
-    //         'submit' => 'Delete',
-    //         'dismiss' => 'Cancel',
-    //     ]);
+    [$named, $typed] = Parameters::model($user);
+
+    expect($test->getConfirm()->toArray($named, $typed))
+        ->toEqual([
+            'title' => \sprintf('Delete %s', $user->name),
+            'description' => \sprintf('Are you sure you want to delete %s?', $user->name),
+            'intent' => Confirm::DESTRUCTIVE,
+            'submit' => 'Delete',
+            'dismiss' => 'Cancel',
+        ]);
 });

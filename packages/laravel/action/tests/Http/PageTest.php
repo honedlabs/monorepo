@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Pest\Handler;
 
-use Workbench\App\Models\User;
 use Honed\Action\Testing\PageRequest;
 use Workbench\App\ActionGroups\UserActions;
 
@@ -18,62 +17,44 @@ beforeEach(function () {
 
 it('executes the action', function () {
     $data = $this->request
-        ->name('create.product.name')
+        ->name('create.name')
         ->getData();
 
     $response = post(route('actions'), $data);
 
     $response->assertRedirect();
 
-    $this->assertDatabaseHas('products', [
+    $this->assertDatabaseHas('users', [
         'name' => 'name',
-        'description' => 'name',
     ]);
 });
 
-// it('is 404 for no name match', function () {
-//     $data = $this->request
-//         ->name('missing')
-//         ->getData();
+it('is 404 for no name match', function () {
+    $data = $this->request
+        ->name('missing')
+        ->getData();
 
-//     $response = post(route('actions'), $data);
+    $response = post(route('actions'), $data);
 
-//     $response->assertNotFound();
-// });
+    $response->assertNotFound();
+});
 
-// it('is 404 if the action is not allowed', function () {
-//     // It's a 404 as the action when retrieved cannot be returned.
-//     $data = $this->request
-//         ->name('create.product.description')
-//         ->getData();
+it('is 403 if the action is not allowed', function () {
+    $data = $this->request
+        ->name('create.description')
+        ->getData();
 
-//     $response = post(route('actions'), $data);
+    $response = post(route('actions'), $data);
 
-//     $response->assertNotFound();
-// });
+    $response->assertForbidden();
+});
 
-// it('does not execute route actions', function () {
-//     $data = $this->request
-//         ->name('create')
-//         ->getData();
+it('does not execute route actions', function () {
+    $data = $this->request
+        ->name('create')
+        ->getData();
 
-//     $response = post(route('actions'), $data);
+    $response = post(route('actions'), $data);
 
-//     $response->assertRedirect();
-// });
-
-// it('returns inertia response', function () {
-//     User::factory()->create();
-    
-//     $data = $this->request
-//         ->name('price.10')
-//         ->getData();
-
-//     $response = post(route('actions'), $data);
-
-//     $response->assertInertia();
-
-//     expect(User::all())
-//         ->toHaveCount(1)
-//         ->first()->price->toBe(10);
-// });
+    $response->assertRedirect();
+});

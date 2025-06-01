@@ -14,7 +14,7 @@ abstract class Controller extends BaseController
 {
     /**
      * Get the class containing the action handler.
-     * 
+     *
      * @return class-string<\Honed\Action\Contracts\Handles>
      */
     abstract public function from();
@@ -25,7 +25,7 @@ abstract class Controller extends BaseController
      * @template TModel of \Illuminate\Database\Eloquent\Model
      * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
      *
-     * @param  \Honed\Action\ActionGroup<TModel, TBuilder>  $action
+     * @param  ActionGroup<TModel, TBuilder>  $action
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @throws \Honed\Action\Exceptions\ActionNotFoundException
@@ -42,7 +42,7 @@ abstract class Controller extends BaseController
      *
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @throws \Honed\Action\Exceptions\CouldNotResolveHandlerException
+     * @throws CouldNotResolveHandlerException
      * @throws \Honed\Action\Exceptions\ActionNotFoundException
      * @throws \Honed\Action\Exceptions\ActionNotAllowedException
      * @throws \Honed\Action\Exceptions\InvalidActionException

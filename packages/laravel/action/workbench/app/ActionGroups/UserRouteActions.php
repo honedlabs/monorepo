@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\ActionGroups;
 
 class UserRouteActions extends UserActions

@@ -16,16 +16,16 @@ use Workbench\Database\Factories\UserFactory;
 class User extends Authenticatable
 {
     /**
+     * @use \Honed\Action\Concerns\HasActionGroup<\Workbench\App\ActionGroups\UserActions>
+     */
+    use HasActionGroup;
+
+    /**
      * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\UserFactory>
      */
     use HasFactory;
 
     use Notifiable;
-
-    /**
-     * @use \Honed\Action\Concerns\HasActionGroup<\Workbench\App\ActionGroups\UserActions>
-     */
-    use HasActionGroup;
 
     /**
      * The factory for the model.

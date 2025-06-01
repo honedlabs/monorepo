@@ -12,6 +12,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function array_merge;
+use function count;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\suggest;
@@ -19,6 +21,22 @@ use function Laravel\Prompts\suggest;
 #[AsCommand(name: 'make:action')]
 class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInput
 {
+    /**
+     * The actions that can be used in the action.
+     *
+     * @var array<string,string>
+     */
+    public $actions = [
+        'index' => 'Index',
+        'create' => 'Create',
+        'store' => 'Store',
+        'show' => 'Show',
+        'edit' => 'Edit',
+        'update' => 'Update',
+        'delete' => 'Delete',
+        'destroy' => 'Destroy',
+    ];
+
     /**
      * The console command name.
      *
@@ -39,22 +57,6 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
      * @var string
      */
     protected $type = 'Action';
-
-    /**
-     * The actions that can be used in the action.
-     *
-     * @var array<string,string>
-     */
-    public $actions = [
-        'index' => 'Index',
-        'create' => 'Create',
-        'store' => 'Store',
-        'show' => 'Show',
-        'edit' => 'Edit',
-        'update' => 'Update',
-        'delete' => 'Delete',
-        'destroy' => 'Destroy',
-    ];
 
     /**
      * Build the class with the given name.
@@ -203,14 +205,14 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
             return;
         }
 
-        $actions = \array_merge($this->actions, [
+        $actions = array_merge($this->actions, [
             'none' => 'None',
         ]);
 
         $action = select(
             'What action should be used? (Optional)',
             $actions,
-            scroll: \count($actions),
+            scroll: count($actions),
             hint: 'If no action is provided, the default action stub will be used.',
         );
 

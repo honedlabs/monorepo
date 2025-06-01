@@ -138,4 +138,4 @@ it('errors if chunking with builder', function () {
         ->chunks()
         ->execute(User::query());
 
-})->throws(\RuntimeException::class);
+})->throws(RuntimeException::class);

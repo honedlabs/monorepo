@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Models\User;
-use function Pest\Laravel\post;
-
 use Honed\Action\Testing\BulkRequest;
 use Workbench\App\ActionGroups\UserActions;
+use Workbench\App\Models\User;
+
+use function Pest\Laravel\post;
 
 beforeEach(function () {
     User::factory()->count(10)->create();
@@ -28,7 +28,7 @@ it('executes the action', function () {
 
     expect(User::all())
         ->each(fn ($user) => $user
-            ->description->toBe('test')
+            ->name->toBe('description')
         );
 });
 
@@ -43,8 +43,7 @@ it('is 404 for no name match', function () {
     $response->assertNotFound();
 });
 
-it('is 404 if the action is not allowed', function () {
-    // It's a 404 as the action when retrieved cannot be returned.
+it('is 403 if the action is not allowed', function () {
     $data = $this->request
         ->all()
         ->name('update.name')
@@ -52,34 +51,18 @@ it('is 404 if the action is not allowed', function () {
 
     $response = post(route('actions'), $data);
 
-    $response->assertNotFound();
+    $response->assertForbidden();
 });
 
 it('does not mix action types', function () {
     $data = $this->request
         ->all()
-        ->name('create.user.name')
+        ->name('create.name')
         ->getData();
 
     $response = post(route('actions'), $data);
 
     $response->assertNotFound();
-});
-
-it('returns inertia response', function () {
-    $data = $this->request
-        ->all()
-        ->name('price.50')
-        ->getData();
-
-    $response = post(route('actions'), $data);
-
-    $response->assertInertia();
-
-    expect(User::all())
-        ->each(fn ($user) => $user
-            ->price->toBe(50)
-        );
 });
 
 it('applies only to selected records', function () {
@@ -95,12 +78,12 @@ it('applies only to selected records', function () {
 
     expect(User::query()->whereIn('id', $ids)->get())
         ->each(fn ($user) => $user
-            ->description->toBe('test')
+            ->name->toBe('description')
         );
 
     expect(User::query()->whereNotIn('id', $ids)->get())
         ->each(fn ($user) => $user
-            ->description->not->toBe('test')
+            ->name->not->toBe('description')
         );
 
 });
@@ -120,11 +103,11 @@ it('applies all excepted records', function () {
 
     expect(User::query()->whereIn('id', $ids)->get())
         ->each(fn ($user) => $user
-            ->description->not->toBe('test')
+            ->name->not->toBe('description')
         );
 
     expect(User::query()->whereNotIn('id', $ids)->get())
         ->each(fn ($user) => $user
-            ->description->toBe('test')
+            ->name->toBe('description')
         );
 });

@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Parameters;
 use Honed\Action\InlineAction;
-use Workbench\App\Models\User;
-use Honed\Action\Support\Constants;
+use Honed\Core\Parameters;
 use Illuminate\Http\RedirectResponse;
 use Workbench\App\Actions\DestroyUser;
 use Workbench\App\Actions\Inline\DestroyAction;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->test = InlineAction::make('test');
@@ -34,7 +33,7 @@ test('with callback', function () {
     });
 
     expect($this->test->execute($this->user))
-        ->toBeInstanceOf(\Inertia\Response::class);
+        ->toBeInstanceOf(Inertia\Response::class);
 
     $this->assertDatabaseHas('users', [
         'id' => $this->user->id,
@@ -43,7 +42,7 @@ test('with callback', function () {
 });
 
 test('with handler', function () {
-    $action = new DestroyAction;
+    $action = new DestroyAction();
 
     expect($action)
         ->getName()->toBe('destroy')

@@ -6,12 +6,13 @@ namespace Honed\Action\Concerns;
 
 use Honed\Action\Action;
 use Honed\Action\ActionGroup;
-use Honed\Action\BulkAction;
-use Honed\Action\InlineAction;
-use Honed\Action\PageAction;
-use Honed\Action\Support\Constants;
 use Honed\Core\Parameters;
 use Illuminate\Support\Arr;
+
+use function array_filter;
+use function array_map;
+use function array_merge;
+use function array_values;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -45,22 +46,22 @@ trait HasActions
     /**
      * List of the actions.
      *
-     * @var array<int,\Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>>
+     * @var array<int,Action|ActionGroup<TModel, TBuilder>>
      */
     protected $actions = [];
 
     /**
      * Merge a set of actions with the existing.
      *
-     * @param  \Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>|iterable<int, \Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>>  ...$actions
+     * @param  Action|ActionGroup<TModel, TBuilder>|iterable<int, Action|ActionGroup<TModel, TBuilder>>  ...$actions
      * @return $this
      */
     public function withActions(...$actions)
     {
-        /** @var array<int, \Honed\Action\Action> */
+        /** @var array<int, Action> */
         $actions = Arr::flatten($actions);
 
-        $this->actions = \array_merge($this->actions, $actions);
+        $this->actions = array_merge($this->actions, $actions);
 
         return $this;
     }
@@ -68,7 +69,7 @@ trait HasActions
     /**
      * Define the actions for the instance.
      *
-     * @return array<int,\Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>>
+     * @return array<int,Action|ActionGroup<TModel, TBuilder>>
      */
     public function actions()
     {
@@ -78,18 +79,18 @@ trait HasActions
     /**
      * Retrieve the actions
      *
-     * @return array<int,\Honed\Action\Action>
+     * @return array<int,Action>
      */
     public function getActions()
     {
-        $actions = \array_merge(
+        $actions = array_merge(
             $this->actions(),
             $this->actions
         );
 
-        return \array_merge(
+        return array_merge(
             [],
-            ...\array_map(
+            ...array_map(
                 static fn ($action) => $action instanceof ActionGroup
                     ? $action->getActions()
                     : [$action],
@@ -142,7 +143,7 @@ trait HasActions
     {
         return ! $this->showsActions();
     }
-    
+
     /**
      * Set whether the instance should provide inline actions.
      *
@@ -166,7 +167,7 @@ trait HasActions
     {
         return $this->showInlineActions(! $hide);
     }
-    
+
     /**
      * Determine if the instance provides inline actions.
      *
@@ -210,7 +211,7 @@ trait HasActions
     {
         return $this->showBulkActions(! $hide);
     }
-    
+
     /**
      * Determine if the instance provides bulk actions.
      *
@@ -278,7 +279,7 @@ trait HasActions
     /**
      * Retrieve only the allowed inline actions.
      *
-     * @return array<int,\Honed\Action\InlineAction>
+     * @return array<int,Action>
      */
     public function getInlineActions()
     {
@@ -286,8 +287,8 @@ trait HasActions
             return [];
         }
 
-        return \array_values(
-            \array_filter(
+        return array_values(
+            array_filter(
                 $this->getActions(),
                 static fn (Action $action) => $action->isInline()
             )
@@ -297,7 +298,7 @@ trait HasActions
     /**
      * Retrieve only the allowed bulk actions.
      *
-     * @return array<int,\Honed\Action\BulkAction>
+     * @return array<int,Action>
      */
     public function getBulkActions()
     {
@@ -305,8 +306,8 @@ trait HasActions
             return [];
         }
 
-        return \array_values(
-            \array_filter(
+        return array_values(
+            array_filter(
                 $this->getActions(),
                 static fn (Action $action) => $action->isBulk() &&
                     $action->isAllowed()
@@ -317,7 +318,7 @@ trait HasActions
     /**
      * Retrieve only the allowed page actions.
      *
-     * @return array<int,\Honed\Action\PageAction>
+     * @return array<int,Action>
      */
     public function getPageActions()
     {
@@ -325,8 +326,8 @@ trait HasActions
             return [];
         }
 
-        return \array_values(
-            \array_filter(
+        return array_values(
+            array_filter(
                 $this->getActions(),
                 static fn (Action $action) => $action->isPage() &&
                     $action->isAllowed()
@@ -348,13 +349,13 @@ trait HasActions
             [$named, $typed] = Parameters::model($model);
         }
 
-        return \array_map(
-            static fn (InlineAction $action) => $action
+        return array_map(
+            static fn (Action $action) => $action
                 ->toArray($named, $typed),
-            \array_values(
-                \array_filter(
+            array_values(
+                array_filter(
                     $this->getInlineActions(),
-                    static fn (InlineAction $action) => $action->isAllowed($named, $typed)
+                    static fn (Action $action) => $action->isAllowed($named, $typed)
                 )
             )
         );
@@ -367,8 +368,8 @@ trait HasActions
      */
     public function bulkActionsToArray()
     {
-        return \array_map(
-            static fn (BulkAction $action) => $action->toArray(),
+        return array_map(
+            static fn (Action $action) => $action->toArray(),
             $this->getBulkActions()
         );
     }
@@ -380,8 +381,8 @@ trait HasActions
      */
     public function pageActionsToArray()
     {
-        return \array_map(
-            static fn (PageAction $action) => $action->toArray(),
+        return array_map(
+            static fn (Action $action) => $action->toArray(),
             $this->getPageActions()
         );
     }

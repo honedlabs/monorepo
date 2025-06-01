@@ -6,18 +6,16 @@ use Honed\Action\BulkAction;
 use Honed\Action\InlineAction;
 use Honed\Action\PageAction;
 use Honed\Action\Tests\Stubs\Product;
-use Honed\Action\Tests\Stubs\Status;
 use Honed\Action\Tests\TestCase;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Str;
 
 uses(TestCase::class)->in(__DIR__);
 
 /**
  * Get the testing actions.
  *
- * @return \Illuminate\Support\Collection<int,\Honed\Action\Action>
+ * @return Illuminate\Support\Collection<int,Honed\Action\Action>
  */
 function actions()
 {

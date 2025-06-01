@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Action\PageAction;
 use Honed\Action\ActionGroup;
-use Workbench\App\Models\User;
-use Illuminate\Http\RedirectResponse;
+use Honed\Action\PageAction;
 use Honed\Action\Testing\RequestFactory;
+use Illuminate\Http\RedirectResponse;
 use Workbench\App\ActionGroups\UserActions;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->group = ActionGroup::make(PageAction::make('create'));
@@ -32,7 +32,7 @@ it('requires builder to handle requests', function () {
 
     expect($this->group->handle($request))
         ->toBeInstanceOf(RedirectResponse::class);
-})->throws(\RuntimeException::class);
+})->throws(RuntimeException::class);
 
 it('handles requests with model', function () {
 

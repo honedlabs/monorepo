@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
+use Closure;
 use Honed\Action\Concerns\HasActions;
 use Honed\Action\Concerns\HasEncoder;
 use Honed\Action\Concerns\HasEndpoint;
 use Honed\Action\Contracts\Handles;
-use Honed\Action\Support\Constants;
 use Honed\Core\Concerns\HasResource;
 use Honed\Core\Primitive;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Support\Str;
+use Throwable;
+
+use function array_merge;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -36,13 +39,6 @@ class ActionGroup extends Primitive implements Handles, UrlRoutable
     use HasResource;
 
     /**
-     * The model to be used to resolve inline actions.
-     *
-     * @var TModel|null
-     */
-    protected $model;
-
-    /**
      * The default namespace where action groups reside.
      *
      * @var string
@@ -50,22 +46,109 @@ class ActionGroup extends Primitive implements Handles, UrlRoutable
     public static $namespace = 'App\\ActionGroups\\';
 
     /**
+     * The model to be used to resolve inline actions.
+     *
+     * @var TModel|null
+     */
+    protected $model;
+
+    /**
      * How to resolve the action group for the given model name.
      *
-     * @var (\Closure(class-string):class-string<\Honed\Action\ActionGroup>)|null
+     * @var (Closure(class-string):class-string<ActionGroup>)|null
      */
     protected static $actionGroupNameResolver;
 
     /**
      * Create a new action group instance.
      *
-     * @param  \Honed\Action\Action|iterable<int, \Honed\Action\Action>  ...$actions
+     * @param  Action|iterable<int, Action>  ...$actions
      * @return static
      */
     public static function make(...$actions)
     {
         return resolve(static::class)
             ->withActions($actions);
+    }
+
+    /**
+     * The root parent class.
+     *
+     * @return class-string
+     */
+    public static function baseClass()
+    {
+        return self::class;
+    }
+
+    /**
+     * Get a new table instance for the given model name.
+     *
+     * @template TClass of \Illuminate\Database\Eloquent\Model
+     *
+     * @param  class-string<TClass>  $modelName
+     * @return ActionGroup<TClass>
+     */
+    public static function actionGroupForModel($modelName)
+    {
+        $table = static::resolveActionGroupName($modelName);
+
+        return $table::make();
+    }
+
+    /**
+     * Get the table name for the given model name.
+     *
+     * @param  class-string  $className
+     * @return class-string<ActionGroup>
+     */
+    public static function resolveActionGroupName($className)
+    {
+        $resolver = static::$actionGroupNameResolver ?? function (string $className) {
+            $appNamespace = static::appNamespace();
+
+            $className = Str::startsWith($className, $appNamespace.'Models\\')
+                ? Str::after($className, $appNamespace.'Models\\')
+                : Str::after($className, $appNamespace);
+
+            /** @var class-string<ActionGroup> */
+            return static::$namespace.$className.'Actions';
+        };
+
+        return $resolver($className);
+    }
+
+    /**
+     * Specify the default namespace that contains the application's model action groups.
+     *
+     * @param  string  $namespace
+     * @return void
+     */
+    public static function useNamespace($namespace)
+    {
+        static::$namespace = $namespace;
+    }
+
+    /**
+     * Specify the callback that should be invoked to guess the name of a model action group.
+     *
+     * @param  Closure(class-string):class-string<ActionGroup>  $callback
+     * @return void
+     */
+    public static function guessActionGroupNamesUsing($callback)
+    {
+        static::$actionGroupNameResolver = $callback;
+    }
+
+    /**
+     * Flush the action group's global configuration state.
+     *
+     * @return void
+     */
+    public static function flushState()
+    {
+        static::$actionGroupNameResolver = null;
+        static::$namespace = 'App\\ActionGroups\\';
     }
 
     /**
@@ -92,16 +175,6 @@ class ActionGroup extends Primitive implements Handles, UrlRoutable
     }
 
     /**
-     * The root parent class.
-     *
-     * @return class-string
-     */
-    public static function baseClass()
-    {
-        return ActionGroup::class;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getRouteKeyName()
@@ -118,102 +191,12 @@ class ActionGroup extends Primitive implements Handles, UrlRoutable
             abort(404);
         }
 
-        try {
-            $resource = $this->getResource();
+        $resource = $this->getResource();
 
-            return Handler::make(
-                $resource,
-                $this->getActions()
-            )->handle($request);
-        } catch (\RuntimeException $e) {
-            abort(404);
-        }
-    }
-
-    /**
-     * Get a new table instance for the given model name.
-     *
-     * @template TClass of \Illuminate\Database\Eloquent\Model
-     *
-     * @param  class-string<TClass>  $modelName
-     * @return \Honed\Action\ActionGroup<TClass>
-     */
-    public static function actionGroupForModel($modelName)
-    {
-        $table = static::resolveActionGroupName($modelName);
-
-        return $table::make();
-    }
-
-    /**
-     * Get the table name for the given model name.
-     *
-     * @param  class-string  $className
-     * @return class-string<\Honed\Action\ActionGroup>
-     */
-    public static function resolveActionGroupName($className)
-    {
-        $resolver = static::$actionGroupNameResolver ?? function (string $className) {
-            $appNamespace = static::appNamespace();
-
-            $className = Str::startsWith($className, $appNamespace.'Models\\')
-                ? Str::after($className, $appNamespace.'Models\\')
-                : Str::after($className, $appNamespace);
-
-            /** @var class-string<\Honed\Action\ActionGroup> */
-            return static::$namespace.$className.'Actions';
-        };
-
-        return $resolver($className);
-    }
-
-    /**
-     * Get the application namespace for the application.
-     *
-     * @return string
-     */
-    protected static function appNamespace()
-    {
-        try {
-            return Container::getInstance()
-                ->make(Application::class)
-                ->getNamespace();
-        } catch (\Throwable) {
-            return 'App\\';
-        }
-    }
-
-    /**
-     * Specify the default namespace that contains the application's model action groups.
-     *
-     * @param  string  $namespace
-     * @return void
-     */
-    public static function useNamespace($namespace)
-    {
-        static::$namespace = $namespace;
-    }
-
-    /**
-     * Specify the callback that should be invoked to guess the name of a model action group.
-     *
-     * @param  \Closure(class-string):class-string<\Honed\Action\ActionGroup>  $callback
-     * @return void
-     */
-    public static function guessActionGroupNamesUsing($callback)
-    {
-        static::$actionGroupNameResolver = $callback;
-    }
-
-    /**
-     * Flush the action group's global configuration state.
-     *
-     * @return void
-     */
-    public static function flushState()
-    {
-        static::$actionGroupNameResolver = null;
-        static::$namespace = 'App\\ActionGroups\\';
+        return Handler::make(
+            $resource,
+            $this->getActions()
+        )->handle($request);
     }
 
     /**
@@ -227,13 +210,29 @@ class ActionGroup extends Primitive implements Handles, UrlRoutable
             'page' => $this->pageActionsToArray(),
         ];
 
-        if ($this->isExecutable(ActionGroup::class)) {
-            return \array_merge($actions, [
+        if ($this->isExecutable(self::class)) {
+            return array_merge($actions, [
                 'id' => $this->getRouteKey(),
                 'endpoint' => $this->getEndpoint(),
             ]);
         }
 
         return $actions;
+    }
+
+    /**
+     * Get the application namespace for the application.
+     *
+     * @return string
+     */
+    protected static function appNamespace()
+    {
+        try {
+            return Container::getInstance()
+                ->make(Application::class)
+                ->getNamespace();
+        } catch (Throwable) {
+            return 'App\\';
+        }
     }
 }
