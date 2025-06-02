@@ -62,6 +62,13 @@ class Refine extends Primitive
     protected $refined = false;
 
     /**
+     * Whether the refine pipeline should use Laravel Scout's search.
+     *
+     * @var bool
+     */
+    protected $scout = false;
+
+    /**
      * A closure to be called before the refiners have been applied.
      *
      * @var (\Closure(TBuilder):void|TBuilder)|null
