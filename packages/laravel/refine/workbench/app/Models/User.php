@@ -1,16 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Honed\Action\Attributes\ActionGroup;
+use Honed\Action\Concerns\HasActionGroup;
+use Honed\Refine\Attributes\Refiner;
+use Honed\Refine\Concerns\HasRefiner;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Workbench\App\ActionGroups\UserActions;
+use Workbench\Database\Factories\UserFactory;
 
+// #[Refiner(UserRefiner::class)]
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    /**
+     * @use \Honed\Refine\Concerns\HasRefiner<\Workbench\App\Refiners\UserRefiner>
+     */
+    use HasRefiner;
+
+    /**
+     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\UserFactory>
+     */
+    use HasFactory;
+
+    use Notifiable;
+
+    /**
+     * The factory for the model.
+     *
+     * @return class-string<\Illuminate\Database\Eloquent\Factories\Factory>
+     */
+    protected static $factory = UserFactory::class;
 
     /**
      * The attributes that are mass assignable.
