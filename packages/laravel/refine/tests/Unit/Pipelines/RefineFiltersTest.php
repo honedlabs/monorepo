@@ -5,12 +5,12 @@ declare(strict_types=1);
 use Honed\Refine\Filter;
 use Honed\Refine\Pipelines\RefineFilters;
 use Honed\Refine\Refine;
-use Honed\Refine\Tests\Stubs\Product;
 use Illuminate\Support\Facades\Request;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->builder = Product::query();
-    $this->pipe = new RefineFilters;
+    $this->builder = User::query();
+    $this->pipe = new RefineFilters();
     $this->closure = fn ($refine) => $refine;
 
     $filters = [

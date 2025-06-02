@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine;
 
 use Honed\Refine\Concerns\HasSearch;
+
+use function array_merge;
+use function is_null;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -18,16 +23,16 @@ class Search extends Refiner
     use HasSearch;
 
     /**
+     * {@inheritdoc}
+     */
+    protected $type = 'search';
+
+    /**
      * The query boolean to use for the search.
      *
      * @var 'and'|'or'
      */
     protected $boolean = 'and';
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $type = 'search';
 
     /**
      * Set the query boolean to use for the search.
@@ -92,7 +97,7 @@ class Search extends Refiner
     {
         [$_, $term] = $value;
 
-        return \is_null($term);
+        return is_null($term);
     }
 
     /**
@@ -104,7 +109,7 @@ class Search extends Refiner
     {
         [$_, $term] = $value;
 
-        return \array_merge(parent::getBindings($term, $builder), [
+        return array_merge(parent::getBindings($term, $builder), [
             'boolean' => $this->getBoolean(),
         ]);
     }

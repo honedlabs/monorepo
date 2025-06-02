@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine;
 
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\IsActive;
 use Honed\Core\Primitive;
+
+use function in_array;
+use function is_array;
 
 class Option extends Primitive
 {
@@ -30,7 +35,7 @@ class Option extends Primitive
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    public function toArray($named = [], $typed = [])
     {
         return [
             'value' => $this->getValue(),
@@ -50,7 +55,7 @@ class Option extends Primitive
         $optionValue = $this->getValue();
 
         $active = match (true) {
-            \is_array($value) => \in_array($optionValue, $value, true),
+            is_array($value) => in_array($optionValue, $value, true),
             default => $optionValue === $value,
         };
 

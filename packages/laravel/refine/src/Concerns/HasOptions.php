@@ -1,18 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine\Concerns;
 
-use Honed\Refine\Contracts\FromOptions;
+use BackedEnum;
+use Honed\Refine\Contracts\WithOptions;
 use Honed\Refine\Option;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+
+use function array_filter;
+use function array_keys;
+use function array_map;
+use function array_values;
+use function is_string;
 
 trait HasOptions
 {
     /**
      * The available options.
      *
-     * @var array<int,\Honed\Refine\Option>|null
+     * @var array<int,Option>|null
      */
     protected $options;
 
@@ -38,11 +47,23 @@ trait HasOptions
     protected $multiple = false;
 
     /**
+     * Indicate that the the options should be strict, and only the options
+     * provided are allowed.
+     *
+     * @param  bool  $strict
+     * @return void
+     */
+    public static function shouldBeStrict($strict = true)
+    {
+        static::$useStrict = $strict;
+    }
+
+    /**
      * Set the options for the filter.
      *
      * @template TValue of bool|float|int|string|null|\Honed\Refine\Option
      *
-     * @param  class-string<\BackedEnum>|array<int|string,TValue>|\Illuminate\Support\Collection<int|string,TValue>  $options
+     * @param  class-string<BackedEnum>|array<int|string,TValue>|Collection<int|string,TValue>  $options
      * @return $this
      */
     public function options($options)
@@ -57,8 +78,8 @@ trait HasOptions
      *
      * @template TValue of scalar|null|\Honed\Refine\Option
      *
-     * @param  class-string<\BackedEnum>|array<int|string,TValue>|\Illuminate\Support\Collection<int|string,TValue>  $options
-     * @return array<int,\Honed\Refine\Option>
+     * @param  class-string<BackedEnum>|array<int|string,TValue>|Collection<int|string,TValue>  $options
+     * @return array<int,Option>
      */
     public function createOptions($options)
     {
@@ -66,27 +87,27 @@ trait HasOptions
             $options = $options->all();
         }
 
-        if (\is_string($options)) {
-            return \array_map(
+        if (is_string($options)) {
+            return array_map(
                 static fn ($case) => Option::make($case->value, $case->name),
                 $options::cases()
             );
         }
 
         if (Arr::isAssoc($options)) {
-            return \array_map(
+            return array_map(
                 // @phpstan-ignore-next-line
-                static fn ($value, $key) => Option::make($value, \strval($key)),
-                \array_keys($options),
-                \array_values($options)
+                static fn ($value, $key) => Option::make($value, (string) $key),
+                array_keys($options),
+                array_values($options)
             );
         }
 
-        return \array_values(
-            \array_map(
+        return array_values(
+            array_map(
                 static fn ($value) => $value instanceof Option
                     ? $value
-                    : Option::make($value, \strval($value)),
+                    : Option::make($value, (string) $value),
                 $options
             )
         );
@@ -95,7 +116,7 @@ trait HasOptions
     /**
      * Get the options.
      *
-     * @return array<int,\Honed\Refine\Option>
+     * @return array<int,Option>
      */
     public function getOptions()
     {
@@ -103,8 +124,8 @@ trait HasOptions
             return $this->options;
         }
 
-        if ($this instanceof FromOptions) {
-            return $this->options = $this->createOptions($this->optionsFrom());
+        if ($this instanceof WithOptions) {
+            return $this->options = $this->createOptions($this->optionsUsing());
         }
 
         return [];
@@ -142,18 +163,6 @@ trait HasOptions
     public function isStrict()
     {
         return $this->strict ?? static::$useStrict;
-    }
-
-    /**
-     * Indicate that the the options should be strict, and only the options 
-     * provided are allowed.
-     *
-     * @param  bool  $strict
-     * @return void
-     */
-    public static function shouldBeStrict($strict = true)
-    {
-        static::$useStrict = $strict;
     }
 
     /**
@@ -208,8 +217,8 @@ trait HasOptions
      */
     public function activateOptions($value)
     {
-        $options = \array_values(
-            \array_filter(
+        $options = array_values(
+            array_filter(
                 $this->getOptions(),
                 // Set and activate the option
                 static fn (Option $option) => $option->activate($value)
@@ -218,7 +227,7 @@ trait HasOptions
 
         return match (true) {
             $this->isStrict() &&
-                $this->isMultiple() => \array_map(
+                $this->isMultiple() => array_map(
                     static fn (Option $option) => $option->getValue(),
                     $options
                 ),
@@ -231,7 +240,6 @@ trait HasOptions
         };
     }
 
-
     /**
      * Get the options as an array.
      *
@@ -239,7 +247,7 @@ trait HasOptions
      */
     public function optionsToArray()
     {
-        return \array_map(
+        return array_map(
             static fn (Option $option) => $option->toArray(),
             $this->getOptions()
         );

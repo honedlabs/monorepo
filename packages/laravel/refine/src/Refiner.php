@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine;
 
+use Closure;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasLabel;
@@ -151,7 +154,7 @@ abstract class Refiner extends Primitive
         $bindings = $this->getBindings($value, $builder);
 
         if (! $this->hasQuery()) {
-            $this->query(\Closure::fromCallable([$this, 'defaultQuery']));
+            $this->query(Closure::fromCallable([$this, 'defaultQuery']));
         }
 
         $this->modifyQuery($builder, $bindings);
@@ -164,7 +167,7 @@ abstract class Refiner extends Primitive
      *
      * @return array<string,mixed>
      */
-    public function toArray()
+    public function toArray($named = [], $typed = [])
     {
         return [
             'name' => $this->getParameter(),

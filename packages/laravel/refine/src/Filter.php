@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine;
 
+use BackedEnum;
 use Carbon\Carbon;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasScope;
@@ -10,6 +13,12 @@ use Honed\Core\Concerns\Validatable;
 use Honed\Refine\Concerns\HasDelimiter;
 use Honed\Refine\Concerns\HasOptions;
 use Honed\Refine\Concerns\HasSearch;
+use ReflectionEnum;
+
+use function array_merge;
+use function in_array;
+use function is_string;
+use function mb_strtoupper;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -28,6 +37,11 @@ class Filter extends Refiner
     use HasSearch;
     use InterpretsRequest;
     use Validatable;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $type = 'filter';
 
     /**
      * The operator to use for the filter.
@@ -49,11 +63,6 @@ class Filter extends Refiner
      * @var mixed
      */
     protected $default;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $type = 'filter';
 
     /**
      * Set the filter to be for boolean values.
@@ -97,7 +106,7 @@ class Filter extends Refiner
     /**
      * Set the filter to use options from an enum.
      *
-     * @param  class-string<\BackedEnum>  $enum
+     * @param  class-string<BackedEnum>  $enum
      * @param  bool  $multiple
      * @return $this
      */
@@ -106,7 +115,7 @@ class Filter extends Refiner
         $this->options($enum);
 
         /** @var 'int'|'string'|null $backing */
-        $backing = (new \ReflectionEnum($enum))
+        $backing = (new ReflectionEnum($enum))
             ->getBackingType()
             ?->getName();
 
@@ -191,7 +200,7 @@ class Filter extends Refiner
      */
     public function operator($operator)
     {
-        $this->operator = \mb_strtoupper($operator, 'UTF8');
+        $this->operator = mb_strtoupper($operator, 'UTF8');
 
         return $this;
     }
@@ -376,7 +385,7 @@ class Filter extends Refiner
      */
     public function getBindings($value, $builder)
     {
-        return \array_merge(parent::getBindings($value, $builder), [
+        return array_merge(parent::getBindings($value, $builder), [
             'operator' => $this->getOperator(),
         ]);
     }
@@ -384,7 +393,7 @@ class Filter extends Refiner
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    public function toArray($named = [], $typed = [])
     {
         $value = $this->getValue();
 
@@ -392,7 +401,7 @@ class Filter extends Refiner
             $value = $value->toIso8601String();
         }
 
-        return \array_merge(parent::toArray(), [
+        return array_merge(parent::toArray(), [
             'value' => $value,
             'options' => $this->optionsToArray(),
             'meta' => $this->getMeta(),
@@ -411,14 +420,14 @@ class Filter extends Refiner
     public function defaultQuery($builder, $column, $operator, $value)
     {
         match (true) {
-            $this->isFullText() && \is_string($value) => $this->searchRecall(
+            $this->isFullText() && is_string($value) => $this->searchRecall(
                 $builder,
                 $value,
                 $column
             ),
 
-            \in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) &&
-                \is_string($value) => $this->searchPrecision(
+            in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) &&
+                is_string($value) => $this->searchPrecision(
                     $builder,
                     $value,
                     $column,

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine\Tests\Feature\Concerns;
 
 use Honed\Refine\Concerns\HasDelimiter;
-use Honed\Refine\Tests\TestCase;
 
 beforeEach(function () {
     $this->test = new class()

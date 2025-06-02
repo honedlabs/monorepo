@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Pipelines;
 
+use Closure;
 use Honed\Core\Interpret;
+
+use function str_starts_with;
 
 /**
  * @template T of \Honed\Refine\Refine = \Honed\Refine\Refine
@@ -15,7 +18,7 @@ class RefineSorts
      * Apply the sorts refining logic.
      *
      * @param  T  $refine
-     * @param  \Closure(T): T  $next
+     * @param  Closure(T): T  $next
      * @return T
      */
     public function __invoke($refine, $next)
@@ -70,8 +73,8 @@ class RefineSorts
             return [null, null];
         }
 
-        if (\str_starts_with($sort, '-')) {
-            return [\substr($sort, 1), 'desc'];
+        if (str_starts_with($sort, '-')) {
+            return [mb_substr($sort, 1), 'desc'];
         }
 
         return [$sort, 'asc'];

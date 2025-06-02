@@ -1,6 +1,8 @@
 <?php
 
-namespace Honed\Refine\Tests\Fixtures;
+declare(strict_types=1);
+
+namespace Workbench\App\Refiners;
 
 use Honed\Refine\Filter;
 use Honed\Refine\Refine;
@@ -15,11 +17,11 @@ use Workbench\App\Models\Product;
  *
  * @extends \Honed\Refine\Refine<TModel, TBuilder>
  */
-class ProductRefiner extends Refine
+class UserRefiner extends Refine
 {
     /**
      * Define the database resource to use.
-     * 
+     *
      * @return TBuilder
      */
     public function resource()
@@ -29,12 +31,12 @@ class ProductRefiner extends Refine
 
     /**
      * Define the filters available to refine the query.
-     * 
-     * @return array<int, \Honed\Refine\Filter<TModel, TBuilder>>
+     *
+     * @return array<int, Filter<TModel, TBuilder>>
      */
     public function filters()
     {
-        /** @var array<int, \Honed\Refine\Filter<TModel, TBuilder>> */
+        /** @var array<int, Filter<TModel, TBuilder>> */
         return [
             Filter::make('name')
                 ->operator('like'),
@@ -71,12 +73,12 @@ class ProductRefiner extends Refine
 
     /**
      * Define the sorts available to order the records.
-     * 
-     * @return array<int, \Honed\Refine\Sort<TModel, TBuilder>>
+     *
+     * @return array<int, Sort<TModel, TBuilder>>
      */
     public function sorts()
     {
-        /** @var array<int, \Honed\Refine\Sort<TModel, TBuilder>> */
+        /** @var array<int, Sort<TModel, TBuilder>> */
         return [
             Sort::make('name', 'A-Z')
                 ->alias('name-desc')
@@ -96,12 +98,12 @@ class ProductRefiner extends Refine
 
     /**
      * Define the columns to search on.
-     * 
-     * @return array<int, \Honed\Refine\Search<TModel, TBuilder>>
+     *
+     * @return array<int, Search<TModel, TBuilder>>
      */
     public function searches()
     {
-        /** @var array<int, \Honed\Refine\Search<TModel, TBuilder>> */
+        /** @var array<int, Search<TModel, TBuilder>> */
         return [
             Search::make('name'),
             Search::make('description'),

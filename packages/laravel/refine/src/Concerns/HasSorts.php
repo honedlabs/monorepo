@@ -1,9 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine\Concerns;
 
 use Honed\Refine\Sort;
 use Illuminate\Support\Arr;
+
+use function array_filter;
+use function array_map;
+use function array_merge;
+use function array_values;
 
 trait HasSorts
 {
@@ -17,7 +24,7 @@ trait HasSorts
     /**
      * List of the sorts.
      *
-     * @var array<int,\Honed\Refine\Sort>
+     * @var array<int,Sort>
      */
     protected $sorts = [];
 
@@ -34,6 +41,17 @@ trait HasSorts
      * @var string
      */
     protected static $useSortKey = 'sort';
+
+    /**
+     * Set the default query parameter to identify the sort to apply.
+     *
+     * @param  string  $sortKey
+     * @return void
+     */
+    public static function useSortKey($sortKey)
+    {
+        static::$useSortKey = $sortKey;
+    }
 
     /**
      * Set whether the sorts should be applied.
@@ -101,7 +119,7 @@ trait HasSorts
     /**
      * Define the sorts for the instance.
      *
-     * @return array<int,\Honed\Refine\Sort>
+     * @return array<int,Sort>
      */
     public function sorts()
     {
@@ -111,15 +129,15 @@ trait HasSorts
     /**
      * Merge a set of sorts with the existing sorts.
      *
-     * @param  \Honed\Refine\Sort|iterable<int, \Honed\Refine\Sort>  ...$sorts
+     * @param  Sort|iterable<int, Sort>  ...$sorts
      * @return $this
      */
     public function withSorts(...$sorts)
     {
-        /** @var array<int, \Honed\Refine\Sort> $sorts */
+        /** @var array<int, Sort> $sorts */
         $sorts = Arr::flatten($sorts);
 
-        $this->sorts = \array_merge($this->sorts, $sorts);
+        $this->sorts = array_merge($this->sorts, $sorts);
 
         return $this;
     }
@@ -127,7 +145,7 @@ trait HasSorts
     /**
      * Retrieve the sorts.
      *
-     * @return array<int,\Honed\Refine\Sort>
+     * @return array<int,Sort>
      */
     public function getSorts()
     {
@@ -135,9 +153,9 @@ trait HasSorts
             return [];
         }
 
-        return once(fn () => \array_values(
-            \array_filter(
-                \array_merge($this->sorts(), $this->sorts),
+        return once(fn () => array_values(
+            array_filter(
+                array_merge($this->sorts(), $this->sorts),
                 static fn (Sort $sort) => $sort->isAllowed()
             )
         ));
@@ -167,17 +185,6 @@ trait HasSorts
     }
 
     /**
-     * Set the default query parameter to identify the sort to apply.
-     *
-     * @param  string  $sortKey
-     * @return void
-     */
-    public static function useSortKey($sortKey)
-    {
-        static::$useSortKey = $sortKey;
-    }
-
-    /**
      * Determine if there is a sort being applied.
      *
      * @return bool
@@ -193,7 +200,7 @@ trait HasSorts
     /**
      * Get the default sort.
      *
-     * @return \Honed\Refine\Sort|null
+     * @return Sort|null
      */
     public function getDefaultSort()
     {
@@ -210,7 +217,7 @@ trait HasSorts
      */
     public function sortsToArray()
     {
-        return \array_map(
+        return array_map(
             static fn (Sort $sort) => $sort->toArray(),
             $this->getSorts()
         );

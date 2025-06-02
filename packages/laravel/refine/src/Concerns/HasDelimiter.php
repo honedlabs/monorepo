@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine\Concerns;
 
 trait HasDelimiter
@@ -17,6 +19,17 @@ trait HasDelimiter
      * @var string
      */
     protected static $useDelimiter = ',';
+
+    /**
+     * Set the delimiter to use by default.
+     *
+     * @param  string  $delimiter
+     * @return void
+     */
+    public static function useDelimiter($delimiter = ',')
+    {
+        static::$useDelimiter = $delimiter;
+    }
 
     /**
      * Set the delimiter.
@@ -39,16 +52,5 @@ trait HasDelimiter
     public function getDelimiter()
     {
         return $this->delimiter ?? static::$useDelimiter;
-    }
-
-    /**
-     * Set the delimiter to use by default.
-     *
-     * @param  string  $delimiter
-     * @return void
-     */
-    public static function useDelimiter($delimiter = ',')
-    {
-        static::$useDelimiter = $delimiter;
     }
 }

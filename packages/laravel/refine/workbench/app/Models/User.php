@@ -4,28 +4,26 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
-use Honed\Action\Attributes\ActionGroup;
-use Honed\Action\Concerns\HasActionGroup;
 use Honed\Refine\Attributes\Refiner;
 use Honed\Refine\Concerns\HasRefiner;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Workbench\App\ActionGroups\UserActions;
+use Workbench\App\Refiners\UserRefiner;
 use Workbench\Database\Factories\UserFactory;
 
-// #[Refiner(UserRefiner::class)]
+#[Refiner(UserRefiner::class)]
 class User extends Authenticatable
 {
-    /**
-     * @use \Honed\Refine\Concerns\HasRefiner<\Workbench\App\Refiners\UserRefiner>
-     */
-    use HasRefiner;
-
     /**
      * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\UserFactory>
      */
     use HasFactory;
+
+    /**
+     * @use \Honed\Refine\Concerns\HasRefiner<\Workbench\App\Refiners\UserRefiner>
+     */
+    use HasRefiner;
 
     use Notifiable;
 
@@ -66,4 +64,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the products for the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Product, $this>
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine;
 
-use Honed\Refine\Contracts\FromOptions;
+use Honed\Core\Contracts\WithQuery;
+use Honed\Refine\Contracts\WithOptions;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -10,7 +13,7 @@ use Honed\Refine\Contracts\FromOptions;
  *
  * @extends \Honed\Refine\Filter<TModel, TBuilder>
  */
-final class TrashedFilter extends Filter implements FromOptions
+final class TrashedFilter extends Filter implements WithOptions, WithQuery
 {
     /**
      * {@inheritdoc}
@@ -42,11 +45,13 @@ final class TrashedFilter extends Filter implements FromOptions
     /**
      * Register the query expression to resolve the filter.
      *
-     * @return \Closure(TBuilder $builder, mixed $value):TBuilder
+     * @param  TBuilder  $builder
+     * @param  mixed  $value
+     * @return TBuilder
      */
-    public function queryAs()
+    public function queryUsing($builder, $value)
     {
-        return fn ($builder, $value) => match ($value) {
+        return match ($value) {
             'with' => $builder->withTrashed(),
             'only' => $builder->onlyTrashed(),
             default => $builder->withoutTrashed(),
@@ -55,10 +60,10 @@ final class TrashedFilter extends Filter implements FromOptions
 
     /**
      * {@inheritdoc}
-     * 
+     *
      * @return array<string, string>
      */
-    public function optionsFrom()
+    public function optionsUsing()
     {
         return [
             'with' => 'With deleted',
