@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Honed\Abn\Rules\Abn;
-use Illuminate\Validation\Rule;
 use Honed\Abn\AbnServiceProvider;
+use Honed\Abn\Rules\Abn;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
 
 beforeEach(function () {
     File::cleanDirectory(resource_path('lang/vendor'));
@@ -23,4 +23,3 @@ it('publishes translations', function () {
 
     $this->assertFileExists(resource_path('lang/vendor/abn/en/messages.php'));
 });
-

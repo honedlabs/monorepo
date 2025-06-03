@@ -19,5 +19,8 @@ it('fails invalid ABN', function () {
     post(route('users.store'), [
         'abn' => $abn,
         'formatted_abn' => $abn,
-    ])->assertSessionHasErrors('abn');
+    ])->assertSessionHasErrors([
+        'abn',
+        'formatted_abn',
+    ]);
 });

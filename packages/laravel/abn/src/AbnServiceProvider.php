@@ -6,9 +6,9 @@ namespace Honed\Abn;
 
 use Honed\Abn\Rules\Abn;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Factory;
 use Illuminate\Validation\InvokableValidationRule;
+use Illuminate\Validation\Rule;
 
 class AbnServiceProvider extends ServiceProvider
 {
