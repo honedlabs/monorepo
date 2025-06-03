@@ -14,6 +14,8 @@ class AbnServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'abn');
+
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
         }
@@ -26,6 +28,8 @@ class AbnServiceProvider extends ServiceProvider
      */
     protected function offerPublishing()
     {
-        //
+        $this->publishes([
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/abn'),
+        ]);
     }
 }
