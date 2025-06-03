@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Binding;
 
+use Honed\Binding\Commands\BindingMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 class BindingServiceProvider extends ServiceProvider
@@ -13,7 +14,6 @@ class BindingServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/binding.php', 'binding');
     }
 
     /**
@@ -21,13 +21,12 @@ class BindingServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->publishes([
-            __DIR__.'/../config/binding.php' => config_path('binding.php'),
-        ], 'binding-config');
 
         if ($this->app->runningInConsole()) {
+            // $this->offerPublishing();
+
             $this->commands([
-                //
+                BindingMakeCommand::class,
             ]);
         }
     }
