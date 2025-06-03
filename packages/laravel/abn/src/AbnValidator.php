@@ -18,12 +18,17 @@ class AbnValidator
     /**
      * Format a valid ABN using the spacing format.
      *
-     * @param  string  $abn
-     * @return string
+     * @param  string|null  $abn
+     * @return string|null
      */
     public static function format($abn)
     {
-        return preg_replace('/(\d{1,2})(\d{1,2})(\d{1,2})(\d{1,2})(\d{1,2})(\d{1,2})(\d{1,2})/', '$1 $2 $3 $4 $5 $6 $7', $abn);
+        if (! $abn) {
+            return null;
+        }
+
+        /** @var string */
+        return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{3})/', '$1 $2 $3 $4', $abn);
     }
 
     /**
@@ -46,8 +51,6 @@ class AbnValidator
             foreach (range(0, 10) as $i) {
                 $digits[] = random_int(0, 9);
             }
-
-            dd($i);
 
             $abn = implode('', $digits);
         } while (static::fails($abn));
@@ -89,6 +92,7 @@ class AbnValidator
             return false;
         }
 
+        /** @var string */
         $abn = preg_replace('/[^0-9]/', '', $value);
 
         if (static::invalidLength($abn)) {
@@ -137,7 +141,7 @@ class AbnValidator
         $checksum = 0;
 
         foreach (mb_str_split($abn) as $index => $digit) {
-            $checksum += $digit * static::WEIGHTS[$index];
+            $checksum += (int) $digit * static::WEIGHTS[$index];
         }
 
         return $checksum;

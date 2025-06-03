@@ -13,6 +13,7 @@ class FormatAbn implements CastsInboundAttributes
     /**
      * Prepare the given value for storage.
      *
+     * @param  string|null  $value
      * @param  array<string, mixed>  $attributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed

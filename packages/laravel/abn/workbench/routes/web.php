@@ -9,5 +9,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::patch('/user', [UserController::class, 'update'])
-    ->name('user.update');
+Route::post('/user', [UserController::class, 'store'])
+    ->name('user.store');

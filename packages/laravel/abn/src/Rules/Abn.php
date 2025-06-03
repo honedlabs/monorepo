@@ -28,9 +28,12 @@ class Abn implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (AbnValidator::fails($value)) {
-            $fail($this->translator->get('abn::messages.abn'), [
+            /** @var string */
+            $message = $this->translator->get('abn::messages.abn', [
                 'attribute' => $attribute,
             ]);
+
+            $fail($message);
         }
     }
 }

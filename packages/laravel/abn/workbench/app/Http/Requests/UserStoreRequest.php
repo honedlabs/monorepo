@@ -6,7 +6,7 @@ namespace Workbench\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserUpdateRequest extends FormRequest
+class UserStoreRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

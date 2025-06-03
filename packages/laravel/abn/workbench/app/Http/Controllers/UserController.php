@@ -5,20 +5,17 @@ declare(strict_types=1);
 namespace Workbench\App\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
-use Workbench\App\Http\Requests\UserUpdateRequest;
+use Workbench\App\Http\Requests\UserStoreRequest;
+use Workbench\App\Models\User;
 
 class UserController extends Controller
 {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserUpdateRequest $request)
+    public function store(UserStoreRequest $request)
     {
-        /** @var \Workbench\App\Models\User $user */
-        $user = Auth::user();
-
-        $user->update($request->safe());
+        User::factory()->create($request->validated());
 
         return back();
     }
