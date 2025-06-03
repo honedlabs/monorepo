@@ -58,3 +58,11 @@ it('fails invalid ABN due to invalid checksum', function () {
     expect(AbnValidator::passes($invalid))->toBeFalse();
     expect(AbnValidator::fails($invalid))->toBeTrue();
 });
+
+it('fails non-string ABN', function () {
+    $invalid = 12345678901;
+
+    expect(AbnValidator::validate($invalid))->toBeFalse();
+    expect(AbnValidator::passes($invalid))->toBeFalse();
+    expect(AbnValidator::fails($invalid))->toBeTrue();
+});

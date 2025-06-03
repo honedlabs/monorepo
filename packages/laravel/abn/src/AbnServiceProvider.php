@@ -7,6 +7,8 @@ namespace Honed\Abn;
 use Honed\Abn\Rules\Abn;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Factory;
+use Illuminate\Validation\InvokableValidationRule;
 
 class AbnServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,14 @@ class AbnServiceProvider extends ServiceProvider
     {
         Rule::macro('abn', function () {
             return new Abn();
+        });
+
+        $this->callAfterResolving('validator', function (Factory $validator) {
+            $validator->extendDependent('abn', function ($attribute, $value, array $parameters, $validator) {
+                return InvokableValidationRule::make(new Abn())
+                    ->setValidator($validator)
+                    ->passes($attribute, $value);
+            });
         });
     }
 

@@ -58,7 +58,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'abn' => FormattedAbn::class,
-        'formatted_abn' => FormatAbn::class,
+        'abn' => FormatAbn::class,
+        'formatted_abn' => FormattedAbn::class,
     ];
 }

@@ -10,4 +10,4 @@ Route::get('/', function () {
 });
 
 Route::post('/user', [UserController::class, 'store'])
-    ->name('user.store');
+    ->name('users.store');

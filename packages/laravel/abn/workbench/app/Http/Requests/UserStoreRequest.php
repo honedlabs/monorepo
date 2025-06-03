@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Workbench\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserStoreRequest extends FormRequest
 {
@@ -17,7 +18,7 @@ class UserStoreRequest extends FormRequest
     {
         return [
             'abn' => ['required', 'abn'],
-            'formatted_abn' => ['required', 'abn'],
+            'formatted_abn' => ['required', Rule::abn()],
         ];
     }
 }
