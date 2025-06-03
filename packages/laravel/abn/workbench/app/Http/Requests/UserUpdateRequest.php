@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Workbench\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-final class StoreRequest extends FormRequest
+class UserUpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,6 +17,7 @@ final class StoreRequest extends FormRequest
     {
         return [
             'abn' => ['required', 'abn'],
+            'formatted_abn' => ['required', 'abn'],
         ];
     }
 }

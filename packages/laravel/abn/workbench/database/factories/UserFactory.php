@@ -2,6 +2,7 @@
 
 namespace Workbench\Database\Factories;
 
+use Honed\Abn\AbnValidator;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -39,6 +40,8 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'abn' => AbnValidator::fake(),
+            'formatted_abn' => AbnValidator::format(AbnValidator::fake()),
         ];
     }
 

@@ -22,7 +22,36 @@ class AbnValidator
      */
     public static function format($abn)
     {
-        return '';
+        return preg_replace('/(\d{1,2})(\d{1,2})(\d{1,2})(\d{1,2})(\d{1,2})(\d{1,2})(\d{1,2})/', '$1 $2 $3 $4 $5 $6 $7', $abn);
+    }
+
+    /**
+     * Generate a fake ABN.
+     * 
+     * @param  bool  $valid
+     * @return string
+     */
+    public static function fake($valid = false)
+    {
+        if (! $valid) {
+            return (string) random_int(10000000000, 99999999999);
+        }
+
+        $abn = null;
+        
+        do {
+            $digits = [];
+
+            foreach (range(0, 10) as $i) {
+                $digits[] = random_int(0, 9);
+            }
+
+            dd($i);
+
+            $abn = implode('', $digits);
+        } while (static::fails($abn));
+
+        return $abn;
     }
 
     /**
@@ -65,7 +94,7 @@ class AbnValidator
             return false;
         }
 
-        if ((int)$abn[0] === 0) {
+        if (static::leadingZero($abn)) {
             return false;
         }
 
@@ -83,6 +112,17 @@ class AbnValidator
     public static function invalidLength($abn)
     {
         return strlen($abn) !== 11;
+    }
+
+    /**
+     * Determine if the ABN contains a leading zero.
+     * 
+     * @param  string  $abn
+     * @return bool
+     */
+    public static function leadingZero($abn)
+    {
+        return (int) $abn[0] === 0;
     }
 
     /**

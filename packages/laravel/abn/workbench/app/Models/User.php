@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
+use Honed\Abn\Casts\FormatAbn;
 use Honed\Abn\Casts\FormattedAbn;
 use Honed\Action\Attributes\ActionGroup;
 use Illuminate\Notifications\Notifiable;
@@ -39,6 +40,7 @@ class User extends Authenticatable
         'email',
         'password',
         'abn',
+        'formatted_abn',
     ];
 
     /**
@@ -60,5 +62,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'abn' => FormattedAbn::class,
+        'formatted_abn' => FormatAbn::class,
     ];
 }
