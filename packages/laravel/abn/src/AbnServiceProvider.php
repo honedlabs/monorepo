@@ -12,19 +12,19 @@ class AbnServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
-     * 
+     *
      * @return void
      */
     public function register()
     {
         Rule::macro('abn', function () {
-            return new Abn;
+            return new Abn();
         });
     }
 
     /**
      * Bootstrap the application services.
-     * 
+     *
      * @return void
      */
     public function boot()

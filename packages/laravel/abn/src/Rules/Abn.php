@@ -1,19 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Abn\Rules;
 
 use Closure;
 use Honed\Abn\AbnValidator;
-use Illuminate\Support\Facades\App;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\App;
 
 class Abn implements ValidationRule
 {
     /**
      * The translator instance.
-     * 
-     * @var \Illuminate\Contracts\Translation\Translator
      */
     protected Translator $translator;
 

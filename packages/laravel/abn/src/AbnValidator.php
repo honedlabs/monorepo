@@ -8,15 +8,16 @@ class AbnValidator
 {
     /**
      * The weights for the ABN by position.
-     * 
+     *
      * @var array<int, int>
+     *
      * @see https://abr.business.gov.au/Help/AbnFormat
      */
-    const WEIGHTS = [10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19];
+    public const WEIGHTS = [10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19];
 
     /**
      * Format a valid ABN using the spacing format.
-     * 
+     *
      * @param  string  $abn
      * @return string
      */
@@ -27,7 +28,7 @@ class AbnValidator
 
     /**
      * Generate a fake ABN.
-     * 
+     *
      * @param  bool  $valid
      * @return string
      */
@@ -38,7 +39,7 @@ class AbnValidator
         }
 
         $abn = null;
-        
+
         do {
             $digits = [];
 
@@ -56,7 +57,7 @@ class AbnValidator
 
     /**
      * Determine if the given value is not a valid ABN.
-     * 
+     *
      * @param  mixed  $value
      * @return bool
      */
@@ -67,7 +68,7 @@ class AbnValidator
 
     /**
      * Determine if the given value is a valid ABN.
-     * 
+     *
      * @param  mixed  $value
      * @return bool
      */
@@ -75,10 +76,10 @@ class AbnValidator
     {
         return static::validate($value);
     }
-    
+
     /**
      * Determine if the given value is a valid ABN.
-     * 
+     *
      * @param  mixed  $value
      * @return bool
      */
@@ -102,21 +103,21 @@ class AbnValidator
 
         return static::checksum($abn) % 89 === 0;
     }
-    
+
     /**
      * Determine if the given ABN is not the correct length.
-     * 
+     *
      * @param  string  $abn
      * @return bool
      */
     public static function invalidLength($abn)
     {
-        return strlen($abn) !== 11;
+        return mb_strlen($abn) !== 11;
     }
 
     /**
      * Determine if the ABN contains a leading zero.
-     * 
+     *
      * @param  string  $abn
      * @return bool
      */
@@ -127,7 +128,7 @@ class AbnValidator
 
     /**
      * Determine the checksum of the given ABN.
-     * 
+     *
      * @param  string  $abn
      * @return int
      */
@@ -135,7 +136,7 @@ class AbnValidator
     {
         $checksum = 0;
 
-        foreach (str_split($abn) as $index => $digit) {
+        foreach (mb_str_split($abn) as $index => $digit) {
             $checksum += $digit * static::WEIGHTS[$index];
         }
 

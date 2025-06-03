@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Abn\Casts;
 
 use Honed\Abn\AbnValidator;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
 
 class FormattedAbn implements CastsAttributes
 {

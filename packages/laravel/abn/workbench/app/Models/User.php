@@ -6,13 +6,10 @@ namespace Workbench\App\Models;
 
 use Honed\Abn\Casts\FormatAbn;
 use Honed\Abn\Casts\FormattedAbn;
-use Honed\Action\Attributes\ActionGroup;
-use Illuminate\Notifications\Notifiable;
-use Honed\Action\Concerns\HasActionGroup;
-use Workbench\App\ActionGroups\UserActions;
-use Workbench\Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Workbench\Database\Factories\UserFactory;
 
 class User extends Authenticatable
 {
