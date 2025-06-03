@@ -35,7 +35,7 @@ it('passes valid ABN', function () {
     expect(AbnValidator::fails($valid))->toBeFalse();
 });
 
-it('fails invalid ABN due to leading zero', function () {
+it('fails due to leading zero', function () {
     $invalid = '01 234 567 890';
 
     expect(AbnValidator::validate($invalid))->toBeFalse();
@@ -43,7 +43,7 @@ it('fails invalid ABN due to leading zero', function () {
     expect(AbnValidator::fails($invalid))->toBeTrue();
 });
 
-it('fails invalid ABN due to invalid length', function () {
+it('fails due to invalid length', function () {
     $invalid = '1234567890';
 
     expect(AbnValidator::validate($invalid))->toBeFalse();
@@ -51,7 +51,7 @@ it('fails invalid ABN due to invalid length', function () {
     expect(AbnValidator::fails($invalid))->toBeTrue();
 });
 
-it('fails invalid ABN due to invalid checksum', function () {
+it('fails due to invalid checksum', function () {
     $invalid = '12345678901';
 
     expect(AbnValidator::validate($invalid))->toBeFalse();
