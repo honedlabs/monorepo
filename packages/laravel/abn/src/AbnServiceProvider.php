@@ -25,7 +25,13 @@ class AbnServiceProvider extends ServiceProvider
 
         $this->callAfterResolving('validator', function (Factory $validator) {
             $validator->extendDependent('abn', function ($attribute, $value, array $parameters, $validator) {
-                return InvokableValidationRule::make(new Abn())
+                $rule = new Abn();
+
+                $validator->setCustomMessages([
+                    'abn' => $rule->message($attribute),
+                ]);
+
+                return InvokableValidationRule::make($rule)
                     ->setValidator($validator)
                     ->passes($attribute, $value);
             });

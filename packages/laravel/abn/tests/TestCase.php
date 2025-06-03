@@ -20,9 +20,10 @@ class TestCase extends Orchestra
      *
      * @return void
      */
-    protected function defineDatabaseMigrations() 
+    protected function defineDatabaseMigrations()
     {
         $this->loadMigrationsFrom(
             workbench_path('database/migrations')
         );
-    }}
+    }
+}
