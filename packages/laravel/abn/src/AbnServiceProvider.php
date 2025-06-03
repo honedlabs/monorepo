@@ -4,15 +4,30 @@ declare(strict_types=1);
 
 namespace Honed\Abn;
 
-use Honed\Abn\Commands\AbnMakeCommand;
+use Honed\Abn\Rules\Abn;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rule;
 
 class AbnServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap the application services.
+     * Register services.
+     * 
+     * @return void
      */
-    public function boot(): void
+    public function register()
+    {
+        Rule::macro('abn', function () {
+            return new Abn;
+        });
+    }
+
+    /**
+     * Bootstrap the application services.
+     * 
+     * @return void
+     */
+    public function boot()
     {
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'abn');
 
