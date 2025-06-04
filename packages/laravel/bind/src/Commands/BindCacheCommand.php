@@ -29,6 +29,8 @@ class BindCacheCommand extends Command
 
     /**
      * Execute the console command.
+     * 
+     * @return void
      */
     public function handle()
     {
@@ -40,11 +42,11 @@ class BindCacheCommand extends Command
 
         $progress = $this->output->createProgressBar(count($bindings, COUNT_RECURSIVE));
 
-        /** @var array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Binding\Binder>>> */
+        /** @var array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Bind\Binder>>> */
         $content = [];
 
         foreach ($bindings as $binding) {
-            /** @var \Honed\Binding\Binder $binding */
+            /** @var \Honed\Bind\Binder $binding */
             $binding = App::make($binding);
 
             $binds = array_fill_keys($binding->bindings(), get_class($binding));
@@ -75,13 +77,13 @@ class BindCacheCommand extends Command
     /**
      * Get all of the events and listeners configured for the application.
      *
-     * @return array<int, \Honed\Binding\Binder>
+     * @return array<int, class-string<\Honed\Bind\Binder>>
      */
     protected function getBindings()
     {
         $bindings = [];
 
-        foreach ($this->laravel->getProviders(BindingServiceProvider::class) as $provider) {
+        foreach ($this->laravel->getProviders(BindServiceProvider::class) as $provider) {
             $providerBindings = array_merge_recursive(
                 $provider->discoveredBinders(),
                 $provider->binders()

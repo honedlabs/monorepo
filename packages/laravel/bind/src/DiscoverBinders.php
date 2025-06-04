@@ -45,6 +45,7 @@ class DiscoverBinders
                 continue;
             }
 
+            /** @var class-string<Binder> $binder */
             $binders[] = $binder;
         }
 
@@ -65,7 +66,7 @@ class DiscoverBinders
     /**
      * Determine if the binder is invalid.
      *
-     * @param  class-string  $binder
+     * @param  string  $binder
      * @return bool
      */
     protected static function invalidBinder($binder)
@@ -79,7 +80,7 @@ class DiscoverBinders
      * Extract the class name from the given file path.
      *
      * @param  string  $basePath
-     * @return class-string
+     * @return string
      */
     protected static function classFromFile(SplFileInfo $file, $basePath)
     {

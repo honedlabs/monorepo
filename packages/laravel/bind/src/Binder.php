@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Bind;
 
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Str;
+use Throwable;
 use ReflectionClass;
 use ReflectionMethod;
-use Throwable;
-
 use function array_reduce;
+use Illuminate\Support\Str;
+use Illuminate\Container\Container;
+use Illuminate\Support\Facades\App;
+
+use Honed\Bind\Attributes\BinderFor;
+use Illuminate\Contracts\Foundation\Application;
 
 /**
- * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  */
 abstract class Binder
 {
@@ -67,6 +68,27 @@ abstract class Binder
 
         if (\class_exists($binder) && \method_exists($binder, $field)) {
             return new $binder();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the binder from the BinderFor class attribute.
+     *
+     * @return class-string<Binder>|null
+     */
+    public static function getBinderForAttribute()
+    {
+        $attributes = (new ReflectionClass(static::class))
+            ->getAttributes(BinderFor::class);
+
+        if ($attributes !== []) {
+            $for = $attributes[0]->newInstance();
+
+            $model = $for->model;
+
+            return $model;
         }
 
         return null;
@@ -146,8 +168,7 @@ abstract class Binder
                 }
 
                 return $bindings;
-            },
-            []
+            }, []
         );
     }
 
@@ -211,7 +232,7 @@ abstract class Binder
         }
 
         if (class_exists($model) && method_exists($model, $field)) {
-            return new $Binder();
+            return new $binder();
         }
 
         return null;

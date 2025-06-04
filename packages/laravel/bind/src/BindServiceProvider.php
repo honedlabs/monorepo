@@ -17,7 +17,7 @@ class BindServiceProvider extends ServiceProvider
     /**
      * The binders to manually register.
      *
-     * @var array<string, class-string<Binder>>
+     * @var array<int, class-string<Binder>>
      */
     protected $binders = [];
 
@@ -79,12 +79,12 @@ class BindServiceProvider extends ServiceProvider
     {
         App::macro('getCachedBindersPath', function () {
             /** @var \Illuminate\Foundation\Application $this */
-            return $this->normalizeCachePath('APP_BINDERS_CACHE', 'cache/binders.php');
+            return $this->normalizeCachePath('APP_BINDERS_CACHE', 'cache/binders.php'); // @phpstan-ignore-line
         });
 
         App::macro('bindersAreCached', function () {
             /** @var \Illuminate\Foundation\Application $this */
-            return $this->files->exists($this->getCachedBindersPath());
+            return $this->files->exists($this->getCachedBindersPath()); // @phpstan-ignore-line
         });
     }
 
@@ -110,7 +110,7 @@ class BindServiceProvider extends ServiceProvider
     /**
      * Get the discovered binders for the application.
      *
-     * @return array
+     * @return array<int, class-string<Binder>>
      */
     public function getBinders()
     {
@@ -150,7 +150,7 @@ class BindServiceProvider extends ServiceProvider
     /**
      * Discover the binders for the application.
      *
-     * @return array
+     * @return array<int, class-string<Binder>>
      */
     public function discoverBinders()
     {
