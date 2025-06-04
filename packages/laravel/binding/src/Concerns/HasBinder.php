@@ -10,9 +10,9 @@ use ReflectionClass;
 
 /**
  * @template TBinder of \Honed\Binding\Binder
- * 
+ *
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
- * 
+ *
  * @property-read TBinder $binder
  */
 trait HasBinder

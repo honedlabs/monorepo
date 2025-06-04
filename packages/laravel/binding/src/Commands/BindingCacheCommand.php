@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Binding\Commands;
 
 use Honed\Binding\BindingServiceProvider;
@@ -56,7 +58,6 @@ class BindingCacheCommand extends Command
         if ($this->option('show')) {
             // $this->table(['Class', 'Binding'], $this->getBindings());
         }
-
 
         $this->components->info('Bindings cached successfully.');
     }

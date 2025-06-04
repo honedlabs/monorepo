@@ -18,9 +18,9 @@ it('makes', function () {
 });
 
 it('bindings for a name', function () {
-    $this->artisan('make:binding', [
+    $this->artisan('make:binder', [
         '--force' => true,
-    ])->expectsQuestion('What should the binding be named?', 'UserBinder')
+    ])->expectsQuestion('What should the binder be named?', 'UserBinder')
         ->assertSuccessful();
 
     $this->assertFileExists(app_path('Binders/UserBinder.php'));

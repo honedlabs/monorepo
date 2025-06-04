@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Binding\Commands;
 
 use Illuminate\Console\Command;
@@ -26,7 +28,7 @@ class BindingClearCommand extends Command
     /**
      * The filesystem instance.
      *
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var Filesystem
      */
     protected $files;
 

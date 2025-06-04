@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Binding;
 
 use Illuminate\Support\Arr;
@@ -53,6 +55,17 @@ class DiscoverBinders
     }
 
     /**
+     * Specify a callback to be used to guess class names.
+     *
+     * @param  callable(SplFileInfo, string): class-string  $callback
+     * @return void
+     */
+    public static function guessClassNamesUsing(callable $callback)
+    {
+        static::$guessClassNamesUsingCallback = $callback;
+    }
+
+    /**
      * Determine if the binder is invalid.
      *
      * @param  class-string  $binder
@@ -84,16 +97,5 @@ class DiscoverBinders
             ['\\', app()->getNamespace()],
             ucfirst(Str::replaceLast('.php', '', $class))
         )));
-    }
-
-    /**
-     * Specify a callback to be used to guess class names.
-     *
-     * @param  callable(SplFileInfo, string): class-string  $callback
-     * @return void
-     */
-    public static function guessClassNamesUsing(callable $callback)
-    {
-        static::$guessClassNamesUsingCallback = $callback;
     }
 }

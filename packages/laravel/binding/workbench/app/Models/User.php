@@ -4,25 +4,24 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
-use Honed\Binding\Concerns\HasBinder;
-use Workbench\App\Binders\UserBinder;
 use Honed\Binding\Attributes\UseBinder;
-use Illuminate\Notifications\Notifiable;
-use Workbench\Database\Factories\UserFactory;
+use Honed\Binding\Concerns\HasBinder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Workbench\App\Binders\UserBinder;
+use Workbench\Database\Factories\UserFactory;
 
 #[UseBinder(UserBinder::class)]
 class User extends Authenticatable
 {
+    use HasBinder;
+
     /**
      * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Workbench\Database\Factories\UserFactory>
      */
     use HasFactory;
-
     use Notifiable;
-
-    use HasBinder;
 
     /**
      * The factory for the model.

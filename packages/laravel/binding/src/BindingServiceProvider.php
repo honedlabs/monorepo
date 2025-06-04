@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace Honed\Binding;
 
-use Illuminate\Support\LazyCollection;
-use Illuminate\Support\ServiceProvider;
 use Honed\Binding\Commands\BinderMakeCommand;
 use Honed\Binding\Commands\BindingCacheCommand;
 use Honed\Binding\Commands\BindingClearCommand;
+use Illuminate\Support\LazyCollection;
+use Illuminate\Support\ServiceProvider;
 
 class BindingServiceProvider extends ServiceProvider
 {
     /**
      * The binders to manually register.
-     * 
-     * @var array<string, class-string<\Honed\Binding\Binder>>
+     *
+     * @var array<string, class-string<Binder>>
      */
     protected $binders = [];
 
     /**
      * Indicates if the package should discover binders.
-     * 
+     *
      * @var bool
      */
     protected static $shouldDiscoverBinders = true;
@@ -32,6 +32,41 @@ class BindingServiceProvider extends ServiceProvider
      * @var iterable<int, string>|null
      */
     protected static $binderDiscoveryPaths;
+
+    /**
+     * Add the given widget discovery paths to the application's widget discovery paths.
+     *
+     * @param  string|iterable<int, string>  $paths
+     * @return void
+     */
+    public static function addBinderDiscoveryPaths(iterable|string $paths)
+    {
+        static::$binderDiscoveryPaths = (new LazyCollection(static::$binderDiscoveryPaths))
+            ->merge(is_string($paths) ? [$paths] : $paths)
+            ->unique()
+            ->values();
+    }
+
+    /**
+     * Set the globally configured binder discovery paths.
+     *
+     * @param  iterable<int, string>  $paths
+     * @return void
+     */
+    public static function setBinderDiscoveryPaths($paths)
+    {
+        static::$binderDiscoveryPaths = $paths;
+    }
+
+    /**
+     * Disable binder discovery for the application.
+     *
+     * @return void
+     */
+    public static function disableBinderDiscovery()
+    {
+        static::$shouldDiscoverBinders = false;
+    }
 
     /**
      * Register services.
@@ -57,21 +92,6 @@ class BindingServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Register the publishing for the package.
-     *
-     * @return void
-     */
-    protected function offerPublishing()
-    {
-        // $this->publishes([
-        //     __DIR__.'/../config/binding.php' => $this->app->configPath('binding.php'),
-        // ], 'binding-config');
-    }
-
-    /**
-     * 
-     */
     public function getCachedBindersPath()
     {
         /** @var \Illuminate\Foundation\Application $app */
@@ -80,9 +100,6 @@ class BindingServiceProvider extends ServiceProvider
         return $app->normalizeCachePath('cache/binders.php');
     }
 
-    /**
-     * 
-     */
     public function bindersAreCached()
     {
         return $this->app->files->exists($this->getCachedBindersPath());
@@ -99,34 +116,23 @@ class BindingServiceProvider extends ServiceProvider
             $cache = require $this->getCachedBindersPath();
 
             return $cache[get_class($this)] ?? [];
-        } else {
-            return array_merge_recursive(
-                $this->discoveredBinders(),
-                $this->binders()
-            );
         }
+
+        return array_merge_recursive(
+            $this->discoveredBinders(),
+            $this->binders()
+        );
+
     }
 
     /**
      * Get the binders that should be cached.
      *
-     * @return array<int, class-string<\Honed\Binding\Binder>>
+     * @return array<int, class-string<Binder>>
      */
     public function binders()
     {
         return $this->binders;
-    }
-
-    /**
-     * Get the discovered binders for the application.
-     *
-     * @return array
-     */
-    protected function discoveredBinders()
-    {
-        return $this->shouldDiscoverBinders()
-            ? $this->discoverBinders()
-            : [];
     }
 
     /**
@@ -160,6 +166,30 @@ class BindingServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the publishing for the package.
+     *
+     * @return void
+     */
+    protected function offerPublishing()
+    {
+        // $this->publishes([
+        //     __DIR__.'/../config/binding.php' => $this->app->configPath('binding.php'),
+        // ], 'binding-config');
+    }
+
+    /**
+     * Get the discovered binders for the application.
+     *
+     * @return array
+     */
+    protected function discoveredBinders()
+    {
+        return $this->shouldDiscoverBinders()
+            ? $this->discoverBinders()
+            : [];
+    }
+
+    /**
      * Get the directories that should be used to discover binders.
      *
      * @return iterable<int, string>
@@ -175,31 +205,6 @@ class BindingServiceProvider extends ServiceProvider
     }
 
     /**
-     * Add the given widget discovery paths to the application's widget discovery paths.
-     *
-     * @param  string|iterable<int, string>  $paths
-     * @return void
-     */
-    public static function addBinderDiscoveryPaths(iterable|string $paths)
-    {
-        static::$binderDiscoveryPaths = (new LazyCollection(static::$binderDiscoveryPaths))
-            ->merge(is_string($paths) ? [$paths] : $paths)
-            ->unique()
-            ->values();
-    }
-
-    /**
-     * Set the globally configured binder discovery paths.
-     *
-     * @param  iterable<int, string>  $paths
-     * @return void
-     */
-    public static function setBinderDiscoveryPaths($paths)
-    {
-        static::$binderDiscoveryPaths = $paths;
-    }
-
-    /**
      * Get the base path to be used during binder discovery.
      *
      * @return string
@@ -207,15 +212,5 @@ class BindingServiceProvider extends ServiceProvider
     protected function binderDiscoveryBasePath()
     {
         return base_path();
-    }
-
-    /**
-     * Disable binder discovery for the application.
-     *
-     * @return void
-     */
-    public static function disableBinderDiscovery()
-    {
-        static::$shouldDiscoverBinders = false;
     }
 }
