@@ -47,7 +47,7 @@ class BindingCacheCommand extends Command
         }
 
         file_put_contents(
-            $this->laravel->getCachedBindingsPath(),
+            $this->laravel->getCachedBindersPath(),
             '<?php return '.var_export($content, true).';'
         );
 

@@ -43,6 +43,31 @@ abstract class Binder
     protected static $binderNameResolver;
 
     /**
+     * Retrieve the binder for the model which binds the given field if it exists.
+     * 
+     * @param class-string<TModel> $model
+     * @param string|null $field
+     * @return static|null
+     */
+    public static function for($model, $field)
+    {
+        //
+    }
+
+    /**
+     * Resolve the binding for the model.
+     * 
+     * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Contracts\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation $query
+     * @param string $field
+     * @param mixed $value
+     * @return \Illuminate\Contracts\Database\Eloquent\Builder
+     */
+    public function resolve($query, $field, $value)
+    {
+        return $this->{$field}($query, $value);
+    }
+
+    /**
      * Specify the callback that should be invoked to guess model names based on binder names.
      *
      * @param  callable(self): class-string<TModel>  $callback

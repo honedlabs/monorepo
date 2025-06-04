@@ -9,6 +9,7 @@ use Honed\Binding\Commands\BindingCacheCommand;
 use Honed\Binding\Commands\BindingClearCommand;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\App;
 
 class BindingServiceProvider extends ServiceProvider
 {
@@ -70,8 +71,21 @@ class BindingServiceProvider extends ServiceProvider
 
     /**
      * Register services.
+     * 
+     * @return void
      */
-    public function register(): void {}
+    public function register()
+    {
+        App::macro('getCachedBindersPath', function () {
+            /** @var \Illuminate\Foundation\Application $this */
+            return $this->normalizeCachePath('APP_BINDERS_CACHE', 'cache/binders.php');
+        });
+
+        App::macro('bindersAreCached', function () {
+            /** @var \Illuminate\Foundation\Application $this */
+            return $this->files->exists($this->getCachedBindersPath());
+        });
+    }
 
     /**
      * Bootstrap services.
@@ -92,19 +106,6 @@ class BindingServiceProvider extends ServiceProvider
         }
     }
 
-    public function getCachedBindersPath()
-    {
-        /** @var \Illuminate\Foundation\Application $app */
-        $app = $this->app;
-
-        return $app->normalizeCachePath('cache/binders.php');
-    }
-
-    public function bindersAreCached()
-    {
-        return $this->app->files->exists($this->getCachedBindersPath());
-    }
-
     /**
      * Get the discovered binders for the application.
      *
@@ -112,8 +113,8 @@ class BindingServiceProvider extends ServiceProvider
      */
     public function getBinders()
     {
-        if ($this->bindersAreCached()) {
-            $cache = require $this->getCachedBindersPath();
+        if ($this->app->bindersAreCached()) {
+            $cache = require $this->app->getCachedBindersPath();
 
             return $cache[get_class($this)] ?? [];
         }
