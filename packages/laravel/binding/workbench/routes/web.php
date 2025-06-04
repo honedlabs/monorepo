@@ -9,5 +9,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/user', [UserController::class, 'store'])
-    ->name('users.store');
+Route::get('/user/{user:show}', [UserController::class, 'show'])
+    ->name('users.show');
+
+Route::get('/user/{user:edit}', [UserController::class, 'edit'])
+    ->name('users.edit');

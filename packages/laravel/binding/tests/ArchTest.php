@@ -11,5 +11,9 @@ arch('it will not use debugging functions')
     ->each->not->toBeUsed();
 
 arch('strict types')
-    ->expect('Honed\Abn')
+    ->expect('Honed\Binding')
     ->toUseStrictTypes();
+
+arch('concerns')
+    ->expect('Honed\Binding\Concerns')
+    ->toBeTraits();

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Binding;
 
-use Honed\Binding\Commands\BindingMakeCommand;
+use Honed\Binding\Commands\BinderMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 class BindingServiceProvider extends ServiceProvider
@@ -12,9 +12,7 @@ class BindingServiceProvider extends ServiceProvider
     /**
      * Register services.
      */
-    public function register(): void
-    {
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap services.
@@ -26,7 +24,7 @@ class BindingServiceProvider extends ServiceProvider
             // $this->offerPublishing();
 
             $this->commands([
-                BindingMakeCommand::class,
+                BinderMakeCommand::class,
             ]);
         }
     }
