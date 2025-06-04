@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Providers;
+namespace App\Providers;
 
+use Honed\Binding\BindingServiceProvider;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
+
+use function Orchestra\Testbench\workbench_path;
 
 class WorkbenchServiceProvider extends ServiceProvider
 {
@@ -13,7 +17,9 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        BindingServiceProvider::setBinderDiscoveryPaths([
+            workbench_path('app/Binders'),
+        ]);
     }
 
     /**

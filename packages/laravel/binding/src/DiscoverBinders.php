@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use ReflectionClass;
 use SplFileInfo;
 use Symfony\Component\Finder\Finder;
+use Workbench\App\Binders\UserBinder;
 
 class DiscoverBinders
 {
@@ -33,6 +34,7 @@ class DiscoverBinders
             return [];
         }
 
+        
         $files = Finder::create()->files()->in($binderPath);
 
         /** @var array<int, \Honed\Binder\Binder> $binders */
@@ -48,7 +50,7 @@ class DiscoverBinders
             /** @var \Honed\Binder\Binder $binder */
             $binder = App::make($binder);
 
-            $binders[$binder->getName()] = $binder;
+            $binders[] = $binder;
         }
 
         return $binders;

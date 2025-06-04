@@ -143,7 +143,7 @@ class BindingServiceProvider extends ServiceProvider
      */
     public function shouldDiscoverBinders()
     {
-        return get_class($this) === __CLASS__ && static::$shouldDiscoverBinders;
+        return static::$shouldDiscoverBinders;
     }
 
     /**
@@ -173,17 +173,17 @@ class BindingServiceProvider extends ServiceProvider
      */
     protected function offerPublishing()
     {
-        // $this->publishes([
-        //     __DIR__.'/../config/binding.php' => $this->app->configPath('binding.php'),
-        // ], 'binding-config');
+        $this->publishes([
+            __DIR__.'/../stubs' => base_path('stubs'),
+        ], 'action-stubs');
     }
 
     /**
      * Get the discovered binders for the application.
      *
-     * @return array
+     * @return array<int, class-string<\Honed\Binding\Binder>>
      */
-    protected function discoveredBinders()
+    public function discoveredBinders()
     {
         return $this->shouldDiscoverBinders()
             ? $this->discoverBinders()

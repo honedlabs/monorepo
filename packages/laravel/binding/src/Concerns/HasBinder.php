@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Binding\Concerns;
 
+use Honed\Binding\Attributes\UseBinder;
 use Honed\Binding\Binder;
 
 /**
@@ -25,6 +26,29 @@ trait HasBinder
         }
 
         return parent::resolveRouteBinding($value, $field);
+    }
+
+    /**
+     * Get the binder from the UseBinder class attribute.
+     * 
+     * @return class-string<\Honed\Binding\Binder>|null
+     */
+    public static function getUseBinderAttribute()
+    {
+        $attributes = (new \ReflectionClass(static::class))
+            ->getAttributes(UseBinder::class);
+
+        if ($attributes !== []) {
+            $useBinder = $attributes[0]->newInstance();
+
+            $binder = $useBinder->bindingClass;
+
+            $binder::guessModelNamesUsing(fn () => static::class);
+
+            return $binder;
+        }
+
+        return null;
     }
 
     // /**

@@ -12,11 +12,10 @@ class UseBinder
     /**
      * Create a new attribute instance.
      *
-     * @param  class-string  $bindingClass
+     * @param  class-string<\Honed\Binding\Binder>  $bindingClass
      * @return void
      */
-    public function __construct(public string $bindingClass)
-    {
-        //
-    }
+    public function __construct(
+        public string $bindingClass)
+    { }
 }

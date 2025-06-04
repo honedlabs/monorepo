@@ -7,6 +7,7 @@ namespace Honed\Binding\Commands;
 use Honed\Binding\BindingServiceProvider;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 #[AsCommand(name: 'binding:cache')]
 class BindingCacheCommand extends Command
@@ -36,13 +37,16 @@ class BindingCacheCommand extends Command
 
         $bindings = $this->getBindings();
 
-        $progress = $this->output->createProgressBar(count($bindings));
+        $progress = $this->output->createProgressBar(count($bindings, COUNT_RECURSIVE));
 
+        /** @var array<class-string, array<string, class-string>> */
         $content = [];
 
         foreach ($bindings as $binding) {
-            $content[$binding->getModel()] = $binding->getBindings();
+            $mapping = array_fill_keys($binding->bindings(), get_class($binding));
 
+            $content[$binding->modelName()] = array_merge($content[$binding->modelName()] ?? [], $mapping);
+            
             $progress->advance();
         }
 
@@ -53,35 +57,42 @@ class BindingCacheCommand extends Command
 
         $progress->finish();
 
-        $this->components->success('Cached '.count($content).' bindings.');
+        $this->components->success('Cached '.count($content).' model bindings.');
 
-        if ($this->option('show')) {
-            // $this->table(['Class', 'Binding'], $this->getBindings());
-        }
+        // if ($this->option('show')) {
+        //     // $this->table(['Class', 'Binding'], $this->getBindings());
+        // }
 
         $this->components->info('Bindings cached successfully.');
     }
 
     /**
-     * Get the bindings that should be cached.
-     *
-     * @return array
-     */
-    /**
      * Get all of the events and listeners configured for the application.
      *
-     * @return array
+     * @return array<int, \Honed\Binding\Binder>
      */
     protected function getBindings()
     {
         $bindings = [];
 
         foreach ($this->laravel->getProviders(BindingServiceProvider::class) as $provider) {
-            $providerBindings = array_merge_recursive($provider->shouldDiscoverBindings() ? $provider->discoverBindings() : [], $provider->bindings());
+            $providerBindings = array_merge_recursive($provider->discoveredBinders(), $provider->binders());
 
-            $bindings[get_class($provider)] = $providerBindings;
+            $bindings = \array_merge($bindings, $providerBindings);
         }
 
         return $bindings;
+    }
+
+    /**
+     * Get the console command options
+     *
+     * @return array<int,array<int,mixed>>
+     */
+    protected function getOptions()
+    {
+        return [
+            ['show', 's', InputOption::VALUE_NONE, 'Show the bindings that are being cached'],
+        ];
     }
 }

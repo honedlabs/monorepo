@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use Workbench\App\Models\User;
+use App\Models\User;
 
 class UserController extends Controller
 {

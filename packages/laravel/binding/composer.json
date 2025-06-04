@@ -4,8 +4,7 @@
     "keywords": [
         "honed",
         "laravel",
-        "binding",
-        "inertia"
+        "binding"
     ],
     "homepage": "https://github.com/honedlabs/binding",
     "license": "MIT",
@@ -32,7 +31,6 @@
         "phpstan/extension-installer": "^1.4.3",
         "phpstan/phpstan-deprecation-rules": "^2.0.1",
         "phpstan/phpstan-phpunit": "^2.0.3",
-        "inertiajs/inertia-laravel": "^1.2||^2.0",
         "pestphp/pest-plugin-laravel": "^3.0"
     },
     "autoload": {
@@ -43,9 +41,9 @@
     "autoload-dev": {
         "psr-4": {
             "Honed\\Binding\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+            "App\\": "workbench/app/",
+            "Database\\Factories\\": "workbench/database/factories/",
+            "Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "scripts": {
