@@ -6,6 +6,7 @@ namespace Honed\Binding\Commands;
 
 use Honed\Binding\BindingServiceProvider;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -39,14 +40,17 @@ class BindingCacheCommand extends Command
 
         $progress = $this->output->createProgressBar(count($bindings, COUNT_RECURSIVE));
 
-        /** @var array<class-string, array<string, class-string>> */
+        /** @var array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Binding\Binder>>> */
         $content = [];
 
         foreach ($bindings as $binding) {
-            $mapping = array_fill_keys($binding->bindings(), get_class($binding));
+            /** @var \Honed\Binding\Binder $binding */
+            $binding = App::make($binding);
 
-            $content[$binding->modelName()] = array_merge($content[$binding->modelName()] ?? [], $mapping);
-            
+            $binds = array_fill_keys($binding->bindings(), get_class($binding));
+
+            $content[$binding->modelName()] = array_merge($content[$binding->modelName()] ?? [], $binds);
+
             $progress->advance();
         }
 
@@ -57,7 +61,9 @@ class BindingCacheCommand extends Command
 
         $progress->finish();
 
-        $this->components->success('Cached '.count($content).' model bindings.');
+        $this->line(PHP_EOL);
+
+        $this->components->success('Cached bindings for '.count($content).' model(s).');
 
         // if ($this->option('show')) {
         //     // $this->table(['Class', 'Binding'], $this->getBindings());
@@ -76,7 +82,10 @@ class BindingCacheCommand extends Command
         $bindings = [];
 
         foreach ($this->laravel->getProviders(BindingServiceProvider::class) as $provider) {
-            $providerBindings = array_merge_recursive($provider->discoveredBinders(), $provider->binders());
+            $providerBindings = array_merge_recursive(
+                $provider->discoveredBinders(),
+                $provider->binders()
+            );
 
             $bindings = \array_merge($bindings, $providerBindings);
         }

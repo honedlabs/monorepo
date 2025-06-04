@@ -7,11 +7,13 @@ use Illuminate\Support\Facades\File;
 beforeEach(function () {
     $this->path = base_path('bootstrap/cache/binders.php');
 
-    File::delete($this->path);
+    File::put($this->path, '<?php return [];');
 });
 
 it('caches', function () {
-    $this->artisan('binding:cache')->assertSuccessful();
-
     $this->assertFileExists($this->path);
+
+    $this->artisan('binding:clear')->assertSuccessful();
+
+    $this->assertFileDoesNotExist($this->path);
 });

@@ -7,9 +7,10 @@ namespace Honed\Binding;
 use Honed\Binding\Commands\BinderMakeCommand;
 use Honed\Binding\Commands\BindingCacheCommand;
 use Honed\Binding\Commands\BindingClearCommand;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\App;
 
 class BindingServiceProvider extends ServiceProvider
 {
@@ -43,7 +44,7 @@ class BindingServiceProvider extends ServiceProvider
     public static function addBinderDiscoveryPaths(iterable|string $paths)
     {
         static::$binderDiscoveryPaths = (new LazyCollection(static::$binderDiscoveryPaths))
-            ->merge(is_string($paths) ? [$paths] : $paths)
+            ->merge(Arr::wrap($paths))
             ->unique()
             ->values();
     }
@@ -71,7 +72,7 @@ class BindingServiceProvider extends ServiceProvider
 
     /**
      * Register services.
-     * 
+     *
      * @return void
      */
     public function register()
@@ -167,6 +168,18 @@ class BindingServiceProvider extends ServiceProvider
     }
 
     /**
+     * Get the discovered binders for the application.
+     *
+     * @return array<int, class-string<Binder>>
+     */
+    public function discoveredBinders()
+    {
+        return $this->shouldDiscoverBinders()
+            ? $this->discoverBinders()
+            : [];
+    }
+
+    /**
      * Register the publishing for the package.
      *
      * @return void
@@ -176,18 +189,6 @@ class BindingServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),
         ], 'action-stubs');
-    }
-
-    /**
-     * Get the discovered binders for the application.
-     *
-     * @return array<int, class-string<\Honed\Binding\Binder>>
-     */
-    public function discoveredBinders()
-    {
-        return $this->shouldDiscoverBinders()
-            ? $this->discoverBinders()
-            : [];
     }
 
     /**

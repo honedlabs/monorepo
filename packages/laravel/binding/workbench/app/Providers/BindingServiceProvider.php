@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use Honed\Binding\BindingServiceProvider as ServiceProvider;
 use Illuminate\Support\Str;
 
 use function Orchestra\Testbench\workbench_path;
-use Honed\Binding\BindingServiceProvider as ServiceProvider;
 
 class BindingServiceProvider extends ServiceProvider
 {

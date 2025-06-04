@@ -17,3 +17,12 @@ namespace Illuminate\Support\Facades {
      */
     class App {}
 }
+
+namespace Illuminate\Foundation {
+
+    /**
+     * @method bool bindersAreCached() Determine if the binders are cached.
+     * @method string getCachedBindersPath() Get the path to the binders cache file.
+     */
+    class Application {}
+}

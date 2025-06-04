@@ -6,6 +6,7 @@ namespace Honed\Binding\Concerns;
 
 use Honed\Binding\Attributes\UseBinder;
 use Honed\Binding\Binder;
+use ReflectionClass;
 
 /**
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
@@ -13,29 +14,20 @@ use Honed\Binding\Binder;
 trait HasBinder
 {
     /**
-     * Retrieve the model for a bound value.
+     * The binder for the model.
      *
-     * @param  mixed  $value
-     * @param  string|null  $field
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @var class-string<Binder>|null
      */
-    public function resolveRouteBinding($value, $field = null)
-    {
-        if ($binder = Binder::for(static::class, $field)) {
-            return $binder->resolve(static::class, $field, $value);
-        }
-
-        return parent::resolveRouteBinding($value, $field);
-    }
+    protected $binder;
 
     /**
      * Get the binder from the UseBinder class attribute.
-     * 
-     * @return class-string<\Honed\Binding\Binder>|null
+     *
+     * @return class-string<Binder>|null
      */
     public static function getUseBinderAttribute()
     {
-        $attributes = (new \ReflectionClass(static::class))
+        $attributes = (new ReflectionClass(static::class))
             ->getAttributes(UseBinder::class);
 
         if ($attributes !== []) {
@@ -51,6 +43,35 @@ trait HasBinder
         return null;
     }
 
+    /**
+     * Retrieve the model for a bound value.
+     *
+     * @param  mixed  $value
+     * @param  string|null  $field
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function resolveRouteBinding($value, $field = null)
+    {
+        if ($binder = $this->binder($field)) {
+            return $binder->resolve(static::class, $field, $value);
+        }
+        if ($binder = Binder::for(static::class, $field)) {
+            return $binder->resolve(static::class, $field, $value);
+        }
+
+        return parent::resolveRouteBinding($value, $field);
+    }
+
+    public function binder($field)
+    {
+        return match (true) {
+            isset($this->binder) => new $this->binder(),
+            $binder = static::getUseBinderAttribute() => $binder,
+            $binder = Binder::for(static::class, $field) => $binder,
+            default => null,
+        };
+    }
+
     // /**
     //  * Get the value of the model's route key.
     //  *
@@ -58,6 +79,6 @@ trait HasBinder
     //  */
     // public function getRouteKey()
     // {
-    //     return 
+    //     return
     // }
 }

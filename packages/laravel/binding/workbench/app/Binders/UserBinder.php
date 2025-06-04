@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Binders;
 
 use Honed\Binding\Binder;
@@ -31,5 +33,4 @@ class UserBinder extends Binder
     {
         return $query->select('name', 'email');
     }
-
 }

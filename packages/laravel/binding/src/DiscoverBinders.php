@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 use ReflectionClass;
 use SplFileInfo;
 use Symfony\Component\Finder\Finder;
-use Workbench\App\Binders\UserBinder;
 
 class DiscoverBinders
 {
@@ -26,7 +25,7 @@ class DiscoverBinders
      *
      * @param  array<int, string>|string  $binderPath
      * @param  string  $basePath
-     * @return array
+     * @return array<int, class-string<Binder>>
      */
     public static function within($binderPath, $basePath)
     {
@@ -34,10 +33,9 @@ class DiscoverBinders
             return [];
         }
 
-        
         $files = Finder::create()->files()->in($binderPath);
 
-        /** @var array<int, \Honed\Binder\Binder> $binders */
+        /** @var array<int, class-string<Binder>> $binders */
         $binders = [];
 
         foreach ($files as $file) {
@@ -46,9 +44,6 @@ class DiscoverBinders
             if (static::invalidBinder($binder)) {
                 continue;
             }
-
-            /** @var \Honed\Binder\Binder $binder */
-            $binder = App::make($binder);
 
             $binders[] = $binder;
         }
@@ -95,8 +90,8 @@ class DiscoverBinders
         $class = trim(Str::replaceFirst($basePath, '', $file->getRealPath()), DIRECTORY_SEPARATOR);
 
         return ucfirst(Str::camel(str_replace(
-            [DIRECTORY_SEPARATOR, ucfirst(basename(app()->path())).'\\'],
-            ['\\', app()->getNamespace()],
+            [DIRECTORY_SEPARATOR, ucfirst(basename(App::path())).'\\'],
+            ['\\', App::getNamespace()],
             ucfirst(Str::replaceLast('.php', '', $class))
         )));
     }

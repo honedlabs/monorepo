@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controller;
 use App\Models\User;
+use Illuminate\Routing\Controller;
 
 class UserController extends Controller
 {

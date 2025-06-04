@@ -49,7 +49,7 @@ class BindingClearCommand extends Command
      */
     public function handle()
     {
-        // $this->files->delete($this->laravel->getCachedBindingsPath());
+        $this->files->delete($this->laravel->getCachedBindersPath());
 
         $this->components->info('Cached binding methods cleared successfully.');
     }

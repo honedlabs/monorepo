@@ -16,6 +16,5 @@ class UseBinder
      * @return void
      */
     public function __construct(
-        public string $bindingClass)
-    { }
+        public string $bindingClass) {}
 }
