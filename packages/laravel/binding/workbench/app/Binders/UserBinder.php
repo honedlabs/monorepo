@@ -2,6 +2,8 @@
 
 namespace Workbench\App\Binders;
 
+use Honed\Binding\Binder;
+
 class UserBinder extends Binder
 {
     /**

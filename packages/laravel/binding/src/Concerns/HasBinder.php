@@ -15,7 +15,7 @@ use ReflectionClass;
  * 
  * @property-read TBinder $binder
  */
-trait HasBindings
+trait HasBinder
 {
     /**
      * Get a new binding instance for the model.

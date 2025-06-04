@@ -11,7 +11,7 @@ abstract class Binder
      *
      * @var string
      */
-    public static $namespace = 'Binders\\';
+    public static $namespace = 'App\\Binders\\';
     
     /**
      * The binder name resolver.
