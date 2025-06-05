@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Bind;
 
-use Throwable;
+use Honed\Bind\Attributes\Binds;
+use Illuminate\Container\Container;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
-use function array_reduce;
-use Illuminate\Support\Str;
-use Illuminate\Container\Container;
-use Illuminate\Support\Facades\App;
+use Throwable;
 
-use Honed\Bind\Attributes\BinderFor;
-use Illuminate\Contracts\Foundation\Application;
+use function array_reduce;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -26,6 +26,20 @@ abstract class Binder
      * @var class-string<TModel>|null
      */
     protected $model;
+
+    /**
+     * The key of the binder to be used when resolving the value of the binding.
+     *
+     * @var string|null
+     */
+    protected $key;
+
+    /**
+     * Store a memory-cache of the binders to ensure that we don't have to re-instantiate them.
+     *
+     * @var array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<self>>>|null
+     */
+    protected static $binders;
 
     /**
      * The default namespace where binders reside.
@@ -42,53 +56,31 @@ abstract class Binder
     protected static $modelNameResolvers = [];
 
     /**
-     * The binder name resolver.
-     *
-     * @var (callable(class-string<\Illuminate\Database\Eloquent\Model>): class-string<Binder>)|null
-     */
-    protected static $binderNameResolver;
-
-    /**
      * Retrieve the binder for the model which binds the given field if it exists.
      *
      * @param  class-string<TModel>  $model
-     * @param  string|null  $field
-     * @return static|null
+     * @param  string  $field
+     * @return self|null
      */
     public static function for($model, $field)
     {
-        if (App::bindersAreCached()
-            && $binder = static::getBinderFromCache($model, $field)) {
-            return $binder;
-        }
-
-        if ($binder = static::guessBinderName($model, $field)) {
-            return $binder;
-        }
-
-        if (\class_exists($binder) && \method_exists($binder, $field)) {
-            return new $binder();
-        }
-
-        return null;
+        return static::cached($model, $field);
     }
 
     /**
-     * Get the binder from the BinderFor class attribute.
+     * Get the binder from the Binds class attribute.
      *
-     * @return class-string<Binder>|null
+     * @return class-string<\Illuminate\Database\Eloquent\Model>|null
      */
-    public static function getBinderForAttribute()
+    public static function getBindsAttribute()
     {
         $attributes = (new ReflectionClass(static::class))
-            ->getAttributes(BinderFor::class);
+            ->getAttributes(Binds::class);
 
         if ($attributes !== []) {
             $for = $attributes[0]->newInstance();
 
-            $model = $for->model;
-
-            return $model;
+            return $for->model;
         }
 
         return null;
@@ -100,7 +92,7 @@ abstract class Binder
      * @param  callable(self): class-string<TModel>  $callback
      * @return void
      */
-    public static function guessModelNamesUsing(callable $callback)
+    public static function guessModelNamesUsing($callback)
     {
         static::$modelNameResolvers[static::class] = $callback;
     }
@@ -108,22 +100,12 @@ abstract class Binder
     /**
      * Specify the default namespace that contains the application's model binders.
      *
+     * @param  string  $namespace
      * @return void
      */
-    public static function useNamespace(string $namespace)
+    public static function useNamespace($namespace)
     {
         static::$namespace = $namespace;
-    }
-
-    /**
-     * Specify the callback that should be invoked to guess binder names based on dynamic relationship names.
-     *
-     * @param  callable(class-string<\Illuminate\Database\Eloquent\Model>): class-string<Binder>  $callback
-     * @return void
-     */
-    public static function guessBinderNamesUsing(callable $callback)
-    {
-        static::$binderNameResolver = $callback;
     }
 
     /**
@@ -133,22 +115,39 @@ abstract class Binder
      */
     public static function flushState()
     {
+        static::$binders = null;
         static::$modelNameResolvers = [];
-        static::$binderNameResolver = null;
         static::$namespace = 'App\\Binders\\';
     }
 
     /**
      * Resolve the binding for the model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Contracts\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation  $query
-     * @param  string  $field
+     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Relations\Relation  $query
      * @param  mixed  $value
-     * @return TModel|null
+     * @param  string  $field
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function resolve($query, $field, $value)
+    public function resolve($query, $value, $field) // @phpstan-ignore missingType.generics
     {
-        return $this->{$field}($query, $value)->first();
+        return $this->query($query, $value, $field)->first();
+    }
+
+    /**
+     * Resolve the binding query for the model.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|\Illuminate\Database\Eloquent\Relations\Relation  $query
+     * @param  mixed  $value
+     * @param  string  $field
+     * @return \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
+     */
+    public function query($query, $value, $field) // @phpstan-ignore missingType.generics
+    {
+        if (isset($this->key)) {
+            $query = $query->where($this->key, $value);
+        }
+
+        return $this->{$field}($query, $value);
     }
 
     /**
@@ -163,7 +162,7 @@ abstract class Binder
                 ->getMethods(ReflectionMethod::IS_PUBLIC),
 
             function (array $bindings, ReflectionMethod $method) {
-                if (! $method->isStatic() && $method->class === $this::class) {
+                if ($this->binds($method)) {
                     $bindings[] = $method->getName();
                 }
 
@@ -173,9 +172,21 @@ abstract class Binder
     }
 
     /**
+     * Determine if the class method is for binding.
+     *
+     * @param  ReflectionMethod  $method
+     * @return bool
+     */
+    protected function binds($method)
+    {
+        return ! $method->isStatic()
+            && $method->getDeclaringClass()->getName() === $this::class;
+    }
+
+    /**
      * Get the name of the model that is generated by the binder.
      *
-     * @return class-string<TModel>
+     * @return class-string<\Illuminate\Database\Eloquent\Model>
      */
     public function modelName()
     {
@@ -183,7 +194,11 @@ abstract class Binder
             return $this->model;
         }
 
-        $resolver = static::$modelNameResolvers[static::class] ?? static::$modelNameResolvers[self::class] ?? static::$modelNameResolver ?? function (self $binder) {
+        if ($model = static::getBindsAttribute()) {
+            return $model;
+        }
+
+        $resolver = static::$modelNameResolvers[static::class] ?? static::$modelNameResolvers[self::class] ?? function (self $binder) {
             $namespacedBinderBasename = Str::replaceLast(
                 'Binder', '', Str::replaceFirst(static::$namespace, '', $binder::class)
             );
@@ -197,6 +212,7 @@ abstract class Binder
                 : $appNamespace.$binderBasename;
         };
 
+        /** @var class-string<\Illuminate\Database\Eloquent\Model> */
         return $resolver($this);
     }
 
@@ -205,34 +221,21 @@ abstract class Binder
      *
      * @param  class-string<TModel>  $model
      * @param  string  $field
-     * @return static|null
+     * @return self|null
      */
-    protected static function getBinderFromCache($model, $field)
+    protected static function cached($model, $field)
     {
-        $binders = require App::getCachedBindersPath();
+        if (! isset(static::$binders)) {
+            /** @var array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<self>>> $binders */
+            $binders = require App::getCachedBindersPath();
 
-        if (isset($binders[$model][$field])) {
-            return new $binders[$model][$field]();
+            static::$binders = $binders;
         }
 
-        return null;
-    }
+        if (isset(static::$binders[$model][$field])) {
+            $class = static::$binders[$model][$field];
 
-    /**
-     * Guess the binder name for the model and field.
-     *
-     * @param  class-string<TModel>  $model
-     * @param  string  $field
-     * @return static|null
-     */
-    protected static function guessBinderName($model, $field)
-    {
-        if (static::$binderNameResolver) {
-            return static::$binderNameResolver($model);
-        }
-
-        if (class_exists($model) && method_exists($model, $field)) {
-            return new $binder();
+            return App::make($class);
         }
 
         return null;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Bind;
 
-use Honed\Bind\Commands\BinderMakeCommand;
 use Honed\Bind\Commands\BindCacheCommand;
 use Honed\Bind\Commands\BindClearCommand;
+use Honed\Bind\Commands\BinderMakeCommand;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\LazyCollection;
@@ -31,9 +31,16 @@ class BindServiceProvider extends ServiceProvider
     /**
      * The paths to discover binders.
      *
-     * @var iterable<int, string>|null
+     * @var iterable<int, string>
      */
-    protected static $binderDiscoveryPaths;
+    protected static $binderDiscoveryPaths = [];
+
+    /**
+     * The base path to discover binders.
+     *
+     * @var string|null
+     */
+    protected static $binderDiscoveryBasePath;
 
     /**
      * Add the given widget discovery paths to the application's widget discovery paths.
@@ -68,6 +75,17 @@ class BindServiceProvider extends ServiceProvider
     public static function disableBinderDiscovery()
     {
         static::$shouldDiscoverBinders = false;
+    }
+
+        /**
+     * Set the globally configured binder discovery paths.
+     *
+     * @param  string  $path
+     * @return void
+     */
+    public static function setBinderDiscoveryBasePath($path)
+    {
+        static::$binderDiscoveryBasePath = $path;
     }
 
     /**
@@ -120,11 +138,20 @@ class BindServiceProvider extends ServiceProvider
             return $cache[get_class($this)] ?? [];
         }
 
+        return $this->registeredBinders();
+    }
+
+    /**
+     * Get the binders which can be registered.
+     *
+     * @return array<int, class-string<Binder>>
+     */
+    public function registeredBinders()
+    {
         return array_merge_recursive(
             $this->discoveredBinders(),
             $this->binders()
         );
-
     }
 
     /**
@@ -144,7 +171,7 @@ class BindServiceProvider extends ServiceProvider
      */
     public function shouldDiscoverBinders()
     {
-        return static::$shouldDiscoverBinders;
+        return get_class($this) === __CLASS__ && static::$shouldDiscoverBinders;
     }
 
     /**
@@ -155,7 +182,7 @@ class BindServiceProvider extends ServiceProvider
     public function discoverBinders()
     {
         return (new LazyCollection($this->discoverBindersWithin()))
-            ->flatMap(function ($directory) {
+            ->flatMap(function ($directory) { // @phpstan-ignore argument.type
                 return glob($directory, GLOB_ONLYDIR);
             })
             ->reject(function ($directory) {
@@ -188,7 +215,7 @@ class BindServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),
-        ], 'action-stubs');
+        ], 'bind-stubs');
     }
 
     /**
@@ -213,6 +240,6 @@ class BindServiceProvider extends ServiceProvider
      */
     protected function binderDiscoveryBasePath()
     {
-        return base_path();
+        return static::$binderDiscoveryBasePath ?? base_path();
     }
 }

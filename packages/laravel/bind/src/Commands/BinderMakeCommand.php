@@ -85,7 +85,7 @@ class BinderMakeCommand extends GeneratorCommand
      *
      * @return array<string,mixed>
      */
-    protected function binderForMissingArgumentsUsing()
+    protected function promptForMissingArgumentsUsing()
     {
         return [
             'name' => [

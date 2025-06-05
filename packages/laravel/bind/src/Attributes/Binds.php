@@ -7,14 +7,14 @@ namespace Honed\Bind\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class UseBinder
+class Binds
 {
     /**
      * Create a new attribute instance.
      *
-     * @param  class-string<\Honed\Bind\Binder>  $bindingClass
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $model
      * @return void
      */
     public function __construct(
-        public string $bindingClass) {}
+        public string $model) {}
 }

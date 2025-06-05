@@ -4,22 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Bind\Concerns;
 
-use Honed\Bind\Attributes\UseBinder;
 use Honed\Bind\Binder;
-use ReflectionClass;
 
 /**
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
  */
 trait HasBinder
 {
-    /**
-     * The binder for the model.
-     *
-     * @var class-string<Binder>|null
-     */
-    protected $binder;
-
     /**
      * Retrieve the model for a bound value.
      *
@@ -29,47 +20,59 @@ trait HasBinder
      */
     public function resolveRouteBinding($value, $field = null)
     {
-        if ($binder = $this->binder($field)) {
-            return $binder->resolve(static::class, $field, $value);
-        }
-
-        if ($binder = Binder::for(static::class, $field)) {
-            return $binder->resolve(static::class, $field, $value);
+        if ($binder = static::getBinder($field ?? 'default')) {
+            return $binder->resolve(static::class, $field ?? 'default', $value);
         }
 
         return parent::resolveRouteBinding($value, $field);
     }
 
-    public function binder($field)
+    /**
+     * Get the binder for the model.
+     *
+     * @param  string|null  $field
+     * @return Binder|null
+     */
+    public static function binder($field)
     {
-        return match (true) {
-            isset($this->binder) => new $this->binder(),
-            $binder = static::getUseBinderAttribute() => $binder,
-            $binder = Binder::for(static::class, $field) => $binder,
-            default => null,
-        };
+        return static::getBinder($field);
     }
 
     /**
-     * Get the binder from the UseBinder class attribute.
+     * Get a model using the specified binding.
      *
-     * @return class-string<Binder>|null
+     * @param  string  $field
+     * @param  mixed  $value
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public static function getUseBinderAttribute()
+    public static function bindBy($field, $value = null)
     {
-        $attributes = (new ReflectionClass(static::class))
-            ->getAttributes(UseBinder::class);
+        return static::binder($field)
+            ->resolve(static::class, $value, $field);
+    }
 
-        if ($attributes !== []) {
-            $useBinder = $attributes[0]->newInstance();
+    /**
+     * Get models using the specified binding.
+     *
+     * @param  string  $field
+     * @param  mixed  $value
+     * @return \Illuminate\Database\Eloquent\Collection<int, $this>
+     */
+    public static function bindOn($field, $value = null)
+    {
+        return static::binder($field)
+            ->query(static::class, $value, $field)
+            ->get();
+    }
 
-            $binder = $useBinder->bindingClass;
-
-            $binder::guessModelNamesUsing(fn () => static::class);
-
-            return $binder;
-        }
-
-        return null;
+    /**
+     * Get the binder for the model.
+     *
+     * @param  string|null  $field
+     * @return Binder|null
+     */
+    protected static function getBinder($field)
+    {
+        return Binder::for(static::class, $field);
     }
 }

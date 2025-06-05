@@ -13,7 +13,7 @@
     <a href="https://packagist.org/packages/honed/bind"><img src="https://img.shields.io/packagist/v/honed/bind" alt="Latest Stable Version"></a>
 </p>
 
-**Bind** is a lightweight package that optimizes how models are retrieved via route model binding in Laravel.
+**Bind** solves the problem of how to retrieve models optimally via route model binding in Laravel.
 
 ## Installation
 

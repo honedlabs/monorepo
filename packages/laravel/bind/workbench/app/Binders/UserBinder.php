@@ -16,9 +16,9 @@ class UserBinder extends Binder
      * @param  string|null  $field
      * @return \Illuminate\Contracts\Database\Eloquent\Builder
      */
-    public function show($query, $value)
+    public function default($query, $value)
     {
-        return $query->select('id', 'name');
+        return $query->select('id', 'name')->where('id', $value);
     }
 
     /**
@@ -31,6 +31,6 @@ class UserBinder extends Binder
      */
     public function edit($query, $value)
     {
-        return $query->select('name', 'email');
+        return $query->select('name', 'email')->where('id', $value);
     }
 }

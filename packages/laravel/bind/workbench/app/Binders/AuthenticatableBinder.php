@@ -15,6 +15,11 @@ class AuthenticatableBinder extends Binder
     protected $model = User::class;
 
     /**
+     * {@inheritdoc}
+     */
+    protected $key = 'id';
+
+    /**
      * Retrieve the route model binding.
      *
      * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Contracts\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation  $query

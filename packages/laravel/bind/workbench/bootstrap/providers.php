@@ -3,5 +3,5 @@
 declare(strict_types=1);
 
 return [
-    App\Providers\BindServiceProvider::class,
+    Honed\Bind\BindServiceProvider::class,
 ];

@@ -19,6 +19,8 @@ class WorkbenchServiceProvider extends ServiceProvider
         BindServiceProvider::setBinderDiscoveryPaths([
             workbench_path('app/Binders'),
         ]);
+
+        BindServiceProvider::setBinderDiscoveryBasePath(workbench_path());
     }
 
     /**

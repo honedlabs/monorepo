@@ -18,7 +18,7 @@ class BindCacheCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'bind:cache';
+    protected $signature = 'bind:cache {--table : Show the model bindings that are being cached}';
 
     /**
      * The console command description.
@@ -29,7 +29,7 @@ class BindCacheCommand extends Command
 
     /**
      * Execute the console command.
-     * 
+     *
      * @return void
      */
     public function handle()
@@ -46,13 +46,7 @@ class BindCacheCommand extends Command
         $content = [];
 
         foreach ($bindings as $binding) {
-            /** @var \Honed\Bind\Binder $binding */
-            $binding = App::make($binding);
-
-            $binds = array_fill_keys($binding->bindings(), get_class($binding));
-
-            $content[$binding->modelName()] = array_merge($content[$binding->modelName()] ?? [], $binds);
-
+            $this->retrieveBindings($binding, $content);
             $progress->advance();
         }
 
@@ -67,9 +61,9 @@ class BindCacheCommand extends Command
 
         $this->components->success('Cached bindings for '.count($content).' model(s).');
 
-        // if ($this->option('show')) {
-        //     // $this->table(['Class', 'Binding'], $this->getBindings());
-        // }
+        if ($this->option('table')) {
+            $this->createTable($content);
+        }
 
         $this->components->info('Bindings cached successfully.');
     }
@@ -84,26 +78,46 @@ class BindCacheCommand extends Command
         $bindings = [];
 
         foreach ($this->laravel->getProviders(BindServiceProvider::class) as $provider) {
-            $providerBindings = array_merge_recursive(
-                $provider->discoveredBinders(),
-                $provider->binders()
-            );
-
-            $bindings = \array_merge($bindings, $providerBindings);
+            $bindings = \array_merge($bindings, $provider->registeredBinders());
         }
 
         return $bindings;
     }
 
     /**
-     * Get the console command options
+     * Retrieve the bindings for the given binder, and push them to the array.
      *
-     * @return array<int,array<int,mixed>>
+     * @param class-string<\Honed\Bind\Binder> $binder
+     * @param array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Bind\Binder>>> $content
+     * @return void
      */
-    protected function getOptions()
+    protected function retrieveBindings($binder, &$content)
     {
-        return [
-            ['show', 's', InputOption::VALUE_NONE, 'Show the bindings that are being cached'],
-        ];
+        /** @var \Honed\Bind\Binder $binder */
+        $binder = App::make($binder);
+
+        $binds = array_fill_keys($binder->bindings(), get_class($binder));
+
+        $model = $binder->modelName();
+
+        $content[$model] = array_merge($content[$model] ?? [], $binds);
+    }
+
+    /**
+     * Create a table of the cached bindings.
+     *
+     * @param array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Bind\Binder>>> $content
+     * @return void
+     */
+    protected function createTable($content)
+    {
+        $headers = ['Model', 'Bindings'];
+
+        $this->table($headers, array_map(function ($model, $binds) {
+            return [
+                $model,
+                implode(', ', array_keys($binds)),
+            ];
+        }, array_keys($content), array_values($content)));
     }
 }
