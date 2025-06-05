@@ -29,6 +29,6 @@ class AuthenticatableBinder extends Binder
      */
     public function auth($query, $value)
     {
-        return $query->where('id', '>', 10);
+        return $query->select('email');
     }
 }

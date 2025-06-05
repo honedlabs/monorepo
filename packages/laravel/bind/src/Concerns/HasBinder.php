@@ -21,7 +21,7 @@ trait HasBinder
     public function resolveRouteBinding($value, $field = null)
     {
         if ($binder = static::getBinder($field ?? 'default')) {
-            return $binder->resolve(static::class, $field ?? 'default', $value);
+            return $binder->resolve($this, $value, $field ?? 'default');
         }
 
         return parent::resolveRouteBinding($value, $field);
@@ -41,28 +41,36 @@ trait HasBinder
     /**
      * Get a model using the specified binding.
      *
-     * @param  string  $field
+     * @param  string|null  $field
      * @param  mixed  $value
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public static function bindBy($field, $value = null)
+    public static function firstBound($field = null, $value = null)
     {
+        $field ??= 'default';
+
         return static::binder($field)
             ->resolve(static::class, $value, $field);
+    }
+
+    public static function whereBound($field = null, $value = null)
+    {
+        $field ??= 'default';
+
+        return static::binder($field)
+            ->query(static::class, $value, $field);
     }
 
     /**
      * Get models using the specified binding.
      *
-     * @param  string  $field
+     * @param  string|null  $field
      * @param  mixed  $value
      * @return \Illuminate\Database\Eloquent\Collection<int, $this>
      */
-    public static function bindOn($field, $value = null)
+    public static function getBound($field = null, $value = null)
     {
-        return static::binder($field)
-            ->query(static::class, $value, $field)
-            ->get();
+        return static::whereBound($field, $value)->get();
     }
 
     /**

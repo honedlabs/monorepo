@@ -21,6 +21,7 @@ class AdminBinder extends Binder
      */
     public function admin($query, $value)
     {
-        return $query->whereNotNull('email_verified_at');
+        return $query
+            ->where('name', $value);
     }
 }
