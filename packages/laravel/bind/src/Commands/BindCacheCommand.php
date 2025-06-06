@@ -8,7 +8,6 @@ use Honed\Bind\BindServiceProvider;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Input\InputOption;
 
 #[AsCommand(name: 'bind:cache')]
 class BindCacheCommand extends Command
@@ -87,8 +86,8 @@ class BindCacheCommand extends Command
     /**
      * Retrieve the bindings for the given binder, and push them to the array.
      *
-     * @param class-string<\Honed\Bind\Binder> $binder
-     * @param array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Bind\Binder>>> $content
+     * @param  class-string<\Honed\Bind\Binder>  $binder
+     * @param  array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Bind\Binder>>>  $content
      * @return void
      */
     protected function retrieveBindings($binder, &$content)
@@ -106,7 +105,7 @@ class BindCacheCommand extends Command
     /**
      * Create a table of the cached bindings.
      *
-     * @param array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Bind\Binder>>> $content
+     * @param  array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Bind\Binder>>>  $content
      * @return void
      */
     protected function createTable($content)

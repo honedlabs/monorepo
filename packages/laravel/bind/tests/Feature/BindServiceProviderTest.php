@@ -1,25 +1,63 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Bind\BindServiceProvider;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 
 beforeEach(function () {
     $this->cache = base_path('bootstrap/cache/binders.php');
     $this->stub = base_path('stubs/honed.binder.stub');
-
     File::delete([$this->cache, $this->stub]);
+    BindServiceProvider::flushState();
 });
 
 it('offers publishing', function () {
     $this->assertFileDoesNotExist($this->stub);
 
     $this->artisan('vendor:publish', [
-        '--provider' => BindServiceProvider::class
+        '--provider' => BindServiceProvider::class,
     ])->assertSuccessful();
 
-    // $this->assertFileExists($this->stub);
+    $this->assertFileExists($this->stub);
 });
 
-it('discovers binders', function () {
+it('adds discovery paths', function () {
+    BindServiceProvider::addBinderDiscoveryPaths('tests/Feature/Binders');
 
+    expect(BindServiceProvider::getBinderDiscoveryPaths())
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->toBe('tests/Feature/Binders');
+});
+
+it('sets discovery paths', function () {
+    BindServiceProvider::setBinderDiscoveryPaths(['tests/Feature/Binders']);
+
+    expect(BindServiceProvider::getBinderDiscoveryPaths())
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}->toBe('tests/Feature/Binders');
+});
+
+it('disables discovery', function () {
+    BindServiceProvider::disableBinderDiscovery();
+
+    /** @var \Honed\Bind\BindServiceProvider $provider */
+    $provider = App::getProvider(BindServiceProvider::class);
+
+    expect($provider->shouldDiscoverBinders())
+        ->toBeFalse();
+
+    expect($provider->getBinders())
+        ->toBeArray()
+        ->toBeEmpty();
+});
+
+it('sets discovery base path', function () {
+    BindServiceProvider::setBinderDiscoveryBasePath('tests/Feature/Binders');
+
+    expect(BindServiceProvider::getBinderDiscoveryBasePath())
+        ->toBe('tests/Feature/Binders');
 });

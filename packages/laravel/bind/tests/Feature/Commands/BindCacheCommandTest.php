@@ -21,12 +21,12 @@ it('caches', function () {
         ->toBeArray()
         ->toHaveKey(User::class)
         ->{User::class}->scoped(fn ($bindings) => $bindings
-            ->toHaveKeys([
-                'admin',
-                'default',
-                'edit',
-                'auth',
-            ])->toBeArray());
+        ->toHaveKeys([
+            'admin',
+            'default',
+            'edit',
+            'auth',
+        ])->toBeArray());
 });
 
 it('has table', function () {

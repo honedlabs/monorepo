@@ -31,6 +31,8 @@ class UserBinder extends Binder
      */
     public function edit($query, $value)
     {
-        return $query->select('name', 'email')->where('id', $value);
+        return $query->select('name', 'email')
+            ->where('id', '>', 1)
+            ->where('id', $value);
     }
 }

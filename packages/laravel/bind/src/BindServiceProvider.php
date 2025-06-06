@@ -53,7 +53,8 @@ class BindServiceProvider extends ServiceProvider
         static::$binderDiscoveryPaths = (new LazyCollection(static::$binderDiscoveryPaths))
             ->merge(Arr::wrap($paths))
             ->unique()
-            ->values();
+            ->values()
+            ->all();
     }
 
     /**
@@ -68,6 +69,16 @@ class BindServiceProvider extends ServiceProvider
     }
 
     /**
+     * Get the globally configured binder discovery paths.
+     *
+     * @return iterable<int, string>
+     */
+    public static function getBinderDiscoveryPaths()
+    {
+        return static::$binderDiscoveryPaths;
+    }
+
+    /**
      * Disable binder discovery for the application.
      *
      * @return void
@@ -77,8 +88,8 @@ class BindServiceProvider extends ServiceProvider
         static::$shouldDiscoverBinders = false;
     }
 
-        /**
-     * Set the globally configured binder discovery paths.
+    /**
+     * Set the base of the discovery path.
      *
      * @param  string  $path
      * @return void
@@ -86,6 +97,28 @@ class BindServiceProvider extends ServiceProvider
     public static function setBinderDiscoveryBasePath($path)
     {
         static::$binderDiscoveryBasePath = $path;
+    }
+
+    /**
+     * Get the base of the discovery path.
+     *
+     * @return string|null
+     */
+    public static function getBinderDiscoveryBasePath()
+    {
+        return static::$binderDiscoveryBasePath;
+    }
+
+    /**
+     * Flush the state of the service provider.
+     *
+     * @return void
+     */
+    public static function flushState()
+    {
+        static::$shouldDiscoverBinders = true;
+        static::$binderDiscoveryPaths = [];
+        static::$binderDiscoveryBasePath = null;
     }
 
     /**
