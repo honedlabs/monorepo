@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Config;
 
 class DateColumn extends Column
 {
+    const DEFAULT_FORMAT = 'Y-m-d H:i:s';
+
     /**
      * {@inheritdoc}
      */
@@ -26,13 +28,6 @@ class DateColumn extends Column
     protected $diffForHumans;
 
     /**
-     * Whether to use the date difference by default.
-     *
-     * @var bool
-     */
-    protected static $useDefaultFormat = false;
-
-    /**
      * A format to use for the date.
      *
      * @var string|null
@@ -44,7 +39,7 @@ class DateColumn extends Column
      *
      * @var string|\Closure
      */
-    protected static $useFormat = 'Y-m-d H:i:s';
+    protected static $useFormat = self::DEFAULT_FORMAT;
 
     /**
      * The timezone to use for date parsing.
@@ -90,7 +85,7 @@ class DateColumn extends Column
             $value = $value->shiftTimezone($timezone);
         }
 
-        if ($this->isDiffForHumans()) {
+        if ($this->diffs()) {
             return $value->diffForHumans();
         }
 
@@ -111,11 +106,22 @@ class DateColumn extends Column
     }
 
     /**
+     * Use diffForHumans to format the date.
+     *
+     * @param  bool  $diffForHumans
+     * @return $this
+     */
+    public function diff($diffForHumans = true)
+    {
+        return $this->diffForHumans($diffForHumans);
+    }
+
+    /**
      * Determine if the date should be formatted using diffForHumans.
      *
      * @return bool
      */
-    public function isDiffForHumans()
+    public function diffs()
     {
         return (bool) $this->diffForHumans;
     }
@@ -147,6 +153,7 @@ class DateColumn extends Column
      * Set the default format to use for formatting dates.
      * 
      * @param string|\Closure():string $format
+     * @return void
      */
     public static function useFormat($format = 'Y-m-d H:i:s')
     {
@@ -200,6 +207,7 @@ class DateColumn extends Column
      * Set the default timezone for all date columns.
      *
      * @param string|\Closure(mixed...):string $timezone
+     * @return void
      */
     public static function useTimezone($timezone)
     {
@@ -224,25 +232,11 @@ class DateColumn extends Column
         return static::$useTimezone;
     }
 
-    /**
-     * Determine if the value has been cast as a date.
-     *
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function isDate($value)
+    public static function flushState()
     {
-        return $value instanceof Carbon;
-    }
+        parent::flushState();
 
-    /**
-     * Determine if the value has been cast as an immutable date.
-     *
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function isImmutable($value)
-    {
-        return $value instanceof CarbonImmutable;
+        static::$useFormat = self::DEFAULT_FORMAT;
+        static::$useTimezone = null;
     }
 }

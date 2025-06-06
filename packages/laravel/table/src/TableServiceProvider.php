@@ -9,6 +9,7 @@ use Honed\Table\Commands\TableMakeCommand;
 use Honed\Table\Contracts\ExportsTable;
 use Honed\Table\Http\Controllers\TableController;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
 class TableServiceProvider extends ServiceProvider
@@ -23,7 +24,7 @@ class TableServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/table.php', 'table');
 
         /** @var string */
-        $exporter = config('table.exporter');
+        $exporter = Config::get('table.exporter');
 
         $this->app->bind(ExportsTable::class, $exporter);
     }
@@ -74,7 +75,7 @@ class TableServiceProvider extends ServiceProvider
             /** @var \Illuminate\Routing\Router $this */
 
             /** @var string $endpoint */
-            $endpoint = config('table.endpoint', '/table');
+            $endpoint = config('table.endpoint', 'table');
 
             $endpoint = \trim($endpoint, '/');
 
