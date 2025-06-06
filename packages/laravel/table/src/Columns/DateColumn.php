@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Honed\Table\Columns;
 
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
+use Closure;
 use Honed\Core\Interpret;
+use Illuminate\Support\Facades\Config;
 
 class DateColumn extends Column
 {
-
     /**
      * {@inheritdoc}
      */
@@ -39,9 +42,9 @@ class DateColumn extends Column
     /**
      * The default format to use for the date.
      *
-     * @var string|null
+     * @var string|\Closure
      */
-    protected static $useFormat;
+    protected static $useFormat = 'Y-m-d H:i:s';
 
     /**
      * The timezone to use for date parsing.
@@ -53,7 +56,7 @@ class DateColumn extends Column
     /**
      * The default timezone to use for date parsing.
      *
-     * @var string|null
+     * @var string|\Closure|null
      */
     protected static $useTimezone;
 
@@ -69,19 +72,29 @@ class DateColumn extends Column
             return $this->getFallback();
         }
 
-        if (! $value instanceof Carbon) {
-            $value = Interpret::dateOf($value, $this->getTimezone());
+        if (! $value instanceof CarbonInterface) {
+            $value = Interpret::dateOf($value);
+            
+            if (\is_null($value)) {
+                return $this->getFallback();
+            }
         }
 
-        if (\is_null($value)) {
-            return $this->getFallback();
+        if ($value instanceof CarbonImmutable) {
+            $value = Carbon::instance($value);
+        }
+
+        $timezone = $this->getTimezone();
+        
+        if ($timezone) {
+            $value = $value->shiftTimezone($timezone);
         }
 
         if ($this->isDiffForHumans()) {
             return $value->diffForHumans();
         }
 
-        return $value->format($this->getBuildermat() ?? 'Y-m-d H:i:s');
+        return $value->format($this->getFormat());
     }
 
     /**
@@ -123,11 +136,39 @@ class DateColumn extends Column
     /**
      * Get the format for the date.
      *
-     * @return string|null
+     * @return string
      */
-    public function getBuildermat()
+    public function getFormat()
     {
-        return $this->format;
+        return $this->format ??= $this->usesFormat();
+    }
+
+    /**
+     * Set the default format to use for formatting dates.
+     * 
+     * @param string|\Closure():string $format
+     */
+    public static function useFormat($format = 'Y-m-d H:i:s')
+    {
+        static::$useFormat = $format;
+    }
+
+    /**
+     * Get the default format to use for formatting dates.
+     * 
+     * @return string
+     */
+    protected function usesFormat()
+    {
+        if (is_null(static::$useFormat)) {
+            return null;
+        }
+
+        if (static::$useFormat instanceof Closure) {
+            static::$useFormat = $this->evaluate($this->useFormat);
+        }
+
+        return static::$useFormat;
     }
 
     /**
@@ -151,6 +192,57 @@ class DateColumn extends Column
     public function getTimezone()
     {
         /** @var string|null */
-        return $this->timezone ?? config('app.timezone');
+        return $this->timezone 
+            ??= $this->usesTimezone() ?? Config::get('app.timezone');
+    }
+
+    /**
+     * Set the default timezone for all date columns.
+     *
+     * @param string|\Closure(mixed...):string $timezone
+     */
+    public static function useTimezone($timezone)
+    {
+        static::$useTimezone = $timezone;
+    }
+
+    /**
+     * Get the default timezone to use for date parsing.
+     *
+     * @return string|null
+     */
+    protected function usesTimezone()
+    {
+        if (is_null(static::$useTimezone)) {
+            return null;
+        }
+
+        if (static::$useTimezone instanceof Closure) {
+            static::$useTimezone = $this->evaluate($this->useTimezone);
+        }
+
+        return static::$useTimezone;
+    }
+
+    /**
+     * Determine if the value has been cast as a date.
+     *
+     * @param  mixed  $value
+     * @return bool
+     */
+    protected function isDate($value)
+    {
+        return $value instanceof Carbon;
+    }
+
+    /**
+     * Determine if the value has been cast as an immutable date.
+     *
+     * @param  mixed  $value
+     * @return bool
+     */
+    protected function isImmutable($value)
+    {
+        return $value instanceof CarbonImmutable;
     }
 }
