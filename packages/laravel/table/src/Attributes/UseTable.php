@@ -7,14 +7,14 @@ namespace Honed\Table\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Table
+class UseTable
 {
     /**
      * Create a new attribute instance.
      *
-     * @param  class-string<\Honed\Table\Table>  $table
+     * @param  class-string<\Honed\Table\Table>  $tableClass
      */
-    public function __construct(
-        public string $name
-    ) { }
+    public function __construct(public string $tableClass)
+    {
+    }
 }
