@@ -101,25 +101,9 @@ it('can be presence', function () {
 
 it('has default', function () {
     expect($this->filter)
+        ->getDefault()->toBeNull()
         ->default('value')->toBe($this->filter)
-        ->getDefault()->toBe('value')
-        ->hasDefault()->toBeTrue();
-});
-
-it('accepts options from list', function () {
-    expect($this->filter)
-        ->hasOptions()->toBeFalse()
-        ->options([1, 2, 3, 5])->toBe($this->filter)
-        ->hasOptions()->toBeTrue()
-        ->getOptions()->toHaveCount(4);
-});
-
-it('accepts options from enum', function () {
-    expect($this->filter)
-        ->hasOptions()->toBeFalse()
-        ->options(Status::class)->toBe($this->filter)
-        ->hasOptions()->toBeTrue()
-        ->getOptions()->toHaveCount(\count(Status::cases()));
+        ->getDefault()->toBe('value');
 });
 
 it('has enum shorthand', function () {
@@ -128,40 +112,6 @@ it('has enum shorthand', function () {
         ->enum(Status::class)->toBe($this->filter)
         ->hasOptions()->toBeTrue()
         ->getOptions()->toHaveCount(\count(Status::cases()));
-});
-
-it('accepts options from associative array', function () {
-    expect($this->filter)
-        ->hasOptions()->toBeFalse()
-        ->options(['active' => 'Active', 'inactive' => 'Inactive'])->toBe($this->filter)
-        ->hasOptions()->toBeTrue()
-        ->getOptions()->toHaveCount(2)
-        ->sequence(
-            fn ($option) => $option
-                ->getValue()->toBe('active')
-                ->getLabel()->toBe('Active'),
-
-            fn ($option) => $option
-                ->getValue()->toBe('inactive')
-                ->getLabel()->toBe('Inactive'),
-        );
-});
-
-it('accepts collection', function () {
-    expect($this->filter)
-        ->hasOptions()->toBeFalse()
-        ->options(collect([1, 2, 3, 5]))->toBe($this->filter)
-        ->hasOptions()->toBeTrue()
-        ->getOptions()->toHaveCount(4);
-});
-
-it('can be strict', function () {
-    expect($this->filter)
-        ->isStrict()->toBe(config('refine.strict'))
-        ->strict(true)->toBe($this->filter)
-        ->isStrict()->toBe(true)
-        ->lax()->toBe($this->filter)
-        ->isStrict()->toBe(false);
 });
 
 it('can be multiple', function () {

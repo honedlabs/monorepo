@@ -11,25 +11,30 @@ beforeEach(function () {
     {
         use HasOptions;
     };
+});
 
+afterEach(function () {
     $this->test::shouldBeStrict(false);
 });
 
 it('has options', function () {
     expect($this->test)
-        ->getOptions()->scoped(fn ($test) => $test
-        ->toBeArray()
-        ->toBeEmpty()
-        )->options([1, 2, 3])->toBe($this->test)
-        ->getOptions()->scoped(fn ($test) => $test
-        ->toBeArray()
-        ->toHaveCount(3)
+        ->getOptions()
+        ->scoped(fn ($test) => $test
+            ->toBeArray()
+            ->toBeEmpty()
+        )
+        ->options([1, 2, 3])->toBe($this->test)
+        ->getOptions()
+        ->scoped(fn ($test) => $test
+            ->toBeArray()
+            ->toHaveCount(3)
         );
 });
 
 it('is strict', function () {
     expect($this->test)
-        ->isStrict()->toBe(config('refine.strict'))
+        ->isStrict()->toBeFalse()
         ->strict()->toBe($this->test)
         ->isStrict()->toBeTrue()
         ->lax()->toBe($this->test)
@@ -57,9 +62,10 @@ it('is single', function () {
         ->isSingle()->toBeTrue();
 });
 
-it('creates options from enum', function () {
+it('creates options from backed enum', function () {
     expect($this->test)
-        ->createOptions(Status::class)
+        ->options(Status::class)->toBe($this->test)
+        ->getOptions()
         ->scoped(fn ($test) => $test
             ->toBeArray()
             ->toHaveCount(3)
@@ -85,7 +91,8 @@ it('creates options from enum', function () {
 
 it('creates options from list', function () {
     expect($this->test)
-        ->createOptions([1, 2, 3])
+        ->options([1, 2, 3])->toBe($this->test)
+        ->getOptions()
         ->scoped(fn ($test) => $test
             ->toBeArray()
             ->toHaveCount(3)
@@ -111,59 +118,63 @@ it('creates options from list', function () {
 
 it('creates options from associative array', function () {
     expect($this->test)
-        ->createOptions([
+        ->options([
             1 => 'one',
             2 => 'two',
             3 => 'three',
-        ])->scoped(fn ($test) => $test
-        ->toBeArray()
-        ->toHaveCount(3)
-        ->sequence(
-            fn ($test) => $test
-                ->toBeInstanceOf(Option::class)
-                ->getValue()->toBe(1)
-                ->getLabel()->toBe('one')
-                ->isActive()->toBeFalse(),
-            fn ($test) => $test
-                ->toBeInstanceOf(Option::class)
-                ->getValue()->toBe(2)
-                ->getLabel()->toBe('two')
-                ->isActive()->toBeFalse(),
-            fn ($test) => $test
-                ->toBeInstanceOf(Option::class)
-                ->getValue()->toBe(3)
-                ->getLabel()->toBe('three')
-                ->isActive()->toBeFalse(),
-        )
+        ])->toBe($this->test)
+        ->getOptions()
+        ->scoped(fn ($test) => $test
+            ->toBeArray()
+            ->toHaveCount(3)
+            ->sequence(
+                fn ($test) => $test
+                    ->toBeInstanceOf(Option::class)
+                    ->getValue()->toBe(1)
+                    ->getLabel()->toBe('one')
+                    ->isActive()->toBeFalse(),
+                fn ($test) => $test
+                    ->toBeInstanceOf(Option::class)
+                    ->getValue()->toBe(2)
+                    ->getLabel()->toBe('two')
+                    ->isActive()->toBeFalse(),
+                fn ($test) => $test
+                    ->toBeInstanceOf(Option::class)
+                    ->getValue()->toBe(3)
+                    ->getLabel()->toBe('three')
+                    ->isActive()->toBeFalse(),
+            )
         );
 });
 
 it('creates options from option array', function () {
     expect($this->test)
-        ->createOptions([
+        ->options([
             Option::make(1, 'one'),
             Option::make(2, 'two'),
             Option::make(3, 'three'),
-        ])->scoped(fn ($test) => $test
-        ->toBeArray()
-        ->toHaveCount(3)
-        ->sequence(
-            fn ($test) => $test
-                ->toBeInstanceOf(Option::class)
-                ->getValue()->toBe(1)
-                ->getLabel()->toBe('one')
-                ->isActive()->toBeFalse(),
-            fn ($test) => $test
-                ->toBeInstanceOf(Option::class)
-                ->getValue()->toBe(2)
-                ->getLabel()->toBe('two')
-                ->isActive()->toBeFalse(),
-            fn ($test) => $test
-                ->toBeInstanceOf(Option::class)
-                ->getValue()->toBe(3)
-                ->getLabel()->toBe('three')
-                ->isActive()->toBeFalse(),
-        )
+        ])->toBe($this->test)
+        ->getOptions()
+        ->scoped(fn ($test) => $test
+            ->toBeArray()
+            ->toHaveCount(3)
+            ->sequence(
+                fn ($test) => $test
+                    ->toBeInstanceOf(Option::class)
+                    ->getValue()->toBe(1)
+                    ->getLabel()->toBe('one')
+                    ->isActive()->toBeFalse(),
+                fn ($test) => $test
+                    ->toBeInstanceOf(Option::class)
+                    ->getValue()->toBe(2)
+                    ->getLabel()->toBe('two')
+                    ->isActive()->toBeFalse(),
+                fn ($test) => $test
+                    ->toBeInstanceOf(Option::class)
+                    ->getValue()->toBe(3)
+                    ->getLabel()->toBe('three')
+                    ->isActive()->toBeFalse(),
+            )
         );
 });
 
@@ -222,14 +233,28 @@ it('activates options', function () {
         );
 });
 
-it('gets options from cotnract', function () {})->skip();
+it('gets options from contract', function () {
+
+})->skip();
 
 it('has array representation', function () {
     expect($this->test)
         ->options(Status::class)->toBe($this->test)
         ->optionsToArray()->toBe([
-            ['value' => 'available', 'label' => 'Available', 'active' => false],
-            ['value' => 'unavailable', 'label' => 'Unavailable', 'active' => false],
-            ['value' => 'coming-soon', 'label' => 'ComingSoon', 'active' => false],
+            [
+                'value' => Status::Available->value,
+                'label' => Status::Available->name,
+                'active' => false,
+            ],
+            [
+                'value' => Status::Unavailable->value,
+                'label' => Status::Unavailable->name,
+                'active' => false,
+            ],
+            [
+                'value' => Status::ComingSoon->value,
+                'label' => Status::ComingSoon->name,
+                'active' => false,
+            ],
         ]);
 });

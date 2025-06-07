@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Refine;
 
 use BackedEnum;
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasScope;
 use Honed\Core\Concerns\InterpretsRequest;
@@ -371,13 +371,24 @@ class Filter extends Refiner
     }
 
     /**
+     * Flush the global configuration state.
+     *
+     * @return void
+     */
+    public static function flushState()
+    {
+        parent::flushState();
+        static::$useStrict = false;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($named = [], $typed = [])
     {
         $value = $this->getValue();
 
-        if ($value instanceof Carbon) {
+        if ($value instanceof CarbonInterface) {
             $value = $value->toIso8601String();
         }
 

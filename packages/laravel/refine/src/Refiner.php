@@ -163,6 +163,16 @@ abstract class Refiner extends Primitive
     }
 
     /**
+     * Flush the global configuration state.
+     *
+     * @return void
+     */
+    public static function flushState()
+    {
+        static::$shouldQualify = false;
+    }
+
+    /**
      * Get the refiner as an array.
      *
      * @return array<string,mixed>

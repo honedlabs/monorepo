@@ -208,7 +208,7 @@ class Refine extends Primitive
     }
 
     /**
-     * Flush the refine class global configuration statw.
+     * Flush the global configuration state.
      *
      * @return void
      */

@@ -81,7 +81,7 @@ trait HasOptions
      * @param  class-string<BackedEnum>|array<int|string,TValue>|Collection<int|string,TValue>  $options
      * @return array<int,Option>
      */
-    public function createOptions($options)
+    protected function createOptions($options)
     {
         if ($options instanceof Collection) {
             $options = $options->all();
@@ -129,6 +129,16 @@ trait HasOptions
         }
 
         return [];
+    }
+
+    /**
+     * Determine if the filter has options.
+     *
+     * @return bool
+     */
+    public function hasOptions()
+    {
+        return filled($this->getOptions());
     }
 
     /**
