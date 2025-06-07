@@ -66,26 +66,19 @@ it('has term', function () {
         ->getTerm()->toBe('test');
 });
 
-it('provides searches', function () {
+it('enables and disables searching', function () {
     expect($this->test)
         // base case
-        ->shouldSearch()->toBeTrue()
-        ->shouldNotSearch()->toBeFalse()
-        ->shouldntSearch()->toBeFalse()
-        // search
-        ->search()->toBe($this->test)
-        ->shouldSearch()->toBeTrue()
-        ->doNotSearch()->toBe($this->test)
-        ->shouldSearch()->toBeFalse()
-        // dont
-        ->dontSearch()->toBe($this->test)
-        ->shouldSearch()->toBeFalse()
-        // reset
-        ->search()->toBe($this->test)
-        ->shouldSearch()->toBeTrue()
-        // do not
-        ->doNotSearch()->toBe($this->test)
-        ->shouldSearch()->toBeFalse();
+        ->searchingEnabled()->toBeTrue()
+        ->searchingDisabled()->toBeFalse()
+        // disable
+        ->disableSearching()->toBe($this->test)
+        ->searchingEnabled()->toBeFalse()
+        ->searchingDisabled()->toBeTrue()
+        // enable
+        ->enableSearching()->toBe($this->test)
+        ->searchingEnabled()->toBeTrue()
+        ->searchingDisabled()->toBeFalse();
 });
 
 it('searches to array', function () {
@@ -110,6 +103,6 @@ it('hides searches from serialization', function () {
     expect($this->test->match())
         ->withSearches([Search::make('name')])->toBe($this->test)
         ->searchesToArray()->toHaveCount(1)
-        ->dontSearch()->toBe($this->test)
+        ->disableSearching()->toBe($this->test)
         ->searchesToArray()->toBeEmpty();
 });

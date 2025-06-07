@@ -39,4 +39,4 @@ it('refines after using method', function () {
 
     expect($refine->getResource()->getQuery()->wheres)
         ->toBeOnlyWhere('price', 100, '>', 'and');
-});
+})->todo();

@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Honed\Refine\Option;
-use Workbench\App\Models\Product;
 use Honed\Refine\TrashedFilter;
 use Illuminate\Support\Facades\Request;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->filter = TrashedFilter::new();

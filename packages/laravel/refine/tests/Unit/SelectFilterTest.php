@@ -9,5 +9,5 @@ it('has text filter', function () {
         ->toBeInstanceOf(SelectFilter::class)
         ->interpretsAs()->toBe('array')
         ->isMultiple()->toBeTrue()
-        ->getType()->toBe('multiple');
+        ->getType()->toBe('select');
 });

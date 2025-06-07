@@ -17,12 +17,13 @@ return new class() extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->uuid('public_id')->unique();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->string('name');
             $table->text('description')->nullable();
             $table->unsignedTinyInteger('status')->default(Status::Available->value);
             $table->unsignedInteger('price')->default(0);
             $table->boolean('best_seller')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

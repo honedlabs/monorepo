@@ -13,7 +13,6 @@ use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasValue;
-use Honed\Core\Contracts\WithQuery;
 use Honed\Core\Primitive;
 use Honed\Refine\Concerns\HasQualifier;
 use Illuminate\Support\Str;

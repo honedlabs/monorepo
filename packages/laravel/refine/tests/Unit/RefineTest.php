@@ -6,7 +6,6 @@ use Honed\Refine\Filter;
 use Honed\Refine\Refine;
 use Honed\Refine\Search;
 use Honed\Refine\Sort;
-use Workbench\App\Models\Product;
 use Illuminate\Auth\Access\Gate as AccessGate;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,31 +13,17 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Request as FacadesRequest;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->test = Refine::make(Product::class);
 });
 
-it('has delimiter', function () {
-    expect($this->test)
-        ->hasDelimiter()->toBeFalse()
-        ->getDelimiter()->toBe(config('refine.delimiter'))
-        ->delimiter('|')->toBe($this->test)
-        ->hasDelimiter()->toBeTrue()
-        ->getDelimiter()->toBe('|');
-});
-
 it('goes without refining', function () {
     expect($this->test)
-        ->providesSearches()->toBeTrue()
-        ->providesFilters()->toBeTrue()
-        ->providesSorts()->toBeTrue()
-        ->isRefinable()->toBeTrue()
-        ->isntRefinable()->toBeFalse()
-        ->exceptRefinements()->toBe($this->test)
-        ->onlyRefinements()->toBe($this->test)
-        ->isRefinable()->toBeTrue()
-        ->isntRefinable()->toBeFalse();
+        ->searchingEnabled()->toBeTrue()
+        ->filteringEnabled()->toBeTrue()
+        ->sortingEnabled()->toBeTrue();
 });
 
 it('refines before', function () {
@@ -52,10 +37,10 @@ it('refines after', function () {
 });
 
 it('evaluates named closure dependencies', function () {
-    $product = product();
+    $product = Product::factory()->create();
     $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
 
-    expect($this->test->request($request)->resource(Product::query()))
+    expect($this->test->request($request)->withResource(Product::query()))
         ->evaluate(fn ($request) => $request->get('key'))->toBe('value')
         // ->evaluate(fn ($route) => $route)->toBeInstanceOf(Route::class)
         ->evaluate(fn ($builder) => $builder->getModel())->toBeInstanceOf(Product::class)
@@ -65,10 +50,10 @@ it('evaluates named closure dependencies', function () {
 });
 
 it('evaluates typed closure dependencies', function () {
-    $product = product();
+    $product = Product::factory()->create();
     $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
 
-    expect($this->test->request($request)->resource(Product::query()))
+    expect($this->test->request($request)->withResource(Product::query()))
         ->evaluate(fn (Request $r) => $r->get('key'))->toBe('value')
         ->evaluate(fn (Builder $b) => $b->getModel())->toBeInstanceOf(Product::class)
         // ->evaluate(fn (Route $r) => $r)->toBeInstanceOf(Route::class)
@@ -93,14 +78,14 @@ it('has array representation', function () {
         Filter::make('name'),
         Sort::make('name'),
         Search::make('name'),
-        product(), // Misc class
+        Product::factory()->create(), // Misc class
     ]);
 
     expect($this->test->toArray())->toBeArray()
         ->toHaveCount(4)
         ->toHaveKeys(['filters', 'sorts', 'searches', 'config'])
         ->{'config'}->scoped(fn ($config) => $config
-        ->{'delimiter'}->toBe(config('refine.delimiter'))
+        ->{'delimiter'}->toBe(',')
         ->{'term'}->toBeNull()
         ->{'search'}->toBe(config('refine.search_key'))
         ->{'sort'}->toBe(config('refine.sort_key'))
@@ -119,7 +104,7 @@ it('has array representation with matches', function () {
         ->toHaveCount(4)
         ->toHaveKeys(['filters', 'sorts', 'searches', 'config'])
         ->{'config'}->toEqual([
-            'delimiter' => config('refine.delimiter'),
+            'delimiter' => ',',
             'term' => null,
             'search' => config('refine.search_key'),
             'sort' => config('refine.sort_key'),
@@ -132,7 +117,7 @@ it('has array representation with scopes', function () {
 
     expect($this->test->toArray())->toBeArray()
         ->{'config'}->toEqual([
-            'delimiter' => config('refine.delimiter'),
+            'delimiter' => ',',
             'term' => null,
             'search' => $this->test->formatScope(config('refine.search_key')),
             'sort' => $this->test->formatScope(config('refine.sort_key')),

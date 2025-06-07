@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Honed\Refine\Pipelines\RefineSorts;
 use Honed\Refine\Refine;
 use Honed\Refine\Sort;
-use Workbench\App\Models\Product;
 use Illuminate\Support\Facades\Request;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();
@@ -41,12 +41,12 @@ it('refines default', function () {
     $builder = $this->refine->getResource();
 
     expect($builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn('name'), 'asc');
+        ->toBeOnlyOrder('name', 'asc');
 });
 
 it('refines', function () {
     $request = Request::create('/', 'GET', [
-        config('refine.sort_key') => 'price',
+        'sort' => 'price',
     ]);
 
     $this->refine->request($request);
@@ -56,12 +56,12 @@ it('refines', function () {
     $builder = $this->refine->getResource();
 
     expect($builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn('price'), 'asc');
+        ->toBeOnlyOrder('price', 'asc');
 });
 
 it('refines directionally', function () {
     $request = Request::create('/', 'GET', [
-        config('refine.sort_key') => '-price',
+        'sort' => '-price',
     ]);
 
     $this->refine->request($request);
@@ -71,15 +71,15 @@ it('refines directionally', function () {
     $builder = $this->refine->getResource();
 
     expect($builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn('price'), 'desc');
+        ->toBeOnlyOrder('price', 'desc');
 });
 
 it('disables', function () {
     $request = Request::create('/', 'GET', [
-        config('refine.sort_key') => 'price',
+        'sort' => 'price',
     ]);
 
-    $this->refine->request($request)->exceptSorts();
+    $this->refine->request($request)->disableSorting();
 
     $this->pipe->__invoke($this->refine, $this->closure);
 
@@ -96,7 +96,7 @@ describe('scope', function () {
 
     it('refines default', function () {
         $request = Request::create('/', 'GET', [
-            config('refine.sort_key') => 'price',
+            'sort' => 'price',
         ]);
 
         $this->refine->request($request);
@@ -106,12 +106,12 @@ describe('scope', function () {
         $builder = $this->refine->getResource();
 
         expect($builder->getQuery()->orders)
-            ->toBeOnlyOrder($this->builder->qualifyColumn('name'), 'asc');
+            ->toBeOnlyOrder('name', 'asc');
     });
 
     it('refines', function () {
         $request = Request::create('/', 'GET', [
-            $this->refine->formatScope(config('refine.sort_key')) => 'price',
+            $this->refine->formatScope('sort') => 'price',
         ]);
 
         $this->refine->request($request);
@@ -121,6 +121,6 @@ describe('scope', function () {
         $builder = $this->refine->getResource();
 
         expect($builder->getQuery()->orders)
-            ->toBeOnlyOrder($this->builder->qualifyColumn('price'), 'asc');
+            ->toBeOnlyOrder('price', 'asc');
     });
 });

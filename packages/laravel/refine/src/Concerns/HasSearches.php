@@ -116,9 +116,9 @@ trait HasSearches
      * @param  bool  $search
      * @return $this
      */
-    public function search($search = true)
+    public function disableSearching()
     {
-        $this->search = $search;
+        $this->search = false;
 
         return $this;
     }
@@ -128,19 +128,11 @@ trait HasSearches
      *
      * @return $this
      */
-    public function doNotSearch()
+    public function enableSearching()
     {
-        return $this->search(false);
-    }
+        $this->search = true;
 
-    /**
-     * Set the searchs to not be applied.
-     *
-     * @return $this
-     */
-    public function dontSearch()
-    {
-        return $this->doNotSearch();
+        return $this;
     }
 
     /**
@@ -148,7 +140,7 @@ trait HasSearches
      *
      * @return bool
      */
-    public function shouldSearch()
+    public function searchingEnabled()
     {
         return $this->search;
     }
@@ -158,19 +150,9 @@ trait HasSearches
      *
      * @return bool
      */
-    public function shouldNotSearch()
+    public function searchingDisabled()
     {
-        return ! $this->shouldSearch();
-    }
-
-    /**
-     * Determine if the searchs should not be applied.
-     *
-     * @return bool
-     */
-    public function shouldntSearch()
-    {
-        return $this->shouldNotSearch();
+        return ! $this->searchingEnabled();
     }
 
     /**
@@ -206,7 +188,7 @@ trait HasSearches
      */
     public function getSearches()
     {
-        if ($this->shouldNotSearch()) {
+        if ($this->searchingDisabled()) {
             return [];
         }
 

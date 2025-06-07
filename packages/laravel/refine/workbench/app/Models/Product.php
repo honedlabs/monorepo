@@ -9,17 +9,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 use Workbench\App\Enums\Status;
+use Workbench\Database\Factories\ProductFactory;
 
 class Product extends Model
 {
     /**
-     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<
+     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\ProductFactory>
      */
     use HasFactory;
 
+    use Searchable;
     use SoftDeletes;
 
-    use Searchable;
+    /**
+     * The factory for the model.
+     *
+     * @var class-string<\Illuminate\Database\Eloquent\Factories\Factory>
+     */
+    protected static $factory = ProductFactory::class;
 
     /**
      * The attributes that cannot be mass assigned.

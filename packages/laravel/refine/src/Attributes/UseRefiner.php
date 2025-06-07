@@ -7,7 +7,7 @@ namespace Honed\Refine\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class UseRefine
+class UseRefiner
 {
     /**
      * Create a new attribute instance.

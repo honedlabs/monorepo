@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Honed\Refine\Pipelines\RefineSearches;
 use Honed\Refine\Refine;
 use Honed\Refine\Search;
+use Illuminate\Http\Request;
 use Workbench\App\Models\Product;
-use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
     $this->builder = Product::query();
@@ -40,7 +40,7 @@ it('does not refine', function () {
 
 it('refines', function () {
     $request = Request::create('/', 'GET', [
-        config('refine.search_key') => 'search+value',
+        'search' => 'search+value',
     ]);
 
     $this->refine->request($request);
@@ -50,8 +50,8 @@ it('refines', function () {
     $builder = $this->refine->getResource();
 
     expect($builder->getQuery()->wheres)
-        ->{0}->toBeSearch($this->builder->qualifyColumn('name'), 'and')
-        ->{1}->toBeSearch($this->builder->qualifyColumn('description'), 'or');
+        ->{0}->toBeSearch('name', 'and')
+        ->{1}->toBeSearch('description', 'or');
 
     expect($this->refine->getTerm())
         ->toBe('search value');
@@ -59,10 +59,10 @@ it('refines', function () {
 
 it('disables', function () {
     $request = Request::create('/', 'GET', [
-        config('refine.search_key') => 'search+value',
+        'search' => 'search+value',
     ]);
 
-    $this->refine->request($request)->exceptSearches();
+    $this->refine->request($request)->disableSearching();
 
     $this->pipe->__invoke($this->refine, $this->closure);
 
@@ -77,8 +77,8 @@ it('disables', function () {
 
 it('refines with match', function () {
     $request = Request::create('/', 'GET', [
-        config('refine.search_key') => 'search+value',
-        config('refine.match_key') => 'name',
+        'search' => 'search+value',
+        'match' => 'name',
     ]);
 
     $this->refine->request($request);
@@ -88,7 +88,7 @@ it('refines with match', function () {
     $builder = $this->refine->getResource();
 
     expect($builder->getQuery()->wheres)
-        ->toBeOnlySearch($this->builder->qualifyColumn('name'));
+        ->toBeOnlySearch('name');
 
     expect($this->refine->getTerm())
         ->toBe('search value');
@@ -101,8 +101,8 @@ describe('scope', function () {
 
     it('does not refine', function () {
         $request = Request::create('/', 'GET', [
-            config('refine.search_key') => 'search+value',
-            config('refine.match_key') => 'description',
+            'search' => 'search+value',
+            'match' => 'description',
         ]);
 
         $this->refine->request($request);
@@ -120,8 +120,8 @@ describe('scope', function () {
 
     it('refines', function () {
         $request = Request::create('/', 'GET', [
-            $this->refine->formatScope(config('refine.search_key')) => 'search+value',
-            $this->refine->formatScope(config('refine.match_key')) => 'description',
+            $this->refine->formatScope('search') => 'search+value',
+            $this->refine->formatScope('match') => 'description',
         ]);
 
         $this->refine->request($request);
@@ -131,7 +131,7 @@ describe('scope', function () {
         $builder = $this->refine->getResource();
 
         expect($builder->getQuery()->wheres)
-            ->toBeOnlySearch($this->builder->qualifyColumn('description'));
+            ->toBeOnlySearch('description');
 
         expect($this->refine->getTerm())
             ->toBe('search value');

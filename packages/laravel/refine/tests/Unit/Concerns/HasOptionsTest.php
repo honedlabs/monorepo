@@ -18,12 +18,12 @@ beforeEach(function () {
 it('has options', function () {
     expect($this->test)
         ->getOptions()->scoped(fn ($test) => $test
-            ->toBeArray()
-            ->toBeEmpty()
+        ->toBeArray()
+        ->toBeEmpty()
         )->options([1, 2, 3])->toBe($this->test)
         ->getOptions()->scoped(fn ($test) => $test
-            ->toBeArray()
-            ->toHaveCount(3)
+        ->toBeArray()
+        ->toHaveCount(3)
         );
 });
 
@@ -222,9 +222,7 @@ it('activates options', function () {
         );
 });
 
-it('gets options from cotnract', function () {
-
-})->skip();
+it('gets options from cotnract', function () {})->skip();
 
 it('has array representation', function () {
     expect($this->test)

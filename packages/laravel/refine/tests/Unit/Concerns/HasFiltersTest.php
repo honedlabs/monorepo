@@ -35,26 +35,19 @@ it('adds filters collection', function () {
         ->getFilters()->toHaveCount(2);
 });
 
-it('provides filters', function () {
+it('enables and disables filtering', function () {
     expect($this->test)
         // base case
-        ->shouldFilter()->toBeTrue()
-        ->shouldNotFilter()->toBeFalse()
-        ->shouldntFilter()->toBeFalse()
-        // filter
-        ->filter()->toBe($this->test)
-        ->shouldFilter()->toBeTrue()
-        ->doNotFilter()->toBe($this->test)
-        ->shouldFilter()->toBeFalse()
-        // dont
-        ->dontFilter()->toBe($this->test)
-        ->shouldFilter()->toBeFalse()
-        // reset
-        ->filter()->toBe($this->test)
-        ->shouldFilter()->toBeTrue()
-        // do not
-        ->doNotFilter()->toBe($this->test)
-        ->shouldFilter()->toBeFalse();
+        ->filteringEnabled()->toBeTrue()
+        ->filteringDisabled()->toBeFalse()
+        // disable
+        ->disableFiltering()->toBe($this->test)
+        ->filteringEnabled()->toBeFalse()
+        ->filteringDisabled()->toBeTrue()
+        // enable
+        ->enableFiltering()->toBe($this->test)
+        ->filteringEnabled()->toBeTrue()
+        ->filteringDisabled()->toBeFalse();
 });
 
 it('filters to array', function () {
@@ -78,6 +71,6 @@ it('hides filters from serialization', function () {
     expect($this->test)
         ->withFilters([Filter::make('name')])->toBe($this->test)
         ->filtersToArray()->toHaveCount(1)
-        ->filter(false)->toBe($this->test)
+        ->disableFiltering()->toBe($this->test)
         ->filtersToArray()->toBeEmpty();
 });

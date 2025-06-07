@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 use Carbon\Carbon;
 use Honed\Refine\Filter;
-use Workbench\App\Models\Product;
-use Workbench\App\Enums\Status;
 use Illuminate\Support\Facades\Request;
+use Workbench\App\Enums\Status;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();

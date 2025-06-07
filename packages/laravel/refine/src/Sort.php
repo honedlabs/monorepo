@@ -217,7 +217,6 @@ class Sort extends Refiner
     }
 
     /**
-     *
      *  Apply the default sort query scope to the builder.
      *
      * @param  TBuilder  $builder

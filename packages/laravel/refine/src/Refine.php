@@ -21,6 +21,7 @@ use Honed\Refine\Pipelines\RefineFilters;
 use Honed\Refine\Pipelines\RefineSearches;
 use Honed\Refine\Pipelines\RefineSorts;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -30,7 +31,6 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Throwable;
-use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -109,8 +109,6 @@ class Refine extends Primitive
 
     /**
      * Create a new refine instance.
-     *
-     * @param  Request  $request
      */
     public function __construct(Request $request)
     {

@@ -47,7 +47,7 @@ it('refines', function () {
     $builder = $this->refine->getResource();
 
     expect($builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn('price'), 100);
+        ->toBeOnlyWhere('price', 100);
 });
 
 it('disables', function () {
@@ -55,7 +55,7 @@ it('disables', function () {
         'price' => 100,
     ]);
 
-    $this->refine->request($request)->exceptFilters();
+    $this->refine->request($request)->disableFiltering();
 
     $this->pipe->__invoke($this->refine, $this->closure);
 
@@ -97,6 +97,6 @@ describe('scope', function () {
         $builder = $this->refine->getResource();
 
         expect($builder->getQuery()->wheres)
-            ->toBeOnlyWhere($this->builder->qualifyColumn('price'), 100);
+            ->toBeOnlyWhere('price', 100);
     });
 });

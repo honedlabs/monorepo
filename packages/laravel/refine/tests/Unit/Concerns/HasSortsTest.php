@@ -43,26 +43,19 @@ it('has sort key', function () {
         ->getSortKey()->toBe('test');
 });
 
-it('provides sorts', function () {
+it('enables and disables sorting', function () {
     expect($this->test)
         // base case
-        ->shouldSort()->toBeTrue()
-        ->shouldNotSort()->toBeFalse()
-        ->shouldntSort()->toBeFalse()
-        // sort
-        ->sort()->toBe($this->test)
-        ->shouldSort()->toBeTrue()
-        ->doNotSort()->toBe($this->test)
-        ->shouldSort()->toBeFalse()
-        // dont
-        ->dontSort()->toBe($this->test)
-        ->shouldSort()->toBeFalse()
-        // reset
-        ->sort()->toBe($this->test)
-        ->shouldSort()->toBeTrue()
-        // do not
-        ->doNotSort()->toBe($this->test)
-        ->shouldSort()->toBeFalse();
+        ->sortingEnabled()->toBeTrue()
+        ->sortingDisabled()->toBeFalse()
+        // disable
+        ->disableSorting()->toBe($this->test)
+        ->sortingEnabled()->toBeFalse()
+        ->sortingDisabled()->toBeTrue()
+        // enable
+        ->enableSorting()->toBe($this->test)
+        ->sortingEnabled()->toBeTrue()
+        ->sortingDisabled()->toBeFalse();
 });
 
 it('has no default sort', function () {
@@ -101,6 +94,6 @@ it('hides sorts from serialization', function () {
     expect($this->test)
         ->withSorts([Sort::make('name')])->toBe($this->test)
         ->sortsToArray()->toHaveCount(1)
-        ->doNotSort()->toBe($this->test)
+        ->disableSorting()->toBe($this->test)
         ->sortsToArray()->toBeEmpty();
 });

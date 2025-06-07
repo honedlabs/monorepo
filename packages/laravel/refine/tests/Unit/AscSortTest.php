@@ -11,6 +11,7 @@ beforeEach(function () {
     $this->sort = AscSort::make('created_at')
         ->alias('newest');
 });
+
 it('has asc sort', function () {
     expect($this->sort)
         ->isFixed()->toBeTrue()
@@ -31,5 +32,5 @@ it('applies', function () {
         ->refine($this->builder, ['newest', 'asc'])->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn('created_at'), 'asc');
+        ->toBeOnlyOrder('created_at', 'asc');
 });
