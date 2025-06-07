@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Refine\FullTextSearch;
-use Honed\Refine\Tests\Stubs\Product;
+use Workbench\App\Models\Product;
 
 it('has full text search', function () {
     expect(FullTextSearch::make('name'))

@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Refine\Tests\Fixtures\RefineFixture;
-use Honed\Refine\Tests\Stubs\Product;
-use Honed\Refine\Tests\Stubs\Status;
+use Workbench\App\Models\Product;
+use Workbench\App\Enums\Status;
 use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {

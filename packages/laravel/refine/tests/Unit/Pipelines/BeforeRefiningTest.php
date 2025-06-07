@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Honed\Refine\Pipelines\BeforeRefining;
 use Honed\Refine\Refine;
 use Honed\Refine\Tests\Fixtures\BeforeRefiningFixture;
-use Honed\Refine\Tests\Stubs\Product;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();

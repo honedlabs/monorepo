@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Honed\Refine\Pipelines\RefineSearches;
 use Honed\Refine\Refine;
 use Honed\Refine\Search;
-use Honed\Refine\Tests\Stubs\Product;
+use Workbench\App\Models\Product;
 use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
@@ -19,7 +19,7 @@ beforeEach(function () {
     ];
 
     $this->refine = Refine::make($this->builder)
-        ->searches($searches);
+        ->withSearches($searches);
 });
 
 it('does not refine', function () {

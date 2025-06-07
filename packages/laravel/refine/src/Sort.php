@@ -217,14 +217,15 @@ class Sort extends Refiner
     }
 
     /**
-     * Apply the default sort query scope to the builder.
+     *
+     *  Apply the default sort query scope to the builder.
      *
      * @param  TBuilder  $builder
      * @param  string  $column
      * @param  'asc'|'desc'|null  $direction
      * @return void
      */
-    public function queryAs($builder, $column, $direction)
+    public function apply($builder, $column, $direction)
     {
         $builder->orderBy($column, $direction ?? 'asc');
     }

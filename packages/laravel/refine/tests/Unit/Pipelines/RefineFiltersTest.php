@@ -18,7 +18,7 @@ beforeEach(function () {
     ];
 
     $this->refine = Refine::make($this->builder)
-        ->filters($filters);
+        ->withFilters($filters);
 
 });
 

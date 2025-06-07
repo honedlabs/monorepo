@@ -3,12 +3,11 @@
 declare(strict_types=1);
 
 use Honed\Refine\Sort;
-use Honed\Refine\Tests\Stubs\Product;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();
-    $this->name = 'name';
-    $this->sort = Sort::make($this->name);
+    $this->sort = Sort::make('name');
 });
 
 it('does not apply', function () {
@@ -21,7 +20,7 @@ it('does not apply', function () {
     expect($this->sort)
         ->isActive()->toBeFalse()
         ->getDirection()->toBeNull()
-        ->getNextDirection()->toBe($this->name);
+        ->getNextDirection()->toBe('name');
 });
 
 it('applies alias', function () {
@@ -29,7 +28,7 @@ it('applies alias', function () {
 
     $sort = $this->sort->alias($alias);
 
-    expect($sort->refine($this->builder, [$this->name, 'asc']))
+    expect($sort->refine($this->builder, ['name', 'asc']))
         ->toBeFalse();
 
     expect($this->builder->getQuery()->orders)
@@ -46,7 +45,7 @@ it('applies alias', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn($this->name), 'asc');
+        ->toBeOnlyOrder('name', 'asc');
 
     expect($sort)
         ->isActive()->toBeTrue()
@@ -57,13 +56,13 @@ it('applies alias', function () {
 it('applies fixed direction', function () {
     $sort = $this->sort->desc();
 
-    $descending = $this->name.'_desc';
+    $descending = 'name'.'_desc';
 
     expect($sort->refine($this->builder, [$descending, 'desc']))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn($this->name), 'desc');
+        ->toBeOnlyOrder('name', 'desc');
 
     expect($sort)
         ->isFixed()->toBeTrue()
@@ -75,17 +74,17 @@ it('applies fixed direction', function () {
 it('applies inverted direction', function () {
     $sort = $this->sort->invert();
 
-    expect($sort->refine($this->builder, [$this->name, 'desc']))
+    expect($sort->refine($this->builder, ['name', 'desc']))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn($this->name), 'desc');
+        ->toBeOnlyOrder('name', 'desc');
 
     expect($sort)
         ->isInverted()->toBeTrue()
         ->isActive()->toBeTrue()
         ->getDirection()->toBe('desc')
-        ->getNextDirection()->toBe($this->name);
+        ->getNextDirection()->toBe('name');
 });
 
 it('applies query', function () {
@@ -94,7 +93,7 @@ it('applies query', function () {
     $sort = $this->sort
         ->query(fn ($builder, $direction) => $builder->orderBy($column, $direction));
 
-    expect($sort->refine($this->builder, [$this->name, 'desc']))
+    expect($sort->refine($this->builder, ['name', 'desc']))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
@@ -104,14 +103,14 @@ it('applies query', function () {
         ->isActive()->toBeTrue();
 });
 
-it('applies with unqualified column', function () {
-    expect($this->sort->qualify(false))
-        ->refine($this->builder, [$this->name, 'asc'])->toBeTrue();
+it('applies with qualified column', function () {
+    expect($this->sort->qualify())
+        ->refine($this->builder, ['name', 'asc'])->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->name, 'asc');
+        ->toBeOnlyOrder($this->builder->qualifyColumn('name'), 'asc');
 
     expect($this->sort)
-        ->isQualifying()->toBeFalse()
+        ->qualifies()->toBeTrue()
         ->isActive()->toBeTrue();
 });

@@ -4,53 +4,62 @@ declare(strict_types=1);
 
 use Honed\Refine\Filter;
 use Honed\Refine\Refine;
-use Honed\Refine\Tests\Stubs\Product;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = Refine::make(Product::class);
+    $this->test = Refine::make(User::class);
 });
 
 it('is empty by default', function () {
     expect($this->test)
         ->isFiltering()->toBeFalse()
-        ->hasFilters()->toBeFalse()
         ->getFilters()->toBeEmpty();
 });
 
 it('adds filters', function () {
     expect($this->test)
-        ->filters([Filter::make('name')])->toBe($this->test)
-        ->filters([Filter::make('price')])->toBe($this->test)
-        ->hasFilters()->toBeTrue()
+        ->withFilters([Filter::make('name')])->toBe($this->test)
+        ->withFilters([Filter::make('price')])->toBe($this->test)
         ->getFilters()->toHaveCount(2);
 });
 
 it('adds filters variadically', function () {
     expect($this->test)
-        ->filters(Filter::make('name'), Filter::make('price'))->toBe($this->test)
-        ->hasFilters()->toBeTrue()
+        ->withFilters(Filter::make('name'), Filter::make('price'))->toBe($this->test)
         ->getFilters()->toHaveCount(2);
 });
 
 it('adds filters collection', function () {
     expect($this->test)
-        ->filters(collect([Filter::make('name'), Filter::make('price')]))->toBe($this->test)
-        ->hasFilters()->toBeTrue()
+        ->withFilters(collect([Filter::make('name'), Filter::make('price')]))->toBe($this->test)
         ->getFilters()->toHaveCount(2);
 });
 
 it('provides filters', function () {
     expect($this->test)
-        ->providesFilters()->toBeTrue()
-        ->exceptFilters()->toBe($this->test)
-        ->providesFilters()->toBeFalse()
-        ->onlyFilters()->toBe($this->test)
-        ->providesFilters()->toBeTrue();
+        // base case
+        ->shouldFilter()->toBeTrue()
+        ->shouldNotFilter()->toBeFalse()
+        ->shouldntFilter()->toBeFalse()
+        // filter
+        ->filter()->toBe($this->test)
+        ->shouldFilter()->toBeTrue()
+        ->doNotFilter()->toBe($this->test)
+        ->shouldFilter()->toBeFalse()
+        // dont
+        ->dontFilter()->toBe($this->test)
+        ->shouldFilter()->toBeFalse()
+        // reset
+        ->filter()->toBe($this->test)
+        ->shouldFilter()->toBeTrue()
+        // do not
+        ->doNotFilter()->toBe($this->test)
+        ->shouldFilter()->toBeFalse();
 });
 
 it('filters to array', function () {
     expect($this->test)
-        ->filters([Filter::make('name'), Filter::make('price')])->toBe($this->test)
+        ->withFilters([Filter::make('name'), Filter::make('price')])->toBe($this->test)
         ->filtersToArray()->toHaveCount(2)
         ->each->scoped(fn ($filter) => $filter
         ->toHaveKeys([
@@ -67,8 +76,8 @@ it('filters to array', function () {
 
 it('hides filters from serialization', function () {
     expect($this->test)
-        ->filters([Filter::make('name')])->toBe($this->test)
+        ->withFilters([Filter::make('name')])->toBe($this->test)
         ->filtersToArray()->toHaveCount(1)
-        ->exceptFilters()->toBe($this->test)
+        ->filter(false)->toBe($this->test)
         ->filtersToArray()->toBeEmpty();
 });

@@ -8,7 +8,7 @@ use Honed\Refine\Filter;
 use Honed\Refine\Refine;
 use Honed\Refine\Search;
 use Honed\Refine\Sort;
-use Honed\Refine\Tests\Stubs\Status;
+use Workbench\App\Enums\Status;
 use Workbench\App\Models\Product;
 
 /**

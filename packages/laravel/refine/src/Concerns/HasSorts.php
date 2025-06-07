@@ -48,7 +48,7 @@ trait HasSorts
      * @param  string  $sortKey
      * @return void
      */
-    public static function useSortKey($sortKey)
+    public static function useSortKey($sortKey = 'sort')
     {
         static::$useSortKey = $sortKey;
     }

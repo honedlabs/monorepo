@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 use Honed\Refine\Concerns\HasOptions;
 use Honed\Refine\Option;
-use Honed\Refine\Tests\Stubs\Status;
+use Workbench\App\Enums\Status;
 
 beforeEach(function () {
     $this->test = new class()
     {
         use HasOptions;
     };
+
+    $this->test::shouldBeStrict(false);
 });
 
 it('has options', function () {
     expect($this->test)
-        ->hasOptions()->toBeFalse()
         ->getOptions()->scoped(fn ($test) => $test
-        ->toBeArray()
-        ->toBeEmpty()
+            ->toBeArray()
+            ->toBeEmpty()
         )->options([1, 2, 3])->toBe($this->test)
-        ->hasOptions()->toBeTrue()
         ->getOptions()->scoped(fn ($test) => $test
-        ->toBeArray()
-        ->toHaveCount(3)
+            ->toBeArray()
+            ->toHaveCount(3)
         );
 });
 
@@ -33,8 +33,14 @@ it('is strict', function () {
         ->strict()->toBe($this->test)
         ->isStrict()->toBeTrue()
         ->lax()->toBe($this->test)
-        ->isStrict()->toBeFalse()
-        ->isStrictByDefault()->toBe(config('refine.strict'));
+        ->isStrict()->toBeFalse();
+});
+
+it('is strict globally', function () {
+    $this->test::shouldBeStrict(true);
+
+    expect($this->test)
+        ->isStrict()->toBeTrue();
 });
 
 it('is multiple', function () {
@@ -215,6 +221,10 @@ it('activates options', function () {
         )
         );
 });
+
+it('gets options from cotnract', function () {
+
+})->skip();
 
 it('has array representation', function () {
     expect($this->test)

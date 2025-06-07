@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Refine\DescSort;
-use Honed\Refine\Tests\Stubs\Product;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();
@@ -36,5 +36,5 @@ it('applies', function () {
         ->refine($builder, ['oldest', 'asc'])->toBeTrue();
 
     expect($builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn('created_at'), 'desc');
+        ->toBeOnlyOrder('created_at', 'desc');
 });

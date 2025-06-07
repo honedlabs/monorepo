@@ -37,7 +37,7 @@ trait HasRefiner
             return static::$refiner::make();
         }
 
-        if ($refiner = static::getRefinerAttribute()) {
+        if ($refiner = static::getUseRefinerAttribute()) {
             return $refiner::make();
         }
 
@@ -49,7 +49,7 @@ trait HasRefiner
      *
      * @return class-string<Refine>|null
      */
-    protected static function getRefinerAttribute()
+    protected static function getUseRefinerAttribute()
     {
         $attributes = (new ReflectionClass(static::class))
             ->getAttributes(Refiner::class);

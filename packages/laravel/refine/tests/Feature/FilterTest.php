@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use Carbon\Carbon;
 use Honed\Refine\Filter;
-use Honed\Refine\Tests\Stubs\Product;
-use Honed\Refine\Tests\Stubs\Status;
+use Workbench\App\Models\Product;
+use Workbench\App\Enums\Status;
 use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
@@ -37,7 +37,7 @@ it('applies', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value);
+        ->toBeOnlyWhere($this->name, $this->value);
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -51,7 +51,7 @@ it('applies with default', function () {
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), 'value');
+        ->toBeOnlyWhere($this->name, 'value');
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -79,7 +79,7 @@ it('applies with alias', function () {
         ->refine($this->builder, $request)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value);
+        ->toBeOnlyWhere($this->name, $this->value);
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -113,7 +113,7 @@ it('applies with scope', function () {
         ->refine($this->builder, $request)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value);
+        ->toBeOnlyWhere($this->name, $this->value);
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -129,7 +129,7 @@ it('applies with different operator', function () {
         ->refine($this->builder, $request)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $this->value, $operator);
+        ->toBeOnlyWhere($this->name, $this->value, $operator);
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -143,7 +143,7 @@ it('applies with `like` operators', function () {
         ->refine($this->builder, $request)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch($this->builder->qualifyColumn($this->name));
+        ->toBeOnlySearch($this->name);
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -164,7 +164,7 @@ it('applies with date', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
         ->{'type'}->toBe('Date')
-        ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
+        ->{'column'}->toBe($this->name)
         ->{'operator'}->toBe('=')
         ->{'value'}->toBe($value->toDateString())
         ->{'boolean'}->toBe('and')
@@ -189,7 +189,7 @@ it('applies with datetime', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
         ->{'type'}->toBe('Basic')
-        ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
+        ->{'column'}->toBe($this->name)
         ->{'operator'}->toBe('=')
         ->{'value'}->toBeInstanceOf(Carbon::class)
         ->{'boolean'}->toBe('and')
@@ -214,7 +214,7 @@ it('applies with time', function () {
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
         ->{'type'}->toBe('Time')
-        ->{'column'}->toBe($this->builder->qualifyColumn($this->name))
+        ->{'column'}->toBe($this->name)
         ->{'operator'}->toBe('=')
         ->{'value'}->toBe($value->toTimeString())
         ->{'boolean'}->toBe('and')
@@ -250,7 +250,7 @@ it('applies lax', function () {
         ->refine($this->builder, $request)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), $value);
+        ->toBeOnlyWhere($this->name, $value);
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -285,7 +285,7 @@ it('applies multiple', function () {
         ->refine($this->builder, $request)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhereIn($this->builder->qualifyColumn($this->name), $value);
+        ->toBeOnlyWhereIn($this->name, $value);
 
     expect($this->filter)
         ->isActive()->toBeTrue()
@@ -299,14 +299,14 @@ it('applies multiple', function () {
         );
 });
 
-it('applies with unqualified column', function () {
+it('applies with qualified column', function () {
     $request = Request::create('/', 'GET', [$this->name => 'value']);
 
-    expect($this->filter->qualify(false)->refine($this->builder, $request))
+    expect($this->filter->qualify()->refine($this->builder, $request))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->name, 'value');
+        ->toBeOnlyWhere($this->builder->qualifyColumn($this->name), 'value');
 
     expect($this->filter)
         ->isActive()->toBeTrue();

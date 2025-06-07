@@ -3,12 +3,15 @@
 declare(strict_types=1);
 
 use Honed\Refine\Sort;
-use Honed\Refine\Tests\Stubs\Product;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
-    $this->param = 'name';
     $this->builder = Product::query();
-    $this->sort = Sort::make($this->param);
+    $this->sort = Sort::make('name');
+});
+
+afterEach(function () {
+    // Sort::flushState();
 });
 
 it('has direction', function () {
@@ -26,8 +29,8 @@ it('has direction', function () {
 
 it('has parameter', function () {
     expect($this->sort)
-        ->getAscendingValue()->toBe($this->param)
-        ->getDescendingValue()->toBe('-'.$this->param);
+        ->getAscendingValue()->toBe('name')
+        ->getDescendingValue()->toBe('-name');
 });
 
 it('has next direction', function () {

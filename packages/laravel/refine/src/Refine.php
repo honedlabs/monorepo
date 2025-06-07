@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Throwable;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -62,7 +63,14 @@ class Refine extends Primitive
      *
      * @var string
      */
-    public static $namespace = 'App\\Refiners\\';
+    protected static $namespace = 'App\\Refiners\\';
+
+    /**
+     * The request instance.
+     *
+     * @var Request
+     */
+    protected $request;
 
     /**
      * Whether the refine pipeline has been run.
@@ -101,10 +109,12 @@ class Refine extends Primitive
 
     /**
      * Create a new refine instance.
+     *
+     * @param  Request  $request
      */
-    public function __construct(
-        protected Request $request
-    ) {
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
         parent::__construct();
     }
 
@@ -130,7 +140,7 @@ class Refine extends Primitive
      */
     public static function make($resource = null)
     {
-        $refine = resolve(static::class);
+        $refine = App::make(static::class);
 
         if ($resource) {
             return $refine->withResource($resource);
@@ -206,8 +216,13 @@ class Refine extends Primitive
      */
     public static function flushState()
     {
-        static::$refinerResolver = null;
         static::$namespace = 'App\\Refine\\';
+        static::$refinerResolver = null;
+        static::$shouldMatch = false;
+        static::$useDelimiter = ',';
+        static::$useSortKey = 'sort';
+        static::$useSearchKey = 'search';
+        static::$useMatchKey = 'match';
     }
 
     /**
@@ -338,6 +353,19 @@ class Refine extends Primitive
     public function getMatchKey()
     {
         return $this->formatScope($this->baseMatchKey());
+    }
+
+    /**
+     * Set the request instance.
+     *
+     * @param  Request  $request
+     * @return $this
+     */
+    public function request($request)
+    {
+        $this->request = $request;
+
+        return $this;
     }
 
     /**
@@ -482,7 +510,8 @@ class Refine extends Primitive
         return match ($parameterType) {
             Request::class => [$request],
             Route::class => [$request->route()],
-            Builder::class => [$resource],
+            Builder::class,
+            BuilderContract::class => [$resource],
             default => [App::make($parameterType)],
         };
     }

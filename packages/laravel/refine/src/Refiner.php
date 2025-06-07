@@ -13,6 +13,7 @@ use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasValue;
+use Honed\Core\Contracts\WithQuery;
 use Honed\Core\Primitive;
 use Honed\Refine\Concerns\HasQualifier;
 use Illuminate\Support\Str;
@@ -21,7 +22,7 @@ use Illuminate\Support\Str;
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @method void defaultQuery(TBuilder $builder, mixed ...$parameters) Apply the default refiner query to the builder.
+ * @method void apply(TBuilder $builder, mixed ...$parameters) Apply the refiner query to apply to the builder.
  */
 abstract class Refiner extends Primitive
 {
@@ -154,7 +155,7 @@ abstract class Refiner extends Primitive
         $bindings = $this->getBindings($value, $builder);
 
         if (! $this->hasQuery()) {
-            $this->query(Closure::fromCallable([$this, 'defaultQuery']));
+            $this->query(Closure::fromCallable([$this, 'apply']));
         }
 
         $this->modifyQuery($builder, $bindings);

@@ -6,7 +6,9 @@ namespace Workbench\App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
+use Workbench\App\Enums\Status;
 
 class Product extends Model
 {
@@ -14,6 +16,8 @@ class Product extends Model
      * @use \Illuminate\Database\Eloquent\Factories\HasFactory<
      */
     use HasFactory;
+
+    use SoftDeletes;
 
     use Searchable;
 
@@ -23,6 +27,15 @@ class Product extends Model
      * @var array<int, string>
      */
     protected $guarded = [];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, class-string>
+     */
+    protected $casts = [
+        'status' => Status::class,
+    ];
 
     /**
      * Get the user that owns the product.

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Refine\Option;
-use Honed\Refine\Tests\Stubs\Product;
+use Workbench\App\Models\Product;
 use Honed\Refine\TrashedFilter;
 use Illuminate\Support\Facades\Request;
 

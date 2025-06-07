@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Refine\AscSort;
-use Honed\Refine\Tests\Stubs\Product;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();

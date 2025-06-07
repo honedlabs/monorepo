@@ -6,7 +6,7 @@ use Honed\Refine\Filter;
 use Honed\Refine\Refine;
 use Honed\Refine\Search;
 use Honed\Refine\Sort;
-use Honed\Refine\Tests\Stubs\Product;
+use Workbench\App\Models\Product;
 use Illuminate\Auth\Access\Gate as AccessGate;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Database\Eloquent\Builder;

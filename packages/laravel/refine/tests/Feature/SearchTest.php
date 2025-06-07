@@ -3,13 +3,10 @@
 declare(strict_types=1);
 
 use Honed\Refine\Search;
-use Honed\Refine\Tests\Stubs\Product;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();
-    $this->search = 'search term';
-    $this->name = 'name';
-
     $this->test = Search::make('name');
 });
 
@@ -26,10 +23,10 @@ it('does not apply', function () {
 
 it('applies', function () {
     expect($this->test)
-        ->refine($this->builder, [true, $this->search])->toBeTrue();
+        ->refine($this->builder, [true, 'term'])->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch($this->builder->qualifyColumn('name'));
+        ->toBeOnlySearch('name');
 
     expect($this->test)
         ->isActive()->toBeTrue();
@@ -39,11 +36,11 @@ it('applies boolean', function () {
     $this->test->boolean('or');
 
     expect($this->test)
-        ->refine($this->builder, [true, $this->search])->toBeTrue()
+        ->refine($this->builder, [true, 'term'])->toBeTrue()
         ->isActive()->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch($this->builder->qualifyColumn('name'), 'or');
+        ->toBeOnlySearch('name', 'or');
 
     expect($this->test)
         ->isActive()->toBeTrue()
@@ -54,7 +51,7 @@ it('applies full text search', function () {
     $this->test->fullText();
 
     expect($this->test)
-        ->refine($this->builder, [true, $this->search])->toBeTrue()
+        ->refine($this->builder, [true, 'term'])->toBeTrue()
         ->isActive()->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
@@ -66,7 +63,7 @@ it('applies full text search', function () {
 
 it('does not apply if inactive', function () {
     expect($this->test)
-        ->refine($this->builder, [false, $this->search])->toBeFalse();
+        ->refine($this->builder, [false, 'term'])->toBeFalse();
 
     expect($this->builder->getQuery()->wheres)
         ->toBeEmpty();
@@ -75,14 +72,14 @@ it('does not apply if inactive', function () {
         ->isActive()->toBeFalse();
 });
 
-it('applies with unqualified column', function () {
-    expect($this->test->qualify(false))
-        ->refine($this->builder, [true, $this->search])->toBeTrue();
+it('applies with qualified column', function () {
+    expect($this->test->qualify())
+        ->refine($this->builder, [true, 'term'])->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
-        ->toBeOnlySearch($this->name);
+        ->toBeOnlySearch($this->builder->qualifyColumn('name'));
 
     expect($this->test)
-        ->isQualifying()->toBeFalse()
+        ->qualifies()->toBeTrue()
         ->isActive()->toBeTrue();
 });

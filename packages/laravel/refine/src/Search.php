@@ -123,7 +123,7 @@ class Search extends Refiner
      * @param  string  $boolean
      * @return void
      */
-    public function defaultQuery($builder, $value, $column, $boolean = 'and')
+    public function apply($builder, $value, $column, $boolean = 'and')
     {
         if ($this->isFullText()) {
             $this->searchRecall($builder, $value, $column, $boolean);
