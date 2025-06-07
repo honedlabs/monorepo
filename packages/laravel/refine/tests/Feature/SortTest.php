@@ -11,7 +11,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    // Sort::flushState();
+    Sort::flushState();
 });
 
 it('has direction', function () {

@@ -16,6 +16,10 @@ beforeEach(function () {
     $this->filter = Filter::make($this->name);
 });
 
+afterEach(function () {
+    Filter::flushState();
+});
+
 it('does not apply', function () {
     $request = Request::create('/', 'GET', ['none' => $this->value]);
 

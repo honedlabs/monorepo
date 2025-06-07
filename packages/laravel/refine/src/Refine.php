@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Throwable;
+use Laravel\Scout\Builder as ScoutBuilder;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -297,6 +298,29 @@ class Refine extends Primitive
     }
 
     /**
+     * Set whether the refine pipeline should use Laravel Scout's search.
+     *
+     * @param  bool  $scout
+     * @return $this
+     */
+    public function scout($scout = true)
+    {
+        $this->scout = $scout;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the refine pipeline should use Laravel Scout's search.
+     *
+     * @return bool
+     */
+    public function usesScout()
+    {
+        return $this->scout;
+    }
+
+    /**
      * Add the given refiners to be used.
      *
      * @param  array<int, Refiner>|\Illuminate\Support\Collection<int, Refiner>  $refiners
@@ -511,6 +535,7 @@ class Refine extends Primitive
             Request::class => [$request],
             Route::class => [$request->route()],
             Builder::class,
+            ScoutBuilder::class,
             BuilderContract::class => [$resource],
             default => [App::make($parameterType)],
         };

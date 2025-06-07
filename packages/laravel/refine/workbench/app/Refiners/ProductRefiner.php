@@ -96,6 +96,7 @@ class ProductRefiner extends Refine
         return [
             Search::make('name'),
             Search::make('description'),
+            Search::make('status'),
         ];
     }
 }

@@ -38,7 +38,7 @@ it('adds sorts collection', function () {
 
 it('has sort key', function () {
     expect($this->test)
-        ->getSortKey()->toBe(config('refine.sort_key'))
+        ->getSortKey()->toBe('sort')
         ->sortKey('test')->toBe($this->test)
         ->getSortKey()->toBe('test');
 });

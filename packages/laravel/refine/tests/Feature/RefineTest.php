@@ -2,21 +2,27 @@
 
 declare(strict_types=1);
 
+use Honed\Refine\Sort;
 use Honed\Refine\Filter;
 use Honed\Refine\Refine;
 use Honed\Refine\Search;
-use Honed\Refine\Sort;
-use Illuminate\Auth\Access\Gate as AccessGate;
-use Illuminate\Contracts\Auth\Access\Gate;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Request as FacadesRequest;
 use Workbench\App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Auth\Access\Gate;
+use Illuminate\Auth\Access\Gate as AccessGate;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Request as FacadesRequest;
+use Workbench\App\Refiners\ProductRefiner;
 
 beforeEach(function () {
     $this->test = Refine::make(Product::class);
+});
+
+afterEach(function () {
+    Refine::flushState();
 });
 
 it('goes without refining', function () {
@@ -34,6 +40,13 @@ it('refines before', function () {
 it('refines after', function () {
     expect($this->test)
         ->after(fn () => $this->test)->toBe($this->test);
+});
+
+it('can use scout', function () {
+    expect($this->test)
+        ->usesScout()->toBeFalse()
+        ->scout()
+        ->usesScout()->toBeTrue();
 });
 
 it('evaluates named closure dependencies', function () {
@@ -84,13 +97,35 @@ it('has array representation', function () {
     expect($this->test->toArray())->toBeArray()
         ->toHaveCount(4)
         ->toHaveKeys(['filters', 'sorts', 'searches', 'config'])
-        ->{'config'}->scoped(fn ($config) => $config
-        ->{'delimiter'}->toBe(',')
-        ->{'term'}->toBeNull()
-        ->{'search'}->toBe(config('refine.search_key'))
-        ->{'sort'}->toBe(config('refine.sort_key'))
-            // ->{'match'}->toBe(config('refine.match_key'))
+        ->{'config'}
+        ->scoped(fn ($config) => $config
+            ->{'delimiter'}->toBe(',')
+            ->{'term'}->toBeNull()
+            ->{'search'}->toBe('search')
+            ->{'sort'}->toBe('sort')
         );
+});
+
+it('resolves refiner name from model', function () {
+    expect(Refine::resolveRefinerName(Product::class))
+        ->toBe('App\Refine\Models\ProductRefiner');
+
+    Refine::guessRefinersUsing(fn ($className) => Str::of($className)
+        ->afterLast('\\')
+        ->append('Refiner')
+        ->prepend('Workbench\App\Refiners\\')
+        ->toString()
+    );
+
+    expect(Refine::resolveRefinerName(Product::class))
+        ->toBe(ProductRefiner::class);
+});
+
+it('can use a custom namespace', function () {
+    Refine::useNamespace('Workbench\App\\');
+
+    expect(Refine::resolveRefinerName(Product::class))
+        ->toBe('Workbench\App\Models\ProductRefiner');
 });
 
 it('has array representation with matches', function () {
@@ -106,9 +141,9 @@ it('has array representation with matches', function () {
         ->{'config'}->toEqual([
             'delimiter' => ',',
             'term' => null,
-            'search' => config('refine.search_key'),
-            'sort' => config('refine.sort_key'),
-            'match' => config('refine.match_key'),
+            'search' => 'search',
+            'sort' => 'sort',
+            'match' => 'match',
         ]);
 });
 
@@ -119,9 +154,9 @@ it('has array representation with scopes', function () {
         ->{'config'}->toEqual([
             'delimiter' => ',',
             'term' => null,
-            'search' => $this->test->formatScope(config('refine.search_key')),
-            'sort' => $this->test->formatScope(config('refine.sort_key')),
-            'match' => $this->test->formatScope(config('refine.match_key')),
+            'search' => $this->test->formatScope('search'),
+            'sort' => $this->test->formatScope('sort'),
+            'match' => $this->test->formatScope('match'),
         ]);
 });
 

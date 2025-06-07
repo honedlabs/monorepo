@@ -10,6 +10,10 @@ beforeEach(function () {
     $this->test = Search::make('name');
 });
 
+afterEach(function () {
+    Search::flushState();
+});
+
 it('does not apply', function () {
     expect($this->test)
         ->refine($this->builder, [true, null])->toBeFalse();
