@@ -233,9 +233,7 @@ it('activates options', function () {
         );
 });
 
-it('gets options from contract', function () {
-
-})->skip();
+it('gets options from contract', function () {})->skip();
 
 it('has array representation', function () {
     expect($this->test)

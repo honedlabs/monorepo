@@ -65,7 +65,7 @@ trait HasQualifier
      */
     public function qualifies()
     {
-        return (bool) $this->qualify;
+        return (bool) $this->getQualifier();
     }
 
     /**

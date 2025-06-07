@@ -53,6 +53,27 @@ abstract class Refiner extends Primitive
     }
 
     /**
+     * Flush the global configuration state.
+     *
+     * @return void
+     */
+    public static function flushState()
+    {
+        static::$shouldQualify = false;
+    }
+
+    /**
+     * Get the name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        /** @var string */
+        return $this->name;
+    }
+
+    /**
      * Determine if the refiner is currently being applied.
      *
      * @return bool
@@ -160,16 +181,6 @@ abstract class Refiner extends Primitive
         $this->modifyQuery($builder, $bindings);
 
         return true;
-    }
-
-    /**
-     * Flush the global configuration state.
-     *
-     * @return void
-     */
-    public static function flushState()
-    {
-        static::$shouldQualify = false;
     }
 
     /**

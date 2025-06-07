@@ -134,7 +134,7 @@ class Refine extends Primitive
      * Create a new refine instance.
      *
      * @param  TModel|class-string<TModel>|TBuilder|null  $resource
-     * @return static
+     * @return self
      */
     public static function make($resource = null)
     {
@@ -153,14 +153,15 @@ class Refine extends Primitive
      * @template TClass of \Illuminate\Database\Eloquent\Model
      *
      * @param  class-string<TClass>  $modelName
-     * @param  Closure|null  $before
+     * 
      * @return Refine<TClass>
      */
-    public static function refinerForModel($modelName, $before = null)
+    public static function refinerForModel($modelName)
     {
         $refiner = static::resolveRefinerName($modelName);
 
-        return $refiner::make($before);
+        return $refiner::make()
+            ->withResource($modelName);
     }
 
     /**
@@ -481,6 +482,7 @@ class Refine extends Primitive
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         $resource = $this->getResource();
+
         $request = $this->getRequest();
 
         [$_, $singular, $plural] = Parameters::names($resource);

@@ -113,7 +113,6 @@ trait HasSearches
     /**
      * Set whether the searchs should be applied.
      *
-     * @param  bool  $search
      * @return $this
      */
     public function disableSearching()

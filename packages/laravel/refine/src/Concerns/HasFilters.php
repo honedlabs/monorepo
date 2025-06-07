@@ -31,7 +31,6 @@ trait HasFilters
     /**
      * Set whether the filters should be applied.
      *
-     * @param  bool  $filter
      * @return $this
      */
     public function disableFiltering()

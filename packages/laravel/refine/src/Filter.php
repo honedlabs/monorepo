@@ -65,6 +65,17 @@ class Filter extends Refiner
     protected $default;
 
     /**
+     * Flush the global configuration state.
+     *
+     * @return void
+     */
+    public static function flushState()
+    {
+        parent::flushState();
+        static::$useStrict = false;
+    }
+
+    /**
      * Set the filter to be for boolean values.
      *
      * @return $this
@@ -368,17 +379,6 @@ class Filter extends Refiner
         return array_merge(parent::getBindings($value, $builder), [
             'operator' => $this->getOperator(),
         ]);
-    }
-
-    /**
-     * Flush the global configuration state.
-     *
-     * @return void
-     */
-    public static function flushState()
-    {
-        parent::flushState();
-        static::$useStrict = false;
     }
 
     /**

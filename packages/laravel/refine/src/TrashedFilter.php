@@ -52,9 +52,9 @@ final class TrashedFilter extends Filter implements WithOptions, WithQuery
     public function queryUsing($builder, $value)
     {
         return match ($value) {
-            'with' => $builder->withTrashed(), // @phpstan-ignore-error method.notFound
-            'only' => $builder->onlyTrashed(), // @phpstan-ignore-error method.notFound
-            default => $builder->withoutTrashed(), // @phpstan-ignore-error method.notFound
+            'with' => $builder->withTrashed(), // @phpstan-ignore method.notFound
+            'only' => $builder->onlyTrashed(), // @phpstan-ignore method.notFound
+            default => $builder->withoutTrashed(), // @phpstan-ignore method.notFound
         };
     }
 

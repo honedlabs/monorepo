@@ -56,7 +56,6 @@ trait HasSorts
     /**
      * Set whether the sorts should be applied.
      *
-     * @param  bool  $sort
      * @return $this
      */
     public function disableSorting()

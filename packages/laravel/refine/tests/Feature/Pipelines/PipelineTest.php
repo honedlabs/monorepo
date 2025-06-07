@@ -34,17 +34,17 @@ it('basic pipeline test', function () {
             ->toEqualCanonicalizing([
                 [
                     'type' => 'raw',
-                    'sql' => "LOWER(name) LIKE ?",
+                    'sql' => 'LOWER(name) LIKE ?',
                     'boolean' => 'and',
                 ],
                 [
                     'type' => 'raw',
-                    'sql' => "LOWER(description) LIKE ?",
+                    'sql' => 'LOWER(description) LIKE ?',
                     'boolean' => 'or',
                 ],
                 [
                     'type' => 'raw',
-                    'sql' => "LOWER(name) LIKE ?",
+                    'sql' => 'LOWER(name) LIKE ?',
                     'boolean' => 'and',
                 ],
                 [

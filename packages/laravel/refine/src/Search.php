@@ -111,6 +111,7 @@ class Search extends Refiner
 
         return array_merge(parent::getBindings($term, $builder), [
             'boolean' => $this->getBoolean(),
+            'term' => $term,
         ]);
     }
 

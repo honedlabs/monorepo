@@ -2,14 +2,20 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Refine;
+use Honed\Refine\Concerns\HasSearches;
 use Honed\Refine\Search;
-use Workbench\App\Models\User;
 
 beforeEach(function () {
-    Refine::useSearchKey();
-    Refine::useMatchKey();
-    $this->test = Refine::make(User::class);
+    $this->test = new class()
+    {
+        use HasSearches;
+    };
+});
+
+afterEach(function () {
+    $this->test::useSearchKey('search');
+    $this->test::useMatchKey('match');
+    $this->test::shouldMatch(false);
 });
 
 it('is empty by default', function () {
@@ -39,23 +45,44 @@ it('adds searches collection', function () {
 
 it('has search key', function () {
     expect($this->test)
-        ->getSearchKey()->toBe(config('refine.search_key'))
+        ->getSearchKey()->toBe('search')
         ->searchKey('test')->toBe($this->test)
         ->getSearchKey()->toBe('test');
 });
 
-it('match', function () {
+it('has search key globally', function () {
+    $this->test::useSearchKey('test');
+
     expect($this->test)
-        ->getMatchKey()->toBe(config('refine.match_key'))
+        ->getSearchKey()->toBe('test');
+});
+
+it('has match key', function () {
+    expect($this->test)
+        ->getMatchKey()->toBe('match')
         ->matchKey('test')->toBe($this->test)
         ->getMatchKey()->toBe('test');
 });
 
-it('matches', function () {
+it('has match key globally', function () {
+    $this->test::useMatchKey('test');
+
     expect($this->test)
-        ->matches()->toBe(config('refine.match'));
+        ->getMatchKey()->toBe('test');
+});
+
+it('should match', function () {
+    expect($this->test)
+        ->matches()->toBeFalse();
 
     expect($this->test->match())->toBe($this->test)
+        ->matches()->toBeTrue();
+});
+
+it('should match globally', function () {
+    $this->test::shouldMatch(true);
+
+    expect($this->test)
         ->matches()->toBeTrue();
 });
 

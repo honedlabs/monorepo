@@ -12,6 +12,10 @@ beforeEach(function () {
     };
 });
 
+afterEach(function () {
+    $this->test::shouldQualify(false);
+});
+
 it('has qualifier', function () {
     expect($this->test)
         // Base case
@@ -23,6 +27,14 @@ it('has qualifier', function () {
         ->qualifies()->toBeFalse()
         // Qualifies with boolean
         ->qualify()->toBe($this->test)
+        ->getQualifier()->toBeTrue()
+        ->qualifies()->toBeTrue();
+});
+
+it('has qualifier globally', function () {
+    $this->test::shouldQualify(true);
+
+    expect($this->test)
         ->getQualifier()->toBeTrue()
         ->qualifies()->toBeTrue();
 });

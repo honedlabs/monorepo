@@ -74,46 +74,6 @@ trait HasOptions
     }
 
     /**
-     * Create options from a value.
-     *
-     * @template TValue of scalar|null|\Honed\Refine\Option
-     *
-     * @param  class-string<BackedEnum>|array<int|string,TValue>|Collection<int|string,TValue>  $options
-     * @return array<int,Option>
-     */
-    protected function createOptions($options)
-    {
-        if ($options instanceof Collection) {
-            $options = $options->all();
-        }
-
-        if (is_string($options)) {
-            return array_map(
-                static fn ($case) => Option::make($case->value, $case->name),
-                $options::cases()
-            );
-        }
-
-        if (Arr::isAssoc($options)) {
-            return array_map(
-                // @phpstan-ignore-next-line
-                static fn ($value, $key) => Option::make($value, (string) $key),
-                array_keys($options),
-                array_values($options)
-            );
-        }
-
-        return array_values(
-            array_map(
-                static fn ($value) => $value instanceof Option
-                    ? $value
-                    : Option::make($value, (string) $value),
-                $options
-            )
-        );
-    }
-
-    /**
      * Get the options.
      *
      * @return array<int,Option>
@@ -260,6 +220,46 @@ trait HasOptions
         return array_map(
             static fn (Option $option) => $option->toArray(),
             $this->getOptions()
+        );
+    }
+
+    /**
+     * Create options from a value.
+     *
+     * @template TValue of scalar|null|\Honed\Refine\Option
+     *
+     * @param  class-string<BackedEnum>|array<int|string,TValue>|Collection<int|string,TValue>  $options
+     * @return array<int,Option>
+     */
+    protected function createOptions($options)
+    {
+        if ($options instanceof Collection) {
+            $options = $options->all();
+        }
+
+        if (is_string($options)) {
+            return array_map(
+                static fn ($case) => Option::make($case->value, $case->name),
+                $options::cases()
+            );
+        }
+
+        if (Arr::isAssoc($options)) {
+            return array_map(
+                // @phpstan-ignore-next-line
+                static fn ($value, $key) => Option::make($value, (string) $key),
+                array_keys($options),
+                array_values($options)
+            );
+        }
+
+        return array_values(
+            array_map(
+                static fn ($value) => $value instanceof Option
+                    ? $value
+                    : Option::make($value, (string) $value),
+                $options
+            )
         );
     }
 }
