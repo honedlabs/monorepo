@@ -71,6 +71,7 @@ class Product extends Model
             'id' => (int) $this->id,
             'name' => $this->name,
             'description' => $this->description,
+            'price' => $this->price,
         ];
     }
 }

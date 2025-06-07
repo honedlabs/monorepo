@@ -36,11 +36,6 @@ beforeEach(function () {
             'sql' => 'LOWER(description) LIKE ?',
             'boolean' => 'or',
         ],
-        // [
-        //     'type' => 'raw',
-        //     'sql' => 'LOWER(status) LIKE ?',
-        //     'boolean' => 'and',
-        // ],
         [
             'type' => 'raw',
             'sql' => 'LOWER(name) LIKE ?',
@@ -152,11 +147,20 @@ it('has custom keys pipeline', function () {
 });
 
 it('has scout pipeline', function () {
-    Product::factory(10)->create();
+    Product::factory(10)->create([
+        'name' => 'test'
+    ]);
 
+    $this->artisan('scout:import', ['model' => Product::class]);
+
+    Product::search('test');
+
+
+    // Decorator around the builder?
     // dd(
     //     Product::search('test')
-    //         ->query(fn ($query) => dd($query))
-    //         ->where('name', 'test')
+    //         ->where('id', 5)
+    //         ->query(fn ($query) => $query->where('id', '>', 5))
+    //         ->raw()
     // );
 })->skip();

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Honed\Refine\Concerns\HasOptions;
 use Honed\Refine\Option;
 use Workbench\App\Enums\Status;
+use Workbench\App\Filters\PriceFilter;
 
 beforeEach(function () {
     $this->test = new class()
@@ -233,7 +234,28 @@ it('activates options', function () {
         );
 });
 
-it('gets options from contract', function () {})->skip();
+it('gets options from contract', function () {
+    expect(PriceFilter::new())
+        ->getOptions()->toBeArray()
+        ->toHaveCount(3)
+        ->sequence(
+            fn ($test) => $test
+                ->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(100)
+                ->getLabel()->toBe('Less than $100')
+                ->isActive()->toBeFalse(),
+            fn ($test) => $test
+                ->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(999)
+                ->getLabel()->toBe('$100 - $999')
+                ->isActive()->toBeFalse(),
+            fn ($test) => $test
+                ->toBeInstanceOf(Option::class)
+                ->getValue()->toBe(1000)
+                ->getLabel()->toBe('$1000+')
+                ->isActive()->toBeFalse(),
+        );
+});
 
 it('has array representation', function () {
     expect($this->test)
