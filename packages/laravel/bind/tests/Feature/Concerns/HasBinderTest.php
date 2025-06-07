@@ -77,7 +77,7 @@ it('gets models', function () {
         ->toBeInstanceOf(Collection::class)
         ->toHaveCount(1)
         ->first()->scoped(fn ($user) => $user
-            ->getAttributes()->toEqual([
+        ->getAttributes()->toEqual([
                 'id' => $this->user->id,
                 'name' => $this->user->name,
             ])
@@ -92,14 +92,14 @@ it('scopes query', function () {
     expect(User::whereBound('edit', $this->user->id))
         ->toBeInstanceOf(Builder::class)
         ->get()->scoped(fn ($users) => $users
-            ->toBeInstanceOf(Collection::class)
-            ->toBeEmpty()
+        ->toBeInstanceOf(Collection::class)
+        ->toBeEmpty()
         );
 
     expect(User::whereBound('false', $this->user->id))
         ->toBeInstanceOf(Builder::class)
         ->get()->scoped(fn ($users) => $users
-            ->toBeInstanceOf(Collection::class)
-            ->toHaveCount(1)
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(1)
         );
 });

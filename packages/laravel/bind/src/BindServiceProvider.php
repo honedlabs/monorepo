@@ -81,11 +81,12 @@ class BindServiceProvider extends ServiceProvider
     /**
      * Disable binder discovery for the application.
      *
+     * @param  bool  $disable
      * @return void
      */
-    public static function disableBinderDiscovery()
+    public static function disableBinderDiscovery($disable = true)
     {
-        static::$shouldDiscoverBinders = false;
+        static::$shouldDiscoverBinders = ! $disable;
     }
 
     /**
@@ -110,18 +111,6 @@ class BindServiceProvider extends ServiceProvider
     }
 
     /**
-     * Flush the state of the service provider.
-     *
-     * @return void
-     */
-    public static function flushState()
-    {
-        static::$shouldDiscoverBinders = true;
-        static::$binderDiscoveryPaths = [];
-        static::$binderDiscoveryBasePath = null;
-    }
-
-    /**
      * Register services.
      *
      * @return void
@@ -141,14 +130,19 @@ class BindServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
-        $this->optimizes(BindCacheCommand::class);
-
         if ($this->app->runningInConsole()) {
 
             $this->offerPublishing();
+
+            // @phpstan-ignore-next-line function.alreadyNarrowedType
+            if (method_exists($this, 'optimizes')) {
+                $this->optimizes('bind:cache', key: 'binders');
+            }
 
             $this->commands([
                 BindCacheCommand::class,
@@ -159,27 +153,11 @@ class BindServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the discovered binders for the application.
-     *
-     * @return array<int, class-string<Binder>>
-     */
-    public function getBinders()
-    {
-        if ($this->app->bindersAreCached()) {
-            $cache = require $this->app->getCachedBindersPath();
-
-            return $cache[get_class($this)] ?? [];
-        }
-
-        return $this->registeredBinders();
-    }
-
-    /**
      * Get the binders which can be registered.
      *
      * @return array<int, class-string<Binder>>
      */
-    public function registeredBinders()
+    public function getBinders()
     {
         return array_merge_recursive(
             $this->discoveredBinders(),

@@ -6,11 +6,22 @@ use Honed\Bind\BindServiceProvider;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 
+use function Orchestra\Testbench\workbench_path;
+
 beforeEach(function () {
     $this->cache = base_path('bootstrap/cache/binders.php');
     $this->stub = base_path('stubs/honed.binder.stub');
     File::delete([$this->cache, $this->stub]);
-    BindServiceProvider::flushState();
+});
+
+afterEach(function () {
+    BindServiceProvider::setBinderDiscoveryPaths([
+        workbench_path('app/Binders'),
+    ]);
+
+    BindServiceProvider::setBinderDiscoveryBasePath(base_path());
+
+    BindServiceProvider::disableBinderDiscovery(false);
 });
 
 it('offers publishing', function () {
@@ -28,8 +39,7 @@ it('adds discovery paths', function () {
 
     expect(BindServiceProvider::getBinderDiscoveryPaths())
         ->toBeArray()
-        ->toHaveCount(1)
-        ->{0}->toBe('tests/Feature/Binders');
+        ->toHaveCount(2);
 });
 
 it('sets discovery paths', function () {
@@ -44,7 +54,7 @@ it('sets discovery paths', function () {
 it('disables discovery', function () {
     BindServiceProvider::disableBinderDiscovery();
 
-    /** @var \Honed\Bind\BindServiceProvider $provider */
+    /** @var BindServiceProvider $provider */
     $provider = App::getProvider(BindServiceProvider::class);
 
     expect($provider->shouldDiscoverBinders())

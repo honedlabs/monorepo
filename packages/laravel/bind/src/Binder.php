@@ -214,10 +214,7 @@ abstract class Binder
     protected static function cached($model, $field)
     {
         if (! isset(static::$binders)) {
-            /** @var array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<self>>> $binders */
-            $binders = require App::getCachedBindersPath();
-
-            static::$binders = $binders;
+            static::$binders = RetrieveBinders::get();
         }
 
         if (isset(static::$binders[$model][$field])) {

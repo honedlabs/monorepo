@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Bind\Commands;
 
-use Honed\Bind\BindServiceProvider;
+use Honed\Bind\RetrieveBinders;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\App;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'bind:cache')]
@@ -37,69 +36,30 @@ class BindCacheCommand extends Command
 
         $this->components->info('Caching bindings...');
 
-        $bindings = $this->getBindings();
+        $bindings = RetrieveBinders::binders();
 
         $progress = $this->output->createProgressBar(count($bindings, COUNT_RECURSIVE));
 
-        /** @var array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Bind\Binder>>> */
-        $content = [];
+        $binds = [];
 
         foreach ($bindings as $binding) {
-            $this->retrieveBindings($binding, $content);
+            RetrieveBinders::bindings($binding, $binds);
             $progress->advance();
         }
 
-        file_put_contents(
-            $this->laravel->getCachedBindersPath(),
-            '<?php return '.var_export($content, true).';'
-        );
+        RetrieveBinders::put($binds);
 
         $progress->finish();
 
         $this->line(PHP_EOL);
 
-        $this->components->success('Cached bindings for '.count($content).' model(s).');
+        $this->components->success('Cached bindings for '.count($binds).' model(s).');
 
         if ($this->option('table')) {
-            $this->createTable($content);
+            $this->createTable($binds);
         }
 
         $this->components->info('Bindings cached successfully.');
-    }
-
-    /**
-     * Get all of the events and listeners configured for the application.
-     *
-     * @return array<int, class-string<\Honed\Bind\Binder>>
-     */
-    protected function getBindings()
-    {
-        $bindings = [];
-
-        foreach ($this->laravel->getProviders(BindServiceProvider::class) as $provider) {
-            $bindings = \array_merge($bindings, $provider->registeredBinders());
-        }
-
-        return $bindings;
-    }
-
-    /**
-     * Retrieve the bindings for the given binder, and push them to the array.
-     *
-     * @param  class-string<\Honed\Bind\Binder>  $binder
-     * @param  array<class-string<\Illuminate\Database\Eloquent\Model>, array<string, class-string<\Honed\Bind\Binder>>>  $content
-     * @return void
-     */
-    protected function retrieveBindings($binder, &$content)
-    {
-        /** @var \Honed\Bind\Binder $binder */
-        $binder = App::make($binder);
-
-        $binds = array_fill_keys($binder->bindings(), get_class($binder));
-
-        $model = $binder->modelName();
-
-        $content[$model] = array_merge($content[$model] ?? [], $binds);
     }
 
     /**
