@@ -27,6 +27,7 @@ it('shares lock', function () {
 it('shares lock with a user', function () {
     Lock::shouldAppend(true);
 
+    // ID is 2
     $user = User::factory()->create();
 
     get(route('user.show', $user))->assertInertia(fn (Assert $page) => $page
@@ -34,12 +35,12 @@ it('shares lock with a user', function () {
         ->has('user', fn (Assert $user) => $user
             ->has(Lock::getProperty(), fn (Assert $lock) => $lock
                 ->where('viewAny', true)
-                ->where('view', false)
+                ->where('view', true)
                 ->where('create', true)
-                ->where('update', true)
-                ->where('delete', false)
-                ->where('restore', true)
+                ->where('update', false)
+                ->where('delete', true)
+                ->where('restore', false)
             )->etc()
         )->etc()
     );
-})->skip();
+});

@@ -20,8 +20,9 @@ return [
     | Locks
     |--------------------------------------------------------------------------
     |
-    | You can override the default implementation of the `Locker` class using
-    | the `Honed\Lock\Contracts\Lockable` interface.
+    | You can override the default implementation of the `Locker` class with
+    | your own class which implements the `Honed\Lock\Contracts\Lockable`
+    | interface. By default, the `Honed\Lock\Locker` class is used.
     |
     */
     'implementation' => Honed\Lock\Locker::class,
