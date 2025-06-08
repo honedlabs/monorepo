@@ -8,7 +8,7 @@ use Honed\Abn\AbnValidator;
 use Illuminate\Contracts\Database\Eloquent\CastsInboundAttributes;
 use Illuminate\Database\Eloquent\Model;
 
-class FormatAbn implements CastsInboundAttributes
+class FormattingAbn implements CastsInboundAttributes
 {
     /**
      * Prepare the given value for storage.

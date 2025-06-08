@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
-use Honed\Abn\Casts\FormatAbn;
 use Honed\Abn\Casts\FormattedAbn;
+use Honed\Abn\Casts\FormattingAbn;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -58,7 +58,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'abn' => FormatAbn::class,
+        'abn' => FormattingAbn::class,
         'formatted_abn' => FormattedAbn::class,
     ];
 }

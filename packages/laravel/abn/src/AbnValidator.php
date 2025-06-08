@@ -114,7 +114,7 @@ class AbnValidator
      * @param  string  $abn
      * @return bool
      */
-    public static function invalidLength($abn)
+    protected static function invalidLength($abn)
     {
         return mb_strlen($abn) !== 11;
     }
@@ -125,7 +125,7 @@ class AbnValidator
      * @param  string  $abn
      * @return bool
      */
-    public static function leadingZero($abn)
+    protected static function leadingZero($abn)
     {
         return (int) $abn[0] === 0;
     }
@@ -136,7 +136,7 @@ class AbnValidator
      * @param  string  $abn
      * @return int
      */
-    public static function checksum($abn)
+    protected static function checksum($abn)
     {
         $checksum = 0;
 
