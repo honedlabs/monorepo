@@ -119,15 +119,19 @@ class BindServiceProvider extends ServiceProvider
     {
         App::macro('getCachedBindersPath', function () {
             /** @var \Illuminate\Foundation\Application $this */
+
+            // @phpstan-ignore-next-line
             return $this->normalizeCachePath(
                 'APP_BINDERS_CACHE',
                 'cache/binders.php'
-            ); // @phpstan-ignore-line
+            );
         });
 
         App::macro('bindersAreCached', function () {
             /** @var \Illuminate\Foundation\Application $this */
-            return $this->files->exists($this->getCachedBindersPath()); // @phpstan-ignore-line
+
+            // @phpstan-ignore-next-line
+            return $this->files->exists($this->getCachedBindersPath());
         });
     }
 
