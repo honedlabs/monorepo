@@ -55,5 +55,5 @@ return [
     | `Honed\Flash\Contracts\Message` contract.
     */
 
-    'implementation' => Honed\Flash\Message::class,
+    'implementation' => \Honed\Flash\Message::class,
 ];

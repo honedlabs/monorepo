@@ -40,7 +40,7 @@ composer require honed/flash
 Get started with the [companion package](https://github.com/honedlabs/flash-vue) by installing it as a node dependency via [NPM](https://npmjs.com).
 
 ```bash
-npm install @honed/flash
+npm i @honed/flash
 ```
 
 ## Documentation
