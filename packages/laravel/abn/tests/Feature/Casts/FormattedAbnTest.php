@@ -34,7 +34,7 @@ it('does not cast nulls', function () {
     ]);
 });
 
-it('formats when already formatted', function () {
+it('removes whitespace when setting', function () {
     $abn = '12 345 678 901';
 
     $user = User::factory()->create([
@@ -42,9 +42,9 @@ it('formats when already formatted', function () {
     ]);
 
     expect($user)
-        ->formatted_abn->toBe($abn);
+        ->formatted_abn->toBe('12 345 678 901');
 
     assertDatabaseHas('users', [
-        'formatted_abn' => $abn,
+        'formatted_abn' => '12345678901',
     ]);
 });
