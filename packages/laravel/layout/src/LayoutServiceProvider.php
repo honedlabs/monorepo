@@ -6,13 +6,14 @@ namespace Honed\Layout;
 
 use Closure;
 use Honed\Layout\Testing\AssertableInertia;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Testing\TestResponse;
 use Inertia\ResponseFactory as InertiaResponseFactory;
 
 use function is_null;
 
-class LayoutServiceProvider extends ServiceProvider
+class LayoutServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Register services.
@@ -24,6 +25,18 @@ class LayoutServiceProvider extends ServiceProvider
         );
 
         $this->registerTestingMacros();
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array<int, class-string>
+     */
+    public function provides()
+    {
+        return [
+            ResponseFactory::class,
+        ];
     }
 
     /**
