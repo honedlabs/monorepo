@@ -11,5 +11,6 @@ trait IsHoned
 {
     // use HasTable;
     // use HasActions;
+    // use HasBinder
     // use 
 }

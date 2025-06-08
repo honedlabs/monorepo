@@ -67,10 +67,11 @@ trait HasAuthor
     /**
      * Get the user model for the application.
      * 
-     * @return class-string<\Illuminate\Foundation\Auth\User>
+     * @return class-string<\Illuminate\Database\Eloquent\Model>
      */
     public function getAuthorModel()
     {
+        /** @var class-string<\Illuminate\Database\Eloquent\Model> */
         return Config::get('auth.providers.users.model', User::class);
     }
 

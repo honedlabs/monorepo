@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -17,18 +18,43 @@ use Illuminate\Support\Facades\Http;
 class HonedServiceProvider extends ServiceProvider
 {
     /**
+     * Register services.
+     * 
+     * @return void
+     */
+    public function register()
+    {
+        $this->registerMacros();
+    }
+
+    /**
      * Bootstrap services.
      *
      * @return void
      */
     public function boot()
     {
-        $this->configureCommands();
-        $this->configureDates();
-        $this->configureModels();
-        $this->configureUrl();
-        $this->configureVite();
-        $this->configureStrayRequests();
+        $this->bootCommands();
+        $this->bootDates();
+        $this->bootModels();
+        $this->bootUrl();
+        $this->bootVite();
+        $this->bootStrayRequests();
+    }
+
+    /**
+     * Register the application's macros.
+     * 
+     * @return void
+     */
+    protected function registerMacros()
+    {
+        Blueprint::macro('authors', function (string $createdBy = 'created_by', string $updatedBy = 'updated_by') {
+            /** @var \Illuminate\Database\Schema\Blueprint $this */
+
+            $this->foreignId($createdBy)->nullable()->constrained('users');
+            $this->foreignId($updatedBy)->nullable()->constrained('users');
+        });
     }
 
     /**
@@ -38,7 +64,7 @@ class HonedServiceProvider extends ServiceProvider
      * 
      * @return void
      */
-    private function configureDates()
+    protected function bootDates()
     {
         Date::use(CarbonImmutable::class);
     }
@@ -48,7 +74,7 @@ class HonedServiceProvider extends ServiceProvider
      * 
      * @return void
      */
-    private function configureCommands()
+    protected function bootCommands()
     {
         DB::prohibitDestructiveCommands(App::isProduction());
     }
@@ -61,7 +87,7 @@ class HonedServiceProvider extends ServiceProvider
      * 
      * @return void
      */
-    private function configureModels()
+    protected function bootModels()
     {
         Model::shouldBeStrict();
         Model::unguard();
@@ -76,7 +102,7 @@ class HonedServiceProvider extends ServiceProvider
      * 
      * @return void
      */
-    private function configureUrl()
+    protected function bootUrl()
     {
         URL::forceHttps(App::isProduction());
     }
@@ -86,7 +112,7 @@ class HonedServiceProvider extends ServiceProvider
      * 
      * @return void
      */
-    private function configureVite()
+    protected function bootVite()
     {
         Vite::useAggressivePrefetching();
     }
@@ -96,7 +122,7 @@ class HonedServiceProvider extends ServiceProvider
      * 
      * @return void
      */
-    private function configureStrayRequests()
+    protected function bootStrayRequests()
     {
         Http::preventStrayRequests();
     }
