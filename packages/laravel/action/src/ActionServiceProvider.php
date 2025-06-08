@@ -26,6 +26,8 @@ class ActionServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/action.php', 'action');
 
+        // $this->app->bind()
+
         $this->registerRoutesMacro();
     }
 

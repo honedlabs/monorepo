@@ -48,7 +48,7 @@ class Confirm extends Primitive
      *
      * @var string
      */
-    protected $useSubmit = 'Confirm';
+    protected static $useSubmit = 'Confirm';
 
     /**
      * The message to display on the dismiss button.
@@ -62,7 +62,7 @@ class Confirm extends Primitive
      *
      * @var string
      */
-    protected $useDismiss = 'Cancel';
+    protected static $useDismiss = 'Cancel';
 
     /**
      * Create a new confirm instance.
