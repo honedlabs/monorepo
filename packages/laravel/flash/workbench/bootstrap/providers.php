@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Flash\FlashServiceProvider;
-
 return [
-    FlashServiceProvider::class,
+    Honed\Flash\FlashServiceProvider::class,
+    Workbench\App\Providers\WorkbenchServiceProvider::class,
 ];
