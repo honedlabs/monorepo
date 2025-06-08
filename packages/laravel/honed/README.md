@@ -13,7 +13,7 @@
     <a href="https://packagist.org/packages/honed/honed"><img src="https://img.shields.io/packagist/v/honed/honed" alt="Latest Stable Version"></a>
 </p>
 
-**Honed** Accelerate monolith development with the Honed ecosystem..
+**Honed** provides commonly use Honed packages in a single command, allowing you to accelerate monolith development using the package ecosystem.
 
 ## Installation
 

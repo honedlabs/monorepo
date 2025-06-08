@@ -3,5 +3,6 @@
 declare(strict_types=1);
 
 return [
-    Honed\Abn\AbnServiceProvider::class,
+    Workbench\App\Providers\WorkbenchServiceProvider::class,
+    Honed\Honed\HonedServiceProvider::class,
 ];
