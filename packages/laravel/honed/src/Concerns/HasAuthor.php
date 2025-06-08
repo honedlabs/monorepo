@@ -24,12 +24,12 @@ trait HasAuthor
         static::creating(function (self $model) {
             $touchedBy = $model->getTouchedByKey();
 
-            $model->setAuthor($touchedBy);
-            $model->setEditor($touchedBy);
+            $model->setCreatedBy($touchedBy);
+            $model->setUpdatedBy($touchedBy);
         });
 
         static::updating(function (self $model) {
-            $model->setEditor($model->getTouchedByKey());
+            $model->setUpdatedBy($model->getTouchedByKey());
         });
     }
     /**
@@ -43,7 +43,7 @@ trait HasAuthor
 
         return $this->belongsTo(
             $model,
-            $this->getAuthorColumn(),
+            $this->getCreatedByColumn(),
             (new $model())->getKeyName(),
         );
     }
@@ -59,7 +59,7 @@ trait HasAuthor
 
         return $this->belongsTo(
             $model,
-            $this->getEditorColumn(),
+            $this->getUpdatedByColumn(),
             (new $model())->getKeyName(),
         );
     }
@@ -79,7 +79,7 @@ trait HasAuthor
      * 
      * @return \Illuminate\Database\Eloquent\Model|int|string|null
      */
-    public function touchedBy()
+    public function getTouchedBy()
     {
         return Auth::id();
     }
@@ -91,7 +91,7 @@ trait HasAuthor
      */
     public function getTouchedByKey()
     {
-        $touchedBy = $this->touchedBy();
+        $touchedBy = $this->getTouchedBy();
 
         if ($touchedBy instanceof Model) {
             /** @var int|string */
@@ -107,9 +107,9 @@ trait HasAuthor
      * @param int|string|null $id
      * @return void
      */
-    public function setAuthor($id)
+    public function setCreatedBy($id)
     {
-        $this->{$this->getAuthorColumn()} = $id;
+        $this->{$this->getCreatedByColumn()} = $id;
     }
 
     /**
@@ -118,9 +118,9 @@ trait HasAuthor
      * @param int|string|null $id
      * @return void
      */
-    public function setEditor($id)
+    public function setUpdatedBy($id)
     {
-        $this->{$this->getEditorColumn()} = $id;
+        $this->{$this->getUpdatedByColumn()} = $id;
     }
 
     /**
@@ -128,7 +128,7 @@ trait HasAuthor
      * 
      * @return string
      */
-    public function getAuthorColumn()
+    public function getCreatedByColumn()
     {
         if (defined('static::CREATED_BY')) {
             return static::CREATED_BY;
@@ -142,7 +142,7 @@ trait HasAuthor
      * 
      * @return string
      */
-    public function getEditorColumn()
+    public function getUpdatedByColumn()
     {
         if (defined('static::UPDATED_BY')) {
             return static::UPDATED_BY;
