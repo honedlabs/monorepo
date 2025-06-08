@@ -5,33 +5,34 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Closure;
-use HandlesActions;
-use Honed\Action\Concerns\HasTypedActions;
-use Honed\Action\Concerns\HasEncoder;
-use Honed\Action\Concerns\HasEndpoint;
-use Honed\Action\Concerns\HasHandler;
-use Honed\Action\Contracts\Handles;
-use Honed\Core\Concerns\HasResource;
-use Honed\Core\Primitive;
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\UrlRoutable;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Str;
 use Throwable;
-
 use function array_merge;
+use Honed\Core\Primitive;
+use Illuminate\Support\Str;
+use Honed\Action\Contracts\Handler;
+use Honed\Action\Contracts\Handles;
+use Illuminate\Container\Container;
+use Illuminate\Support\Facades\App;
+use Honed\Core\Concerns\HasResource;
+use Honed\Action\Concerns\HasEncoder;
+use Honed\Action\Concerns\HasHandler;
+use Honed\Action\Concerns\HasEndpoint;
+use Honed\Action\Concerns\HandlesActions;
+
+use Honed\Action\Concerns\HasTypedActions;
+use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Contracts\Foundation\Application;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  */
-class ActionGroup extends Primitive implements HandlesActions
+class ActionGroup extends Primitive implements Handler
 {
     /**
-     * @use \Honed\Action\Concerns\HasTypedActions<TModel, TBuilder>
+     * @use \Honed\Action\Concerns\HandlesActions<TModel, TBuilder>
      */
-    use HasTypedActions;
+    use HandlesActions;
 
     use HasHandler;
 

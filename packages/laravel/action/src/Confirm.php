@@ -250,6 +250,17 @@ class Confirm extends Primitive
     }
 
     /**
+     * Flush the global configuration state.
+     * 
+     * @return void
+     */
+    public static function flushState()
+    {
+        static::$useSubmit = 'Confirm';
+        static::$useDismiss = 'Cancel';
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($named = [], $typed = [])

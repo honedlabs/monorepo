@@ -1,5 +1,7 @@
 <?php
 
+namespace Honed\Action\Contracts;
+
 use Illuminate\Contracts\Routing\UrlRoutable;
 
 interface Handler extends UrlRoutable

@@ -11,7 +11,7 @@ use ReflectionClass;
 /**
  * @template TActionGroup of \Honed\Action\ActionGroup = \Honed\Action\ActionGroup
  *
- * @property string $actions
+ * @property class-string<TActionGroup> $actions
  */
 trait HasActions
 {
