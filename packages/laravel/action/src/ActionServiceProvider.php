@@ -19,8 +19,10 @@ class ActionServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
+     * 
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/action.php', 'action');
 
@@ -29,10 +31,11 @@ class ActionServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
+     * 
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
-
         if ($this->app->runningInConsole()) {
 
             $this->offerPublishing();
@@ -65,9 +68,11 @@ class ActionServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the route macro for the Table class.
+     * Register the route macro for the action handler.
+     *
+     * @return void
      */
-    private function registerRoutesMacro(): void
+    private function registerRoutesMacro()
     {
         Router::macro('actions', function () {
             /** @var Router $this */

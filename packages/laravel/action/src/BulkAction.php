@@ -13,16 +13,16 @@ class BulkAction extends Action
     use HasBulkActions;
 
     /**
+     * {@inheritdoc}
+     */
+    protected $type = 'bulk';
+
+    /**
      * Whether the action keeps the records selected after successful execution.
      *
      * @var bool
      */
     protected $keepSelected = false;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $type = 'bulk';
 
     /**
      * Set the action to keep the records selected.
