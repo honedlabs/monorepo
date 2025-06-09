@@ -14,6 +14,7 @@ use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Primitive;
+use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
 use Illuminate\Support\Str;
 
@@ -25,6 +26,7 @@ use Illuminate\Support\Str;
  */
 abstract class Refiner extends Primitive
 {
+    use CanBeHidden;
     use Allowable;
     use HasAlias;
     use HasLabel;
@@ -34,9 +36,14 @@ abstract class Refiner extends Primitive
 
     /** @use HasQuery<TModel, TBuilder> */
     use HasQuery;
-
-    use HasType;
     use HasValue;
+
+    /**
+     * Define the type of the refiner.
+     * 
+     * @return string
+     */
+    abstract public function type();
 
     /**
      * Create a new refiner instance.
@@ -50,16 +57,6 @@ abstract class Refiner extends Primitive
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
-    }
-
-    /**
-     * Flush the global configuration state.
-     *
-     * @return void
-     */
-    public static function flushState()
-    {
-        static::$shouldQualify = false;
     }
 
     /**
@@ -89,7 +86,7 @@ abstract class Refiner extends Primitive
      * @param  \Illuminate\Http\Request|mixed  $value
      * @return mixed
      */
-    public function getRequestValue($value)
+    protected function getRequestValue($value)
     {
         return $value;
     }
@@ -109,7 +106,7 @@ abstract class Refiner extends Primitive
      *
      * @return string
      */
-    public function guessParameter()
+    protected function guessParameter()
     {
         return Str::of($this->getName())
             ->afterLast('.')
@@ -122,7 +119,7 @@ abstract class Refiner extends Primitive
      * @param  mixed  $value
      * @return mixed
      */
-    public function transformParameter($value)
+    protected function transformParameter($value)
     {
         return $value;
     }
@@ -133,7 +130,7 @@ abstract class Refiner extends Primitive
      * @param  mixed  $value
      * @return bool
      */
-    public function invalidValue($value)
+    protected function invalidValue($value)
     {
         return false;
     }
@@ -145,7 +142,7 @@ abstract class Refiner extends Primitive
      * @param  TBuilder  $builder
      * @return array<string,mixed>
      */
-    public function getBindings($value, $builder)
+    protected function getBindings($value, $builder)
     {
         return [
             'value' => $value,
@@ -193,7 +190,7 @@ abstract class Refiner extends Primitive
         return [
             'name' => $this->getParameter(),
             'label' => $this->getLabel(),
-            'type' => $this->getType(),
+            'type' => $this->type(),
             'active' => $this->isActive(),
             'meta' => $this->getMeta(),
         ];

@@ -3,6 +3,7 @@
 namespace Honed\Refine\Concerns;
 
 use Honed\Core\Concerns\HasScope;
+use Honed\Refine\Sorts\Concerns\HasSorts;
 
 trait CanRefine
 {
@@ -164,6 +165,10 @@ trait CanRefine
      */
     protected function filter()
     {
+        foreach ($this->getFilters() as $filter) {
+            // $value = $filter->getRequestValue($request)
+            $filter->refine($this->resource, $this->request);
+        }
 
     }
 

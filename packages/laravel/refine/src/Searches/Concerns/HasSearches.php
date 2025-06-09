@@ -31,44 +31,23 @@ trait HasSearches
     /**
      * The query parameter to identify the search string.
      *
-     * @var string|null
-     */
-    protected $searchKey;
-
-    /**
-     * The default query parameter to identify the search string.
-     *
      * @var string
      */
-    protected static $useSearchKey = 'search';
+    protected $searchKey = 'search';
 
     /**
      * Whether the search columns can be toggled.
      *
-     * @var bool|null
+     * @var bool
      */
-    protected $match;
-
-    /**
-     * Whether the search columns can be toggled by default.
-     *
-     * @var bool|null
-     */
-    protected static $shouldMatch = false;
+    protected $match = false;
 
     /**
      * The query parameter to identify the columns to search on.
      *
-     * @var string|null
-     */
-    protected $matchKey;
-
-    /**
-     * The default query parameter to identify the columns to search on.
-     *
      * @var string
      */
-    protected static $useMatchKey = 'match';
+    protected $matchKey = 'match';
 
     /**
      * The search term as a string without replacements.
@@ -78,90 +57,54 @@ trait HasSearches
     protected $term;
 
     /**
-     * Set the default query parameter to identify the search.
+     * The placeholder to use for the search bar.
      *
-     * @param  string  $searchKey
-     * @return void
+     * @var string|null
      */
-    public static function useSearchKey($searchKey = 'search')
-    {
-        static::$useSearchKey = $searchKey;
-    }
+    protected $searchPlaceholder;
 
     /**
-     * Set the default query parameter to identify the columns to search.
+     * Set whether the searches should be applied.
      *
-     * @param  string  $matchKey
-     * @return void
-     */
-    public static function useMatchKey($matchKey = 'match')
-    {
-        static::$useMatchKey = $matchKey;
-    }
-
-    /**
-     * Determine if matching is enabled from the config.
-     *
-     * @param  bool  $match
-     * @return void
-     */
-    public static function shouldMatch($match = true)
-    {
-        static::$shouldMatch = $match;
-    }
-
-    /**
-     * Set whether the searchs should be applied.
-     *
+     * @param  bool  $enable
      * @return $this
      */
-    public function disableSearching()
+    public function searchable($enable = true)
     {
-        $this->search = false;
+        $this->searchable = $enable;
 
         return $this;
     }
 
     /**
-     * Set the searchs to not be applied.
-     *
+     * Set whether the searches should not be applied.
+     * 
+     * @param  bool  $searchable
      * @return $this
      */
-    public function enableSearching()
+    public function notSearchable($disable = true)
     {
-        $this->search = true;
-
-        return $this;
+        return $this->searchable(! $disable);
     }
 
     /**
-     * Determine if the searchs should be applied.
+     * Determine if the searches should be applied.
      *
      * @return bool
      */
-    public function searchingEnabled()
+    public function isSearchable()
     {
-        return $this->search;
+        return $this->searchable;
     }
 
     /**
-     * Determine if the searchs should not be applied.
+     * Determine if the searches should not be applied.
      *
      * @return bool
      */
-    public function searchingDisabled()
+    public function isNotSearchable()
     {
-        return ! $this->searchingEnabled();
-    }
-
-    /**
-     * Define the searches for the instance.
-     *
-     * @return array<int, Search>
-     */
-    public function searches()
-    {
-        return [];
+        return ! $this->isSearchable();
     }
 
     /**
@@ -170,7 +113,7 @@ trait HasSearches
      * @param  Search|iterable<int, Search>  ...$searches
      * @return $this
      */
-    public function withSearches(...$searches)
+    public function searches(...$searches)
     {
         /** @var array<int, Search> $searches */
         $searches = Arr::flatten($searches);
@@ -187,13 +130,13 @@ trait HasSearches
      */
     public function getSearches()
     {
-        if ($this->searchingDisabled()) {
+        if ($this->isNotSearchable()) {
             return [];
         }
 
         return once(fn () => array_values(
             array_filter(
-                array_merge($this->searches(), $this->searches),
+                $this->searches,
                 static fn (Search $search) => $search->isAllowed()
             )
         ));
@@ -219,7 +162,7 @@ trait HasSearches
      */
     public function getSearchKey()
     {
-        return $this->searchKey ?? static::$useSearchKey;
+        return $this->formatScope($this->searchKey);
     }
 
     /**
@@ -242,16 +185,16 @@ trait HasSearches
      */
     public function getMatchKey()
     {
-        return $this->matchKey ?? static::$useMatchKey;
+        return $this->formatScope($this->matchKey);
     }
 
     /**
      * Set whether the search columns can be toggled.
      *
-     * @param  bool|null  $match
+     * @param  bool  $match
      * @return $this
      */
-    public function match($match = true)
+    public function matchable($match = true)
     {
         $this->match = $match;
 
@@ -263,9 +206,9 @@ trait HasSearches
      *
      * @return bool
      */
-    public function matches()
+    public function isMatchable()
     {
-        return (bool) ($this->match ?? static::$shouldMatch);
+        return $this->match;
     }
 
     /**
@@ -308,13 +251,18 @@ trait HasSearches
      */
     public function searchesToArray()
     {
-        if (! $this->matches()) {
+        if (! $this->isMatchable()) {
             return [];
         }
 
-        return array_map(
-            static fn (Search $search) => $search->toArray(),
-            $this->getSearches()
+        return array_values(
+            array_map(
+                static fn (Search $search) => $search->toArray(),
+                array_filter(
+                    $this->getSearches(),
+                    static fn (Search $search) => $search->isVisible()
+                )
+            )
         );
     }
 }

@@ -19,7 +19,7 @@ trait HasFilters
      *
      * @var bool
      */
-    protected $filter = true;
+    protected $filterable = true;
 
     /**
      * List of the filters.
@@ -31,25 +31,25 @@ trait HasFilters
     /**
      * Set whether the filters should be applied.
      *
+     * @param  bool  $enable
      * @return $this
      */
-    public function disableFiltering()
+    public function filterable($enable = true)
     {
-        $this->filter = false;
+        $this->filterable = $enable;
 
         return $this;
     }
 
     /**
-     * Set the filters to not be applied.
-     *
+     * Set whether the filters should not be applied.
+     * 
+     * @param  bool  $filterable
      * @return $this
      */
-    public function enableFiltering()
+    public function notFilterable($disable = true)
     {
-        $this->filter = true;
-
-        return $this;
+        return $this->filterable(! $disable);
     }
 
     /**
@@ -57,9 +57,9 @@ trait HasFilters
      *
      * @return bool
      */
-    public function filteringEnabled()
+    public function isFilterable()
     {
-        return $this->filter;
+        return $this->filterable;
     }
 
     /**
@@ -67,19 +67,9 @@ trait HasFilters
      *
      * @return bool
      */
-    public function filteringDisabled()
+    public function isNotFilterable()
     {
-        return ! $this->filteringEnabled();
-    }
-
-    /**
-     * Define the filters for the instance.
-     *
-     * @return array<int,Filter>
-     */
-    public function filters()
-    {
-        return [];
+        return ! $this->isFilterable();
     }
 
     /**
@@ -88,7 +78,7 @@ trait HasFilters
      * @param  Filter|iterable<int, Filter>  ...$filters
      * @return $this
      */
-    public function withFilters(...$filters)
+    public function filters(...$filters)
     {
         /** @var array<int, Filter> $filters */
         $filters = Arr::flatten($filters);
@@ -105,13 +95,13 @@ trait HasFilters
      */
     public function getFilters()
     {
-        if ($this->filteringDisabled()) {
+        if ($this->isNotFilterable()) {
             return [];
         }
 
         return once(fn () => array_values(
             array_filter(
-                array_merge($this->filters(), $this->filters),
+                $this->filters,
                 static fn (Filter $filter) => $filter->isAllowed()
             )
         ));
@@ -131,15 +121,20 @@ trait HasFilters
     }
 
     /**
-     * Get the filters as an array.
+     * Get the filters as an array for serialization.
      *
      * @return array<int,array<string,mixed>>
      */
     public function filtersToArray()
     {
-        return array_map(
-            static fn (Filter $filter) => $filter->toArray(),
-            $this->getFilters()
+        return array_values(
+            array_map(
+                static fn (Filter $filter) => $filter->toArray(),
+                array_filter(
+                    $this->getFilters(),
+                    static fn (Filter $filter) => $filter->isVisible()
+                )
+            )
         );
     }
 }

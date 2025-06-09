@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Concerns;
+namespace Honed\Refine\Sorts\Concerns;
 
 use Honed\Refine\Sort;
 use Illuminate\Support\Arr;
@@ -56,9 +56,7 @@ trait HasSorts
      */
     public function notSortable($disable = true)
     {
-        $this->sortable = ! $disable;
-
-        return $this;
+        return $this->sortable(! $disable);
     }
 
     /**
@@ -80,7 +78,6 @@ trait HasSorts
     {
         return ! $this->isSortable();
     }
-
 
     /**
      * Merge a set of sorts with the existing sorts.
@@ -109,12 +106,12 @@ trait HasSorts
             return [];
         }
 
-        return array_values(
+        return once(fn () => array_values(
             array_filter(
                 $this->sorts,
                 static fn (Sort $sort) => $sort->isAllowed()
             )
-        );
+        ));
     }
 
     /**
@@ -181,15 +178,20 @@ trait HasSorts
     }
 
     /**
-     * Get the sorts as an array.
+     * Get the sorts as an array for serialization.
      *
      * @return array<int,array<string,mixed>>
      */
     public function sortsToArray()
     {
-        return array_map(
-            static fn (Sort $sort) => $sort->toArray(),
-            $this->getSorts()
+        return array_values(
+            array_map(
+                static fn (Sort $sort) => $sort->toArray(),
+                array_filter(
+                    $this->getSorts(),
+                    static fn (Sort $sort) => $sort->isVisible()
+                )
+            )
         );
     }
 }
