@@ -2,8 +2,10 @@
 
 namespace Honed\Refine\Concerns;
 
+use Honed\Core\Concerns\HasResource;
 use Honed\Core\Concerns\HasScope;
 use Honed\Refine\Sorts\Concerns\HasSorts;
+use Workbench\App\Models\Product;
 
 trait CanRefine
 {
@@ -13,6 +15,7 @@ trait CanRefine
     use HasRequest;
     use HasFilters;
     use HasSearches;
+    use HasResource;
 
     /**
      * Indicate whether the refinements have been processed.
@@ -122,8 +125,10 @@ trait CanRefine
             return $this;
         }
 
-        foreach ($this->pipelines() as $pipeline) {
-            $pipeline();
+        if ($this->isScout()) {
+            $this->scoutRefine();
+        } else {
+            $this->eloquentRefine();
         }
 
         $this->refined = true;
@@ -131,12 +136,40 @@ trait CanRefine
         return $this;
     }
 
-    /**
-     * Register the callbacks to be used for the refine process.
-     * 
-     * @return array<int, \Closure>
-     */
-    abstract protected function pipelines();
+    // protected function scoutRefine()
+    // {
+    //     Product::search($this->getSearch(), $this->scoutCallback());
+    // }
+
+    // protected function scoutCallback()
+    // {
+    //     return match ($this->getScoutDriver()) {
+    //         'meilisearch' => $this->meilisearchCallback(),
+    //         default => null,
+    //     };
+    // }
+
+    // protected function meilisearchCallback()
+    // {
+    //     // Map through the filters and get the active ones.
+
+    //     return function ($meilisearch, $query, $options) {
+    //         $options['sort'] = [$filters['sort'].':'.$filters['sort_direction']];
+    //         $options['filter'] = 'created_at > '.$filter['created_after'].' AND company_id = "'.$filter['company_id'].'"';
+    
+    //         return $meilisearch->search($query, $options);
+    //     }
+
+    // }
+
+    public function eloquentRefine()
+    {
+        $this->actBefore();
+        $this->search();
+        $this->filter();
+        $this->sort();
+        $this->actAfter();
+    }
 
     /**
      * Modify the resource before the refiners are processed.
@@ -155,8 +188,20 @@ trait CanRefine
      */
     protected function search()
     {
-
+        if ($this->isScout()) {
+        }
     }
+
+    /**
+     * Get the scout driver.
+     * 
+     * @return string|null
+     */
+    protected function getScoutDriver()
+    {
+        return config('scout.driver');
+    }
+
 
     /**
      * Apply the filters to the resource.
@@ -165,9 +210,14 @@ trait CanRefine
      */
     protected function filter()
     {
+        $resource = $this->getResource();
+        $delimiter = $this->getDelimiter();
+
+
         foreach ($this->getFilters() as $filter) {
-            // $value = $filter->getRequestValue($request)
-            $filter->refine($this->resource, $this->request);
+            $value = $filter->getRequestValue($this->request);
+
+            $filter->refine($resource, $value);
         }
 
     }

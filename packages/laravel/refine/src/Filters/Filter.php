@@ -339,7 +339,7 @@ class Filter extends Refiner
     /**
      * {@inheritdoc}
      */
-    public function transformParameter($value)
+    protected function transformParameter($value)
     {
         if (filled($this->getOptions())) {
             return $this->activateOptions($value);
@@ -355,7 +355,7 @@ class Filter extends Refiner
     /**
      * {@inheritdoc}
      */
-    public function invalidValue($value)
+    protected function invalidValue($value)
     {
         return ! $this->validate($value);
     }
@@ -363,7 +363,7 @@ class Filter extends Refiner
     /**
      * {@inheritdoc}
      */
-    public function getBindings($value, $builder)
+    protected function getBindings($value, $builder)
     {
         return array_merge(parent::getBindings($value, $builder), [
             'operator' => $this->getOperator(),
