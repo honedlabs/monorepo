@@ -39,11 +39,6 @@ class Filter extends Refiner
     use Validatable;
 
     /**
-     * {@inheritdoc}
-     */
-    protected $type = 'filter';
-
-    /**
      * The operator to use for the filter.
      *
      * @var string
@@ -64,15 +59,9 @@ class Filter extends Refiner
      */
     protected $default;
 
-    /**
-     * Flush the global configuration state.
-     *
-     * @return void
-     */
-    public static function flushState()
+    public function type()
     {
-        parent::flushState();
-        static::$useStrict = false;
+        return 'filter';
     }
 
     /**

@@ -23,16 +23,16 @@ class Search extends Refiner
     use HasSearch;
 
     /**
-     * {@inheritdoc}
-     */
-    protected $type = 'search';
-
-    /**
      * The query boolean to use for the search.
      *
      * @var 'and'|'or'
      */
     protected $boolean = 'and';
+
+    public function type()
+    {
+        return 'search';
+    }
 
     /**
      * Set the query boolean to use for the search.
