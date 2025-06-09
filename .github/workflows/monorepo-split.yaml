@@ -15,17 +15,17 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          # - abn
-          # - action
-          # - bind
+          - abn
+          - action
+          - bind
           # - chart
           - command
-          # - core
+          - core
           # - crumb
-          # - flash
+          - flash
           # - form
           # - layout
-          # - lock
+          - lock
           # - modal
           # - nav
           # - page
