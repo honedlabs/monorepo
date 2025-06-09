@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Contracts\WithoutNullValues;
+use Honed\Core\Contracts\NullsAsUndefined;
 use Workbench\App\Classes\Component;
 
 beforeEach(function () {
@@ -30,7 +30,7 @@ it('serializes', function () {
 });
 
 it('serializes without null values', function () {
-    $test = new class() extends Component implements WithoutNullValues {};
+    $test = new class() extends Component implements NullsAsUndefined {};
 
     expect($test)
         ->jsonSerialize()->toEqual([

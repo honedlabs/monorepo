@@ -6,7 +6,9 @@ namespace Honed\Core\Concerns;
 
 use BackedEnum;
 use Closure;
+use Honed\Core\Primitive;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Facades\App;
 use ReflectionFunction;
 use ReflectionNamedType;
 use ReflectionParameter;
@@ -16,18 +18,10 @@ use function count;
 use function is_object;
 
 /**
- * Taken from FilamentPHP
- * https://github.com/filamentphp/filament/blob/3.x/packages/support/src/Concerns/EvaluatesClosures.php
+ * @phpstan-require-extends \Honed\Core\Primitive
  */
 trait Evaluable
 {
-    /**
-     * The identifier for the evaluation.
-     *
-     * @var string|null
-     */
-    protected $evaluationIdentifier;
-
     /**
      * Evaluate an expression with correct dependencies.
      *
@@ -45,12 +39,9 @@ trait Evaluable
         }
 
         if (! $value instanceof Closure) {
-            return $value; // @phpstan-ignore-line
+            return $value instanceof BackedEnum ? $value->value : $value;
         }
 
-        if ($value instanceof BackedEnum) {
-            return $value->value;
-        }
 
         $dependencies = [];
 
@@ -101,13 +92,6 @@ trait Evaluable
             }
         }
 
-        if (
-            isset($this->evaluationIdentifier) &&
-            ($parameterName === $this->evaluationIdentifier)
-        ) {
-            return $this;
-        }
-
         if (filled($typedParameterClassName)) {
             return app()->make($typedParameterClassName);
         }
@@ -123,28 +107,6 @@ trait Evaluable
         $staticClass = static::class;
 
         throw new BindingResolutionException("An attempt was made to evaluate a closure for [{$staticClass}], but [\${$parameterName}] was unresolvable.");
-    }
-
-    /**
-     * Provide a selection of default dependencies for evaluation by name.
-     *
-     * @param  string  $parameterName
-     * @return array<int,mixed>
-     */
-    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
-    {
-        return [];
-    }
-
-    /**
-     * Provide a selection of default dependencies for evaluation by type.
-     *
-     * @param  string  $parameterType
-     * @return array<int,mixed>
-     */
-    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
-    {
-        return [];
     }
 
     /**
@@ -182,5 +144,33 @@ trait Evaluable
         }
 
         return $name;
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by name.
+     *
+     * @param  string  $parameterName
+     * @return array<int,mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    {
+        return match ($parameterName) {
+            'primitive', 'self' => [$this],
+            default => []
+        };
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by type.
+     *
+     * @param  string  $parameterType
+     * @return array<int,mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    {
+        return match ($parameterType) {
+            Primitive::class, static::class => [$this],
+            default => [App::make($parameterType)],
+        };
     }
 }

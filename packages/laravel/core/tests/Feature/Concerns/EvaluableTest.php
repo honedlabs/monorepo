@@ -2,24 +2,30 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Tests\Stubs\Status;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Workbench\App\Classes\Component;
+use Workbench\App\Enums\Status;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->test = Component::make();
 });
 
+
 it('evaluates a closure', function () {
     expect($this->test)
         ->evaluate(fn () => 'value')->toBe('value');
 });
 
-it('evaluates non-closures', function () {
+it('evaluates built-ins', function () {
     expect($this->test)
         ->evaluate(1)->toBe(1)
         ->evaluate('value')->toBe('value');
+});
+
+it('evaluates enums', function () {
+    expect($this->test)
+        ->evaluate(Status::Available)->toBe(Status::Available->value);
 });
 
 it('evaluates named parameters', function () {
@@ -76,7 +82,7 @@ it('resolves default parameter values by name', function () {
 });
 
 it('fails if it cannot find a binding', function () {
-    $fn = fn (Status $status) => $status->label();
+    $fn = fn (Status $status) => $status->name;
 
     $this->test->evaluate($fn);
 })->throws(BindingResolutionException::class);

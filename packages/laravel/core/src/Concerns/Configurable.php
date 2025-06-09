@@ -6,12 +6,15 @@ namespace Honed\Core\Concerns;
 
 use Closure;
 
+/**
+ * @phpstan-require-extends \Honed\Core\Primitive
+ */
 trait Configurable
 {
     /**
      * The configuration callback for the instance.
      * 
-     * @var (\Closure(\Honed\Core\Primitive):\Honed\Core\Primitive|void)|null
+     * @var (\Closure(\Honed\Core\Primitive):\Honed\Core\Primitive|void)
      */
     protected static $configuration;
 
@@ -34,7 +37,7 @@ trait Configurable
     public function configure()
     {
         if (static::$configuration) {
-            static::$configuration($this);
+            (static::$configuration)($this);
         }
     }
 

@@ -21,11 +21,18 @@ class Component extends Primitive
      */
     public function setUp()
     {
-        parent::setUp();
         $this->type('component');
         $this->name('Products');
+
+        // Keep after to allow for configurable tests.
+        parent::setUp();
     }
 
+    /**
+     * Make a new instance of the component.
+     * 
+     * @return static
+     */
     public static function make()
     {
         return resolve(static::class);
