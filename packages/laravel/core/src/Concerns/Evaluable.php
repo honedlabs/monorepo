@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use BackedEnum;
 use Closure;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use ReflectionFunction;
@@ -45,6 +46,10 @@ trait Evaluable
 
         if (! $value instanceof Closure) {
             return $value; // @phpstan-ignore-line
+        }
+
+        if ($value instanceof BackedEnum) {
+            return $value->value;
         }
 
         $dependencies = [];

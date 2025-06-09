@@ -1,10 +1,10 @@
 > **Caution:** This package is currently under development and not ready for production use. Tag v1.0.0 will indicate a stable release.
 
 <a href="https://honed.dev/core">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="art/header-dark.png">
-    <img alt="" src="art/header-light.png">
-  </picture>
+	<picture>
+		<source media="(prefers-color-scheme: dark)" srcset="art/header-dark.png">
+		<img alt="" src="art/header-light.png">
+	</picture>
 </a>
 
 # Core
@@ -36,4 +36,4 @@ Please refer to the [documentation](https://honed.dev/core) for the usage of the
 
 ## License
 
-**Core** was created by **[Joshua Wallace](https://joshua-wallace.com)** under the **[MIT license](https://opensource.org/licenses/MIT)**.
+**Core** was created by [Joshua Wallace](https://joshua-wallace.com) under the [MIT license](https://opensource.org/licenses/MIT).

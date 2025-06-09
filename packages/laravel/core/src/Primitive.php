@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Core;
 
+use JsonSerializable;
 use BadMethodCallException;
 use Honed\Core\Concerns\Evaluable;
-use Honed\Core\Contracts\WithoutNullValues;
-use Illuminate\Support\Traits\Conditionable;
-use Illuminate\Support\Traits\Macroable;
+use Honed\Core\Concerns\Configurable;
 use Illuminate\Support\Traits\Tappable;
-use JsonSerializable;
+use Illuminate\Support\Traits\Macroable;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Illuminate\Support\Traits\Conditionable;
 
 use function array_filter;
 
 abstract class Primitive implements JsonSerializable
 {
     use Conditionable;
+    use Configurable;
     use Evaluable;
     use Macroable {
         __call as macroCall;
@@ -46,16 +48,6 @@ abstract class Primitive implements JsonSerializable
     }
 
     /**
-     * Provide the instance with any necessary setup.
-     *
-     * @return void
-     */
-    public function setUp()
-    {
-        //
-    }
-
-    /**
      * Get the instance as an array.
      *
      * @param  array<string,mixed>  $named
@@ -71,15 +63,13 @@ abstract class Primitive implements JsonSerializable
      */
     public function jsonSerialize(): mixed
     {
-        $array = $this->toArray();
-
-        if ($this instanceof WithoutNullValues) {
+        if ($this instanceof NullsAsUndefined) {
             return array_filter(
-                $array,
+                $this->toArray(),
                 static fn ($value) => ! is_null($value)
             );
         }
 
-        return $array;
+        return $this->toArray();
     }
 }
