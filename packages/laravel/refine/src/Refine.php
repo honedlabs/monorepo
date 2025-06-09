@@ -42,6 +42,7 @@ use Throwable;
 class Refine extends Primitive
 {
     use ForwardsCalls;
+    // use CanRefine;
     use HasDelimiter;
     use HasFilters;
 
@@ -113,8 +114,8 @@ class Refine extends Primitive
      */
     public function __construct(Request $request)
     {
-        $this->request = $request;
         parent::__construct();
+        $this->request = $request;
     }
 
     /**
@@ -219,7 +220,7 @@ class Refine extends Primitive
         static::$refinerResolver = null;
         static::$shouldMatch = false;
         static::$useDelimiter = ',';
-        static::$useSortKey = 'sort';
+        // static::$useSortKey = 'sort';
         static::$useSearchKey = 'search';
         static::$useMatchKey = 'match';
     }
@@ -485,6 +486,17 @@ class Refine extends Primitive
             AfterRefining::class,
         ];
     }
+
+    // protected function pipelines()
+    // {
+    //     return [
+    //         fn () => $this->actBefore(),
+    //         fn () => $this->search(),
+    //         fn () => $this->sort(),
+    //         fn () => $this->filter(),
+    //         fn () => $this->actAfter(),
+    //     ];
+    // }
 
     /**
      * Forward a call to the resource.
