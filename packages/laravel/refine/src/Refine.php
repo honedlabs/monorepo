@@ -440,6 +440,10 @@ class Refine extends Primitive
             return $this;
         }
 
+        // foreach ($this->pipelines() as $pipeline) {
+        //     $pipeline();
+        // }
+
         App::make(Pipeline::class)
             ->send($this)
             ->through($this->pipelines())

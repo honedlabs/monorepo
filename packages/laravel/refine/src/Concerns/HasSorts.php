@@ -19,7 +19,7 @@ trait HasSorts
      *
      * @var bool
      */
-    protected $sort = true;
+    protected $sortable = true;
 
     /**
      * List of the sorts.
@@ -31,48 +31,32 @@ trait HasSorts
     /**
      * The query parameter to identify the sort to apply.
      *
-     * @var string|null
-     */
-    protected $sortKey;
-
-    /**
-     * The default query parameter to identify the sort to apply.
-     *
      * @var string
      */
-    protected static $useSortKey = 'sort';
-
-    /**
-     * Set the default query parameter to identify the sort to apply.
-     *
-     * @param  string  $sortKey
-     * @return void
-     */
-    public static function useSortKey($sortKey = 'sort')
-    {
-        static::$useSortKey = $sortKey;
-    }
+    protected $sortKey = 'sort';
 
     /**
      * Set whether the sorts should be applied.
      *
+     * @param  bool  $enable
      * @return $this
      */
-    public function disableSorting()
+    public function sortable($enable = true)
     {
-        $this->sort = false;
+        $this->sortable = $enable;
 
         return $this;
     }
 
     /**
-     * Set the sorts to not be applied.
-     *
+     * Set whether the sorts should not be applied.
+     * 
+     * @param  bool  $sortable
      * @return $this
      */
-    public function enableSorting()
+    public function notSortable($disable = true)
     {
-        $this->sort = true;
+        $this->sortable = ! $disable;
 
         return $this;
     }
@@ -82,9 +66,9 @@ trait HasSorts
      *
      * @return bool
      */
-    public function sortingEnabled()
+    public function isSortable()
     {
-        return $this->sort;
+        return $this->sortable;
     }
 
     /**
@@ -92,20 +76,11 @@ trait HasSorts
      *
      * @return bool
      */
-    public function sortingDisabled()
+    public function isNotSortable()
     {
-        return ! $this->sortingEnabled();
+        return ! $this->isSortable();
     }
 
-    /**
-     * Define the sorts for the instance.
-     *
-     * @return array<int,Sort>
-     */
-    public function sorts()
-    {
-        return [];
-    }
 
     /**
      * Merge a set of sorts with the existing sorts.
@@ -113,7 +88,7 @@ trait HasSorts
      * @param  Sort|iterable<int, Sort>  ...$sorts
      * @return $this
      */
-    public function withSorts(...$sorts)
+    public function sorts(...$sorts)
     {
         /** @var array<int, Sort> $sorts */
         $sorts = Arr::flatten($sorts);
@@ -130,16 +105,43 @@ trait HasSorts
      */
     public function getSorts()
     {
-        if ($this->sortingDisabled()) {
+        if ($this->isNotSortable()) {
             return [];
         }
 
-        return once(fn () => array_values(
+        return array_values(
             array_filter(
-                array_merge($this->sorts(), $this->sorts),
+                $this->sorts,
                 static fn (Sort $sort) => $sort->isAllowed()
             )
-        ));
+        );
+    }
+
+    /**
+     * Set a default sort, which will not be serialized.
+     * 
+     * @param string|Sort|\Closure $sort
+     * @param string $direction
+     * @return $this
+     */
+    public function defaultSort($sort, $direction = 'desc')
+    {
+        $this->defaultSort = $sort;
+
+        return $this;
+    }
+
+    /**
+     * Get the default sort.
+     *
+     * @return Sort|null
+     */
+    public function getDefaultSort()
+    {
+        return Arr::first(
+            $this->getSorts(),
+            static fn (Sort $sort) => $sort->isDefault()
+        );
     }
 
     /**
@@ -162,7 +164,7 @@ trait HasSorts
      */
     public function getSortKey()
     {
-        return $this->sortKey ?? static::$useSortKey;
+        return $this->formatScope($this->sortKey);
     }
 
     /**
@@ -175,19 +177,6 @@ trait HasSorts
         return (bool) Arr::first(
             $this->getSorts(),
             static fn (Sort $sort) => $sort->isActive()
-        );
-    }
-
-    /**
-     * Get the default sort.
-     *
-     * @return Sort|null
-     */
-    public function getDefaultSort()
-    {
-        return Arr::first(
-            $this->getSorts(),
-            static fn (Sort $sort) => $sort->isDefault()
         );
     }
 
