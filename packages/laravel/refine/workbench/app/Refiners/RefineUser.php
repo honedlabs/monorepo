@@ -31,8 +31,7 @@ class RefineUser extends Refine
             ->searches([
                 
             ])
-            ->cookie(static::class)
-            ->persist()
+            ->persistKey(static::class)
             ->persistSorts()
             ->persistSearches()
             ->persistFilters()

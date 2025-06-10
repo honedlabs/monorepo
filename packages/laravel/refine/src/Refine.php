@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace Honed\Refine;
 
 use Closure;
-use Honed\Core\Parameters;
+use Throwable;
 use Honed\Core\Primitive;
-use Honed\Refine\Concerns\CanRefine;
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Database\Eloquent\Builder;
+use Honed\Core\Parameters;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
+use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Str;
-use Illuminate\Support\Traits\ForwardsCalls;
+use Honed\Refine\Concerns\CanRefine;
+use Illuminate\Database\Eloquent\Builder;
+use Honed\Core\Contracts\NullsAsUndefined;
 use Laravel\Scout\Builder as ScoutBuilder;
-use Throwable;
+use Illuminate\Support\Traits\ForwardsCalls;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -26,7 +27,7 @@ use Throwable;
  *
  * @mixin TBuilder
  */
-class Refine extends Primitive // implements NullsAsUndefined
+class Refine extends Primitive implements NullsAsUndefined
 {
     use ForwardsCalls;
     use CanRefine;
@@ -79,10 +80,10 @@ class Refine extends Primitive // implements NullsAsUndefined
      */
     public static function make($resource = null)
     {
-        $refine = App::make(static::class);
+        $refine = resolve(static::class);
 
         if ($resource) {
-            return $refine->withResource($resource);
+            $refine->resource($resource);
         }
 
         return $refine;
@@ -100,8 +101,7 @@ class Refine extends Primitive // implements NullsAsUndefined
     {
         $refiner = static::resolveRefinerName($modelName);
 
-        return $refiner::make()
-            ->withResource($modelName);
+        return $refiner::make($modelName);
     }
 
     /**
@@ -216,7 +216,7 @@ class Refine extends Primitive // implements NullsAsUndefined
     {
         return $this->refine()
             ->forwardDecoratedCallTo(
-                $this->getResource(),
+                $this->getBuilder(),
                 $method,
                 $parameters
             );
@@ -227,16 +227,9 @@ class Refine extends Primitive // implements NullsAsUndefined
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
-        $resource = $this->getResource();
-
-        $request = $this->getRequest();
-
-        [$_, $singular, $plural] = Parameters::names($resource);
-
         return match ($parameterName) {
-            'request' => [$request],
-            'route' => [$request->route()],
-            'builder', 'resource', 'query', 'q', $singular, $plural => [$resource],
+            'request' => [$this->getRequest()],
+            'builder', 'query', 'q' => [$this->getBuilder()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
@@ -246,13 +239,11 @@ class Refine extends Primitive // implements NullsAsUndefined
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
-        $resource = $this->getResource();
-        $request = $this->getRequest();
+        $builder = $this->getBuilder();
 
         return match ($parameterType) {
-            Request::class => [$request],
-            Route::class => [$request->route()],
-            $resource::class, Builder::class, ScoutBuilder::class, BuilderContract::class => [$resource],
+            Request::class => [$this->getRequest()],
+            $builder::class, Builder::class, ScoutBuilder::class, BuilderContract::class => [$builder],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }

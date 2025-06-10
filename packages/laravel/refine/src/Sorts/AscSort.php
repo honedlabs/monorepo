@@ -19,13 +19,18 @@ class AscSort extends Sort
      */
     public function type()
     {
-        return 'asc';
+        return 'sort:asc';
     }
 
+    /**
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
+     */
     public function setUp()
     {
         parent::setUp();
 
-        $this->fixed('asc');
+        $this->descending();
     }
 }

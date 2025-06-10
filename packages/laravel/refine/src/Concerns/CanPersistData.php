@@ -2,8 +2,17 @@
 
 namespace Honed\Refine\Concerns;
 
+use Illuminate\Support\Str;
+
 trait CanPersistData
 {
+    /**
+     * The name of the key when persisting data.
+     * 
+     * @var string|null
+     */
+    protected $persistKey;
+
     /**
      * The default driver to use for persisting data.
      * 
@@ -33,12 +42,45 @@ trait CanPersistData
     protected $persistSort;
 
     /**
+     * Set the name of the key to use when persisting data.
+     * 
+     * @param string $key
+     * @return $this
+     */
+    public function persistKey($key)
+    {
+        $this->persistKey = $key;
+
+        return $this;
+    }
+
+    /**
+     * Get the name of the key to use when persisting data.
+     * 
+     * @return string
+     */
+    public function getPersistKey()
+    {
+        return $this->persistKey ?? $this->guessPersistKey();
+    }
+
+    /**
+     * Guess the name of the key to use when persisting data.
+     * 
+     * @return string
+     */
+    protected function guessPersistKey()
+    {
+        return Str::slug(class_basename(static::class));
+    }
+
+    /**
      * Set the driver to use for persisting searches.
      * 
      * @param bool|'session'|'cookie' $driver
      * @return $this
      */
-    public function persistSearches($driver = true)
+    public function persistSearch($driver = true)
     {
         $this->persistSearch = $driver;
 
@@ -50,7 +92,7 @@ trait CanPersistData
      * 
      * @return $this
      */
-    public function persistSearchesToSession()
+    public function persistSearchInSession()
     {
         return $this->persistSearches('session');
     }
@@ -60,7 +102,7 @@ trait CanPersistData
      * 
      * @return $this
      */
-    public function persistSearchesToCookie()
+    public function persistSearchInCookie()
     {
         return $this->persistSearches('cookie');
     }
@@ -71,7 +113,7 @@ trait CanPersistData
      * @param bool|'session'|'cookie' $driver
      * @return $this
      */
-    public function persistFilters($driver = true)
+    public function persistFilter($driver = true)
     {
         $this->persistSearch = $driver;
 
@@ -83,7 +125,7 @@ trait CanPersistData
      * 
      * @return $this
      */
-    public function persistFiltersToSession()
+    public function persistFilterInSession()
     {
         return $this->persistFilters('session');
     }
@@ -93,7 +135,7 @@ trait CanPersistData
      * 
      * @return $this
      */
-    public function persistFiltersToCookie()
+    public function persistFilterInCookie()
     {
         return $this->persistFilters('cookie');
     }
@@ -104,7 +146,7 @@ trait CanPersistData
      * @param bool|'session'|'cookie' $driver
      * @return $this
      */
-    public function persistSorts($driver = true)
+    public function persistSort($driver = true)
     {
         $this->persistSort = $driver;
 
@@ -116,7 +158,7 @@ trait CanPersistData
      * 
      * @return $this
      */
-    public function persistSortsToSession()
+    public function persistSortInSession()
     {
         return $this->persistSorts('session');
     }
@@ -126,8 +168,44 @@ trait CanPersistData
      * 
      * @return $this
      */
-    public function persistSortsToCookie()
+    public function persistSortInCookie()
     {
         return $this->persistSorts('cookie');
     }
+
+    /**
+     * Set the driver to use for persisting all refinements.
+     * 
+     * @param bool|'session'|'cookie' $driver
+     * @return $this
+     */
+    public function persistAll($driver = true)
+    {
+        $this->persistSearch = $driver;
+        $this->persistFilter = $driver;
+        $this->persistSort = $driver;
+
+        return $this;
+    }
+
+    /**
+     * Set the cookie driver to be used for persisting all refinements.
+     * 
+     * @return $this
+     */
+    public function persistAllInCookie()
+    {
+        return $this->persistAll('cookie');
+    }
+
+    /**
+     * Set the session driver to be used for persisting all refinements.
+     * 
+     * @return $this
+     */
+    public function persistAllInSession()
+    {
+        return $this->persistAll('session');
+    }
+    
 }

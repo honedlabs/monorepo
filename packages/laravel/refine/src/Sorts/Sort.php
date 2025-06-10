@@ -139,17 +139,6 @@ class Sort extends Refiner
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function toArray($named = [], $typed = [])
-    {
-        return array_merge(parent::toArray(), [
-            'direction' => $this->getDirection(),
-            'next' => $this->getNextDirection(),
-        ]);
-    }
-
-    /**
      *  Apply the default sort query scope to the builder.
      *
      * @param  TBuilder  $builder
@@ -160,5 +149,16 @@ class Sort extends Refiner
     public function apply($builder, $column, $direction)
     {
         $builder->orderBy($column, $direction ?? 'asc');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toArray($named = [], $typed = [])
+    {
+        return array_merge(parent::toArray(), [
+            'direction' => $this->getDirection(),
+            'next' => $this->getNextDirection(),
+        ]);
     }
 }

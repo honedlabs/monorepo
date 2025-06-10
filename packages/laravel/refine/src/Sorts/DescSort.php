@@ -19,13 +19,18 @@ class DescSort extends Sort
      */
     public function type()
     {
-        return 'desc';
+        return 'sort:desc';
     }
 
+    /**
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
+     */
     public function setUp()
     {
         parent::setUp();
 
-        $this->fixed('desc');
+        $this->ascending();
     }
 }

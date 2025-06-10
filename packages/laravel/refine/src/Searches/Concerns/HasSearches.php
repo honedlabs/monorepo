@@ -22,6 +22,20 @@ trait HasSearches
     protected $searchable = true;
 
     /**
+     * Whether the search columns can be toggled.
+     *
+     * @var bool
+     */
+    protected $match = false;
+
+    /**
+     * Indicate whether to use Laravel Scout for searching.
+     * 
+     * @var bool
+     */
+    protected $scout = false;
+
+    /**
      * List of the searches.
      *
      * @var array<int,Search>
@@ -34,13 +48,6 @@ trait HasSearches
      * @var string
      */
     protected $searchKey = 'search';
-
-    /**
-     * Whether the search columns can be toggled.
-     *
-     * @var bool
-     */
-    protected $match = false;
 
     /**
      * The query parameter to identify the columns to search on.
@@ -105,6 +112,83 @@ trait HasSearches
     public function isNotSearchable()
     {
         return ! $this->isSearchable();
+    }
+
+    /**
+     * Set whether the search columns can be toggled.
+     *
+     * @param  bool  $enable
+     * @return $this
+     */
+    public function matchable($enable = true)
+    {
+        $this->match = $enable;
+
+        return $this;
+    }
+
+    /**
+     * Set whether the search columns can not be toggled.
+     *
+     * @param  bool  $disable
+     * @return $this
+     */
+    public function notMatchable($disable = true)
+    {
+        return $this->matchable(! $disable);
+    }
+
+    /**
+     * Determine if matching is enabled
+     *
+     * @return bool
+     */
+    public function isMatchable()
+    {
+        return $this->match && $this->isNotScout();
+    }
+
+    /**
+     * Determine if matching is not enabled.
+     *
+     * @return bool
+     */
+    public function isNotMatchable()
+    {
+        return ! $this->isMatchable();
+    }
+
+    /**
+     * Set whether to use Laravel Scout for searching.
+     *
+     * @param bool $scout
+     * @return $this
+     */
+    public function scout($scout)
+    {
+        $this->scout = $scout;
+
+        return $this;
+    }
+
+    /**
+     * Determine if Laravel Scout is being used for searching.
+     *
+     * @return bool
+     */
+    public function isScout()
+    {
+        return $this->scout;
+    }
+
+    /**
+     * Determine if Laravel Scout is not being used for searching.
+     *
+     * @return bool
+     */
+    public function isNotScout()
+    {
+        return ! $this->isScout();
     }
 
     /**
@@ -189,29 +273,6 @@ trait HasSearches
     }
 
     /**
-     * Set whether the search columns can be toggled.
-     *
-     * @param  bool  $match
-     * @return $this
-     */
-    public function matchable($match = true)
-    {
-        $this->match = $match;
-
-        return $this;
-    }
-
-    /**
-     * Determine if matching is enabled
-     *
-     * @return bool
-     */
-    public function isMatchable()
-    {
-        return $this->match;
-    }
-
-    /**
      * Set the search term.
      *
      * @param  string|null  $term
@@ -274,7 +335,7 @@ trait HasSearches
      */
     public function searchesToArray()
     {
-        if (! $this->isMatchable()) {
+        if ($this->isNotMatchable()) {
             return [];
         }
 

@@ -5,11 +5,12 @@ namespace Honed\Refine\Concerns;
 use Honed\Core\Interpret;
 use Honed\Core\Concerns\HasScope;
 use Honed\Core\Concerns\HasRequest;
-use Honed\Core\Concerns\HasResource;
+use Honed\Refine\Concerns\HasResource;
 use Illuminate\Support\Facades\Config;
 use Honed\Refine\Sorts\Concerns\HasSorts;
 use Honed\Refine\Filters\Concerns\HasFilters;
 use Honed\Refine\Searches\Concerns\HasSearches;
+use Workbench\App\Models\Product;
 
 trait CanRefine
 {
@@ -29,47 +30,27 @@ trait CanRefine
     protected $refined = false;
 
     /**
-     * Indicate whether to use Laravel Scout as the driver.
-     * 
-     * @var bool
-     */
-    protected $scout = false;
-
-    /**
      * The callback to be processed before the refiners.
      *
-     * @var \Closure
+     * @var \Closure|null
      */
     protected $before;
 
     /**
      * The callback to be processed after refinement.
      *
-     * @var \Closure
+     * @var \Closure|null
      */
     protected $after;
 
     /**
-     * Set whether to use Laravel Scout as the driver.
-     *
-     * @param bool $scout
-     * @return $this
-     */
-    public function scout($scout)
-    {
-        $this->scout = $scout;
-
-        return $this;
-    }
-
-    /**
-     * Determine if Laravel Scout is being used as the driver.
-     *
+     * Determine if the refinements have been processed.
+     * 
      * @return bool
      */
-    public function isScout()
+    public function isRefined()
     {
-        return $this->scout;
+        return $this->refined;
     }
 
     /**
@@ -88,7 +69,7 @@ trait CanRefine
     /**
      * Get the callback to be executed before the refiners.
      *
-     * @return \Closure
+     * @return \Closure|null
      */
     public function getBeforeCallback()
     {
@@ -111,7 +92,7 @@ trait CanRefine
     /**
      * Get the callback to be executed after refinement.
      *
-     * @return \Closure
+     * @return \Closure|null
      */
     public function getAfterCallback()
     {
@@ -129,66 +110,19 @@ trait CanRefine
             return $this;
         }
 
-        if ($this->isScout()) {
-            $this->scoutRefine();
-        } else {
-            $this->eloquentRefine();
-        }
+        $this->pipeline();
 
         $this->refined = true;
 
         return $this;
     }
 
-
     /**
-     * Get the scout driver.
-     * 
-     * @return string|null
-     */
-    protected function getScoutDriver()
-    {
-        /** @var string|null */
-        return Config::get('scout.driver');
-    }
-
-    /**
-     * Refine the resource using the scout driver.
+     * Execute the pipeline of refiners.
      * 
      * @return void
      */
-    protected function scoutRefine()
-    {
-        // Product::search($this->getSearch(), $this->scoutCallback());
-    }
-
-    // protected function scoutCallback()
-    // {
-    //     return match ($this->getScoutDriver()) {
-    //         'meilisearch' => $this->meilisearchCallback(),
-    //         default => null,
-    //     };
-    // }
-
-    // protected function meilisearchCallback()
-    // {
-    //     // Map through the filters and get the active ones.
-
-    //     return function ($meilisearch, $query, $options) {
-    //         $options['sort'] = [$filters['sort'].':'.$filters['sort_direction']];
-    //         $options['filter'] = 'created_at > '.$filter['created_after'].' AND company_id = "'.$filter['company_id'].'"';
-    
-    //         return $meilisearch->search($query, $options);
-    //     }
-
-    // }
-
-    /**
-     * Refine the resource using the eloquent driver.
-     * 
-     * @return void
-     */
-    public function eloquentRefine()
+    protected function pipeline()
     {
         $this->actBefore();
         $this->search();
@@ -214,13 +148,28 @@ trait CanRefine
      */
     protected function search()
     {
+        $builder = $this->getBuilder();
         $this->term($this->getSearch($this->request));
         $columns = $this->getMatch($this->request);
+
+        if ($this->isScout()) {
+            $model = $this->getModel();
+
+            $builder->whereIn(
+                $model->getKeyName(),
+                // @phpstan-ignore-next-line method.notFound
+                $model->search($this->term)->keys() 
+            );
+            
+            return;
+        }
 
         $or = false;
 
         foreach ($this->getSearches() as $search) {
-            $or |= $search->handle($this->resource, $this->term, $or, $columns);
+            $or |= $search->handle(
+                $builder, $this->term, $or, $columns
+            );
         }
     }
 
@@ -231,16 +180,16 @@ trait CanRefine
      */
     protected function filter()
     {
-        $delimiter = $this->getDelimiter();
-        
+        $builder = $this->getBuilder();
+
         foreach ($this->getFilters() as $filter) {
             $key = $this->formatScope($filter->getParameter());
 
             $value = $filter->getRequestValue(
-                $this->request, $key, $delimiter
+                $this->request, $key, $this->delimiter
             );
 
-            $filter->handle($this->resource, $value);
+            $filter->handle($builder, $value);
         }
     }
 
@@ -251,10 +200,23 @@ trait CanRefine
      */
     protected function sort()
     {
+        $builder = $this->getBuilder();
         [$parameter, $direction] = $this->getSort($this->request);
 
+        $sorted = false;
+
         foreach ($this->getSorts() as $sort) {
-            $sort->handle($this->resource, $parameter, $direction);
+            $sorted |= $sort->handle(
+                $builder, $parameter, $direction
+            );
+        }
+
+        if (! $sorted && $sort = $this->getDefaultSort()) {
+            $sort->handle(
+                $builder, $parameter, $direction
+            );
+
+            return;
         }
     }
 
@@ -266,16 +228,6 @@ trait CanRefine
     protected function actAfter()
     {
         $this->evaluate($this->after);
-    }
-
-    /**
-     * Determine if the refinements have been processed.
-     * 
-     * @return bool
-     */
-    public function isRefined()
-    {
-        return $this->refined;
     }
 
     /**
@@ -324,9 +276,9 @@ trait CanRefine
      */
     protected function getMatch($request)
     {
-        // if ($this->isNotMatchable()) {
-        //     return null;
-        // }
+        if ($this->isNotMatchable()) {
+            return null;
+        }
 
         $delimiter = $this->getDelimiter();
         $key = $this->getMatchKey();
