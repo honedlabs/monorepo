@@ -51,7 +51,7 @@ trait HasSorts
     /**
      * Set whether the sorts should not be applied.
      * 
-     * @param  bool  $sortable
+     * @param  bool  $disable
      * @return $this
      */
     public function notSortable($disable = true)
@@ -123,7 +123,7 @@ trait HasSorts
      */
     public function defaultSort($sort, $direction = 'desc')
     {
-        $this->defaultSort = $sort;
+        // $this->defaultSort = $sort;
 
         return $this;
     }

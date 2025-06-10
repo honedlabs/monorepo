@@ -2,18 +2,9 @@
 
 namespace {{ namespace }};
 
-use Honed\Refine\Filter;
-use Illuminate\Database\Eloquent\Builder;
-use Honed\Refine\Contracts\WithOptions;
-use Honed\Core\Contracts\WithQuery;
+use Honed\Refine\Filters\Filter;
 
-/**
- * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
- *
- * @extends \Honed\Refine\Filter<TModel, TBuilder>
- */
-class {{ class }} extends Filter // implements WithOptions, WithQuery
+class {{ class }} extends Filter
 {
     /**
      *  Create a new filter instance.
@@ -32,10 +23,18 @@ class {{ class }} extends Filter // implements WithOptions, WithQuery
      */
     protected function setUp()
     {
+        parent::setUp();
+
         //
     }
 
-    protected function definition($filter)
+    /**
+     * Define the filter instance.
+     *
+     * @param  $this  $filter
+     * @return $this
+     */
+    protected function definition(Filter $filter)
     {
         return $filter;
     }

@@ -10,7 +10,9 @@ use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasScope;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
+use Honed\Core\Interpret;
 use Honed\Refine\Concerns\HasDelimiter;
+use Honed\Refine\Filters\Concerns\HasOperator;
 use Honed\Refine\Filters\Concerns\HasOptions;
 use Honed\Refine\Refiner;
 use Honed\Refine\Searches\Concerns\HasSearch;
@@ -29,23 +31,11 @@ use function mb_strtoupper;
  */
 class Filter extends Refiner
 {
-    use HasDelimiter;
-    use HasMeta;
-    use HasOptions {
-        multiple as protected baseMultiple;
-    }
-    use HasScope;
-    use HasSearch;
+    use HasOptions;
     use InterpretsRequest;
     use Validatable;
-
-    /**
-     * The operator to use for the filter.
-     *
-     * @var string
-     */
-    protected $operator = '=';
-
+    use HasOperator;
+    
     /**
      * Whether the filter only responds to presence values.
      *
@@ -60,48 +50,37 @@ class Filter extends Refiner
      */
     protected $default;
 
+    /**
+     * Define the type of the filter.
+     *
+     * @return string
+     */
     public function type()
     {
         return 'filter';
     }
 
     /**
-     * Set the filter to be for boolean values.
-     *
-     * @return $this
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
      */
-    public function boolean()
+    public function setUp()
     {
-        $this->type('boolean');
-        $this->asBoolean();
+        parent::setUp();
 
-        return $this;
+        $this->definition($this);
     }
 
     /**
-     * Set the filter to be for date values.
+     * Define the filter instance.
      *
-     * @return $this
+     * @param  \Honed\Refine\Filters\Filter<TModel, TBuilder>  $filter
+     * @return \Honed\Refine\Filters\Filter<TModel, TBuilder>|void
      */
-    public function date()
+    protected function definition(Filter $filter)
     {
-        $this->type('date');
-        $this->asDate();
-
-        return $this;
-    }
-
-    /**
-     * Set the filter to be for date time values.
-     *
-     * @return $this
-     */
-    public function datetime()
-    {
-        $this->type('datetime');
-        $this->asDatetime();
-
-        return $this;
+        return $filter;
     }
 
     /**
@@ -127,32 +106,6 @@ class Filter extends Refiner
     }
 
     /**
-     * Set the filter to be for float values.
-     *
-     * @return $this
-     */
-    public function float()
-    {
-        $this->type('number');
-        $this->asFloat();
-
-        return $this;
-    }
-
-    /**
-     * Set the filter to be for integer values.
-     *
-     * @return $this
-     */
-    public function int()
-    {
-        $this->type('number');
-        $this->asInt();
-
-        return $this;
-    }
-
-    /**
      * Set the filter to be for multiple values.
      *
      * @param  bool  $multiple
@@ -160,120 +113,10 @@ class Filter extends Refiner
      */
     public function multiple($multiple = true)
     {
-        $this->type('multiple');
         $this->asArray();
         $this->baseMultiple($multiple);
 
         return $this;
-    }
-
-    /**
-     * Set the filter to be for text values.
-     *
-     * @return $this
-     */
-    public function text()
-    {
-        $this->type('text');
-        $this->asString();
-
-        return $this;
-    }
-
-    /**
-     * Set the filter to be for time values.
-     *
-     * @return $this
-     */
-    public function time()
-    {
-        $this->type('time');
-        $this->asTime();
-
-        return $this;
-    }
-
-    /**
-     * Set the operator to use for the filter.
-     *
-     * @param  string  $operator
-     * @return $this
-     */
-    public function operator($operator)
-    {
-        $this->operator = mb_strtoupper($operator, 'UTF8');
-
-        return $this;
-    }
-
-    /**
-     * Set the operator to be '>'
-     *
-     * @return $this
-     */
-    public function gt()
-    {
-        return $this->operator('>');
-    }
-
-    /**
-     * Set the operator to be '>='
-     *
-     * @return $this
-     */
-    public function gte()
-    {
-        return $this->operator('>=');
-    }
-
-    /**
-     * Set the operator to be '<'
-     *
-     * @return $this
-     */
-    public function lt()
-    {
-        return $this->operator('<');
-    }
-
-    /**
-     * Set the operator to be '<='
-     *
-     * @return $this
-     */
-    public function lte()
-    {
-        return $this->operator('<=');
-    }
-
-    /**
-     * Set the operator to be '!='
-     *
-     * @return $this
-     */
-    public function neq()
-    {
-        return $this->operator('!=');
-    }
-
-    /**
-     * Set the operator to be '='
-     *
-     * @return $this
-     */
-    public function eq()
-    {
-        return $this->operator('=');
-    }
-
-    /**
-     * Get the operator to use for the filter.
-     *
-     * @return string
-     */
-    public function getOperator()
-    {
-        return $this->operator;
     }
 
     /**
@@ -284,7 +127,6 @@ class Filter extends Refiner
     public function presence()
     {
         $this->boolean();
-
         $this->presence = true;
 
         return $this;
@@ -301,7 +143,7 @@ class Filter extends Refiner
     }
 
     /**
-     * Set the default value to use for the filter even if it is not active.
+     * Set a default value to use for the filter if the filter is not active.
      *
      * @param  mixed  $default
      * @return $this
@@ -314,7 +156,7 @@ class Filter extends Refiner
     }
 
     /**
-     * Get the default value to use for the filter even if it is not active.
+     * Get the default value to use for the filter if the filter is not active.
      *
      * @return mixed
      */
@@ -324,15 +166,18 @@ class Filter extends Refiner
     }
 
     /**
-     * {@inheritdoc}
+     * Get the query value from the request.
      *
-     * @param  \Illuminate\Http\Request  $value
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $key
+     * @param  string  $delimiter
+     * @return mixed
      */
-    public function getRequestValue($value)
+    public function getRequestValue($request, $key, $delimiter = ',')
     {
-        $parameter = $this->getParameter();
 
-        $value = $this->interpret($value, $this->formatScope($parameter));
+        $value = (new Interpret())
+            ->interpret($request, $key, $delimiter);
 
         return $value ?? $this->getDefault();
     }
@@ -385,7 +230,6 @@ class Filter extends Refiner
         return array_merge(parent::toArray(), [
             'value' => $value,
             'options' => $this->optionsToArray(),
-            'meta' => $this->getMeta(),
         ]);
     }
 

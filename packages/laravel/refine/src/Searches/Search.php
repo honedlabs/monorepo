@@ -28,9 +28,37 @@ class Search extends Refiner
      */
     protected $boolean = 'and';
 
+    /**
+     * Define the type of the search.
+     *
+     * @return string
+     */
     public function type()
     {
         return 'search';
+    }
+
+    /**
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->definition($this);
+    }
+
+    /**
+     * Define the search instance.
+     *
+     * @param  \Honed\Refine\Searches\Search<TModel, TBuilder>  $search
+     * @return \Honed\Refine\Searches\Search<TModel, TBuilder>|void
+     */
+    protected function definition(Search $search)
+    {
+        return $search;
     }
 
     /**
@@ -66,15 +94,15 @@ class Search extends Refiner
         return $active;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param  array{bool, string|null}  $value
-     */
-    public function getRequestValue($value)
-    {
-        return parent::getRequestValue($value);
-    }
+    // /**
+    //  * {@inheritdoc}
+    //  *
+    //  * @param  array{bool, string|null}  $value
+    //  */
+    // public function getRequestValue($value)
+    // {
+    //     return parent::getRequestValue($value);
+    // }
 
     /**
      * {@inheritdoc}

@@ -3,11 +3,9 @@
 namespace {{ namespace }};
 
 use Honed\Refine\Refine;
-use Honed\Refine\Filter;
-use Honed\Refine\Sort;
-use Honed\Refine\Search;
-use Honed\Refine\Contracts\RefinesAfter;
-use Honed\Refine\Contracts\RefinesBefore;
+use Honed\Refine\Filters\Filter;
+use Honed\Refine\Sorts\Sort;
+use Honed\Refine\Searches\Search;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -22,57 +20,31 @@ class {{ class }} extends Refine
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
+        parent::setUp();
+
         //
     }
 
     /**
-     * Define the database resource to use.
-     * 
-     * @return TBuilder
+     * Define the refine instance.
+     *
+     * @param  $this  $refine
+     * @return $this
      */
-    public function resource()
+    protected function definition(Refine $refine)
     {
-        // return Model::query();
-    }
-    
-    /**
-     * Define the filters available to refine the query.
-     * 
-     * @return array<int, \Honed\Refine\Filter<TModel, TBuilder>>
-     */
-    public function filters()
-    {
-        /** @var array<int, \Honed\Refine\Filter<TModel, TBuilder>> */
-        return [
-            //
-        ];
-    }
+        return $refine
+            ->for(Model::class)
+            ->filters([
 
-    /**
-     * Define the sorts available to order the records.
-     * 
-     * @return array<int, \Honed\Refine\Sort<TModel, TBuilder>>
-     */
-    public function sorts()
-    {
-        /** @var array<int, \Honed\Refine\Sort<TModel, TBuilder>> */
-        return [
-            //
-        ];
-    }
+            ])
+            ->sorts([
 
-    /**
-     * Define the columns to search on.
-     * 
-     * @return array<int, \Honed\Refine\Search<TModel, TBuilder>>
-     */
-    public function searches()
-    {
-        /** @var array<int, \Honed\Refine\Search<TModel, TBuilder>> */
-        return [
-            //
-        ];
+            ])
+            ->searches([
+
+            ]);
     }
 }

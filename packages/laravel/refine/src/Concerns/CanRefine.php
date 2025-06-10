@@ -2,10 +2,13 @@
 
 namespace Honed\Refine\Concerns;
 
-use Honed\Core\Concerns\HasResource;
 use Honed\Core\Concerns\HasScope;
+use Honed\Core\Concerns\HasResource;
+use Honed\Core\Interpret;
 use Honed\Refine\Sorts\Concerns\HasSorts;
-use Workbench\App\Models\Product;
+use Honed\Refine\Filters\Concerns\HasFilters;
+use Honed\Refine\Searches\Concerns\HasSearches;
+use Illuminate\Support\Facades\Config;
 
 trait CanRefine
 {
@@ -144,7 +147,8 @@ trait CanRefine
      */
     protected function getScoutDriver()
     {
-        return config('scout.driver');
+        /** @var string|null */
+        return Config::get('scout.driver');
     }
 
     /**
@@ -215,9 +219,8 @@ trait CanRefine
         $or = false;
 
         foreach ($this->getSearches() as $search) {
-            $or |= $search->apply($this->resource, $term, $or, $columns);
+            $or |= $search->handle($this->resource, $term, $or, $columns);
         }
-
     }
 
     /**
@@ -227,16 +230,17 @@ trait CanRefine
      */
     protected function filter()
     {
+        $delimiter = $this->getDelimiter();
+        
         foreach ($this->getFilters() as $filter) {
+            $key = $this->formatScope($filter->getParameter());
+
             $value = $filter->getRequestValue(
-                $this->request,
-                $this->getScope(),
-                $this->getDelimiter()
+                $this->request, $key, $delimiter
             );
 
-            $filter->apply($this->resource, $value);
+            $filter->handle($this->resource, $value);
         }
-
     }
 
     /**
@@ -249,7 +253,7 @@ trait CanRefine
         [$parameter, $direction] = $this->getSort($this->request);
 
         foreach ($this->getSorts() as $sort) {
-            $sort->apply($this->resource, $parameter, $direction);
+            $sort->handle($this->resource, $parameter, $direction);
         }
     }
 
@@ -271,5 +275,61 @@ trait CanRefine
     public function isRefined()
     {
         return $this->refined;
+    }
+
+    /**
+     * Get the search term from the request.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return string|null
+     */
+    protected function getSearch($request)
+    {
+        $key = $this->getSearchKey();
+
+        $term = Interpret::string($request, $key);
+
+        if (! $term) {
+            return null;
+        }
+
+        return str_replace('+', ' ', trim($term));
+    }
+
+    /**
+     * Get the sort parameter from the request.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return array{string|null, 'asc'|'desc'|null}
+     */
+    protected function getSort($request)
+    {
+        $key = $this->getSortKey();
+
+        $sort = Interpret::string($request, $key);
+
+        return match (true) {
+            ! $sort => [null, null],
+            str_starts_with($sort, '-') => [mb_substr($sort, 1), 'desc'],
+            default => [$sort, 'asc'],
+        };
+    }
+
+    /**
+     * Get the search columns from the request.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return array<int,string>|null
+     */
+    protected function getMatch($request)
+    {
+        // if ($this->isNotMatchable()) {
+        //     return null;
+        // }
+
+        $delimiter = $this->getDelimiter();
+        $key = $this->getMatchKey();
+
+        return Interpret::array($request, $key, $delimiter, 'string');
     }
 }

@@ -27,7 +27,7 @@ trait CanBeHidden
     /**
      * Set whether the instance should not be hidden from serialization.
      * 
-     * @param bool $hidden
+     * @param bool $visible
      * @return $this
      */
     public function visible($visible = true)

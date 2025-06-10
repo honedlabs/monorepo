@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Searches\Concerns;
 
-use Honed\Refine\Search;
+use Honed\Refine\Searches\Search;
 use Illuminate\Support\Arr;
 
 use function array_filter;
@@ -19,7 +19,7 @@ trait HasSearches
      *
      * @var bool
      */
-    protected $search = true;
+    protected $searchable = true;
 
     /**
      * List of the searches.
@@ -79,7 +79,7 @@ trait HasSearches
     /**
      * Set whether the searches should not be applied.
      * 
-     * @param  bool  $searchable
+     * @param  bool  $disable
      * @return $this
      */
     public function notSearchable($disable = true)
@@ -217,7 +217,7 @@ trait HasSearches
      * @param  string|null  $term
      * @return $this
      */
-    public function term($term)
+    protected function term($term)
     {
         $this->term = $term;
 
@@ -232,6 +232,29 @@ trait HasSearches
     public function getTerm()
     {
         return $this->term;
+    }
+
+    /**
+     * Set the placeholder text to use for the search bar.
+     *
+     * @param  string|null  $placeholder
+     * @return $this
+     */
+    public function searchPlaceholder($placeholder)
+    {
+        $this->searchPlaceholder = $placeholder;
+
+        return $this;
+    }
+
+    /**
+     * Get the placeholder text to use for the search bar.
+     *
+     * @return string|null
+     */
+    public function getSearchPlaceholder()
+    {
+        return $this->searchPlaceholder;
     }
 
     /**

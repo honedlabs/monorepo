@@ -44,7 +44,7 @@ trait HasFilters
     /**
      * Set whether the filters should not be applied.
      * 
-     * @param  bool  $filterable
+     * @param  bool  $disable
      * @return $this
      */
     public function notFilterable($disable = true)

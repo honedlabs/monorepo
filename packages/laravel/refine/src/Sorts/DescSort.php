@@ -8,10 +8,15 @@ namespace Honed\Refine\Sorts;
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @extends \Honed\Refine\Sort<TModel, TBuilder>
+ * @extends \Honed\Refine\Sorts\Sort<TModel, TBuilder>
  */
 class DescSort extends Sort
 {
+    /**
+     * Define the type of the sort.
+     *
+     * @return string
+     */
     public function type()
     {
         return 'desc';

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine;
+namespace Honed\Refine\Filters;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -12,6 +12,11 @@ namespace Honed\Refine;
  */
 class NumberFilter extends Filter
 {
+    /**
+     * Define the type of the filter.
+     *
+     * @return string
+     */
     public function type()
     {
         return 'number';
@@ -21,6 +26,6 @@ class NumberFilter extends Filter
     {
         parent::setUp();
 
-        $this->as('int');
+        $this->int();
     }
 }

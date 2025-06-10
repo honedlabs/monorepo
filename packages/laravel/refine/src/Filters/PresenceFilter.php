@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine;
+namespace Honed\Refine\Filters;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -12,6 +12,11 @@ namespace Honed\Refine;
  */
 class PresenceFilter extends BooleanFilter
 {
+    /**
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
+     */
     public function setUp()
     {
         parent::setUp();

@@ -12,15 +12,25 @@ namespace Honed\Refine\Filters;
  */
 class TextFilter extends Filter
 {
+    /**
+     * Define the type of the filter.
+     *
+     * @return string
+     */
     public function type()
     {
         return 'text';
     }
 
+    /**
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
+     */
     public function setUp()
     {
         parent::setUp();
 
-        $this->as('string');
+        $this->string();
     }
 }

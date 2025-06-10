@@ -12,16 +12,25 @@ namespace Honed\Refine\Filters;
  */
 class TimeFilter extends Filter
 {
-
+    /**
+     * Define the type of the filter.
+     *
+     * @return string
+     */
     public function type()
     {
         return 'time';
     }
 
+    /**
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
+     */
     public function setUp()
     {
         parent::setUp();
 
-        $this->as('time');
+        $this->time();
     }
 }

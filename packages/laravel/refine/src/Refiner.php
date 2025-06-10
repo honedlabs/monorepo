@@ -11,7 +11,6 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasQuery;
-use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Primitive;
 use Honed\Refine\Concerns\CanBeHidden;
@@ -81,17 +80,6 @@ abstract class Refiner extends Primitive
     }
 
     /**
-     * Get the value for the refiner from the request.
-     *
-     * @param  \Illuminate\Http\Request|mixed  $value
-     * @return mixed
-     */
-    public function getRequestValue($value)
-    {
-        return $value;
-    }
-
-    /**
      * Get the parameter for the refiner.
      *
      * @return string
@@ -146,6 +134,7 @@ abstract class Refiner extends Primitive
     {
         return [
             'value' => $value,
+            'name' => $this->getName(),
             'column' => $this->qualifyColumn($this->getName(), $builder),
         ];
     }
@@ -154,13 +143,11 @@ abstract class Refiner extends Primitive
      * Refine the builder using the request.
      *
      * @param  TBuilder  $builder
-     * @param  \Illuminate\Http\Request|mixed  $requestValue
+     * @param  mixed  $requestValue
      * @return bool
      */
-    public function refine($builder, $requestValue)
+    public function refine($builder, $value)
     {
-        $value = $this->getRequestValue($requestValue);
-
         $value = $this->transformParameter($value);
 
         $this->value($value);

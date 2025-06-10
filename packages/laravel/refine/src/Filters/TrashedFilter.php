@@ -10,49 +10,8 @@ namespace Honed\Refine\Filters;
  *
  * @extends \Honed\Refine\Filters\Filter<TModel, TBuilder>
  */
-final class TrashedFilter extends Filter
+class TrashedFilter extends Filter
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $type = 'trashed';
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $name = 'trashed';
-
-    /**
-     * {@inheritdoc}
-     *
-     * @var string
-     */
-    protected $label = 'Show deleted';
-
-    public function type()
-    {
-        return 'trashed';
-    }
-
-    public function definition(Filter $filter)
-    {
-        return $filter
-            ->name('trashed')
-            ->label('Show deleted')
-            ->options([
-                'with' => 'With deleted',
-                'only' => 'Only deleted',
-                'without' => 'Without deleted',
-            ])
-            ->query(function ($builder, $value) {
-                return match ($value) {
-                    'with' => $builder->withTrashed(),
-                    'only' => $builder->onlyTrashed(),
-                    default => $builder->withoutTrashed(),
-                };
-            });
-    }
-
     /**
      * Create a new trashed filter instance.
      *
@@ -60,6 +19,42 @@ final class TrashedFilter extends Filter
      */
     public static function new()
     {
-        return resolve(self::class);
+        return resolve(static::class);
+    }
+
+    /**
+     * Define the type of the filter.
+     *
+     * @return string
+     */
+    public function type()
+    {
+        return 'trashed';
+    }
+
+    /**
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->name('trashed');
+
+        $this->label('Show deleted');
+        
+        $this->options([
+            'with' => 'With deleted',
+            'only' => 'Only deleted',
+            'without' => 'Without deleted',
+        ]);
+
+        $this->query(fn ($builder, $value) => match ($value) {
+            'with' => $builder->withTrashed(),
+            'only' => $builder->onlyTrashed(),
+            default => $builder->withoutTrashed(),
+        });
     }
 }

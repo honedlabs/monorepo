@@ -47,9 +47,37 @@ class Sort extends Refiner
      */
     protected $invert = false;
 
+    /**
+     * Define the type of the sort.
+     *
+     * @return string
+     */
     public function type()
     {
         return 'sort';
+    }
+
+    /**
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->definition($this);
+    }
+
+    /**
+     * Define the sort instance.
+     *
+     * @param  \Honed\Refine\Sorts\Sort<TModel, TBuilder>  $sort
+     * @return \Honed\Refine\Sorts\Sort<TModel, TBuilder>|void
+     */
+    protected function definition(Sort $sort)
+    {
+        return $sort;
     }
 
     /**
@@ -269,21 +297,21 @@ class Sort extends Refiner
         return $active;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param  array{string|null, 'asc'|'desc'|null}  $value
-     */
-    public function getRequestValue($value)
-    {
-        [$value, $direction] = $value;
+    // /**
+    //  * {@inheritdoc}
+    //  *
+    //  * @param  array{string|null, 'asc'|'desc'|null}  $value
+    //  */
+    // public function getRequestValue($value)
+    // {
+    //     [$value, $direction] = $value;
 
-        if ($this->isFixed()) {
-            $direction = $this->fixed;
-        }
+    //     if ($this->isFixed()) {
+    //         $direction = $this->fixed;
+    //     }
 
-        return [$value, $direction];
-    }
+    //     return [$value, $direction];
+    // }
 
     /**
      * {@inheritdoc}
@@ -304,7 +332,7 @@ class Sort extends Refiner
      *
      * @param  array{string|null, 'asc'|'desc'|null}  $value
      */
-    public function getBindings($value, $builder)
+    protected function getBindings($value, $builder)
     {
         [$value, $direction] = $value;
 
