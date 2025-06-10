@@ -1,0 +1,105 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Honed\Table\Concerns;
+
+use Honed\Table\EmptyState;
+
+trait HasEmptyState
+{
+    /**
+     * The empty state of the table.
+     * 
+     * @var \Honed\Table\EmptyState|null
+     */
+    protected $emptyState;
+
+    /**
+     * Set the empty state of the table.
+     * 
+     * @param \Honed\Table\EmptyState|\Closure $emptyState
+     * @return $this
+     */
+    public function emptyState($emptyState)
+    {
+        match (true) {
+            $emptyState instanceof \Closure => $this->evaluate($emptyState),
+            default => $this->emptyState = $emptyState,
+        };
+
+        return $this;
+    }
+
+    /**
+     * Create a new empty state instance.
+     * 
+     * @return \Honed\Table\EmptyState
+     */
+    protected function newEmptyState()
+    {
+        return $this->emptyState ??= EmptyState::make();
+    }
+
+    /**
+     * Set the heading of the empty state.
+     * 
+     * @param string $heading
+     * @return $this
+     */
+    public function emptyStateHeading($heading)
+    {
+        $this->newEmptyState()->heading($heading);
+
+        return $this;
+    }
+
+    /**
+     * Set the description of the empty state.
+     * 
+     * @param string $description
+     * @return $this
+     */
+    public function emptyStateDescription($description)
+    {
+        $this->newEmptyState()->description($description);
+
+        return $this;
+    }
+
+    /**
+     * Set the icon of the empty state.
+     * 
+     * @param string $icon
+     * @return $this
+     */
+    public function emptyStateIcon($icon)
+    {
+        $this->newEmptyState()->icon($icon);
+
+        return $this;
+    }
+
+    /**
+     * Set the actions of the empty state.
+     * 
+     * @param \Honed\Action\Action|iterable<int, \Honed\Action\Action> ...$actions
+     * @return $this
+     */
+    public function emptyStateActions(...$actions)
+    {
+        $this->newEmptyState()->actions(...$actions);
+
+        return $this;
+    }
+
+    /**
+     * Get the empty state as an array.
+     * 
+     * @return array<string, mixed>
+     */
+    public function emptyStateToArray()
+    {
+        return $this->emptyState?->toArray() ?? [];
+    }
+}

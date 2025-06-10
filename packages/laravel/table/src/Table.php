@@ -525,8 +525,6 @@ class Table extends Refine implements Handles, UrlRoutable
     {
         static::$tableNameResolver = null;
         static::$namespace = 'App\\Tables\\';
-        static::$shouldSerialize = false;
-        static::$shouldSelect = false;
     }
 
     /**

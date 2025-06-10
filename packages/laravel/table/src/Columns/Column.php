@@ -41,7 +41,6 @@ class Column extends Primitive
     use HasQuery;
 
     use HasType;
-    use HasValue;
     use IsActive;
     use IsVisible;
     use Transformable;
@@ -52,6 +51,13 @@ class Column extends Primitive
      * @var bool
      */
     protected $key = false;
+
+    /**
+     * A callback or fixed value to be used in place of a retrieved value.
+     * 
+     * @var mixed
+     */
+    protected $using;
 
     /**
      * Whether this column is hidden.
