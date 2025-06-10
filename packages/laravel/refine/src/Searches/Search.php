@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine;
+namespace Honed\Refine\Searches;
 
-use Honed\Refine\Concerns\HasSearch;
-
-use function array_merge;
 use function is_null;
+use function array_merge;
+use Honed\Refine\Refiner;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -18,9 +17,9 @@ use function is_null;
 class Search extends Refiner
 {
     /**
-     * @use HasSearch<TModel, TBuilder>
+     * @use Concerns\HasSearch<TModel, TBuilder>
      */
-    use HasSearch;
+    use Concerns\HasSearch;
 
     /**
      * The query boolean to use for the search.

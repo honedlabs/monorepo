@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine;
+namespace Honed\Refine\Searches;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model

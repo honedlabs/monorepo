@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Concerns;
+namespace Honed\Refine\Searches\Concerns;
 
 use function mb_strtolower;
 use function sprintf;

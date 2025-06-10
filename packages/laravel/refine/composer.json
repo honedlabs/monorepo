@@ -26,8 +26,11 @@
         "pinkary-project/type-guard": "^0.1.0"
     },
     "require-dev": {
+        "algolia/algoliasearch-client-php": "^4.21",
+        "http-interop/http-factory-guzzle": "^1.2",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.18",
+        "meilisearch/meilisearch-php": "^1.14",
         "nunomaduro/collision": "^8.1",
         "orchestra/testbench": "^9.0.0||^10.0.0",
         "pestphp/pest": "^3.5.1",
@@ -36,7 +39,8 @@
         "phpstan/extension-installer": "^1.4.3",
         "phpstan/phpstan-deprecation-rules": "^2.0.1",
         "phpstan/phpstan-phpunit": "^2.0.3",
-        "sti3bas/laravel-scout-array-driver": "^4.1"
+        "sti3bas/laravel-scout-array-driver": "^4.1",
+        "typesense/typesense-php": "^5.1"
     },
     "autoload": {
         "psr-4": {
@@ -83,7 +87,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "php-http/discovery": true
         }
     },
     "extra": {

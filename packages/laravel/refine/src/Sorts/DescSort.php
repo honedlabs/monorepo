@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine;
+namespace Honed\Refine\Sorts;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -12,13 +12,15 @@ namespace Honed\Refine;
  */
 class DescSort extends Sort
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $type = 'desc';
+    public function type()
+    {
+        return 'desc';
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $fixed = 'desc';
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->fixed('desc');
+    }
 }

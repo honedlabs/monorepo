@@ -2,28 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine;
+namespace Honed\Refine\Filters;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @extends \Honed\Refine\Filter<TModel, TBuilder>
+ * @extends \Honed\Refine\Filters\Filter<TModel, TBuilder>
  */
 class SelectFilter extends Filter
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $type = 'select';
+    public function type()
+    {
+        return 'select';
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $as = 'array';
+    public function setUp()
+    {
+        parent::setUp();
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $multiple = true;
+        $this->multiple();
+    }
 }

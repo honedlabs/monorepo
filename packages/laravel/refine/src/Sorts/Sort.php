@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine;
+namespace Honed\Refine\Sorts;
+
+use Honed\Refine\Refiner;
 
 use function array_merge;
 use function array_pad;
@@ -17,11 +19,6 @@ use function sprintf;
  */
 class Sort extends Refiner
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $type = 'sort';
-
     /**
      * Whether it is the default.
      *
@@ -49,6 +46,11 @@ class Sort extends Refiner
      * @var bool
      */
     protected $invert = false;
+
+    public function type()
+    {
+        return 'sort';
+    }
 
     /**
      * Set as the default.

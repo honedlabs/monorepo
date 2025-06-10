@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Concerns;
+namespace Honed\Refine\Searches\Concerns;
 
 use Honed\Refine\Search;
 use Illuminate\Support\Arr;

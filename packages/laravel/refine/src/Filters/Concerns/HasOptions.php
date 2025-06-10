@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Concerns;
+namespace Honed\Refine\Filters\Concerns;
 
 use BackedEnum;
-use Honed\Refine\Contracts\WithOptions;
 use Honed\Refine\Option;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -21,9 +20,9 @@ trait HasOptions
     /**
      * The available options.
      *
-     * @var array<int,Option>|null
+     * @var array<int,Option>
      */
-    protected $options;
+    protected $options = [];
 
     /**
      * Whether to restrict options to only those provided.
@@ -80,15 +79,7 @@ trait HasOptions
      */
     public function getOptions()
     {
-        if (isset($this->options)) {
-            return $this->options;
-        }
-
-        if ($this instanceof WithOptions) {
-            return $this->options = $this->createOptions($this->optionsUsing());
-        }
-
-        return [];
+        return $this->options;
     }
 
     /**

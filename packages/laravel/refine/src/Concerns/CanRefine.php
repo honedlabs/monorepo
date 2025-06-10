@@ -136,10 +136,26 @@ trait CanRefine
         return $this;
     }
 
-    // protected function scoutRefine()
-    // {
-    //     Product::search($this->getSearch(), $this->scoutCallback());
-    // }
+
+    /**
+     * Get the scout driver.
+     * 
+     * @return string|null
+     */
+    protected function getScoutDriver()
+    {
+        return config('scout.driver');
+    }
+
+    /**
+     * Refine the resource using the scout driver.
+     * 
+     * @return void
+     */
+    protected function scoutRefine()
+    {
+        // Product::search($this->getSearch(), $this->scoutCallback());
+    }
 
     // protected function scoutCallback()
     // {
@@ -162,6 +178,11 @@ trait CanRefine
 
     // }
 
+    /**
+     * Refine the resource using the eloquent driver.
+     * 
+     * @return void
+     */
     public function eloquentRefine()
     {
         $this->actBefore();
@@ -188,20 +209,16 @@ trait CanRefine
      */
     protected function search()
     {
-        if ($this->isScout()) {
+        $term = $this->getSearch($this->request);
+        $columns = $this->getMatch($this->request);
+
+        $or = false;
+
+        foreach ($this->getSearches() as $search) {
+            $or |= $search->apply($this->resource, $term, $or, $columns);
         }
-    }
 
-    /**
-     * Get the scout driver.
-     * 
-     * @return string|null
-     */
-    protected function getScoutDriver()
-    {
-        return config('scout.driver');
     }
-
 
     /**
      * Apply the filters to the resource.
@@ -210,14 +227,14 @@ trait CanRefine
      */
     protected function filter()
     {
-        $resource = $this->getResource();
-        $delimiter = $this->getDelimiter();
-
-
         foreach ($this->getFilters() as $filter) {
-            $value = $filter->getRequestValue($this->request);
+            $value = $filter->getRequestValue(
+                $this->request,
+                $this->getScope(),
+                $this->getDelimiter()
+            );
 
-            $filter->refine($resource, $value);
+            $filter->apply($this->resource, $value);
         }
 
     }
@@ -229,7 +246,11 @@ trait CanRefine
      */
     protected function sort()
     {
+        [$parameter, $direction] = $this->getSort($this->request);
 
+        foreach ($this->getSorts() as $sort) {
+            $sort->apply($this->resource, $parameter, $direction);
+        }
     }
 
     /**

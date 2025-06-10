@@ -30,30 +30,13 @@ class {{ class }} extends Filter // implements WithOptions, WithQuery
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         //
     }
 
-    // /**
-    //  * Register the options for the filter.
-    //  *
-    //  * @return array<int, string>
-    //  */
-    // public function optionsUsing()
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Register the query expression to apply the filter.
-    //  *
-    //  * @param  TBuilder  $builder
-    //  * @param  mixed  $value
-    //  * @return void
-    //  */
-    // public function queryUsing($builder, $value)
-    // {
-    //     //
-    // }
+    protected function definition($filter)
+    {
+        return $filter;
+    }
 }

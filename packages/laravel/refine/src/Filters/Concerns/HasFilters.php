@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Concerns;
+namespace Honed\Refine\Filters\Concerns;
 
-use Honed\Refine\Filter;
+use Honed\Refine\Filters\Filter;
 use Illuminate\Support\Arr;
 
 use function array_filter;

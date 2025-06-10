@@ -86,7 +86,7 @@ abstract class Refiner extends Primitive
      * @param  \Illuminate\Http\Request|mixed  $value
      * @return mixed
      */
-    protected function getRequestValue($value)
+    public function getRequestValue($value)
     {
         return $value;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Sorts\Concerns;
 
-use Honed\Refine\Sort;
+use Honed\Refine\Sorts\Sort;
 use Illuminate\Support\Arr;
 
 use function array_filter;

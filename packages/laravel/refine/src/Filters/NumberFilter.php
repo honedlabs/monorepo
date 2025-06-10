@@ -8,17 +8,19 @@ namespace Honed\Refine;
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @extends \Honed\Refine\Filter<TModel, TBuilder>
+ * @extends \Honed\Refine\Filters\Filter<TModel, TBuilder>
  */
 class NumberFilter extends Filter
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $type = 'number';
+    public function type()
+    {
+        return 'number';
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $as = 'int';
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->as('int');
+    }
 }

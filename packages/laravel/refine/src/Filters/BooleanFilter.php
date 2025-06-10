@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine;
+namespace Honed\Refine\Filters;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -12,13 +12,15 @@ namespace Honed\Refine;
  */
 class BooleanFilter extends Filter
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $type = 'boolean';
+    public function type()
+    {
+        return 'boolean';
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $as = 'boolean';
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->as('boolean');
+    }
 }

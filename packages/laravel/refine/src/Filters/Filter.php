@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine;
+namespace Honed\Refine\Filters;
 
 use BackedEnum;
 use Carbon\CarbonInterface;
@@ -11,8 +11,9 @@ use Honed\Core\Concerns\HasScope;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
 use Honed\Refine\Concerns\HasDelimiter;
-use Honed\Refine\Concerns\HasOptions;
-use Honed\Refine\Concerns\HasSearch;
+use Honed\Refine\Filters\Concerns\HasOptions;
+use Honed\Refine\Refiner;
+use Honed\Refine\Searches\Concerns\HasSearch;
 use ReflectionEnum;
 
 use function array_merge;
