@@ -7,14 +7,14 @@ namespace Honed\Core\Concerns;
 trait IsDefault
 {
     /**
-     * Whether it is the default.
+     * Whether the instance is the default.
      *
      * @var bool
      */
     protected $default = false;
 
     /**
-     * Set as the default.
+     * Set the instance to the default.
      *
      * @param  bool  $default
      * @return $this
@@ -27,12 +27,33 @@ trait IsDefault
     }
 
     /**
-     * Determine if it is the default.
+     * Set the instance to not the default.
+     *
+     * @param  bool  $notDefault
+     * @return $this
+     */
+    public function notDefault($notDefault = true)
+    {
+        return $this->default(! $notDefault);
+    }
+
+    /**
+     * Determine if the instance is the default.
      *
      * @return bool
      */
     public function isDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * Determine if the instance is not the default.
+     *
+     * @return bool
+     */
+    public function isNotDefault()
+    {
+        return ! $this->isDefault();
     }
 }

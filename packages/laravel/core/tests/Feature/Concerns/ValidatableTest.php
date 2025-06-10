@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Core\Concerns\Validatable;
-use Honed\Core\Contracts\WithValidator;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
@@ -31,21 +30,4 @@ it('evaluates', function () {
         ->validate($this->user)->toBeTrue()
         ->validator($this->fn)->toBe($this->test)
         ->validate($this->user)->toBeFalse();
-});
-
-it('has contract', function () {
-    $test = new class() implements WithValidator
-    {
-        use Validatable;
-
-        public function validateUsing(User $user)
-        {
-            return $user->id === 1;
-        }
-    };
-
-    expect($test)
-        ->getValidator()->toBeInstanceOf(Closure::class)
-        ->validates()->toBeTrue()
-        ->validate($this->user)->toBeTrue();
 });

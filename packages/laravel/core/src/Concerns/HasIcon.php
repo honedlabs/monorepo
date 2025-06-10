@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use BackedEnum;
-use UnitEnum;
 
 trait HasIcon
 {
     /**
-     * The icon.
+     * The icon of the instance.
      *
      * @var string|(\Closure(...mixed):string)|null
      */
@@ -19,16 +18,12 @@ trait HasIcon
     /**
      * Set the icon.
      *
-     * @param  string|BackedEnum|UnitEnum|null  $icon
+     * @param  string|BackedEnum|null  $icon
      * @return $this
      */
     public function icon($icon)
     {
-        $this->icon = match (true) {
-            $icon instanceof BackedEnum => $icon->value,
-            $icon instanceof UnitEnum => $icon->name,
-            default => $icon
-        };
+        $this->icon = $icon;
 
         return $this;
     }
@@ -52,6 +47,6 @@ trait HasIcon
      */
     public function hasIcon()
     {
-        return isset($this->icon);
+        return filled($this->icon);
     }
 }

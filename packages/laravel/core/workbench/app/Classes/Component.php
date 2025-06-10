@@ -30,7 +30,7 @@ class Component extends Primitive
 
     /**
      * Make a new instance of the component.
-     * 
+     *
      * @return static
      */
     public static function make()

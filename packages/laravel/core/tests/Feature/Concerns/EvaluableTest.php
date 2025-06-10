@@ -11,7 +11,6 @@ beforeEach(function () {
     $this->test = Component::make();
 });
 
-
 it('evaluates a closure', function () {
     expect($this->test)
         ->evaluate(fn () => 'value')->toBe('value');

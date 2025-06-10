@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Core;
 
-use JsonSerializable;
 use BadMethodCallException;
-use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\Configurable;
-use Illuminate\Support\Traits\Tappable;
-use Illuminate\Support\Traits\Macroable;
+use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
+use JsonSerializable;
 
 use function array_filter;
 

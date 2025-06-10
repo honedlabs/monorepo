@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Closure;
-use Honed\Core\Contracts\WithTransformer;
 
 trait Transformable
 {
@@ -38,15 +37,7 @@ trait Transformable
      */
     public function getTransformer()
     {
-        if (isset($this->transformer)) {
-            return $this->transformer;
-        }
-
-        if ($this instanceof WithTransformer) {
-            return $this->transformer = Closure::fromCallable([$this, 'transformUsing']);
-        }
-
-        return null;
+        return $this->transformer;
     }
 
     /**
@@ -56,7 +47,7 @@ trait Transformable
      */
     public function transforms()
     {
-        return filled($this->getTransformer());
+        return filled($this->transformer);
     }
 
     /**

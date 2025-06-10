@@ -16,6 +16,7 @@ class User extends Authenticatable
      * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\UserFactory>
      */
     use HasFactory;
+
     use Notifiable;
 
     /**
