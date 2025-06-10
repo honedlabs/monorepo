@@ -31,6 +31,6 @@ class TextFilter extends Filter
     {
         parent::setUp();
 
-        $this->string();
+        $this->asString();
     }
 }

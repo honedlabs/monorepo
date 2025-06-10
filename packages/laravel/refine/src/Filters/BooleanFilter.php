@@ -26,6 +26,6 @@ class BooleanFilter extends Filter
     {
         parent::setUp();
 
-        $this->boolean();
+        $this->asBoolean();
     }
 }

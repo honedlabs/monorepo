@@ -26,6 +26,6 @@ class DatetimeFilter extends Filter
     {
         parent::setUp();
 
-        $this->datetime();
+        $this->asDatetime();
     }
 }

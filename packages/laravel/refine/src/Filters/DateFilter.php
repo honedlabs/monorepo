@@ -26,6 +26,6 @@ class DateFilter extends Filter
     {
         parent::setUp();
 
-        $this->date();
+        $this->asDate();
     }
 }

@@ -31,7 +31,9 @@ use function mb_strtoupper;
  */
 class Filter extends Refiner
 {
-    use HasOptions;
+    use HasOptions {
+        multiple as private setMultiple;
+    }
     use InterpretsRequest;
     use Validatable;
     use HasOperator;
@@ -114,7 +116,7 @@ class Filter extends Refiner
     public function multiple($multiple = true)
     {
         $this->asArray();
-        $this->baseMultiple($multiple);
+        $this->setMultiple($multiple);
 
         return $this;
     }
@@ -126,7 +128,7 @@ class Filter extends Refiner
      */
     public function presence()
     {
-        $this->boolean();
+        $this->asBoolean();
         $this->presence = true;
 
         return $this;
@@ -245,20 +247,13 @@ class Filter extends Refiner
     public function apply($builder, $column, $operator, $value)
     {
         match (true) {
-            $this->isFullText() && is_string($value) => $this->searchRecall(
-                $builder,
-                $value,
-                $column
-            ),
-
-            in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) &&
-                is_string($value) => $this->searchPrecision(
-                    $builder,
-                    $value,
-                    $column,
-                    // @phpstan-ignore-next-line
-                    operator: $operator
-                ),
+            // in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) &&
+            //     is_string($value) => $this->searchPrecision(
+            //         $builder,
+            //         $value,
+            //         $column,
+            //         operator: $operator
+            //     ),
 
             $this->isMultiple() ||
                 $this->interpretsArray() => $builder->whereIn($column, $value),

@@ -2,13 +2,14 @@
 
 namespace Honed\Refine\Concerns;
 
-use Honed\Core\Concerns\HasScope;
-use Honed\Core\Concerns\HasResource;
 use Honed\Core\Interpret;
+use Honed\Core\Concerns\HasScope;
+use Honed\Core\Concerns\HasRequest;
+use Honed\Core\Concerns\HasResource;
+use Illuminate\Support\Facades\Config;
 use Honed\Refine\Sorts\Concerns\HasSorts;
 use Honed\Refine\Filters\Concerns\HasFilters;
 use Honed\Refine\Searches\Concerns\HasSearches;
-use Illuminate\Support\Facades\Config;
 
 trait CanRefine
 {
@@ -213,13 +214,13 @@ trait CanRefine
      */
     protected function search()
     {
-        $term = $this->getSearch($this->request);
+        $this->term($this->getSearch($this->request));
         $columns = $this->getMatch($this->request);
 
         $or = false;
 
         foreach ($this->getSearches() as $search) {
-            $or |= $search->handle($this->resource, $term, $or, $columns);
+            $or |= $search->handle($this->resource, $this->term, $or, $columns);
         }
     }
 

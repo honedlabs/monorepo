@@ -26,6 +26,6 @@ class NumberFilter extends Filter
     {
         parent::setUp();
 
-        $this->int();
+        $this->asInt();
     }
 }

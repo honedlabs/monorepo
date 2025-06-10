@@ -12,6 +12,7 @@ use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Concerns\HasValue;
+use Honed\Core\Concerns\IsActive;
 use Honed\Core\Primitive;
 use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
@@ -32,6 +33,7 @@ abstract class Refiner extends Primitive
     use HasMeta;
     use HasName;
     use HasQualifier;
+    use IsActive;
 
     /** @use HasQuery<TModel, TBuilder> */
     use HasQuery;
@@ -143,7 +145,7 @@ abstract class Refiner extends Primitive
      * Refine the builder using the request.
      *
      * @param  TBuilder  $builder
-     * @param  mixed  $requestValue
+     * @param  mixed  $value
      * @return bool
      */
     public function refine($builder, $value)

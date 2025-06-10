@@ -31,6 +31,6 @@ class TimeFilter extends Filter
     {
         parent::setUp();
 
-        $this->time();
+        $this->asTime();
     }
 }
