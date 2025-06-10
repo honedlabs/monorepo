@@ -30,8 +30,11 @@ use Honed\Table\Pipelines\SelectColumns;
 use Honed\Table\Pipelines\ToggleColumns;
 use Honed\Table\Pipelines\TransformRecords;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
@@ -66,6 +69,15 @@ class Table extends Refine implements Handles, UrlRoutable
         getColumnKey as protected getBaseColumnKey;
     }
 
+    // use CanBeRefined;
+    // use InteractsWithRecords;
+    // use CanBePaginated;
+    // use HasColumns;
+    // use HasActions;
+    // use HasMeta;
+    // use HasEmptyState;
+    // select, toggle?
+
     /**
      * The unique identifier column for the table.
      *
@@ -86,27 +98,6 @@ class Table extends Refine implements Handles, UrlRoutable
      * @var array<string,mixed>
      */
     protected $paginationData = [];
-
-    /**
-     * Whether the model should be serialized per record.
-     *
-     * @var bool|null
-     */
-    protected $serialize;
-
-    /**
-     * Whether the model attributes should be serialized by default.
-     *
-     * @var bool
-     */
-    protected static $shouldSerialize = false;
-
-    /**
-     * The empty state of the table.
-     *
-     * @var \Honed\Table\EmptyState|null
-     */
-    protected $emptyState;
 
     /**
      * Whether to do column selection.
@@ -240,44 +231,6 @@ class Table extends Refine implements Handles, UrlRoutable
     }
 
     /**
-     * Set whether the model attributes should serialized alongside columns.
-     *
-     * @param  bool|null  $serialize
-     * @return $this
-     */
-    public function serializes($serialize = true)
-    {
-        $this->serialize = $serialize;
-
-        return $this;
-    }
-
-    /**
-     * Get whether the model should be serialized per record.
-     *
-     * @return bool
-     */
-    public function isSerialized()
-    {
-        if (isset($this->serialize)) {
-            return $this->serialize;
-        }
-
-        return false; // TODO
-    }
-
-    /**
-     * Set the records for the table.
-     *
-     * @param  array<int,mixed>  $records
-     * @return void
-     */
-    public function setRecords($records)
-    {
-        $this->records = $records;
-    }
-
-    /**
      * Get the records from the table.
      *
      * @return array<int,mixed>
@@ -306,49 +259,6 @@ class Table extends Refine implements Handles, UrlRoutable
     public function getPaginationData()
     {
         return $this->paginationData;
-    }
-
-    /**
-     * Set the empty state of the table.
-     *
-     * @param  \Honed\Table\EmptyState|string|\Closure(\Honed\Table\EmptyState):mixed  $message
-     * @param  string|null  $title
-     * @return $this
-     */
-    public function withEmptyState($message, $title = null)
-    {
-        $emptyState = $this->getEmptyState();
-
-        if (\is_string($message)) {
-            $emptyState->message($message)->title($title);
-        } elseif ($message instanceof \Closure) {
-            $message($emptyState);
-        } else {
-            $this->emptyState = $message;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get the empty state of the table.
-     *
-     * @return \Honed\Table\EmptyState
-     */
-    public function getEmptyState()
-    {
-        return $this->emptyState ??= EmptyState::make();
-    }
-
-    /**
-     * Define the empty state of the table.
-     *
-     * @param  \Honed\Table\EmptyState  $emptyState
-     * @return void
-     */
-    public function emptyState($emptyState)
-    {
-        //
     }
 
     /**
@@ -599,6 +509,19 @@ class Table extends Refine implements Handles, UrlRoutable
      */
     protected function pipeline()
     {
+        // $this->actBefore();
+        // $this->toggleColumns();
+        // $this->search();
+        // $this->filter();
+        // $this->sort();
+        // $this->selectColumns();
+        // $this->callbackColumns();
+        // $this->actAfter();
+        // $this->paginate();
+        // $this->transform();
+        // $this->createEmptyState();
+        // $this->cleanup();
+
         App::make(Pipeline::class)
             ->send($this)
             ->through([
@@ -623,5 +546,33 @@ class Table extends Refine implements Handles, UrlRoutable
     public function __call($method, $parameters)
     {
         return $this->macroCall($method, $parameters);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    {
+        return match ($parameterName) {
+            'emptyState' => [$this->getEmptyState()],
+            'request' => [$this->getRequest()],
+            'builder', 'query', 'q' => [$this->getBuilder()],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
+        };
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    {
+        $builder = $this->getBuilder();
+
+        return match ($parameterType) {
+            EmptyState::class => [$this->getEmptyState()],
+            Request::class => [$this->getRequest()],
+            $builder::class, Builder::class, BuilderContract::class => [$builder],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
+        };
     }
 }

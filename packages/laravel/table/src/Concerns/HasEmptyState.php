@@ -94,6 +94,45 @@ trait HasEmptyState
     }
 
     /**
+     * Register a callback to update the empty state when filtering is applied.
+     * 
+     * @param \Closure $callback
+     * @return $this
+     */
+    public function whenEmptyStateFiltering($callback)
+    {
+        $this->newEmptyState()->filtering($callback);
+
+        return $this;
+    }
+
+    /**
+     * Register a callback to update the empty state when searching is applied.
+     * 
+     * @param \Closure $callback
+     * @return $this
+     */
+    public function whenEmptyStateSearching($callback)
+    {
+        $this->newEmptyState()->searching($callback);
+
+        return $this;
+    }
+
+    /**
+     * Register a callback to update the empty state when refinements are being applied
+     * 
+     * @param \Closure $callback
+     * @return $this
+     */
+    public function whenEmptyStateRefining($callback)
+    {
+        $this->newEmptyState()->refining($callback);
+
+        return $this;
+    }
+
+    /**
      * Get the empty state as an array.
      * 
      * @return array<string, mixed>
