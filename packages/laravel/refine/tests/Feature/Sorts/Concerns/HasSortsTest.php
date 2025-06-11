@@ -3,36 +3,39 @@
 declare(strict_types=1);
 
 use Honed\Refine\Refine;
-use Honed\Refine\Sort;
+use Honed\Refine\Sorts\Sort;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    Refine::useSortKey();
     $this->test = Refine::make(User::class);
 });
 
-it('is empty by default', function () {
+it('is sortable', function () {
     expect($this->test)
-        ->isSorting()->toBeFalse()
-        ->getSorts()->toBeEmpty();
+        ->sortable()->toBe($this->test)
+        ->isSortable()->toBeTrue()
+        ->isNotSortable()->toBeFalse()
+        ->notSortable()->toBe($this->test)
+        ->isSortable()->toBeFalse()
+        ->isNotSortable()->toBeTrue();
 });
 
 it('adds sorts', function () {
     expect($this->test)
-        ->withSorts([Sort::make('name')])->toBe($this->test)
-        ->withSorts([Sort::make('price')])->toBe($this->test)
+        ->sorts([Sort::make('name')])->toBe($this->test)
+        ->sorts([Sort::make('price')])->toBe($this->test)
         ->getSorts()->toHaveCount(2);
 });
 
 it('adds sorts variadically', function () {
     expect($this->test)
-        ->withSorts(Sort::make('name'), Sort::make('price'))->toBe($this->test)
+        ->sorts(Sort::make('name'), Sort::make('price'))->toBe($this->test)
         ->getSorts()->toHaveCount(2);
 });
 
 it('adds sorts collection', function () {
     expect($this->test)
-        ->withSorts(collect([Sort::make('name'), Sort::make('price')]))->toBe($this->test)
+        ->sorts(collect([Sort::make('name'), Sort::make('price')]))->toBe($this->test)
         ->getSorts()->toHaveCount(2);
 });
 
@@ -43,30 +46,15 @@ it('has sort key', function () {
         ->getSortKey()->toBe('test');
 });
 
-it('enables and disables sorting', function () {
-    expect($this->test)
-        // base case
-        ->sortingEnabled()->toBeTrue()
-        ->sortingDisabled()->toBeFalse()
-        // disable
-        ->disableSorting()->toBe($this->test)
-        ->sortingEnabled()->toBeFalse()
-        ->sortingDisabled()->toBeTrue()
-        // enable
-        ->enableSorting()->toBe($this->test)
-        ->sortingEnabled()->toBeTrue()
-        ->sortingDisabled()->toBeFalse();
-});
-
 it('has no default sort', function () {
     expect($this->test)
-        ->withSorts([Sort::make('name')])->toBe($this->test)
+        ->sorts([Sort::make('name')])->toBe($this->test)
         ->getDefaultSort()->toBeNull();
 });
 
 it('has default sort', function () {
     expect($this->test)
-        ->withSorts([Sort::make('price'), Sort::make('name')->default()])->toBe($this->test)
+        ->sorts([Sort::make('price'), Sort::make('name')->default()])->toBe($this->test)
         ->getDefaultSort()->scoped(fn ($sort) => $sort
         ->not->toBeNull()
         ->getName()->toBe('name')
@@ -75,7 +63,7 @@ it('has default sort', function () {
 
 it('sorts to array', function () {
     expect($this->test)
-        ->withSorts([Sort::make('name'), Sort::make('price')])->toBe($this->test)
+        ->sorts([Sort::make('name'), Sort::make('price')])->toBe($this->test)
         ->sortsToArray()->toHaveCount(2)
         ->each->scoped(fn ($sort) => $sort
         ->toHaveKeys([
@@ -92,8 +80,8 @@ it('sorts to array', function () {
 
 it('hides sorts from serialization', function () {
     expect($this->test)
-        ->withSorts([Sort::make('name')])->toBe($this->test)
+        ->sorts([Sort::make('name')])->toBe($this->test)
         ->sortsToArray()->toHaveCount(1)
-        ->disableSorting()->toBe($this->test)
+        ->notSortable()->toBe($this->test)
         ->sortsToArray()->toBeEmpty();
 });

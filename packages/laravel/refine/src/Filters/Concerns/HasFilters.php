@@ -43,7 +43,7 @@ trait HasFilters
 
     /**
      * Set whether the filters should not be applied.
-     * 
+     *
      * @param  bool  $disable
      * @return $this
      */

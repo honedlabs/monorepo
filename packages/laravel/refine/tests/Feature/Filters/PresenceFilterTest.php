@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\PresenceFilter;
+use Honed\Refine\Filters\PresenceFilter;
 use Illuminate\Support\Facades\Request;
 use Workbench\App\Enums\Status;
 use Workbench\App\Models\Product;
@@ -14,9 +14,9 @@ beforeEach(function () {
         ->query(fn ($query) => $query->where('status', Status::Available->value));
 });
 
-it('has presence filter', function () {
+it('creates', function () {
     expect($this->filter)
-        ->getType()->toBe('boolean')
+        ->type()->toBe('boolean')
         ->interpretsAs()->toBe('boolean')
         ->isPresence()->toBeTrue();
 });

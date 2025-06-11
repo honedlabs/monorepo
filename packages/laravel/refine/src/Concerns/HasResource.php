@@ -8,9 +8,7 @@ use Honed\Core\Exceptions\InvalidResourceException;
 use Honed\Core\Exceptions\ResourceNotSetException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use InvalidArgumentException;
 
-use function class_exists;
 use function is_string;
 
 /**
@@ -25,24 +23,6 @@ trait HasResource
      * @var TBuilder|null
      */
     protected $resource;
-
-    /**
-     * Create a new builder instance from a resource.
-     *
-     * @param  TBuilder|TModel|class-string<TModel>  $resource
-     * @return TBuilder|null
-     *
-     * @throws InvalidResourceException
-     */
-    protected function throughBuilder($resource)
-    {
-        return match (true) {
-            $resource instanceof Builder => $resource,
-            $resource instanceof Model => $resource::query(),
-            // is_string($resource) && class_exists($resource) => $resource::query(),
-            default => InvalidResourceException::throw(static::class),
-        };
-    }
 
     /**
      * Set the resource to be used.
@@ -96,5 +76,23 @@ trait HasResource
     public function getModel()
     {
         return $this->getBuilder()->getModel();
+    }
+
+    /**
+     * Create a new builder instance from a resource.
+     *
+     * @param  TBuilder|TModel|class-string<TModel>  $resource
+     * @return TBuilder|null
+     *
+     * @throws InvalidResourceException
+     */
+    protected function throughBuilder($resource)
+    {
+        return match (true) {
+            $resource instanceof Builder => $resource,
+            $resource instanceof Model => $resource::query(),
+            is_string($resource) => $resource::query(),
+            default => InvalidResourceException::throw(static::class),
+        };
     }
 }

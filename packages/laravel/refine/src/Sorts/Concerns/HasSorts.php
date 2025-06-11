@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Sorts\Concerns;
 
+use Closure;
 use Honed\Refine\Sorts\Sort;
 use Illuminate\Support\Arr;
 
@@ -50,7 +51,7 @@ trait HasSorts
 
     /**
      * Set whether the sorts should not be applied.
-     * 
+     *
      * @param  bool  $disable
      * @return $this
      */
@@ -116,9 +117,9 @@ trait HasSorts
 
     /**
      * Set a default sort, which will not be serialized.
-     * 
-     * @param string|Sort|\Closure $sort
-     * @param string $direction
+     *
+     * @param  string|Sort|Closure  $sort
+     * @param  string  $direction
      * @return $this
      */
     public function defaultSort($sort, $direction = 'desc')

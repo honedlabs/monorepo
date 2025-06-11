@@ -88,7 +88,7 @@ class RefineMakeCommand extends GeneratorCommand
         return [
             'name' => [
                 'What should the '.mb_strtolower($this->type).' be named?',
-                'E.g. UserRefiner',
+                'E.g. RefineUser',
             ],
         ];
     }

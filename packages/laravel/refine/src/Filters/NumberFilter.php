@@ -12,6 +12,13 @@ namespace Honed\Refine\Filters;
  */
 class NumberFilter extends Filter
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->asInt();
+    }
+
     /**
      * Define the type of the filter.
      *
@@ -20,12 +27,5 @@ class NumberFilter extends Filter
     public function type()
     {
         return 'number';
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->asInt();
     }
 }

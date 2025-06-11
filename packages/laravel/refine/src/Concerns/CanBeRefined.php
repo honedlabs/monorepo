@@ -1,31 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine\Concerns;
 
-use Honed\Core\Interpret;
-use Honed\Core\Concerns\HasScope;
+use Closure;
 use Honed\Core\Concerns\HasRequest;
-use Honed\Refine\Concerns\HasResource;
-use Illuminate\Support\Facades\Config;
-use Honed\Refine\Sorts\Concerns\HasSorts;
+use Honed\Core\Concerns\HasScope;
+use Honed\Core\Interpret;
 use Honed\Refine\Filters\Concerns\HasFilters;
 use Honed\Refine\Searches\Concerns\HasSearches;
-use Workbench\App\Models\Product;
+use Honed\Refine\Sorts\Concerns\HasSorts;
 
 trait CanBeRefined
 {
     use CanBePersisted;
     use HasDelimiter;
-    use HasScope;
-    use HasSorts;
-    use HasRequest;
     use HasFilters;
-    use HasSearches;
+    use HasRequest;
     use HasResource;
+    use HasScope;
+    use HasSearches;
+    use HasSorts;
 
     /**
      * Indicate whether the refinements have been processed.
-     * 
+     *
      * @var bool
      */
     protected $refined = false;
@@ -33,20 +33,20 @@ trait CanBeRefined
     /**
      * The callback to be processed before the refiners.
      *
-     * @var \Closure|null
+     * @var Closure|null
      */
     protected $before;
 
     /**
      * The callback to be processed after refinement.
      *
-     * @var \Closure|null
+     * @var Closure|null
      */
     protected $after;
 
     /**
      * Determine if the refinements have been processed.
-     * 
+     *
      * @return bool
      */
     public function isRefined()
@@ -57,7 +57,7 @@ trait CanBeRefined
     /**
      * Register the callback to be executed before the refiners.
      *
-     * @param \Closure $callback
+     * @param  Closure  $callback
      * @return $this
      */
     public function before($callback)
@@ -70,7 +70,7 @@ trait CanBeRefined
     /**
      * Get the callback to be executed before the refiners.
      *
-     * @return \Closure|null
+     * @return Closure|null
      */
     public function getBeforeCallback()
     {
@@ -80,7 +80,7 @@ trait CanBeRefined
     /**
      * Register the callback to be executed after refinement.
      *
-     * @param \Closure $callback
+     * @param  Closure  $callback
      * @return $this
      */
     public function after($callback)
@@ -93,7 +93,7 @@ trait CanBeRefined
     /**
      * Get the callback to be executed after refinement.
      *
-     * @return \Closure|null
+     * @return Closure|null
      */
     public function getAfterCallback()
     {
@@ -102,7 +102,7 @@ trait CanBeRefined
 
     /**
      * Refine the provided resource.
-     * 
+     *
      * @return $this
      */
     public function refine()
@@ -120,7 +120,7 @@ trait CanBeRefined
 
     /**
      * Execute the pipeline of refiners.
-     * 
+     *
      * @return void
      */
     protected function pipeline()
@@ -134,7 +134,7 @@ trait CanBeRefined
 
     /**
      * Modify the resource before the refiners are processed.
-     * 
+     *
      * @return void
      */
     protected function actBefore()
@@ -144,7 +144,7 @@ trait CanBeRefined
 
     /**
      * Apply the searches to the resource.
-     * 
+     *
      * @return void
      */
     protected function search()
@@ -159,9 +159,9 @@ trait CanBeRefined
             $builder->whereIn(
                 $builder->qualifyColumn($model->getKeyName()),
                 // @phpstan-ignore-next-line method.notFound
-                $model->search($this->term)->keys() 
+                $model->search($this->term)->keys()
             );
-            
+
             return;
         }
 
@@ -178,7 +178,7 @@ trait CanBeRefined
 
     /**
      * Apply the filters to the resource.
-     * 
+     *
      * @return void
      */
     protected function filter()
@@ -198,7 +198,7 @@ trait CanBeRefined
 
     /**
      * Apply the sorts to the resource.
-     * 
+     *
      * @return void
      */
     protected function sort()
@@ -227,7 +227,7 @@ trait CanBeRefined
 
     /**
      * Modify the resource after the refiners have been processed.
-     * 
+     *
      * @return void
      */
     protected function actAfter()
@@ -237,18 +237,15 @@ trait CanBeRefined
 
     /**
      * Persist the data to the appropriate driver
-     * 
+     *
      * @return void
      */
-    protected function persistData()
-    {
-
-    }
+    protected function persistData() {}
 
     /**
      * Get the search term from the request.
-     * 
-     * @param \Illuminate\Http\Request $request
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
     protected function getSearch($request)
@@ -266,8 +263,8 @@ trait CanBeRefined
 
     /**
      * Get the sort parameter from the request.
-     * 
-     * @param \Illuminate\Http\Request $request
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return array{string|null, 'asc'|'desc'|null}
      */
     protected function getSort($request)
@@ -285,8 +282,8 @@ trait CanBeRefined
 
     /**
      * Get the search columns from the request.
-     * 
-     * @param \Illuminate\Http\Request $request
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return array<int,string>|null
      */
     protected function getMatch($request)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine\Concerns;
 
 use Illuminate\Support\Str;
@@ -8,50 +10,50 @@ trait CanBePersisted
 {
     /**
      * The name of the key when persisting data.
-     * 
+     *
      * @var string|null
      */
     protected $persistKey;
 
     /**
      * The default driver to use for persisting data.
-     * 
+     *
      * @var 'session'|'cookie'
      */
     protected $persistDriver = 'session';
 
     /**
      * The time to live for the persistent data, if using the cookie driver.
-     * 
+     *
      * @var int
      */
     protected $persistFor = 15724800;
 
     /**
      * The driver to use for persisting search data.
-     * 
+     *
      * @var bool|'session'|'cookie'|null
      */
     protected $persistSearch;
 
     /**
      * The driver to use for persisting filter data.
-     * 
+     *
      * @var bool|'session'|'cookie'|null
      */
     protected $persistFilter;
 
     /**
      * The driver to use for persisting sort data.
-     * 
+     *
      * @var bool|'session'|'cookie'|null
      */
     protected $persistSort;
 
     /**
      * Set the name of the key to use when persisting data.
-     * 
-     * @param string $key
+     *
+     * @param  string  $key
      * @return $this
      */
     public function persistKey($key)
@@ -63,7 +65,7 @@ trait CanBePersisted
 
     /**
      * Get the name of the key to use when persisting data.
-     * 
+     *
      * @return string
      */
     public function getPersistKey()
@@ -72,22 +74,9 @@ trait CanBePersisted
     }
 
     /**
-     * Guess the name of the key to use when persisting data.
-     * 
-     * @return string
-     */
-    protected function guessPersistKey()
-    {
-        return Str::of(static::class)
-            ->classBasename()
-            ->slug()
-            ->toString();
-    }
-
-    /**
      * Set the default driver to use for persisting data.
-     * 
-     * @param 'session'|'cookie' $driver
+     *
+     * @param  'session'|'cookie'  $driver
      * @return $this
      */
     public function persistUsing($driver)
@@ -99,7 +88,7 @@ trait CanBePersisted
 
     /**
      * Get the default driver to use for persisting data.
-     * 
+     *
      * @return 'session'|'cookie'
      */
     public function getPersistDriver()
@@ -109,8 +98,8 @@ trait CanBePersisted
 
     /**
      * Set the time to live for the persistent data, if using the cookie driver.
-     * 
-     * @param int $seconds
+     *
+     * @param  int  $seconds
      * @return $this
      */
     public function persistFor($seconds = 15724800)
@@ -122,7 +111,7 @@ trait CanBePersisted
 
     /**
      * Get the time to live for the persistent data, if using the cookie driver.
-     * 
+     *
      * @return int
      */
     public function getPersistDuration()
@@ -132,8 +121,8 @@ trait CanBePersisted
 
     /**
      * Set the driver to use for persisting searches.
-     * 
-     * @param bool|'session'|'cookie' $driver
+     *
+     * @param  bool|'session'|'cookie'  $driver
      * @return $this
      */
     public function persistSearch($driver = true)
@@ -145,7 +134,7 @@ trait CanBePersisted
 
     /**
      * Set the session driver to be used for persisting searches.
-     * 
+     *
      * @return $this
      */
     public function persistSearchInSession()
@@ -155,7 +144,7 @@ trait CanBePersisted
 
     /**
      * Set the cookie driver to be used for persisting searches.
-     * 
+     *
      * @return $this
      */
     public function persistSearchInCookie()
@@ -165,8 +154,8 @@ trait CanBePersisted
 
     /**
      * Set the driver to use for persisting filters.
-     * 
-     * @param bool|'session'|'cookie' $driver
+     *
+     * @param  bool|'session'|'cookie'  $driver
      * @return $this
      */
     public function persistFilter($driver = true)
@@ -178,7 +167,7 @@ trait CanBePersisted
 
     /**
      * Set the session driver to be used for persisting filters.
-     * 
+     *
      * @return $this
      */
     public function persistFilterInSession()
@@ -188,7 +177,7 @@ trait CanBePersisted
 
     /**
      * Set the cookie driver to be used for persisting filters.
-     * 
+     *
      * @return $this
      */
     public function persistFilterInCookie()
@@ -198,8 +187,8 @@ trait CanBePersisted
 
     /**
      * Set the driver to use for persisting sorts.
-     * 
-     * @param bool|'session'|'cookie' $driver
+     *
+     * @param  bool|'session'|'cookie'  $driver
      * @return $this
      */
     public function persistSort($driver = true)
@@ -211,7 +200,7 @@ trait CanBePersisted
 
     /**
      * Set the session driver to be used for persisting sorts.
-     * 
+     *
      * @return $this
      */
     public function persistSortInSession()
@@ -221,7 +210,7 @@ trait CanBePersisted
 
     /**
      * Set the cookie driver to be used for persisting sorts.
-     * 
+     *
      * @return $this
      */
     public function persistSortInCookie()
@@ -231,8 +220,8 @@ trait CanBePersisted
 
     /**
      * Set the driver to use for persisting all refinements.
-     * 
-     * @param bool|'session'|'cookie' $driver
+     *
+     * @param  bool|'session'|'cookie'  $driver
      * @return $this
      */
     public function persist($driver = true)
@@ -246,7 +235,7 @@ trait CanBePersisted
 
     /**
      * Set the cookie driver to be used for persisting all refinements.
-     * 
+     *
      * @return $this
      */
     public function persistInCookie()
@@ -256,11 +245,24 @@ trait CanBePersisted
 
     /**
      * Set the session driver to be used for persisting all refinements.
-     * 
+     *
      * @return $this
      */
     public function persistInSession()
     {
         return $this->persist('session');
-    }    
+    }
+
+    /**
+     * Guess the name of the key to use when persisting data.
+     *
+     * @return string
+     */
+    protected function guessPersistKey()
+    {
+        return Str::of(static::class)
+            ->classBasename()
+            ->slug()
+            ->toString();
+    }
 }

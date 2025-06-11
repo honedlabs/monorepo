@@ -2,27 +2,34 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filter;
-use Honed\Refine\Pipelines\RefineFilters;
+use Honed\Refine\Pipelines\RefineSorts;
 use Honed\Refine\Refine;
+use Honed\Refine\Sort;
 use Illuminate\Support\Facades\Request;
-use Workbench\App\Models\User;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
-    $this->builder = User::query();
-    $this->pipe = new RefineFilters();
+    $this->builder = Product::query();
+    $this->pipe = new RefineSorts();
     $this->closure = fn ($refine) => $refine;
 
-    $filters = [
-        Filter::make('price')->int(),
+    $sorts = [
+        Sort::make('name')->default(),
+        Sort::make('price'),
     ];
 
     $this->refine = Refine::make($this->builder)
-        ->withFilters($filters);
-
+        ->sorts($sorts);
 });
 
 it('does not refine', function () {
+    $this->pipe->__invoke($this->refine, $this->closure);
+
+    expect($this->refine->getResource()->getQuery()->wheres)
+        ->toBeEmpty();
+});
+
+it('refines default', function () {
     $request = Request::create('/', 'GET', [
         'invalid' => 'test',
     ]);
@@ -31,13 +38,15 @@ it('does not refine', function () {
 
     $this->pipe->__invoke($this->refine, $this->closure);
 
-    expect($this->refine->getResource()->getQuery()->wheres)
-        ->toBeEmpty();
+    $builder = $this->refine->getResource();
+
+    expect($builder->getQuery()->orders)
+        ->toBeOnlyOrder('name', 'asc');
 });
 
 it('refines', function () {
     $request = Request::create('/', 'GET', [
-        'price' => 100,
+        'sort' => 'price',
     ]);
 
     $this->refine->request($request);
@@ -46,22 +55,37 @@ it('refines', function () {
 
     $builder = $this->refine->getResource();
 
-    expect($builder->getQuery()->wheres)
-        ->toBeOnlyWhere('price', 100);
+    expect($builder->getQuery()->orders)
+        ->toBeOnlyOrder('price', 'asc');
 });
 
-it('disables', function () {
+it('refines directionally', function () {
     $request = Request::create('/', 'GET', [
-        'price' => 100,
+        'sort' => '-price',
     ]);
 
-    $this->refine->request($request)->disableFiltering();
+    $this->refine->request($request);
 
     $this->pipe->__invoke($this->refine, $this->closure);
 
     $builder = $this->refine->getResource();
 
-    expect($builder->getQuery()->wheres)
+    expect($builder->getQuery()->orders)
+        ->toBeOnlyOrder('price', 'desc');
+});
+
+it('disables', function () {
+    $request = Request::create('/', 'GET', [
+        'sort' => 'price',
+    ]);
+
+    $this->refine->request($request)->disableSorting();
+
+    $this->pipe->__invoke($this->refine, $this->closure);
+
+    $builder = $this->refine->getResource();
+
+    expect($builder->getQuery()->orders)
         ->toBeEmpty();
 });
 
@@ -70,9 +94,9 @@ describe('scope', function () {
         $this->refine = $this->refine->scope('scope');
     });
 
-    it('does not refine', function () {
+    it('refines default', function () {
         $request = Request::create('/', 'GET', [
-            'price' => 100,
+            'sort' => 'price',
         ]);
 
         $this->refine->request($request);
@@ -81,13 +105,13 @@ describe('scope', function () {
 
         $builder = $this->refine->getResource();
 
-        expect($builder->getQuery()->wheres)
-            ->toBeEmpty();
+        expect($builder->getQuery()->orders)
+            ->toBeOnlyOrder('name', 'asc');
     });
 
     it('refines', function () {
         $request = Request::create('/', 'GET', [
-            $this->refine->formatScope('price') => 100,
+            $this->refine->formatScope('sort') => 'price',
         ]);
 
         $this->refine->request($request);
@@ -96,7 +120,7 @@ describe('scope', function () {
 
         $builder = $this->refine->getResource();
 
-        expect($builder->getQuery()->wheres)
-            ->toBeOnlyWhere('price', 100);
+        expect($builder->getQuery()->orders)
+            ->toBeOnlyOrder('price', 'asc');
     });
 });

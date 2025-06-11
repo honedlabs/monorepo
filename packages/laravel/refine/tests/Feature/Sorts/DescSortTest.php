@@ -16,14 +16,14 @@ it('has desc sort', function () {
     expect($this->sort)
         ->isFixed()->toBeTrue()
         ->getDirection()->toBe('desc')
-        ->getType()->toBe('desc');
+        ->type()->toBe('sort:desc');
 });
 
 it('does not apply', function () {
     $builder = Product::query();
 
     expect($this->sort)
-        ->refine($builder, ['invalid', 'asc'])->toBeFalse();
+        ->handle($builder, 'invalid', 'asc')->toBeFalse();
 
     expect($builder->getQuery()->orders)
         ->toBeEmpty();
@@ -33,7 +33,7 @@ it('applies', function () {
     $builder = Product::query();
 
     expect($this->sort)
-        ->refine($builder, ['oldest', 'asc'])->toBeTrue();
+        ->handle($builder, 'oldest', 'desc')->toBeTrue();
 
     expect($builder->getQuery()->orders)
         ->toBeOnlyOrder('created_at', 'desc');

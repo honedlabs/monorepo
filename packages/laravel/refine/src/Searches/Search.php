@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Searches;
 
-use function is_null;
-use function array_merge;
-
 use Closure;
 use Honed\Refine\Refiner;
 
@@ -24,18 +21,8 @@ class Search extends Refiner
     use Concerns\HasSearch;
 
     /**
-     * Define the type of the search.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'search';
-    }
-
-    /**
      * Provide the instance with any necessary setup.
-     * 
+     *
      * @return void
      */
     public function setUp()
@@ -46,19 +33,18 @@ class Search extends Refiner
     }
 
     /**
-     * Define the search instance.
+     * Define the type of the search.
      *
-     * @param  \Honed\Refine\Searches\Search<TModel, TBuilder>  $search
-     * @return \Honed\Refine\Searches\Search<TModel, TBuilder>|void
+     * @return string
      */
-    protected function definition(Search $search)
+    public function type()
     {
-        return $search;
+        return 'search';
     }
 
     /**
      * Handle the refinement.
-     * 
+     *
      * @param  TBuilder  $query
      * @param  string|null  $term
      * @param  array<int, string>|null  $columns
@@ -67,7 +53,7 @@ class Search extends Refiner
      */
     public function handle($query, $term, $columns, $or = false)
     {
-        $this->active(! $columns || ! in_array($term, $columns, true));
+        $this->checkIfActive($columns, $term);
 
         if ($this->isInactive() || ! $term) {
             return false;
@@ -100,9 +86,33 @@ class Search extends Refiner
     {
         if ($this->isFullText()) {
             $this->searchRecall($builder, $value, $column, $boolean);
+
             return;
         }
 
         $this->searchPrecision($builder, $value, $column, $boolean);
+    }
+
+    /**
+     * Define the search instance.
+     *
+     * @param  Search<TModel, TBuilder>  $search
+     * @return Search<TModel, TBuilder>|void
+     */
+    protected function definition(self $search)
+    {
+        return $search;
+    }
+
+    /**
+     * Check if the search is active.
+     *
+     * @param  array<int, string>|null  $column
+     * @param  string  $term
+     * @return void
+     */
+    protected function checkIfActive($columns, $term)
+    {
+        $this->active(! $columns || ! in_array($term, $columns, true));
     }
 }

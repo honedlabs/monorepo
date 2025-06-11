@@ -12,6 +12,13 @@ namespace Honed\Refine\Filters;
  */
 class DatetimeFilter extends Filter
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->asDatetime();
+    }
+
     /**
      * Define the type of the filter.
      *
@@ -20,12 +27,5 @@ class DatetimeFilter extends Filter
     public function type()
     {
         return 'datetime';
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->asDatetime();
     }
 }

@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Sorts;
 
+use Closure;
 use Honed\Core\Concerns\IsDefault;
 use Honed\Refine\Refiner;
 
 use function array_merge;
-use function array_pad;
-use function is_null;
 use function sprintf;
 
 /**
@@ -20,8 +19,20 @@ use function sprintf;
  */
 class Sort extends Refiner
 {
-    use IsDefault;
     use Concerns\HasDirection;
+    use IsDefault;
+
+    /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->definition($this);
+    }
 
     /**
      * Define the type of the sort.
@@ -34,108 +45,75 @@ class Sort extends Refiner
     }
 
     /**
-     * Provide the instance with any necessary setup.
-     * 
-     * @return void
-     */
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->definition($this);
-    }
-
-    /**
-     * Define the sort instance.
+     * Get the value for the sort indicating an ascending direction.
      *
-     * @param  \Honed\Refine\Sorts\Sort<TModel, TBuilder>  $sort
-     * @return \Honed\Refine\Sorts\Sort<TModel, TBuilder>|void
+     * @return string
      */
-    protected function definition(Sort $sort)
+    public function getAscendingValue()
     {
-        return $sort;
+        return $this->getParameter();
     }
 
     /**
-     * {@inheritdoc}
+     * Get the value for the sort indicating a descending direction.
      *
-     * @return array{string|null, 'asc'|'desc'|null}|null
+     * @return string
      */
-    public function getValue()
+    public function getDescendingValue()
     {
-        /** @var array{string|null, 'asc'|'desc'|null}|null */
-        return parent::getValue();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isActive()
-    {
-        /** @var array{string|null, 'asc'|'desc'|null}|null */
-        $value = $this->getValue();
-
-        if (is_null($value)) {
-            return false;
-        }
-
-        [$value, $direction] = array_pad($value, 2, null);
-
-        $active = $value === $this->getParameter();
+        $parameter = $this->getParameter();
 
         if ($this->isFixed()) {
-            return $active && $direction === $this->fixed;
+            return $parameter;
         }
 
-        return $active;
+        return sprintf('-%s', $parameter);
     }
 
     /**
-     * {@inheritdoc}
+     * Get the next value to use for the query parameter.
+     *
+     * @return string|null
      */
-    protected function guessParameter()
+    public function getNextDirection()
     {
-        $parameter = parent::guessParameter();
-
-        if ($this->fixed) {
-            $parameter = $parameter.'_'.$this->fixed;
-        }
-
-        return $parameter;
+        return match (true) {
+            $this->isFixed() => $this->getFixedValue(),
+            $this->isInverted() => $this->getInvertedValue(),
+            default => match (true) {
+                $this->isAscending() => $this->getDescendingValue(),
+                $this->isDescending() => $this->getAscendingValue(),
+                default => null,
+            },
+        };
     }
-
-    // /**
-    //  * {@inheritdoc}
-    //  *
-    //  * @param  array{string|null, 'asc'|'desc'|null}  $value
-    //  */
-    // protected function getBindings($value, $builder)
-    // {
-    //     [$value, $direction] = $value;
-
-    //     return array_merge(parent::getBindings($value, $builder), [
-    //         'direction' => $direction,
-    //     ]);
-    // }
 
     /**
      * {@inheritdoc}
      *
      * @param  array{string|null, 'asc'|'desc'|null}  $requestValue
      */
-    public function refine($builder, $requestValue)
+    public function handle($query, $parameter, $direction)
     {
-        $applied = parent::refine($builder, $requestValue);
+        $this->active(
+            $active = $this->checkIfActive($parameter, $direction)
+        );
 
-        $value = $this->getValue();
-
-        if ($applied && $value) {
-            [$_, $direction] = $value;
-
-            $this->direction($direction);
+        if (! $active) {
+            return false;
         }
 
-        return $applied;
+        if (! $this->hasQuery()) {
+            $this->query(Closure::fromCallable([$this, 'apply']));
+        }
+
+        $this->modifyQuery($query, [
+            ...$this->getBindings($parameter, $query),
+            'parameter' => $parameter,
+            'direction' => $direction,
+        ]);
+
+        return true;
     }
 
     /**
@@ -160,5 +138,73 @@ class Sort extends Refiner
             'direction' => $this->getDirection(),
             'next' => $this->getNextDirection(),
         ]);
+    }
+
+    /**
+     * Define the sort instance.
+     *
+     * @param  Sort<TModel, TBuilder>  $sort
+     * @return Sort<TModel, TBuilder>|void
+     */
+    protected function definition(self $sort)
+    {
+        return $sort;
+    }
+
+    /**
+     * Get the fixed direction.
+     *
+     * @return 'asc'|'desc'|null
+     */
+    protected function getFixedValue()
+    {
+        if ($this->isNotFixed()) {
+            return null;
+        }
+
+        return $this->isFixedAscending()
+            ? $this->getAscendingValue()
+            : $this->getDescendingValue();
+    }
+
+    /**
+     * Get the inverted value.
+     *
+     * @return string|null
+     */
+    protected function getInvertedValue()
+    {
+        return match (true) {
+            $this->isAscending() => null,
+            $this->isDescending() => $this->getAscendingValue(),
+            default => $this->getDescendingValue(),
+        };
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function checkIfActive($parameter, $direction)
+    {
+        $match = $parameter === $this->getParameter();
+
+        return match (true) {
+            $this->isFixed($direction) => $match,
+            default => $match,
+        };
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function guessParameter()
+    {
+        $parameter = parent::guessParameter();
+
+        if ($this->fixed) {
+            $parameter = $parameter.'_'.$this->fixed;
+        }
+
+        return $parameter;
     }
 }

@@ -13,18 +13,8 @@ namespace Honed\Refine\Filters;
 class SelectFilter extends Filter
 {
     /**
-     * Define the type of the filter.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'select';
-    }
-
-    /**
      * Provide the instance with any necessary setup.
-     * 
+     *
      * @return void
      */
     public function setUp()
@@ -32,5 +22,15 @@ class SelectFilter extends Filter
         parent::setUp();
 
         $this->multiple();
+    }
+
+    /**
+     * Define the type of the filter.
+     *
+     * @return string
+     */
+    public function type()
+    {
+        return 'select';
     }
 }

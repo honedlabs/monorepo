@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filter;
+use Honed\Refine\Filters\Filter;
 use Honed\Refine\Refine;
 use Workbench\App\Models\User;
 
@@ -18,20 +18,20 @@ it('is empty by default', function () {
 
 it('adds filters', function () {
     expect($this->test)
-        ->withFilters([Filter::make('name')])->toBe($this->test)
-        ->withFilters([Filter::make('price')])->toBe($this->test)
+        ->filters([Filter::make('name')])->toBe($this->test)
+        ->filters([Filter::make('price')])->toBe($this->test)
         ->getFilters()->toHaveCount(2);
 });
 
 it('adds filters variadically', function () {
     expect($this->test)
-        ->withFilters(Filter::make('name'), Filter::make('price'))->toBe($this->test)
+        ->filters(Filter::make('name'), Filter::make('price'))->toBe($this->test)
         ->getFilters()->toHaveCount(2);
 });
 
 it('adds filters collection', function () {
     expect($this->test)
-        ->withFilters(collect([Filter::make('name'), Filter::make('price')]))->toBe($this->test)
+        ->filters(collect([Filter::make('name'), Filter::make('price')]))->toBe($this->test)
         ->getFilters()->toHaveCount(2);
 });
 
@@ -52,7 +52,7 @@ it('enables and disables filtering', function () {
 
 it('filters to array', function () {
     expect($this->test)
-        ->withFilters([Filter::make('name'), Filter::make('price')])->toBe($this->test)
+        ->filters([Filter::make('name'), Filter::make('price')])->toBe($this->test)
         ->filtersToArray()->toHaveCount(2)
         ->each->scoped(fn ($filter) => $filter
         ->toHaveKeys([
@@ -69,7 +69,7 @@ it('filters to array', function () {
 
 it('hides filters from serialization', function () {
     expect($this->test)
-        ->withFilters([Filter::make('name')])->toBe($this->test)
+        ->filters([Filter::make('name')])->toBe($this->test)
         ->filtersToArray()->toHaveCount(1)
         ->disableFiltering()->toBe($this->test)
         ->filtersToArray()->toBeEmpty();

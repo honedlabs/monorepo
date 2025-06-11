@@ -16,7 +16,7 @@ trait HasQualifier
      * @var bool|string
      */
     protected $qualify = false;
-    
+
     /**
      * Set whether to qualify against the builder.
      *

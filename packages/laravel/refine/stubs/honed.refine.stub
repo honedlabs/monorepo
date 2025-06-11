@@ -16,18 +16,6 @@ use Honed\Refine\Searches\Search;
 class {{ class }} extends Refine
 {
     /**
-     * Provide the refine with any necessary setup
-     *
-     * @return void
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        //
-    }
-
-    /**
      * Define the refine instance.
      *
      * @param  $this  $refine
@@ -37,13 +25,13 @@ class {{ class }} extends Refine
     {
         return $refine
             ->for(Model::class)
+            ->searches([
+
+            ])
             ->filters([
 
             ])
             ->sorts([
-
-            ])
-            ->searches([
 
             ]);
     }

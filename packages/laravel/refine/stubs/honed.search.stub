@@ -7,25 +7,13 @@ use Honed\Refine\Searches\Search;
 class {{ class }} extends Search
 {
     /**
-     *  Create a new search instance.
+     * Create a new search instance.
      *
      * @return static
      */
     public static function new()
     {
         return resolve(static::class);
-    }
-
-    /**
-     * Provide the search with any necessary setup.
-     *
-     * @return void
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        //
     }
 
     /**

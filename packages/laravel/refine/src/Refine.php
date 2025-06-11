@@ -5,20 +5,17 @@ declare(strict_types=1);
 namespace Honed\Refine;
 
 use Closure;
-use Throwable;
-use Honed\Core\Primitive;
-use Honed\Core\Parameters;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
-use Illuminate\Container\Container;
-use Illuminate\Support\Facades\App;
-use Honed\Refine\Concerns\CanBeRefined;
-use Illuminate\Database\Eloquent\Builder;
 use Honed\Core\Contracts\NullsAsUndefined;
-use Illuminate\Support\Traits\ForwardsCalls;
-use Illuminate\Contracts\Foundation\Application;
+use Honed\Core\Primitive;
+use Honed\Refine\Concerns\CanBeRefined;
+use Illuminate\Container\Container;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Traits\ForwardsCalls;
+use Throwable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -28,8 +25,8 @@ use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
  */
 class Refine extends Primitive implements NullsAsUndefined
 {
-    use ForwardsCalls;
     use CanBeRefined;
+    use ForwardsCalls;
 
     /**
      * The default namespace where refiners reside.
@@ -80,7 +77,8 @@ class Refine extends Primitive implements NullsAsUndefined
     public static function make($resource = null)
     {
         return resolve(static::class)
-            ->when($resource, fn (Refine $refine, $resource) => $refine->resource($resource));
+            ->when($resource, fn (Refine $refine, $resource) => $refine->resource($resource)
+            );
     }
 
     /**
@@ -191,10 +189,10 @@ class Refine extends Primitive implements NullsAsUndefined
     /**
      * Define the refine instance.
      *
-     * @param  \Honed\Refine\Refine<TModel, TBuilder>  $refine
-     * @return \Honed\Refine\Refine<TModel, TBuilder>|void
+     * @param  Refine<TModel, TBuilder>  $refine
+     * @return Refine<TModel, TBuilder>|void
      */
-    protected function definition(Refine $refine)
+    protected function definition(self $refine)
     {
         return $refine;
     }

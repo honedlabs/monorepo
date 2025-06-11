@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\DateFilter;
+use Honed\Refine\Filters\DateFilter;
 
-it('has date filter', function () {
-    expect(DateFilter::make('created_at'))
-        ->toBeInstanceOf(DateFilter::class)
-        ->getType()->toBe('date')
+beforeEach(function () {
+    $this->filter = DateFilter::make('created_at');
+});
+
+it('creates', function () {
+    expect($this->filter)
+        ->type()->toBe('date')
         ->interpretsAs()->toBe('date');
 });

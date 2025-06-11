@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\TimeFilter;
+use Honed\Refine\Filters\TimeFilter;
 
-it('has time filter', function () {
-    expect(TimeFilter::make('time'))
-        ->toBeInstanceOf(TimeFilter::class)
-        ->getType()->toBe('time')
+beforeEach(function () {
+    $this->filter = TimeFilter::make('time');
+});
+
+it('creates', function () {
+    expect($this->filter)
+        ->type()->toBe('time')
         ->interpretsAs()->toBe('time');
 });

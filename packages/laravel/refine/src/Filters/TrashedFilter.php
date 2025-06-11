@@ -13,6 +13,32 @@ namespace Honed\Refine\Filters;
 class TrashedFilter extends Filter
 {
     /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->name('trashed');
+
+        $this->label('Show deleted');
+
+        $this->options([
+            'with' => 'With deleted',
+            'only' => 'Only deleted',
+            'without' => 'Without deleted',
+        ]);
+
+        $this->query(fn ($builder, $value) => match ($value) {
+            'with' => $builder->withTrashed(),
+            'only' => $builder->onlyTrashed(),
+            default => $builder->withoutTrashed(),
+        });
+    }
+
+    /**
      * Create a new trashed filter instance.
      *
      * @return static
@@ -30,31 +56,5 @@ class TrashedFilter extends Filter
     public function type()
     {
         return 'trashed';
-    }
-
-    /**
-     * Provide the instance with any necessary setup.
-     * 
-     * @return void
-     */
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->name('trashed');
-
-        $this->label('Show deleted');
-        
-        $this->options([
-            'with' => 'With deleted',
-            'only' => 'Only deleted',
-            'without' => 'Without deleted',
-        ]);
-
-        $this->query(fn ($builder, $value) => match ($value) {
-            'with' => $builder->withTrashed(),
-            'only' => $builder->onlyTrashed(),
-            default => $builder->withoutTrashed(),
-        });
     }
 }

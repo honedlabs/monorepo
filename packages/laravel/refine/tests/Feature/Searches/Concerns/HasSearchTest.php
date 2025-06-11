@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Tests\Pest\Concerns;
 
-use Honed\Refine\Concerns\HasSearch;
+use Honed\Refine\Searches\Concerns\HasSearch;
 use Workbench\App\Models\Product;
 
 use function sprintf;

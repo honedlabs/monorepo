@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use Honed\Refine\Filters\TrashedFilter;
 use Honed\Refine\Option;
-use Honed\Refine\TrashedFilter;
 use Illuminate\Support\Facades\Request;
 use Workbench\App\Models\Product;
 

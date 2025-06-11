@@ -27,16 +27,9 @@ trait HasOptions
     /**
      * Whether to restrict options to only those provided.
      *
-     * @var bool|null
-     */
-    protected $strict;
-
-    /**
-     * Whether to restrict options to only those provided by default.
-     *
      * @var bool
      */
-    protected static $useStrict = false;
+    protected $strict = false;
 
     /**
      * Whether to accept multiple values.
@@ -44,18 +37,6 @@ trait HasOptions
      * @var bool
      */
     protected $multiple = false;
-
-    /**
-     * Indicate that the the options should be strict, and only the options
-     * provided are allowed.
-     *
-     * @param  bool  $strict
-     * @return void
-     */
-    public static function shouldBeStrict($strict = true)
-    {
-        static::$useStrict = $strict;
-    }
 
     /**
      * Set the options for the filter.
@@ -123,7 +104,7 @@ trait HasOptions
      */
     public function isStrict()
     {
-        return $this->strict ?? static::$useStrict;
+        return $this->strict;
     }
 
     /**
@@ -165,7 +146,7 @@ trait HasOptions
      *
      * @return bool
      */
-    public function isSingle()
+    public function isNotMultiple()
     {
         return ! $this->isMultiple();
     }

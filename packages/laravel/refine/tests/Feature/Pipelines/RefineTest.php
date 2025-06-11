@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Workbench\App\Enums\Status;
 use Workbench\App\Models\Product;
-use Workbench\App\Refiners\ProductRefiner;
+use Workbench\App\Refiners\RefineProduct;
 
 beforeEach(function () {
-    $this->refine = ProductRefiner::make();
+    $this->refine = RefineProduct::make();
 
     $this->parameters = [
         'name' => 'test',

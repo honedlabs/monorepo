@@ -4,68 +4,47 @@ declare(strict_types=1);
 
 namespace Workbench\App\Filters;
 
-use Honed\Core\Contracts\WithQuery;
-use Honed\Refine\Contracts\WithOptions;
-use Honed\Refine\Filter;
+use Honed\Refine\Filters\Filter;
 
-/**
- * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
- *
- * @extends \Honed\Refine\Filter<TModel, TBuilder>
- */
-class PriceFilter extends Filter implements WithOptions, WithQuery
+class PriceFilter extends Filter
 {
     /**
-     * Provide the filter with any necessary setup.
-     *
-     * @return void
-     */
-    public function setUp()
-    {
-        $this->type('number');
-        $this->name('price');
-        $this->label('Price');
-        $this->strict();
-    }
-
-    /**
-     *  Create a new filter instance.
+     * Create a new filter instance.
      *
      * @return static
      */
     public static function new()
     {
-        return resolve(static::class);
+        return new self();
     }
 
     /**
-     * Register the options for the filter.
+     * Define the type of the filter.
      *
-     * @return array<int, string>
+     * @return string
      */
-    public function optionsUsing()
+    public function type()
     {
-        return [
-            100 => 'Less than $100',
-            999 => '$100 - $999',
-            1000 => '$1000+',
-        ];
+        return 'number';
     }
 
-    /**
-     * Register the query expression to apply the filter.
-     *
-     * @param  TBuilder  $builder
-     * @param  mixed  $value
-     * @return void
-     */
-    public function queryUsing($builder, $value)
+    protected function definition(Filter $filter)
     {
-        match ($value) {
-            100 => $builder->where('price', '<', 100),
-            999 => $builder->where('price', '>=', 100)->where('price', '<=', 999),
-            1000 => $builder->where('price', '>=', 1000),
-        };
+        return $filter
+            ->name('price')
+            ->label('Price')
+            ->strict()
+            ->options([
+                100 => 'Less than $100',
+                999 => '$100 - $999',
+                1000 => '$1000+',
+            ])
+            ->query(function ($builder, $value) {
+                match ($value) {
+                    100 => $builder->where('price', '<', 100),
+                    999 => $builder->where('price', '>=', 100)->where('price', '<=', 999),
+                    1000 => $builder->where('price', '>=', 1000),
+                };
+            });
     }
 }

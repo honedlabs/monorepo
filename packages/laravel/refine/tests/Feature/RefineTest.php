@@ -15,7 +15,7 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Str;
 use Workbench\App\Models\Product;
-use Workbench\App\Refiners\ProductRefiner;
+use Workbench\App\Refiners\RefineProduct;
 
 beforeEach(function () {
     $this->test = Refine::make(Product::class);
@@ -53,7 +53,7 @@ it('evaluates named closure dependencies', function () {
     $product = Product::factory()->create();
     $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
 
-    expect($this->test->request($request)->withResource(Product::query()))
+    expect($this->test->request($request)->for(Product::query()))
         ->evaluate(fn ($request) => $request->get('key'))->toBe('value')
         // ->evaluate(fn ($route) => $route)->toBeInstanceOf(Route::class)
         ->evaluate(fn ($builder) => $builder->getModel())->toBeInstanceOf(Product::class)
@@ -66,7 +66,7 @@ it('evaluates typed closure dependencies', function () {
     $product = Product::factory()->create();
     $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
 
-    expect($this->test->request($request)->withResource(Product::query()))
+    expect($this->test->request($request)->for(Product::query()))
         ->evaluate(fn (Request $r) => $r->get('key'))->toBe('value')
         ->evaluate(fn (Builder $b) => $b->getModel())->toBeInstanceOf(Product::class)
         // ->evaluate(fn (Route $r) => $r)->toBeInstanceOf(Route::class)
@@ -108,7 +108,7 @@ it('has array representation', function () {
 
 it('resolves refiner name from model', function () {
     expect(Refine::resolveRefinerName(Product::class))
-        ->toBe('App\Refine\Models\ProductRefiner');
+        ->toBe('App\Refine\Models\RefineProduct');
 
     Refine::guessRefinersUsing(fn ($className) => Str::of($className)
         ->afterLast('\\')
@@ -118,14 +118,14 @@ it('resolves refiner name from model', function () {
     );
 
     expect(Refine::resolveRefinerName(Product::class))
-        ->toBe(ProductRefiner::class);
+        ->toBe(RefineProduct::class);
 });
 
 it('can use a custom namespace', function () {
     Refine::useNamespace('Workbench\App\\');
 
     expect(Refine::resolveRefinerName(Product::class))
-        ->toBe('Workbench\App\Models\ProductRefiner');
+        ->toBe('Workbench\App\Models\RefineProduct');
 });
 
 it('has array representation with matches', function () {

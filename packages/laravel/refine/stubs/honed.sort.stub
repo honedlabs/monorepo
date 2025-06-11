@@ -15,17 +15,15 @@ class {{ class }} extends Sort
     {
         return resolve(static::class);
     }
-
+    
     /**
-     * Provide the sort with any necessary setup.
-     *
-     * @return void
+     * Define the type of the sort.
+     * 
+     * @return string
      */
-    protected function setUp()
+    public function type()
     {
-        parent::setUp();
-
-        //
+        return 'sort';
     }
 
     /**

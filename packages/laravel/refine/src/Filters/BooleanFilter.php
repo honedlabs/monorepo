@@ -12,6 +12,13 @@ namespace Honed\Refine\Filters;
  */
 class BooleanFilter extends Filter
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->asBoolean();
+    }
+
     /**
      * Define the type of the filter.
      *
@@ -20,12 +27,5 @@ class BooleanFilter extends Filter
     public function type()
     {
         return 'boolean';
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->asBoolean();
     }
 }

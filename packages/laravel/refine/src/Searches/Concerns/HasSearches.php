@@ -30,7 +30,7 @@ trait HasSearches
 
     /**
      * Indicate whether to use Laravel Scout for searching.
-     * 
+     *
      * @var bool
      */
     protected $scout = false;
@@ -85,7 +85,7 @@ trait HasSearches
 
     /**
      * Set whether the searches should not be applied.
-     * 
+     *
      * @param  bool  $disable
      * @return $this
      */
@@ -161,7 +161,7 @@ trait HasSearches
     /**
      * Set whether to use Laravel Scout for searching.
      *
-     * @param bool $scout
+     * @param  bool  $scout
      * @return $this
      */
     public function scout($scout)
@@ -273,19 +273,6 @@ trait HasSearches
     }
 
     /**
-     * Set the search term.
-     *
-     * @param  string|null  $term
-     * @return $this
-     */
-    protected function term($term)
-    {
-        $this->term = $term;
-
-        return $this;
-    }
-
-    /**
      * Retrieve the search value.
      *
      * @return string|null
@@ -348,5 +335,18 @@ trait HasSearches
                 )
             )
         );
+    }
+
+    /**
+     * Set the search term.
+     *
+     * @param  string|null  $term
+     * @return $this
+     */
+    protected function term($term)
+    {
+        $this->term = $term;
+
+        return $this;
     }
 }

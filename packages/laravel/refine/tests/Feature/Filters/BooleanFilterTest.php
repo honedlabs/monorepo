@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\BooleanFilter;
+use Honed\Refine\Filters\BooleanFilter;
 
-it('has boolean filter', function () {
-    expect(BooleanFilter::make('is_active'))
-        ->toBeInstanceOf(BooleanFilter::class)
-        ->getType()->toBe('boolean')
+beforeEach(function () {
+    $this->filter = BooleanFilter::make('is_active');
+});
+
+it('creates', function () {
+    expect($this->filter)
+        ->type()->toBe('boolean')
         ->interpretsAs()->toBe('boolean');
 });

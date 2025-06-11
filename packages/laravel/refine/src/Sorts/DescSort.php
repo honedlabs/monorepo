@@ -13,6 +13,18 @@ namespace Honed\Refine\Sorts;
 class DescSort extends Sort
 {
     /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->descending();
+    }
+
+    /**
      * Define the type of the sort.
      *
      * @return string
@@ -20,17 +32,5 @@ class DescSort extends Sort
     public function type()
     {
         return 'sort:desc';
-    }
-
-    /**
-     * Provide the instance with any necessary setup.
-     * 
-     * @return void
-     */
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->ascending();
     }
 }

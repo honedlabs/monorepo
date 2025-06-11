@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\SelectFilter;
+use Honed\Refine\Filters\SelectFilter;
 
-it('has text filter', function () {
-    expect(SelectFilter::make('status'))
-        ->toBeInstanceOf(SelectFilter::class)
+beforeEach(function () {
+    $this->filter = SelectFilter::make('status');
+});
+
+it('creates', function () {
+    expect($this->filter)
         ->interpretsAs()->toBe('array')
         ->isMultiple()->toBeTrue()
         ->getType()->toBe('select');

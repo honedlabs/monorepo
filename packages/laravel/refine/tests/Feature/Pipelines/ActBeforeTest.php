@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Refine\Pipelines\BeforeRefining;
-use Workbench\App\Refiners\ProductRefiner;
-use Workbench\App\Refiners\UserRefiner;
+use Workbench\App\Refiners\RefineProduct;
+use Workbench\App\Refiners\RefineUser;
 
 beforeEach(function () {
     $this->pipe = new BeforeRefining();
@@ -12,7 +12,7 @@ beforeEach(function () {
 });
 
 it('does not refine before', function () {
-    $refiner = ProductRefiner::make();
+    $refiner = RefineProduct::make();
 
     ($this->pipe)($refiner, $this->closure);
 
@@ -21,7 +21,7 @@ it('does not refine before', function () {
 });
 
 it('refines before using property', function () {
-    $refiner = ProductRefiner::make();
+    $refiner = RefineProduct::make();
 
     $refiner->before(fn ($builder) => $builder->where('price', '>', 100));
 
@@ -32,7 +32,7 @@ it('refines before using property', function () {
 });
 
 it('refines before using method', function () {
-    $refiner = UserRefiner::make();
+    $refiner = RefineUser::make();
 
     ($this->pipe)($refiner, $this->closure);
 

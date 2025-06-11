@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Concerns\HasOptions;
+use Honed\Refine\Filters\Concerns\HasOptions;
 use Honed\Refine\Option;
 use Workbench\App\Enums\Status;
 use Workbench\App\Filters\PriceFilter;
@@ -12,10 +12,6 @@ beforeEach(function () {
     {
         use HasOptions;
     };
-});
-
-afterEach(function () {
-    $this->test::shouldBeStrict(false);
 });
 
 it('has options', function () {
@@ -58,9 +54,9 @@ it('is multiple', function () {
 
 it('is single', function () {
     expect($this->test)
-        ->isSingle()->toBeTrue()
+        ->isNotMultiple()->toBeTrue()
         ->single()->toBe($this->test)
-        ->isSingle()->toBeTrue();
+        ->isNotMultiple()->toBeTrue();
 });
 
 it('creates options from backed enum', function () {

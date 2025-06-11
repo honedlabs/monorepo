@@ -14,7 +14,7 @@ class PresenceFilter extends BooleanFilter
 {
     /**
      * Provide the instance with any necessary setup.
-     * 
+     *
      * @return void
      */
     public function setUp()

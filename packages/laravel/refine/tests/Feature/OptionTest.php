@@ -38,5 +38,5 @@ it('has array representation', function () {
 
 it('serializes', function () {
     expect($this->option)
-        ->serialize()->toEqual($this->option->toArray());
+        ->jsonSerialize()->toEqual($this->option->toArray());
 });

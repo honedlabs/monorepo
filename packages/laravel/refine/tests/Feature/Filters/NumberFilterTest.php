@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\NumberFilter;
+use Honed\Refine\Filters\NumberFilter;
 
-it('has number filter', function () {
-    expect(NumberFilter::make('price'))
-        ->toBeInstanceOf(NumberFilter::class)
-        ->getType()->toBe('number')
+beforeEach(function () {
+    $this->filter = NumberFilter::make('price');
+});
+
+it('creates', function () {
+    expect($this->filter)
+        ->type()->toBe('number')
         ->interpretsAs()->toBe('int');
 });

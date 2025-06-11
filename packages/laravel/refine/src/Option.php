@@ -21,7 +21,7 @@ class Option extends Primitive
     /**
      * Create a new option.
      *
-     * @param  mixed  $value
+     * @param  scalar  $value
      * @param  string|null  $label
      * @return static
      */
@@ -40,16 +40,10 @@ class Option extends Primitive
      */
     public function activate($value)
     {
-        $optionValue = $this->getValue();
-
-        $active = match (true) {
-            is_array($value) => in_array($optionValue, $value, true),
-            default => $optionValue === $value,
+        return $this->active = match (true) {
+            is_array($value) => in_array($this->getValue(), $value, true),
+            default => $this->getValue() === $value,
         };
-
-        $this->active = $active;
-
-        return $active;
     }
 
     /**

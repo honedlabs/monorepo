@@ -6,22 +6,17 @@ namespace Honed\Refine\Filters;
 
 use BackedEnum;
 use Carbon\CarbonInterface;
-use Honed\Core\Concerns\HasMeta;
-use Honed\Core\Concerns\HasScope;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
 use Honed\Core\Interpret;
-use Honed\Refine\Concerns\HasDelimiter;
 use Honed\Refine\Filters\Concerns\HasOperator;
 use Honed\Refine\Filters\Concerns\HasOptions;
 use Honed\Refine\Refiner;
-use Honed\Refine\Searches\Concerns\HasSearch;
 use ReflectionEnum;
 
 use function array_merge;
 use function in_array;
 use function is_string;
-use function mb_strtoupper;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -31,13 +26,13 @@ use function mb_strtoupper;
  */
 class Filter extends Refiner
 {
+    use HasOperator;
     use HasOptions {
         multiple as private setMultiple;
     }
     use InterpretsRequest;
     use Validatable;
-    use HasOperator;
-    
+
     /**
      * Whether the filter only responds to presence values.
      *
@@ -53,18 +48,8 @@ class Filter extends Refiner
     protected $default;
 
     /**
-     * Define the type of the filter.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'filter';
-    }
-
-    /**
      * Provide the instance with any necessary setup.
-     * 
+     *
      * @return void
      */
     public function setUp()
@@ -75,14 +60,13 @@ class Filter extends Refiner
     }
 
     /**
-     * Define the filter instance.
+     * Define the type of the filter.
      *
-     * @param  \Honed\Refine\Filters\Filter<TModel, TBuilder>  $filter
-     * @return \Honed\Refine\Filters\Filter<TModel, TBuilder>|void
+     * @return string
      */
-    protected function definition(Filter $filter)
+    public function type()
     {
-        return $filter;
+        return 'filter';
     }
 
     /**
@@ -187,40 +171,6 @@ class Filter extends Refiner
     /**
      * {@inheritdoc}
      */
-    protected function transformParameter($value)
-    {
-        if (filled($this->getOptions())) {
-            return $this->activateOptions($value);
-        }
-
-        if ($this->isPresence()) {
-            return $value ?: null;
-        }
-
-        return $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function invalidValue($value)
-    {
-        return ! $this->validate($value);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getBindings($value, $builder)
-    {
-        return array_merge(parent::getBindings($value, $builder), [
-            'operator' => $this->getOperator(),
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($named = [], $typed = [])
     {
         $value = $this->getValue();
@@ -268,5 +218,50 @@ class Filter extends Refiner
 
             default => $builder->where($column, $operator, $value),
         };
+    }
+
+    /**
+     * Define the filter instance.
+     *
+     * @param  $this  $filter
+     * @return $this|void
+     */
+    protected function definition(self $filter)
+    {
+        return $filter;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function transformParameter($value)
+    {
+        if (filled($this->getOptions())) {
+            return $this->activateOptions($value);
+        }
+
+        if ($this->isPresence()) {
+            return $value ?: null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function invalidValue($value)
+    {
+        return ! $this->validate($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBindings($value, $builder)
+    {
+        return array_merge(parent::getBindings($value, $builder), [
+            'operator' => $this->getOperator(),
+        ]);
     }
 }

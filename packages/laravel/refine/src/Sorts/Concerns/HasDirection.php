@@ -6,6 +6,10 @@ namespace Honed\Refine\Sorts\Concerns;
 
 trait HasDirection
 {
+    public const ASCENDING = 'asc';
+
+    public const DESCENDING = 'desc';
+
     /**
      * The order direction.
      *
@@ -57,7 +61,7 @@ trait HasDirection
      */
     public function isAscending()
     {
-        return $this->direction === 'asc';
+        return $this->direction === self::ASCENDING;
     }
 
     /**
@@ -67,7 +71,7 @@ trait HasDirection
      */
     public function isDescending()
     {
-        return $this->direction === 'desc';
+        return $this->direction === self::DESCENDING;
     }
 
     /**
@@ -85,12 +89,12 @@ trait HasDirection
 
     /**
      * Fix the direction to be ascending.
-     * 
+     *
      * @return $this
      */
     public function ascending()
     {
-        return $this->fixed('asc');
+        return $this->fixed(self::ASCENDING);
     }
 
     /**
@@ -110,7 +114,7 @@ trait HasDirection
      */
     public function descending()
     {
-        return $this->fixed('desc');
+        return $this->fixed(self::DESCENDING);
     }
 
     /**
@@ -126,10 +130,15 @@ trait HasDirection
     /**
      * Determine if the direction is fixed.
      *
+     * @param  'asc'|'desc'|null  $direction
      * @return bool
      */
-    public function isFixed()
+    public function isFixed($direction = null)
     {
+        if ($direction) {
+            return $this->fixed === $direction;
+        }
+
         return isset($this->fixed);
     }
 
@@ -157,54 +166,22 @@ trait HasDirection
     }
 
     /**
-     * Get the value for the sort indicating an ascending direction.
+     * Determine if the direction is fixed to be ascending.
      *
-     * @return string
+     * @return bool
      */
-    public function getAscendingValue()
+    protected function isFixedAscending()
     {
-        return $this->getParameter();
+        return $this->fixed === self::ASCENDING;
     }
 
     /**
-     * Get the value for the sort indicating a descending direction.
+     * Determine if the direction is fixed to be descending.
      *
-     * @return string
+     * @return bool
      */
-    public function getDescendingValue()
+    protected function isFixedDescending()
     {
-        $parameter = $this->getParameter();
-
-        if ($this->isFixed()) {
-            return $parameter;
-        }
-
-        return sprintf('-%s', $parameter);
+        return $this->fixed === self::DESCENDING;
     }
-
-    /**
-     * Get the next value to use for the query parameter.
-     *
-     * @return string|null
-     */
-    public function getNextDirection()
-    {
-        $ascending = $this->getAscendingValue();
-        $descending = $this->getDescendingValue();
-
-        if ($this->isFixed()) {
-            return $this->fixed === 'desc'
-                ? $ascending
-                : $descending;
-        }
-
-        $inverted = $this->isInverted();
-
-        return match (true) {
-            $this->isAscending() => $inverted ? null : $descending,
-            $this->isDescending() => $inverted ? $ascending : null,
-            default => $inverted ? $descending : $ascending,
-        };
-    }
-
 }
