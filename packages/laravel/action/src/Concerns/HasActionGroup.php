@@ -11,7 +11,7 @@ use ReflectionClass;
 /**
  * @template TActionGroup of \Honed\Action\ActionGroup = \Honed\Action\ActionGroup
  *
- * @property class-string<TActionGroup> $actions
+ * @property class-string<TActionGroup> $actionGroup
  */
 trait HasActionGroup
 {
@@ -20,9 +20,9 @@ trait HasActionGroup
      *
      * @return TActionGroup
      */
-    public static function actions()
+    public static function actionGroup()
     {
-        return static::newActions()
+        return static::newActionGroup()
             ?? ActionGroup::actionGroupForModel(static::class);
     }
 
@@ -31,21 +31,21 @@ trait HasActionGroup
      *
      * @return TActionGroup
      */
-    protected static function newActions()
+    protected static function newActionGroup()
     {
-        if (isset(static::$actions)) {
-            return static::$actions::make();
+        if (isset(static::$actionGroup)) {
+            return static::$actionGroup::make();
         }
 
-        if ($actions = static::getActionsAttribute()) {
-            return $actions::make();
+        if ($actionGroup = static::getActionGroupAttribute()) {
+            return $actionGroup::make();
         }
 
         return null;
     }
 
     /**
-     * Get the actions from the Actions class attribute.
+     * Get the actions from the UseActionGroup class attribute.
      *
      * @return class-string<TActionGroup>|null
      */
