@@ -7,10 +7,7 @@ namespace Honed\Action;
 use Honed\Action\Commands\ActionGroupMakeCommand;
 use Honed\Action\Commands\ActionMakeCommand;
 use Honed\Action\Commands\ActionsMakeCommand;
-use Honed\Action\Commands\BulkActionMakeCommand;
-use Honed\Action\Commands\InlineActionMakeCommand;
 use Honed\Action\Commands\OperationMakeCommand;
-use Honed\Action\Commands\PageActionMakeCommand;
 use Honed\Action\Http\Controllers\ActionController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -47,10 +44,7 @@ class ActionServiceProvider extends ServiceProvider
                 ActionMakeCommand::class,
                 ActionsMakeCommand::class,
                 ActionGroupMakeCommand::class,
-                InlineActionMakeCommand::class,
-                BulkActionMakeCommand::class,
                 OperationMakeCommand::class,
-                PageActionMakeCommand::class,
             ]);
         }
     }
@@ -80,7 +74,9 @@ class ActionServiceProvider extends ServiceProvider
     {
         Router::macro('actions', function () {
             /** @var Router $this */
-            $endpoint = type(config('action.endpoint', '/actions'))->asString();
+
+            /** @var string $endpoint */
+            $endpoint = config('action.endpoint', 'actions');
 
             $methods = ['post', 'patch', 'put'];
 

@@ -11,28 +11,13 @@ use Honed\Action\PageAction;
 abstract class Operation
 {
     /**
-     * Get the name of the menu option.
+     * Configure the action.
      * 
-     * @return string
-     */
-    abstract protected static function name();
-
-    /**
-     * Get the label of the menu option.
+     * @param \Honed\Action\Action $action
      * 
-     * @return string|\Closure
+     * @return \Honed\Action\Action
      */
-    abstract protected static function label();
-
-    /**
-     * Get the icon of the menu option.
-     * 
-     * @return string|\BackedEnum|\Closure|null
-     */
-    protected static function icon()
-    {
-        return null;
-    }
+    abstract protected function definition(Action $action): Action;
 
     /**
      * The type of the action to be generated.
@@ -41,10 +26,9 @@ abstract class Operation
      * 
      * @return \Honed\Action\Action
      */
-    public static function create($type)
+    protected function create($type)
     {
-        return $type::make(static::name(), static::label())
-            ->icon(static::icon());
+        return static::definition(new $type);
     }
 
     /**
@@ -54,7 +38,7 @@ abstract class Operation
      */
     public static function inline()
     {
-        return static::create(InlineAction::class);
+        return resolve(static::class)->create(InlineAction::class);
     }
 
     /**
@@ -64,7 +48,7 @@ abstract class Operation
      */
     public static function bulk()
     {
-        return static::create(BulkAction::class);
+        return resolve(static::class)->create(BulkAction::class);
     }
 
     /**
@@ -74,6 +58,6 @@ abstract class Operation
      */
     public static function page()
     {
-        return static::create(PageAction::class);
+        return resolve(static::class)->create(PageAction::class);
     }
 }
