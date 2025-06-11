@@ -4,7 +4,7 @@ namespace Honed\Refine\Concerns;
 
 use Illuminate\Support\Str;
 
-trait CanPersistData
+trait CanBePersisted
 {
     /**
      * The name of the key when persisting data.
@@ -19,6 +19,13 @@ trait CanPersistData
      * @var 'session'|'cookie'
      */
     protected $persistDriver = 'session';
+
+    /**
+     * The time to live for the persistent data, if using the cookie driver.
+     * 
+     * @var int
+     */
+    protected $persistFor = 15724800;
 
     /**
      * The driver to use for persisting search data.
@@ -71,7 +78,56 @@ trait CanPersistData
      */
     protected function guessPersistKey()
     {
-        return Str::slug(class_basename(static::class));
+        return Str::of(static::class)
+            ->classBasename()
+            ->slug()
+            ->toString();
+    }
+
+    /**
+     * Set the default driver to use for persisting data.
+     * 
+     * @param 'session'|'cookie' $driver
+     * @return $this
+     */
+    public function persistUsing($driver)
+    {
+        $this->persistDriver = $driver;
+
+        return $this;
+    }
+
+    /**
+     * Get the default driver to use for persisting data.
+     * 
+     * @return 'session'|'cookie'
+     */
+    public function getPersistDriver()
+    {
+        return $this->persistDriver;
+    }
+
+    /**
+     * Set the time to live for the persistent data, if using the cookie driver.
+     * 
+     * @param int $seconds
+     * @return $this
+     */
+    public function persistFor($seconds = 15724800)
+    {
+        $this->persistFor = $seconds;
+
+        return $this;
+    }
+
+    /**
+     * Get the time to live for the persistent data, if using the cookie driver.
+     * 
+     * @return int
+     */
+    public function getPersistDuration()
+    {
+        return $this->persistFor;
     }
 
     /**
@@ -94,7 +150,7 @@ trait CanPersistData
      */
     public function persistSearchInSession()
     {
-        return $this->persistSearches('session');
+        return $this->persistSearch('session');
     }
 
     /**
@@ -104,7 +160,7 @@ trait CanPersistData
      */
     public function persistSearchInCookie()
     {
-        return $this->persistSearches('cookie');
+        return $this->persistSearch('cookie');
     }
 
     /**
@@ -127,7 +183,7 @@ trait CanPersistData
      */
     public function persistFilterInSession()
     {
-        return $this->persistFilters('session');
+        return $this->persistFilter('session');
     }
 
     /**
@@ -137,7 +193,7 @@ trait CanPersistData
      */
     public function persistFilterInCookie()
     {
-        return $this->persistFilters('cookie');
+        return $this->persistFilter('cookie');
     }
 
     /**
@@ -160,7 +216,7 @@ trait CanPersistData
      */
     public function persistSortInSession()
     {
-        return $this->persistSorts('session');
+        return $this->persistSort('session');
     }
 
     /**
@@ -170,7 +226,7 @@ trait CanPersistData
      */
     public function persistSortInCookie()
     {
-        return $this->persistSorts('cookie');
+        return $this->persistSort('cookie');
     }
 
     /**
@@ -179,7 +235,7 @@ trait CanPersistData
      * @param bool|'session'|'cookie' $driver
      * @return $this
      */
-    public function persistAll($driver = true)
+    public function persist($driver = true)
     {
         $this->persistSearch = $driver;
         $this->persistFilter = $driver;
@@ -193,9 +249,9 @@ trait CanPersistData
      * 
      * @return $this
      */
-    public function persistAllInCookie()
+    public function persistInCookie()
     {
-        return $this->persistAll('cookie');
+        return $this->persist('cookie');
     }
 
     /**
@@ -203,9 +259,8 @@ trait CanPersistData
      * 
      * @return $this
      */
-    public function persistAllInSession()
+    public function persistInSession()
     {
-        return $this->persistAll('session');
-    }
-    
+        return $this->persist('session');
+    }    
 }

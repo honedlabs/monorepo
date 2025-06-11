@@ -13,10 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
-use Honed\Refine\Concerns\CanRefine;
+use Honed\Refine\Concerns\CanBeRefined;
 use Illuminate\Database\Eloquent\Builder;
 use Honed\Core\Contracts\NullsAsUndefined;
-use Laravel\Scout\Builder as ScoutBuilder;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
@@ -30,7 +29,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 class Refine extends Primitive implements NullsAsUndefined
 {
     use ForwardsCalls;
-    use CanRefine;
+    use CanBeRefined;
 
     /**
      * The default namespace where refiners reside.
@@ -80,13 +79,8 @@ class Refine extends Primitive implements NullsAsUndefined
      */
     public static function make($resource = null)
     {
-        $refine = resolve(static::class);
-
-        if ($resource) {
-            $refine->resource($resource);
-        }
-
-        return $refine;
+        return resolve(static::class)
+            ->when($resource, fn (Refine $refine, $resource) => $refine->resource($resource));
     }
 
     /**
@@ -165,12 +159,12 @@ class Refine extends Primitive implements NullsAsUndefined
     public function toArray($named = [], $typed = [])
     {
         return [
-            'term' => $this->getTerm(),
-            'delimiter' => $this->getDelimiter(),
             'sort' => $this->getSortKey(),
             'search' => $this->getSearchKey(),
-            'placeholder' => $this->getSearchPlaceholder(),
             'match' => $this->getMatchKey(),
+            'term' => $this->getTerm(),
+            'delimiter' => $this->getDelimiter(),
+            'placeholder' => $this->getSearchPlaceholder(),
 
             'sorts' => $this->sortsToArray(),
             'filters' => $this->filtersToArray(),
@@ -243,7 +237,7 @@ class Refine extends Primitive implements NullsAsUndefined
 
         return match ($parameterType) {
             Request::class => [$this->getRequest()],
-            $builder::class, Builder::class, ScoutBuilder::class, BuilderContract::class => [$builder],
+            $builder::class, Builder::class, BuilderContract::class => [$builder],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\DescSort;
+use Honed\Refine\Sorts\DescSort;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {

@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 use Honed\Refine\Option;
 
-it('can create an option', function () {
-    expect(Option::make('test', 'Test'))
-        ->toBeInstanceOf(Option::class)
+beforeEach(function () {
+    $this->option = Option::make('test', 'Test');
+});
+
+it('creates', function () {
+    expect($this->option)
+        ->toBe($this->option)
         ->getValue()->toBe('test')
         ->getLabel()->toBe('Test');
 });
@@ -19,16 +23,20 @@ it('activates an option', function () {
         ->isActive()->toBeTrue();
 
     expect($option)
-        ->activate(5)
-        ->toBeFalse()
+        ->activate(5)->toBeFalse()
         ->isActive()->toBeFalse();
 });
 
 it('has array representation', function () {
-    expect(Option::make('test', 'Test')->toArray())
-        ->toBe([
+    expect($this->option)
+        ->toArray()->toEqual([
             'value' => 'test',
             'label' => 'Test',
             'active' => false,
         ]);
+});
+
+it('serializes', function () {
+    expect($this->option)
+        ->serialize()->toEqual($this->option->toArray());
 });

@@ -12,8 +12,9 @@ use Honed\Refine\Filters\Concerns\HasFilters;
 use Honed\Refine\Searches\Concerns\HasSearches;
 use Workbench\App\Models\Product;
 
-trait CanRefine
+trait CanBeRefined
 {
+    use CanBePersisted;
     use HasDelimiter;
     use HasScope;
     use HasSorts;
@@ -149,14 +150,14 @@ trait CanRefine
     protected function search()
     {
         $builder = $this->getBuilder();
-        $this->term($this->getSearch($this->request));
+        $this->term = $this->getSearch($this->request);
         $columns = $this->getMatch($this->request);
 
         if ($this->isScout()) {
             $model = $this->getModel();
 
             $builder->whereIn(
-                $model->getKeyName(),
+                $builder->qualifyColumn($model->getKeyName()),
                 // @phpstan-ignore-next-line method.notFound
                 $model->search($this->term)->keys() 
             );
@@ -167,9 +168,11 @@ trait CanRefine
         $or = false;
 
         foreach ($this->getSearches() as $search) {
-            $or |= $search->handle(
+            $outcome = $search->handle(
                 $builder, $this->term, $or, $columns
             );
+
+            $or = $or || $outcome;
         }
     }
 
@@ -212,6 +215,8 @@ trait CanRefine
         }
 
         if (! $sorted && $sort = $this->getDefaultSort()) {
+            $parameter = $sort->getParameter();
+
             $sort->handle(
                 $builder, $parameter, $direction
             );
@@ -228,6 +233,16 @@ trait CanRefine
     protected function actAfter()
     {
         $this->evaluate($this->after);
+    }
+
+    /**
+     * Persist the data to the appropriate driver
+     * 
+     * @return void
+     */
+    protected function persistData()
+    {
+
     }
 
     /**

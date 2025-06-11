@@ -22,7 +22,7 @@ trait HasResource
     /**
      * The builder instance.
      *
-     * @var TBuilder
+     * @var TBuilder|null
      */
     protected $resource;
 
@@ -39,7 +39,7 @@ trait HasResource
         return match (true) {
             $resource instanceof Builder => $resource,
             $resource instanceof Model => $resource::query(),
-            is_string($resource) && class_exists($resource) => $resource::query(),
+            // is_string($resource) && class_exists($resource) => $resource::query(),
             default => InvalidResourceException::throw(static::class),
         };
     }
@@ -50,7 +50,7 @@ trait HasResource
      * @param  TBuilder|TModel|class-string<TModel>  $resource
      * @return $this
      *
-     * @throws InvalidArgumentException
+     * @throws InvalidResourceException
      */
     public function resource($resource)
     {
@@ -75,7 +75,6 @@ trait HasResource
      *
      * @return TBuilder
      *
-     * @throws InvalidResourceException
      * @throws ResourceNotSetException
      */
     public function getBuilder()

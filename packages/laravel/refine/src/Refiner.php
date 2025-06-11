@@ -61,27 +61,6 @@ abstract class Refiner extends Primitive
     }
 
     /**
-     * Get the name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        /** @var string */
-        return $this->name;
-    }
-
-    /**
-     * Determine if the refiner is currently being applied.
-     *
-     * @return bool
-     */
-    public function isActive()
-    {
-        return filled($this->getValue());
-    }
-
-    /**
      * Get the parameter for the refiner.
      *
      * @return string

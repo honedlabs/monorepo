@@ -2,16 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Sort;
+use Honed\Refine\Sorts\Sort;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();
     $this->sort = Sort::make('name');
-});
-
-afterEach(function () {
-    Sort::flushState();
 });
 
 it('has direction', function () {

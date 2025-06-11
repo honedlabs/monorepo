@@ -60,16 +60,16 @@ class Search extends Refiner
      * Handle the refinement.
      * 
      * @param  TBuilder  $query
-     * @param  string  $term
+     * @param  string|null  $term
+     * @param  array<int, string>|null  $columns
      * @param  bool  $or
-     * @param  array<int, string>  $columns
      * @return bool
      */
-    public function handle($query, $term, $or = false, $columns = [])
+    public function handle($query, $term, $columns, $or = false)
     {
-        $this->active(! $term || ! in_array($term, $columns, true));
+        $this->active(! $columns || ! in_array($term, $columns, true));
 
-        if ($this->isInactive()) {
+        if ($this->isInactive() || ! $term) {
             return false;
         }
 

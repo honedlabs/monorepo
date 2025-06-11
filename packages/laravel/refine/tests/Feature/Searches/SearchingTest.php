@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Search;
+use Honed\Refine\Searches\Search;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {
@@ -10,13 +10,9 @@ beforeEach(function () {
     $this->test = Search::make('name');
 });
 
-afterEach(function () {
-    Search::flushState();
-});
-
-it('does not apply', function () {
+it('requires a search term', function () {
     expect($this->test)
-        ->refine($this->builder, [true, null])->toBeFalse();
+        ->handle($this->builder, null, null, false)->toBeFalse();
 
     expect($this->builder->getQuery()->wheres)
         ->toBeEmpty();
@@ -25,9 +21,9 @@ it('does not apply', function () {
         ->isActive()->toBeTrue();
 });
 
-it('applies', function () {
+it('applies without columns', function () {
     expect($this->test)
-        ->refine($this->builder, [true, 'term'])->toBeTrue();
+        ->handle($this->builder, 'term', null, false)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
         ->toBeOnlySearch('name');
@@ -37,25 +33,22 @@ it('applies', function () {
 });
 
 it('applies boolean', function () {
-    $this->test->boolean('or');
-
     expect($this->test)
-        ->refine($this->builder, [true, 'term'])->toBeTrue()
+        ->handle($this->builder, 'term', null, true)->toBeTrue()
         ->isActive()->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
         ->toBeOnlySearch('name', 'or');
 
     expect($this->test)
-        ->isActive()->toBeTrue()
-        ->getBoolean()->toBe('or');
+        ->isActive()->toBeTrue();
 });
 
 it('applies full text search', function () {
     $this->test->fullText();
 
     expect($this->test)
-        ->refine($this->builder, [true, 'term'])->toBeTrue()
+        ->handle($this->builder, 'term', null, false)->toBeTrue()
         ->isActive()->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
@@ -65,25 +58,14 @@ it('applies full text search', function () {
         ->isActive()->toBeTrue();
 });
 
-it('does not apply if inactive', function () {
-    expect($this->test)
-        ->refine($this->builder, [false, 'term'])->toBeFalse();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toBeEmpty();
-
-    expect($this->test)
-        ->isActive()->toBeFalse();
-});
-
 it('applies with qualified column', function () {
     expect($this->test->qualify())
-        ->refine($this->builder, [true, 'term'])->toBeTrue();
+        ->handle($this->builder, 'term', null, false)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
         ->toBeOnlySearch($this->builder->qualifyColumn('name'));
 
     expect($this->test)
-        ->qualifies()->toBeTrue()
+        ->isQualifying()->toBeTrue()
         ->isActive()->toBeTrue();
 });

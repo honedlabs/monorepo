@@ -13,7 +13,14 @@ namespace Honed\Refine\Searches;
 class FullTextSearch extends Search
 {
     /**
-     * {@inheritdoc}
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
      */
-    protected $fullText = true;
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->fullText();
+    }
 }
