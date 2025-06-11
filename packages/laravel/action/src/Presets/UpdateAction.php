@@ -40,7 +40,7 @@ abstract class UpdateAction implements Actionable
      * @param TModel $model
      * @return array<string, mixed>
      */
-    protected function prepare($input, $model)
+    protected function prepare($model, $input)
     {
         return $input->all();
     }
@@ -54,7 +54,7 @@ abstract class UpdateAction implements Actionable
      */
     protected function update($model, $input)
     {
-        $prepared = $this->prepare($input, $model);
+        $prepared = $this->prepare($model, $input);
 
         $model->update($prepared);
 

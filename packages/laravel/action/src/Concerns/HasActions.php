@@ -28,6 +28,13 @@ trait HandlesActions
      * @var bool
      */
     protected $actionable = true;
+
+    /**
+     * List of the actions.
+     *
+     * @var array<int,Action|ActionGroup<TModel, TBuilder>>
+     */
+    protected $actions = [];
     
     /**
      * Whether the instance should provide inline actions.
@@ -49,13 +56,6 @@ trait HandlesActions
      * @var bool
      */
     protected $page = true;
-
-    /**
-     * List of the actions.
-     *
-     * @var array<int,Action|ActionGroup<TModel, TBuilder>>
-     */
-    protected $actions = [];
 
     /**
      * Set whether the actions should be provided.
@@ -109,7 +109,7 @@ trait HandlesActions
      */
     public function actions($actions)
     {
-        $this->actions = array_merge($this->actions, $actions);
+        $this->actions = [...$this->actions, ...$actions];
 
         return $this;
     }
