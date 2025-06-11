@@ -1,0 +1,28 @@
+<?php
+
+namespace {{ namespace }};
+
+use Honed\Action\Operation
+
+class {{ class }} extends Operation
+{
+    /**
+     * Get the name of the action.
+     * 
+     * @return string
+     */
+    protected static function name()
+    {
+        //
+    }
+
+    /**
+     * Get the label of the action.
+     * 
+     * @return string
+     */
+    protected static function label()
+    {
+        //
+    }
+}

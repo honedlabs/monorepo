@@ -7,7 +7,7 @@ namespace Honed\Action\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class UseActions
+class UseActionGroup
 {
     /**
      * Create a new attribute instance.

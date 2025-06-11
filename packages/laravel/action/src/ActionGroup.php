@@ -75,6 +75,17 @@ class ActionGroup extends Primitive implements Handler
     }
 
     /**
+     * Define the actions for the action group.
+     *
+     * @param  $this  $actions
+     * @return $this|void
+     */
+    public function definition(ActionGroup $actions)
+    {
+        return $actions;
+    }
+
+    /**
      * The root parent class, indicating an anonymous class.
      * 
      * @return class-string<\Honed\Action\Contracts\HandlesActions>

@@ -9,6 +9,7 @@ use Honed\Action\Commands\ActionMakeCommand;
 use Honed\Action\Commands\ActionsMakeCommand;
 use Honed\Action\Commands\BulkActionMakeCommand;
 use Honed\Action\Commands\InlineActionMakeCommand;
+use Honed\Action\Commands\OperationMakeCommand;
 use Honed\Action\Commands\PageActionMakeCommand;
 use Honed\Action\Http\Controllers\ActionController;
 use Illuminate\Routing\Router;
@@ -48,6 +49,7 @@ class ActionServiceProvider extends ServiceProvider
                 ActionGroupMakeCommand::class,
                 InlineActionMakeCommand::class,
                 BulkActionMakeCommand::class,
+                OperationMakeCommand::class,
                 PageActionMakeCommand::class,
             ]);
         }

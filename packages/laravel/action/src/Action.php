@@ -15,11 +15,6 @@ use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Primitive;
-use Illuminate\Support\Facades\App;
-
-use function is_string;
-use function str_ends_with;
-use function str_starts_with;
 
 abstract class Action extends Primitive
 {
@@ -53,24 +48,6 @@ abstract class Action extends Primitive
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
-    }
-
-    /**
-     * Set the route.
-     *
-     * @param  string|Closure(mixed...):string  $route
-     * @param  mixed  $parameters
-     * @return $this
-     */
-    public function route($route, $parameters = [])
-    {
-        $this->route = match (true) {
-            $route instanceof Closure => $route,
-            $this->isBindingParameter($parameters) => fn ($model) => route($route, $model, true),
-            default => route($route, $parameters, true),
-        };
-
-        return $this;
     }
 
     /**
@@ -123,7 +100,7 @@ abstract class Action extends Primitive
     /**
      * {@inheritdoc}
      */
-    public function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         if (isset($this->parameters[$parameterName])) {
             return [$this->parameters[$parameterName]];
@@ -131,31 +108,18 @@ abstract class Action extends Primitive
 
         return match ($parameterName) {
             'confirm' => [$this->confirmInstance()],
-            default => [],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
 
     /**
      * {@inheritdoc}
      */
-    public function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
         return match ($parameterType) {
             Confirm::class => [$this->confirmInstance()],
-            default => [App::make($parameterType)],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
-    }
-
-    /**
-     * Determine if the parameters are implicit route-model bindings to be evaluated.
-     *
-     * @param  mixed  $parameters
-     * @return bool
-     */
-    protected function isBindingParameter($parameters)
-    {
-        return is_string($parameters)
-            && str_starts_with($parameters, '{')
-            && str_ends_with($parameters, '}');
     }
 }

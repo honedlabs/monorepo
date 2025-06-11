@@ -12,20 +12,6 @@ use Closure;
 trait HasHandler
 {
     /**
-     * The encoding closure.
-     *
-     * @var Closure(mixed):string|null
-     */
-    protected static $encoder;
-
-    /**
-     * The decoding closure.
-     *
-     * @var Closure(string):mixed|null
-     */
-    protected static $decoder;
-
-    /**
      * The endpoint to execute server actions.
      *
      * @var string|null
@@ -47,9 +33,23 @@ trait HasHandler
     protected $key;
 
     /**
+     * The encoding closure.
+     *
+     * @var Closure(mixed):string|null
+     */
+    protected static $encoder;
+
+    /**
+     * The decoding closure.
+     *
+     * @var Closure(string):mixed|null
+     */
+    protected static $decoder;
+
+    /**
      * The root parent class, indicating an anonymous class.
      * 
-     * @return class-string<\Honed\Action\Contracts\HandlesActions>
+     * @return class-string<\Honed\Action\Contracts\Handler>
      */
     abstract public static function anonymous();
 
