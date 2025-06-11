@@ -38,26 +38,15 @@ it('is strict', function () {
         ->isStrict()->toBeFalse();
 });
 
-it('is strict globally', function () {
-    $this->test::shouldBeStrict(true);
-
-    expect($this->test)
-        ->isStrict()->toBeTrue();
-});
-
 it('is multiple', function () {
     expect($this->test)
         ->isMultiple()->toBeFalse()
+        ->isNotMultiple()->toBeTrue()
         ->multiple()->toBe($this->test)
-        ->isMultiple()->toBeTrue();
+        ->isMultiple()->toBeTrue()
+        ->isNotMultiple()->toBeFalse();
 });
 
-it('is single', function () {
-    expect($this->test)
-        ->isNotMultiple()->toBeTrue()
-        ->single()->toBe($this->test)
-        ->isNotMultiple()->toBeTrue();
-});
 
 it('creates options from backed enum', function () {
     expect($this->test)

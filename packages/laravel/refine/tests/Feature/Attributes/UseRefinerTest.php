@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Attributes\UseRefiner;
+use Honed\Refine\Attributes\UseRefine;
 use Workbench\App\Models\User;
 use Workbench\App\Refiners\RefineUser;
 
 it('has attribute', function () {
-    $attribute = new UseRefiner(RefineUser::class);
+    $attribute = new UseRefine(RefineUser::class);
 
     expect($attribute)
-        ->toBeInstanceOf(UseRefiner::class)
+        ->toBeInstanceOf(UseRefine::class)
         ->refinerClass->toBe(RefineUser::class);
 
     expect(User::class)
-        ->toHaveAttribute(UseRefiner::class);
+        ->toHaveAttribute(UseRefine::class);
 });

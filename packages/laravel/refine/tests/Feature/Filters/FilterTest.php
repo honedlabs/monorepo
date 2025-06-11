@@ -41,7 +41,7 @@ it('can be float', function () {
 
 it('can be integer', function () {
     expect($this->filter)
-        ->asInteger()->toBe($this->filter)
+        ->asInt()->toBe($this->filter)
         ->interpretsAs()->toBe('int');
 });
 
@@ -54,7 +54,7 @@ it('can be array multiple', function () {
 
 it('can be text', function () {
     expect($this->filter)
-        ->asText()->toBe($this->filter)
+        ->asString()->toBe($this->filter)
         ->interpretsAs()->toBe('string');
 });
 

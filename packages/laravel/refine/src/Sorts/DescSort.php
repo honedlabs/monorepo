@@ -17,20 +17,12 @@ class DescSort extends Sort
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
-        $this->descending();
-    }
+        $this->type(Sort::DESCENDING);
 
-    /**
-     * Define the type of the sort.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'sort:desc';
+        $this->descending();
     }
 }

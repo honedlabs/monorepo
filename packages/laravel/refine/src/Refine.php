@@ -112,7 +112,7 @@ class Refine extends Primitive implements NullsAsUndefined
                 : Str::after($className, $appNamespace);
 
             /** @var class-string<Refine> */
-            return static::$namespace.$className.'Refiner';
+            return static::$namespace.'Refine'.$className;
         };
 
         return $resolver($className);
@@ -156,18 +156,7 @@ class Refine extends Primitive implements NullsAsUndefined
      */
     public function toArray($named = [], $typed = [])
     {
-        return [
-            'sort' => $this->getSortKey(),
-            'search' => $this->getSearchKey(),
-            'match' => $this->getMatchKey(),
-            'term' => $this->getTerm(),
-            'delimiter' => $this->getDelimiter(),
-            'placeholder' => $this->getSearchPlaceholder(),
-
-            'sorts' => $this->sortsToArray(),
-            'filters' => $this->filtersToArray(),
-            'searches' => $this->searchesToArray(),
-        ];
+        return $this->refineToArray();
     }
 
     /**
@@ -220,6 +209,7 @@ class Refine extends Primitive implements NullsAsUndefined
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return match ($parameterName) {
+            'refine' => [$this],
             'request' => [$this->getRequest()],
             'builder', 'query', 'q' => [$this->getBuilder()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
@@ -234,6 +224,7 @@ class Refine extends Primitive implements NullsAsUndefined
         $builder = $this->getBuilder();
 
         return match ($parameterType) {
+            Refine::class => [$this],
             Request::class => [$this->getRequest()],
             $builder::class, Builder::class, BuilderContract::class => [$builder],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),

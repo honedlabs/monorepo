@@ -17,20 +17,12 @@ class AscSort extends Sort
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
-        $this->ascending();
-    }
+        $this->type(Sort::ASCENDING);
 
-    /**
-     * Define the type of the sort.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'sort:asc';
+        $this->ascending();
     }
 }

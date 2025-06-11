@@ -57,7 +57,7 @@ trait HasQualifier
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|null  $builder
      * @return string
      */
-    protected function qualifyColumn($column, $builder = null)
+    public function qualifyColumn($column, $builder = null)
     {
         $qualifier = $this->getQualifier();
 

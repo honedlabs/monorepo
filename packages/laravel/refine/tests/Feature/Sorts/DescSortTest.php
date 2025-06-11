@@ -14,7 +14,7 @@ beforeEach(function () {
 
 it('has desc sort', function () {
     expect($this->sort)
-        ->isFixed()->toBeTrue()
+        ->enforcesDirection()->toBeTrue()
         ->getDirection()->toBe('desc')
         ->type()->toBe('sort:desc');
 });

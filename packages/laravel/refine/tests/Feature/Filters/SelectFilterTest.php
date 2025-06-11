@@ -12,5 +12,5 @@ it('creates', function () {
     expect($this->filter)
         ->interpretsAs()->toBe('array')
         ->isMultiple()->toBeTrue()
-        ->getType()->toBe('select');
+        ->type()->toBe('select');
 });

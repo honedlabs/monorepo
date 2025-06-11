@@ -17,20 +17,10 @@ class SelectFilter extends Filter
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
         $this->multiple();
-    }
-
-    /**
-     * Define the type of the filter.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'select';
     }
 }

@@ -10,10 +10,14 @@ beforeEach(function () {
     $this->test = Refine::make(User::class);
 });
 
-it('is empty by default', function () {
+it('is filterable', function () {
     expect($this->test)
-        ->isFiltering()->toBeFalse()
-        ->getFilters()->toBeEmpty();
+        ->filterable()->toBe($this->test)
+        ->isFilterable()->toBeTrue()
+        ->isNotFilterable()->toBeFalse()
+        ->notFilterable()->toBe($this->test)
+        ->isFilterable()->toBeFalse()
+        ->isNotFilterable()->toBeTrue();
 });
 
 it('adds filters', function () {
@@ -35,35 +39,21 @@ it('adds filters collection', function () {
         ->getFilters()->toHaveCount(2);
 });
 
-it('enables and disables filtering', function () {
-    expect($this->test)
-        // base case
-        ->filteringEnabled()->toBeTrue()
-        ->filteringDisabled()->toBeFalse()
-        // disable
-        ->disableFiltering()->toBe($this->test)
-        ->filteringEnabled()->toBeFalse()
-        ->filteringDisabled()->toBeTrue()
-        // enable
-        ->enableFiltering()->toBe($this->test)
-        ->filteringEnabled()->toBeTrue()
-        ->filteringDisabled()->toBeFalse();
-});
-
 it('filters to array', function () {
     expect($this->test)
         ->filters([Filter::make('name'), Filter::make('price')])->toBe($this->test)
         ->filtersToArray()->toHaveCount(2)
-        ->each->scoped(fn ($filter) => $filter
-        ->toHaveKeys([
-            'name',
-            'label',
-            'type',
-            'active',
-            'meta',
-            'value',
-            'options',
-        ])
+        ->each
+        ->scoped(fn ($filter) => $filter
+            ->toHaveKeys([
+                'name',
+                'label',
+                'type',
+                'active',
+                'meta',
+                'value',
+                'options',
+            ])
         );
 });
 
@@ -71,6 +61,6 @@ it('hides filters from serialization', function () {
     expect($this->test)
         ->filters([Filter::make('name')])->toBe($this->test)
         ->filtersToArray()->toHaveCount(1)
-        ->disableFiltering()->toBe($this->test)
+        ->notFilterable()->toBe($this->test)
         ->filtersToArray()->toBeEmpty();
 });

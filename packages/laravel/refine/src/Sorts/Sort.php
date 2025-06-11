@@ -31,19 +31,11 @@ class Sort extends Refiner
     {
         parent::setUp();
 
+        $this->type('sort');
+
         $this->definition($this);
     }
-
-    /**
-     * Define the type of the sort.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'sort';
-    }
-
+    
     /**
      * Get the value for the sort indicating an ascending direction.
      *
@@ -63,7 +55,7 @@ class Sort extends Refiner
     {
         $parameter = $this->getParameter();
 
-        if ($this->isFixed()) {
+        if ($this->enforcesDirection()) {
             return $parameter;
         }
 
@@ -78,7 +70,7 @@ class Sort extends Refiner
     public function getNextDirection()
     {
         return match (true) {
-            $this->isFixed() => $this->getFixedValue(),
+            $this->enforcesDirection() => $this->getFixedValue(),
             $this->isInverted() => $this->getInvertedValue(),
             default => match (true) {
                 $this->isAscending() => $this->getDescendingValue(),
@@ -158,11 +150,11 @@ class Sort extends Refiner
      */
     protected function getFixedValue()
     {
-        if ($this->isNotFixed()) {
+        if ($this->isNotEnforced()) {
             return null;
         }
 
-        return $this->isFixedAscending()
+        return $this->enforcesDirectionAscending()
             ? $this->getAscendingValue()
             : $this->getDescendingValue();
     }
@@ -189,7 +181,7 @@ class Sort extends Refiner
         $match = $parameter === $this->getParameter();
 
         return match (true) {
-            $this->isFixed($direction) => $match,
+            $this->enforcesDirection($direction) => $match,
             default => $match,
         };
     }
@@ -201,8 +193,8 @@ class Sort extends Refiner
     {
         $parameter = parent::guessParameter();
 
-        if ($this->fixed) {
-            $parameter = $parameter.'_'.$this->fixed;
+        if ($this->enforcesDirection()) {
+            $parameter = $parameter.'_'.$this->enforced;
         }
 
         return $parameter;

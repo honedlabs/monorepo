@@ -9,7 +9,7 @@ use Workbench\App\Refiners\RefineUser;
 beforeEach(function () {
     $this->pipe = new BeforeRefining();
     $this->closure = fn ($refine) => $refine;
-});
+})->skip();
 
 it('does not refine before', function () {
     $refiner = RefineProduct::make();

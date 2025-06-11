@@ -17,7 +17,7 @@ class PresenceFilter extends BooleanFilter
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

@@ -21,16 +21,6 @@ class TimeFilter extends Filter
     {
         parent::setUp();
 
-        $this->asTime();
-    }
-
-    /**
-     * Define the type of the filter.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'time';
+        $this->time();
     }
 }

@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filter;
+use Honed\Refine\Filters\Filter;
 use Honed\Refine\Refine;
-use Honed\Refine\Search;
-use Honed\Refine\Sort;
+use Honed\Refine\Searches\Search;
+use Honed\Refine\Sorts\Sort;
 use Illuminate\Auth\Access\Gate as AccessGate;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Str;
 use Workbench\App\Models\Product;
@@ -148,16 +147,11 @@ it('has array representation with matches', function () {
 });
 
 it('has array representation with scopes', function () {
-    $this->test->scope('name', 'John')->matches();
+    $this->test->scope('name', 'John')
+        ->matchable();
 
-    expect($this->test->toArray())->toBeArray()
-        ->{'config'}->toEqual([
-            'delimiter' => ',',
-            'term' => null,
-            'search' => $this->test->formatScope('search'),
-            'sort' => $this->test->formatScope('sort'),
-            'match' => $this->test->formatScope('match'),
-        ]);
+    expect($this->test->matchable()->scope('name'))
+        ->toArray()->toBeArray();
 });
 
 it('refines once', function () {

@@ -6,11 +6,11 @@ namespace Honed\Refine\Filters;
 
 use BackedEnum;
 use Carbon\CarbonInterface;
+use Closure;
+use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
 use Honed\Core\Interpret;
-use Honed\Refine\Filters\Concerns\HasOperator;
-use Honed\Refine\Filters\Concerns\HasOptions;
 use Honed\Refine\Refiner;
 use ReflectionEnum;
 
@@ -26,12 +26,29 @@ use function is_string;
  */
 class Filter extends Refiner
 {
-    use HasOperator;
-    use HasOptions {
-        multiple as private setMultiple;
+    use Concerns\HasOperator;
+    use Concerns\HasOptions {
+        multiple as protected setMultiple;
     }
+    use HasValue;
     use InterpretsRequest;
     use Validatable;
+
+    public const BOOLEAN = 'boolean';
+
+    public const DATE = 'date';
+
+    public const DATETIME = 'datetime';
+
+    public const NUMBER = 'number';
+
+    public const SELECT = 'select';
+
+    public const TEXT = 'text';
+
+    public const TIME = 'time';
+
+    public const TRASHED = 'trashed';
 
     /**
      * Whether the filter only responds to presence values.
@@ -52,21 +69,52 @@ class Filter extends Refiner
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
+
+        $this->type('filter');
 
         $this->definition($this);
     }
 
     /**
-     * Define the type of the filter.
+     * Set the filter to be for boolean values.
      *
-     * @return string
+     * @return $this
      */
-    public function type()
+    public function boolean()
     {
-        return 'filter';
+        $this->type(Filter::BOOLEAN);
+        $this->asBoolean();
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for date values.
+     *
+     * @return $this
+     */
+    public function date()
+    {
+        $this->type(Filter::DATE);
+        $this->asDate();
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for date time values.
+     *
+     * @return $this
+     */
+    public function datetime()
+    {
+        $this->type(Filter::DATETIME);
+        $this->asDatetime();
+
+        return $this;
     }
 
     /**
@@ -91,6 +139,32 @@ class Filter extends Refiner
         return $this;
     }
 
+/**
+     * Set the filter to be for float values.
+     *
+     * @return $this
+     */
+    public function float()
+    {
+        $this->type(Filter::NUMBER);
+        $this->asFloat();
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for integer values.
+     *
+     * @return $this
+     */
+    public function int()
+    {
+        $this->type(Filter::NUMBER);
+        $this->asInt();
+
+        return $this;
+    }
+
     /**
      * Set the filter to be for multiple values.
      *
@@ -99,8 +173,35 @@ class Filter extends Refiner
      */
     public function multiple($multiple = true)
     {
+        $this->type(Filter::SELECT);
         $this->asArray();
         $this->setMultiple($multiple);
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for text values.
+     *
+     * @return $this
+     */
+    public function text()
+    {
+        $this->type(Filter::TEXT);
+        $this->asString();
+
+        return $this;
+    }
+
+    /**
+     * Set the filter to be for time values.
+     *
+     * @return $this
+     */
+    public function time()
+    {
+        $this->type(Filter::TIME);
+        $this->asTime();
 
         return $this;
     }
@@ -161,28 +262,31 @@ class Filter extends Refiner
      */
     public function getRequestValue($request, $key, $delimiter = ',')
     {
-
         $value = (new Interpret())
             ->interpret($request, $key, $delimiter);
 
         return $value ?? $this->getDefault();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray($named = [], $typed = [])
+    public function handle($builder, $value)
     {
-        $value = $this->getValue();
+        $this->value = $this->transformParameter($value);
 
-        if ($value instanceof CarbonInterface) {
-            $value = $value->toIso8601String();
+        $this->active(filled($this->value));
+
+        if ($this->isInactive() || ! $this->validate($this->value)) {
+            return false;
         }
 
-        return array_merge(parent::toArray(), [
-            'value' => $value,
-            'options' => $this->optionsToArray(),
-        ]);
+        $bindings = $this->getBindings($this->value, $builder);
+
+        if (! $this->hasQuery()) {
+            $this->query(Closure::fromCallable([$this, 'apply']));
+        }
+
+        $this->modifyQuery($builder, $bindings);
+
+        return true;
     }
 
     /**
@@ -221,6 +325,23 @@ class Filter extends Refiner
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function toArray($named = [], $typed = [])
+    {
+        $value = $this->getValue();
+
+        if ($value instanceof CarbonInterface) {
+            $value = $value->toIso8601String();
+        }
+
+        return array_merge(parent::toArray(), [
+            'value' => $value,
+            'options' => $this->optionsToArray(),
+        ]);
+    }
+
+    /**
      * Define the filter instance.
      *
      * @param  $this  $filter
@@ -236,23 +357,11 @@ class Filter extends Refiner
      */
     protected function transformParameter($value)
     {
-        if (filled($this->getOptions())) {
-            return $this->activateOptions($value);
-        }
-
-        if ($this->isPresence()) {
-            return $value ?: null;
-        }
-
-        return $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function invalidValue($value)
-    {
-        return ! $this->validate($value);
+        return match (true) {
+            filled($this->getOptions()) => $this->activateOptions($value),
+            $this->isPresence() => $value ?: null,
+            default => $value,
+        };
     }
 
     /**

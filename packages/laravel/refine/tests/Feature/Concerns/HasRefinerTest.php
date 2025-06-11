@@ -14,7 +14,7 @@ beforeEach(function () {
     Refine::useNamespace('Workbench\App\Refiners');
     Refine::guessRefinersUsing(fn ($model) => Str::of($model)
         ->afterLast('\\')
-        ->append('Refiner')
+        ->prepend('Refine')
         ->prepend('Workbench\App\Refiners\\')
         ->value()
     );

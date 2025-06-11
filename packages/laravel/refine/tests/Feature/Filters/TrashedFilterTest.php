@@ -14,7 +14,7 @@ beforeEach(function () {
 it('has trashed filter', function () {
     expect($this->filter)
         ->toBe($this->filter)
-        ->getType()->toBe('trashed')
+        ->type()->toBe('trashed')
         ->getLabel()->toBe('Show deleted');
 });
 
@@ -43,12 +43,8 @@ it('has options', function () {
 it('applies with trashed', function () {
     $builder = Product::query();
 
-    $request = Request::create('/', 'GET', [
-        $this->filter->getParameter() => 'with',
-    ]);
-
     expect($this->filter)
-        ->refine($builder, $request)->toBeTrue();
+        ->handle($builder, 'with')->toBeTrue();
 
     expect($builder->getQuery()->wheres)
         ->toBeEmpty();
@@ -57,12 +53,8 @@ it('applies with trashed', function () {
 it('applies only trashed', function () {
     $builder = Product::query();
 
-    $request = Request::create('/', 'GET', [
-        $this->filter->getParameter() => 'only',
-    ]);
-
     expect($this->filter)
-        ->refine($builder, $request)->toBeTrue();
+        ->handle($builder, 'only')->toBeTrue();
 
     expect($builder->getQuery()->wheres)
         ->toBeArray()
@@ -77,12 +69,8 @@ it('applies only trashed', function () {
 it('applies without trashed', function () {
     $builder = Product::query();
 
-    $request = Request::create('/', 'GET', [
-        $this->filter->getParameter() => 'default',
-    ]);
-
     expect($this->filter)
-        ->refine($builder, $request)->toBeTrue();
+        ->handle($builder, 'without')->toBeTrue();
 
     expect($builder->getQuery()->wheres)
         ->toBeArray()

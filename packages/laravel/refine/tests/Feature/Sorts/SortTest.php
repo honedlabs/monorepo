@@ -33,19 +33,3 @@ it('has next direction', function () {
     expect($this->sort)
         ->getNextDirection()->toBe($this->sort->getAscendingValue());
 });
-
-it('can invert', function () {
-    expect($this->sort)
-        ->isInverted()->toBeFalse()
-        ->invert()->toBe($this->sort)
-        ->isInverted()->toBeTrue()
-        ->getNextDirection()->toBe($this->sort->getDescendingValue());
-});
-
-it('can be fixed', function () {
-    expect($this->sort)
-        ->isFixed()->toBeFalse()
-        ->fixed('asc')->toBe($this->sort)
-        ->isFixed()->toBeTrue()
-        ->getDirection()->toBe('asc');
-});

@@ -33,16 +33,6 @@ class Search extends Refiner
     }
 
     /**
-     * Define the type of the search.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'search';
-    }
-
-    /**
      * Handle the refinement.
      *
      * @param  TBuilder  $query

@@ -65,7 +65,7 @@ class RefineMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Refines';
+        return $rootNamespace.'\Refiners';
     }
 
     /**

@@ -119,6 +119,27 @@ trait CanBeRefined
     }
 
     /**
+     * Get the refined data.
+     *
+     * @return array<string, mixed>
+     */
+    public function refinedToArray()
+    {
+        return [
+            'sort' => $this->getSortKey(),
+            'search' => $this->getSearchKey(),
+            'match' => $this->getMatchKey(),
+            'term' => $this->getTerm(),
+            'delimiter' => $this->getDelimiter(),
+            'placeholder' => $this->getSearchPlaceholder(),
+
+            'sorts' => $this->sortsToArray(),
+            'filters' => $this->filtersToArray(),
+            'searches' => $this->searchesToArray(),
+        ];
+    }
+
+    /**
      * Execute the pipeline of refiners.
      *
      * @return void
@@ -150,7 +171,9 @@ trait CanBeRefined
     protected function search()
     {
         $builder = $this->getBuilder();
+
         $this->term = $this->getSearch($this->request);
+
         $columns = $this->getMatch($this->request);
 
         if ($this->isScout()) {
@@ -204,6 +227,7 @@ trait CanBeRefined
     protected function sort()
     {
         $builder = $this->getBuilder();
+
         [$parameter, $direction] = $this->getSort($this->request);
 
         $sorted = false;

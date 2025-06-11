@@ -68,23 +68,24 @@ it('searches to array', function () {
         ->searches([Search::make('name'), Search::make('price')])->toBe($this->test)
         ->searchesToArray()->toBeEmpty();
 
-    expect($this->test->match())
+    expect($this->test->matchable())
         ->searchesToArray()->toHaveCount(2)
-        ->each->scoped(fn ($search) => $search
-        ->toHaveKeys([
-            'name',
-            'label',
-            'type',
-            'active',
-            'meta',
-        ])
+        ->each
+        ->scoped(fn ($search) => $search
+            ->toHaveKeys([
+                'name',
+                'label',
+                'type',
+                'active',
+                'meta',
+            ])
         );
 });
 
 it('hides searches from serialization', function () {
-    expect($this->test->match())
+    expect($this->test->matchable())
         ->searches([Search::make('name')])->toBe($this->test)
         ->searchesToArray()->toHaveCount(1)
-        ->disableSearching()->toBe($this->test)
+        ->notSearchable()->toBe($this->test)
         ->searchesToArray()->toBeEmpty();
 });

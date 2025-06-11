@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
-use Honed\Refine\Attributes\UseRefiner;
+use Honed\Refine\Attributes\UseRefine;
 use Honed\Refine\Concerns\HasRefiner;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Workbench\App\Refiners\RefineUser;
 use Workbench\Database\Factories\UserFactory;
 
-#[UseRefiner(RefineUser::class)]
+#[UseRefine(RefineUser::class)]
 class User extends Authenticatable
 {
     /**

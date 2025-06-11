@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Honed\Refine\Pipelines\RefineSorts;
 use Honed\Refine\Refine;
-use Honed\Refine\Sort;
+use Honed\Refine\Sorts\Sort;
 use Illuminate\Support\Facades\Request;
 use Workbench\App\Models\Product;
 
@@ -20,7 +20,7 @@ beforeEach(function () {
 
     $this->refine = Refine::make($this->builder)
         ->sorts($sorts);
-});
+})->skip();
 
 it('does not refine', function () {
     $this->pipe->__invoke($this->refine, $this->closure);

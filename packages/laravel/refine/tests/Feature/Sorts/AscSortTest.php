@@ -13,7 +13,7 @@ beforeEach(function () {
 
 it('has asc sort', function () {
     expect($this->sort)
-        ->isFixed()->toBeTrue()
+        ->enforcesDirection()->toBeTrue()
         ->getDirection()->toBe('asc')
         ->type()->toBe('sort:asc');
 });

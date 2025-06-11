@@ -18,11 +18,11 @@ trait HasDirection
     protected $direction;
 
     /**
-     * Indicate that the direction is fixed.
+     * Force the direction to be a specific value.
      *
      * @var 'asc'|'desc'|null
      */
-    protected $fixed;
+    protected $enforced;
 
     /**
      * Whether the direction is inverted.
@@ -51,7 +51,9 @@ trait HasDirection
      */
     public function getDirection()
     {
-        return $this->isFixed() ? $this->fixed : $this->direction;
+        return $this->enforcesDirection()
+            ? $this->enforced
+            : $this->direction;
     }
 
     /**
@@ -61,7 +63,7 @@ trait HasDirection
      */
     public function isAscending()
     {
-        return $this->direction === self::ASCENDING;
+        return $this->getDirection() === self::ASCENDING;
     }
 
     /**
@@ -71,34 +73,23 @@ trait HasDirection
      */
     public function isDescending()
     {
-        return $this->direction === self::DESCENDING;
+        return $this->getDirection() === self::DESCENDING;
     }
 
     /**
-     * Fix the direction to a single value.
-     *
-     * @param  'asc'|'desc'|null  $direction
-     * @return $this
-     */
-    public function fixed($direction)
-    {
-        $this->fixed = $direction;
-
-        return $this;
-    }
-
-    /**
-     * Fix the direction to be ascending.
+     * Force the direction to be always be ascending.
      *
      * @return $this
      */
     public function ascending()
     {
-        return $this->fixed(self::ASCENDING);
+        $this->enforced = self::ASCENDING;
+
+        return $this;
     }
 
     /**
-     * Fix the direction to be ascending.
+     * Force the direction to be always be descending.
      *
      * @return $this
      */
@@ -108,17 +99,19 @@ trait HasDirection
     }
 
     /**
-     * Fix the direction to be descending.
+     * Force the direction to be always be descending.
      *
      * @return $this
      */
     public function descending()
     {
-        return $this->fixed(self::DESCENDING);
+        $this->enforced = self::DESCENDING;
+
+        return $this;
     }
 
     /**
-     * Fix the direction to be descending.
+     * Force the direction to be always be descending.
      *
      * @return $this
      */
@@ -128,18 +121,28 @@ trait HasDirection
     }
 
     /**
-     * Determine if the direction is fixed.
+     * Determine if the direction is enforced.
      *
      * @param  'asc'|'desc'|null  $direction
      * @return bool
      */
-    public function isFixed($direction = null)
+    public function enforcesDirection($direction = null)
     {
         if ($direction) {
-            return $this->fixed === $direction;
+            return $this->enforced === $direction;
         }
 
-        return isset($this->fixed);
+        return isset($this->enforced);
+    }
+
+    /**
+     * Determine if the direction is not enforced.
+     *
+     * @return bool
+     */
+    public function isNotEnforced()
+    {
+        return ! $this->enforcesDirection();
     }
 
     /**
@@ -163,25 +166,5 @@ trait HasDirection
     public function isInverted()
     {
         return $this->invert;
-    }
-
-    /**
-     * Determine if the direction is fixed to be ascending.
-     *
-     * @return bool
-     */
-    protected function isFixedAscending()
-    {
-        return $this->fixed === self::ASCENDING;
-    }
-
-    /**
-     * Determine if the direction is fixed to be descending.
-     *
-     * @return bool
-     */
-    protected function isFixedDescending()
-    {
-        return $this->fixed === self::DESCENDING;
     }
 }

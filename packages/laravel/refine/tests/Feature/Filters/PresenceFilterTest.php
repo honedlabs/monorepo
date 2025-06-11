@@ -22,20 +22,16 @@ it('creates', function () {
 });
 
 it('does not apply', function () {
-    $request = Request::create('/', 'GET', ['status' => '0']);
-
     expect($this->filter)
-        ->refine($this->builder, $request)->toBeFalse();
+        ->handle($this->builder, null)->toBeFalse();
 
     expect($this->builder->getQuery()->wheres)
         ->toBeEmpty();
 });
 
 it('applies', function () {
-    $request = Request::create('/', 'GET', ['status' => '1']);
-
     expect($this->filter)
-        ->refine($this->builder, $request)->toBeTrue();
+        ->handle($this->builder, true)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
         ->toBeOnlyWhere('status', Status::Available->value);

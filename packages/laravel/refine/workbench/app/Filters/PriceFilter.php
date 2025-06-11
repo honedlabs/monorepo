@@ -18,20 +18,11 @@ class PriceFilter extends Filter
         return new self();
     }
 
-    /**
-     * Define the type of the filter.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'number';
-    }
-
     protected function definition(Filter $filter)
     {
         return $filter
             ->name('price')
+            ->type('price')
             ->label('Price')
             ->strict()
             ->options([

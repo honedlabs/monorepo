@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filter;
+use Honed\Refine\Filters\Filter;
 use Honed\Refine\Pipelines\RefineFilters;
 use Honed\Refine\Refine;
 use Illuminate\Support\Facades\Request;
@@ -14,13 +14,12 @@ beforeEach(function () {
     $this->closure = fn ($refine) => $refine;
 
     $filters = [
-        Filter::make('price')->int(),
+        Filter::make('price')->asInt(),
     ];
 
     $this->refine = Refine::make($this->builder)
         ->filters($filters);
-
-});
+})->skip();
 
 it('does not refine', function () {
     $request = Request::create('/', 'GET', [

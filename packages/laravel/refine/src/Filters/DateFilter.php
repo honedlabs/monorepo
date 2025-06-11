@@ -12,20 +12,15 @@ namespace Honed\Refine\Filters;
  */
 class DateFilter extends Filter
 {
-    public function setUp()
+    /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    protected function setUp()
     {
         parent::setUp();
 
-        $this->asDate();
-    }
-
-    /**
-     * Define the type of the filter.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'date';
+        $this->date();
     }
 }

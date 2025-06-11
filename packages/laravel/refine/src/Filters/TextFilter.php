@@ -21,16 +21,6 @@ class TextFilter extends Filter
     {
         parent::setUp();
 
-        $this->asString();
-    }
-
-    /**
-     * Define the type of the filter.
-     *
-     * @return string
-     */
-    public function type()
-    {
-        return 'text';
+        $this->text();
     }
 }

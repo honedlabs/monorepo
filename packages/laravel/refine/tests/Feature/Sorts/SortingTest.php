@@ -65,7 +65,7 @@ it('applies fixed direction', function () {
         ->toBeOnlyOrder('name', 'desc');
 
     expect($sort)
-        ->isFixed()->toBeTrue()
+        ->enforcesDirection()->toBeTrue()
         ->isActive()->toBeTrue()
         ->getDirection()->toBe('desc')
         ->getNextDirection()->toBe($descending);
