@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace Workbench\App\Models;
 
 use Honed\Action\Attributes\ActionGroup;
-use Honed\Action\Attributes\UseActions;
-use Honed\Action\Concerns\HasActions;
+use Honed\Action\Attributes\UseActionGroup;
+use Honed\Action\Concerns\HasActionGroup;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Workbench\App\ActionGroups\UserActions;
 use Workbench\Database\Factories\UserFactory;
 
-#[UseActions(UserActions::class)]
+#[UseActionGroup(UserActions::class)]
 class User extends Authenticatable
 {
     /**
-     * @use \Honed\Action\Concerns\HasActions<\Workbench\App\ActionGroups\UserActions>
+     * @use \Honed\Action\Concerns\HasActionGroup<\Workbench\App\ActionGroups\UserActions>
      */
-    use HasActions;
+    use HasActionGroup;
 
     /**
      * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\UserFactory>

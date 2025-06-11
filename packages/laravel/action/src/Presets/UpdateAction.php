@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Generic;
+namespace Honed\Action\Presets;
 
 use Honed\Action\Contracts\Actionable;
-use Honed\Action\Presets\Concerns\CanBeTransaction;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -13,7 +12,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 abstract class UpdateAction implements Actionable
 {
-    use CanBeTransaction;
+    use Concerns\CanBeTransaction;
 
     /**
      * Update the provided model using the input.
@@ -38,9 +37,10 @@ abstract class UpdateAction implements Actionable
      * Prepare the input for the update method.
      * 
      * @param \Illuminate\Support\ValidatedInput $input
+     * @param TModel $model
      * @return array<string, mixed>
      */
-    protected function prepare($input)
+    protected function prepare($input, $model)
     {
         return $input->all();
     }
@@ -54,7 +54,7 @@ abstract class UpdateAction implements Actionable
      */
     protected function update($model, $input)
     {
-        $prepared = $this->prepare($input);
+        $prepared = $this->prepare($input, $model);
 
         $model->update($prepared);
 
