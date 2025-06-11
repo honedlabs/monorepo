@@ -12,15 +12,15 @@ beforeEach(function () {
     $this->refine = Refine::make(User::class);
 });
 
-it('does not refine before', function () {
+it('does not refine after', function () {
     $this->refine->refine();
 
     expect($this->refine->getBuilder()->getQuery()->wheres)
         ->toBeEmpty();
 });
 
-it('refines before using callback', function () {
-    $this->refine->before(fn ($builder) => $builder->where('price', '>', 100));
+it('refines after using callback', function () {
+    $this->refine->after(fn ($builder) => $builder->where('price', '>', 100));
 
     $this->refine->refine();
 

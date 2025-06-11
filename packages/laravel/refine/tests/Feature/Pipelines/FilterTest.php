@@ -17,9 +17,8 @@ beforeEach(function () {
         Filter::make('price')->asInt(),
     ];
 
-    $this->refine = Refine::make($this->builder)
-        ->filters($filters);
-})->skip();
+    $this->refine = Refine::make($thi)->filters($filters);
+});
 
 it('does not refine', function () {
     $request = Request::create('/', 'GET', [

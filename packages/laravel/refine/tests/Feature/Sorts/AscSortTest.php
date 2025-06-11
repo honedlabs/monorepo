@@ -3,24 +3,26 @@
 declare(strict_types=1);
 
 use Honed\Refine\Sorts\AscSort;
+use Honed\Refine\Sorts\Sort;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();
-
-    $this->sort = AscSort::make('created_at')->alias('newest');
+    $this->name = 'created_at';
+    $this->alias = 'newest';
+    $this->sort = AscSort::make($this->name)->alias($this->alias);
 });
 
 it('has asc sort', function () {
     expect($this->sort)
         ->enforcesDirection()->toBeTrue()
-        ->getDirection()->toBe('asc')
-        ->type()->toBe('sort:asc');
+        ->getDirection()->toBe(Sort::ASCENDING)
+        ->getType()->toBe(Sort::ASCENDING);
 });
 
 it('does not apply', function () {
     expect($this->sort)
-        ->handle($this->builder, 'invalid', 'asc')->toBeFalse();
+        ->handle($this->builder, $this->alias, Sort::DESCENDING)->toBeFalse();
 
     expect($this->builder->getQuery()->orders)
         ->toBeEmpty();
@@ -28,8 +30,8 @@ it('does not apply', function () {
 
 it('applies', function () {
     expect($this->sort)
-        ->handle($this->builder, 'newest', 'asc')->toBeTrue();
+        ->handle($this->builder, $this->alias, Sort::ASCENDING)->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder('created_at', 'asc');
+        ->toBeOnlyOrder($this->name, Sort::ASCENDING);
 });

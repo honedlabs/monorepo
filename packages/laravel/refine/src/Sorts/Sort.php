@@ -35,7 +35,7 @@ class Sort extends Refiner
 
         $this->definition($this);
     }
-    
+
     /**
      * Get the value for the sort indicating an ascending direction.
      *
@@ -70,55 +70,52 @@ class Sort extends Refiner
     public function getNextDirection()
     {
         return match (true) {
-            $this->enforcesDirection() => $this->getFixedValue(),
+            $this->enforcesDirection() => $this->getEnforcedDirection(),
             $this->isInverted() => $this->getInvertedValue(),
             default => match (true) {
                 $this->isAscending() => $this->getDescendingValue(),
-                $this->isDescending() => $this->getAscendingValue(),
-                default => null,
+                $this->isDescending() => null,
+                default => $this->getAscendingValue(),
             },
         };
     }
 
     /**
-     * {@inheritdoc}
+     * Handle the sorting of the query.
      *
-     * @param  array{string|null, 'asc'|'desc'|null}  $requestValue
+     * @param  TBuilder  $query
+     * @param  string  $parameter
+     * @param  'asc'|'desc'|null  $direction
+     * @return bool
      */
     public function handle($query, $parameter, $direction)
     {
-        $this->active(
-            $active = $this->checkIfActive($parameter, $direction)
-        );
+        $this->checkIfActive($parameter, $direction);
 
-        if (! $active) {
+        if ($this->isInactive()) {
             return false;
         }
+        
+        $this->direction($direction);
 
-        if (! $this->hasQuery()) {
-            $this->query(Closure::fromCallable([$this, 'apply']));
-        }
-
-        $this->modifyQuery($query, [
-            ...$this->getBindings($parameter, $query),
-            'parameter' => $parameter,
+        return $this->refine($query, [
+            ...$this->getBindings($query),
             'direction' => $direction,
+            'parameter' => $parameter,
         ]);
-
-        return true;
     }
 
     /**
-     *  Apply the default sort query scope to the builder.
+     *  Add a sort scope to the query.
      *
-     * @param  TBuilder  $builder
+     * @param  TBuilder  $query
      * @param  string  $column
      * @param  'asc'|'desc'|null  $direction
      * @return void
      */
-    public function apply($builder, $column, $direction)
+    public function apply($query, $column, $direction)
     {
-        $builder->orderBy($column, $direction ?? 'asc');
+        $query->orderBy($column, $direction ?? Sort::ASCENDING);
     }
 
     /**
@@ -138,7 +135,7 @@ class Sort extends Refiner
      * @param  Sort<TModel, TBuilder>  $sort
      * @return Sort<TModel, TBuilder>|void
      */
-    protected function definition(self $sort)
+    protected function definition(Sort $sort)
     {
         return $sort;
     }
@@ -146,15 +143,15 @@ class Sort extends Refiner
     /**
      * Get the fixed direction.
      *
-     * @return 'asc'|'desc'|null
+     * @return string|null
      */
-    protected function getFixedValue()
+    protected function getEnforcedDirection()
     {
         if ($this->isNotEnforced()) {
             return null;
         }
 
-        return $this->enforcesDirectionAscending()
+        return $this->enforcesDirection(Sort::ASCENDING)
             ? $this->getAscendingValue()
             : $this->getDescendingValue();
     }
@@ -174,20 +171,9 @@ class Sort extends Refiner
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function checkIfActive($parameter, $direction)
-    {
-        $match = $parameter === $this->getParameter();
-
-        return match (true) {
-            $this->enforcesDirection($direction) => $match,
-            default => $match,
-        };
-    }
-
-    /**
-     * {@inheritdoc}
+     * Guess the parameter for the sort.
+     * 
+     * @return string
      */
     protected function guessParameter()
     {
@@ -198,5 +184,23 @@ class Sort extends Refiner
         }
 
         return $parameter;
+    }
+
+    /**
+     * Determine if the sort is active.
+     *
+     * @param  string|null  $parameter
+     * @param  'asc'|'desc'|null  $direction
+     * @return void
+     */
+    protected function checkIfActive($parameter, $direction)
+    {
+        $this->active(
+            $parameter === $this->getParameter() && (
+                $this->enforcesDirection()
+                    ? $direction === $this->getDirection()
+                    : true
+            )
+        );
     }
 }

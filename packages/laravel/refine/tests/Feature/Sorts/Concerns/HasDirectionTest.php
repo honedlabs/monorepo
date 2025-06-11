@@ -13,8 +13,8 @@ beforeEach(function () {
 it('has direction', function () {
     expect($this->sort)
         ->getDirection()->toBeNull()
-        ->direction('asc')->toBe($this->sort)
-        ->getDirection()->toBe('asc');
+        ->direction(Sort::ASCENDING)->toBe($this->sort)
+        ->getDirection()->toBe(Sort::ASCENDING);
 });
 
 it('can be ascending', function () {
@@ -40,12 +40,4 @@ it('can invert', function () {
         ->isInverted()->toBeFalse()
         ->invert()->toBe($this->sort)
         ->isInverted()->toBeTrue();
-});
-
-it('can set fixed direction', function () {
-    expect($this->sort)
-        ->enforcesDirection()->toBeFalse()
-        ->fixed('asc')->toBe($this->sort)
-        ->enforcesDirection()->toBeTrue()
-        ->getDirection()->toBe('asc');
 });

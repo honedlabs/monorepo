@@ -55,9 +55,10 @@ it('has no default sort', function () {
 it('has default sort', function () {
     expect($this->test)
         ->sorts([Sort::make('price'), Sort::make('name')->default()])->toBe($this->test)
-        ->getDefaultSort()->scoped(fn ($sort) => $sort
-        ->not->toBeNull()
-        ->getName()->toBe('name')
+        ->getDefaultSort()
+        ->scoped(fn ($sort) => $sort
+            ->not->toBeNull()
+            ->getName()->toBe('name')
         );
 });
 
@@ -65,16 +66,17 @@ it('sorts to array', function () {
     expect($this->test)
         ->sorts([Sort::make('name'), Sort::make('price')])->toBe($this->test)
         ->sortsToArray()->toHaveCount(2)
-        ->each->scoped(fn ($sort) => $sort
-        ->toHaveKeys([
-            'name',
-            'label',
-            'type',
-            'active',
-            'meta',
-            'direction',
-            'next',
-        ])
+        ->each
+        ->scoped(fn ($sort) => $sort
+            ->toHaveKeys([
+                'name',
+                'label',
+                'type',
+                'active',
+                'meta',
+                'direction',
+                'next',
+            ])
         );
 });
 

@@ -29,7 +29,7 @@ class Option extends Primitive
     {
         return resolve(static::class)
             ->value($value)
-            ->label($label ?? (string) $value); // @phpstan-ignore-line
+            ->label($label ?? (string) $value);
     }
 
     /**

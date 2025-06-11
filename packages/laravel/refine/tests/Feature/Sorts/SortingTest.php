@@ -7,11 +7,12 @@ use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();
-    $this->sort = Sort::make('name');
+    $this->name = 'name';
+    $this->sort = Sort::make($this->name);
 });
 
 it('does not apply', function () {
-    expect($this->sort->handle($this->builder, 'other', 'asc'))
+    expect($this->sort->handle($this->builder, 'other', Sort::ASCENDING))
         ->toBeFalse();
 
     expect($this->builder->getQuery()->orders)
@@ -20,7 +21,7 @@ it('does not apply', function () {
     expect($this->sort)
         ->isActive()->toBeFalse()
         ->getDirection()->toBeNull()
-        ->getNextDirection()->toBe('name');
+        ->getNextDirection()->toBe($this->name);
 });
 
 it('applies alias', function () {
@@ -28,7 +29,7 @@ it('applies alias', function () {
 
     $sort = $this->sort->alias($alias);
 
-    expect($sort->handle($this->builder, 'name', 'asc'))
+    expect($sort->handle($this->builder, $this->name, Sort::ASCENDING))
         ->toBeFalse();
 
     expect($this->builder->getQuery()->orders)
@@ -39,52 +40,50 @@ it('applies alias', function () {
         ->getDirection()->toBeNull()
         ->getNextDirection()->toBe($alias);
 
-    // Should apply
-
-    expect($sort->handle($this->builder, $alias, 'asc'))
+    expect($sort->handle($this->builder, $alias, Sort::ASCENDING))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder('name', 'asc');
+        ->toBeOnlyOrder($this->name, Sort::ASCENDING);
 
     expect($sort)
         ->isActive()->toBeTrue()
-        ->getDirection()->toBe('asc')
+        ->getDirection()->toBe(Sort::ASCENDING)
         ->getNextDirection()->toBe('-'.$alias);
 });
 
-it('applies fixed direction', function () {
+it('applies enforced direction', function () {
     $sort = $this->sort->desc();
 
-    $descending = 'name'.'_desc';
+    $descending = $this->name.'_'.Sort::DESCENDING;
 
-    expect($sort->handle($this->builder, $descending, 'desc'))
+    expect($sort->handle($this->builder, $descending, Sort::DESCENDING))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder('name', 'desc');
+        ->toBeOnlyOrder($this->name, Sort::DESCENDING);
 
     expect($sort)
         ->enforcesDirection()->toBeTrue()
         ->isActive()->toBeTrue()
-        ->getDirection()->toBe('desc')
+        ->getDirection()->toBe(Sort::DESCENDING)
         ->getNextDirection()->toBe($descending);
 });
 
 it('applies inverted direction', function () {
     $sort = $this->sort->invert();
 
-    expect($sort->handle($this->builder, 'name', 'desc'))
+    expect($sort->handle($this->builder, $this->name, Sort::DESCENDING))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder('name', 'desc');
+        ->toBeOnlyOrder($this->name, Sort::DESCENDING);
 
     expect($sort)
         ->isInverted()->toBeTrue()
         ->isActive()->toBeTrue()
-        ->getDirection()->toBe('desc')
-        ->getNextDirection()->toBe('name');
+        ->getDirection()->toBe(Sort::DESCENDING)
+        ->getNextDirection()->toBe($this->name);
 });
 
 it('applies query', function () {
@@ -93,11 +92,11 @@ it('applies query', function () {
     $sort = $this->sort
         ->query(fn ($builder, $direction) => $builder->orderBy($column, $direction));
 
-    expect($sort->handle($this->builder, 'name', 'desc'))
+    expect($sort->handle($this->builder, $this->name, Sort::DESCENDING))
         ->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($column, 'desc');
+        ->toBeOnlyOrder($column, Sort::DESCENDING);
 
     expect($sort)
         ->isActive()->toBeTrue();
@@ -105,10 +104,10 @@ it('applies query', function () {
 
 it('applies with qualified column', function () {
     expect($this->sort->qualify())
-        ->handle($this->builder, 'name', 'asc')->toBeTrue();
+        ->handle($this->builder, $this->name, Sort::ASCENDING)->toBeTrue();
 
     expect($this->builder->getQuery()->orders)
-        ->toBeOnlyOrder($this->builder->qualifyColumn('name'), 'asc');
+        ->toBeOnlyOrder($this->builder->qualifyColumn($this->name), Sort::ASCENDING);
 
     expect($this->sort)
         ->isQualifying()->toBeTrue()

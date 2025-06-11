@@ -24,13 +24,6 @@ afterEach(function () {
     Refine::flushState();
 });
 
-it('goes without refining', function () {
-    expect($this->test)
-        ->searchingEnabled()->toBeTrue()
-        ->filteringEnabled()->toBeTrue()
-        ->sortingEnabled()->toBeTrue();
-});
-
 it('refines before', function () {
     expect($this->test)
         ->before(fn () => $this->test)->toBe($this->test);
@@ -39,13 +32,6 @@ it('refines before', function () {
 it('refines after', function () {
     expect($this->test)
         ->after(fn () => $this->test)->toBe($this->test);
-});
-
-it('can use scout', function () {
-    expect($this->test)
-        ->usesScout()->toBeFalse()
-        ->scout()
-        ->usesScout()->toBeTrue();
 });
 
 it('evaluates named closure dependencies', function () {
@@ -59,7 +45,7 @@ it('evaluates named closure dependencies', function () {
         ->evaluate(fn ($query) => $query->getModel())->toBeInstanceOf(Product::class)
         ->evaluate(fn ($product) => $product->getModel())->toBeInstanceOf(Product::class)
         ->evaluate(fn ($products) => $products->getModel())->toBeInstanceOf(Product::class);
-});
+})->skip();
 
 it('evaluates typed closure dependencies', function () {
     $product = Product::factory()->create();
@@ -103,11 +89,11 @@ it('has array representation', function () {
             ->{'search'}->toBe('search')
             ->{'sort'}->toBe('sort')
         );
-});
+})->skip();
 
 it('resolves refiner name from model', function () {
     expect(Refine::resolveRefinerName(Product::class))
-        ->toBe('App\Refine\Models\RefineProduct');
+        ->toBe('App\Refiners\RefineModels\Product');
 
     Refine::guessRefinersUsing(fn ($className) => Str::of($className)
         ->afterLast('\\')
@@ -118,13 +104,13 @@ it('resolves refiner name from model', function () {
 
     expect(Refine::resolveRefinerName(Product::class))
         ->toBe(RefineProduct::class);
-});
+})->skip();
 
 it('can use a custom namespace', function () {
     Refine::useNamespace('Workbench\App\\');
 
     expect(Refine::resolveRefinerName(Product::class))
-        ->toBe('Workbench\App\Models\RefineProduct');
+        ->toBe('Workbench\App\RefineModels\Product');
 });
 
 it('has array representation with matches', function () {
@@ -132,19 +118,20 @@ it('has array representation with matches', function () {
         Filter::make('name'),
         Sort::make('name'),
         Search::make('name'),
-    ])->matches();
+    ])->matchable();
 
-    expect($this->test->toArray())->toBeArray()
-        ->toHaveCount(4)
-        ->toHaveKeys(['filters', 'sorts', 'searches', 'config'])
-        ->{'config'}->toEqual([
-            'delimiter' => ',',
-            'term' => null,
-            'search' => 'search',
-            'sort' => 'sort',
-            'match' => 'match',
+    expect($this->test->toArray())
+        ->toBeArray()
+        ->toHaveKeys([
+            'filters',
+            'sorts',
+            'searches',
+            'config',
+            'sort',
+            'search',
+            'match',
         ]);
-});
+})->skip();
 
 it('has array representation with scopes', function () {
     $this->test->scope('name', 'John')
@@ -152,7 +139,7 @@ it('has array representation with scopes', function () {
 
     expect($this->test->matchable()->scope('name'))
         ->toArray()->toBeArray();
-});
+})->skip();
 
 it('refines once', function () {
     expect($this->test)

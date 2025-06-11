@@ -62,6 +62,23 @@ abstract class Refiner extends Primitive
         return $this->getAlias() ?? $this->guessParameter();
     }
 
+    /**
+     * Handle refining the query.
+     * 
+     * @param  TBuilder  $query
+     * @param  array<string,mixed>  $bindings
+     * @return true
+     */
+    protected function refine($query, $bindings)
+    {
+        if (! $this->hasQuery()) {
+            $this->query(Closure::fromCallable([$this, 'apply']));
+        }
+
+        $this->modifyQuery($query, $bindings);
+
+        return true;
+    }
 
     /**
      * Get the refiner as an array.
@@ -92,40 +109,21 @@ abstract class Refiner extends Primitive
     }
 
     /**
-     * Transform the value for the refiner from the request.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    protected function transformParameter($value)
-    {
-        return $value;
-    }
-
-    /**
-     * Determine if the value is invalid.
-     *
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function invalidValue($value)
-    {
-        return false;
-    }
-
-    /**
      * Get the bindings for the refiner closure.
      *
      * @param  mixed  $value
-     * @param  TBuilder  $builder
+     * @param  TBuilder  $query
      * @return array<string,mixed>
      */
-    protected function getBindings($value, $builder)
+    protected function getBindings($query)
     {
         return [
-            'value' => $value,
+            'builder' => $query,
+            'query' => $query,
+            'q' => $query,
+            'refiner' => $this,
             'name' => $this->getName(),
-            'column' => $this->qualifyColumn($this->getName(), $builder),
+            'column' => $this->qualifyColumn($this->getName(), $query),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Honed\Refine\Filters\Filter;
 use Honed\Refine\Filters\TimeFilter;
 
 beforeEach(function () {
@@ -10,6 +11,6 @@ beforeEach(function () {
 
 it('creates', function () {
     expect($this->filter)
-        ->type()->toBe('time')
+        ->getType()->toBe(Filter::TIME)
         ->interpretsAs()->toBe('time');
 });

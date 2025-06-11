@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use Honed\Refine\Filters\Filter;
 use Honed\Refine\Filters\TrashedFilter;
 use Honed\Refine\Option;
-use Illuminate\Support\Facades\Request;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {
@@ -14,7 +14,7 @@ beforeEach(function () {
 it('has trashed filter', function () {
     expect($this->filter)
         ->toBe($this->filter)
-        ->type()->toBe('trashed')
+        ->getType()->toBe(Filter::TRASHED)
         ->getLabel()->toBe('Show deleted');
 });
 

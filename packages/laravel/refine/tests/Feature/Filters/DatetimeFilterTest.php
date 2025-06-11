@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Refine\Filters\DatetimeFilter;
+use Honed\Refine\Filters\Filter;
 
 beforeEach(function () {
     $this->filter = DatetimeFilter::make('datetime');
@@ -10,6 +11,6 @@ beforeEach(function () {
 
 it('creates', function () {
     expect($this->filter)
-        ->type()->toBe('datetime')
+        ->getType()->toBe(Filter::DATETIME)
         ->interpretsAs()->toBe('datetime');
 });

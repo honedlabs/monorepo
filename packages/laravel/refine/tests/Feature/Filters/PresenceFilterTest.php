@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Honed\Refine\Filters\Filter;
 use Honed\Refine\Filters\PresenceFilter;
 use Illuminate\Support\Facades\Request;
 use Workbench\App\Enums\Status;
@@ -16,7 +17,7 @@ beforeEach(function () {
 
 it('creates', function () {
     expect($this->filter)
-        ->type()->toBe('boolean')
+        ->getType()->toBe(Filter::BOOLEAN)
         ->interpretsAs()->toBe('boolean')
         ->isPresence()->toBeTrue();
 });

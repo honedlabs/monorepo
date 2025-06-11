@@ -10,65 +10,62 @@ use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();
-    $this->pipe = new RefineSearches();
-    $this->closure = fn ($refine) => $refine;
+
+    $this->query = 'search+value';
+
+    $this->term = 'search value';
 
     $searches = [
         Search::make('name'),
         Search::make('description'),
     ];
 
-    $this->refine = Refine::make($this->builder)
-        ->searches($searches);
-})->skip();
+    $this->refine = Refine::make($this->builder)->searches($searches);
+});
 
-it('does not refine', function () {
+it('does not search if key is not present', function () {
     $request = Request::create('/', 'GET', [
-        'invalid' => 'test',
+        'search' => $this->query,
     ]);
 
     $this->refine->request($request);
 
-    $this->pipe->__invoke($this->refine, $this->closure);
+    $this->refine->refine();
 
-    expect($this->refine->getResource()->getQuery()->wheres)
+    expect($this->refine->getBuilder()->getQuery()->wheres)
         ->toBeEmpty();
 
     expect($this->refine->getTerm())
         ->toBeNull();
 });
 
-it('refines', function () {
+it('searches if key is present', function () {
     $request = Request::create('/', 'GET', [
-        'search' => 'search+value',
+        $this->refine->getSearchKey() => $this->query,
     ]);
 
-    $this->refine->request($request);
+    $this->refine->request($request)->refine();
 
-    $this->pipe->__invoke($this->refine, $this->closure);
-
-    $builder = $this->refine->getResource();
-
-    expect($builder->getQuery()->wheres)
+    expect($this->refine->getBuilder()->getQuery()->wheres)
         ->{0}->toBeSearch('name', 'and')
         ->{1}->toBeSearch('description', 'or');
 
     expect($this->refine->getTerm())
-        ->toBe('search value');
+        ->toBe($this->term);
 });
 
-it('disables', function () {
+it('matches columns to search against', function () {
+
+})->todo();
+
+it('does not search if not searchable', function () {
     $request = Request::create('/', 'GET', [
-        'search' => 'search+value',
+        $this->refine->getSearchKey() => $this->query,
     ]);
 
-    $this->refine->request($request)->disableSearching();
+    $this->refine->request($request)->notSearchable()->refine();
 
-    $this->pipe->__invoke($this->refine, $this->closure);
-
-    $builder = $this->refine->getResource();
-
-    expect($builder->getQuery()->wheres)
+    expect($this->refine->getBuilder()->getQuery()->wheres)
         ->toBeEmpty();
 
     expect($this->refine->getTerm())
@@ -81,17 +78,17 @@ it('refines with match', function () {
         'match' => 'name',
     ]);
 
-    $this->refine->request($request);
+    $this->refine->request($request)->refine();
 
-    $this->pipe->__invoke($this->refine, $this->closure);
-
-    $builder = $this->refine->getResource();
-
-    expect($builder->getQuery()->wheres)
+    expect($this->refine->getBuilder()->getQuery()->wheres)
         ->toBeOnlySearch('name');
 
     expect($this->refine->getTerm())
         ->toBe('search value');
+});
+
+it('does not search if scope does not match', function () {
+
 });
 
 describe('scope', function () {
@@ -107,11 +104,9 @@ describe('scope', function () {
 
         $this->refine->request($request);
 
-        $this->pipe->__invoke($this->refine, $this->closure);
+        $this->refine->refine();
 
-        $builder = $this->refine->getResource();
-
-        expect($builder->getQuery()->wheres)
+        expect($this->refine->getBuilder()->getQuery()->wheres)
             ->toBeEmpty();
 
         expect($this->refine->getTerm())
@@ -126,11 +121,9 @@ describe('scope', function () {
 
         $this->refine->request($request);
 
-        $this->pipe->__invoke($this->refine, $this->closure);
+        $this->refine->refine();
 
-        $builder = $this->refine->getResource();
-
-        expect($builder->getQuery()->wheres)
+        expect($this->refine->getBuilder()->getQuery()->wheres)
             ->toBeOnlySearch('description');
 
         expect($this->refine->getTerm())

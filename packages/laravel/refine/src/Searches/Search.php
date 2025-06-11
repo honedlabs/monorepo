@@ -33,7 +33,7 @@ class Search extends Refiner
     }
 
     /**
-     * Handle the refinement.
+     * Handle the searching of the query.
      *
      * @param  TBuilder  $query
      * @param  string|null  $term
@@ -41,46 +41,40 @@ class Search extends Refiner
      * @param  bool  $or
      * @return bool
      */
-    public function handle($query, $term, $columns, $or = false)
+    public function handle($query, $term, $columns, $or)
     {
-        $this->checkIfActive($columns, $term);
+        $this->checkIfActive($columns);
 
         if ($this->isInactive() || ! $term) {
             return false;
         }
 
-        if (! $this->hasQuery()) {
-            $this->query(Closure::fromCallable([$this, 'apply']));
-        }
-
-        $this->modifyQuery($query, [
-            ...$this->getBindings($term, $query),
+        return $this->refine($query, [
+            ...$this->getBindings($query),
             'boolean' => $or ? 'or' : 'and',
-            'term' => $term,
             'search' => $term,
+            'term' => $term,
         ]);
-
-        return true;
     }
 
     /**
-     * Add the search query scope to the builder.
+     * Add a search scope to the query.
      *
-     * @param  TBuilder  $builder
-     * @param  string  $value
+     * @param  TBuilder  $query
+     * @param  string  $term
      * @param  string  $column
      * @param  string  $boolean
      * @return void
      */
-    public function apply($builder, $value, $column, $boolean = 'and')
+    public function apply($query, $term, $column, $boolean)
     {
         if ($this->isFullText()) {
-            $this->searchRecall($builder, $value, $column, $boolean);
+            $this->searchRecall($query, $term, $column, $boolean);
 
             return;
         }
 
-        $this->searchPrecision($builder, $value, $column, $boolean);
+        $this->searchPrecision($query, $term, $column, $boolean);
     }
 
     /**
@@ -95,14 +89,15 @@ class Search extends Refiner
     }
 
     /**
-     * Check if the search is active.
+     * Determine if the search is active.
      *
-     * @param  array<int, string>|null  $column
-     * @param  string  $term
+     * @param  array<int, string>|null  $columns
      * @return void
      */
-    protected function checkIfActive($columns, $term)
+    protected function checkIfActive($columns)
     {
-        $this->active(! $columns || ! in_array($term, $columns, true));
+        $this->active(
+            (! $columns) ?: in_array($this->getParameter(), $columns, true),
+        );
     }
 }

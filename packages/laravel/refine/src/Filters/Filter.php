@@ -268,59 +268,64 @@ class Filter extends Refiner
         return $value ?? $this->getDefault();
     }
 
-    public function handle($builder, $value)
+    /**
+     * Handle refining the query.
+     *
+     * @param  TBuilder  $query
+     * @param  mixed  $value
+     * @return bool
+     */
+    public function handle($query, $value)
     {
-        $this->value = $this->transformParameter($value);
+        $value = $this->transformParameter($value);
 
-        $this->active(filled($this->value));
+        $this->value($value);
 
-        if ($this->isInactive() || ! $this->validate($this->value)) {
+        $this->checkIfActive($value);
+
+        if ($this->isInactive() || ! $this->validate($value)) {
             return false;
         }
 
-        $bindings = $this->getBindings($this->value, $builder);
-
-        if (! $this->hasQuery()) {
-            $this->query(Closure::fromCallable([$this, 'apply']));
-        }
-
-        $this->modifyQuery($builder, $bindings);
-
-        return true;
+        return $this->refine($query, [
+            ...$this->getBindings($query),
+            'operator' => $this->getOperator(),
+            'value' => $value,
+        ]);
     }
 
     /**
-     * Apply the default filter query to the builder.
+     * Add a filter scope to the query.
      *
-     * @param  TBuilder  $builder
+     * @param  TBuilder  $query
      * @param  string  $column
      * @param  string|null  $operator
      * @param  mixed  $value
      * @return void
      */
-    public function apply($builder, $column, $operator, $value)
+    public function apply($query, $column, $operator, $value)
     {
         match (true) {
             // in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) &&
             //     is_string($value) => $this->searchPrecision(
-            //         $builder,
+            //         $query,
             //         $value,
             //         $column,
             //         operator: $operator
             //     ),
 
             $this->isMultiple() ||
-                $this->interpretsArray() => $builder->whereIn($column, $value),
+                $this->interpretsArray() => $query->whereIn($column, $value),
 
             $this->interpretsDate() =>
                 // @phpstan-ignore-next-line
-                $builder->whereDate($column, $operator, $value),
+                $query->whereDate($column, $operator, $value),
 
             $this->interpretsTime() =>
                 // @phpstan-ignore-next-line
-                $builder->whereTime($column, $operator, $value),
+                $query->whereTime($column, $operator, $value),
 
-            default => $builder->where($column, $operator, $value),
+            default => $query->where($column, $operator, $value),
         };
     }
 
@@ -347,13 +352,16 @@ class Filter extends Refiner
      * @param  $this  $filter
      * @return $this|void
      */
-    protected function definition(self $filter)
+    protected function definition(Filter $filter)
     {
         return $filter;
     }
 
     /**
-     * {@inheritdoc}
+     * Transform the value for the filter.
+     *
+     * @param  mixed  $value
+     * @return mixed
      */
     protected function transformParameter($value)
     {
@@ -365,12 +373,13 @@ class Filter extends Refiner
     }
 
     /**
-     * {@inheritdoc}
+     * Determine if the filter is active.
+     *
+     * @param  mixed  $value
+     * @return void
      */
-    protected function getBindings($value, $builder)
+    protected function checkIfActive($value)
     {
-        return array_merge(parent::getBindings($value, $builder), [
-            'operator' => $this->getOperator(),
-        ]);
+        $this->active(filled($value));
     }
 }

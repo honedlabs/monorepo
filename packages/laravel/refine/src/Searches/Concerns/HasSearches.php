@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Searches\Concerns;
 
-use Honed\Refine\Searches\Search;
-use Illuminate\Support\Arr;
-
-use function array_filter;
 use function array_map;
 use function array_merge;
+
+use Honed\Core\Interpret;
+use function array_filter;
 use function array_values;
+use Illuminate\Support\Arr;
+use Honed\Refine\Searches\Search;
 
 trait HasSearches
 {
@@ -313,6 +314,44 @@ trait HasSearches
     public function isSearching()
     {
         return filled($this->getTerm());
+    }
+
+    /**
+     * Get the search value from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string|null
+     */
+    public function getSearchValue($request)
+    {
+        $key = $this->getSearchKey();
+
+        $term = Interpret::string($request, $key);
+
+        if (! $term) {
+            return null;
+        }
+
+        return str_replace('+', ' ', trim($term));
+    }
+
+    /**
+     * Get the columns to search on from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array<int,string>|null
+     */
+    public function getSearchColumns($request)
+    {
+        if ($this->isNotMatchable()) {
+            return null;
+        }
+
+        $delimiter = $this->getDelimiter();
+        
+        $key = $this->getMatchKey();
+
+        return Interpret::array($request, $key, $delimiter, 'string');
     }
 
     /**

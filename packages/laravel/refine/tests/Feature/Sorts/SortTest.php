@@ -7,26 +7,27 @@ use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();
+    $this->name = 'name';
     $this->sort = Sort::make('name');
 });
 
 it('has direction', function () {
     expect($this->sort)
         ->getDirection()->toBeNull()
-        ->direction('asc')->toBe($this->sort)
-        ->getDirection()->toBe('asc')
+        ->direction(Sort::ASCENDING)->toBe($this->sort)
+        ->getDirection()->toBe(Sort::ASCENDING)
         ->isAscending()->toBeTrue()
         ->isDescending()->toBeFalse()
-        ->direction('desc')->toBe($this->sort)
-        ->getDirection()->toBe('desc')
+        ->direction(Sort::DESCENDING)->toBe($this->sort)
+        ->getDirection()->toBe(Sort::DESCENDING)
         ->isAscending()->toBeFalse()
         ->isDescending()->toBeTrue();
 });
 
 it('has parameter', function () {
     expect($this->sort)
-        ->getAscendingValue()->toBe('name')
-        ->getDescendingValue()->toBe('-name');
+        ->getAscendingValue()->toBe($this->name)
+        ->getDescendingValue()->toBe('-'.$this->name);
 });
 
 it('has next direction', function () {

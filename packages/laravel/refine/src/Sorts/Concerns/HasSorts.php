@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Sorts\Concerns;
 
-use Closure;
+use Honed\Core\Interpret;
 use Honed\Refine\Sorts\Sort;
 use Illuminate\Support\Arr;
 
@@ -116,20 +116,6 @@ trait HasSorts
     }
 
     /**
-     * Set a default sort, which will not be serialized.
-     *
-     * @param  string|Sort|Closure  $sort
-     * @param  string  $direction
-     * @return $this
-     */
-    public function defaultSort($sort, $direction = 'desc')
-    {
-        // $this->defaultSort = $sort;
-
-        return $this;
-    }
-
-    /**
      * Get the default sort.
      *
      * @return Sort|null
@@ -176,6 +162,25 @@ trait HasSorts
             $this->getSorts(),
             static fn (Sort $sort) => $sort->isActive()
         );
+    }
+
+    /**
+     * Get the sort parameter from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array{string|null, 'asc'|'desc'|null}
+     */
+    public function getSortValue($request)
+    {
+        $key = $this->getSortKey();
+
+        $sort = Interpret::string($request, $key);
+
+        return match (true) {
+            ! $sort => [null, null],
+            str_starts_with($sort, '-') => [mb_substr($sort, 1), 'desc'],
+            default => [$sort, 'asc'],
+        };
     }
 
     /**

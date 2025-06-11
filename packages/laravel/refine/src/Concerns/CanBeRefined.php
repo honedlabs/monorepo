@@ -123,7 +123,7 @@ trait CanBeRefined
      *
      * @return array<string, mixed>
      */
-    public function refinedToArray()
+    public function refineToArray()
     {
         return [
             'sort' => $this->getSortKey(),
@@ -170,17 +170,15 @@ trait CanBeRefined
      */
     protected function search()
     {
-        $builder = $this->getBuilder();
+        $this->term = $this->getSearchValue($this->request);
 
-        $this->term = $this->getSearch($this->request);
-
-        $columns = $this->getMatch($this->request);
+        $columns = $this->getSearchColumns($this->request);
 
         if ($this->isScout()) {
             $model = $this->getModel();
 
-            $builder->whereIn(
-                $builder->qualifyColumn($model->getKeyName()),
+            $this->builder->whereIn(
+                $this->builder->qualifyColumn($model->getKeyName()),
                 // @phpstan-ignore-next-line method.notFound
                 $model->search($this->term)->keys()
             );
@@ -191,11 +189,9 @@ trait CanBeRefined
         $or = false;
 
         foreach ($this->getSearches() as $search) {
-            $outcome = $search->handle(
-                $builder, $this->term, $or, $columns
+            $or |= $search->handle(
+                $this->builder, $this->term, $columns, $or
             );
-
-            $or = $or || $outcome;
         }
     }
 
@@ -206,16 +202,10 @@ trait CanBeRefined
      */
     protected function filter()
     {
-        $builder = $this->getBuilder();
-
         foreach ($this->getFilters() as $filter) {
-            $key = $this->formatScope($filter->getParameter());
+            $value = $this->getFilterValue($this->request, $filter);
 
-            $value = $filter->getRequestValue(
-                $this->request, $key, $this->delimiter
-            );
-
-            $filter->handle($builder, $value);
+            $filter->handle($this->builder, $value);
         }
     }
 
@@ -226,15 +216,13 @@ trait CanBeRefined
      */
     protected function sort()
     {
-        $builder = $this->getBuilder();
-
-        [$parameter, $direction] = $this->getSort($this->request);
+        [$parameter, $direction] = $this->getSortValue($this->request);
 
         $sorted = false;
 
         foreach ($this->getSorts() as $sort) {
             $sorted |= $sort->handle(
-                $builder, $parameter, $direction
+                $this->builder, $parameter, $direction
             );
         }
 
@@ -242,7 +230,7 @@ trait CanBeRefined
             $parameter = $sort->getParameter();
 
             $sort->handle(
-                $builder, $parameter, $direction
+                $this->builder, $parameter, $direction
             );
 
             return;
@@ -264,61 +252,8 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function persistData() {}
-
-    /**
-     * Get the search term from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string|null
-     */
-    protected function getSearch($request)
+    protected function persistData()
     {
-        $key = $this->getSearchKey();
-
-        $term = Interpret::string($request, $key);
-
-        if (! $term) {
-            return null;
-        }
-
-        return str_replace('+', ' ', trim($term));
-    }
-
-    /**
-     * Get the sort parameter from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array{string|null, 'asc'|'desc'|null}
-     */
-    protected function getSort($request)
-    {
-        $key = $this->getSortKey();
-
-        $sort = Interpret::string($request, $key);
-
-        return match (true) {
-            ! $sort => [null, null],
-            str_starts_with($sort, '-') => [mb_substr($sort, 1), 'desc'],
-            default => [$sort, 'asc'],
-        };
-    }
-
-    /**
-     * Get the search columns from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array<int,string>|null
-     */
-    protected function getMatch($request)
-    {
-        if ($this->isNotMatchable()) {
-            return null;
-        }
-
-        $delimiter = $this->getDelimiter();
-        $key = $this->getMatchKey();
-
-        return Interpret::array($request, $key, $delimiter, 'string');
+        //
     }
 }

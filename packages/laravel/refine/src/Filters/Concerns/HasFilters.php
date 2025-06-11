@@ -121,6 +121,22 @@ trait HasFilters
     }
 
     /**
+     * Get the filter value from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  Filter  $filter
+     * @return mixed
+     */
+    public function getFilterValue($request, $filter)
+    {
+        $key = $this->formatScope($filter->getParameter());
+
+        $delimiter = $this->getDelimiter();
+
+        return $filter->interpret($request, $key, $delimiter);
+    }
+
+    /**
      * Get the filters as an array for serialization.
      *
      * @return array<int,array<string,mixed>>
