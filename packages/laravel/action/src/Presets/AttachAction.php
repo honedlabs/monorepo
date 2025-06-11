@@ -105,14 +105,4 @@ abstract class AttachAction implements Actionable
     {
         //
     }
-
-    /**
-     * Indicate whether the parent model should be touched.
-     * 
-     * @return bool
-     */
-    protected function shouldTouch()
-    {
-        return true;
-    }
 }
