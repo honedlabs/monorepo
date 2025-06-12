@@ -11,15 +11,7 @@ use Honed\Action\Presets\UpdateAction;
  *
  * @extends \Honed\Action\Presets\UpdateAction<TModel>
  */
-class StoreProduct extends UpdateAction
+class UpdateProduct extends UpdateAction
 {
-    /**
-     * Get the model to store the input data in.
-     *
-     * @return class-string<TModel>
-     */
-    protected function for()
-    {
-        return \Workbench\App\Models\Product::class;
-    }
+    //
 } 
