@@ -9,7 +9,7 @@ use Honed\Action\Contracts\Actionable;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class ForceDestroyAction implements Actionable
+class ForceDestroyAction implements Actionable
 {
     use Concerns\CanBeTransaction;
 

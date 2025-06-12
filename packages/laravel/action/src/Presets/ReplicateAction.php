@@ -12,7 +12,7 @@ use Workbench\App\Models\User;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class ReplicateAction implements Actionable
+class ReplicateAction implements Actionable
 {
     use Concerns\CanBeTransaction;
 

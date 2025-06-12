@@ -4,6 +4,11 @@ namespace Workbench\App\Actions\Product;
 
 use Honed\Action\Presets\AttachAction;
 
+/**
+ * @template TModel of \Workbench\App\Models\Product
+ * @template TUser of \Workbench\App\Models\User
+ * @extends \Honed\Action\Presets\AttachAction<TModel, TUser>
+ */
 class AttachUser extends AttachAction
 {
     /**

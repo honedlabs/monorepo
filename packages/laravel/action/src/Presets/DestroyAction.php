@@ -9,16 +9,16 @@ use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TArg of 'model' | 'models' | 'query' = 'model'
+ * @template TArg of 'model' | 'models' | 'query' | 'relationship' = 'model'
  */
-abstract class DestroyAction implements Actionable
+class DestroyAction implements Actionable
 {
     use Concerns\CanBeTransaction;
 
     /**
      * Destroy the model(s).
      * 
-     * @param TArg is 'model' ? TModel : TArg is 'models' ? iterable<int, TModel> : \Illuminate\Database\Eloquent\Builder<TModel> $model
+     * @param TArg is 'model' ? TModel : TArg is 'models' ? iterable<int, TModel> : TArg is 'query' ? \Illuminate\Database\Eloquent\Builder<TModel> : \Illuminate\Database\Eloquent\Relations\Relation<TModel, TModel> $model
      * @return void
      */
     public function handle($model)
@@ -38,7 +38,7 @@ abstract class DestroyAction implements Actionable
      */
     protected function destroy($model)
     {
-        if (Arr::accessible($model)) {
+        if (is_iterable($model)) {
             foreach ($model as $item) {
                 $item->delete();
             }

@@ -8,11 +8,7 @@ use Workbench\App\Models\User;
 beforeEach(function () {
     $this->action = new AttachUser();
 
-    $this->product = Product::factory()
-        ->create();
-
-    $this->user = User::factory()
-        ->create();
+    $this->product = Product::factory()->create();
 
     $this->assertDatabaseEmpty('product_user');
 });

@@ -10,7 +10,7 @@ use Illuminate\Support\Arr;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class RestoreAction implements Actionable
+class RestoreAction implements Actionable
 {
     use Concerns\CanBeTransaction;
 

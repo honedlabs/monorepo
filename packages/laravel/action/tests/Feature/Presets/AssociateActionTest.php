@@ -7,11 +7,9 @@ use Workbench\App\Models\User;
 beforeEach(function () {
     $this->action = new AssociateUser();
 
-    $this->product = Product::factory()
-        ->create();
+    $this->product = Product::factory()->create();
 
-    $this->user = User::factory()
-        ->create();
+    $this->user = User::factory()->create();
 });
 
 it('handles model association', function () {
