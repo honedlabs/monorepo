@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Tests\Stubs;
+namespace Workbench\App\Enums;
 
 enum Status: string
 {

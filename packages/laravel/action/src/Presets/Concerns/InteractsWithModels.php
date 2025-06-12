@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Honed\Action\Presets\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Traversable;
 
 trait InteractsWithModels
 {
@@ -33,6 +35,21 @@ trait InteractsWithModels
     protected function shouldTouch()
     {
         return true;
+    }
+
+    /**
+     * Deiterate the value if it is an iterable.
+     * 
+     * @param mixed $value
+     * @return array<int, mixed>
+     */
+    protected function arrayable($value)
+    {
+        return match (true) {
+            is_array($value) => $value,
+            $value instanceof Traversable => iterator_to_array($value),
+            default => [$value],
+        };
     }
 
 }

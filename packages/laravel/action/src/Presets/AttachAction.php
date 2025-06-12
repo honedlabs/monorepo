@@ -8,6 +8,7 @@ use Honed\Action\Contracts\Actionable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -20,7 +21,7 @@ abstract class AttachAction implements Actionable
     use Concerns\InteractsWithModels;
 
     /**
-     * Get the relation name, must be a belongs-to-many relationship.
+     * Get the relation name, must be a belongs to many relationship.
      * 
      * @return string
      */
@@ -42,8 +43,8 @@ abstract class AttachAction implements Actionable
      * Attach models to the parent model.
      * 
      * @param TModel $model
-     * @param int|string|TAttach|array<int, int|string|TAttach> $attachments
-     * @param array<string, mixed> $attributes
+     * @param int|string|TAttach|iterable<int, int|string|TAttach> $attachments
+     * @param iterable<string, mixed> $attributes
      * 
      * @return void
      */
@@ -64,8 +65,6 @@ abstract class AttachAction implements Actionable
      */
     protected function prepare($attachments, $attributes)
     {
-        $attachments = is_array($attachments) ? $attachments : [$attachments];
-        
         return Arr::mapWithKeys(
             $attachments,
             fn ($attachment) => [
@@ -78,13 +77,17 @@ abstract class AttachAction implements Actionable
      * Store the attachments in the database.
      * 
      * @param TModel $model
-     * @param int|string|TAttach|array<int, int|string|TAttach> $attachments
-     * @param array<string, mixed> $attributes
+     * @param int|string|TAttach|iterable<int, int|string|TAttach> $attachments
+     * @param iterable<string, mixed> $attributes
      * 
      * @return void
      */
     protected function attach($model, $attachments, $attributes)
     {
+        $attachments = $this->arrayable($attachments);
+
+        $attributes = $this->arrayable($attributes);
+
         $attaching = $this->prepare($attachments, $attributes);
 
         $this->getRelation($model)->attach($attaching, touch: $this->shouldTouch());

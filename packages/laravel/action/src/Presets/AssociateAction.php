@@ -19,7 +19,7 @@ abstract class AssociateAction implements Actionable
     use Concerns\CanBeTransaction;
 
     /**
-     * Get the relation name, must be a belongs-to-many relationship.
+     * Get the relation name, must be a belongs to relationship.
      * 
      * @return string
      */
