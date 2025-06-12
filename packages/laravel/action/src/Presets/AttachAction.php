@@ -20,11 +20,11 @@ abstract class AttachAction implements Actionable
     use Concerns\InteractsWithModels;
 
     /**
-     * Get the relation name, must be a many-to-many relationship.
+     * Get the relation name, must be a belongs-to-many relationship.
      * 
      * @return string
      */
-    abstract protected function relation();
+    abstract protected function relationship();
 
     /**
      * Get the relation for the model.
@@ -35,7 +35,7 @@ abstract class AttachAction implements Actionable
     protected function getRelation($model)
     {
         /** @var \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach> */
-        return $model->{$this->relation()}();
+        return $model->{$this->relationship()}();
     }
 
     /**
@@ -93,7 +93,7 @@ abstract class AttachAction implements Actionable
     }
 
     /**
-     * Perform any actions after the model has been attached.
+     * Perform additional logic after the model has been attached.
      * 
      * @param TModel $model
      * @param int|string|TAttach|array<int, int|string|TAttach> $attachments

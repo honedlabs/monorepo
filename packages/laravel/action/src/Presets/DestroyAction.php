@@ -48,7 +48,7 @@ abstract class DestroyAction implements Actionable
     }
 
     /**
-     * Perform any actions after the model has been deleted.
+     * Perform additional logic after the model has been deleted.
      * 
      * @param TArg is 'model' ? TModel : TArg is 'models' ? iterable<int, TModel> : \Illuminate\Database\Eloquent\Builder<TModel> $model
      * @return void

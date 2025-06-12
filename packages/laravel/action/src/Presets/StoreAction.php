@@ -26,7 +26,6 @@ abstract class UpdateAction implements Actionable
     /**
      * Store the input data in the database.
      * 
-     * @param TModel $model
      * @param \Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest $input
      * @return TModel $model
      */
@@ -63,7 +62,9 @@ abstract class UpdateAction implements Actionable
     {
         $prepared = $this->prepare($input);
 
-        $model = $this->for()::create($prepared);
+        $class = $this->for();
+
+        $model = (new $class)->query()->create($prepared);
 
         $this->after($model, $input, $prepared);
 

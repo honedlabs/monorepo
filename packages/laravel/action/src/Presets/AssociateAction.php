@@ -23,7 +23,7 @@ abstract class AssociateAction implements Actionable
      * 
      * @return string
      */
-    abstract protected function relation();
+    abstract protected function relationship();
 
     /**
      * Get the relation for the model.
@@ -34,7 +34,7 @@ abstract class AssociateAction implements Actionable
     protected function getRelation($model)
     {
         /** @var \Illuminate\Database\Eloquent\Relations\BelongsTo<TParent, TModel> */
-        return $model->{$this->relation()}();
+        return $model->{$this->relationship()}();
     }
 
     /**
@@ -67,7 +67,7 @@ abstract class AssociateAction implements Actionable
     }
 
     /**
-     * Perform any actions after the model has been attached.
+     * Perform additional logic after the model has been attached.
      * 
      * @param TModel $model
      * @param int|string|TParent $parent
