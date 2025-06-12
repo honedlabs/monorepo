@@ -89,6 +89,16 @@ class InvokableRequest extends FormRequest
     }
 
     /**
+     * Get the type of the action.
+     *
+     * @return 'inline'|'bulk'|'page'
+     */
+    public function type()
+    {
+        return $this->validated('type');
+    }
+
+    /**
      * Get the models to apply the action to.
      *
      * @return array<int,string|int>

@@ -9,6 +9,7 @@ use Honed\Action\Concerns\CanResolveActions;
 use Honed\Action\Concerns\HandlesActions;
 use Honed\Action\Concerns\HasHandler;
 use Honed\Action\Contracts\Handler;
+use Honed\Action\Handler as ActionHandler;
 use Honed\Core\Concerns\HasResource;
 use Honed\Core\Primitive;
 use Illuminate\Container\Container;
@@ -23,7 +24,7 @@ use function array_merge;
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  */
-class ActionGroup extends Primitive implements Handler
+class ActionGroup extends Primitive
 {
     use CanResolveActions;
 
@@ -135,34 +136,16 @@ class ActionGroup extends Primitive implements Handler
     }
 
     /**
-     * Set the model to be used to resolve inline actions.
-     *
-     * @param  TModel|null  $model
-     * @return $this
-     */
-    public function for($model)
-    {
-        $this->model = $model;
-
-        return $this;
-    }
-
-    /**
-     * Get the model to be used to resolve inline actions.
-     *
-     * @return TModel|null
-     */
-    public function getModel()
-    {
-        return $this->model;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getRouteKeyName()
     {
         return 'action';
+    }
+
+    public function getHandler()
+    {
+        return config('action.handler', ActionHandler::class);
     }
 
     /**

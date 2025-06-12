@@ -14,26 +14,54 @@ use Honed\Core\Concerns\HasResource;
 use Honed\Core\Parameters;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ * @template TClass of \Honed\Action\Contracts\HandlesActions
  */
 abstract class Handler
 {
-    abstract public function getKey();
+    /**
+     * The instance to be used to resolve the action.
+     *
+     * @var TClass
+     */
+    protected $instance;
 
-    abstract public function getActions();
+    /**
+     * Get the key to use for selecting records.
+     *
+     * @return string
+     */
+    abstract protected function getKey();
 
-    abstract public function getBuilder();
+    /**
+     * Get the actions to be used to resolve the action.
+     *
+     * @return array<int,Action>
+     */
+    abstract protected function getActions();
 
-    public static function make(
-        protected $instance
-    ) {
-        
+    /**
+     * Get the query builder to be used to retrieve resources.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
+     */
+    abstract protected function getBuilder();
+
+    /**
+     * Handle the incoming action request.
+     *
+     * @param  TClass  $instance
+     * @param  Http\Requests\InvokableRequest  $request
+     * @return Responsable|RedirectResponse
+     */
+    public static function handle($instance, $request)
+    {
+        return (new self($instance))->resolve($request);
     }
 
     /**
@@ -42,7 +70,7 @@ abstract class Handler
      * @param  Http\Requests\InvokableRequest  $request
      * @return Responsable|RedirectResponse
      */
-    public function handle($request)
+    protected function resolve($request)
     {
         /** @var string */
         $type = $request->validated('type');
@@ -84,7 +112,7 @@ abstract class Handler
      * @param  ActionData  $data
      * @return array{Action|null,TModel|TBuilder|null}
      */
-    public function resolveAction($type, $data)
+    protected function resolveAction($type, $data)
     {
         return match ($type) {
             'inline' => $this->resolveInlineAction(type($data)->as(InlineData::class)),
@@ -100,7 +128,7 @@ abstract class Handler
      * @param  BulkData  $data
      * @return array{Action|null, TBuilder}
      */
-    public function resolveBulkAction($data)
+    protected function resolveBulkAction($data)
     {
         $resource = $this->getResource();
         $key = $this->getKey($resource);
@@ -122,7 +150,7 @@ abstract class Handler
      * @param  ActionData  $data
      * @return array{Action|null, TBuilder}
      */
-    public function resolvePageAction($data)
+    protected function resolvePageAction($data)
     {
         return [
             $this->getAction($data->name, PageAction::class),
@@ -137,7 +165,7 @@ abstract class Handler
      * @param  class-string<Action>  $type
      * @return Action|null
      */
-    public function getAction($name, $type)
+    protected function getAction($name, $type)
     {
         return Arr::first(
             $this->getActions(),
