@@ -10,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class UpdateAction implements Actionable
+abstract class StoreAction implements Actionable
 {
     use Concerns\CanBeTransaction;
 
