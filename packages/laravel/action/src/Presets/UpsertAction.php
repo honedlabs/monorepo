@@ -11,7 +11,7 @@ use Illuminate\Support\ValidatedInput;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class UpdateAction implements Actionable
+abstract class UpsertAction implements Actionable
 {
     use Concerns\CanBeTransaction;
 
