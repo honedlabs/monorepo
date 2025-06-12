@@ -18,7 +18,7 @@ class PriceFilter extends Filter
         return new self();
     }
 
-    protected function definition(Filter $filter)
+    protected function definition(Filter $filter): Filter
     {
         return $filter
             ->name('price')

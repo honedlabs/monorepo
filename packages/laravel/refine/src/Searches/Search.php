@@ -129,10 +129,10 @@ class Search extends Refiner
     /**
      * Define the search instance.
      *
-     * @param  Search<TModel, TBuilder>  $search
-     * @return Search<TModel, TBuilder>|void
+     * @param  $this  $search
+     * @return $this
      */
-    protected function definition(self $search)
+    protected function definition(self $search): self
     {
         return $search;
     }

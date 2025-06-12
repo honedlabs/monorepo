@@ -39,13 +39,9 @@ it('evaluates named closure dependencies', function () {
     $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
 
     expect($this->test->request($request)->for(Product::query()))
-        ->evaluate(fn ($request) => $request->get('key'))->toBe('value')
+        ->evaluate(fn ($request) => $request->get('key'))->toBe('value');
         // ->evaluate(fn ($route) => $route)->toBeInstanceOf(Route::class)
-        ->evaluate(fn ($builder) => $builder->getModel())->toBeInstanceOf(Product::class)
-        ->evaluate(fn ($query) => $query->getModel())->toBeInstanceOf(Product::class)
-        ->evaluate(fn ($product) => $product->getModel())->toBeInstanceOf(Product::class)
-        ->evaluate(fn ($products) => $products->getModel())->toBeInstanceOf(Product::class);
-})->skip();
+});
 
 it('evaluates typed closure dependencies', function () {
     $product = Product::factory()->create();

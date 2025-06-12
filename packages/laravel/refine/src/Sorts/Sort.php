@@ -131,10 +131,10 @@ class Sort extends Refiner
     /**
      * Define the sort instance.
      *
-     * @param  Sort<TModel, TBuilder>  $sort
-     * @return Sort<TModel, TBuilder>|void
+     * @param  $this  $sort
+     * @return $this
      */
-    protected function definition(self $sort)
+    protected function definition(self $sort): self
     {
         return $sort;
     }

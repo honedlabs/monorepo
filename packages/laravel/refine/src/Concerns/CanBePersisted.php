@@ -9,6 +9,13 @@ use Illuminate\Support\Str;
 trait CanBePersisted
 {
     /**
+     * The instance of the persistence manager.
+     *
+     * @var mixed
+     */
+    protected $persist;
+
+    /**
      * The name of the key when persisting data.
      *
      * @var string|null

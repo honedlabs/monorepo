@@ -320,7 +320,7 @@ class Filter extends Refiner
         $value = $this->getValue();
 
         if ($value instanceof CarbonInterface) {
-            $value = $value->toIso8601String();
+            $value = $value->format('Y-m-d\TH:i:s');
         }
 
         return array_merge(parent::toArray(), [
@@ -333,9 +333,9 @@ class Filter extends Refiner
      * Define the filter instance.
      *
      * @param  $this  $filter
-     * @return $this|void
+     * @return $this
      */
-    protected function definition(self $filter)
+    protected function definition(self $filter): self
     {
         return $filter;
     }
