@@ -20,8 +20,10 @@ trait CanBeTransaction
      * Perform a database operation, possibly wrapped in a transaction and 
      * return the result.
      * 
-     * @param  callback
-     * @return mixed
+     * @template TReturn of mixed
+     * 
+     * @param  \Closure():TReturn $callback
+     * @return TReturn
      */
     protected function transact($callback)
     {
