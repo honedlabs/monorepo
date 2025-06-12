@@ -4,37 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
-use Illuminate\Support\Str;
-
-trait CanBePersisted
+trait CanPersistRefinements
 {
-    /**
-     * The instance of the persistence manager.
-     *
-     * @var mixed
-     */
-    protected $persist;
-
-    /**
-     * The name of the key when persisting data.
-     *
-     * @var string|null
-     */
-    protected $persistKey;
-
-    /**
-     * The default driver to use for persisting data.
-     *
-     * @var 'session'|'cookie'
-     */
-    protected $persistDriver = 'session';
-
-    /**
-     * The time to live for the persistent data, if using the cookie driver.
-     *
-     * @var int
-     */
-    protected $persistFor = 15724800;
+    use CanPersistData;
 
     /**
      * The driver to use for persisting search data.
@@ -56,75 +28,6 @@ trait CanBePersisted
      * @var bool|'session'|'cookie'|null
      */
     protected $persistSort;
-
-    /**
-     * Set the name of the key to use when persisting data.
-     *
-     * @param  string  $key
-     * @return $this
-     */
-    public function persistKey($key)
-    {
-        $this->persistKey = $key;
-
-        return $this;
-    }
-
-    /**
-     * Get the name of the key to use when persisting data.
-     *
-     * @return string
-     */
-    public function getPersistKey()
-    {
-        return $this->persistKey ?? $this->guessPersistKey();
-    }
-
-    /**
-     * Set the default driver to use for persisting data.
-     *
-     * @param  'session'|'cookie'  $driver
-     * @return $this
-     */
-    public function persistUsing($driver)
-    {
-        $this->persistDriver = $driver;
-
-        return $this;
-    }
-
-    /**
-     * Get the default driver to use for persisting data.
-     *
-     * @return 'session'|'cookie'
-     */
-    public function getPersistDriver()
-    {
-        return $this->persistDriver;
-    }
-
-    /**
-     * Set the time to live for the persistent data, if using the cookie driver.
-     *
-     * @param  int  $seconds
-     * @return $this
-     */
-    public function persistFor($seconds = 15724800)
-    {
-        $this->persistFor = $seconds;
-
-        return $this;
-    }
-
-    /**
-     * Get the time to live for the persistent data, if using the cookie driver.
-     *
-     * @return int
-     */
-    public function getPersistDuration()
-    {
-        return $this->persistFor;
-    }
 
     /**
      * Set the driver to use for persisting searches.
@@ -258,18 +161,5 @@ trait CanBePersisted
     public function persistInSession()
     {
         return $this->persistent('session');
-    }
-
-    /**
-     * Guess the name of the key to use when persisting data.
-     *
-     * @return string
-     */
-    protected function guessPersistKey()
-    {
-        return Str::of(static::class)
-            ->classBasename()
-            ->slug()
-            ->toString();
     }
 }

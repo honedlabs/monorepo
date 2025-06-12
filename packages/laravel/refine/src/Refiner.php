@@ -128,8 +128,8 @@ abstract class Refiner extends Primitive
             'builder' => $query,
             'query' => $query,
             'q' => $query,
-            'refiner' => $this,
             'name' => $name,
+            'refiner' => $this,
             'column' => $this->qualifyColumn($name, $query),
         ];
     }

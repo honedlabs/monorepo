@@ -16,7 +16,7 @@ abstract class Driver
      * 
      * @var mixed
      */
-    protected $resolvedData = null;
+    protected $resolvedData = [];
 
     /**
      * The key to be used for the instance.

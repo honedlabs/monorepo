@@ -13,7 +13,7 @@ use Honed\Refine\Sorts\Concerns\HasSorts;
 
 trait CanBeRefined
 {
-    use CanBePersisted;
+    use CanPersistRefinements;
     use HasDelimiter;
     use HasFilters;
     use HasRequest;

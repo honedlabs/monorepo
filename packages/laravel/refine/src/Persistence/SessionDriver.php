@@ -17,7 +17,20 @@ class SessionDriver extends Driver
      */
     public function resolve()
     {
-        $this->resolvedData = $this->session->get($this->key);
+        $this->resolvedData = $this->session->get($this->key, []);
+    }
+
+    /**
+     * Set the session to use for the driver.
+     *
+     * @param  \Illuminate\Contracts\Session\Session  $session
+     * @return $this
+     */
+    public function session($session)
+    {
+        $this->session = $session;
+
+        return $this;
     }
 
     /**
