@@ -7,11 +7,9 @@ namespace Honed\Action\Concerns;
 use Honed\Action\Action;
 use Honed\Action\ActionGroup;
 use Honed\Core\Parameters;
-use Illuminate\Support\Arr;
 
 use function array_filter;
 use function array_map;
-use function array_merge;
 use function array_values;
 
 /**
@@ -24,7 +22,7 @@ trait HandlesActions
 {
     /**
      * Whether the actions should be provided.
-     * 
+     *
      * @var bool
      */
     protected $actionable = true;
@@ -35,7 +33,7 @@ trait HandlesActions
      * @var array<int,Action|ActionGroup<TModel, TBuilder>>
      */
     protected $actions = [];
-    
+
     /**
      * Whether the instance should provide inline actions.
      *
@@ -72,7 +70,7 @@ trait HandlesActions
 
     /**
      * Set whether the actions should not be provided.
-     * 
+     *
      * @param  bool  $provide
      * @return $this
      */
@@ -122,7 +120,7 @@ trait HandlesActions
     public function getActions()
     {
         $actions = [];
-        
+
         foreach ($this->actions as $action) {
             if ($action instanceof ActionGroup) {
                 $actions = [...$actions, ...$action->getActions()];
@@ -130,14 +128,14 @@ trait HandlesActions
                 $actions[] = $action;
             }
         }
-        
+
         return $actions;
     }
 
     /**
      * Set the inline actions for the instance, or update whether the instance should provide inline actions.
      *
-     * @param  iterable<\Honed\Action\Action>|bool $actions
+     * @param  iterable<Action>|bool  $actions
      * @return $this
      */
     public function inlineActions($actions)
@@ -219,7 +217,7 @@ trait HandlesActions
     /**
      * Set the bulk actions for the instance, or update whether the instance should provide bulk actions.
      *
-     * @param  iterable<\Honed\Action\Action>|bool $actions
+     * @param  iterable<Action>|bool  $actions
      * @return $this
      */
     public function bulkActions($actions)
@@ -289,7 +287,7 @@ trait HandlesActions
     /**
      * Set the page actions for the instance, or update whether the instance should provide page actions.
      *
-     * @param  iterable<\Honed\Action\Action>|bool $actions
+     * @param  iterable<Action>|bool  $actions
      * @return $this
      */
     public function pageActions($actions)

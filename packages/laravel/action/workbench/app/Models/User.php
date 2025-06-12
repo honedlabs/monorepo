@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
-use Honed\Action\Attributes\ActionGroup;
 use Honed\Action\Attributes\UseActionGroup;
 use Honed\Action\Concerns\HasActionGroup;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -69,7 +68,7 @@ class User extends Authenticatable
     /**
      * Get the products for the user.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\Workbench\App\Models\Product>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
      */
     public function products()
     {
@@ -79,7 +78,7 @@ class User extends Authenticatable
     /**
      * Get the products that the user has.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\Workbench\App\Models\Product, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Product, $this>
      */
     public function purchasedProducts()
     {

@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Presets;
 
 use Honed\Action\Contracts\Actionable;
-use Honed\Action\Tests\Stubs\Product;
 use Illuminate\Foundation\Http\FormRequest;
-use Workbench\App\Models\User;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -18,9 +16,9 @@ class ReplicateAction implements Actionable
 
     /**
      * Store the input data in the database.
-     * 
-     * @param TModel $model
-     * @param array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest $attributes
+     *
+     * @param  TModel  $model
+     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput|FormRequest  $attributes
      * @return TModel $model
      */
     public function handle($model, $attributes = [])
@@ -37,8 +35,8 @@ class ReplicateAction implements Actionable
 
     /**
      * Prepare the attributes to override on replication
-     * 
-     * @param array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest $attributes
+     *
+     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput|FormRequest  $attributes
      * @return array<string, mixed>
      */
     protected function prepare($attributes)
@@ -48,7 +46,7 @@ class ReplicateAction implements Actionable
 
     /**
      * Get the attributes to exclude from the replication.
-     * 
+     *
      * @return array<int, string>
      */
     protected function except()
@@ -58,9 +56,9 @@ class ReplicateAction implements Actionable
 
     /**
      * Store the record in the database.
-     * 
-     * @param TModel $model
-     * @param array<string, mixed>|\Illuminate\Support\ValidatedInput $attributes
+     *
+     * @param  TModel  $model
+     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput  $attributes
      * @return TModel
      */
     protected function replicate($model, $attributes)
@@ -80,9 +78,9 @@ class ReplicateAction implements Actionable
 
     /**
      * Perform additional logic after the model has been replicated.
-     * 
-     * @param TModel $new
-     * @param TModel $old
+     *
+     * @param  TModel  $new
+     * @param  TModel  $old
      * @return void
      */
     protected function after($new, $old)
@@ -90,4 +88,3 @@ class ReplicateAction implements Actionable
         //
     }
 }
-

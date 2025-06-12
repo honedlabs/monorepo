@@ -14,9 +14,15 @@ beforeEach(function () {
     $this->assertDatabaseEmpty('product_user');
 });
 
-it('attaches a single model', function () {
+it('detaches a single model', function () {
     $user = User::factory()
+        ->hasAttached($this->product, relationship: 'purchasedProducts')
         ->create();
+
+    $this->assertDatabaseHas('product_user', [
+        'product_id' => $this->product->id,
+        'user_id' => $user->id,
+    ]);
 
     $this->action->handle($this->product, $user);
 
@@ -27,7 +33,7 @@ it('attaches a single model', function () {
         'user_id' => $user->id,
         'is_active' => false,
     ]);
-});
+})->only();
 
 it('attaches multiple models', function () {
     $users = User::factory()

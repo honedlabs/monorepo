@@ -8,8 +8,6 @@ use Honed\Action\Contracts\Actionable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -22,30 +20,17 @@ abstract class AttachAction implements Actionable
 
     /**
      * Get the relation name, must be a belongs to many relationship.
-     * 
+     *
      * @return string
      */
     abstract protected function relationship();
 
     /**
-     * Get the relation for the model.
-     * 
-     * @param TModel $model
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach>
-     */
-    protected function getRelation($model)
-    {
-        /** @var \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach> */
-        return $model->{$this->relationship()}();
-    }
-
-    /**
      * Attach models to the parent model.
-     * 
-     * @param TModel $model
-     * @param int|string|TAttach|iterable<int, int|string|TAttach> $attachments
-     * @param iterable<string, mixed> $attributes
-     * 
+     *
+     * @param  TModel  $model
+     * @param  int|string|TAttach|iterable<int, int|string|TAttach>  $attachments
+     * @param  iterable<string, mixed>  $attributes
      * @return void
      */
     public function handle($model, $attachments, $attributes = [])
@@ -56,36 +41,46 @@ abstract class AttachAction implements Actionable
     }
 
     /**
+     * Get the relation for the model.
+     *
+     * @param  TModel  $model
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach>
+     */
+    protected function getRelation($model)
+    {
+        /** @var \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach> */
+        return $model->{$this->relationship()}();
+    }
+
+    /**
      * Prepare the attachments and attributes for the attach method.
-     * 
-     * @param int|string|TAttach|array<int, int|string|TAttach> $attachments
-     * @param array<string, mixed> $attributes
-     * 
+     *
+     * @param  int|string|TAttach|array<int, int|string|TAttach>  $attachments
+     * @param  array<string, mixed>  $attributes
      * @return array<int|string, array<string, mixed>>
      */
     protected function prepare($attachments, $attributes)
     {
+        $attachments = $this->arrayable($attachments);
+
         return Arr::mapWithKeys(
             $attachments,
             fn ($attachment) => [
-                $this->getKey($attachment) => $attributes
+                $this->getKey($attachment) => $attributes,
             ]
         );
     }
 
     /**
      * Store the attachments in the database.
-     * 
-     * @param TModel $model
-     * @param int|string|TAttach|iterable<int, int|string|TAttach> $attachments
-     * @param iterable<string, mixed> $attributes
-     * 
+     *
+     * @param  TModel  $model
+     * @param  int|string|TAttach|iterable<int, int|string|TAttach>  $attachments
+     * @param  iterable<string, mixed>  $attributes
      * @return void
      */
     protected function attach($model, $attachments, $attributes)
     {
-        $attachments = $this->arrayable($attachments);
-
         $attributes = $this->arrayable($attributes);
 
         $attaching = $this->prepare($attachments, $attributes);
@@ -97,11 +92,10 @@ abstract class AttachAction implements Actionable
 
     /**
      * Perform additional logic after the model has been attached.
-     * 
-     * @param TModel $model
-     * @param int|string|TAttach|array<int, int|string|TAttach> $attachments
-     * @param array<int|string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest $attributes
-     * 
+     *
+     * @param  TModel  $model
+     * @param  int|string|TAttach|array<int, int|string|TAttach>  $attachments
+     * @param  array<int|string, mixed>|\Illuminate\Support\ValidatedInput|FormRequest  $attributes
      * @return void
      */
     protected function after($model, $attachments, $attributes)

@@ -80,7 +80,6 @@ trait HandlesBulkActions
         return $this->chunk || $this instanceof ShouldChunk;
     }
 
-
     /**
      * Set the action to chunk the records by id.
      *

@@ -16,9 +16,9 @@ class UpdateAction implements Actionable
 
     /**
      * Update the provided model using the input.
-     * 
-     * @param TModel $model
-     * @param \Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest $input
+     *
+     * @param  TModel  $model
+     * @param  \Illuminate\Support\ValidatedInput|FormRequest  $input
      * @return TModel $model
      */
     public function handle($model, $input)
@@ -35,9 +35,9 @@ class UpdateAction implements Actionable
 
     /**
      * Prepare the input for the update method.
-     * 
-     * @param \Illuminate\Support\ValidatedInput $input
-     * @param TModel $model
+     *
+     * @param  \Illuminate\Support\ValidatedInput  $input
+     * @param  TModel  $model
      * @return array<string, mixed>
      */
     protected function prepare($model, $input)
@@ -47,9 +47,9 @@ class UpdateAction implements Actionable
 
     /**
      * Store the record in the database.
-     * 
-     * @param TModel $model
-     * @param \Illuminate\Support\ValidatedInput $input
+     *
+     * @param  TModel  $model
+     * @param  \Illuminate\Support\ValidatedInput  $input
      * @return TModel
      */
     protected function update($model, $input)
@@ -65,10 +65,10 @@ class UpdateAction implements Actionable
 
     /**
      * Perform additional database transactions after the model has been updated.
-     * 
-     * @param TModel $model
-     * @param \Illuminate\Support\ValidatedInput $input
-     * @param array<string, mixed> $prepared
+     *
+     * @param  TModel  $model
+     * @param  \Illuminate\Support\ValidatedInput  $input
+     * @param  array<string, mixed>  $prepared
      * @return void
      */
     protected function after($model, $input, $prepared)
@@ -76,4 +76,3 @@ class UpdateAction implements Actionable
         //
     }
 }
-

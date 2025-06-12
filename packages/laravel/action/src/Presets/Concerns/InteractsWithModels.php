@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Honed\Action\Presets\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Traversable;
 
 trait InteractsWithModels
 {
     /**
      * Get the key of the model.
-     * 
-     * @param \Illuminate\Database\Eloquent\Model|int|string $model
+     *
+     * @param  Model|int|string  $model
      * @return int|string
      */
     protected function getKey($model)
@@ -26,10 +25,9 @@ trait InteractsWithModels
         return $model;
     }
 
-
     /**
      * Indicate whether touched columns should be updated.
-     * 
+     *
      * @return bool
      */
     protected function shouldTouch()
@@ -39,8 +37,8 @@ trait InteractsWithModels
 
     /**
      * Deiterate the value if it is an iterable.
-     * 
-     * @param mixed $value
+     *
+     * @param  mixed  $value
      * @return array<int, mixed>
      */
     protected function arrayable($value)
@@ -51,5 +49,4 @@ trait InteractsWithModels
             default => [$value],
         };
     }
-
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Action\Presets;
 
 use Honed\Action\Contracts\Actionable;
-use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -17,8 +16,8 @@ class DestroyAction implements Actionable
 
     /**
      * Destroy the model(s).
-     * 
-     * @param TArg is 'model' ? TModel : TArg is 'models' ? iterable<int, TModel> : TArg is 'query' ? \Illuminate\Database\Eloquent\Builder<TModel> : \Illuminate\Database\Eloquent\Relations\Relation<TModel, TModel> $model
+     *
+     * @param TArg is 'model' ? TModel : TArg is 'models' ? iterable<int, TModel> : TArg is 'query' ? \Illuminate\Database\Eloquent\Builder<TModel> : \Illuminate\Database\Eloquent\Relations\Relation<\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Model> $model
      * @return void
      */
     public function handle($model)
@@ -32,8 +31,8 @@ class DestroyAction implements Actionable
 
     /**
      * Destroy the model(s).
-     * 
-     * @param TArg is 'model' ? TModel : TArg is 'models' ? iterable<int, TModel> : \Illuminate\Database\Eloquent\Builder<TModel> $model
+     *
+     * @param TArg is 'model' ? TModel : TArg is 'models' ? iterable<int, TModel> : TArg is 'query' ? \Illuminate\Database\Eloquent\Builder<TModel> : \Illuminate\Database\Eloquent\Relations\Relation<\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Model> $model
      * @return void
      */
     protected function destroy($model)
@@ -49,8 +48,8 @@ class DestroyAction implements Actionable
 
     /**
      * Perform additional logic after the model has been deleted.
-     * 
-     * @param TArg is 'model' ? TModel : TArg is 'models' ? iterable<int, TModel> : \Illuminate\Database\Eloquent\Builder<TModel> $model
+     *
+     * @param TArg is 'model' ? TModel : TArg is 'models' ? iterable<int, TModel> : TArg is 'query' ? \Illuminate\Database\Eloquent\Builder<TModel> : \Illuminate\Database\Eloquent\Relations\Relation<\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Model> $model
      * @return void
      */
     protected function after($model)

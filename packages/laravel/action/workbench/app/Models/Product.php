@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
-use Honed\Refine\Concerns\HasRefiner;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,7 +45,7 @@ class Product extends Model
     /**
      * Get the user that owns the product.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\Workbench\App\Models\User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
      */
     public function user()
     {
@@ -56,7 +55,7 @@ class Product extends Model
     /**
      * Get the users that have the product.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\Workbench\App\Models\User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<User, $this>
      */
     public function users()
     {

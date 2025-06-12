@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Presets;
 
 use Honed\Action\Contracts\Actionable;
-use Honed\Action\Tests\Stubs\Product;
 use Illuminate\Foundation\Http\FormRequest;
-use Workbench\App\Models\User;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -18,15 +16,15 @@ abstract class UpdateAction implements Actionable
 
     /**
      * Get the model to store the input data in.
-     * 
+     *
      * @return class-string<TModel>
      */
     abstract protected function for();
 
     /**
      * Store the input data in the database.
-     * 
-     * @param \Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest $input
+     *
+     * @param  \Illuminate\Support\ValidatedInput|FormRequest  $input
      * @return TModel $model
      */
     public function handle($input)
@@ -43,8 +41,8 @@ abstract class UpdateAction implements Actionable
 
     /**
      * Prepare the input for the update method.
-     * 
-     * @param \Illuminate\Support\ValidatedInput $input
+     *
+     * @param  \Illuminate\Support\ValidatedInput  $input
      * @return array<string, mixed>
      */
     protected function prepare($input)
@@ -54,8 +52,8 @@ abstract class UpdateAction implements Actionable
 
     /**
      * Store the record in the database.
-     * 
-     * @param \Illuminate\Support\ValidatedInput $input
+     *
+     * @param  \Illuminate\Support\ValidatedInput  $input
      * @return TModel
      */
     protected function store($input)
@@ -64,7 +62,7 @@ abstract class UpdateAction implements Actionable
 
         $class = $this->for();
 
-        $model = (new $class)->query()->create($prepared);
+        $model = (new $class())->query()->create($prepared);
 
         $this->after($model, $input, $prepared);
 
@@ -73,10 +71,10 @@ abstract class UpdateAction implements Actionable
 
     /**
      * Perform additional database transactions after the model has been updated.
-     * 
-     * @param TModel $model
-     * @param \Illuminate\Support\ValidatedInput $input
-     * @param array<string, mixed> $prepared
+     *
+     * @param  TModel  $model
+     * @param  \Illuminate\Support\ValidatedInput  $input
+     * @param  array<string, mixed>  $prepared
      * @return void
      */
     protected function after($model, $input, $prepared)
@@ -84,4 +82,3 @@ abstract class UpdateAction implements Actionable
         //
     }
 }
-

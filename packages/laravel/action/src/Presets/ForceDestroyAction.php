@@ -15,8 +15,8 @@ class ForceDestroyAction implements Actionable
 
     /**
      * Force destroy the model.
-     * 
-     * @param TModel $model
+     *
+     * @param  TModel  $model
      * @return void
      */
     public function handle($model)
@@ -30,8 +30,8 @@ class ForceDestroyAction implements Actionable
 
     /**
      * Destroy the model(s).
-     * 
-     * @param TModel $model
+     *
+     * @param  TModel  $model
      * @return void
      */
     protected function forceDestroy($model)
@@ -41,8 +41,8 @@ class ForceDestroyAction implements Actionable
 
     /**
      * Perform additional logic after the model has been deleted.
-     * 
-     * @param TModel $model
+     *
+     * @param  TModel  $model
      * @return void
      */
     protected function after($model)

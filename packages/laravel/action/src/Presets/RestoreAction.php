@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Action\Presets;
 
 use Honed\Action\Contracts\Actionable;
-use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -16,8 +15,8 @@ class RestoreAction implements Actionable
 
     /**
      * Restore the model(s).
-     * 
-     * @param TModel|\Illuminate\Database\Eloquent\Builder<TModel> $model
+     *
+     * @param  TModel|\Illuminate\Database\Eloquent\Builder<TModel>  $model
      * @return TModel|\Illuminate\Database\Eloquent\Collection<int, TModel>
      */
     public function handle($model)
@@ -29,8 +28,8 @@ class RestoreAction implements Actionable
 
     /**
      * Restore the model(s).
-     * 
-     * @param TModel|\Illuminate\Database\Eloquent\Builder<TModel> $model
+     *
+     * @param  TModel|\Illuminate\Database\Eloquent\Builder<TModel>  $model
      * @return TModel|\Illuminate\Database\Eloquent\Collection<int, TModel>
      */
     protected function restore($model)
@@ -44,8 +43,8 @@ class RestoreAction implements Actionable
 
     /**
      * Perform additional logic after the model(s) have been restored.
-     * 
-     * @param TModel|\Illuminate\Database\Eloquent\Collection<int, TModel> $models
+     *
+     * @param  TModel|\Illuminate\Database\Eloquent\Collection<int, TModel>  $models
      * @return void
      */
     protected function after($models)

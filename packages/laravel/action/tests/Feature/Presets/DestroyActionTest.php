@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Workbench\App\Actions\Product\DestroyProduct;
 use Workbench\App\Models\Product;
 use Workbench\App\Models\User;

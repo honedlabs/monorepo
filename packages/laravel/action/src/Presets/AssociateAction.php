@@ -6,9 +6,6 @@ namespace Honed\Action\Presets;
 
 use Honed\Action\Contracts\Actionable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -20,15 +17,29 @@ abstract class AssociateAction implements Actionable
 
     /**
      * Get the relation name, must be a belongs to relationship.
-     * 
+     *
      * @return string
      */
     abstract protected function relationship();
 
     /**
+     * Associate a model to the parent model.
+     *
+     * @param  TModel  $model
+     * @param  int|string|TParent  $parent
+     * @return void
+     */
+    public function handle($model, $parent)
+    {
+        $this->transact(
+            fn () => $this->associate($model, $parent)
+        );
+    }
+
+    /**
      * Get the relation for the model.
-     * 
-     * @param TModel $model
+     *
+     * @param  TModel  $model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TParent, TModel>
      */
     protected function getRelation($model)
@@ -38,25 +49,10 @@ abstract class AssociateAction implements Actionable
     }
 
     /**
-     * Associate a model to the parent model.
-     * 
-     * @param TModel $model
-     * @param int|string|TParent $parent
-     * 
-     * @return void
-     */
-    public function handle($model, $parent)
-    {
-        $this->transact(
-            fn () => $this->associate($model, $parent)
-        );
-    }
-    /**
      * Store the parent in the database.
-     * 
-     * @param TModel $model
-     * @param int|string|TParent $parent
-     * 
+     *
+     * @param  TModel  $model
+     * @param  int|string|TParent  $parent
      * @return void
      */
     protected function associate($model, $parent)
@@ -68,10 +64,9 @@ abstract class AssociateAction implements Actionable
 
     /**
      * Perform additional logic after the model has been attached.
-     * 
-     * @param TModel $model
-     * @param int|string|TParent $parent
-     * 
+     *
+     * @param  TModel  $model
+     * @param  int|string|TParent  $parent
      * @return void
      */
     protected function after($model, $parent)
