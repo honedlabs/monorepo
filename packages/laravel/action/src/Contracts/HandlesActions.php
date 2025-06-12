@@ -6,7 +6,7 @@ namespace Honed\Action\Contracts;
 
 use Illuminate\Contracts\Routing\UrlRoutable;
 
-interface Handler extends UrlRoutable
+interface HandlesActions extends UrlRoutable
 {
     /**
      * Find a primitive class from the encoded value.

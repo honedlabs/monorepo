@@ -18,7 +18,7 @@ use function array_values;
  *
  * @phpstan-require-extends \Honed\Core\Primitive
  */
-trait HandlesActions
+trait HasActions
 {
     /**
      * Whether the actions should be provided.
@@ -39,21 +39,21 @@ trait HandlesActions
      *
      * @var bool
      */
-    protected $inline = true;
+    protected $inlinable = true;
 
     /**
      * Whether the instance should provide bulk actions.
      *
      * @var bool
      */
-    protected $bulk = true;
+    protected $bulkable = true;
 
     /**
      * Whether the instance should provide page actions.
      *
      * @var bool
      */
-    protected $page = true;
+    protected $pageable = true;
 
     /**
      * Set whether the actions should be provided.
@@ -102,11 +102,14 @@ trait HandlesActions
     /**
      * Merge a set of actions with the existing actions.
      *
-     * @param  iterable<int, Action|ActionGroup<TModel, TBuilder>>  $actions
+     * @param  Action|ActionGroup|array<int, Action|ActionGroup<TModel, TBuilder>>  $actions
      * @return $this
      */
     public function actions($actions)
     {
+        /** @var array<int, Action|ActionGroup> */
+        $actions = is_array($actions) ? $actions : func_get_args();
+
         $this->actions = [...$this->actions, ...$actions];
 
         return $this;
@@ -135,18 +138,37 @@ trait HandlesActions
     /**
      * Set the inline actions for the instance, or update whether the instance should provide inline actions.
      *
-     * @param  iterable<Action>|bool  $actions
+     * @param  Action|array<int, Action>|bool  $actions
      * @return $this
      */
     public function inlineActions($actions)
     {
-        if (is_bool($actions)) {
-            $this->inline = $actions;
-        } else {
-            $this->actions($actions);
-        }
+        return match (true) {
+            is_bool($actions) => $this->inlinable($actions),
+            default => $this->actions($actions),
+        };
+    }
 
-        return $this;
+    /**
+     * Set whether the instance should provide inline actions.
+     *
+     * @param  bool  $inlinable
+     * @return $this
+     */
+    public function inlinable($inlinable = true)
+    {
+        $this->inlinable = $inlinable;
+    }
+
+    /**
+     * Set whether the instance should not provide inline actions.
+     *
+     * @param  bool  $inlinable
+     * @return $this
+     */
+    public function notInlinable($inlinable = true)
+    {
+        return $this->inlinable(! $inlinable);
     }
 
     /**
@@ -156,7 +178,7 @@ trait HandlesActions
      */
     public function isInlinable()
     {
-        return $this->inline;
+        return $this->inlinable;
     }
 
     /**
@@ -217,18 +239,37 @@ trait HandlesActions
     /**
      * Set the bulk actions for the instance, or update whether the instance should provide bulk actions.
      *
-     * @param  iterable<Action>|bool  $actions
+     * @param  Action|array<int, Action>|bool  $actions
      * @return $this
      */
     public function bulkActions($actions)
     {
-        if (is_bool($actions)) {
-            $this->bulk = $actions;
-        } else {
-            $this->actions($actions);
-        }
+        return match (true) {
+            is_bool($actions) => $this->bulkable($actions),
+            default => $this->actions($actions),
+        };
+    }
 
-        return $this;
+    /**
+     * Set whether the instance should provide bulk actions.
+     *
+     * @param  bool  $bulkable
+     * @return $this
+     */
+    public function bulkable($bulkable = true)
+    {
+        $this->bulkable = $bulkable;
+    }
+
+    /**
+     * Set whether the instance should not provide bulk actions.
+     *
+     * @param  bool  $bulkable
+     * @return $this
+     */
+    public function notBulkable($bulkable = true)
+    {
+        return $this->bulkable(! $bulkable);
     }
 
     /**
@@ -238,7 +279,7 @@ trait HandlesActions
      */
     public function isBulkable()
     {
-        return $this->bulk;
+        return $this->bulkable;
     }
 
     /**
@@ -287,18 +328,37 @@ trait HandlesActions
     /**
      * Set the page actions for the instance, or update whether the instance should provide page actions.
      *
-     * @param  iterable<Action>|bool  $actions
+     * @param  Action|array<int, Action>|bool  $actions
      * @return $this
      */
     public function pageActions($actions)
     {
-        if (is_bool($actions)) {
-            $this->page = $actions;
-        } else {
-            $this->actions($actions);
-        }
+        return match (true) {
+            is_bool($actions) => $this->pageable($actions),
+            default => $this->actions($actions),
+        };
+    }
 
-        return $this;
+    /**
+     * Set whether the instance should provide page actions.
+     *
+     * @param  bool  $pageable
+     * @return $this
+     */
+    public function pageable($pageable = true)
+    {
+        $this->pageable = $pageable;
+    }
+
+    /**
+     * Set whether the instance should not provide page actions.
+     *
+     * @param  bool  $pageable
+     * @return $this
+     */
+    public function notPageable($pageable = true)
+    {
+        return $this->pageable(! $pageable);
     }
 
     /**
@@ -308,7 +368,7 @@ trait HandlesActions
      */
     public function isPageable()
     {
-        return $this->page;
+        return $this->pageable;
     }
 
     /**

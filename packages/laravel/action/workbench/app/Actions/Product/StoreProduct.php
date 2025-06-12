@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Workbench\App\Actions\Product;
 
-use Honed\Action\Presets\UpdateAction;
+use Honed\Action\Presets\StoreAction;
+use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Workbench\App\Models\Product
  *
- * @extends \Honed\Action\Presets\UpdateAction<TModel>
+ * @extends \Honed\Action\Presets\StoreAction<TModel>
  */
-class StoreProduct extends UpdateAction
+class StoreProduct extends StoreAction
 {
     /**
      * Get the model to store the input data in.
@@ -20,6 +21,6 @@ class StoreProduct extends UpdateAction
      */
     protected function for()
     {
-        return \Workbench\App\Models\Product::class;
+        return Product::class;
     }
 } 

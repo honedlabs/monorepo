@@ -28,6 +28,10 @@ abstract class Action extends Primitive
     use HasRoute;
     use HasType;
 
+    public const INLINE = 'inline';
+    public const BULK = 'bulk';
+    public const PAGE = 'page';
+
     /**
      * Execute the action on a resource.
      *
@@ -48,6 +52,17 @@ abstract class Action extends Primitive
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
+    }
+
+    /**
+     * Define the action instance.
+     *
+     * @param  $this  $action
+     * @return $this
+     */
+    public function definition(self $action): self
+    {
+        return $action;
     }
 
     /**
@@ -95,6 +110,18 @@ abstract class Action extends Primitive
             'confirm' => $this->getConfirm()?->toArray($named, $typed),
             'route' => $this->routeToArray($named, $typed),
         ];
+    }
+
+    /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->definition($this);
     }
 
     /**

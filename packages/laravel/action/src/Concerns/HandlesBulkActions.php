@@ -17,6 +17,7 @@ use RuntimeException;
 
 use function array_merge;
 
+// Builder, $builder, $query, $q, BuilderContract, Collection, $collection, Model, $model, $row, $record
 trait HandlesBulkActions
 {
     /** @use HasQuery<\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>> */

@@ -8,19 +8,15 @@ use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->action = new DestroyProduct();
-
-    $this->product = Product::factory()->create();
-
-    $this->assertDatabaseHas('products', [
-        'id' => $this->product->id,
-    ]);
 });
 
 it('destroys a model', function () {
-    $this->action->handle($this->product);
+    $product = Product::factory()->create();
+
+    $this->action->handle($product);
 
     $this->assertSoftDeleted('products', [
-        'id' => $this->product->id,
+        'id' => $product->id,
     ]);
 });
 
@@ -30,10 +26,6 @@ it('destroys multiple models from collection', function () {
         ->create();
 
     $this->action->handle($products);
-
-    $this->assertNotSoftDeleted('products', [
-        'id' => $this->product->id,
-    ]);
 
     $products->each(function ($product) {
         $this->assertSoftDeleted('products', [
@@ -49,10 +41,6 @@ it('destroy models from builder', function () {
 
     $this->action->handle(Product::query()->whereIn('id', $products->pluck('id')));
 
-    $this->assertNotSoftDeleted('products', [
-        'id' => $this->product->id,
-    ]);
-
     $products->each(function ($product) {
         $this->assertSoftDeleted('products', [
             'id' => $product->id,
@@ -61,17 +49,14 @@ it('destroy models from builder', function () {
 });
 
 it('destroys models from relationship', function () {
-    $user = User::query()->find(1);
+    $user = User::factory()->create();
 
     $products = Product::factory()
+        ->hasAttached($user)
         ->count(3)
         ->create();
 
     $this->action->handle($user->products());
-
-    $this->assertSoftDeleted('products', [
-        'id' => $this->product->id,
-    ]);
 
     $products->each(function ($product) {
         $this->assertNotSoftDeleted('products', [

@@ -8,6 +8,9 @@ abstract class Operation
 {
     /**
      * Configure the action.
+     * 
+     * @param  Action  $action
+     * @return Action
      */
     abstract protected function definition(Action $action): Action;
 
@@ -18,7 +21,7 @@ abstract class Operation
      */
     public static function inline()
     {
-        return resolve(static::class)->create(InlineAction::class);
+        return static::create(InlineAction::class);
     }
 
     /**
@@ -28,7 +31,7 @@ abstract class Operation
      */
     public static function bulk()
     {
-        return resolve(static::class)->create(BulkAction::class);
+        return static::create(BulkAction::class);
     }
 
     /**
@@ -38,7 +41,7 @@ abstract class Operation
      */
     public static function page()
     {
-        return resolve(static::class)->create(PageAction::class);
+        return static::create(PageAction::class);
     }
 
     /**
@@ -47,8 +50,8 @@ abstract class Operation
      * @param  class-string<Action>  $type
      * @return Action
      */
-    protected function create($type)
+    protected static function create($type)
     {
-        return static::definition(new $type());
+        return resolve(static::class)->definition(new $type());
     }
 }

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Actions\Product\AttachUser;
+use Workbench\App\Actions\Product\DetachUser;
 use Workbench\App\Models\Product;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->action = new AttachUser();
+    $this->action = new DetachUser();
 
     $this->product = Product::factory()->create();
 
@@ -26,100 +26,80 @@ it('detaches a single model', function () {
 
     $this->action->handle($this->product, $user);
 
-    $this->assertDatabaseCount('product_user', 1);
+    $this->assertDatabaseEmpty('product_user');
+});
+
+it('detaches multiple models', function () {
+    $users = User::factory()
+        ->count(3)
+        ->hasAttached($this->product, relationship: 'purchasedProducts')
+        ->create();
+
+    $this->assertDatabaseCount('product_user', 3);
+
+    $this->action->handle($this->product, $users);
+
+    $this->assertDatabaseEmpty('product_user');
+});
+
+it('detaches a single key', function () {
+    $user = User::factory()
+        ->hasAttached($this->product, relationship: 'purchasedProducts')
+        ->create();
 
     $this->assertDatabaseHas('product_user', [
         'product_id' => $this->product->id,
         'user_id' => $user->id,
-        'is_active' => false,
     ]);
-})->only();
 
-it('attaches multiple models', function () {
+    $this->action->handle($this->product, $user->getKey());
+
+    $this->assertDatabaseEmpty('product_user');
+});
+
+it('detaches multiple keys', function () {
     $users = User::factory()
         ->count(3)
+        ->hasAttached($this->product, relationship: 'purchasedProducts')
         ->create();
-
-    $this->action->handle($this->product, $users);
 
     $this->assertDatabaseCount('product_user', 3);
-
-    $users->each(function ($user) {
-        $this->assertDatabaseHas('product_user', [
-            'product_id' => $this->product->id,
-            'user_id' => $user->id,
-            'is_active' => false,
-        ]);
-    });
-});
-
-it('attaches a single key', function () {
-    $id = User::factory()
-        ->create()
-        ->getKey();
-
-    $this->action->handle($this->product, $id);
-
-    $this->assertDatabaseCount('product_user', 1);
-
-    $this->assertDatabaseHas('product_user', [
-        'product_id' => $this->product->id,
-        'user_id' => $id,
-        'is_active' => false,
-    ]);
-});
-
-it('attaches multiple keys', function () {
-    $users = User::factory()
-        ->count(3)
-        ->create();
 
     $ids = $users->map(fn ($user) => $user->getKey());
 
     $this->action->handle($this->product, $ids);
 
-    $this->assertDatabaseCount('product_user', 3);
+    $this->assertDatabaseEmpty('product_user');
+});
 
-    $users->each(function ($user) {
+it('detaches only specified models when others exist', function () {
+    $usersToDetach = User::factory()
+        ->count(2)
+        ->hasAttached($this->product, relationship: 'purchasedProducts')
+        ->create();
+
+    $usersToKeep = User::factory()
+        ->count(2)
+        ->hasAttached($this->product, relationship: 'purchasedProducts')
+        ->create();
+
+    $this->assertDatabaseCount('product_user', 4);
+
+    $this->action->handle($this->product, $usersToDetach);
+
+    $this->assertDatabaseCount('product_user', 2);
+
+    $usersToKeep->each(function ($user) {
         $this->assertDatabaseHas('product_user', [
             'product_id' => $this->product->id,
             'user_id' => $user->id,
-            'is_active' => false,
         ]);
     });
-});
 
-it('attaches a single model with attributes', function () {
-    $this->assertDatabaseEmpty('product_user');
-
-    $user = User::factory()
-        ->create();
-
-    $this->action->handle($this->product, $user, ['is_active' => true]);
-
-    $this->assertDatabaseCount('product_user', 1);
-
-    $this->assertDatabaseHas('product_user', [
-        'product_id' => $this->product->id,
-        'user_id' => $user->id,
-        'is_active' => true,
-    ]);
-});
-
-it('attaches multiple models with attributes', function () {
-    $users = User::factory()
-        ->count(3)
-        ->create();
-
-    $this->action->handle($this->product, $users, ['is_active' => true]);
-
-    $this->assertDatabaseCount('product_user', 3);
-
-    $users->each(function ($user) {
-        $this->assertDatabaseHas('product_user', [
+    $usersToDetach->each(function ($user) {
+        $this->assertDatabaseMissing('product_user', [
             'product_id' => $this->product->id,
             'user_id' => $user->id,
-            'is_active' => true,
         ]);
     });
 });

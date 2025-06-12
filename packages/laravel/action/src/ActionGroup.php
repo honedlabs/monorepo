@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Closure;
+use Honed\Action\Concerns\CanResolveActions;
 use Honed\Action\Concerns\HandlesActions;
 use Honed\Action\Concerns\HasHandler;
 use Honed\Action\Contracts\Handler;
@@ -24,17 +25,7 @@ use function array_merge;
  */
 class ActionGroup extends Primitive implements Handler
 {
-    /**
-     * @use \Honed\Action\Concerns\HandlesActions<TModel, TBuilder>
-     */
-    use HandlesActions;
-
-    use HasHandler;
-
-    /**
-     * @use \Honed\Core\Concerns\HasResource<TModel, TBuilder>
-     */
-    use HasResource;
+    use CanResolveActions;
 
     /**
      * The default namespace where action groups reside.
@@ -42,13 +33,6 @@ class ActionGroup extends Primitive implements Handler
      * @var string
      */
     public static $namespace = 'App\\ActionGroups\\';
-
-    /**
-     * The model to be used to resolve inline actions.
-     *
-     * @var TModel|null
-     */
-    protected $model;
 
     /**
      * How to resolve the action group for the given model name.
@@ -60,23 +44,13 @@ class ActionGroup extends Primitive implements Handler
     /**
      * Create a new action group instance.
      *
-     * @param  Action|iterable<int, Action>  ...$actions
+     * @param  Action|ActionGroup|array<int, Action|ActionGroup>  $actions
      * @return static
      */
-    public static function make(...$actions)
+    public static function make($actions = [])
     {
         return resolve(static::class)
-            ->withActions($actions);
-    }
-
-    /**
-     * The root parent class, indicating an anonymous class.
-     *
-     * @return class-string<Contracts\HandlesActions>
-     */
-    public static function anonymous()
-    {
-        return self::class;
+            ->actions($actions);
     }
 
     /**
@@ -153,9 +127,9 @@ class ActionGroup extends Primitive implements Handler
      * Define the actions for the action group.
      *
      * @param  $this  $actions
-     * @return $this|void
+     * @return $this
      */
-    public function definition(self $actions)
+    public function definition(self $actions): self
     {
         return $actions;
     }

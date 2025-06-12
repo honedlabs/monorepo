@@ -24,7 +24,7 @@ class ActionServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/action.php', 'action');
 
-        // $this->app->bind()
+        // $this->app->bind(ActionGroupHandler::class, ActionHandler::class)
 
         $this->registerRoutesMacro();
     }
@@ -75,10 +75,9 @@ class ActionServiceProvider extends ServiceProvider
         Router::macro('actions', function () {
             /** @var Router $this */
 
-            /** @var string $endpoint */
-            $endpoint = config('action.endpoint', 'actions');
-
             $methods = ['post', 'patch', 'put'];
+
+            $endpoint = ActionGroup::getDefaultEndpoint();
 
             $this->match($methods, $endpoint, [ActionController::class, 'dispatch'])
                 ->name('actions');
