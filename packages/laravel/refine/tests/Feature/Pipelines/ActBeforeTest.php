@@ -2,11 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Pipelines\AfterRefining;
 use Honed\Refine\Refine;
 use Workbench\App\Models\User;
-use Workbench\App\Refiners\RefineProduct;
-use Workbench\App\Refiners\RefineUser;
 
 beforeEach(function () {
     $this->refine = Refine::make(User::class);

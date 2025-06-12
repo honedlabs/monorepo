@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Searches\Concerns;
 
-use function array_map;
-use function array_merge;
-
 use Honed\Core\Interpret;
-use function array_filter;
-use function array_values;
-use Illuminate\Support\Arr;
 use Honed\Refine\Searches\Search;
+
+use function array_filter;
+use function array_map;
+use function array_values;
 
 trait HasSearches
 {
@@ -195,15 +193,15 @@ trait HasSearches
     /**
      * Merge a set of searches with the existing searches.
      *
-     * @param  Search|iterable<int, Search>  ...$searches
+     * @param  Search|array<int, Search>  $searches
      * @return $this
      */
-    public function searches(...$searches)
+    public function searches($searches)
     {
         /** @var array<int, Search> $searches */
-        $searches = Arr::flatten($searches);
+        $searches = is_array($searches) ? $searches : func_get_args();
 
-        $this->searches = array_merge($this->searches, $searches);
+        $this->searches = [...$this->searches, ...$searches];
 
         return $this;
     }
@@ -348,7 +346,7 @@ trait HasSearches
         }
 
         $delimiter = $this->getDelimiter();
-        
+
         $key = $this->getMatchKey();
 
         return Interpret::array($request, $key, $delimiter, 'string');
@@ -374,18 +372,5 @@ trait HasSearches
                 )
             )
         );
-    }
-
-    /**
-     * Set the search term.
-     *
-     * @param  string|null  $term
-     * @return $this
-     */
-    protected function term($term)
-    {
-        $this->term = $term;
-
-        return $this;
     }
 }

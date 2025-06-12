@@ -7,7 +7,6 @@ namespace Honed\Refine\Concerns;
 use Closure;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasScope;
-use Honed\Core\Interpret;
 use Honed\Refine\Filters\Concerns\HasFilters;
 use Honed\Refine\Searches\Concerns\HasSearches;
 use Honed\Refine\Sorts\Concerns\HasSorts;
@@ -170,6 +169,8 @@ trait CanBeRefined
      */
     protected function search()
     {
+        $builder = $this->getBuilder();
+
         $this->term = $this->getSearchValue($this->request);
 
         $columns = $this->getSearchColumns($this->request);
@@ -177,8 +178,8 @@ trait CanBeRefined
         if ($this->isScout()) {
             $model = $this->getModel();
 
-            $this->builder->whereIn(
-                $this->builder->qualifyColumn($model->getKeyName()),
+            $builder->whereIn(
+                $builder->qualifyColumn($model->getKeyName()),
                 // @phpstan-ignore-next-line method.notFound
                 $model->search($this->term)->keys()
             );
@@ -189,9 +190,11 @@ trait CanBeRefined
         $or = false;
 
         foreach ($this->getSearches() as $search) {
-            $or |= $search->handle(
-                $this->builder, $this->term, $columns, $or
+            $applied = $search->handle(
+                $builder, $this->term, $columns, $or
             );
+
+            $or = $applied || $or;
         }
     }
 
@@ -202,10 +205,12 @@ trait CanBeRefined
      */
     protected function filter()
     {
+        $builder = $this->getBuilder();
+
         foreach ($this->getFilters() as $filter) {
             $value = $this->getFilterValue($this->request, $filter);
 
-            $filter->handle($this->builder, $value);
+            $filter->handle($builder, $value);
         }
     }
 
@@ -216,21 +221,25 @@ trait CanBeRefined
      */
     protected function sort()
     {
+        $builder = $this->getBuilder();
+
         [$parameter, $direction] = $this->getSortValue($this->request);
 
         $sorted = false;
 
         foreach ($this->getSorts() as $sort) {
-            $sorted |= $sort->handle(
-                $this->builder, $parameter, $direction
+            $applied = $sort->handle(
+                $builder, $parameter, $direction
             );
+
+            $sorted = $applied || $sorted;
         }
 
         if (! $sorted && $sort = $this->getDefaultSort()) {
             $parameter = $sort->getParameter();
 
             $sort->handle(
-                $this->builder, $parameter, $direction
+                $builder, $parameter, $direction
             );
 
             return;

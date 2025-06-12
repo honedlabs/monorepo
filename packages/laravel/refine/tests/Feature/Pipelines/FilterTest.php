@@ -3,98 +3,89 @@
 declare(strict_types=1);
 
 use Honed\Refine\Filters\Filter;
-use Honed\Refine\Pipelines\RefineFilters;
 use Honed\Refine\Refine;
 use Illuminate\Support\Facades\Request;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->builder = User::query();
-    $this->pipe = new RefineFilters();
-    $this->closure = fn ($refine) => $refine;
+    $this->name = 'price';
 
-    $filters = [
-        Filter::make('price')->asInt(),
-    ];
+    $this->value = 100;
 
-    $this->refine = Refine::make($thi)->filters($filters);
+    $this->refine = Refine::make(User::class)
+        ->filters(Filter::make($this->name)->int());
 });
 
-it('does not refine', function () {
+it('does not filter if key is not present', function () {
     $request = Request::create('/', 'GET', [
-        'invalid' => 'test',
+        'invalid' => $this->value,
     ]);
 
-    $this->refine->request($request);
+    $this->refine->request($request)->refine();
 
-    $this->pipe->__invoke($this->refine, $this->closure);
-
-    expect($this->refine->getResource()->getQuery()->wheres)
+    expect($this->refine->getBuilder()->getQuery()->wheres)
         ->toBeEmpty();
 });
 
-it('refines', function () {
+it('filters with key', function () {
     $request = Request::create('/', 'GET', [
-        'price' => 100,
+        $this->name => $this->value,
     ]);
 
-    $this->refine->request($request);
+    $this->refine->request($request)->refine();
 
-    $this->pipe->__invoke($this->refine, $this->closure);
-
-    $builder = $this->refine->getResource();
-
-    expect($builder->getQuery()->wheres)
-        ->toBeOnlyWhere('price', 100);
+    expect($this->refine->getBuilder()->getQuery()->wheres)
+        ->toBeOnlyWhere($this->name, $this->value);
 });
 
-it('disables', function () {
+it('filters with default', function () {
+    $name = 'name';
+    $value = 'joshua';
+
+    $request = Request::create('/', 'GET');
+
+    $this->refine->filters([
+        Filter::make($name)
+            ->default($value),
+    ])
+        ->request($request)
+        ->refine();
+
+    expect($this->refine->getBuilder()->getQuery()->wheres)
+        ->toBeOnlyWhere($name, $value);
+})->todo();
+
+it('can disable filtering', function () {
     $request = Request::create('/', 'GET', [
-        'price' => 100,
+        $this->name => $this->value,
     ]);
 
-    $this->refine->request($request)->disableFiltering();
+    $this->refine->request($request)->notFilterable()->refine();
 
-    $this->pipe->__invoke($this->refine, $this->closure);
-
-    $builder = $this->refine->getResource();
-
-    expect($builder->getQuery()->wheres)
+    expect($this->refine->getBuilder()->getQuery()->wheres)
         ->toBeEmpty();
 });
 
-describe('scope', function () {
-    beforeEach(function () {
-        $this->refine = $this->refine->scope('scope');
-    });
+it('does not filter if scoped parameter is not present', function () {
+    $request = Request::create('/', 'GET', [
+        $this->name => $this->value,
+    ]);
 
-    it('does not refine', function () {
-        $request = Request::create('/', 'GET', [
-            'price' => 100,
-        ]);
+    $this->refine->scope('scope')->request($request)->refine();
 
-        $this->refine->request($request);
+    expect($this->refine->getBuilder()->getQuery()->orders)
+        ->toBeEmpty();
+});
 
-        $this->pipe->__invoke($this->refine, $this->closure);
+it('sorts with scoped key', function () {
+    $this->refine->scope('scope');
 
-        $builder = $this->refine->getResource();
+    $request = Request::create('/', 'GET', [
+        $this->refine->formatScope($this->name) => $this->value,
+    ]);
 
-        expect($builder->getQuery()->wheres)
-            ->toBeEmpty();
-    });
+    $this->refine->request($request)->refine();
 
-    it('refines', function () {
-        $request = Request::create('/', 'GET', [
-            $this->refine->formatScope('price') => 100,
-        ]);
-
-        $this->refine->request($request);
-
-        $this->pipe->__invoke($this->refine, $this->closure);
-
-        $builder = $this->refine->getResource();
-
-        expect($builder->getQuery()->wheres)
-            ->toBeOnlyWhere('price', 100);
-    });
+    expect($this->refine->getBuilder()->getQuery()->wheres)
+        ->toBeOnlyWhere($this->name, $this->value);
 });

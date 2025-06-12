@@ -81,7 +81,7 @@ trait HasResource
     /**
      * Create a new builder instance from a resource.
      *
-     * @param  TBuilder|TModel|class-string<TModel>  $resource
+     * @param  TBuilder|TModel|class-string<TModel>|null  $resource
      * @return TBuilder|null
      *
      * @throws InvalidResourceException

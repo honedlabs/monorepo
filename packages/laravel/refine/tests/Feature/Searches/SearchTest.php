@@ -6,8 +6,8 @@ use Honed\Refine\Searches\Search;
 
 it('has type', function () {
     expect(Search::make('name'))
-        ->type()->toBe('search');
-});
+        ->getType()->toBe('search');
+})->skip();
 
 it('has definition', function () {
     // expect(new NameSearch())

@@ -13,16 +13,6 @@ namespace Honed\Refine\Filters;
 class TrashedFilter extends Filter
 {
     /**
-     * Create a new trashed filter instance.
-     *
-     * @return static
-     */
-    public static function new()
-    {
-        return resolve(static::class);
-    }
-
-    /**
      * Provide the instance with any necessary setup.
      *
      * @return void
@@ -48,5 +38,15 @@ class TrashedFilter extends Filter
             'only' => $builder->onlyTrashed(),
             default => $builder->withoutTrashed(),
         });
+    }
+
+    /**
+     * Create a new trashed filter instance.
+     *
+     * @return static
+     */
+    public static function new()
+    {
+        return resolve(static::class);
     }
 }

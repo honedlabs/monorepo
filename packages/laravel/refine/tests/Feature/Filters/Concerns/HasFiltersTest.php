@@ -27,18 +27,6 @@ it('adds filters', function () {
         ->getFilters()->toHaveCount(2);
 });
 
-it('adds filters variadically', function () {
-    expect($this->test)
-        ->filters(Filter::make('name'), Filter::make('price'))->toBe($this->test)
-        ->getFilters()->toHaveCount(2);
-});
-
-it('adds filters collection', function () {
-    expect($this->test)
-        ->filters(collect([Filter::make('name'), Filter::make('price')]))->toBe($this->test)
-        ->getFilters()->toHaveCount(2);
-});
-
 it('filters to array', function () {
     expect($this->test)
         ->filters([Filter::make('name'), Filter::make('price')])->toBe($this->test)

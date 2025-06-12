@@ -121,17 +121,6 @@ trait HasOptions
     }
 
     /**
-     * Allow only one option to be used.
-     *
-     * @param  bool  $single
-     * @return $this
-     */
-    public function single($single = true)
-    {
-        return $this->multiple(! $single);
-    }
-
-    /**
      * Determine if multiple options are allowed.
      *
      * @return bool

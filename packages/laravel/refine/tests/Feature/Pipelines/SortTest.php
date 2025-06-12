@@ -2,125 +2,97 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Pipelines\RefineSorts;
 use Honed\Refine\Refine;
 use Honed\Refine\Sorts\Sort;
 use Illuminate\Support\Facades\Request;
-use Workbench\App\Models\Product;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->builder = Product::query();
-    $this->pipe = new RefineSorts();
-    $this->closure = fn ($refine) => $refine;
+    $this->name = 'name';
 
-    $sorts = [
-        Sort::make('name')->default(),
-        Sort::make('price'),
-    ];
+    $this->refine = Refine::make(User::class)
+        ->sorts(Sort::make($this->name));
+});
 
-    $this->refine = Refine::make($this->builder)
-        ->sorts($sorts);
-})->skip();
+it('does not sort if parameter is not present', function () {
+    $request = Request::create('/', 'GET', [
+        $this->refine->getSortKey() => 'other',
+    ]);
 
-it('does not refine', function () {
-    $this->pipe->__invoke($this->refine, $this->closure);
+    $this->refine->request($request)->refine();
 
-    expect($this->refine->getResource()->getQuery()->wheres)
+    expect($this->refine->getBuilder()->getQuery()->orders)
         ->toBeEmpty();
 });
 
-it('refines default', function () {
+it('sorts with key', function () {
     $request = Request::create('/', 'GET', [
-        'invalid' => 'test',
+        $this->refine->getSortKey() => $this->name,
     ]);
 
-    $this->refine->request($request);
+    $this->refine->request($request)->refine();
 
-    $this->pipe->__invoke($this->refine, $this->closure);
-
-    $builder = $this->refine->getResource();
-
-    expect($builder->getQuery()->orders)
-        ->toBeOnlyOrder('name', 'asc');
+    expect($this->refine->getBuilder()->getQuery()->orders)
+        ->toBeOnlyOrder($this->name, Sort::ASCENDING);
 });
 
-it('refines', function () {
+it('sorts with default', function () {
+    $name = 'price';
+
     $request = Request::create('/', 'GET', [
-        'sort' => 'price',
+        $this->refine->getSortKey() => $name,
     ]);
 
-    $this->refine->request($request);
+    $this->refine->sorts(Sort::make($name)->default())
+        ->request($request)
+        ->refine();
 
-    $this->pipe->__invoke($this->refine, $this->closure);
-
-    $builder = $this->refine->getResource();
-
-    expect($builder->getQuery()->orders)
-        ->toBeOnlyOrder('price', 'asc');
+    expect($this->refine->getBuilder()->getQuery()->orders)
+        ->toBeOnlyOrder($name, Sort::ASCENDING);
 });
 
-it('refines directionally', function () {
+it('sorts with direction', function () {
     $request = Request::create('/', 'GET', [
-        'sort' => '-price',
+        $this->refine->getSortKey() => '-'.$this->name,
     ]);
 
-    $this->refine->request($request);
+    $this->refine->request($request)->refine();
 
-    $this->pipe->__invoke($this->refine, $this->closure);
-
-    $builder = $this->refine->getResource();
-
-    expect($builder->getQuery()->orders)
-        ->toBeOnlyOrder('price', 'desc');
+    expect($this->refine->getBuilder()->getQuery()->orders)
+        ->toBeOnlyOrder($this->name, Sort::DESCENDING);
 });
 
-it('disables', function () {
+it('can disable sorting', function () {
     $request = Request::create('/', 'GET', [
-        'sort' => 'price',
+        $this->refine->getSortKey() => $this->name,
     ]);
 
-    $this->refine->request($request)->disableSorting();
+    $this->refine->request($request)->notSortable()->refine();
 
-    $this->pipe->__invoke($this->refine, $this->closure);
-
-    $builder = $this->refine->getResource();
-
-    expect($builder->getQuery()->orders)
+    expect($this->refine->getBuilder()->getQuery()->orders)
         ->toBeEmpty();
 });
 
-describe('scope', function () {
-    beforeEach(function () {
-        $this->refine = $this->refine->scope('scope');
-    });
+it('does not sort if scoped key is not present', function () {
+    $request = Request::create('/', 'GET', [
+        $this->refine->getSortKey() => $this->name,
+    ]);
 
-    it('refines default', function () {
-        $request = Request::create('/', 'GET', [
-            'sort' => 'price',
-        ]);
+    $this->refine->scope('scope')->request($request)->refine();
 
-        $this->refine->request($request);
+    expect($this->refine->getBuilder()->getQuery()->orders)
+        ->toBeEmpty();
+});
 
-        $this->pipe->__invoke($this->refine, $this->closure);
+it('sorts with scoped key', function () {
+    $this->refine->scope('scope');
 
-        $builder = $this->refine->getResource();
+    $request = Request::create('/', 'GET', [
+        $this->refine->getSortKey() => $this->name,
+    ]);
 
-        expect($builder->getQuery()->orders)
-            ->toBeOnlyOrder('name', 'asc');
-    });
+    $this->refine->request($request)->refine();
 
-    it('refines', function () {
-        $request = Request::create('/', 'GET', [
-            $this->refine->formatScope('sort') => 'price',
-        ]);
-
-        $this->refine->request($request);
-
-        $this->pipe->__invoke($this->refine, $this->closure);
-
-        $builder = $this->refine->getResource();
-
-        expect($builder->getQuery()->orders)
-            ->toBeOnlyOrder('price', 'asc');
-    });
+    expect($this->refine->getBuilder()->getQuery()->orders)
+        ->toBeOnlyOrder($this->name, Sort::ASCENDING);
 });

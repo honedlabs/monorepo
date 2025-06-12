@@ -195,7 +195,7 @@ it('applies with time', function () {
     expect($this->builder->getQuery()->wheres)
         ->toHaveCount(1)
         ->{0}
-            ->scoped(fn ($where) => $where
+        ->scoped(fn ($where) => $where
             ->{'type'}->toBe('Time')
             ->{'column'}->toBe($this->name)
             ->{'operator'}->toBe('=')

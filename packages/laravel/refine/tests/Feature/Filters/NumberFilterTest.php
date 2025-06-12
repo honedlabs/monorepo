@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filters\NumberFilter;
 use Honed\Refine\Filters\Filter;
+use Honed\Refine\Filters\NumberFilter;
 
 beforeEach(function () {
     $this->filter = NumberFilter::make('price');

@@ -27,18 +27,6 @@ it('adds sorts', function () {
         ->getSorts()->toHaveCount(2);
 });
 
-it('adds sorts variadically', function () {
-    expect($this->test)
-        ->sorts(Sort::make('name'), Sort::make('price'))->toBe($this->test)
-        ->getSorts()->toHaveCount(2);
-});
-
-it('adds sorts collection', function () {
-    expect($this->test)
-        ->sorts(collect([Sort::make('name'), Sort::make('price')]))->toBe($this->test)
-        ->getSorts()->toHaveCount(2);
-});
-
 it('has sort key', function () {
     expect($this->test)
         ->getSortKey()->toBe('sort')

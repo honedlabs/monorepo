@@ -47,7 +47,6 @@ it('is multiple', function () {
         ->isNotMultiple()->toBeFalse();
 });
 
-
 it('creates options from backed enum', function () {
     expect($this->test)
         ->options(Status::class)->toBe($this->test)

@@ -9,7 +9,6 @@ use Illuminate\Support\Arr;
 
 use function array_filter;
 use function array_map;
-use function array_merge;
 use function array_values;
 
 trait HasFilters
@@ -75,15 +74,15 @@ trait HasFilters
     /**
      * Merge a set of filters with the existing filters.
      *
-     * @param  Filter|iterable<int, Filter>  ...$filters
+     * @param  Filter|array<int, Filter>  $filters
      * @return $this
      */
-    public function filters(...$filters)
+    public function filters($filters)
     {
         /** @var array<int, Filter> $filters */
-        $filters = Arr::flatten($filters);
+        $filters = is_array($filters) ? $filters : func_get_args();
 
-        $this->filters = array_merge($this->filters, $filters);
+        $this->filters = [...$this->filters, ...$filters];
 
         return $this;
     }

@@ -33,8 +33,10 @@ abstract class Refiner extends Primitive
     use HasMeta;
     use HasName;
     use HasQualifier;
+
     /** @use HasQuery<TModel, TBuilder> */
     use HasQuery;
+
     use HasType;
     use IsActive;
 
@@ -63,24 +65,6 @@ abstract class Refiner extends Primitive
     }
 
     /**
-     * Handle refining the query.
-     * 
-     * @param  TBuilder  $query
-     * @param  array<string,mixed>  $bindings
-     * @return true
-     */
-    protected function refine($query, $bindings)
-    {
-        if (! $this->hasQuery()) {
-            $this->query(Closure::fromCallable([$this, 'apply']));
-        }
-
-        $this->modifyQuery($query, $bindings);
-
-        return true;
-    }
-
-    /**
      * Get the refiner as an array.
      *
      * @return array<string,mixed>
@@ -97,13 +81,34 @@ abstract class Refiner extends Primitive
     }
 
     /**
+     * Handle refining the query.
+     *
+     * @param  TBuilder  $query
+     * @param  array<string,mixed>  $bindings
+     * @return true
+     */
+    protected function refine($query, $bindings)
+    {
+        if (! $this->hasQuery()) {
+            $this->query(Closure::fromCallable([$this, 'apply']));
+        }
+
+        $this->modifyQuery($query, $bindings);
+
+        return true;
+    }
+
+    /**
      * Guess the parameter for the refiner.
      *
      * @return string
      */
     protected function guessParameter()
     {
-        return Str::of($this->getName())
+        /** @var string */
+        $name = $this->getName();
+
+        return Str::of($name)
             ->afterLast('.')
             ->value();
     }
@@ -111,19 +116,21 @@ abstract class Refiner extends Primitive
     /**
      * Get the bindings for the refiner closure.
      *
-     * @param  mixed  $value
      * @param  TBuilder  $query
      * @return array<string,mixed>
      */
     protected function getBindings($query)
     {
+        /** @var string */
+        $name = $this->getName();
+
         return [
             'builder' => $query,
             'query' => $query,
             'q' => $query,
             'refiner' => $this,
-            'name' => $this->getName(),
-            'column' => $this->qualifyColumn($this->getName(), $query),
+            'name' => $name,
+            'column' => $this->qualifyColumn($name, $query),
         ];
     }
 }

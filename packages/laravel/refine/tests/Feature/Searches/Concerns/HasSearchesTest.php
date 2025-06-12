@@ -20,22 +20,20 @@ it('is searchable', function () {
         ->isNotSearchable()->toBeTrue();
 });
 
+it('is matchable', function () {
+    expect($this->test)
+        ->matchable()->toBe($this->test)
+        ->isMatchable()->toBeTrue()
+        ->isNotMatchable()->toBeFalse()
+        ->notMatchable()->toBe($this->test)
+        ->isMatchable()->toBeFalse()
+        ->isNotMatchable()->toBeTrue();
+});
+
 it('adds searches', function () {
     expect($this->test)
         ->searches([Search::make('name')])->toBe($this->test)
         ->searches([Search::make('price')])->toBe($this->test)
-        ->getSearches()->toHaveCount(2);
-});
-
-it('adds searches variadically', function () {
-    expect($this->test)
-        ->searches(Search::make('name'), Search::make('price'))->toBe($this->test)
-        ->getSearches()->toHaveCount(2);
-});
-
-it('adds searches collection', function () {
-    expect($this->test)
-        ->searches(collect([Search::make('name'), Search::make('price')]))->toBe($this->test)
         ->getSearches()->toHaveCount(2);
 });
 
@@ -53,14 +51,11 @@ it('has match key', function () {
         ->getMatchKey()->toBe('test');
 });
 
-it('is matchable', function () {
+it('has search placeholder', function () {
     expect($this->test)
-        ->matchable()->toBe($this->test)
-        ->isMatchable()->toBeTrue()
-        ->isNotMatchable()->toBeFalse()
-        ->notMatchable()->toBe($this->test)
-        ->isMatchable()->toBeFalse()
-        ->isNotMatchable()->toBeTrue();
+        ->getSearchPlaceholder()->toBeNull()
+        ->searchPlaceholder('test')->toBe($this->test)
+        ->getSearchPlaceholder()->toBe('test');
 });
 
 it('searches to array', function () {

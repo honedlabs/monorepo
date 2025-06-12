@@ -21,7 +21,7 @@ class Option extends Primitive
     /**
      * Create a new option.
      *
-     * @param  scalar  $value
+     * @param  scalar|null  $value
      * @param  string|null  $label
      * @return static
      */

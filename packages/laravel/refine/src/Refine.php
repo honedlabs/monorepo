@@ -77,8 +77,7 @@ class Refine extends Primitive implements NullsAsUndefined
     public static function make($resource = null)
     {
         return resolve(static::class)
-            ->when($resource, fn (Refine $refine, $resource) => $refine->resource($resource)
-            );
+            ->when($resource, fn (Refine $refine, $resource) => $refine->resource($resource));
     }
 
     /**
@@ -224,7 +223,7 @@ class Refine extends Primitive implements NullsAsUndefined
         $builder = $this->getBuilder();
 
         return match ($parameterType) {
-            Refine::class => [$this],
+            self::class => [$this],
             Request::class => [$this->getRequest()],
             $builder::class, Builder::class, BuilderContract::class => [$builder],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),

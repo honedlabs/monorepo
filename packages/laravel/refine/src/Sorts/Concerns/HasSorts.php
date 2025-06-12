@@ -10,7 +10,6 @@ use Illuminate\Support\Arr;
 
 use function array_filter;
 use function array_map;
-use function array_merge;
 use function array_values;
 
 trait HasSorts
@@ -83,15 +82,15 @@ trait HasSorts
     /**
      * Merge a set of sorts with the existing sorts.
      *
-     * @param  Sort|iterable<int, Sort>  ...$sorts
+     * @param  Sort|array<int, Sort>  $sorts
      * @return $this
      */
-    public function sorts(...$sorts)
+    public function sorts($sorts)
     {
         /** @var array<int, Sort> $sorts */
-        $sorts = Arr::flatten($sorts);
+        $sorts = is_array($sorts) ? $sorts : func_get_args();
 
-        $this->sorts = array_merge($this->sorts, $sorts);
+        $this->sorts = [...$this->sorts, ...$sorts];
 
         return $this;
     }

@@ -224,7 +224,7 @@ trait CanBePersisted
      * @param  bool|'session'|'cookie'  $driver
      * @return $this
      */
-    public function persist($driver = true)
+    public function persistent($driver = true)
     {
         $this->persistSearch = $driver;
         $this->persistFilter = $driver;
@@ -240,7 +240,7 @@ trait CanBePersisted
      */
     public function persistInCookie()
     {
-        return $this->persist('cookie');
+        return $this->persistent('cookie');
     }
 
     /**
@@ -250,7 +250,7 @@ trait CanBePersisted
      */
     public function persistInSession()
     {
-        return $this->persist('session');
+        return $this->persistent('session');
     }
 
     /**

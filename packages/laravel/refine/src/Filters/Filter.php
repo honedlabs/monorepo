@@ -6,12 +6,11 @@ namespace Honed\Refine\Filters;
 
 use BackedEnum;
 use Carbon\CarbonInterface;
-use Closure;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
-use Honed\Core\Interpret;
 use Honed\Refine\Refiner;
+use Honed\Refine\Searches\Search;
 use ReflectionEnum;
 
 use function array_merge;
@@ -85,7 +84,7 @@ class Filter extends Refiner
      */
     public function boolean()
     {
-        $this->type(Filter::BOOLEAN);
+        $this->type(self::BOOLEAN);
         $this->asBoolean();
 
         return $this;
@@ -98,7 +97,7 @@ class Filter extends Refiner
      */
     public function date()
     {
-        $this->type(Filter::DATE);
+        $this->type(self::DATE);
         $this->asDate();
 
         return $this;
@@ -111,7 +110,7 @@ class Filter extends Refiner
      */
     public function datetime()
     {
-        $this->type(Filter::DATETIME);
+        $this->type(self::DATETIME);
         $this->asDatetime();
 
         return $this;
@@ -139,14 +138,14 @@ class Filter extends Refiner
         return $this;
     }
 
-/**
+    /**
      * Set the filter to be for float values.
      *
      * @return $this
      */
     public function float()
     {
-        $this->type(Filter::NUMBER);
+        $this->type(self::NUMBER);
         $this->asFloat();
 
         return $this;
@@ -159,7 +158,7 @@ class Filter extends Refiner
      */
     public function int()
     {
-        $this->type(Filter::NUMBER);
+        $this->type(self::NUMBER);
         $this->asInt();
 
         return $this;
@@ -173,7 +172,7 @@ class Filter extends Refiner
      */
     public function multiple($multiple = true)
     {
-        $this->type(Filter::SELECT);
+        $this->type(self::SELECT);
         $this->asArray();
         $this->setMultiple($multiple);
 
@@ -187,7 +186,7 @@ class Filter extends Refiner
      */
     public function text()
     {
-        $this->type(Filter::TEXT);
+        $this->type(self::TEXT);
         $this->asString();
 
         return $this;
@@ -200,7 +199,7 @@ class Filter extends Refiner
      */
     public function time()
     {
-        $this->type(Filter::TIME);
+        $this->type(self::TIME);
         $this->asTime();
 
         return $this;
@@ -253,22 +252,6 @@ class Filter extends Refiner
     }
 
     /**
-     * Get the query value from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $key
-     * @param  string  $delimiter
-     * @return mixed
-     */
-    public function getRequestValue($request, $key, $delimiter = ',')
-    {
-        $value = (new Interpret())
-            ->interpret($request, $key, $delimiter);
-
-        return $value ?? $this->getDefault();
-    }
-
-    /**
      * Handle refining the query.
      *
      * @param  TBuilder  $query
@@ -306,13 +289,13 @@ class Filter extends Refiner
     public function apply($query, $column, $operator, $value)
     {
         match (true) {
-            // in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) &&
-            //     is_string($value) => $this->searchPrecision(
-            //         $query,
-            //         $value,
-            //         $column,
-            //         operator: $operator
-            //     ),
+            in_array($operator, ['LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE']) &&
+                is_string($value) => Search::searchWildcard(
+                    $query,
+                    $value,
+                    $column,
+                    operator: $operator // @phpstan-ignore argument.type
+                ),
 
             $this->isMultiple() ||
                 $this->interpretsArray() => $query->whereIn($column, $value),
@@ -352,7 +335,7 @@ class Filter extends Refiner
      * @param  $this  $filter
      * @return $this|void
      */
-    protected function definition(Filter $filter)
+    protected function definition(self $filter)
     {
         return $filter;
     }

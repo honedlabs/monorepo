@@ -33,14 +33,13 @@ class RefineProduct extends Refine
             ->searches([
                 Search::make('name'),
                 Search::make('description'),
-                Search::make('status'),
             ])
             ->filters([
                 Filter::make('name')->like(),
 
                 Filter::make('price', 'Maximum price')
                     ->strict()
-                    ->lte()
+                    ->gte()
                     ->options([10, 20, 50, 100]),
 
                 Filter::make('status')
@@ -78,8 +77,6 @@ class RefineProduct extends Refine
 
                 Sort::make('best_seller', 'Favourite')
                     ->alias('favourite'),
-            ])
-            ->after(fn ($builder) => $builder->latest())
-            ->before(fn ($builder) => $builder->where('email', 'test@test.com'));
+            ]);
     }
 }

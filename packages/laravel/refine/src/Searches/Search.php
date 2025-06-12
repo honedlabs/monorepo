@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Searches;
 
-use Closure;
 use Honed\Refine\Refiner;
 
 /**
@@ -16,20 +15,73 @@ use Honed\Refine\Refiner;
 class Search extends Refiner
 {
     /**
-     * @use Concerns\HasSearch<TModel, TBuilder>
+     * Whether to use a full-text, recall search.
+     *
+     * @var bool
      */
-    use Concerns\HasSearch;
+    protected $fullText = false;
 
     /**
      * Provide the instance with any necessary setup.
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
         $this->definition($this);
+    }
+
+    /**
+     * Perform a wildcard search on the query.
+     *
+     * @param  TBuilder  $query
+     * @param  string  $term
+     * @param  string  $column
+     * @param  string  $boolean
+     * @param  string  $operator
+     * @return void
+     */
+    public static function searchWildcard(
+        $query,
+        $term,
+        $column,
+        $boolean = 'and',
+        $operator = 'LIKE'
+    ) {
+        $sql = sprintf(
+            'LOWER(%s) %s ?',
+            $column,
+            $operator
+        );
+
+        $binding = ['%'.mb_strtolower($term, 'UTF8').'%'];
+
+        $query->whereRaw($sql, $binding, $boolean);
+    }
+
+    /**
+     * Set whether to use a full-text search.
+     *
+     * @param  bool  $fullText
+     * @return $this
+     */
+    public function fullText($fullText = true)
+    {
+        $this->fullText = $fullText;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the search is a full-text search.
+     *
+     * @return bool
+     */
+    public function isFullText()
+    {
+        return $this->fullText;
     }
 
     /**
@@ -41,7 +93,7 @@ class Search extends Refiner
      * @param  bool  $or
      * @return bool
      */
-    public function handle($query, $term, $columns, $or)
+    public function handle($query, $term, $columns, $or = false)
     {
         $this->checkIfActive($columns);
 
@@ -68,13 +120,10 @@ class Search extends Refiner
      */
     public function apply($query, $term, $column, $boolean)
     {
-        if ($this->isFullText()) {
-            $this->searchRecall($query, $term, $column, $boolean);
-
-            return;
-        }
-
-        $this->searchPrecision($query, $term, $column, $boolean);
+        match (true) {
+            $this->isFullText() => $query->whereFullText($column, $term, boolean: $boolean),
+            default => static::searchWildcard($query, $term, $column, $boolean),
+        };
     }
 
     /**

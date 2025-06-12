@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Refine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Workbench\App\Enums\Status;
@@ -82,14 +81,13 @@ beforeEach(function () {
             'value' => '2001-01-01',
         ],
     ];
-})->skip();
-
+});
 
 it('has base pipeline', function () {
     $this->refine
         ->request(Request::create('/', Request::METHOD_GET, $this->parameters));
 
-    expect($this->refine->refine()->getResource()->getQuery())
+    expect($this->refine->refine()->getBuilder()->getQuery())
         ->wheres
         ->scoped(fn ($wheres) => $wheres
             ->toBeArray()
@@ -110,7 +108,7 @@ it('has scoped pipeline', function () {
     $this->refine
         ->request(Request::create('/', Request::METHOD_GET, $parameters));
 
-    expect($this->refine->refine()->getResource()->getQuery())
+    expect($this->refine->refine()->getBuilder()->getQuery())
         ->wheres
         ->scoped(fn ($wheres) => $wheres
             ->toBeArray()
@@ -134,7 +132,7 @@ it('has custom keys pipeline', function () {
         ->matchKey('on')
         ->request(Request::create('/', Request::METHOD_GET, $this->parameters));
 
-    expect($this->refine->refine()->getResource()->getQuery())
+    expect($this->refine->refine()->getBuilder()->getQuery())
         ->wheres
         ->scoped(fn ($wheres) => $wheres
             ->toBeArray()

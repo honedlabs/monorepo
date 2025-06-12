@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Sorts;
 
-use Closure;
 use Honed\Core\Concerns\IsDefault;
 use Honed\Refine\Refiner;
 
@@ -84,7 +83,7 @@ class Sort extends Refiner
      * Handle the sorting of the query.
      *
      * @param  TBuilder  $query
-     * @param  string  $parameter
+     * @param  string|null  $parameter
      * @param  'asc'|'desc'|null  $direction
      * @return bool
      */
@@ -95,7 +94,7 @@ class Sort extends Refiner
         if ($this->isInactive()) {
             return false;
         }
-        
+
         $this->direction($direction);
 
         return $this->refine($query, [
@@ -115,7 +114,7 @@ class Sort extends Refiner
      */
     public function apply($query, $column, $direction)
     {
-        $query->orderBy($column, $direction ?? Sort::ASCENDING);
+        $query->orderBy($column, $direction ?? self::ASCENDING);
     }
 
     /**
@@ -135,7 +134,7 @@ class Sort extends Refiner
      * @param  Sort<TModel, TBuilder>  $sort
      * @return Sort<TModel, TBuilder>|void
      */
-    protected function definition(Sort $sort)
+    protected function definition(self $sort)
     {
         return $sort;
     }
@@ -151,7 +150,7 @@ class Sort extends Refiner
             return null;
         }
 
-        return $this->enforcesDirection(Sort::ASCENDING)
+        return $this->enforcesDirection(self::ASCENDING)
             ? $this->getAscendingValue()
             : $this->getDescendingValue();
     }
@@ -172,7 +171,7 @@ class Sort extends Refiner
 
     /**
      * Guess the parameter for the sort.
-     * 
+     *
      * @return string
      */
     protected function guessParameter()
