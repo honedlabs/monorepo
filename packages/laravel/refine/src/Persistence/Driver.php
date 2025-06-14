@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine\Persistence;
 
 abstract class Driver
@@ -13,17 +15,31 @@ abstract class Driver
 
     /**
      * The resolved data from the driver.
-     * 
+     *
      * @var mixed
      */
-    protected $resolvedData = [];
+    protected $resolved = [];
 
     /**
      * The key to be used for the instance.
-     * 
+     *
      * @var string
      */
     protected $key;
+
+    /**
+     * Retrieve the data from the driver and store it in memory.
+     *
+     * @return $this
+     */
+    abstract public function resolve();
+
+    /**
+     * Persist the data to the session.
+     *
+     * @return void
+     */
+    abstract public function persist();
 
     /**
      * Create a new instance of the driver.
@@ -40,7 +56,7 @@ abstract class Driver
 
     /**
      * Set the key to be used for the driver.
-     * 
+     *
      * @param  string  $key
      * @return $this
      */
@@ -52,28 +68,18 @@ abstract class Driver
     }
 
     /**
-     * Retrieve the data from the driver and store it in memory.
-     * 
-     * @return void
-     */
-    abstract public function resolve();
-
-    /**
-     * Persist the data to the session.
-     * 
-     * @return void
-     */
-    abstract public function persist();
-
-    /**
      * Get a value from the resolved data.
      *
-     * @param  string  $key
+     * @param  string|null  $key
      * @return mixed
      */
-    public function get($key)
+    public function get($key = null)
     {
-        return $this->resolvedData[$key] ?? null;
+        if ($key) {
+            return $this->resolved[$key] ?? null;
+        }
+
+        return $this->resolved;
     }
 
     /**

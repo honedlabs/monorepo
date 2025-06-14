@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine\Persistence;
 
 use Illuminate\Contracts\Session\Session;
@@ -8,22 +10,24 @@ class SessionDriver extends Driver
 {
     public function __construct(
         protected Session $session,
-    ) { }
+    ) {}
 
     /**
      * Retrieve the data from the driver and store it in memory.
-     * 
-     * @return void
+     *
+     * @return $this
      */
     public function resolve()
     {
-        $this->resolvedData = $this->session->get($this->key, []);
+        $this->resolved = $this->session->get($this->key, []);
+
+        return $this;
     }
 
     /**
      * Set the session to use for the driver.
      *
-     * @param  \Illuminate\Contracts\Session\Session  $session
+     * @param  Session  $session
      * @return $this
      */
     public function session($session)
@@ -35,7 +39,7 @@ class SessionDriver extends Driver
 
     /**
      * Persist the data to the session.
-     * 
+     *
      * @return void
      */
     public function persist()

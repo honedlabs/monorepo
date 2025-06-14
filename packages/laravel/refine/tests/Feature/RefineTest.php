@@ -40,7 +40,7 @@ it('evaluates named closure dependencies', function () {
 
     expect($this->test->request($request)->for(Product::query()))
         ->evaluate(fn ($request) => $request->get('key'))->toBe('value');
-        // ->evaluate(fn ($route) => $route)->toBeInstanceOf(Route::class)
+    // ->evaluate(fn ($route) => $route)->toBeInstanceOf(Route::class)
 });
 
 it('evaluates typed closure dependencies', function () {

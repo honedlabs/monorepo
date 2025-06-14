@@ -131,7 +131,6 @@ trait CanBeRefined
             'term' => $this->getTerm(),
             'delimiter' => $this->getDelimiter(),
             'placeholder' => $this->getSearchPlaceholder(),
-
             'sorts' => $this->sortsToArray(),
             'filters' => $this->filtersToArray(),
             'searches' => $this->searchesToArray(),
@@ -150,6 +149,7 @@ trait CanBeRefined
         $this->filter();
         $this->sort();
         $this->actAfter();
+        $this->persist();
     }
 
     /**
@@ -254,15 +254,5 @@ trait CanBeRefined
     protected function actAfter()
     {
         $this->evaluate($this->after);
-    }
-
-    /**
-     * Persist the data to the appropriate driver
-     *
-     * @return void
-     */
-    protected function persistData()
-    {
-        //
     }
 }

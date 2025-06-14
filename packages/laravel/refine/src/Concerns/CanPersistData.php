@@ -11,13 +11,6 @@ use Illuminate\Support\Str;
 trait CanPersistData
 {
     /**
-     * The drivers to use for persisting data.
-     *
-     * @var array<string,\Honed\Refine\Persistence\Driver>
-     */
-    protected $drivers = [];
-
-    /**
      * The name of the key when persisting data.
      *
      * @var string|null
@@ -27,13 +20,20 @@ trait CanPersistData
     /**
      * The default driver to use for persisting data.
      *
-     * @var 'session'|'cookie'
+     * @var 'session'|'cookie'|string
      */
     protected $persistDriver = 'session';
 
     /**
+     * The drivers to use for persisting data.
+     *
+     * @var array<string,\Honed\Refine\Persistence\Driver>
+     */
+    protected $drivers = [];
+
+    /**
      * Get the request to use for the driver.
-     * 
+     *
      * @return \Illuminate\Http\Request
      */
     abstract public function getRequest();
@@ -62,6 +62,39 @@ trait CanPersistData
     }
 
     /**
+     * Set the driver to use for persisting data by default.
+     *
+     * @param  'session'|'cookie'|string  $driver
+     * @return $this
+     */
+    public function persistIn($driver)
+    {
+        $this->persistDriver = $driver;
+
+        return $this;
+    }
+
+    /**
+     * Set the driver to use for persisting data to the session.
+     *
+     * @return $this
+     */
+    public function persistInSession()
+    {
+        return $this->persistIn('session');
+    }
+
+    /**
+     * Set the driver to use for persisting data to the cookie.
+     *
+     * @return $this
+     */
+    public function persistInCookie()
+    {
+        return $this->persistIn('cookie');
+    }
+
+    /**
      * Set the time to live for the persistent data, if using the cookie driver.
      *
      * @param  int  $seconds
@@ -69,12 +102,24 @@ trait CanPersistData
      */
     public function lifetime($seconds = 15724800)
     {
-        /** @var \Honed\Refine\Persistence\CookieDriver $driver */
+        /** @var CookieDriver $driver */
         $driver = $this->getPersistDriver('cookie');
 
         $driver->lifetime($seconds);
 
         return $this;
+    }
+
+    /**
+     * Persist the data to the drivers.
+     *
+     * @return void
+     */
+    protected function persist()
+    {
+        foreach ($this->drivers as $driver) {
+            $driver->persist();
+        }
     }
 
     /**
@@ -93,7 +138,7 @@ trait CanPersistData
     /**
      * Get the driver to use for persisting data.
      *
-     * @param  'session'|'cookie'  $type
+     * @param  'session'|'cookie'|string  $type
      * @return \Honed\Refine\Persistence\Driver
      */
     protected function getPersistDriver($type)
@@ -107,11 +152,11 @@ trait CanPersistData
     /**
      * Create a new cookie driver instance.
      *
-     * @return \Honed\Refine\Persistence\CookieDriver
+     * @return CookieDriver
      */
     protected function newCookieDriver()
     {
-        return $this->drivers['cookie'] 
+        return $this->drivers['cookie']
             ??= CookieDriver::make($this->getPersistKey())
                 ->request($this->getRequest());
     }
@@ -119,11 +164,11 @@ trait CanPersistData
     /**
      * Create a new session driver instance.
      *
-     * @return \Honed\Refine\Persistence\SessionDriver
+     * @return SessionDriver
      */
     protected function newSessionDriver()
     {
-        return $this->drivers['session'] 
+        return $this->drivers['session']
             ??= SessionDriver::make($this->getPersistKey());
     }
 }

@@ -134,7 +134,7 @@ trait CanPersistRefinements
      * @param  bool|'session'|'cookie'  $driver
      * @return $this
      */
-    public function persistent($driver = true)
+    public function persist($driver = true)
     {
         $this->persistSearch = $driver;
         $this->persistFilter = $driver;
@@ -150,7 +150,7 @@ trait CanPersistRefinements
      */
     public function persistInCookie()
     {
-        return $this->persistent('cookie');
+        return $this->persist('cookie');
     }
 
     /**
@@ -160,6 +160,6 @@ trait CanPersistRefinements
      */
     public function persistInSession()
     {
-        return $this->persistent('session');
+        return $this->persist('session');
     }
 }

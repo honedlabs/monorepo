@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Refine\Persistence;
 
 use Illuminate\Contracts\Session\Session;
@@ -18,22 +20,26 @@ class CookieDriver extends Driver
     public function __construct(
         protected CookieJar $cookieJar,
         protected Request $request,
-    ) { }
+    ) {}
 
     /**
      * Retrieve the data from the driver and store it in memory.
-     * 
-     * @return void
+     *
+     * @return $this
      */
     public function resolve()
     {
-        $this->resolvedData = $this->request->cookie($this->key, []);
+        $this->resolved = json_decode(
+            $this->request->cookie($this->key, '[]'), true
+        );
+
+        return $this;
     }
 
     /**
      * Set the request to use for the driver.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return $this
      */
     public function request($request)
@@ -46,7 +52,7 @@ class CookieDriver extends Driver
     /**
      * Set the cookie jar to use for the driver.
      *
-     * @param  \Illuminate\Cookie\CookieJar  $cookieJar
+     * @param  CookieJar  $cookieJar
      * @return $this
      */
     public function cookieJar($cookieJar)
@@ -71,14 +77,16 @@ class CookieDriver extends Driver
 
     /**
      * Persist the data to the session.
-     * 
+     *
      * @return void
      */
     public function persist()
     {
         match (true) {
             empty($this->data) => $this->cookieJar->forget($this->key),
-            default => $this->cookieJar->put($this->key, $this->data),
+            default => $this->cookieJar->queue(
+                $this->key, json_encode($this->data), $this->lifetime
+            ),
         };
     }
 }
