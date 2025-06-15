@@ -186,9 +186,13 @@ trait CanBeRefined
     {
         $builder = $this->getBuilder();
 
-        $this->term = $this->getSearchValue($this->request);
+        [$persistedTerm, $persistedColumns] = $this->getPersistedSearchValue();
 
-        $columns = $this->getSearchColumns($this->request);
+        $this->term = $this->getSearchValue($this->request) ?? $persistedTerm;
+
+        $columns = $this->getSearchColumns($this->request) ?? $persistedColumns;
+
+        $this->persistSearchValue($this->term, $columns);
 
         if ($this->isScout()) {
             $model = $this->getModel();
@@ -198,18 +202,14 @@ trait CanBeRefined
                 // @phpstan-ignore-next-line method.notFound
                 $model->search($this->term)->keys()
             );
-
-            return;
         }
 
         $or = false;
 
         foreach ($this->getSearches() as $search) {
-            $applied = $search->handle(
+            $or = $search->handle(
                 $builder, $this->term, $columns, $or
-            );
-
-            $or = $applied || $or;
+            ) || $or;
         }
     }
 
@@ -229,8 +229,7 @@ trait CanBeRefined
 
             $applied = $filter->handle($builder, $value) || $applied;
 
-            // Set the value in the persist driver
-            // $this->persistFilterValue($filter, $value);
+            $this->persistFilterValue($filter, $value);
         }
 
         if ($applied) {
@@ -242,7 +241,7 @@ trait CanBeRefined
 
             $filter->handle($builder, $value);
 
-            // Set the value in the persist driver
+            $this->persistFilterValue($filter, $value);
         }
     }
 
@@ -257,23 +256,25 @@ trait CanBeRefined
 
         [$parameter, $direction] = $this->getSortValue($this->request);
 
-        $sorted = false;
+        if (! $parameter) {
+            [$parameter, $direction] = $this->getPersistedSortValue();
+        }
 
+        $this->persistSortValue($parameter, $direction);
+
+        $applied = false;
+    
         foreach ($this->getSorts() as $sort) {
             $applied = $sort->handle(
                 $builder, $parameter, $direction
-            );
-
-            $sorted = $applied || $sorted;
+            ) || $applied;
         }
-
-        if (! $sorted && $sort = $this->getDefaultSort()) {
+    
+        if (! $applied && $sort = $this->getDefaultSort()) {
             $parameter = $sort->getParameter();
-
-            $sort->handle(
-                $builder, $parameter, $direction
-            );
-
+    
+            $sort->handle($builder, $parameter, $direction);
+    
             return;
         }
     }
@@ -286,15 +287,5 @@ trait CanBeRefined
     protected function actAfter()
     {
         $this->evaluate($this->after);
-    }
-
-    /**
-     * Get the persisted filter value.
-     */
-    protected function getPersistedFilterValue($filter)
-    {
-        return $this->driver->get($filter->getParameter());
-
-        // sort, direction, [filters], term, columns, toggles
     }
 }
