@@ -10,6 +10,8 @@ use Honed\Core\Concerns\HasScope;
 use Honed\Refine\Filters\Concerns\HasFilters;
 use Honed\Refine\Searches\Concerns\HasSearches;
 use Honed\Refine\Sorts\Concerns\HasSorts;
+use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Facades\App;
 
 trait CanBeRefined
 {
@@ -144,6 +146,19 @@ trait CanBeRefined
      */
     protected function pipeline()
     {
+        $builder = $this->getBuilder();
+
+        // App::make(Pipeline::class)
+        //     ->send($builder)
+        //     ->through([
+        //         $this->actBefore(...),
+        //         $this->search(...),
+        //         $this->filter(...),
+        //         $this->sort(...),
+        //         $this->actAfter(...),
+        //     ])
+        //     ->thenReturn();
+
         $this->actBefore();
         $this->search();
         $this->filter();
@@ -207,10 +222,27 @@ trait CanBeRefined
     {
         $builder = $this->getBuilder();
 
+        $applied = false;
+
         foreach ($this->getFilters() as $filter) {
             $value = $this->getFilterValue($this->request, $filter);
 
+            $applied = $filter->handle($builder, $value) || $applied;
+
+            // Set the value in the persist driver
+            // $this->persistFilterValue($filter, $value);
+        }
+
+        if ($applied) {
+            return;
+        }
+
+        foreach ($this->getFilters() as $filter) {
+            $value = $this->getPersistedFilterValue($filter);
+
             $filter->handle($builder, $value);
+
+            // Set the value in the persist driver
         }
     }
 
@@ -254,5 +286,15 @@ trait CanBeRefined
     protected function actAfter()
     {
         $this->evaluate($this->after);
+    }
+
+    /**
+     * Get the persisted filter value.
+     */
+    protected function getPersistedFilterValue($filter)
+    {
+        return $this->driver->get($filter->getParameter());
+
+        // sort, direction, [filters], term, columns, toggles
     }
 }

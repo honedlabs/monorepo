@@ -138,14 +138,19 @@ trait CanPersistData
     /**
      * Get the driver to use for persisting data.
      *
-     * @param  'session'|'cookie'|string  $type
-     * @return \Honed\Refine\Persistence\Driver
+     * @param  bool|'session'|'cookie'|string|null  $type
+     * @return \Honed\Refine\Persistence\Driver|null
      */
     protected function getPersistDriver($type)
     {
+        if ($type === true) {
+            $type = $this->persistDriver;
+        }
+
         return match ($type) {
             'cookie' => $this->newCookieDriver(),
-            default => $this->newSessionDriver(),
+            'session' => $this->newSessionDriver(),
+            default => null,
         };
     }
 

@@ -162,4 +162,104 @@ trait CanPersistRefinements
     {
         return $this->persist('session');
     }
+
+    /**
+     * Get the driver to use for persisting filter data.
+     *
+     * @return \Honed\Refine\Persistence\Driver|null
+     */
+    protected function get()
+    {
+        return $this->getPersistDriver($this->persistFilter);
+    }
+
+    /**
+     * Push a search value into the internal data store.
+     *
+     * @param  \Honed\Refine\Filter  $filter
+     * @param  mixed  $value
+     * @return void
+     */
+    protected function persistSearchValue($term, $columns = null)
+    {
+        $this->getPersistDriver($this->persistFilter)
+            ?->merge('search', 'term', $term);
+
+        if ($columns) {
+            $this->getPersistDriver($this->persistFilter)
+                ?->merge('search', 'cols', $columns);
+        }
+    }
+
+    /**
+     * Get a filter value from the internal data store.
+     *
+     * @param  \Honed\Refine\Filter  $filter
+     * @return array<string|null, array<int,string>|null>
+     */
+    protected function getPersistedSearchValue()
+    {
+        $term = $this->getPersistDriver($this->persistFilter)
+            ?->get('search.term');
+
+        $columns = $this->getPersistDriver($this->persistFilter)
+            ?->get('search.cols');
+
+        return [$term, $columns];
+    }
+
+    /**
+     * Push a filter value into the internal data store.
+     *
+     * @param  \Honed\Refine\Filter  $filter
+     * @param  mixed  $value
+     * @return void
+     */
+    protected function persistFilterValue($filter, $value)
+    {
+        $this->getPersistDriver($this->persistFilter)
+            ?->merge('filters', $filter->getParameter(), $value);
+    }
+
+    /**
+     * Get a filter value from the internal data store.
+     *
+     * @param  \Honed\Refine\Filter  $filter
+     * @return mixed
+     */
+    protected function getPersistedFilterValue($filter)
+    {
+        return $this->getPersistDriver($this->persistFilter)
+            ?->get('filters.'.$filter->getParameter());
+    }
+
+    /**
+     * Push the sort value into the internal data store.
+     *
+     * @param  string  $column
+     * @param  string|null  $direction
+     * @return void
+     */
+    protected function persistSortValue($column, $direction)
+    {
+        $this->getPersistDriver($this->persistFilter)
+            ?->merge('sorts', 'col', $column)
+            ->merge('sorts', 'dir', $direction);
+    }
+
+    /**
+     * Get a sort value from the internal data store.
+     *
+     * @return array<string|null, 'asc'|'desc'|null>
+     */
+    protected function getPersistedSortValue()
+    {
+        $column = $this->getPersistDriver($this->persistFilter)
+            ?->get('sorts.col');
+
+        $direction = $this->getPersistDriver($this->persistFilter)
+            ?->get('sorts.dir');
+
+        return [$column, $direction];
+    }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Persistence;
 
+use Illuminate\Support\Arr;
+
 abstract class Driver
 {
     /**
@@ -76,7 +78,7 @@ abstract class Driver
     public function get($key = null)
     {
         if ($key) {
-            return $this->resolved[$key] ?? null;
+            return Arr::get($this->resolved, $key);
         }
 
         return $this->resolved;
@@ -88,10 +90,30 @@ abstract class Driver
      *
      * @param  string  $key
      * @param  mixed  $value
-     * @return void
+     * @return $this
      */
     public function put($key, $value)
     {
         $this->data[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Merge a value with a key into the internal data store.
+     *
+     * @param  string  $key
+     * @param  string  $key2
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function merge($key, $key2, $value)
+    {
+        $this->data[$key] = [
+            ...$this->data[$key] ?? [],
+            $key2 => $value,
+        ];
+
+        return $this;
     }
 }
