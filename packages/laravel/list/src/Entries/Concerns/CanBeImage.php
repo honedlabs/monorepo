@@ -13,7 +13,7 @@ trait CanBeImage
     /**
      * The disk to be used to retrieve the image from.
      */
-    protected ?string $disk;
+    protected ?string $disk = null;
 
     /**
      * Whether the image should be displayed as a square.

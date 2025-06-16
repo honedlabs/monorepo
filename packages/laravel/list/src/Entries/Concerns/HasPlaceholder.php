@@ -9,7 +9,7 @@ trait HasPlaceholder
     /**
      * The placeholder value to display if the entry is null.
      */
-    protected mixed $placeholder;
+    protected mixed $placeholder = null;
 
     /**
      * Set the placeholder value to display.

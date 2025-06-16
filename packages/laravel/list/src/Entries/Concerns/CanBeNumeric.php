@@ -14,22 +14,22 @@ trait CanBeNumeric
     /**
      * The number of decimal places to display.
      */
-    protected ?int $decimals;
+    protected ?int $decimals = null;
 
     /**
      * The locale to use for formatting the number.
      */
-    protected ?string $locale;
+    protected ?string $locale = null;
 
     /**
      * The currency to use for formatting the number.
      */
-    protected ?string $currency;
+    protected ?string $currency = null;
 
     /**
      * The divide by amount to use for formatting the number.
      */
-    protected ?int $divideBy;
+    protected ?int $divideBy = null;
 
     /**
      * Whether to format the number as a file size.
@@ -162,7 +162,7 @@ trait CanBeNumeric
 
         return match (true) {
             $this->fileSize => $this->formatFileSize($value),
-            $this->currency => $this->formatCurrency($value),
+            (bool) $this->currency => $this->formatCurrency($value),
             default => $this->formatNumber($value),
         };
     }
@@ -194,7 +194,7 @@ trait CanBeNumeric
         $currency = $this->getCurrency();
 
         $formatted = Number::currency(
-            $value, $currency, $this->getLocale()
+            $value, $currency, $this->getLocale(), $this->getDecimals() ?? 2
         );
 
         return $formatted ?: null;

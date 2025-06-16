@@ -10,6 +10,8 @@ trait CanBeBadge
 {
     /**
      * Whether the entry should be displayed as a badge.
+     * 
+     * @var true|null
      */
     protected ?bool $isBadge = null;
 
@@ -34,10 +36,12 @@ trait CanBeBadge
 
     /**
      * Determine if the entry should be displayed as a badge.
+     * 
+     * @return true|null
      */
-    public function isBadge(): bool
+    public function isBadge(): ?bool
     {
-        return (bool) $this->isBadge;
+        return $this->isBadge;
     }
 
     /**
@@ -46,7 +50,7 @@ trait CanBeBadge
      * @param  string|(Closure(mixed...): string)  $variant
      * @return $this
      */
-    public function variant(string|Closure $variant): static
+    public function variant(string|Closure|null $variant): static
     {
         $this->variant = $variant;
 

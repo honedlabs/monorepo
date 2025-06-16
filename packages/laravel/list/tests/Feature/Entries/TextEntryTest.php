@@ -12,6 +12,28 @@ it('has text type', function () {
         ->getType()->toBe(TextEntry::TEXT);
 });
 
+it('has array representation', function () {
+    expect($this->entry->toArray())
+        ->toBeArray()
+        ->toEqual([
+            'type' => TextEntry::TEXT,
+            'label' => 'Name',
+            'state' => null,
+            'placehold' => null,
+            'badge' => null,
+            'variant' => null,
+        ]);
+});
+
+it('serializes to json', function () {
+    expect($this->entry->jsonSerialize())
+        ->toBeArray()
+        ->toEqual([
+            'type' => TextEntry::TEXT,
+            'label' => 'Name',
+        ]);
+});
+
 it('does not format null values', function () {
     expect($this->entry)
         ->format(null)->toBeNull();

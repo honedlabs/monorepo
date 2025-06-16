@@ -267,6 +267,10 @@ trait CanBeDateTime
      */
     protected function formatCarbon(mixed $value, string $format): ?string
     {
+        if (is_null($value)) {
+            return null;
+        }
+
         if (! $value instanceof CarbonInterface) {
             $value = $this->newCarbon($value);
         }
