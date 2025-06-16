@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\List;
+namespace Honed\Infolist;
 
-use Honed\List\Commands\InfolistMakeCommand;
+use Honed\Infolist\Commands\InfolistMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 class InfolistServiceProvider extends ServiceProvider

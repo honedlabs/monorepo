@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Entries\Concerns;
+namespace Honed\Infolist\Entries\Concerns;
 
 trait CanBeAggregated
 {
@@ -15,7 +15,7 @@ trait CanBeAggregated
 
     /**
      * Set the type of the entry to array.
-     * 
+     *
      * @return $this
      */
     public function array(): static
@@ -25,7 +25,7 @@ trait CanBeAggregated
 
     /**
      * Set the type of the entry to boolean.
-     * 
+     *
      * @return $this
      */
     public function boolean(): static
@@ -35,7 +35,7 @@ trait CanBeAggregated
 
     /**
      * Set the type of the entry to image.
-     * 
+     *
      * @return $this
      */
     public function image(): static
@@ -45,7 +45,7 @@ trait CanBeAggregated
 
     /**
      * Set the type of the entry to numeric.
-     * 
+     *
      * @return $this
      */
     public function numeric(): static
@@ -55,7 +55,7 @@ trait CanBeAggregated
 
     /**
      * Set the type of the entry to text.
-     * 
+     *
      * @return $this
      */
     public function text(): static
@@ -65,8 +65,6 @@ trait CanBeAggregated
 
     /**
      * Determine if the entry is an array entry.
-     * 
-     * @return bool
      */
     public function isArray(): bool
     {
@@ -75,8 +73,6 @@ trait CanBeAggregated
 
     /**
      * Determine if the entry is a boolean entry.
-     * 
-     * @return bool
      */
     public function isBoolean(): bool
     {
@@ -85,8 +81,6 @@ trait CanBeAggregated
 
     /**
      * Determine if the entry is an image entry.
-     * 
-     * @return bool
      */
     public function isImage(): bool
     {
@@ -95,8 +89,6 @@ trait CanBeAggregated
 
     /**
      * Determine if the entry is a numeric entry.
-     * 
-     * @return bool
      */
     public function isNumeric(): bool
     {
@@ -105,8 +97,6 @@ trait CanBeAggregated
 
     /**
      * Determine if the entry is a text entry.
-     * 
-     * @return bool
      */
     public function isText(): bool
     {
@@ -115,9 +105,6 @@ trait CanBeAggregated
 
     /**
      * Format the value of the entry.
-     * 
-     * @param  mixed  $value
-     * @return mixed
      */
     public function format(mixed $value): mixed
     {
@@ -138,5 +125,4 @@ trait CanBeAggregated
             default => $value,
         };
     }
-
 }

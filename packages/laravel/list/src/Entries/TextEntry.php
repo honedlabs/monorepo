@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Entries;
+namespace Honed\Infolist\Entries;
 
 class TextEntry extends BaseEntry
 {
@@ -10,8 +10,6 @@ class TextEntry extends BaseEntry
 
     /**
      * Provide the instance with any necessary setup.
-     * 
-     * @return void
      */
     protected function setUp(): void
     {
@@ -22,9 +20,6 @@ class TextEntry extends BaseEntry
 
     /**
      * Format the value of the entry.
-     * 
-     * @param  mixed  $value
-     * @return mixed
      */
     public function format(mixed $value): mixed
     {

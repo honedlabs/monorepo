@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Honed\List;
+namespace Honed\Infolist;
 
 use Honed\Core\Exceptions\ResourceNotSetException;
 use Honed\Core\Primitive;
-use Honed\List\Entries\Entry;
+use Honed\Infolist\Entries\Entry;
 use Illuminate\Database\Eloquent\Model;
 
 class Infolist extends Primitive
@@ -15,8 +15,8 @@ class Infolist extends Primitive
 
     /**
      * The resource of the infolist.
-     * 
-     * @var array<string, mixed>|\Illuminate\Database\Eloquent\Model
+     *
+     * @var array<string, mixed>|Model
      */
     protected array|Model $resource;
 
@@ -32,8 +32,8 @@ class Infolist extends Primitive
 
     /**
      * Set the resource of the infolist.
-     * 
-     * @param  array<string, mixed>|\Illuminate\Database\Eloquent\Model  $resource
+     *
+     * @param  array<string, mixed>|Model  $resource
      * @return $this
      */
     public function for(array|Model $resource): self
@@ -45,8 +45,8 @@ class Infolist extends Primitive
 
     /**
      * Get the resource to be used to generate the list.
-     * 
-     * @return array<string, mixed>|\Illuminate\Database\Eloquent\Model
+     *
+     * @return array<string, mixed>|Model
      */
     public function getResource(): array|Model
     {

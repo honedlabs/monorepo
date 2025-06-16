@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Entries\Concerns;
+namespace Honed\Infolist\Entries\Concerns;
 
+use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
@@ -11,29 +12,25 @@ trait HasState
 {
     /**
      * The record to be used to generate a state.
-     * 
-     * @var array<string, mixed>|\Illuminate\Database\Eloquent\Model|null
+     *
+     * @var array<string, mixed>|Model|null
      */
     protected array|Model|null $record = null;
 
     /**
      * The retrieval method for the state.
-     * 
-     * @var string|\Closure
      */
-    protected string|\Closure|null $state = null;
+    protected string|Closure|null $state = null;
 
     /**
      * The resolved state of the entry.
-     * 
-     * @var mixed
      */
     protected mixed $resolved = null;
 
     /**
      * Set the record to be used to generate a state.
-     * 
-     * @param  array<string, mixed>|\Illuminate\Database\Eloquent\Model  $record
+     *
+     * @param  array<string, mixed>|Model  $record
      * @return $this
      */
     public function record(array|Model $record): static
@@ -45,8 +42,8 @@ trait HasState
 
     /**
      * Get the record to be used to generate a state.
-     * 
-     * @return array<string, mixed>|\Illuminate\Database\Eloquent\Model|null
+     *
+     * @return array<string, mixed>|Model|null
      */
     public function getRecord(): array|Model|null
     {
@@ -55,11 +52,10 @@ trait HasState
 
     /**
      * Set how the state of the entry is generated.
-     * 
-     * @param  string|\Closure  $state
+     *
      * @return $this
      */
-    public function state(string|\Closure $state): static
+    public function state(string|Closure $state): static
     {
         $this->state = $state;
 
@@ -68,8 +64,6 @@ trait HasState
 
     /**
      * Get the resolved state of the entry.
-     * 
-     * @return mixed
      */
     public function getState(): mixed
     {
@@ -82,8 +76,6 @@ trait HasState
 
     /**
      * Resolve the state of the entry.
-     * 
-     * @return mixed
      */
     protected function resolveState(): mixed
     {

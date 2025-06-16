@@ -2,21 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Entries\Concerns;
+namespace Honed\Infolist\Entries\Concerns;
 
 trait HasPlaceholder
 {
     /**
      * The placeholder value to display if the entry is null.
-     * 
-     * @var mixed
      */
     protected mixed $placeholder;
 
     /**
      * Set the placeholder value to display.
-     * 
-     * @param  mixed  $placeholder
+     *
      * @return $this
      */
     public function placeholder(mixed $placeholder): static
@@ -28,8 +25,6 @@ trait HasPlaceholder
 
     /**
      * Get the placeholder value to display.
-     * 
-     * @return mixed
      */
     public function getPlaceholder(): mixed
     {
@@ -38,8 +33,6 @@ trait HasPlaceholder
 
     /**
      * Determine if a placeholder is set.
-     * 
-     * @return bool
      */
     public function hasPlaceholder(): bool
     {

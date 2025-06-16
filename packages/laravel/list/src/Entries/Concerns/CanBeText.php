@@ -1,52 +1,43 @@
 <?php
 
-namespace Honed\List\Entries\Concerns;
+declare(strict_types=1);
+
+namespace Honed\Infolist\Entries\Concerns;
 
 use Illuminate\Support\Str;
 
 trait CanBeText
 {
     public const TEXT = 'text';
-    
+
     /**
      * The limit of the characters to display.
-     * 
-     * @var int|null
      */
     protected ?int $limit;
 
     /**
      * The limit of the words to display.
-     * 
-     * @var int|null
      */
     protected ?int $words;
 
     /**
      * The prefix to display before the text.
-     * 
-     * @var string|null
      */
     protected ?string $prefix;
 
     /**
      * The suffix to display after the text.
-     * 
-     * @var string|null
      */
     protected ?string $suffix;
-    
+
     /**
      * The separator to be used to separate the text.
-     * 
-     * @var string|null
      */
-    protected ?string $separator;   
+    protected ?string $separator;
 
     /**
      * Set the limit of the text to display.
-     * 
-     * @param  int  $limit
+     *
      * @return $this
      */
     public function limit(int $limit): static
@@ -58,8 +49,6 @@ trait CanBeText
 
     /**
      * Get the limit of the text to display.
-     * 
-     * @return int|null
      */
     public function getLimit(): ?int
     {
@@ -68,8 +57,6 @@ trait CanBeText
 
     /**
      * Determine if a limit is set.
-     * 
-     * @return bool
      */
     public function hasLimit(): bool
     {
@@ -78,8 +65,7 @@ trait CanBeText
 
     /**
      * Set the limit of the words to display.
-     * 
-     * @param  int  $words
+     *
      * @return $this
      */
     public function words(int $words): static
@@ -91,8 +77,6 @@ trait CanBeText
 
     /**
      * Get the limit of the words to display.
-     * 
-     * @return int|null
      */
     public function getWords(): ?int
     {
@@ -101,8 +85,6 @@ trait CanBeText
 
     /**
      * Determine if a words limit is set.
-     * 
-     * @return bool
      */
     public function hasWords(): bool
     {
@@ -111,8 +93,7 @@ trait CanBeText
 
     /**
      * Set the prefix to display before the text.
-     * 
-     * @param  string  $prefix
+     *
      * @return $this
      */
     public function prefix(string $prefix): static
@@ -124,8 +105,6 @@ trait CanBeText
 
     /**
      * Get the prefix to display before the text.
-     * 
-     * @return string|null
      */
     public function getPrefix(): ?string
     {
@@ -134,8 +113,6 @@ trait CanBeText
 
     /**
      * Determine if a prefix is set.
-     * 
-     * @return bool
      */
     public function hasPrefix(): bool
     {
@@ -144,8 +121,7 @@ trait CanBeText
 
     /**
      * Set the suffix to display after the text.
-     * 
-     * @param  string  $suffix
+     *
      * @return $this
      */
     public function suffix(string $suffix): static
@@ -157,8 +133,6 @@ trait CanBeText
 
     /**
      * Get the suffix to display after the text.
-     * 
-     * @return string|null
      */
     public function getSuffix(): ?string
     {
@@ -167,8 +141,6 @@ trait CanBeText
 
     /**
      * Determine if a suffix is set.
-     * 
-     * @return bool
      */
     public function hasSuffix(): bool
     {
@@ -177,8 +149,7 @@ trait CanBeText
 
     /**
      * Set the separator to be used to separate the text.
-     * 
-     * @param  string  $separator
+     *
      * @return $this
      */
     public function separator(string $separator): static
@@ -190,8 +161,6 @@ trait CanBeText
 
     /**
      * Get the separator to be used to separate the text.
-     * 
-     * @return string|null
      */
     public function getSeparator(): ?string
     {
@@ -200,8 +169,6 @@ trait CanBeText
 
     /**
      * Determine if a separator is set.
-     * 
-     * @return bool
      */
     public function hasSeparator(): bool
     {
@@ -210,8 +177,7 @@ trait CanBeText
 
     /**
      * Format the value as text.
-     * 
-     * @param  mixed  $value
+     *
      * @return string|array<int, string>|null
      */
     protected function formatText(mixed $value): string|array|null
@@ -237,9 +203,6 @@ trait CanBeText
 
     /**
      * Format the value as text with a limit.
-     * 
-     * @param  string  $value
-     * @return string
      */
     protected function formatLimit(string $value): string
     {
@@ -250,52 +213,44 @@ trait CanBeText
 
     /**
      * Format the value as text with a words limit.
-     * 
-     * @param  string  $value
-     * @return string
      */
     protected function formatWords(string $value): string
     {
-        return $this->hasWords() 
+        return $this->hasWords()
             ? Str::words($value, $this->getWords())
             : $value;
     }
 
     /**
      * Format the value as text with a prefix.
-     * 
-     * @param  string  $value
-     * @return string
      */
     protected function formatPrefix(string $value): string
     {
-        return $this->hasPrefix() 
-            ? $this->getPrefix() . $value
+        return $this->hasPrefix()
+            ? $this->getPrefix().$value
             : $value;
     }
 
     /**
      * Format the value as text with a suffix.
-     * 
-     * @param  string  $value
+     *
      * @return string|null
      */
     protected function formatSuffix(string $value): string
     {
-        return $this->hasSuffix() 
-            ? $value . $this->getSuffix()
+        return $this->hasSuffix()
+            ? $value.$this->getSuffix()
             : $value;
     }
 
     /**
      * Format the value as text with a separator.
-     * 
-     * @param  string  $value
+     *
      * @return string|array<int, string>
      */
     protected function formatSeparator(string $value): array|string
     {
-        return $this->hasSeparator() 
+        return $this->hasSeparator()
             ? explode($this->getSeparator(), $value)
             : $value;
     }

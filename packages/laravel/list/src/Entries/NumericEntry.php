@@ -1,6 +1,8 @@
 <?php
 
-namespace Honed\List\Entries;
+declare(strict_types=1);
+
+namespace Honed\Infolist\Entries;
 
 class NumericEntry extends BaseEntry
 {
@@ -8,8 +10,6 @@ class NumericEntry extends BaseEntry
 
     /**
      * Provide the instance with any necessary setup.
-     * 
-     * @return void
      */
     protected function setUp(): void
     {
@@ -20,9 +20,6 @@ class NumericEntry extends BaseEntry
 
     /**
      * Format the value of the entry.
-     * 
-     * @param  mixed  $value
-     * @return mixed
      */
     public function format(mixed $value): mixed
     {

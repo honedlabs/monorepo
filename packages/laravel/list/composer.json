@@ -1,5 +1,5 @@
 {
-    "name": "honed/list",
+    "name": "honed/infolist",
     "description": "Generate and authenticate complex data lists for your Laravel models.",
     "keywords": [
         "honed",
@@ -7,7 +7,7 @@
         "list",
         "inertia"
     ],
-    "homepage": "https://github.com/honedlabs/list",
+    "homepage": "https://github.com/honedlabs/infolist",
     "license": "MIT",
     "authors": [
         {
@@ -38,12 +38,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Honed\\List\\": "src/"
+            "Honed\\Infolist\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Honed\\List\\Tests\\": "tests/",
+            "Honed\\Infolist\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/",
             "Workbench\\Database\\Factories\\": "workbench/database/factories/",
             "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
@@ -87,11 +87,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Honed\\List\\ListServiceProvider"
-            ],
-            "aliases": {
-                "List": "Honed\\List\\Facades\\List"
-            }
+                "Honed\\Infolist\\InfolistServiceProvider"
+            ]
         }
     },
     "minimum-stability": "dev",

@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\List\Tests\TestCase;
+use Honed\Infolist\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

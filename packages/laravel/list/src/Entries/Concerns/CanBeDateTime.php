@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Entries\Concerns;
+namespace Honed\Infolist\Entries\Concerns;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
@@ -11,69 +11,52 @@ use Carbon\Exceptions\InvalidFormatException;
 trait CanBeDateTime
 {
     public const DATE = 'date';
-    
+
     public const DATETIME = 'datetime';
-    
+
     /**
      * Whether the value should be formatted as a date.
-     * 
-     * @var bool
      */
     protected bool $isDate = false;
 
     /**
      * Whether the value should be formatted as a time.
-     * 
-     * @var bool
      */
     protected bool $isTime = false;
 
     /**
      * Whether the value should be formatted as a date time.
-     * 
-     * @var bool
      */
     protected bool $isDateTime = false;
 
     /**
      * The format to use for formatting dates.
-     * 
-     * @var string
      */
     protected string $dateFormat = 'Y-m-d';
 
     /**
      * The format to use for formatting times.
-     * 
-     * @var string
      */
     protected string $timeFormat = 'H:i:s';
 
     /**
      * The format to use for formatting date times.
-     * 
-     * @var string
      */
     protected string $dateTimeFormat = 'Y-m-d H:i:s';
 
     /**
      * Whether to use Carbon's diffForHumans to format the date.
-     * 
-     * @var bool
      */
     protected bool $isSince = false;
 
     /**
      * The timezone to use for formatting dates.
-     * 
-     * @var string
      */
     protected string $timezone = 'UTC';
 
     /**
      * Set whether the value should be formatted as a date.
-     * 
-     * @param  bool  $date
+     *
      * @return $this
      */
     public function date(bool $date = true): static
@@ -85,8 +68,6 @@ trait CanBeDateTime
 
     /**
      * Get whether the value should be formatted as a date.
-     * 
-     * @return bool
      */
     public function isDate(): bool
     {
@@ -95,8 +76,7 @@ trait CanBeDateTime
 
     /**
      * Set whether the value should be formatted as a time.
-     * 
-     * @param  bool  $time
+     *
      * @return $this
      */
     public function time(bool $time = true): static
@@ -108,8 +88,6 @@ trait CanBeDateTime
 
     /**
      * Get whether the value should be formatted as a time.
-     * 
-     * @return bool
      */
     public function isTime(): bool
     {
@@ -118,8 +96,7 @@ trait CanBeDateTime
 
     /**
      * Set whether the value should be formatted as a date time.
-     * 
-     * @param  bool  $dateTime
+     *
      * @return $this
      */
     public function dateTime(bool $dateTime = true): static
@@ -131,8 +108,6 @@ trait CanBeDateTime
 
     /**
      * Get whether the value should be formatted as a date time.
-     * 
-     * @return bool
      */
     public function isDateTime(): bool
     {
@@ -141,8 +116,7 @@ trait CanBeDateTime
 
     /**
      * Set the format to use for formatting dates.
-     * 
-     * @param  string  $format
+     *
      * @return $this
      */
     public function dateFormat(string $format): static
@@ -154,8 +128,6 @@ trait CanBeDateTime
 
     /**
      * Get the format to use for formatting dates.
-     * 
-     * @return string
      */
     public function getDateFormat(): string
     {
@@ -164,8 +136,7 @@ trait CanBeDateTime
 
     /**
      * Set the format to use for formatting times.
-     * 
-     * @param  string  $format
+     *
      * @return $this
      */
     public function timeFormat(string $format): static
@@ -177,8 +148,6 @@ trait CanBeDateTime
 
     /**
      * Get the format to use for formatting times.
-     * 
-     * @return string
      */
     public function getTimeFormat(): string
     {
@@ -187,8 +156,7 @@ trait CanBeDateTime
 
     /**
      * Set the format to use for formatting date times.
-     * 
-     * @param  string  $format
+     *
      * @return $this
      */
     public function dateTimeFormat(string $format): static
@@ -200,8 +168,6 @@ trait CanBeDateTime
 
     /**
      * Get the format to use for formatting date times.
-     * 
-     * @return string
      */
     public function getDateTimeFormat(): string
     {
@@ -210,7 +176,7 @@ trait CanBeDateTime
 
     /**
      * Set whether to use Carbon's diffForHumans to format the date.
-     * 
+     *
      * @param  bool  $isSince
      * @return $this
      */
@@ -223,8 +189,6 @@ trait CanBeDateTime
 
     /**
      * Get whether to use Carbon's diffForHumans to format the date.
-     * 
-     * @return bool
      */
     public function isSince(): bool
     {
@@ -233,8 +197,7 @@ trait CanBeDateTime
 
     /**
      * Set the timezone to use for formatting dates.
-     * 
-     * @param  string  $timezone
+     *
      * @return $this
      */
     public function timezone(string $timezone): static
@@ -246,8 +209,6 @@ trait CanBeDateTime
 
     /**
      * Get the timezone to use for formatting dates.
-     * 
-     * @return string
      */
     public function getTimezone(): string
     {
@@ -256,9 +217,6 @@ trait CanBeDateTime
 
     /**
      * Format the value as a date.
-     * 
-     * @param  mixed  $value
-     * @return string|null
      */
     protected function formatDate(mixed $value): ?string
     {
@@ -267,9 +225,6 @@ trait CanBeDateTime
 
     /**
      * Format the value as a time.
-     * 
-     * @param  mixed  $value
-     * @return string|null
      */
     protected function formatTime(mixed $value): ?string
     {
@@ -278,9 +233,6 @@ trait CanBeDateTime
 
     /**
      * Format the value as a date time.
-     * 
-     * @param  mixed  $value
-     * @return string|null
      */
     protected function formatDateTime(mixed $value): ?string
     {
@@ -289,9 +241,6 @@ trait CanBeDateTime
 
     /**
      * Format the value as a since date.
-     * 
-     * @param  mixed  $value
-     * @return string|null
      */
     protected function formatSince(mixed $value): ?string
     {
@@ -304,10 +253,6 @@ trait CanBeDateTime
 
     /**
      * Format the value as a date or time using Carbon and the given format.
-     * 
-     * @param  mixed  $value
-     * @param  string  $format
-     * @return string|null
      */
     protected function formatCarbon(mixed $value, string $format): ?string
     {
@@ -321,9 +266,6 @@ trait CanBeDateTime
 
     /**
      * Attempt to parse the value as a Carbon instance.
-     * 
-     * @param  mixed  $value
-     * @return \Carbon\CarbonInterface|null
      */
     protected function newCarbon(mixed $value): ?CarbonInterface
     {

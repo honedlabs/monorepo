@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Attribute;
+namespace Honed\Infolist\Attribute;
 
 use Attribute;
 

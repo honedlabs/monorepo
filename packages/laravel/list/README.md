@@ -1,19 +1,19 @@
-<a href="https://honed.dev/list">
+<a href="https://honed.dev/infolist">
     <picture>
         <source media="(prefers-color-scheme: dark)" srcset="art/header-dark.png">
         <img alt="" src="art/header-light.png">
     </picture>
 </a>
 
-# List
+# Infolist
 
 <p>
-    <a href="https://github.com/honedlabs/list/actions"><img src="https://github.com/honedlabs/list/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
-    <a href="https://packagist.org/packages/honed/list"><img src="https://img.shields.io/packagist/dt/honed/list" alt="Total Downloads"></a>
-    <a href="https://packagist.org/packages/honed/list"><img src="https://img.shields.io/packagist/v/honed/list" alt="Latest Stable Version"></a>
+    <a href="https://github.com/honedlabs/infolist/actions"><img src="https://github.com/honedlabs/infolist/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://packagist.org/packages/honed/infolist"><img src="https://img.shields.io/packagist/dt/honed/infolist" alt="Total Downloads"></a>
+    <a href="https://packagist.org/packages/honed/infolist"><img src="https://img.shields.io/packagist/v/honed/infolist" alt="Latest Stable Version"></a>
 </p>
 
-**List** is a package that generates and authenticates complex data lists for your Laravel models.
+**List** is a package that enables complex transformations for Eloquent models and other records for your application.
 
 ## Installation
 
@@ -24,12 +24,12 @@
 Get started with the package by requiring it in your PHP project using [Composer](https://getcomposer.org/).
 
 ```bash
-composer require honed/list
+composer require honed/infolist
 ```
 
 ## Documentation
 
-Please refer to the [documentation](https://honed.dev/list) for the usage of the package.
+Please refer to the [documentation](https://honed.dev/infolist) for the usage of the package.
 
 ## License
 

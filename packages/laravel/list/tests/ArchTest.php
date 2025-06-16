@@ -13,18 +13,18 @@ arch('it will not use debugging functions')
     ->each->not->toBeUsed();
 
 arch('strict types')
-    ->expect('Honed\List')
+    ->expect('Honed\Infolist')
     ->toUseStrictTypes();
 
 arch('concerns')
-    ->expect('Honed\List\Concerns')
+    ->expect('Honed\Infolist\Concerns')
     ->toBeTraits();
 
 arch('contracts')
-    ->expect('Honed\List\Contracts')
+    ->expect('Honed\Infolist\Contracts')
     ->toBeInterfaces();
 
 arch('commands')
-    ->expect('Honed\List\Commands')
+    ->expect('Honed\Infolist\Commands')
     ->toBeClasses()
     ->toExtend(Command::class);

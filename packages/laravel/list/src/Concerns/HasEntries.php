@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Concerns;
+namespace Honed\Infolist\Concerns;
 
-use Honed\List\Entries\Entry;
+use Honed\Infolist\Entries\Entry;
 
 trait HasEntries
 {
@@ -45,7 +45,7 @@ trait HasEntries
 
     /**
      * Get the entries of the list.
-     * 
+     *
      * @return array<int, \Honed\List\Entries\Entry>
      */
     public function getEntries(): array

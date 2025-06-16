@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Entries\Concerns;
+namespace Honed\Infolist\Entries\Concerns;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -10,25 +10,20 @@ use Illuminate\Support\Collection;
 trait CanBeArray
 {
     public const ARRAY = 'array';
-    
+
     /**
      * The property to pluck from the array.
-     * 
-     * @var string|null
      */
     protected ?string $pluck = null;
 
     /**
      * The separator to use when joining the array.
-     * 
-     * @var string|null
      */
     protected ?string $glue = null;
 
     /**
      * Set the property to pluck from the array.
-     * 
-     * @param  string  $pluck
+     *
      * @return $this
      */
     public function pluck(string $pluck): static
@@ -40,8 +35,6 @@ trait CanBeArray
 
     /**
      * Get the property to pluck from the array.
-     * 
-     * @return string|null
      */
     public function getPluck(): ?string
     {
@@ -50,8 +43,6 @@ trait CanBeArray
 
     /**
      * Determine if a pluck property is set.
-     * 
-     * @return bool
      */
     public function hasPluck(): bool
     {
@@ -60,8 +51,7 @@ trait CanBeArray
 
     /**
      * Set the separator to use when joining the array.
-     * 
-     * @param  string  $glue
+     *
      * @return $this
      */
     public function glue(string $glue): static
@@ -73,8 +63,6 @@ trait CanBeArray
 
     /**
      * Get the separator to use when joining the array.
-     * 
-     * @return string|null
      */
     public function getGlue(): ?string
     {
@@ -83,8 +71,6 @@ trait CanBeArray
 
     /**
      * Determine if a glue separator is set.
-     * 
-     * @return bool
      */
     public function hasGlue(): bool
     {
@@ -93,9 +79,6 @@ trait CanBeArray
 
     /**
      * Format the value as an array.
-     * 
-     * @param  mixed  $value
-     * @return array|string|null
      */
     protected function formatArray(mixed $value): array|string|null
     {
@@ -117,26 +100,20 @@ trait CanBeArray
 
     /**
      * Format the value by plucking a property from the array.
-     * 
-     * @param  array  $value
-     * @return array
      */
     protected function formatPluck(array $value): array
     {
-        return $this->hasPluck() 
+        return $this->hasPluck()
             ? Arr::pluck($value, $this->getPluck())
             : $value;
     }
 
     /**
      * Format the value by joining the array with a separator.
-     * 
-     * @param  array  $value
-     * @return array|string
      */
     protected function formatGlue(array $value): array|string
     {
-        return $this->hasGlue() 
+        return $this->hasGlue()
             ? implode($this->getGlue(), $value)
             : $value;
     }

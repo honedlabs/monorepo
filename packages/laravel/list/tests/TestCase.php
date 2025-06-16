@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Tests;
+namespace Honed\Infolist\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\Concerns\WithWorkbench;

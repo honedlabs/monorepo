@@ -2,39 +2,32 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Entries\Concerns;
+namespace Honed\Infolist\Entries\Concerns;
 
 use Illuminate\Support\Facades\Storage;
 
 trait CanBeImage
 {
     public const IMAGE = 'image';
-    
+
     /**
      * The disk to be used to retrieve the image from.
-     * 
-     * @var string|null
      */
     protected ?string $disk;
 
     /**
      * Whether the image should be displayed as a square.
-     * 
-     * @var bool
      */
     protected bool $isSquare = false;
 
     /**
      * Whether to create a temporary file url for the image.
-     * 
-     * @var int
      */
     protected int $temporary = 0;
 
     /**
      * Set the disk to be used to retrieve the image from.
-     * 
-     * @param  string  $disk
+     *
      * @return $this
      */
     public function disk(string $disk): static
@@ -46,8 +39,6 @@ trait CanBeImage
 
     /**
      * Get the disk to be used to retrieve the image from.
-     * 
-     * @return string|null
      */
     public function getDisk(): ?string
     {
@@ -56,8 +47,6 @@ trait CanBeImage
 
     /**
      * Determine if a disk is set.
-     * 
-     * @return bool
      */
     public function hasDisk(): bool
     {
@@ -66,8 +55,7 @@ trait CanBeImage
 
     /**
      * Set whether the image should be displayed as a square.
-     * 
-     * @param  bool  $isSquare
+     *
      * @return $this
      */
     public function square(bool $isSquare = true): static
@@ -79,7 +67,7 @@ trait CanBeImage
 
     /**
      * Set whether the image should be displayed as a circle.
-     * 
+     *
      * @param  bool  $isCircle
      * @return $this
      */
@@ -90,8 +78,6 @@ trait CanBeImage
 
     /**
      * Get whether the image should be displayed as a square.
-     * 
-     * @return bool
      */
     public function isSquare(): bool
     {
@@ -100,8 +86,6 @@ trait CanBeImage
 
     /**
      * Get whether the image should be displayed as a circle.
-     * 
-     * @return bool
      */
     public function isCircular(): bool
     {
@@ -110,8 +94,7 @@ trait CanBeImage
 
     /**
      * Set whether to create a temporary file url for the image.
-     * 
-     * @param  int  $minutes
+     *
      * @return $this
      */
     public function temporaryUrl(int $minutes = 5): static
@@ -123,8 +106,6 @@ trait CanBeImage
 
     /**
      * Determine if a temporary file url should be created for the image.
-     * 
-     * @return bool
      */
     public function isTemporaryUrl(): bool
     {
@@ -133,8 +114,6 @@ trait CanBeImage
 
     /**
      * Get the duration of the temporary file url.
-     * 
-     * @return int
      */
     public function getUrlDuration(): int
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Entries;
+namespace Honed\Infolist\Entries;
 
 class Entry extends BaseEntry
 {

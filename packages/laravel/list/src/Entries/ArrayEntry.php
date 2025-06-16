@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Entries;
+namespace Honed\Infolist\Entries;
 
 class DateEntry extends BaseEntry
 {
@@ -10,8 +10,6 @@ class DateEntry extends BaseEntry
 
     /**
      * Provide the instance with any necessary setup.
-     * 
-     * @return void
      */
     protected function setUp(): void
     {
@@ -24,8 +22,7 @@ class DateEntry extends BaseEntry
 
     /**
      * Format the value of the entry.
-     * 
-     * @param  mixed  $value
+     *
      * @return string|null
      */
     public function format(mixed $value): mixed

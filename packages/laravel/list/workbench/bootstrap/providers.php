@@ -3,5 +3,6 @@
 declare(strict_types=1);
 
 return [
-    Honed\List\ListServiceProvider::class,
+    Honed\Infolist\InfolistServiceProvider::class,
+    Workbench\App\Providers\WorkbenchServiceProvider::class,
 ];

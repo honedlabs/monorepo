@@ -2,28 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Entries\Concerns;
+namespace Honed\Infolist\Entries\Concerns;
+
+use Closure;
 
 trait CanBeBadge
 {
     /**
      * Whether the entry should be displayed as a badge.
-     * 
-     * @var bool|null
      */
     protected ?bool $isBadge = null;
 
     /**
      * The variant of the badge.
-     * 
-     * @var string|(\Closure(mixed...): string)|null
+     *
+     * @var string|(Closure(mixed...): string)|null
      */
-    protected string|\Closure|null $variant = null;
+    protected string|Closure|null $variant = null;
 
     /**
      * Set whether the entry should be displayed as a badge.
-     * 
-     * @param  bool  $isBadge
+     *
      * @return $this
      */
     public function badge(bool $isBadge = true): static
@@ -35,8 +34,6 @@ trait CanBeBadge
 
     /**
      * Determine if the entry should be displayed as a badge.
-     * 
-     * @return bool
      */
     public function isBadge(): bool
     {
@@ -45,11 +42,11 @@ trait CanBeBadge
 
     /**
      * Set the variant of the badge.
-     * 
-     * @param  string|(\Closure(mixed...): string)  $variant
+     *
+     * @param  string|(Closure(mixed...): string)  $variant
      * @return $this
      */
-    public function variant(string|\Closure $variant): static
+    public function variant(string|Closure $variant): static
     {
         $this->variant = $variant;
 
@@ -59,7 +56,7 @@ trait CanBeBadge
     /**
      * Get the variant of the badge.
      */
-    public function getVariant(): string|null
+    public function getVariant(): ?string
     {
         if (! $this->isBadge()) {
             return null;
@@ -70,8 +67,6 @@ trait CanBeBadge
 
     /**
      * Determine if a variant is set.
-     * 
-     * @return bool
      */
     public function hasVariant(): bool
     {

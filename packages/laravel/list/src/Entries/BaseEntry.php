@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\List\Entries;
+namespace Honed\Infolist\Entries;
 
+use Closure;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasType;
@@ -14,23 +15,27 @@ use Illuminate\Database\Eloquent\Model;
 abstract class BaseEntry extends Primitive implements NullsAsUndefined
 {
     use Allowable;
-    use HasType;
-    use HasLabel;
     use Concerns\CanBeBadge;
     use Concerns\HasPlaceholder;
     use Concerns\HasState;
-    
+    use HasLabel;
+    use HasType;
+
     public const NUMERIC = 'numeric';
-    
+
     public const TEXT = 'text';
-    
+
     public const TIME = 'time';
 
     /**
+     * Format the value of the entry.
+     */
+    abstract public function format(mixed $value): mixed;
+
+    /**
      * Create a new list entry.
-     * 
-     * @param  string  $label
-     * @param  string|\Closure  $state
+     *
+     * @param  string|Closure  $state
      * @return \Honed\List\Entry
      */
     public static function make(?string $label = null, mixed $state = null): static
@@ -41,16 +46,8 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
     }
 
     /**
-     * Format the value of the entry.
-     * 
-     * @param  mixed  $value
-     * @return mixed
-     */
-    abstract public function format(mixed $value): mixed;
-
-    /**
      * Get the instance as an array.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray($named = [], $typed = [])
@@ -76,7 +73,7 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
 
     /**
      * Provide a selection of default dependencies for evaluation by name.
-     * 
+     *
      * @param  string  $parameterName
      * @return array<int, mixed>
      */
@@ -91,7 +88,7 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
 
     /**
      * Provide a selection of default dependencies for evaluation by type.
-     * 
+     *
      * @param  class-string  $parameterType
      * @return array<mixed>
      */
@@ -108,5 +105,4 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }
-
 }
