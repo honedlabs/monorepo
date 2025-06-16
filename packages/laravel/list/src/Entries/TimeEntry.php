@@ -4,7 +4,7 @@ namespace Honed\List\Entries;
 
 class TimeEntry extends BaseEntry
 {
-    use Concerns\CanBeDate;
+    use Concerns\CanBeDateTime;
 
     /**
      * Provide the instance with any necessary setup.

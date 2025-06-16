@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\List;
 
-use Honed\List\Commands\ListMakeCommand;
+use Honed\List\Commands\InfolistMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
-class ListServiceProvider extends ServiceProvider
+class InfolistServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.
@@ -16,7 +16,7 @@ class ListServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                ListMakeCommand::class,
+                InfolistMakeCommand::class,
             ]);
         }
     }

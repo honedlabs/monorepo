@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 
 trait CanBeImage
 {
+    public const IMAGE = 'image';
+    
     /**
      * The disk to be used to retrieve the image from.
      * 

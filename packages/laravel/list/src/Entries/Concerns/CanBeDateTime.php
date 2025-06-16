@@ -8,8 +8,12 @@ use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Carbon\Exceptions\InvalidFormatException;
 
-trait CanBeDate
+trait CanBeDateTime
 {
+    public const DATE = 'date';
+    
+    public const DATETIME = 'datetime';
+    
     /**
      * Whether the value should be formatted as a date.
      * 

@@ -9,6 +9,8 @@ use Illuminate\Support\Collection;
 
 trait CanBeArray
 {
+    public const ARRAY = 'array';
+    
     /**
      * The property to pluck from the array.
      * 

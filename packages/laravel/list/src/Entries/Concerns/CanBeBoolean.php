@@ -6,6 +6,8 @@ namespace Honed\List\Entries\Concerns;
 
 trait CanBeBoolean
 {
+    public const BOOLEAN = 'boolean';
+
     /**
      * The text to display when the value is true.
      * 

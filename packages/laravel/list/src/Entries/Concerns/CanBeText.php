@@ -6,6 +6,8 @@ use Illuminate\Support\Str;
 
 trait CanBeText
 {
+    public const TEXT = 'text';
+    
     /**
      * The limit of the characters to display.
      * 

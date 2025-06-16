@@ -20,16 +20,6 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
     use Concerns\HasPlaceholder;
     use Concerns\HasState;
     
-    public const ARRAY = 'array';
-    
-    public const BOOLEAN = 'boolean';
-    
-    public const DATE = 'date';
-    
-    public const DATETIME = 'datetime';
-
-    public const IMAGE = 'image';
-    
     public const NUMERIC = 'numeric';
     
     public const TEXT = 'text';

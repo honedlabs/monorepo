@@ -7,6 +7,8 @@ use Illuminate\Support\Number;
 
 trait CanBeNumeric
 {
+    public const NUMERIC = 'numeric';
+
     /**
      * The number of decimal places to display.
      * 
@@ -65,15 +67,6 @@ trait CanBeNumeric
         return $this->decimals;
     }
 
-    /**
-     * Determine if decimal places are set.
-     * 
-     * @return bool
-     */
-    public function hasDecimals(): bool
-    {
-        return isset($this->decimals);
-    }
 
     /**
      * Set the locale to use for formatting the number.
@@ -96,16 +89,6 @@ trait CanBeNumeric
     public function getLocale(): string
     {
         return $this->locale ?? App::getLocale();
-    }
-
-    /**
-     * Determine if a locale is set.
-     * 
-     * @return bool
-     */
-    public function hasLocale(): bool
-    {
-        return isset($this->locale);
     }
 
     /**
@@ -132,16 +115,6 @@ trait CanBeNumeric
     }
 
     /**
-     * Determine if a currency is set.
-     * 
-     * @return bool
-     */
-    public function hasCurrency(): bool
-    {
-        return isset($this->currency);
-    }
-
-    /**
      * Set the divide by amount to use for formatting the number.
      * 
      * @param  int  $divideBy
@@ -165,13 +138,18 @@ trait CanBeNumeric
     }
 
     /**
-     * Determine if a divide by amount is set.
+     * Set the currency and locale to use for formatting the number as money.
      * 
-     * @return bool
+     * @param  string|null  $currency
+     * @param  string|null  $locale
+     * @return $this
      */
-    public function hasDivideBy(): bool
+    public function money(?string $currency = null, ?string $locale = null): static
     {
-        return isset($this->divideBy);
+        $this->currency = $currency;
+        $this->locale = $locale;
+
+        return $this;
     }
 
     /**
@@ -209,18 +187,21 @@ trait CanBeNumeric
             return null;
         }
 
-        $pipes = [
-            'formatDivideBy',
-            'formatFileSize',
-            'formatMoney',
-            'formatNumber',
-        ];
+        $value = $this->formatDivideBy((float) $value);
 
-        return array_reduce(
-            $pipes,
-            fn ($value, $pipe) => $this->{$pipe}($value),
-            (float) $value
-        );
+        return match (true) {
+            $this->fileSize => Number::fileSize($value),
+            $this->currency => Number::currency(
+                $value,
+                $this->getCurrency(),
+                $this->getLocale()
+            ),
+            default => Number::format(
+                $value,
+                $this->getDecimals(),
+                $this->getLocale()
+            ),
+        };
     }
 
     /**
@@ -231,63 +212,9 @@ trait CanBeNumeric
      */
     protected function formatDivideBy(float $value): float
     {
-        return $this->hasDivideBy() 
-            ? $value / $this->getDivideBy()
-            : $value;
+        $divideBy = $this->getDivideBy();
+
+        return $divideBy ? $value / $divideBy : $value;
     }
 
-    /**
-     * Format the value as a file size.
-     * 
-     * @param  float  $value
-     * @return string|float
-     */
-    protected function formatFileSize(float $value): string|float
-    {
-        if (! $this->isFileSize()) {
-            return $value;
-        }
-
-        return Number::fileSize($value);
-    }
-
-    /**
-     * Format the value as money.
-     * 
-     * @param  float|string  $value
-     * @return string|float
-     */
-    protected function formatMoney(float|string $value): string|float
-    {
-        if (! $this->hasCurrency()) {
-            return $value;
-        }
-
-        return Number::currency(
-            $value,
-            $this->getCurrency(),
-            $this->getLocale()
-        );
-    }
-
-    /**
-     * Format the value as a number.
-     * 
-     * @param  float|string  $value
-     * @return string
-     */
-    protected function formatNumber(float|string $value): string
-    {
-        if (is_string($value)) {
-            return $value;
-        }
-
-        $locale = $this->getLocale() ?? app()->getLocale();
-
-        return Number::format(
-            $value,
-            $this->getDecimals(),
-            $this->getLocale()
-        );
-    }
 }
