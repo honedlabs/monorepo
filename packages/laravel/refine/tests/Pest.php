@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Refine\Tests\TestCase;
+use Workbench\App\Enums\Status;
 
 uses(TestCase::class)->in(__DIR__);
 
@@ -19,9 +20,7 @@ expect()->extend('toBeWhere', function (string $column, mixed $value, string $op
 expect()->extend('toBeOnlyWhere', function (string $column, mixed $value, string $operator = '=', string $boolean = 'and') {
     return $this->toBeArray()
         ->toHaveCount(1)
-        ->{0}->scoped(fn ($where) => $where
-        ->toBeWhere($column, $value, $operator, $boolean)
-        );
+        ->{0}->toBeWhere($column, $value, $operator, $boolean);
 });
 
 expect()->extend('toBeWhereIn', function (string $column, array $values, string $boolean = 'and') {
@@ -36,9 +35,7 @@ expect()->extend('toBeWhereIn', function (string $column, array $values, string 
 expect()->extend('toBeOnlyWhereIn', function (string $column, array $values, string $boolean = 'and') {
     return $this->toBeArray()
         ->toHaveCount(1)
-        ->{0}->scoped(fn ($whereIn) => $whereIn
-        ->toBeWhereIn($column, $values, $boolean)
-        );
+        ->{0}->toBeWhereIn($column, $values, $boolean);
 });
 
 expect()->extend('toBeSearch', function (string $column, string $boolean = 'and') {
@@ -52,9 +49,7 @@ expect()->extend('toBeSearch', function (string $column, string $boolean = 'and'
 expect()->extend('toBeOnlySearch', function (string $column, string $boolean = 'and') {
     return $this->toBeArray()
         ->toHaveCount(1)
-        ->{0}->scoped(fn ($search) => $search
-        ->toBeSearch($column, $boolean)
-        );
+        ->{0}->toBeSearch($column, $boolean);
 });
 
 expect()->extend('toBeOrder', function (string $column, string $direction = 'asc') {
@@ -67,7 +62,5 @@ expect()->extend('toBeOrder', function (string $column, string $direction = 'asc
 expect()->extend('toBeOnlyOrder', function (string $column, string $direction = 'asc') {
     return $this->toBeArray()
         ->toHaveCount(1)
-        ->{0}->scoped(fn ($order) => $order
-        ->toBeOrder($column, $direction)
-        );
+        ->{0}->toBeOrder($column, $direction);
 });

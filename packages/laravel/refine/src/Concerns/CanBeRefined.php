@@ -146,19 +146,6 @@ trait CanBeRefined
      */
     protected function pipeline()
     {
-        $builder = $this->getBuilder();
-
-        // App::make(Pipeline::class)
-        //     ->send($builder)
-        //     ->through([
-        //         $this->actBefore(...),
-        //         $this->search(...),
-        //         $this->filter(...),
-        //         $this->sort(...),
-        //         $this->actAfter(...),
-        //     ])
-        //     ->thenReturn();
-
         $this->actBefore();
         $this->search();
         $this->filter();
@@ -202,6 +189,8 @@ trait CanBeRefined
                 // @phpstan-ignore-next-line method.notFound
                 $model->search($this->term)->keys()
             );
+
+            return;
         }
 
         $or = false;

@@ -20,7 +20,7 @@ trait CanPersistData
     /**
      * The default driver to use for persisting data.
      *
-     * @var 'session'|'cookie'|string
+     * @var string
      */
     protected $persistDriver = 'session';
 
@@ -64,7 +64,7 @@ trait CanPersistData
     /**
      * Set the driver to use for persisting data by default.
      *
-     * @param  'session'|'cookie'|string  $driver
+     * @param  string  $driver
      * @return $this
      */
     public function persistIn($driver)
@@ -131,7 +131,7 @@ trait CanPersistData
     {
         return Str::of(static::class)
             ->classBasename()
-            ->slug()
+            ->snake('-')
             ->toString();
     }
 
@@ -141,7 +141,7 @@ trait CanPersistData
      * @param  bool|'session'|'cookie'|string|null  $type
      * @return \Honed\Refine\Persistence\Driver|null
      */
-    protected function getPersistDriver($type)
+    public function getPersistDriver($type = null)
     {
         if ($type === true) {
             $type = $this->persistDriver;

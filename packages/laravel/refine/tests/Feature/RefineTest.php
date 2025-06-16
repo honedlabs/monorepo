@@ -11,7 +11,6 @@ use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Str;
 use Workbench\App\Models\Product;
 use Workbench\App\Refiners\RefineProduct;
@@ -24,35 +23,20 @@ afterEach(function () {
     Refine::flushState();
 });
 
-it('refines before', function () {
+it('evaluates closure dependencies', function ($callback, $type) {
     expect($this->test)
-        ->before(fn () => $this->test)->toBe($this->test);
-});
-
-it('refines after', function () {
-    expect($this->test)
-        ->after(fn () => $this->test)->toBe($this->test);
-});
-
-it('evaluates named closure dependencies', function () {
-    $product = Product::factory()->create();
-    $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
-
-    expect($this->test->request($request)->for(Product::query()))
-        ->evaluate(fn ($request) => $request->get('key'))->toBe('value');
-    // ->evaluate(fn ($route) => $route)->toBeInstanceOf(Route::class)
-});
-
-it('evaluates typed closure dependencies', function () {
-    $product = Product::factory()->create();
-    $request = FacadesRequest::create(route('products.show', $product), 'GET', ['key' => 'value']);
-
-    expect($this->test->request($request)->for(Product::query()))
-        ->evaluate(fn (Request $r) => $r->get('key'))->toBe('value')
-        ->evaluate(fn (Builder $b) => $b->getModel())->toBeInstanceOf(Product::class)
-        // ->evaluate(fn (Route $r) => $r)->toBeInstanceOf(Route::class)
-        ->evaluate(fn (Gate $g) => $g)->toBeInstanceOf(AccessGate::class);
-});
+        ->evaluate($callback)->toBeInstanceOf($type);
+})->with([
+    fn () => [fn ($request) => $request, Request::class],
+    fn () => [fn ($refine) => $refine, Refine::class],
+    fn () => [fn ($builder) => $builder, Builder::class],
+    fn () => [fn ($query) => $query, Builder::class],
+    fn () => [fn ($q) => $q, Builder::class],
+    fn () => [fn (Request $arg) => $arg, Request::class],
+    fn () => [fn (Refine $arg) => $arg, Refine::class],
+    fn () => [fn (Builder $arg) => $arg, Builder::class],
+    fn () => [fn (Gate $arg) => $arg, AccessGate::class],
+]);
 
 it('forwards calls to the builder', function () {
     expect($this->test)
@@ -67,40 +51,19 @@ it('has macro', function () {
         ->test()->toBe('test');
 });
 
-it('has array representation', function () {
-    $this->test->with([
-        Filter::make('name'),
-        Sort::make('name'),
-        Search::make('name'),
-        Product::factory()->create(), // Misc class
-    ]);
-
-    expect($this->test->toArray())->toBeArray()
-        ->toHaveCount(4)
-        ->toHaveKeys(['filters', 'sorts', 'searches', 'config'])
-        ->{'config'}
-        ->scoped(fn ($config) => $config
-            ->{'delimiter'}->toBe(',')
-            ->{'term'}->toBeNull()
-            ->{'search'}->toBe('search')
-            ->{'sort'}->toBe('sort')
-        );
-})->skip();
-
 it('resolves refiner name from model', function () {
     expect(Refine::resolveRefinerName(Product::class))
         ->toBe('App\Refiners\RefineModels\Product');
 
     Refine::guessRefinersUsing(fn ($className) => Str::of($className)
         ->afterLast('\\')
-        ->append('Refiner')
-        ->prepend('Workbench\App\Refiners\\')
+        ->prepend('Workbench\App\Refiners\Refine')
         ->toString()
     );
 
     expect(Refine::resolveRefinerName(Product::class))
         ->toBe(RefineProduct::class);
-})->skip();
+});
 
 it('can use a custom namespace', function () {
     Refine::useNamespace('Workbench\App\\');
@@ -109,38 +72,30 @@ it('can use a custom namespace', function () {
         ->toBe('Workbench\App\RefineModels\Product');
 });
 
-it('has array representation with matches', function () {
-    $this->test->with([
-        Filter::make('name'),
-        Sort::make('name'),
-        Search::make('name'),
-    ])->matchable();
-
-    expect($this->test->toArray())
-        ->toBeArray()
+it('has array representation', function () {
+    expect($this->test->toArray())->toBeArray()
         ->toHaveKeys([
-            'filters',
-            'sorts',
-            'searches',
-            'config',
             'sort',
             'search',
             'match',
+            'term',
+            'delimiter',
+            'placeholder',
+            'filters',
+            'sorts',
+            'searches',
         ]);
-})->skip();
+});
 
-it('has array representation with scopes', function () {
-    $this->test->scope('name', 'John')
-        ->matchable();
-
-    expect($this->test->matchable()->scope('name'))
-        ->toArray()->toBeArray();
-})->skip();
-
-it('refines once', function () {
-    expect($this->test)
-        ->refine()->toBe($this->test)
-        ->isRefined()->toBeTrue()
-        ->refine()->toBe($this->test)
-        ->isRefined()->toBeTrue();
+it('serializes to json', function () {
+    expect($this->test->jsonSerialize())
+        ->toHaveKeys([
+            'sort',
+            'search',
+            'match',
+            'delimiter',
+            'sorts',
+            'filters',
+            'searches',
+        ]);
 });

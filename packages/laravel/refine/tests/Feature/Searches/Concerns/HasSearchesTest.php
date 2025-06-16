@@ -30,6 +30,15 @@ it('is matchable', function () {
         ->isNotMatchable()->toBeTrue();
 });
 
+it('can use scout', function () {
+    expect($this->test)
+        ->isScout()->toBeFalse()
+        ->isNotScout()->toBeTrue()
+        ->scout()->toBe($this->test)
+        ->isScout()->toBeTrue()
+        ->isNotScout()->toBeFalse();
+});
+
 it('adds searches', function () {
     expect($this->test)
         ->searches([Search::make('name')])->toBe($this->test)

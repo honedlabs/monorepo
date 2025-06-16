@@ -348,11 +348,13 @@ class Filter extends Refiner
      */
     protected function transformParameter($value)
     {
-        return match (true) {
+        $transformed = match (true) {
             filled($this->getOptions()) => $this->activateOptions($value),
             $this->isPresence() => $value ?: null,
             default => $value,
         };
+
+        return $transformed ?? $this->getDefault();
     }
 
     /**

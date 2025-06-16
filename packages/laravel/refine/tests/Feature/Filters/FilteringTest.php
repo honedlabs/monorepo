@@ -50,69 +50,7 @@ it('applies with default', function () {
     expect($this->filter)
         ->isActive()->toBeTrue()
         ->getValue()->toBe('value');
-})->skip();
-
-it('does not apply with alias', function () {
-    $request = Request::create('/', 'GET', [$this->name => $this->value]);
-
-    expect($this->filter->alias($this->alias))
-        ->handle($this->builder, $request)->toBeFalse();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toBeEmpty();
-
-    expect($this->filter)
-        ->isActive()->toBeFalse()
-        ->getValue()->toBeNull();
-})->skip();
-
-it('applies with alias', function () {
-    $request = Request::create('/', 'GET', [$this->alias => $this->value]);
-
-    expect($this->filter->alias($this->alias))
-        ->handle($this->builder, $request)->toBeTrue();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->name, $this->value);
-
-    expect($this->filter)
-        ->isActive()->toBeTrue()
-        ->getValue()->toBe($this->value);
-})->skip();
-
-it('does not apply with scope', function () {
-    $scope = 'scope';
-
-    $request = Request::create('/', 'GET', [$this->name => $this->value]);
-
-    expect($this->filter->scope($scope))
-        ->handle($this->builder, $request)->toBeFalse();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toBeEmpty();
-
-    expect($this->filter)
-        ->isActive()->toBeFalse()
-        ->getValue()->toBeNull();
-})->skip();
-
-it('applies with scope', function () {
-    $this->filter->scope('scope');
-
-    $request = Request::create('/', 'GET', [
-        $this->filter->formatScope($this->name) => $this->value,
-    ]);
-
-    expect($this->filter)
-        ->handle($this->builder, $request)->toBeTrue();
-
-    expect($this->builder->getQuery()->wheres)
-        ->toBeOnlyWhere($this->name, $this->value);
-
-    expect($this->filter)
-        ->isActive()->toBeTrue()
-        ->getValue()->toBe($this->value);
-})->skip();
+});
 
 it('applies with different operator', function () {
     $operator = '>';
@@ -129,10 +67,8 @@ it('applies with different operator', function () {
 });
 
 it('applies with `like` operators', function () {
-    $request = Request::create('/', 'GET', [$this->name => $this->value]);
-
     expect($this->filter->operator('like'))
-        ->handle($this->builder, $request)->toBeTrue();
+        ->handle($this->builder, $this->value)->toBeTrue();
 
     expect($this->builder->getQuery()->wheres)
         ->toBeOnlySearch($this->name);
@@ -140,7 +76,7 @@ it('applies with `like` operators', function () {
     expect($this->filter)
         ->isActive()->toBeTrue()
         ->getValue()->toBe($this->value);
-})->todo();
+});
 
 it('applies with date', function () {
     $value = Carbon::now();

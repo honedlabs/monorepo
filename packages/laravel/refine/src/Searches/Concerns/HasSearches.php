@@ -163,7 +163,7 @@ trait HasSearches
      * @param  bool  $scout
      * @return $this
      */
-    public function scout($scout)
+    public function scout($scout = true)
     {
         $this->scout = $scout;
 

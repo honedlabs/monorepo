@@ -16,9 +16,24 @@ it('has a before callback', function () {
         ->getBeforeCallback()->toBeInstanceOf(Closure::class);
 });
 
-it('has am after callback', function () {
+it('has an after callback', function () {
     expect($this->refine)
         ->getAfterCallback()->toBeNull()
         ->after(fn () => 'after')->toBe($this->refine)
         ->getAfterCallback()->toBeInstanceOf(Closure::class);
+});
+
+it('has array representation', function () {
+    expect($this->refine->toArray())->toBeArray()
+        ->toHaveKeys([
+            'sort',
+            'search',
+            'match',
+            'term',
+            'delimiter',
+            'placeholder',
+            'sorts',
+            'filters',
+            'searches',
+        ]);
 });

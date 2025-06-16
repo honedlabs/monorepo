@@ -47,13 +47,13 @@ it('filters with default', function () {
     $this->refine->filters([
         Filter::make($name)
             ->default($value),
-    ])
+        ])
         ->request($request)
         ->refine();
 
     expect($this->refine->getBuilder()->getQuery()->wheres)
         ->toBeOnlyWhere($name, $value);
-})->todo();
+});
 
 it('can disable filtering', function () {
     $request = Request::create('/', 'GET', [
