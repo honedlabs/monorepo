@@ -7,7 +7,7 @@ namespace Honed\List\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class List
+class UseList
 {
     /**
      * Create a new attribute instance.

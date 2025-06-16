@@ -5,25 +5,31 @@ declare(strict_types=1);
 namespace Honed\List\Concerns;
 
 use Honed\List\Attributes\List;
+use Honed\List\Infolist;
 use Honed\List\List;
 use ReflectionClass;
 
 /**
- * @template TList of \Honed\List\List
- *
- * @property-read string|null $list The class string of the list for this model.
+ * @template TList of \Honed\List\Infolist
  */
 trait HasList
 {
+    /**
+     * The list instance for the model.
+     *
+     * @var TList|null
+     */
+    protected $list;
+
     /**
      * Get the list instance for the model.
      *
      * @return TList
      */
-    public function list()
+    public function list(): Infolist
     {
         return $this->newList()
-            ?? List::listForModel(static::class);
+            ?? List::listForModel($this);
     }
 
     /**
@@ -31,14 +37,14 @@ trait HasList
      *
      * @return TList|null
      */
-    protected static function newList()
+    protected function newList(): ?Infolist
     {
-        if (isset(static::$list)) {
-            return static::$list::make();
+        if (isset($this->list)) {
+            return $this->list::make()->for($this);
         }
 
         if ($list = static::getListAttribute()) {
-            return $list::make();
+            return $list::make()->for($this);
         }
 
         return null;
@@ -49,15 +55,15 @@ trait HasList
      *
      * @return class-string<List>|null
      */
-    protected static function getListAttribute()
+    protected static function getUseListAttribute(): ?string
     {
         $attributes = (new ReflectionClass(static::class))
-            ->getAttributes(List::class);
+            ->getAttributes(UseList::class);
 
         if ($attributes !== []) {
             $list = $attributes[0]->newInstance();
 
-            return $list->getList();
+            return $list->listClass;
         }
 
         return null;

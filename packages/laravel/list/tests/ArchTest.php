@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Console\Command;
+
 arch()->preset()->php();
 
 arch()->preset()->security();
@@ -11,5 +13,18 @@ arch('it will not use debugging functions')
     ->each->not->toBeUsed();
 
 arch('strict types')
-    ->expect('Honed\Abn')
+    ->expect('Honed\List')
     ->toUseStrictTypes();
+
+arch('concerns')
+    ->expect('Honed\List\Concerns')
+    ->toBeTraits();
+
+arch('contracts')
+    ->expect('Honed\List\Contracts')
+    ->toBeInterfaces();
+
+arch('commands')
+    ->expect('Honed\List\Commands')
+    ->toBeClasses()
+    ->toExtend(Command::class);

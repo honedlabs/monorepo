@@ -18,6 +18,8 @@ class User extends Authenticatable
 
     use Notifiable;
 
+    // ->toList()
+
     /**
      * The factory for the model.
      *
