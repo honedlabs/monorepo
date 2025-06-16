@@ -37,7 +37,7 @@ trait CanBeBadge
      */
     public function isBadge(): bool
     {
-        return $this->isBadge;
+        return (bool) $this->isBadge;
     }
 
     /**
@@ -62,6 +62,7 @@ trait CanBeBadge
             return null;
         }
 
+        /** @var string|null */
         return $this->evaluate($this->variant);
     }
 

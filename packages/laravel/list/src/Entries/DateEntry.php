@@ -23,6 +23,7 @@ class DateEntry extends BaseEntry
     /**
      * Format the value of the entry.
      *
+     * @param  \Carbon\CarbonInterface|string|int|float|null  $value
      * @return string|null
      */
     public function format(mixed $value): mixed

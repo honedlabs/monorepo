@@ -12,10 +12,10 @@ class UseInfolist
     /**
      * Create a new attribute instance.
      *
-     * @param  class-string<\Honed\List\Infolist>  $listClass
+     * @param  class-string<\Honed\Infolist\Infolist>  $infolistClass
      * @return void
      */
     public function __construct(
-        public string $listClass
+        public string $infolistClass
     ) {}
 }

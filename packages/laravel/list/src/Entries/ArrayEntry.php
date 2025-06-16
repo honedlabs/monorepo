@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
-class DateEntry extends BaseEntry
+class ArrayEntry extends BaseEntry
 {
     use Concerns\CanBeArray;
 
@@ -16,14 +16,13 @@ class DateEntry extends BaseEntry
         parent::setUp();
 
         $this->type(self::ARRAY);
-
-        $this->date();
     }
 
     /**
      * Format the value of the entry.
      *
-     * @return string|null
+     * @param  array<int, mixed>|string|null  $value
+     * @return array<int, mixed>|string|null
      */
     public function format(mixed $value): mixed
     {

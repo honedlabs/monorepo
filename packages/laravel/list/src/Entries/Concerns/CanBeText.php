@@ -56,14 +56,6 @@ trait CanBeText
     }
 
     /**
-     * Determine if a limit is set.
-     */
-    public function hasLimit(): bool
-    {
-        return isset($this->limit);
-    }
-
-    /**
      * Set the limit of the words to display.
      *
      * @return $this
@@ -81,14 +73,6 @@ trait CanBeText
     public function getWords(): ?int
     {
         return $this->words;
-    }
-
-    /**
-     * Determine if a words limit is set.
-     */
-    public function hasWords(): bool
-    {
-        return isset($this->words);
     }
 
     /**
@@ -112,14 +96,6 @@ trait CanBeText
     }
 
     /**
-     * Determine if a prefix is set.
-     */
-    public function hasPrefix(): bool
-    {
-        return isset($this->prefix);
-    }
-
-    /**
      * Set the suffix to display after the text.
      *
      * @return $this
@@ -140,14 +116,6 @@ trait CanBeText
     }
 
     /**
-     * Determine if a suffix is set.
-     */
-    public function hasSuffix(): bool
-    {
-        return isset($this->suffix);
-    }
-
-    /**
      * Set the separator to be used to separate the text.
      *
      * @return $this
@@ -165,14 +133,6 @@ trait CanBeText
     public function getSeparator(): ?string
     {
         return $this->separator;
-    }
-
-    /**
-     * Determine if a separator is set.
-     */
-    public function hasSeparator(): bool
-    {
-        return isset($this->separator);
     }
 
     /**
@@ -206,9 +166,9 @@ trait CanBeText
      */
     protected function formatLimit(string $value): string
     {
-        return $this->hasLimit()
-            ? Str::limit($value, $this->getLimit())
-            : $value;
+        $limit = $this->getLimit();
+
+        return $limit ? Str::limit($value, $limit) : $value;
     }
 
     /**
@@ -216,9 +176,9 @@ trait CanBeText
      */
     protected function formatWords(string $value): string
     {
-        return $this->hasWords()
-            ? Str::words($value, $this->getWords())
-            : $value;
+        $words = $this->getWords();
+
+        return $words ? Str::words($value, $words) : $value;
     }
 
     /**
@@ -226,21 +186,21 @@ trait CanBeText
      */
     protected function formatPrefix(string $value): string
     {
-        return $this->hasPrefix()
-            ? $this->getPrefix().$value
-            : $value;
+        $prefix = $this->getPrefix();
+
+        return $prefix ? $prefix.$value : $value;
     }
 
     /**
      * Format the value as text with a suffix.
      *
-     * @return string|null
+     * @return string
      */
     protected function formatSuffix(string $value): string
     {
-        return $this->hasSuffix()
-            ? $value.$this->getSuffix()
-            : $value;
+        $suffix = $this->getSuffix();
+
+        return $suffix ? $value.$suffix : $value;
     }
 
     /**
@@ -250,8 +210,8 @@ trait CanBeText
      */
     protected function formatSeparator(string $value): array|string
     {
-        return $this->hasSeparator()
-            ? explode($this->getSeparator(), $value)
-            : $value;
+        $separator = $this->getSeparator();
+
+        return $separator ? explode($separator, $value) : $value;
     }
 }

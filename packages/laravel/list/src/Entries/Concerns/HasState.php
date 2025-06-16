@@ -79,8 +79,14 @@ trait HasState
      */
     protected function resolveState(): mixed
     {
+        $record = $this->getRecord();
+
+        if (is_null($record)) {
+            return null;
+        }
+
         return $this->resolved = match (true) {
-            is_string($this->state) => Arr::get($this->getRecord(), $this->state),
+            is_string($this->state) => Arr::get($record, $this->state),
             is_callable($this->state) => $this->evaluate($this->state),
             default => null,
         };

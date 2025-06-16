@@ -36,7 +36,7 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
      * Create a new list entry.
      *
      * @param  string|Closure  $state
-     * @return \Honed\List\Entry
+     * @return static
      */
     public static function make(?string $label = null, mixed $state = null): static
     {

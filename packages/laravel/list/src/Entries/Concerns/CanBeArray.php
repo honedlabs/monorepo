@@ -35,6 +35,8 @@ trait CanBeArray
 
     /**
      * Get the property to pluck from the array.
+     * 
+     * @return string|null
      */
     public function getPluck(): ?string
     {
@@ -43,6 +45,8 @@ trait CanBeArray
 
     /**
      * Determine if a pluck property is set.
+     * 
+     * @return bool
      */
     public function hasPluck(): bool
     {
@@ -63,6 +67,8 @@ trait CanBeArray
 
     /**
      * Get the separator to use when joining the array.
+     * 
+     * @return string|null
      */
     public function getGlue(): ?string
     {
@@ -71,6 +77,8 @@ trait CanBeArray
 
     /**
      * Determine if a glue separator is set.
+     * 
+     * @return bool
      */
     public function hasGlue(): bool
     {
@@ -79,6 +87,9 @@ trait CanBeArray
 
     /**
      * Format the value as an array.
+     * 
+     * @param  iterable<int, mixed>|string|null  $value
+     * @return array<int, mixed>|string|null
      */
     protected function formatArray(mixed $value): array|string|null
     {
@@ -100,21 +111,27 @@ trait CanBeArray
 
     /**
      * Format the value by plucking a property from the array.
+     * 
+     * @param  array<string, mixed>  $value
+     * @return array<int, mixed>
      */
     protected function formatPluck(array $value): array
     {
-        return $this->hasPluck()
-            ? Arr::pluck($value, $this->getPluck())
-            : $value;
+        $pluck = $this->getPluck();
+
+        return $pluck ? Arr::pluck($value, $pluck) : $value;
     }
 
     /**
      * Format the value by joining the array with a separator.
+     * 
+     * @param  array<int, mixed>  $value
+     * @return array<int, mixed>|string
      */
     protected function formatGlue(array $value): array|string
     {
-        return $this->hasGlue()
-            ? implode($this->getGlue(), $value)
-            : $value;
+        $glue = $this->getGlue();
+
+        return $glue ? implode($glue, $value) : $value;
     }
 }

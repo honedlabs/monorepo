@@ -105,6 +105,8 @@ trait CanBeAggregated
 
     /**
      * Format the value of the entry.
+     * 
+     * @param \Carbon\CarbonInterface|string|int|float|null  $value
      */
     public function format(mixed $value): mixed
     {
@@ -113,13 +115,13 @@ trait CanBeAggregated
         }
 
         return match (true) {
-            $this->isArray() => $this->formatArray($value),
+            $this->isArray() => $this->formatArray($value), // @phpstan-ignore argument.type
             $this->isBoolean() => $this->formatBoolean($value),
             $this->isDate() => $this->formatDate($value),
             $this->isDateTime() => $this->formatDateTime($value),
             $this->isTime() => $this->formatTime($value),
             $this->isSince() => $this->formatSince($value),
-            $this->isImage() => $this->formatImage($value),
+            $this->isImage() => $this->formatImage($value), // @phpstan-ignore argument.type
             $this->isNumeric() => $this->formatNumeric($value),
             $this->isText() => $this->formatText($value),
             default => $value,

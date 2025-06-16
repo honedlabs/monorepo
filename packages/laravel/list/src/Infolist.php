@@ -4,14 +4,34 @@ declare(strict_types=1);
 
 namespace Honed\Infolist;
 
-use Honed\Core\Exceptions\ResourceNotSetException;
+use Closure;
 use Honed\Core\Primitive;
+use Illuminate\Support\Str;
 use Honed\Infolist\Entries\Entry;
 use Illuminate\Database\Eloquent\Model;
+use Honed\Core\Exceptions\ResourceNotSetException;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Container\Container;
+use Throwable;
+
 
 class Infolist extends Primitive
 {
     use Concerns\HasEntries;
+
+    /**
+     * The default namespace where refiners reside.
+     *
+     * @var string
+     */
+    protected static $namespace = 'App\\Infolists\\';
+
+    /**
+     * How to resolve the infolist for the given model name.
+     *
+     * @var (Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<\Honed\Infolist\Infolist>)|null
+     */
+    protected static $infolistResolver;
 
     /**
      * The resource of the infolist.
@@ -29,6 +49,87 @@ class Infolist extends Primitive
 
         $this->definition($this);
     }
+
+    /**
+     * Create a new infolist instance.
+     *
+     * @param  array<string, mixed>|Model|null  $resource
+     * @return static
+     */
+    public static function make(array|Model|null $resource = null): static
+    {
+        return resolve(static::class)
+            ->when($resource, fn ($infolist, $resource) => $infolist->for($resource));
+    }
+
+    /**
+     * Get a new infolist instance for the given model name.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return \Honed\Infolist\Infolist
+     */
+    public static function infolistForModel(Model $model)
+    {
+        $infolist = static::resolveInfolistName($model::class);
+
+        return $infolist::make($model);
+    }
+
+    /**
+     * Get the infolist name for the given model name.
+     *
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $className
+     * @return class-string<Infolist>
+     */
+    public static function resolveInfolistName(string $className): string
+    {
+        $resolver = static::$infolistResolver ?? function (string $className): string {
+            $appNamespace = static::appNamespace();
+
+            $className = Str::startsWith($className, $appNamespace.'Models\\')
+                ? Str::after($className, $appNamespace.'Models\\')
+                : Str::after($className, $appNamespace);
+
+            /** @var class-string<Infolist> */
+            return static::$namespace.$className.'Infolist';
+        };
+
+        return $resolver($className);
+    }
+
+    /**
+     * Specify the default namespace that contains the application's infolists.
+     *
+     * @param  string  $namespace
+     * @return void
+     */
+    public static function useNamespace(string $namespace): void
+    {
+        static::$namespace = $namespace;
+    }
+
+    /**
+     * Specify the callback that should be invoked to guess the name of a infolist for a model.
+     *
+     * @param  Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<\Honed\Infolist\Infolist>  $callback
+     * @return void
+     */
+    public static function guessInfolistsUsing(Closure $callback): void
+    {
+        static::$infolistResolver = $callback;
+    }
+
+    /**
+     * Flush the global configuration state.
+     *
+     * @return void
+     */
+    public static function flushState(): void
+    {
+        static::$namespace = 'App\\Infolists\\';
+        static::$infolistResolver = null;
+    }
+
 
     /**
      * Set the resource of the infolist.
@@ -59,6 +160,8 @@ class Infolist extends Primitive
 
     /**
      * Get the instance as an array.
+     * 
+     * @return array<int, array<string, mixed>>
      */
     public function toArray($named = [], $typed = [])
     {
@@ -70,6 +173,22 @@ class Infolist extends Primitive
                 ->toArray(),
             $this->getEntries()
         );
+    }
+
+    /**
+     * Get the application namespace for the application.
+     *
+     * @return string
+     */
+    protected static function appNamespace()
+    {
+        try {
+            return Container::getInstance()
+                ->make(Application::class)
+                ->getNamespace();
+        } catch (Throwable) {
+            return 'App\\';
+        }
     }
 
     /**

@@ -68,7 +68,7 @@ trait CanBeImage
     /**
      * Set whether the image should be displayed as a circle.
      *
-     * @param  bool  $isCircle
+     * @param  bool  $circular
      * @return $this
      */
     public function circular(bool $circular = true): static
@@ -122,10 +122,13 @@ trait CanBeImage
 
     /**
      * Format the image value.
+     * 
+     * @param  string|null  $value
+     * @return string|null
      */
-    protected function formatImage(mixed $value): string
+    protected function formatImage(mixed $value): ?string
     {
-        if (! $this->hasDisk()) {
+        if (! $this->hasDisk() || is_null($value)) {
             return $value;
         }
 

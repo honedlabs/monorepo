@@ -161,17 +161,9 @@ trait CanBeNumeric
         $value = $this->formatDivideBy((float) $value);
 
         return match (true) {
-            $this->fileSize => Number::fileSize($value),
-            $this->currency => Number::currency(
-                $value,
-                $this->getCurrency(),
-                $this->getLocale()
-            ),
-            default => Number::format(
-                $value,
-                $this->getDecimals(),
-                $this->getLocale()
-            ),
+            $this->fileSize => $this->formatFileSize($value),
+            $this->currency => $this->formatCurrency($value),
+            default => $this->formatNumber($value),
         };
     }
 
@@ -183,5 +175,40 @@ trait CanBeNumeric
         $divideBy = $this->getDivideBy();
 
         return $divideBy ? $value / $divideBy : $value;
+    }
+
+    /**
+     * Format the value as a file size.
+     */
+    protected function formatFileSize(float $value): string
+    {
+        return Number::fileSize($value);
+    }
+
+    /**
+     * Format the value as a currency.
+     */
+    protected function formatCurrency(float $value): ?string
+    {
+        /** @var string */
+        $currency = $this->getCurrency();
+
+        $formatted = Number::currency(
+            $value, $currency, $this->getLocale()
+        );
+
+        return $formatted ?: null;
+    }
+
+    /**
+     * Format the value as a number.
+     */
+    protected function formatNumber(float $value): ?string
+    {
+        $formatted = Number::format(
+            $value, $this->getDecimals(), locale: $this->getLocale()
+        );
+
+        return $formatted ?: null;
     }
 }

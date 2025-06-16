@@ -9,9 +9,9 @@ use Honed\Infolist\Infolist;
 use ReflectionClass;
 
 /**
- * @template TList of \Honed\List\Infolist
+ * @template TList of \Honed\Infolist\Infolist
  */
-trait HasList
+trait HasInfolist
 {
     /**
      * The list instance for the model.
@@ -21,22 +21,32 @@ trait HasList
     protected $list;
 
     /**
+     * Get the infolist for the model.
+     *
+     * @return TList
+     */
+    public function toList(): Infolist
+    {
+        return $this->infolist();
+    }
+
+    /**
      * Get the list instance for the model.
      *
      * @return TList
      */
-    public function list(): Infolist
+    public function infolist(): Infolist
     {
-        return $this->newList()
-            ?? Infolist::listForModel($this);
+        return $this->newInfolist()
+            ?? Infolist::infolistForModel($this);
     }
 
     /**
      * Get the list from the List class attribute.
      *
-     * @return class-string<List>|null
+     * @return class-string<TList>|null
      */
-    protected static function getUseListAttribute(): ?string
+    protected static function getUseInfolistAttribute(): ?string
     {
         $attributes = (new ReflectionClass(static::class))
             ->getAttributes(UseInfolist::class);
@@ -44,7 +54,7 @@ trait HasList
         if ($attributes !== []) {
             $list = $attributes[0]->newInstance();
 
-            return $list->listClass;
+            return $list->infolistClass;
         }
 
         return null;
@@ -55,13 +65,13 @@ trait HasList
      *
      * @return TList|null
      */
-    protected function newList(): ?Infolist
+    protected function newInfolist(): ?Infolist
     {
         if (isset($this->list)) {
             return $this->list::make()->for($this);
         }
 
-        if ($list = static::getListAttribute()) {
+        if ($list = static::getUseInfolistAttribute()) {
             return $list::make()->for($this);
         }
 
