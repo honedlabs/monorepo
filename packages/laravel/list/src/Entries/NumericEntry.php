@@ -4,6 +4,8 @@ namespace Honed\List\Entries;
 
 class NumericEntry extends BaseEntry
 {
+    use Concerns\CanBeNumeric;
+
     /**
      * Provide the instance with any necessary setup.
      * 
@@ -13,9 +15,7 @@ class NumericEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type('numeric');
-
-        $this->numeric();
+        $this->type(self::NUMERIC);
     }
 
     /**

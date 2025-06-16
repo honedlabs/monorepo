@@ -7,50 +7,47 @@ namespace Honed\List\Entries;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\HasValue;
+use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class BaseEntry extends Primitive
+abstract class BaseEntry extends Primitive implements NullsAsUndefined
 {
     use Allowable;
     use HasType;
     use HasLabel;
-    use HasValue;
+    use Concerns\CanBeBadge;
     use Concerns\HasPlaceholder;
+    use Concerns\HasState;
+    
+    public const ARRAY = 'array';
+    
+    public const BOOLEAN = 'boolean';
+    
+    public const DATE = 'date';
+    
+    public const DATETIME = 'datetime';
 
-    /**
-     * The state of the entry to use.
-     * 
-     * @var string|\Closure
-     */
-    protected string|\Closure $state;
-
-    /**
-     * Set the state of the entry to use.
-     * 
-     * @param  string|\Closure  $state
-     * @return $this
-     */
-    public function state(string|\Closure $state): static
-    {
-        $this->state = $state;
-
-        return $this;
-    }
+    public const IMAGE = 'image';
+    
+    public const NUMERIC = 'numeric';
+    
+    public const TEXT = 'text';
+    
+    public const TIME = 'time';
 
     /**
      * Create a new list entry.
      * 
      * @param  string  $label
-     * @param  string|\Closure  $value
+     * @param  string|\Closure  $state
      * @return \Honed\List\Entry
      */
-    public static function make(?string $label = null, mixed $value = null): static
+    public static function make(?string $label = null, mixed $state = null): static
     {
         return resolve(static::class)
             ->label($label)
-            ->value($value);
+            ->state($state);
     }
 
     /**
@@ -62,60 +59,62 @@ abstract class BaseEntry extends Primitive
     abstract public function format(mixed $value): mixed;
 
     /**
-     * Create the entry for the resource.
-     * 
-     * @param  array<string, mixed>|\Illuminate\Database\Eloquent\Model  $resource
-     * @return array<string, mixed>
-     */
-    public function build(array|Model $resource): array
-    {
-        $this->stateful($resource);
-
-        return [
-            'type' => $this->getType(),
-            'label' => $this->getLabel(),
-            'value' => $this->getValue(),
-            'none' => $this->isDefaulted(),
-        ];
-    }
-
-    /**
      * Get the instance as an array.
      * 
      * @return array<string, mixed>
      */
     public function toArray($named = [], $typed = [])
     {
+        $state = $this->getState();
+
+        $placehold = false;
+
+        if (is_null($state)) {
+            $placehold = true;
+            $state = $this->getPlaceholder();
+        }
+
         return [
             'type' => $this->getType(),
             'label' => $this->getLabel(),
-            'value' => $this->getValue(),
-            'none' => $this->isDefaulted(),
+            'state' => $state,
+            'placehold' => $placehold,
+            'badge' => $this->isBadge(),
+            'variant' => $this->getVariant(),
         ];
     }
 
+    /**
+     * Provide a selection of default dependencies for evaluation by name.
+     * 
+     * @param  string  $parameterName
+     * @return array<int, mixed>
+     */
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return match ($parameterName) {
-            // 'record', 'row' => [$this->getRecord()],
-            // 'state' => [$this->getState()],
+            'record', 'row' => [$this->getRecord()],
+            'state' => [$this->getState()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
 
     /**
+     * Provide a selection of default dependencies for evaluation by type.
+     * 
+     * @param  class-string  $parameterType
      * @return array<mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
-        // $record = $this->getRecord();
+        $record = $this->getRecord();
 
-        // if (! $record) {
-        //     return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
-        // }
+        if (! $record instanceof Model) {
+            return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
+        }
 
         return match ($parameterType) {
-            // Model::class, $record::class => [$record],
+            Model::class, $record::class => [$record],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }

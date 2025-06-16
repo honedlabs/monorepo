@@ -2,6 +2,8 @@
 
 namespace Honed\List\Entries\Concerns;
 
+use Illuminate\Support\Str;
+
 trait CanBeText
 {
     /**
@@ -202,5 +204,97 @@ trait CanBeText
     public function hasSeparator(): bool
     {
         return isset($this->separator);
+    }
+
+    /**
+     * Format the value as text.
+     * 
+     * @param  mixed  $value
+     * @return string|array<int, string>|null
+     */
+    protected function formatText(mixed $value): string|array|null
+    {
+        if (! is_string($value)) {
+            return null;
+        }
+
+        $pipes = [
+            'formatLimit',
+            'formatWords',
+            'formatPrefix',
+            'formatSuffix',
+            'formatSeparator',
+        ];
+
+        return array_reduce(
+            $pipes,
+            fn ($value, $pipe) => $this->{$pipe}($value),
+            $value
+        );
+    }
+
+    /**
+     * Format the value as text with a limit.
+     * 
+     * @param  string  $value
+     * @return string
+     */
+    protected function formatLimit(string $value): string
+    {
+        return $this->hasLimit()
+            ? Str::limit($value, $this->getLimit())
+            : $value;
+    }
+
+    /**
+     * Format the value as text with a words limit.
+     * 
+     * @param  string  $value
+     * @return string
+     */
+    protected function formatWords(string $value): string
+    {
+        return $this->hasWords() 
+            ? Str::words($value, $this->getWords())
+            : $value;
+    }
+
+    /**
+     * Format the value as text with a prefix.
+     * 
+     * @param  string  $value
+     * @return string
+     */
+    protected function formatPrefix(string $value): string
+    {
+        return $this->hasPrefix() 
+            ? $this->getPrefix() . $value
+            : $value;
+    }
+
+    /**
+     * Format the value as text with a suffix.
+     * 
+     * @param  string  $value
+     * @return string|null
+     */
+    protected function formatSuffix(string $value): string
+    {
+        return $this->hasSuffix() 
+            ? $value . $this->getSuffix()
+            : $value;
+    }
+
+    /**
+     * Format the value as text with a separator.
+     * 
+     * @param  string  $value
+     * @return string|array<int, string>
+     */
+    protected function formatSeparator(string $value): array|string
+    {
+        return $this->hasSeparator() 
+            ? explode($this->getSeparator(), $value)
+            : $value;
     }
 }

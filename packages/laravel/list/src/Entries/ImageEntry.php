@@ -4,7 +4,7 @@ namespace Honed\List\Entries;
 
 class DateEntry extends BaseEntry
 {
-    use Concerns\CanBeDate;
+    use Concerns\CanBeImage;
 
     /**
      * Provide the instance with any necessary setup.
@@ -15,9 +15,7 @@ class DateEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type(self::DATE);
-
-        $this->date();
+        $this->type(self::IMAGE);
     }
 
     /**
@@ -28,6 +26,6 @@ class DateEntry extends BaseEntry
      */
     public function format(mixed $value): mixed
     {
-        return $this->formatDate($value);
+        return is_null($value) ? null : $this->formatImage($value);
     }
 }

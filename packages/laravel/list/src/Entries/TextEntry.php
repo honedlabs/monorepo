@@ -17,7 +17,7 @@ class TextEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type('text');
+        $this->type(self::TEXT);
     }
 
     /**

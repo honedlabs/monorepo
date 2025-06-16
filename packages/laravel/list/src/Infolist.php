@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\List;
 
+use Honed\Core\Exceptions\ResourceNotSetException;
 use Honed\Core\Primitive;
 use Honed\List\Entries\Entry;
 use Illuminate\Database\Eloquent\Model;
@@ -43,12 +44,30 @@ class Infolist extends Primitive
     }
 
     /**
+     * Get the resource to be used to generate the list.
+     * 
+     * @return array<string, mixed>|\Illuminate\Database\Eloquent\Model
+     */
+    public function getResource(): array|Model
+    {
+        if (! $this->resource) {
+            ResourceNotSetException::throw(static::class);
+        }
+
+        return $this->resource;
+    }
+
+    /**
      * Get the instance as an array.
      */
     public function toArray($named = [], $typed = [])
     {
+        $resource = $this->getResource();
+
         return array_map(
-            fn (Entry $entry) => $entry->build($this->resource),
+            static fn (Entry $entry) => $entry
+                ->record($resource)
+                ->toArray(),
             $this->getEntries()
         );
     }

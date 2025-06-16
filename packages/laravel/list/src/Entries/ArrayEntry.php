@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\List\Entries;
 
 class DateEntry extends BaseEntry
 {
-    use Concerns\CanBeDate;
+    use Concerns\CanBeArray;
 
     /**
      * Provide the instance with any necessary setup.
@@ -15,7 +17,7 @@ class DateEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type(self::DATE);
+        $this->type(self::ARRAY);
 
         $this->date();
     }
@@ -28,6 +30,10 @@ class DateEntry extends BaseEntry
      */
     public function format(mixed $value): mixed
     {
-        return $this->formatDate($value);
+        if (! is_array($value)) {
+            return null;
+        }
+
+        return $this->formatArray($value);
     }
 }

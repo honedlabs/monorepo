@@ -251,23 +251,6 @@ trait CanBeDate
     }
 
     /**
-     * Format the value as a date or time using Carbon and the given format.
-     * 
-     * @param  mixed  $value
-     * @param  string  $format
-     * @return string|null
-     */
-    protected function formatCarbon(mixed $value, string $format): ?string
-    {
-        if (! $value instanceof CarbonInterface) {
-            $value = $this->newCarbon($value);
-        }
-
-        return $value->shiftTimezone($this->getTimezone())
-            ->format($format);
-    }
-
-    /**
      * Format the value as a date.
      * 
      * @param  mixed  $value
@@ -313,6 +296,23 @@ trait CanBeDate
         }
 
         return $this->newCarbon($value)?->diffForHumans();
+    }
+
+    /**
+     * Format the value as a date or time using Carbon and the given format.
+     * 
+     * @param  mixed  $value
+     * @param  string  $format
+     * @return string|null
+     */
+    protected function formatCarbon(mixed $value, string $format): ?string
+    {
+        if (! $value instanceof CarbonInterface) {
+            $value = $this->newCarbon($value);
+        }
+
+        return $value->shiftTimezone($this->getTimezone())
+            ->format($format);
     }
 
     /**

@@ -2,6 +2,9 @@
 
 namespace Honed\List\Entries\Concerns;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Number;
+
 trait CanBeNumeric
 {
     /**
@@ -31,6 +34,13 @@ trait CanBeNumeric
      * @var int|null
      */
     protected ?int $divideBy;
+
+    /**
+     * Whether to format the number as a file size.
+     * 
+     * @var bool
+     */
+    protected bool $fileSize = false;
 
     /**
      * Set the number of decimal places to display.
@@ -81,11 +91,11 @@ trait CanBeNumeric
     /**
      * Get the locale to use for formatting the number.
      * 
-     * @return string|null
+     * @return string
      */
-    public function getLocale(): ?string
+    public function getLocale(): string
     {
-        return $this->locale;
+        return $this->locale ?? App::getLocale();
     }
 
     /**
@@ -162,5 +172,122 @@ trait CanBeNumeric
     public function hasDivideBy(): bool
     {
         return isset($this->divideBy);
+    }
+
+    /**
+     * Set whether to format the number as a file size.
+     * 
+     * @param  bool  $fileSize
+     * @return $this
+     */
+    public function fileSize(bool $fileSize = true): static
+    {
+        $this->fileSize = $fileSize;
+
+        return $this;
+    }
+
+    /**
+     * Get whether the number should be formatted as a file size.
+     * 
+     * @return bool
+     */
+    public function isFileSize(): bool
+    {
+        return $this->fileSize;
+    }
+
+    /**
+     * Format the value as a number.
+     * 
+     * @param  mixed  $value
+     * @return string|null
+     */
+    protected function formatNumeric(mixed $value): ?string
+    {
+        if (! is_numeric($value)) {
+            return null;
+        }
+
+        $pipes = [
+            'formatDivideBy',
+            'formatFileSize',
+            'formatMoney',
+            'formatNumber',
+        ];
+
+        return array_reduce(
+            $pipes,
+            fn ($value, $pipe) => $this->{$pipe}($value),
+            (float) $value
+        );
+    }
+
+    /**
+     * Format the value by dividing it.
+     * 
+     * @param  float  $value
+     * @return float
+     */
+    protected function formatDivideBy(float $value): float
+    {
+        return $this->hasDivideBy() 
+            ? $value / $this->getDivideBy()
+            : $value;
+    }
+
+    /**
+     * Format the value as a file size.
+     * 
+     * @param  float  $value
+     * @return string|float
+     */
+    protected function formatFileSize(float $value): string|float
+    {
+        if (! $this->isFileSize()) {
+            return $value;
+        }
+
+        return Number::fileSize($value);
+    }
+
+    /**
+     * Format the value as money.
+     * 
+     * @param  float|string  $value
+     * @return string|float
+     */
+    protected function formatMoney(float|string $value): string|float
+    {
+        if (! $this->hasCurrency()) {
+            return $value;
+        }
+
+        return Number::currency(
+            $value,
+            $this->getCurrency(),
+            $this->getLocale()
+        );
+    }
+
+    /**
+     * Format the value as a number.
+     * 
+     * @param  float|string  $value
+     * @return string
+     */
+    protected function formatNumber(float|string $value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+
+        $locale = $this->getLocale() ?? app()->getLocale();
+
+        return Number::format(
+            $value,
+            $this->getDecimals(),
+            $this->getLocale()
+        );
     }
 }
