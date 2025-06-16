@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+use Honed\Infolist\Infolist;
+
+class {{ class }} extends Infolist
+{
+    /**
+     * Define the list.
+     * 
+     * @param  $this  $list
+     * @return $this
+     */
+    public function definition(Infolist $list): Infolist
+    {
+        return $list;
+    }
+}
