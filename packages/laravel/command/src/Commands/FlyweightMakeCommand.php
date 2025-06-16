@@ -81,11 +81,11 @@ class FlyweightMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Flyweight for missing input arguments using the returned questions.
+     * Prompt for missing input arguments using the returned questions.
      *
      * @return array<string,mixed>
      */
-    protected function flyweightForMissingArgumentsUsing()
+    protected function promptForMissingArgumentsUsing()
     {
         return [
             'name' => [

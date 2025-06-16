@@ -81,11 +81,11 @@ class ResponseMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Response for missing input arguments using the returned questions.
+     * Prompt for missing input arguments using the returned questions.
      *
      * @return array<string,mixed>
      */
-    protected function responseForMissingArgumentsUsing()
+    protected function promptForMissingArgumentsUsing()
     {
         return [
             'name' => [
