@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\List;
 
-use Honed\Command\Commands\ListMakeCommand;
+use Honed\List\Commands\ListMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 class ListServiceProvider extends ServiceProvider

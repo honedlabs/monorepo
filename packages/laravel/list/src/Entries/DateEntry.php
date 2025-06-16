@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\List\Entries;
 
-class TextEntry extends BaseEntry
+class DateEntry extends BaseEntry
 {
-    use Concerns\CanBeText;
+    use Concerns\CanBeDate;
 
     /**
      * Provide the instance with any necessary setup.
@@ -17,17 +15,19 @@ class TextEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type('text');
+        $this->type('date');
+
+        $this->date();
     }
 
     /**
      * Format the value of the entry.
      * 
      * @param  mixed  $value
-     * @return mixed
+     * @return string|null
      */
     public function format(mixed $value): mixed
     {
-        return is_null($value) ? null : $this->formatText($value);
+        return $this->formatDate($value);
     }
 }

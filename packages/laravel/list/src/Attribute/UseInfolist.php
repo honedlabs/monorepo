@@ -7,15 +7,15 @@ namespace Honed\List\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class UseList
+class UseInfolist
 {
     /**
      * Create a new attribute instance.
      *
-     * @param  class-string<\Honed\List\List>  $list
+     * @param  class-string<\Honed\List\Infolist>  $listClass
      * @return void
      */
     public function __construct(
-        public string $list
+        public string $listClass
     ) {}
 }

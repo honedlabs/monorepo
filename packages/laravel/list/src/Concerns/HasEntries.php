@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\List\Concerns;
 
-use Honed\List\Entry;
+use Honed\List\Entries\Entry;
 
 trait HasEntries
 {

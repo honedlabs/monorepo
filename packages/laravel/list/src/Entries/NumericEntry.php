@@ -1,13 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Honed\List\Entries;
 
-class TextEntry extends BaseEntry
+class NumericEntry extends BaseEntry
 {
-    use Concerns\CanBeText;
-
     /**
      * Provide the instance with any necessary setup.
      * 
@@ -17,7 +13,9 @@ class TextEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type('text');
+        $this->type('numeric');
+
+        $this->numeric();
     }
 
     /**
@@ -28,6 +26,6 @@ class TextEntry extends BaseEntry
      */
     public function format(mixed $value): mixed
     {
-        return is_null($value) ? null : $this->formatText($value);
+        return is_null($value) ? null : $this->formatNumeric($value);
     }
 }

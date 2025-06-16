@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\List\Entries\Concerns;
 
+use Illuminate\Support\Facades\Storage;
+
 trait CanBeImage
 {
     /**
@@ -21,18 +23,11 @@ trait CanBeImage
     protected bool $isSquare = false;
 
     /**
-     * The alt text to be used for the image.
+     * Whether to create a temporary file url for the image.
      * 
-     * @var string|\Closure|null
+     * @var int
      */
-    protected string|\Closure|null $alt;
-
-    /**
-     * Whether lazy loading should be used for the image.
-     * 
-     * @var bool
-     */
-    protected bool $isLazy = false;
+    protected int $temporary = 0;
 
     /**
      * Set the disk to be used to retrieve the image from.
@@ -112,58 +107,55 @@ trait CanBeImage
     }
 
     /**
-     * Set the alt text to be used for the image.
+     * Set whether to create a temporary file url for the image.
      * 
-     * @param  string|\Closure  $alt
+     * @param  int  $minutes
      * @return $this
      */
-    public function alt(string|\Closure $alt): static
+    public function temporaryUrl(int $minutes = 5): static
     {
-        $this->alt = $alt;
+        $this->temporary = $minutes;
 
         return $this;
     }
 
     /**
-     * Get the alt text to be used for the image.
-     * 
-     * @return string|\Closure|null
-     */
-    public function getAlt(): string|\Closure|null
-    {
-        return $this->evaluate($this->alt);
-    }
-
-    /**
-     * Determine if alt text is set.
+     * Determine if a temporary file url should be created for the image.
      * 
      * @return bool
      */
-    public function hasAlt(): bool
+    public function isTemporaryUrl(): bool
     {
-        return isset($this->alt);
+        return (bool) $this->temporary;
     }
 
     /**
-     * Set whether lazy loading should be used for the image.
+     * Get the duration of the temporary file url.
      * 
-     * @param  bool  $isLazy
-     * @return $this
+     * @return int
      */
-    public function lazy(bool $isLazy = true): static
+    public function getUrlDuration(): int
     {
-        $this->isLazy = $isLazy;
-
-        return $this;
+        return $this->temporary;
     }
 
     /**
-     * Get whether lazy loading should be used for the image.
-     * 
-     * @return bool
+     * Format the image value.
      */
-    public function isLazy(): bool
+    protected function formatImage(mixed $value): string
     {
-        return $this->isLazy;
+        if (! $this->hasDisk()) {
+            return $value;
+        }
+
+        /** @var \Illuminate\Filesystem\FilesystemAdapter */
+        $disk = Storage::disk($this->getDisk());
+
+        return match (true) {
+            $this->isTemporaryUrl() => $disk->temporaryUrl(
+                $value, now()->addMinutes($this->getUrlDuration())
+            ),
+            default => $disk->url($value),
+        };
     }
 }

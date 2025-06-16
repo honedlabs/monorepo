@@ -2,70 +2,96 @@
 
 declare(strict_types=1);
 
-namespace Honed\List;
+namespace Honed\List\Entries;
 
-use Honed\Core\Concerns\Allowable;
-use Honed\Core\Concerns\HasType;
-use Honed\Core\Primitive;
-
-class Entry extends Primitive
+class Entry extends BaseEntry
 {
-    use Allowable;
-    use HasType;
+    use Concerns\CanBeDate;
+    use Concerns\CanBeNumeric;
+    use Concerns\CanBeText;
+    use Concerns\CanBeImage;
 
     /**
-     * Create a new list entry.
+     * Set the type of the entry to text.
      * 
-     * @param  string  $label
-     * @param  string|\Closure  $value
-     * @return \Honed\List\Entry
+     * @return $this
      */
-    public static function make(?string $label = null, mixed $value = null)
+    public function text(): static
     {
-        return resolve(static::class)
-            ->label($label)
-            ->value($value);
+        return $this->type('text');
     }
 
     /**
-     * Get the instance as an array.
+     * Determine if the entry is a text entry.
      * 
-     * @return array<string, mixed>
+     * @return bool
      */
-    public function toArray($named = [], $typed = [])
+    public function isText(): bool
     {
-        return [
-            'type' => $this->getType(),
-            'label' => $this->getLabel(),
-            'value' => $this->getValue(),
-            'none' => $this->isDefaulted(),
-        ];
+        return $this->getType() === 'text';
     }
 
-    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    /**
+     * Set the type of the entry to numeric.
+     * 
+     * @return $this
+     */
+    public function numeric(): static
     {
-        return match ($parameterName) {
-            // 'record', 'row' => [$this->getRecord()],
-            // 'state' => [$this->getState()],
-            default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
+        return $this->type('numeric');
+    }
+
+    /**
+     * Determine if the entry is a numeric entry.
+     * 
+     * @return bool
+     */
+    public function isNumeric(): bool
+    {
+        return $this->getType() === 'numeric';
+    }
+
+    /**
+     * Set the type of the entry to image.
+     * 
+     * @return $this
+     */
+    public function image(): static
+    {
+        return $this->type('image');
+    }
+
+    /**
+     * Determine if the entry is an image entry.
+     * 
+     * @return bool
+     */
+    public function isImage(): bool
+    {
+        return $this->getType() === 'image';
+    }
+
+    /**
+     * Format the value of the entry.
+     * 
+     * @param  mixed  $value
+     * @return mixed
+     */
+    public function format(mixed $value): mixed
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        return match (true) {
+            $this->isDate() => $this->formatDate($value),
+            $this->isTime() => $this->formatTime($value),
+            $this->isDateTime() => $this->formatDateTime($value),
+            $this->isSince() => $this->formatSince($value),
+            $this->isImage() => $this->formatImage($value),
+            $this->isNumeric() => $this->formatNumeric($value),
+            $this->isText() => $this->formatText($value),
+            default => $value,
         };
     }
-
-    /**
-     * @return array<mixed>
-     */
-    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
-    {
-        // $record = $this->getRecord();
-
-        // if (! $record) {
-        //     return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
-        // }
-
-        return match ($parameterType) {
-            // Model::class, $record::class => [$record],
-            default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
-        };
-    }
-
 }

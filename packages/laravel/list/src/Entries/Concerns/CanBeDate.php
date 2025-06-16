@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\List\Entries\Concerns;
 
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
+use Carbon\Exceptions\InvalidFormatException;
+
 trait CanBeDate
 {
     /**
@@ -54,6 +58,13 @@ trait CanBeDate
      * @var bool
      */
     protected bool $isSince = false;
+
+    /**
+     * The timezone to use for formatting dates.
+     * 
+     * @var string
+     */
+    protected string $timezone = 'UTC';
 
     /**
      * Set whether the value should be formatted as a date.
@@ -214,5 +225,108 @@ trait CanBeDate
     public function isSince(): bool
     {
         return $this->isSince;
+    }
+
+    /**
+     * Set the timezone to use for formatting dates.
+     * 
+     * @param  string  $timezone
+     * @return $this
+     */
+    public function timezone(string $timezone): static
+    {
+        $this->timezone = $timezone;
+
+        return $this;
+    }
+
+    /**
+     * Get the timezone to use for formatting dates.
+     * 
+     * @return string
+     */
+    public function getTimezone(): string
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * Format the value as a date or time using Carbon and the given format.
+     * 
+     * @param  mixed  $value
+     * @param  string  $format
+     * @return string|null
+     */
+    protected function formatCarbon(mixed $value, string $format): ?string
+    {
+        if (! $value instanceof CarbonInterface) {
+            $value = $this->newCarbon($value);
+        }
+
+        return $value->shiftTimezone($this->getTimezone())
+            ->format($format);
+    }
+
+    /**
+     * Format the value as a date.
+     * 
+     * @param  mixed  $value
+     * @return string|null
+     */
+    protected function formatDate(mixed $value): ?string
+    {
+        return $this->formatCarbon($value, $this->getDateFormat());
+    }
+
+    /**
+     * Format the value as a time.
+     * 
+     * @param  mixed  $value
+     * @return string|null
+     */
+    protected function formatTime(mixed $value): ?string
+    {
+        return $this->formatCarbon($value, $this->getTimeFormat());
+    }
+
+    /**
+     * Format the value as a date time.
+     * 
+     * @param  mixed  $value
+     * @return string|null
+     */
+    protected function formatDateTime(mixed $value): ?string
+    {
+        return $this->formatCarbon($value, $this->getDateTimeFormat());
+    }
+
+    /**
+     * Format the value as a since date.
+     * 
+     * @param  mixed  $value
+     * @return string|null
+     */
+    protected function formatSince(mixed $value): ?string
+    {
+        if ($value instanceof CarbonInterface) {
+            return $value->diffForHumans();
+        }
+
+        return $this->newCarbon($value)?->diffForHumans();
+    }
+
+    /**
+     * Attempt to parse the value as a Carbon instance.
+     * 
+     * @param  mixed  $value
+     * @return \Carbon\CarbonInterface|null
+     */
+    protected function newCarbon(mixed $value): ?CarbonInterface
+    {
+        try {
+            return Carbon::parse($value);
+        } catch (InvalidFormatException $e) {
+            return null;
+        }
     }
 }

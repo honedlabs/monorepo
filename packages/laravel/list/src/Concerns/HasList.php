@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\List\Concerns;
 
-use Honed\List\Attributes\List;
+use Honed\List\Attribute\UseInfolist;
+use Honed\List\Attributes\UseList;
 use Honed\List\Infolist;
-use Honed\List\List;
 use ReflectionClass;
 
 /**
@@ -29,7 +29,7 @@ trait HasList
     public function list(): Infolist
     {
         return $this->newList()
-            ?? List::listForModel($this);
+            ?? Infolist::listForModel($this);
     }
 
     /**
@@ -58,7 +58,7 @@ trait HasList
     protected static function getUseListAttribute(): ?string
     {
         $attributes = (new ReflectionClass(static::class))
-            ->getAttributes(UseList::class);
+            ->getAttributes(UseInfolist::class);
 
         if ($attributes !== []) {
             $list = $attributes[0]->newInstance();
