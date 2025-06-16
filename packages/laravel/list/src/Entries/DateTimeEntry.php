@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
-class DateEntry extends BaseEntry
+class DateTimeEntry extends BaseEntry
 {
     use Concerns\CanBeDateTime;
 
