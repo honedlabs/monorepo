@@ -7,7 +7,7 @@ use Honed\Infolist\Infolist;
 use Honed\Infolist\Entries\TextEntry;
 use Illuminate\Support\Facades\Auth;
 
-class UserList extends Infolist
+class UserInfolist extends Infolist
 {
     /**
      * Define the list.

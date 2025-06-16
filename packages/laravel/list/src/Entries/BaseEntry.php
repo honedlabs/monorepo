@@ -38,11 +38,11 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
      * @param  string|Closure  $state
      * @return static
      */
-    public static function make(?string $label = null, mixed $state = null): static
+    public static function make(string|Closure|null $state = null, ?string $label = null): static
     {
         return resolve(static::class)
-            ->label($label)
-            ->state($state);
+            ->state($state)
+            ->label($label ?? is_string($state) ? static::makeLabel($state) : null);
     }
 
     /**

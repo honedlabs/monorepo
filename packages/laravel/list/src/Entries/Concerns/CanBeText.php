@@ -13,27 +13,27 @@ trait CanBeText
     /**
      * The limit of the characters to display.
      */
-    protected ?int $limit;
+    protected ?int $limit = null;
 
     /**
      * The limit of the words to display.
      */
-    protected ?int $words;
+    protected ?int $words = null;
 
     /**
      * The prefix to display before the text.
      */
-    protected ?string $prefix;
+    protected ?string $prefix = null;
 
     /**
      * The suffix to display after the text.
      */
-    protected ?string $suffix;
+    protected ?string $suffix = null;
 
     /**
      * The separator to be used to separate the text.
      */
-    protected ?string $separator;
+    protected ?string $separator = null;
 
     /**
      * Set the limit of the text to display.

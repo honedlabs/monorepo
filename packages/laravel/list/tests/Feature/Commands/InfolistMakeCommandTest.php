@@ -18,7 +18,7 @@ it('makes action group', function () {
 
 it('prompts for a action group name', function () {
     $this->artisan('make:infolist')
-        ->expectsQuestion('What should the action group be named?', 'UserInfolist')
+        ->expectsQuestion('What should the infolist be named?', 'UserInfolist')
         ->assertSuccessful();
 
     $this->assertFileExists(app_path('Infolists/UserInfolist.php'));

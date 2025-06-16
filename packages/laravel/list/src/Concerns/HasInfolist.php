@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Concerns;
 
-use Honed\Infolist\Attribute\UseInfolist;
+use Honed\Infolist\Attributes\UseInfolist;
 use Honed\Infolist\Infolist;
 use ReflectionClass;
 
