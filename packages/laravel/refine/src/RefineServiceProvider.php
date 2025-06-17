@@ -31,13 +31,11 @@ class RefineServiceProvider extends ServiceProvider
 
     /**
      * Register the publishing for the package.
-     *
-     * @return void
      */
-    protected function offerPublishing()
+    protected function offerPublishing(): void
     {
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),
-        ], 'refine-stubs');
+        ], 'stubs');
     }
 }

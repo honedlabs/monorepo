@@ -26,7 +26,7 @@ class Search extends Refiner
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -67,7 +67,7 @@ class Search extends Refiner
      * @param  bool  $fullText
      * @return $this
      */
-    public function fullText($fullText = true)
+    public function fullText(bool $fullText = true): self
     {
         $this->fullText = $fullText;
 
@@ -79,7 +79,7 @@ class Search extends Refiner
      *
      * @return bool
      */
-    public function isFullText()
+    public function isFullText(): bool
     {
         return $this->fullText;
     }
@@ -93,7 +93,7 @@ class Search extends Refiner
      * @param  bool  $or
      * @return bool
      */
-    public function handle($query, $term, $columns, $or = false)
+    public function handle($query, $term, $columns, $or = false): bool
     {
         $this->checkIfActive($columns);
 
@@ -143,7 +143,7 @@ class Search extends Refiner
      * @param  array<int, string>|null  $columns
      * @return void
      */
-    protected function checkIfActive($columns)
+    protected function checkIfActive($columns): void
     {
         $this->active(
             (! $columns) ?: in_array($this->getParameter(), $columns, true),

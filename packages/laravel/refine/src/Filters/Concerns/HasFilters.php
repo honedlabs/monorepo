@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Filters\Concerns;
 
-use Honed\Refine\Filters\Filter;
-use Illuminate\Support\Arr;
-
-use function array_filter;
 use function array_map;
+use function array_filter;
+
 use function array_values;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use Honed\Refine\Filters\Filter;
 
 trait HasFilters
 {
@@ -18,14 +19,14 @@ trait HasFilters
      *
      * @var bool
      */
-    protected $filterable = true;
+    protected bool $filterable = true;
 
     /**
      * List of the filters.
      *
      * @var array<int,Filter>
      */
-    protected $filters = [];
+    protected array $filters = [];
 
     /**
      * Set whether the filters should be applied.
@@ -33,7 +34,7 @@ trait HasFilters
      * @param  bool  $enable
      * @return $this
      */
-    public function filterable($enable = true)
+    public function filterable(bool $enable = true): self
     {
         $this->filterable = $enable;
 
@@ -46,7 +47,7 @@ trait HasFilters
      * @param  bool  $disable
      * @return $this
      */
-    public function notFilterable($disable = true)
+    public function notFilterable(bool $disable = true): self
     {
         return $this->filterable(! $disable);
     }
@@ -56,7 +57,7 @@ trait HasFilters
      *
      * @return bool
      */
-    public function isFilterable()
+    public function isFilterable(): bool
     {
         return $this->filterable;
     }
@@ -66,7 +67,7 @@ trait HasFilters
      *
      * @return bool
      */
-    public function isNotFilterable()
+    public function isNotFilterable(): bool
     {
         return ! $this->isFilterable();
     }
@@ -77,7 +78,7 @@ trait HasFilters
      * @param  Filter|array<int, Filter>  $filters
      * @return $this
      */
-    public function filters($filters)
+    public function filters(Filter|array $filters): self
     {
         /** @var array<int, Filter> $filters */
         $filters = is_array($filters) ? $filters : func_get_args();
@@ -92,7 +93,7 @@ trait HasFilters
      *
      * @return array<int,Filter>
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         if ($this->isNotFilterable()) {
             return [];
@@ -111,7 +112,7 @@ trait HasFilters
      *
      * @return bool
      */
-    public function isFiltering()
+    public function isFiltering(): bool
     {
         return (bool) Arr::first(
             $this->getFilters(),
@@ -126,7 +127,7 @@ trait HasFilters
      * @param  Filter  $filter
      * @return mixed
      */
-    public function getFilterValue($request, $filter)
+    public function getFilterValue(Request $request, Filter $filter): mixed
     {
         $key = $this->formatScope($filter->getParameter());
 
@@ -140,7 +141,7 @@ trait HasFilters
      *
      * @return array<int,array<string,mixed>>
      */
-    public function filtersToArray()
+    public function filtersToArray(): array
     {
         return array_values(
             array_map(

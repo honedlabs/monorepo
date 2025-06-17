@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
+use Honed\Refine\Filters\Filter;
+
 trait CanPersistRefinements
 {
     use CanPersistData;
@@ -11,31 +13,31 @@ trait CanPersistRefinements
     /**
      * The driver to use for persisting search data.
      *
-     * @var bool|'session'|'cookie'|null
+     * @var bool|string|null
      */
-    protected $persistSearch;
+    protected bool|string|null $persistSearch = null;
 
     /**
      * The driver to use for persisting filter data.
      *
-     * @var bool|'session'|'cookie'|null
+     * @var bool|string|null
      */
-    protected $persistFilter;
+    protected bool|string|null $persistFilter = null;
 
     /**
      * The driver to use for persisting sort data.
      *
-     * @var bool|'session'|'cookie'|null
+     * @var bool|string|null
      */
-    protected $persistSort;
+    protected bool|string|null $persistSort = null;
 
     /**
      * Set the driver to use for persisting searches.
      *
-     * @param  bool|'session'|'cookie'  $driver
+     * @param  bool|string|null  $driver
      * @return $this
      */
-    public function persistSearch($driver = true)
+    public function persistSearch(bool|string $driver = true): self
     {
         $this->persistSearch = $driver;
 
@@ -47,7 +49,7 @@ trait CanPersistRefinements
      *
      * @return $this
      */
-    public function persistSearchInSession()
+    public function persistSearchInSession(): self
     {
         return $this->persistSearch('session');
     }
@@ -57,7 +59,7 @@ trait CanPersistRefinements
      *
      * @return $this
      */
-    public function persistSearchInCookie()
+    public function persistSearchInCookie(): self
     {
         return $this->persistSearch('cookie');
     }
@@ -65,10 +67,9 @@ trait CanPersistRefinements
     /**
      * Set the driver to use for persisting filters.
      *
-     * @param  bool|'session'|'cookie'  $driver
      * @return $this
      */
-    public function persistFilter($driver = true)
+    public function persistFilter(bool|string $driver = true): self
     {
         $this->persistSearch = $driver;
 
@@ -80,7 +81,7 @@ trait CanPersistRefinements
      *
      * @return $this
      */
-    public function persistFilterInSession()
+    public function persistFilterInSession(): self
     {
         return $this->persistFilter('session');
     }
@@ -90,7 +91,7 @@ trait CanPersistRefinements
      *
      * @return $this
      */
-    public function persistFilterInCookie()
+    public function persistFilterInCookie(): self
     {
         return $this->persistFilter('cookie');
     }
@@ -98,10 +99,9 @@ trait CanPersistRefinements
     /**
      * Set the driver to use for persisting sorts.
      *
-     * @param  bool|'session'|'cookie'  $driver
      * @return $this
      */
-    public function persistSort($driver = true)
+    public function persistSort(bool|string $driver = true): self
     {
         $this->persistSort = $driver;
 
@@ -113,7 +113,7 @@ trait CanPersistRefinements
      *
      * @return $this
      */
-    public function persistSortInSession()
+    public function persistSortInSession(): self
     {
         return $this->persistSort('session');
     }
@@ -123,7 +123,7 @@ trait CanPersistRefinements
      *
      * @return $this
      */
-    public function persistSortInCookie()
+    public function persistSortInCookie(): self
     {
         return $this->persistSort('cookie');
     }
@@ -131,10 +131,9 @@ trait CanPersistRefinements
     /**
      * Set the driver to use for persisting all refinements.
      *
-     * @param  bool|'session'|'cookie'  $driver
      * @return $this
      */
-    public function persistent($driver = true)
+    public function persistent(bool|string $driver = true): self
     {
         $this->persistSearch = $driver;
         $this->persistFilter = $driver;
@@ -145,12 +144,8 @@ trait CanPersistRefinements
 
     /**
      * Push a search value into the internal data store.
-     *
-     * @param  \Honed\Refine\Filter  $filter
-     * @param  mixed  $value
-     * @return void
      */
-    public function persistSearchValue($term, $columns = null)
+    public function persistSearchValue(?string $term, ?array $columns = null): void
     {
         $this->getPersistDriver($this->persistSearch)
             ?->merge('search', 'term', $term);
@@ -164,28 +159,22 @@ trait CanPersistRefinements
     /**
      * Get a filter value from the internal data store.
      *
-     * @param  \Honed\Refine\Filter  $filter
-     * @return array<string|null, array<int,string>|null>
+     * @return array{string|null, array<int,string>|null}
      */
-    public function getPersistedSearchValue()
+    public function getPersistedSearchValue(): array
     {
-        $term = $this->getPersistDriver($this->persistSearch)
-            ?->get('search.term');
+        $driver = $this->getPersistDriver($this->persistSearch);
 
-        $columns = $this->getPersistDriver($this->persistSearch)
-            ?->get('search.cols');
-
-        return [$term, $columns];
+        return [
+            $driver?->get('search.term'),
+            $driver?->get('search.cols'),
+        ];
     }
 
     /**
      * Push a filter value into the internal data store.
-     *
-     * @param  \Honed\Refine\Filter  $filter
-     * @param  mixed  $value
-     * @return void
      */
-    public function persistFilterValue($filter, $value)
+    public function persistFilterValue(Filter $filter, mixed $value): void
     {
         $this->getPersistDriver($this->persistFilter)
             ?->merge('filters', $filter->getParameter(), $value);
@@ -193,11 +182,8 @@ trait CanPersistRefinements
 
     /**
      * Get a filter value from the internal data store.
-     *
-     * @param  \Honed\Refine\Filter  $filter
-     * @return mixed
      */
-    public function getPersistedFilterValue($filter)
+    public function getPersistedFilterValue(Filter $filter): mixed
     {
         return $this->getPersistDriver($this->persistFilter)
             ?->get('filters.'.$filter->getParameter());
@@ -207,10 +193,10 @@ trait CanPersistRefinements
      * Push the sort value into the internal data store.
      *
      * @param  string  $column
-     * @param  string|null  $direction
+     * @param  'asc'|'desc'|null  $direction
      * @return void
      */
-    public function persistSortValue($column, $direction)
+    public function persistSortValue(string $column, ?string $direction = null): void
     {
         $this->getPersistDriver($this->persistFilter)
             ?->merge('sorts', 'col', $column)
@@ -220,16 +206,15 @@ trait CanPersistRefinements
     /**
      * Get a sort value from the internal data store.
      *
-     * @return array<string|null, 'asc'|'desc'|null>
+     * @return array{string|null, 'asc'|'desc'|null}
      */
-    public function getPersistedSortValue()
+    public function getPersistedSortValue(): array
     {
-        $column = $this->getPersistDriver($this->persistFilter)
-            ?->get('sorts.col');
+        $driver = $this->getPersistDriver($this->persistSort);
 
-        $direction = $this->getPersistDriver($this->persistFilter)
-            ?->get('sorts.dir');
-
-        return [$column, $direction];
+        return [
+            $driver?->get('sorts.col'),
+            $driver?->get('sorts.dir'),
+        ];
     }
 }

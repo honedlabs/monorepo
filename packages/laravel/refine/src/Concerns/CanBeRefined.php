@@ -29,28 +29,28 @@ trait CanBeRefined
      *
      * @var bool
      */
-    protected $refined = false;
+    protected bool $refined = false;
 
     /**
      * The callback to be processed before the refiners.
      *
      * @var Closure|null
      */
-    protected $before;
+    protected ?Closure $before = null;
 
     /**
      * The callback to be processed after refinement.
      *
      * @var Closure|null
      */
-    protected $after;
+    protected ?Closure $after = null;
 
     /**
      * Determine if the refinements have been processed.
      *
      * @return bool
      */
-    public function isRefined()
+    public function isRefined(): bool
     {
         return $this->refined;
     }
@@ -61,7 +61,7 @@ trait CanBeRefined
      * @param  Closure  $callback
      * @return $this
      */
-    public function before($callback)
+    public function before(Closure $callback): self
     {
         $this->before = $callback;
 
@@ -73,7 +73,7 @@ trait CanBeRefined
      *
      * @return Closure|null
      */
-    public function getBeforeCallback()
+    public function getBeforeCallback(): ?Closure
     {
         return $this->before;
     }
@@ -84,7 +84,7 @@ trait CanBeRefined
      * @param  Closure  $callback
      * @return $this
      */
-    public function after($callback)
+    public function after(Closure $callback): self
     {
         $this->after = $callback;
 
@@ -96,7 +96,7 @@ trait CanBeRefined
      *
      * @return Closure|null
      */
-    public function getAfterCallback()
+    public function getAfterCallback(): ?Closure
     {
         return $this->after;
     }
@@ -106,7 +106,7 @@ trait CanBeRefined
      *
      * @return $this
      */
-    public function refine()
+    public function refine(): self
     {
         if ($this->isRefined()) {
             return $this;
@@ -124,7 +124,7 @@ trait CanBeRefined
      *
      * @return array<string, mixed>
      */
-    public function refineToArray()
+    public function refineToArray(): array
     {
         return [
             'sort' => $this->getSortKey(),
@@ -144,7 +144,7 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function pipeline()
+    protected function pipeline(): void
     {
         $this->actBefore();
         $this->search();
@@ -159,7 +159,7 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function actBefore()
+    protected function actBefore(): void
     {
         $this->evaluate($this->before);
     }
@@ -169,7 +169,7 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function search()
+    protected function search(): void
     {
         $builder = $this->getBuilder();
 
@@ -207,7 +207,7 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function filter()
+    protected function filter(): void
     {
         $builder = $this->getBuilder();
 
@@ -239,7 +239,7 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function sort()
+    protected function sort(): void
     {
         $builder = $this->getBuilder();
 
@@ -273,7 +273,7 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function actAfter()
+    protected function actAfter(): void
     {
         $this->evaluate($this->after);
     }

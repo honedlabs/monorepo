@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Refine\Concerns;
 
 use Honed\Refine\Persistence\CookieDriver;
+use Honed\Refine\Persistence\Driver;
 use Honed\Refine\Persistence\SessionDriver;
 use Illuminate\Support\Str;
 
@@ -15,21 +16,21 @@ trait CanPersistData
      *
      * @var string|null
      */
-    protected $persistKey;
+    protected ?string $persistKey = null;
 
     /**
      * The default driver to use for persisting data.
      *
      * @var string
      */
-    protected $persistDriver = 'session';
+    protected string $persistDriver = 'session';
 
     /**
      * The drivers to use for persisting data.
      *
      * @var array<string,\Honed\Refine\Persistence\Driver>
      */
-    protected $drivers = [];
+    protected array $drivers = [];
 
     /**
      * Get the request to use for the driver.
@@ -44,7 +45,7 @@ trait CanPersistData
      * @param  string  $key
      * @return $this
      */
-    public function persistKey($key)
+    public function persistKey(string $key): self
     {
         $this->persistKey = $key;
 
@@ -56,7 +57,7 @@ trait CanPersistData
      *
      * @return string
      */
-    public function getPersistKey()
+    public function getPersistKey(): string
     {
         return $this->persistKey ?? $this->guessPersistKey();
     }
@@ -67,7 +68,7 @@ trait CanPersistData
      * @param  string  $driver
      * @return $this
      */
-    public function persistIn($driver)
+    public function persistIn(string $driver): self
     {
         $this->persistDriver = $driver;
 
@@ -79,7 +80,7 @@ trait CanPersistData
      *
      * @return $this
      */
-    public function persistInSession()
+    public function persistInSession(): self
     {
         return $this->persistIn('session');
     }
@@ -89,7 +90,7 @@ trait CanPersistData
      *
      * @return $this
      */
-    public function persistInCookie()
+    public function persistInCookie(): self
     {
         return $this->persistIn('cookie');
     }
@@ -100,7 +101,7 @@ trait CanPersistData
      * @param  int  $seconds
      * @return $this
      */
-    public function lifetime($seconds = 15724800)
+    public function lifetime(int $seconds = 15724800): self
     {
         /** @var CookieDriver $driver */
         $driver = $this->getPersistDriver('cookie');
@@ -115,7 +116,7 @@ trait CanPersistData
      *
      * @return void
      */
-    protected function persist()
+    protected function persist(): void
     {
         foreach ($this->drivers as $driver) {
             $driver->persist();
@@ -127,7 +128,7 @@ trait CanPersistData
      *
      * @return string
      */
-    protected function guessPersistKey()
+    protected function guessPersistKey(): string
     {
         return Str::of(static::class)
             ->classBasename()
@@ -138,10 +139,10 @@ trait CanPersistData
     /**
      * Get the driver to use for persisting data.
      *
-     * @param  bool|'session'|'cookie'|string|null  $type
+     * @param  bool|string|null  $type
      * @return \Honed\Refine\Persistence\Driver|null
      */
-    public function getPersistDriver($type = null)
+    public function getPersistDriver(bool|string|null $type = null): ?Driver
     {
         if ($type === true) {
             $type = $this->persistDriver;
@@ -159,7 +160,7 @@ trait CanPersistData
      *
      * @return CookieDriver
      */
-    protected function newCookieDriver()
+    protected function newCookieDriver(): CookieDriver
     {
         return $this->drivers['cookie']
             ??= CookieDriver::make($this->getPersistKey())
@@ -171,7 +172,7 @@ trait CanPersistData
      *
      * @return SessionDriver
      */
-    protected function newSessionDriver()
+    protected function newSessionDriver(): SessionDriver
     {
         return $this->drivers['session']
             ??= SessionDriver::make($this->getPersistKey());

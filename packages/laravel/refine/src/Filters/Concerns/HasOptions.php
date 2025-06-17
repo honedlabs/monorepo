@@ -20,23 +20,23 @@ trait HasOptions
     /**
      * The available options.
      *
-     * @var array<int,Option>
+     * @var array<int, Option>
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * Whether to restrict options to only those provided.
      *
      * @var bool
      */
-    protected $strict = false;
+    protected bool $strict = false;
 
     /**
      * Whether to accept multiple values.
      *
      * @var bool
      */
-    protected $multiple = false;
+    protected bool $multiple = false;
 
     /**
      * Set the options for the filter.
@@ -58,7 +58,7 @@ trait HasOptions
      *
      * @return array<int,Option>
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -68,7 +68,7 @@ trait HasOptions
      *
      * @return bool
      */
-    public function hasOptions()
+    public function hasOptions(): bool
     {
         return filled($this->getOptions());
     }
@@ -79,7 +79,7 @@ trait HasOptions
      * @param  bool  $strict
      * @return $this
      */
-    public function strict($strict = true)
+    public function strict(bool $strict = true): self
     {
         $this->strict = $strict;
 
@@ -92,7 +92,7 @@ trait HasOptions
      * @param  bool  $lax
      * @return $this
      */
-    public function lax($lax = true)
+    public function lax(bool $lax = true): self
     {
         return $this->strict(! $lax);
     }
@@ -102,7 +102,7 @@ trait HasOptions
      *
      * @return bool
      */
-    public function isStrict()
+    public function isStrict(): bool
     {
         return $this->strict;
     }
@@ -113,7 +113,7 @@ trait HasOptions
      * @param  bool  $multiple
      * @return $this
      */
-    public function multiple($multiple = true)
+    public function multiple(bool $multiple = true): self
     {
         $this->multiple = $multiple;
 
@@ -125,7 +125,7 @@ trait HasOptions
      *
      * @return bool
      */
-    public function isMultiple()
+    public function isMultiple(): bool
     {
         return $this->multiple;
     }
@@ -135,7 +135,7 @@ trait HasOptions
      *
      * @return bool
      */
-    public function isNotMultiple()
+    public function isNotMultiple(): bool
     {
         return ! $this->isMultiple();
     }
@@ -146,7 +146,7 @@ trait HasOptions
      * @param  mixed  $value
      * @return mixed
      */
-    public function activateOptions($value)
+    public function activateOptions(mixed $value): mixed
     {
         $options = array_values(
             array_filter(
@@ -176,7 +176,7 @@ trait HasOptions
      *
      * @return array<int,mixed>
      */
-    public function optionsToArray()
+    public function optionsToArray(): array
     {
         return array_map(
             static fn (Option $option) => $option->toArray(),
@@ -192,35 +192,61 @@ trait HasOptions
      * @param  class-string<BackedEnum>|array<int|string,TValue>|Collection<int|string,TValue>  $options
      * @return array<int,Option>
      */
-    protected function createOptions($options)
+    protected function createOptions(array|string|Collection $options): array
     {
         if ($options instanceof Collection) {
             $options = $options->all();
         }
 
-        if (is_string($options)) {
-            return array_map(
-                static fn ($case) => Option::make($case->value, $case->name),
-                $options::cases()
-            );
-        }
+        return match (true) {
+            is_string($options) => $this->createEnumOptions($options),
+            Arr::isAssoc($options) => $this->createAssociativeOptions($options),
+            default => $this->createListOptions($options),
+        };
+    }
 
-        if (Arr::isAssoc($options)) {
-            return array_map(
-                // @phpstan-ignore-next-line
-                static fn ($value, $key) => Option::make($value, (string) $key),
-                array_keys($options),
-                array_values($options)
-            );
-        }
+    /**
+     * Create options from a backed enum.
+     *
+     * @param  class-string<BackedEnum>  $enum
+     * @return array<int,Option>
+     */
+    protected function createEnumOptions(string $enum): array
+    {
+        return array_map(
+            static fn ($case) => Option::make($case->value, $case->name),
+            $enum::cases()
+        );
+    }
 
-        return array_values(
-            array_map(
-                static fn ($value) => $value instanceof Option
-                    ? $value
-                    : Option::make($value, (string) $value),
-                $options
-            )
+    /**
+     * Create options from an associative array.
+     *
+     * @param  array<int|string,mixed>  $options
+     * @return array<int,Option>
+     */
+    protected function createAssociativeOptions(array $options): array
+    {
+        return array_map(
+            static fn ($value, $key) => Option::make($value, (string) $key),
+            array_keys($options),
+            array_values($options)
+        );
+    }
+
+    /**
+     * Create options from a list of values.
+     *
+     * @param  array<int|string,mixed>  $options
+     * @return array<int,Option>
+     */
+    protected function createListOptions(array $options): array
+    {
+        return array_map(
+            static fn ($value) => $value instanceof Option
+                ? $value
+                : Option::make($value, (string) $value),
+            $options
         );
     }
 }

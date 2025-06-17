@@ -26,7 +26,7 @@ trait HasSearch
      * @param  bool  $fullText
      * @return $this
      */
-    public function fullText($fullText = true)
+    public function fullText(bool $fullText = true): self
     {
         $this->fullText = $fullText;
 
@@ -38,7 +38,7 @@ trait HasSearch
      *
      * @return bool
      */
-    public function isFullText()
+    public function isFullText(): bool
     {
         return $this->fullText;
     }

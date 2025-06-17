@@ -23,10 +23,8 @@ class Sort extends Refiner
 
     /**
      * Provide the instance with any necessary setup.
-     *
-     * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -120,7 +118,7 @@ class Sort extends Refiner
     /**
      * {@inheritDoc}
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         return array_merge(parent::toArray(), [
             'direction' => $this->getDirection(),

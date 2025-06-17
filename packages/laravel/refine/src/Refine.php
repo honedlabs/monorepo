@@ -144,16 +144,16 @@ class Refine extends Primitive implements NullsAsUndefined
      *
      * @return void
      */
-    public static function flushState()
+    public static function flushState(): void
     {
-        static::$namespace = 'App\\Refine\\';
+        static::$namespace = 'App\\Refiners\\';
         static::$refinerResolver = null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         return $this->refineToArray();
     }
@@ -163,7 +163,7 @@ class Refine extends Primitive implements NullsAsUndefined
      *
      * @return string
      */
-    protected static function appNamespace()
+    protected static function appNamespace(): string
     {
         try {
             return Container::getInstance()

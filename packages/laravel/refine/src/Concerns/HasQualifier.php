@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 use function is_string;
@@ -15,7 +16,7 @@ trait HasQualifier
      *
      * @var bool|string
      */
-    protected $qualify = false;
+    protected bool|string $qualify = false;
 
     /**
      * Set whether to qualify against the builder.
@@ -23,7 +24,7 @@ trait HasQualifier
      * @param  bool|string  $qualify
      * @return $this
      */
-    public function qualify($qualify = true)
+    public function qualify(bool|string $qualify = true): self
     {
         $this->qualify = $qualify;
 
@@ -35,7 +36,7 @@ trait HasQualifier
      *
      * @return bool|string
      */
-    public function getQualifier()
+    public function getQualifier(): bool|string
     {
         return $this->qualify;
     }
@@ -45,7 +46,7 @@ trait HasQualifier
      *
      * @return bool
      */
-    public function isQualifying()
+    public function isQualifying(): bool
     {
         return (bool) $this->getQualifier();
     }
@@ -57,7 +58,7 @@ trait HasQualifier
      * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|null  $builder
      * @return string
      */
-    public function qualifyColumn($column, $builder = null)
+    public function qualifyColumn(string $column, ?Builder $builder = null): string
     {
         $qualifier = $this->getQualifier();
 

@@ -32,7 +32,7 @@ class {{ class }} extends Sort
      * @param  $this  $sort
      * @return $this
      */
-    protected function definition(Sort $sort)
+    protected function definition(Sort $sort): Sort
     {
         return $sort;
     }

@@ -69,7 +69,7 @@ abstract class Refiner extends Primitive
      *
      * @return array<string,mixed>
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         return [
             'name' => $this->getParameter(),

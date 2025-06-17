@@ -27,10 +27,10 @@ class CookieDriver extends Driver
      *
      * @return $this
      */
-    public function resolve()
+    public function resolve(): self
     {
         $this->resolved = json_decode(
-            $this->request->cookie($this->key, '[]'), true
+            $this->request->cookie($this->key, '[]'), true // @phpstan-ignore argument.type
         );
 
         return $this;
@@ -42,7 +42,7 @@ class CookieDriver extends Driver
      * @param  Request  $request
      * @return $this
      */
-    public function request($request)
+    public function request(Request $request): self
     {
         $this->request = $request;
 
@@ -55,7 +55,7 @@ class CookieDriver extends Driver
      * @param  CookieJar  $cookieJar
      * @return $this
      */
-    public function cookieJar($cookieJar)
+    public function cookieJar(CookieJar $cookieJar): self
     {
         $this->cookieJar = $cookieJar;
 
@@ -68,7 +68,7 @@ class CookieDriver extends Driver
      * @param  int  $seconds
      * @return $this
      */
-    public function lifetime($seconds)
+    public function lifetime(int $seconds): self
     {
         $this->lifetime = $seconds;
 
@@ -80,7 +80,7 @@ class CookieDriver extends Driver
      *
      * @return void
      */
-    public function persist()
+    public function persist(): void
     {
         match (true) {
             empty($this->data) => $this->cookieJar->forget($this->key),

@@ -17,7 +17,7 @@ class FullTextSearch extends Search
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

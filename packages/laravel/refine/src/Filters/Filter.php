@@ -68,7 +68,7 @@ class Filter extends Refiner
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -315,7 +315,7 @@ class Filter extends Refiner
     /**
      * {@inheritdoc}
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         $value = $this->getValue();
 

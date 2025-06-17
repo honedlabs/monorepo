@@ -17,7 +17,7 @@ class SessionDriver extends Driver
      *
      * @return $this
      */
-    public function resolve()
+    public function resolve(): self
     {
         $this->resolved = $this->session->get($this->key, []);
 
@@ -30,7 +30,7 @@ class SessionDriver extends Driver
      * @param  Session  $session
      * @return $this
      */
-    public function session($session)
+    public function session(Session $session): self
     {
         $this->session = $session;
 
@@ -42,7 +42,7 @@ class SessionDriver extends Driver
      *
      * @return void
      */
-    public function persist()
+    public function persist(): void
     {
         match (true) {
             empty($this->data) => $this->session->forget($this->key),

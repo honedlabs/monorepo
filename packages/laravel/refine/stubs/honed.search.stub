@@ -22,7 +22,7 @@ class {{ class }} extends Search
      * @param  $this  $search
      * @return $this
      */
-    protected function definition(Search $search)
+    protected function definition(Search $search): Search
     {
         return $search;
     }

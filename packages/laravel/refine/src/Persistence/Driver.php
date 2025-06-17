@@ -34,14 +34,14 @@ abstract class Driver
      *
      * @return $this
      */
-    abstract public function resolve();
+    abstract public function resolve(): self;
 
     /**
      * Persist the data to the session.
      *
      * @return void
      */
-    abstract public function persist();
+    abstract public function persist(): void;
 
     /**
      * Create a new instance of the driver.
@@ -49,7 +49,7 @@ abstract class Driver
      * @param  string  $key
      * @return static
      */
-    public static function make($key)
+    public static function make(string $key): self
     {
         return resolve(static::class)
             ->key($key)
@@ -62,7 +62,7 @@ abstract class Driver
      * @param  string  $key
      * @return $this
      */
-    public function key($key)
+    public function key(string $key): self
     {
         $this->key = $key;
 
@@ -75,13 +75,9 @@ abstract class Driver
      * @param  string|null  $key
      * @return mixed
      */
-    public function get($key = null)
+    public function get(?string $key = null)
     {
-        if ($key) {
-            return Arr::get($this->resolved, $key);
-        }
-
-        return $this->resolved;
+        return $key ? Arr::get($this->resolved, $key) : $this->resolved;
     }
 
     /**
@@ -92,7 +88,7 @@ abstract class Driver
      * @param  mixed  $value
      * @return $this
      */
-    public function put($key, $value)
+    public function put(string $key, mixed $value): self
     {
         $this->data[$key] = $value;
 
@@ -107,7 +103,7 @@ abstract class Driver
      * @param  mixed  $value
      * @return $this
      */
-    public function merge($key, $key2, $value)
+    public function merge(string $key, string $key2, mixed $value): self
     {
         $this->data[$key] = [
             ...$this->data[$key] ?? [],

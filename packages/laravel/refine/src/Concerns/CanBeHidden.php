@@ -11,7 +11,7 @@ trait CanBeHidden
      *
      * @var bool
      */
-    protected $hidden = false;
+    protected bool $hidden = false;
 
     /**
      * Set whether the instance should be hidden from serialization
@@ -19,7 +19,7 @@ trait CanBeHidden
      * @param  bool  $hidden
      * @return $this
      */
-    public function hidden($hidden = true)
+    public function hidden(bool $hidden = true): self
     {
         $this->hidden = $hidden;
 
@@ -32,7 +32,7 @@ trait CanBeHidden
      * @param  bool  $visible
      * @return $this
      */
-    public function notHidden($visible = true)
+    public function notHidden(bool $visible = true): self
     {
         return $this->hidden(! $visible);
     }
@@ -43,7 +43,7 @@ trait CanBeHidden
      * @param  bool  $visible
      * @return $this
      */
-    public function visible($visible = true)
+    public function visible(bool $visible = true): self
     {
         return $this->hidden(! $visible);
     }
@@ -54,7 +54,7 @@ trait CanBeHidden
      * @param  bool  $hidden
      * @return $this
      */
-    public function notVisible($hidden = true)
+    public function notVisible(bool $hidden = true): self
     {
         return $this->hidden($hidden);
     }
@@ -64,7 +64,7 @@ trait CanBeHidden
      *
      * @return bool
      */
-    public function isHidden()
+    public function isHidden(): bool
     {
         return $this->hidden;
     }
@@ -74,7 +74,7 @@ trait CanBeHidden
      *
      * @return bool
      */
-    public function isNotHidden()
+    public function isNotHidden(): bool
     {
         return ! $this->isHidden();
     }
@@ -84,7 +84,7 @@ trait CanBeHidden
      *
      * @return bool
      */
-    public function isVisible()
+    public function isVisible(): bool
     {
         return ! $this->isHidden();
     }
@@ -94,7 +94,7 @@ trait CanBeHidden
      *
      * @return bool
      */
-    public function isNotVisible()
+    public function isNotVisible(): bool
     {
         return $this->isHidden();
     }
