@@ -23,7 +23,7 @@ class Abn implements ValidationRule
     }
 
     /**
-     * {@inheritDoc}
+     * Run the validation rule.
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -34,11 +34,8 @@ class Abn implements ValidationRule
 
     /**
      * Get the validation error message.
-     *
-     * @param  string  $attribute
-     * @return string
      */
-    public function message($attribute)
+    public function message(string $attribute): string
     {
         /** @var string */
         return $this->translator->get('abn::messages.abn', [
