@@ -65,7 +65,7 @@ class ProcessMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Processs';
+        return $rootNamespace.'\Processes';
     }
 
     /**
