@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Infolist\Entries\DateEntry;
-use Honed\Infolist\Entries\TimeEntry;
 use Honed\Infolist\Entries\DateTimeEntry;
+use Honed\Infolist\Entries\TimeEntry;
 
 describe('date', function () {
     beforeEach(function () {
         $this->entry = DateEntry::make('created_at');
     });
-    
+
     it('can be date', function () {
         expect($this->entry)
             ->isDate()->toBeTrue()
@@ -16,7 +18,7 @@ describe('date', function () {
             ->format(null)->toBeNull()
             ->format('invalid')->toBeNull();
     });
-    
+
     it('can be date with format', function () {
         expect($this->entry)
             ->getDateFormat()->toBe('Y-m-d')
@@ -40,7 +42,7 @@ describe('date time', function () {
             ->format(null)->toBeNull()
             ->format('invalid')->toBeNull();
     });
-    
+
     it('can be date time with format', function () {
         expect($this->entry)
             ->getDateTimeFormat()->toBe('Y-m-d H:i:s')
@@ -63,7 +65,7 @@ describe('time', function () {
             ->format(null)->toBeNull()
             ->format('invalid')->toBeNull();
     });
-    
+
     it('can be time with format', function () {
         expect($this->entry)
             ->getTimeFormat()->toBe('H:i:s')

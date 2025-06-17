@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Infolist\Entries\Entry;
 use Workbench\App\Models\User;
 

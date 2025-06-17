@@ -29,7 +29,7 @@ class ArrayEntry extends BaseEntry
         if (is_null($value)) {
             return null;
         }
-        
+
         return $this->formatArray($value);
     }
 }

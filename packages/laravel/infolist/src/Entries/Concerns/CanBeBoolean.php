@@ -38,7 +38,6 @@ trait CanBeBoolean
         return $this->trueText;
     }
 
-
     /**
      * Set the text to display when the value is false.
      *

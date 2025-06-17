@@ -10,7 +10,7 @@ trait CanBeBadge
 {
     /**
      * Whether the entry should be displayed as a badge.
-     * 
+     *
      * @var true|null
      */
     protected ?bool $isBadge = null;
@@ -36,7 +36,7 @@ trait CanBeBadge
 
     /**
      * Determine if the entry should be displayed as a badge.
-     * 
+     *
      * @return true|null
      */
     public function isBadge(): ?bool

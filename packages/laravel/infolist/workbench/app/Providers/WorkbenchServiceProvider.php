@@ -17,7 +17,8 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        Config::set('filesystems', require workbench_path('config/filesystems.php'));    }
+        Config::set('filesystems', require workbench_path('config/filesystems.php'));
+    }
 
     /**
      * Bootstrap services.

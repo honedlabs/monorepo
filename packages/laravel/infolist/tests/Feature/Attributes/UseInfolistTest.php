@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Infolist\Attributes\UseInfolist;
-use Workbench\App\Models\User;
 use Workbench\App\Infolists\UserInfolist;
+use Workbench\App\Models\User;
 
 it('has attribute', function () {
     $attribute = new UseInfolist(UserInfolist::class);

@@ -21,7 +21,6 @@ class BooleanEntry extends BaseEntry
     /**
      * Format the value of the entry.
      *
-     * @param  mixed $value
      * @return string|null
      */
     public function format(mixed $value): mixed

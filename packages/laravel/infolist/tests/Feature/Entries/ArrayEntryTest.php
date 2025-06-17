@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Infolist\Entries\ArrayEntry;
 
 beforeEach(function () {
@@ -21,7 +23,7 @@ it('has array representation', function () {
             'placehold' => null,
             'badge' => null,
             'variant' => null,
-            'class' => null
+            'class' => null,
         ]);
 });
 

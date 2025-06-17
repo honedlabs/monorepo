@@ -59,7 +59,7 @@ trait CanBeImage
 
     /**
      * Set the shape of the image to square.
-     * 
+     *
      * @return $this
      */
     public function square(): static
@@ -115,9 +115,8 @@ trait CanBeImage
 
     /**
      * Format the image value.
-     * 
+     *
      * @param  string|null  $value
-     * @return string|null
      */
     protected function formatImage(mixed $value): ?string
     {

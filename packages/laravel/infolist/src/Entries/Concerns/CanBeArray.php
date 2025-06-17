@@ -35,8 +35,6 @@ trait CanBeArray
 
     /**
      * Get the property to pluck from the array.
-     * 
-     * @return string|null
      */
     public function getPluck(): ?string
     {
@@ -57,8 +55,6 @@ trait CanBeArray
 
     /**
      * Get the separator to use when joining the array.
-     * 
-     * @return string|null
      */
     public function getGlue(): ?string
     {
@@ -67,8 +63,8 @@ trait CanBeArray
 
     /**
      * Format the value as an array.
-     * 
-     * @param  array<int, mixed>|\Illuminate\Support\Collection<int, mixed>  $value
+     *
+     * @param  array<int, mixed>|Collection<int, mixed>  $value
      * @return array<int, mixed>|string|null
      */
     protected function formatArray(mixed $value): array|string|null
@@ -87,7 +83,7 @@ trait CanBeArray
 
     /**
      * Format the value by plucking a property from the array.
-     * 
+     *
      * @param  array<string, mixed>  $value
      * @return array<int, mixed>
      */
@@ -100,7 +96,7 @@ trait CanBeArray
 
     /**
      * Format the value by joining the array with a separator.
-     * 
+     *
      * @param  array<int, mixed>  $value
      * @return array<int, mixed>|string
      */

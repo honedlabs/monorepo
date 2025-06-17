@@ -12,14 +12,14 @@ trait HasEntries
     /**
      * The entries of the list.
      *
-     * @var array<int, \Honed\Infolist\Entries\BaseEntry>
+     * @var array<int, BaseEntry>
      */
     protected array $entries = [];
 
     /**
      * Merge a set of entries into the list.
      *
-     * @param  \Honed\Infolist\Entries\BaseEntry|array<int, \Honed\Infolist\Entries\BaseEntry>  $entries
+     * @param  BaseEntry|array<int, BaseEntry>  $entries
      * @return $this
      */
     public function entries(array|BaseEntry $entries): self
@@ -34,7 +34,6 @@ trait HasEntries
     /**
      * Add an entry to the list.
      *
-     * @param  \Honed\Infolist\Entries\BaseEntry  $entry
      * @return $this
      */
     public function entry(BaseEntry $entry): self
@@ -47,7 +46,7 @@ trait HasEntries
     /**
      * Get the entries of the list.
      *
-     * @return array<int, \Honed\Infolist\Entries\BaseEntry>
+     * @return array<int, BaseEntry>
      */
     public function getEntries(): array
     {

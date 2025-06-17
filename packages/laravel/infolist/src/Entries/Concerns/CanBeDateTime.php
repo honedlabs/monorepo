@@ -185,7 +185,6 @@ trait CanBeDateTime
     /**
      * Set whether to use Carbon's diffForHumans to format the date.
      *
-     * @param  bool  $since
      * @return $this
      */
     public function since(bool $since = true): static
@@ -225,8 +224,8 @@ trait CanBeDateTime
 
     /**
      * Format the value as a date.
-     * 
-     * @param  \Carbon\CarbonInterface|string|int|float|null  $value
+     *
+     * @param  CarbonInterface|string|int|float|null  $value
      */
     protected function formatDate(mixed $value): ?string
     {
@@ -235,8 +234,8 @@ trait CanBeDateTime
 
     /**
      * Format the value as a time.
-     * 
-     * @param  \Carbon\CarbonInterface|string|int|float|null  $value
+     *
+     * @param  CarbonInterface|string|int|float|null  $value
      */
     protected function formatTime(mixed $value): ?string
     {
@@ -245,8 +244,8 @@ trait CanBeDateTime
 
     /**
      * Format the value as a date time.
-     * 
-     * @param  \Carbon\CarbonInterface|string|int|float|null  $value
+     *
+     * @param  CarbonInterface|string|int|float|null  $value
      */
     protected function formatDateTime(mixed $value): ?string
     {
@@ -255,9 +254,8 @@ trait CanBeDateTime
 
     /**
      * Format the value as a date or time using Carbon and the given format.
-     * 
-     * @param  \Carbon\CarbonInterface|string|int|float|null  $value
-     * @return string|null
+     *
+     * @param  CarbonInterface|string|int|float|null  $value
      */
     protected function formatCarbon(mixed $value, string $format): ?string
     {
@@ -280,9 +278,8 @@ trait CanBeDateTime
 
     /**
      * Attempt to parse the value as a Carbon instance.
-     * 
+     *
      * @param  string|int|float|null  $value
-     * @return \Carbon\CarbonInterface|null
      */
     protected function newCarbon(mixed $value): ?CarbonInterface
     {

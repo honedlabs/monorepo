@@ -1,7 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Infolist\Entries\TextEntry;
-use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->entry = TextEntry::make('name');
@@ -54,10 +55,10 @@ it('can separate the text', function () {
 
 it('can pipeline', function () {
     expect($this->entry
-            ->limit(7)
-            ->words(1)
-            ->prefix('Mr. ')
-            ->suffix(' Jr.')
-        )
+        ->limit(7)
+        ->words(1)
+        ->prefix('Mr. ')
+        ->suffix(' Jr.')
+    )
         ->format('John Doe')->toBe('Mr. John... Jr.');
 });

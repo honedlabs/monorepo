@@ -193,8 +193,6 @@ trait CanBeText
 
     /**
      * Format the value as text with a suffix.
-     *
-     * @return string
      */
     protected function formatSuffix(string $value): string
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Infolist\Entries\ImageEntry;
 use Illuminate\Support\Facades\Storage;
 

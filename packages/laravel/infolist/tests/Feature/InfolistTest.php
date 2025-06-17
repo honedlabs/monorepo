@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Str;
 use Honed\Infolist\Infolist;
+use Illuminate\Support\Str;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
@@ -31,7 +31,7 @@ it('resolves infolist for model', function () {
         ->prepend('Workbench\\App\\Infolists\\')
         ->append('Infolist')
         ->toString()
-    );     
+    );
 });
 
 it('can use a custom namespace', function () {

@@ -12,6 +12,9 @@ use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @extends \Honed\Core\Primitive<string, mixed>
+ */
 abstract class BaseEntry extends Primitive implements NullsAsUndefined
 {
     use Allowable;
@@ -37,7 +40,6 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
      * Create a new list entry.
      *
      * @param  string|Closure  $state
-     * @return static
      */
     public static function make(string|Closure|null $state = null, ?string $label = null): static
     {
@@ -53,7 +55,7 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
      *
      * @return array<string, mixed>
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         $state = $this->getState();
 

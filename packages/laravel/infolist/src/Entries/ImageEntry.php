@@ -32,14 +32,12 @@ class ImageEntry extends BaseEntry
     /**
      * Get the instance as an array.
      *
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
      * @return array<string, mixed>
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         return [
-            ...parent::toArray($named, $typed),
+            ...parent::toArray(),
             'shape' => $this->getShape(),
         ];
     }

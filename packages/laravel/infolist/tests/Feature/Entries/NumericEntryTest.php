@@ -1,7 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Infolist\Entries\NumericEntry;
-use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->entry = NumericEntry::make('age');

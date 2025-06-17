@@ -1,7 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Infolist\Entries\NumericEntry;
-use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->entry = NumericEntry::make('age');
@@ -63,4 +64,3 @@ it('can format the number as money', function () {
         ->money('aud', 'au')->toBe($this->entry)
         ->format(100)->toBe('A$ 100.00');
 });
-

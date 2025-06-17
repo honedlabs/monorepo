@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace Honed\Infolist;
 
 use Closure;
-use Honed\Core\Primitive;
-use Illuminate\Support\Str;
-use Honed\Infolist\Entries\BaseEntry;
-use Illuminate\Database\Eloquent\Model;
 use Honed\Core\Exceptions\ResourceNotSetException;
-use Illuminate\Contracts\Foundation\Application;
+use Honed\Core\Primitive;
+use Honed\Infolist\Entries\BaseEntry;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Throwable;
 
-
+/**
+ * @extends \Honed\Core\Primitive<int, mixed>
+ */
 class Infolist extends Primitive
 {
     use Concerns\HasEntries;
@@ -29,7 +31,7 @@ class Infolist extends Primitive
     /**
      * How to resolve the infolist for the given model name.
      *
-     * @var (Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<\Honed\Infolist\Infolist>)|null
+     * @var (Closure(class-string<Model>):class-string<Infolist>)|null
      */
     protected static $infolistResolver;
 
@@ -54,7 +56,6 @@ class Infolist extends Primitive
      * Create a new infolist instance.
      *
      * @param  array<string, mixed>|Model|null  $resource
-     * @return static
      */
     public static function make(array|Model|null $resource = null): static
     {
@@ -65,8 +66,7 @@ class Infolist extends Primitive
     /**
      * Get a new infolist instance for the given model name.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @return \Honed\Infolist\Infolist
+     * @return Infolist
      */
     public static function infolistForModel(Model $model)
     {
@@ -78,7 +78,7 @@ class Infolist extends Primitive
     /**
      * Get the infolist name for the given model name.
      *
-     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $className
+     * @param  class-string<Model>  $className
      * @return class-string<Infolist>
      */
     public static function resolveInfolistName(string $className): string
@@ -99,9 +99,6 @@ class Infolist extends Primitive
 
     /**
      * Specify the default namespace that contains the application's infolists.
-     *
-     * @param  string  $namespace
-     * @return void
      */
     public static function useNamespace(string $namespace): void
     {
@@ -111,8 +108,7 @@ class Infolist extends Primitive
     /**
      * Specify the callback that should be invoked to guess the name of a infolist for a model.
      *
-     * @param  Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<\Honed\Infolist\Infolist>  $callback
-     * @return void
+     * @param  Closure(class-string<Model>):class-string<Infolist>  $callback
      */
     public static function guessInfolistsUsing(Closure $callback): void
     {
@@ -121,15 +117,12 @@ class Infolist extends Primitive
 
     /**
      * Flush the global configuration state.
-     *
-     * @return void
      */
     public static function flushState(): void
     {
         static::$namespace = 'App\\Infolists\\';
         static::$infolistResolver = null;
     }
-
 
     /**
      * Set the resource of the infolist.
@@ -160,10 +153,10 @@ class Infolist extends Primitive
 
     /**
      * Get the instance as an array.
-     * 
+     *
      * @return array<int, array<string, mixed>>
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         $resource = $this->getResource();
 

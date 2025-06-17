@@ -105,8 +105,8 @@ trait CanBeAggregated
 
     /**
      * Format the value of the entry.
-     * 
-     * @param \Carbon\CarbonInterface|string|int|float|null  $value
+     *
+     * @param  \Carbon\CarbonInterface|string|int|float|null  $value
      */
     public function format(mixed $value): mixed
     {

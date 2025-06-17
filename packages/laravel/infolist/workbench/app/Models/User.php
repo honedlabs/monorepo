@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
-use Workbench\App\Infolists\UserInfolist;
-use Honed\Infolist\Concerns\HasInfolist;
-use Illuminate\Notifications\Notifiable;
 use Honed\Infolist\Attributes\UseInfolist;
-use Workbench\Database\Factories\UserFactory;
+use Honed\Infolist\Concerns\HasInfolist;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Workbench\App\Infolists\UserInfolist;
+use Workbench\Database\Factories\UserFactory;
 
 #[UseInfolist(UserInfolist::class)]
 class User extends Authenticatable
@@ -20,12 +20,12 @@ class User extends Authenticatable
      */
     use HasFactory;
 
-    use Notifiable;
-
     /**
      * @use \Honed\Infolist\Concerns\HasInfolist<\Workbench\App\Infolists\UserInfolist>
      */
     use HasInfolist;
+
+    use Notifiable;
 
     /**
      * The factory for the model.
