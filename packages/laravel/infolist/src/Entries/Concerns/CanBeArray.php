@@ -44,21 +44,11 @@ trait CanBeArray
     }
 
     /**
-     * Determine if a pluck property is set.
-     * 
-     * @return bool
-     */
-    public function hasPluck(): bool
-    {
-        return isset($this->pluck);
-    }
-
-    /**
      * Set the separator to use when joining the array.
      *
      * @return $this
      */
-    public function glue(string $glue): static
+    public function glue(string $glue = ', '): static
     {
         $this->glue = $glue;
 
@@ -76,27 +66,13 @@ trait CanBeArray
     }
 
     /**
-     * Determine if a glue separator is set.
-     * 
-     * @return bool
-     */
-    public function hasGlue(): bool
-    {
-        return isset($this->glue);
-    }
-
-    /**
      * Format the value as an array.
      * 
-     * @param  iterable<int, mixed>|string|null  $value
+     * @param  array<int, mixed>|\Illuminate\Support\Collection  $value
      * @return array<int, mixed>|string|null
      */
     protected function formatArray(mixed $value): array|string|null
     {
-        if (! is_iterable($value)) {
-            return null;
-        }
-
         $pipes = [
             'formatPluck',
             'formatGlue',

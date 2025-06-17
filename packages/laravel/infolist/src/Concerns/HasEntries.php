@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Concerns;
 
+use Honed\Infolist\Entries\BaseEntry;
 use Honed\Infolist\Entries\Entry;
 
 trait HasEntries
@@ -11,17 +12,17 @@ trait HasEntries
     /**
      * The entries of the list.
      *
-     * @var array<int, \Honed\Infolist\Entries\Entry>
+     * @var array<int, \Honed\Infolist\Entries\BaseEntry>
      */
     protected array $entries = [];
 
     /**
      * Merge a set of entries into the list.
      *
-     * @param  \Honed\Infolist\Entries\Entry|array<int, \Honed\Infolist\Entries\Entry>  $entries
+     * @param  \Honed\Infolist\Entries\BaseEntry|array<int, \Honed\Infolist\Entries\BaseEntry>  $entries
      * @return $this
      */
-    public function entries(array|Entry $entries): self
+    public function entries(array|BaseEntry $entries): self
     {
         $entries = is_array($entries) ? $entries : [$entries];
 
@@ -33,10 +34,10 @@ trait HasEntries
     /**
      * Add an entry to the list.
      *
-     * @param  \Honed\Infolist\Entries\Entry  $entry
+     * @param  \Honed\Infolist\Entries\BaseEntry  $entry
      * @return $this
      */
-    public function entry(Entry $entry): self
+    public function entry(BaseEntry $entry): self
     {
         $this->entries[] = $entry;
 
@@ -46,14 +47,14 @@ trait HasEntries
     /**
      * Get the entries of the list.
      *
-     * @return array<int, \Honed\Infolist\Entries\Entry>
+     * @return array<int, \Honed\Infolist\Entries\BaseEntry>
      */
     public function getEntries(): array
     {
         return array_values(
             array_filter(
                 $this->entries,
-                fn (Entry $entry) => $entry->isAllowed()
+                fn (BaseEntry $entry) => $entry->isAllowed()
             )
         );
     }
@@ -66,7 +67,7 @@ trait HasEntries
     public function entriesToArray(): array
     {
         return array_map(
-            fn (Entry $entry) => $entry->toArray(),
+            fn (BaseEntry $entry) => $entry->toArray(),
             $this->getEntries()
         );
     }

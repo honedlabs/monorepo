@@ -7,7 +7,7 @@ namespace Honed\Infolist;
 use Closure;
 use Honed\Core\Primitive;
 use Illuminate\Support\Str;
-use Honed\Infolist\Entries\Entry;
+use Honed\Infolist\Entries\BaseEntry;
 use Illuminate\Database\Eloquent\Model;
 use Honed\Core\Exceptions\ResourceNotSetException;
 use Illuminate\Contracts\Foundation\Application;
@@ -168,7 +168,7 @@ class Infolist extends Primitive
         $resource = $this->getResource();
 
         return array_map(
-            static fn (Entry $entry) => $entry
+            static fn (BaseEntry $entry) => $entry
                 ->record($resource)
                 ->toArray(),
             $this->getEntries()

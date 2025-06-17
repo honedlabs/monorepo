@@ -69,12 +69,4 @@ trait CanBeBadge
         /** @var string|null */
         return $this->evaluate($this->variant);
     }
-
-    /**
-     * Determine if a variant is set.
-     */
-    public function hasVariant(): bool
-    {
-        return isset($this->variant);
-    }
 }

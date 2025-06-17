@@ -30,12 +30,4 @@ trait HasPlaceholder
     {
         return $this->placeholder;
     }
-
-    /**
-     * Determine if a placeholder is set.
-     */
-    public function hasPlaceholder(): bool
-    {
-        return isset($this->placeholder);
-    }
 }

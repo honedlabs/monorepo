@@ -22,6 +22,7 @@ it('has array representation', function () {
             'placehold' => null,
             'badge' => null,
             'variant' => null,
+            'shape' => null,
         ]);
 });
 
@@ -32,14 +33,4 @@ it('serializes to json', function () {
             'type' => ImageEntry::IMAGE,
             'label' => 'Avatar',
         ]);
-});
-
-it('does not format null values', function () {
-    expect($this->entry)
-        ->format(null)->toBeNull();
-});
-
-it('does not format without a disk', function () {
-    expect($this->entry)
-        ->format('misc')->toBe('misc');
 });

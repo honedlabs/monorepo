@@ -16,9 +16,9 @@ trait CanBeImage
     protected ?string $disk = null;
 
     /**
-     * Whether the image should be displayed as a square.
+     * The shape of the image.
      */
-    protected bool $isSquare = false;
+    protected ?string $shape = null;
 
     /**
      * Whether to create a temporary file url for the image.
@@ -30,7 +30,7 @@ trait CanBeImage
      *
      * @return $this
      */
-    public function disk(string $disk): static
+    public function disk(string $disk = 's3'): static
     {
         $this->disk = $disk;
 
@@ -46,50 +46,43 @@ trait CanBeImage
     }
 
     /**
-     * Determine if a disk is set.
-     */
-    public function hasDisk(): bool
-    {
-        return isset($this->disk);
-    }
-
-    /**
      * Set whether the image should be displayed as a square.
      *
      * @return $this
      */
-    public function square(bool $isSquare = true): static
+    public function shape(string $shape = 'square'): static
     {
-        $this->isSquare = $isSquare;
+        $this->shape = $shape;
 
         return $this;
     }
 
     /**
-     * Set whether the image should be displayed as a circle.
-     *
-     * @param  bool  $circular
+     * Set the shape of the image to square.
+     * 
      * @return $this
      */
-    public function circular(bool $circular = true): static
+    public function square(): static
     {
-        return $this->square(! $circular);
+        return $this->shape('square');
     }
 
     /**
-     * Get whether the image should be displayed as a square.
+     * Set the shape of the image to circular.
+     *
+     * @return $this
      */
-    public function isSquare(): bool
+    public function circular(): static
     {
-        return $this->isSquare;
+        return $this->shape('circle');
     }
 
     /**
-     * Get whether the image should be displayed as a circle.
+     * Get the shape of the image.
      */
-    public function isCircular(): bool
+    public function getShape(): ?string
     {
-        return ! $this->isSquare();
+        return $this->shape;
     }
 
     /**
@@ -128,12 +121,14 @@ trait CanBeImage
      */
     protected function formatImage(mixed $value): ?string
     {
-        if (! $this->hasDisk() || is_null($value)) {
+        $driver = $this->getDisk();
+
+        if (! $driver || is_null($value)) {
             return $value;
         }
 
         /** @var \Illuminate\Filesystem\FilesystemAdapter */
-        $disk = Storage::disk($this->getDisk());
+        $disk = Storage::disk($driver);
 
         return match (true) {
             $this->isTemporaryUrl() => $disk->temporaryUrl(

@@ -38,13 +38,6 @@ trait CanBeBoolean
         return $this->trueText;
     }
 
-    /**
-     * Determine if a true text is set.
-     */
-    public function hasTrueText(): bool
-    {
-        return isset($this->trueText);
-    }
 
     /**
      * Set the text to display when the value is false.
@@ -64,14 +57,6 @@ trait CanBeBoolean
     public function getFalseText(): ?string
     {
         return $this->falseText;
-    }
-
-    /**
-     * Determine if a false text is set.
-     */
-    public function hasFalseText(): bool
-    {
-        return isset($this->falseText);
     }
 
     /**

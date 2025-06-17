@@ -21,15 +21,15 @@ class ArrayEntry extends BaseEntry
     /**
      * Format the value of the entry.
      *
-     * @param  array<int, mixed>|string|null  $value
+     * @param  array<int, mixed>|\Illuminate\Support\Collection|null  $value
      * @return array<int, mixed>|string|null
      */
     public function format(mixed $value): mixed
     {
-        if (! is_array($value)) {
+        if (is_null($value)) {
             return null;
         }
-
+        
         return $this->formatArray($value);
     }
 }

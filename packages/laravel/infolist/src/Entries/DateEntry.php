@@ -15,8 +15,6 @@ class DateEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type(self::DATE);
-
         $this->date();
     }
 

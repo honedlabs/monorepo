@@ -15,8 +15,6 @@ class TimeEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type(self::TIME);
-
         $this->time();
     }
 

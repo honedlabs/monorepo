@@ -14,6 +14,8 @@ trait CanBeDateTime
 
     public const DATETIME = 'datetime';
 
+    public const TIME = 'time';
+
     /**
      * Whether the value should be formatted as a date.
      */
@@ -63,6 +65,8 @@ trait CanBeDateTime
     {
         $this->isDate = $date;
 
+        $this->type(self::DATE);
+
         return $this;
     }
 
@@ -83,6 +87,8 @@ trait CanBeDateTime
     {
         $this->isTime = $time;
 
+        $this->type(self::TIME);
+
         return $this;
     }
 
@@ -102,6 +108,8 @@ trait CanBeDateTime
     public function dateTime(bool $dateTime = true): static
     {
         $this->isDateTime = $dateTime;
+
+        $this->type(self::DATETIME);
 
         return $this;
     }
