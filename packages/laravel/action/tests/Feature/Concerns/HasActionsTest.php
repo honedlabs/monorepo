@@ -24,29 +24,29 @@ beforeEach(function () {
 
 it('adds actions', function () {
     expect($this->test)
-        ->withActions([PageAction::make('view')])->toBe($this->test)
-        ->withActions([InlineAction::make('edit')])->toBe($this->test)
+        ->actions([PageAction::make('view')])->toBe($this->test)
+        ->actions([InlineAction::make('edit')])->toBe($this->test)
         ->hasActions()->toBeTrue()
         ->getActions()->toHaveCount(2);
 });
 
 it('adds actions variadically', function () {
     expect($this->test)
-        ->withActions(PageAction::make('view'), InlineAction::make('edit'))->toBe($this->test)
+        ->actions(PageAction::make('view'), InlineAction::make('edit'))->toBe($this->test)
         ->hasActions()->toBeTrue()
         ->getActions()->toHaveCount(2);
 });
 
 it('adds actions collection', function () {
     expect($this->test)
-        ->withActions(collect([PageAction::make('view'), InlineAction::make('edit')]))->toBe($this->test)
+        ->actions(collect([PageAction::make('view'), InlineAction::make('edit')]))->toBe($this->test)
         ->hasActions()->toBeTrue()
         ->getActions()->toHaveCount(2);
 });
 
 it('adds action groups', function () {
     expect($this->test)
-        ->withActions(ActionGroup::make(PageAction::make('view')))->toBe($this->test)
+        ->actions(ActionGroup::make(PageAction::make('view')))->toBe($this->test)
         ->hasActions()->toBeTrue()
         ->getActions()->toHaveCount(1);
 });
@@ -58,7 +58,7 @@ it('provides actions', function () {
 });
 
 it('provides inline actions', function () {
-    expect($this->test->withActions(InlineAction::make('edit')))
+    expect($this->test->actions(InlineAction::make('edit')))
         ->showsInlineActions()->toBeTrue()
         ->hidesInlineActions()->toBeFalse()
         ->hideInlineActions()->toBe($this->test)
@@ -70,7 +70,7 @@ it('provides inline actions', function () {
 });
 
 it('provides bulk actions', function () {
-    expect($this->test->withActions(BulkAction::make('edit')))
+    expect($this->test->actions(BulkAction::make('edit')))
         ->showsBulkActions()->toBeTrue()
         ->hidesBulkActions()->toBeFalse()
         ->hideBulkActions()->toBe($this->test)
@@ -82,7 +82,7 @@ it('provides bulk actions', function () {
 });
 
 it('provides page actions', function () {
-    expect($this->test->withActions(PageAction::make('edit')))
+    expect($this->test->actions(PageAction::make('edit')))
         ->showsPageActions()->toBeTrue()
         ->hidesPageActions()->toBeFalse()
         ->hidePageActions()->toBe($this->test)
@@ -95,25 +95,25 @@ it('provides page actions', function () {
 
 it('has inline actions', function () {
     expect($this->test)
-        ->withActions([PageAction::make('create')])
+        ->actions([PageAction::make('create')])
         ->getInlineActions()->toHaveCount(0)
-        ->withActions([InlineAction::make('create')])
+        ->actions([InlineAction::make('create')])
         ->getInlineActions()->toHaveCount(1);
 });
 
 it('has bulk actions', function () {
     expect($this->test)
-        ->withActions([PageAction::make('create')])
+        ->actions([PageAction::make('create')])
         ->getBulkActions()->toHaveCount(0)
-        ->withActions([BulkAction::make('create')])
+        ->actions([BulkAction::make('create')])
         ->getBulkActions()->toHaveCount(1);
 });
 
 it('has page actions', function () {
     expect($this->test)
-        ->withActions([InlineAction::make('create')])
+        ->actions([InlineAction::make('create')])
         ->getPageActions()->toHaveCount(0)
-        ->withActions([PageAction::make('create')])
+        ->actions([PageAction::make('create')])
         ->getPageActions()->toHaveCount(1);
 });
 
@@ -121,7 +121,7 @@ it('has inline actions array representation', function () {
     $user = User::factory()->create();
 
     expect($this->test)
-        ->withActions([
+        ->actions([
             InlineAction::make('create')
                 ->label(fn ($user) => $user->name)
                 ->allow(fn ($user) => $user->id % 2 === 1),
@@ -134,12 +134,12 @@ it('has inline actions array representation', function () {
 
 it('has bulk actions array representation', function () {
     expect($this->test)
-        ->withActions([BulkAction::make('create')])
+        ->actions([BulkAction::make('create')])
         ->bulkActionsToArray()->toHaveCount(1);
 });
 
 it('has page actions array representation', function () {
     expect($this->test)
-        ->withActions([PageAction::make('create')])
+        ->actions([PageAction::make('create')])
         ->pageActionsToArray()->toHaveCount(1);
 });

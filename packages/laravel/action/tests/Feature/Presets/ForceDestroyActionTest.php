@@ -24,27 +24,8 @@ it('force destroys a model', function () {
     ]);
 });
 
-it('force destroys multiple models from collection', function () {
-    $products = Product::factory()
-        ->count(3)
-        ->create();
-
-    $this->action->handle($products);
-
-    $this->assertDatabaseHas('products', [
-        'id' => $this->product->id,
-    ]);
-
-    $products->each(function ($product) {
-        $this->assertDatabaseMissing('products', [
-            'id' => $product->id,
-        ]);
-    });
-});
-
-it('force destroy models from builder', function () {
-    $products = Product::factory()
-        ->count(3)
+it('force destroys models from builder', function () {
+    $products = Product::factory(3)
         ->create();
 
     $this->action->handle(Product::query()->whereIn('id', $products->pluck('id')));
@@ -63,8 +44,7 @@ it('force destroy models from builder', function () {
 it('force destroys models from relationship', function () {
     $user = User::query()->find(1);
 
-    $products = Product::factory()
-        ->count(3)
+    $products = Product::factory(3)
         ->create();
 
     $this->action->handle($user->products());

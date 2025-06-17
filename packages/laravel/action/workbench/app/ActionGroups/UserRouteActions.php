@@ -13,6 +13,8 @@ class UserRouteActions extends UserActions
      */
     public function setUp()
     {
-        $this->shouldntExecute();
+        parent::setUp();
+
+        $this->isNotExecutable();
     }
 }

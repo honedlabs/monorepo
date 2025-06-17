@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets;
+namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Actionable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -20,7 +21,7 @@ abstract class AssociateAction implements Actionable
      *
      * @return string
      */
-    abstract protected function relationship();
+    abstract protected function relationship(): string;
 
     /**
      * Associate a model to the parent model.
@@ -29,11 +30,13 @@ abstract class AssociateAction implements Actionable
      * @param  int|string|TParent  $parent
      * @return void
      */
-    public function handle($model, $parent)
+    public function handle(Model $model, int|string|Model $parent): Model
     {
         $this->transact(
             fn () => $this->associate($model, $parent)
         );
+
+        return $model;
     }
 
     /**
@@ -42,7 +45,7 @@ abstract class AssociateAction implements Actionable
      * @param  TModel  $model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TParent, TModel>
      */
-    protected function getRelation($model)
+    protected function getRelation(Model $model): BelongsTo
     {
         /** @var \Illuminate\Database\Eloquent\Relations\BelongsTo<TParent, TModel> */
         return $model->{$this->relationship()}();
@@ -55,7 +58,7 @@ abstract class AssociateAction implements Actionable
      * @param  int|string|TParent  $parent
      * @return void
      */
-    protected function associate($model, $parent)
+    protected function associate(Model $model, int|string|Model $parent): void
     {
         $this->getRelation($model)->associate($parent);
 
@@ -69,7 +72,7 @@ abstract class AssociateAction implements Actionable
      * @param  int|string|TParent  $parent
      * @return void
      */
-    protected function after($model, $parent)
+    protected function after(Model $model, int|string|Model $parent): void
     {
         //
     }

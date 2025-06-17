@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action;
+namespace Honed\Action\Operations;
 
 use Honed\Action\Concerns\HandlesBulkActions;
 
 use function array_merge;
 
-class BulkAction extends Action
+class BulkOperation extends Operation
 {
     use HandlesBulkActions;
     
@@ -28,7 +28,7 @@ class BulkAction extends Action
     {
         parent::setUp();
 
-        $this->type(Action::BULK);
+        $this->type(self::BULK);
     }
 
     /**
@@ -57,10 +57,11 @@ class BulkAction extends Action
     /**
      * {@inheritdoc}
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
-        return array_merge(parent::toArray($named, $typed), [
+        return [
+            ...parent::toArray(),
             'keepSelected' => $this->keepsSelected(),
-        ]);
+        ];
     }
 }

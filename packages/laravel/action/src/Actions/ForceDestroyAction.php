@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets;
+namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Actionable;
 
@@ -17,7 +17,7 @@ class ForceDestroyAction implements Actionable
      * Force destroy the model.
      *
      * @param  TModel  $model
-     * @return void
+     * @return TModel
      */
     public function handle($model)
     {
@@ -26,6 +26,8 @@ class ForceDestroyAction implements Actionable
         );
 
         $this->after($model);
+
+        return $model;
     }
 
     /**

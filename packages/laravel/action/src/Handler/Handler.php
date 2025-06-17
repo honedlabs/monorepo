@@ -12,7 +12,10 @@ use Honed\Action\Http\Data\BulkData;
 use Honed\Action\Http\Data\InlineData;
 use Honed\Core\Concerns\HasResource;
 use Honed\Core\Parameters;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;
@@ -20,7 +23,7 @@ use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * @template TClass of \Honed\Action\Contracts\HandlesActions
+ * @template TClass of mixed
  */
 abstract class Handler
 {
@@ -72,106 +75,32 @@ abstract class Handler
      */
     protected function resolve($request)
     {
-        /** @var string */
-        $type = $request->validated('type');
+        $type = $request->type();
 
-        $response = match ($type) {
+        $data = $request->toData();
 
-            Action::INLINE => $this->handleInlineAction($request),
-            Action::BULK => $this->handleBulkAction($request),
-            Action::PAGE => $this->handlePageAction($request),
+        if (! $data) {
+            abort(400, 'Invalid action type.');
+        }
+
+        [$action, $query] = match ($type) {
+            Action::INLINE => $this->resolveInlineAction($data),
+            Action::BULK => $this->resolveBulkAction($data),
+            Action::PAGE => $this->resolvePageAction($data),
             default => abort(400, 'Invalid action type.'),
         };
 
-        [$action, $query] = $this->resolveAction($type, $data);
-
-        if (! $action || ! $query) {
+        if ($this->invalidAction($action, $query)) {
             ActionNotFoundException::throw($data->name);
         }
 
-        [$named, $typed] = Parameters::builder($query);
+        $response = $this->instance->evaluate([$action, 'execute'], [$query]);
 
-        if (! $action->isAllowed($named, $typed)) {
-            ActionNotAllowedException::throw($data->name);
-        }
-
-        /** @var TModel|TBuilder $query */
-        $result = $action->execute($query);
-
-        if ($this->isResponsable($result)) {
-            return $result;
+        if ($this->isResponsable($response)) {
+            return $response;
         }
 
         return Redirect::back();
-    }
-
-    /**
-     * Retrieve the action and query based on the type and data.
-     *
-     * @param  string  $type
-     * @param  ActionData  $data
-     * @return array{Action|null,TModel|TBuilder|null}
-     */
-    protected function resolveAction($type, $data)
-    {
-        return match ($type) {
-            'inline' => $this->resolveInlineAction(type($data)->as(InlineData::class)),
-            'bulk' => $this->resolveBulkAction(type($data)->as(BulkData::class)),
-            'page' => $this->resolvePageAction($data),
-            default => InvalidActionException::throw($type),
-        };
-    }
-
-    /**
-     * Resolve the bulk action.
-     *
-     * @param  BulkData  $data
-     * @return array{Action|null, TBuilder}
-     */
-    protected function resolveBulkAction($data)
-    {
-        $resource = $this->getResource();
-        $key = $this->getKey($resource);
-
-        /** @var TBuilder $resource */
-        $resource = $data->all
-            ? $resource->whereNotIn($key, $data->except)
-            : $resource->whereIn($key, $data->only);
-
-        return [
-            $this->getAction($data->name, BulkAction::class),
-            $resource,
-        ];
-    }
-
-    /**
-     * Resolve the page action.
-     *
-     * @param  ActionData  $data
-     * @return array{Action|null, TBuilder}
-     */
-    protected function resolvePageAction($data)
-    {
-        return [
-            $this->getAction($data->name, PageAction::class),
-            $this->getResource(),
-        ];
-    }
-
-    /**
-     * Find the action by name and type.
-     *
-     * @param  string  $name
-     * @param  class-string<Action>  $type
-     * @return Action|null
-     */
-    protected function getAction($name, $type)
-    {
-        return Arr::first(
-            $this->getActions(),
-            static fn (Action $action) => $action instanceof $type
-                && $action->getName() === $name
-        );
     }
 
     /**
@@ -182,15 +111,121 @@ abstract class Handler
      */
     protected function resolveInlineAction($data)
     {
-        $resource = $this->getResource();
-        $key = $this->getKey($resource);
+        $builder = $this->getBuilder();
 
-        return [
-            $this->getAction($data->name, InlineAction::class),
+        $key = $this->getKey($builder);
+
+        $model = $builder->where($key, $data->record)
+            ->first();
+
+        $action = Arr::first(
+            $this->getActions(),
+            static fn (Action $action) => $action->isInline()
+                && $action->getName() === $data->name
+        );
+
+        return [$action, $model];
+    }
+
+    /**
+     * Resolve the bulk action.
+     *
+     * @param  BulkData  $data
+     * @return array{Action|null, TBuilder}
+     */
+    protected function resolveBulkAction($data)
+    {
+        $builder = $this->getBuilder();
+
+        $key = $this->getKey($builder);
+
+        /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder */
+        $builder = $data->all
+            ? $builder->whereNotIn($key, $data->except)
+            : $builder->whereIn($key, $data->only);
+
+        $action = Arr::first(
+            $this->getActions(),
+            static fn (Action $action) => $action->isBulk() 
+                && $action->getName() === $data->name
+        );
+
+        return [$action, $builder];
+    }
+
+    /**
+     * Resolve the page action.
+     *
+     * @param  ActionData  $data
+     * @return array{Action|null, TBuilder}
+     */
+    protected function resolvePageAction($data)
+    {
+        $builder = $this->getBuilder();
+
+        $action = Arr::first(
+            $this->getActions(),
+            static fn (Action $action) => $action->isPage()
+                && $action->getName() === $data->name
+        );
+
+        return [$action, $builder];
+    }
+
+    /**
+     * Determine if the action and query are not allowed.
+     *
+     * @param  Action|null  $action
+     * @param  TModel|TBuilder|null  $query
+     * @return bool
+     */
+    protected function invalidAction($action, $query)
+    {
+        if (! $action || ! $query) {
+            return true;
+        }
+
+        $isBuilder = $query instanceof Builder;
+
+        return ! $action->isAllowed($this->named($query, $isBuilder), $this->typed($query, $isBuilder));
+    }
+
+    /**
+     * Get the named parameters for the action.
+     *
+     * @param  TModel|TBuilder  $resource
+     * @param  bool  $builder
+     * @return array
+     */
+    protected function named($resource, $builder)
+    {
+        $keys = $builder 
+            ? ['builder', 'query', 'q'] 
+            : ['model', 'record', 'row'];
+
+        return \array_fill_keys(
+            $keys,
             $resource
-                ->where($key, $data->record)
-                ->first(),
-        ];
+        );
+    }
+
+    /**
+     * Get the typed parameters for the action.
+     *
+     * @param  TModel|TBuilder  $resource
+     * @param  bool  $builder
+     * @return array
+     */
+    protected function typed($resource, $builder)
+    {
+        $keys = $builder 
+            ? [Builder::class, BuilderContract::class] 
+            : [Model::class];
+
+        return \array_fill_keys(
+            $keys,
+            $resource
+        );
     }
 
     /**

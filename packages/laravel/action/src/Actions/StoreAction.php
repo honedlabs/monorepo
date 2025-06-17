@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets;
+namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Actionable;
 use Illuminate\Foundation\Http\FormRequest;

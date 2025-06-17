@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets;
+namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Actionable;
 
@@ -18,7 +18,7 @@ class DestroyAction implements Actionable
      * Destroy the model(s).
      *
      * @param TArg is 'model' ? TModel : TArg is 'models' ? iterable<int, TModel> : TArg is 'query' ? \Illuminate\Database\Eloquent\Builder<TModel> : \Illuminate\Database\Eloquent\Relations\Relation<\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Model> $model
-     * @return void
+     * @return TModel
      */
     public function handle($model)
     {
@@ -27,6 +27,8 @@ class DestroyAction implements Actionable
         );
 
         $this->after($model);
+
+        return $model;
     }
 
     /**

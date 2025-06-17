@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-abstract class Operation
+abstract class Assembler
 {
     /**
      * Configure the action.
@@ -19,7 +19,7 @@ abstract class Operation
      *
      * @return InlineAction
      */
-    public static function inline()
+    public static function inline(): InlineAction
     {
         return static::create(InlineAction::class);
     }
@@ -29,7 +29,7 @@ abstract class Operation
      *
      * @return BulkAction
      */
-    public static function bulk()
+    public static function bulk(): BulkAction
     {
         return static::create(BulkAction::class);
     }
@@ -39,7 +39,7 @@ abstract class Operation
      *
      * @return PageAction
      */
-    public static function page()
+    public static function page(): PageAction
     {
         return static::create(PageAction::class);
     }
@@ -50,7 +50,7 @@ abstract class Operation
      * @param  class-string<Action>  $type
      * @return Action
      */
-    protected static function create($type)
+    protected static function create(string $type): Action
     {
         return resolve(static::class)->definition(new $type());
     }

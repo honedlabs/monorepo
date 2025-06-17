@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action;
+namespace Honed\Action\Operations;
 
 use Honed\Core\Concerns\IsDefault;
 use Honed\Core\Parameters;
 
 use function array_merge;
 
-class InlineAction extends Action
+class InlineOperation extends Operation
 {
     use IsDefault;
 
@@ -22,17 +22,18 @@ class InlineAction extends Action
     {
         parent::setUp();
 
-        $this->type(Action::INLINE);
+        $this->type(self::INLINE);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
-        return array_merge(parent::toArray($named, $typed), [
+        return [
+            ...parent::toArray(),
             'default' => $this->isDefault(),
-        ]);
+        ];
     }
 
     /**

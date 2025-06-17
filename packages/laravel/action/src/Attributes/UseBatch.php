@@ -7,15 +7,15 @@ namespace Honed\Action\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class UseActionGroup
+class UseBatch
 {
     /**
      * Create a new attribute instance.
      *
-     * @param  class-string<\Honed\Action\ActionGroup>  $actionGroupClass
+     * @param  class-string<\Honed\Action\Batch>  $batchClass
      * @return void
      */
     public function __construct(
-        public string $actionGroupClass
+        public string $batchClass
     ) {}
 }

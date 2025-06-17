@@ -15,8 +15,7 @@ beforeEach(function () {
 });
 
 it('syncs a single model', function () {
-    $user = User::factory()
-        ->create();
+    $user = User::factory()->create();
 
     $this->action->handle($this->product, $user);
 
@@ -30,9 +29,7 @@ it('syncs a single model', function () {
 });
 
 it('syncs multiple models', function () {
-    $users = User::factory()
-        ->count(3)
-        ->create();
+    $users = User::factory(3)->create();
 
     $this->action->handle($this->product, $users);
 
@@ -64,8 +61,7 @@ it('syncs a single key', function () {
 });
 
 it('syncs multiple keys', function () {
-    $users = User::factory()
-        ->count(3)
+    $users = User::factory(3)
         ->create();
 
     $ids = $users->map(fn ($user) => $user->getKey());
@@ -101,8 +97,7 @@ it('syncs a single model with attributes', function () {
 });
 
 it('syncs multiple models with attributes', function () {
-    $users = User::factory()
-        ->count(3)
+    $users = User::factory(3)
         ->create();
 
     $this->action->handle($this->product, $users, ['is_active' => true]);
@@ -119,23 +114,18 @@ it('syncs multiple models with attributes', function () {
 });
 
 it('replaces existing relationships when syncing', function () {
-    // First, attach some users
-    $initialUsers = User::factory()
-        ->count(2)
+    $initialUsers = User::factory(2)
         ->create();
 
     $this->product->users()->attach($initialUsers, ['is_active' => false]);
 
     $this->assertDatabaseCount('product_user', 2);
 
-    // Now sync with different users
-    $newUsers = User::factory()
-        ->count(3)
+    $newUsers = User::factory(3)
         ->create();
 
     $this->action->handle($this->product, $newUsers);
 
-    // Should have only the new users, not the initial ones
     $this->assertDatabaseCount('product_user', 3);
 
     $newUsers->each(function ($user) {
@@ -155,18 +145,14 @@ it('replaces existing relationships when syncing', function () {
 });
 
 it('can sync with empty array to remove all relationships', function () {
-    // First, attach some users
-    $users = User::factory()
-        ->count(2)
+    $users = User::factory(3)
         ->create();
 
     $this->product->users()->attach($users, ['is_active' => false]);
 
-    $this->assertDatabaseCount('product_user', 2);
+    $this->assertDatabaseCount('product_user', 3);
 
-    // Now sync with empty array
     $this->action->handle($this->product, []);
 
-    // Should have no relationships
     $this->assertDatabaseCount('product_user', 0);
 });

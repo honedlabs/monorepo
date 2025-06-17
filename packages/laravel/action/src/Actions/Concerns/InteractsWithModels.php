@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets\Concerns;
+namespace Honed\Action\Actions\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
 use Traversable;

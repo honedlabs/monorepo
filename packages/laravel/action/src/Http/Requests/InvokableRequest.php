@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Honed\Action\Http\Requests;
 
 use Honed\Action\Action;
+use Honed\Action\Http\Data\ActionData;
+use Honed\Action\Http\Data\BulkData;
+use Honed\Action\Http\Data\InlineData;
 use Honed\Action\Support\Constants;
 use Honed\Action\Testing\RequestFactory;
 use Illuminate\Foundation\Http\FormRequest;
@@ -91,7 +94,7 @@ class InvokableRequest extends FormRequest
     /**
      * Get the type of the action.
      *
-     * @return 'inline'|'bulk'|'page'
+     * @return 'inline'|'bulk'|'page'|null
      */
     public function type()
     {
@@ -116,5 +119,20 @@ class InvokableRequest extends FormRequest
         }
 
         return [];
+    }
+
+    /**
+     * Convert the request to a data object.
+     *
+     * @return ActionData|null
+     */
+    public function toData()
+    {
+        return match ($this->type()) {
+            Action::INLINE => InlineData::from($this),
+            Action::BULK => BulkData::from($this),
+            Action::PAGE => ActionData::from($this),
+            default => null
+        };
     }
 }

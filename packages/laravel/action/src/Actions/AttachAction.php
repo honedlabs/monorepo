@@ -2,28 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets;
+namespace Honed\Action\Actions;
 
+use Illuminate\Support\Arr;
 use Honed\Action\Contracts\Actionable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Arr;
+use Honed\Action\Contracts\HasRelationship;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  */
-abstract class AttachAction implements Actionable
+abstract class AttachAction implements Actionable, HasRelationship
 {
     use Concerns\CanBeTransaction;
     use Concerns\InteractsWithModels;
-
-    /**
-     * Get the relation name, must be a belongs to many relationship.
-     *
-     * @return string
-     */
-    abstract protected function relationship();
 
     /**
      * Attach models to the parent model.
@@ -31,13 +26,15 @@ abstract class AttachAction implements Actionable
      * @param  TModel  $model
      * @param  int|string|TAttach|iterable<int, int|string|TAttach>  $attachments
      * @param  iterable<string, mixed>  $attributes
-     * @return void
+     * @return TModel
      */
     public function handle($model, $attachments, $attributes = [])
     {
         $this->transact(
             fn () => $this->attach($model, $attachments, $attributes)
         );
+
+        return $model;
     }
 
     /**

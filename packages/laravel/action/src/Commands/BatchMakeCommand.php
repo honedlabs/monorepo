@@ -11,15 +11,15 @@ use Symfony\Component\Console\Input\InputOption;
 use function sprintf;
 use function trim;
 
-#[AsCommand(name: 'make:action-group')]
-class ActionGroupMakeCommand extends GeneratorCommand
+#[AsCommand(name: 'make:batch')]
+class BatchMakeCommand extends GeneratorCommand
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:action-group';
+    protected $name = 'make:batch';
 
     /**
      * The console command description.
@@ -42,7 +42,7 @@ class ActionGroupMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return $this->resolveStubPath('/stubs/honed.action-group.stub');
+        return $this->resolveStubPath('/stubs/honed.batch.stub');
     }
 
     /**
@@ -66,7 +66,7 @@ class ActionGroupMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\ActionGroups';
+        return $rootNamespace.'\Batches';
     }
 
     /**
@@ -99,7 +99,7 @@ class ActionGroupMakeCommand extends GeneratorCommand
         return [
             'name' => [
                 'What should the '.mb_strtolower($this->type).' be named?',
-                'E.g. UserActions',
+                'E.g. UserBatch',
             ],
         ];
     }

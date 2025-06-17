@@ -2,39 +2,36 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets;
+namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Actionable;
+use Honed\Action\Contracts\Relatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TDetach of \Illuminate\Database\Eloquent\Model
  */
-abstract class DetachAction implements Actionable
+abstract class DetachAction implements Actionable, Relatable
 {
     use Concerns\CanBeTransaction;
     use Concerns\InteractsWithModels;
-
-    /**
-     * Get the relation name, must be a belongs to many relationship.
-     *
-     * @return string
-     */
-    abstract protected function relationship();
 
     /**
      * Detach models from the parent model.
      *
      * @param  TModel  $model
      * @param  int|string|TDetach|array<int, int|string|TDetach>  $detachments
-     * @return void
+     * @return TModel
      */
-    public function handle($model, $detachments)
+    public function handle(Model $model, int|string|Model|array $detachments): Model
     {
         $this->transact(
             fn () => $this->detach($model, $detachments)
         );
+
+        return $model;
     }
 
     /**
@@ -43,7 +40,7 @@ abstract class DetachAction implements Actionable
      * @param  TModel  $model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TDetach>
      */
-    protected function getRelation($model)
+    protected function getRelation(Model $model): BelongsToMany
     {
         /** @var \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TDetach> */
         return $model->{$this->relationship()}();
@@ -55,7 +52,7 @@ abstract class DetachAction implements Actionable
      * @param  int|string|TDetach|array<int, int|string|TDetach>  $detachments
      * @return array<int, int|string>
      */
-    protected function prepare($detachments)
+    protected function prepare(int|string|Model|array $detachments): array
     {
         $detachments = $this->arrayable($detachments);
 
@@ -72,7 +69,7 @@ abstract class DetachAction implements Actionable
      * @param  int|string|TDetach|array<int, int|string|TDetach>  $detachments
      * @return void
      */
-    protected function detach($model, $detachments)
+    protected function detach(Model $model, int|string|Model|array $detachments): void
     {
         $detaching = $this->prepare($detachments);
 
@@ -88,7 +85,7 @@ abstract class DetachAction implements Actionable
      * @param  int|string|TDetach|array<int, int|string|TDetach>  $detachments
      * @return void
      */
-    protected function after($model, $detachments)
+    protected function after(Model $model, int|string|Model|array $detachments): void
     {
         //
     }

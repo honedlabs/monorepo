@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets;
+namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Actionable;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\ValidatedInput;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -36,12 +37,16 @@ class ReplicateAction implements Actionable
     /**
      * Prepare the attributes to override on replication
      *
-     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput|FormRequest  $attributes
+     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput  $attributes
      * @return array<string, mixed>
      */
     protected function prepare($attributes)
     {
-        return [];
+        if ($attributes instanceof ValidatedInput) {
+            return $attributes->all();
+        }
+
+        return $attributes;
     }
 
     /**
@@ -67,9 +72,9 @@ class ReplicateAction implements Actionable
 
         if (filled($attributes = $this->prepare($attributes))) {
             $new->fill($attributes);
-
-            $new->save();
         }
+
+        $new->save();
 
         $this->after($new, $model);
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets;
+namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Actionable;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +33,8 @@ abstract class DissociateAction implements Actionable
         $this->transact(
             fn () => $this->dissociate($model)
         );
+
+        return $model;
     }
 
     /**

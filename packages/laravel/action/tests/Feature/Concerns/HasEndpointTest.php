@@ -33,19 +33,19 @@ it('is executable', function () {
         // Executes by default
         ->isExecutable()->toBeTrue()
         ->isExecutable($class)->toBeFalse()
-        ->isntExecutable($class)->toBeTrue()
+        ->isNotExecutable($class)->toBeTrue()
         ->executes()->toBe($this->test)
         ->isExecutable($class)->toBeFalse()
-        ->isntExecutable($class)->toBeTrue();
+        ->isNotExecutable($class)->toBeTrue();
 
     $actions = ProductActions::make();
 
     expect($actions)
         ->isExecutable(ActionGroup::class)->toBeTrue()
-        ->isntExecutable(ActionGroup::class)->toBeFalse()
+        ->isNotExecutable(ActionGroup::class)->toBeFalse()
         ->executes(false)->toBe($actions)
         ->isExecutable(ActionGroup::class)->toBeFalse()
-        ->isntExecutable(ActionGroup::class)->toBeTrue();
+        ->isNotExecutable(ActionGroup::class)->toBeTrue();
 });
 
 it('should be executable', function () {

@@ -29,13 +29,15 @@ abstract class SyncAction implements Actionable
      * @param  TModel  $model
      * @param  int|string|TSync|array<int, int|string|TSync>  $syncs
      * @param  array<string, mixed>  $attributes
-     * @return void
+     * @return TModel
      */
     public function handle($model, $syncs, $attributes = [])
     {
         $this->transact(
             fn () => $this->sync($model, $syncs, $attributes)
         );
+
+        return $model;
     }
 
     /**
@@ -59,7 +61,7 @@ abstract class SyncAction implements Actionable
      */
     protected function prepare($syncs, $attributes)
     {
-        $syncs = is_array($syncs) ? $syncs : [$syncs];
+        $syncs = $this->arrayable($syncs);
 
         return Arr::mapWithKeys(
             $syncs,

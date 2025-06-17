@@ -18,55 +18,40 @@ use Workbench\App\Models\User;
  */
 class UserActions extends ActionGroup
 {
-    /**
-     * Provide the action group with any necessary setup
-     *
-     * @return void
-     */
-    public function setUp()
+    protected function definition(ActionGroup $actions): ActionGroup
     {
-        $this->withResource(User::class);
-    }
+        return $actions
+            ->actions([
+                InlineAction::make('show')
+                    ->route(fn ($user) => route('users.show', $user)),
 
-    /**
-     * Define the available actions.
-     *
-     * @return array<int,\Honed\Action\Action|ActionGroup<TModel, TBuilder>>
-     */
-    public function actions()
-    {
-        /** @var array<int,\Honed\Action\Action|ActionGroup<TModel, TBuilder>> */
-        return [
-            InlineAction::make('show')
-                ->route(fn ($user) => route('users.show', $user)),
+                InlineAction::make('update.name')
+                    ->action(fn ($user) => $user->update(['name' => 'test'])),
 
-            InlineAction::make('update.name')
-                ->action(fn ($user) => $user->update(['name' => 'test'])),
+                InlineAction::make('update.description')
+                    ->action(fn ($user) => $user->update(['name' => 'description']))
+                    ->allow(false),
 
-            InlineAction::make('update.description')
-                ->action(fn ($user) => $user->update(['name' => 'description']))
-                ->allow(false),
+                BulkAction::make('update.name')
+                    ->action(fn ($user) => $user->update(['name' => 'test']))
+                    ->allow(false),
 
-            BulkAction::make('update.name')
-                ->action(fn ($user) => $user->update(['name' => 'test']))
-                ->allow(false),
+                BulkAction::make('update.description')
+                    ->action(fn ($user) => $user->update(['name' => 'description'])),
 
-            BulkAction::make('update.description')
-                ->action(fn ($user) => $user->update(['name' => 'description'])),
+                PageAction::make('create')
+                    ->route('users.create'),
 
-            PageAction::make('create')
-                ->route('users.create'),
+                PageAction::make('create.name')
+                    ->action(fn () => User::factory()->create([
+                        'name' => 'name',
+                    ])),
 
-            PageAction::make('create.name')
-                ->action(fn () => User::factory()->create([
-                    'name' => 'name',
-                ])),
-
-            PageAction::make('create.description')
-                ->action(fn () => User::factory()->create([
-                    'name' => 'description',
-                ]))
-                ->allow(false),
-        ];
+                PageAction::make('create.description')
+                    ->action(fn () => User::factory()->create([
+                        'name' => 'description',
+                    ]))
+                    ->allow(false),
+            ]);
     }
 }

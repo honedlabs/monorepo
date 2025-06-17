@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Workbench\App\Actions\Product;
 
 use Honed\Action\Presets\UpsertAction;
+use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Workbench\App\Models\Product
@@ -20,7 +21,7 @@ class UpsertProduct extends UpsertAction
      */
     protected function for()
     {
-        return \Workbench\App\Models\Product::class;
+        return Product::class;
     }
 
     /**
@@ -30,7 +31,7 @@ class UpsertProduct extends UpsertAction
      */
     protected function uniqueBy()
     {
-        return ['name'];
+        return ['id'];
     }
 
     /**
@@ -40,6 +41,6 @@ class UpsertProduct extends UpsertAction
      */
     protected function update()
     {
-        return ['description', 'price'];
+        return ['name'];
     }
 } 

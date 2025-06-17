@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets\Concerns;
+namespace Honed\Action\Concerns;
 
 use Closure;
 use Illuminate\Support\Facades\DB;
@@ -10,13 +10,33 @@ use Illuminate\Support\Facades\DB;
 trait CanBeTransaction
 {
     /**
-     * Determine whether to wrap the update in a database transaction.
+     * Indicate whether to wrap the update in a database transaction.
+     *
+     * @var bool
+     */
+    protected $transaction = true;
+
+    /**
+     * Set whether to wrap the update in a database transaction.
+     *
+     * @param  bool  $transaction
+     * @return $this
+     */
+    public function transaction($transaction = true)
+    {
+        $this->transaction = $transaction;
+
+        return $this;
+    }
+
+    /**
+     * Determine whether to wrap the operation in a database transaction.
      *
      * @return bool
      */
     protected function isTransaction()
     {
-        return true;
+        return $this->transaction;
     }
 
     /**

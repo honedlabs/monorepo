@@ -10,17 +10,14 @@ use Honed\Action\Commands\ActionsMakeCommand;
 use Honed\Action\Commands\OperationMakeCommand;
 use Honed\Action\Http\Controllers\ActionController;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class ActionServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/action.php', 'action');
 
@@ -31,10 +28,8 @@ class ActionServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
 
@@ -51,10 +46,8 @@ class ActionServiceProvider extends ServiceProvider
 
     /**
      * Register the publishing for the package.
-     *
-     * @return void
      */
-    protected function offerPublishing()
+    protected function offerPublishing(): void
     {
         $this->publishes([
             __DIR__.'/../config/action.php' => config_path('action.php'),
@@ -67,10 +60,8 @@ class ActionServiceProvider extends ServiceProvider
 
     /**
      * Register the route macro for the action handler.
-     *
-     * @return void
      */
-    private function registerRoutesMacro()
+    private function registerRoutesMacro(): void
     {
         Router::macro('actions', function () {
             /** @var Router $this */

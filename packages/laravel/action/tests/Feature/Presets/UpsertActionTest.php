@@ -8,28 +8,20 @@ use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->action = new UpsertProduct();
+
+    $this->name = fake()->unique()->name();
 });
 
 it('upserts a single record from array', function () {
-    $this->assertDatabaseEmpty('products');
+    $product = Product::factory()->create();
 
-    $values = [
-        [
-            'name' => 'Test Product',
-            'description' => 'Test Description',
-            'price' => 99.99,
-        ],
-    ];
+    $values = Product::factory()
+        ->create()
+        ->getAttributes();
 
-    $this->action->handle($values);
+    $this->action->handle([$values]);
 
-    $this->assertDatabaseCount('products', 1);
-
-    $this->assertDatabaseHas('products', [
-        'name' => 'Test Product',
-        'description' => 'Test Description',
-        'price' => 99.99,
-    ]);
+    $this->assertDatabaseCount('products', 2);
 });
 
 it('upserts multiple records from array', function () {

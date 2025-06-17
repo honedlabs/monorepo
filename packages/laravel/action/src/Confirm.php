@@ -51,13 +51,6 @@ class Confirm extends Primitive
     protected $dismiss = 'Cancel';
 
     /**
-     * The default message to display on the dismiss button.
-     *
-     * @var string
-     */
-    protected static $useDismiss = 'Cancel';
-
-    /**
      * Create a new confirm instance.
      *
      * @param  string|Closure(mixed...):string|null  $title

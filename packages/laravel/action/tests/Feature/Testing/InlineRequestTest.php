@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Honed\Action\Action;
 use Honed\Action\Support\Constants;
 use Honed\Action\Testing\InlineRequest;
 
@@ -18,15 +19,17 @@ it('has record', function () {
 
 it('has data', function () {
     expect($this->request)
-        ->getData()->scoped(fn ($data) => $data
-        ->toBeArray()
-        ->toHaveKeys(['type', 'record', 'id', 'name'])
-        ->{'type'}->toBe(Constants::INLINE)
+        ->getData()
+        ->scoped(fn ($data) => $data
+            ->toBeArray()
+            ->toHaveKeys(['type', 'record', 'id', 'name'])
+            ->{'type'}->toBe(Action::INLINE)
         )
         ->data(['type' => 'test'])->toBe($this->request)
-        ->getData()->scoped(fn ($data) => $data
-        ->toBeArray()
-        ->toHaveKeys(['type', 'record', 'id', 'name'])
-        ->{'type'}->toBe('test')
+        ->getData()
+        ->scoped(fn ($data) => $data
+            ->toBeArray()
+            ->toHaveKeys(['type', 'record', 'id', 'name'])
+            ->{'type'}->toBe('test')
         );
 });

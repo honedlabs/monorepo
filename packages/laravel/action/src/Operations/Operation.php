@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action;
+namespace Honed\Action\Operations;
 
 use Closure;
 use Honed\Action\Concerns\HasAction;
 use Honed\Action\Concerns\HasConfirm;
+use Honed\Action\Confirm;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasExtra;
 use Honed\Core\Concerns\HasIcon;
@@ -16,7 +17,7 @@ use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Primitive;
 
-abstract class Action extends Primitive
+abstract class Operation extends Primitive
 {
     use Allowable;
     use HasAction;
@@ -29,7 +30,9 @@ abstract class Action extends Primitive
     use HasType;
 
     public const INLINE = 'inline';
+
     public const BULK = 'bulk';
+    
     public const PAGE = 'page';
 
     /**
@@ -70,9 +73,9 @@ abstract class Action extends Primitive
      *
      * @return bool
      */
-    public function isInline()
+    public function isInline(): bool
     {
-        return $this instanceof InlineAction;
+        return $this instanceof InlineOperation;
     }
 
     /**
@@ -80,35 +83,33 @@ abstract class Action extends Primitive
      *
      * @return bool
      */
-    public function isBulk()
+    public function isBulk(): bool
     {
-        return $this instanceof BulkAction;
+        return $this instanceof BulkOperation;
     }
 
     /**
      * Determine if the action is a page action.
-     *
-     * @return bool
      */
-    public function isPage()
+    public function isPage(): bool
     {
-        return $this instanceof PageAction;
+        return $this instanceof PageOperation;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         return [
             'name' => $this->getName(),
-            'label' => $this->getLabel($named, $typed),
+            'label' => $this->getLabel(),
             'type' => $this->getType(),
-            'icon' => $this->getIcon($named, $typed),
-            'extra' => $this->getExtra($named, $typed),
+            'icon' => $this->getIcon(),
+            'extra' => $this->getExtra(),
             'actionable' => $this->isActionable(),
-            'confirm' => $this->getConfirm()?->toArray($named, $typed),
-            'route' => $this->routeToArray($named, $typed),
+            'confirm' => $this->getConfirm()?->toArray(),
+            'route' => $this->routeToArray(),
         ];
     }
 

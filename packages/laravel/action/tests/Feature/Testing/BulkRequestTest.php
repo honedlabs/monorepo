@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Honed\Action\Action;
 use Honed\Action\Support\Constants;
 use Honed\Action\Testing\BulkRequest;
 
@@ -32,15 +33,17 @@ it('has except', function () {
 
 it('has data', function () {
     expect($this->request)
-        ->getData()->scoped(fn ($data) => $data
-        ->toBeArray()
-        ->toHaveKeys(['type', 'only', 'except', 'all', 'id', 'name'])
-        ->{'type'}->toBe(Constants::BULK)
+        ->getData()
+        ->scoped(fn ($data) => $data
+            ->toBeArray()
+            ->toHaveKeys(['type', 'only', 'except', 'all', 'id', 'name'])
+            ->{'type'}->toBe(Action::BULK)
         )
         ->data(['type' => 'test'])->toBe($this->request)
-        ->getData()->scoped(fn ($data) => $data
-        ->toBeArray()
-        ->toHaveKeys(['type', 'only', 'except', 'all', 'id', 'name'])
-        ->{'type'}->toBe('test')
+        ->getData()
+        ->scoped(fn ($data) => $data
+            ->toBeArray()
+            ->toHaveKeys(['type', 'only', 'except', 'all', 'id', 'name'])
+            ->{'type'}->toBe('test')
         );
 });

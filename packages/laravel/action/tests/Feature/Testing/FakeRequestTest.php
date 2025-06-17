@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Honed\Action\Action;
 use Honed\Action\Http\Requests\InvokableRequest;
 use Honed\Action\Support\Constants;
 use Honed\Action\Testing\FakeRequest;
@@ -47,14 +48,16 @@ it('fills', function () {
 
 it('has data', function () {
     expect($this->request)
-        ->getData()->scoped(fn ($data) => $data
-        ->toBeArray()
-        ->toHaveKeys(['id', 'name'])
+        ->getData()
+        ->scoped(fn ($data) => $data
+            ->toBeArray()
+            ->toHaveKeys(['id', 'name'])
         )
         ->data(['test' => 'test'])->toBe($this->request)
-        ->getData()->scoped(fn ($data) => $data
-        ->toBeArray()
-        ->toHaveKeys(['id', 'name', 'test'])
+        ->getData()
+        ->scoped(fn ($data) => $data
+            ->toBeArray()
+            ->toHaveKeys(['id', 'name', 'test'])
         );
 });
 
@@ -66,6 +69,6 @@ it('creates', function () {
 it('validates', function () {
     expect($this->request)
         ->fill()->toBe($this->request)
-        ->data(['type' => Constants::PAGE])->toBe($this->request)
+        ->data(['type' => Action::PAGE])->toBe($this->request)
         ->validate()->toBeInstanceOf(InvokableRequest::class);
 });

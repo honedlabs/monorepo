@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action;
+namespace Honed\Action\Operations;
 
 use Honed\Action\Concerns\HandlesBulkActions;
 
-class PageAction extends Action
+class PageOperation extends Operation
 {
     use HandlesBulkActions;
 
@@ -19,6 +19,6 @@ class PageAction extends Action
     {
         parent::setUp();
 
-        $this->type(Action::PAGE);
+        $this->type(self::PAGE);
     }
 }

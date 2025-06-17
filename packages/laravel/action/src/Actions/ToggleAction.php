@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets;
+namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Actionable;
 use Illuminate\Support\Arr;
@@ -29,13 +29,15 @@ abstract class ToggleAction implements Actionable
      * @param  TModel  $model
      * @param  int|string|TToggle|array<int, int|string|TToggle>  $toggles
      * @param  array<string, mixed>  $attributes
-     * @return void
+     * @return TModel
      */
     public function handle($model, $toggles, $attributes = [])
     {
         $this->transact(
             fn () => $this->toggle($model, $toggles, $attributes)
         );
+
+        return $model;
     }
 
     /**
@@ -59,7 +61,7 @@ abstract class ToggleAction implements Actionable
      */
     protected function prepare($toggles, $attributes)
     {
-        $toggles = is_array($toggles) ? $toggles : [$toggles];
+        $toggles = $this->arrayable($toggles);
 
         return Arr::mapWithKeys(
             $toggles,
@@ -79,6 +81,8 @@ abstract class ToggleAction implements Actionable
      */
     protected function toggle($model, $toggles, $attributes)
     {
+        $attributes = $this->arrayable($attributes);
+
         $toggling = $this->prepare($toggles, $attributes);
 
         $toggled = $this->getRelation($model)->toggle($toggling, $this->shouldTouch());

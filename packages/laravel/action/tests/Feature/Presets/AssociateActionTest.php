@@ -20,9 +20,8 @@ it('handles model association', function () {
 
     $this->action->handle($this->product, $this->user);
 
-    $this->product->refresh();
-
-    dd($this->product);
-    expect($this->product->user->is($this->user))
-        ->toBeTrue();
-})->todo();
+    $this->assertDatabaseHas('products', [
+        'id' => $this->product->id,
+        'user_id' => $this->user->id,
+    ]);
+});

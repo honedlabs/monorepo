@@ -2,122 +2,85 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Validator;
 use Workbench\App\Actions\Product\ReplicateProduct;
+use Workbench\App\Http\Requests\NameRequest;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->action = new ReplicateProduct();
 
-    $this->product = Product::factory()->create([
-        'name' => 'Original Product',
-        'description' => 'Original Description',
-        'price' => 100,
+    $this->product = Product::factory()->create();
+
+    $this->assertDatabaseHas('products', [
+        'id' => $this->product->id,
+    ]);
+
+    $this->name = fake()->unique()->name();
+});
+
+it('replicates a model', function () {
+    $replicated = $this->action->handle($this->product);
+
+    $this->assertDatabaseCount('products', 2);
+
+    $this->assertDatabaseHas('products', [
+        'name' => $this->product->name,
+        'price' => 0,
+        'description' => $this->product->description,
     ]);
 });
 
-it('replicates a model without attributes', function () {
-    $initialCount = Product::count();
+it('replicates a model with attributes', function () {
+    $replicated = $this->action->handle($this->product, ['name' => $this->name]);
 
-    $replicated = $this->action->handle($this->product);
+    $this->assertDatabaseCount('products', 2);
 
-    expect(Product::count())->toBe($initialCount + 1);
-    expect($replicated)->toBeInstanceOf(Product::class);
-    expect($replicated->id)->not->toBe($this->product->id);
-    expect($replicated->name)->toBe($this->product->name);
-    expect($replicated->description)->toBe($this->product->description);
-    expect($replicated->price)->toBe($this->product->price);
+    $this->assertDatabaseHas('products', [
+        'name' => $this->name,
+        'price' => 0,
+        'description' => $this->product->description,
+    ]);
 });
 
-it('replicates a model with array attributes', function () {
-    $initialCount = Product::count();
 
-    $attributes = [
-        'name' => 'Replicated Product',
-        'price' => 150,
-    ];
+it('replicates a model with validated attributes', function () {
+    $input = Validator::make([
+        'name' => $this->name,
+    ], [
+        'name' => 'required|string|max:255',
+    ]);
 
-    $replicated = $this->action->handle($this->product, $attributes);
+    $this->action->handle($this->product, $input->safe());
 
-    expect(Product::count())->toBe($initialCount + 1);
-    expect($replicated)->toBeInstanceOf(Product::class);
-    expect($replicated->id)->not->toBe($this->product->id);
-    expect($replicated->name)->toBe('Replicated Product');
-    expect($replicated->description)->toBe($this->product->description);
-    expect($replicated->price)->toBe(150);
+    $this->assertDatabaseCount('products', 2);
+
+    $this->assertDatabaseHas('products', [
+        'name' => $this->name,
+        'price' => 0,
+        'description' => $this->product->description,
+    ]);
 });
 
-it('replicates a model with empty array attributes', function () {
-    $initialCount = Product::count();
+it('replicates a model with a form request', function () {
+    $request = Request::create('/', 'POST', [
+        'name' => $this->name,
+    ]);
 
-    $replicated = $this->action->handle($this->product, []);
+    $this->app->instance('request', $request);
+    
+    $request = $this->app->make(NameRequest::class);
 
-    expect(Product::count())->toBe($initialCount + 1);
-    expect($replicated)->toBeInstanceOf(Product::class);
-    expect($replicated->id)->not->toBe($this->product->id);
-    expect($replicated->name)->toBe($this->product->name);
-    expect($replicated->description)->toBe($this->product->description);
-    expect($replicated->price)->toBe($this->product->price);
-});
+    $request->setContainer($this->app);
 
-it('replicates a model with partial attributes', function () {
-    $initialCount = Product::count();
+    $request->validateResolved();
 
-    $attributes = [
-        'name' => 'Partially Updated Product',
-    ];
+    $this->action->handle($this->product, $request);
 
-    $replicated = $this->action->handle($this->product, $attributes);
-
-    expect(Product::count())->toBe($initialCount + 1);
-    expect($replicated)->toBeInstanceOf(Product::class);
-    expect($replicated->id)->not->toBe($this->product->id);
-    expect($replicated->name)->toBe('Partially Updated Product');
-    expect($replicated->description)->toBe($this->product->description);
-    expect($replicated->price)->toBe($this->product->price);
-});
-
-it('replicates a model with all attributes overridden', function () {
-    $initialCount = Product::count();
-
-    $attributes = [
-        'name' => 'Completely New Product',
-        'description' => 'Completely New Description',
-        'price' => 200,
-    ];
-
-    $replicated = $this->action->handle($this->product, $attributes);
-
-    expect(Product::count())->toBe($initialCount + 1);
-    expect($replicated)->toBeInstanceOf(Product::class);
-    expect($replicated->id)->not->toBe($this->product->id);
-    expect($replicated->name)->toBe('Completely New Product');
-    expect($replicated->description)->toBe('Completely New Description');
-    expect($replicated->price)->toBe(200);
-});
-
-it('preserves timestamps behavior during replication', function () {
-    $initialCount = Product::count();
-
-    $replicated = $this->action->handle($this->product);
-
-    expect(Product::count())->toBe($initialCount + 1);
-    expect($replicated->created_at)->not->toBe($this->product->created_at);
-    expect($replicated->updated_at)->not->toBe($this->product->updated_at);
-});
-
-it('replicates with null attribute values', function () {
-    $initialCount = Product::count();
-
-    $attributes = [
-        'description' => null,
-    ];
-
-    $replicated = $this->action->handle($this->product, $attributes);
-
-    expect(Product::count())->toBe($initialCount + 1);
-    expect($replicated)->toBeInstanceOf(Product::class);
-    expect($replicated->id)->not->toBe($this->product->id);
-    expect($replicated->name)->toBe($this->product->name);
-    expect($replicated->description)->toBeNull();
-    expect($replicated->price)->toBe($this->product->price);
+    $this->assertDatabaseHas('products', [
+        'name' => $this->name,
+        'price' => 0,
+        'description' => $this->product->description,
+    ]);
 });

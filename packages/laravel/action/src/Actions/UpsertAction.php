@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets;
+namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Actionable;
 use Illuminate\Foundation\Http\FormRequest;
@@ -40,7 +40,7 @@ abstract class UpsertAction implements Actionable
      * Upsert the input data in the database.
      *
      * @param  array<int, array<string, mixed>>|ValidatedInput|FormRequest  $values
-     * @return void
+     * @return array<int, array<string, mixed>>|ValidatedInput
      */
     public function handle($values)
     {
@@ -52,6 +52,8 @@ abstract class UpsertAction implements Actionable
         $this->transact(
             fn () => $this->upsert($values)
         );
+
+        return $values;
     }
 
     /**

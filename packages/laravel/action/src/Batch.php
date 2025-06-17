@@ -24,7 +24,7 @@ use function array_merge;
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  */
-class ActionGroup extends Primitive
+class Batch extends Primitive
 {
     use CanResolveActions;
 
@@ -33,14 +33,14 @@ class ActionGroup extends Primitive
      *
      * @var string
      */
-    public static $namespace = 'App\\ActionGroups\\';
+    public static string $namespace = 'App\\Batches\\';
 
     /**
      * How to resolve the action group for the given model name.
      *
      * @var (Closure(class-string):class-string<ActionGroup>)|null
      */
-    protected static $actionGroupNameResolver;
+    protected static ?Closure $actionGroupNameResolver = null;
 
     /**
      * Create a new action group instance.
@@ -48,7 +48,7 @@ class ActionGroup extends Primitive
      * @param  Action|ActionGroup|array<int, Action|ActionGroup>  $actions
      * @return static
      */
-    public static function make($actions = [])
+    public static function make(Action|ActionGroup|array $actions = []): static
     {
         return resolve(static::class)
             ->actions($actions);
@@ -62,7 +62,7 @@ class ActionGroup extends Primitive
      * @param  class-string<TClass>  $modelName
      * @return ActionGroup<TClass>
      */
-    public static function actionGroupForModel($modelName)
+    public static function actionGroupForModel(string $modelName): ActionGroup
     {
         $table = static::resolveActionGroupName($modelName);
 
@@ -75,7 +75,7 @@ class ActionGroup extends Primitive
      * @param  class-string  $className
      * @return class-string<ActionGroup>
      */
-    public static function resolveActionGroupName($className)
+    public static function resolveActionGroupName(string $className): string
     {
         $resolver = static::$actionGroupNameResolver ?? function (string $className) {
             $appNamespace = static::appNamespace();
@@ -97,7 +97,7 @@ class ActionGroup extends Primitive
      * @param  string  $namespace
      * @return void
      */
-    public static function useNamespace($namespace)
+    public static function useNamespace(string $namespace): void
     {
         static::$namespace = $namespace;
     }
@@ -108,7 +108,7 @@ class ActionGroup extends Primitive
      * @param  Closure(class-string):class-string<ActionGroup>  $callback
      * @return void
      */
-    public static function guessActionGroupNamesUsing($callback)
+    public static function guessActionGroupNamesUsing(Closure $callback): void
     {
         static::$actionGroupNameResolver = $callback;
     }
@@ -118,10 +118,10 @@ class ActionGroup extends Primitive
      *
      * @return void
      */
-    public static function flushState()
+    public static function flushState(): void
     {
         static::$actionGroupNameResolver = null;
-        static::$namespace = 'App\\ActionGroups\\';
+        static::$namespace = 'App\\Batches\\';
     }
 
     /**
@@ -130,7 +130,7 @@ class ActionGroup extends Primitive
      * @param  $this  $actions
      * @return $this
      */
-    public function definition(self $actions): self
+    protected function definition(self $actions): self
     {
         return $actions;
     }
@@ -143,6 +143,9 @@ class ActionGroup extends Primitive
         return 'action';
     }
 
+    /**
+     * 
+     */
     public function getHandler()
     {
         return config('action.handler', ActionHandler::class);
@@ -153,25 +156,18 @@ class ActionGroup extends Primitive
      */
     public function handle($request)
     {
-        if ($this->isntExecutable()) {
+        if ($this->isNotExecutable()) {
             abort(404);
         }
 
-        $resource = $this->getResource();
-
         return App::make(Handler::class)
             ->handle($this, $request);
-
-        // return Handler::make(
-        //     $resource,
-        //     $this->getActions()
-        // )->handle($request);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         $actions = [
             'inline' => $this->inlineActionsToArray($this->getModel()),
@@ -180,10 +176,11 @@ class ActionGroup extends Primitive
         ];
 
         if ($this->isExecutable(self::class)) {
-            return array_merge($actions, [
+            return [
+                ...$actions,
                 'id' => $this->getRouteKey(),
                 'endpoint' => $this->getEndpoint(),
-            ]);
+            ];
         }
 
         return $actions;

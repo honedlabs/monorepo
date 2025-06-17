@@ -13,5 +13,13 @@ use Honed\Action\Presets\ReplicateAction;
  */
 class ReplicateProduct extends ReplicateAction
 {
-    //
+    /**
+     * Get the attributes to exclude from the replication.
+     *
+     * @return array<int, string>
+     */
+    protected function except()
+    {
+        return ['price'];
+    }
 } 
