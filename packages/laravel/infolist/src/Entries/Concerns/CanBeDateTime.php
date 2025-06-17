@@ -254,20 +254,6 @@ trait CanBeDateTime
     }
 
     /**
-     * Format the value as a since date.
-     * 
-     * @param  \Carbon\CarbonInterface|string|int|float|null  $value
-     */
-    protected function formatSince(mixed $value): ?string
-    {
-        if ($value instanceof CarbonInterface) {
-            return $value->diffForHumans();
-        }
-
-        return $this->newCarbon($value)?->diffForHumans();
-    }
-
-    /**
      * Format the value as a date or time using Carbon and the given format.
      * 
      * @param  \Carbon\CarbonInterface|string|int|float|null  $value
@@ -281,6 +267,10 @@ trait CanBeDateTime
 
         if (! $value instanceof CarbonInterface) {
             $value = $this->newCarbon($value);
+        }
+
+        if ($this->isSince()) {
+            return $value?->diffForHumans();
         }
 
         return $value

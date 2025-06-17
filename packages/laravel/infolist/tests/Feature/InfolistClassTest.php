@@ -23,6 +23,7 @@ it('has an infolist', function () {
                 'placehold' => null,
                 'badge' => null,
                 'variant' => null,
+                'class' => null,
             ],
             [
                 'type' => Entry::DATETIME,
@@ -31,6 +32,8 @@ it('has an infolist', function () {
                 'placehold' => null,
                 'badge' => null,
                 'variant' => null,
+                'shape' => null,
+                'class' => null,
             ],
         ]);
 });

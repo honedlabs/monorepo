@@ -26,6 +26,7 @@ it('has array representation', function () {
             'placehold' => null,
             'badge' => null,
             'variant' => null,
+            'class' => null,
             'shape' => null,
         ]);
 });
@@ -40,6 +41,7 @@ it('has array representation with placeholder', function () {
             'placehold' => true,
             'badge' => null,
             'variant' => null,
+            'class' => null,
             'shape' => null,
         ]);
 });

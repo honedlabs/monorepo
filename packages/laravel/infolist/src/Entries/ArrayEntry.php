@@ -21,7 +21,7 @@ class ArrayEntry extends BaseEntry
     /**
      * Format the value of the entry.
      *
-     * @param  array<int, mixed>|\Illuminate\Support\Collection|null  $value
+     * @param  array<int, mixed>|\Illuminate\Support\Collection<int, mixed>|null  $value
      * @return array<int, mixed>|string|null
      */
     public function format(mixed $value): mixed

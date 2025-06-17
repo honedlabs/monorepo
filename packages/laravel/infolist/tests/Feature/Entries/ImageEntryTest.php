@@ -22,6 +22,7 @@ it('has array representation', function () {
             'placehold' => null,
             'badge' => null,
             'variant' => null,
+            'class' => null,
             'shape' => null,
         ]);
 });

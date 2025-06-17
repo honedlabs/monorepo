@@ -68,7 +68,7 @@ trait CanBeArray
     /**
      * Format the value as an array.
      * 
-     * @param  array<int, mixed>|\Illuminate\Support\Collection  $value
+     * @param  array<int, mixed>|\Illuminate\Support\Collection<int, mixed>  $value
      * @return array<int, mixed>|string|null
      */
     protected function formatArray(mixed $value): array|string|null

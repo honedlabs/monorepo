@@ -120,7 +120,6 @@ trait CanBeAggregated
             $this->isDate() => $this->formatDate($value),
             $this->isDateTime() => $this->formatDateTime($value),
             $this->isTime() => $this->formatTime($value),
-            $this->isSince() => $this->formatSince($value),
             $this->isImage() => $this->formatImage($value), // @phpstan-ignore argument.type
             $this->isNumeric() => $this->formatNumeric($value),
             $this->isText() => $this->formatText($value),

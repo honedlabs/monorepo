@@ -16,6 +16,7 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
 {
     use Allowable;
     use Concerns\CanBeBadge;
+    use Concerns\HasClasses;
     use Concerns\HasPlaceholder;
     use Concerns\HasState;
     use HasLabel;
@@ -40,9 +41,11 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
      */
     public static function make(string|Closure|null $state = null, ?string $label = null): static
     {
+        $label ??= is_string($state) ? static::makeLabel($state) : null;
+
         return resolve(static::class)
             ->state($state)
-            ->label($label ?? is_string($state) ? static::makeLabel($state) : null);
+            ->label($label);
     }
 
     /**
@@ -54,12 +57,10 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
     {
         $state = $this->getState();
 
-        $placehold = false;
-
-        if (is_null($state)) {
-            $state = $this->getPlaceholder();
-            $placehold = ! is_null($state);
-        }
+        [$state, $placehold] = match (true) {
+            is_null($state) => [$this->getPlaceholder(), (bool) $this->getPlaceholder()],
+            default => [$this->format($state), false],
+        };
 
         return [
             'type' => $this->getType(),
@@ -68,6 +69,7 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
             'placehold' => $placehold ?: null,
             'badge' => $this->isBadge(),
             'variant' => $this->getVariant(),
+            'class' => $this->getClasses(),
         ];
     }
 
