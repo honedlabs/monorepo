@@ -41,7 +41,7 @@ class Component extends Primitive
     /**
      * {@inheritdoc}
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         return [
             'type' => $this->getType(),

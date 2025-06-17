@@ -8,6 +8,7 @@ use BadMethodCallException;
 use Honed\Core\Concerns\Configurable;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Contracts\NullsAsUndefined;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
@@ -15,7 +16,13 @@ use JsonSerializable;
 
 use function array_filter;
 
-abstract class Primitive implements JsonSerializable
+/**
+ * @template TKey of array-key = string
+ * @template TValue of mixed = mixed
+ *
+ * @implements Arrayable<TKey,TValue>
+ */
+abstract class Primitive implements Arrayable, JsonSerializable
 {
     use Conditionable;
     use Configurable;
@@ -46,15 +53,6 @@ abstract class Primitive implements JsonSerializable
     {
         return $this->macroCall($method, $parameters);
     }
-
-    /**
-     * Get the instance as an array.
-     *
-     * @param  array<string,mixed>  $named
-     * @param  array<class-string,mixed>  $typed
-     * @return array<string,mixed>
-     */
-    abstract public function toArray($named = [], $typed = []);
 
     /**
      * Serialize the instance
