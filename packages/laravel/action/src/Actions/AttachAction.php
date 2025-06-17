@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Illuminate\Support\Arr;
-use Honed\Action\Contracts\Actionable;
+use Honed\Action\Contracts\Action;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Honed\Action\Contracts\HasRelationship;
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  */
-abstract class AttachAction implements Actionable, HasRelationship
+abstract class AttachAction implements Action, HasRelationship
 {
     use Concerns\CanBeTransaction;
     use Concerns\InteractsWithModels;

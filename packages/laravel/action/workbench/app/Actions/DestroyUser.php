@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Workbench\App\Actions;
 
-use Honed\Action\Contracts\Actionable;
+use Honed\Action\Contracts\Action;
 use Workbench\App\Models\User;
 
-class DestroyUser implements Actionable
+class DestroyUser implements Action
 {
     public function handle(User $user)
     {

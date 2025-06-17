@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\Actionable;
+use Honed\Action\Contracts\Action;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TArg of 'model' | 'models' | 'query' | 'relationship' = 'model'
  */
-class DestroyAction implements Actionable
+class DestroyAction implements Action
 {
     use Concerns\CanBeTransaction;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\Actionable;
+use Honed\Action\Contracts\Action;
 use Honed\Action\Contracts\Dispatches;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @template TDispatch of \Honed\Action\Contracts\Dispatches
  * @template TPayload of mixed
  */
-abstract class DispatchAction implements Actionable
+abstract class DispatchAction implements Action
 {
     /**
      * Get the dispatchable class.

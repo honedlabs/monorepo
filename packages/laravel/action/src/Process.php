@@ -54,10 +54,10 @@ abstract class Process
     /**
      * Handle the failure of the process.
      *
-     * @param  Throwable  $exception
+     * @param  Throwable  $throwable
      * @return mixed
      */
-    protected function failure($exception)
+    protected function failure($throwable)
     {
         //
     }

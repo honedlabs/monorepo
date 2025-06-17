@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use Honed\Action\ActionGroup;
+use Honed\Action\Batch;
 use Honed\Action\Contracts\ShouldExecute;
 use Honed\Action\InlineAction;
 use Honed\Action\BulkAction;
@@ -12,9 +12,9 @@ use Honed\Action\PageAction;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<\TModel>
  *
- * @extends \Honed\Action\ActionGroup<TModel, TBuilder>
+ * @extends \Honed\Action\Batch<TModel, TBuilder>
  */
-class {{ class }} extends ActionGroup
+class {{ class }} extends Batch
 {
     /**
      * Provide the action group with any necessary setup
@@ -29,7 +29,7 @@ class {{ class }} extends ActionGroup
     /**
      * Define the available actions.
      *
-     * @return array<int,\Honed\Action\Action|\Honed\Action\ActionGroup<TModel, TBuilder>>
+     * @return array<int,\Honed\Action\Action|\Honed\Action\Batch<TModel, TBuilder>>
      */
     public function defineActions()
     {

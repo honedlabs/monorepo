@@ -7,6 +7,9 @@ namespace Honed\Action;
 use Closure;
 use Honed\Core\Primitive;
 
+/**
+ * @extends \Honed\Core\Primitive<string, mixed>
+ */
 class Confirm extends Primitive
 {
     public const CONSTRUCTIVE = 'constructive';

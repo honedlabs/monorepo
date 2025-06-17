@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Action\Commands\ActionGroupMakeCommand;
+use Honed\Action\Commands\BatchMakeCommand;
 use Honed\Action\Commands\ActionMakeCommand;
 use Honed\Action\Commands\ActionsMakeCommand;
 use Honed\Action\Commands\OperationMakeCommand;
@@ -21,8 +21,6 @@ class ActionServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/action.php', 'action');
 
-        // $this->app->bind(ActionGroupHandler::class, ActionHandler::class)
-
         $this->registerRoutesMacro();
     }
 
@@ -38,7 +36,7 @@ class ActionServiceProvider extends ServiceProvider
             $this->commands([
                 ActionMakeCommand::class,
                 ActionsMakeCommand::class,
-                ActionGroupMakeCommand::class,
+                BatchMakeCommand::class,
                 OperationMakeCommand::class,
             ]);
         }
@@ -68,7 +66,7 @@ class ActionServiceProvider extends ServiceProvider
 
             $methods = ['post', 'patch', 'put'];
 
-            $endpoint = ActionGroup::getDefaultEndpoint();
+            $endpoint = Batch::getDefaultEndpoint();
 
             $this->match($methods, $endpoint, [ActionController::class, 'dispatch'])
                 ->name('actions');

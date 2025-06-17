@@ -6,8 +6,9 @@ use Honed\Action\Process;
 
 /**
  * @template TPayload
+ * @template TResult
  * 
- * @extends Honed\Command\Process<TPayload>
+ * @extends Honed\Command\Process<TPayload, TResult>
  */
 class {{ class }} extends Process
 {
@@ -16,7 +17,7 @@ class {{ class }} extends Process
      *
      * @return array<int, class-string>
      */
-    protected function tasks(): array
+    protected function tasks()
     {
         return [
 

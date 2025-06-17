@@ -48,7 +48,7 @@ test('with handler', function () {
         ->getName()->toBe('destroy')
         ->getLabel(...Parameters::model($this->user))->toBe('Destroy '.$this->user->name)
         ->getType()->toBe('inline')
-        ->isActionable()->toBeTrue();
+        ->isAction()->toBeTrue();
 
     $action->execute($this->user);
 

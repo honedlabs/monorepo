@@ -107,7 +107,7 @@ abstract class Operation extends Primitive
             'type' => $this->getType(),
             'icon' => $this->getIcon(),
             'extra' => $this->getExtra(),
-            'actionable' => $this->isActionable(),
+            'actionable' => $this->isAction(),
             'confirm' => $this->getConfirm()?->toArray(),
             'route' => $this->routeToArray(),
         ];

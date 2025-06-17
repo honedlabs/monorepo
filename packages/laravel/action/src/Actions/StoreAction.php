@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\Actionable;
+use Honed\Action\Contracts\Action;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class StoreAction implements Actionable
+abstract class StoreAction implements Action
 {
     use Concerns\CanBeTransaction;
 

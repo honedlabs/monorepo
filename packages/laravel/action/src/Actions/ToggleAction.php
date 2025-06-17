@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\Actionable;
+use Honed\Action\Contracts\Action;
 use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TToggle of \Illuminate\Database\Eloquent\Model
  */
-abstract class ToggleAction implements Actionable
+abstract class ToggleAction implements Action
 {
     use Concerns\CanBeTransaction;
     use Concerns\InteractsWithModels;

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Action\Presets;
 
-use Honed\Action\Contracts\Actionable;
+use Honed\Action\Contracts\Action;
 use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TSync of \Illuminate\Database\Eloquent\Model
  */
-abstract class SyncAction implements Actionable
+abstract class SyncAction implements Action
 {
     use Concerns\CanBeTransaction;
     use Concerns\InteractsWithModels;

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\Actionable;
+use Honed\Action\Contracts\Action;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\ValidatedInput;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class UpsertAction implements Actionable
+abstract class UpsertAction implements Action
 {
     use Concerns\CanBeTransaction;
 

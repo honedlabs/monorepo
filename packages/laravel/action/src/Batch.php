@@ -38,20 +38,20 @@ class Batch extends Primitive
     /**
      * How to resolve the action group for the given model name.
      *
-     * @var (Closure(class-string):class-string<ActionGroup>)|null
+     * @var (Closure(class-string):class-string<Batch>)|null
      */
-    protected static ?Closure $actionGroupNameResolver = null;
+    protected static ?Closure $batchNameResolver = null;
 
     /**
      * Create a new action group instance.
      *
-     * @param  Action|ActionGroup|array<int, Action|ActionGroup>  $actions
+     * @param  Operation|Batch|array<int, Operation|Batch>  $operations
      * @return static
      */
-    public static function make(Action|ActionGroup|array $actions = []): static
+    public static function make($operations = []): static
     {
         return resolve(static::class)
-            ->actions($actions);
+            ->operations($operations);
     }
 
     /**
@@ -60,11 +60,11 @@ class Batch extends Primitive
      * @template TClass of \Illuminate\Database\Eloquent\Model
      *
      * @param  class-string<TClass>  $modelName
-     * @return ActionGroup<TClass>
+     * @return Batch<TClass>
      */
-    public static function actionGroupForModel(string $modelName): ActionGroup
+    public static function batchForModel(string $modelName): Batch
     {
-        $table = static::resolveActionGroupName($modelName);
+        $table = static::resolveBatchName($modelName);
 
         return $table::make();
     }
@@ -73,18 +73,18 @@ class Batch extends Primitive
      * Get the table name for the given model name.
      *
      * @param  class-string  $className
-     * @return class-string<ActionGroup>
+     * @return class-string<Batch>
      */
-    public static function resolveActionGroupName(string $className): string
+    public static function resolveBatchName(string $className): string
     {
-        $resolver = static::$actionGroupNameResolver ?? function (string $className) {
+        $resolver = static::$batchNameResolver ?? function (string $className) {
             $appNamespace = static::appNamespace();
 
             $className = Str::startsWith($className, $appNamespace.'Models\\')
                 ? Str::after($className, $appNamespace.'Models\\')
                 : Str::after($className, $appNamespace);
 
-            /** @var class-string<ActionGroup> */
+            /** @var class-string<Batch> */
             return static::$namespace.$className.'Actions';
         };
 
@@ -105,12 +105,12 @@ class Batch extends Primitive
     /**
      * Specify the callback that should be invoked to guess the name of a model action group.
      *
-     * @param  Closure(class-string):class-string<ActionGroup>  $callback
+     * @param  Closure(class-string):class-string<Batch>  $callback
      * @return void
      */
-    public static function guessActionGroupNamesUsing(Closure $callback): void
+    public static function guessBatchNamesUsing(Closure $callback): void
     {
-        static::$actionGroupNameResolver = $callback;
+        static::$batchNameResolver = $callback;
     }
 
     /**
@@ -120,19 +120,19 @@ class Batch extends Primitive
      */
     public static function flushState(): void
     {
-        static::$actionGroupNameResolver = null;
+        static::$batchNameResolver = null;
         static::$namespace = 'App\\Batches\\';
     }
 
     /**
-     * Define the actions for the action group.
+     * Define the operations for the action group.
      *
-     * @param  $this  $actions
+     * @param  $this  $operations
      * @return $this
      */
-    protected function definition(self $actions): self
+    protected function definition(self $operations): self
     {
-        return $actions;
+        return $operations;
     }
 
     /**
@@ -169,7 +169,7 @@ class Batch extends Primitive
      */
     public function toArray()
     {
-        $actions = [
+        $operations = [
             'inline' => $this->inlineActionsToArray($this->getModel()),
             'bulk' => $this->bulkActionsToArray(),
             'page' => $this->pageActionsToArray(),
@@ -177,13 +177,13 @@ class Batch extends Primitive
 
         if ($this->isExecutable(self::class)) {
             return [
-                ...$actions,
+                ...$operations,
                 'id' => $this->getRouteKey(),
                 'endpoint' => $this->getEndpoint(),
             ];
         }
 
-        return $actions;
+        return $operations;
     }
 
     /**

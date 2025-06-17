@@ -241,7 +241,7 @@ class FakeRequest
     {
         return Request::create(
             $this->getUri(),
-            HttpFoundationRequest::METHOD_POST,
+            Request::METHOD_POST,
             $this->getData()
         );
     }

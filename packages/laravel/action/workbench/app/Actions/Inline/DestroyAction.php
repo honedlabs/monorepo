@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Workbench\App\Actions\Inline;
 
-use Honed\Action\Contracts\Actionable;
+use Honed\Action\Contracts\Action;
 use Honed\Action\InlineAction;
 use Workbench\App\Models\User;
 
-class DestroyAction extends InlineAction implements Actionable
+class DestroyAction extends InlineAction implements Action
 {
     public function setUp(): void
     {
