@@ -33,15 +33,20 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
 
     /**
      * Format the value of the entry.
+     *
+     * @param  mixed  $value
+     * @return mixed
      */
-    abstract public function format(mixed $value): mixed;
+    abstract public function format($value);
 
     /**
      * Create a new list entry.
      *
-     * @param  string|Closure  $state
+     * @param  string|Closure|null  $state
+     * @param  string|null  $label
+     * @return static
      */
-    public static function make(string|Closure|null $state = null, ?string $label = null): static
+    public static function make($state = null, $label = null)
     {
         $label ??= is_string($state) ? static::makeLabel($state) : null;
 

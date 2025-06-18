@@ -10,8 +10,10 @@ class ImageEntry extends BaseEntry
 
     /**
      * Provide the instance with any necessary setup.
+     *
+     * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -24,7 +26,7 @@ class ImageEntry extends BaseEntry
      * @param  string|null  $value
      * @return string|null
      */
-    public function format(mixed $value): mixed
+    public function format($value)
     {
         return is_null($value) ? null : $this->formatImage($value);
     }

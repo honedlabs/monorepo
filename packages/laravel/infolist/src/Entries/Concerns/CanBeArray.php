@@ -13,20 +13,25 @@ trait CanBeArray
 
     /**
      * The property to pluck from the array.
+     *
+     * @var string|null
      */
-    protected ?string $pluck = null;
+    protected $pluck = null;
 
     /**
      * The separator to use when joining the array.
+     *
+     * @var string|null
      */
-    protected ?string $glue = null;
+    protected $glue = null;
 
     /**
      * Set the property to pluck from the array.
      *
+     * @param  string  $pluck
      * @return $this
      */
-    public function pluck(string $pluck): static
+    public function pluck($pluck)
     {
         $this->pluck = $pluck;
 
@@ -35,8 +40,10 @@ trait CanBeArray
 
     /**
      * Get the property to pluck from the array.
+     *
+     * @return string|null
      */
-    public function getPluck(): ?string
+    public function getPluck()
     {
         return $this->pluck;
     }
@@ -44,9 +51,10 @@ trait CanBeArray
     /**
      * Set the separator to use when joining the array.
      *
+     * @param  string  $glue
      * @return $this
      */
-    public function glue(string $glue = ', '): static
+    public function glue($glue = ', ')
     {
         $this->glue = $glue;
 
@@ -55,8 +63,10 @@ trait CanBeArray
 
     /**
      * Get the separator to use when joining the array.
+     *
+     * @return string|null
      */
-    public function getGlue(): ?string
+    public function getGlue()
     {
         return $this->glue;
     }
@@ -67,7 +77,7 @@ trait CanBeArray
      * @param  array<int, mixed>|Collection<int, mixed>  $value
      * @return array<int, mixed>|string|null
      */
-    protected function formatArray(mixed $value): array|string|null
+    protected function formatArray($value)
     {
         $pipes = [
             'formatPluck',
@@ -87,7 +97,7 @@ trait CanBeArray
      * @param  array<string, mixed>  $value
      * @return array<int, mixed>
      */
-    protected function formatPluck(array $value): array
+    protected function formatPluck($value)
     {
         $pluck = $this->getPluck();
 
@@ -100,7 +110,7 @@ trait CanBeArray
      * @param  array<int, mixed>  $value
      * @return array<int, mixed>|string
      */
-    protected function formatGlue(array $value): array|string
+    protected function formatGlue($value)
     {
         $glue = $this->getGlue();
 

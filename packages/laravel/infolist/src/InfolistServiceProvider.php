@@ -11,13 +11,29 @@ class InfolistServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
         if ($this->app->runningInConsole()) {
+            $this->offerPublishing();
+
             $this->commands([
                 InfolistMakeCommand::class,
             ]);
         }
+    }
+
+    /**
+     * Register the publishing for the package.
+     *
+     * @return void
+     */
+    protected function offerPublishing()
+    {
+        $this->publishes([
+            __DIR__.'/../stubs' => base_path('stubs'),
+        ], 'stubs');
     }
 }

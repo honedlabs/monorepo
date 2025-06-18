@@ -18,7 +18,7 @@ trait CanBeAggregated
      *
      * @return $this
      */
-    public function array(): static
+    public function array()
     {
         return $this->type(self::ARRAY);
     }
@@ -28,7 +28,7 @@ trait CanBeAggregated
      *
      * @return $this
      */
-    public function boolean(): static
+    public function boolean()
     {
         return $this->type(self::BOOLEAN);
     }
@@ -38,7 +38,7 @@ trait CanBeAggregated
      *
      * @return $this
      */
-    public function image(): static
+    public function image()
     {
         return $this->type(self::IMAGE);
     }
@@ -48,7 +48,7 @@ trait CanBeAggregated
      *
      * @return $this
      */
-    public function numeric(): static
+    public function numeric()
     {
         return $this->type(self::NUMERIC);
     }
@@ -58,47 +58,57 @@ trait CanBeAggregated
      *
      * @return $this
      */
-    public function text(): static
+    public function text()
     {
         return $this->type(self::TEXT);
     }
 
     /**
      * Determine if the entry is an array entry.
+     *
+     * @return bool
      */
-    public function isArray(): bool
+    public function isArray()
     {
         return $this->getType() === self::ARRAY;
     }
 
     /**
      * Determine if the entry is a boolean entry.
+     *
+     * @return bool
      */
-    public function isBoolean(): bool
+    public function isBoolean()
     {
         return $this->getType() === self::BOOLEAN;
     }
 
     /**
      * Determine if the entry is an image entry.
+     *
+     * @return bool
      */
-    public function isImage(): bool
+    public function isImage()
     {
         return $this->getType() === self::IMAGE;
     }
 
     /**
      * Determine if the entry is a numeric entry.
+     *
+     * @return bool
      */
-    public function isNumeric(): bool
+    public function isNumeric()
     {
         return $this->getType() === self::NUMERIC;
     }
 
     /**
      * Determine if the entry is a text entry.
+     *
+     * @return bool
      */
-    public function isText(): bool
+    public function isText()
     {
         return $this->getType() === self::TEXT;
     }
@@ -107,8 +117,9 @@ trait CanBeAggregated
      * Format the value of the entry.
      *
      * @param  \Carbon\CarbonInterface|string|int|float|null  $value
+     * @return mixed
      */
-    public function format(mixed $value): mixed
+    public function format($value)
     {
         if (is_null($value)) {
             return null;

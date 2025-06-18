@@ -13,7 +13,7 @@ trait HasClasses
      *
      * @var array<int, string|Closure(mixed...):string>
      */
-    protected array $classes = [];
+    protected $classes = [];
 
     /**
      * Set the classes to apply to the entry.
@@ -21,7 +21,7 @@ trait HasClasses
      * @param  string|Closure(mixed...):string  $classes
      * @return $this
      */
-    public function classes(string|Closure $classes): static
+    public function classes($classes)
     {
         $this->classes[] = $classes;
 
@@ -30,8 +30,10 @@ trait HasClasses
 
     /**
      * Get the classes to apply to the entry.
+     *
+     * @return string|null
      */
-    public function getClasses(): ?string
+    public function getClasses()
     {
         if (empty($this->classes)) {
             return null;

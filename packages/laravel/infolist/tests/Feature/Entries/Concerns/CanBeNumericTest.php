@@ -61,6 +61,6 @@ it('can format the number with a locale', function () {
 
 it('can format the number as money', function () {
     expect($this->entry)
-        ->money('aud', 'au')->toBe($this->entry)
-        ->format(100)->toBe('A$ 100.00');
+        ->money('aud', 'en')->toBe($this->entry)
+        ->format(100)->toBe('A$100.00');
 });

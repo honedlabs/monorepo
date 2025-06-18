@@ -12,25 +12,32 @@ trait CanBeImage
 
     /**
      * The disk to be used to retrieve the image from.
+     *
+     * @var string|null
      */
-    protected ?string $disk = null;
+    protected $disk = null;
 
     /**
      * The shape of the image.
+     *
+     * @var string|null
      */
-    protected ?string $shape = null;
+    protected $shape = null;
 
     /**
      * Whether to create a temporary file url for the image.
+     *
+     * @var int
      */
-    protected int $temporary = 0;
+    protected $temporary = 0;
 
     /**
      * Set the disk to be used to retrieve the image from.
      *
+     * @param  string  $disk
      * @return $this
      */
-    public function disk(string $disk = 's3'): static
+    public function disk($disk = 's3')
     {
         $this->disk = $disk;
 
@@ -39,8 +46,10 @@ trait CanBeImage
 
     /**
      * Get the disk to be used to retrieve the image from.
+     *
+     * @return string|null
      */
-    public function getDisk(): ?string
+    public function getDisk()
     {
         return $this->disk;
     }
@@ -48,9 +57,10 @@ trait CanBeImage
     /**
      * Set whether the image should be displayed as a square.
      *
+     * @param  string  $shape
      * @return $this
      */
-    public function shape(string $shape = 'square'): static
+    public function shape($shape = 'square')
     {
         $this->shape = $shape;
 
@@ -62,7 +72,7 @@ trait CanBeImage
      *
      * @return $this
      */
-    public function square(): static
+    public function square()
     {
         return $this->shape('square');
     }
@@ -72,15 +82,17 @@ trait CanBeImage
      *
      * @return $this
      */
-    public function circular(): static
+    public function circular()
     {
         return $this->shape('circle');
     }
 
     /**
      * Get the shape of the image.
+     *
+     * @return string|null
      */
-    public function getShape(): ?string
+    public function getShape()
     {
         return $this->shape;
     }
@@ -88,9 +100,10 @@ trait CanBeImage
     /**
      * Set whether to create a temporary file url for the image.
      *
+     * @param  int  $minutes
      * @return $this
      */
-    public function temporaryUrl(int $minutes = 5): static
+    public function temporaryUrl($minutes = 5)
     {
         $this->temporary = $minutes;
 
@@ -99,16 +112,20 @@ trait CanBeImage
 
     /**
      * Determine if a temporary file url should be created for the image.
+     *
+     * @return bool
      */
-    public function isTemporaryUrl(): bool
+    public function isTemporaryUrl()
     {
         return (bool) $this->temporary;
     }
 
     /**
      * Get the duration of the temporary file url.
+     *
+     * @return int
      */
-    public function getUrlDuration(): int
+    public function getUrlDuration()
     {
         return $this->temporary;
     }
@@ -117,8 +134,9 @@ trait CanBeImage
      * Format the image value.
      *
      * @param  string|null  $value
+     * @return string|null
      */
-    protected function formatImage(mixed $value): ?string
+    protected function formatImage($value)
     {
         $driver = $this->getDisk();
 

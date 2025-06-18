@@ -5,57 +5,34 @@ declare(strict_types=1);
 namespace Honed\Infolist\Entries\Concerns;
 
 use Closure;
-use Illuminate\Database\Eloquent\Model;
+use Honed\Core\Concerns\HasRecord;
 use Illuminate\Support\Arr;
 
 trait HasState
 {
-    /**
-     * The record to be used to generate a state.
-     *
-     * @var array<string, mixed>|Model|null
-     */
-    protected array|Model|null $record = null;
+    use HasRecord;
 
     /**
      * The retrieval method for the state.
+     *
+     * @var string|Closure|null
      */
-    protected string|Closure|null $state = null;
+    protected $state = null;
 
     /**
      * The resolved state of the entry.
-     */
-    protected mixed $resolved = null;
-
-    /**
-     * Set the record to be used to generate a state.
      *
-     * @param  array<string, mixed>|Model  $record
-     * @return $this
+     * @var mixed
      */
-    public function record(array|Model $record): static
-    {
-        $this->record = $record;
-
-        return $this;
-    }
-
-    /**
-     * Get the record to be used to generate a state.
-     *
-     * @return array<string, mixed>|Model|null
-     */
-    public function getRecord(): array|Model|null
-    {
-        return $this->record;
-    }
+    protected $resolved = null;
 
     /**
      * Set how the state of the entry is generated.
      *
+     * @param  string|Closure  $state
      * @return $this
      */
-    public function state(string|Closure $state): static
+    public function state($state)
     {
         $this->state = $state;
 
@@ -64,8 +41,10 @@ trait HasState
 
     /**
      * Get the resolved state of the entry.
+     *
+     * @return mixed
      */
-    public function getState(): mixed
+    public function getState()
     {
         if (is_null($this->resolved)) {
             $this->resolveState();
@@ -76,8 +55,10 @@ trait HasState
 
     /**
      * Resolve the state of the entry.
+     *
+     * @return mixed
      */
-    protected function resolveState(): mixed
+    protected function resolveState()
     {
         $record = $this->getRecord();
 

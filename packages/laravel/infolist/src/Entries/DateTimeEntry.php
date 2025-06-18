@@ -10,8 +10,10 @@ class DateTimeEntry extends BaseEntry
 
     /**
      * Provide the instance with any necessary setup.
+     *
+     * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -24,7 +26,7 @@ class DateTimeEntry extends BaseEntry
      * @param  \Carbon\CarbonInterface|string|int|float|null  $value
      * @return string|null
      */
-    public function format(mixed $value): mixed
+    public function format($value)
     {
         return $this->formatDateTime($value);
     }

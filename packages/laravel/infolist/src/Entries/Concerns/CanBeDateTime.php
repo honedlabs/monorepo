@@ -18,50 +18,67 @@ trait CanBeDateTime
 
     /**
      * Whether the value should be formatted as a date.
+     *
+     * @var bool
      */
-    protected bool $isDate = false;
+    protected $isDate = false;
 
     /**
      * Whether the value should be formatted as a time.
+     *
+     * @var bool
      */
-    protected bool $isTime = false;
+    protected $isTime = false;
 
     /**
      * Whether the value should be formatted as a date time.
+     *
+     * @var bool
      */
-    protected bool $isDateTime = false;
+    protected $isDateTime = false;
 
     /**
      * The format to use for formatting dates.
+     *
+     * @var string
      */
-    protected string $dateFormat = 'Y-m-d';
+    protected $dateFormat = 'Y-m-d';
 
     /**
      * The format to use for formatting times.
+     *
+     * @var string
      */
-    protected string $timeFormat = 'H:i:s';
+    protected $timeFormat = 'H:i:s';
 
     /**
      * The format to use for formatting date times.
+     *
+     * @var string
      */
-    protected string $dateTimeFormat = 'Y-m-d H:i:s';
+    protected $dateTimeFormat = 'Y-m-d H:i:s';
 
     /**
      * Whether to use Carbon's diffForHumans to format the date.
+     *
+     * @var bool
      */
-    protected bool $isSince = false;
+    protected $isSince = false;
 
     /**
      * The timezone to use for formatting dates.
+     *
+     * @var string
      */
-    protected string $timezone = 'UTC';
+    protected $timezone = 'UTC';
 
     /**
      * Set whether the value should be formatted as a date.
      *
+     * @param  bool  $date
      * @return $this
      */
-    public function date(bool $date = true): static
+    public function date($date = true)
     {
         $this->isDate = $date;
 
@@ -72,8 +89,10 @@ trait CanBeDateTime
 
     /**
      * Get whether the value should be formatted as a date.
+     *
+     * @return bool
      */
-    public function isDate(): bool
+    public function isDate()
     {
         return $this->isDate;
     }
@@ -81,9 +100,10 @@ trait CanBeDateTime
     /**
      * Set whether the value should be formatted as a time.
      *
+     * @param  bool  $time
      * @return $this
      */
-    public function time(bool $time = true): static
+    public function time($time = true)
     {
         $this->isTime = $time;
 
@@ -94,8 +114,10 @@ trait CanBeDateTime
 
     /**
      * Get whether the value should be formatted as a time.
+     *
+     * @return bool
      */
-    public function isTime(): bool
+    public function isTime()
     {
         return $this->isTime;
     }
@@ -103,9 +125,10 @@ trait CanBeDateTime
     /**
      * Set whether the value should be formatted as a date time.
      *
+     * @param  bool  $dateTime
      * @return $this
      */
-    public function dateTime(bool $dateTime = true): static
+    public function dateTime($dateTime = true)
     {
         $this->isDateTime = $dateTime;
 
@@ -116,8 +139,10 @@ trait CanBeDateTime
 
     /**
      * Get whether the value should be formatted as a date time.
+     *
+     * @return bool
      */
-    public function isDateTime(): bool
+    public function isDateTime()
     {
         return $this->isDateTime;
     }
@@ -125,9 +150,10 @@ trait CanBeDateTime
     /**
      * Set the format to use for formatting dates.
      *
+     * @param  string  $format
      * @return $this
      */
-    public function dateFormat(string $format): static
+    public function dateFormat($format)
     {
         $this->dateFormat = $format;
 
@@ -136,8 +162,10 @@ trait CanBeDateTime
 
     /**
      * Get the format to use for formatting dates.
+     *
+     * @return string
      */
-    public function getDateFormat(): string
+    public function getDateFormat()
     {
         return $this->dateFormat;
     }
@@ -145,9 +173,10 @@ trait CanBeDateTime
     /**
      * Set the format to use for formatting times.
      *
+     * @param  string  $format
      * @return $this
      */
-    public function timeFormat(string $format): static
+    public function timeFormat($format)
     {
         $this->timeFormat = $format;
 
@@ -156,8 +185,10 @@ trait CanBeDateTime
 
     /**
      * Get the format to use for formatting times.
+     *
+     * @return string
      */
-    public function getTimeFormat(): string
+    public function getTimeFormat()
     {
         return $this->timeFormat;
     }
@@ -165,9 +196,10 @@ trait CanBeDateTime
     /**
      * Set the format to use for formatting date times.
      *
+     * @param  string  $format
      * @return $this
      */
-    public function dateTimeFormat(string $format): static
+    public function dateTimeFormat($format)
     {
         $this->dateTimeFormat = $format;
 
@@ -176,8 +208,10 @@ trait CanBeDateTime
 
     /**
      * Get the format to use for formatting date times.
+     *
+     * @return string
      */
-    public function getDateTimeFormat(): string
+    public function getDateTimeFormat()
     {
         return $this->dateTimeFormat;
     }
@@ -185,9 +219,10 @@ trait CanBeDateTime
     /**
      * Set whether to use Carbon's diffForHumans to format the date.
      *
+     * @param  bool  $since
      * @return $this
      */
-    public function since(bool $since = true): static
+    public function since($since = true)
     {
         $this->isSince = $since;
 
@@ -196,8 +231,10 @@ trait CanBeDateTime
 
     /**
      * Get whether to use Carbon's diffForHumans to format the date.
+     *
+     * @return bool
      */
-    public function isSince(): bool
+    public function isSince()
     {
         return $this->isSince;
     }
@@ -205,9 +242,10 @@ trait CanBeDateTime
     /**
      * Set the timezone to use for formatting dates.
      *
+     * @param  string  $timezone
      * @return $this
      */
-    public function timezone(string $timezone): static
+    public function timezone($timezone)
     {
         $this->timezone = $timezone;
 
@@ -216,8 +254,10 @@ trait CanBeDateTime
 
     /**
      * Get the timezone to use for formatting dates.
+     *
+     * @return string
      */
-    public function getTimezone(): string
+    public function getTimezone()
     {
         return $this->timezone;
     }
@@ -226,8 +266,9 @@ trait CanBeDateTime
      * Format the value as a date.
      *
      * @param  CarbonInterface|string|int|float|null  $value
+     * @return string|null
      */
-    protected function formatDate(mixed $value): ?string
+    protected function formatDate($value)
     {
         return $this->formatCarbon($value, $this->getDateFormat());
     }
@@ -236,8 +277,9 @@ trait CanBeDateTime
      * Format the value as a time.
      *
      * @param  CarbonInterface|string|int|float|null  $value
+     * @return string|null
      */
-    protected function formatTime(mixed $value): ?string
+    protected function formatTime($value)
     {
         return $this->formatCarbon($value, $this->getTimeFormat());
     }
@@ -246,8 +288,9 @@ trait CanBeDateTime
      * Format the value as a date time.
      *
      * @param  CarbonInterface|string|int|float|null  $value
+     * @return string|null
      */
-    protected function formatDateTime(mixed $value): ?string
+    protected function formatDateTime($value)
     {
         return $this->formatCarbon($value, $this->getDateTimeFormat());
     }
@@ -256,8 +299,10 @@ trait CanBeDateTime
      * Format the value as a date or time using Carbon and the given format.
      *
      * @param  CarbonInterface|string|int|float|null  $value
+     * @param  string  $format
+     * @return string|null
      */
-    protected function formatCarbon(mixed $value, string $format): ?string
+    protected function formatCarbon($value, $format)
     {
         if (is_null($value)) {
             return null;
@@ -280,8 +325,9 @@ trait CanBeDateTime
      * Attempt to parse the value as a Carbon instance.
      *
      * @param  string|int|float|null  $value
+     * @return CarbonInterface|null
      */
-    protected function newCarbon(mixed $value): ?CarbonInterface
+    protected function newCarbon($value)
     {
         try {
             return Carbon::parse($value);

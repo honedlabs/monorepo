@@ -10,20 +10,25 @@ trait CanBeBoolean
 
     /**
      * The text to display when the value is true.
+     *
+     * @var string|null
      */
-    protected ?string $trueText = null;
+    protected $trueText = null;
 
     /**
      * The text to display when the value is false.
+     *
+     * @var string|null
      */
-    protected ?string $falseText = null;
+    protected $falseText = null;
 
     /**
      * Set the text to display when the value is true.
      *
+     * @param  string  $text
      * @return $this
      */
-    public function trueText(string $text): static
+    public function trueText($text)
     {
         $this->trueText = $text;
 
@@ -32,8 +37,10 @@ trait CanBeBoolean
 
     /**
      * Get the text to display when the value is true.
+     *
+     * @return string|null
      */
-    public function getTrueText(): ?string
+    public function getTrueText()
     {
         return $this->trueText;
     }
@@ -41,9 +48,10 @@ trait CanBeBoolean
     /**
      * Set the text to display when the value is false.
      *
+     * @param  string  $text
      * @return $this
      */
-    public function falseText(string $text): static
+    public function falseText($text)
     {
         $this->falseText = $text;
 
@@ -52,16 +60,21 @@ trait CanBeBoolean
 
     /**
      * Get the text to display when the value is false.
+     *
+     * @return string|null
      */
-    public function getFalseText(): ?string
+    public function getFalseText()
     {
         return $this->falseText;
     }
 
     /**
      * Format the value as a boolean.
+     *
+     * @param  mixed  $value
+     * @return string|null
      */
-    protected function formatBoolean(mixed $value): ?string
+    protected function formatBoolean($value)
     {
         return ((bool) $value) ? $this->getTrueText() : $this->getFalseText();
     }

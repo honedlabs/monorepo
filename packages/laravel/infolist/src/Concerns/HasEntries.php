@@ -14,7 +14,7 @@ trait HasEntries
      *
      * @var array<int, BaseEntry>
      */
-    protected array $entries = [];
+    protected $entries = [];
 
     /**
      * Merge a set of entries into the list.
@@ -22,7 +22,7 @@ trait HasEntries
      * @param  BaseEntry|array<int, BaseEntry>  $entries
      * @return $this
      */
-    public function entries(array|BaseEntry $entries): self
+    public function entries($entries)
     {
         $entries = is_array($entries) ? $entries : [$entries];
 
@@ -34,9 +34,10 @@ trait HasEntries
     /**
      * Add an entry to the list.
      *
+     * @param  BaseEntry  $entry
      * @return $this
      */
-    public function entry(BaseEntry $entry): self
+    public function entry($entry)
     {
         $this->entries[] = $entry;
 
@@ -48,7 +49,7 @@ trait HasEntries
      *
      * @return array<int, BaseEntry>
      */
-    public function getEntries(): array
+    public function getEntries()
     {
         return array_values(
             array_filter(
@@ -63,7 +64,7 @@ trait HasEntries
      *
      * @return array<int, array<string, mixed>>
      */
-    public function entriesToArray(): array
+    public function entriesToArray()
     {
         return array_map(
             fn (BaseEntry $entry) => $entry->toArray(),

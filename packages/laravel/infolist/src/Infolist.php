@@ -40,7 +40,7 @@ class Infolist extends Primitive
      *
      * @var array<string, mixed>|Model
      */
-    protected array|Model $resource;
+    protected $resource;
 
     /**
      * Create a new infolist instance.
@@ -56,8 +56,9 @@ class Infolist extends Primitive
      * Create a new infolist instance.
      *
      * @param  array<string, mixed>|Model|null  $resource
+     * @return static
      */
-    public static function make(array|Model|null $resource = null): static
+    public static function make($resource = null)
     {
         return resolve(static::class)
             ->when($resource, fn ($infolist, $resource) => $infolist->for($resource));
@@ -66,9 +67,10 @@ class Infolist extends Primitive
     /**
      * Get a new infolist instance for the given model name.
      *
+     * @param  Model  $model
      * @return Infolist
      */
-    public static function infolistForModel(Model $model)
+    public static function infolistForModel($model)
     {
         $infolist = static::resolveInfolistName($model::class);
 
@@ -81,7 +83,7 @@ class Infolist extends Primitive
      * @param  class-string<Model>  $className
      * @return class-string<Infolist>
      */
-    public static function resolveInfolistName(string $className): string
+    public static function resolveInfolistName($className)
     {
         $resolver = static::$infolistResolver ?? function (string $className): string {
             $appNamespace = static::appNamespace();
@@ -99,8 +101,11 @@ class Infolist extends Primitive
 
     /**
      * Specify the default namespace that contains the application's infolists.
+     *
+     * @param  string  $namespace
+     * @return void
      */
-    public static function useNamespace(string $namespace): void
+    public static function useNamespace($namespace)
     {
         static::$namespace = $namespace;
     }
@@ -109,16 +114,19 @@ class Infolist extends Primitive
      * Specify the callback that should be invoked to guess the name of a infolist for a model.
      *
      * @param  Closure(class-string<Model>):class-string<Infolist>  $callback
+     * @return void
      */
-    public static function guessInfolistsUsing(Closure $callback): void
+    public static function guessInfolistsUsing($callback)
     {
         static::$infolistResolver = $callback;
     }
 
     /**
      * Flush the global configuration state.
+     *
+     * @return void
      */
-    public static function flushState(): void
+    public static function flushState()
     {
         static::$namespace = 'App\\Infolists\\';
         static::$infolistResolver = null;
@@ -130,7 +138,7 @@ class Infolist extends Primitive
      * @param  array<string, mixed>|Model  $resource
      * @return $this
      */
-    public function for(array|Model $resource): self
+    public function for($resource)
     {
         $this->resource = $resource;
 
@@ -142,7 +150,7 @@ class Infolist extends Primitive
      *
      * @return array<string, mixed>|Model
      */
-    public function getResource(): array|Model
+    public function getResource()
     {
         if (! $this->resource) {
             ResourceNotSetException::throw(static::class);

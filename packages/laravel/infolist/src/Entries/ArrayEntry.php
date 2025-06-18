@@ -10,8 +10,10 @@ class ArrayEntry extends BaseEntry
 
     /**
      * Provide the instance with any necessary setup.
+     *
+     * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -24,12 +26,8 @@ class ArrayEntry extends BaseEntry
      * @param  array<int, mixed>|\Illuminate\Support\Collection<int, mixed>|null  $value
      * @return array<int, mixed>|string|null
      */
-    public function format(mixed $value): mixed
+    public function format($value)
     {
-        if (is_null($value)) {
-            return null;
-        }
-
-        return $this->formatArray($value);
+        return is_null($value) ? null : $this->formatArray($value);
     }
 }

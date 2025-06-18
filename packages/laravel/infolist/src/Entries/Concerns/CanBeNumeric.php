@@ -13,35 +13,46 @@ trait CanBeNumeric
 
     /**
      * The number of decimal places to display.
+     *
+     * @var int|null
      */
-    protected ?int $decimals = null;
+    protected $decimals = null;
 
     /**
      * The locale to use for formatting the number.
+     *
+     * @var string|null
      */
-    protected ?string $locale = null;
+    protected $locale = null;
 
     /**
      * The currency to use for formatting the number.
+     *
+     * @var string|null
      */
-    protected ?string $currency = null;
+    protected $currency = null;
 
     /**
      * The divide by amount to use for formatting the number.
+     *
+     * @var int|null
      */
-    protected ?int $divideBy = null;
+    protected $divideBy = null;
 
     /**
      * Whether to format the number as a file size.
+     *
+     * @var bool
      */
-    protected bool $fileSize = false;
+    protected $fileSize = false;
 
     /**
      * Set the number of decimal places to display.
      *
+     * @param  int  $decimals
      * @return $this
      */
-    public function decimals(int $decimals): static
+    public function decimals($decimals)
     {
         $this->decimals = $decimals;
 
@@ -50,8 +61,10 @@ trait CanBeNumeric
 
     /**
      * Get the number of decimal places to display.
+     *
+     * @return int|null
      */
-    public function getDecimals(): ?int
+    public function getDecimals()
     {
         return $this->decimals;
     }
@@ -59,9 +72,10 @@ trait CanBeNumeric
     /**
      * Set the locale to use for formatting the number.
      *
+     * @param  string  $locale
      * @return $this
      */
-    public function locale(string $locale): static
+    public function locale($locale)
     {
         $this->locale = $locale;
 
@@ -70,8 +84,10 @@ trait CanBeNumeric
 
     /**
      * Get the locale to use for formatting the number.
+     *
+     * @return string
      */
-    public function getLocale(): string
+    public function getLocale()
     {
         return $this->locale ?? App::getLocale();
     }
@@ -79,19 +95,22 @@ trait CanBeNumeric
     /**
      * Set the currency to use for formatting the number.
      *
+     * @param  string  $currency
      * @return $this
      */
-    public function currency(string $currency): static
+    public function currency($currency)
     {
-        $this->currency = $currency;
+        $this->currency = mb_strtoupper($currency);
 
         return $this;
     }
 
     /**
      * Get the currency to use for formatting the number.
+     *
+     * @return string|null
      */
-    public function getCurrency(): ?string
+    public function getCurrency()
     {
         return $this->currency;
     }
@@ -99,9 +118,10 @@ trait CanBeNumeric
     /**
      * Set the divide by amount to use for formatting the number.
      *
+     * @param  int  $divideBy
      * @return $this
      */
-    public function divideBy(int $divideBy): static
+    public function divideBy($divideBy)
     {
         $this->divideBy = $divideBy;
 
@@ -110,8 +130,10 @@ trait CanBeNumeric
 
     /**
      * Get the divide by amount to use for formatting the number.
+     *
+     * @return int|null
      */
-    public function getDivideBy(): ?int
+    public function getDivideBy()
     {
         return $this->divideBy;
     }
@@ -119,9 +141,11 @@ trait CanBeNumeric
     /**
      * Set the currency and locale to use for formatting the number as money.
      *
+     * @param  string|null  $currency
+     * @param  string|null  $locale
      * @return $this
      */
-    public function money(?string $currency = null, ?string $locale = null): static
+    public function money($currency = null, $locale = null)
     {
         $this->currency = $currency;
         $this->locale = $locale;
@@ -132,9 +156,10 @@ trait CanBeNumeric
     /**
      * Set whether to format the number as a file size.
      *
+     * @param  bool  $fileSize
      * @return $this
      */
-    public function fileSize(bool $fileSize = true): static
+    public function fileSize($fileSize = true)
     {
         $this->fileSize = $fileSize;
 
@@ -143,16 +168,21 @@ trait CanBeNumeric
 
     /**
      * Get whether the number should be formatted as a file size.
+     *
+     * @return bool
      */
-    public function isFileSize(): bool
+    public function isFileSize()
     {
         return $this->fileSize;
     }
 
     /**
      * Format the value as a number.
+     *
+     * @param  mixed  $value
+     * @return string|null
      */
-    protected function formatNumeric(mixed $value): ?string
+    protected function formatNumeric($value)
     {
         if (! is_numeric($value)) {
             return null;
@@ -169,8 +199,11 @@ trait CanBeNumeric
 
     /**
      * Format the value by dividing it.
+     *
+     * @param  float  $value
+     * @return float
      */
-    protected function formatDivideBy(float $value): float
+    protected function formatDivideBy($value)
     {
         $divideBy = $this->getDivideBy();
 
@@ -179,16 +212,22 @@ trait CanBeNumeric
 
     /**
      * Format the value as a file size.
+     *
+     * @param  float  $value
+     * @return string
      */
-    protected function formatFileSize(float $value): string
+    protected function formatFileSize($value)
     {
         return Number::fileSize($value);
     }
 
     /**
      * Format the value as a currency.
+     *
+     * @param  float  $value
+     * @return string|null
      */
-    protected function formatCurrency(float $value): ?string
+    protected function formatCurrency($value)
     {
         /** @var string */
         $currency = $this->getCurrency();
@@ -202,8 +241,11 @@ trait CanBeNumeric
 
     /**
      * Format the value as a number.
+     *
+     * @param  float  $value
+     * @return string|null
      */
-    protected function formatNumber(float $value): ?string
+    protected function formatNumber($value)
     {
         $formatted = Number::format(
             $value, $this->getDecimals(), locale: $this->getLocale()

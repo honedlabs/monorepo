@@ -10,8 +10,10 @@ class BooleanEntry extends BaseEntry
 
     /**
      * Provide the instance with any necessary setup.
+     *
+     * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -21,9 +23,10 @@ class BooleanEntry extends BaseEntry
     /**
      * Format the value of the entry.
      *
+     * @param  mixed  $value
      * @return string|null
      */
-    public function format(mixed $value): mixed
+    public function format($value)
     {
         return $this->formatBoolean($value);
     }
