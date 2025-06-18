@@ -7,17 +7,18 @@ namespace Honed\Action\Actions;
 use Illuminate\Support\Arr;
 use Honed\Action\Contracts\Action;
 use Illuminate\Database\Eloquent\Model;
+use Honed\Action\Concerns\CanBeTransaction;
+use Honed\Action\Contracts\Relatable;
 use Illuminate\Foundation\Http\FormRequest;
-use Honed\Action\Contracts\HasRelationship;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  */
-abstract class AttachAction implements Action, HasRelationship
+abstract class AttachAction implements Action, Relatable
 {
-    use Concerns\CanBeTransaction;
+    use CanBeTransaction;
     use Concerns\InteractsWithModels;
 
     /**

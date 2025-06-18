@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Action;
+use Honed\Action\Concerns\CanBeTransaction;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
 class ForceDestroyAction implements Action
 {
-    use Concerns\CanBeTransaction;
+    use CanBeTransaction;
 
     /**
      * Force destroy the model.

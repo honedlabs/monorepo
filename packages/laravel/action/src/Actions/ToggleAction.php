@@ -4,24 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\Action;
 use Illuminate\Support\Arr;
+use Honed\Action\Contracts\Action;
+use Honed\Action\Concerns\CanBeTransaction;
+use Honed\Action\Contracts\Relatable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TToggle of \Illuminate\Database\Eloquent\Model
  */
-abstract class ToggleAction implements Action
+abstract class ToggleAction implements Action, Relatable
 {
-    use Concerns\CanBeTransaction;
+    use CanBeTransaction;
     use Concerns\InteractsWithModels;
-
-    /**
-     * Get the relation name, must be a belongs-to-many relationship.
-     *
-     * @return string
-     */
-    abstract protected function relationship();
 
     /**
      * Toggle the models in the relationship.

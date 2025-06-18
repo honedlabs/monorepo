@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-use Honed\Action\BulkAction;
+use Honed\Action\Operations\BulkOperation;
 
 beforeEach(function () {
-    $this->action = BulkAction::make('test');
+    $this->action = BulkOperation::make('test');
 });
 
 it('has bulk type', function () {
     expect($this->action)
-        ->getType()->toBe('bulk')
+        ->getType()->toBe(BulkOperation::BULK)
         ->isBulk()->toBeTrue();
 });
 

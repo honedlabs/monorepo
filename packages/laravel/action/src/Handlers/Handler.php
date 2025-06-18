@@ -2,25 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action;
+namespace Honed\Action\Handlers;
 
-use Honed\Action\Exceptions\ActionNotAllowedException;
-use Honed\Action\Exceptions\ActionNotFoundException;
-use Honed\Action\Exceptions\InvalidActionException;
-use Honed\Action\Http\Data\ActionData;
-use Honed\Action\Http\Data\BulkData;
-use Honed\Action\Http\Data\InlineData;
-use Honed\Core\Concerns\HasResource;
 use Honed\Core\Parameters;
-use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Support\Arr;
+use InvalidArgumentException;
+use Illuminate\Support\Facades\App;
+use Honed\Action\Http\Data\BulkData;
+use Honed\Core\Concerns\HasResource;
+use Honed\Action\Http\Data\ActionData;
+use Honed\Action\Http\Data\InlineData;
+use Honed\Action\Operations\Operation;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Redirect;
-use InvalidArgumentException;
+use Honed\Action\Exceptions\InvalidActionException;
+use Honed\Action\Exceptions\ActionNotFoundException;
+use Honed\Action\Exceptions\ActionNotAllowedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Honed\Action\Exceptions\OperationNotFoundException;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 
 /**
  * @template TClass of mixed
@@ -44,9 +46,9 @@ abstract class Handler
     /**
      * Get the actions to be used to resolve the action.
      *
-     * @return array<int,Action>
+     * @return array<int,Operation>
      */
-    abstract protected function getActions();
+    abstract protected function getOperations();
 
     /**
      * Get the query builder to be used to retrieve resources.
@@ -70,7 +72,7 @@ abstract class Handler
     /**
      * Handle the incoming action request using the actions from the source, and the resource provided.
      *
-     * @param  Http\Requests\InvokableRequest  $request
+     * @param  Honed\Action\Http\Requests\InvokableRequest  $request
      * @return Responsable|RedirectResponse
      */
     protected function resolve($request)
@@ -84,14 +86,14 @@ abstract class Handler
         }
 
         [$action, $query] = match ($type) {
-            Action::INLINE => $this->resolveInlineAction($data),
-            Action::BULK => $this->resolveBulkAction($data),
-            Action::PAGE => $this->resolvePageAction($data),
+            Operation::INLINE => $this->resolveInlineOperation($data),
+            Operation::BULK => $this->resolveBulkOperation($data),
+            Operation::PAGE => $this->resolvePageOperation($data),
             default => abort(400, 'Invalid action type.'),
         };
 
-        if ($this->invalidAction($action, $query)) {
-            ActionNotFoundException::throw($data->name);
+        if ($this->invalidOperation($action, $query)) {
+            OperationNotFoundException::throw($data->name);
         }
 
         $response = $this->instance->evaluate([$action, 'execute'], [$query]);
@@ -107,9 +109,9 @@ abstract class Handler
      * Resolve the inline action.
      *
      * @param  InlineData  $data
-     * @return array{Action|null, TModel|null}
+     * @return array{Operation|null, TModel|null}
      */
-    protected function resolveInlineAction($data)
+    protected function resolveInlineOperation($data)
     {
         $builder = $this->getBuilder();
 
@@ -119,8 +121,8 @@ abstract class Handler
             ->first();
 
         $action = Arr::first(
-            $this->getActions(),
-            static fn (Action $action) => $action->isInline()
+            $this->getOperations(),
+            static fn (Operation $action) => $action->isInline()
                 && $action->getName() === $data->name
         );
 
@@ -131,9 +133,9 @@ abstract class Handler
      * Resolve the bulk action.
      *
      * @param  BulkData  $data
-     * @return array{Action|null, TBuilder}
+     * @return array{Operation|null, TBuilder}
      */
-    protected function resolveBulkAction($data)
+    protected function resolveBulkOperation($data)
     {
         $builder = $this->getBuilder();
 
@@ -145,8 +147,8 @@ abstract class Handler
             : $builder->whereIn($key, $data->only);
 
         $action = Arr::first(
-            $this->getActions(),
-            static fn (Action $action) => $action->isBulk() 
+            $this->getOperations(),
+            static fn (Operation $action) => $action->isBulk() 
                 && $action->getName() === $data->name
         );
 
@@ -156,16 +158,16 @@ abstract class Handler
     /**
      * Resolve the page action.
      *
-     * @param  ActionData  $data
-     * @return array{Action|null, TBuilder}
+     * @param  OperationData  $data
+     * @return array{Operation|null, TBuilder}
      */
-    protected function resolvePageAction($data)
+    protected function resolvePageOperation($data)
     {
         $builder = $this->getBuilder();
 
         $action = Arr::first(
-            $this->getActions(),
-            static fn (Action $action) => $action->isPage()
+            $this->getOperations(),
+            static fn (Operation $action) => $action->isPage()
                 && $action->getName() === $data->name
         );
 
@@ -175,11 +177,11 @@ abstract class Handler
     /**
      * Determine if the action and query are not allowed.
      *
-     * @param  Action|null  $action
+     * @param  Operation|null  $action
      * @param  TModel|TBuilder|null  $query
      * @return bool
      */
-    protected function invalidAction($action, $query)
+    protected function invalidOperation($action, $query)
     {
         if (! $action || ! $query) {
             return true;
@@ -187,7 +189,10 @@ abstract class Handler
 
         $isBuilder = $query instanceof Builder;
 
-        return ! $action->isAllowed($this->named($query, $isBuilder), $this->typed($query, $isBuilder));
+        return ! $action->isAllowed(
+            $this->getNamedParameters($query, $isBuilder),
+            $this->getTypedParameters($query, $isBuilder)
+        );
     }
 
     /**
@@ -197,7 +202,7 @@ abstract class Handler
      * @param  bool  $builder
      * @return array
      */
-    protected function named($resource, $builder)
+    protected function getNamedParameters($resource, $builder)
     {
         $keys = $builder 
             ? ['builder', 'query', 'q'] 
@@ -216,7 +221,7 @@ abstract class Handler
      * @param  bool  $builder
      * @return array
      */
-    protected function typed($resource, $builder)
+    protected function getTypedParameters($resource, $builder)
     {
         $keys = $builder 
             ? [Builder::class, BuilderContract::class] 

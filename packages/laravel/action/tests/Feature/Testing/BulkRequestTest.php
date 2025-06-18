@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Action\Action;
+use Honed\Action\Operations\Operation;
 use Honed\Action\Support\Constants;
 use Honed\Action\Testing\BulkRequest;
 
@@ -37,7 +38,7 @@ it('has data', function () {
         ->scoped(fn ($data) => $data
             ->toBeArray()
             ->toHaveKeys(['type', 'only', 'except', 'all', 'id', 'name'])
-            ->{'type'}->toBe(Action::BULK)
+            ->{'type'}->toBe(Operation::BULK)
         )
         ->data(['type' => 'test'])->toBe($this->request)
         ->getData()

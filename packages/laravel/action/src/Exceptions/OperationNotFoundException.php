@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use function sprintf;
 
-class ActionNotFoundException extends NotFoundHttpException
+class OperationNotFoundException extends NotFoundHttpException
 {
     /**
      * Create a new action not found exception.
@@ -18,10 +18,7 @@ class ActionNotFoundException extends NotFoundHttpException
     public function __construct($name)
     {
         parent::__construct(
-            sprintf(
-                'No action named [%s] exists for the provided handler.',
-                $name
-            )
+            "No operation named [{$name}] exists for the provided handler.",
         );
     }
 

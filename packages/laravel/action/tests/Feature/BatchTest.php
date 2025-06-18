@@ -2,16 +2,21 @@
 
 declare(strict_types=1);
 
-use Honed\Action\ActionGroup;
-use Honed\Action\PageAction;
-use Honed\Action\Testing\RequestFactory;
-use Illuminate\Http\RedirectResponse;
+use Honed\Action\Batch;
 use Illuminate\Support\Str;
-use Workbench\App\ActionGroups\UserActions;
+use Honed\Action\PageAction;
 use Workbench\App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Honed\Action\Testing\RequestFactory;
+use Honed\Action\Operations\PageOperation;
+use Workbench\App\Batches\UserBatch;
 
 beforeEach(function () {
-    $this->group = ActionGroup::make(PageAction::make('create'));
+    $this->group = Batch::make(PageOperation::make('create'));
+});
+
+afterEach(function () {
+    Batch::flushState();
 });
 
 it('has model', function () {
@@ -44,7 +49,7 @@ it('handles requests with model', function () {
 
     expect(User::query()->count())->toBe(0);
 
-    expect(UserActions::make())
+    expect(UserBatch::make())
         ->handle($request)
         ->toBeInstanceOf(RedirectResponse::class);
 
@@ -56,46 +61,46 @@ it('resolves route binding', function () {
         ->resolveRouteBinding($this->group->getRouteKey())
         ->toBeNull();
 
-    $actions = UserActions::make();
+    $actions = UserBatch::make();
 
     expect($actions)
         ->resolveRouteBinding($actions->getRouteKey())
-        ->toBeInstanceOf(UserActions::class);
+        ->toBeInstanceOf(UserBatch::class);
 
     expect($actions)
-        ->resolveChildRouteBinding(UserActions::class, $actions->getRouteKey())
-        ->toBeInstanceOf(UserActions::class);
+        ->resolveChildRouteBinding(UserBatch::class, $actions->getRouteKey())
+        ->toBeInstanceOf(UserBatch::class);
 });
 
 it('resolves action group', function () {
-    UserActions::guessActionGroupNamesUsing(function ($class) {
+    UserBatch::guessBatchNamesUsing(function ($class) {
         return Str::of($class)
             ->afterLast('\\')
-            ->prepend('Workbench\\App\\ActionGroups\\')
+            ->prepend('Workbench\\App\\Batchs\\')
             ->append('Actions')
             ->value();
     });
 
-    expect(UserActions::resolveActionGroupName(User::class))
-        ->toBe(UserActions::class);
+    expect(UserBatch::resolveBatchName(User::class))
+        ->toBe(UserBatch::class);
 
-    expect(UserActions::actionGroupForModel(User::class))
-        ->toBeInstanceOf(UserActions::class);
+    expect(UserBatch::actionGroupForModel(User::class))
+        ->toBeInstanceOf(UserBatch::class);
 
-    UserActions::flushState();
+    UserBatch::flushState();
 });
 
 it('uses namespace', function () {
-    ActionGroup::useNamespace('');
+    Batch::useNamespace('');
 
-    expect(UserActions::resolveActionGroupName(User::class))
-        ->toBe(Str::of(UserActions::class)
+    expect(UserBatch::resolveBatchName(User::class))
+        ->toBe(Str::of(UserBatch::class)
             ->afterLast('\\')
             ->prepend('Models\\')
             ->value()
         );
 
-    UserActions::flushState();
+    UserBatch::flushState();
 });
 
 it('has array representation', function () {
@@ -106,12 +111,12 @@ it('has array representation', function () {
 });
 
 it('has array representation with server actions', function () {
-    expect(UserActions::make()->for(User::factory()->create())->toArray())
+    expect(UserBatch::make()->for(User::factory()->create())->toArray())
         ->toBeArray()
         ->toHaveCount(5)
         ->toHaveKeys(['id', 'endpoint', 'inline', 'bulk', 'page']);
 
-    expect(UserActions::make()->for(User::factory()->create())->executes(false)->toArray())
+    expect(UserBatch::make()->for(User::factory()->create())->executes(false)->toArray())
         ->toHaveCount(3)
         ->toHaveKeys(['inline', 'bulk', 'page']);
 });
@@ -119,7 +124,7 @@ it('has array representation with server actions', function () {
 it('has array representation with model', function () {
     $user = User::factory()->create();
 
-    expect(UserActions::make()->for($user)->toArray())
+    expect(UserBatch::make()->for($user)->toArray())
         ->toBeArray()
         ->toHaveCount(5)
         ->toHaveKeys(['inline', 'bulk', 'page', 'id', 'endpoint']);

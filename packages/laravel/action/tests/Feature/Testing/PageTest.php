@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Action\Action;
+use Honed\Action\Operations\Operation;
 use Honed\Action\Support\Constants;
 use Honed\Action\Testing\PageRequest;
 
@@ -16,7 +17,7 @@ it('has data', function () {
         ->scoped(fn ($data) => $data
             ->toBeArray()
             ->toHaveKeys(['type', 'id', 'name'])
-            ->{'type'}->toBe(Action::PAGE)
+            ->{'type'}->toBe(Operation::PAGE)
         )
         ->data(['type' => 'test'])->toBe($this->request)
         ->getData()

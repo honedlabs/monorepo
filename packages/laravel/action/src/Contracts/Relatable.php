@@ -11,5 +11,5 @@ interface Relatable
      *
      * @return string
      */
-    public function relationship(): string;
+    public function relationship();
 }

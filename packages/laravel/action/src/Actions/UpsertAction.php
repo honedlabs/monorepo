@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Action;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\ValidatedInput;
+use Honed\Action\Concerns\CanBeTransaction;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
 abstract class UpsertAction implements Action
 {
-    use Concerns\CanBeTransaction;
+    use CanBeTransaction;
 
     /**
      * Get the model to perform the upsert on.

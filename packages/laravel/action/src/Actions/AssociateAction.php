@@ -6,22 +6,17 @@ namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Action;
 use Illuminate\Database\Eloquent\Model;
+use Honed\Action\Concerns\CanBeTransaction;
+use Honed\Action\Contracts\Relatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
  */
-abstract class AssociateAction implements Action
+abstract class AssociateAction implements Action, Relatable
 {
-    use Concerns\CanBeTransaction;
-
-    /**
-     * Get the relation name, must be a belongs to relationship.
-     *
-     * @return string
-     */
-    abstract protected function relationship(): string;
+    use CanBeTransaction;
 
     /**
      * Associate a model to the parent model.
@@ -30,7 +25,7 @@ abstract class AssociateAction implements Action
      * @param  int|string|TParent  $parent
      * @return void
      */
-    public function handle(Model $model, int|string|Model $parent): Model
+    public function handle($model, $parent)
     {
         $this->transact(
             fn () => $this->associate($model, $parent)
@@ -45,7 +40,7 @@ abstract class AssociateAction implements Action
      * @param  TModel  $model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TParent, TModel>
      */
-    protected function getRelation(Model $model): BelongsTo
+    protected function getRelation($model)
     {
         /** @var \Illuminate\Database\Eloquent\Relations\BelongsTo<TParent, TModel> */
         return $model->{$this->relationship()}();
@@ -58,7 +53,7 @@ abstract class AssociateAction implements Action
      * @param  int|string|TParent  $parent
      * @return void
      */
-    protected function associate(Model $model, int|string|Model $parent): void
+    protected function associate($model, $parent)
     {
         $this->getRelation($model)->associate($parent);
 
@@ -72,7 +67,7 @@ abstract class AssociateAction implements Action
      * @param  int|string|TParent  $parent
      * @return void
      */
-    protected function after(Model $model, int|string|Model $parent): void
+    protected function after($model, $parent)
     {
         //
     }

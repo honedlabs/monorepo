@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Action\InlineAction;
+use Honed\Action\Operations\InlineOperation;
 use Honed\Core\Parameters;
 use Illuminate\Http\RedirectResponse;
 use Workbench\App\Actions\DestroyUser;
@@ -10,7 +10,7 @@ use Workbench\App\Actions\Inline\DestroyAction;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = InlineAction::make('test');
+    $this->test = InlineOperation::make('test');
     $this->user = User::factory()->create();
 });
 

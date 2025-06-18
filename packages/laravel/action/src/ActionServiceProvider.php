@@ -8,7 +8,9 @@ use Honed\Action\Commands\BatchMakeCommand;
 use Honed\Action\Commands\ActionMakeCommand;
 use Honed\Action\Commands\ActionsMakeCommand;
 use Honed\Action\Commands\OperationMakeCommand;
+use Honed\Action\Commands\ProcessMakeCommand;
 use Honed\Action\Http\Controllers\ActionController;
+use Honed\Action\Commands\AssemblerMakeCommand;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,8 +38,10 @@ class ActionServiceProvider extends ServiceProvider
             $this->commands([
                 ActionMakeCommand::class,
                 ActionsMakeCommand::class,
+                AssemblerMakeCommand::class,
                 BatchMakeCommand::class,
                 OperationMakeCommand::class,
+                ProcessMakeCommand::class,
             ]);
         }
     }
@@ -49,11 +53,11 @@ class ActionServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/action.php' => config_path('action.php'),
-        ], 'action-config');
+        ], 'config');
 
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),
-        ], 'action-stubs');
+        ], 'stubs');
     }
 
     /**

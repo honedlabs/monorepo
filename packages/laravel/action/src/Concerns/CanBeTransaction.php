@@ -14,7 +14,7 @@ trait CanBeTransaction
      *
      * @var bool
      */
-    protected $transaction = true;
+    protected $transaction = false;
 
     /**
      * Set whether to wrap the update in a database transaction.

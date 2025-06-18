@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Honed\Action\Action;
 use Honed\Action\Confirm;
-use Honed\Action\InlineAction;
+use Honed\Action\Operations\InlineOperation;
 use Honed\Core\Parameters;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +13,7 @@ use Workbench\App\Models\User;
 
 beforeEach(function () {
     // Using inline action for testing base class
-    $this->action = InlineAction::make('test');
+    $this->action = InlineOperation::make('test');
 });
 
 it('has implicit route bindings', function () {
@@ -25,9 +25,10 @@ it('has implicit route bindings', function () {
 
     expect($this->action->toArray($named, $typed))
         ->toHaveKey('route')
-        ->{'route'}->scoped(fn ($route) => $route
-        ->toHaveKey('url')
-        ->{'url'}->toBe(route('users.show', $user))
+        ->{'route'}
+        ->scoped(fn ($route) => $route
+            ->toHaveKey('url')
+            ->{'url'}->toBe(route('users.show', $user))
         );
 });
 

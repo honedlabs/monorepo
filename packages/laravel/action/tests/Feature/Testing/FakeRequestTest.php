@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Honed\Action\Action;
 use Honed\Action\Http\Requests\InvokableRequest;
+use Honed\Action\Operations\Operation;
 use Honed\Action\Support\Constants;
 use Honed\Action\Testing\FakeRequest;
 use Illuminate\Http\Request;
@@ -69,6 +70,6 @@ it('creates', function () {
 it('validates', function () {
     expect($this->request)
         ->fill()->toBe($this->request)
-        ->data(['type' => Action::PAGE])->toBe($this->request)
+        ->data(['type' => Operation::PAGE])->toBe($this->request)
         ->validate()->toBeInstanceOf(InvokableRequest::class);
 });

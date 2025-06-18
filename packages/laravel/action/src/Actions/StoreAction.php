@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Action;
+use Honed\Action\Concerns\CanBeTransaction;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -12,7 +13,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 abstract class StoreAction implements Action
 {
-    use Concerns\CanBeTransaction;
+    use CanBeTransaction;
 
     /**
      * Get the model to store the input data in.

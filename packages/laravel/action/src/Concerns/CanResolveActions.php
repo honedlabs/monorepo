@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\App;
 
 trait CanResolveActions
 {
-    use HasActions;
+    use HasOperations;
     use HasEndpoint;
     use CanBeExecutable;
     use HasEncoder;

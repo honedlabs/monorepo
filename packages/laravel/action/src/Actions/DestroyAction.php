@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Action;
+use Honed\Action\Concerns\CanBeTransaction;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -12,7 +13,7 @@ use Honed\Action\Contracts\Action;
  */
 class DestroyAction implements Action
 {
-    use Concerns\CanBeTransaction;
+    use CanBeTransaction;
 
     /**
      * Destroy the model(s).

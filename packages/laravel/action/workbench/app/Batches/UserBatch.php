@@ -2,52 +2,52 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\ActionGroups;
+namespace Workbench\App\Batches;
 
-use Honed\Action\ActionGroup;
-use Honed\Action\BulkAction;
-use Honed\Action\InlineAction;
-use Honed\Action\PageAction;
+use Honed\Action\Batch;
+use Honed\Action\Operations\BulkOperation;
+use Honed\Action\Operations\InlineOperation;
+use Honed\Action\Operations\PageOperation;
 use Workbench\App\Models\User;
 
 /**
  * @template TModel of \Workbench\App\Models\User = \Workbench\App\Models\User
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @extends \Honed\Action\ActionGroup<TModel, TBuilder>
+ * @extends \Honed\Action\Batch<TModel, TBuilder>
  */
-class UserActions extends ActionGroup
+class UserBatch extends Batch
 {
-    protected function definition(ActionGroup $actions): ActionGroup
+    protected function definition(Batch $actions): Batch
     {
         return $actions
             ->actions([
-                InlineAction::make('show')
+                InlineOperation::make('show')
                     ->route(fn ($user) => route('users.show', $user)),
 
-                InlineAction::make('update.name')
+                InlineOperation::make('update.name')
                     ->action(fn ($user) => $user->update(['name' => 'test'])),
 
-                InlineAction::make('update.description')
+                InlineOperation::make('update.description')
                     ->action(fn ($user) => $user->update(['name' => 'description']))
                     ->allow(false),
 
-                BulkAction::make('update.name')
+                BulkOperation::make('update.name')
                     ->action(fn ($user) => $user->update(['name' => 'test']))
                     ->allow(false),
 
-                BulkAction::make('update.description')
+                BulkOperation::make('update.description')
                     ->action(fn ($user) => $user->update(['name' => 'description'])),
 
-                PageAction::make('create')
+                PageOperation::make('create')
                     ->route('users.create'),
 
-                PageAction::make('create.name')
+                PageOperation::make('create.name')
                     ->action(fn () => User::factory()->create([
                         'name' => 'name',
                     ])),
 
-                PageAction::make('create.description')
+                PageOperation::make('create.description')
                     ->action(fn () => User::factory()->create([
                         'name' => 'description',
                     ]))

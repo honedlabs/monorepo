@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-use Honed\Action\InlineAction;
+use Honed\Action\Operations\InlineOperation;
 
 beforeEach(function () {
-    $this->test = InlineAction::make('test');
+    $this->test = InlineOperation::make('test');
 });
 
 it('has inline type', function () {
     expect($this->test)
-        ->getType()->toBe('inline')
+        ->getType()->toBe(InlineOperation::INLINE)
         ->isInline()->toBeTrue();
 });
 

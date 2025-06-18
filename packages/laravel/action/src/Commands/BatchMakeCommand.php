@@ -26,14 +26,14 @@ class BatchMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $description = 'Create a new action group class.';
+    protected $description = 'Create a new batch class.';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Action Group';
+    protected $type = 'Batch';
 
     /**
      * Get the stub file for the generator.

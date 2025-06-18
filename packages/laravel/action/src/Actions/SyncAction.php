@@ -2,26 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Presets;
+namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\Action;
 use Illuminate\Support\Arr;
+use Honed\Action\Contracts\Action;
+use Honed\Action\Concerns\CanBeTransaction;
+use Honed\Action\Contracts\Relatable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TSync of \Illuminate\Database\Eloquent\Model
  */
-abstract class SyncAction implements Action
+abstract class SyncAction implements Action, Relatable
 {
-    use Concerns\CanBeTransaction;
+    use CanBeTransaction;
     use Concerns\InteractsWithModels;
-
-    /**
-     * Get the relation name, must be a belongs-to-many relationship.
-     *
-     * @return string
-     */
-    abstract protected function relationship();
 
     /**
      * Sync models to the relationship.

@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Action;
+use Honed\Action\Concerns\CanBeTransaction;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
 class RestoreAction implements Action
 {
-    use Concerns\CanBeTransaction;
+    use CanBeTransaction;
 
     /**
      * Restore the model(s).

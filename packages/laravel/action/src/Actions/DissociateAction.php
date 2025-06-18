@@ -6,21 +6,16 @@ namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Action;
 use Illuminate\Database\Eloquent\Model;
+use Honed\Action\Concerns\CanBeTransaction;
+use Honed\Action\Contracts\Relatable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
  */
-abstract class DissociateAction implements Action
+abstract class DissociateAction implements Action, Relatable
 {
-    use Concerns\CanBeTransaction;
-
-    /**
-     * Get the relation name, must be a belongs-to-many relationship.
-     *
-     * @return string
-     */
-    abstract protected function relationship();
+    use CanBeTransaction;
 
     /**
      * Dissociate a model from the parent model.

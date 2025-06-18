@@ -3,12 +3,13 @@
 declare(strict_types=1);
 
 use Honed\Action\BulkAction;
+use Honed\Action\Operations\BulkOperation;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->action = BulkAction::make('test');
+    $this->action = BulkOperation::make('test');
 
     $this->user = User::factory()->create();
 });

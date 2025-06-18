@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Action\Http\Data;
 
-class ActionData
+class PageData
 {
     public function __construct(
         public readonly string $name
