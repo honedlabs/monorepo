@@ -53,13 +53,11 @@ trait HasLabel
     /**
      * Get the label.
      *
-     * @param  array<string,mixed>  $parameters
-     * @param  array<class-string,mixed>  $typed
      * @return string|null
      */
-    public function getLabel($parameters = [], $typed = [])
+    public function getLabel()
     {
-        return $this->evaluate($this->label, $parameters, $typed);
+        return $this->evaluate($this->label);
     }
 
     /**

@@ -43,6 +43,6 @@ trait HasName
      */
     public function hasName()
     {
-        return filled($this->getName());
+        return isset($this->name);
     }
 }

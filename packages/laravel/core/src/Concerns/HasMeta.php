@@ -43,6 +43,6 @@ trait HasMeta
      */
     public function hasMeta()
     {
-        return filled($this->getMeta());
+        return filled($this->meta);
     }
 }

@@ -24,12 +24,6 @@ it('sets', function () {
         ->hasLabel()->toBeTrue();
 });
 
-it('evaluates', function () {
-    expect($this->test)
-        ->label(fn (User $user) => $user->email)->toBe($this->test)
-        ->getLabel(['user' => $this->user])->toBe($this->user->email);
-});
-
 it('makes', function () {
     expect($this->test)
         ->makeLabel(null)->toBeNull()

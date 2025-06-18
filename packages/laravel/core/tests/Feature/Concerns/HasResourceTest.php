@@ -20,42 +20,21 @@ beforeEach(function () {
 
 it('sets', function () {
     expect($this->test)
-        ->withResource(User::query())->toBe($this->test)
-        ->getResource()->toBeInstanceOf(Builder::class)
-        ->hasResource()->toBeTrue();
-});
-
-it('defines', function () {
-    $test = new class()
-    {
-        use HasResource;
-
-        public function resource()
-        {
-            return User::query();
-        }
-    };
-
-    expect($test)
-        ->hasResource()->toBeTrue()
-        ->getResource()->toBeInstanceOf(Builder::class);
+        ->resource(User::query())->toBe($this->test)
+        ->getBuilder()->toBeInstanceOf(Builder::class)
+        ->getModel()->toBeInstanceOf(User::class)
+        ->for(User::class)->toBe($this->test)
+        ->getBuilder()->toBeInstanceOf(Builder::class)
+        ->getModel()->toBeInstanceOf(User::class)
+        ->for(User::factory()->create())->toBe($this->test)
+        ->getBuilder()->toBeInstanceOf(Builder::class)
+        ->getModel()->toBeInstanceOf(User::class);
 });
 
 it('requires builder', function () {
-    $this->test->getResource();
+    $this->test->getBuilder();
 })->throws(ResourceNotSetException::class);
 
-it('converts to builder', function () {
-    expect($this->test->throughBuilder(User::query()))
-        ->toBeInstanceOf(Builder::class);
-
-    expect($this->test->throughBuilder(User::class))
-        ->toBeInstanceOf(Builder::class);
-
-    expect($this->test->throughBuilder(User::factory()->create()))
-        ->toBeInstanceOf(Builder::class);
-});
-
-it('cannot create without a valid builder', function () {
-    $this->test->throughBuilder(Status::cases());
+it('requires a valid resource', function () {
+    $this->test->resource(Status::cases());
 })->throws(InvalidResourceException::class);

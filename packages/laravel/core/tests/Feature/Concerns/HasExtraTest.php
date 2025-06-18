@@ -23,9 +23,3 @@ it('sets', function () {
         ->getExtra()->toEqual(['key' => 'value'])
         ->hasExtra()->toBeTrue();
 });
-
-it('evaluates', function () {
-    expect($this->test)
-        ->extra(fn (User $user) => ['id' => $user->id])->toBe($this->test)
-        ->getExtra(['user' => $this->user])->toEqual(['id' => $this->user->id]);
-});

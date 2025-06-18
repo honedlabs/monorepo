@@ -8,9 +8,7 @@ use Honed\Core\Exceptions\InvalidResourceException;
 use Honed\Core\Exceptions\ResourceNotSetException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use InvalidArgumentException;
 
-use function class_exists;
 use function is_string;
 
 /**
@@ -22,38 +20,19 @@ trait HasResource
     /**
      * The builder instance.
      *
-     * @var TBuilder|mixed|null
+     * @var TBuilder|null
      */
     protected $resource;
 
     /**
-     * Create a new builder instance from a resource.
-     *
-     * @param  TBuilder|TModel|class-string<TModel>  $resource
-     * @return TBuilder|null
-     *
-     * @throws InvalidResourceException
-     */
-    public static function throughBuilder($resource)
-    {
-        return match (true) {
-            ! $resource => null,
-            $resource instanceof Builder => $resource,
-            $resource instanceof Model => $resource::query(),
-            is_string($resource) && class_exists($resource) => $resource::query(),
-            default => InvalidResourceException::throw(static::class),
-        };
-    }
-
-    /**
-     * Set the builder resource.
+     * Set the resource to be used.
      *
      * @param  TBuilder|TModel|class-string<TModel>  $resource
      * @return $this
      *
-     * @throws InvalidArgumentException
+     * @throws InvalidResourceException
      */
-    public function withResource($resource)
+    public function resource($resource)
     {
         $this->resource = $this->throughBuilder($resource);
 
@@ -61,41 +40,59 @@ trait HasResource
     }
 
     /**
-     * Define the builder resource.
+     * Set the resource to be used.
      *
-     * @return TBuilder|TModel|class-string<TModel>|null
+     * @param  TBuilder|TModel|class-string<TModel>  $resource
+     * @return $this
      */
-    public function resource()
+    public function for($resource)
     {
-        return null;
+        return $this->resource($resource);
     }
 
     /**
-     * Get the builder instance.
+     * Get a builder instance of the resource.
      *
      * @return TBuilder
      *
-     * @throws InvalidResourceException
      * @throws ResourceNotSetException
      */
-    public function getResource()
+    public function getBuilder()
     {
-        $resource = $this->resource ??= $this->throughBuilder($this->resource());
-
-        if (! $resource) {
-            ResourceNotSetException::throw(static::class);
+        if (! $this->resource) {
+            throw ResourceNotSetException::throw(static::class);
         }
 
-        return $resource;
+        return $this->resource;
     }
 
     /**
-     * Determine if the builder instance has been set.
+     * Get a model instance.
      *
-     * @return bool
+     * @return TModel
+     *
+     * @throws ResourceNotSetException
      */
-    public function hasResource()
+    public function getModel()
     {
-        return filled($this->getResource());
+        return $this->getBuilder()->getModel();
+    }
+
+    /**
+     * Create a new builder instance from a resource.
+     *
+     * @param  TBuilder|TModel|class-string<TModel>|null  $resource
+     * @return TBuilder|null
+     *
+     * @throws InvalidResourceException
+     */
+    protected function throughBuilder($resource)
+    {
+        return match (true) {
+            $resource instanceof Builder => $resource,
+            $resource instanceof Model => $resource::query(),
+            is_string($resource) => $resource::query(),
+            default => InvalidResourceException::throw(static::class),
+        };
     }
 }

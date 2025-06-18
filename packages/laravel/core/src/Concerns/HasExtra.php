@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Closure;
-use Honed\Core\Contracts\WithExtra;
-
 trait HasExtra
 {
     /**
@@ -30,33 +27,13 @@ trait HasExtra
     }
 
     /**
-     * Get the extra callback.
-     *
-     * @return array<string,mixed>|(\Closure(...mixed):array<string,mixed>)|null
-     */
-    public function getExtraCallback()
-    {
-        if (isset($this->extra)) {
-            return $this->extra;
-        }
-
-        if ($this instanceof WithExtra) {
-            return $this->extra = Closure::fromCallable([$this, 'extraUsing']);
-        }
-
-        return null;
-    }
-
-    /**
      * Get the extra data.
      *
-     * @param  array<string,mixed>  $parameters
-     * @param  array<class-string,mixed>  $typed
      * @return array<string,mixed>
      */
-    public function getExtra($parameters = [], $typed = [])
+    public function getExtra()
     {
-        return $this->evaluate($this->getExtraCallback(), $parameters, $typed);
+        return $this->evaluate($this->extra);
     }
 
     /**
@@ -66,6 +43,6 @@ trait HasExtra
      */
     public function hasExtra()
     {
-        return filled($this->getExtraCallback());
+        return isset($this->extra);
     }
 }

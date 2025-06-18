@@ -43,6 +43,6 @@ trait HasAlias
      */
     public function hasAlias()
     {
-        return filled($this->getAlias());
+        return isset($this->alias);
     }
 }

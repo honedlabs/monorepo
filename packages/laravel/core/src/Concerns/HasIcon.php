@@ -31,13 +31,11 @@ trait HasIcon
     /**
      * Get the icon.
      *
-     * @param  array<string,mixed>  $parameters
-     * @param  array<class-string,mixed>  $typed
      * @return string|null
      */
-    public function getIcon($parameters = [], $typed = [])
+    public function getIcon()
     {
-        return $this->evaluate($this->icon, $parameters, $typed);
+        return $this->evaluate($this->icon);
     }
 
     /**
@@ -47,6 +45,6 @@ trait HasIcon
      */
     public function hasIcon()
     {
-        return filled($this->icon);
+        return isset($this->icon);
     }
 }

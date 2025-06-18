@@ -49,7 +49,7 @@ trait HasScope
      */
     public function hasScope()
     {
-        return filled($this->getScope());
+        return isset($this->scope);
     }
 
     /**
