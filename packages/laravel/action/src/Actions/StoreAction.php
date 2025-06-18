@@ -12,10 +12,8 @@ use Illuminate\Support\ValidatedInput;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class StoreAction implements Action
+abstract class StoreAction extends DatabaseAction
 {
-    use CanBeTransaction;
-
     /**
      * Get the model to store the input data in.
      *

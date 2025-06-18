@@ -9,7 +9,7 @@ use Workbench\App\Models\Product;
 beforeEach(function () {
     $this->builder = Product::query();
     $this->handler = Handler::make($this->builder);
-})->skip();
+})->todo();
 
 it('sets actions', function () {
     expect($this->handler)

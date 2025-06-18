@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Closure;
+use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Primitive;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @extends \Honed\Core\Primitive<string, mixed>
  */
 class Confirm extends Primitive
 {
+    use HasRecord;
+
     public const CONSTRUCTIVE = 'constructive';
 
     public const DESTRUCTIVE = 'destructive';
@@ -219,14 +223,48 @@ class Confirm extends Primitive
     /**
      * {@inheritdoc}
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         return [
-            'title' => $this->getTitle($named, $typed),
-            'description' => $this->getDescription($named, $typed),
+            'title' => $this->getTitle(),
+            'description' => $this->getDescription(),
             'dismiss' => $this->getDismiss(),
             'submit' => $this->getSubmit(),
             'intent' => $this->getIntent(),
         ];
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by name.
+     * 
+     * @param  string  $parameterName
+     * @return array<int, mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    {
+        return match ($parameterName) {
+            'record', 'row' => [$this->getRecord()],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
+        };
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by type.
+     * 
+     * @param  string  $parameterType
+     * @return array<int, mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    {
+        $record = $this->getRecord();
+
+        if (! $record instanceof Model) {
+            return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
+        }
+
+        return match ($parameterType) {
+            Model::class, $record::class => [$record],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
+        };
     }
 }

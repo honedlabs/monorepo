@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Honed\Action\Operations\Concerns\HasAction;
 use Honed\Action\Contracts\Action;
-use Workbench\App\Actions\Inline\DestroyAction;
+use Workbench\App\Actions\User\DestroyUser;
 
 beforeEach(function () {
     $this->test = new class()
@@ -36,7 +36,7 @@ it('has handler', function () {
         ->getHandler()->toBeNull()
         ->action(fn () => 'test')->toBe($this->test)
         ->getHandler()->toBeInstanceOf(Closure::class)
-        ->action(DestroyAction::class)->toBe($this->test)
+        ->action(DestroyUser::class)->toBe($this->test)
         ->getHandler()->toBeInstanceOf(Closure::class);
 });
 

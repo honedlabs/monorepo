@@ -14,7 +14,7 @@ beforeEach(function () {
         'name' => 'Name',
         'description' => 'Description',
     ];
-})->only();
+});
 
 it('handles', function () {
     expect(ProductProcess::make()->handle($this->data))

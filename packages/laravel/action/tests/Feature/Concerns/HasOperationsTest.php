@@ -22,56 +22,50 @@ beforeEach(function () {
     };
 });
 
-it('adds actions', function () {
+it('adds operations', function () {
     expect($this->test)
-        ->actions([PageOperation::make('view')])->toBe($this->test)
-        ->actions([InlineOperation::make('edit')])->toBe($this->test)
-        ->hasActions()->toBeTrue()
-        ->getActions()->toHaveCount(2);
+        ->operations([PageOperation::make('view')])->toBe($this->test)
+        ->operations([InlineOperation::make('edit')])->toBe($this->test)
+        ->hasOperations()->toBeTrue()
+        ->getOperations()->toHaveCount(2);
 });
 
 it('adds action groups', function () {
     expect($this->test)
-        ->actions(Batch::make(PageOperation::make('view')))->toBe($this->test)
-        ->hasActions()->toBeTrue()
-        ->getActions()->toHaveCount(1);
+        ->operations(Batch::make(PageOperation::make('view')))->toBe($this->test)
+        ->hasOperations()->toBeTrue()
+        ->getOperations()->toHaveCount(1);
 });
 
-it('provides actions', function () {
+it('has inline operations', function () {
     expect($this->test)
-        ->showsActions()->toBeTrue()
-        ->hidesActions()->toBeFalse();
-});
-
-it('has inline actions', function () {
-    expect($this->test)
-        ->actions([PageOperation::make('create')])
+        ->operations([PageOperation::make('create')])
         ->getInlineOperations()->toHaveCount(0)
-        ->actions([InlineOperation::make('create')])
+        ->operations([InlineOperation::make('create')])
         ->getInlineOperations()->toHaveCount(1);
 });
 
-it('has bulk actions', function () {
+it('has bulk operations', function () {
     expect($this->test)
-        ->actions([PageOperation::make('create')])
+        ->operations([PageOperation::make('create')])
         ->getBulkOperations()->toHaveCount(0)
-        ->actions([BulkOperation::make('create')])
+        ->operations([BulkOperation::make('create')])
         ->getBulkOperations()->toHaveCount(1);
 });
 
-it('has page actions', function () {
+it('has page operations', function () {
     expect($this->test)
-        ->actions([InlineOperation::make('create')])
+        ->operations([InlineOperation::make('create')])
         ->getPageOperations()->toHaveCount(0)
-        ->actions([PageOperation::make('create')])
+        ->operations([PageOperation::make('create')])
         ->getPageOperations()->toHaveCount(1);
 });
 
-it('has inline actions array representation', function () {
+it('has inline operations array representation', function () {
     $user = User::factory()->create();
 
     expect($this->test)
-        ->actions([
+        ->operations([
             InlineOperation::make('create')
                 ->label(fn ($user) => $user->name)
                 ->allow(fn ($user) => $user->id % 2 === 1),
@@ -79,17 +73,17 @@ it('has inline actions array representation', function () {
                 ->label(fn ($user) => $user->name)
                 ->allow(fn ($user) => $user->id % 2 === 0),
         ])
-        ->inlineActionsToArray($user)->toHaveCount(1);
+        ->inlineOperationsToArray($user)->toHaveCount(1);
 });
 
-it('has bulk actions array representation', function () {
+it('has bulk operations array representation', function () {
     expect($this->test)
-        ->actions([BulkOperation::make('create')])
-        ->bulkActionsToArray()->toHaveCount(1);
+        ->operations([BulkOperation::make('create')])
+        ->bulkOperationsToArray()->toHaveCount(1);
 });
 
-it('has page actions array representation', function () {
+it('has page operations array representation', function () {
     expect($this->test)
-        ->actions([PageOperation::make('create')])
-        ->pageActionsToArray()->toHaveCount(1);
+        ->operations([PageOperation::make('create')])
+        ->pageOperationsToArray()->toHaveCount(1);
 });

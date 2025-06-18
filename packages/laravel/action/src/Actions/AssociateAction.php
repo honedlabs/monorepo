@@ -14,10 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
  */
-abstract class AssociateAction implements Action, Relatable
+abstract class AssociateAction extends DatabaseAction implements Relatable
 {
-    use CanBeTransaction;
-
     /**
      * Associate a model to the parent model.
      *

@@ -14,9 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TDetach of \Illuminate\Database\Eloquent\Model
  */
-abstract class DetachAction implements Action, Relatable
+abstract class DetachAction extends DatabaseAction implements Relatable
 {
-    use CanBeTransaction;
     use Concerns\InteractsWithModels;
 
     /**

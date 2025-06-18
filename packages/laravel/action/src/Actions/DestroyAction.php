@@ -11,10 +11,8 @@ use Honed\Action\Contracts\Action;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TArg of 'model' | 'models' | 'query' | 'relationship' = 'model'
  */
-class DestroyAction implements Action
+class DestroyAction extends DatabaseAction
 {
-    use CanBeTransaction;
-
     /**
      * Destroy the model(s).
      *

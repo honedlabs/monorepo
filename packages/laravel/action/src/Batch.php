@@ -80,7 +80,7 @@ class Batch extends Primitive implements HandlesOperations
                 : Str::after($className, $appNamespace);
 
             /** @var class-string<Batch> */
-            return static::$namespace.$className.'Actions';
+            return static::$namespace.$className.'Batch';
         };
 
         return $resolver($className);

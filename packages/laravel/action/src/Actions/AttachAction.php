@@ -16,9 +16,8 @@ use Illuminate\Support\Arr;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  */
-abstract class AttachAction implements Action, Relatable
+abstract class AttachAction extends DatabaseAction implements Relatable
 {
-    use CanBeTransaction;
     use Concerns\InteractsWithModels;
 
     /**

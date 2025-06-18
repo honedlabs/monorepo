@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Concerns\CanBeTransaction;
 use Honed\Action\Contracts\Action;
+use Illuminate\Support\ValidatedInput;
+use Honed\Action\Concerns\CanBeTransaction;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-class UpdateAction implements Action
+class UpdateAction extends DatabaseAction
 {
-    use CanBeTransaction;
-
     /**
      * Update the provided model using the input.
      *
      * @param  TModel  $model
-     * @param  \Illuminate\Support\ValidatedInput|FormRequest  $input
+     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput|FormRequest  $input
      * @return TModel $model
      */
     public function handle($model, $input)
@@ -43,11 +42,11 @@ class UpdateAction implements Action
      */
     protected function prepare($model, $input)
     {
-        return $input->all();
+        return $input instanceof ValidatedInput ? $input->all() : $input;
     }
 
     /**
-     * Store the record in the database.
+     * Update the record in the database.
      *
      * @param  TModel  $model
      * @param  \Illuminate\Support\ValidatedInput  $input

@@ -47,7 +47,7 @@ it('executes on collection', function () {
 });
 
 it('executes on chunked by id collection', function () {
-    $this->action->chunksById();
+    $this->action->chunkById();
 
     $fn = fn (Collection $u) => $u->each(fn (User $u) => $u->update(['name' => 'test']));
 
@@ -60,7 +60,7 @@ it('executes on chunked by id collection', function () {
 });
 
 it('executes on chunked by id models', function () {
-    $this->action->chunksById();
+    $this->action->chunkById();
 
     $fn = fn (User $q) => $q->update(['name' => 'test']);
 
@@ -75,7 +75,7 @@ it('executes on chunked by id models', function () {
 it('executes on chunked collection', function () {
     $fn = fn (Collection $u) => $u->each(fn (User $u) => $u->update(['name' => 'test']));
 
-    $this->action->chunks();
+    $this->action->chunk();
 
     $fn = fn (Collection $u) => $u->each(fn (User $u) => $u->update(['name' => 'test']));
 
@@ -88,7 +88,7 @@ it('executes on chunked collection', function () {
 });
 
 it('executes on chunked models', function () {
-    $this->action->chunks();
+    $this->action->chunk();
 
     $fn = fn (User $q) => $q->update(['name' => 'test']);
 

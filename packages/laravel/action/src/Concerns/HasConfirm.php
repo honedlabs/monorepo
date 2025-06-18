@@ -50,6 +50,11 @@ trait HasConfirm
         return $this->confirm;
     }
 
+    public function hasConfirm()
+    {
+        return isset($this->confirm);
+    }
+
     /**
      * Access the confirm for this instance.
      *

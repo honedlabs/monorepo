@@ -12,10 +12,8 @@ use Illuminate\Support\ValidatedInput;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class UpsertAction implements Action
+abstract class UpsertAction extends DatabaseAction
 {
-    use CanBeTransaction;
-
     /**
      * Get the model to perform the upsert on.
      *

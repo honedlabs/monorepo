@@ -13,9 +13,8 @@ use Illuminate\Support\Arr;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TSync of \Illuminate\Database\Eloquent\Model
  */
-abstract class SyncAction implements Action, Relatable
+abstract class SyncAction extends DatabaseAction implements Relatable
 {
-    use CanBeTransaction;
     use Concerns\InteractsWithModels;
 
     /**

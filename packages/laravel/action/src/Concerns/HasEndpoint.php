@@ -21,7 +21,7 @@ trait HasEndpoint
     public static function getDefaultEndpoint()
     {
         /** @var string */
-        return config('action.endpoint', '/actions');
+        return config('action.endpoint', 'actions');
     }
 
     /**
@@ -40,7 +40,7 @@ trait HasEndpoint
     /**
      * Get the endpoint to execute server actions.
      *
-     * @return string|null
+     * @return string
      */
     public function getEndpoint()
     {

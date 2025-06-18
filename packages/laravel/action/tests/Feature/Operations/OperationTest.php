@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
 use Workbench\App\Actions\Inline\DestroyAction;
 use Workbench\App\Models\User;
+use Workbench\App\Operations\DestroyOperation;
 
 beforeEach(function () {
     // Using inline action for testing base class
@@ -70,9 +71,7 @@ it('has array representation with route', function () {
 it('resolves to array', function () {
     $user = User::factory()->create();
 
-    [$named, $typed] = Parameters::model($user);
-
-    expect((new DestroyAction())->toArray($named, $typed))
+    expect((new DestroyOperation())->record($user)->toArray())
         ->toEqual([
             'name' => 'destroy',
             'label' => 'Destroy '.$user->name,

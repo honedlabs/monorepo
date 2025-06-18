@@ -14,11 +14,11 @@ beforeEach(function () {
 it('sets with instance', function () {
     expect($this->test->confirm(Confirm::make('name', 'description')->constructive()))
         ->toBe($this->test)
-        ->hasConfirm()->toBeTrue()
-        ->getConfirm()->scoped(fn ($confirm) => $confirm
-        ->getTitle()->toBe('name')
-        ->getDescription()->toBe('description')
-        ->getIntent()->toBe(Confirm::CONSTRUCTIVE)
+        ->getConfirm()
+        ->scoped(fn ($confirm) => $confirm
+            ->getTitle()->toBe('name')
+            ->getDescription()->toBe('description')
+            ->getIntent()->toBe(Confirm::CONSTRUCTIVE)
         );
 });
 
@@ -28,21 +28,21 @@ it('sets with self-call', function () {
         ->description('description')
         ->submit('Accept'))
     )->toBe($this->test)
-        ->hasConfirm()->toBeTrue()
-        ->getConfirm()->scoped(fn ($confirm) => $confirm
-        ->getTitle()->toBe('name')
-        ->getDescription()->toBe('description')
-        ->getSubmit()->toBe('Accept')
+        ->getConfirm()
+        ->scoped(fn ($confirm) => $confirm
+            ->getTitle()->toBe('name')
+            ->getDescription()->toBe('description')
+            ->getSubmit()->toBe('Accept')
         );
 });
 
 it('sets with strings', function () {
     expect($this->test->confirm('name', 'description'))
         ->toBe($this->test)
-        ->hasConfirm()->toBeTrue()
-        ->getConfirm()->scoped(fn ($confirm) => $confirm
-        ->getTitle()->toBe('name')
-        ->getDescription()->toBe('description')
+        ->getConfirm()
+        ->scoped(fn ($confirm) => $confirm
+            ->getTitle()->toBe('name')
+            ->getDescription()->toBe('description')
         );
 });
 
@@ -56,9 +56,7 @@ it('resolves to array', function () {
         ->destructive()
     );
 
-    [$named, $typed] = Parameters::model($user);
-
-    expect($test->getConfirm()->toArray($named, $typed))
+    expect($test->getConfirm()->record($user)->toArray())
         ->toEqual([
             'title' => \sprintf('Delete %s', $user->name),
             'description' => \sprintf('Are you sure you want to delete %s?', $user->name),

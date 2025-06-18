@@ -13,10 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
  */
-abstract class DissociateAction implements Action, Relatable
+abstract class DissociateAction extends DatabaseAction implements Relatable
 {
-    use CanBeTransaction;
-
     /**
      * Dissociate a model from the parent model.
      *

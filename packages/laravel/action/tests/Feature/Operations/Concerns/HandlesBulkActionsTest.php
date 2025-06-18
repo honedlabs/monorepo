@@ -16,7 +16,7 @@ beforeEach(function () {
 it('chunks', function () {
     expect($this->test)
         ->isChunked()->toBeFalse()
-        ->chunks()->toBe($this->test)
+        ->chunk()->toBe($this->test)
         ->isChunked()->toBeTrue();
 });
 
@@ -33,7 +33,7 @@ it('chunks via contract', function () {
 it('chunks by id', function () {
     expect($this->test)
         ->isChunkedById()->toBeFalse()
-        ->chunksById()->toBe($this->test)
+        ->chunkById()->toBe($this->test)
         ->isChunkedById()->toBeTrue();
 });
 

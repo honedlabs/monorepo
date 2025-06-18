@@ -13,9 +13,8 @@ use Illuminate\Support\Arr;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TToggle of \Illuminate\Database\Eloquent\Model
  */
-abstract class ToggleAction implements Action, Relatable
+abstract class ToggleAction extends DatabaseAction implements Relatable
 {
-    use CanBeTransaction;
     use Concerns\InteractsWithModels;
 
     /**

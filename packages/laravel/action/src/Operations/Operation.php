@@ -130,7 +130,7 @@ abstract class Operation extends Primitive
         }
 
         return match ($parameterName) {
-            'confirm' => [$this->confirmInstance()],
+            'confirm' => [$this->newConfirm()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
@@ -144,7 +144,7 @@ abstract class Operation extends Primitive
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
         return match ($parameterType) {
-            Confirm::class => [$this->confirmInstance()],
+            Confirm::class => [$this->newConfirm()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }

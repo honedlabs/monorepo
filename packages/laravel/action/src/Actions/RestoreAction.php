@@ -10,10 +10,8 @@ use Honed\Action\Contracts\Action;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-class RestoreAction implements Action
+class RestoreAction extends DatabaseAction
 {
-    use CanBeTransaction;
-
     /**
      * Restore the model(s).
      *
