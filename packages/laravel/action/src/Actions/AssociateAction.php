@@ -25,11 +25,9 @@ abstract class AssociateAction extends DatabaseAction implements Relatable
      */
     public function handle($model, $parent)
     {
-        $this->transact(
+        return $this->transact(
             fn () => $this->associate($model, $parent)
         );
-
-        return $model;
     }
 
     /**
@@ -49,13 +47,17 @@ abstract class AssociateAction extends DatabaseAction implements Relatable
      *
      * @param  TModel  $model
      * @param  int|string|TParent  $parent
-     * @return void
+     * @return TModel
      */
     protected function associate($model, $parent)
     {
-        $this->getRelation($model)->associate($parent);
+        $model = $this->getRelation($model)->associate($parent);
+
+        $model->save();
 
         $this->after($model, $parent);
+
+        return $model;
     }
 
     /**
