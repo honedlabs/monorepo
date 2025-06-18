@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Closure;
-use Honed\Action\Concerns\CanResolveActions;
+use Honed\Action\Concerns\CanHandleOperations;
 use Honed\Action\Contracts\Handler;
+use Honed\Action\Contracts\HandlesOperations;
 use Honed\Action\Handler as ActionHandler;
 use Honed\Core\Primitive;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -19,28 +19,31 @@ use Throwable;
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  */
-class Batch extends Primitive
+class Batch extends Primitive implements HandlesOperations
 {
-    use CanResolveActions;
+    use CanHandleOperations;
 
     /**
-     * The default namespace where action groups reside.
+     * The default namespace where batches reside.
+     *
+     * @var string
      */
-    public static string $namespace = 'App\\Batches\\';
+    public static $namespace = 'App\\Batches\\';
 
     /**
-     * How to resolve the action group for the given model name.
+     * How to resolve the batch for the given model name.
      *
      * @var (Closure(class-string):class-string<Batch>)|null
      */
-    protected static ?Closure $batchNameResolver = null;
+    protected static $batchNameResolver = null;
 
     /**
-     * Create a new action group instance.
+     * Create a new batch instance.
      *
      * @param  Operation|Batch|array<int, Operation|Batch>  $operations
+     * @return static
      */
-    public static function make($operations = []): static
+    public static function make($operations = [])
     {
         return resolve(static::class)
             ->operations($operations);
@@ -52,9 +55,9 @@ class Batch extends Primitive
      * @template TClass of \Illuminate\Database\Eloquent\Model
      *
      * @param  class-string<TClass>  $modelName
-     * @return Batch<TClass>
+     * @return static
      */
-    public static function batchForModel(string $modelName): self
+    public static function batchForModel($modelName)
     {
         $table = static::resolveBatchName($modelName);
 
@@ -67,7 +70,7 @@ class Batch extends Primitive
      * @param  class-string  $className
      * @return class-string<Batch>
      */
-    public static function resolveBatchName(string $className): string
+    public static function resolveBatchName($className)
     {
         $resolver = static::$batchNameResolver ?? function (string $className) {
             $appNamespace = static::appNamespace();
@@ -84,67 +87,82 @@ class Batch extends Primitive
     }
 
     /**
-     * Specify the default namespace that contains the application's model action groups.
+     * Specify the default namespace that contains the application's model batches.
+     *
+     * @param  string  $namespace
+     * @return void
      */
-    public static function useNamespace(string $namespace): void
+    public static function useNamespace($namespace)
     {
         static::$namespace = $namespace;
     }
 
     /**
-     * Specify the callback that should be invoked to guess the name of a model action group.
+     * Specify the callback that should be invoked to guess the name of a model batch.
      *
      * @param  Closure(class-string):class-string<Batch>  $callback
+     * @return void
      */
-    public static function guessBatchNamesUsing(Closure $callback): void
+    public static function guessBatchNamesUsing($callback)
     {
         static::$batchNameResolver = $callback;
     }
 
     /**
-     * Flush the action group's global configuration state.
+     * Flush the batch's global configuration state.
+     *
+     * @return void
      */
-    public static function flushState(): void
+    public static function flushState()
     {
+        static::$encoder = null;
+        static::$decoder = null;
         static::$batchNameResolver = null;
         static::$namespace = 'App\\Batches\\';
     }
 
     /**
-     * {@inheritdoc}
+     * Get the route key for the instance.
+     *
+     * @return string
      */
     public function getRouteKeyName()
     {
         return 'action';
     }
 
+    /**
+     * Get the handler for the instance.
+     *
+     * @return class-string<Handlers\Handler>
+     */
     public function getHandler()
     {
+        /** @var class-string<Handlers\Handler> */
         return config('action.handler', ActionHandler::class);
     }
 
     /**
-     * {@inheritdoc}
+     * Get the parent class for the instance.
+     *
+     * @return class-string<Batch>
      */
-    public function handle($request)
+    public static function getParentClass()
     {
-        if ($this->isNotExecutable()) {
-            abort(404);
-        }
-
-        return App::make(Handler::class)
-            ->handle($this, $request);
+        return self::class;
     }
 
     /**
-     * {@inheritdoc}
+     * Get the instance as an array.
+     *
+     * @return array<string, mixed>
      */
     public function toArray()
     {
         $operations = [
-            'inline' => $this->inlineActionsToArray($this->getModel()),
-            'bulk' => $this->bulkActionsToArray(),
-            'page' => $this->pageActionsToArray(),
+            'inline' => $this->inlineOperationsToArray($this->getModel()),
+            'bulk' => $this->bulkOperationsToArray(),
+            'page' => $this->pageOperationsToArray(),
         ];
 
         if ($this->isExecutable(self::class)) {
@@ -175,13 +193,13 @@ class Batch extends Primitive
     }
 
     /**
-     * Define the operations for the action group.
+     * Define the operations for the batch.
      *
-     * @param  $this  $operations
+     * @param  $this  $batch
      * @return $this
      */
-    protected function definition(self $operations): self
+    protected function definition(self $batch): self
     {
-        return $operations;
+        return $batch;
     }
 }

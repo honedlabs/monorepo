@@ -24,7 +24,7 @@ abstract class Controller extends BaseController
      *
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @throws \Honed\Action\Exceptions\ActionNotFoundException
+     * @throws \Honed\Action\Exceptions\OperationNotFoundException
      * @throws \Honed\Action\Exceptions\ActionNotAllowedException
      * @throws \Honed\Action\Exceptions\InvalidActionException
      */
@@ -39,7 +39,7 @@ abstract class Controller extends BaseController
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @throws CouldNotResolveHandlerException
-     * @throws \Honed\Action\Exceptions\ActionNotFoundException
+     * @throws \Honed\Action\Exceptions\OperationNotFoundException
      * @throws \Honed\Action\Exceptions\ActionNotAllowedException
      * @throws \Honed\Action\Exceptions\InvalidActionException
      */

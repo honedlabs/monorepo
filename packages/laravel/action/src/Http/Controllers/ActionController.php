@@ -18,7 +18,7 @@ class ActionController extends Controller
      * @param  Batch<TModel, TBuilder>  $action
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @throws \Honed\Action\Exceptions\ActionNotFoundException
+     * @throws \Honed\Action\Exceptions\OperationNotFoundException
      * @throws \Honed\Action\Exceptions\ActionNotAllowedException
      * @throws \Honed\Action\Exceptions\InvalidActionException
      */

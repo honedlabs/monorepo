@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 use Honed\Action\Confirm;
-use Honed\Action\InlineAction;
+use Honed\Action\Operations\InlineOperation;
 use Honed\Core\Parameters;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = InlineAction::make('test');
+    $this->test = InlineOperation::make('test');
 });
 
 it('sets with instance', function () {

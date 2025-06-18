@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Concerns;
+namespace Honed\Action\Operations\Concerns;
 
 use Closure;
 use Honed\Action\Contracts\ShouldChunk;
@@ -76,7 +76,7 @@ trait HandlesBulkActions
      *
      * @return bool
      */
-    public function chunks()
+    public function isChunked()
     {
         return $this->chunk || $this instanceof ShouldChunk;
     }

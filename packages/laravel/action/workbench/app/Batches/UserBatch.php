@@ -18,10 +18,10 @@ use Workbench\App\Models\User;
  */
 class UserBatch extends Batch
 {
-    protected function definition(Batch $actions): Batch
+    protected function definition(Batch $batch): Batch
     {
-        return $actions
-            ->actions([
+        return $batch
+            ->operations([
                 InlineOperation::make('show')
                     ->route(fn ($user) => route('users.show', $user)),
 

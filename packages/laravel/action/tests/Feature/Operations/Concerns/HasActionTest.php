@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Concerns\HasAction;
+use Honed\Action\Operations\Concerns\HasAction;
 use Honed\Action\Contracts\Action;
 use Workbench\App\Actions\Inline\DestroyAction;
 

@@ -16,11 +16,12 @@ use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Primitive;
+use Illuminate\Database\Eloquent\Model;
 
 abstract class Operation extends Primitive
 {
     use Allowable;
-    use HasAction;
+    use Concerns\HasAction;
     use HasConfirm;
     use HasExtra;
     use HasIcon;
@@ -71,24 +72,30 @@ abstract class Operation extends Primitive
 
     /**
      * Determine if the action is an inline action.
+     *
+     * @return bool
      */
-    public function isInline(): bool
+    public function isInline()
     {
         return $this instanceof InlineOperation;
     }
 
     /**
      * Determine if the action is a bulk action.
+     *
+     * @return bool
      */
-    public function isBulk(): bool
+    public function isBulk()
     {
         return $this instanceof BulkOperation;
     }
 
     /**
      * Determine if the action is a page action.
+     *
+     * @return bool
      */
-    public function isPage(): bool
+    public function isPage()
     {
         return $this instanceof PageOperation;
     }
@@ -111,7 +118,10 @@ abstract class Operation extends Primitive
     }
 
     /**
-     * {@inheritdoc}
+     * Provide a selection of default dependencies for evaluation by name.
+     * 
+     * @param  string  $parameterName
+     * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
@@ -126,7 +136,10 @@ abstract class Operation extends Primitive
     }
 
     /**
-     * {@inheritdoc}
+     * Provide a selection of default dependencies for evaluation by type.
+     * 
+     * @param  string  $parameterType
+     * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {

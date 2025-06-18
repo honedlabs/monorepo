@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Exceptions\ActionNotFoundException;
+use Honed\Action\Exceptions\OperationNotFoundException;
 
 it('constructs', function () {
-    $exception = new ActionNotFoundException('test');
+    $exception = new OperationNotFoundException('test');
 
     expect($exception->getStatusCode())->toBe(404);
 });
 
 it('throws', function () {
-    ActionNotFoundException::throw('test');
-})->throws(ActionNotFoundException::class);
+    OperationNotFoundException::throw('test');
+})->throws(OperationNotFoundException::class);

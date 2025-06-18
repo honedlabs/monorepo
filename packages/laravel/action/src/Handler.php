@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Honed\Action\Exceptions\ActionNotAllowedException;
-use Honed\Action\Exceptions\ActionNotFoundException;
+use Honed\Action\Exceptions\OperationNotFoundException;
 use Honed\Action\Exceptions\InvalidActionException;
 use Honed\Action\Http\Data\ActionData;
 use Honed\Action\Http\Data\BulkData;
@@ -143,7 +143,7 @@ class Handler
         [$action, $query] = $this->resolveAction($type, $data);
 
         if (! $action || ! $query) {
-            ActionNotFoundException::throw($data->name);
+            OperationNotFoundException::throw($data->name);
         }
 
         [$named, $typed] = Parameters::builder($query);

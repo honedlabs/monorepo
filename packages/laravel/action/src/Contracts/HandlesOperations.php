@@ -6,7 +6,7 @@ namespace Honed\Action\Contracts;
 
 use Illuminate\Contracts\Routing\UrlRoutable;
 
-interface HandlesActions extends UrlRoutable
+interface HandlesOperations extends UrlRoutable
 {
     /**
      * Find a primitive class from the encoded value.
@@ -15,6 +15,20 @@ interface HandlesActions extends UrlRoutable
      * @return mixed
      */
     public static function find($value);
+
+    /**
+     * Get the handler for the instance.
+     *
+     * @return class-string<\Honed\Action\Handlers\Handler>
+     */
+    public function getHandler();
+
+    /**
+     * Get the parent class for the instance.
+     *
+     * @return class-string<\Honed\Action\Contracts\HandlesOperations>
+     */
+    public static function getParentClass();
 
     /**
      * Handle the incoming action request.

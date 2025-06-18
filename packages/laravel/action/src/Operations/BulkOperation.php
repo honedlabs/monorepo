@@ -8,7 +8,7 @@ use Honed\Action\Concerns\HandlesBulkActions;
 
 class BulkOperation extends Operation
 {
-    use HandlesBulkActions;
+    use Concerns\HandlesBulkActions;
 
     /**
      * Whether the action keeps the records selected after successful execution.

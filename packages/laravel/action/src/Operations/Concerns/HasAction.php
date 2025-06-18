@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Concerns;
+namespace Honed\Action\Operations\Concerns;
 
 use Closure;
 use Honed\Action\Contracts\Action;

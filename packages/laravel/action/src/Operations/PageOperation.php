@@ -8,7 +8,7 @@ use Honed\Action\Concerns\HandlesBulkActions;
 
 class PageOperation extends Operation
 {
-    use HandlesBulkActions;
+    use Concerns\HandlesBulkActions;
 
     /**
      * Provide the instance with any necessary setup.

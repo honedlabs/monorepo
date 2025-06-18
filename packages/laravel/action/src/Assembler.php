@@ -17,6 +17,16 @@ abstract class Assembler
     abstract protected function definition(Operation $operation): Operation;
 
     /**
+     * Create a new instance of the assembler.
+     * 
+     * @return static
+     */
+    public static function make()
+    {
+        return resolve(static::class);
+    }
+
+    /**
      * Get as an inline action
      *
      * @return InlineOperation
@@ -52,8 +62,8 @@ abstract class Assembler
      * @param  class-string<Operation>  $type
      * @return Operation
      */
-    public static function create($type)
+    protected static function create($type)
     {
-        return resolve(static::class)->definition(new $type());
+        return static::make()->definition(new $type());
     }
 }
