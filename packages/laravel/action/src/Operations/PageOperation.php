@@ -6,7 +6,7 @@ namespace Honed\Action\Operations;
 
 class PageOperation extends Operation
 {
-    use Concerns\HandlesBulkActions;
+    use Concerns\CanBeChunked;
 
     /**
      * Provide the instance with any necessary setup.
@@ -18,16 +18,5 @@ class PageOperation extends Operation
         parent::setUp();
 
         $this->type(self::PAGE);
-    }
-
-    /**
-     * Define the page operation instance.
-     *
-     * @param  $this  $operation
-     * @return $this
-     */
-    protected function definition(self $operation): self
-    {
-        return $operation;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Honed\Action\Concerns\CanBeTransaction;
+use Honed\Action\Contracts\Action;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Facades\Pipeline;
 use RuntimeException;
@@ -16,7 +17,7 @@ use function array_map;
  * @template TPayload
  * @template TResult
  */
-abstract class Process
+abstract class Process implements Action
 {
     use CanBeTransaction;
 
@@ -55,27 +56,27 @@ abstract class Process
     }
 
     /**
-     * Run the process with exception handling.
+     * Handle the process with exception handling.
      *
      * @param  TPayload  $payload
      * @return TResult
      */
-    public function run($payload)
+    public function handle($payload)
     {
         try {
-            return $this->handle($payload);
+            return $this->run($payload);
         } catch (Throwable $e) {
             return $this->failure($e);
         }
     }
 
     /**
-     * Handle the process without exception handling.
+     * Run the process without exception handling.
      *
      * @param  TPayload  $payload
      * @return TResult
      */
-    public function handle($payload)
+    public function run($payload)
     {
         return $this->transact(
             fn () => $this->pipe($payload)

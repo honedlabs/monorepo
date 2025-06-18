@@ -171,6 +171,8 @@ trait HasOperations
     public function inlinable($inlinable = true)
     {
         $this->inlinable = $inlinable;
+
+        return $this;
     }
 
     /**
@@ -226,7 +228,7 @@ trait HasOperations
     /**
      * Get the inline operations as an array.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|null  $model
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model|null  $model
      * @return array<int,mixed>
      */
     public function inlineOperationsToArray($model = null)
@@ -268,6 +270,8 @@ trait HasOperations
     public function bulkable($bulkable = true)
     {
         $this->bulkable = $bulkable;
+
+        return $this;
     }
 
     /**
@@ -357,6 +361,8 @@ trait HasOperations
     public function pageable($pageable = true)
     {
         $this->pageable = $pageable;
+
+        return $this;
     }
 
     /**

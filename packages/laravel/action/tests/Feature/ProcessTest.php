@@ -30,11 +30,11 @@ it('handles', function () {
 });
 
 it('handles with error throwing', function () {
-    FailProcess::make()->handle($this->data);
+    FailProcess::make()->run($this->data);
 })->throws(Exception::class);
 
 it('handles with error handling', function () {
-    expect(FailProcess::make()->run($this->data))
+    expect(FailProcess::make()->handle($this->data))
         ->toBeFalse();
 });
 

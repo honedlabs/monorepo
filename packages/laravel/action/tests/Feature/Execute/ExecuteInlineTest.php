@@ -10,6 +10,7 @@ use Workbench\App\Operations\DestroyOperation;
 
 beforeEach(function () {
     $this->test = InlineOperation::make('test');
+
     $this->user = User::factory()->create();
 });
 
@@ -22,12 +23,12 @@ test('not without action', function () {
     ]);
 });
 
-test('with callback', function () {
-    $this->test->action(function (User $user) {
-        $user->update(['name' => 'test']);
+it('executes callback', function () {
+    $this->test->action(function (User $record) {
+        $record->update(['name' => 'test']);
 
         return inertia('Users/Show', [
-            'user' => $user,
+            'user' => $record,
         ]);
     });
 
@@ -40,7 +41,7 @@ test('with callback', function () {
     ]);
 });
 
-test('with handler', function () {
+it('executes handler', function () {
     $action = new DestroyOperation();
 
     expect($action)
@@ -57,7 +58,7 @@ test('with handler', function () {
     ]);
 })->skip();
 
-test('with class-string action', function () {
+it('executes action', function () {
     expect($this->test->action(DestroyUser::class))
         ->execute($this->user)
         ->toBeInstanceOf(RedirectResponse::class);

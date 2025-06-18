@@ -56,17 +56,6 @@ class InlineOperation extends Operation
     }
 
     /**
-     * Define the inline operation instance.
-     *
-     * @param  $this  $operation
-     * @return $this
-     */
-    protected function definition(self $operation): self
-    {
-        return $operation;
-    }
-
-    /**
      * Provide a selection of default dependencies for evaluation by name.
      *
      * @param  string  $parameterName

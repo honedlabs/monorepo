@@ -45,7 +45,7 @@ trait CanBeTransaction
      *
      * @return bool
      */
-    protected function isTransaction()
+    public function isTransaction()
     {
         return static::$transaction;
     }

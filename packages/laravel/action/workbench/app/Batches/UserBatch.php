@@ -29,21 +29,21 @@ class UserBatch extends Batch
         return $batch
             ->operations([
                 InlineOperation::make('show')
-                    ->route(fn ($user) => route('users.show', $user)),
+                    ->route(fn ($record) => route('users.show', $record)),
 
                 InlineOperation::make('update.name')
-                    ->action(fn ($user) => $user->update(['name' => 'test'])),
+                    ->action(fn ($record) => $record->update(['name' => 'test'])),
 
                 InlineOperation::make('update.description')
-                    ->action(fn ($user) => $user->update(['name' => 'description']))
+                    ->action(fn ($record) => $record->update(['name' => 'description']))
                     ->allow(false),
 
                 BulkOperation::make('update.name')
-                    ->action(fn ($user) => $user->update(['name' => 'test']))
+                    ->action(fn ($record) => $record->update(['name' => 'test']))
                     ->allow(false),
 
                 BulkOperation::make('update.description')
-                    ->action(fn ($user) => $user->update(['name' => 'description'])),
+                    ->action(fn ($record) => $record->update(['name' => 'description'])),
 
                 PageOperation::make('create')
                     ->route('users.create'),

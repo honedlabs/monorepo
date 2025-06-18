@@ -6,13 +6,16 @@ namespace Honed\Action\Contracts;
 
 use Illuminate\Contracts\Routing\UrlRoutable;
 
+/**
+ * @phpstan-require-extends \Honed\Core\Primitive
+ */
 interface HandlesOperations extends UrlRoutable
 {
     /**
      * Find a primitive class from the encoded value.
      *
      * @param  string  $value
-     * @return mixed
+     * @return static|null
      */
     public static function find($value);
 
@@ -26,9 +29,9 @@ interface HandlesOperations extends UrlRoutable
     /**
      * Get the handler for the instance.
      *
-     * @return class-string<\Honed\Action\Handlers\Handler<$this>>
+     * @return class-string<\Honed\Action\Handlers\Handler<self>>
      */
-    public function getHandler();
+    public function getHandler(); // @phpstan-ignore-line
 
     /**
      * Handle the incoming action request.

@@ -12,16 +12,15 @@ use Throwable;
  */
 trait CanHandleOperations
 {
-    use CanBeExecutable;
     use HasEncoder;
-    use HasEndpoint;
     use HasOperations;
+    use CanBeActionable;
 
     /**
      * Decode and retrieve a primitive class.
      *
      * @param  string  $value
-     * @return mixed
+     * @return static|null
      */
     public static function find($value)
     {
@@ -29,7 +28,7 @@ trait CanHandleOperations
             $primitive = static::decode($value);
 
             return static::canHandleOperations($primitive)
-                ? $primitive::make()
+                ? $primitive::make() // @phpstan-ignore-line
                 : null;
 
         } catch (Throwable $th) {
@@ -81,7 +80,7 @@ trait CanHandleOperations
      */
     public function handle($request)
     {
-        if ($this->isNotExecutable()) {
+        if ($this->isNotActionable()) {
             abort(404);
         }
 
@@ -92,12 +91,13 @@ trait CanHandleOperations
     /**
      * Determine if the primitive cannot handle operations.
      *
-     * @param  string  $primitive
+     * @param  mixed  $primitive
      * @return bool
      */
     protected static function canHandleOperations($primitive)
     {
-        return class_exists($primitive)
-            && is_subclass_of($primitive, static::getParentClass());
+        return is_string($primitive)
+            && class_exists($primitive)
+            && is_subclass_of($primitive, static::getParentClass()); // @phpstan-ignore function.alreadyNarrowedType
     }
 }

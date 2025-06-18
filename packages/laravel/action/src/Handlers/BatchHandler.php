@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Handlers;
 
 /**
- * @template TClass of \Honed\Action\Batch
+ * @extends Handler<\Honed\Action\Batch>
  */
 class BatchHandler extends Handler
 {
@@ -14,20 +14,18 @@ class BatchHandler extends Handler
      *
      * @return string
      */
-    protected function getKey() {}
+    protected function getKey()
+    {
+        return $this->getInstance()->getKey() ?? 'id';
+    }
 
     /**
      * Get the operations to be used to resolve the action.
      *
-     * @return array<int,Operation>
+     * @return array<int,\Honed\Action\Operations\Operation>
      */
     protected function getOperations()
     {
-        return $this->instance->getOperations();
-    }
-
-    protected function getBuilder()
-    {
-        return $this->instance->getBuilder();
+        return $this->getInstance()->getOperations();
     }
 }

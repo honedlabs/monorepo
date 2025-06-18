@@ -46,14 +46,14 @@ class Confirm extends Primitive
     /**
      * The message to display on the submit button.
      *
-     * @var string
+     * @var string|Closure(mixed...):string
      */
     protected $submit = 'Confirm';
 
     /**
      * The message to display on the dismiss button.
      *
-     * @var string|null
+     * @var string|Closure(mixed...):string
      */
     protected $dismiss = 'Cancel';
 
@@ -91,6 +91,7 @@ class Confirm extends Primitive
      */
     public function getTitle()
     {
+        /** @var string|null */
         return $this->evaluate($this->title);
     }
 
@@ -114,6 +115,7 @@ class Confirm extends Primitive
      */
     public function getDescription()
     {
+        /** @var string|null */
         return $this->evaluate($this->description);
     }
 
@@ -173,7 +175,7 @@ class Confirm extends Primitive
     /**
      * Set the submit message for the confirm.
      *
-     * @param  string|Closure(mixed...):string|null  $submit
+     * @param  string|Closure(mixed...):string  $submit
      * @return $this
      */
     public function submit($submit)
@@ -190,13 +192,14 @@ class Confirm extends Primitive
      */
     public function getSubmit()
     {
+        /** @var string */
         return $this->evaluate($this->submit);
     }
 
     /**
      * Set the dismiss message for the confirm.
      *
-     * @param  string|Closure(mixed...):string|null  $dismiss
+     * @param  string|Closure(mixed...):string  $dismiss
      * @return $this
      */
     public function dismiss($dismiss)
@@ -213,6 +216,7 @@ class Confirm extends Primitive
      */
     public function getDismiss()
     {
+        /** @var string */
         return $this->evaluate($this->dismiss);
     }
 

@@ -65,7 +65,9 @@ abstract class AttachAction extends DatabaseAction implements Relatable
         $attachments = $this->arrayable($attachments);
 
         /** @var array<string, mixed> */
-        $attributes = $this->normalize($attributes);
+        $attributes = $this->only(
+            $this->normalize($attributes)
+        );
 
         return Arr::mapWithKeys(
             $attachments,

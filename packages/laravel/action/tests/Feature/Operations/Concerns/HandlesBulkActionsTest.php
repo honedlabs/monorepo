@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 use Honed\Action\Contracts\ShouldChunk;
 use Honed\Action\Contracts\ShouldChunkById;
-use Honed\Action\Operations\Concerns\HandlesBulkActions;
+use Honed\Action\Operations\Concerns\CanBeChunked;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use HandlesBulkActions;
+        use CanBeChunked;
     };
 });
 
@@ -23,7 +23,7 @@ it('chunks', function () {
 it('chunks via contract', function () {
     $test = new class() implements ShouldChunk
     {
-        use HandlesBulkActions;
+        use CanBeChunked;
     };
 
     expect($test)
@@ -40,7 +40,7 @@ it('chunks by id', function () {
 it('chunks by id via contract', function () {
     $test = new class() implements ShouldChunkById
     {
-        use HandlesBulkActions;
+        use CanBeChunked;
     };
 
     expect($test)

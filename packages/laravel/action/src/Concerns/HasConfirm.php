@@ -15,6 +15,8 @@ use function is_null;
 trait HasConfirm
 {
     /**
+     * The instance of the confirm.
+     * 
      * @var Confirm|null
      */
     protected $confirm;
@@ -50,6 +52,10 @@ trait HasConfirm
         return $this->confirm;
     }
 
+    /**
+     * @deprecated
+     * @return bool
+     */
     public function hasConfirm()
     {
         return isset($this->confirm);

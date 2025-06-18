@@ -9,23 +9,24 @@ use Illuminate\Support\ValidatedInput;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  */
 class ReplicateAction extends DatabaseAction
 {
     /**
+     * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
+     */
+    use Concerns\InteractsWithFormData;
+
+    /**
      * Store the input data in the database.
      *
      * @param  TModel  $model
-     * @param  array<string, mixed>|ValidatedInput|FormRequest  $attributes
+     * @param  TInput  $attributes
      * @return TModel $model
      */
     public function handle($model, $attributes = [])
     {
-        if ($attributes instanceof FormRequest) {
-            /** @var ValidatedInput */
-            $attributes = $attributes->safe();
-        }
-
         return $this->transact(
             fn () => $this->replicate($model, $attributes)
         );
@@ -34,16 +35,14 @@ class ReplicateAction extends DatabaseAction
     /**
      * Prepare the attributes to override on replication
      *
-     * @param  array<string, mixed>|ValidatedInput  $attributes
+     * @param  TInput  $attributes
      * @return array<string, mixed>
      */
     protected function prepare($attributes)
     {
-        if ($attributes instanceof ValidatedInput) {
-            return $attributes->all();
-        }
-
-        return $attributes;
+        return $this->only(
+            $this->normalize($attributes)
+        );
     }
 
     /**
@@ -60,20 +59,22 @@ class ReplicateAction extends DatabaseAction
      * Store the record in the database.
      *
      * @param  TModel  $model
-     * @param  array<string, mixed>|ValidatedInput  $attributes
+     * @param  TInput  $attributes
      * @return TModel
      */
     protected function replicate($model, $attributes)
     {
         $new = $model->replicate($this->except());
 
-        if (filled($attributes = $this->prepare($attributes))) {
-            $new->fill($attributes);
+        $prepared = $this->prepare($attributes);
+
+        if (filled($prepared)) {
+            $new->fill($prepared);
         }
 
         $new->save();
 
-        $this->after($new, $model);
+        $this->after($new, $model, $attributes);
 
         return $new;
     }
@@ -83,9 +84,10 @@ class ReplicateAction extends DatabaseAction
      *
      * @param  TModel  $new
      * @param  TModel  $old
+     * @param TInput  $attributes
      * @return void
      */
-    protected function after($new, $old)
+    protected function after($new, $old, $attributes)
     {
         //
     }

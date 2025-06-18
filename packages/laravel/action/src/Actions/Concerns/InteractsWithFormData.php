@@ -6,6 +6,7 @@ namespace Honed\Action\Actions\Concerns;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ValidatedInput;
 
 /**
@@ -42,5 +43,30 @@ trait InteractsWithFormData
             $input instanceof ValidatedInput => $input,
             default => new ValidatedInput($input),
         };
+    }
+
+    /**
+     * Define the fields to be retrieved from the input.
+     *
+     * @return array<string>
+     */
+    protected function fields()
+    {
+        return [];
+    }
+
+    /**
+     * Retrieve only the fields defined in the `only` method.
+     *
+     * @param  array<string, mixed>  $input
+     * @return array<string, mixed>
+     */
+    protected function only($input)
+    {
+        $fields = $this->fields();
+
+        return filled($fields) 
+            ? Arr::only($input, $fields)
+            : $input;
     }
 }

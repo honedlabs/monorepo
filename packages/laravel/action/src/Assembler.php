@@ -12,7 +12,12 @@ use Honed\Action\Operations\PageOperation;
 abstract class Assembler
 {
     /**
-     * Configure the action.
+     * Define the parameters of the operation.
+     * 
+     * @template TOperation of Operation
+     *
+     * @param  TOperation  $operation
+     * @return TOperation
      */
     abstract protected function definition(Operation $operation): Operation;
 

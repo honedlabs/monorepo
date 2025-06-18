@@ -45,7 +45,9 @@ abstract class StoreAction extends DatabaseAction
      */
     protected function prepare($input)
     {
-        return $this->normalize($input);
+        return $this->only(
+            $this->normalize($input)
+        );
     }
 
     /**

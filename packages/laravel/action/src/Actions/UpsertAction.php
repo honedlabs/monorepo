@@ -62,7 +62,9 @@ abstract class UpsertAction extends DatabaseAction
     protected function prepare($values)
     {
         if (! is_array($values)) {
-            return [$this->normalize($values)];
+            return [$this->only(
+                $this->normalize($values)
+            )];
         }
 
         return $values;

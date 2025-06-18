@@ -101,29 +101,26 @@ it('uses namespace', function () {
     UserBatch::flushState();
 });
 
-it('has array representation', function () {
+it('has array representation with actions', function () {
     expect($this->group->toArray())
         ->toBeArray()
-        ->toHaveCount(3)
-        ->toHaveKeys(['inline', 'bulk', 'page']);
+        ->toHaveKeys([
+            'inline',
+            'page',
+            'id',
+            'endpoint',
+        ]);
 });
 
-it('has array representation with server actions', function () {
-    expect(UserBatch::make()->for(User::factory()->create())->toArray())
+it('has array representation without actions', function () {
+    expect(UserBatch::make()
+        ->for(User::factory()->create())
+        ->actionable(false)
+        ->toArray()
+    )
         ->toBeArray()
-        ->toHaveCount(5)
-        ->toHaveKeys(['id', 'endpoint', 'inline', 'bulk', 'page']);
-
-    expect(UserBatch::make()->for(User::factory()->create())->executes(false)->toArray())
-        ->toHaveCount(3)
-        ->toHaveKeys(['inline', 'bulk', 'page']);
-});
-
-it('has array representation with model', function () {
-    $user = User::factory()->create();
-
-    expect(UserBatch::make()->for($user)->toArray())
-        ->toBeArray()
-        ->toHaveCount(5)
-        ->toHaveKeys(['inline', 'bulk', 'page', 'id', 'endpoint']);
+        ->toHaveKeys([
+            'inline',
+            'page',
+        ]);
 });

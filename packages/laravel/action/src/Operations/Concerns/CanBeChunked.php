@@ -17,8 +17,10 @@ use RuntimeException;
 
 use function array_merge;
 
-// Builder, $builder, $query, $q, BuilderContract, Collection, $collection, Model, $model, $row, $record
-trait HandlesBulkActions
+/**
+ * @phpstan-require-extends \Honed\Action\Operations\Operation
+ */
+trait CanBeChunked
 {
     /** @use HasQuery<\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>> */
     use HasQuery;
@@ -61,7 +63,7 @@ trait HandlesBulkActions
     /**
      * Set the action to chunk the records.
      *
-     * @param  bool|null  $chunk
+     * @param  bool  $chunk
      * @return $this
      */
     public function chunk($chunk = true)
@@ -84,7 +86,7 @@ trait HandlesBulkActions
     /**
      * Set the action to chunk the records by id.
      *
-     * @param  bool|null  $byId
+     * @param  bool  $byId
      * @return $this
      */
     public function chunkById($byId = true)
@@ -139,6 +141,7 @@ trait HandlesBulkActions
     {
         $handler = $this->getHandler();
 
+        dd($handler);
         if (! $handler) {
             return null;
         }

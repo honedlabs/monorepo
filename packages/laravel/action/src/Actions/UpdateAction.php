@@ -38,7 +38,9 @@ class UpdateAction extends DatabaseAction
      */
     protected function prepare($model, $input)
     {
-        return $this->normalize($input);
+        return $this->only(
+            $this->normalize($input)
+        );
     }
 
     /**

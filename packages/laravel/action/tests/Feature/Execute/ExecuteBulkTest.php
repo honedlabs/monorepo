@@ -14,7 +14,7 @@ beforeEach(function () {
 });
 
 it('executes on builder', function () {
-    $fn = fn (Builder $q) => $q->update(['name' => 'test']);
+    $fn = fn ($q) => $q->update(['name' => 'test']);
 
     $this->action->action($fn)->execute(User::query());
 
@@ -22,10 +22,10 @@ it('executes on builder', function () {
         'id' => $this->user->id,
         'name' => 'test',
     ]);
-});
+})->only();
 
 it('executes on model', function () {
-    $fn = fn (User $u) => $u->update(['name' => 'test']);
+    $fn = fn ($record) => $record->update(['name' => 'test']);
 
     $this->action->action($fn)->execute($this->user);
 
@@ -135,7 +135,7 @@ it('errors if chunking with builder', function () {
     $fn = fn (Builder $q) => $q->update(['name' => 'test']);
 
     $this->action->action($fn)
-        ->chunks()
+        ->chunk()
         ->execute(User::query());
 
 })->throws(RuntimeException::class);

@@ -15,7 +15,6 @@ use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasRoute;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Primitive;
-use Illuminate\Database\Eloquent\Model;
 
 abstract class Operation extends Primitive
 {
@@ -36,21 +35,9 @@ abstract class Operation extends Primitive
     public const PAGE = 'page';
 
     /**
-     * Provide the instance with any necessary setup.
-     *
-     * @return void
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->definition($this);
-    }
-
-    /**
      * Execute the action on a resource.
      *
-     * @param  Model|\Illuminate\Database\Eloquent\Builder<Model>  $record
+     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $record
      * @return mixed
      */
     abstract public function execute($record);
@@ -100,7 +87,9 @@ abstract class Operation extends Primitive
     }
 
     /**
-     * {@inheritdoc}
+     * Get the instance as an array.
+     *
+     * @return array<string, mixed>
      */
     public function toArray()
     {
