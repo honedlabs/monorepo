@@ -193,9 +193,11 @@ class Message extends Primitive implements MessageContract
     }
 
     /**
-     * {@inheritdoc}
+     * Get the array representation of the message.
+     *
+     * @return array<string,mixed>
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         return [
             'message' => $this->getMessage(),

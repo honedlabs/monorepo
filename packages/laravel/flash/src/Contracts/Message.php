@@ -43,9 +43,7 @@ interface Message
     /**
      * Get the array representation of the message.
      *
-     * @param  array<string,mixed>  $named
-     * @param  array<string,mixed>  $typed
      * @return array<string,mixed>
      */
-    public function toArray($named = [], $typed = []);
+    public function toArray();
 }

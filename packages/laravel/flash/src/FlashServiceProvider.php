@@ -16,8 +16,10 @@ class FlashServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
+     *
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/flash.php', 'flash');
 
@@ -29,10 +31,13 @@ class FlashServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
         if ($this->app->runningInConsole()) {
+            $this->offerPublishing();
             $this->publishes([
                 __DIR__.'/../config/flash.php' => config_path('flash.php'),
             ], 'config');
@@ -44,17 +49,35 @@ class FlashServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the middleware alias for flash messages.
+     * Register the publishing for the package.
+     *
+     * @return void
      */
-    protected function registerMiddlewareAlias(): void
+    protected function offerPublishing()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../config/flash.php' => config_path('flash.php'),
+            ], 'config');
+        }
+    }
+
+    /**
+     * Register the middleware alias for flash messages.
+     *
+     * @return void
+     */
+    protected function registerMiddlewareAlias()
     {
         Route::aliasMiddleware('flash', Middleware\ShareFlash::class);
     }
 
     /**
      * Register the redirect response macros.
+     *
+     * @return void
      */
-    protected function registerRedirectResponseMacros(): void
+    protected function registerRedirectResponseMacros()
     {
         RedirectResponse::macro('flash', function (
             string|MessageContract $message,
@@ -70,8 +93,10 @@ class FlashServiceProvider extends ServiceProvider
 
     /**
      * Register the inertia response macros.
+     *
+     * @return void
      */
-    protected function registerInertiaMacros(): void
+    protected function registerInertiaMacros()
     {
         ResponseFactory::macro('flash', function (
             string|MessageContract $message,
