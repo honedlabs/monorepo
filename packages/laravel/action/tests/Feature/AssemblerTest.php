@@ -7,7 +7,7 @@ use Workbench\App\Assemblers\UpdateAssembler;
 
 beforeEach(function () {
     $this->assembler = UpdateAssembler::make();
-})->only();
+});
 
 it('creates inline operation', function () {
     expect($this->assembler->inline())

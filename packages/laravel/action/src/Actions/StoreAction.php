@@ -7,6 +7,7 @@ namespace Honed\Action\Actions;
 use Honed\Action\Concerns\CanBeTransaction;
 use Honed\Action\Contracts\Action;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\ValidatedInput;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -25,7 +26,7 @@ abstract class StoreAction implements Action
     /**
      * Store the input data in the database.
      *
-     * @param  \Illuminate\Support\ValidatedInput|FormRequest  $input
+     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput|FormRequest  $input
      * @return TModel $model
      */
     public function handle($input)
@@ -43,18 +44,18 @@ abstract class StoreAction implements Action
     /**
      * Prepare the input for the update method.
      *
-     * @param  \Illuminate\Support\ValidatedInput  $input
+     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput  $input
      * @return array<string, mixed>
      */
     protected function prepare($input)
     {
-        return $input->all();
+        return $input instanceof ValidatedInput ? $input->all() : $input;
     }
 
     /**
      * Store the record in the database.
      *
-     * @param  \Illuminate\Support\ValidatedInput  $input
+     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput  $input
      * @return TModel
      */
     protected function store($input)

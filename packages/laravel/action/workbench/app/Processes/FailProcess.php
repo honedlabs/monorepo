@@ -1,16 +1,16 @@
 <?php
 
-namespace {{ namespace }};
+declare(strict_types=1);
 
-use Honed\Action\Process;
+namespace Workbench\App\Processes;
 
 /**
  * @template TPayload
  * @template TResult
- * 
+ *
  * @extends Honed\Command\Process<TPayload, TResult>
  */
-class {{ class }} extends Process
+class FailProcess extends ProductProcess
 {
     /**
      * The tasks to be sequentially executed.
@@ -20,7 +20,8 @@ class {{ class }} extends Process
     protected function tasks()
     {
         return [
-
+            ...parent::tasks(),
+            fn () => throw new \Exception('Failed'),
         ];
     }
 }

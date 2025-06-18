@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Honed\Action\Concerns\CanBeTransaction;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Facades\Pipeline;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -17,11 +19,38 @@ abstract class Process
     use CanBeTransaction;
 
     /**
+     * The container implementation.
+     *
+     * @var \Illuminate\Contracts\Container\Container|null
+     */
+    protected $container;
+
+    /**
+     * Create a new class instance.
+     *
+     * @param  \Illuminate\Contracts\Container\Container|null  $container
+     * @return void
+     */
+    public function __construct(?Container $container = null)
+    {
+        $this->container = $container;
+    }
+    /**
      * The tasks to be sequentially executed.
      *
      * @return array<int, class-string>
      */
     abstract protected function tasks();
+
+    /**
+     * Create a new instance of the process.
+     * 
+     * @return static
+     */
+    public static function make()
+    {
+        return resolve(static::class);
+    }
 
     /**
      * Run the process with exception handling.
@@ -52,6 +81,35 @@ abstract class Process
     }
 
     /**
+     * Get the container instance.
+     *
+     * @return \Illuminate\Contracts\Container\Container
+     *
+     * @throws \RuntimeException
+     */
+    protected function getContainer()
+    {
+        if (! $this->container) {
+            throw new RuntimeException('A container instance has not been passed to the Pipeline.');
+        }
+
+        return $this->container;
+    }
+
+    /**
+     * Set the container instance.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $container
+     * @return $this
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+
+        return $this;
+    }
+
+    /**
      * Handle the failure of the process.
      *
      * @param  Throwable  $throwable
@@ -59,7 +117,7 @@ abstract class Process
      */
     protected function failure($throwable)
     {
-        //
+        return false;
     }
 
     /**
@@ -81,8 +139,27 @@ abstract class Process
     protected function pipe($payload)
     {
         return Pipeline::send($payload)
-            ->through($this->tasks())
+            ->through($this->pipelines())
             ->via($this->method())
             ->thenReturn();
+    }
+
+    /**
+     * Generate the pipelines with closures.
+     * 
+     * @return array<int, callable>
+     */
+    protected function pipelines()
+    {
+        return \array_map(
+            fn ($task) => is_callable($task) 
+                ? $task
+                : fn ($payload, $next) => $next(
+                    $this->getContainer()
+                        ->make($task)
+                        ->{$this->method()}($payload)
+                ),
+            $this->tasks()
+        );
     }
 }
