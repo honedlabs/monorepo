@@ -20,8 +20,8 @@ class UserBatch extends Batch
 {
     /**
      * Define the operations for the batch.
-     * 
-     * @param $this $batch
+     *
+     * @param  $this  $batch
      * @return $this
      */
     protected function definition(Batch $batch): Batch

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Operations\Concerns\HandlesBulkActions;
 use Honed\Action\Contracts\ShouldChunk;
 use Honed\Action\Contracts\ShouldChunkById;
+use Honed\Action\Operations\Concerns\HandlesBulkActions;
 
 beforeEach(function () {
     $this->test = new class()

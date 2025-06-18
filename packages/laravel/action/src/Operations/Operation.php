@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Action\Operations;
 
 use Closure;
-use Honed\Action\Concerns\HasAction;
 use Honed\Action\Concerns\HasConfirm;
 use Honed\Action\Confirm;
 use Honed\Core\Concerns\Allowable;
@@ -51,7 +50,7 @@ abstract class Operation extends Primitive
     /**
      * Execute the action on a resource.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $record
+     * @param  Model|\Illuminate\Database\Eloquent\Builder<Model>  $record
      * @return mixed
      */
     abstract public function execute($record);
@@ -119,7 +118,7 @@ abstract class Operation extends Primitive
 
     /**
      * Provide a selection of default dependencies for evaluation by name.
-     * 
+     *
      * @param  string  $parameterName
      * @return array<int, mixed>
      */
@@ -137,7 +136,7 @@ abstract class Operation extends Primitive
 
     /**
      * Provide a selection of default dependencies for evaluation by type.
-     * 
+     *
      * @param  string  $parameterType
      * @return array<int, mixed>
      */

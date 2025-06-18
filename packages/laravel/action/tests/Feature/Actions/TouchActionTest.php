@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Carbon\Carbon;
-use Workbench\App\Models\Product;
 use Workbench\App\Actions\Product\TouchProduct;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->action = new TouchProduct();

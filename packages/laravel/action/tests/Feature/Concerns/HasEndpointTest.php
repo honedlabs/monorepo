@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Batch;
 use Honed\Action\Concerns\HasEndpoint;
-use Workbench\App\Batches\UserBatch;
 
 beforeEach(function () {
     $this->test = new class()

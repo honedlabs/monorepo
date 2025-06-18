@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Workbench\App\Processes;
 
+use Closure;
 use Honed\Action\Process;
-use Workbench\App\Actions\Product\StoreProduct;
 use Workbench\App\Actions\Product\DispatchProductCreated;
+use Workbench\App\Actions\Product\StoreProduct;
 
 /**
  * @template TPayload
@@ -26,7 +27,7 @@ class ProductProcess extends Process
     /**
      * The tasks to be sequentially executed.
      *
-     * @return array<int, class-string|\Closure>
+     * @return array<int, class-string|Closure>
      */
     protected function tasks()
     {

@@ -20,7 +20,7 @@ class TouchAction extends DatabaseAction
     {
         return null;
     }
-    
+
     /**
      * Update the provided model using the input.
      *

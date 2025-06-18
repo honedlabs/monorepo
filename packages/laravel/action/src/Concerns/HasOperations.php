@@ -7,7 +7,6 @@ namespace Honed\Action\Concerns;
 use Honed\Action\Batch;
 use Honed\Action\Operations\InlineOperation;
 use Honed\Action\Operations\Operation;
-use Honed\Core\Parameters;
 
 use function array_filter;
 use function array_map;

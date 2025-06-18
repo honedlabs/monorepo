@@ -4,30 +4,26 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\Action;
-use Illuminate\Support\ValidatedInput;
-use Honed\Action\Concerns\CanBeTransaction;
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  */
 class UpdateAction extends DatabaseAction
 {
     /**
+     * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
+     */
+    use Concerns\InteractsWithFormData;
+
+    /**
      * Update the provided model using the input.
      *
      * @param  TModel  $model
-     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput|FormRequest  $input
+     * @param  TInput  $input
      * @return TModel $model
      */
     public function handle($model, $input)
     {
-        if ($input instanceof FormRequest) {
-            /** @var \Illuminate\Support\ValidatedInput */
-            $input = $input->safe();
-        }
-
         return $this->transact(
             fn () => $this->update($model, $input)
         );
@@ -36,20 +32,20 @@ class UpdateAction extends DatabaseAction
     /**
      * Prepare the input for the update method.
      *
-     * @param  \Illuminate\Support\ValidatedInput  $input
+     * @param  TInput  $input
      * @param  TModel  $model
      * @return array<string, mixed>
      */
     protected function prepare($model, $input)
     {
-        return $input instanceof ValidatedInput ? $input->all() : $input;
+        return $this->normalize($input);
     }
 
     /**
      * Update the record in the database.
      *
      * @param  TModel  $model
-     * @param  \Illuminate\Support\ValidatedInput  $input
+     * @param  TInput  $input
      * @return TModel
      */
     protected function update($model, $input)
@@ -67,7 +63,7 @@ class UpdateAction extends DatabaseAction
      * Perform additional database transactions after the model has been updated.
      *
      * @param  TModel  $model
-     * @param  \Illuminate\Support\ValidatedInput  $input
+     * @param  TInput  $input
      * @param  array<string, mixed>  $prepared
      * @return void
      */

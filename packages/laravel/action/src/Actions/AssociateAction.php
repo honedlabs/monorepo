@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Concerns\CanBeTransaction;
-use Honed\Action\Contracts\Action;
 use Honed\Action\Contracts\Relatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,7 +19,7 @@ abstract class AssociateAction extends DatabaseAction implements Relatable
      *
      * @param  TModel  $model
      * @param  int|string|TParent  $parent
-     * @return void
+     * @return TModel
      */
     public function handle($model, $parent)
     {

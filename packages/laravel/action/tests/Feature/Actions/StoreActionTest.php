@@ -3,10 +3,9 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Request;
-use Workbench\App\Models\Product;
 use Illuminate\Support\ValidatedInput;
-use Workbench\App\Http\Requests\NameRequest;
 use Workbench\App\Actions\Product\StoreProduct;
+use Workbench\App\Http\Requests\NameRequest;
 
 beforeEach(function () {
     $this->action = new StoreProduct();

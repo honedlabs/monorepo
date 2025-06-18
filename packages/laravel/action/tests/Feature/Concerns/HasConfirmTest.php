@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Honed\Action\Confirm;
 use Honed\Action\Operations\InlineOperation;
-use Honed\Core\Parameters;
 use Workbench\App\Models\User;
 
 beforeEach(function () {

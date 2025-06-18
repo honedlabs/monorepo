@@ -5,10 +5,8 @@ declare(strict_types=1);
 use Honed\Action\Action;
 use Honed\Action\Confirm;
 use Honed\Action\Operations\InlineOperation;
-use Honed\Core\Parameters;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
-use Workbench\App\Actions\Inline\DestroyAction;
 use Workbench\App\Models\User;
 use Workbench\App\Operations\DestroyOperation;
 
@@ -20,11 +18,9 @@ beforeEach(function () {
 it('has implicit route bindings', function () {
     $user = User::factory()->create();
 
-    [$named, $typed] = Parameters::model($user);
-
     $this->action->route('users.show', '{user}');
 
-    expect($this->action->toArray($named, $typed))
+    expect($this->action->record($user)->toArray())
         ->toHaveKey('route')
         ->{'route'}
         ->scoped(fn ($route) => $route

@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Concerns\CanBeTransaction;
-use Honed\Action\Contracts\Action;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\ValidatedInput;
+use Honed\Action\Actions\Concerns\InteractsWithFormData;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  */
 abstract class StoreAction extends DatabaseAction
 {
+    /**
+     * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
+     */
+    use InteractsWithFormData;
+
     /**
      * Get the model to store the input data in.
      *
@@ -24,16 +27,11 @@ abstract class StoreAction extends DatabaseAction
     /**
      * Store the input data in the database.
      *
-     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput|FormRequest  $input
+     * @param  TInput  $input
      * @return TModel $model
      */
     public function handle($input)
     {
-        if ($input instanceof FormRequest) {
-            /** @var \Illuminate\Support\ValidatedInput */
-            $input = $input->safe();
-        }
-
         return $this->transact(
             fn () => $this->store($input)
         );
@@ -42,18 +40,18 @@ abstract class StoreAction extends DatabaseAction
     /**
      * Prepare the input for the update method.
      *
-     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput  $input
+     * @param  TInput  $input
      * @return array<string, mixed>
      */
     protected function prepare($input)
     {
-        return $input instanceof ValidatedInput ? $input->all() : $input;
+        return $this->normalize($input);
     }
 
     /**
      * Store the record in the database.
      *
-     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput  $input
+     * @param  TInput  $input
      * @return TModel
      */
     protected function store($input)
@@ -73,7 +71,7 @@ abstract class StoreAction extends DatabaseAction
      * Perform additional database transactions after the model has been updated.
      *
      * @param  TModel  $model
-     * @param  \Illuminate\Support\ValidatedInput  $input
+     * @param  TInput  $input
      * @param  array<string, mixed>  $prepared
      * @return void
      */

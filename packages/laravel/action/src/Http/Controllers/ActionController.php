@@ -30,7 +30,7 @@ class ActionController extends Controller
     /**
      * Get the class containing the action handler.
      *
-     * @return class-string<\Honed\Action\Contracts\HandlesActions>
+     * @return class-string<\Honed\Action\Contracts\HandlesOperations>
      */
     protected function from()
     {

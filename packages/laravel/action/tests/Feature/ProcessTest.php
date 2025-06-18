@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Contracts\Container\Container;
+declare(strict_types=1);
+
 use Illuminate\Support\Facades\Event;
 use Workbench\App\Events\ProductCreated;
 use Workbench\App\Models\Product;

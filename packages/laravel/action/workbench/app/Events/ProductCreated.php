@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Workbench\App\Events;
 
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 use Workbench\App\Models\Product;
 
 class ProductCreated
@@ -18,5 +18,5 @@ class ProductCreated
      */
     public function __construct(
         protected Product $product
-    ) { }
+    ) {}
 }

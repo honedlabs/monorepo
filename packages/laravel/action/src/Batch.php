@@ -9,6 +9,7 @@ use Honed\Action\Concerns\CanHandleOperations;
 use Honed\Action\Contracts\Handler;
 use Honed\Action\Contracts\HandlesOperations;
 use Honed\Action\Handler as ActionHandler;
+use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Primitive;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
@@ -22,6 +23,7 @@ use Throwable;
 class Batch extends Primitive implements HandlesOperations
 {
     use CanHandleOperations;
+    use HasRecord;
 
     /**
      * The default namespace where batches reside.
@@ -122,6 +124,27 @@ class Batch extends Primitive implements HandlesOperations
     }
 
     /**
+     * Get the parent class for the instance.
+     *
+     * @return class-string<Batch>
+     */
+    public static function getParentClass()
+    {
+        return self::class;
+    }
+
+    /**
+     * Set the record to be used for the batch.
+     *
+     * @param  array<string, mixed>|TModel  $model
+     * @return $this
+     */
+    public function for($model)
+    {
+        return $this->record($model);
+    }
+
+    /**
      * Get the route key for the instance.
      *
      * @return string
@@ -143,16 +166,6 @@ class Batch extends Primitive implements HandlesOperations
     }
 
     /**
-     * Get the parent class for the instance.
-     *
-     * @return class-string<Batch>
-     */
-    public static function getParentClass()
-    {
-        return self::class;
-    }
-
-    /**
      * Get the instance as an array.
      *
      * @return array<string, mixed>
@@ -160,7 +173,7 @@ class Batch extends Primitive implements HandlesOperations
     public function toArray()
     {
         $operations = [
-            'inline' => $this->inlineOperationsToArray($this->getModel()),
+            'inline' => $this->inlineOperationsToArray($this->getRecord()),
             'bulk' => $this->bulkOperationsToArray(),
             'page' => $this->pageOperationsToArray(),
         ];

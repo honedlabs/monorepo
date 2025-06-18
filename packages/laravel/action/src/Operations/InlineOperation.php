@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Action\Operations;
 
-use Honed\Core\Parameters;
 use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Concerns\IsDefault;
 use Illuminate\Database\Eloquent\Model;
 
 class InlineOperation extends Operation
 {
-    use IsDefault;
     use HasRecord;
+    use IsDefault;
 
     /**
      * Provide the instance with any necessary setup.
@@ -40,7 +39,7 @@ class InlineOperation extends Operation
     /**
      * Execute the inline action on the given record.
      *
-     * @param  array<string, mixed>|\Illuminate\Database\Eloquent\Model  $record
+     * @param  array<string, mixed>|Model  $record
      * @return mixed
      */
     public function execute($record)
@@ -69,21 +68,21 @@ class InlineOperation extends Operation
 
     /**
      * Provide a selection of default dependencies for evaluation by name.
-     * 
+     *
      * @param  string  $parameterName
      * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return match ($parameterName) {
-            'record', 'row' => [$this->getRecord()],
+            'model', 'record', 'row' => [$this->getRecord()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
 
     /**
      * Provide a selection of default dependencies for evaluation by type.
-     * 
+     *
      * @param  string  $parameterType
      * @return array<int, mixed>
      */

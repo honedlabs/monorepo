@@ -8,7 +8,7 @@ use Honed\Action\Actions\TouchAction;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
- * 
+ *
  * @extends TouchAction<Product>
  */
 class TouchProduct extends TouchAction

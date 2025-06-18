@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Action\Operations;
 
-use Honed\Action\Concerns\HandlesBulkActions;
-
 class BulkOperation extends Operation
 {
     use Concerns\HandlesBulkActions;

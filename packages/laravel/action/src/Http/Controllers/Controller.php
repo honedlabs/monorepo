@@ -15,7 +15,7 @@ abstract class Controller extends BaseController
     /**
      * Get the class containing the action handler.
      *
-     * @return class-string<\Honed\Action\Contracts\HandleActions>
+     * @return class-string<\Honed\Action\Contracts\HandlesOperations>
      */
     abstract protected function from();
 
@@ -48,7 +48,7 @@ abstract class Controller extends BaseController
         /** @var string */
         $key = $request->validated('id');
 
-        /** @var \Honed\Action\Contracts\HandlesActions|null */
+        /** @var \Honed\Action\Contracts\HandlesOperations|null */
         $action = $this->from()::find($key);
 
         if (! $action) {

@@ -7,8 +7,8 @@ namespace Honed\Action\Actions;
 use Honed\Action\Contracts\Action;
 
 /**
- * @template TDispatch of object
- * @template TPayload of mixed
+ * @template TDispatch
+ * @template TPayload
  */
 abstract class DispatchAction implements Action
 {

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Operations\Concerns\HasAction;
 use Honed\Action\Contracts\Action;
+use Honed\Action\Operations\Concerns\HasAction;
 use Workbench\App\Actions\User\DestroyUser;
 
 beforeEach(function () {

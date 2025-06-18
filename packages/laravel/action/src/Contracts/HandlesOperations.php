@@ -17,18 +17,18 @@ interface HandlesOperations extends UrlRoutable
     public static function find($value);
 
     /**
-     * Get the handler for the instance.
-     *
-     * @return class-string<\Honed\Action\Handlers\Handler>
-     */
-    public function getHandler();
-
-    /**
      * Get the parent class for the instance.
      *
-     * @return class-string<\Honed\Action\Contracts\HandlesOperations>
+     * @return class-string<HandlesOperations>
      */
     public static function getParentClass();
+
+    /**
+     * Get the handler for the instance.
+     *
+     * @return class-string<\Honed\Action\Handlers\Handler<$this>>
+     */
+    public function getHandler();
 
     /**
      * Handle the incoming action request.

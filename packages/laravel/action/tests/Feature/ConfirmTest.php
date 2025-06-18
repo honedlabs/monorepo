@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Action\Confirm;
-use Honed\Core\Parameters;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
@@ -71,7 +70,7 @@ it('resolves to array', function () {
         fn (User $p) => \sprintf('Are you sure you want to delete %s?', $p->name)
     );
 
-    expect($confirm->toArray(...Parameters::model($user)))
+    expect($confirm->record($user)->toArray())
         ->toEqual([
             'title' => $user->name,
             'description' => \sprintf('Are you sure you want to delete %s?', $user->name),

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Models\Product;
 use Illuminate\Support\Facades\Event;
-use Workbench\App\Events\ProductCreated;
 use Workbench\App\Actions\Product\DispatchProductCreated;
+use Workbench\App\Events\ProductCreated;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->action = new DispatchProductCreated();

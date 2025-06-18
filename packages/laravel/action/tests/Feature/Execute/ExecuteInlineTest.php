@@ -3,10 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Action\Operations\InlineOperation;
-use Honed\Core\Parameters;
 use Illuminate\Http\RedirectResponse;
-use Workbench\App\Actions\DestroyUser;
-use Workbench\App\Actions\Inline\DestroyAction;
+use Workbench\App\Actions\User\DestroyUser;
 use Workbench\App\Models\User;
 use Workbench\App\Operations\DestroyOperation;
 

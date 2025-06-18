@@ -20,9 +20,9 @@ afterEach(function () {
 
 it('has model', function () {
     expect($this->group)
-        ->getModel()->toBeNull()
+        ->getRecord()->toBeNull()
         ->for(User::factory()->create())->toBe($this->group)
-        ->getModel()->toBeInstanceOf(User::class);
+        ->getRecord()->toBeInstanceOf(User::class);
 });
 
 it('has route key name', function () {
@@ -40,7 +40,6 @@ it('requires builder to handle requests', function () {
 })->throws(RuntimeException::class);
 
 it('handles requests with model', function () {
-
     $request = RequestFactory::page()
         ->fill()
         ->name('create.name')
@@ -71,19 +70,19 @@ it('resolves route binding', function () {
         ->toBeInstanceOf(UserBatch::class);
 });
 
-it('resolves action group', function () {
+it('resolves batch', function () {
     UserBatch::guessBatchNamesUsing(function ($class) {
         return Str::of($class)
             ->afterLast('\\')
-            ->prepend('Workbench\\App\\Batchs\\')
-            ->append('Actions')
+            ->prepend('Workbench\\App\\Batches\\')
+            ->append('Batch')
             ->value();
     });
 
     expect(UserBatch::resolveBatchName(User::class))
         ->toBe(UserBatch::class);
 
-    expect(UserBatch::actionGroupForModel(User::class))
+    expect(UserBatch::batchForModel(User::class))
         ->toBeInstanceOf(UserBatch::class);
 
     UserBatch::flushState();

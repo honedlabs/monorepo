@@ -29,5 +29,5 @@ return [
     |
     */
 
-    'handler' => Honed\Action\Handlers\ActionHandler::class,
+    'handler' => Honed\Action\Handlers\BatchHandler::class,
 ];

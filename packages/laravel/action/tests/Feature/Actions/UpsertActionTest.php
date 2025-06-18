@@ -3,11 +3,10 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Request;
-use Workbench\App\Models\Product;
-use Illuminate\Support\ValidatedInput;
 use Illuminate\Support\Facades\Validator;
-use Workbench\App\Http\Requests\NameRequest;
 use Workbench\App\Actions\Product\UpsertProduct;
+use Workbench\App\Http\Requests\NameRequest;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->action = new UpsertProduct();
@@ -34,14 +33,14 @@ it('updates a record', function () {
 
     $this->action->handle([
         'id' => $product->id,
-        'name' => $this->name
+        'name' => $this->name,
     ]);
 
     $this->assertDatabaseCount('products', 1);
 
     $this->assertDatabaseHas('products', [
         'id' => $product->id,
-        'name' => $this->name
+        'name' => $this->name,
     ]);
 });
 
@@ -54,12 +53,12 @@ it('upserts multiple records', function () {
     $values = [
         [
             'id' => $product->id,
-            'name' => $this->name
+            'name' => $this->name,
         ],
         [
             'id' => 5,
-            'name' => $this->name
-        ]
+            'name' => $this->name,
+        ],
     ];
 
     $this->action->handle($values);
@@ -68,12 +67,12 @@ it('upserts multiple records', function () {
 
     $this->assertDatabaseHas('products', [
         'id' => $product->id,
-        'name' => $this->name
+        'name' => $this->name,
     ]);
 
     $this->assertDatabaseHas('products', [
         'id' => 5,
-        'name' => $this->name
+        'name' => $this->name,
     ]);
 });
 

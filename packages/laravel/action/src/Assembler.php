@@ -18,7 +18,7 @@ abstract class Assembler
 
     /**
      * Create a new instance of the assembler.
-     * 
+     *
      * @return static
      */
     public static function make()
@@ -59,8 +59,10 @@ abstract class Assembler
     /**
      * The type of the action to be generated.
      *
-     * @param  class-string<Operation>  $type
-     * @return Operation
+     * @template TOperation of Operation
+     *
+     * @param  class-string<TOperation>  $type
+     * @return TOperation
      */
     protected static function create($type)
     {

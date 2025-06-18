@@ -11,7 +11,7 @@ it('has attribute', function () {
 
     expect($attribute)
         ->toBeInstanceOf(UseBatch::class)
-        ->actionGroupClass->toBe(UserBatch::class);
+        ->batchClass->toBe(UserBatch::class);
 
     expect(User::class)
         ->toHaveAttribute(UseBatch::class);

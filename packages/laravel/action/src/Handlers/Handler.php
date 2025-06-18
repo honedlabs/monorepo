@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use function array_fill_keys;
 
 /**
- * @template TClass of mixed
+ * @template TClass of \Honed\Core\Primitive
  */
 abstract class Handler
 {
@@ -39,7 +39,7 @@ abstract class Handler
     abstract protected function getKey();
 
     /**
-     * Get the actions to be used to resolve the action.
+     * Get the operations to be used to resolve the action.
      *
      * @return array<int,Operation>
      */

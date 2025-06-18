@@ -61,7 +61,7 @@ trait HandlesBulkActions
     /**
      * Set the action to chunk the records.
      *
-     * @param  bool|null  $chunks
+     * @param  bool|null  $chunk
      * @return $this
      */
     public function chunk($chunk = true)
@@ -84,7 +84,7 @@ trait HandlesBulkActions
     /**
      * Set the action to chunk the records by id.
      *
-     * @param  bool|null  $chunksById
+     * @param  bool|null  $byId
      * @return $this
      */
     public function chunkById($byId = true)
@@ -107,7 +107,7 @@ trait HandlesBulkActions
     /**
      * Set the size of the chunk to use when chunking the records.
      *
-     * @param  int|null  $size
+     * @param  int  $size
      * @return $this
      */
     public function chunkSize($size)

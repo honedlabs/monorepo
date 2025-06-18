@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Pipeline;
 use RuntimeException;
 use Throwable;
 
+use function array_map;
+
 /**
  * @template TPayload
  * @template TResult
@@ -21,20 +23,20 @@ abstract class Process
     /**
      * The container implementation.
      *
-     * @var \Illuminate\Contracts\Container\Container|null
+     * @var Container|null
      */
     protected $container;
 
     /**
      * Create a new class instance.
      *
-     * @param  \Illuminate\Contracts\Container\Container|null  $container
      * @return void
      */
     public function __construct(?Container $container = null)
     {
         $this->container = $container;
     }
+
     /**
      * The tasks to be sequentially executed.
      *
@@ -44,7 +46,7 @@ abstract class Process
 
     /**
      * Create a new instance of the process.
-     * 
+     *
      * @return static
      */
     public static function make()
@@ -81,11 +83,23 @@ abstract class Process
     }
 
     /**
+     * Set the container instance.
+     *
+     * @return $this
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+
+        return $this;
+    }
+
+    /**
      * Get the container instance.
      *
-     * @return \Illuminate\Contracts\Container\Container
+     * @return Container
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected function getContainer()
     {
@@ -94,19 +108,6 @@ abstract class Process
         }
 
         return $this->container;
-    }
-
-    /**
-     * Set the container instance.
-     *
-     * @param  \Illuminate\Contracts\Container\Container  $container
-     * @return $this
-     */
-    public function setContainer(Container $container)
-    {
-        $this->container = $container;
-
-        return $this;
     }
 
     /**
@@ -146,13 +147,13 @@ abstract class Process
 
     /**
      * Generate the pipelines with closures.
-     * 
+     *
      * @return array<int, callable>
      */
     protected function pipelines()
     {
-        return \array_map(
-            fn ($task) => is_callable($task) 
+        return array_map(
+            fn ($task) => is_callable($task)
                 ? $task
                 : fn ($payload, $next) => $next(
                     $this->getContainer()

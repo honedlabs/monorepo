@@ -26,14 +26,12 @@ it('adds operations', function () {
     expect($this->test)
         ->operations([PageOperation::make('view')])->toBe($this->test)
         ->operations([InlineOperation::make('edit')])->toBe($this->test)
-        ->hasOperations()->toBeTrue()
         ->getOperations()->toHaveCount(2);
 });
 
 it('adds action groups', function () {
     expect($this->test)
         ->operations(Batch::make(PageOperation::make('view')))->toBe($this->test)
-        ->hasOperations()->toBeTrue()
         ->getOperations()->toHaveCount(1);
 });
 
@@ -67,11 +65,11 @@ it('has inline operations array representation', function () {
     expect($this->test)
         ->operations([
             InlineOperation::make('create')
-                ->label(fn ($user) => $user->name)
-                ->allow(fn ($user) => $user->id % 2 === 1),
+                ->label(fn ($record) => $record->name)
+                ->allow(fn ($record) => $record->id % 2 === 1),
             InlineOperation::make('edit')
-                ->label(fn ($user) => $user->name)
-                ->allow(fn ($user) => $user->id % 2 === 0),
+                ->label(fn ($record) => $record->name)
+                ->allow(fn ($record) => $record->id % 2 === 0),
         ])
         ->inlineOperationsToArray($user)->toHaveCount(1);
 });
