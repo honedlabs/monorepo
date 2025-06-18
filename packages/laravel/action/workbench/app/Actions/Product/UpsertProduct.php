@@ -43,4 +43,4 @@ class UpsertProduct extends UpsertAction
     {
         return ['name'];
     }
-} 
+}

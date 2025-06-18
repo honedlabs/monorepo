@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Action\BulkAction;
 use Honed\Action\Operations\BulkOperation;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;

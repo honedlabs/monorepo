@@ -15,7 +15,7 @@ beforeEach(function () {
 
 it('does not restore a model that is not soft deleted', function () {
     $this->action->handle($this->product);
-    
+
     $this->product->refresh();
 
     $this->assertNotSoftDeleted('products', [
@@ -29,9 +29,9 @@ it('restores a soft deleted model', function () {
     $this->assertSoftDeleted('products', [
         'id' => $this->product->id,
     ]);
-    
+
     $this->action->handle($this->product);
-    
+
     $this->assertNotSoftDeleted('products', [
         'id' => $this->product->id,
     ]);

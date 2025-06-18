@@ -14,4 +14,4 @@ use Honed\Action\Actions\RestoreAction;
 class RestoreProduct extends RestoreAction
 {
     //
-} 
+}

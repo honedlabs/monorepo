@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Action\Handler;
-use Honed\Action\InlineAction;
-use Workbench\App\Models\Product;
 use Honed\Action\Operations\InlineOperation;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->builder = Product::query();

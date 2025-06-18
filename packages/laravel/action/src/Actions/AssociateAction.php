@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\Action;
-use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Concerns\CanBeTransaction;
+use Honed\Action\Contracts\Action;
 use Honed\Action\Contracts\Relatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -38,11 +38,11 @@ abstract class AssociateAction implements Action, Relatable
      * Get the relation for the model.
      *
      * @param  TModel  $model
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TParent, TModel>
+     * @return BelongsTo<TParent, TModel>
      */
     protected function getRelation($model)
     {
-        /** @var \Illuminate\Database\Eloquent\Relations\BelongsTo<TParent, TModel> */
+        /** @var BelongsTo<TParent, TModel> */
         return $model->{$this->relationship()}();
     }
 

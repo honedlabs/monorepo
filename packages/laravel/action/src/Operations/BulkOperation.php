@@ -6,12 +6,10 @@ namespace Honed\Action\Operations;
 
 use Honed\Action\Concerns\HandlesBulkActions;
 
-use function array_merge;
-
 class BulkOperation extends Operation
 {
     use HandlesBulkActions;
-    
+
     /**
      * Whether the action keeps the records selected after successful execution.
      *
@@ -63,5 +61,16 @@ class BulkOperation extends Operation
             ...parent::toArray(),
             'keepSelected' => $this->keepsSelected(),
         ];
+    }
+
+    /**
+     * Define the bulk operation instance.
+     *
+     * @param  $this  $operation
+     * @return $this
+     */
+    protected function definition(self $operation): self
+    {
+        return $operation;
     }
 }

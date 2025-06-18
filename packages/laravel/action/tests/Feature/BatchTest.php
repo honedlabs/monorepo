@@ -3,13 +3,12 @@
 declare(strict_types=1);
 
 use Honed\Action\Batch;
-use Illuminate\Support\Str;
-use Honed\Action\PageAction;
-use Workbench\App\Models\User;
-use Illuminate\Http\RedirectResponse;
-use Honed\Action\Testing\RequestFactory;
 use Honed\Action\Operations\PageOperation;
+use Honed\Action\Testing\RequestFactory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Workbench\App\Batches\UserBatch;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->group = Batch::make(PageOperation::make('create'));

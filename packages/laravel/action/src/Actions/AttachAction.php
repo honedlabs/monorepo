@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Illuminate\Support\Arr;
-use Honed\Action\Contracts\Action;
-use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Concerns\CanBeTransaction;
+use Honed\Action\Contracts\Action;
 use Honed\Action\Contracts\Relatable;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -42,11 +42,11 @@ abstract class AttachAction implements Action, Relatable
      * Get the relation for the model.
      *
      * @param  TModel  $model
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach>
+     * @return BelongsToMany<TModel, TAttach>
      */
     protected function getRelation($model)
     {
-        /** @var \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach> */
+        /** @var BelongsToMany<TModel, TAttach> */
         return $model->{$this->relationship()}();
     }
 

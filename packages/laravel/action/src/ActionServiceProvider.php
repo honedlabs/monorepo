@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Action\Commands\BatchMakeCommand;
 use Honed\Action\Commands\ActionMakeCommand;
 use Honed\Action\Commands\ActionsMakeCommand;
+use Honed\Action\Commands\AssemblerMakeCommand;
+use Honed\Action\Commands\BatchMakeCommand;
 use Honed\Action\Commands\OperationMakeCommand;
 use Honed\Action\Commands\ProcessMakeCommand;
 use Honed\Action\Http\Controllers\ActionController;
-use Honed\Action\Commands\AssemblerMakeCommand;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
@@ -67,7 +67,6 @@ class ActionServiceProvider extends ServiceProvider
     {
         Router::macro('actions', function () {
             /** @var Router $this */
-
             $methods = ['post', 'patch', 'put'];
 
             $endpoint = Batch::getDefaultEndpoint();

@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\DB;
 trait CanBeTransaction
 {
     /**
-     * Indicate whether to wrap the update in a database transaction.
+     * Indicate whether to wrap the callback in a database transaction.
      *
      * @var bool
      */
     protected $transaction = false;
 
     /**
-     * Set whether to wrap the update in a database transaction.
+     * Set whether to wrap the callback in a database transaction.
      *
      * @param  bool  $transaction
      * @return $this

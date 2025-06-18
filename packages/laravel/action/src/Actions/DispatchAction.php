@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\Action;
-use Honed\Action\Contracts\Dispatches;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * @template TDispatch of \Honed\Action\Contracts\Dispatches
@@ -30,7 +28,7 @@ abstract class DispatchAction implements Action
     public function handle($payload)
     {
         $event = $this->dispatch();
-        
+
         $event::dispatch($payload);
 
         $this->after($payload, $event);

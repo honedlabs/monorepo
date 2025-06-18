@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Action\Operations\Operation;
-use Honed\Action\Operations\InlineOperation;
 use Honed\Action\Operations\BulkOperation;
+use Honed\Action\Operations\InlineOperation;
+use Honed\Action\Operations\Operation;
 use Honed\Action\Operations\PageOperation;
 
 abstract class Assembler
 {
     /**
      * Configure the action.
-     * 
-     * @param  Operation  $operation
-     * @return Operation
      */
     abstract protected function definition(Operation $operation): Operation;
 

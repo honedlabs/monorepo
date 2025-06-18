@@ -21,4 +21,15 @@ class PageOperation extends Operation
 
         $this->type(self::PAGE);
     }
+
+    /**
+     * Define the page operation instance.
+     *
+     * @param  $this  $operation
+     * @return $this
+     */
+    protected function definition(self $operation): self
+    {
+        return $operation;
+    }
 }

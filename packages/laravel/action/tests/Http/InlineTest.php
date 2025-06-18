@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Honed\Action\Testing\InlineRequest;
 use Illuminate\Support\Str;
 use Workbench\App\Batches\UserBatch;
-use Workbench\App\Batchs\UserActions;
 use Workbench\App\Models\User;
 
 use function Pest\Laravel\post;

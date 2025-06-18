@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Action\Batch;
-use Honed\Action\Operations\BulkOperation;
 use Honed\Action\Concerns\HasOperations;
+use Honed\Action\Operations\BulkOperation;
 use Honed\Action\Operations\InlineOperation;
 use Honed\Action\Operations\PageOperation;
 use Honed\Core\Primitive;

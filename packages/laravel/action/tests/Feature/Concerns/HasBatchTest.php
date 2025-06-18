@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Batchs\UserActions;
 use Workbench\App\Batches\UserBatch;
 use Workbench\App\Models\User;
 

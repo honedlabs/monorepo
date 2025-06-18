@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-use Honed\Action\Batch;
 use Honed\Action\Attributes\UseBatch;
+use Honed\Action\Batch;
 use ReflectionClass;
 
 /**

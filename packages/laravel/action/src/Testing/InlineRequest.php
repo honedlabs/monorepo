@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Action\Testing;
 
-use Honed\Action\Action;
-use function array_merge;
-
-use Honed\Action\Support\Constants;
 use Honed\Action\Operations\Operation;
 
 class InlineRequest extends FakeRequest

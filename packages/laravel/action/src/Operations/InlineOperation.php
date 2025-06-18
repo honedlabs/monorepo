@@ -7,8 +7,6 @@ namespace Honed\Action\Operations;
 use Honed\Core\Concerns\IsDefault;
 use Honed\Core\Parameters;
 
-use function array_merge;
-
 class InlineOperation extends Operation
 {
     use IsDefault;
@@ -53,5 +51,16 @@ class InlineOperation extends Operation
         [$named, $typed] = Parameters::model($record);
 
         return $this->evaluate($handler, $named, $typed);
+    }
+
+    /**
+     * Define the inline operation instance.
+     *
+     * @param  $this  $operation
+     * @return $this
+     */
+    protected function definition(self $operation): self
+    {
+        return $operation;
     }
 }

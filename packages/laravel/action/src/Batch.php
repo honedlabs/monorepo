@@ -25,8 +25,6 @@ class Batch extends Primitive
 
     /**
      * The default namespace where action groups reside.
-     *
-     * @var string
      */
     public static string $namespace = 'App\\Batches\\';
 
@@ -41,7 +39,6 @@ class Batch extends Primitive
      * Create a new action group instance.
      *
      * @param  Operation|Batch|array<int, Operation|Batch>  $operations
-     * @return static
      */
     public static function make($operations = []): static
     {
@@ -57,7 +54,7 @@ class Batch extends Primitive
      * @param  class-string<TClass>  $modelName
      * @return Batch<TClass>
      */
-    public static function batchForModel(string $modelName): Batch
+    public static function batchForModel(string $modelName): self
     {
         $table = static::resolveBatchName($modelName);
 
@@ -88,9 +85,6 @@ class Batch extends Primitive
 
     /**
      * Specify the default namespace that contains the application's model action groups.
-     *
-     * @param  string  $namespace
-     * @return void
      */
     public static function useNamespace(string $namespace): void
     {
@@ -101,7 +95,6 @@ class Batch extends Primitive
      * Specify the callback that should be invoked to guess the name of a model action group.
      *
      * @param  Closure(class-string):class-string<Batch>  $callback
-     * @return void
      */
     public static function guessBatchNamesUsing(Closure $callback): void
     {
@@ -110,24 +103,11 @@ class Batch extends Primitive
 
     /**
      * Flush the action group's global configuration state.
-     *
-     * @return void
      */
     public static function flushState(): void
     {
         static::$batchNameResolver = null;
         static::$namespace = 'App\\Batches\\';
-    }
-
-    /**
-     * Define the operations for the action group.
-     *
-     * @param  $this  $operations
-     * @return $this
-     */
-    protected function definition(self $operations): self
-    {
-        return $operations;
     }
 
     /**
@@ -138,9 +118,6 @@ class Batch extends Primitive
         return 'action';
     }
 
-    /**
-     * 
-     */
     public function getHandler()
     {
         return config('action.handler', ActionHandler::class);
@@ -195,5 +172,16 @@ class Batch extends Primitive
         } catch (Throwable) {
             return 'App\\';
         }
+    }
+
+    /**
+     * Define the operations for the action group.
+     *
+     * @param  $this  $operations
+     * @return $this
+     */
+    protected function definition(self $operations): self
+    {
+        return $operations;
     }
 }

@@ -4,25 +4,20 @@ declare(strict_types=1);
 
 namespace Honed\Action\Handlers;
 
-use Honed\Core\Parameters;
-use Illuminate\Support\Arr;
-use InvalidArgumentException;
-use Illuminate\Support\Facades\App;
+use Honed\Action\Exceptions\OperationNotFoundException;
 use Honed\Action\Http\Data\BulkData;
-use Honed\Core\Concerns\HasResource;
-use Honed\Action\Http\Data\ActionData;
 use Honed\Action\Http\Data\InlineData;
 use Honed\Action\Operations\Operation;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Contracts\Support\Responsable;
-use Honed\Action\Exceptions\InvalidActionException;
-use Honed\Action\Exceptions\ActionNotFoundException;
-use Honed\Action\Exceptions\ActionNotAllowedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Honed\Action\Exceptions\OperationNotFoundException;
+use Honed\Core\Parameters;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Redirect;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use function array_fill_keys;
 
 /**
  * @template TClass of mixed
@@ -53,7 +48,7 @@ abstract class Handler
     /**
      * Get the query builder to be used to retrieve resources.
      *
-     * @return \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
+     * @return Builder<Model>
      */
     abstract protected function getBuilder();
 
@@ -141,14 +136,14 @@ abstract class Handler
 
         $key = $this->getKey($builder);
 
-        /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder */
+        /** @var Builder<Model> $builder */
         $builder = $data->all
             ? $builder->whereNotIn($key, $data->except)
             : $builder->whereIn($key, $data->only);
 
         $action = Arr::first(
             $this->getOperations(),
-            static fn (Operation $action) => $action->isBulk() 
+            static fn (Operation $action) => $action->isBulk()
                 && $action->getName() === $data->name
         );
 
@@ -204,11 +199,11 @@ abstract class Handler
      */
     protected function getNamedParameters($resource, $builder)
     {
-        $keys = $builder 
-            ? ['builder', 'query', 'q'] 
+        $keys = $builder
+            ? ['builder', 'query', 'q']
             : ['model', 'record', 'row'];
 
-        return \array_fill_keys(
+        return array_fill_keys(
             $keys,
             $resource
         );
@@ -223,11 +218,11 @@ abstract class Handler
      */
     protected function getTypedParameters($resource, $builder)
     {
-        $keys = $builder 
-            ? [Builder::class, BuilderContract::class] 
+        $keys = $builder
+            ? [Builder::class, BuilderContract::class]
             : [Model::class];
 
-        return \array_fill_keys(
+        return array_fill_keys(
             $keys,
             $resource
         );

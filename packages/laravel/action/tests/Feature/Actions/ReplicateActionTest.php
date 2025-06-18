@@ -44,7 +44,6 @@ it('replicates a model with attributes', function () {
     ]);
 });
 
-
 it('replicates a model with validated attributes', function () {
     $input = Validator::make([
         'name' => $this->name,
@@ -69,7 +68,7 @@ it('replicates a model with a form request', function () {
     ]);
 
     $this->app->instance('request', $request);
-    
+
     $request = $this->app->make(NameRequest::class);
 
     $request->setContainer($this->app);

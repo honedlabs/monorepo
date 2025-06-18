@@ -22,4 +22,4 @@ class ReplicateProduct extends ReplicateAction
     {
         return ['price'];
     }
-} 
+}

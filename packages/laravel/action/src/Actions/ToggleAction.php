@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Illuminate\Support\Arr;
-use Honed\Action\Contracts\Action;
 use Honed\Action\Concerns\CanBeTransaction;
+use Honed\Action\Contracts\Action;
 use Honed\Action\Contracts\Relatable;
+use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
+use Honed\Action\Concerns\CanBeTransaction;
 use Honed\Action\Contracts\Action;
 use Honed\Action\Contracts\Relatable;
 use Illuminate\Database\Eloquent\Model;
-use Honed\Action\Concerns\CanBeTransaction;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
@@ -39,11 +39,11 @@ abstract class DetachAction implements Action, Relatable
      * Get the relation for the model.
      *
      * @param  TModel  $model
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TDetach>
+     * @return BelongsToMany<TModel, TDetach>
      */
     protected function getRelation($model)
     {
-        /** @var \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TDetach> */
+        /** @var BelongsToMany<TModel, TDetach> */
         return $model->{$this->relationship()}();
     }
 

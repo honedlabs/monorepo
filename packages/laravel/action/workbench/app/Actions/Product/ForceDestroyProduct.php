@@ -14,4 +14,4 @@ use Honed\Action\Actions\ForceDestroyAction;
 class ForceDestroyProduct extends ForceDestroyAction
 {
     //
-} 
+}

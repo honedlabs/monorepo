@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\Action;
-use Illuminate\Support\ValidatedInput;
 use Honed\Action\Concerns\CanBeTransaction;
+use Honed\Action\Contracts\Action;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\ValidatedInput;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -20,13 +20,13 @@ class ReplicateAction implements Action
      * Store the input data in the database.
      *
      * @param  TModel  $model
-     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput|FormRequest  $attributes
+     * @param  array<string, mixed>|ValidatedInput|FormRequest  $attributes
      * @return TModel $model
      */
     public function handle($model, $attributes = [])
     {
         if ($attributes instanceof FormRequest) {
-            /** @var \Illuminate\Support\ValidatedInput */
+            /** @var ValidatedInput */
             $attributes = $attributes->safe();
         }
 
@@ -38,7 +38,7 @@ class ReplicateAction implements Action
     /**
      * Prepare the attributes to override on replication
      *
-     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput  $attributes
+     * @param  array<string, mixed>|ValidatedInput  $attributes
      * @return array<string, mixed>
      */
     protected function prepare($attributes)
@@ -64,7 +64,7 @@ class ReplicateAction implements Action
      * Store the record in the database.
      *
      * @param  TModel  $model
-     * @param  array<string, mixed>|\Illuminate\Support\ValidatedInput  $attributes
+     * @param  array<string, mixed>|ValidatedInput  $attributes
      * @return TModel
      */
     protected function replicate($model, $attributes)

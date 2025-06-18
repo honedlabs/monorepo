@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\ValidatedInput;
 use Workbench\App\Actions\Product\StoreProduct;
 use Workbench\App\Models\Product;

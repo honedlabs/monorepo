@@ -47,7 +47,7 @@ abstract class Process
     public function handle($payload)
     {
         return $this->transact(
-            fn() => $this->pipe($payload)
+            fn () => $this->pipe($payload)
         );
     }
 
@@ -74,7 +74,7 @@ abstract class Process
 
     /**
      * Execute the pipeline.
-     * 
+     *
      * @param  TPayload  $payload
      * @return TResult
      */

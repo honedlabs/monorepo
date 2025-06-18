@@ -5,15 +5,23 @@ declare(strict_types=1);
 namespace Honed\Action\Concerns;
 
 use Illuminate\Support\Facades\App;
+use Throwable;
 
 trait CanResolveActions
 {
-    use HasOperations;
-    use HasEndpoint;
     use CanBeExecutable;
     use HasEncoder;
+    use HasEndpoint;
+    use HasOperations;
 
-        /**
+    /**
+     * Get the handler for the instance.
+     *
+     * @return class-string<Handler>
+     */
+    abstract public function getHandler();
+
+    /**
      * Decode and retrieve a primitive class.
      *
      * @param  string  $value
@@ -30,17 +38,10 @@ trait CanResolveActions
             }
 
             return null;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return null;
         }
     }
-
-    /**
-     * Get the handler for the instance.
-     *
-     * @return class-string<Handler>
-     */
-    abstract public function getHandler();
 
     /**
      * Retrieve the child model for a bound value.

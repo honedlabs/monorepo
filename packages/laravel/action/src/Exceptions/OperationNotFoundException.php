@@ -6,8 +6,6 @@ namespace Honed\Action\Exceptions;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-use function sprintf;
-
 class OperationNotFoundException extends NotFoundHttpException
 {
     /**

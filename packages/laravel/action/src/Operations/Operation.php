@@ -32,8 +32,20 @@ abstract class Operation extends Primitive
     public const INLINE = 'inline';
 
     public const BULK = 'bulk';
-    
+
     public const PAGE = 'page';
+
+    /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->definition($this);
+    }
 
     /**
      * Execute the action on a resource.
@@ -58,20 +70,7 @@ abstract class Operation extends Primitive
     }
 
     /**
-     * Define the action instance.
-     *
-     * @param  $this  $action
-     * @return $this
-     */
-    public function definition(self $action): self
-    {
-        return $action;
-    }
-
-    /**
      * Determine if the action is an inline action.
-     *
-     * @return bool
      */
     public function isInline(): bool
     {
@@ -80,8 +79,6 @@ abstract class Operation extends Primitive
 
     /**
      * Determine if the action is a bulk action.
-     *
-     * @return bool
      */
     public function isBulk(): bool
     {
@@ -111,18 +108,6 @@ abstract class Operation extends Primitive
             'confirm' => $this->getConfirm()?->toArray(),
             'route' => $this->routeToArray(),
         ];
-    }
-
-    /**
-     * Provide the instance with any necessary setup.
-     *
-     * @return void
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->definition($this);
     }
 
     /**
