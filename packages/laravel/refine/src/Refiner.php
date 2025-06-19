@@ -59,7 +59,7 @@ abstract class Refiner extends Primitive
      *
      * @return string
      */
-    public function getParameter()
+    public function getParameter(): string
     {
         return $this->getAlias() ?? $this->guessParameter();
     }

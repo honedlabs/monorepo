@@ -29,28 +29,28 @@ trait CanBeRefined
      *
      * @var bool
      */
-    protected bool $refined = false;
+    protected $refined = false;
 
     /**
      * The callback to be processed before the refiners.
      *
      * @var Closure|null
      */
-    protected ?Closure $before = null;
+    protected $before = null;
 
     /**
      * The callback to be processed after refinement.
      *
      * @var Closure|null
      */
-    protected ?Closure $after = null;
+    protected $after = null;
 
     /**
      * Determine if the refinements have been processed.
      *
      * @return bool
      */
-    public function isRefined(): bool
+    public function isRefined()
     {
         return $this->refined;
     }
@@ -58,10 +58,10 @@ trait CanBeRefined
     /**
      * Register the callback to be executed before the refiners.
      *
-     * @param  Closure  $callback
+     * @param  Closure|null  $callback
      * @return $this
      */
-    public function before(Closure $callback): self
+    public function before($callback)
     {
         $this->before = $callback;
 
@@ -69,11 +69,11 @@ trait CanBeRefined
     }
 
     /**
-     * Get the callback to be executed before the refiners.
+     * Get the callback to be executed before refinement.
      *
      * @return Closure|null
      */
-    public function getBeforeCallback(): ?Closure
+    public function getBeforeCallback()
     {
         return $this->before;
     }
@@ -81,10 +81,10 @@ trait CanBeRefined
     /**
      * Register the callback to be executed after refinement.
      *
-     * @param  Closure  $callback
+     * @param  Closure|null  $callback
      * @return $this
      */
-    public function after(Closure $callback): self
+    public function after($callback)
     {
         $this->after = $callback;
 
@@ -96,7 +96,7 @@ trait CanBeRefined
      *
      * @return Closure|null
      */
-    public function getAfterCallback(): ?Closure
+    public function getAfterCallback()
     {
         return $this->after;
     }
@@ -106,7 +106,7 @@ trait CanBeRefined
      *
      * @return $this
      */
-    public function refine(): self
+    public function refine()
     {
         if ($this->isRefined()) {
             return $this;
@@ -124,7 +124,7 @@ trait CanBeRefined
      *
      * @return array<string, mixed>
      */
-    public function refineToArray(): array
+    public function refineToArray()
     {
         return [
             'sort' => $this->getSortKey(),
@@ -144,7 +144,7 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function pipeline(): void
+    protected function pipeline()
     {
         $this->actBefore();
         $this->search();
@@ -159,7 +159,7 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function actBefore(): void
+    protected function actBefore()
     {
         $this->evaluate($this->before);
     }
@@ -169,7 +169,7 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function search(): void
+    protected function search()
     {
         $builder = $this->getBuilder();
 
@@ -207,7 +207,7 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function filter(): void
+    protected function filter()
     {
         $builder = $this->getBuilder();
 

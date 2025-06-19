@@ -24,7 +24,7 @@ class RefineUser extends Refine
      * @param  $this  $refine
      * @return $this
      */
-    protected function definition(Refine $refine)
+    protected function definition(Refine $refine): Refine
     {
         return $refine->for(User::class)
             ->searchPlaceholder('Search users...')

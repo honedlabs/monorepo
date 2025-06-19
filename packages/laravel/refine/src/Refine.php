@@ -8,6 +8,7 @@ use Closure;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Honed\Refine\Concerns\CanBeRefined;
+use Honed\Refine\Contracts\RefinesData;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Contracts\Foundation\Application;
@@ -23,7 +24,7 @@ use Throwable;
  *
  * @mixin TBuilder
  */
-class Refine extends Primitive implements NullsAsUndefined
+class Refine extends Primitive implements RefinesData, NullsAsUndefined
 {
     use CanBeRefined;
     use ForwardsCalls;
@@ -72,7 +73,7 @@ class Refine extends Primitive implements NullsAsUndefined
      * Create a new refine instance.
      *
      * @param  TModel|class-string<TModel>|TBuilder|null  $resource
-     * @return self
+     * @return static
      */
     public static function make($resource = null)
     {
@@ -144,14 +145,16 @@ class Refine extends Primitive implements NullsAsUndefined
      *
      * @return void
      */
-    public static function flushState(): void
+    public static function flushState()
     {
         static::$namespace = 'App\\Refiners\\';
         static::$refinerResolver = null;
     }
 
     /**
-     * {@inheritdoc}
+     * Get the instance as an array.
+     *
+     * @return array<string, mixed>
      */
     public function toArray()
     {
@@ -163,7 +166,7 @@ class Refine extends Primitive implements NullsAsUndefined
      *
      * @return string
      */
-    protected static function appNamespace(): string
+    protected static function appNamespace()
     {
         try {
             return Container::getInstance()
@@ -177,10 +180,10 @@ class Refine extends Primitive implements NullsAsUndefined
     /**
      * Define the refine instance.
      *
-     * @param  Refine<TModel, TBuilder>  $refine
-     * @return Refine<TModel, TBuilder>|void
+     * @param  self  $refine
+     * @return self
      */
-    protected function definition(self $refine)
+    protected function definition(self $refine): self
     {
         return $refine;
     }
@@ -203,7 +206,10 @@ class Refine extends Primitive implements NullsAsUndefined
     }
 
     /**
-     * {@inheritdoc}
+     * Provide a selection of default dependencies for evaluation by name.
+     *
+     * @param  string  $parameterName
+     * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
@@ -216,7 +222,10 @@ class Refine extends Primitive implements NullsAsUndefined
     }
 
     /**
-     * {@inheritdoc}
+     * Provide a selection of default dependencies for evaluation by type.
+     *
+     * @param  string  $parameterType
+     * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {

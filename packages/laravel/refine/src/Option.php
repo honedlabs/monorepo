@@ -25,7 +25,7 @@ class Option extends Primitive
      * @param  string|null  $label
      * @return static
      */
-    public static function make(mixed $value, ?string $label = null)
+    public static function make($value, $label = null)
     {
         return resolve(static::class)
             ->value($value)
@@ -38,7 +38,7 @@ class Option extends Primitive
      * @param  mixed  $value
      * @return bool
      */
-    public function activate(mixed $value): bool
+    public function activate($value)
     {
         return $this->active = match (true) {
             is_array($value) => in_array($this->getValue(), $value, true),
@@ -49,7 +49,7 @@ class Option extends Primitive
     /**
      * {@inheritdoc}
      */
-    public function toArray(): array
+    public function toArray()
     {
         return [
             'value' => $this->getValue(),

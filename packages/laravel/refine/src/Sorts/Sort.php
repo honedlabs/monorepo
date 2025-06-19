@@ -174,13 +174,9 @@ class Sort extends Refiner
      */
     protected function guessParameter()
     {
-        $parameter = parent::guessParameter();
-
-        if ($this->enforcesDirection()) {
-            $parameter = $parameter.'_'.$this->enforced;
-        }
-
-        return $parameter;
+        return $this->enforcesDirection()
+            ? sprintf('%s_%s', parent::guessParameter(), $this->enforced)
+            : parent::guessParameter();
     }
 
     /**
