@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Action\Operations\Concerns;
 
+use Closure;
 use Honed\Action\Contracts\ShouldChunk;
 use Honed\Action\Contracts\ShouldChunkById;
 use Honed\Core\Concerns\HasQuery;
@@ -38,20 +39,6 @@ trait CanBeChunked
      * @var int
      */
     protected $chunkSize = 500;
-
-    /**
-     * Throw an exception for a chunked handler.
-     *
-     * @return never
-     *
-     * @throws RuntimeException
-     */
-    public static function throwChunkedHandlerException()
-    {
-        throw new RuntimeException(
-            'A chunked handler cannot reference the builder.'
-        );
-    }
 
     /**
      * Set the action to chunk the records.
@@ -125,7 +112,7 @@ trait CanBeChunked
     /**
      * Execute the inline action on the given record.
      *
-     * @return \Closure|null
+     * @return Closure|null
      */
     public function callback()
     {
@@ -135,12 +122,10 @@ trait CanBeChunked
             return null;
         }
 
-        $handler = match (true) {
+        return match (true) {
             $this->isChunkedById() => fn (Builder $builder) => $builder->chunkById($this->getChunkSize(), $handler),
             $this->isChunked() => fn (Builder $builder) => $builder->chunk($this->getChunkSize(), $handler),
             default => $handler,
         };
-
-        return $handler;
     }
 }

@@ -6,14 +6,15 @@ namespace Workbench\App\Operations;
 
 use Honed\Action\Actions\DestroyAction;
 use Honed\Action\Operations\InlineOperation;
-use Workbench\App\Models\User;
 
 class DestroyOperation extends InlineOperation
 {
     /**
      * Provide the instance with any necessary setup.
+     * 
+     * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

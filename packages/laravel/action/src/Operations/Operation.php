@@ -35,22 +35,6 @@ abstract class Operation extends Primitive
     public const PAGE = 'page';
 
     /**
-     * Execute the inline action on the given record.
-     *
-     * @return \Closure|null
-     */
-    public function callback()
-    {
-        $handler = $this->getHandler();
-
-        if (! $handler) {
-            return;
-        }
-
-        return $handler;
-    }
-
-    /**
      * Create a new action instance.
      *
      * @param  string  $name
@@ -62,6 +46,16 @@ abstract class Operation extends Primitive
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
+    }
+
+    /**
+     * Execute the inline action on the given record.
+     *
+     * @return Closure|null
+     */
+    public function callback()
+    {
+        return $this->getHandler();
     }
 
     /**

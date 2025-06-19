@@ -39,21 +39,6 @@ it('requires builder to handle requests', function () {
         ->toBeInstanceOf(RedirectResponse::class);
 })->throws(RuntimeException::class);
 
-it('handles requests with model', function () {
-    $request = RequestFactory::page()
-        ->fill()
-        ->name('create.name')
-        ->validate();
-
-    expect(User::query()->count())->toBe(0);
-
-    expect(UserBatch::make())
-        ->handle($request)
-        ->toBeInstanceOf(RedirectResponse::class);
-
-    expect(User::query()->count())->toBe(1);
-})->skip();
-
 it('resolves route binding', function () {
     expect($this->group)
         ->resolveRouteBinding($this->group->getRouteKey())
@@ -107,7 +92,7 @@ it('has array representation with actions but is anonymous', function () {
         ->toHaveKeys([
             'inline',
             'bulk',
-            'page'
+            'page',
         ]);
 });
 

@@ -12,7 +12,7 @@ class OperationForbiddenException extends AccessDeniedHttpException
      * Create a new action not found exception.
      *
      * @param  string  $name
-    */
+     */
     public function __construct($name)
     {
         parent::__construct(

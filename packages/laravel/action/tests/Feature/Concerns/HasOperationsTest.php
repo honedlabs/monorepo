@@ -3,13 +3,9 @@
 declare(strict_types=1);
 
 use Honed\Action\Batch;
-use Honed\Action\Concerns\HasOperations;
 use Honed\Action\Operations\BulkOperation;
 use Honed\Action\Operations\InlineOperation;
-use Honed\Action\Operations\Operation;
 use Honed\Action\Operations\PageOperation;
-use Honed\Core\Primitive;
-use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->batch = Batch::make();

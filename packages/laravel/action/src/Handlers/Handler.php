@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Honed\Action\Handlers;
 
-use Closure;
-use Illuminate\Support\Arr;
-use function array_fill_keys;
-use Honed\Action\Http\Data\BulkData;
-use Honed\Action\Http\Data\PageData;
-use Honed\Action\Http\Data\InlineData;
-use Honed\Action\Operations\Operation;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Contracts\Support\Responsable;
 use Honed\Action\Exceptions\InvalidOperationException;
 use Honed\Action\Exceptions\OperationForbiddenException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Honed\Action\Exceptions\OperationNotFoundException;
+use Honed\Action\Http\Data\BulkData;
+use Honed\Action\Http\Data\InlineData;
+use Honed\Action\Http\Data\PageData;
+use Honed\Action\Operations\Operation;
+use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Redirect;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use function array_fill_keys;
 
 /**
  * @template TClass of \Honed\Core\Primitive
@@ -108,6 +108,7 @@ abstract class Handler
         $typed = $this->getTypedParameters($model);
 
         if (! $operation->isAllowed($named, $typed)) {
+            // @phpstan-ignore-next-line argument.type
             OperationForbiddenException::throw($operation->getName());
         }
 
