@@ -35,12 +35,20 @@ abstract class Operation extends Primitive
     public const PAGE = 'page';
 
     /**
-     * Execute the action on a resource.
+     * Execute the inline action on the given record.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $record
-     * @return mixed
+     * @return \Closure|null
      */
-    abstract public function execute($record);
+    public function callback()
+    {
+        $handler = $this->getHandler();
+
+        if (! $handler) {
+            return;
+        }
+
+        return $handler;
+    }
 
     /**
      * Create a new action instance.
@@ -99,7 +107,7 @@ abstract class Operation extends Primitive
             'type' => $this->getType(),
             'icon' => $this->getIcon(),
             'extra' => $this->getExtra(),
-            'actionable' => $this->isAction(),
+            'action' => $this->hasAction(),
             'confirm' => $this->getConfirm()?->toArray(),
             'route' => $this->routeToArray(),
         ];

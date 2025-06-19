@@ -144,17 +144,6 @@ class Batch extends Primitive implements HandlesOperations
     }
 
     /**
-     * Set the record to be used for the batch.
-     *
-     * @param  array<string, mixed>|TModel  $model
-     * @return $this
-     */
-    public function for($model)
-    {
-        return $this->record($model);
-    }
-
-    /**
      * Get the route key for the instance.
      *
      * @return string
@@ -199,6 +188,18 @@ class Batch extends Primitive implements HandlesOperations
         }
 
         return $operations;
+    }
+
+    /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->definition($this);
     }
 
     /**

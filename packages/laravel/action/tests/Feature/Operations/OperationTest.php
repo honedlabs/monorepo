@@ -38,7 +38,7 @@ it('has array representation', function () {
             'type',
             'icon',
             'extra',
-            'actionable',
+            'action',
             'confirm',
             'route',
         ]);
@@ -53,7 +53,7 @@ it('has array representation with route', function () {
             'type' => 'inline',
             'icon' => null,
             'extra' => null,
-            'actionable' => false,
+            'action' => false,
             'confirm' => null,
             'default' => false,
             'route' => [
@@ -74,7 +74,7 @@ it('resolves to array', function () {
             'type' => 'inline',
             'icon' => null,
             'extra' => null,
-            'actionable' => true,
+            'action' => true,
             'confirm' => null,
             'default' => false,
             'route' => null,

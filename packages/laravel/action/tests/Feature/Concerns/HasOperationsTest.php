@@ -6,82 +6,157 @@ use Honed\Action\Batch;
 use Honed\Action\Concerns\HasOperations;
 use Honed\Action\Operations\BulkOperation;
 use Honed\Action\Operations\InlineOperation;
+use Honed\Action\Operations\Operation;
 use Honed\Action\Operations\PageOperation;
 use Honed\Core\Primitive;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->test = new class() extends Primitive
-    {
-        use HasOperations;
-
-        public function toArray($named = [], $typed = [])
-        {
-            return [];
-        }
-    };
+    $this->batch = Batch::make();
 });
 
-it('adds operations', function () {
-    expect($this->test)
-        ->operations([PageOperation::make('view')])->toBe($this->test)
-        ->operations([InlineOperation::make('edit')])->toBe($this->test)
-        ->getOperations()->toHaveCount(2);
-});
-
-it('adds action groups', function () {
-    expect($this->test)
-        ->operations(Batch::make(PageOperation::make('view')))->toBe($this->test)
+it('can be operable', function () {
+    expect($this->batch)
+        ->operations(InlineOperation::make('create'))->toBe($this->batch)
+        ->isOperable()->toBeTrue()
+        ->notOperable()->toBe($this->batch)
+        ->isNotOperable()->toBeTrue()
+        ->getOperations()->toBeEmpty()
+        ->operable()->toBe($this->batch)
+        ->isOperable()->toBeTrue()
         ->getOperations()->toHaveCount(1);
 });
 
-it('has inline operations', function () {
-    expect($this->test)
-        ->operations([PageOperation::make('create')])
-        ->getInlineOperations()->toHaveCount(0)
-        ->operations([InlineOperation::make('create')])
-        ->getInlineOperations()->toHaveCount(1);
+it('adds operations', function () {
+    expect($this->batch)
+        ->operations([PageOperation::make('view')])->toBe($this->batch)
+        ->operations([InlineOperation::make('edit')])->toBe($this->batch)
+        ->getOperations()->toHaveCount(2);
 });
 
-it('has bulk operations', function () {
-    expect($this->test)
-        ->operations([PageOperation::make('create')])
-        ->getBulkOperations()->toHaveCount(0)
-        ->operations([BulkOperation::make('create')])
-        ->getBulkOperations()->toHaveCount(1);
+it('adds batches', function () {
+    expect($this->batch)
+        ->operations(Batch::make(PageOperation::make('view')))->toBe($this->batch)
+        ->getOperations()->toHaveCount(1);
 });
 
-it('has page operations', function () {
-    expect($this->test)
-        ->operations([InlineOperation::make('create')])
-        ->getPageOperations()->toHaveCount(0)
-        ->operations([PageOperation::make('create')])
-        ->getPageOperations()->toHaveCount(1);
+it('adds operation', function () {
+    expect($this->batch)
+        ->operation(PageOperation::make('view'))->toBe($this->batch)
+        ->operation(InlineOperation::make('edit'))->toBe($this->batch)
+        ->getOperations()->toHaveCount(2);
 });
 
-it('has inline operations array representation', function () {
-    $user = User::factory()->create();
+describe('inline operations', function () {
+    beforeEach(function () {
+        $this->batch->operations([
+            PageOperation::make('create'),
+            InlineOperation::make('edit'),
+            BulkOperation::make('delete'),
+        ]);
+    });
 
-    expect($this->test)
-        ->operations([
-            InlineOperation::make('create')
-                ->label(fn ($record) => $record->name)
-                ->allow(fn ($record) => $record->id % 2 === 1),
-            InlineOperation::make('edit')
-                ->label(fn ($record) => $record->name)
-                ->allow(fn ($record) => $record->id % 2 === 0),
-        ])
-        ->inlineOperationsToArray($user)->toHaveCount(1);
+    it('provides', function () {
+        expect($this->batch)
+            ->isInlinable()->toBeTrue()
+            ->notInlinable()->toBe($this->batch)
+            ->isNotInlinable()->toBeTrue()
+            ->getInlineOperations()->toHaveCount(0)
+            ->inlinable()->toBe($this->batch)
+            ->isInlinable()->toBeTrue()
+            ->getInlineOperations()->toHaveCount(1);
+    });
+
+    it('adds', function () {
+        expect($this->batch)
+            ->inlineOperations([InlineOperation::make('new')])->toBe($this->batch)
+            ->getInlineOperations()->toHaveCount(2)
+            ->inlineOperations(false)->toBe($this->batch)
+            ->isInlinable()->toBeFalse()
+            ->getInlineOperations()->toHaveCount(0);
+    });
+
+    it('has array representation', function () {
+        expect($this->batch)
+            ->inlineOperations([
+                InlineOperation::make('new')->allow(fn () => false),
+            ])->toBe($this->batch)
+            ->inlineOperationsToArray()->toHaveCount(1);
+    });
 });
 
-it('has bulk operations array representation', function () {
-    expect($this->test)
-        ->operations([BulkOperation::make('create')])
-        ->bulkOperationsToArray()->toHaveCount(1);
+describe('bulk operations', function () {
+    beforeEach(function () {
+        $this->batch->operations([
+            PageOperation::make('create'),
+            InlineOperation::make('edit'),
+            BulkOperation::make('delete'),
+        ]);
+    });
+
+    it('provides', function () {
+        expect($this->batch)
+            ->isBulkable()->toBeTrue()
+            ->notBulkable()->toBe($this->batch)
+            ->isNotBulkable()->toBeTrue()
+            ->getBulkOperations()->toHaveCount(0)
+            ->bulkable()->toBe($this->batch)
+            ->isBulkable()->toBeTrue()
+            ->getBulkOperations()->toHaveCount(1);
+    });
+
+    it('adds', function () {
+        expect($this->batch)
+            ->bulkOperations([BulkOperation::make('new')])->toBe($this->batch)
+            ->getBulkOperations()->toHaveCount(2)
+            ->bulkOperations(false)->toBe($this->batch)
+            ->isBulkable()->toBeFalse()
+            ->getBulkOperations()->toHaveCount(0);
+    });
+
+    it('has array representation', function () {
+        expect($this->batch)
+            ->bulkOperations([
+                BulkOperation::make('new')->allow(fn () => false),
+            ])->toBe($this->batch)
+            ->bulkOperationsToArray()->toHaveCount(1);
+    });
 });
 
-it('has page operations array representation', function () {
-    expect($this->test)
-        ->operations([PageOperation::make('create')])
-        ->pageOperationsToArray()->toHaveCount(1);
+describe('page operations', function () {
+    beforeEach(function () {
+        $this->batch->operations([
+            PageOperation::make('create'),
+            InlineOperation::make('edit'),
+            BulkOperation::make('delete'),
+        ]);
+    });
+
+    it('provides', function () {
+        expect($this->batch)
+            ->isPageable()->toBeTrue()
+            ->notPageable()->toBe($this->batch)
+            ->isNotPageable()->toBeTrue()
+            ->getPageOperations()->toHaveCount(0)
+            ->pageable()->toBe($this->batch)
+            ->isPageable()->toBeTrue()
+            ->getPageOperations()->toHaveCount(1);
+    });
+
+    it('adds', function () {
+        expect($this->batch)
+            ->pageOperations([PageOperation::make('new')])->toBe($this->batch)
+            ->getPageOperations()->toHaveCount(2)
+            ->pageOperations(false)->toBe($this->batch)
+            ->isPageable()->toBeFalse()
+            ->getPageOperations()->toHaveCount(0);
+    });
+
+    it('has array representation', function () {
+        expect($this->batch)
+            ->pageOperations([
+                PageOperation::make('new')->allow(fn () => false),
+            ])->toBe($this->batch)
+            ->pageOperationsToArray()->toHaveCount(1);
+    });
 });

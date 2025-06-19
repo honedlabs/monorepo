@@ -15,10 +15,10 @@ beforeEach(function () {
 
 it('has action', function () {
     expect($this->test)
-        ->isAction()->toBeFalse()
+        ->hasAction()->toBeFalse()
         ->getAction()->toBeNull()
         ->action(fn () => 'test')
-        ->isAction()->toBeTrue()
+        ->hasAction()->toBeTrue()
         ->getAction()->toBeInstanceOf(Closure::class);
 });
 
@@ -52,9 +52,9 @@ it('has actionable', function () {
     };
 
     expect($test)
-        ->isAction()->toBeTrue()
+        ->hasAction()->toBeTrue()
         ->getAction()->toBeNull()
         ->action(fn () => 'test')
-        ->isAction()->toBeTrue()
+        ->hasAction()->toBeTrue()
         ->getHandler()->toBeInstanceOf(Closure::class);
 });

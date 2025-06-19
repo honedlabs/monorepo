@@ -67,8 +67,8 @@ class Confirm extends Primitive
     public static function make($title = null, $description = null)
     {
         return resolve(static::class)
-            ->when($title, fn ($confirm, $title) => $confirm->title($title))
-            ->when($description, fn ($confirm, $description) => $confirm->description($description));
+            ->title($title)
+            ->description($description);
     }
 
     /**

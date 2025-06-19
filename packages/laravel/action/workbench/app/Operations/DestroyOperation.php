@@ -19,19 +19,6 @@ class DestroyOperation extends InlineOperation
 
         $this->name('destroy');
         $this->label(fn ($record) => 'Destroy '.$record->name);
-    }
-
-    /**
-     * Define the inline operation instance.
-     *
-     * @param  $this  $operation
-     * @return $this
-     */
-    protected function definition(InlineOperation $operation): InlineOperation
-    {
-        return $operation
-            ->name('destroy')
-            ->label(fn (User $user) => 'Destroy '.$user->name)
-            ->action(DestroyAction::class);
+        $this->action(DestroyAction::class);
     }
 }

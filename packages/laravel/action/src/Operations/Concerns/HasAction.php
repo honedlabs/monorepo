@@ -56,7 +56,7 @@ trait HasAction
      *
      * @return bool
      */
-    public function isAction()
+    public function hasAction()
     {
         return (bool) $this->action || $this instanceof Action;
     }

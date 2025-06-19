@@ -135,6 +135,10 @@ trait HasOperations
      */
     public function getOperations()
     {
+        if ($this->isNotOperable()) {
+            return [];
+        }
+
         $operations = [];
 
         foreach ($this->operations as $operation) {

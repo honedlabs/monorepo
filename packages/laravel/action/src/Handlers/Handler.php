@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Honed\Action\Handlers;
 
-use Honed\Action\Exceptions\InvalidOperationException;
-use Honed\Action\Exceptions\OperationNotFoundException;
-use Honed\Action\Http\Data\BulkData;
-use Honed\Action\Http\Data\InlineData;
-use Honed\Action\Http\Data\PageData;
-use Honed\Action\Operations\Operation;
-use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Database\Eloquent\Model;
+use Closure;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Redirect;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use function array_fill_keys;
+use Honed\Action\Http\Data\BulkData;
+use Honed\Action\Http\Data\PageData;
+use Honed\Action\Http\Data\InlineData;
+use Honed\Action\Operations\Operation;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Contracts\Support\Responsable;
+use Honed\Action\Exceptions\InvalidOperationException;
+use Honed\Action\Exceptions\OperationForbiddenException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Honed\Action\Exceptions\OperationNotFoundException;
 
 /**
  * @template TClass of \Honed\Core\Primitive
@@ -84,6 +85,10 @@ abstract class Handler
      *
      * @param  \Honed\Action\Http\Requests\InvokableRequest  $request
      * @return Responsable|RedirectResponse
+     *
+     * @throws InvalidOperationException
+     * @throws OperationNotFoundException
+     * @throws OperationForbiddenException
      */
     protected function resolve($request)
     {
@@ -99,8 +104,15 @@ abstract class Handler
             OperationNotFoundException::throw($data->name);
         }
 
+        $named = $this->getNamedParameters($model);
+        $typed = $this->getTypedParameters($model);
+
+        if (! $operation->isAllowed($named, $typed)) {
+            OperationForbiddenException::throw($operation->getName());
+        }
+
         $response = $this->instance->evaluate(
-            [$operation, 'execute'],
+            $operation->callback(),
             $this->getNamedParameters($model),
             $this->getTypedParameters($model)
         );
@@ -140,14 +152,14 @@ abstract class Handler
                 ->first()
         );
 
+        if (! $model) {
+            abort(404);
+        }
+
         $action = Arr::first(
             $this->getOperations(),
             fn (Operation $action) => $action->isInline()
                 && $action->getName() === $data->name
-                && $action->isAllowed(
-                    $this->getNamedParameters($model),
-                    $this->getTypedParameters($model)
-                )
         );
 
         return [$action, $model];

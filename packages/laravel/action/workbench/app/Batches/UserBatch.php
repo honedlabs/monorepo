@@ -27,6 +27,7 @@ class UserBatch extends Batch
     protected function definition(Batch $batch): Batch
     {
         return $batch
+            ->for(User::class)
             ->operations([
                 InlineOperation::make('show')
                     ->route(fn ($record) => route('users.show', $record)),
@@ -39,11 +40,11 @@ class UserBatch extends Batch
                     ->allow(false),
 
                 BulkOperation::make('update.name')
-                    ->action(fn ($record) => $record->update(['name' => 'test']))
+                    ->action(fn ($builder) => $builder->update(['name' => 'test']))
                     ->allow(false),
 
                 BulkOperation::make('update.description')
-                    ->action(fn ($record) => $record->update(['name' => 'description'])),
+                    ->action(fn ($builder) => $builder->update(['name' => 'description'])),
 
                 PageOperation::make('create')
                     ->route('users.create'),

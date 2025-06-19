@@ -123,14 +123,11 @@ trait CanBeChunked
     }
 
     /**
-     * Execute the bulk action on a builder.
+     * Execute the inline action on the given record.
      *
-     * @param  Builder<\Illuminate\Database\Eloquent\Model>  $builder
-     * @return mixed
-     *
-     * @throws RuntimeException
+     * @return \Closure|null
      */
-    public function execute($builder)
+    public function callback()
     {
         $handler = $this->getHandler();
 
@@ -144,6 +141,6 @@ trait CanBeChunked
             default => $handler,
         };
 
-        return $this->evaluate($handler);
+        return $handler;
     }
 }

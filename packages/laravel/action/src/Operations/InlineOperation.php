@@ -37,25 +37,6 @@ class InlineOperation extends Operation
     }
 
     /**
-     * Execute the inline action on the given record.
-     *
-     * @param  array<string, mixed>|Model  $record
-     * @return mixed
-     */
-    public function execute($record)
-    {
-        $handler = $this->getHandler();
-
-        if (! $handler) {
-            return;
-        }
-
-        $this->record($record);
-
-        return $this->evaluate($handler);
-    }
-
-    /**
      * Provide a selection of default dependencies for evaluation by name.
      *
      * @param  string  $parameterName
