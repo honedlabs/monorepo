@@ -24,6 +24,8 @@ class SortQuery extends Pipe
         $instance->persistSort($parameter, $direction);
 
         if ($this->sort($instance, $parameter, $direction)) {
+            $this->persist($instance, $parameter, $direction);
+
             return;
         }
 
@@ -87,5 +89,29 @@ class SortQuery extends Pipe
 
             $sort->handle($builder, $parameter, null);
         }
+    }
+
+    /**
+     * Persist the sort value to the internal data store.
+     * 
+     * @param  TClass  $instance
+     * @param  string|null  $parameter
+     * @param  'asc'|'desc'|null  $direction
+     * @return void
+     */
+    public function persist($instance, $parameter, $direction)
+    {
+        $driver = $instance->getSortPersistenceDriver();
+
+        if (! $driver) {
+            return;
+        }
+
+        $driver->put([
+            'sort' => [
+                'col' => $parameter,
+                'dir' => $direction,
+            ]
+        ]);
     }
 }

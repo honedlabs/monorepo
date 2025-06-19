@@ -34,14 +34,14 @@ abstract class Driver
      *
      * @return $this
      */
-    abstract public function resolve(): self;
+    abstract public function resolve();
 
     /**
      * Persist the data to the session.
      *
      * @return void
      */
-    abstract public function persist(): void;
+    abstract public function persist();
 
     /**
      * Create a new instance of the driver.
@@ -49,7 +49,7 @@ abstract class Driver
      * @param  string  $key
      * @return static
      */
-    public static function make(string $key): self
+    public static function make($key)
     {
         return resolve(static::class)
             ->key($key)
@@ -62,7 +62,7 @@ abstract class Driver
      * @param  string  $key
      * @return $this
      */
-    public function key(string $key): self
+    public function key($key)
     {
         $this->key = $key;
 
@@ -75,7 +75,7 @@ abstract class Driver
      * @param  string|null  $key
      * @return mixed
      */
-    public function get(?string $key = null)
+    public function get($key = null)
     {
         return $key ? Arr::get($this->resolved, $key) : $this->resolved;
     }
@@ -84,31 +84,17 @@ abstract class Driver
      * Put the value for the given key in to an internal data store in preparation
      * to persist it.
      *
-     * @param  string  $key
+     * @param  string|array<string,mixed>  $key
      * @param  mixed  $value
      * @return $this
      */
-    public function put(string $key, mixed $value): self
+    public function put($key, $value = null)
     {
-        $this->data[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Merge a value with a key into the internal data store.
-     *
-     * @param  string  $key
-     * @param  string  $key2
-     * @param  mixed  $value
-     * @return $this
-     */
-    public function merge(string $key, string $key2, mixed $value): self
-    {
-        $this->data[$key] = [
-            ...$this->data[$key] ?? [],
-            $key2 => $value,
-        ];
+        if (is_array($key)) {
+            $this->data = [...$this->data, ...$key];
+        } else {
+            $this->data[$key] = $value;
+        }
 
         return $this;
     }

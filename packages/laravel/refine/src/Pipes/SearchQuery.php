@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Pipes;
 
+use Honed\Core\Interpret;
+
 /**
  * @template TClass of \Honed\Refine\Refine
  * 
@@ -27,17 +29,58 @@ class SearchQuery extends Pipe
             $instance->isScout() => $this->scout($instance),
             default => $this->search($instance, $columns)
         };
+
+        $this->persist($instance, $columns);
     }
 
     /**
      * Set the search term, and if applicable, the search columns on the instance.
      * 
      * @param  TClass  $instance
-     * @return void
+     * @return array{string|null, array<int,string>|null}
      */
-    protected function getValues($instance)
+    public function getValues($instance)
     {
+        return [
+            $this->getTerm($instance),
+            $this->getColumns($instance),
+        ];
+    }
 
+    /**
+     * Get the search term from the instance's request.
+     * 
+     * @param  TClass  $instance
+     * @return string|null
+     */
+    public function getTerm($instance)
+    {
+        $term = Interpret::string(
+            $instance->getRequest(), $instance->getSearchKey()
+        );
+
+
+        return $term ? str_replace('+', ' ', trim($term)) : null;
+    }
+
+    /**
+     * Get the search columns from the instance's request.
+     * 
+     * @param  TClass  $instance
+     * @return array<int,string>|null
+     */
+    public function getColumns($instance)
+    {
+        if ($instance->isNotMatchable()) {
+            return null;
+        }
+
+        return Interpret::array(
+            $instance->getRequest(),
+            $instance->getMatchKey(),
+            $instance->getDelimiter(),
+            'string'
+        );
     }
 
     /**
@@ -46,7 +89,7 @@ class SearchQuery extends Pipe
      * @param  TClass  $instance
      * @return void
      */
-    protected function scout($instance)
+    public function scout($instance)
     {
         $model = $instance->getModel();
 
@@ -68,9 +111,10 @@ class SearchQuery extends Pipe
      * Perform the search using the default search logic.
      * 
      * @param  TClass  $instance
-     * @return void
+     * @param  array<int,string>|null  $columns
+     * @return bool
      */
-    protected function search($instance, $columns)
+    public function search($instance, $columns)
     {
         $builder = $instance->getBuilder();
         
@@ -83,5 +127,29 @@ class SearchQuery extends Pipe
                 $applied = true;
             }
         }
+
+        return $applied;
+    }
+
+    /**
+     * Persist the search value to the internal data store.
+     * 
+     * @param  TClass  $instance
+     * @return void
+     */
+    public function persist($instance, $columns)
+    {
+        $driver = $instance->getSearchPersistenceDriver();
+
+        if (! $driver) {
+            return;
+        }
+
+        $driver->put([
+            'search' => [
+                'term' => $instance->getTerm(),
+                ...($instance->isMatchable() && $columns ? ['cols' => $columns] : []),
+            ]
+        ]);
     }
 }

@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Pipeline;
 
 trait CanBeRefined
 {
-    use CanPersistRefinements;
+    use CanPersistData;
     use HasDelimiter;
     use HasFilters;
     use HasRequest;
@@ -194,6 +194,16 @@ trait CanBeRefined
     }
 
     /**
+     * Get the driver to use for persisting searches.
+     * 
+     * @return \Honed\Refine\Persistence\Driver|null
+     */
+    public function getSearchPersistenceDriver()
+    {
+        return $this->getPersistDriver($this->persistSearch);
+    }
+
+    /**
      * Set the driver to use for persisting filters.
      *
      * @param  bool|string|null  $driver
@@ -237,6 +247,16 @@ trait CanBeRefined
     }
 
     /**
+     * Get the driver to use for persisting filters.
+     * 
+     * @return \Honed\Refine\Persistence\Driver|null
+     */
+    public function getFilterPersistenceDriver()
+    {
+        return $this->getPersistDriver($this->persistFilter);
+    }
+
+    /**
      * Set the driver to use for persisting sorts.
      *
      * @param  bool|string|null  $driver
@@ -277,6 +297,16 @@ trait CanBeRefined
     public function shouldPersistSort()
     {
         return (bool) $this->persistSort;
+    }
+
+    /**
+     * Get the driver to use for persisting sorts.
+     * 
+     * @return \Honed\Refine\Persistence\Driver|null
+     */
+    public function getSortPersistenceDriver()
+    {
+        return $this->getPersistDriver($this->persistSort);
     }
 
     /**

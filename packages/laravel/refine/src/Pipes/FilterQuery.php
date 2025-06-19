@@ -46,7 +46,7 @@ class FilterQuery extends Pipe
             if ($filter->handle($builder, $value)) {
                 $applied = true;
 
-                $instance->persistFilter($filter, $value);
+                // $this->persist($instance, $filter, $value);
             }
         }
 
@@ -67,7 +67,7 @@ class FilterQuery extends Pipe
             $value = $instance->getPersistedFilterValue($filter);
 
             if ($filter->handle($builder, $value)) {
-                $instance->persistFilter($filter, $value);
+                // $instance->persistFilter($filter, $value);
             }
         }
     }
