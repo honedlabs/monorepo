@@ -9,7 +9,6 @@ use Honed\Action\Contracts\ShouldChunk;
 use Honed\Action\Contracts\ShouldChunkById;
 use Honed\Core\Concerns\HasQuery;
 use Illuminate\Database\Eloquent\Builder;
-use RuntimeException;
 
 /**
  * @phpstan-require-extends \Honed\Action\Operations\Operation

@@ -11,7 +11,7 @@ class DestroyOperation extends InlineOperation
 {
     /**
      * Provide the instance with any necessary setup.
-     * 
+     *
      * @return void
      */
     protected function setUp()

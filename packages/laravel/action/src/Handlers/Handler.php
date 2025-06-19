@@ -147,11 +147,7 @@ abstract class Handler
     protected function prepareForInlineOperation($data)
     {
         /** @var Model|null $model */
-        $model = $this->instance->evaluate(
-            fn ($builder) => $builder
-                ->where($this->getKey(), $data->record)
-                ->first()
-        );
+        $model = $this->getRecord($data->record);
 
         if (! $model) {
             abort(404);
@@ -174,14 +170,9 @@ abstract class Handler
      */
     protected function prepareForBulkOperation($data)
     {
-        match (true) {
-            $data->all => $this->instance->evaluate(
-                fn ($builder) => $builder->whereNotIn($this->getKey(), $data->except)
-            ),
-            default => $this->instance->evaluate(
-                fn ($builder) => $builder->whereIn($this->getKey(), $data->only)
-            ),
-        };
+        $data->all
+            ? $this->getException($data->except)
+            : $this->getOnly($data->only);
 
         $action = Arr::first(
             $this->getOperations(),
@@ -259,5 +250,49 @@ abstract class Handler
     {
         return $result instanceof Responsable ||
             $result instanceof RedirectResponse;
+    }
+
+    /**
+     * Get the record for the given id.
+     *
+     * @param  int|string  $id
+     * @return array<string, mixed>|Model|null
+     */
+    protected function getRecord($id)
+    {
+        /** @var array<string, mixed>|Model|null */
+        return $this->instance->evaluate(
+            fn ($builder) => $builder
+                ->where($this->getKey(), $id)
+                ->first()
+        );
+    }
+
+    /**
+     * Apply an exception clause to the record builder.
+     *
+     * @param  array<int, mixed>  $ids
+     * @return void
+     */
+    protected function getException($ids)
+    {
+        $this->instance->evaluate(
+            fn ($builder) => $builder
+                ->whereNotIn($this->getKey(), $ids)
+        );
+    }
+
+    /**
+     * Apply an only clause to the record builder.
+     *
+     * @param  array<int, mixed>  $ids
+     * @return void
+     */
+    protected function getOnly($ids)
+    {
+        $this->instance->evaluate(
+            fn ($builder) => $builder
+                ->whereIn($this->getKey(), $ids)
+        );
     }
 }

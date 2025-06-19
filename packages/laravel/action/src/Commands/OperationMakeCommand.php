@@ -53,9 +53,9 @@ class OperationMakeCommand extends GeneratorCommand
     protected function getOperationStub()
     {
         return match (true) {
-            (bool) $this->option(Operation::INLINE), $this->option('type') ===  Operation::INLINE => '/stubs/honed.operation.inline.stub',
-            (bool) $this->option(Operation::BULK), $this->option('type') ===  Operation::BULK => '/stubs/honed.operation.bulk.stub',
-            (bool) $this->option(Operation::PAGE), $this->option('type') ===  Operation::PAGE => '/stubs/honed.operation.page.stub',
+            (bool) $this->option(Operation::INLINE), $this->option('type') === Operation::INLINE => '/stubs/honed.operation.inline.stub',
+            (bool) $this->option(Operation::BULK), $this->option('type') === Operation::BULK => '/stubs/honed.operation.bulk.stub',
+            (bool) $this->option(Operation::PAGE), $this->option('type') === Operation::PAGE => '/stubs/honed.operation.page.stub',
             default => '/stubs/honed.operation.inline.stub',
         };
     }

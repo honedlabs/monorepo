@@ -48,14 +48,12 @@ class UserBatch extends Batch
 
                 BulkOperation::make('chunk')
                     ->chunk()
-                    ->action(fn ($collection) => 
-                        $collection->each(fn ($record) => $record->update(['name' => 'chunk']))
+                    ->action(fn ($collection) => $collection->each(fn ($record) => $record->update(['name' => 'chunk']))
                     ),
 
                 BulkOperation::make('chunk.id')
                     ->chunkById()
-                    ->action(fn ($collection) => 
-                        $collection->each(fn ($record) => $record->update(['name' => 'chunk.id']))
+                    ->action(fn ($collection) => $collection->each(fn ($record) => $record->update(['name' => 'chunk.id']))
                     ),
 
                 PageOperation::make('create')

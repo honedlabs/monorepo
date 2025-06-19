@@ -5,6 +5,9 @@ declare(strict_types=1);
 use Honed\Action\Batch;
 use Honed\Action\Operations\PageOperation;
 use Honed\Action\Testing\RequestFactory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use Workbench\App\Batches\UserBatch;
@@ -122,4 +125,32 @@ describe('class-based batch', function () {
                 'page',
             ]);
     });
+});
+
+describe('evaluation', function () {
+    beforeEach(function () {
+        $this->batch = UserBatch::make()
+            ->record(User::factory()->create());
+    });
+
+    it('named dependencies', function ($closure, $class) {
+        expect($this->batch->evaluate($closure))->toBeInstanceOf($class);
+    })->with([
+        fn () => [fn ($row) => $row, User::class],
+        fn () => [fn ($record) => $record, User::class],
+        fn () => [fn ($builder) => $builder, Builder::class],
+        fn () => [fn ($query) => $query, Builder::class],
+        fn () => [fn ($q) => $q, Builder::class],
+        fn () => [fn ($collection) => $collection, Collection::class],
+        fn () => [fn ($records) => $records, Collection::class],
+    ]);
+
+    it('typed dependencies', function ($closure, $class) {
+        expect($this->batch->evaluate($closure))->toBeInstanceOf($class);
+    })->with([
+        fn () => [fn (Model $arg) => $arg, User::class],
+        fn () => [fn (User $arg) => $arg, User::class],
+        fn () => [fn (Builder $arg) => $arg, Builder::class],
+        fn () => [fn (Collection $arg) => $arg, Collection::class],
+    ]);
 });

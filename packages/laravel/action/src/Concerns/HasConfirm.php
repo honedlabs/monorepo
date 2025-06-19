@@ -51,7 +51,7 @@ trait HasConfirm
     {
         return $this->confirm;
     }
-    
+
     /**
      * Access the confirm for this instance.
      *
