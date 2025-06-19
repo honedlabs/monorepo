@@ -141,7 +141,7 @@ abstract class Process implements Action
     protected function pipe($payload)
     {
         return Pipeline::send($payload)
-            ->through($this->pipelines())
+            ->through($this->pipes())
             ->via($this->method())
             ->thenReturn();
     }
@@ -151,7 +151,7 @@ abstract class Process implements Action
      *
      * @return array<int, callable>
      */
-    protected function pipelines()
+    protected function pipes()
     {
         return array_map(
             fn ($task) => is_callable($task)
