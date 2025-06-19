@@ -106,6 +106,7 @@ it('has array representation with actions', function () {
         ->toBeArray()
         ->toHaveKeys([
             'inline',
+            'bulk',
             'page',
             'id',
             'endpoint',
@@ -121,6 +122,7 @@ it('has array representation without actions', function () {
         ->toBeArray()
         ->toHaveKeys([
             'inline',
+            'bulk',
             'page',
         ]);
 });

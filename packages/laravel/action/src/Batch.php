@@ -185,6 +185,7 @@ class Batch extends Primitive implements HandlesOperations
     {
         $operations = [
             'inline' => $this->inlineOperationsToArray($this->getRecord()),
+            'bulk' => $this->bulkOperationsToArray(),
             'page' => $this->pageOperationsToArray(),
         ];
 

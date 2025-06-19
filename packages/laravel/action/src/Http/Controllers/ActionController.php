@@ -12,15 +12,10 @@ class ActionController extends Controller
     /**
      * Find and execute the appropriate action from route binding.
      *
-     * @template TModel of \Illuminate\Database\Eloquent\Model
-     * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
-     *
-     * @param  Batch<TModel, TBuilder>  $action
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      *
+     * @throws \Honed\Action\Exceptions\InvalidOperationException
      * @throws \Honed\Action\Exceptions\OperationNotFoundException
-     * @throws \Honed\Action\Exceptions\ActionNotAllowedException
-     * @throws \Honed\Action\Exceptions\InvalidActionException
      */
     public function invoke(InvokableRequest $request, Batch $action)
     {

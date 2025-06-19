@@ -9,6 +9,7 @@ use Honed\Action\Contracts\ShouldChunk;
 use Honed\Action\Contracts\ShouldChunkById;
 use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Parameters;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 use Illuminate\Support\Collection;
 use ReflectionFunction;
@@ -141,106 +142,18 @@ trait CanBeChunked
     {
         $handler = $this->getHandler();
 
-        dd($handler);
         if (! $handler) {
             return null;
         }
 
-        $model = $builder->getModel()::class;
-        $type = $this->getHandlerType($handler, $model);
+        $handler = match (true) {
+            $this->isChunkedById() => fn (Builder $builder) => 
+                $builder->chunkById($this->getChunkSize(), $handler),
+            $this->isChunked() => fn (Builder $builder) => 
+                $builder->chunk($this->getChunkSize(), $handler),
+            default => $handler,
+        };
 
-        if ($type === 'builder' && $this->isChunked()) {
-            static::throwChunkedHandlerException();
-        }
-
-        $this->modifyQuery($builder);
-
-        $handler = $type === 'model'
-            ? fn ($records) => $records->each($handler)
-            : $handler;
-
-        if ($this->isChunked()) {
-            $handler = $this->wrapHandlerForChunking($handler);
-        } elseif ($type !== 'builder') {
-            $builder = $builder->get();
-        }
-
-        [$named, $typed] = $this->getEvaluationParameters($model, $builder);
-
-        return $this->evaluate($handler, $named, $typed);
-    }
-
-    /**
-     * Determine if the handler type references the builder, collection, or model.
-     *
-     * @param  Closure  $handler
-     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $model
-     * @return 'builder'|'collection'|'model'|null
-     */
-    public function getHandlerType($handler, $model)
-    {
-        $parameters = (new ReflectionFunction($handler))->getParameters();
-
-        foreach ($parameters as $parameter) {
-            $name = $parameter->getName();
-
-            $typed = $parameter->getType();
-
-            $type = $typed instanceof ReflectionNamedType
-                ? $typed->getName()
-                : null;
-
-            if (Parameters::isBuilder($name, $type)) {
-                return 'builder';
-            }
-
-            if (Parameters::isCollection($name, $type)) {
-                return 'collection';
-            }
-
-            if (Parameters::isModel($name, $type, $model)) {
-                return 'model';
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the named and typed parameters to use for the bulk action.
-     *
-     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $model
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|DatabaseCollection<int,\Illuminate\Database\Eloquent\Model>  $value
-     * @return array{array<string, mixed>,  array<class-string, mixed>}
-     */
-    public function getEvaluationParameters($model, $value)
-    {
-        [$named, $typed] = Parameters::builder($model, $value);
-
-        $named = array_merge($named, [
-            'collection' => $value,
-        ]);
-
-        $typed = array_merge($typed, [
-            DatabaseCollection::class => $value,
-            Collection::class => $value,
-        ]);
-
-        return [$named, $typed];
-    }
-
-    /**
-     * Wrap the handler for chunking.
-     *
-     * @param  Closure  $handler
-     * @return Closure
-     */
-    protected function wrapHandlerForChunking($handler)
-    {
-        $chunkSize = $this->getChunkSize();
-
-        return $this->isChunkedById()
-            ? fn ($builder) => $builder->chunkById($chunkSize, $handler)
-            : fn ($builder) => $builder->chunk($chunkSize, $handler);
+        return $this->evaluate($handler);
     }
 }

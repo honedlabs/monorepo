@@ -94,6 +94,7 @@ trait HasAction
         $action = $this->getAction();
 
         return match (true) {
+            // @phpstan-ignore-next-line argument.type
             is_string($action) => Closure::fromCallable([
                 App::make($action),
                 'handle',

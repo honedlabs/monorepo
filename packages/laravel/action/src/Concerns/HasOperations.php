@@ -209,7 +209,7 @@ trait HasOperations
     /**
      * Retrieve only the allowed inline operations.
      *
-     * @return array<int,Operation>
+     * @return array<int,InlineOperation>
      */
     public function getInlineOperations()
     {
@@ -217,6 +217,7 @@ trait HasOperations
             return [];
         }
 
+        /** @var array<int,InlineOperation> */
         return array_values(
             array_filter(
                 $this->getOperations(),

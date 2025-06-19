@@ -20,26 +20,13 @@ abstract class Controller extends BaseController
     abstract protected function from();
 
     /**
-     * Find and execute the appropriate action from route binding.
-     *
-     * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @throws \Honed\Action\Exceptions\OperationNotFoundException
-     * @throws \Honed\Action\Exceptions\OperationNotAllowedException
-     */
-    public function invoke(InvokableRequest $request, Batch $action)
-    {
-        return $action->handle($request);
-    }
-
-    /**
      * Find and execute the appropriate action from the request input.
      *
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @throws CouldNotResolveHandlerException
+     * @throws \Honed\Action\Exceptions\InvalidOperationException
      * @throws \Honed\Action\Exceptions\OperationNotFoundException
-     * @throws \Honed\Action\Exceptions\OperationNotAllowedException
      */
     public function dispatch(DispatchableRequest $request)
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Handlers;
 
 use Illuminate\Support\Arr;
+use Inertia\ResponseFactory;
 use function array_fill_keys;
 use Honed\Action\Http\Data\BulkData;
 use Honed\Action\Http\Data\PageData;
@@ -15,7 +16,6 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Database\Eloquent\Builder;
 use Honed\Action\Operations\InlineOperation;
 use Illuminate\Contracts\Support\Responsable;
-
 use Honed\Action\Exceptions\InvalidOperationException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Honed\Action\Exceptions\OperationNotFoundException;
@@ -117,15 +117,14 @@ abstract class Handler
      * Prepare the data and instance to handle the operation.
      * 
      * @param  PageData  $data
-     * @return array{Operation|null, TModel|null}
+     * @return array{Operation|null, Model|null}
      */
     protected function prepare($data)
     {
         return match (true) {
             $data instanceof InlineData => $this->prepareForInlineOperation($data),
             $data instanceof BulkData => $this->prepareForBulkOperation($data),
-            $data instanceof PageData => $this->prepareForPageOperation($data),
-            default => [null, null],
+            default => $this->prepareForPageOperation($data),
         };
     }
 
@@ -133,11 +132,11 @@ abstract class Handler
      * Prepare the data and instance to handle the inline operation.
      *
      * @param  InlineData  $data
-     * @return array{Operation|null, TModel|null}
+     * @return array{Operation|null, Model|null}
      */
     protected function prepareForInlineOperation($data)
     {
-        /** @var TModel|null $model */
+        /** @var Model|null $model */
         $model = $this->instance->evaluate(
             fn ($builder) => $builder
                 ->where($this->getKey(), $data->record)
@@ -146,7 +145,7 @@ abstract class Handler
 
         $action = Arr::first(
             $this->getOperations(),
-            static fn (Operation $action) => $action->isInline()
+            fn (Operation $action) => $action->isInline()
                 && $action->getName() === $data->name
                 && $action->isAllowed(
                     $this->getNamedParameters($model),
@@ -186,7 +185,7 @@ abstract class Handler
     /**
      * Prepare the data and instance to handle the page operation.
      *
-     * @param  OperationData  $data
+     * @param  PageData  $data
      * @return array{Operation|null, null}
      */
     protected function prepareForPageOperation($data)
@@ -245,12 +244,11 @@ abstract class Handler
      * Determine if the result is a responsable or redirect response.
      *
      * @param  mixed  $result
-     * @return bool
+     * @return ($result is Responsable|RedirectResponse ? true : false)
      */
     protected function isResponsable($result)
     {
         return $result instanceof Responsable ||
-            $result instanceof RedirectResponse ||
-            $result instanceof \Inertia\ResponseFactory;
+            $result instanceof RedirectResponse;
     }
 }
