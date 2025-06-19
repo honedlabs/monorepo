@@ -65,7 +65,7 @@ trait InteractsWithFormData
     {
         $fields = $this->fields();
 
-        return filled($fields) 
+        return filled($fields)
             ? Arr::only($input, $fields)
             : $input;
     }

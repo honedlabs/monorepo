@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Action\Handlers;
 
-use Illuminate\Support\Arr;
-use Inertia\ResponseFactory;
-use function array_fill_keys;
-use Honed\Action\Http\Data\BulkData;
-use Honed\Action\Http\Data\PageData;
-use Honed\Action\Http\Data\InlineData;
-use Honed\Action\Operations\Operation;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Database\Eloquent\Builder;
-use Honed\Action\Operations\InlineOperation;
-use Illuminate\Contracts\Support\Responsable;
 use Honed\Action\Exceptions\InvalidOperationException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Honed\Action\Exceptions\OperationNotFoundException;
-use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Honed\Action\Http\Data\BulkData;
+use Honed\Action\Http\Data\InlineData;
+use Honed\Action\Http\Data\PageData;
+use Honed\Action\Operations\Operation;
+use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Redirect;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use function array_fill_keys;
 
 /**
  * @template TClass of \Honed\Core\Primitive
@@ -115,7 +112,7 @@ abstract class Handler
 
     /**
      * Prepare the data and instance to handle the operation.
-     * 
+     *
      * @param  PageData  $data
      * @return array{Operation|null, Model|null}
      */
@@ -203,7 +200,7 @@ abstract class Handler
      * Get the named parameters for the action.
      *
      * @template TResource of array<string,mixed>|\Illuminate\Database\Eloquent\Model
-     * 
+     *
      * @param  TResource|null  $resource
      * @return array<string,TResource>
      */
@@ -223,10 +220,9 @@ abstract class Handler
      * Get the typed parameters for the action.
      *
      * @template TResource of array<string,mixed>|\Illuminate\Database\Eloquent\Model
-     * 
+     *
      * @param  TResource|null  $resource
      * @return array<class-string,TResource>
-
      */
     protected function getTypedParameters($resource)
     {

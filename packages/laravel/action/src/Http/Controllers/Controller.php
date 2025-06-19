@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Action\Http\Controllers;
 
-use Honed\Action\Batch;
 use Honed\Action\Exceptions\CouldNotResolveHandlerException;
 use Honed\Action\Http\Requests\DispatchableRequest;
-use Honed\Action\Http\Requests\InvokableRequest;
 use Illuminate\Routing\Controller as BaseController;
 
 abstract class Controller extends BaseController

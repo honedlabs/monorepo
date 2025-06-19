@@ -5,25 +5,24 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Closure;
-use Throwable;
-use Honed\Core\Primitive;
-use Illuminate\Support\Str;
-use Honed\Action\Concerns\HasKey;
-use Honed\Core\Concerns\HasRecord;
-use Illuminate\Support\Collection;
-use Honed\Action\Contracts\Handler;
-use Illuminate\Container\Container;
-use Honed\Core\Concerns\HasResource;
-use Honed\Action\Operations\Operation;
-use Honed\Action\Handlers\BatchHandler;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Honed\Action\Handler as ActionHandler;
-use Honed\Action\Contracts\HandlesOperations;
 use Honed\Action\Concerns\CanHandleOperations;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
+use Honed\Action\Concerns\HasKey;
+use Honed\Action\Contracts\Handler;
+use Honed\Action\Contracts\HandlesOperations;
+use Honed\Action\Handlers\BatchHandler;
+use Honed\Action\Operations\Operation;
+use Honed\Core\Concerns\HasRecord;
+use Honed\Core\Concerns\HasResource;
+use Honed\Core\Primitive;
+use Illuminate\Container\Container;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Throwable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -32,9 +31,9 @@ use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 class Batch extends Primitive implements HandlesOperations
 {
     use CanHandleOperations;
+    use HasKey;
     use HasRecord;
     use HasResource;
-    use HasKey;
 
     /**
      * The default namespace where batches reside.
@@ -168,11 +167,11 @@ class Batch extends Primitive implements HandlesOperations
     /**
      * Get the handler for the instance.
      *
-     * @return class-string<\Honed\Action\Handlers\Handler<self>>
+     * @return class-string<Handlers\Handler<self>>
      */
     public function getHandler() // @phpstan-ignore-line
     {
-        /** @var class-string<\Honed\Action\Handlers\Handler<self>> */
+        /** @var class-string<Handlers\Handler<self>> */
         return config('action.handler', BatchHandler::class);
     }
 
@@ -189,7 +188,7 @@ class Batch extends Primitive implements HandlesOperations
             'page' => $this->pageOperationsToArray(),
         ];
 
-        if ($this->isActionable() 
+        if ($this->isActionable()
             && is_subclass_of($this, static::getParentClass()) // @phpstan-ignore function.alreadyNarrowedType
         ) {
             return [

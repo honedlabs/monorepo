@@ -17,9 +17,9 @@ afterEach(function () {
 
 it('can be a transaction', function () {
     expect($this->test)
-    ->isTransaction()->toBeFalse()
-    ->transaction()->toBe($this->test)
-    ->isTransaction()->toBeTrue();
+        ->isTransaction()->toBeFalse()
+        ->transaction()->toBe($this->test)
+        ->isTransaction()->toBeTrue();
 });
 
 it('configures to be a transaction', function () {

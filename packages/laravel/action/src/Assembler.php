@@ -13,7 +13,7 @@ abstract class Assembler
 {
     /**
      * Define the parameters of the operation.
-     * 
+     *
      * @template TOperation of Operation
      *
      * @param  TOperation  $operation

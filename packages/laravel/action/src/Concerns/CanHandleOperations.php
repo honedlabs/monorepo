@@ -12,9 +12,9 @@ use Throwable;
  */
 trait CanHandleOperations
 {
+    use CanBeActionable;
     use HasEncoder;
     use HasOperations;
-    use CanBeActionable;
 
     /**
      * Decode and retrieve a primitive class.

@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\ValidatedInput;
-
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
@@ -84,7 +81,7 @@ class ReplicateAction extends DatabaseAction
      *
      * @param  TModel  $new
      * @param  TModel  $old
-     * @param TInput  $attributes
+     * @param  TInput  $attributes
      * @return void
      */
     protected function after($new, $old, $attributes)

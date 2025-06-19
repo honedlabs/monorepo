@@ -6,8 +6,6 @@ namespace Honed\Action\Exceptions;
 
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-use function sprintf;
-
 class InvalidOperationException extends BadRequestHttpException
 {
     /**

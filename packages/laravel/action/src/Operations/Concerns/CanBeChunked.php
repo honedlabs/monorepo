@@ -4,19 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Action\Operations\Concerns;
 
-use Closure;
 use Honed\Action\Contracts\ShouldChunk;
 use Honed\Action\Contracts\ShouldChunkById;
 use Honed\Core\Concerns\HasQuery;
-use Honed\Core\Parameters;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
-use Illuminate\Support\Collection;
-use ReflectionFunction;
-use ReflectionNamedType;
 use RuntimeException;
-
-use function array_merge;
 
 /**
  * @phpstan-require-extends \Honed\Action\Operations\Operation
@@ -133,7 +125,7 @@ trait CanBeChunked
     /**
      * Execute the bulk action on a builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @return mixed
      *
      * @throws RuntimeException
@@ -147,10 +139,8 @@ trait CanBeChunked
         }
 
         $handler = match (true) {
-            $this->isChunkedById() => fn (Builder $builder) => 
-                $builder->chunkById($this->getChunkSize(), $handler),
-            $this->isChunked() => fn (Builder $builder) => 
-                $builder->chunk($this->getChunkSize(), $handler),
+            $this->isChunkedById() => fn (Builder $builder) => $builder->chunkById($this->getChunkSize(), $handler),
+            $this->isChunked() => fn (Builder $builder) => $builder->chunk($this->getChunkSize(), $handler),
             default => $handler,
         };
 

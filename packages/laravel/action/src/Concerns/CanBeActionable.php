@@ -97,5 +97,4 @@ trait CanBeActionable
     {
         return ! $this->isActionable();
     }
-
 }

@@ -16,7 +16,7 @@ trait HasConfirm
 {
     /**
      * The instance of the confirm.
-     * 
+     *
      * @var Confirm|null
      */
     protected $confirm;
@@ -54,6 +54,7 @@ trait HasConfirm
 
     /**
      * @deprecated
+     *
      * @return bool
      */
     public function hasConfirm()

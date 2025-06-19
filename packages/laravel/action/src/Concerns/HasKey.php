@@ -8,14 +8,14 @@ trait HasKey
 {
     /**
      * The key to use for selecting records.
-     * 
+     *
      * @var string|null
      */
     protected $key;
 
     /**
      * Set the key to use for selecting records.
-     * 
+     *
      * @param  string|null  $key
      * @return $this
      */
@@ -25,11 +25,10 @@ trait HasKey
 
         return $this;
     }
-    
 
     /**
      * Get the key to use for selecting records.
-     * 
+     *
      * @return string|null
      */
     public function getKey()
