@@ -9,7 +9,7 @@ namespace Honed\Refine\Pipes;
  * 
  * @extends Pipe<TClass>
  */
-class PersistData extends Pipe
+class SortQuery extends Pipe
 {
     /**
      * Run the sort query logic.

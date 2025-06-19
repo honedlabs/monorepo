@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\File;
 
 beforeEach(function () {
-    File::cleanDirectory(app_path('Refiners'));
+    File::cleanDirectory(app_path('Refines'));
 });
 
 it('makes refines', function () {
@@ -13,7 +13,7 @@ it('makes refines', function () {
         'name' => 'ProductRefine',
     ])->assertSuccessful();
 
-    $this->assertFileExists(app_path('Refiners/ProductRefine.php'));
+    $this->assertFileExists(app_path('Refines/ProductRefine.php'));
 });
 
 it('prompts for a refine name', function () {
@@ -21,5 +21,5 @@ it('prompts for a refine name', function () {
         ->expectsQuestion('What should the refine be named?', 'ProductRefine')
         ->assertSuccessful();
 
-    $this->assertFileExists(app_path('Refiners/ProductRefine.php'));
+    $this->assertFileExists(app_path('Refines/ProductRefine.php'));
 });

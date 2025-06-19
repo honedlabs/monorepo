@@ -8,10 +8,18 @@ use Closure;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasScope;
 use Honed\Refine\Filters\Concerns\HasFilters;
+use Honed\Refine\Persistence\CookieDriver;
+use Honed\Refine\Persistence\SessionDriver;
+use Honed\Refine\Pipes\AfterRefining;
+use Honed\Refine\Pipes\BeforeRefining;
+use Honed\Refine\Pipes\FilterQuery;
+use Honed\Refine\Pipes\PersistData;
+use Honed\Refine\Pipes\SearchQuery;
+use Honed\Refine\Pipes\SortQuery;
 use Honed\Refine\Searches\Concerns\HasSearches;
 use Honed\Refine\Sorts\Concerns\HasSorts;
-use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Pipeline;
 
 trait CanBeRefined
 {
@@ -44,6 +52,27 @@ trait CanBeRefined
      * @var Closure|null
      */
     protected $after = null;
+
+    /**
+     * The driver to use for persisting search data.
+     * 
+     * @var bool|string|null
+     */
+    protected $persistSearch = null;
+
+    /**
+     * The driver to use for persisting filter data.
+     * 
+     * @var bool|string|null
+     */
+    protected $persistFilter = null;
+
+    /**
+     * The driver to use for persisting sort data.
+     * 
+     * @var bool|string|null
+     */
+    protected $persistSort = null;
 
     /**
      * Determine if the refinements have been processed.
@@ -112,11 +141,142 @@ trait CanBeRefined
             return $this;
         }
 
-        $this->pipeline();
+        Pipeline::send($this)
+            ->through($this->pipes())
+            ->thenReturn();
 
         $this->refined = true;
 
         return $this;
+    }
+
+    /**
+     * Set the driver to use for persisting searches.
+     *
+     * @param  bool|string|null  $driver
+     * @return $this
+     */
+    public function persistSearch($driver = true)
+    {
+        $this->persistSearch = $driver;
+
+        return $this;
+    }
+
+    /**
+     * Set the session driver to be used for persisting searches.
+     *
+     * @return $this
+     */
+    public function persistSearchInSession()
+    {
+        return $this->persistSearch(SessionDriver::NAME);
+    }
+
+    /**
+     * Set the cookie driver to be used for persisting searches.
+     *
+     * @return $this
+     */
+    public function persistSearchInCookie()
+    {
+        return $this->persistSearch(CookieDriver::NAME);
+    }
+
+    /**
+     * Determine if the search should be persisted.
+     * 
+     * @return bool
+     */
+    public function shouldPersistSearch()
+    {
+        return (bool) $this->persistSearch;
+    }
+
+    /**
+     * Set the driver to use for persisting filters.
+     *
+     * @param  bool|string|null  $driver
+     * @return $this
+     */
+    public function persistFilter($driver = true)
+    {
+        $this->persistFilter = $driver;
+
+        return $this;
+    }
+
+    /**
+     * Set the session driver to be used for persisting filters.
+     *
+     * @return $this
+     */
+    public function persistFilterInSession()
+    {
+        return $this->persistFilter(SessionDriver::NAME);
+    }
+
+    /**
+     * Set the cookie driver to be used for persisting filters.
+     *
+     * @return $this
+     */
+    public function persistFilterInCookie()
+    {
+        return $this->persistFilter(CookieDriver::NAME);
+    }
+
+    /**
+     * Determine if the filter should be persisted.
+     * 
+     * @return bool
+     */
+    public function shouldPersistFilter()
+    {
+        return (bool) $this->persistFilter;
+    }
+
+    /**
+     * Set the driver to use for persisting sorts.
+     *
+     * @param  bool|string|null  $driver
+     * @return $this
+     */
+    public function persistSort($driver = true)
+    {
+        $this->persistSort = $driver;
+
+        return $this;
+    }
+
+    /**
+     * Set the session driver to be used for persisting sorts.
+     *
+     * @return $this
+     */
+    public function persistSortInSession()
+    {
+        return $this->persistSort(SessionDriver::NAME);
+    }
+
+    /**
+     * Set the cookie driver to be used for persisting sorts.
+     *
+     * @return $this
+     */
+    public function persistSortInCookie()
+    {
+        return $this->persistSort(CookieDriver::NAME);
+    }
+
+    /**
+     * Determine if the sort should be persisted.
+     * 
+     * @return bool
+     */
+    public function shouldPersistSort()
+    {
+        return (bool) $this->persistSort;
     }
 
     /**
@@ -140,28 +300,20 @@ trait CanBeRefined
     }
 
     /**
-     * Execute the pipeline of refiners.
+     * Get the pipes to be used for refining.
      *
-     * @return void
+     * @return array<int,class-string<\Honed\Refine\Pipes\Pipe>>
      */
-    protected function pipeline()
+    protected function pipes()
     {
-        $this->actBefore();
-        $this->search();
-        $this->filter();
-        $this->sort();
-        $this->actAfter();
-        $this->persist();
-    }
-
-    /**
-     * Modify the resource before the refiners are processed.
-     *
-     * @return void
-     */
-    protected function actBefore()
-    {
-        $this->evaluate($this->before);
+        return [
+            BeforeRefining::class,
+            SearchQuery::class,
+            FilterQuery::class,
+            SortQuery::class,
+            AfterRefining::class,
+            PersistData::class
+        ];
     }
 
     /**
@@ -239,7 +391,7 @@ trait CanBeRefined
      *
      * @return void
      */
-    protected function sort(): void
+    protected function sort()
     {
         $builder = $this->getBuilder();
 
@@ -266,15 +418,5 @@ trait CanBeRefined
     
             return;
         }
-    }
-
-    /**
-     * Modify the resource after the refiners have been processed.
-     *
-     * @return void
-     */
-    protected function actAfter(): void
-    {
-        $this->evaluate($this->after);
     }
 }

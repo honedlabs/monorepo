@@ -8,6 +8,8 @@ use Illuminate\Contracts\Session\Session;
 
 class SessionDriver extends Driver
 {
+    const NAME = 'session';
+    
     public function __construct(
         protected Session $session,
     ) {}

@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 
 class CookieDriver extends Driver
 {
+    const NAME = 'cookie';
+    
     /**
      * The default lifetime for the cookie.
      *

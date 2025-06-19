@@ -82,7 +82,7 @@ trait CanPersistData
      */
     public function persistInSession(): self
     {
-        return $this->persistIn('session');
+        return $this->persistIn(SessionDriver::NAME);
     }
 
     /**
@@ -92,7 +92,7 @@ trait CanPersistData
      */
     public function persistInCookie(): self
     {
-        return $this->persistIn('cookie');
+        return $this->persistIn(CookieDriver::NAME);
     }
 
     /**
@@ -104,7 +104,7 @@ trait CanPersistData
     public function lifetime(int $seconds = 15724800): self
     {
         /** @var CookieDriver $driver */
-        $driver = $this->getPersistDriver('cookie');
+        $driver = $this->getPersistDriver(CookieDriver::NAME);
 
         $driver->lifetime($seconds);
 
@@ -116,7 +116,7 @@ trait CanPersistData
      *
      * @return void
      */
-    protected function persist(): void
+    public function persistData(): void
     {
         foreach ($this->drivers as $driver) {
             $driver->persist();
@@ -149,8 +149,8 @@ trait CanPersistData
         }
 
         return match ($type) {
-            'cookie' => $this->newCookieDriver(),
-            'session' => $this->newSessionDriver(),
+            CookieDriver::NAME => $this->newCookieDriver(),
+            SessionDriver::NAME => $this->newSessionDriver(),
             default => null,
         };
     }
@@ -162,7 +162,7 @@ trait CanPersistData
      */
     protected function newCookieDriver(): CookieDriver
     {
-        return $this->drivers['cookie']
+        return $this->drivers[CookieDriver::NAME]
             ??= CookieDriver::make($this->getPersistKey())
                 ->request($this->getRequest());
     }
@@ -174,7 +174,7 @@ trait CanPersistData
      */
     protected function newSessionDriver(): SessionDriver
     {
-        return $this->drivers['session']
+        return $this->drivers[SessionDriver::NAME]
             ??= SessionDriver::make($this->getPersistKey());
     }
 }
