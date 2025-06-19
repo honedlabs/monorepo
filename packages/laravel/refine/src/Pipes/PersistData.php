@@ -19,6 +19,8 @@ class PersistData extends Pipe
      */
     public function run($instance)
     {
-        //
+        foreach ($instance->getStores() as $store) {
+            $store->persist();
+        }
     }
 }

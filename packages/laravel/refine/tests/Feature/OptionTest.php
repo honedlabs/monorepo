@@ -18,14 +18,10 @@ it('creates', function () {
 });
 
 it('activates an option', function () {
-    $option = Option::make(10);
-
-    expect($option)
-        ->activate(10)->toBeTrue()
-        ->isActive()->toBeTrue();
-
-    expect($option)
-        ->activate(5)->toBeFalse()
+    expect($this->option)
+        ->activate('test')->toBeTrue()
+        ->isActive()->toBeTrue()
+        ->activate('fail')->toBeFalse()
         ->isActive()->toBeFalse();
 });
 

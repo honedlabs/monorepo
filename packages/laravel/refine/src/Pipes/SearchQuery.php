@@ -139,13 +139,13 @@ class SearchQuery extends Pipe
      */
     public function persist($instance, $columns)
     {
-        $driver = $instance->getSearchPersistenceDriver();
+        $store = $instance->getSearchStore();
 
-        if (! $driver) {
+        if (! $store) {
             return;
         }
 
-        $driver->put([
+        $store->put([
             'search' => [
                 'term' => $instance->getTerm(),
                 ...($instance->isMatchable() && $columns ? ['cols' => $columns] : []),

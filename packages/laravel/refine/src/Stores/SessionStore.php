@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Persistence;
+namespace Honed\Refine\Stores;
 
 use Illuminate\Contracts\Session\Session;
 
-class SessionDriver extends Driver
+class SessionStore extends Store
 {
     const NAME = 'session';
     
@@ -15,7 +15,7 @@ class SessionDriver extends Driver
     ) {}
 
     /**
-     * Retrieve the data from the driver and store it in memory.
+     * Retrieve the data from the store and put it in memory.
      *
      * @return $this
      */
@@ -27,7 +27,7 @@ class SessionDriver extends Driver
     }
 
     /**
-     * Set the session to use for the driver.
+     * Set the session to use for the store.
      *
      * @param  Session  $session
      * @return $this

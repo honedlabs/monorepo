@@ -3,29 +3,37 @@
 declare(strict_types=1);
 
 use Honed\Refine\Refine;
-use Honed\Refine\Searches\Search;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Honed\Refine\Searches\Search;
 use Workbench\App\Models\Product;
+use Honed\Refine\Pipes\SearchQuery;
 
 beforeEach(function () {
+    $this->pipe = new SearchQuery();
+
     $this->query = 'search+value';
 
-    $this->term = 'search value';
+    $this->term = Str::of($this->query)
+        ->replace('+', ' ')
+        ->trim()
+        ->toString();
 
-    $searches = [
-        Search::make('name'),
-        Search::make('description'),
-    ];
-
-    $this->refine = Refine::make(Product::class)->searches($searches);
+    $this->refine = Refine::make(Product::class)
+        ->searches([
+            Search::make('name'),
+            Search::make('description'),
+        ]);
 });
 
-it('does not search if key is not present', function () {
+it('needs a search term', function () {
     $request = Request::create('/', 'GET', [
         'invalid' => $this->query,
     ]);
 
-    $this->refine->request($request)->refine();
+    $this->pipe->run(
+        $this->refine->request($request)
+    );
 
     expect($this->refine->getBuilder()->getQuery()->wheres)
         ->toBeEmpty();
@@ -34,12 +42,14 @@ it('does not search if key is not present', function () {
         ->toBeNull();
 });
 
-it('searches with key', function () {
+it('applies search', function () {
     $request = Request::create('/', 'GET', [
         $this->refine->getSearchKey() => $this->query,
     ]);
 
-    $this->refine->request($request)->refine();
+    $this->pipe->run(
+        $this->refine->request($request)
+    );
 
     expect($this->refine->getBuilder()->getQuery()->wheres)
         ->{0}->toBeSearch('name', 'and')
@@ -49,13 +59,15 @@ it('searches with key', function () {
         ->toBe($this->term);
 });
 
-it('does not match columns to search against if not matchable', function () {
+it('applies search without matching', function () {
     $request = Request::create('/', 'GET', [
         $this->refine->getSearchKey() => $this->query,
         $this->refine->getMatchKey() => 'name',
     ]);
 
-    $this->refine->request($request)->refine();
+    $this->pipe->run(
+        $this->refine->request($request)
+    );
 
     expect($this->refine->getBuilder()->getQuery()->wheres)
         ->{0}->toBeSearch('name', 'and')
@@ -65,13 +77,17 @@ it('does not match columns to search against if not matchable', function () {
         ->toBe($this->term);
 });
 
-it('matches columns to search against', function () {
+it('applies search with matching', function () {
+    $this->refine->matchable();
+    
     $request = Request::create('/', 'GET', [
         $this->refine->getSearchKey() => $this->query,
         $this->refine->getMatchKey() => 'name',
     ]);
 
-    $this->refine->request($request)->matchable()->refine();
+    $this->pipe->run(
+        $this->refine->request($request)
+    );
 
     expect($this->refine->getBuilder()->getQuery()->wheres)
         ->toBeOnlySearch('name');
@@ -80,12 +96,16 @@ it('matches columns to search against', function () {
         ->toBe($this->term);
 });
 
-it('can disable searching', function () {
+it('disables search', function () {
     $request = Request::create('/', 'GET', [
         $this->refine->getSearchKey() => $this->query,
     ]);
 
-    $this->refine->request($request)->notSearchable()->refine();
+    $this->pipe->run(
+        $this->refine
+            ->notSearchable()
+            ->request($request)
+    );
 
     expect($this->refine->getBuilder()->getQuery()->wheres)
         ->toBeEmpty();
@@ -94,13 +114,17 @@ it('can disable searching', function () {
         ->toBe($this->term);
 });
 
-it('does not search if scoped key is not present', function () {
+it('does not apply search if key is not scoped', function () {
     $request = Request::create('/', 'GET', [
         $this->refine->getSearchKey() => $this->query,
         $this->refine->getMatchKey() => 'name',
     ]);
 
-    $this->refine->scope('scope')->request($request)->refine();
+    $this->pipe->run(
+        $this->refine
+            ->scope('scope')
+            ->request($request)
+    );
 
     expect($this->refine->getBuilder()->getQuery()->orders)
         ->toBeEmpty();
@@ -109,15 +133,17 @@ it('does not search if scoped key is not present', function () {
         ->toBeNull();
 });
 
-it('searches with scoped key', function () {
-    $this->refine->scope('scope');
+it('applies search with scoped key', function () {
+    $this->refine->matchable()->scope('scope');
 
     $request = Request::create('/', 'GET', [
         $this->refine->getSearchKey() => $this->query,
         $this->refine->getMatchKey() => 'description',
     ]);
 
-    $this->refine->request($request)->matchable()->refine();
+    $this->pipe->run(
+        $this->refine->request($request)
+    );
 
     expect($this->refine->getBuilder()->getQuery()->wheres)
         ->toBeOnlySearch('description');
@@ -125,3 +151,11 @@ it('searches with scoped key', function () {
     expect($this->refine->getTerm())
         ->toBe($this->term);
 });
+
+it('uses cookie persisted search', function () {
+
+})->todo();
+
+it('uses session persisted search', function () {
+
+})->todo();

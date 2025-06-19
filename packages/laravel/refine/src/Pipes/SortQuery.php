@@ -36,6 +36,7 @@ class SortQuery extends Pipe
      * Get the sort name and direction from the request, or from a persisted
      * value.
      * 
+     * @param  TClass  $instance
      * @return array{string|null, 'asc'|'desc'|null}
      */
     public function getValues($instance)
@@ -46,7 +47,7 @@ class SortQuery extends Pipe
 
         return match (true) {
             (bool) $parameter => [$parameter, $direction],
-            $instance->persistsSort() => $instance->getPersistedSortValue(),
+            $instance->shouldPersistSort() => [null, null],
             default => [null, null]
         };
     }
@@ -101,13 +102,13 @@ class SortQuery extends Pipe
      */
     public function persist($instance, $parameter, $direction)
     {
-        $driver = $instance->getSortPersistenceDriver();
+        $store = $instance->getSortStore();
 
-        if (! $driver) {
+        if (! $store) {
             return;
         }
 
-        $driver->put([
+        $store->put([
             'sort' => [
                 'col' => $parameter,
                 'dir' => $direction,

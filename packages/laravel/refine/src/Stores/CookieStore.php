@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Persistence;
+namespace Honed\Refine\Stores;
 
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 
-class CookieDriver extends Driver
+class CookieStore extends Store
 {
     const NAME = 'cookie';
-    
+
     /**
      * The default lifetime for the cookie.
      *
@@ -25,7 +25,7 @@ class CookieDriver extends Driver
     ) {}
 
     /**
-     * Retrieve the data from the driver and store it in memory.
+     * Retrieve the data from the store and store it in memory.
      *
      * @return $this
      */
@@ -39,7 +39,7 @@ class CookieDriver extends Driver
     }
 
     /**
-     * Set the request to use for the driver.
+     * Set the request to use for the store.
      *
      * @param  Request  $request
      * @return $this
@@ -52,7 +52,7 @@ class CookieDriver extends Driver
     }
 
     /**
-     * Set the cookie jar to use for the driver.
+     * Set the cookie jar to use for the store.
      *
      * @param  CookieJar  $cookieJar
      * @return $this

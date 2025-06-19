@@ -23,21 +23,6 @@ afterEach(function () {
     Refine::flushState();
 });
 
-it('evaluates closure dependencies', function ($callback, $type) {
-    expect($this->test)
-        ->evaluate($callback)->toBeInstanceOf($type);
-})->with([
-    fn () => [fn ($request) => $request, Request::class],
-    fn () => [fn ($refine) => $refine, Refine::class],
-    fn () => [fn ($builder) => $builder, Builder::class],
-    fn () => [fn ($query) => $query, Builder::class],
-    fn () => [fn ($q) => $q, Builder::class],
-    fn () => [fn (Request $arg) => $arg, Request::class],
-    fn () => [fn (Refine $arg) => $arg, Refine::class],
-    fn () => [fn (Builder $arg) => $arg, Builder::class],
-    fn () => [fn (Gate $arg) => $arg, AccessGate::class],
-]);
-
 it('forwards calls to the builder', function () {
     expect($this->test)
         ->paginate(10)->toBeInstanceOf(LengthAwarePaginator::class)
@@ -99,3 +84,18 @@ it('serializes to json', function () {
             'searches',
         ]);
 });
+
+it('evaluates closure dependencies', function ($callback, $type) {
+    expect($this->test)
+        ->evaluate($callback)->toBeInstanceOf($type);
+})->with([
+    fn () => [fn ($request) => $request, Request::class],
+    fn () => [fn ($refine) => $refine, Refine::class],
+    fn () => [fn ($builder) => $builder, Builder::class],
+    fn () => [fn ($query) => $query, Builder::class],
+    fn () => [fn ($q) => $q, Builder::class],
+    fn () => [fn (Request $arg) => $arg, Request::class],
+    fn () => [fn (Refine $arg) => $arg, Refine::class],
+    fn () => [fn (Builder $arg) => $arg, Builder::class],
+    fn () => [fn (Gate $arg) => $arg, AccessGate::class],
+]);

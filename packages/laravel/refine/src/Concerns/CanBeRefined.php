@@ -8,8 +8,8 @@ use Closure;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasScope;
 use Honed\Refine\Filters\Concerns\HasFilters;
-use Honed\Refine\Persistence\CookieDriver;
-use Honed\Refine\Persistence\SessionDriver;
+use Honed\Refine\Stores\CookieStore;
+use Honed\Refine\Stores\SessionStore;
 use Honed\Refine\Pipes\AfterRefining;
 use Honed\Refine\Pipes\BeforeRefining;
 use Honed\Refine\Pipes\FilterQuery;
@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Pipeline;
 
 trait CanBeRefined
 {
-    use CanPersistData;
+    use CanBePersisted;
     use HasDelimiter;
     use HasFilters;
     use HasRequest;
@@ -54,21 +54,21 @@ trait CanBeRefined
     protected $after = null;
 
     /**
-     * The driver to use for persisting search data.
+     * The store to use for persisting search data.
      * 
      * @var bool|string|null
      */
     protected $persistSearch = null;
 
     /**
-     * The driver to use for persisting filter data.
+     * The store to use for persisting filter data.
      * 
      * @var bool|string|null
      */
     protected $persistFilter = null;
 
     /**
-     * The driver to use for persisting sort data.
+     * The store to use for persisting sort data.
      * 
      * @var bool|string|null
      */
@@ -151,36 +151,36 @@ trait CanBeRefined
     }
 
     /**
-     * Set the driver to use for persisting searches.
+     * Set the store to use for persisting searches.
      *
-     * @param  bool|string|null  $driver
+     * @param  bool|string|null  $store
      * @return $this
      */
-    public function persistSearch($driver = true)
+    public function persistSearch($store = true)
     {
-        $this->persistSearch = $driver;
+        $this->persistSearch = $store;
 
         return $this;
     }
 
     /**
-     * Set the session driver to be used for persisting searches.
+     * Set the session store to be used for persisting searches.
      *
      * @return $this
      */
     public function persistSearchInSession()
     {
-        return $this->persistSearch(SessionDriver::NAME);
+        return $this->persistSearch(SessionStore::NAME);
     }
 
     /**
-     * Set the cookie driver to be used for persisting searches.
+     * Set the cookie store to be used for persisting searches.
      *
      * @return $this
      */
     public function persistSearchInCookie()
     {
-        return $this->persistSearch(CookieDriver::NAME);
+        return $this->persistSearch(CookieStore::NAME);
     }
 
     /**
@@ -194,46 +194,46 @@ trait CanBeRefined
     }
 
     /**
-     * Get the driver to use for persisting searches.
+     * Get the store to use for persisting searches.
      * 
-     * @return \Honed\Refine\Persistence\Driver|null
+     * @return \Honed\Refine\Stores\Store|null
      */
-    public function getSearchPersistenceDriver()
+    public function getSearchStore()
     {
-        return $this->getPersistDriver($this->persistSearch);
+        return $this->getStore($this->persistSearch);
     }
 
     /**
-     * Set the driver to use for persisting filters.
+     * Set the store to use for persisting filters.
      *
-     * @param  bool|string|null  $driver
+     * @param  bool|string|null  $store
      * @return $this
      */
-    public function persistFilter($driver = true)
+    public function persistFilter($store = true)
     {
-        $this->persistFilter = $driver;
+        $this->persistFilter = $store;
 
         return $this;
     }
 
     /**
-     * Set the session driver to be used for persisting filters.
+     * Set the session store to be used for persisting filters.
      *
      * @return $this
      */
     public function persistFilterInSession()
     {
-        return $this->persistFilter(SessionDriver::NAME);
+        return $this->persistFilter(SessionStore::NAME);
     }
 
     /**
-     * Set the cookie driver to be used for persisting filters.
+     * Set the cookie store to be used for persisting filters.
      *
      * @return $this
      */
     public function persistFilterInCookie()
     {
-        return $this->persistFilter(CookieDriver::NAME);
+        return $this->persistFilter(CookieStore::NAME);
     }
 
     /**
@@ -247,46 +247,46 @@ trait CanBeRefined
     }
 
     /**
-     * Get the driver to use for persisting filters.
+     * Get the store to use for persisting filters.
      * 
-     * @return \Honed\Refine\Persistence\Driver|null
+     * @return \Honed\Refine\Stores\Store|null
      */
-    public function getFilterPersistenceDriver()
+    public function getFilterStore()
     {
-        return $this->getPersistDriver($this->persistFilter);
+        return $this->getStore($this->persistFilter);
     }
 
     /**
-     * Set the driver to use for persisting sorts.
+     * Set the store to use for persisting sorts.
      *
-     * @param  bool|string|null  $driver
+     * @param  bool|string|null  $store
      * @return $this
      */
-    public function persistSort($driver = true)
+    public function persistSort($store = true)
     {
-        $this->persistSort = $driver;
+        $this->persistSort = $store;
 
         return $this;
     }
 
     /**
-     * Set the session driver to be used for persisting sorts.
+     * Set the session store to be used for persisting sorts.
      *
      * @return $this
      */
     public function persistSortInSession()
     {
-        return $this->persistSort(SessionDriver::NAME);
+        return $this->persistSort(SessionStore::NAME);
     }
 
     /**
-     * Set the cookie driver to be used for persisting sorts.
+     * Set the cookie store to be used for persisting sorts.
      *
      * @return $this
      */
     public function persistSortInCookie()
     {
-        return $this->persistSort(CookieDriver::NAME);
+        return $this->persistSort(CookieStore::NAME);
     }
 
     /**
@@ -300,13 +300,13 @@ trait CanBeRefined
     }
 
     /**
-     * Get the driver to use for persisting sorts.
+     * Get the store to use for persisting sorts.
      * 
-     * @return \Honed\Refine\Persistence\Driver|null
+     * @return \Honed\Refine\Stores\Store|null
      */
-    public function getSortPersistenceDriver()
+    public function getSortStore()
     {
-        return $this->getPersistDriver($this->persistSort);
+        return $this->getStore($this->persistSort);
     }
 
     /**
@@ -346,107 +346,107 @@ trait CanBeRefined
         ];
     }
 
-    /**
-     * Apply the searches to the resource.
-     *
-     * @return void
-     */
-    protected function search()
-    {
-        $builder = $this->getBuilder();
+    // /**
+    //  * Apply the searches to the resource.
+    //  *
+    //  * @return void
+    //  */
+    // protected function search()
+    // {
+    //     $builder = $this->getBuilder();
 
-        [$persistedTerm, $persistedColumns] = $this->getPersistedSearchValue();
+    //     [$persistedTerm, $persistedColumns] = $this->getPersistedSearchValue();
 
-        $this->term = $this->getSearchValue($this->request) ?? $persistedTerm;
+    //     $this->term = $this->getSearchValue($this->request) ?? $persistedTerm;
 
-        $columns = $this->getSearchColumns($this->request) ?? $persistedColumns;
+    //     $columns = $this->getSearchColumns($this->request) ?? $persistedColumns;
 
-        $this->persistSearchValue($this->term, $columns);
+    //     $this->persistSearchValue($this->term, $columns);
 
-        if ($this->isScout()) {
-            $model = $this->getModel();
+    //     if ($this->isScout()) {
+    //         $model = $this->getModel();
 
-            $builder->whereIn(
-                $builder->qualifyColumn($model->getKeyName()),
-                // @phpstan-ignore-next-line method.notFound
-                $model->search($this->term)->keys()
-            );
+    //         $builder->whereIn(
+    //             $builder->qualifyColumn($model->getKeyName()),
+    //             // @phpstan-ignore-next-line method.notFound
+    //             $model->search($this->term)->keys()
+    //         );
 
-            return;
-        }
+    //         return;
+    //     }
 
-        $or = false;
+    //     $or = false;
 
-        foreach ($this->getSearches() as $search) {
-            $or = $search->handle(
-                $builder, $this->term, $columns, $or
-            ) || $or;
-        }
-    }
+    //     foreach ($this->getSearches() as $search) {
+    //         $or = $search->handle(
+    //             $builder, $this->term, $columns, $or
+    //         ) || $or;
+    //     }
+    // }
 
-    /**
-     * Apply the filters to the resource.
-     *
-     * @return void
-     */
-    protected function filter()
-    {
-        $builder = $this->getBuilder();
+    // /**
+    //  * Apply the filters to the resource.
+    //  *
+    //  * @return void
+    //  */
+    // protected function filter()
+    // {
+    //     $builder = $this->getBuilder();
 
-        $applied = false;
+    //     $applied = false;
 
-        foreach ($this->getFilters() as $filter) {
-            $value = $this->getFilterValue($this->request, $filter);
+    //     foreach ($this->getFilters() as $filter) {
+    //         $value = $this->getFilterValue($this->request, $filter);
 
-            $applied = $filter->handle($builder, $value) || $applied;
+    //         $applied = $filter->handle($builder, $value) || $applied;
 
-            $this->persistFilterValue($filter, $value);
-        }
+    //         $this->persistFilterValue($filter, $value);
+    //     }
 
-        if ($applied) {
-            return;
-        }
+    //     if ($applied) {
+    //         return;
+    //     }
 
-        foreach ($this->getFilters() as $filter) {
-            $value = $this->getPersistedFilterValue($filter);
+    //     foreach ($this->getFilters() as $filter) {
+    //         $value = $this->getPersistedFilterValue($filter);
 
-            $filter->handle($builder, $value);
+    //         $filter->handle($builder, $value);
 
-            $this->persistFilterValue($filter, $value);
-        }
-    }
+    //         $this->persistFilterValue($filter, $value);
+    //     }
+    // }
 
-    /**
-     * Apply the sorts to the resource.
-     *
-     * @return void
-     */
-    protected function sort()
-    {
-        $builder = $this->getBuilder();
+    // /**
+    //  * Apply the sorts to the resource.
+    //  *
+    //  * @return void
+    //  */
+    // protected function sort()
+    // {
+    //     $builder = $this->getBuilder();
 
-        [$parameter, $direction] = $this->getSortValue($this->request);
+    //     [$parameter, $direction] = $this->getSortValue($this->request);
 
-        if (! $parameter) {
-            [$parameter, $direction] = $this->getPersistedSortValue();
-        }
+    //     if (! $parameter) {
+    //         [$parameter, $direction] = $this->getPersistedSortValue();
+    //     }
 
-        $this->persistSortValue($parameter, $direction);
+    //     $this->persistSortValue($parameter, $direction);
 
-        $applied = false;
+    //     $applied = false;
     
-        foreach ($this->getSorts() as $sort) {
-            $applied = $sort->handle(
-                $builder, $parameter, $direction
-            ) || $applied;
-        }
+    //     foreach ($this->getSorts() as $sort) {
+    //         $applied = $sort->handle(
+    //             $builder, $parameter, $direction
+    //         ) || $applied;
+    //     }
     
-        if (! $applied && $sort = $this->getDefaultSort()) {
-            $parameter = $sort->getParameter();
+    //     if (! $applied && $sort = $this->getDefaultSort()) {
+    //         $parameter = $sort->getParameter();
     
-            $sort->handle($builder, $parameter, $direction);
+    //         $sort->handle($builder, $parameter, $direction);
     
-            return;
-        }
-    }
+    //         return;
+    //     }
+    // }
 }

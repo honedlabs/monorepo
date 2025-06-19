@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Persistence;
+namespace Honed\Refine\Stores;
 
 use Illuminate\Support\Arr;
 
-abstract class Driver
+abstract class Store
 {
     /**
      * The data to persist.
@@ -16,7 +16,7 @@ abstract class Driver
     protected $data = [];
 
     /**
-     * The resolved data from the driver.
+     * The resolved data from the store.
      *
      * @var mixed
      */
@@ -30,7 +30,7 @@ abstract class Driver
     protected $key;
 
     /**
-     * Retrieve the data from the driver and store it in memory.
+     * Retrieve the data from the store and set it in memory.
      *
      * @return $this
      */
@@ -44,7 +44,7 @@ abstract class Driver
     abstract public function persist();
 
     /**
-     * Create a new instance of the driver.
+     * Create a new instance of the store.
      *
      * @param  string  $key
      * @return static
@@ -57,7 +57,7 @@ abstract class Driver
     }
 
     /**
-     * Set the key to be used for the driver.
+     * Set the key to be used for the store.
      *
      * @param  string  $key
      * @return $this

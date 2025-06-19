@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Honed\Refine\Refine;
 use Workbench\App\Models\User;
 use Workbench\App\Refiners\RefineUser;
-use Honed\Refine\Persistence\CookieDriver;
-use Honed\Refine\Persistence\SessionDriver;
+use Honed\Refine\Stores\CookieStore;
+use Honed\Refine\Stores\SessionStore;
 
 beforeEach(function () {
     $this->refine = Refine::make(User::class);
@@ -22,16 +22,26 @@ it('sets persist key', function () {
         ->getPersistKey()->toBe('refine-user');
 });
 
-it('sets driver', function () {
+it('sets store', function () {
     expect($this->refine)
-        ->getPersistDriver(true)->toBeInstanceOf(SessionDriver::class)
+        ->getStore(true)->toBeInstanceOf(SessionStore::class)
         ->persistInCookie()->toBe($this->refine)
-        ->getPersistDriver(true)->toBeInstanceOf(CookieDriver::class)
+        ->getStore(true)->toBeInstanceOf(CookieStore::class)
         ->persistInSession()->toBe($this->refine)
-        ->getPersistDriver(true)->toBeInstanceOf(SessionDriver::class);
+        ->getStore(true)->toBeInstanceOf(SessionStore::class);
 });
 
 it('sets lifetime', function () {
     expect($this->refine)
         ->lifetime(10)->toBe($this->refine);
+});
+
+it('gets stores', function () {
+    expect($this->refine)
+        ->getStore(SessionStore::NAME)->toBeInstanceOf(SessionStore::class)
+        ->getStore(CookieStore::NAME)->toBeInstanceOf(CookieStore::class)
+        ->getStores()->toHaveKeys([
+            SessionStore::NAME,
+            CookieStore::NAME,
+        ]);
 });

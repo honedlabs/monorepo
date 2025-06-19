@@ -2,8 +2,8 @@
 
 use Workbench\App\Models\User;
 use Illuminate\Support\Facades\Session;
-use Honed\Refine\Persistence\CookieDriver;
-use Honed\Refine\Persistence\SessionDriver;
+use Honed\Refine\Stores\CookieStore;
+use Honed\Refine\Stores\SessionStore;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -15,15 +15,15 @@ beforeEach(function () {
         'cookie' => json_encode(['key' => 'value'])
     ]);
 
-    $this->driver = CookieDriver::make('cookie')
+    $this->store = CookieStore::make('cookie')
         ->request($request)
         ->resolve();
 });
 
-it('can persist data to a queued cookie', function () {
-    $this->driver->put('key', 'value');
+it('can persist key value pairs to a queued cookie', function () {
+    $this->store->put('key', 'value');
 
-    $this->driver->persist();
+    $this->store->persist();
 
     expect(Cookie::getQueuedCookies())
         ->toBeArray()
@@ -31,13 +31,13 @@ it('can persist data to a queued cookie', function () {
         ->{0}->getName()->toEqual('cookie');
 });
 
-it('can merge data to the cookie', function () {
-    $this->driver->put('key', ['key' => 'value']);
+it('can persist arrays to the cookie', function () {
+    $this->store->put('key', ['key' => 'value']);
 
-    expect($this->driver)
-        ->merge('key', 'key2', 'value2')->toBe($this->driver);
+    expect($this->store)
+        ->put(['key' => 'value', 'key2' => 'value2'])->toBe($this->store);
 
-    $this->driver->persist();
+    $this->store->persist();
 
     expect(Cookie::getQueuedCookies())
         ->toBeArray()
@@ -46,25 +46,25 @@ it('can merge data to the cookie', function () {
 });
 
 it('can retrieve all data from cookie', function () {
-    expect($this->driver->get())->toEqual(['key' => 'value']);
+    expect($this->store->get())->toEqual(['key' => 'value']);
 });
 
 it('can retrieve data from cookie', function () {
-    expect($this->driver->get('key'))->toEqual('value');
+    expect($this->store->get('key'))->toEqual('value');
 });
 
 it('retrieves null when the key does not exist', function () {
-    expect($this->driver->get('invalid'))->toBeNull();
+    expect($this->store->get('invalid'))->toBeNull();
 });
 
 it('can set the cookie jar', function () {
     $cookieJar = App::make(CookieJar::class);
 
-    expect($this->driver)
-        ->cookieJar($cookieJar)->toBe($this->driver);
+    expect($this->store)
+        ->cookieJar($cookieJar)->toBe($this->store);
 });
 
 it('can set the lifetime of the cookie', function () {
-    expect($this->driver)
-        ->lifetime(10)->toBe($this->driver);
+    expect($this->store)
+        ->lifetime(10)->toBe($this->store);
 });

@@ -23,7 +23,7 @@ class FilterQuery extends Pipe
             return;
         }
 
-        $this->persistedFilter($instance);
+        // $this->persistedFilter($instance);
     }
 
     /**
