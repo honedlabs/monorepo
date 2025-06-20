@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Honed\Upload\Concerns;
 
 use Closure;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Number;
 
 use function abs;
 use function array_map;
-use function array_merge;
 use function implode;
 use function in_array;
 use function mb_strtolower;
@@ -20,26 +18,32 @@ use function trim;
 
 trait ValidatesUpload
 {
+    public const LIFETIME = 2;
+
+    public const MAX_SIZE = 2147483647;
+
+    public const MIN_SIZE = 0;
+
     /**
      * The lifetime of the request in minutes.
      *
      * @var int
      */
-    protected $lifetime = 2;
+    protected $lifetime = self::LIFETIME;
 
     /**
      * The maximum file size in bytes.
      *
      * @var int
      */
-    protected $maxSize = 2147483647;
+    protected $maxSize = self::MAX_SIZE;
 
     /**
      * The minimum file size in bytes.
      *
      * @var int
      */
-    protected $minSize = 0;
+    protected $minSize = self::MIN_SIZE;
 
     /**
      * The accepted file mime types.
@@ -167,7 +171,7 @@ trait ValidatesUpload
         return $this->mimes($types);
     }
 
-    /** 
+    /**
      * Add a mime type to the accepted mime types.
      *
      * @param  string  $type

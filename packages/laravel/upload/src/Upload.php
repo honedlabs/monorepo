@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
+use Honed\Core\Concerns\HasPipeline;
+use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Primitive;
-use Illuminate\Http\Request;
+use Honed\Upload\Exceptions\PresignNotGeneratedException;
+use Honed\Upload\Pipes\CreateRules;
 use Honed\Upload\Pipes\Presign;
 use Honed\Upload\Pipes\Validate;
-use Honed\Core\Concerns\HasRequest;
-use Honed\Upload\Pipes\CreateRules;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Honed\Upload\Exceptions\PresignNotGeneratedException;
 
 class Upload extends Primitive implements Responsable
 {
@@ -21,8 +22,15 @@ class Upload extends Primitive implements Responsable
     use Concerns\HasRules;
     use Concerns\InteractsWithS3;
     use Concerns\ValidatesUpload;
+    use HasPipeline;
     use HasRequest;
-    // use HasPipeline;
+
+    /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'upload';
 
     /**
      * Create a new upload instance.
@@ -83,6 +91,7 @@ class Upload extends Primitive implements Responsable
             $this->getMimeTypes()
         );
     }
+
     /**
      * Create a presigned POST URL using.
      *
@@ -110,7 +119,7 @@ class Upload extends Primitive implements Responsable
 
     /**
      * Get the instance as an array.
-     * 
+     *
      * @return array<string,mixed>
      */
     public function toArray()
@@ -148,6 +157,11 @@ class Upload extends Primitive implements Responsable
         return $upload;
     }
 
+    /**
+     * Get the pipes to be used.
+     *
+     * @return array<int,class-string<\Honed\Core\Pipe<self>>>
+     */
     protected function pipes()
     {
         return [

@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace Honed\Upload\Pipes;
 
 use Aws\S3\PostObjectV4;
+use Honed\Core\Pipe;
 use Honed\Upload\Events\PresignCreated;
-use Honed\Upload\UploadRule;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 /**
- * @extends \Honed\Upload\Pipes\Pipe<\Honed\Upload\Upload>
+ * @extends \Honed\Core\Pipe<\Honed\Upload\Upload>
  */
 class Presign extends Pipe
 {
@@ -21,7 +18,7 @@ class Presign extends Pipe
      */
     public function run($instance)
     {
-        $lifetime = $instance->getRule()?->getLifetime() 
+        $lifetime = $instance->getRule()?->getLifetime()
             ?? $instance->getLifetime();
 
         $file = $instance->getFile();
@@ -35,7 +32,7 @@ class Presign extends Pipe
             ),
             $instance->formatLifetime($lifetime),
         ));
-        
+
         PresignCreated::dispatch(
             $instance::class, $file, $instance->getDisk()
         );

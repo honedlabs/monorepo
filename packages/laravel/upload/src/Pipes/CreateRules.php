@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Upload\Pipes;
 
+use Honed\Core\Pipe;
 use Honed\Upload\UploadRule;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 /**
- * @extends \Honed\Upload\Pipes\Pipe<\Honed\Upload\Upload>
+ * @extends \Honed\Core\Pipe<\Honed\Upload\Upload>
  */
 class CreateRules extends Pipe
 {

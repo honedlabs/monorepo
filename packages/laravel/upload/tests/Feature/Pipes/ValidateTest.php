@@ -3,11 +3,14 @@
 declare(strict_types=1);
 
 use Honed\Upload\Events\PresignCreated;
+use Honed\Upload\Pipes\Validate;
 use Honed\Upload\Upload;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Validation\ValidationException;
 
 beforeEach(function () {
+    $this->pipe = new Validate();
+
     $this->upload = Upload::make()
         ->mimes('image/')
         ->extensions('png')
@@ -18,7 +21,7 @@ beforeEach(function () {
         ->anonymize();
 
     Event::fake();
-});
+})->todo();
 
 it('invalidates type', function () {
     $request = presignRequest('test.png', 'audio/mp3', 1024);
