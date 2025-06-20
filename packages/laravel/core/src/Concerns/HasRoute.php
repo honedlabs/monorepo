@@ -49,7 +49,7 @@ trait HasRoute
         $this->route = match (true) {
             ! $route => null,
             $route instanceof Closure => $route,
-            $this->isRouteBound($parameters) => fn ($model) => route($route, $model, true),
+            $this->isRouteBound($parameters) => fn ($record) => route($route, $record, true),
             default => route($route, $parameters, true),
         };
 
