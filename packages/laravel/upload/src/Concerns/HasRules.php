@@ -4,314 +4,77 @@ declare(strict_types=1);
 
 namespace Honed\Upload\Concerns;
 
-use Closure;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Number;
-
-use function abs;
-use function array_map;
-use function array_merge;
-use function implode;
-use function in_array;
-use function mb_strtolower;
-use function sprintf;
-use function str_starts_with;
-use function trim;
-
 trait HasRules
 {
     /**
-     * The lifetime of the request in minutes.
+     * The list of upload rules for validating files.
      *
-     * @var int
+     * @var array<int, UploadRule>
      */
-    protected $lifetime = 2;
+    protected $rules = [];
 
     /**
-     * The maximum file size in bytes.
+     * The selected set of validation rules based on the request.
      *
-     * @var int
+     * @var array<int, mixed>|null
      */
-    protected $maxSize = 2147483647;
+    protected $rule;
 
     /**
-     * The minimum file size in bytes.
+     * Merge a set of rules with the existing.
      *
-     * @var int
-     */
-    protected $minSize = 0;
-
-    /**
-     * The accepted file mime types.
-     *
-     * @var array<int, string>
-     */
-    protected $mimes = [];
-
-    /**
-     * The accepted file extensions.
-     *
-     * @var array<int, string>
-     */
-    protected $extensions = [];
-
-    /**
-     * Set the expiry duration of the request in minutes.
-     *
-     * @param  int  $minutes
+     * @param  UploadRule|array<int,UploadRule>  $rules
      * @return $this
      */
-    public function lifetime($minutes)
+    public function rules($rules)
     {
-        $this->lifetime = $minutes;
+        /** @var array<int,UploadRule> */
+        $rules = is_array($rules) ? $rules : func_get_args();
+        
+        $this->rules = [...$this->rules, ...$rules];
 
         return $this;
     }
 
     /**
-     * Get the lifetime of the request in minutes.
+     * Add a rule to the upload.
      *
-     * @return int
-     */
-    public function getLifetime()
-    {
-        return $this->lifetime;
-    }
-
-    /**
-     * Format the lifetime of the request.
-     *
-     * @param  int  $minutes
-     * @return string
-     */
-    public function formatLifetime($minutes)
-    {
-        return sprintf('+%d minutes', abs($minutes));
-    }
-
-    /**
-     * Set the maximum file size in bytes.
-     *
-     * @param  int  $bytes
+     * @param  UploadRule  $rule
      * @return $this
      */
-    public function maxSize($bytes)
+    public function rule($rule)
     {
-        $this->maxSize = $bytes;
-
-        return $this;
+        return $this->rules($rule);
     }
 
     /**
-     * Get the maximum file size in bytes.
+     * Get the rules for validating file uploads.
      *
-     * @return int
+     * @return array<int, UploadRule>
      */
-    public function getMaxSize()
+    public function getRules()
     {
-        return $this->maxSize;
+        return $this->rules;
     }
 
     /**
-     * Set the minimum file size in bytes.
+     * Set the active rule for the upload.
      *
-     * @param  int  $bytes
-     * @return $this
+     * @param  array<int, mixed>  $rule
+     * @return void
      */
-    public function minSize($bytes)
+    public function setRule($rule)
     {
-        $this->minSize = $bytes;
-
-        return $this;
+        $this->rule = $rule;
     }
 
     /**
-     * Get the minimum file size in bytes.
+     * Get the active rule for the upload.
      *
-     * @return int
+     * @return array<int, mixed>|null
      */
-    public function getMinSize()
+    public function getRule()
     {
-        return $this->minSize;
-    }
-
-    /**
-     * Merge a set of accepted mime types with the existing.
-     *
-     * @param  string|array<int,string>  $types
-     * @return $this
-     */
-    public function mimes($types)
-    {
-        /** @var array<int, string> */
-        $types = is_array($types) ? $types : func_get_args();
-
-        $types = array_map(
-            static fn ($type) => rtrim(mb_strtolower(trim($type, ' *')), '/'),
-            $types
-        );
-
-        $this->mimes = [...$this->mimes, ...$types];
-
-        return $this;
-    }
-
-    /**
-     * Merge a set of accepted mime types with the existing.
-     *
-     * @param  string|array<int,string>  $types
-     * @return $this
-     */
-    public function mimeTypes($types)
-    {
-        return $this->mimes($types);
-    }
-
-    /** 
-     * Add a mime type to the accepted mime types.
-     *
-     * @param  string  $type
-     * @return $this
-     */
-    public function mime($type)
-    {
-        return $this->mimes($type);
-    }
-
-    /**
-     * Add a mime type to the accepted mime types.
-     *
-     * @param  string  $type
-     * @return $this
-     */
-    public function mimeType($type)
-    {
-        return $this->mime($type);
-    }
-
-    /**
-     * Get the accepted file mime types.
-     *
-     * @return array<int, string>
-     */
-    public function getMimes()
-    {
-        return $this->mimes;
-    }
-
-    /**
-     * Merge a set of accepted extensions with the existing.
-     *
-     * @param  string|array<int,string>  $extensions
-     * @return $this
-     */
-    public function extensions($extensions)
-    {
-        /** @var array<int, string> */
-        $extensions = is_array($extensions) ? $extensions : func_get_args();
-
-        $extensions = array_map(
-            static fn ($ext) => mb_strtolower(trim($ext, ' .')),
-            $extensions
-        );
-
-        $this->extensions = [...$this->extensions, ...$extensions];
-
-        return $this;
-    }
-
-    /**
-     * Add an accepted file extension.
-     *
-     * @param  string  $extension
-     * @return $this
-     */
-    public function extension($extension)
-    {
-        return $this->extensions($extension);
-    }
-
-    /**
-     * Get the accepted file extensions.
-     *
-     * @return array<int, string>
-     */
-    public function getExtensions()
-    {
-        return $this->extensions;
-    }
-
-    /**
-     * Create the general rules for validating the presigned POST request.
-     *
-     * @return array<string, mixed>
-     */
-    public function createRules()
-    {
-        return [
-            'name' => [
-                'required',
-                'string',
-                'max:1024',
-            ],
-            'extension' => [
-                'required',
-                'string',
-                function (string $attribute, string $value, Closure $fail) {
-                    $extensions = $this->getExtensions();
-
-                    if (! filled($extensions)) {
-                        return;
-                    }
-
-                    if (! in_array($value, $extensions)) {
-                        $fail(__('upload::messages.extension', [
-                            'extensions' => implode(', ', $extensions),
-                        ]));
-                    }
-                },
-            ],
-            'size' => [
-                'required',
-                'integer',
-                function (string $attribute, int $value, Closure $fail) {
-                    $max = $this->getMax();
-
-                    if ($value > $max) {
-                        $fail(__('upload::messages.max_size', [
-                            'size' => Number::fileSize($max),
-                        ]));
-                    }
-
-                    $min = $this->getMin();
-
-                    if ($value < $min) {
-                        $fail(__('upload::messages.min_size', [
-                            'size' => Number::fileSize($min),
-                        ]));
-                    }
-                },
-            ],
-            'type' => [
-                'required',
-                'string',
-                function (string $attribute, string $value, Closure $fail) {
-                    $types = $this->getmimes();
-
-                    if (! filled($types)) {
-                        return;
-                    }
-
-                    foreach ($types as $type) {
-                        if (str_starts_with($value, $type)) {
-                            return;
-                        }
-                    }
-
-                    $fail(__('upload::messages.type'));
-                },
-            ],
-            'meta' => ['nullable'],
-        ];
+        return $this->rule;
     }
 }

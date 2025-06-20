@@ -10,17 +10,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 /**
- * @template TClass of \Honed\Upload\Upload
- * 
- * @extends \Honed\Upload\Pipes\Pipe<TClass>
+ * @extends \Honed\Upload\Pipes\Pipe<\Honed\Upload\Upload>
  */
 class CreateRules extends Pipe
 {
     /**
      * Run the pipe logic.
-     * 
-     * @param  TClass  $instance
-     * @return void
      */
     public function run($instance)
     {

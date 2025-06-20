@@ -6,8 +6,19 @@ namespace Honed\Upload;
 
 use Illuminate\Support\Arr;
 
-class UploadData
+class File
 {
+    public $filename;
+
+    public $extension;
+
+    public $mimeType;
+
+    public $size;
+
+    public $meta;
+
+
     /**
      * Create a new upload data instance.
      */

@@ -7,7 +7,7 @@ namespace Honed\Upload\Pipes;
 use Closure;
 
 /**
- * @template TClass of \Honed\Upload\Upload
+ * @template TClass
  */
 abstract class Pipe
 {

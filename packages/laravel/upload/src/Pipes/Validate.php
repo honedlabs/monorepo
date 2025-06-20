@@ -4,21 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Upload\Pipes;
 
+use Honed\Upload\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 /**
- * @template TClass of \Honed\Upload\Upload
- * 
- * @extends \Honed\Upload\Pipes\Pipe<TClass>
+ * @extends \Honed\Upload\Pipes\Pipe<\Honed\Upload\Upload>
  */
 class Validate extends Pipe
 {
     /**
      * Run the pipe logic.
-     * 
-     * @param  TClass  $instance
-     * @return void
      * 
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -36,7 +32,7 @@ class Validate extends Pipe
                 $instance->getAttributes(),
             )->validate();
 
-            return $validated;
+            $instance->setFile(File::from($validated));
 
         } catch (ValidationException $e) {
             $instance->failedPresign($request);

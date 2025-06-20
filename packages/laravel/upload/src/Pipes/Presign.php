@@ -12,17 +12,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 /**
- * @template TClass of \Honed\Upload\Upload
- * 
- * @extends \Honed\Upload\Pipes\Pipe<TClass>
+ * @extends \Honed\Upload\Pipes\Pipe<\Honed\Upload\Upload>
  */
 class Presign extends Pipe
 {
     /**
      * Run the pipe logic.
-     * 
-     * @param  TClass  $instance
-     * @return void
      */
     public function run($instance)
     {
@@ -31,16 +26,20 @@ class Presign extends Pipe
         $lifetime = $instance->getRule()?->getLifetime() 
             ?? $instance->getLifetime();
 
+        $file = $instance->getFile();
+
         $instance->setPresign(new PostObjectV4(
             $instance->getClient(),
             $instance->getBucket(),
             $instance->getFormInputs($key),
-            $instance->getOptions($key),
+            $instance->getOptions(
+                $file->getPath(), $file->getType(), $file->getSize()
+            ),
             $instance->formatExpiry($lifetime),
         ));
         
         PresignCreated::dispatch(
-            $instance::class, $instance->getData(), $instance->getDisk()
+            $instance::class, $file, $instance->getDisk()
         );
     }
 }

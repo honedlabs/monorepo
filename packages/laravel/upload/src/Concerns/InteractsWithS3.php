@@ -31,6 +31,13 @@ trait InteractsWithS3
     protected $bucket;
 
     /**
+     * The presigned object.
+     * 
+     * @var \Aws\S3\PostObjectV4|null
+     */
+    protected $presign;
+
+    /**
      * Set the policy to use for the uploads ACL.
      *
      * @param  string  $policy
@@ -146,21 +153,42 @@ trait InteractsWithS3
      *
      * @param  string  $key
      * @param  string  $type
-     * @param  int  $min
-     * @param  int  $max
+     * @param  int  $size
      * @return array<int,array<int,string|int>>
      * 
      * @throws CouldNotResolveBucketException
      */
-    public function getOptions($key, $type, $min, $max)
+    public function getOptions($key, $type, $size)
     {
         return [
             ['eq', '$acl', $this->getPolicy()],
             ['eq', '$key', $key],
             ['eq', '$bucket', $this->getBucket()],
-            ['content-length-range', $min, $max],
+            // Must be equal to the size of the uploaded file
+            ['content-length-range', $size, $size],
             ['eq', '$Content-Type', $type],
         ];
+    }
+
+    /**
+     * Set the presigned object.
+     *
+     * @param  \Aws\S3\PostObjectV4|null  $presign
+     * @return void
+     */
+    public function setPresign($presign)
+    {
+        $this->presign = $presign;
+    }
+
+    /**
+     * Get the presigned object.
+     *
+     * @return \Aws\S3\PostObjectV4|null
+     */
+    public function getPresign()
+    {
+        return $this->presign;
     }
 
     /**
@@ -168,7 +196,7 @@ trait InteractsWithS3
      *
      * @return \Aws\S3\S3Client
      */
-    protected function client()
+    public function getClient()
     {
         /** @var \Illuminate\Filesystem\AwsS3V3Adapter */
         $client = Storage::disk($this->getDisk());

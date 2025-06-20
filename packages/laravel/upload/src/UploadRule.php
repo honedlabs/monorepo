@@ -9,9 +9,7 @@ use Illuminate\Support\Arr;
 
 use function in_array;
 use function is_string;
-use function mb_strtolower;
 use function str_starts_with;
-use function trim;
 
 class UploadRule
 {

@@ -4,62 +4,20 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
-use Aws\S3\PostObjectV4;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Primitive;
-use Honed\Upload\Concerns\DispatchesPresignEvents;
-use Honed\Upload\Concerns\HasFile;
-use Honed\Upload\Concerns\ValidatesUpload;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Number;
 use Illuminate\Validation\ValidationException;
-
-use function array_map;
-use function array_merge;
-use function count;
-use function implode;
-use function mb_strtoupper;
-use function trim;
-use function ucfirst;
 
 class Upload extends Primitive implements Responsable
 {
-    use DispatchesPresignEvents;
-    use HasFile;
+    use Concerns\BridgesSerialization;
+    use Concerns\HasFile;
     use Concerns\HasRules;
     use Concerns\InteractsWithS3;
+    use Concerns\ValidatesUpload;
     use HasRequest;
-
-    /**
-     * The upload data to use from the request.
-     *
-     * @var UploadData|null
-     */
-    protected $data;
-
-    /**
-     * Get the configuration rules for validating file uploads.
-     *
-     * @var array<int, UploadRule>
-     */
-    protected $rules = [];
-
-    /**
-     * The additional data to return with the presign response.
-     *
-     * @var mixed
-     */
-    protected $returns = null;
-
-    /**
-     * Whether the upload accepts multiple files.
-     *
-     * @var bool
-     */
-    protected $multiple = false;
 
     /**
      * Create a new upload instance.
@@ -93,189 +51,6 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
-     * Merge a set of rules with the existing.
-     *
-     * @param  UploadRule|array<int,UploadRule>  $rules
-     * @return $this
-     */
-    public function rules($rules)
-    {
-        /** @var array<int,UploadRule> */
-        $rules = is_array($rules) ? $rules : func_get_args();
-        
-        $this->rules = [...$this->rules, ...$rules];
-
-        return $this;
-    }
-
-    /**
-     * Add a rule to the upload.
-     *
-     * @param  UploadRule  $rule
-     * @return $this
-     */
-    public function rule($rule)
-    {
-        return $this->rules($rule);
-    }
-
-    /**
-     * Get the rules for validating file uploads.
-     *
-     * @return array<int, UploadRule>
-     */
-    public function getRules()
-    {
-        return $this->rules;
-    }
-
-    /**
-     * Set additiional data to return with the presign response.
-     *
-     * @param  mixed  $return
-     * @return $this
-     */
-    public function provide($return)
-    {
-        $this->returns = $return;
-
-        return $this;
-    }
-
-    /**
-     * Define the data that should be provided as part of the presign response.
-     *
-     * @return mixed
-     */
-    public function provides()
-    {
-        return [];
-    }
-
-    /**
-     * Get the additional data to return with the presign response.
-     *
-     * @return mixed
-     */
-    public function getProvided()
-    {
-        if (isset($this->returns)) {
-            return $this->evaluate($this->returns);
-        }
-
-        return $this->provides();
-    }
-
-    /**
-     * Set whether the upload accepts multiple files.
-     *
-     * @param  bool  $multiple
-     * @return $this
-     */
-    public function multiple($multiple = true)
-    {
-        $this->multiple = $multiple;
-
-        return $this;
-    }
-
-    /**
-     * Determine whether the upload accepts multiple files.
-     *
-     * @return bool
-     */
-    public function isMultiple()
-    {
-        return $this->multiple;
-    }
-
-    /**
-     * Get the upload data.
-     *
-     * @return UploadData|null
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * Create the upload message.
-     *
-     * @return string
-     */
-    public function getMessage()
-    {
-        $extensions = $this->getExtensions();
-        $mimes = $this->getMimeTypes();
-
-        $numMimes = count($mimes);
-        $numExts = count($extensions);
-
-        $typed = match (true) {
-            $numExts > 0 && $numExts < 4 => implode(', ', array_map(
-                static fn ($ext) => mb_strtoupper(trim($ext)),
-                $extensions
-            )),
-
-            $numMimes > 0 && $numMimes < 4 => ucfirst(implode(', ', array_map(
-                static fn ($mime) => trim($mime, ' /'),
-                $mimes
-            ))),
-
-            $this->isMultiple() => 'Files',
-
-            default => 'A single file',
-        };
-
-        return $typed.' up to '.Number::fileSize($this->getMax());
-    }
-
-    /**
-     * Validate the incoming request.
-     *
-     * @param  Request|null  $request
-     * @return array{UploadData, UploadRule|null}
-     *
-     * @throws ValidationException
-     */
-    public function validate($request)
-    {
-        $request ??= $this->request;
-
-        [$name, $extension] =
-            static::destructureFilename($request->input('name'));
-
-        $request->merge([
-            'name' => $name,
-            'extension' => $extension,
-        ])->all();
-
-        $rule = Arr::first(
-            $this->getRules(),
-            static fn (UploadRule $rule) => $rule->isMatching(
-                $request->input('type'),
-                $extension,
-            ),
-        );
-
-        try {
-            $validated = Validator::make(
-                $request->all(),
-                $rule?->createRules() ?? $this->createRules(),
-                [],
-                $this->getAttributes(),
-            )->validate();
-
-            return [UploadData::from($validated), $rule];
-        } catch (ValidationException $e) {
-            $this->failedPresign($request);
-
-            throw $e;
-        }
-    }
-
-    /**
      * Get the attributes for the validator.
      *
      * @return array<string,string>
@@ -298,33 +73,14 @@ class Upload extends Primitive implements Responsable
      *
      * @throws ValidationException
      */
-    public function create($request = null)
+    public function create()
     {
-        // Validate
-        // Create Presigned DTO?
-        // Create PostObject
-        // Dispatch Event
-        // Respond
-        [$data, $rule] = $this->validate($request);
-
-        $this->data = $data;
-
-        $key = $this->createKey($data);
-
-        $postObject = new PostObjectV4(
-            $this->getClient(),
-            $this->getBucket(),
-            $this->getFormInputs($key),
-            $this->getOptions($key),
-            $this->formatExpiry($rule ? $rule->getLifetime() : $this->getLifetime())
-        );
-
-        static::createdPresign($data, $this->getDisk());
+        $this->build();
 
         return [
-            'attributes' => $postObject->getFormAttributes(),
-            'inputs' => $postObject->getFormInputs(),
-            'data' => $this->getProvided(),
+            'attributes' => $this->getPresign()->getFormAttributes(),
+            'inputs' => $this->getPresign()->getFormInputs(),
+            'data' => $this->getResponse(),
         ];
     }
 
@@ -352,9 +108,9 @@ class Upload extends Primitive implements Responsable
      */
     public function toResponse($request)
     {
-        $presign = $this->create($request);
+        $this->request($request);
 
-        return response()->json($presign);
+        return response()->json($this->create());
     }
 
     /**
