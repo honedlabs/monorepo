@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Upload;
 
 use Aws\S3\PostObjectV4;
+use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Primitive;
 use Honed\Upload\Concerns\DispatchesPresignEvents;
 use Honed\Upload\Concerns\HasFile;
@@ -28,7 +29,9 @@ class Upload extends Primitive implements Responsable
 {
     use DispatchesPresignEvents;
     use HasFile;
-    use ValidatesUpload;
+    use Concerns\HasRules;
+    use Concerns\InteractsWithS3;
+    use HasRequest;
 
     /**
      * The upload data to use from the request.
@@ -45,13 +48,6 @@ class Upload extends Primitive implements Responsable
     protected $rules = [];
 
     /**
-     * The access control list to use for the file.
-     *
-     * @var string|null
-     */
-    protected $acl;
-
-    /**
      * The additional data to return with the presign response.
      *
      * @var mixed
@@ -66,30 +62,23 @@ class Upload extends Primitive implements Responsable
     protected $multiple = false;
 
     /**
-     * Whether to only return the upload message.
-     *
-     * @var bool
-     */
-    protected $message = false;
-
-    /**
      * Create a new upload instance.
      */
-    public function __construct(
-        protected Request $request,
-    ) {
+    public function __construct(Request $request)
+    {
         parent::__construct();
+
+        $this->request($request);
     }
 
     /**
      * Create a new upload instance.
      *
-     * @param  string|null  $disk
      * @return static
      */
-    public static function make($disk = null)
+    public static function make()
     {
-        return resolve(static::class)->disk($disk);
+        return resolve(static::class);
     }
 
     /**
@@ -100,32 +89,34 @@ class Upload extends Primitive implements Responsable
      */
     public static function into($disk)
     {
-        return static::make($disk);
+        return static::make()->disk($disk);
     }
 
     /**
-     * Get the default access control list to use for the file.
+     * Merge a set of rules with the existing.
      *
-     * @return string
-     */
-    public static function getDefaultACL()
-    {
-        return type(config('upload.acl', 'public-read'))->asString();
-    }
-
-    /**
-     * Set the rules for validating file uploads.
-     *
-     * @param  UploadRule|iterable<UploadRule>  ...$rules
+     * @param  UploadRule|array<int,UploadRule>  $rules
      * @return $this
      */
-    public function rules(...$rules)
+    public function rules($rules)
     {
-        $rules = Arr::flatten($rules);
-
-        $this->rules = array_merge($this->rules, $rules);
+        /** @var array<int,UploadRule> */
+        $rules = is_array($rules) ? $rules : func_get_args();
+        
+        $this->rules = [...$this->rules, ...$rules];
 
         return $this;
+    }
+
+    /**
+     * Add a rule to the upload.
+     *
+     * @param  UploadRule  $rule
+     * @return $this
+     */
+    public function rule($rule)
+    {
+        return $this->rules($rule);
     }
 
     /**
@@ -136,29 +127,6 @@ class Upload extends Primitive implements Responsable
     public function getRules()
     {
         return $this->rules;
-    }
-
-    /**
-     * Set the access control list to use for the file.
-     *
-     * @param  string  $acl
-     * @return $this
-     */
-    public function acl($acl)
-    {
-        $this->acl = $acl;
-
-        return $this;
-    }
-
-    /**
-     * Get the access control list to use for the file.
-     *
-     * @return string
-     */
-    public function getACL()
-    {
-        return $this->acl ?? static::getDefaultACL();
     }
 
     /**
@@ -232,29 +200,6 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
-     * Set whether to only return the upload message.
-     *
-     * @param  bool  $message
-     * @return $this
-     */
-    public function message($message = true)
-    {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    /**
-     * Determine whether to only return the upload message.
-     *
-     * @return bool
-     */
-    public function onlyMessage()
-    {
-        return $this->message;
-    }
-
-    /**
      * Create the upload message.
      *
      * @return string
@@ -284,49 +229,6 @@ class Upload extends Primitive implements Responsable
         };
 
         return $typed.' up to '.Number::fileSize($this->getMax());
-    }
-
-    /**
-     * Get the S3 bucket to use for uploading files.
-     *
-     * @return string
-     */
-    public function getBucket()
-    {
-        $disk = $this->getDisk();
-
-        return type(config("filesystems.disks.{$disk}.bucket"))->asString();
-    }
-
-    /**
-     * Get the defaults for form input fields.
-     *
-     * @param  string  $key
-     * @return array<string,mixed>
-     */
-    public function getFormInputs($key)
-    {
-        return [
-            'acl' => $this->getACL(),
-            'key' => $key,
-        ];
-    }
-
-    /**
-     * Get the policy condition options for the request.
-     *
-     * @param  string  $key
-     * @return array<int,array<string|int,mixed>>
-     */
-    public function getOptions($key)
-    {
-        return [
-            ['eq', '$acl', $this->getACL()],
-            ['eq', '$key', $key],
-            ['eq', '$bucket', $this->getBucket()],
-            ['content-length-range', $this->getMin(), $this->getMax()],
-            ['eq', '$Content-Type', $this->getData()?->type],
-        ];
     }
 
     /**
@@ -398,6 +300,11 @@ class Upload extends Primitive implements Responsable
      */
     public function create($request = null)
     {
+        // Validate
+        // Create Presigned DTO?
+        // Create PostObject
+        // Dispatch Event
+        // Respond
         [$data, $rule] = $this->validate($request);
 
         $this->data = $data;
@@ -409,7 +316,7 @@ class Upload extends Primitive implements Responsable
             $this->getBucket(),
             $this->getFormInputs($key),
             $this->getOptions($key),
-            $this->formatExpiry($rule ? $rule->getExpiry() : $this->getExpiry())
+            $this->formatExpiry($rule ? $rule->getLifetime() : $this->getLifetime())
         );
 
         static::createdPresign($data, $this->getDisk());
@@ -422,24 +329,19 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
-     * {@inheritdoc}
+     * Get the instance as an array.
+     * 
+     * @return array<string,mixed>
      */
     public function toArray()
     {
-        $data = [
+        return [
             'multiple' => $this->isMultiple(),
             'message' => $this->getMessage(),
-        ];
-
-        if ($this->onlyMessage()) {
-            return $data;
-        }
-
-        return array_merge($data, [
             'extensions' => $this->getExtensions(),
             'mimes' => $this->getMimeTypes(),
             'size' => $this->getMax(),
-        ]);
+        ];
     }
 
     /**

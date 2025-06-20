@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Upload\Concerns;
 
+use Honed\Upload\Exceptions\CouldNotResolveBucketException;
+use Illuminate\Support\Facades\Storage;
+
 trait InteractsWithS3
 {
     /**
@@ -110,13 +113,15 @@ trait InteractsWithS3
      * Get the S3 bucket to use.
      *
      * @return string
+     * 
+     * @throws CouldNotResolveBucketException
      */
     public function getBucket()
     {
         $this->bucket ??= config("filesystems.disks.{$this->getDisk()}.bucket");
 
         if (! $this->bucket) {
-            throw new \Exception('No bucket specified for the upload.');
+            CouldNotResolveBucketException::throw();
         }
 
         return $this->bucket;
@@ -126,7 +131,7 @@ trait InteractsWithS3
      * Get the form inputs for the S3 presigner.
      *
      * @param  string  $key
-     * @return array
+     * @return array{acl:string,key:string}
      */
     public function getFormInputs($key)
     {
@@ -144,8 +149,10 @@ trait InteractsWithS3
      * @param  int  $min
      * @param  int  $max
      * @return array<int,array<int,string|int>>
+     * 
+     * @throws CouldNotResolveBucketException
      */
-    public function getOptions($key, $type, $min = 0, $max = 2147483647)
+    public function getOptions($key, $type, $min, $max)
     {
         return [
             ['eq', '$acl', $this->getPolicy()],
@@ -155,4 +162,17 @@ trait InteractsWithS3
             ['eq', '$Content-Type', $type],
         ];
     }
+
+    /**
+     * Get an instance of the S3 client.
+     *
+     * @return \Aws\S3\S3Client
+     */
+    protected function client()
+    {
+        /** @var \Illuminate\Filesystem\AwsS3V3Adapter */
+        $client = Storage::disk($this->getDisk());
+
+        return $client->getClient();
+    }       
 }

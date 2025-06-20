@@ -11,16 +11,20 @@ final class UploadServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
+     * 
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/upload.php', 'upload');
     }
 
     /**
      * Bootstrap services.
+     * 
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'upload');
 
@@ -33,7 +37,12 @@ final class UploadServiceProvider extends ServiceProvider
         }
     }
 
-    public function offerPublishing(): void
+    /**
+     * Register the publishing for the package.
+     *
+     * @return void
+     */
+    public function offerPublishing()
     {
         $this->publishes([
             __DIR__.'/../config/upload.php' => config_path('upload.php'),
