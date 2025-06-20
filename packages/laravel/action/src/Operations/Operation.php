@@ -35,6 +35,13 @@ abstract class Operation extends Primitive
     public const PAGE = 'page';
 
     /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'operation';
+
+    /**
      * Create a new action instance.
      *
      * @param  string  $name

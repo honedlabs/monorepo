@@ -100,7 +100,7 @@ trait HasOperations
     }
 
     /**
-     * Merge a set of operations with the existing operations.
+     * Merge a set of operations with existing.
      *
      * @param  Operation|Batch|array<int, Operation|Batch<TModel, TBuilder>>  $operations
      * @return $this
