@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+use Honed\Core\Pipe;
+
+/**
+ * @extends \Honed\Core\Pipe<mixed>
+ */
+class {{ class }} extends Pipe
+{
+    /**
+     * Run the pipe logic.
+     */
+    public function run($instance)
+    {
+        //
+    }
+}
