@@ -80,6 +80,14 @@ it('resolves default parameter values by name', function () {
         ->evaluate($fn)->toBe($user->email);
 });
 
+it('uses evaluation identifier', function ($callback, $type) {
+    expect($this->test)
+        ->evaluate($callback)->toBeInstanceOf($type);
+})->with([
+    [fn (Component $c) => $c, Component::class],
+    [fn ($component) => $component, Component::class],
+]);
+
 it('fails if it cannot find a binding', function () {
     $fn = fn (Status $status) => $status->name;
 

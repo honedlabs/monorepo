@@ -20,6 +20,13 @@ class Component extends Primitive
     use HasType;
 
     /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'component';
+
+    /**
      * {@inheritdoc}
      */
     public function setUp()

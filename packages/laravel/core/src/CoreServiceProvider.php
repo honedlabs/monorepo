@@ -11,7 +11,7 @@ final class CoreServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.
-     * 
+     *
      * @return void
      */
     public function boot()

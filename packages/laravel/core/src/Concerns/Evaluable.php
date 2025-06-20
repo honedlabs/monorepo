@@ -6,7 +6,6 @@ namespace Honed\Core\Concerns;
 
 use BackedEnum;
 use Closure;
-use Honed\Core\Primitive;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\App;
 use ReflectionFunction;
@@ -22,6 +21,13 @@ use function is_object;
  */
 trait Evaluable
 {
+    /**
+     * The identifier to use for evaluation.
+     *
+     * @var string|null
+     */
+    protected $evaluationIdentifier;
+
     /**
      * Evaluate an expression with correct dependencies.
      *
@@ -89,6 +95,16 @@ trait Evaluable
             }
         }
 
+        if (
+            (
+                isset($this->evaluationIdentifier) &&
+                ($parameterName === $this->evaluationIdentifier)
+            ) ||
+            ($typedParameterClassName === static::class)
+        ) {
+            return $this;
+        }
+
         if (filled($typedParameterClassName)) {
             return app()->make($typedParameterClassName);
         }
@@ -151,10 +167,7 @@ trait Evaluable
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
-        return match ($parameterName) {
-            'primitive', 'self' => [$this],
-            default => []
-        };
+        return [];
     }
 
     /**
@@ -165,9 +178,6 @@ trait Evaluable
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
-        return match ($parameterType) {
-            Primitive::class, static::class => [$this],
-            default => [App::make($parameterType)],
-        };
+        return [App::make($parameterType)];
     }
 }
