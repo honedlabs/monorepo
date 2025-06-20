@@ -18,6 +18,7 @@ use Honed\Core\Concerns\Transformable;
 use Honed\Core\Primitive;
 use Honed\Refine\Concerns\HasQualifier;
 use Honed\Refine\Sort;
+use Honed\Table\Columns\Concerns\HasState;
 use Honed\Table\Concerns\IsVisible;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
@@ -43,7 +44,7 @@ class Column extends Primitive
     use HasType;
     use IsActive;
     use IsVisible;
-    use Transformable;
+    use Concerns\HasState;
 
     /**
      * Whether this column represents the record key.
@@ -148,6 +149,8 @@ class Column extends Primitive
      */
     public function setUp()
     {
+        parent::setUp();
+
         $this->active(true);
     }
 
@@ -220,16 +223,6 @@ class Column extends Primitive
         return $this->fallback ?? static::$useFallback;
     }
 
-    /**
-     * Set the default fallback value for the column.
-     *
-     * @param  mixed  $default
-     * @return void
-     */
-    public function useFallback($default)
-    {
-        static::$useFallback = $default;
-    }
 
     /**
      * Set the class for the column.
@@ -530,6 +523,16 @@ class Column extends Primitive
             : Arr::get($record, $this->getName())
         );
 
+        /**
+         * [
+         *  'v' => mixed // value
+         *  'e' => mixed // extra
+         *  'c' => string|null // class
+         *  'f' => boolean // fallback
+         *  ]
+         * ]
+         */
+
         return [
             $this->getParameter() => [
                 'value' => $value,
@@ -541,9 +544,18 @@ class Column extends Primitive
         ];
     }
 
-    public function count()
+    /**
+     * Add a relationship count to the column.
+     * 
+     * @param string|array<string, \Closure> $relationship
+     * @return $this
+     */
+    public function count($relationship)
     {
-        // $this->query(fn (Builder $query) => $query->withCount())
+        
+        $this->query(fn (Builder $query) => $query->withCount($relationship));
+
+        return $this;
     }
 
     public function exists()

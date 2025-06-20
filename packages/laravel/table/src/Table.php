@@ -477,7 +477,21 @@ class Table extends Refine implements Handles, UrlRoutable
      */
     public function toArray()
     {
-        $this->build();
+        $this->refine();
+
+        return [
+            ...$this->refineToArray(),
+            'records' => $this->getRecords(),
+            'paginate' => $this->getPagination(),
+            'columns' => $this->columnsToArray(),
+            'pages' => $this->pageToArray(),
+            'toggleable' => $this->isToggleable(),
+            'actions' => $this->actionsToArray(),
+            'meta' => $this->getMeta(),
+            'layout' => $this->getLayout(),
+            // empty
+            //config
+        ];
 
         $table = \array_merge(parent::toArray(), [
             'records' => $this->getRecords(),
@@ -554,6 +568,7 @@ class Table extends Refine implements Handles, UrlRoutable
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return match ($parameterName) {
+            'table' => [$this],
             'emptyState' => [$this->getEmptyState()],
             'request' => [$this->getRequest()],
             'builder', 'query', 'q' => [$this->getBuilder()],
@@ -569,6 +584,7 @@ class Table extends Refine implements Handles, UrlRoutable
         $builder = $this->getBuilder();
 
         return match ($parameterType) {
+            Table::class => [$this],
             EmptyState::class => [$this->getEmptyState()],
             Request::class => [$this->getRequest()],
             $builder::class, Builder::class, BuilderContract::class => [$builder],

@@ -45,25 +45,11 @@ class Export extends Action
     protected $method = 'download';
 
     /**
-     * The default method to be used for generating the export.
-     * 
-     * @var 'download'|'queue'|'store'
-     */
-    protected static $useMethod = 'download';
-
-    /**
      * The queue to be used for the export.
      * 
-     * @var bool|string|null
+     * @var bool|string
      */
-    protected $queue;
-
-    /**
-     * The default queue to be used for the export.
-     * 
-     * @var string
-     */
-    protected static $useQueue = 'default';
+    protected $queue = 'default';
 
     /**
      * The disk for the export to be stored on.
@@ -73,40 +59,18 @@ class Export extends Action
     protected $disk;
 
     /**
-     * The default disk for the export to be stored on, null will use the 
-     * default disk supplied by the filesystem config.
-     * 
-     * @var string|null
-     */
-    protected static $useDisk = null;
-
-    /**
      * Whether to only use records that have been filtered.
      * 
      * @var bool|null
      */
-    protected $filtered;
-
-    /**
-     * Whether to only use records that have been filtered by default.
-     * 
-     * @var bool|null
-     */
-    protected static $useFiltered = true;
+    protected $filtered = true;
 
     /**
      * Whether to only use records that have been selected.
      * 
      * @var bool|null
      */
-    protected $selected;
-
-    /**
-     * Whether to only use records that have been selected by default.
-     * 
-     * @var bool|null
-     */
-    protected static $useSelected = true;
+    protected $selected = true;
 
     public function all()
     {
@@ -278,35 +242,13 @@ class Export extends Action
     }
 
     /**
-     * Set the default method to be used for generating the export.
-     * 
-     * @param  'download'|'queue'|'store'  $method
-     * @return void
-     */
-    public static function useMethod($method)
-    {
-        static::$useMethod = $method;
-    }
-
-    /**
      * Get the queue to be used for the export.
      * 
      * @return string
      */
     public function getQueue()
     {
-        return $this->queue ?? static::$useQueue;
-    }
-
-    /**
-     * Set the queue to be used for the export.
-     * 
-     * @param  string|null  $queue
-     * @return void
-     */
-    public static function useQueue($queue)
-    {
-        static::$useQueue = $queue;
+        return $this->queue;
     }
 
     /**
@@ -316,40 +258,7 @@ class Export extends Action
      */
     public function getDisk()
     {
-        return $this->disk ?? static::$useDisk;
-    }
-
-    /**
-     * Set the disk to be used for the export.
-     * 
-     * @param  string|null  $disk
-     * @return void
-     */
-    public static function useDisk($disk)
-    {
-        static::$useDisk = $disk;
-    }
-
-    /**
-     * Set whether to only use records that have been filtered.
-     * 
-     * @param  bool|null  $filtered
-     * @return void
-     */
-    public static function onlyFiltered($filtered = true)
-    {
-        static::$useFiltered = $filtered;
-    }
-
-    /**
-     * Set whether to only use records that have been selected.
-     * 
-     * @param  bool|null  $selected
-     * @return void
-     */
-    public static function onlySelected($selected = true)
-    {
-        static::$useSelected = $selected;
+        return $this->disk;
     }
 
     /**
@@ -389,13 +298,7 @@ class Export extends Action
     
 
     /**
-     * Statics:
-     * onlyFilteredRecords
-     * onlySelectedRecords
-     * onlyShownColumns
-     * useQueue
-     * useDisk
-     * 
+
      * Methods
      * events
      * queue

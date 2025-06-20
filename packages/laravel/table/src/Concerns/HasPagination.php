@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Honed\Table\PageOption;
 use Honed\Table\PerPageRecord;
 use Illuminate\Support\Collection;
 
@@ -71,11 +72,17 @@ trait HasPagination
     /**
      * Set the paginator type.
      *
-     * @param  'length-aware'|'cursor'|'simple'|'collection'|string  $paginator
+     * @param  bool|'length-aware'|'cursor'|'simple'|'collection'|string  $paginator
      * @return $this
      */
-    public function paginator($paginator)
+    public function paginator($paginator = self::LENGTH_AWARE)
     {
+        match ($paginator) {
+            true => $paginator = self::LENGTH_AWARE,
+            false => $paginator = self::COLLECTION,
+            default => $paginator,
+        };
+
         $this->paginator = $paginator;
 
         return $this;
@@ -88,7 +95,7 @@ trait HasPagination
      */
     public function lengthAware()
     {
-        return $this->paginator('length-aware');
+        return $this->paginator(self::LENGTH_AWARE);
     }
 
     /**
@@ -98,7 +105,7 @@ trait HasPagination
      */
     public function simple()
     {
-        return $this->paginator('simple');
+        return $this->paginator(self::SIMPLE);
     }
 
     /**
@@ -108,7 +115,7 @@ trait HasPagination
      */
     public function cursor()
     {
-        return $this->paginator('cursor');
+        return $this->paginator(self::CURSOR);
     }
 
     /**
@@ -118,7 +125,7 @@ trait HasPagination
      */
     public function collection()
     {
-        return $this->paginator('collection');
+        return $this->paginator(self::COLLECTION);
     }
 
     /**
@@ -128,32 +135,18 @@ trait HasPagination
      */
     public function getPaginator()
     {
-        if (isset($this->paginator)) {
-            return $this->paginator;
-        }
-
-        return static::getDefaultPaginator();
-    }
-
-    /**
-     * Get the default paginator type.
-     *
-     * @return 'cursor'|'simple'|'length-aware'|'collection'|string
-     */
-    public static function getDefaultPaginator()
-    {
-        return type(config('table.paginator', 'length-aware'))->asString();
+        return $this->paginator;
     }
 
     /**
      * Set the pagination options.
      *
-     * @param  int|array<int,int>  $pagination
+     * @param  int|array<int,int>  $perPage
      * @return $this
      */
-    public function pagination($pagination)
+    public function perPage($perPage)
     {
-        $this->pagination = $pagination;
+        $this->perPage = $perPage;
 
         return $this;
     }
@@ -163,35 +156,21 @@ trait HasPagination
      *
      * @return int|array<int,int>
      */
-    public function getPagination()
+    public function getPerPage()
     {
-        if (isset($this->pagination)) {
-            return $this->pagination;
-        }
-
-        return static::getFallbackPagination();
+        return $this->perPage;
     }
 
-    /**
-     * Get the pagination options from the config.
-     *
-     * @return int|array<int,int>
-     */
-    public static function getFallbackPagination()
-    {
-        /** @var int|array<int,int> */
-        return config('table.pagination', 10);
-    }
 
     /**
      * Set the default pagination amount.
      *
-     * @param  int  $defaultPagination
+     * @param  int  $perPage
      * @return $this
      */
-    public function defaultPagination($defaultPagination)
+    public function defaultPerPage($perPage)
     {
-        $this->defaultPagination = $defaultPagination;
+        $this->defaultPerPage = $perPage;
 
         return $this;
     }
@@ -201,23 +180,9 @@ trait HasPagination
      *
      * @return int
      */
-    public function getDefaultPagination()
+    public function getDefaultPerPage()
     {
-        if (isset($this->defaultPagination)) {
-            return $this->defaultPagination;
-        }
-
-        return static::getDefaultedPagination();
-    }
-
-    /**
-     * Get the fallback default pagination amount from the config.
-     *
-     * @return int
-     */
-    public static function getDefaultedPagination()
-    {
-        return type(config('table.default_pagination', 10))->asInt();
+        return $this->defaultPerPage;
     }
 
     /**
@@ -240,21 +205,7 @@ trait HasPagination
      */
     public function getPageKey()
     {
-        if (isset($this->pageKey)) {
-            return $this->pageKey;
-        }
-
-        return static::getDefaultPageKey();
-    }
-
-    /**
-     * Get the query parameter for the page number from the config.
-     *
-     * @return string
-     */
-    public static function getDefaultPageKey()
-    {
-        return type(config('table.page_key', 'page'))->asString();
+        return $this->pageKey;
     }
 
     /**
@@ -277,22 +228,7 @@ trait HasPagination
      */
     public function getRecordKey()
     {
-        if (isset($this->recordKey)) {
-            return $this->recordKey;
-        }
-
-        return static::getDefaultRecordKey();
-    }
-
-    /**
-     * Get the default query parameter for the number of records to show per
-     * page.
-     *
-     * @return string
-     */
-    public static function getDefaultRecordKey()
-    {
-        return type(config('table.record_key', 'rows'))->asString();
+        return $this->recordKey;
     }
 
     /**
@@ -315,22 +251,7 @@ trait HasPagination
      */
     public function getWindow()
     {
-        if (isset($this->window)) {
-            return $this->window;
-        }
-
-        return static::getDefaultWindow();
-    }
-
-    /**
-     * Get the default number of page links to show either side of the current
-     * page.
-     *
-     * @return int
-     */
-    public static function getDefaultWindow()
-    {
-        return type(config('table.window', 2))->asInt();
+        return $this->window;
     }
 
     /**
@@ -355,7 +276,7 @@ trait HasPagination
      */
     public function getRecordsPerPage()
     {
-        return $this->recordsPerPage;
+        return $this->pageOptions;
     }
 
     /**
@@ -366,7 +287,7 @@ trait HasPagination
     public function recordsPerPageToArray()
     {
         return \array_map(
-            static fn (PerPageRecord $record) => $record->toArray(),
+            static fn (PageOption $record) => $record->toArray(),
             $this->getRecordsPerPage()
         );
     }

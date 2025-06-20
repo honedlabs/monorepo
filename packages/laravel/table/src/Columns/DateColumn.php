@@ -32,14 +32,7 @@ class DateColumn extends Column
      *
      * @var string|null
      */
-    protected $format;
-
-    /**
-     * The default format to use for the date.
-     *
-     * @var string|\Closure
-     */
-    protected static $useFormat = self::DEFAULT_FORMAT;
+    protected $format = 'Y-m-d H:i:s';
 
     /**
      * The timezone to use for date parsing.
@@ -47,14 +40,6 @@ class DateColumn extends Column
      * @var string|null
      */
     protected $timezone;
-
-    /**
-     * The default timezone to use for date parsing.
-     *
-     * @var string|\Closure|null
-     */
-    protected static $useTimezone;
-
 
     /**
      * {@inheritdoc}
@@ -146,36 +131,7 @@ class DateColumn extends Column
      */
     public function getFormat()
     {
-        return $this->format ??= $this->usesFormat();
-    }
-
-    /**
-     * Set the default format to use for formatting dates.
-     * 
-     * @param string|\Closure():string $format
-     * @return void
-     */
-    public static function useFormat($format = 'Y-m-d H:i:s')
-    {
-        static::$useFormat = $format;
-    }
-
-    /**
-     * Get the default format to use for formatting dates.
-     * 
-     * @return string
-     */
-    protected function usesFormat()
-    {
-        if (is_null(static::$useFormat)) {
-            return null;
-        }
-
-        if (static::$useFormat instanceof Closure) {
-            static::$useFormat = $this->evaluate($this->useFormat);
-        }
-
-        return static::$useFormat;
+        return $this->format;
     }
 
     /**
@@ -198,45 +154,11 @@ class DateColumn extends Column
      */
     public function getTimezone()
     {
-        /** @var string|null */
-        return $this->timezone 
-            ??= $this->usesTimezone() ?? Config::get('app.timezone');
+        return $this->evaluate($this->timezone) ?? Config::get('app.timezone');
     }
 
-    /**
-     * Set the default timezone for all date columns.
-     *
-     * @param string|\Closure(mixed...):string $timezone
-     * @return void
-     */
-    public static function useTimezone($timezone)
+    protected function parsePossibleCarbonInstance($value)
     {
-        static::$useTimezone = $timezone;
-    }
-
-    /**
-     * Get the default timezone to use for date parsing.
-     *
-     * @return string|null
-     */
-    protected function usesTimezone()
-    {
-        if (is_null(static::$useTimezone)) {
-            return null;
-        }
-
-        if (static::$useTimezone instanceof Closure) {
-            static::$useTimezone = $this->evaluate($this->useTimezone);
-        }
-
-        return static::$useTimezone;
-    }
-
-    public static function flushState()
-    {
-        parent::flushState();
-
-        static::$useFormat = self::DEFAULT_FORMAT;
-        static::$useTimezone = null;
+        
     }
 }

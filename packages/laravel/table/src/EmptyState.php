@@ -8,7 +8,7 @@ use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Primitive;
 use Illuminate\Support\Arr;
 
-class EmptyState extends Primitive
+class EmptyState extends Primitive //implements NullAsUndefined
 {
     use HasIcon;
 
@@ -29,7 +29,7 @@ class EmptyState extends Primitive
     /**
      * The label of the empty state action.
      *
-     * @var array<int, \Honed\Action\PageAction>
+     * @var array<int, \Honed\Action\Action>
      */
     protected $actions = [];
 
