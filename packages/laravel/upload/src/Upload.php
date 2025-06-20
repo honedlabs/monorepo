@@ -79,14 +79,14 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
-     * Use the upload configuration to build the message.
+     * Get the message for the upload file input.
      *
      * @return string
      */
     public function message()
     {
         return $this->getMessage(
-            $this->getFile()->getSize(),
+            $this->getMaxSize(),
             $this->getExtensions(),
             $this->getMimeTypes()
         );
@@ -147,6 +147,18 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->definition($this);
+    }
+
+    /**
      * Define the settings for the upload.
      *
      * @param  $this  $upload
@@ -197,6 +209,7 @@ class Upload extends Primitive implements Responsable
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
         return match ($parameterType) {
+            UploadRule::class => [$this->getRule()],
             File::class => [$this->getFile()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
