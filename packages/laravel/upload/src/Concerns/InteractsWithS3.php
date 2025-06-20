@@ -77,7 +77,7 @@ trait InteractsWithS3
      */
     public function getPolicy()
     {
-        return $this->acl;
+        return $this->policy;
     }
 
     /**
@@ -125,12 +125,14 @@ trait InteractsWithS3
      */
     public function getBucket()
     {
+        // @phpstan-ignore assign.propertyType
         $this->bucket ??= config("filesystems.disks.{$this->getDisk()}.bucket");
 
         if (! $this->bucket) {
             CouldNotResolveBucketException::throw();
         }
 
+        // @phpstan-ignore return.type
         return $this->bucket;
     }
 

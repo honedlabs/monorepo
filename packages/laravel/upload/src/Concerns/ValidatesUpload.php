@@ -194,7 +194,7 @@ trait ValidatesUpload
      *
      * @return array<int, string>
      */
-    public function getMimes()
+    public function getMimeTypes()
     {
         return $this->mimes;
     }
@@ -275,7 +275,7 @@ trait ValidatesUpload
                 'required',
                 'integer',
                 function (string $attribute, int $value, Closure $fail) {
-                    $max = $this->getMax();
+                    $max = $this->getMaxSize();
 
                     if ($value > $max) {
                         $fail(__('upload::messages.max_size', [
@@ -283,7 +283,7 @@ trait ValidatesUpload
                         ]));
                     }
 
-                    $min = $this->getMin();
+                    $min = $this->getMinSize();
 
                     if ($value < $min) {
                         $fail(__('upload::messages.min_size', [
@@ -296,7 +296,7 @@ trait ValidatesUpload
                 'required',
                 'string',
                 function (string $attribute, string $value, Closure $fail) {
-                    $types = $this->getmimes();
+                    $types = $this->getMimeTypes();
 
                     if (! filled($types)) {
                         return;

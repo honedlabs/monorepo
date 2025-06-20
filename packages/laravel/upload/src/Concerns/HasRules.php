@@ -9,26 +9,26 @@ trait HasRules
     /**
      * The list of upload rules for validating files.
      *
-     * @var array<int, UploadRule>
+     * @var array<int, \Honed\Upload\UploadRule>
      */
     protected $rules = [];
 
     /**
      * The selected set of validation rules based on the request.
      *
-     * @var array<int, mixed>|null
+     * @var \Honed\Upload\UploadRule|null
      */
     protected $rule;
 
     /**
      * Merge a set of rules with the existing.
      *
-     * @param  UploadRule|array<int,UploadRule>  $rules
+     * @param  \Honed\Upload\UploadRule|array<int,\Honed\Upload\UploadRule>  $rules
      * @return $this
      */
     public function rules($rules)
     {
-        /** @var array<int,UploadRule> */
+        /** @var array<int,\Honed\Upload\UploadRule> */
         $rules = is_array($rules) ? $rules : func_get_args();
         
         $this->rules = [...$this->rules, ...$rules];
@@ -39,7 +39,7 @@ trait HasRules
     /**
      * Add a rule to the upload.
      *
-     * @param  UploadRule  $rule
+     * @param  \Honed\Upload\UploadRule  $rule
      * @return $this
      */
     public function rule($rule)
@@ -50,7 +50,7 @@ trait HasRules
     /**
      * Get the rules for validating file uploads.
      *
-     * @return array<int, UploadRule>
+     * @return array<int, \Honed\Upload\UploadRule>
      */
     public function getRules()
     {
@@ -60,7 +60,7 @@ trait HasRules
     /**
      * Set the active rule for the upload.
      *
-     * @param  array<int, mixed>  $rule
+     * @param  \Honed\Upload\UploadRule|null  $rule
      * @return void
      */
     public function setRule($rule)
@@ -71,7 +71,7 @@ trait HasRules
     /**
      * Get the active rule for the upload.
      *
-     * @return array<int, mixed>|null
+     * @return \Honed\Upload\UploadRule|null
      */
     public function getRule()
     {

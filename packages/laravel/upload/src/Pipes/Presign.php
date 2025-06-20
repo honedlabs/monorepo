@@ -21,8 +21,6 @@ class Presign extends Pipe
      */
     public function run($instance)
     {
-        $key = $instance->createKey($instance->getData());
-
         $lifetime = $instance->getRule()?->getLifetime() 
             ?? $instance->getLifetime();
 
@@ -31,7 +29,7 @@ class Presign extends Pipe
         $instance->setPresign(new PostObjectV4(
             $instance->getClient(),
             $instance->getBucket(),
-            $instance->getFormInputs($key),
+            $instance->getFormInputs($file->getPath()),
             $instance->getOptions(
                 $file->getPath(), $file->getMimeType(), $file->getSize()
             ),

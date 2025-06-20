@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
-use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Primitive;
-use Honed\Upload\Pipes\CreateRules;
+use Illuminate\Http\Request;
 use Honed\Upload\Pipes\Presign;
 use Honed\Upload\Pipes\Validate;
+use Honed\Core\Concerns\HasRequest;
+use Honed\Upload\Pipes\CreateRules;
 use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Honed\Upload\Exceptions\PresignNotGeneratedException;
 
 class Upload extends Primitive implements Responsable
 {
@@ -85,18 +86,24 @@ class Upload extends Primitive implements Responsable
     /**
      * Create a presigned POST URL using.
      *
-     * @param  Request|null  $request
      * @return array{attributes:array<string,mixed>,inputs:array<string,mixed>}
      *
      * @throws ValidationException
+     * @throws PresignNotGeneratedException
      */
     public function create()
     {
         $this->build();
 
+        $presign = $this->getPresign();
+
+        if (! $presign) {
+            PresignNotGeneratedException::throw();
+        }
+
         return [
-            'attributes' => $this->getPresign()->getFormAttributes(),
-            'inputs' => $this->getPresign()->getFormInputs(),
+            'attributes' => $presign->getFormAttributes(),
+            'inputs' => $presign->getFormInputs(),
             'data' => $this->getResponse(),
         ];
     }
@@ -113,7 +120,7 @@ class Upload extends Primitive implements Responsable
             'message' => $this->message(),
             'extensions' => $this->getExtensions(),
             'mimes' => $this->getMimeTypes(),
-            'size' => $this->getMax(),
+            'size' => $this->getMaxSize(),
         ];
     }
 

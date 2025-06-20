@@ -48,7 +48,7 @@ trait BridgesSerialization
     /**
      * Set the data to return with the presign response.
      *
-     * @param  mixed  $data
+     * @param  mixed  $response
      * @return $this
      */
     public function respondWith($response)
@@ -87,6 +87,8 @@ trait BridgesSerialization
     /**
      * Build a human-readable description of the accepted file types.
      *
+     * @param  array<int, string>  $extensions
+     * @param  array<int, string>  $mimeTypes
      * @return string
      */
     protected function buildFileTypeDescription($extensions, $mimeTypes): string

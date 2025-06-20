@@ -34,7 +34,7 @@ trait HasFile
     /**
      * A handler to create the file path.
      * 
-     * @var (\Closure(File):string)|null
+     * @var (\Closure(mixed...):string)|null
      */
     protected $path;
 
@@ -94,7 +94,7 @@ trait HasFile
     /**
      * Set the path to the file.
      *
-     * @param  \Closure(File):string  $path
+     * @param  \Closure(mixed...):string  $path
      * @return $this
      */
     public function path($path)
@@ -107,7 +107,7 @@ trait HasFile
     /**
      * Get the path callback.
      *
-     * @return (\Closure(File):string)|null
+     * @return (\Closure(mixed...):string)|null
      */
     public function getPathCallback()
     {
@@ -124,6 +124,7 @@ trait HasFile
     {
         $this->file = $file;
 
+        /** @var string $name */
         $name = match (true) {
             (bool) $n = $this->getName() => $this->evaluate($n),
             $this->isUuid() => Str::uuid()->toString(),
@@ -134,9 +135,12 @@ trait HasFile
 
         $this->file->setPath();
 
+        /** @var string|null $path */
         $path = $this->evaluate($this->path);
 
-        $this->file->path($path);
+        if ($path) {
+            $this->file->path($path);
+        }
     }
 
     /**
@@ -153,51 +157,5 @@ trait HasFile
         }
 
         return $this->file;
-    }
-
-    /**
-     * Get the complete filename of the file to be stored.
-     *
-     * @param  \Honed\Upload\UploadData  $data
-     * @return string
-     */
-    public function createFilename($data)
-    {
-        return once(function () use ($data) {
-            $name = $this->getName();
-
-            if ($this->isAnonymized()) {
-                return Str::uuid()->toString();
-            }
-
-            if (isset($name)) {
-                return $this->evaluate($name);
-            }
-
-            return $data->name;
-        });
-    }
-
-    /**
-     * Build the storage key location for the uploaded file.
-     *
-     * @param  \Honed\Upload\UploadData  $data
-     * @return string
-     */
-    public function createKey($data)
-    {
-        return once(function () use ($data) {
-            $filename = $this->createFilename($data);
-
-            $location = $this->evaluate($this->getLocation());
-
-            return Str::of($filename)
-                ->append('.', $data->extension)
-                ->when($location, fn ($name, $location) => $name
-                    ->prepend($location, '/')
-                    ->replace('//', '/'),
-                )->trim('/')
-                ->value();
-        });
     }
 }

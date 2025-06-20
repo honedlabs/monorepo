@@ -39,7 +39,7 @@ class UploadRule
         }
 
         return (bool) Arr::first(
-            $this->getMimes(), 
+            $this->getMimeTypes(), 
             static fn ($type) => is_string($mime) && str_starts_with($mime, $type)
         );
     }

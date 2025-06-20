@@ -24,7 +24,8 @@ class Validate extends Pipe
         $request = $instance->getRequest();
 
         try {
-            $rules = $instance->getRule() ?: $instance->createRules();
+            $rules = $instance->getRule()?->createRules() 
+                ?? $instance->createRules();
 
             /** @var array{name:string,extension:string,type:string,size:int,meta:mixed} $validated */
             $validated = Validator::make(
