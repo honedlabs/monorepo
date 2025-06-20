@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Upload;
 
 use Illuminate\Support\Arr;
+use Honed\Upload\Exceptions\PathNotSetException;
 
 class File
 {
@@ -46,7 +47,7 @@ class File
     /**
      * The path of the file in storage.
      * 
-     * @var string|null
+     * @var string
      */
     public $path;
 
@@ -54,16 +55,20 @@ class File
      * Create a new upload data instance from the validated data.
      *
      * @param  array{name:string,extension:string,type:string,size:int,meta:mixed}  $data
-     * @return self
+     * @return static
      */
     public static function from($data)
     {
+        $name = $data['name'];
+        $extension = $data['extension'];
+
         return resolve(static::class)
-            ->name($data['name'])
-            ->extension($data['extension'])
+            ->name($name)
+            ->extension($extension)
             ->mimeType($data['type'])
             ->size($data['size'])
-            ->meta($data['meta']);
+            ->meta($data['meta'])
+            ->path($name.'.'.$extension);
     }
 
     /**
@@ -110,6 +115,16 @@ class File
     public function getExtension()
     {
         return $this->extension;
+    }
+
+    /**
+     * Get the filename of the file.
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->name . '.' . $this->extension;
     }
 
     /**
@@ -179,5 +194,38 @@ class File
     public function getMeta()
     {
         return $this->meta;
+    }
+
+    /**
+     * Set the path of the file using the properties.
+     * 
+     * @return void
+     */
+    public function setPath()
+    {
+        $this->path = $this->getFilename();
+    }
+
+    /**
+     * Set the path of the file.
+     *
+     * @param  string  $path
+     * @return $this
+     */
+    public function path($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * Get the path of the file.
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 }

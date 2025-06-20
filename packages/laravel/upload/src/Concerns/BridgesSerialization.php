@@ -21,7 +21,7 @@ trait BridgesSerialization
      * @var mixed
      */
     protected $response = null;
-    
+
     /**
      * Set whether the upload accepts multiple files.
      *
@@ -71,12 +71,15 @@ trait BridgesSerialization
     /**
      * Create the upload message.
      *
+     * @param  int  $size
+     * @param  array<int, string>  $extensions
+     * @param  array<int, string>  $mimeTypes
      * @return string
      */
-    public function getMessage()
+    public function getMessage($size, $extensions, $mimeTypes)
     {
-        $fileTypeDescription = $this->buildFileTypeDescription();
-        $maxSizeDescription = $this->formatMaxSize();
+        $fileTypeDescription = $this->buildFileTypeDescription($extensions, $mimeTypes);
+        $maxSizeDescription = Number::fileSize($size);
         
         return "{$fileTypeDescription} up to {$maxSizeDescription}";
     }
@@ -86,23 +89,13 @@ trait BridgesSerialization
      *
      * @return string
      */
-    protected function buildFileTypeDescription(): string
+    protected function buildFileTypeDescription($extensions, $mimeTypes): string
     {
-        $extensions = $this->getExtensions();
-        $mimeTypes = $this->getMimeTypes();
-
-        // Prefer extensions if available and few enough to list
-        if ($this->shouldListExtensions($extensions)) {
-            return $this->formatExtensions($extensions);
-        }
-
-        // Fall back to MIME types if available and few enough to list
-        if ($this->shouldListMimeTypes($mimeTypes)) {
-            return $this->formatMimeTypes($mimeTypes);
-        }
-
-        // Default to generic description
-        return $this->getGenericFileDescription();
+        return match (true) {
+            $this->shouldListExtensions($extensions) => $this->formatExtensions($extensions),
+            $this->shouldListMimeTypes($mimeTypes) => $this->formatMimeTypes($mimeTypes),
+            default => $this->getGenericFileDescription(),
+        };
     }
 
     /**
@@ -111,7 +104,7 @@ trait BridgesSerialization
      * @param array<int, string> $extensions
      * @return bool
      */
-    protected function shouldListExtensions(array $extensions): bool
+    protected function shouldListExtensions($extensions)
     {
         return !empty($extensions) && count($extensions) < 4;
     }
@@ -122,7 +115,7 @@ trait BridgesSerialization
      * @param array<int, string> $mimeTypes
      * @return bool
      */
-    protected function shouldListMimeTypes(array $mimeTypes): bool
+    protected function shouldListMimeTypes($mimeTypes)
     {
         return !empty($mimeTypes) && count($mimeTypes) < 4;
     }
@@ -133,7 +126,7 @@ trait BridgesSerialization
      * @param array<int, string> $extensions
      * @return string
      */
-    protected function formatExtensions(array $extensions): string
+    protected function formatExtensions($extensions)
     {
         $formattedExtensions = array_map(
             static fn (string $extension) => mb_strtoupper(trim($extension)),
@@ -149,7 +142,7 @@ trait BridgesSerialization
      * @param array<int, string> $mimeTypes
      * @return string
      */
-    protected function formatMimeTypes(array $mimeTypes): string
+    protected function formatMimeTypes($mimeTypes)
     {
         $formattedTypes = array_map(
             static fn (string $mimeType) => trim($mimeType, ' /'),
@@ -168,16 +161,4 @@ trait BridgesSerialization
     {
         return $this->isMultiple() ? 'Files' : 'A single file';
     }
-
-    /**
-     * Format the maximum file size for display.
-     *
-     * @return string
-     */
-    protected function formatMaxSize(): string
-    {
-        return Number::fileSize($this->getMax());
-    }
-
-
 }

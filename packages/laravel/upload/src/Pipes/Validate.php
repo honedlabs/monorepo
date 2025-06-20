@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Upload\Pipes;
 
+use Honed\Upload\Events\PresignFailed;
 use Honed\Upload\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -25,6 +26,7 @@ class Validate extends Pipe
         try {
             $rules = $instance->getRule() ?: $instance->createRules();
 
+            /** @var array{name:string,extension:string,type:string,size:int,meta:mixed} $validated */
             $validated = Validator::make(
                 $request->all(),
                 $rules,
@@ -35,7 +37,7 @@ class Validate extends Pipe
             $instance->setFile(File::from($validated));
 
         } catch (ValidationException $e) {
-            $instance->failedPresign($request);
+            PresignFailed::dispatch($instance::class, $request);
 
             throw $e;
         }

@@ -70,6 +70,19 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
+     * Use the upload configuration to build the message.
+     *
+     * @return string
+     */
+    public function message()
+    {
+        return $this->getMessage(
+            $this->getFile()->getSize(),
+            $this->getExtensions(),
+            $this->getMimeTypes()
+        );
+    }
+    /**
      * Create a presigned POST URL using.
      *
      * @param  Request|null  $request
@@ -97,7 +110,7 @@ class Upload extends Primitive implements Responsable
     {
         return [
             'multiple' => $this->isMultiple(),
-            'message' => $this->getMessage(),
+            'message' => $this->message(),
             'extensions' => $this->getExtensions(),
             'mimes' => $this->getMimeTypes(),
             'size' => $this->getMax(),

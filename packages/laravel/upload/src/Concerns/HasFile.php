@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Honed\Upload\Contracts\ShouldBeUuid;
 use Honed\Upload\Contracts\ShouldAnonymize;
+use Honed\Upload\Exceptions\FileNotSetException;
 
 trait HasFile
 {
@@ -114,19 +115,45 @@ trait HasFile
     }
 
     /**
-     * Set the file data.
+     * Set the file data and evaluate the callbacks.
      *
      * @param  \Honed\Upload\File  $file
      * @return void
      */
     public function setFile($file)
     {
-        // Create the key for the file
-        $this->
+        $this->file = $file;
+
+        $name = match (true) {
+            (bool) $n = $this->getName() => $this->evaluate($n),
+            $this->isUuid() => Str::uuid()->toString(),
+            default => $this->file->getName(),
+        };
+
+        $this->file->name($name);
+
+        $this->file->setPath();
+
+        $path = $this->evaluate($this->path);
+
+        $this->file->path($path);
     }
 
+    /**
+     * Get the file data transfer object.
+     *
+     * @return \Honed\Upload\File
+     * 
+     * @throws \Honed\Upload\Exceptions\FileNotSetException
+     */
+    public function getFile()
+    {
+        if (! $this->file) {
+            FileNotSetException::throw();
+        }
 
-
+        return $this->file;
+    }
 
     /**
      * Get the complete filename of the file to be stored.

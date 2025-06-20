@@ -152,20 +152,20 @@ trait InteractsWithS3
      * Get the policy options for the request.
      *
      * @param  string  $key
-     * @param  string  $type
+     * @param  string  $mimeType
      * @param  int  $size
      * @return array<int,array<int,string|int>>
      * 
      * @throws CouldNotResolveBucketException
      */
-    public function getOptions($key, $type, $size)
+    public function getOptions($key, $mimeType, $size)
     {
         return [
             ['eq', '$acl', $this->getPolicy()],
             ['eq', '$key', $key],
             ['eq', '$bucket', $this->getBucket()],
             ['content-length-range', $size, $size], // Must be equal to the size of the uploaded file
-            ['eq', '$Content-Type', $type],
+            ['eq', '$Content-Type', $mimeType],
         ];
     }
 

@@ -33,9 +33,9 @@ class Presign extends Pipe
             $instance->getBucket(),
             $instance->getFormInputs($key),
             $instance->getOptions(
-                $file->getPath(), $file->getType(), $file->getSize()
+                $file->getPath(), $file->getMimeType(), $file->getSize()
             ),
-            $instance->formatExpiry($lifetime),
+            $instance->formatLifetime($lifetime),
         ));
         
         PresignCreated::dispatch(
