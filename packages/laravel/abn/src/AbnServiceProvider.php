@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Abn;
 
-use Honed\Abn\Rules\Abn;
+use Honed\Abn\Rules\AbnRule;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Factory;
 use Illuminate\Validation\InvokableValidationRule;
@@ -14,16 +14,18 @@ class AbnServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
+     *
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
         Rule::macro('abn', function () {
-            return new Abn();
+            return new AbnRule();
         });
 
         $this->callAfterResolving('validator', function (Factory $validator) {
             $validator->extendDependent('abn', function ($attribute, $value, array $parameters, $validator) {
-                $rule = new Abn();
+                $rule = new AbnRule();
 
                 $validator->setCustomMessages([
                     'abn' => $rule->message($attribute),
@@ -38,8 +40,10 @@ class AbnServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap the application services.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'abn');
 
@@ -50,8 +54,10 @@ class AbnServiceProvider extends ServiceProvider
 
     /**
      * Register the publishing for the package.
+     *
+     * @return void
      */
-    protected function offerPublishing(): void
+    protected function offerPublishing()
     {
         $this->publishes([
             __DIR__.'/../resources/lang' => resource_path('lang/vendor/abn'),

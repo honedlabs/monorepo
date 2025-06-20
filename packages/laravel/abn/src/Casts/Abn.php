@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 /**
  * @implements \Illuminate\Contracts\Database\Eloquent\CastsAttributes<string|null, string|null>
  */
-class FormattedAbn implements CastsAttributes
+class Abn implements CastsAttributes
 {
     /**
      * Cast the given value.

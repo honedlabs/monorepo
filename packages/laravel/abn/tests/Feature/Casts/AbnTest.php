@@ -6,7 +6,7 @@ use Workbench\App\Models\User;
 
 use function Pest\Laravel\assertDatabaseHas;
 
-it('formats abn when setting', function () {
+it('formats abn when getting', function () {
     $abn = '12345678901';
 
     $user = User::factory()->create([
@@ -17,11 +17,11 @@ it('formats abn when setting', function () {
         ->abn->toBe('12 345 678 901');
 
     assertDatabaseHas('users', [
-        'abn' => '12 345 678 901',
+        'abn' => $abn,
     ]);
 });
 
-it('does not format nulls', function () {
+it('does not cast nulls', function () {
     $user = User::factory()->create([
         'abn' => null,
     ]);
@@ -31,5 +31,20 @@ it('does not format nulls', function () {
 
     assertDatabaseHas('users', [
         'abn' => null,
+    ]);
+});
+
+it('removes whitespace when setting', function () {
+    $abn = '12 345 678 901';
+
+    $user = User::factory()->create([
+        'abn' => $abn,
+    ]);
+
+    expect($user)
+        ->abn->toBe('12 345 678 901');
+
+    assertDatabaseHas('users', [
+        'abn' => '12345678901',
     ]);
 });

@@ -17,8 +17,11 @@ class AbnValidator
 
     /**
      * Format a valid ABN using the spacing format.
+     *
+     * @param  string|null  $abn
+     * @return string|null
      */
-    public static function format(?string $abn): ?string
+    public static function format($abn)
     {
         if (! $abn) {
             return null;
@@ -30,8 +33,11 @@ class AbnValidator
 
     /**
      * Generate a fake ABN.
+     *
+     * @param  bool  $valid
+     * @return string
      */
-    public static function fake(bool $valid = false): string
+    public static function fake($valid = false)
     {
         if (! $valid) {
             return (string) random_int(10000000000, 99999999999);
@@ -54,24 +60,33 @@ class AbnValidator
 
     /**
      * Determine if the given value is not a valid ABN.
+     *
+     * @param  mixed  $value
+     * @return bool
      */
-    public static function fails(mixed $value): bool
+    public static function fails($value)
     {
         return ! static::passes($value);
     }
 
     /**
      * Determine if the given value is a valid ABN.
+     *
+     * @param  mixed  $value
+     * @return bool
      */
-    public static function passes(mixed $value): bool
+    public static function passes($value)
     {
         return static::validate($value);
     }
 
     /**
      * Determine if the given value is a valid ABN.
+     *
+     * @param  mixed  $value
+     * @return bool
      */
-    public static function validate(mixed $value): bool
+    public static function validate($value)
     {
         if (! is_string($value)) {
             return false;
@@ -95,24 +110,33 @@ class AbnValidator
 
     /**
      * Determine if the given ABN is not the correct length.
+     *
+     * @param  string  $abn
+     * @return bool
      */
-    protected static function invalidLength(string $abn): bool
+    protected static function invalidLength($abn)
     {
         return mb_strlen($abn) !== 11;
     }
 
     /**
      * Determine if the ABN contains a leading zero.
+     *
+     * @param  string  $abn
+     * @return bool
      */
-    protected static function leadingZero(string $abn): bool
+    protected static function leadingZero($abn)
     {
         return (int) $abn[0] === 0;
     }
 
     /**
      * Determine the checksum of the given ABN.
+     *
+     * @param  string  $abn
+     * @return int
      */
-    protected static function checksum(string $abn): int
+    protected static function checksum($abn)
     {
         $checksum = 0;
 

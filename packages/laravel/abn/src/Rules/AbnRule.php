@@ -10,13 +10,16 @@ use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\App;
 
-class Abn implements ValidationRule
+class AbnRule implements ValidationRule
 {
     /**
      * The translator instance.
      */
     protected Translator $translator;
 
+    /**
+     * Create a new Abn rule instance.
+     */
     public function __construct()
     {
         $this->translator = App::make(Translator::class);
