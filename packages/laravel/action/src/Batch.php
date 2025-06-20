@@ -36,18 +36,18 @@ class Batch extends Primitive implements HandlesOperations
     use HasResource;
 
     /**
-     * The identifier to use for evaluation.
-     *
-     * @var string
-     */
-    protected $evaluationIdentifier = 'batch';
-
-    /**
      * The default namespace where batches reside.
      *
      * @var string
      */
     public static $namespace = 'App\\Batches\\';
+
+    /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'batch';
 
     /**
      * How to resolve the batch for the given model name.
