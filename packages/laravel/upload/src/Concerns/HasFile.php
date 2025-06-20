@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Honed\Upload\Concerns;
 
 use Closure;
-use Honed\Upload\Contracts\ShouldAnonymize;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-
+use function pathinfo;
 use function is_string;
 use function mb_strtolower;
-use function pathinfo;
+
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Honed\Upload\Contracts\ShouldBeUuid;
+use Honed\Upload\Contracts\ShouldAnonymize;
 
 trait HasFile
 {
@@ -23,14 +24,21 @@ trait HasFile
     protected $name;
 
     /**
-     * Whether the file name should be generated using a UUID.
+     * Whether the file name should be a UUID.
      *
-     * @var bool|null
+     * @var bool
      */
-    protected $anonymize;
+    protected $uuid = false;
 
     /**
-     * The file data.
+     * A handler to create the file path.
+     * 
+     * @var (\Closure(File):string)|null
+     */
+    protected $path;
+
+    /**
+     * The file data transfer object.
      * 
      * @var \Honed\Upload\File|null
      */
@@ -60,45 +68,64 @@ trait HasFile
     }
 
     /**
-     * Set whether to anonymize the file name using a UUID.
-     *
-     * @param  bool  $anonymize
+     * Set the file name of the upload to be a UUID.
+     * 
+     * @param  bool  $uuid
      * @return $this
      */
-    public function anonymize($anonymize = true)
+    public function uuid($uuid = true)
     {
-        $this->anonymize = $anonymize;
+        $this->uuid = $uuid;
 
         return $this;
     }
 
     /**
-     * Determine whether the file name should be anonymized using a UUID.
+     * Determine if the file name should be a UUID.
      *
      * @return bool
      */
-    public function isAnonymized()
+    public function isUuid()
     {
-        if (isset($this->anonymize)) {
-            return $this->anonymize;
-        }
-
-        if ($this instanceof ShouldAnonymize) {
-            return true;
-        }
-
-        return $this->isAnonymizedByDefault();
+        return $this->uuid || $this instanceof ShouldBeUuid;
     }
 
     /**
-     * Determine whether the file name should be anonymized using a UUID by default.
+     * Set the path to the file.
      *
-     * @return bool
+     * @param  \Closure(File):string  $path
+     * @return $this
      */
-    public function isAnonymizedByDefault()
+    public function path($path)
     {
-        return (bool) config('upload.anonymize', false);
+        $this->path = $path;
+
+        return $this;
     }
+
+    /**
+     * Get the path callback.
+     *
+     * @return (\Closure(File):string)|null
+     */
+    public function getPathCallback()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Set the file data.
+     *
+     * @param  \Honed\Upload\File  $file
+     * @return void
+     */
+    public function setFile($file)
+    {
+        // Create the key for the file
+        $this->
+    }
+
+
 
 
     /**

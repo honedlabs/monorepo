@@ -6,6 +6,9 @@ namespace Honed\Upload;
 
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Primitive;
+use Honed\Upload\Pipes\CreateRules;
+use Honed\Upload\Pipes\Presign;
+use Honed\Upload\Pipes\Validate;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -18,6 +21,7 @@ class Upload extends Primitive implements Responsable
     use Concerns\InteractsWithS3;
     use Concerns\ValidatesUpload;
     use HasRequest;
+    // use HasPipeline;
 
     /**
      * Create a new upload instance.
@@ -114,7 +118,7 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
-     * Define the upload instance.
+     * Define the settings for the upload.
      *
      * @param  $this  $upload
      * @return $this
@@ -124,46 +128,43 @@ class Upload extends Primitive implements Responsable
         return $upload;
     }
 
+    protected function pipes()
+    {
+        return [
+            CreateRules::class,
+            Validate::class,
+            Presign::class,
+        ];
+    }
+
     /**
-     * {@inheritdoc}
+     * Provide a selection of default dependencies for evaluation by name.
+     *
+     * @param  string  $parameterName
+     * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
-        if ($parameterName === 'bucket') {
-            return [$this->getBucket()];
-        }
-        
-        $data = $this->getData();
-
-        if (! $data) {
-            return parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName);
-        }
-
         return match ($parameterName) {
-            'data' => [$data],
-            'key' => [$this->createKey($data)],
-            'file' => [$this->createFilename($data).'.'.$data->extension],
-            'filename' => [$this->createFilename($data)],
-            'folder' => [$this->getFolder($this->createKey($data))],
-            'name' => [$data->name],
-            'extension' => [$data->extension],
-            'type' => [$data->type],
-            'size' => [$data->size],
-            'meta' => [$data->meta],
+            'file' => [$this->getFile()],
+            'bucket' => [$this->getBucket()],
             'disk' => [$this->getDisk()],
+            'rule' => [$this->getRule()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
 
     /**
-     * {@inheritdoc}
+     * Provide a selection of default dependencies for evaluation by type.
+     *
+     * @param  class-string  $parameterType
+     * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
-        if ($parameterType === UploadData::class && isset($this->data)) {
-            return [$this->data];
-        }
-
-        return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
+        return match ($parameterType) {
+            File::class => [$this->getFile()],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
+        };
     }
 }

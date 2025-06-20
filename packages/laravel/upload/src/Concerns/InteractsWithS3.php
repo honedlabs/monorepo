@@ -164,8 +164,7 @@ trait InteractsWithS3
             ['eq', '$acl', $this->getPolicy()],
             ['eq', '$key', $key],
             ['eq', '$bucket', $this->getBucket()],
-            // Must be equal to the size of the uploaded file
-            ['content-length-range', $size, $size],
+            ['content-length-range', $size, $size], // Must be equal to the size of the uploaded file
             ['eq', '$Content-Type', $type],
         ];
     }

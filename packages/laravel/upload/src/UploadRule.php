@@ -13,7 +13,7 @@ use function str_starts_with;
 
 class UploadRule
 {
-    use Concerns\HasRules;
+    use Concerns\ValidatesUpload;
 
     /**
      * Create a new file rule instance.

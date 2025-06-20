@@ -21,7 +21,7 @@ class CreateRules extends Pipe
     {
         $request = $instance->getRequest();
 
-        [$name, $ext] = $this->splitFilename($request->input('name'));
+        [$name, $ext] = $this->separate($request->input('name'));
 
         $request->merge(['name' => $name, 'extension' => $ext]);
 
@@ -41,7 +41,7 @@ class CreateRules extends Pipe
      * @param  mixed  $name
      * @return array{string|null, string|null}
      */
-    public function splitFilename($name)
+    public function separate($name)
     {
         if (! is_string($name)) {
             return [null, null];
