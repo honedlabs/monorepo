@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use Honed\Upload\File;
 use Honed\Upload\Upload;
-use Honed\Upload\UploadData;
 use Honed\Upload\UploadRule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,8 +17,7 @@ it('uploads into a disk', function () {
         ->getDisk()->toBe('r2');
 });
 
-
-it('is response', function () {
+it('responds with json', function () {
     $request = Request::create('/', Request::METHOD_GET, [
         'name' => 'test.png',
         'type' => 'image/png',
@@ -40,36 +39,32 @@ it('has array representation', function () {
         ]);
 });
 
-// it('resolves closures by name', function () {
-//     $request = presignRequest('test.png', 'image/png', 1024);
-//     $upload = Upload::make();
-//     $upload->create($request);
+describe('evaluation', function () {
+    beforeEach(function () {
+        $this->upload->setFile(new File());
+        $this->upload->setRule(new UploadRule());
+    });
 
-//     expect($upload)
-//         ->evaluate(fn ($bucket) => $bucket)->toBe('test')
-//         ->evaluate(fn ($data) => $data)->toBeInstanceOf(UploadData::class)
-//         ->evaluate(fn ($extension) => $extension)->toBe('png')
-//         ->evaluate(fn ($type) => $type)->toBe('image/png')
-//         ->evaluate(fn ($size) => $size)->toBe(1024)
-//         ->evaluate(fn ($meta) => $meta)->toBeNull()
-//         ->evaluate(fn ($disk) => $disk)->toBe(config('upload.disk'))
-//         ->evaluate(fn ($key) => $key)->toBe('test.png')
-//         ->evaluate(fn ($file) => $file)->toBe('test.png')
-//         ->evaluate(fn ($filename) => $filename)->toBe('test')
-//         ->evaluate(fn ($folder) => $folder)->toBeNull()
-//         ->evaluate(fn ($name) => $name)->toBe('test')
-//         ->evaluate(fn ($extension) => $extension)->toBe('png')
-//         ->evaluate(fn ($type) => $type)->toBe('image/png')
-//         ->evaluate(fn ($size) => $size)->toBe(1024)
-//         ->evaluate(fn ($meta) => $meta)->toBeNull()
-//         ->evaluate(fn ($disk) => $disk)->toBe(config('upload.disk'));
-// });
+    it('names dependencies classes', function ($closure, $class) {
+        expect($this->upload)
+            ->evaluate($closure)->toBeInstanceOf($class);
+    })->with([
+        fn () => [fn ($file) => $file, File::class],
+        fn () => [fn ($rule) => $rule, UploadRule::class],
+    ]);
 
-// it('resolves closures by type', function () {
-//     $request = presignRequest('test.png', 'image/png', 1024);
-//     $upload = Upload::make();
-//     $upload->create($request);
+    it('names dependencies', function ($closure, $value) {
+        expect($this->upload)
+            ->evaluate($closure)->toBe($value);
+    })->with([
+        fn () => [fn ($disk) => $disk, 's3'],
+        fn () => [fn ($bucket) => $bucket, 'test'],
+    ]);
 
-//     expect($upload)
-//         ->evaluate(fn (UploadData $d) => $d)->toBeInstanceOf(UploadData::class);
-// });
+    it('typed dependencies', function ($closure, $class) {
+        expect($this->upload->evaluate($closure))->toBeInstanceOf($class);
+    })->with([
+        fn () => [fn (File $arg) => $arg, File::class],
+        fn () => [fn (UploadRule $arg) => $arg, UploadRule::class],
+    ]);
+});

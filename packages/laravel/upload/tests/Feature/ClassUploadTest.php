@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Workbench\App\Uploads\AvatarUpload;
-
 
 beforeEach(function () {
     $this->upload = AvatarUpload::make();
@@ -20,5 +21,18 @@ it('has definition', function () {
 });
 
 it('creates upload', function () {
+    $request = Request::create('/', Request::METHOD_GET, [
+        'name' => 'test.png',
+        'type' => 'image/png',
+        'size' => 1024,
+    ]);
 
-})->todo();
+    expect($this->upload->toResponse($request))
+        ->toBeInstanceOf(JsonResponse::class)
+        ->getData()->{'data'}->toBe('avatars/test.png');
+});
+
+it('has message', function () {
+    expect($this->upload)
+        ->message()->toBe('The avatar must be a valid image (JPEG or PNG) and less than 2MB.');
+});

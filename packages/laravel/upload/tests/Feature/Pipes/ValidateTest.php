@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Upload\Events\PresignCreated;
 use Honed\Upload\Events\PresignFailed;
 use Honed\Upload\Pipes\Validate;
 use Honed\Upload\Upload;

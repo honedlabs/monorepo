@@ -43,6 +43,18 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->definition($this);
+    }
+
+    /**
      * Create a new upload instance.
      *
      * @return static
@@ -144,18 +156,6 @@ class Upload extends Primitive implements Responsable
         $this->request($request);
 
         return response()->json($this->create());
-    }
-
-    /**
-     * Provide the instance with any necessary setup.
-     *
-     * @return void
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->definition($this);
     }
 
     /**
