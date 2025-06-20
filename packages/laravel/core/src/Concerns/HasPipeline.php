@@ -37,7 +37,7 @@ trait HasPipeline
             ->through($this->pipes())
             ->thenReturn();
 
-        $this->completed();
+        $this->complete();
 
         return $this;
     }
@@ -48,7 +48,7 @@ trait HasPipeline
      * @param  bool  $complete
      * @return $this
      */
-    public function completed($complete = true)
+    public function complete($complete = true)
     {
         $this->complete = $complete;
 

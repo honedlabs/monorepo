@@ -35,8 +35,8 @@ it('evaluates route', function () {
 it('binds route', function () {
     expect($this->test)
         // Will always be bound as model
-        ->route('users.show', '{model}')->toBe($this->test)
-        ->getRoute(['model' => $this->user])->toBe(route('users.show', $this->user));
+        ->route('users.show', '{record}')->toBe($this->test)
+        ->getRoute(['record' => $this->user])->toBe(route('users.show', $this->user));
 });
 
 it('sets url', function () {

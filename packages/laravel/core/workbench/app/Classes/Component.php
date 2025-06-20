@@ -6,14 +6,17 @@ namespace Workbench\App\Classes;
 
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasPipeline;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Primitive;
 use Workbench\App\Models\User;
+use Workbench\App\Pipes\SetName;
 
 class Component extends Primitive
 {
     use HasMeta;
     use HasName;
+    use HasPipeline;
     use HasType;
 
     /**
@@ -51,9 +54,21 @@ class Component extends Primitive
     }
 
     /**
+     * Get the pipes to be used..
+     *
+     * @return array<int,class-string<\Honed\Core\Pipe<$this>>>
+     */
+    protected function pipes()
+    {
+        return [
+            SetName::class,
+        ];
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return match ($parameterName) {
             'user' => [User::query()->first()],
@@ -64,7 +79,7 @@ class Component extends Primitive
     /**
      * {@inheritdoc}
      */
-    public function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
         return match ($parameterType) {
             User::class => [User::query()->first()],
