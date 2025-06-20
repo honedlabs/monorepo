@@ -69,7 +69,7 @@ class NavServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/nav.php' => config_path('nav.php'),
-        ], 'config');
+        ], 'nav-config');
     }
 
     /**
