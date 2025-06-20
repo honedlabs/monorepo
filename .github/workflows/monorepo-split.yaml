@@ -21,19 +21,19 @@ jobs:
           # - chart
           - command
           - core
-          # - crumb
+          - crumb
           - flash
           # - form
           - infolist
-          # - layout
+          - layout
           - lock
           # - modal
-          # - nav
-          # - page
-          # - refine
+          - nav
+          - page
+          - refine
           # - registry
           # - table
-          # - upload
+          - upload
           # - widget
     steps:
       - name: Checkout
