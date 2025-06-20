@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use Honed\Refine\Refine;
-use Workbench\App\Models\User;
-use Workbench\App\Refiners\RefineUser;
 use Honed\Refine\Stores\CookieStore;
 use Honed\Refine\Stores\SessionStore;
+use Workbench\App\Models\User;
+use Workbench\App\Refiners\RefineUser;
 
 beforeEach(function () {
     $this->refine = Refine::make(User::class);

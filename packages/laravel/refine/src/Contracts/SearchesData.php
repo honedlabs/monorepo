@@ -4,7 +4,4 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Contracts;
 
-interface SearchesData
-{
-    
-}
+interface SearchesData {}

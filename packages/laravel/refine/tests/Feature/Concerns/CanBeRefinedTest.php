@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use Honed\Refine\Refine;
 use Honed\Refine\Stores\CookieStore;
 use Honed\Refine\Stores\SessionStore;
-use Honed\Refine\Refine;
 use Workbench\App\Models\User;
 
 beforeEach(function () {

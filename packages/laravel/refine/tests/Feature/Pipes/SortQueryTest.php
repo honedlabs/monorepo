@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
+use Honed\Refine\Pipes\SortQuery;
 use Honed\Refine\Refine;
 use Honed\Refine\Sorts\Sort;
-use Workbench\App\Models\User;
-use Honed\Refine\Pipes\SortQuery;
 use Illuminate\Support\Facades\Request;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->pipe = new SortQuery();
-    
+
     $this->name = 'name';
 
     $this->refine = Refine::make(User::class)

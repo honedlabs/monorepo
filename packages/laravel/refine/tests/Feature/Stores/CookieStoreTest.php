@@ -1,18 +1,16 @@
 <?php
 
-use Workbench\App\Models\User;
-use Illuminate\Support\Facades\Session;
+declare(strict_types=1);
+
 use Honed\Refine\Stores\CookieStore;
-use Honed\Refine\Stores\SessionStore;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
-use Symfony\Component\HttpFoundation\Cookie as HttpFoundationCookie;
 
 beforeEach(function () {
     $request = Request::create('/', cookies: [
-        'cookie' => json_encode(['key' => 'value'])
+        'cookie' => json_encode(['key' => 'value']),
     ]);
 
     $this->store = CookieStore::make('cookie')

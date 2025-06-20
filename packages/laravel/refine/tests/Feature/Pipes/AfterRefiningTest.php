@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use Honed\Refine\Pipes\AfterRefining;
 use Honed\Refine\Refine;
 use Workbench\App\Models\Product;
-use Honed\Refine\Pipes\AfterRefining;
 
 beforeEach(function () {
     $this->pipe = new AfterRefining();

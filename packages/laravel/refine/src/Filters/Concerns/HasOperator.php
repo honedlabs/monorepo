@@ -19,7 +19,7 @@ trait HasOperator
      * @param  string  $operator
      * @return $this
      */
-    public function operator(string $operator): self
+    public function operator($operator)
     {
         $this->operator = mb_strtoupper($operator, 'UTF8');
 
@@ -31,7 +31,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function greaterThan(): self
+    public function greaterThan()
     {
         return $this->operator('>');
     }
@@ -41,7 +41,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function gt(): self
+    public function gt()
     {
         return $this->operator('>');
     }
@@ -51,7 +51,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function greaterThanOrEqualTo(): self
+    public function greaterThanOrEqualTo()
     {
         return $this->operator('>=');
     }
@@ -61,7 +61,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function gte(): self
+    public function gte()
     {
         return $this->operator('>=');
     }
@@ -71,7 +71,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function lessThan(): self
+    public function lessThan()
     {
         return $this->operator('<');
     }
@@ -81,7 +81,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function lt(): self
+    public function lt()
     {
         return $this->operator('<');
     }
@@ -91,7 +91,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function lessThanOrEqualTo(): self
+    public function lessThanOrEqualTo()
     {
         return $this->operator('<=');
     }
@@ -101,7 +101,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function lte(): self
+    public function lte()
     {
         return $this->operator('<=');
     }
@@ -111,7 +111,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function notEqualTo(): self
+    public function notEqualTo()
     {
         return $this->operator('!=');
     }
@@ -121,7 +121,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function neq(): self
+    public function neq()
     {
         return $this->operator('!=');
     }
@@ -131,7 +131,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function equals(): self
+    public function equals()
     {
         return $this->operator('=');
     }
@@ -141,7 +141,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function eq(): self
+    public function eq()
     {
         return $this->operator('=');
     }
@@ -151,7 +151,7 @@ trait HasOperator
      *
      * @return $this
      */
-    public function like(): self
+    public function like()
     {
         return $this->operator('LIKE');
     }
@@ -161,7 +161,7 @@ trait HasOperator
      *
      * @return string
      */
-    public function getOperator(): string
+    public function getOperator()
     {
         return $this->operator;
     }

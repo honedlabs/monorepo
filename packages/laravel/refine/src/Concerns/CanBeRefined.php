@@ -8,8 +8,6 @@ use Closure;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasScope;
 use Honed\Refine\Filters\Concerns\HasFilters;
-use Honed\Refine\Stores\CookieStore;
-use Honed\Refine\Stores\SessionStore;
 use Honed\Refine\Pipes\AfterRefining;
 use Honed\Refine\Pipes\BeforeRefining;
 use Honed\Refine\Pipes\FilterQuery;
@@ -18,9 +16,13 @@ use Honed\Refine\Pipes\SearchQuery;
 use Honed\Refine\Pipes\SortQuery;
 use Honed\Refine\Searches\Concerns\HasSearches;
 use Honed\Refine\Sorts\Concerns\HasSorts;
-use Illuminate\Support\Facades\App;
+use Honed\Refine\Stores\CookieStore;
+use Honed\Refine\Stores\SessionStore;
 use Illuminate\Support\Facades\Pipeline;
 
+/**
+ * @phpstan-require-implements \Honed\Refine\Contracts\RefinesData
+ */
 trait CanBeRefined
 {
     use CanBePersisted;
@@ -55,21 +57,21 @@ trait CanBeRefined
 
     /**
      * The store to use for persisting search data.
-     * 
+     *
      * @var bool|string|null
      */
     protected $persistSearch = null;
 
     /**
      * The store to use for persisting filter data.
-     * 
+     *
      * @var bool|string|null
      */
     protected $persistFilter = null;
 
     /**
      * The store to use for persisting sort data.
-     * 
+     *
      * @var bool|string|null
      */
     protected $persistSort = null;
@@ -185,7 +187,7 @@ trait CanBeRefined
 
     /**
      * Determine if the search should be persisted.
-     * 
+     *
      * @return bool
      */
     public function shouldPersistSearch()
@@ -195,7 +197,7 @@ trait CanBeRefined
 
     /**
      * Get the store to use for persisting searches.
-     * 
+     *
      * @return \Honed\Refine\Stores\Store|null
      */
     public function getSearchStore()
@@ -238,7 +240,7 @@ trait CanBeRefined
 
     /**
      * Determine if the filter should be persisted.
-     * 
+     *
      * @return bool
      */
     public function shouldPersistFilter()
@@ -248,7 +250,7 @@ trait CanBeRefined
 
     /**
      * Get the store to use for persisting filters.
-     * 
+     *
      * @return \Honed\Refine\Stores\Store|null
      */
     public function getFilterStore()
@@ -291,7 +293,7 @@ trait CanBeRefined
 
     /**
      * Determine if the sort should be persisted.
-     * 
+     *
      * @return bool
      */
     public function shouldPersistSort()
@@ -301,7 +303,7 @@ trait CanBeRefined
 
     /**
      * Get the store to use for persisting sorts.
-     * 
+     *
      * @return \Honed\Refine\Stores\Store|null
      */
     public function getSortStore()
@@ -342,7 +344,7 @@ trait CanBeRefined
             FilterQuery::class,
             SortQuery::class,
             AfterRefining::class,
-            PersistData::class
+            PersistData::class,
         ];
     }
 
@@ -434,18 +436,18 @@ trait CanBeRefined
     //     $this->persistSortValue($parameter, $direction);
 
     //     $applied = false;
-    
+
     //     foreach ($this->getSorts() as $sort) {
     //         $applied = $sort->handle(
     //             $builder, $parameter, $direction
     //         ) || $applied;
     //     }
-    
+
     //     if (! $applied && $sort = $this->getDefaultSort()) {
     //         $parameter = $sort->getParameter();
-    
+
     //         $sort->handle($builder, $parameter, $direction);
-    
+
     //         return;
     //     }
     // }

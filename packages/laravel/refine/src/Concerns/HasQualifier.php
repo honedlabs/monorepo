@@ -55,7 +55,7 @@ trait HasQualifier
      * Get the qualified name.
      *
      * @param  string  $column
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>|null  $builder
+     * @param  Builder<\Illuminate\Database\Eloquent\Model>|null  $builder
      * @return string
      */
     public function qualifyColumn($column, $builder = null)

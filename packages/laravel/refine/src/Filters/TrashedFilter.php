@@ -17,7 +17,7 @@ class TrashedFilter extends Filter
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -45,7 +45,7 @@ class TrashedFilter extends Filter
      *
      * @return static
      */
-    public static function new(): static
+    public static function new()
     {
         return resolve(static::class);
     }

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Refine\Tests\TestCase;
-use Workbench\App\Enums\Status;
 
 uses(TestCase::class)->in(__DIR__);
 

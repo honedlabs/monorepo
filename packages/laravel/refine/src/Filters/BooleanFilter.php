@@ -17,7 +17,7 @@ class BooleanFilter extends Filter
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

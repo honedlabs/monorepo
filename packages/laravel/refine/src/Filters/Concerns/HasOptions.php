@@ -22,21 +22,21 @@ trait HasOptions
      *
      * @var array<int, Option>
      */
-    protected array $options = [];
+    protected $options = [];
 
     /**
      * Whether to restrict options to only those provided.
      *
      * @var bool
      */
-    protected bool $strict = false;
+    protected $strict = false;
 
     /**
      * Whether to accept multiple values.
      *
      * @var bool
      */
-    protected bool $multiple = false;
+    protected $multiple = false;
 
     /**
      * Set the options for the filter.
@@ -58,7 +58,7 @@ trait HasOptions
      *
      * @return array<int,Option>
      */
-    public function getOptions(): array
+    public function getOptions()
     {
         return $this->options;
     }
@@ -68,7 +68,7 @@ trait HasOptions
      *
      * @return bool
      */
-    public function hasOptions(): bool
+    public function hasOptions()
     {
         return filled($this->getOptions());
     }
@@ -79,7 +79,7 @@ trait HasOptions
      * @param  bool  $strict
      * @return $this
      */
-    public function strict(bool $strict = true): self
+    public function strict($strict = true)
     {
         $this->strict = $strict;
 
@@ -92,7 +92,7 @@ trait HasOptions
      * @param  bool  $lax
      * @return $this
      */
-    public function lax(bool $lax = true): self
+    public function lax($lax = true)
     {
         return $this->strict(! $lax);
     }
@@ -102,7 +102,7 @@ trait HasOptions
      *
      * @return bool
      */
-    public function isStrict(): bool
+    public function isStrict()
     {
         return $this->strict;
     }
@@ -113,7 +113,7 @@ trait HasOptions
      * @param  bool  $multiple
      * @return $this
      */
-    public function multiple(bool $multiple = true): self
+    public function multiple($multiple = true)
     {
         $this->multiple = $multiple;
 
@@ -125,7 +125,7 @@ trait HasOptions
      *
      * @return bool
      */
-    public function isMultiple(): bool
+    public function isMultiple()
     {
         return $this->multiple;
     }
@@ -135,7 +135,7 @@ trait HasOptions
      *
      * @return bool
      */
-    public function isNotMultiple(): bool
+    public function isNotMultiple()
     {
         return ! $this->isMultiple();
     }
@@ -146,7 +146,7 @@ trait HasOptions
      * @param  mixed  $value
      * @return mixed
      */
-    public function activateOptions(mixed $value): mixed
+    public function activateOptions($value)
     {
         $options = array_values(
             array_filter(
@@ -176,12 +176,28 @@ trait HasOptions
      *
      * @return array<int,mixed>
      */
-    public function optionsToArray(): array
+    public function optionsToArray()
     {
         return array_map(
             static fn (Option $option) => $option->toArray(),
             $this->getOptions()
         );
+    }
+
+    /**
+     * Create a new option instance.
+     *
+     * @template TValue of \Honed\Refine\Option|scalar|null
+     *
+     * @param  TValue  $value
+     * @param  string|null  $label
+     * @return Option
+     */
+    protected static function newOption($value, $label = null)
+    {
+        return $value instanceof Option
+            ? $value
+            : Option::make($value, $label ?? (string) $value); // @phpstan-ignore cast.string
     }
 
     /**
@@ -192,7 +208,7 @@ trait HasOptions
      * @param  class-string<BackedEnum>|array<int|string,TValue>|Collection<int|string,TValue>  $options
      * @return array<int,Option>
      */
-    protected function createOptions(array|string|Collection $options): array
+    protected function createOptions($options)
     {
         if ($options instanceof Collection) {
             $options = $options->all();
@@ -211,7 +227,7 @@ trait HasOptions
      * @param  class-string<BackedEnum>  $enum
      * @return array<int,Option>
      */
-    protected function createEnumOptions(string $enum): array
+    protected function createEnumOptions($enum)
     {
         return array_map(
             static fn ($case) => Option::make($case->value, $case->name),
@@ -222,13 +238,15 @@ trait HasOptions
     /**
      * Create options from an associative array.
      *
-     * @param  array<int|string,mixed>  $options
+     * @template TValue of \Honed\Refine\Option|scalar|null
+     *
+     * @param  array<int|string,TValue>  $options
      * @return array<int,Option>
      */
-    protected function createAssociativeOptions(array $options): array
+    protected function createAssociativeOptions($options)
     {
         return array_map(
-            static fn ($value, $key) => Option::make($value, (string) $key),
+            static fn ($value, $key) => static::newOption($value, $key), // @phpstan-ignore argument.type
             array_keys($options),
             array_values($options)
         );
@@ -237,15 +255,16 @@ trait HasOptions
     /**
      * Create options from a list of values.
      *
-     * @param  array<int|string,mixed>  $options
+     * @template TValue of scalar|\Honed\Refine\Option|null
+     *
+     * @param  array<int|string,TValue>  $options
      * @return array<int,Option>
      */
-    protected function createListOptions(array $options): array
+    protected function createListOptions($options)
     {
+        /** @var array<int,Option> */
         return array_map(
-            static fn ($value) => $value instanceof Option
-                ? $value
-                : Option::make($value, (string) $value),
+            static fn ($value) => static::newOption($value),
             $options
         );
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Refine\Pipes\PersistData;
 use Honed\Refine\Refine;
 use Workbench\App\Models\User;

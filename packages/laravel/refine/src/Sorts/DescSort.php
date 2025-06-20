@@ -14,8 +14,10 @@ class DescSort extends Sort
 {
     /**
      * Provide the instance with any necessary setup.
+     *
+     * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

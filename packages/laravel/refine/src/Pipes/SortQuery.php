@@ -6,7 +6,7 @@ namespace Honed\Refine\Pipes;
 
 /**
  * @template TClass of \Honed\Refine\Refine
- * 
+ *
  * @extends Pipe<TClass>
  */
 class SortQuery extends Pipe
@@ -21,7 +21,7 @@ class SortQuery extends Pipe
     {
         [$parameter, $direction] = $this->getValues($instance);
 
-        $instance->persistSort($parameter, $direction);
+        $this->persist($instance, $parameter, $direction);
 
         if ($this->sort($instance, $parameter, $direction)) {
             $this->persist($instance, $parameter, $direction);
@@ -35,7 +35,7 @@ class SortQuery extends Pipe
     /**
      * Get the sort name and direction from the request, or from a persisted
      * value.
-     * 
+     *
      * @param  TClass  $instance
      * @return array{string|null, 'asc'|'desc'|null}
      */
@@ -54,7 +54,7 @@ class SortQuery extends Pipe
 
     /**
      * Apply the sort to the resource.
-     * 
+     *
      * @param  TClass  $instance
      * @param  string|null  $parameter
      * @param  'asc'|'desc'|null  $direction
@@ -77,14 +77,14 @@ class SortQuery extends Pipe
 
     /**
      * Apply the default sort to the resource.
-     * 
+     *
      * @param  TClass  $instance
      * @return void
      */
     public function defaultSort($instance)
     {
         $builder = $instance->getBuilder();
-        
+
         if ($sort = $instance->getDefaultSort()) {
             $parameter = $sort->getParameter();
 
@@ -94,7 +94,7 @@ class SortQuery extends Pipe
 
     /**
      * Persist the sort value to the internal data store.
-     * 
+     *
      * @param  TClass  $instance
      * @param  string|null  $parameter
      * @param  'asc'|'desc'|null  $direction
@@ -112,7 +112,7 @@ class SortQuery extends Pipe
             'sort' => [
                 'col' => $parameter,
                 'dir' => $direction,
-            ]
+            ],
         ]);
     }
 }

@@ -18,7 +18,7 @@ abstract class Store
     /**
      * The resolved data from the store.
      *
-     * @var mixed
+     * @var array<string,mixed>
      */
     protected $resolved = [];
 

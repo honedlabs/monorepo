@@ -8,8 +8,8 @@ use Illuminate\Contracts\Session\Session;
 
 class SessionStore extends Store
 {
-    const NAME = 'session';
-    
+    public const NAME = 'session';
+
     public function __construct(
         protected Session $session,
     ) {}
@@ -19,9 +19,14 @@ class SessionStore extends Store
      *
      * @return $this
      */
-    public function resolve(): self
+    public function resolve()
     {
-        $this->resolved = $this->session->get($this->key, []);
+        /** @var array<string,mixed>|null $data */
+        $data = $this->session->get($this->key, []);
+
+        if (is_array($data)) {
+            $this->data = $data;
+        }
 
         return $this;
     }
@@ -32,7 +37,7 @@ class SessionStore extends Store
      * @param  Session  $session
      * @return $this
      */
-    public function session(Session $session): self
+    public function session($session)
     {
         $this->session = $session;
 
@@ -44,7 +49,7 @@ class SessionStore extends Store
      *
      * @return void
      */
-    public function persist(): void
+    public function persist()
     {
         match (true) {
             empty($this->data) => $this->session->forget($this->key),

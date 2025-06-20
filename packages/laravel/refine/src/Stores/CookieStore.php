@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class CookieStore extends Store
 {
-    const NAME = 'cookie';
+    public const NAME = 'cookie';
 
     /**
      * The default lifetime for the cookie.
@@ -29,11 +29,16 @@ class CookieStore extends Store
      *
      * @return $this
      */
-    public function resolve(): self
+    public function resolve()
     {
-        $this->resolved = json_decode(
+        /** @var array<string,mixed>|null $data */
+        $data = json_decode(
             $this->request->cookie($this->key, '[]'), true // @phpstan-ignore argument.type
         );
+
+        if (is_array($data)) {
+            $this->data = $data;
+        }
 
         return $this;
     }
@@ -41,10 +46,9 @@ class CookieStore extends Store
     /**
      * Set the request to use for the store.
      *
-     * @param  Request  $request
      * @return $this
      */
-    public function request(Request $request): self
+    public function request(Request $request)
     {
         $this->request = $request;
 
@@ -54,10 +58,9 @@ class CookieStore extends Store
     /**
      * Set the cookie jar to use for the store.
      *
-     * @param  CookieJar  $cookieJar
      * @return $this
      */
-    public function cookieJar(CookieJar $cookieJar): self
+    public function cookieJar(CookieJar $cookieJar)
     {
         $this->cookieJar = $cookieJar;
 
@@ -70,7 +73,7 @@ class CookieStore extends Store
      * @param  int  $seconds
      * @return $this
      */
-    public function lifetime(int $seconds): self
+    public function lifetime($seconds)
     {
         $this->lifetime = $seconds;
 
@@ -82,7 +85,7 @@ class CookieStore extends Store
      *
      * @return void
      */
-    public function persist(): void
+    public function persist()
     {
         match (true) {
             empty($this->data) => $this->cookieJar->forget($this->key),

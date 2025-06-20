@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Refine;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Honed\Refine\Searches\Search;
-use Workbench\App\Models\Product;
 use Honed\Refine\Pipes\SearchQuery;
+use Honed\Refine\Refine;
+use Honed\Refine\Searches\Search;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->pipe = new SearchQuery();
@@ -79,7 +79,7 @@ it('applies search without matching', function () {
 
 it('applies search with matching', function () {
     $this->refine->matchable();
-    
+
     $request = Request::create('/', 'GET', [
         $this->refine->getSearchKey() => $this->query,
         $this->refine->getMatchKey() => 'name',
@@ -152,10 +152,6 @@ it('applies search with scoped key', function () {
         ->toBe($this->term);
 });
 
-it('uses cookie persisted search', function () {
+it('uses cookie persisted search', function () {})->todo();
 
-})->todo();
-
-it('uses session persisted search', function () {
-
-})->todo();
+it('uses session persisted search', function () {})->todo();

@@ -6,7 +6,7 @@ namespace Honed\Refine\Pipes;
 
 /**
  * @template TClass of \Honed\Refine\Refine
- * 
+ *
  * @extends Pipe<TClass>
  */
 class BeforeRefining extends Pipe

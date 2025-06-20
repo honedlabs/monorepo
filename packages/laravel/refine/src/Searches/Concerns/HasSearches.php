@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Searches\Concerns;
 
-use function array_map;
-use Honed\Core\Interpret;
+use Honed\Refine\Searches\Search;
 
 use function array_filter;
+use function array_map;
 use function array_values;
-use Illuminate\Http\Request;
-use Honed\Refine\Searches\Search;
 
 trait HasSearches
 {

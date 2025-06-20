@@ -2,10 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filters\Filter;
 use Honed\Refine\Refine;
-use Honed\Refine\Searches\Search;
-use Honed\Refine\Sorts\Sort;
 use Illuminate\Auth\Access\Gate as AccessGate;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Database\Eloquent\Builder;

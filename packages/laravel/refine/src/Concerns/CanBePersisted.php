@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Refine\Concerns;
 
 use Honed\Refine\Stores\CookieStore;
-use Honed\Refine\Stores\Store;
 use Honed\Refine\Stores\SessionStore;
+use Honed\Refine\Stores\Store;
 use Illuminate\Support\Str;
 
 trait CanBePersisted
@@ -28,7 +28,7 @@ trait CanBePersisted
     /**
      * The stores to use for persisting data.
      *
-     * @var array<string,\Honed\Refine\Stores\Store>
+     * @var array<string,Store>
      */
     protected $stores = [];
 
@@ -114,11 +114,30 @@ trait CanBePersisted
     /**
      * Persist the data to the stores.
      *
-     * @return array<string,\Honed\Refine\Stores\Store>
+     * @return array<string,Store>
      */
     public function getStores()
     {
         return $this->stores;
+    }
+
+    /**
+     * Get the store to use for persisting data.
+     *
+     * @param  bool|string|null  $type
+     * @return Store|null
+     */
+    public function getStore($type = null)
+    {
+        if ($type === true) {
+            $type = $this->store;
+        }
+
+        return match ($type) {
+            CookieStore::NAME => $this->newCookieStore(),
+            SessionStore::NAME => $this->newSessionStore(),
+            default => null,
+        };
     }
 
     /**
@@ -135,31 +154,13 @@ trait CanBePersisted
     }
 
     /**
-     * Get the store to use for persisting data.
-     *
-     * @param  bool|string|null  $type
-     * @return \Honed\Refine\Stores\Store|null
-     */
-    public function getStore($type = null)
-    {
-        if ($type === true) {
-            $type = $this->store;
-        }
-
-        return match ($type) {
-            CookieStore::NAME => $this->newCookieStore(),
-            SessionStore::NAME => $this->newSessionStore(),
-            default => null,
-        };
-    }
-
-    /**
      * Create a new cookie store instance.
      *
      * @return CookieStore
      */
     protected function newCookieStore()
     {
+        /** @var CookieStore */
         return $this->stores[CookieStore::NAME]
             ??= CookieStore::make($this->getPersistKey())
                 ->request($this->getRequest());
@@ -172,6 +173,7 @@ trait CanBePersisted
      */
     protected function newSessionStore()
     {
+        /** @var SessionStore */
         return $this->stores[SessionStore::NAME]
             ??= SessionStore::make($this->getPersistKey());
     }

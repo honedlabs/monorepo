@@ -6,7 +6,7 @@ namespace Honed\Refine\Pipes;
 
 /**
  * @template TClass of \Honed\Refine\Refine
- * 
+ *
  * @extends Pipe<TClass>
  */
 class FilterQuery extends Pipe
@@ -28,7 +28,7 @@ class FilterQuery extends Pipe
 
     /**
      * Apply the filters using the request values.
-     * 
+     *
      * @param  TClass  $instance
      * @return bool
      */
@@ -55,20 +55,20 @@ class FilterQuery extends Pipe
 
     /**
      * Apply the filters using the persisted values.
-     * 
+     *
      * @param  TClass  $instance
      * @return void
      */
     public function persistedFilter($instance)
     {
-        $builder = $instance->getBuilder();
+        // $builder = $instance->getBuilder();
 
         foreach ($instance->getFilters() as $filter) {
-            $value = $instance->getPersistedFilterValue($filter);
+            // $value = $instance->getPersistedFilterValue($filter);
 
-            if ($filter->handle($builder, $value)) {
-                // $instance->persistFilter($filter, $value);
-            }
+            // if ($filter->handle($builder, $value)) {
+            //     $instance->persistFilter($filter, $value);
+            // }
         }
     }
 }

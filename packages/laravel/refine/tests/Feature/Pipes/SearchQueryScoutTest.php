@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Session;
 use Workbench\App\Enums\Status;
 use Workbench\App\Models\Product;
 use Workbench\App\Refiners\RefineProduct;
@@ -28,7 +27,7 @@ beforeEach(function () {
     Product::factory(5)->create([
         'name' => 'test',
     ]);
-    
+
     Product::factory(5)->create([
         'name' => 'name',
     ]);

@@ -8,7 +8,7 @@ use Honed\Core\Interpret;
 
 /**
  * @template TClass of \Honed\Refine\Refine
- * 
+ *
  * @extends Pipe<TClass>
  */
 class SearchQuery extends Pipe
@@ -30,12 +30,12 @@ class SearchQuery extends Pipe
             default => $this->search($instance, $columns)
         };
 
-        $this->persist($instance, $columns);
+        $this->persist($instance, $term, $columns);
     }
 
     /**
      * Set the search term, and if applicable, the search columns on the instance.
-     * 
+     *
      * @param  TClass  $instance
      * @return array{string|null, array<int,string>|null}
      */
@@ -49,7 +49,7 @@ class SearchQuery extends Pipe
 
     /**
      * Get the search term from the instance's request.
-     * 
+     *
      * @param  TClass  $instance
      * @return string|null
      */
@@ -59,13 +59,12 @@ class SearchQuery extends Pipe
             $instance->getRequest(), $instance->getSearchKey()
         );
 
-
         return $term ? str_replace('+', ' ', trim($term)) : null;
     }
 
     /**
      * Get the search columns from the instance's request.
-     * 
+     *
      * @param  TClass  $instance
      * @return array<int,string>|null
      */
@@ -85,7 +84,7 @@ class SearchQuery extends Pipe
 
     /**
      * Perform the search using Scout.
-     * 
+     *
      * @param  TClass  $instance
      * @return void
      */
@@ -109,7 +108,7 @@ class SearchQuery extends Pipe
 
     /**
      * Perform the search using the default search logic.
-     * 
+     *
      * @param  TClass  $instance
      * @param  array<int,string>|null  $columns
      * @return bool
@@ -117,7 +116,7 @@ class SearchQuery extends Pipe
     public function search($instance, $columns)
     {
         $builder = $instance->getBuilder();
-        
+
         $term = $instance->getTerm();
 
         $applied = false;
@@ -133,11 +132,13 @@ class SearchQuery extends Pipe
 
     /**
      * Persist the search value to the internal data store.
-     * 
+     *
      * @param  TClass  $instance
+     * @param  string|null  $term
+     * @param  array<int,string>|null  $columns
      * @return void
      */
-    public function persist($instance, $columns)
+    public function persist($instance, $term, $columns)
     {
         $store = $instance->getSearchStore();
 
@@ -147,9 +148,9 @@ class SearchQuery extends Pipe
 
         $store->put([
             'search' => [
-                'term' => $instance->getTerm(),
+                'term' => $term,
                 ...($instance->isMatchable() && $columns ? ['cols' => $columns] : []),
-            ]
+            ],
         ]);
     }
 }

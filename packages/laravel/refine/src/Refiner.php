@@ -56,8 +56,6 @@ abstract class Refiner extends Primitive
 
     /**
      * Get the parameter for the refiner.
-     *
-     * @return string
      */
     public function getParameter(): string
     {

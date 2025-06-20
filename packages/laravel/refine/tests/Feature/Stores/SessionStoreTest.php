@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Refine\Stores\SessionStore;
 use Illuminate\Contracts\Session\Session as SessionContract;
 use Illuminate\Support\Facades\App;

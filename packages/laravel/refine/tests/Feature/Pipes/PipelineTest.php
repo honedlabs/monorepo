@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
 use Workbench\App\Enums\Status;
-use Workbench\App\Models\Product;
 use Workbench\App\Refiners\RefineProduct;
 
 beforeEach(function () {

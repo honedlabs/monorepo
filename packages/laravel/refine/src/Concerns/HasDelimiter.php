@@ -11,7 +11,7 @@ trait HasDelimiter
      *
      * @var string
      */
-    protected string $delimiter = ',';
+    protected $delimiter = ',';
 
     /**
      * Set the delimiter.
@@ -19,7 +19,7 @@ trait HasDelimiter
      * @param  string  $delimiter
      * @return $this
      */
-    public function delimiter(string $delimiter): self
+    public function delimiter($delimiter)
     {
         $this->delimiter = $delimiter;
 
@@ -31,7 +31,7 @@ trait HasDelimiter
      *
      * @return string
      */
-    public function getDelimiter(): string
+    public function getDelimiter()
     {
         return $this->delimiter;
     }

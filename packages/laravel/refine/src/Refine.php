@@ -24,7 +24,7 @@ use Throwable;
  *
  * @mixin TBuilder
  */
-class Refine extends Primitive implements RefinesData, NullsAsUndefined
+class Refine extends Primitive implements NullsAsUndefined, RefinesData
 {
     use CanBeRefined;
     use ForwardsCalls;
@@ -179,9 +179,6 @@ class Refine extends Primitive implements RefinesData, NullsAsUndefined
 
     /**
      * Define the refine instance.
-     *
-     * @param  self  $refine
-     * @return self
      */
     protected function definition(self $refine): self
     {

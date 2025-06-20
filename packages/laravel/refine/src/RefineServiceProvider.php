@@ -14,7 +14,7 @@ class RefineServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
-     * 
+     *
      * @return void
      */
     public function boot()
@@ -33,13 +33,13 @@ class RefineServiceProvider extends ServiceProvider
 
     /**
      * Register the publishing for the package.
-     * 
+     *
      * @return void
      */
     protected function offerPublishing()
     {
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),
-        ], 'stubs');
+        ], 'refine-stubs');
     }
 }
