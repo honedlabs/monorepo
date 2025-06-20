@@ -22,7 +22,5 @@ class PresignCreated
         public $upload,
         public $data,
         public $disk,
-    ) {
-        //
-    }
+    ) { }
 }

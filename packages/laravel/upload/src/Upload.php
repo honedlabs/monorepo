@@ -424,7 +424,7 @@ class Upload extends Primitive implements Responsable
     /**
      * {@inheritdoc}
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         $data = [
             'multiple' => $this->isMultiple(),
@@ -456,15 +456,26 @@ class Upload extends Primitive implements Responsable
     }
 
     /**
+     * Define the upload instance.
+     *
+     * @param  $this  $upload
+     * @return $this
+     */
+    protected function definition(self $upload): self
+    {
+        return $upload;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
-        $data = $this->getData();
-
         if ($parameterName === 'bucket') {
             return [$this->getBucket()];
         }
+        
+        $data = $this->getData();
 
         if (! $data) {
             return parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName);

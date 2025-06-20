@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Upload\Console\Commands;
+namespace Honed\Upload\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -54,7 +54,7 @@ class UploadMakeCommand extends GeneratorCommand
     {
         return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
-            : __DIR__.'/../../..'.$stub;
+            : __DIR__.'/../..'.$stub;
     }
 
     /**
