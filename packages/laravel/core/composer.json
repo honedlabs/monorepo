@@ -82,7 +82,11 @@
         }
     },
     "extra": {
-        "laravel": []
+        "laravel": {
+            "providers": [
+                "Honed\\Core\\CoreServiceProvider"
+            ]
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
