@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Honed\Action\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-use function Laravel\Prompts\error;
-use function Laravel\Prompts\select;
+use function mb_strtolower;
 
 #[AsCommand(name: 'make:actions')]
-class ActionsMakeCommand extends GeneratorCommand implements PromptsForMissingInput
+class ActionsMakeCommand extends Command implements PromptsForMissingInput
 {
     use Concerns\SuggestsModels;
 
@@ -53,18 +50,15 @@ class ActionsMakeCommand extends GeneratorCommand implements PromptsForMissingIn
         $model = $this->argument('model');
 
         if ($model) {
-            $model = $this->parseModel($model);
-
             $this->promptForModelCreation($model);
         }
-
 
         foreach ($this->getActions() as $action => $verb) {
             $path = $this->getClassPath($model ?? '', $verb);
 
             $this->call('make:action', array_filter([
                 'name' => $path,
-                '--model' => class_basename($model),
+                '--model' => $model ? class_basename($model) : null,
                 '--action' => $action,
                 '--force' => (bool) $this->option('force'),
             ]));
@@ -81,7 +75,7 @@ class ActionsMakeCommand extends GeneratorCommand implements PromptsForMissingIn
     protected function getArguments()
     {
         return [
-            ['model', InputArgument::OPTIONAL, 'The model for the '.\mb_strtolower($this->type)],
+            ['model', InputArgument::OPTIONAL, 'The model for the '.mb_strtolower($this->type)],
         ];
     }
 
@@ -100,7 +94,7 @@ class ActionsMakeCommand extends GeneratorCommand implements PromptsForMissingIn
 
     /**
      * Get the stub file for the generator.
-     * 
+     *
      * @return string
      */
     protected function getStub()

@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Action\Commands\Concerns;
 
-use function in_array;
-use function Laravel\Prompts\confirm;
-
-use InvalidArgumentException;
-
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 use Symfony\Component\Finder\Finder;
 
+use function Laravel\Prompts\confirm;
+
 /**
- * @phpstan-require-extends \Illuminate\Console\GeneratorCommand
+ * @phpstan-require-extends \Illuminate\Console\Command
  */
 trait SuggestsModels
 {
@@ -58,10 +57,8 @@ trait SuggestsModels
      */
     protected function promptForModelCreation($modelClass)
     {
-        $modelPath = $this->getModelPath($modelClass);
-        
         if (
-            ! file_exists($modelPath)
+            ! class_exists($modelClass)
             && confirm("A [{$modelClass}] model does not exist. Do you want to generate it?", default: true)
         ) {
             $this->call('make:model', ['name' => $modelClass]);
@@ -69,16 +66,34 @@ trait SuggestsModels
     }
 
     /**
-     * Get the file path for the model class.
+     * Get the root namespace for the class.
      *
-     * @param  string  $modelClass
      * @return string
      */
-    protected function getModelPath($modelClass)
+    protected function rootNamespace()
     {
-        $modelName = class_basename($modelClass);
-        $modelPath = is_dir(app_path('Models')) ? app_path('Models') : app_path();
-        
-        return $modelPath . '/' . $modelName . '.php';
+        return $this->laravel->getNamespace();
+    }
+
+    /**
+     * Qualify the given model class base name.
+     *
+     * @return string
+     */
+    protected function qualifyModel(string $model)
+    {
+        $model = ltrim($model, '\\/');
+
+        $model = str_replace('/', '\\', $model);
+
+        $rootNamespace = $this->rootNamespace();
+
+        if (Str::startsWith($model, $rootNamespace)) {
+            return $model;
+        }
+
+        return is_dir(app_path('Models'))
+                    ? $rootNamespace.'Models\\'.$model
+                    : $rootNamespace.$model;
     }
 }

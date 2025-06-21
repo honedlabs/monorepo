@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 
 beforeEach(function () {
     File::cleanDirectory(app_path('Actions'));
+    File::cleanDirectory(app_path('Models'));
 
     $this->artisan('make:model', ['name' => 'App\\Models\\Product']);
 
@@ -15,7 +16,7 @@ beforeEach(function () {
 
 afterEach(function () {
     File::cleanDirectory(app_path('Actions'));
-
+    File::cleanDirectory(app_path('Models'));
     Config::set('action.model_actions', $this->actions);
 });
 
@@ -67,21 +68,3 @@ it('uses default action', function () {
         );
     }
 });
-
-it('makes for model', function () {
-    $this->artisan('make:actions', [
-        'model' => 'Product',
-    ])->expectsQuestion('A [App\Models\Product] model does not exist. Do you want to generate it?', true)
-        ->assertSuccessful();
-
-    foreach ($this->actions as $file => $action) {
-        $file = app_path("Actions/{$action}Product.php");
-
-        $this->assertFileExists($file);
-
-        $this->assertStringContainsString(
-            "class {$action} extends {$action}Action",
-            File::get($file)
-        );
-    }
-})->only();

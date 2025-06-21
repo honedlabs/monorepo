@@ -3,19 +3,20 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Arr;
-use InvalidArgumentException;
-
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
+use InvalidArgumentException;
 
 beforeEach(function () {
     File::cleanDirectory(app_path('Actions'));
+    File::cleanDirectory(app_path('Models'));
 
     $this->actions = Config::get('action.actions');
 });
 
 afterEach(function () {
     File::cleanDirectory(app_path('Actions'));
+    File::cleanDirectory(app_path('Models'));
     Config::set('action.actions', $this->actions);
 });
 
@@ -78,7 +79,7 @@ it('uses default action', function () {
     $this->assertFileExists($file);
 
     $this->assertStringContainsString(
-        "class TestAction extends StoreAction",
+        'class TestAction extends StoreAction',
         File::get($file)
     );
 });
