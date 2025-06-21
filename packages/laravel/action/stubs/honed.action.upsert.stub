@@ -5,7 +5,7 @@ namespace {{ namespace }};
 use Honed\Action\Actions\UpsertAction;
 
 /**
- * @extends \Honed\Action\Actions\UpsertAction<{{ model }}>
+ * @extends \Honed\Action\Actions\UpsertAction<\{{ namespacedModel }}>
  */
 class {{ class }} extends UpsertAction
 {

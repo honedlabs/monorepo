@@ -2,17 +2,21 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Commands\ActionsMakeCommand;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Config;
 
 beforeEach(function () {
     File::cleanDirectory(app_path('Actions'));
-    $this->artisan('make:model', ['name' => 'Product']);
-});
+
+    $this->artisan('make:model', ['name' => 'App\\Models\\Product']);
+
+    $this->actions = Config::get('action.model_actions');
+})->only();
 
 afterEach(function () {
     File::cleanDirectory(app_path('Actions'));
+
+    Config::set('action.model_actions', $this->actions);
 });
 
 it('makes actions', function () {

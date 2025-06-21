@@ -7,14 +7,11 @@ namespace Honed\Action\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Finder\Finder;
 
-use function in_array;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\select;
 
@@ -54,7 +51,9 @@ class ActionsMakeCommand extends Command implements PromptsForMissingInput
         $model = $this->getModel($this->argument('model'));
 
         if (! $model) {
-            return $this->missingModel();
+            error('The model does not exist.');
+
+            return 1;
         }
 
         /** @var string|null */
@@ -120,18 +119,6 @@ class ActionsMakeCommand extends Command implements PromptsForMissingInput
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the action already exists.'],
             ['path', 'p', InputOption::VALUE_REQUIRED, 'Add an additional path to the actions directory.'],
         ];
-    }
-
-    /**
-     * Error the command when the model does not exist.
-     *
-     * @return int
-     */
-    protected function missingModel()
-    {
-        error('The model does not exist.');
-
-        return 1;
     }
 
     /**
