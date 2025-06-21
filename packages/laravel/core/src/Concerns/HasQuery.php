@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Closure;
-use Honed\Core\Contracts\WithQuery;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -18,14 +17,14 @@ trait HasQuery
     /**
      * The query closure to modify the Eloquent builder.
      *
-     * @var (\Closure(TBuilder, ...mixed):TBuilder|void)|null
+     * @var (\Closure(TBuilder, ...mixed):TBuilder|null)|null
      */
     protected $query;
 
     /**
      * Set the query closure.
      *
-     * @param  (\Closure(TBuilder, ...mixed):TBuilder)|void|null  $query
+     * @param  (\Closure(TBuilder, ...mixed):TBuilder|null)|void|null  $query
      * @return $this
      */
     public function query($query)
@@ -38,19 +37,11 @@ trait HasQuery
     /**
      * Get the query closure.
      *
-     * @return (\Closure(TBuilder, ...mixed):TBuilder)|void|null
+     * @return (\Closure(TBuilder, ...mixed):TBuilder|null)|null
      */
     public function getQuery()
     {
-        if (isset($this->query)) {
-            return $this->query;
-        }
-
-        if ($this instanceof WithQuery) {
-            return $this->query = Closure::fromCallable([$this, 'queryUsing']);
-        }
-
-        return null;
+        return $this->query;
     }
 
     /**
@@ -60,7 +51,7 @@ trait HasQuery
      */
     public function hasQuery()
     {
-        return filled($this->getQuery());
+        return filled($this->query);
     }
 
     /**
@@ -85,9 +76,9 @@ trait HasQuery
     /**
      * Rebind the query closure with the bindings injected to closure arguments.
      *
-     * @param  (\Closure(TBuilder, ...mixed):TBuilder)|void  $closure
+     * @param  (\Closure(TBuilder, ...mixed):TBuilder|null)|void  $closure
      * @param  array<string, mixed>  $bindings
-     * @return (\Closure(TBuilder, ...mixed):TBuilder)|void
+     * @return (\Closure(TBuilder, ...mixed):TBuilder|null)|void
      */
     public function rebindQuery($closure, $bindings = [])
     {

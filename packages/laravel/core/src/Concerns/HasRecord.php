@@ -16,7 +16,7 @@ trait HasRecord
     /**
      * Set the record to be used to generate a state.
      *
-     * @param  array<string, mixed>|\Illuminate\Database\Eloquent\Model  $record
+     * @param  array<string, mixed>|\Illuminate\Database\Eloquent\Model|null  $record
      * @return $this
      */
     public function record($record)

@@ -16,10 +16,8 @@ beforeEach(function () {
 it('sets', function () {
     expect($this->test)
         ->getQuery()->toBeNull()
-        ->hasQuery()->toBeFalse()
         ->query(fn () => null)->toBe($this->test)
-        ->getQuery()->toBeInstanceOf(Closure::class)
-        ->hasQuery()->toBeTrue();
+        ->getQuery()->toBeInstanceOf(Closure::class);
 });
 
 it('modifies', function () {

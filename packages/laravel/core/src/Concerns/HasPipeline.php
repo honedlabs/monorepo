@@ -16,9 +16,9 @@ trait HasPipeline
     protected $complete = false;
 
     /**
-     * Get the pipes to be used..
+     * Get the pipes to be used.
      *
-     * @return array<int,class-string<\Honed\Core\Pipe<$this>>>
+     * @return array<int,class-string<\Honed\Core\Pipe<mixed>>>
      */
     abstract protected function pipes();
 
