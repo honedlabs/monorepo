@@ -8,6 +8,10 @@ use function Pest\Laravel\artisan;
 
 beforeEach(function () {
     File::cleanDirectory(app_path('Actions'));
+})->only();
+
+afterEach(function () {
+    File::cleanDirectory(app_path('Actions'));
 });
 
 it('makes', function () {

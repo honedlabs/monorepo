@@ -6,6 +6,7 @@ namespace Honed\Action\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,21 +21,7 @@ use function Laravel\Prompts\suggest;
 #[AsCommand(name: 'make:action')]
 class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInput
 {
-    /**
-     * The actions that can be used in the action.
-     *
-     * @var array<string,string>
-     */
-    public $actions = [
-        'index' => 'Index',
-        'create' => 'Create',
-        'store' => 'Store',
-        'show' => 'Show',
-        'edit' => 'Edit',
-        'update' => 'Update',
-        'delete' => 'Delete',
-        'destroy' => 'Destroy',
-    ];
+    use Concerns\SuggestsModels;
 
     /**
      * The console command name.
@@ -194,6 +181,39 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
     }
 
     /**
+     * Get the action to be used.
+     *
+     * @return string|null
+     */
+    protected function getActions()
+    {
+        $actions = config('action.actions');
+
+        if (is_array($actions) && Arr::isAssoc($actions)) {
+            /** @var array<string,string> */
+            return $actions;
+        }
+
+        return [
+            'associate' => 'Associate',
+            'attach' => 'Attach',
+            'detach' => 'Detach',
+            'destroy' => 'Destroy',
+            'dispatch' => 'Dispatch',
+            'dissociate' => 'Dissociate',
+            'force-destroy' => 'Force Destroy',
+            'replicate' => 'Replicate',
+            'restore' => 'Restore',
+            'store' => 'Store',
+            'sync' => 'Sync',
+            'toggle' => 'Toggle',
+            'touch' => 'Touch',
+            'update' => 'Update',
+            'upsert' => 'Upsert',
+        ];
+    }
+
+    /**
      * Interact further with the user if they were prompted for missing arguments.
      *
      * @return void
@@ -205,7 +225,7 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
         }
 
         $actions = [
-            ...$this->actions,
+            ...$this->getActions(),
             'none' => 'None',
         ];
 

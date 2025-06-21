@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Operations;
 
 use Closure;
-use Honed\Action\Concerns\HasConfirm;
+use Honed\Action\Concerns\Confirmable;
 use Honed\Action\Confirm;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasExtra;
@@ -19,8 +19,9 @@ use Honed\Core\Primitive;
 abstract class Operation extends Primitive
 {
     use Allowable;
+    use Concerns\CanBeRateLimited;
+    use Concerns\Confirmable;
     use Concerns\HasAction;
-    use HasConfirm;
     use HasExtra;
     use HasIcon;
     use HasLabel;

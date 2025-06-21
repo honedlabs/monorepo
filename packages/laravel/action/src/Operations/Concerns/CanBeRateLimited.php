@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Actions\Concerns;
+namespace Honed\Action\Operations\Concerns;
 
 use Closure;
 
@@ -35,6 +35,7 @@ trait CanBeRateLimited
      */
     public function getRateLimit()
     {
+        /** @var int|null */
         return $this->evaluate($this->rateLimit);
     }
 }
