@@ -453,47 +453,137 @@ class Column extends Primitive
     }
 
     /**
-     * Add a relationship count to the column.
+     * Add a count of the related recordss the column state.
      * 
-     * @param string|array<string, \Closure> $relationship
+     * @param string|array<string, \Closure>|null $relationship
      * @return $this
      */
-    public function count($relationship)
+    public function count($relationship = null)
     {
-        $this->query(fn (Builder $query) => $query->withCount($relationship));
+        return $this->addSimpleRelationship($relationship, 'count');
+    }
+
+    /**
+     * Add a relationship exists as the column state.
+     * 
+     * @param string|array<string, \Closure>|null $relationship
+     * @return $this
+     */
+    public function exists($relationship = null)
+    {
+        return $this->addSimpleRelationship($relationship, 'exists');
+    }
+
+    /**
+     * Add an average aggregate to the column state.
+     * 
+     * @param string|array<string, \Closure>|null $relationship
+     * @param string|null $column
+     * @return $this
+     */
+    public function avg($relationship = null, $column = null)
+    {
+        return $this->addAggregateRelationship($relationship, $column, 'avg');
+    }
+
+    /**
+     * Add an average aggregate to the column state.
+     * 
+     * @param string|array<string, \Closure>|null $relationship
+     * @param string|null $column
+     * @return $this
+     */
+    public function average($relationship = null, $column = null)
+    {
+        return $this->avg($relationship, $column);
+    }
+
+    /**
+     * Add a sum aggregate to the column state.
+     * 
+     * @param string|array<string, \Closure>|null $relationship
+     * @param string|null $column
+     * @return $this
+     */
+    public function sum($relationship = null, $column = null)
+    {
+        return $this->addAggregateRelationship($relationship, $column, 'sum');
+    }
+
+    /**
+     * Add a minimum aggregate to the column state.
+     * 
+     * @param string|array<string, \Closure>|null $relationship
+     * @param string|null $column
+     * @return $this
+     */
+    public function min($relationship = null, $column = null)
+    {
+        return $this->addAggregateRelationship($relationship, $column, 'min');
+    }
+
+    /**
+     * Add a maximum aggregate to the column state.
+     * 
+     * @param string|array<string, \Closure>|null $relationship
+     * @param string|null $column
+     * @return $this
+     */
+    public function max($relationship = null, $column = null)
+    {
+        return $this->addAggregateRelationship($relationship, $column, 'max');
+    }
+
+    /**
+     * Add a simple relationship to the column state.
+     * 
+     * @param string|array<string, \Closure>|null $relationship
+     * @param string $method
+     * @return $this
+     */
+    protected function addSimpleRelationship($relationship, $method)
+    {
+        $this->query(match (true) {
+            (bool) $relationship => fn (Builder $query) =>
+                $query->{'with'.Str::studly($method)}($relationship),
+            default => fn (Builder $query) => 
+                $query->{'with'.Str::studly($method)}(
+                    Str::beforeLast($this->getName(), '_'.$method),
+                ),
+        });
 
         return $this;
     }
 
-    public function exists()
+    /**
+     * Add an aggregate relationship to the column state.
+     * 
+     * @param string|array<string, \Closure>|null $relationship
+     * @param string|null $column
+     * @param string $method
+     * @return $this
+     */
+    protected function addAggregateRelationship($relationship, $column, $method)
     {
+        if ($relationship && ! $column) {
+            throw new \InvalidArgumentException(
+                'A column must be specified when an aggregate relationship is used.'
+            );
+        }
 
+        $this->query(match (true) {
+            (bool) $relationship => fn (Builder $query) => 
+                $query->{'with'.Str::studly($method)}($relationship, $column),
+            default => fn (Builder $query) => 
+                $query->{'with'.Str::studly($method)}(
+                    Str::beforeLast($this->getName(), '_'.$method),
+                    Str::afterLast($this->getName(), $method.'_'),
+                ),
+        });
+
+        return $this;
     }
 
-    public function avg()
-    {
-
-    }
-
-    public function average()
-    {
-
-    }
-
-    public function sum()
-    {
-
-    }
-
-    public function min()
-    {
-
-    }
-
-    public function max()
-    {
-
-    }
 
     /**
      * Get the sort instance as an array.

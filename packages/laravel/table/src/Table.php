@@ -584,11 +584,13 @@ class Table extends Refine implements Handles, UrlRoutable
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
+        $builder = $this->getBuilder();
+
         return match ($parameterType) {
             Table::class => [$this],
             EmptyState::class => [$this->getEmptyState()],
             Request::class => [$this->getRequest()],
-            $builder::class, Builder::class, BuilderContract::class => [$this->getBuilder()],
+            $builder::class, Builder::class, BuilderContract::class => [$builder],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }
