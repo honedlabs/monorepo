@@ -57,7 +57,6 @@ return [
         'store' => 'Store',
         'sync' => 'Sync',
         'toggle' => 'Toggle',
-        'touch' => 'Touch',
         'update' => 'Update',
         'upsert' => 'Upsert',
     ],

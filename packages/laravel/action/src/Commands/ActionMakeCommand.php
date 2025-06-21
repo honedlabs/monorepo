@@ -106,13 +106,10 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
             array_keys($replace), array_values($replace), $stub
         );
 
-        $contract = "use Honed\Action\Contracts\Action;\r\n";
-
         /** @var string */
         return preg_replace(
-            '/'.preg_quote($contract, '/').'/',
-            vsprintf("use %s;\r\nuse %s;\r\n", [
-                'Honed\Action\Contracts\Action',
+            '/(?<=namespace [^;]+;)/',
+            vsprintf("\n\nuse %s;", [
                 $namespacedModel,
             ]),
             $stub
@@ -183,7 +180,7 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
     /**
      * Get the action to be used.
      *
-     * @return string|null
+     * @return array<string,string>
      */
     protected function getActions()
     {
