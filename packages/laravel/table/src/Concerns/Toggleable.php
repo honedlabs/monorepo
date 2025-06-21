@@ -14,6 +14,13 @@ trait CanBeToggled
     protected $toggleable = false;
 
     /**
+     * Whether the instance is toggled active by default.
+     * 
+     * @var bool
+     */
+    protected $defaultToggled = true;
+
+    /**
      * Set the instance to be toggleable.
      * 
      * @param bool $enable
@@ -27,17 +34,6 @@ trait CanBeToggled
     }
 
     /**
-     * Set the instance to not be toggleable.
-     * 
-     * @param bool $disable
-     * @return $this
-     */
-    public function notToggleable($disable = true)
-    {
-        return $this->toggleable(! $disable);
-    }
-
-    /**
      * Determine if the instance is toggleable.
      * 
      * @return bool
@@ -45,15 +41,5 @@ trait CanBeToggled
     public function isToggleable()
     {
         return $this->toggleable;
-    }
-
-    /**
-     * Determine if the instance is not toggleable.
-     * 
-     * @return bool
-     */
-    public function isNotToggleable()
-    {
-        return ! $this->isToggleable();
     }
 }

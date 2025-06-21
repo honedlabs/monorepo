@@ -43,15 +43,22 @@ class Column extends Primitive
 
     use HasType;
     use IsActive;
-    use IsVisible;
     use Concerns\HasState;
+    use Concerns\CanBeKey;
+    // use Concerns\CanHavePlaceholder;
+    // use Concerns\CanBeSortable;
+    // use Concerns\CanBeSearchable;
+    // use Concerns\CanBeFilterable;
+    // use Concerns\Exportable;
+    // use Concerns\Selectable;
+    // use Concerns\Toggleable;
 
     /**
-     * Whether this column represents the record key.
+     * The identifier to use for evaluation.
      *
-     * @var bool
+     * @var string
      */
-    protected $key = false;
+    protected $evaluationIdentifier = 'column';
 
     /**
      * A callback or fixed value to be used in place of a retrieved value.
@@ -66,27 +73,6 @@ class Column extends Primitive
      * @var bool
      */
     protected $hidden = false;
-
-    /**
-     * The value to display when the column is empty.
-     *
-     * @var mixed
-     */
-    protected $fallback;
-
-    /**
-     * The default fallback value for the columns.
-     *
-     * @var mixed
-     */
-    protected static $useFallback;
-
-    /**
-     * The class of the column header.
-     *
-     * @var string|null
-     */
-    protected $class;
 
     /**
      * The column sort.
@@ -142,109 +128,6 @@ class Column extends Primitive
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->active(true);
-    }
-
-    /**
-     * Set this column to represent the record key.
-     *
-     * @param  bool  $key
-     * @return $this
-     */
-    public function key($key = true)
-    {
-        $this->key = $key;
-
-        return $this;
-    }
-
-    /**
-     * Determine whether this column represents the record key.
-     *
-     * @return bool
-     */
-    public function isKey()
-    {
-        return $this->key;
-    }
-
-    /**
-     * Set the column as hidden.
-     *
-     * @param  bool  $hidden
-     * @return $this
-     */
-    public function hidden($hidden = true)
-    {
-        $this->hidden = $hidden;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the column is hidden.
-     *
-     * @return bool
-     */
-    public function isHidden()
-    {
-        return $this->hidden;
-    }
-
-    /**
-     * Set the fallback value for the column.
-     *
-     * @param  mixed  $fallback
-     * @return $this
-     */
-    public function fallback($fallback)
-    {
-        $this->fallback = $fallback;
-
-        return $this;
-    }
-
-    /**
-     * Get the fallback value for the column.
-     *
-     * @return mixed
-     */
-    public function getFallback()
-    {
-        return $this->fallback ?? static::$useFallback;
-    }
-
-
-    /**
-     * Set the class for the column.
-     *
-     * @param  string  $class
-     * @return $this
-     */
-    public function class($class)
-    {
-        $this->class = $class;
-
-        return $this;
-    }
-
-    /**
-     * Get the class for the column.
-     *
-     * @return string|null
-     */
-    public function getClass()
-    {
-        return $this->class;
     }
 
     /**
@@ -545,6 +428,31 @@ class Column extends Primitive
     }
 
     /**
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->active();
+
+        $this->definition($this);
+    }
+
+    /**
+     * Define the column.
+     * 
+     * @param $this $column
+     * @return $this
+     */
+    public function definition(Column $column): Column
+    {
+        return $column;
+    }
+
+    /**
      * Add a relationship count to the column.
      * 
      * @param string|array<string, \Closure> $relationship
@@ -552,7 +460,6 @@ class Column extends Primitive
      */
     public function count($relationship)
     {
-        
         $this->query(fn (Builder $query) => $query->withCount($relationship));
 
         return $this;
@@ -586,18 +493,6 @@ class Column extends Primitive
     public function max()
     {
 
-    }
-    
-
-
-    /**
-     * Flush the column's global configuration state.
-     * 
-     * @return void
-     */
-    public static function flushState()
-    {
-        static::$useFallback = null;
     }
 
     /**

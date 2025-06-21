@@ -79,6 +79,16 @@ class Table extends Refine implements Handles, UrlRoutable
     // select, toggle?
 
     /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'table';
+
+
+
+
+    /**
      * The unique identifier column for the table.
      *
      * @var string|null
@@ -105,13 +115,6 @@ class Table extends Refine implements Handles, UrlRoutable
      * @var bool|null
      */
     protected $select;
-
-    /**
-     * Whether to do column selection by default.
-     * 
-     * @var bool
-     */
-    protected static $shouldSelect = false;
 
     /**
      * The columns to always be selected.
@@ -581,13 +584,11 @@ class Table extends Refine implements Handles, UrlRoutable
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
-        $builder = $this->getBuilder();
-
         return match ($parameterType) {
             Table::class => [$this],
             EmptyState::class => [$this->getEmptyState()],
             Request::class => [$this->getRequest()],
-            $builder::class, Builder::class, BuilderContract::class => [$builder],
+            $builder::class, Builder::class, BuilderContract::class => [$this->getBuilder()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }

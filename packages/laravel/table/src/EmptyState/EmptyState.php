@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Table;
+namespace Honed\Table\EmptyState;
 
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Primitive;
@@ -11,6 +11,14 @@ use Illuminate\Support\Arr;
 class EmptyState extends Primitive //implements NullAsUndefined
 {
     use HasIcon;
+    use Concerns\AdaptsToRefinements;
+
+    /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'emptyState';
 
     /**
      * The heading of the empty state.
@@ -32,27 +40,6 @@ class EmptyState extends Primitive //implements NullAsUndefined
      * @var array<int, \Honed\Action\Action>
      */
     protected $actions = [];
-
-    /**
-     * The callback to modify the state when refiners are being applied.
-     *
-     * @var \Closure|null
-     */
-    protected $refining;
-
-    /**
-     * The callback to modify the state when filters are being applied.
-     *
-     * @var \Closure|null
-     */
-    protected $filtering;
-
-    /**
-     * The callback to modify the state when searching is being applied.
-     *
-     * @var \Closure|null
-     */
-    protected $searching;
 
     /**
      * Create a new empty state.
@@ -145,75 +132,6 @@ class EmptyState extends Primitive //implements NullAsUndefined
     }
 
     /**
-     * Register a callback to modify the state when refiners are being applied.
-     *
-     * @param  \Closure  $refining
-     * @return $this
-     */
-    public function refining($refining)
-    {
-        $this->refining = $refining;
-
-        return $this;
-    }
-
-    /**
-     * Get the callback to modify the state when refiners are being applied.
-     *
-     * @return \Closure|null
-     */
-    public function getRefiningState()
-    {
-        return $this->refining;
-    }
-
-    /**
-     * Register a callback to modify the state when filters are being applied.
-     *
-     * @param  \Closure  $filtering
-     * @return $this
-     */
-    public function filtering($filtering)
-    {
-        $this->filtering = $filtering;
-
-        return $this;
-    }
-
-    /**
-     * Get the callback to modify the state when filters are being applied.
-     *
-     * @return \Closure|null
-     */
-    public function getFilteringState()
-    {
-        return $this->filtering;
-    }
-
-    /**
-     * Register a callback to modify the state when searching is being applied.
-     *
-     * @param  \Closure  $searching
-     * @return $this
-     */
-    public function searching($searching)
-    {
-        $this->searching = $searching;
-
-        return $this;
-    }
-
-    /**
-     * Get the callback to modify the state when searching is being applied.
-     *
-     * @return \Closure|null
-     */
-    public function getSearchingState()
-    {
-        return $this->searching;
-    }
-
-    /**
      * Get the actions of the empty state as an array.
      *
      * @return array<int, array<string, mixed>>
@@ -224,6 +142,29 @@ class EmptyState extends Primitive //implements NullAsUndefined
             static fn ($action) => $action->toArray(),
             $this->getActions()
         );
+    }
+
+    /**
+     * Provide the instance with any necessary setup.
+     * 
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->definition($this);
+    }
+
+    /**
+     * Define the empty state.
+     * 
+     * @param  $this $state
+     * @return $this
+     */
+    protected function definition(EmptyState $state): EmptyState
+    {
+        return $state;
     }
 
     /**

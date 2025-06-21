@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Table;
+namespace Honed\Table\Concerns;
 
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\IsActive;

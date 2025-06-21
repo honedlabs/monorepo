@@ -4,7 +4,7 @@ namespace Honed\Table\Concerns;
 
 use Honed\Table\Contracts\ShouldSelect;
 
-trait CanBeSelected
+trait Selectable
 {
     /**
      * The columns to select, indicative of whether the instance is selectable.
@@ -16,27 +16,15 @@ trait CanBeSelected
     /**
      * Set the instance to be selectable, optionally with a list of columns to select.
      *
-     * @param  bool|array<int, string>  $enable
+     * @param  bool|array<int, string>  $select
      * @return $this
      */
-    public function selectable($enable = true)
+    public function selectable($select = true)
     {
-        $this->selectable = $enable;
+        $this->selectable = $select;
 
         return $this;
     }
-
-    /**
-     * Set the instance to not be selectable.
-     * 
-     * @param  bool  $disable
-     * @return $this
-     */
-    public function notSelectable($disable = true)
-    {
-        return $this->selectable(! $disable);
-    }
-
 
     /**
      * Determine if the instance is selectable.
@@ -46,16 +34,6 @@ trait CanBeSelected
     public function isSelectable()
     {
         return ((bool) $this->selectable) || $this instanceof ShouldSelect;
-    }
-
-    /**
-     * Determine if the instance is not selectable.
-     *
-     * @return bool
-     */
-    public function isNotSelectable()
-    {
-        return ! $this->isSelectable();
     }
 
     /**
