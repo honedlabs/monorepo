@@ -1,4 +1,4 @@
-> **Caution:** This package is currently under development and not ready for production use. Tag v1.0.0 will indicate a stable release.
+> **Deprecated:** This package is no longer maintained.
 
 <a href="https://honed.dev/typescript">
     <picture>

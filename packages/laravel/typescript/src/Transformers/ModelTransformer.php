@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Typescript\Transformers;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use ReflectionClass;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
 use Spatie\TypeScriptTransformer\Transformers\Transformer;
@@ -37,8 +38,33 @@ class ModelTransformer implements Transformer
     public function transform(ReflectionClass $class, string $name): TransformedType
     {
         
-        $type = 'any';
+        $transformed = 'any';
 
-        return TransformedType::create($class, $name, $type);
+        return TransformedType::create($class, $name, $transformed);
+    }
+
+    public function getProperties(ReflectionClass $class)
+    {
+
+    }
+
+    public function getSingularRelations(ReflectionClass $class)
+    {
+
+    }
+
+    public function getManyRelations(ReflectionClass $class)
+    {
+
+    }
+
+    public function getAttributes(ReflectionClass $class)
+    {
+
+    }
+
+    public function getCasts(ReflectionClass $class)
+    {
+
     }
 }
