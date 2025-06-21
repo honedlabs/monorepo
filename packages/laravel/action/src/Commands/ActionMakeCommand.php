@@ -6,6 +6,7 @@ namespace Honed\Action\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -55,12 +56,7 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
      */
     protected function buildClass($name)
     {
-        /** @var array<string, string> $replace */
-        $replace = [];
-
-        if ($this->option('model')) {
-            $replace = $this->buildModelReplacements($replace);
-        }
+        $replace = $this->buildModelReplacements();
 
         $action = $this->option('action');
 
@@ -76,22 +72,18 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
     /**
      * Build the model replacement values.
      *
-     * @param  array<string, string>  $replace
      * @return array<string, string>
      */
-    protected function buildModelReplacements($replace)
+    protected function buildModelReplacements()
     {
-        /** @var string $model */
+        /** @var string|null $model */
         $model = $this->option('model');
 
-        $modelClass = $this->parseModel($model);
+        $modelClass = $model ? $this->parseModel($model) : Model::class;
 
-        if (! class_exists($modelClass) && confirm("A [{$modelClass}] model does not exist. Do you want to generate it?", default: true)) {
-            $this->call('make:model', ['name' => $modelClass]);
-        }
+        $this->promptForModelCreation($modelClass);
 
         return [
-            ...$replace,
             'DummyFullModelClass' => $modelClass,
             '{{ namespacedModel }}' => $modelClass,
             '{{namespacedModel}}' => $modelClass,
@@ -102,23 +94,6 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
             '{{ modelVariable }}' => lcfirst(class_basename($modelClass)),
             '{{modelVariable}}' => lcfirst(class_basename($modelClass)),
         ];
-    }
-
-    /**
-     * Get the fully-qualified model class name.
-     *
-     * @param  string  $model
-     * @return string
-     *
-     * @throws InvalidArgumentException
-     */
-    protected function parseModel($model)
-    {
-        if (preg_match('([^A-Za-z0-9_/\\\\])', $model)) {
-            throw new InvalidArgumentException('Model name contains invalid characters.');
-        }
-
-        return $this->qualifyModel($model);
     }
 
     /**
@@ -135,13 +110,7 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
             return $this->resolveStubPath('/stubs/honed.action.stub');
         }
 
-        $stub = Str::of($action)
-            ->lower()
-            ->prepend('/stubs/honed.action.')
-            ->append('.stub')
-            ->value();
-
-        return $this->resolveStubPath($stub);
+        return $this->resolveStubPath("/stubs/honed.action.{$action}.stub");
     }
 
     /**
@@ -177,8 +146,8 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
     {
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the action already exists.'],
-            ['model', 'm', InputOption::VALUE_REQUIRED, 'The model that the action is for.'],
             ['action', 'a', InputOption::VALUE_REQUIRED, 'The action to be used.'],
+            ['model', 'm', InputOption::VALUE_REQUIRED, 'The model that the action is for.'],
         ];
     }
 

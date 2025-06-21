@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ use function Laravel\Prompts\error;
 use function Laravel\Prompts\select;
 
 #[AsCommand(name: 'make:actions')]
-class ActionsMakeCommand extends Command implements PromptsForMissingInput
+class ActionsMakeCommand extends GeneratorCommand implements PromptsForMissingInput
 {
     use Concerns\SuggestsModels;
 
@@ -48,34 +49,25 @@ class ActionsMakeCommand extends Command implements PromptsForMissingInput
      */
     public function handle()
     {
-        $model = $this->getModel($this->argument('model'));
+        /** @var string|null $model */
+        $model = $this->argument('model');
 
-        if (! $model) {
-            error('The model does not exist.');
+        if ($model) {
+            $model = $this->parseModel($model);
 
-            return 1;
+            $this->promptForModelCreation($model);
         }
 
-        /** @var string|null */
-        $path = $this->option('path');
-
-        $force = (bool) $this->option('force');
 
         foreach ($this->getActions() as $action => $verb) {
-            $name = Str::of($path ?? '')
-                ->append('/'.$model)
-                ->append('/'.$verb.$model)
-                ->replace('\\', '/')
-                ->replace('//', '/')
-                ->trim('/')
-                ->value();
+            $path = $this->getClassPath($model ?? '', $verb);
 
-            $this->call('make:action', [
-                'name' => $name,
-                '--model' => $this->argument('model'),
+            $this->call('make:action', array_filter([
+                'name' => $path,
+                '--model' => class_basename($model),
                 '--action' => $action,
-                '--force' => $force,
-            ]);
+                '--force' => (bool) $this->option('force'),
+            ]));
         }
 
         return 0;
@@ -89,22 +81,7 @@ class ActionsMakeCommand extends Command implements PromptsForMissingInput
     protected function getArguments()
     {
         return [
-            ['model', InputArgument::REQUIRED, 'The model for the '.\mb_strtolower($this->type)],
-        ];
-    }
-
-    /**
-     * Prompt for missing input arguments using the returned questions.
-     *
-     * @return array<string, mixed>
-     */
-    protected function promptForMissingArgumentsUsing()
-    {
-        return [
-            'model' => fn () => select(
-                'What model should the '.mb_strtolower($this->type).' be for?',
-                $this->possibleModels()
-            ),
+            ['model', InputArgument::OPTIONAL, 'The model for the '.\mb_strtolower($this->type)],
         ];
     }
 
@@ -119,6 +96,37 @@ class ActionsMakeCommand extends Command implements PromptsForMissingInput
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the action already exists.'],
             ['path', 'p', InputOption::VALUE_REQUIRED, 'Add an additional path to the actions directory.'],
         ];
+    }
+
+    /**
+     * Get the stub file for the generator.
+     * 
+     * @return string
+     */
+    protected function getStub()
+    {
+        return '';
+    }
+
+    /**
+     * Get the path for the action.
+     *
+     * @param  string  $model
+     * @param  string  $action
+     * @return string
+     */
+    protected function getClassPath($model, $action)
+    {
+        $name = class_basename($model).$action;
+
+        /** @var string|null $path */
+        $path = $this->option('path');
+
+        if ($path) {
+            return trim($path, ' /').'/'.$name;
+        }
+
+        return $name;
     }
 
     /**

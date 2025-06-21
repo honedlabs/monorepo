@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 
-use function Pest\Laravel\artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Config;
 
@@ -21,7 +20,7 @@ afterEach(function () {
 });
 
 it('makes', function () {
-    artisan('make:action', [
+    $this->artisan('make:action', [
         'name' => 'TestAction',
     ])->assertSuccessful();
 
@@ -29,7 +28,7 @@ it('makes', function () {
 });
 
 it('creates actions', function ($name, $action) {
-    artisan('make:action', [
+    $this->artisan('make:action', [
         'name' => 'TestAction',
         '--action' => $name,
     ])->assertSuccessful();
@@ -49,7 +48,7 @@ it('creates actions', function ($name, $action) {
 it('prompts', function () {
     $this->artisan('make:model', ['name' => 'Product']);
 
-    artisan('make:action')
+    $this->artisan('make:action')
         ->expectsQuestion('What should the action be named?', 'StoreAction')
         ->expectsQuestion('What action should be used? (Optional)', 'store')
         ->expectsQuestion('What model should this action be for? (Optional)', 'Product')
@@ -60,7 +59,7 @@ it('prompts', function () {
 });
 
 it('throws error when invalid action is provided', function () {
-    artisan('make:action', [
+    $this->artisan('make:action', [
         'name' => 'TestAction',
         '--action' => 'invalid',
     ]);
@@ -69,7 +68,7 @@ it('throws error when invalid action is provided', function () {
 it('uses default action', function () {
     Config::set('action.actions', null);
 
-    artisan('make:action', [
+    $this->artisan('make:action', [
         'name' => 'TestAction',
         '--action' => 'store',
     ])->assertSuccessful();
