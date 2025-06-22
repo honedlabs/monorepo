@@ -24,5 +24,9 @@ return [
     |
     */
 
-    'default' => null,
+    'default' => null, // -> move to static
+
+    'implementation' => \Honed\Crumb\TrailManager::class,
+
+    'property' => 'crumbs',
 ];
