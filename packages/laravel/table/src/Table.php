@@ -294,30 +294,6 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
             'actions' => $this->actionsToArray(),
             'meta' => $this->getMeta(),
         ];
-
-        $table = array_merge(parent::toArray(), [
-            'records' => $this->getRecords(),
-            'paginator' => $this->getPaginationData(),
-            'columns' => $this->columnsToArray(),
-            'perPage' => $this->recordsPerPageToArray(),
-            'toggles' => $this->isToggleable(),
-            'actions' => $this->actionsToArray(),
-            'meta' => $this->getMeta(),
-        ]);
-
-        if (Arr::get($this->getPaginationData(), 'empty', false)) {
-            $table = array_merge($table, [
-                'empty' => $this->getEmptyState()->toArray(),
-            ]);
-        }
-
-        if ($this->isExecutable(static::baseClass())) {
-            return array_merge($table, [
-                'id' => $this->getRouteKey(),
-            ]);
-        }
-
-        return $table;
     }
 
     /**
@@ -350,7 +326,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     /**
      * Get the pipes to be used for refining.
      *
-     * @return array<int,class-string<\Honed\Core\Pipe<self>>>
+     * @return array<int,class-string<\Honed\Core\Pipe<mixed>>>
      */
     protected function pipes()
     {

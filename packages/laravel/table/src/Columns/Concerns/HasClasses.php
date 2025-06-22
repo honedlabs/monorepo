@@ -13,7 +13,7 @@ trait HasClasses
     /**
      * The classes to apply to an individual cell.
      *
-     * @var array<int, string|Closure(mixed...):string>
+     * @var array<int, string|\Closure(mixed...):string>
      */
     protected $cellClasses = [];
 
@@ -27,7 +27,7 @@ trait HasClasses
     /**
      * Set the classes to apply to an individual cell.
      *
-     * @param  string|Closure(mixed...):string  $classes
+     * @param  string|\Closure(mixed...):string  $classes
      * @return $this
      */
     public function cellClasses($classes)

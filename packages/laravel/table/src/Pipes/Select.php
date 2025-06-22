@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Honed\Table\Pipes;
 
 use Honed\Core\Pipe;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 
 /**
  * @template TClass of \Honed\Table\Table
@@ -25,6 +27,13 @@ class Select extends Pipe
             return;
         }
 
-        //
+        $selects = array_unique($instance->getSelects(), SORT_STRING);
+
+        $resource = $instance->getBuilder();
+
+        match (true) {
+            $resource instanceof Builder => $resource->select($selects),
+            default => Arr::select($resource, $selects)
+        };
     }
 }

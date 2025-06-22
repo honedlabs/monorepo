@@ -15,7 +15,7 @@ class Views extends Facade
     /**
      * Get the root object behind the facade.
      *
-     * @return NavManager
+     * @return ViewManager
      */
     public static function getFacadeRoot()
     {

@@ -6,13 +6,14 @@ namespace Honed\Table\Actions;
 
 use Closure;
 use Honed\Action\Action;
+use Honed\Action\Operations\Operation;
 use Honed\Table\Contracts\ExportsTable;
 use Illuminate\Support\Facades\App;
 use Maatwebsite\Excel\Facades\Excel;
 
 use function array_merge;
 
-class Export extends Action
+class Export extends Operation
 {
     /**
      * The callback to be used to create the export from the table.
@@ -77,7 +78,10 @@ class Export extends Action
      */
     protected $selected = true;
 
-    public function all() {}
+    public function all()
+    {
+        //
+    }
 
     /**
      * Register the callback to be used to create the export from the table.

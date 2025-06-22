@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
-class DateColumn extends Column
+use Illuminate\Support\Number;
+
+use function is_null;
+use function is_numeric;
+use function number_format;
+
+class NumberColumn extends Column
 {
     /**
      * Provide the instance with any necessary setup.
@@ -15,17 +21,17 @@ class DateColumn extends Column
     {
         parent::setUp();
 
-        $this->date();
+        $this->type(self::NUMERIC);
     }
 
     /**
      * Format the value of the entry.
      *
-     * @param  \Carbon\CarbonInterface|string|int|float|null  $value
-     * @return string|null
+     * @param  mixed  $value
+     * @return mixed
      */
     public function format($value)
     {
-        return $this->formatDate($value);
+        return is_null($value) ? null : $this->formatNumeric($value);
     }
 }

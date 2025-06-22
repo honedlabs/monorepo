@@ -13,6 +13,7 @@ trait InteractsWithDatabase
      */
     public function getConnection()
     {
+        /** @var string|null */
         $connection = config('table.views.connection');
 
         /** @var string */
@@ -26,6 +27,7 @@ trait InteractsWithDatabase
      */
     public function getTableName()
     {
+        /** @var string|null */
         $table = config('table.views.table');
 
         /** @var string */

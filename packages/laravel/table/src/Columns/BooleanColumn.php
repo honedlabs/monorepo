@@ -4,93 +4,28 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
-use Closure;
-
 class BooleanColumn extends Column
 {
     /**
-     * {@inheritdoc}
-     */
-    protected $type = 'boolean';
-
-    /**
-     * The label to display when the value evaluates to true.
+     * Provide the instance with any necessary setup.
      *
-     * @var string|Closure
+     * @return void
      */
-    protected $trueLabel = 'True';
-
-    /**
-     * The label to display when the value evaluates to false.
-     *
-     * @var string|Closure
-     */
-    protected $falseLabel = 'False';
-
-    /**
-     * {@inheritdoc}
-     */
-    public function formatValue($value)
+    protected function setUp()
     {
-        return (bool) $value ? $this->getTrueLabel() : $this->getFalseLabel();
+        parent::setUp();
+
+        $this->type(self::BOOLEAN);
     }
 
     /**
-     * Set the label for the true value.
+     * Format the value of the entry.
      *
-     * @param  string  $true
-     * @return $this
+     * @param  mixed  $value
+     * @return string|null
      */
-    public function trueLabel($true)
+    public function format($value)
     {
-        $this->trueLabel = $true;
-
-        return $this;
-    }
-
-    /**
-     * Get the label for the true value.
-     *
-     * @return string
-     */
-    public function getTrueLabel()
-    {
-        return $this->evaluate($this->trueLabel);
-    }
-
-    /**
-     * Set the label for the false value.
-     *
-     * @param  string  $false
-     * @return $this
-     */
-    public function falseLabel($false)
-    {
-        $this->falseLabel = $false;
-
-        return $this;
-    }
-
-    /**
-     * Get the label for the false value.
-     *
-     * @return string
-     */
-    public function getFalseLabel()
-    {
-        return $this->evaluate($this->falseLabel);
-    }
-
-    /**
-     * @param  string  $true
-     * @param  string  $false
-     * @return $this
-     */
-    public function labels($true, $false)
-    {
-        $this->trueLabel($true);
-        $this->falseLabel($false);
-
-        return $this;
+        return $this->formatBoolean($value);
     }
 }

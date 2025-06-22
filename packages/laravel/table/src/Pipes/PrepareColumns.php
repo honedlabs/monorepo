@@ -48,7 +48,10 @@ class PrepareColumns extends Pipe
      * @param  \Honed\Table\Columns\Column  $column
      * @return void
      */
-    protected function prepareSearch($instance, $column) {}
+    protected function prepareSearch($instance, $column)
+    {
+        //
+    }
 
     /**
      * Prepare the column filter state.
@@ -59,7 +62,11 @@ class PrepareColumns extends Pipe
      */
     protected function prepareFilter($instance, $column)
     {
-        //
+        $filter = $column->getFilter();
+
+        if ($filter) {
+            $instance->filter($filter);
+        }
     }
 
     /**

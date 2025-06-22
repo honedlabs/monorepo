@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
+use Honed\Action\Operations\PageOperation;
 use Honed\Action\PageAction;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Primitive;
@@ -46,7 +47,7 @@ class EmptyState extends Primitive // implements NullAsUndefined
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -146,7 +147,7 @@ class EmptyState extends Primitive // implements NullAsUndefined
      *
      * @return array<string, mixed>
      */
-    public function toArray($named = [], $typed = [])
+    public function toArray()
     {
         return [
             'heading' => $this->getHeading(),
@@ -164,11 +165,11 @@ class EmptyState extends Primitive // implements NullAsUndefined
     protected function operationsToArray()
     {
         return array_map(
-            static fn (PageAction $operation) => $operation->toArray(),
+            static fn (PageOperation $operation) => $operation->toArray(),
             array_values(
                 array_filter(
                     $this->getOperations(),
-                    static fn (PageAction $operation) => $operation->isAllowed()
+                    static fn (PageOperation $operation) => $operation->isAllowed()
                 )
             )
         );

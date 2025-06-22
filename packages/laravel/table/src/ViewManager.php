@@ -49,7 +49,6 @@ class ViewManager
     /**
      * Create a new view resolver.
      *
-     * @param  array<string, (callable(mixed $scope): mixed)>  $featureStateResolvers
      * @return void
      */
     public function __construct(
@@ -72,9 +71,9 @@ class ViewManager
             is_string($scope) => $scope,
             is_numeric($scope) => (string) $scope,
             $scope instanceof Model
-                && $this->useMorphMap => $scope->getMorphClass().'|'.$scope->getKey(),
+                && $this->useMorphMap => $scope->getMorphClass().'|'.(string) $scope->getKey(),
             $scope instanceof Model
-                && ! $this->useMorphMap => $scope::class.'|'.$scope->getKey(),
+                && ! $this->useMorphMap => $scope::class.'|'.(string) $scope->getKey(),
             default => throw new RuntimeException(
                 'Unable to serialize the view scope to a string. You should implement the ViewScopeSerializeable contract.'
             )
@@ -146,9 +145,9 @@ class ViewManager
     }
 
     /**
-     * Retrieve the value for the given feature and scope from storage.
+     * Retrieve the value for the given name and scope from storage.
      *
-     * @param  string  $feature
+     * @param  string  $name
      * @param  mixed  $scope
      * @return object|null
      */
@@ -188,6 +187,7 @@ class ViewManager
                 return ($this->defaultScopeResolver)($driver);
             }
 
+            // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
             return $this->container['auth']->guard()->user();
         };
     }
@@ -200,7 +200,7 @@ class ViewManager
     protected function getDatabaseManager()
     {
         /** @var DatabaseManager */
-        return $this->container['db'];
+        return $this->container['db']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 
     /**
@@ -211,7 +211,7 @@ class ViewManager
     protected function getConfig()
     {
         /** @var Repository */
-        return $this->container['config'];
+        return $this->container['config']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 
     /**
@@ -222,7 +222,7 @@ class ViewManager
     protected function getDispatcher()
     {
         /** @var Dispatcher */
-        return $this->container['events'];
+        return $this->container['events']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 
     /**
