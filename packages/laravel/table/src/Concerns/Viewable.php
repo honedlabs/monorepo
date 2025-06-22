@@ -9,19 +9,19 @@ trait CanHaveViews
     /**
      * The table views to utilise.
      * 
-     * @var bool|array<int, View>
+     * @var bool|array<int, mixed>
      */
     protected $views = false;
 
     /**
      * Set whether the table is viewable, or the specific views you want to use.
      * 
-     * @param  bool|View|array<int, View>  $viewable
+     * @param  bool|array<int, mixed>  $scopes
      * @return $this
      */
-    public function viewable($viewable = true)
+    public function viewable($scopes = true)
     {
-        $this->views = $viewable;
+        $this->views = $scopes;
 
         return $this;
     }
@@ -33,11 +33,21 @@ trait CanHaveViews
      */
     public function isViewable()
     {
-        return $this->views !== false;
+        return (bool) $this->views;
     }
 
+    /**
+     * Get the views for the table.
+     */
     public function getViews()
     {
+        if (! $this->views) {
+            return null;
+        }
         
     }
+
+    ->viewable(Auth::user(), AppSession::organisation())
+
+    // Gets the views it needs to 
 }
