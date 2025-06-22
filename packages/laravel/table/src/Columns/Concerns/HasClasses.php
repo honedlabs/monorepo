@@ -11,11 +11,48 @@ trait HasClasses
     use HasHeadingClasses;
 
     /**
+     * The classes to apply to an individual cell.
+     *
+     * @var array<int, string|Closure(mixed...):string>
+     */
+    protected $cellClasses = [];
+
+    /**
      * The classes to apply to the record (row).
      *
      * @var array<int, string|Closure(mixed...):string>
      */
     protected $recordClasses = [];
+
+    /**
+     * Set the classes to apply to an individual cell.
+     *
+     * @param  string|Closure(mixed...):string  $classes
+     * @return $this
+     */
+    public function cellClasses($classes)
+    {
+        $this->cellClasses[] = $classes;
+
+        return $this;
+    }
+
+    /**
+     * Get the classes to apply to an individual cell.
+     *
+     * @return string|null
+     */
+    public function getCellClasses()
+    {
+        if (empty($this->cellClasses)) {
+            return null;
+        }
+
+        return implode(
+            ' ',
+            array_map($this->evaluate(...), $this->cellClasses)
+        );
+    }
 
     /**
      * Set the classes to apply to the record (row).
@@ -46,5 +83,4 @@ trait HasClasses
             array_map($this->evaluate(...), $this->classes)
         );
     }
-
 }

@@ -145,10 +145,10 @@ trait HasEmptyState
     /**
      * Get the empty state as an array.
      * 
-     * @return array<string, mixed>
+     * @return array<string, mixed>|null
      */
     public function emptyStateToArray()
     {
-        return $this->emptyState?->toArray() ?? [];
+        return $this->emptyState?->toArray();
     }
 }

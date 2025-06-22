@@ -21,6 +21,10 @@ class Select extends Pipe
      */
     public function run($instance)
     {
+        if (! $instance->isSelectable()) {
+            return;
+        }
+
         //
     }
 }

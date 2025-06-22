@@ -21,6 +21,6 @@ class Paginate extends Pipe
      */
     public function run($instance)
     {
-        //
+        
     }
 }

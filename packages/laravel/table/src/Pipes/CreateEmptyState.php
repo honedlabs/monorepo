@@ -21,6 +21,6 @@ class CreateEmptyState extends Pipe
      */
     public function run($instance)
     {
-        //
+        
     }
 }

@@ -25,6 +25,7 @@ use Honed\Refine\Sort;
 use Honed\Table\Columns\Concerns\HasState;
 use Honed\Table\Concerns\IsVisible;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -41,10 +42,8 @@ class Column extends Primitive
     use HasLabel;
     use HasName;
     use HasQualifier;
-
     /** @use \Honed\Core\Concerns\HasQuery<TModel, TBuilder> */
     use HasQuery;
-
     use HasType;
     use IsActive;
     use Concerns\HasState;
@@ -56,6 +55,7 @@ class Column extends Primitive
     use Concerns\Sortable;
     use Concerns\Filterable;
     use Concerns\Exportable;
+    use Concerns\Toggleable;
     use CanBeHidden;
 
     /**
@@ -87,9 +87,7 @@ class Column extends Primitive
     public function getParameter()
     {
         return $this->getAlias()
-            ?? Str::of($this->getName())
-                ->replace('.', '_')
-                ->value();
+            ?? str_replace('.', '-', $this->getName());
     }
 
     /**
@@ -345,10 +343,46 @@ class Column extends Primitive
             'type' => $this->getType(),
             'hidden' => $this->isHidden(),
             'active' => $this->isActive(),
-            'toggles' => $this->isToggleable(),
+            'toggleable' => $this->isToggleable(),
+            'class' => $this->getClasses(),
+            'recordClass' => $this->getRecordClasses(),
             'icon' => $this->getIcon(),
-            'class' => $this->getClass(),
             'sort' => $this->sortToArray(),
         ];
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by name.
+     *
+     * @param  string  $parameterName
+     * @return array<int, mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    {
+        return match ($parameterName) {
+            'model', 'record', 'row' => [$this->getRecord()],
+            'state' => [$this->getState()],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
+        };
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by type.
+     *
+     * @param  class-string  $parameterType
+     * @return array<mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    {
+        $record = $this->getRecord();
+
+        if (! $record instanceof Model) {
+            return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
+        }
+
+        return match ($parameterType) {
+            Model::class, $record::class => [$record],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
+        };
     }
 }

@@ -21,6 +21,18 @@ class Toggle extends Pipe
      */
     public function run($instance)
     {
-        //
+        if (! $instance->isToggleable()) {
+            return;
+        }
+
+        $request = $instance->getRequest();
+
+        // Get the value
+
+        $instance->setHeadings([]);
+
+        if ($instance->shouldPersistToggledColumns()) {
+            // $instance->configureCookie($request, $params);
+        }
     }
 }

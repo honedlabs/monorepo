@@ -11,7 +11,7 @@ use Honed\Core\Pipe;
  *
  * @extends Pipe<TClass>
  */
-class CreateEntries extends Pipe
+class CreateRecords extends Pipe
 {
     /**
      * Run the after refining logic.
@@ -21,6 +21,10 @@ class CreateEntries extends Pipe
      */
     public function run($instance)
     {
-        //
+        $columns = $instance->getColumns();
+
+        $records = $instance->getRecords();
+
+        
     }
 }

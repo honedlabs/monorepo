@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-trait CanBeToggled
+trait Toggleable
 {
     /**
      * Whether the instance supports toggling.
@@ -12,13 +12,6 @@ trait CanBeToggled
      * @var bool
      */
     protected $toggleable = false;
-
-    /**
-     * Whether the instance is toggled active by default.
-     * 
-     * @var bool
-     */
-    protected $defaultToggled = true;
 
     /**
      * Set the instance to be toggleable.
