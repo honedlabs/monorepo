@@ -55,9 +55,10 @@ trait Filterable
         }
 
         return Filter::make($this->getName(), $this->getLabel())
+            ->hidden()
+            ->alias($this->getAlias())
             ->as($this->getFilterableType())
             ->qualify($this->getQualifier())
-            ->alias($this->getAlias())
             ->query($this->filterable instanceof Closure ? $this->filterable : null);
     }
 

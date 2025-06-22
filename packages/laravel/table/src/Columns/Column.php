@@ -19,6 +19,7 @@ use Honed\Core\Primitive;
 use Honed\Infolist\Entries\Concerns\CanBeAggregated;
 use Honed\Infolist\Entries\Concerns\HasClasses;
 use Honed\Infolist\Entries\Concerns\HasPlaceholder;
+use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
 use Honed\Refine\Sort;
 use Honed\Table\Columns\Concerns\HasState;
@@ -50,10 +51,12 @@ class Column extends Primitive
     use Concerns\CanBeKey;
     use CanBeAggregated;
     use HasPlaceholder;
-    use HasClasses;
+    use Concerns\HasClasses;
     use Concerns\Searchable;
     use Concerns\Sortable;
     use Concerns\Filterable;
+    use Concerns\Exportable;
+    use CanBeHidden;
 
     /**
      * The identifier to use for evaluation.
@@ -61,62 +64,6 @@ class Column extends Primitive
      * @var string
      */
     protected $evaluationIdentifier = 'column';
-
-    /**
-     * A callback or fixed value to be used in place of a retrieved value.
-     * 
-     * @var mixed
-     */
-    protected $using;
-
-    /**
-     * Whether this column is hidden.
-     *
-     * @var bool
-     */
-    protected $hidden = false;
-
-    /**
-     * The column sort.
-     *
-     * @var \Honed\Refine\Sort<TModel, TBuilder>|null
-     */
-    protected $sort;
-
-    /**
-     * The database columns to search on.
-     *
-     * @var bool|string|array<int, string>
-     */
-    protected $search = false;
-
-    /**
-     * How to select this column
-     *
-     * @var string|bool|array<int,string>
-     */
-    protected $select = true;
-
-    /**
-     * How this column should be exported.
-     *
-     * @var bool|array<int,string>
-     */
-    protected $export = true;
-
-    /**
-     * The format to export the column in.
-     * 
-     * @var string|null
-     */
-    protected $exportFormat;
-
-    /**
-     * The style to export the column in.
-     * 
-     * @var array<string,mixed>|(\Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)|null
-     */
-    protected $exportStyle;
 
     /**
      * Create a new column instance.
@@ -130,139 +77,6 @@ class Column extends Primitive
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
-    }
-
-    /**
-     * Set how to select this column.
-     *
-     * @param  bool|string|array<int,string>  $select
-     * @return $this
-     */
-    public function select($select = true)
-    {
-        $this->select = $select;
-
-        return $this;
-    }
-
-    /**
-     * Set the column to not be selectable.
-     *
-     * @return $this
-     */
-    public function doNotSelect()
-    {
-        return $this->select(false);
-    }
-
-    /**
-     * Set the column to not be selectable.
-     *
-     * @return $this
-     */
-    public function dontSelect()
-    {
-        return $this->doNotSelect();
-    }
-
-    /**
-     * Get the properties to select.
-     *
-     * @return string|array<int,string>
-     */
-    public function getSelects()
-    {
-        if (\is_bool($this->select)) {
-            return $this->getName();
-        }
-
-        return $this->select;
-    }
-
-    /**
-     * Determine if the column can be selected.
-     *
-     * @return bool
-     */
-    public function selects()
-    {
-        return (bool) $this->select;
-    }
-
-    /**
-     * Set whether, and how, the column should be exported.
-     * 
-     * @param  bool|(\Closure(mixed, TModel):mixed)  $as
-     * @param  string|null  $format
-     * @param  array<string,mixed>|(\Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)|null  $style
-     * @return $this
-     */
-    public function export($as = true, $format = null, $style = null)
-    {
-        $this->export = $as;
-
-        if ($format) {
-            $this->exportFormat($format);
-        }
-
-        if ($style) {
-            $this->exportStyle($style);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Register the callback to be used to export the content of a column.
-     * 
-     * @param  \Closure(mixed, TModel):mixed  $callback
-     * @return $this
-     */
-    public function exportUsing($callback)
-    {
-        $this->export = $callback;
-
-        return $this;
-    }
-
-    /**
-     * Set the column to not be exportable.
-     *
-     * @return $this
-     */
-    public function doNotExport()
-    {
-        return $this->export(false);
-    }
-
-    /**
-     * Set the column to not be exportable.
-     *
-     * @return $this
-     */
-    public function dontExport()
-    {
-        return $this->export(false);
-    }
-
-    /**
-     * Get the exporter for the column.
-     * 
-     * @return bool|\Closure(mixed, TModel):mixed|null
-     */
-    public function getExporter()
-    {
-        return $this->export;
-    }
-
-    /**
-     * Determine if this column is exportable.
-     * 
-     * @return bool
-     */
-    public function exports()
-    {
-        return (bool) $this->export;
     }
 
     /**
@@ -360,7 +174,7 @@ class Column extends Primitive
      * @param $this $column
      * @return $this
      */
-    public function definition(self $column): self
+    protected function definition(self $column): self
     {
         return $column;
     }

@@ -54,6 +54,7 @@ use Honed\Action\Concerns\CanHandleOperations;
 use Honed\Table\Exceptions\KeyNotFoundException;
 use Illuminate\Contracts\Foundation\Application;
 use Honed\Refine\Pipes\BeforeRefining as PipesBeforeRefining;
+use Honed\Table\Pipes\PrepareColumns;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 
 /**
@@ -370,6 +371,7 @@ class Table extends Primitive implements HandlesOperations, RefinesData, NullsAs
     {
         return [
             Toggle::class,
+            PrepareColumns::class,
             BeforeRefining::class,
             Select::class,
             SearchQuery::class,
@@ -379,7 +381,6 @@ class Table extends Primitive implements HandlesOperations, RefinesData, NullsAs
             CreateEmptyState::class,
             PersistData::class,
         ];
-        
     }
 
     /**

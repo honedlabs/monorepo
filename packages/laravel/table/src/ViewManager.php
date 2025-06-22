@@ -237,9 +237,8 @@ class ViewManager
      */
     protected function newQuery()
     {
-        return $this->connection()->table(
-            $this->getTableName()
-        );
+        return $this->connection()
+            ->table($this->getTableName());
     }
 
     /**
@@ -249,8 +248,7 @@ class ViewManager
      */
     protected function connection()
     {
-        return $this->getDatabaseManager()->connection(
-            $this->getConnection()
-        );
+        return $this->getDatabaseManager()
+            ->connection($this->getConnection());
     }
 }

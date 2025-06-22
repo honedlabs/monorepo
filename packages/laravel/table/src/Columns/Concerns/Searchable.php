@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns\Concerns;
 
-/**
- * @phpstan-require-extends \Honed\Table\Columns\Column
- */
 trait Searchable
 {
     /**
@@ -37,5 +34,23 @@ trait Searchable
     public function isSearchable()
     {
         return (bool) $this->searchable;
+    }
+
+    /**
+     * Get the columns to search on.
+     * 
+     * @return array<int, string>
+     */
+    public function getSearch()
+    {
+        if (! $this->searchable) {
+            return [];
+        }
+
+        return match (true) {
+            is_array($this->searchable) => $this->searchable,
+            is_string($this) => [$this->searchable],
+            default => [$this->getName()]
+        };
     }
 }

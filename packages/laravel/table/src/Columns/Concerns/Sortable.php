@@ -53,8 +53,9 @@ trait Sortable
         $name = is_string($this->sortable) ? $this->sortable : $this->getName();
 
         return Sort::make($name, $this->getLabel())
-            ->qualifies($this->getQualifier())
+            ->hidden()
             ->alias($this->getParameter())
+            ->qualify($this->getQualifier())
             ->query($this->sortable instanceof Closure ? $this->sortable : null);
     }
 }
