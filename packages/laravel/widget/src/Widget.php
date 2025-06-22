@@ -20,7 +20,6 @@ abstract class Widget
      */
     protected static $guessWidgetNameUsing;
 
-
     /**
      * Retrieve the value of the widget.
      * 

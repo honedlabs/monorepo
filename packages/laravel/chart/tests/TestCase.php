@@ -17,8 +17,8 @@ use Orchestra\Testbench\Concerns\WithWorkbench;
 
 class TestCase extends Orchestra
 {
-    use WithWorkbench;
     use RefreshDatabase;
+    use WithWorkbench;
 
     /**
      * Setup the test environment.
@@ -27,5 +27,17 @@ class TestCase extends Orchestra
     {
         parent::setUp();
         $this->withoutExceptionHandling();
+    }
+
+    /**
+     * Define database migrations.
+     *
+     * @return void
+     */
+    protected function defineDatabaseMigrations()
+    {
+        $this->loadMigrationsFrom(
+            workbench_path('database/migrations')
+        );
     }
 }

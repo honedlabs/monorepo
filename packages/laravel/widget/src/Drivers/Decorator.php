@@ -7,6 +7,7 @@ use Honed\Widget\Contracts\WidgetScopeable;
 use Honed\Widget\Events\WidgetDeleted;
 use Honed\Widget\Events\WidgetUpdated;
 use Honed\Widget\ScopedWidgetRetrieval;
+use Honed\Widget\Widget;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Traits\Macroable;
 
@@ -140,17 +141,6 @@ class Decorator implements Driver
     // 
 
     /**
-     * Retrieve the widget's class.
-     * 
-     * @param string $name
-     * @return \Honed\Widget\Contracts\Widget
-     */
-    public function instance($name)
-    {
-        $this->container->make($name);
-    }
-
-    /**
      * Retrieve the widget's name.
      * 
      * @param string $widget
@@ -169,7 +159,31 @@ class Decorator implements Driver
      */
     protected function resolveWidget($widget)
     {
-        // return $this->
+        if (class_exists($widget)
+            && is_subclass_of($widget, Widget::class)
+            && $name = $this->container->make($widget)->getName()
+        ) {
+            return $name;
+        }
+
+        return $widget;
+    }
+
+    /**
+     * Retrieve the widget's class.
+     * 
+     * @param string $name
+     * @return \Honed\Widget\Contracts\Widget
+     */
+    public function instance($name)
+    {
+        $widget = $this->implementationClass($name);
+
+        if (is_string($widget) && class_exists($widget)) {
+            return $this->container->make($widget);
+        }
+
+        return fn () => $widget;
     }
 
     /**
