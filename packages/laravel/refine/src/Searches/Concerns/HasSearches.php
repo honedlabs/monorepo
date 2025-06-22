@@ -82,17 +82,6 @@ trait HasSearches
     }
 
     /**
-     * Set whether the searches should not be applied.
-     *
-     * @param  bool  $disable
-     * @return $this
-     */
-    public function notSearchable($disable = true)
-    {
-        return $this->searchable(! $disable);
-    }
-
-    /**
      * Determine if the searches should be applied.
      *
      * @return bool
@@ -100,16 +89,6 @@ trait HasSearches
     public function isSearchable()
     {
         return $this->searchable;
-    }
-
-    /**
-     * Determine if the searches should not be applied.
-     *
-     * @return bool
-     */
-    public function isNotSearchable()
-    {
-        return ! $this->isSearchable();
     }
 
     /**
@@ -126,17 +105,6 @@ trait HasSearches
     }
 
     /**
-     * Set whether the search columns can not be toggled.
-     *
-     * @param  bool  $disable
-     * @return $this
-     */
-    public function notMatchable($disable = true)
-    {
-        return $this->matchable(! $disable);
-    }
-
-    /**
      * Determine if matching is enabled
      *
      * @return bool
@@ -144,16 +112,6 @@ trait HasSearches
     public function isMatchable()
     {
         return $this->match && $this->isNotScout();
-    }
-
-    /**
-     * Determine if matching is not enabled.
-     *
-     * @return bool
-     */
-    public function isNotMatchable()
-    {
-        return ! $this->isMatchable();
     }
 
     /**
@@ -180,16 +138,6 @@ trait HasSearches
     }
 
     /**
-     * Determine if Laravel Scout is not being used for searching.
-     *
-     * @return bool
-     */
-    public function isNotScout()
-    {
-        return ! $this->isScout();
-    }
-
-    /**
      * Merge a set of searches with the existing searches.
      *
      * @param  Search|array<int, Search>  $searches
@@ -212,7 +160,7 @@ trait HasSearches
      */
     public function getSearches()
     {
-        if ($this->isNotSearchable()) {
+        if (! $this->isSearchable()) {
             return [];
         }
 
@@ -274,13 +222,11 @@ trait HasSearches
      * Set the search term.
      *
      * @param  string|null  $term
-     * @return $this
+     * @return void
      */
-    public function term($term)
+    public function setTerm($term)
     {
         $this->term = $term;
-
-        return $this;
     }
 
     /**

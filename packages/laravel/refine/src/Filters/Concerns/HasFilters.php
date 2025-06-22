@@ -42,17 +42,6 @@ trait HasFilters
     }
 
     /**
-     * Set whether the filters should not be applied.
-     *
-     * @param  bool  $disable
-     * @return $this
-     */
-    public function notFilterable($disable = true)
-    {
-        return $this->filterable(! $disable);
-    }
-
-    /**
      * Determine if the filters should be applied.
      *
      * @return bool
@@ -60,16 +49,6 @@ trait HasFilters
     public function isFilterable()
     {
         return $this->filterable;
-    }
-
-    /**
-     * Determine if the filters should not be applied.
-     *
-     * @return bool
-     */
-    public function isNotFilterable()
-    {
-        return ! $this->isFilterable();
     }
 
     /**
@@ -95,7 +74,7 @@ trait HasFilters
      */
     public function getFilters()
     {
-        if ($this->isNotFilterable()) {
+        if (! $this->isFilterable()) {
             return [];
         }
 

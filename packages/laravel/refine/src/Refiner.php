@@ -28,11 +28,11 @@ abstract class Refiner extends Primitive
 {
     use Allowable;
     use CanBeHidden;
-    use HasAlias;
+    use Concerns\CanHaveAlias;
     use HasLabel;
     use HasMeta;
     use HasName;
-    use HasQualifier;
+    use Concerns\HasQualifier;
 
     /** @use HasQuery<TModel, TBuilder> */
     use HasQuery;
