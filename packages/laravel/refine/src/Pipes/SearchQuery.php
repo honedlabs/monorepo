@@ -93,7 +93,6 @@ class SearchQuery extends Pipe
     {
         $model = $instance->getModel();
 
-        // Don't search if there is no term.
         if (! $term = $instance->getTerm()) {
             return;
         }
