@@ -69,7 +69,7 @@ trait HasAuthor
      * 
      * @return class-string<\Illuminate\Database\Eloquent\Model>
      */
-    public function getAuthorModel()
+    protected function getAuthorModel()
     {
         /** @var class-string<\Illuminate\Database\Eloquent\Model> */
         return Config::get('auth.providers.users.model', User::class);
@@ -80,7 +80,7 @@ trait HasAuthor
      * 
      * @return \Illuminate\Database\Eloquent\Model|int|string|null
      */
-    public function getTouchedBy()
+    protected function getTouchedBy()
     {
         return Auth::id();
     }
@@ -90,7 +90,7 @@ trait HasAuthor
      * 
      * @return int|string|null
      */
-    public function getTouchedByKey()
+    protected function getTouchedByKey()
     {
         $touchedBy = $this->getTouchedBy();
 
@@ -131,8 +131,8 @@ trait HasAuthor
      */
     public function getCreatedByColumn()
     {
-        if (defined('static::CREATED_BY')) {
-            return static::CREATED_BY;
+        if (defined('self::CREATED_BY')) {
+            return self::CREATED_BY;
         }
 
         return 'created_by';
@@ -145,8 +145,8 @@ trait HasAuthor
      */
     public function getUpdatedByColumn()
     {
-        if (defined('static::UPDATED_BY')) {
-            return static::UPDATED_BY;
+        if (defined('self::UPDATED_BY')) {
+            return self::UPDATED_BY;
         }
         
         return 'updated_by';

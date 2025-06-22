@@ -49,11 +49,15 @@ class HonedServiceProvider extends ServiceProvider
      */
     protected function registerMacros()
     {
-        Blueprint::macro('authors', function (string $createdBy = 'created_by', string $updatedBy = 'updated_by') {
+        Blueprint::macro('authors', function (
+            string $createdBy = 'created_by',
+            string $updatedBy = 'updated_by',
+            string $table = 'users',
+        ) {
             /** @var \Illuminate\Database\Schema\Blueprint $this */
 
-            $this->foreignId($createdBy)->nullable()->constrained('users');
-            $this->foreignId($updatedBy)->nullable()->constrained('users');
+            $this->foreignId($createdBy)->nullable()->constrained($table);
+            $this->foreignId($updatedBy)->nullable()->constrained($table);
         });
     }
 
