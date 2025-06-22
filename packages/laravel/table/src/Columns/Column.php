@@ -16,6 +16,9 @@ use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\IsActive;
 use Honed\Core\Concerns\Transformable;
 use Honed\Core\Primitive;
+use Honed\Infolist\Entries\Concerns\CanBeAggregated;
+use Honed\Infolist\Entries\Concerns\HasClasses;
+use Honed\Infolist\Entries\Concerns\HasPlaceholder;
 use Honed\Refine\Concerns\HasQualifier;
 use Honed\Refine\Sort;
 use Honed\Table\Columns\Concerns\HasState;
@@ -45,13 +48,12 @@ class Column extends Primitive
     use IsActive;
     use Concerns\HasState;
     use Concerns\CanBeKey;
-    // use Concerns\CanHavePlaceholder;
-    // use Concerns\CanBeSortable;
-    // use Concerns\CanBeSearchable;
-    // use Concerns\CanBeFilterable;
-    // use Concerns\Exportable;
-    // use Concerns\Selectable;
-    // use Concerns\Toggleable;
+    use CanBeAggregated;
+    use HasPlaceholder;
+    use HasClasses;
+    use Concerns\Searchable;
+    use Concerns\Sortable;
+    use Concerns\Filterable;
 
     /**
      * The identifier to use for evaluation.
@@ -128,95 +130,6 @@ class Column extends Primitive
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
-    }
-
-    /**
-     * Set the column as sortable.
-     *
-     * @param  \Honed\Refine\Sort<TModel, TBuilder>|string|bool  $sort
-     * @return $this
-     */
-    public function sort($sort = true)
-    {
-        $this->sort = match (true) {
-            ! $sort => null,
-            $sort instanceof Sort => $sort,
-            default => $this->newSort($sort),
-        };
-
-        return $this;
-    }
-
-    /**
-     * Create a new sort instance using the column properties.
-     *
-     * @param  string|bool  $sort
-     * @return \Honed\Refine\Sort<TModel, TBuilder>
-     */
-    protected function newSort($sort)
-    {
-        $sort = \is_string($sort) ? $sort : $this->getName();
-
-        return Sort::make($sort, $this->getLabel())
-            ->qualifies($this->getQualifier())
-            ->alias($this->getParameter());
-    }
-
-    /**
-     * Get the sort.
-     *
-     * @return \Honed\Refine\Sort<TModel, TBuilder>|null
-     */
-    public function getSort()
-    {
-        return $this->sort;
-    }
-
-    /**
-     * Determine if the column is sortable.
-     *
-     * @return bool
-     */
-    public function sorts()
-    {
-        return (bool) $this->sort;
-    }
-
-    /**
-     * Set the column as searchable.
-     *
-     * @param  bool|string|array<int, string>  $search
-     * @return $this
-     */
-    public function search($search = true)
-    {
-        $this->search = $search;
-
-        return $this;
-    }
-
-    /**
-     * Get the search columns.
-     *
-     * @return bool|string|array<int, string>
-     */
-    public function getSearch()
-    {
-        if (! $this->search) {
-            return false;
-        }
-
-        return $this->search;
-    }
-
-    /**
-     * Determine if the column is searchable.
-     *
-     * @return bool
-     */
-    public function searches()
-    {
-        return (bool) $this->search;
     }
 
     /**

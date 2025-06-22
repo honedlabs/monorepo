@@ -4,79 +4,78 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
+use Honed\Refine\Refine;
+use Honed\Action\Handler;
+use Honed\Core\Primitive;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Honed\Table\Pipes\Select;
+use Honed\Table\Pipes\Toggle;
+use Honed\Table\Columns\Column;
+use Honed\Core\Concerns\HasMeta;
+use Honed\Refine\Pipes\SortQuery;
+use Illuminate\Pipeline\Pipeline;
+use Honed\Action\Contracts\Handles;
+use Honed\Refine\Pipes\FilterQuery;
+use Honed\Refine\Pipes\PersistData;
+use Honed\Refine\Pipes\SearchQuery;
+use Honed\Table\Pipelines\Paginate;
+use Illuminate\Container\Container;
+use Illuminate\Support\Facades\App;
+use Honed\Core\Concerns\HasPipeline;
+use Honed\Table\Concerns\HasColumns;
 use Honed\Action\Concerns\HasActions;
 use Honed\Action\Concerns\HasEncoder;
+use Honed\Refine\Pipes\AfterRefining;
 use Honed\Action\Concerns\HasEndpoint;
-use Honed\Action\Contracts\Handles;
-use Honed\Action\Handler;
-use Honed\Core\Concerns\HasMeta;
-use Honed\Refine\Pipelines\AfterRefining;
-use Honed\Refine\Pipelines\BeforeRefining;
-use Honed\Refine\Refine;
-use Honed\Table\Columns\Column;
-use Honed\Table\Concerns\HasColumns;
-use Honed\Table\Concerns\HasPagination;
+use Honed\Refine\Pipes\BeforeRefining;
 use Honed\Table\Concerns\IsToggleable;
-use Honed\Table\Contracts\ShouldSelect;
-use Honed\Table\Exceptions\KeyNotFoundException;
-use Honed\Table\Pipelines\CleanupTable;
-use Honed\Table\Pipelines\CreateEmptyState;
-use Honed\Table\Pipelines\Paginate;
-use Honed\Table\Pipelines\QueryColumns;
-use Honed\Table\Pipelines\RefineFilters;
-use Honed\Table\Pipelines\RefineSearches;
 use Honed\Table\Pipelines\RefineSorts;
+use Honed\Action\Handlers\BatchHandler;
+use Honed\Refine\Concerns\CanBeRefined;
+use Honed\Refine\Contracts\RefinesData;
+use Honed\Table\Concerns\HasEmptyState;
+use Honed\Table\Concerns\HasPagination;
+use Honed\Table\Contracts\ShouldSelect;
+use Honed\Table\Pipelines\CleanupTable;
+use Honed\Table\Pipelines\QueryColumns;
+use Honed\Table\Pipes\CreateEmptyState;
+use Honed\Table\Pipelines\RefineFilters;
 use Honed\Table\Pipelines\SelectColumns;
 use Honed\Table\Pipelines\ToggleColumns;
-use Honed\Table\Pipelines\TransformRecords;
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\UrlRoutable;
+use Honed\Table\Pipelines\RefineSearches;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Pipeline\Pipeline;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Str;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Table\Pipelines\TransformRecords;
+use Honed\Action\Contracts\HandlesOperations;
+use Illuminate\Contracts\Routing\UrlRoutable;
+use Honed\Action\Concerns\CanHandleOperations;
+use Honed\Table\Exceptions\KeyNotFoundException;
+use Illuminate\Contracts\Foundation\Application;
+use Honed\Refine\Pipes\BeforeRefining as PipesBeforeRefining;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
- * @extends Refine<TModel, TBuilder>
+ * @extends Primitive<string, mixed>
  */
-class Table extends Refine implements Handles, UrlRoutable
+class Table extends Primitive implements HandlesOperations, RefinesData, NullsAsUndefined
 {
-    /** @use HasActions<TModel, TBuilder> */
-    use HasActions;
-
-    /** @use HasColumns<TModel, TBuilder> */
+    use CanBeRefined;
+    use CanHandleOperations;
     use HasColumns;
-
-    use HasEncoder;
-    use HasEndpoint;
     use HasMeta;
+    use HasEmptyState;
 
-    /** @use HasPagination<TModel, TBuilder> */
-    use HasPagination {
-        getPageKey as protected getBasePageKey;
-        getRecordKey as protected getBaseRecordKey;
-    }
-
-    /** @use IsToggleable<TModel, TBuilder> */
-    use IsToggleable {
-        getColumnKey as protected getBaseColumnKey;
-    }
-
-    // use CanBeRefined;
-    // use InteractsWithRecords;
-    // use CanBePaginated;
-    // use HasColumns;
-    // use HasActions;
-    // use HasMeta;
-    // use HasEmptyState;
-    // select, toggle?
+    /**
+     * The unique identifier key for table records.
+     *
+     * @var string|null
+     */
+    protected $key;
 
     /**
      * The identifier to use for evaluation.
@@ -84,44 +83,6 @@ class Table extends Refine implements Handles, UrlRoutable
      * @var string
      */
     protected $evaluationIdentifier = 'table';
-
-
-
-
-    /**
-     * The unique identifier column for the table.
-     *
-     * @var string|null
-     */
-    protected $key;
-
-    /**
-     * The table records.
-     *
-     * @var array<int,mixed>
-     */
-    protected $records = [];
-
-    /**
-     * The pagination data of the table.
-     *
-     * @var array<string,mixed>
-     */
-    protected $paginationData = [];
-
-    /**
-     * Whether to do column selection.
-     *
-     * @var bool|null
-     */
-    protected $select;
-
-    /**
-     * The columns to always be selected.
-     *
-     * @var array<int,string>
-     */
-    protected $selects = [];
 
     /**
      * The default namespace where tables reside.
@@ -133,9 +94,23 @@ class Table extends Refine implements Handles, UrlRoutable
     /**
      * How to resolve the table for the given model name.
      *
-     * @var (\Closure(class-string):class-string<\Honed\Table\Table>)|null
+     * @var (\Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<\Honed\Table\Table>)|null
      */
     protected static $tableNameResolver;
+
+    /**
+     * Create a new table instance.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function __construct(Request $request)
+    {
+        parent::__construct();
+
+        $this->request($request);
+
+        $this->definition($this);
+    }
 
     /**
      * Create a new table instance.
@@ -150,55 +125,9 @@ class Table extends Refine implements Handles, UrlRoutable
     }
 
     /**
-     * Build the table. Alias for `refine`.
-     *
-     * @return $this
-     */
-    public function build()
-    {
-        return $this->refine();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function baseClass()
-    {
-        return Table::class;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRouteKeyName()
-    {
-        return 'table';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle($request)
-    {
-        if ($this->isntActionable()) {
-            abort(404);
-        }
-
-        try {
-            return Handler::make(
-                $this->getResource(),
-                $this->getActions(),
-                $this->getKey()
-            )->handle($request);
-        } catch (\RuntimeException $e) {
-            abort(404);
-        }
-    }
-
-    /**
      * Set the record key to use.
      *
-     * @param  string  $key
+     * @param  string|null  $key
      * @return $this
      */
     public function key($key)
@@ -234,126 +163,6 @@ class Table extends Refine implements Handles, UrlRoutable
     }
 
     /**
-     * Get the records from the table.
-     *
-     * @return array<int,mixed>
-     */
-    public function getRecords()
-    {
-        return $this->records;
-    }
-
-    /**
-     * Set the pagination data for the table.
-     *
-     * @param  array<string,mixed>  $paginationData
-     * @return void
-     */
-    public function setPaginationData($paginationData)
-    {
-        $this->paginationData = $paginationData;
-    }
-
-    /**
-     * Get the pagination data from the table.
-     *
-     * @return array<string,mixed>
-     */
-    public function getPaginationData()
-    {
-        return $this->paginationData;
-    }
-
-    /**
-     * Set whether to do column selection.
-     *
-     * @param  bool  $select
-     * @return $this
-     */
-    public function select($select = true)
-    {
-        $this->select = $select;
-
-        return $this;
-    }
-
-    /**
-     * Determine whether to do column selection.
-     *
-     * @return bool
-     */
-    public function isSelectable()
-    {
-        if (isset($this->select)) {
-            return $this->select;
-        }
-
-        if ($this instanceof ShouldSelect) {
-            return true;
-        }
-
-        return false; // TODO
-    }
-
-
-    /**
-     * Set the columns to always have selected.
-     *
-     * @param  string|iterable<int,string>  $selects
-     * @return $this
-     */
-    public function selects(...$selects)
-    {
-        $this->select();
-
-        $selects = Arr::flatten($selects);
-
-        $this->selects = \array_merge($this->selects, $selects);
-
-        return $this;
-    }
-
-    /**
-     * Get the columns to always have selected.
-     *
-     * @return array<int,string>
-     */
-    public function getSelects()
-    {
-        return $this->selects;
-    }
-
-    /**
-     * Get the query parameter for the page number.
-     *
-     * @return string
-     */
-    public function getPageKey()
-    {
-        return $this->formatScope($this->getBasePageKey());
-    }
-
-    /**
-     * Get the query parameter for the number of records to show per page.
-     *
-     * @return string
-     */
-    public function getRecordKey()
-    {
-        return $this->formatScope($this->getBaseRecordKey());
-    }
-
-    /**
-     * Get the query parameter for which columns to display.
-     *
-     * @return string
-     */
-    public function getColumnKey()
-    {
-        return $this->formatScope($this->getBaseColumnKey());
-    }
-
-    /**
      * Get a new table instance for the given model name.
      *
      * @template TClass of \Illuminate\Database\Eloquent\Model
@@ -372,7 +181,7 @@ class Table extends Refine implements Handles, UrlRoutable
     /**
      * Get the table name for the given model name.
      *
-     * @param  class-string  $className
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $className
      * @return class-string<\Honed\Table\Table>
      */
     public static function resolveTableName($className)
@@ -392,6 +201,28 @@ class Table extends Refine implements Handles, UrlRoutable
     }
 
     /**
+     * Specify the default namespace that contains the application's model tables.
+     *
+     * @param  string  $namespace
+     * @return void
+     */
+    public static function useNamespace($namespace)
+    {
+        static::$namespace = $namespace;
+    }
+
+    /**
+     * Specify the callback that should be invoked to guess the name of a model table.
+     *
+     * @param  \Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<\Honed\Table\Table>  $callback
+     * @return void
+     */
+    public static function guessTableNamesUsing($callback)
+    {
+        static::$tableNameResolver = $callback;
+    }
+
+    /**
      * Get the application namespace for the application.
      *
      * @return string
@@ -408,58 +239,47 @@ class Table extends Refine implements Handles, UrlRoutable
     }
 
     /**
-     * Specify the default namespace that contains the application's model tables.
-     *
-     * @param  string  $namespace
-     * @return void
-     */
-    public static function useNamespace($namespace)
-    {
-        static::$namespace = $namespace;
-    }
-
-    /**
-     * Specify the callback that should be invoked to guess the name of a model table.
-     *
-     * @param  \Closure(class-string):class-string<\Honed\Table\Table>  $callback
-     * @return void
-     */
-    public static function guessTableNamesUsing($callback)
-    {
-        static::$tableNameResolver = $callback;
-    }
-
-    /**
      * Flush the table class global configuration state.
      *
      * @return void
      */
     public static function flushState()
     {
-        static::$tableNameResolver = null;
         static::$namespace = 'App\\Tables\\';
+        static::$tableNameResolver = null;
     }
 
     /**
-     * {@inheritdoc}
+     * Get the parent class for the instance.
+     *
+     * @return class-string<Table>
      */
-    public function configToArray()
+    public static function getParentClass()
     {
-        $config = \array_merge(parent::configToArray(), [
-            'key' => $this->getKey(),
-            'record' => $this->getRecordKey(),
-            'column' => $this->getColumnKey(),
-            'page' => $this->getPageKey(),
-        ]);
-
-        if ($this->isExecutable(static::baseClass())) {
-            return \array_merge($config, [
-                'endpoint' => $this->getEndpoint(),
-            ]);
-        }
-
-        return $config;
+        return self::class;
     }
+
+    /**
+     * Get the route key for the instance.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'table';
+    }
+
+    /**
+     * Get the handler for the instance.
+     *
+     * @return class-string<\Honed\Action\Handlers\Handler<self>>
+     */
+    public function getHandler() // @phpstan-ignore-line
+    {
+        /** @var class-string<Handlers\Handler<self>> */
+        return config('action.handler', BatchHandler::class);
+    }
+
 
     /**
      * Get the actions for the table as an array.
@@ -480,7 +300,7 @@ class Table extends Refine implements Handles, UrlRoutable
      */
     public function toArray()
     {
-        $this->refine();
+        $this->build();
 
         return [
             ...$this->refineToArray(),
@@ -519,43 +339,11 @@ class Table extends Refine implements Handles, UrlRoutable
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function pipeline()
-    {
-        // $this->actBefore();
-        // $this->toggleColumns();
-        // $this->search();
-        // $this->filter();
-        // $this->sort();
-        // $this->selectColumns();
-        // $this->callbackColumns();
-        // $this->actAfter();
-        // $this->paginate();
-        // $this->transform();
-        // $this->createEmptyState();
-        // $this->cleanup();
-
-        App::make(Pipeline::class)
-            ->send($this)
-            ->through([
-                BeforeRefining::class,
-                ToggleColumns::class,
-                RefineSearches::class,
-                RefineFilters::class,
-                RefineSorts::class,
-                SelectColumns::class,
-                QueryColumns::class,
-                AfterRefining::class,
-                Paginate::class,
-                TransformRecords::class,
-                CreateEmptyState::class,
-                CleanupTable::class,
-            ])->thenReturn();
-    }
-
-    /**
-     * {@inheritdoc}
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array<int,mixed>  $parameters
+     * @return mixed
      */
     public function __call($method, $parameters)
     {
@@ -563,12 +351,47 @@ class Table extends Refine implements Handles, UrlRoutable
     }
 
     /**
-     * {@inheritdoc}
+     * Define the table.
+     *
+     * @param  $this  $table
+     * @return $this
+     */
+    protected function definition(self $table): self
+    {
+        return $table;
+    }
+
+    /**
+     * Get the pipes to be used for refining.
+     *
+     * @return array<int,class-string<\Honed\Core\Pipe<self>>>
+     */
+    protected function pipes()
+    {
+        return [
+            Toggle::class,
+            BeforeRefining::class,
+            Select::class,
+            SearchQuery::class,
+            FilterQuery::class,
+            SortQuery::class,
+            AfterRefining::class,
+            CreateEmptyState::class,
+            PersistData::class,
+        ];
+        
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by name.
+     *
+     * @param  string  $parameterName
+     * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return match ($parameterName) {
-            'table' => [$this],
+            'columns' => [$this->getColumns()],
             'emptyState' => [$this->getEmptyState()],
             'request' => [$this->getRequest()],
             'builder', 'query', 'q' => [$this->getBuilder()],
@@ -577,14 +400,16 @@ class Table extends Refine implements Handles, UrlRoutable
     }
 
     /**
-     * {@inheritdoc}
+     * Provide a selection of default dependencies for evaluation by type.
+     *
+     * @param  string  $parameterType
+     * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
         $builder = $this->getBuilder();
 
         return match ($parameterType) {
-            Table::class => [$this],
             EmptyState::class => [$this->getEmptyState()],
             Request::class => [$this->getRequest()],
             $builder::class, Builder::class, BuilderContract::class => [$builder],

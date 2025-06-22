@@ -9,17 +9,17 @@ trait CanBeKey
      *
      * @var bool
      */
-    protected $isKey = false;
+    protected $key = false;
 
     /**
      * Set the column to be a key.
      *
-     * @param  bool  $isKey
+     * @param  bool  $key
      * @return $this
      */
-    public function key($isKey = true)
+    public function key($key = true)
     {
-        $this->isKey = $isKey;
+        $this->key = $key;
 
         return $this;
     }
@@ -31,6 +31,6 @@ trait CanBeKey
      */
     public function isKey()
     {
-        return $this->isKey;
+        return $this->key;
     }
 }

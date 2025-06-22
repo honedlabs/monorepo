@@ -32,6 +32,16 @@ trait HasEmptyState
     }
 
     /**
+     * Get the empty state of the table.
+     * 
+     * @return \Honed\Table\EmptyState|null
+     */
+    public function getEmptyState()
+    {
+        return $this->emptyState;
+    }
+
+    /**
      * Create a new empty state instance.
      * 
      * @return \Honed\Table\EmptyState
