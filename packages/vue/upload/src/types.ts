@@ -19,20 +19,7 @@ export interface AsFile {
 	extension?: string;
 }
 
-export interface UploadFile extends AsFile {
-	id: number;
-	progress?: number;
-	status?: UploadStatus;
-	source: File | string;
-	remove: () => void;
-	upload?: () => void;
-}
-
-export interface Options<T = any> {
-	upload?: Upload | ExtendedUpload;
-	waited?: boolean;
-	meta?: Record<string, any>;
-	files?: AsFile;
+export interface Callbacks<T = any> {
 	onStart?: (file: File) => void;
 	onError?: (error: Record<string, any>) => void;
 	onSuccess?: (data: T) => void;
@@ -40,6 +27,23 @@ export interface Options<T = any> {
 	onUploadError?: (error: Error) => void;
 	onUploadSuccess?: (data: T) => void;
 	onFinish?: () => void;
+}
+
+
+export interface UploadFile extends AsFile {
+	id: number;
+	progress?: number;
+	status?: UploadStatus;
+	source: File | string;
+	remove: () => void;
+	upload?: (options?: Callbacks) => void;
+}
+
+export interface Options<T = any> extends Callbacks<T> {
+	upload?: Upload | ExtendedUpload;
+	waited?: boolean;
+	meta?: Record<string, any>;
+	files?: AsFile;
 }
 
 export interface FormAttributes {
