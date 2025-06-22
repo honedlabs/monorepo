@@ -23,7 +23,7 @@ trait HasPagination
     /**
      * The paginator to use.
      *
-     * @var 'length-aware'|'cursor'|'simple'|'collection'|null
+     * @var string|null
      */
     protected $paginator;
 
@@ -44,9 +44,9 @@ trait HasPagination
     /**
      * The query parameter for the page number.
      *
-     * @var string|null
+     * @var string
      */
-    protected $pageKey;
+    protected $pageKey = 'page';
 
     /**
      * The query parameter for the number of records to show per page.
@@ -72,18 +72,16 @@ trait HasPagination
     /**
      * Set the paginator type.
      *
-     * @param  bool|'length-aware'|'cursor'|'simple'|'collection'|string  $paginator
+     * @param  bool|string  $paginator
      * @return $this
      */
-    public function paginator($paginator = self::LENGTH_AWARE)
+    public function paginate($paginator = self::LENGTH_AWARE)
     {
-        match ($paginator) {
+        $this->paginator = match ($paginator) {
             true => $paginator = self::LENGTH_AWARE,
             false => $paginator = self::COLLECTION,
             default => $paginator,
         };
-
-        $this->paginator = $paginator;
 
         return $this;
     }
@@ -93,9 +91,9 @@ trait HasPagination
      *
      * @return $this
      */
-    public function lengthAware()
+    public function lengthAwarePaginate()
     {
-        return $this->paginator(self::LENGTH_AWARE);
+        return $this->paginate(self::LENGTH_AWARE);
     }
 
     /**
@@ -103,9 +101,9 @@ trait HasPagination
      *
      * @return $this
      */
-    public function simple()
+    public function simplePaginate()
     {
-        return $this->paginator(self::SIMPLE);
+        return $this->paginate(self::SIMPLE);
     }
 
     /**
@@ -113,9 +111,9 @@ trait HasPagination
      *
      * @return $this
      */
-    public function cursor()
+    public function cursorPaginate()
     {
-        return $this->paginator(self::CURSOR);
+        return $this->paginate(self::CURSOR);
     }
 
     /**
@@ -123,15 +121,15 @@ trait HasPagination
      *
      * @return $this
      */
-    public function collection()
+    public function collectionPaginate()
     {
-        return $this->paginator(self::COLLECTION);
+        return $this->paginate(self::COLLECTION);
     }
 
     /**
      * Get the paginator type.
      *
-     * @return 'cursor'|'simple'|'length-aware'|'collection'|string
+     * @return string
      */
     public function getPaginator()
     {

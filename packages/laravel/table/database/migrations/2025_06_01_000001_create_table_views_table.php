@@ -15,7 +15,7 @@ return new class extends ViewMigration
             $table->id();
             $table->string('name');
             $table->string('scope');
-            $table->text('view');
+            $table->text('data');
             $table->timestamps();
 
             $table->unique(['name', 'scope']);
@@ -27,6 +27,6 @@ return new class extends ViewMigration
      */
     public function down(): void
     {
-        Schema::dropIfExists('features');
+        Schema::dropIfExists($this->getTableName());
     }
 };

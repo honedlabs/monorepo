@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Table\EmptyState\Concerns;
+namespace Honed\Table\Concerns;
 
 trait AdaptsToRefinements
 {

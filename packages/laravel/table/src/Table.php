@@ -491,9 +491,6 @@ class Table extends Refine implements Handles, UrlRoutable
             'toggleable' => $this->isToggleable(),
             'actions' => $this->actionsToArray(),
             'meta' => $this->getMeta(),
-            'layout' => $this->getLayout(),
-            // empty
-            //config
         ];
 
         $table = \array_merge(parent::toArray(), [

@@ -35,4 +35,9 @@ trait CanHaveViews
     {
         return $this->views !== false;
     }
+
+    public function getViews()
+    {
+        
+    }
 }

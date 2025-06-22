@@ -17,6 +17,7 @@ abstract class ViewMigration extends Migration
     {
         $connection = config('table.views.connection');
 
+        /** @var string */
         return ($connection === null || $connection === 'null') ? config('database.default') : $connection;
     }
 
@@ -29,6 +30,7 @@ abstract class ViewMigration extends Migration
     {
         $table = config('table.views.table');
 
+        /** @var string */
         return ($table === null || $table === 'null') ? 'views' : $table;
     }
 }

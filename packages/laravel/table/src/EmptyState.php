@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\Table\EmptyState;
+namespace Honed\Table;
 
+use Honed\Action\PageAction;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Primitive;
 use Illuminate\Support\Arr;
@@ -35,11 +36,11 @@ class EmptyState extends Primitive //implements NullAsUndefined
     protected $description = 'There are no results to display.';
 
     /**
-     * The label of the empty state action.
+     * The operations of the empty state.
      *
-     * @var array<int, \Honed\Action\Action>
+     * @var array<int, \Honed\Action\Operations\PageOperation>
      */
-    protected $actions = [];
+    protected $operations = [];
 
     /**
      * Create a new empty state.
@@ -62,7 +63,7 @@ class EmptyState extends Primitive //implements NullAsUndefined
     /**
      * Set the heading of the empty state.
      *
-     * @param  string|null  $heading
+     * @param  string  $heading
      * @return $this
      */
     public function heading($heading)
@@ -85,7 +86,7 @@ class EmptyState extends Primitive //implements NullAsUndefined
     /**
      * Set the description of the empty state.
      *
-     * @param  string|null  $description
+     * @param  string  $description
      * @return $this
      */
     public function description($description)
@@ -106,41 +107,46 @@ class EmptyState extends Primitive //implements NullAsUndefined
     }
 
     /**
-     * Sets the actions of the empty state. This will replace any existing actions.
+     * Sets the operations of the empty state. This will replace any existing actions.
      *
-     * @param  \Honed\Action\PageAction|iterable<int, \Honed\Action\PageAction>  $actions
+     * @param  \Honed\Action\PageAction|array<int, \Honed\Action\PageAction>  $actions
      * @return $this
      */
-    public function actions(...$actions)
+    public function operations($operations)
     {
         /** @var array<int, \Honed\Action\PageAction> */
-        $actions = Arr::flatten($actions);
+        $operations = is_array($operations) ? $operations : func_get_args();
 
-        $this->actions = $actions;
+        $this->operations = [...$this->operations, ...$operations];
 
         return $this;
     }
 
     /**
-     * Get the actions of the empty state.
+     * Get the operations of the empty state.
      *
-     * @return array<int, \Honed\Action\PageAction>
+     * @return array<int, \Honed\Action\Operations\PageOperation>
      */
-    public function getActions()
+    public function getOperations()
     {
-        return $this->actions;
+        return $this->operations;
     }
 
     /**
-     * Get the actions of the empty state as an array.
+     * Get the operations of the empty state as an array.
      *
      * @return array<int, array<string, mixed>>
      */
-    protected function actionsToArray()
+    protected function operationsToArray()
     {
         return array_map(
-            static fn ($action) => $action->toArray(),
-            $this->getActions()
+            static fn (PageAction $operation) => $operation->toArray(),
+            array_values(
+                array_filter(
+                    $this->getOperations(),
+                    static fn (PageAction $operation) => $operation->isAllowed()
+                )
+            )
         );
     }
 
@@ -159,16 +165,18 @@ class EmptyState extends Primitive //implements NullAsUndefined
     /**
      * Define the empty state.
      * 
-     * @param  $this $state
+     * @param  $this $emptyState
      * @return $this
      */
-    protected function definition(EmptyState $state): EmptyState
+    protected function definition(self $emptyState): self
     {
-        return $state;
+        return $emptyState;
     }
 
     /**
-     * {@inheritdoc}
+     * Get the instance as an array.
+     * 
+     * @return array<string, mixed>
      */
     public function toArray($named = [], $typed = [])
     {
@@ -176,7 +184,7 @@ class EmptyState extends Primitive //implements NullAsUndefined
             'heading' => $this->getHeading(),
             'description' => $this->getDescription(),
             'icon' => $this->getIcon(),
-            'actions' => $this->actionsToArray(),
+            'operations' => $this->operationsToArray(),
         ];
     }
 }

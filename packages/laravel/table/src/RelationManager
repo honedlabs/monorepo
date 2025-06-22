@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * I loop over columns. Create the sorts, filters, searches. 
+ * 
+ * I need to loop over and toggle the active columns.
+ * 
+ * When selecting 'relation.name'. If the name of the column has a dot, then it's a relationship.
+ * -> add a ->query(fn (Builder $query) => $query->with('relation')) but it needs to check if one has been set.
+ */

@@ -447,7 +447,7 @@ class Column extends Primitive
      * @param $this $column
      * @return $this
      */
-    public function definition(Column $column): Column
+    public function definition(self $column): self
     {
         return $column;
     }
@@ -511,18 +511,6 @@ class Column extends Primitive
     }
 
     /**
-     * Add a minimum aggregate to the column state.
-     * 
-     * @param string|array<string, \Closure>|null $relationship
-     * @param string|null $column
-     * @return $this
-     */
-    public function min($relationship = null, $column = null)
-    {
-        return $this->addAggregateRelationship($relationship, $column, 'min');
-    }
-
-    /**
      * Add a maximum aggregate to the column state.
      * 
      * @param string|array<string, \Closure>|null $relationship
@@ -532,6 +520,18 @@ class Column extends Primitive
     public function max($relationship = null, $column = null)
     {
         return $this->addAggregateRelationship($relationship, $column, 'max');
+    }
+
+    /**
+     * Add a minimum aggregate to the column state.
+     * 
+     * @param string|array<string, \Closure>|null $relationship
+     * @param string|null $column
+     * @return $this
+     */
+    public function min($relationship = null, $column = null)
+    {
+        return $this->addAggregateRelationship($relationship, $column, 'min');
     }
 
     /**
@@ -606,7 +606,9 @@ class Column extends Primitive
     }
 
     /**
-     * {@inheritdoc}
+     * Get the instance as an array.
+     * 
+     * @return array<string,mixed>
      */
     public function toArray()
     {

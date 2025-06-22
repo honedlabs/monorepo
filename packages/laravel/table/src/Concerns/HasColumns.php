@@ -28,19 +28,12 @@ trait HasColumns
     protected $cachedColumns = [];
 
     /**
-     * Whether the columns should be retrievable.
-     *
-     * @var bool
-     */
-    protected $withoutColumns = false;
-
-    /**
      * Merge a set of columns with the existing columns.
      *
      * @param  iterable<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  ...$columns
      * @return $this
      */
-    public function withColumns(...$columns)
+    public function columns(...$columns)
     {
         $columns = Arr::flatten($columns);
 
@@ -50,29 +43,15 @@ trait HasColumns
     }
 
     /**
-     * Define the columns for the instance.
-     *
-     * @return array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>
-     */
-    public function columns()
-    {
-        return [];
-    }
-
-    /**
      * Retrieve the columns.
      *
      * @return array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>
      */
     public function getColumns()
     {
-        if ($this->isWithoutColumns()) {
-            return [];
-        }
-
-        return once(fn () => \array_values(
-            \array_filter(
-                \array_merge($this->defineColumns(), $this->columns),
+        return once(fn () => array_values(
+            array_filter(
+                $this->columns,
                 static fn (Column $column) => $column->isAllowed()
             )
         ));
