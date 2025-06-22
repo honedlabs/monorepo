@@ -111,7 +111,7 @@ trait HasSearches
      */
     public function isMatchable()
     {
-        return $this->match && $this->isNotScout();
+        return $this->match && ! $this->isScout();
     }
 
     /**
@@ -279,7 +279,7 @@ trait HasSearches
      */
     public function searchesToArray()
     {
-        if ($this->isNotMatchable()) {
+        if (! $this->isMatchable()) {
             return [];
         }
 

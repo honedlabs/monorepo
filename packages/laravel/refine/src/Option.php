@@ -10,7 +10,6 @@ use Honed\Core\Concerns\IsActive;
 use Honed\Core\Primitive;
 
 use function in_array;
-use function is_array;
 
 class Option extends Primitive
 {

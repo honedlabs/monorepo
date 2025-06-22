@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Pipes;
 
-use Honed\Core\Pipe;
 use Honed\Core\Interpret;
+use Honed\Core\Pipe;
 
 /**
  * @template TClass of \Honed\Refine\Contracts\RefinesData
@@ -94,7 +94,7 @@ class SortQuery extends Pipe
 
         return match (true) {
             (bool) $parameter => [$parameter, $direction],
-            $instance->shouldPersistSort() 
+            $instance->shouldPersistSort()
                 && ! $request->has($key) => [null, null],
             default => [null, null]
         };

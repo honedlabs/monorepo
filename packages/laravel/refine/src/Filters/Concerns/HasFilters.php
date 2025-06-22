@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Refine\Filters\Concerns;
 
 use Honed\Refine\Filters\Filter;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 use function array_filter;
@@ -97,22 +96,6 @@ trait HasFilters
             $this->getFilters(),
             static fn (Filter $filter) => $filter->isActive()
         );
-    }
-
-    /**
-     * Get the filter value from the request.
-     *
-     * @param  Request  $request
-     * @param  Filter  $filter
-     * @return mixed
-     */
-    public function getFilterValue($request, $filter)
-    {
-        $key = $this->formatScope($filter->getParameter());
-
-        $delimiter = $this->getDelimiter();
-
-        return $filter->interpret($request, $key, $delimiter);
     }
 
     /**

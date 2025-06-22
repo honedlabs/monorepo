@@ -6,7 +6,6 @@ namespace Honed\Refine;
 
 use Closure;
 use Honed\Core\Concerns\Allowable;
-use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
@@ -32,7 +31,7 @@ abstract class Refiner extends Primitive
     use HasLabel;
     use HasMeta;
     use HasName;
-    use Concerns\HasQualifier;
+    use HasQualifier;
 
     /** @use HasQuery<TModel, TBuilder> */
     use HasQuery;

@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Contracts;
 
-use Honed\Core\Concerns\HasRequest;
-
-interface FiltersData 
+interface FiltersData
 {
     /**
      * Retrieve the filters.
      *
-     * @return array<int,Filter>
+     * @return array<int,\Honed\Refine\Filters\Filter>
      */
     public function getFilters();
 

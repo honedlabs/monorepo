@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Sorts\Concerns;
 
-use Honed\Core\Interpret;
 use Honed\Refine\Sorts\Sort;
 use Illuminate\Support\Arr;
 
@@ -81,7 +80,7 @@ trait HasSorts
      */
     public function getSorts()
     {
-        if ($this->isNotSortable()) {
+        if (! $this->isSortable()) {
             return [];
         }
 

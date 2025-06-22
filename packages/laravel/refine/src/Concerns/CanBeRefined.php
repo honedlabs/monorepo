@@ -5,21 +5,20 @@ declare(strict_types=1);
 namespace Honed\Refine\Concerns;
 
 use Closure;
-use Honed\Core\Concerns\HasScope;
-use Honed\Refine\Pipes\SortQuery;
+use Honed\Core\Concerns\HasPipeline;
 use Honed\Core\Concerns\HasRequest;
+use Honed\Core\Concerns\HasScope;
+use Honed\Refine\Filters\Concerns\HasFilters;
+use Honed\Refine\Pipes\AfterRefining;
+use Honed\Refine\Pipes\BeforeRefining;
 use Honed\Refine\Pipes\FilterQuery;
 use Honed\Refine\Pipes\PersistData;
 use Honed\Refine\Pipes\SearchQuery;
-use Honed\Core\Concerns\HasPipeline;
-use Honed\Refine\Stores\CookieStore;
-use Honed\Refine\Pipes\AfterRefining;
-use Honed\Refine\Stores\SessionStore;
-use Honed\Refine\Pipes\BeforeRefining;
-use Illuminate\Support\Facades\Pipeline;
-use Honed\Refine\Sorts\Concerns\HasSorts;
-use Honed\Refine\Filters\Concerns\HasFilters;
+use Honed\Refine\Pipes\SortQuery;
 use Honed\Refine\Searches\Concerns\HasSearches;
+use Honed\Refine\Sorts\Concerns\HasSorts;
+use Honed\Refine\Stores\CookieStore;
+use Honed\Refine\Stores\SessionStore;
 
 /**
  * @phpstan-require-implements \Honed\Refine\Contracts\RefinesData
@@ -29,12 +28,12 @@ trait CanBeRefined
     use CanBePersisted;
     use HasDelimiter;
     use HasFilters;
+    use HasPipeline;
     use HasRequest;
     use HasResource;
     use HasScope;
     use HasSearches;
     use HasSorts;
-    use HasPipeline;
 
     /**
      * The callback to be processed before the refiners.
@@ -299,7 +298,7 @@ trait CanBeRefined
     /**
      * Get the pipes to be used for refining.
      *
-     * @return array<int,class-string<\Honed\Core\Pipe<$this>>>
+     * @return array<int,class-string<\Honed\Core\Pipe<\Honed\Refine\Contracts\RefinesData>>>
      */
     protected function pipes()
     {
