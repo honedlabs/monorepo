@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
+use Closure;
 use Honed\Core\Interpret;
 use Honed\Table\Columns\Column;
 use Honed\Table\Table;
+
+use function array_filter;
+use function array_values;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -17,9 +21,9 @@ class ToggleColumns
     /**
      * Toggle the columns that are displayed.
      *
-     * @param  \Honed\Table\Table<TModel, TBuilder>  $table
-     * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
-     * @return \Honed\Table\Table<TModel, TBuilder>
+     * @param  Table<TModel, TBuilder>  $table
+     * @param  Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
+     * @return Table<TModel, TBuilder>
      */
     public function __invoke($table, $next)
     {
@@ -51,15 +55,15 @@ class ToggleColumns
     /**
      * Cache the columns to be displayed.
      *
-     * @param  \Honed\Table\Table<TModel, TBuilder>  $table
+     * @param  Table<TModel, TBuilder>  $table
      * @param  array<int,string>|null  $params
      * @return void
      */
     public function cacheColumns($table, $params = null)
     {
         $table->cacheColumns(
-            \array_values(
-                \array_filter(
+            array_values(
+                array_filter(
                     $table->getColumns(),
                     static fn (Column $column) => $column->visible($params)
                 )

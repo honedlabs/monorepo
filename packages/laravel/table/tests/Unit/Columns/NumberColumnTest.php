@@ -41,4 +41,3 @@ it('applies', function () {
         ->decimals(2)->toBe($this->column)
         ->apply(1.23456789)->toBe('1.23');
 });
-

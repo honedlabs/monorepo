@@ -17,4 +17,3 @@ it('has attribute', function () {
     // expect(Product::class)
     //     ->toHaveAttribute(Select::class);
 });
-

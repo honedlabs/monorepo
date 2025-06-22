@@ -11,15 +11,15 @@ trait Sortable
 {
     /**
      * The sortable state of the column.
-     * 
-     * @var bool|string|\Closure
+     *
+     * @var bool|string|Closure
      */
     protected $sortable = false;
 
     /**
      * Set the sortable state of the column.
-     * 
-     * @param  bool|string|\Closure  $sortable
+     *
+     * @param  bool|string|Closure  $sortable
      * @return $this
      */
     public function sortable($sortable = true)
@@ -31,7 +31,7 @@ trait Sortable
 
     /**
      * Determine if the column is sortable.
-     * 
+     *
      * @return bool
      */
     public function isSortable()
@@ -41,7 +41,7 @@ trait Sortable
 
     /**
      * Get the sortable state of the column.
-     * 
+     *
      * @return \Honed\Refine\Sort|null
      */
     public function getSort()

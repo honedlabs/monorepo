@@ -2,15 +2,8 @@
 
 declare(strict_types=1);
 
-use Carbon\Carbon;
 use Honed\Refine\Sort;
 use Honed\Table\Columns\Column;
-use Honed\Table\Columns\KeyColumn;
-use Honed\Table\Columns\DateColumn;
-use Honed\Table\Columns\TextColumn;
-use Honed\Table\Columns\HiddenColumn;
-use Honed\Table\Columns\NumberColumn;
-use Honed\Table\Columns\BooleanColumn;
 
 beforeEach(function () {
     $this->param = 'name';
@@ -61,10 +54,10 @@ it('has sort', function () {
         ->sorts()->toBe($this->test)
         ->isSortable()->toBeTrue()
         ->getSort()->scoped(fn ($sort) => $sort
-            ->toBeInstanceOf(Sort::class)
-            ->getName()->toBe($this->test->getName())
-            ->getLabel()->toBe($this->test->getLabel())
-            ->getParameter()->toBe($this->test->getParameter())
+        ->toBeInstanceOf(Sort::class)
+        ->getName()->toBe($this->test->getName())
+        ->getLabel()->toBe($this->test->getLabel())
+        ->getParameter()->toBe($this->test->getParameter())
         )->sorts(false)->toBe($this->test)
         ->isSortable()->toBeFalse()
         ->getSort()->toBeNull();
@@ -75,10 +68,10 @@ it('has sort on different column', function () {
         ->sorts('description')->toBe($this->test)
         ->isSortable()->toBeTrue()
         ->getSort()->scoped(fn ($sort) => $sort
-            ->toBeInstanceOf(Sort::class)
-            ->getName()->toBe('description')
-            ->getLabel()->toBe($this->test->getLabel())
-            ->getParameter()->toBe($this->test->getParameter())
+        ->toBeInstanceOf(Sort::class)
+        ->getName()->toBe('description')
+        ->getLabel()->toBe($this->test->getLabel())
+        ->getParameter()->toBe($this->test->getParameter())
         );
 });
 
@@ -89,10 +82,10 @@ it('has sort instance', function () {
         ->sorts(Sort::make('description'))->toBe($this->test)
         ->isSortable()->toBeTrue()
         ->getSort()->scoped(fn ($sort) => $sort
-            ->toBeInstanceOf(Sort::class)
-            ->getName()->toBe('description')
-            ->getLabel()->toBe(ucfirst('description'))
-            ->getParameter()->toBe('description')
+        ->toBeInstanceOf(Sort::class)
+        ->getName()->toBe('description')
+        ->getLabel()->toBe(ucfirst('description'))
+        ->getParameter()->toBe('description')
         );
 });
 
@@ -132,7 +125,7 @@ it('applies', function () {
 it('has a query', function () {
     expect($this->test)
         ->query(fn ($query) => $query->where('name', 'value'))->toBe($this->test)
-        ->getQuery()->toBeInstanceOf(\Closure::class);
+        ->getQuery()->toBeInstanceOf(Closure::class);
 });
 
 it('has array representation', function () {

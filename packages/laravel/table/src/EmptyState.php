@@ -7,12 +7,11 @@ namespace Honed\Table;
 use Honed\Action\PageAction;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Primitive;
-use Illuminate\Support\Arr;
 
-class EmptyState extends Primitive //implements NullAsUndefined
+class EmptyState extends Primitive // implements NullAsUndefined
 {
-    use HasIcon;
     use Concerns\AdaptsToRefinements;
+    use HasIcon;
 
     /**
      * The identifier to use for evaluation.
@@ -43,6 +42,18 @@ class EmptyState extends Primitive //implements NullAsUndefined
     protected $operations = [];
 
     /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->definition($this);
+    }
+
+    /**
      * Create a new empty state.
      *
      * @param  string|null  $heading
@@ -52,11 +63,9 @@ class EmptyState extends Primitive //implements NullAsUndefined
     public static function make($heading = null, $description = null)
     {
         return resolve(static::class)
-            ->when($heading, fn ($emptyState, $heading) => 
-                $emptyState->heading($heading)
+            ->when($heading, fn ($emptyState, $heading) => $emptyState->heading($heading)
             )
-            ->when($description, fn ($emptyState, $description) => 
-                $emptyState->description($description)
+            ->when($description, fn ($emptyState, $description) => $emptyState->description($description)
             );
     }
 
@@ -109,12 +118,12 @@ class EmptyState extends Primitive //implements NullAsUndefined
     /**
      * Sets the operations of the empty state. This will replace any existing actions.
      *
-     * @param  \Honed\Action\PageAction|array<int, \Honed\Action\PageAction>  $actions
+     * @param  PageAction|array<int, PageAction>  $actions
      * @return $this
      */
     public function operations($operations)
     {
-        /** @var array<int, \Honed\Action\PageAction> */
+        /** @var array<int, PageAction> */
         $operations = is_array($operations) ? $operations : func_get_args();
 
         $this->operations = [...$this->operations, ...$operations];
@@ -130,6 +139,21 @@ class EmptyState extends Primitive //implements NullAsUndefined
     public function getOperations()
     {
         return $this->operations;
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray($named = [], $typed = [])
+    {
+        return [
+            'heading' => $this->getHeading(),
+            'description' => $this->getDescription(),
+            'icon' => $this->getIcon(),
+            'operations' => $this->operationsToArray(),
+        ];
     }
 
     /**
@@ -151,40 +175,13 @@ class EmptyState extends Primitive //implements NullAsUndefined
     }
 
     /**
-     * Provide the instance with any necessary setup.
-     * 
-     * @return void
-     */
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->definition($this);
-    }
-
-    /**
      * Define the empty state.
-     * 
-     * @param  $this $emptyState
+     *
+     * @param  $this  $emptyState
      * @return $this
      */
     protected function definition(self $emptyState): self
     {
         return $emptyState;
-    }
-
-    /**
-     * Get the instance as an array.
-     * 
-     * @return array<string, mixed>
-     */
-    public function toArray($named = [], $typed = [])
-    {
-        return [
-            'heading' => $this->getHeading(),
-            'description' => $this->getDescription(),
-            'icon' => $this->getIcon(),
-            'operations' => $this->operationsToArray(),
-        ];
     }
 }

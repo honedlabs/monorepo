@@ -15,15 +15,15 @@ trait Filterable
 {
     /**
      * The filterable state of the column.
-     * 
-     * @var bool|\Closure
+     *
+     * @var bool|Closure
      */
     protected $filterable = false;
 
     /**
      * Set the filterable state of the column.
-     * 
-     * @param  bool|\Closure  $filterable
+     *
+     * @param  bool|Closure  $filterable
      * @return $this
      */
     public function filterable($filterable = true)
@@ -35,7 +35,7 @@ trait Filterable
 
     /**
      * Determine if the column is filterable.
-     * 
+     *
      * @return bool
      */
     public function isFilterable()
@@ -45,8 +45,8 @@ trait Filterable
 
     /**
      * Get the filterable state of the column.
-     * 
-     * @return \Honed\Refine\Filters\Filter|null
+     *
+     * @return Filter|null
      */
     public function getFilter()
     {
@@ -64,7 +64,7 @@ trait Filterable
 
     /**
      * Get the filter interpreter type.
-     * 
+     *
      * @return 'string'|'array'|'boolean'|'int'|'date'|'datetime'|'time'|null
      */
     protected function getFilterableType()
@@ -80,5 +80,4 @@ trait Filterable
             default => null,
         };
     }
-    
 }

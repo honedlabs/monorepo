@@ -26,7 +26,7 @@ class InvalidPaginatorException extends InvalidArgumentException
      * @param  string  $paginator
      * @return never
      *
-     * @throws \Honed\Table\Exceptions\InvalidPaginatorException
+     * @throws InvalidPaginatorException
      */
     public static function throw($paginator)
     {

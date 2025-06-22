@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
+use Closure;
 use Honed\Action\InlineAction;
 use Honed\Table\Columns\Column;
 use Honed\Table\Table;
 use Illuminate\Support\Arr;
+
+use function array_filter;
+use function array_map;
+use function array_merge;
+use function array_values;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -18,9 +24,9 @@ class TransformRecords
     /**
      * Transform the records.
      *
-     * @param  \Honed\Table\Table<TModel, TBuilder>  $table
-     * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
-     * @return \Honed\Table\Table<TModel, TBuilder>
+     * @param  Table<TModel, TBuilder>  $table
+     * @param  Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
+     * @return Table<TModel, TBuilder>
      */
     public function __invoke($table, $next)
     {
@@ -28,7 +34,7 @@ class TransformRecords
         $records = $table->getRecords();
 
         $table->setRecords(
-            \array_map(
+            array_map(
                 static fn ($record) => static::createRecord(
                     $record,
                     $table->getCachedColumns(),
@@ -46,8 +52,8 @@ class TransformRecords
      * Create a record for the table.
      *
      * @param  TModel  $record
-     * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $columns
-     * @param  array<int,\Honed\Action\InlineAction>  $actions
+     * @param  array<int,Column<TModel, TBuilder>>  $columns
+     * @param  array<int,InlineAction>  $actions
      * @param  bool  $serialize
      * @return array<string,mixed>
      */
@@ -55,10 +61,10 @@ class TransformRecords
     {
         [$named, $typed] = Table::getModelParameters($record);
 
-        $actions = \array_map(
+        $actions = array_map(
             static fn (InlineAction $action) => $action->resolveToArray($named, $typed),
-            \array_values(
-                \array_filter(
+            array_values(
+                array_filter(
                     $actions,
                     static fn (InlineAction $action) => $action->isAllowed($named, $typed)
                 )
@@ -72,6 +78,6 @@ class TransformRecords
 
         $entry = $serialize ? $record->toArray() : [];
 
-        return \array_merge($entry, $row, ['actions' => $actions]);
+        return array_merge($entry, $row, ['actions' => $actions]);
     }
 }

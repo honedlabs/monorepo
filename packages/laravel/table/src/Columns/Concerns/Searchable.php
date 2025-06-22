@@ -8,14 +8,14 @@ trait Searchable
 {
     /**
      * The searchable state of the column.
-     * 
+     *
      * @var bool|string|array<int,string>
      */
     protected $searchable = false;
 
     /**
      * Set the searchable state of the column.
-     * 
+     *
      * @param  bool|string|array<int,string>  $searches
      * @return $this
      */
@@ -28,7 +28,7 @@ trait Searchable
 
     /**
      * Determine if the column is searchable.
-     * 
+     *
      * @return bool
      */
     public function isSearchable()
@@ -38,7 +38,7 @@ trait Searchable
 
     /**
      * Get the columns to search on.
-     * 
+     *
      * @return array<int, string>
      */
     public function getSearch()

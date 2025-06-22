@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use function in_array;
+use function is_null;
+
 trait IsVisible
 {
     /**
@@ -103,10 +106,10 @@ trait IsVisible
             return true;
         }
 
-        if (\is_null($params)) {
+        if (is_null($params)) {
             return ! $this->isSometimes();
         }
 
-        return \in_array($this->getParameter(), $params);
+        return in_array($this->getParameter(), $params);
     }
 }

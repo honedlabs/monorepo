@@ -7,13 +7,17 @@ namespace Honed\Table\Columns;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 
+use function implode;
+use function is_array;
+use function is_null;
+
 class ArrayColumn extends Column
 {
     /**
      * {@inheritdoc}
      */
     protected $type = 'array';
-    
+
     /**
      * The property to use for the values.
      *
@@ -37,7 +41,7 @@ class ArrayColumn extends Column
             $value = $value->toArray();
         }
 
-        if (\is_null($value) || ! \is_array($value)) {
+        if (is_null($value) || ! is_array($value)) {
             return $this->getFallback();
         }
 
@@ -46,7 +50,7 @@ class ArrayColumn extends Column
         }
 
         if ($glue = $this->getGlue()) {
-            return \implode($glue, $value);
+            return implode($glue, $value);
         }
 
         return $value;

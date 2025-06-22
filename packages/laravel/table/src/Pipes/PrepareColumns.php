@@ -16,7 +16,7 @@ class PrepareColumns extends Pipe
 {
     /**
      * The methods to prepare.
-     * 
+     *
      * @var array<int, string>
      */
     protected $methods = [
@@ -25,7 +25,7 @@ class PrepareColumns extends Pipe
         'sort',
         'query',
     ];
-    
+
     /**
      * Run the after refining logic.
      *
@@ -43,19 +43,16 @@ class PrepareColumns extends Pipe
 
     /**
      * Prepare the column search state.
-     * 
+     *
      * @param  TClass  $instance
      * @param  \Honed\Table\Columns\Column  $column
      * @return void
      */
-    protected function prepareSearch($instance, $column)
-    {
-        
-    }
+    protected function prepareSearch($instance, $column) {}
 
     /**
      * Prepare the column filter state.
-     * 
+     *
      * @param  TClass  $instance
      * @param  \Honed\Table\Columns\Column  $column
      * @return void
@@ -67,7 +64,7 @@ class PrepareColumns extends Pipe
 
     /**
      * Prepare the column sort state.
-     * 
+     *
      * @param  TClass  $instance
      * @param  \Honed\Table\Columns\Column  $column
      * @return void
@@ -79,7 +76,7 @@ class PrepareColumns extends Pipe
 
     /**
      * Prepare the column query state.
-     * 
+     *
      * @param  TClass  $instance
      * @param  \Honed\Table\Columns\Column  $column
      * @return void

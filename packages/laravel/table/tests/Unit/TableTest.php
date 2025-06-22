@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Table;
 use Honed\Table\Columns\KeyColumn;
 use Honed\Table\EmptyState;
 use Honed\Table\Exceptions\KeyNotFoundException;
+use Honed\Table\Table;
 use Honed\Table\Tests\Stubs\Product;
 use Honed\Table\Tests\Stubs\ProductTable;
 
@@ -48,7 +48,7 @@ it('has records', function () {
     $this->table->setRecords([
         [
             'id' => 1,
-        ]
+        ],
     ]);
 
     expect($this->table)
@@ -72,13 +72,13 @@ it('has empty state', function () {
         ->getEmptyState()->toBeInstanceOf(EmptyState::class)
         ->emptyState('string')->toBe($this->table)
         ->getEmptyState()->scoped(fn ($state) => $state
-            ->getMessage()->toBe('string')
+        ->getMessage()->toBe('string')
         )->emptyState(fn ($state) => $state->message('closure'))->toBe($this->table)
         ->getEmptyState()->scoped(fn ($state) => $state
-            ->getMessage()->toBe('closure')
+        ->getMessage()->toBe('closure')
         )->emptyState(EmptyState::make('title'))->toBe($this->table)
         ->getEmptyState()->scoped(fn ($state) => $state
-            ->getTitle()->toBe('title')
+        ->getTitle()->toBe('title')
         );
 });
 

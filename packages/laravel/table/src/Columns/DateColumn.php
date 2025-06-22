@@ -7,19 +7,20 @@ namespace Honed\Table\Columns;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
-use Closure;
 use Honed\Core\Interpret;
 use Illuminate\Support\Facades\Config;
 
+use function is_null;
+
 class DateColumn extends Column
 {
-    const DEFAULT_FORMAT = 'Y-m-d H:i:s';
+    public const DEFAULT_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * {@inheritdoc}
      */
     protected $type = 'date';
-    
+
     /**
      * Whether to use diffForHumans.
      *
@@ -44,18 +45,18 @@ class DateColumn extends Column
     /**
      * {@inheritdoc}
      *
-     * @param  string|\Carbon\Carbon|null  $value
+     * @param  string|Carbon|null  $value
      */
     public function formatValue($value)
     {
-        if (\is_null($value)) {
+        if (is_null($value)) {
             return $this->getFallback();
         }
 
         if (! $value instanceof CarbonInterface) {
             $value = Interpret::dateOf($value);
-            
-            if (\is_null($value)) {
+
+            if (is_null($value)) {
                 return $this->getFallback();
             }
         }
@@ -65,7 +66,7 @@ class DateColumn extends Column
         }
 
         $timezone = $this->getTimezone();
-        
+
         if ($timezone) {
             $value = $value->shiftTimezone($timezone);
         }
@@ -157,8 +158,5 @@ class DateColumn extends Column
         return $this->evaluate($this->timezone) ?? Config::get('app.timezone');
     }
 
-    protected function parsePossibleCarbonInstance($value)
-    {
-        
-    }
+    protected function parsePossibleCarbonInstance($value) {}
 }

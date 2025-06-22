@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
+use Closure;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasExtra;
@@ -12,22 +13,21 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\IsActive;
-use Honed\Core\Concerns\Transformable;
 use Honed\Core\Primitive;
 use Honed\Infolist\Entries\Concerns\CanBeAggregated;
-use Honed\Infolist\Entries\Concerns\HasClasses;
 use Honed\Infolist\Entries\Concerns\HasPlaceholder;
 use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
 use Honed\Refine\Sort;
 use Honed\Table\Columns\Concerns\HasState;
-use Honed\Table\Concerns\IsVisible;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
+
+use function array_merge;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -36,27 +36,29 @@ use Illuminate\Support\Str;
 class Column extends Primitive
 {
     use Allowable;
+    use CanBeAggregated;
+    use CanBeHidden;
+    use Concerns\CanBeKey;
+    use Concerns\Exportable;
+    use Concerns\Filterable;
+    use Concerns\HasClasses;
+
+    use Concerns\Searchable;
+
+    use Concerns\Sortable;
+    use Concerns\Toggleable;
     use HasAlias;
     use HasExtra;
     use HasIcon;
     use HasLabel;
     use HasName;
+    use HasPlaceholder;
     use HasQualifier;
     /** @use \Honed\Core\Concerns\HasQuery<TModel, TBuilder> */
     use HasQuery;
+    use HasState;
     use HasType;
     use IsActive;
-    use Concerns\HasState;
-    use Concerns\CanBeKey;
-    use CanBeAggregated;
-    use HasPlaceholder;
-    use Concerns\HasClasses;
-    use Concerns\Searchable;
-    use Concerns\Sortable;
-    use Concerns\Filterable;
-    use Concerns\Exportable;
-    use Concerns\Toggleable;
-    use CanBeHidden;
 
     /**
      * The identifier to use for evaluation.
@@ -64,6 +66,20 @@ class Column extends Primitive
      * @var string
      */
     protected $evaluationIdentifier = 'column';
+
+    /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->active();
+
+        $this->definition($this);
+    }
 
     /**
      * Create a new column instance.
@@ -145,7 +161,7 @@ class Column extends Primitive
             $this->getParameter() => [
                 'value' => $value,
                 'extra' => $this->getExtra(
-                    \array_merge($named, ['value' => $value]),
+                    array_merge($named, ['value' => $value]),
                     $typed,
                 ),
             ],
@@ -153,34 +169,9 @@ class Column extends Primitive
     }
 
     /**
-     * Provide the instance with any necessary setup.
-     * 
-     * @return void
-     */
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->active();
-
-        $this->definition($this);
-    }
-
-    /**
-     * Define the column.
-     * 
-     * @param $this $column
-     * @return $this
-     */
-    protected function definition(self $column): self
-    {
-        return $column;
-    }
-
-    /**
      * Add a count of the related recordss the column state.
-     * 
-     * @param string|array<string, \Closure>|null $relationship
+     *
+     * @param  string|array<string, Closure>|null  $relationship
      * @return $this
      */
     public function count($relationship = null)
@@ -190,8 +181,8 @@ class Column extends Primitive
 
     /**
      * Add a relationship exists as the column state.
-     * 
-     * @param string|array<string, \Closure>|null $relationship
+     *
+     * @param  string|array<string, Closure>|null  $relationship
      * @return $this
      */
     public function exists($relationship = null)
@@ -201,9 +192,9 @@ class Column extends Primitive
 
     /**
      * Add an average aggregate to the column state.
-     * 
-     * @param string|array<string, \Closure>|null $relationship
-     * @param string|null $column
+     *
+     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|null  $column
      * @return $this
      */
     public function avg($relationship = null, $column = null)
@@ -213,9 +204,9 @@ class Column extends Primitive
 
     /**
      * Add an average aggregate to the column state.
-     * 
-     * @param string|array<string, \Closure>|null $relationship
-     * @param string|null $column
+     *
+     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|null  $column
      * @return $this
      */
     public function average($relationship = null, $column = null)
@@ -225,9 +216,9 @@ class Column extends Primitive
 
     /**
      * Add a sum aggregate to the column state.
-     * 
-     * @param string|array<string, \Closure>|null $relationship
-     * @param string|null $column
+     *
+     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|null  $column
      * @return $this
      */
     public function sum($relationship = null, $column = null)
@@ -237,9 +228,9 @@ class Column extends Primitive
 
     /**
      * Add a maximum aggregate to the column state.
-     * 
-     * @param string|array<string, \Closure>|null $relationship
-     * @param string|null $column
+     *
+     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|null  $column
      * @return $this
      */
     public function max($relationship = null, $column = null)
@@ -249,66 +240,15 @@ class Column extends Primitive
 
     /**
      * Add a minimum aggregate to the column state.
-     * 
-     * @param string|array<string, \Closure>|null $relationship
-     * @param string|null $column
+     *
+     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|null  $column
      * @return $this
      */
     public function min($relationship = null, $column = null)
     {
         return $this->addAggregateRelationship($relationship, $column, 'min');
     }
-
-    /**
-     * Add a simple relationship to the column state.
-     * 
-     * @param string|array<string, \Closure>|null $relationship
-     * @param string $method
-     * @return $this
-     */
-    protected function addSimpleRelationship($relationship, $method)
-    {
-        $this->query(match (true) {
-            (bool) $relationship => fn (Builder $query) =>
-                $query->{'with'.Str::studly($method)}($relationship),
-            default => fn (Builder $query) => 
-                $query->{'with'.Str::studly($method)}(
-                    Str::beforeLast($this->getName(), '_'.$method),
-                ),
-        });
-
-        return $this;
-    }
-
-    /**
-     * Add an aggregate relationship to the column state.
-     * 
-     * @param string|array<string, \Closure>|null $relationship
-     * @param string|null $column
-     * @param string $method
-     * @return $this
-     */
-    protected function addAggregateRelationship($relationship, $column, $method)
-    {
-        if ($relationship && ! $column) {
-            throw new \InvalidArgumentException(
-                'A column must be specified when an aggregate relationship is used.'
-            );
-        }
-
-        $this->query(match (true) {
-            (bool) $relationship => fn (Builder $query) => 
-                $query->{'with'.Str::studly($method)}($relationship, $column),
-            default => fn (Builder $query) => 
-                $query->{'with'.Str::studly($method)}(
-                    Str::beforeLast($this->getName(), '_'.$method),
-                    Str::afterLast($this->getName(), $method.'_'),
-                ),
-        });
-
-        return $this;
-    }
-
 
     /**
      * Get the sort instance as an array.
@@ -332,7 +272,7 @@ class Column extends Primitive
 
     /**
      * Get the instance as an array.
-     * 
+     *
      * @return array<string,mixed>
      */
     public function toArray()
@@ -349,6 +289,63 @@ class Column extends Primitive
             'icon' => $this->getIcon(),
             'sort' => $this->sortToArray(),
         ];
+    }
+
+    /**
+     * Define the column.
+     *
+     * @param  $this  $column
+     * @return $this
+     */
+    protected function definition(self $column): self
+    {
+        return $column;
+    }
+
+    /**
+     * Add a simple relationship to the column state.
+     *
+     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string  $method
+     * @return $this
+     */
+    protected function addSimpleRelationship($relationship, $method)
+    {
+        $this->query(match (true) {
+            (bool) $relationship => fn (Builder $query) => $query->{'with'.Str::studly($method)}($relationship),
+            default => fn (Builder $query) => $query->{'with'.Str::studly($method)}(
+                Str::beforeLast($this->getName(), '_'.$method),
+            ),
+        });
+
+        return $this;
+    }
+
+    /**
+     * Add an aggregate relationship to the column state.
+     *
+     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|null  $column
+     * @param  string  $method
+     * @return $this
+     */
+    protected function addAggregateRelationship($relationship, $column, $method)
+    {
+        if ($relationship && ! $column) {
+            throw new InvalidArgumentException(
+                'A column must be specified when an aggregate relationship is used.'
+            );
+        }
+
+        $this->query(match (true) {
+            (bool) $relationship => fn (Builder $query) => $query->{'with'.Str::studly($method)}($relationship, $column),
+            default => fn (Builder $query) => $query->{'with'.Str::studly($method)}(
+                Str::beforeLast($this->getName(), '_'.$method),
+                Str::afterLast($this->getName(), $method.'_'),
+            ),
+        });
+
+        return $this;
     }
 
     /**

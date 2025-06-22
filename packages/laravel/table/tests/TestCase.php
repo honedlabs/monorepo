@@ -13,8 +13,8 @@ use function Orchestra\Testbench\workbench_path;
 
 class TestCase extends Orchestra
 {
-    use WithWorkbench;
     use RefreshDatabase;
+    use WithWorkbench;
 
     /**
      * Setup the test environment.

@@ -5,7 +5,8 @@ declare(strict_types=1);
 use Honed\Table\Concerns\HasClass;
 
 beforeEach(function () {
-    $this->test = new class {
+    $this->test = new class()
+    {
         use HasClass;
     };
 });

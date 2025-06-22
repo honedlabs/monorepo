@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Table\Tests\Stubs\Category;
 use Honed\Table\Tests\Stubs\Product;
 use Honed\Table\Tests\Stubs\Seller;

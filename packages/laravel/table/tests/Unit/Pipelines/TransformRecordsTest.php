@@ -41,7 +41,7 @@ beforeEach(function () {
             ->value(fn ($record) => $record->status?->name),
 
         Column::make('fixed')
-            ->value('Constant')
+            ->value('Constant'),
     ];
 
     $this->actions = [
@@ -82,7 +82,7 @@ it('serializes', function () {
     $this->table->serializes(true);
 
     $this->pipe->__invoke($this->table, $this->next);
-    
+
     expect($this->table->getRecords())
-        ->each->toHaveCount(11 + 1);    
+        ->each->toHaveCount(11 + 1);
 });

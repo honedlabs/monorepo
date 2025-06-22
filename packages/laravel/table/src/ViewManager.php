@@ -4,23 +4,38 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use RuntimeException;
-use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\DatabaseManager;
-use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Contracts\Container\Container;
+use Closure;
 use Honed\Table\Contracts\ViewScopeSerializeable;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use RuntimeException;
 
 class ViewManager
 {
     use Concerns\InteractsWithDatabase;
 
     /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    public const CREATED_AT = 'created_at';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    public const UPDATED_AT = 'updated_at';
+
+    /**
      * The default scope resolver.
      *
-     * @var (\Closure(string): mixed)|null
+     * @var (Closure(string): mixed)|null
      */
     protected $defaultScopeResolver;
 
@@ -30,20 +45,6 @@ class ViewManager
      * @var bool
      */
     protected $useMorphMap = false;
-
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
-    const CREATED_AT = 'created_at';
-
-    /**
-     * The name of the "updated at" column.
-     *
-     * @var string
-     */
-    const UPDATED_AT = 'updated_at';
 
     /**
      * Create a new view resolver.
@@ -57,11 +58,11 @@ class ViewManager
 
     /**
      * Serialize the given scope for storage.
-     * 
+     *
      * @param  mixed  $scope
      * @return string
-     * 
-     * @throws \RuntimeException
+     *
+     * @throws RuntimeException
      */
     public function serializeScope($scope)
     {
@@ -70,9 +71,9 @@ class ViewManager
             $scope === null => '__laravel_null',
             is_string($scope) => $scope,
             is_numeric($scope) => (string) $scope,
-            $scope instanceof Model 
+            $scope instanceof Model
                 && $this->useMorphMap => $scope->getMorphClass().'|'.$scope->getKey(),
-            $scope instanceof Model 
+            $scope instanceof Model
                 && ! $this->useMorphMap => $scope::class.'|'.$scope->getKey(),
             default => throw new RuntimeException(
                 'Unable to serialize the view scope to a string. You should implement the ViewScopeSerializeable contract.'
@@ -94,23 +95,6 @@ class ViewManager
     }
 
     /**
-     * The default scope resolver.
-     *
-     * @param  string  $driver
-     * @return callable(): mixed
-     */
-    protected function defaultScopeResolver($driver)
-    {
-        return function () use ($driver) {
-            if ($this->defaultScopeResolver !== null) {
-                return ($this->defaultScopeResolver)($driver);
-            }
-
-            return $this->container['auth']->guard()->user();
-        };
-    }
-
-    /**
      * Set the default scope resolver.
      *
      * @param  (callable(string): mixed)  $resolver
@@ -121,20 +105,14 @@ class ViewManager
         $this->defaultScopeResolver = $resolver;
     }
 
-    public function for($scope)
-    {
-        return ;
-    }
+    public function for($scope) {}
 
-    public function all()
-    {
-
-    }
+    public function all() {}
 
     /**
      * Insert the table view for the given scope into storage.
-     * 
-     * @param  \Honed\Table\Table|string  $name
+     *
+     * @param  Table|string  $name
      * @param  array<string, mixed>  $scope
      * @param  array<string, mixed>  $value
      * @return bool
@@ -150,7 +128,7 @@ class ViewManager
 
     /**
      * Insert the table views into storage.
-     * 
+     *
      * @param  array<array<string, mixed>>  $inserts
      * @return bool
      */
@@ -184,8 +162,8 @@ class ViewManager
 
     /**
      * Delete a view.
-     * 
-     * @param  \Honed\Table\Table|string  $name
+     *
+     * @param  Table|string  $name
      * @param  array<string, mixed>  $scope
      * @return void
      */
@@ -198,35 +176,52 @@ class ViewManager
     }
 
     /**
+     * The default scope resolver.
+     *
+     * @param  string  $driver
+     * @return callable(): mixed
+     */
+    protected function defaultScopeResolver($driver)
+    {
+        return function () use ($driver) {
+            if ($this->defaultScopeResolver !== null) {
+                return ($this->defaultScopeResolver)($driver);
+            }
+
+            return $this->container['auth']->guard()->user();
+        };
+    }
+
+    /**
      * Get the database manager instance from the container.
-     * 
-     * @return \Illuminate\Database\DatabaseManager
+     *
+     * @return DatabaseManager
      */
     protected function getDatabaseManager()
     {
-        /** @var \Illuminate\Database\DatabaseManager */
+        /** @var DatabaseManager */
         return $this->container['db'];
     }
 
     /**
      * Get the config instance from the container.
-     * 
-     * @return \Illuminate\Contracts\Config\Repository
+     *
+     * @return Repository
      */
     protected function getConfig()
     {
-        /** @var \Illuminate\Contracts\Config\Repository */
+        /** @var Repository */
         return $this->container['config'];
     }
 
     /**
      * Get the event dispatcher instance from the container.
-     * 
-     * @return \Illuminate\Contracts\Events\Dispatcher
+     *
+     * @return Dispatcher
      */
     protected function getDispatcher()
     {
-        /** @var \Illuminate\Contracts\Events\Dispatcher */
+        /** @var Dispatcher */
         return $this->container['events'];
     }
 

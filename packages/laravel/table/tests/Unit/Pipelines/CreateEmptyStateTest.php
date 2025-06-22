@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use Honed\Refine\Filter;
 use Honed\Table\Pipelines\CreateEmptyState;
-use Honed\Table\Tests\Stubs\Product;
 use Honed\Table\Table;
+use Honed\Table\Tests\Stubs\Product;
 
 beforeEach(function () {
     $this->pipe = new CreateEmptyState();

@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Models;
 
-use Honed\Table\Attributes\Table;
 use Honed\Table\Concerns\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

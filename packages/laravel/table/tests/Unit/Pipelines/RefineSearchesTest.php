@@ -9,7 +9,7 @@ use Honed\Table\Table;
 use Honed\Table\Tests\Stubs\Product;
 
 beforeEach(function () {
-    $this->pipe = new RefineSearches;
+    $this->pipe = new RefineSearches();
     $this->next = fn ($table) => $table;
 
     $columns = [

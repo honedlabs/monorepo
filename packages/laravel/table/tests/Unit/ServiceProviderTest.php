@@ -12,5 +12,3 @@ it('publishes config', function () {
     expect(file_exists(base_path('stubs/honed.table.stub')))->toBeTrue();
     expect(file_exists(base_path('stubs/honed.column.stub')))->toBeTrue();
 });
-
-

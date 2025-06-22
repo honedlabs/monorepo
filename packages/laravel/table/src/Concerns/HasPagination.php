@@ -8,6 +8,10 @@ use Honed\Table\PageOption;
 use Honed\Table\PerPageRecord;
 use Illuminate\Support\Collection;
 
+use function array_map;
+use function array_merge;
+use function in_array;
+
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  *
@@ -16,8 +20,11 @@ use Illuminate\Support\Collection;
 trait HasPagination
 {
     public const CURSOR = 'cursor';
+
     public const SIMPLE = 'simple';
+
     public const LENGTH_AWARE = 'length-aware';
+
     public const COLLECTION = 'collection';
 
     /**
@@ -65,7 +72,7 @@ trait HasPagination
     /**
      * The records per page options if dynamic.
      *
-     * @var array<int,\Honed\Table\PerPageRecord>
+     * @var array<int,PerPageRecord>
      */
     protected $recordsPerPage = [];
 
@@ -158,7 +165,6 @@ trait HasPagination
     {
         return $this->perPage;
     }
-
 
     /**
      * Set the default pagination amount.
@@ -261,7 +267,7 @@ trait HasPagination
      */
     public function createRecordsPerPage($pagination, $active)
     {
-        $this->recordsPerPage = \array_map(
+        $this->recordsPerPage = array_map(
             static fn (int $amount) => PerPageRecord::make($amount, $active),
             $pagination
         );
@@ -270,7 +276,7 @@ trait HasPagination
     /**
      * Get records per page options.
      *
-     * @return array<int,\Honed\Table\PerPageRecord>
+     * @return array<int,PerPageRecord>
      */
     public function getRecordsPerPage()
     {
@@ -284,7 +290,7 @@ trait HasPagination
      */
     public function recordsPerPageToArray()
     {
-        return \array_map(
+        return array_map(
             static fn (PageOption $record) => $record->toArray(),
             $this->getRecordsPerPage()
         );
@@ -298,7 +304,7 @@ trait HasPagination
      */
     public function isLengthAware($paginator)
     {
-        return \in_array($paginator, [
+        return in_array($paginator, [
             'length-aware',
             \Illuminate\Contracts\Pagination\LengthAwarePaginator::class,
             \Illuminate\Pagination\LengthAwarePaginator::class,
@@ -313,7 +319,7 @@ trait HasPagination
      */
     public function isSimple($paginator)
     {
-        return \in_array($paginator, [
+        return in_array($paginator, [
             'simple',
             \Illuminate\Contracts\Pagination\Paginator::class,
             \Illuminate\Pagination\Paginator::class,
@@ -328,7 +334,7 @@ trait HasPagination
      */
     public function isCursor($paginator)
     {
-        return \in_array($paginator, [
+        return in_array($paginator, [
             'cursor',
             \Illuminate\Contracts\Pagination\CursorPaginator::class,
             \Illuminate\Pagination\CursorPaginator::class,
@@ -343,10 +349,10 @@ trait HasPagination
      */
     public function isCollector($paginator)
     {
-        return \in_array($paginator, [
+        return in_array($paginator, [
             'none',
             'collection',
-            \Illuminate\Support\Collection::class,
+            Collection::class,
         ]);
     }
 
@@ -358,7 +364,7 @@ trait HasPagination
      */
     public function lengthAwarePaginator($paginator)
     {
-        return \array_merge($this->simplePaginator($paginator), [
+        return array_merge($this->simplePaginator($paginator), [
             'total' => $paginator->total(),
             'from' => $paginator->firstItem(),
             'to' => $paginator->lastItem(),
@@ -383,7 +389,7 @@ trait HasPagination
         $start = max(1, min($currentPage - $onEachSide, $lastPage - ($onEachSide * 2)));
         $end = min($lastPage, max($currentPage + $onEachSide, ($onEachSide * 2 + 1)));
 
-        return \array_map(
+        return array_map(
             static fn (int $page) => [
                 'url' => $paginator->url($page),
                 'label' => (string) $page,
@@ -401,7 +407,7 @@ trait HasPagination
      */
     public function simplePaginator($paginator)
     {
-        return \array_merge($this->cursorPaginator($paginator), [
+        return array_merge($this->cursorPaginator($paginator), [
             'currentPage' => $paginator->currentPage(),
         ]);
     }
@@ -414,7 +420,7 @@ trait HasPagination
      */
     public function cursorPaginator($paginator)
     {
-        return \array_merge($this->collectionPaginator($paginator), [
+        return array_merge($this->collectionPaginator($paginator), [
             'prevLink' => $paginator->previousPageUrl(),
             'nextLink' => $paginator->nextPageUrl(),
             'perPage' => $paginator->perPage(),
@@ -424,7 +430,7 @@ trait HasPagination
     /**
      * Get the base metadata for the collection paginator, and all others.
      *
-     * @param  \Illuminate\Support\Collection<int,TModel>|\Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
+     * @param  Collection<int,TModel>|\Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
      * @return array<string, mixed>
      */
     public function collectionPaginator($paginator)

@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
+use function is_null;
+
 class TextColumn extends Column
 {
     /**
      * {@inheritdoc}
      */
     protected $type = 'text';
-    
+
     /**
      * The prefix to display.
      *
@@ -37,7 +39,7 @@ class TextColumn extends Column
      */
     public function formatValue($value)
     {
-        if (\is_null($value)) {
+        if (is_null($value)) {
             return $this->getFallback();
         }
 
@@ -47,15 +49,15 @@ class TextColumn extends Column
         $suffix = $this->getSuffix();
         $length = $this->getLength();
 
-        if (! \is_null($prefix)) {
+        if (! is_null($prefix)) {
             $value = $prefix.$value;
         }
 
-        if (! \is_null($suffix)) {
+        if (! is_null($suffix)) {
             $value = $value.$suffix;
         }
 
-        if (! \is_null($length)) {
+        if (! is_null($length)) {
             $value = substr($value, 0, $length);
         }
 

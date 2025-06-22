@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Table\Concerns;
 
 use Honed\Table\Contracts\ShouldSelect;
@@ -8,8 +10,8 @@ trait Selectable
 {
     /**
      * The columns to select, indicative of whether the instance is selectable.
-     * 
-     * @param bool|array<int, string> $selectable
+     *
+     * @param  bool|array<int, string>  $selectable
      */
     protected $selectable = false;
 

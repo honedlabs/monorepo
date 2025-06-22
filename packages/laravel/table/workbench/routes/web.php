@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Support\Facades\Route;
 
 Route::table();
@@ -15,4 +17,3 @@ Route::get('/products/{product}', fn () => view('welcome'))
 
 Route::get('/products/create', fn () => view('welcome'))
     ->name('products.create');
-    

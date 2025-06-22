@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Table\Http\Controllers;
 
 use Honed\Action\Exceptions\CouldNotResolveHandlerException;
@@ -25,7 +27,7 @@ class TableController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @throws \Honed\Action\Exceptions\CouldNotResolveHandlerException
+     * @throws CouldNotResolveHandlerException
      * @throws \Honed\Action\Exceptions\ActionNotFoundException
      * @throws \Honed\Action\Exceptions\ActionNotAllowedException
      * @throws \Honed\Action\Exceptions\InvalidActionException

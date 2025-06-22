@@ -1,11 +1,10 @@
 <?php
 
-use Honed\Table\Table;
-use Honed\Table\Columns\Column;
-use Honed\Table\Contracts\ShouldToggle;
-use Illuminate\Support\Facades\Request;
+declare(strict_types=1);
+
 use Honed\Table\Contracts\ShouldRemember;
-use Illuminate\Support\Facades\Cookie;
+use Honed\Table\Contracts\ShouldToggle;
+use Honed\Table\Table;
 
 beforeEach(function () {
     $this->table = Table::make();
@@ -19,7 +18,8 @@ it('is toggleable', function () {
         ->isToggleable()->toBe(true)
         ->isToggleableByDefault()->toBe(config('table.toggle'));
 
-    $class = new class extends Table implements ShouldToggle {
+    $class = new class() extends Table implements ShouldToggle
+    {
         public function __construct() {}
     };
 
@@ -45,7 +45,8 @@ it('can remember', function () {
         ->isRememberable()->toBe(true)
         ->isRememberableByDefault()->toBe(config('table.remember'));
 
-    $class = new class extends Table implements ShouldRemember {
+    $class = new class() extends Table implements ShouldRemember
+    {
         public function __construct() {}
     };
 
@@ -70,4 +71,3 @@ it('has duration', function () {
         ->getDuration()->toBe(100)
         ->getDefaultDuration()->toBe(config('table.duration'));
 });
-

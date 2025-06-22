@@ -19,8 +19,5 @@ class CreateEmptyState extends Pipe
      * @param  TClass  $instance
      * @return void
      */
-    public function run($instance)
-    {
-        
-    }
+    public function run($instance) {}
 }

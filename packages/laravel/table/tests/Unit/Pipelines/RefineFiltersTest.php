@@ -13,7 +13,7 @@ use Honed\Table\Table;
 use Honed\Table\Tests\Stubs\Product;
 
 beforeEach(function () {
-    $this->pipe = new RefineFilters;
+    $this->pipe = new RefineFilters();
     $this->next = fn ($table) => $table;
 
     $columns = [
@@ -56,7 +56,7 @@ it('merges as date', function () {
     $this->table->columns(
         DateColumn::make('created_at', 'Created At')
             ->filters()
-    ); 
+    );
 
     $this->pipe->__invoke($this->table, $this->next);
 
@@ -117,4 +117,3 @@ it('merges as text', function () {
         ->getType()->toBe('text')
         ->getParameter()->toBe('description');
 });
-

@@ -4,33 +4,35 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns\Concerns;
 
+use Closure;
+
 trait Exportable
 {
     /**
      * How the column should be exported.
-     * 
-     * @var bool|\Closure(mixed...):mixed
+     *
+     * @var bool|Closure(mixed...):mixed
      */
     protected $exportable = true;
 
     /**
      * The format to export the column as.
-     * 
+     *
      * @var string|null
      */
     protected $exportFormat;
 
     /**
      * The style to export the column as.
-     * 
-     * @var array<string,mixed>|(\Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)|null
+     *
+     * @var array<string,mixed>|(Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)|null
      */
     protected $exportStyle;
 
     /**
      * Set whether the column should be exported.
-     * 
-     * @param  bool|\Closure(mixed...):mixed  $value
+     *
+     * @param  bool|Closure(mixed...):mixed  $value
      * @return $this
      */
     public function exportable($value = true)
@@ -42,7 +44,7 @@ trait Exportable
 
     /**
      * Check if the column is exportable.
-     * 
+     *
      * @return bool
      */
     public function isExportable()
@@ -52,8 +54,8 @@ trait Exportable
 
     /**
      * Get the exportable value.
-     * 
-     * @return bool|\Closure(mixed...):mixed
+     *
+     * @return bool|Closure(mixed...):mixed
      */
     public function getExportable()
     {
@@ -62,8 +64,8 @@ trait Exportable
 
     /**
      * Set the style to export the column as.
-     * 
-     * @param  array<string,mixed>|(\Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)  $style
+     *
+     * @param  array<string,mixed>|(Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)  $style
      * @return $this
      */
     public function exportStyle($style)
@@ -75,8 +77,8 @@ trait Exportable
 
     /**
      * Get the style to export the column as.
-     * 
-     * @return array<string,mixed>|(\Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)|null
+     *
+     * @return array<string,mixed>|(Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)|null
      */
     public function getExportStyle()
     {
@@ -85,7 +87,7 @@ trait Exportable
 
     /**
      * Set the format to export the column as.
-     * 
+     *
      * @param  string  $format
      * @return $this
      */
@@ -98,7 +100,7 @@ trait Exportable
 
     /**
      * Get the format to export the column as.
-     * 
+     *
      * @return string|null
      */
     public function getExportFormat()

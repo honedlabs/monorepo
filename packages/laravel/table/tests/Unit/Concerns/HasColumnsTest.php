@@ -40,7 +40,7 @@ it('adds columns collection', function () {
 it('retrieves with authorization', function () {
     expect($this->table)
         ->columns([
-            Column::make('id')->allow(false), 
+            Column::make('id')->allow(false),
             Column::make('public_id'),
         ])->toBe($this->table)
         ->hasColumns()->toBeTrue()
@@ -51,7 +51,7 @@ it('caches columns', function () {
     expect($this->table)
         ->cacheColumns([Column::make('id')->allow(false), Column::make('public_id')])->toBe($this->table)
         ->getCachedColumns()->toHaveCount(2);
-    
+
     $this->table->flushCachedColumns();
 
     expect($this->table)

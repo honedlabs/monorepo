@@ -6,7 +6,6 @@ namespace Honed\Table;
 
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\IsActive;
-use Honed\Core\Primitive;
 use Illuminate\Contracts\Support\Arrayable;
 use JsonSerializable;
 
@@ -34,7 +33,7 @@ class PageOption implements Arrayable, JsonSerializable
 
     /**
      * Specify data which should be serialized to JSON
-     * 
+     *
      * @return array<string, mixed>
      */
     public function jsonSerialize(): mixed

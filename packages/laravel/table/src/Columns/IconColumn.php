@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
+use Closure;
 use Honed\Core\Concerns\HasIcon;
 
 class IconColumn extends Column
@@ -18,7 +19,7 @@ class IconColumn extends Column
     /**
      * {@inheritdoc}
      *
-     * @return \Closure(mixed):array{icon:mixed}
+     * @return Closure(mixed):array{icon:mixed}
      */
     public function defineExtra()
     {

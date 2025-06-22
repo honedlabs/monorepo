@@ -25,6 +25,5 @@ class CreateRecords extends Pipe
 
         $records = $instance->getRecords();
 
-        
     }
 }

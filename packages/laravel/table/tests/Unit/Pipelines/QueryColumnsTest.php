@@ -2,13 +2,10 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Search;
 use Honed\Table\Columns\Column;
-use Honed\Table\Pipelines\Paginate;
 use Honed\Table\Pipelines\QueryColumns;
 use Honed\Table\Table;
 use Honed\Table\Tests\Stubs\Product;
-use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
     $this->pipe = new QueryColumns();
@@ -56,5 +53,3 @@ describe('modifies', function () {
             ->toHaveCount(1);
     });
 });
-
-

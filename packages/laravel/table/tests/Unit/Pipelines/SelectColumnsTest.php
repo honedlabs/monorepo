@@ -11,7 +11,7 @@ beforeEach(function () {
     $this->pipe = new SelectColumns();
 
     $this->next = fn ($table) => $table;
-    
+
     $this->builder = Product::query();
 
     $this->table = Table::make()
@@ -40,4 +40,3 @@ it('selects', function () {
             $this->builder->qualifyColumn('description as content'),
         ]);
 });
-

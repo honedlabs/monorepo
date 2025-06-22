@@ -16,4 +16,3 @@ it('has attribute', function () {
     expect(Product::class)
         ->toHaveAttribute(Table::class);
 });
-

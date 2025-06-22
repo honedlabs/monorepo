@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Table\Columns\BadgeColumn;
-use Honed\Table\Tests\Stubs\Status;
 
 beforeEach(function () {
     $this->column = BadgeColumn::make('status');
@@ -33,9 +32,8 @@ it('has default', function () {
 
 it('has extra', function () {
     expect($this->column)
-        ->defineExtra()->toBeInstanceOf(\Closure::class)
+        ->defineExtra()->toBeInstanceOf(Closure::class)
         ->getExtra(['value' => 'value'])->toEqual([
             'variant' => 'default',
         ]);
 });
-

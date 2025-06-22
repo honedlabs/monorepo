@@ -12,18 +12,18 @@ class BooleanColumn extends Column
      * {@inheritdoc}
      */
     protected $type = 'boolean';
-    
+
     /**
      * The label to display when the value evaluates to true.
      *
-     * @var string|\Closure
+     * @var string|Closure
      */
     protected $trueLabel = 'True';
 
     /**
      * The label to display when the value evaluates to false.
      *
-     * @var string|\Closure
+     * @var string|Closure
      */
     protected $falseLabel = 'False';
 
@@ -57,7 +57,6 @@ class BooleanColumn extends Column
     {
         return $this->evaluate($this->trueLabel);
     }
-
 
     /**
      * Set the label for the false value.

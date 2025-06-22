@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Table;
-use Honed\Table\Columns\Column;
-use Honed\Table\Tests\Stubs\Product;
 use Honed\Table\Contracts\ShouldSelect;
+use Honed\Table\Table;
 
 beforeEach(function () {
     $this->table = Table::make();
@@ -18,7 +16,8 @@ it('is selectable', function () {
         ->isSelectable()->toBe(true)
         ->isSelectableByDefault()->toBe(config('table.select'));
 
-    $class = new class extends Table implements ShouldSelect {
+    $class = new class() extends Table implements ShouldSelect
+    {
         public function __construct() {}
     };
 

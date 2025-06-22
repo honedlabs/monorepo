@@ -7,24 +7,27 @@ namespace Honed\Table\Columns;
 use Closure;
 use Illuminate\Support\Number;
 
+use function is_null;
+use function is_numeric;
+
 class CurrencyColumn extends Column
 {
     /**
      * {@inheritdoc}
      */
     protected $type = 'currency';
-    
+
     /**
      * The currency to use.
      *
-     * @var string|\Closure|null
+     * @var string|Closure|null
      */
     protected $currency;
 
     /**
      * The locale to use.
      *
-     * @var string|\Closure|null
+     * @var string|Closure|null
      */
     protected $locale;
 
@@ -33,7 +36,7 @@ class CurrencyColumn extends Column
      */
     public function formatValue($value)
     {
-        if (\is_null($value) || ! \is_numeric($value)) {
+        if (is_null($value) || ! is_numeric($value)) {
             return $this->getFallback();
         }
 

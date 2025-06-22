@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+use Honed\Table\Migrations\ViewMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Honed\Table\Migrations\ViewMigration;
 
-return new class extends ViewMigration
+return new class() extends ViewMigration
 {
     /**
      * Run the migrations.

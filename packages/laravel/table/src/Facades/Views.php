@@ -8,7 +8,7 @@ use Honed\Table\ViewManager;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Honed\Table\ViewManager
+ * @see ViewManager
  */
 class Views extends Facade
 {

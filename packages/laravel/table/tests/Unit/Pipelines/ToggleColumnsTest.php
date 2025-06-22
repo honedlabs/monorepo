@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Search;
 use Honed\Table\Columns\Column;
 use Honed\Table\Columns\KeyColumn;
-use Honed\Table\Pipelines\Paginate;
 use Honed\Table\Pipelines\ToggleColumns;
 use Honed\Table\Table;
 use Illuminate\Support\Facades\Request;

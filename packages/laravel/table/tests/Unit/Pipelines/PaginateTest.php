@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Search;
-use Honed\Table\Columns\Column;
 use Honed\Table\Exceptions\InvalidPaginatorException;
 use Honed\Table\Pipelines\Paginate;
 use Honed\Table\Table;
@@ -42,7 +40,7 @@ it('paginates default', function () {
             'to',
             'firstLink',
             'lastLink',
-            'links'
+            'links',
         ])->{'links'}->toHaveCount(config('table.window') * 2 + 1);
 });
 
@@ -94,7 +92,7 @@ it('paginates collection', function () {
 
     expect($this->table->getPaginationData())
         ->toHaveKeys([
-            'empty'
+            'empty',
         ]);
 });
 
@@ -102,14 +100,14 @@ it('paginate fails', function () {
     $this->table->paginator('invalid');
 
     $this->pipe->__invoke($this->table, $this->next);
-    
+
 })->throws(InvalidPaginatorException::class);
 
 it('changes per page', function () {
     $count = 25;
 
     $request = Request::create('/', 'GET', [
-        config('table.record_key') => $count
+        config('table.record_key') => $count,
     ]);
 
     $this->table->pagination([10, 25, 50])->request($request);
@@ -127,7 +125,7 @@ it('changes per page with restrictions', function () {
     $count = 20;
 
     $request = Request::create('/', 'GET', [
-        config('table.record_key') => $count
+        config('table.record_key') => $count,
     ]);
 
     $this->table->pagination([10, 25, 50])->request($request);
@@ -145,7 +143,7 @@ it('changes default per page', function () {
     $count = 25;
 
     $request = Request::create('/', 'GET', [
-        config('table.record_key') => 20
+        config('table.record_key') => 20,
     ]);
 
     $this->table->pagination([10, 25, 50])
@@ -163,7 +161,7 @@ it('changes default per page', function () {
 
 it('preserves query string', function () {
     $request = Request::create('/', 'GET', [
-        'name' => 'test'
+        'name' => 'test',
     ]);
 
     $this->table->request($request);
@@ -181,7 +179,7 @@ it('fails to paginate scope', function () {
 
     $request = Request::create('/', 'GET', [
         config('table.record_key') => 25,
-        config('table.page_key') => 2
+        config('table.page_key') => 2,
     ]);
 
     $this->table->request($request);
@@ -194,7 +192,7 @@ it('fails to paginate scope', function () {
 
     expect($this->table->getPaginationData())
         ->{'currentPage'}->toBe(1);
-    
+
     expect($this->table->getRecordsPerPage())
         ->toHaveCount(3);
 });
@@ -205,7 +203,7 @@ it('paginates scope', function () {
 
     $request = Request::create('/', 'GET', [
         $this->table->formatScope(config('table.record_key')) => 25,
-        $this->table->formatScope(config('table.page_key')) => 2
+        $this->table->formatScope(config('table.page_key')) => 2,
     ]);
 
     $this->table->request($request);

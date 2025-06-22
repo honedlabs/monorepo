@@ -181,5 +181,5 @@ return [
     |
     */
 
-    'exporter' => \Honed\Table\Exports\TableExport::class,
+    'exporter' => Honed\Table\Exports\TableExport::class,
 ];

@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipelines;
 
+use Closure;
 use Honed\Table\Table;
 use Illuminate\Support\Arr;
+
+use function array_map;
+use function array_merge;
+use function array_unique;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -16,9 +21,9 @@ class SelectColumns
     /**
      * Select the columns to be displayed.
      *
-     * @param  \Honed\Table\Table<TModel, TBuilder>  $table
-     * @param  \Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
-     * @return \Honed\Table\Table<TModel, TBuilder>
+     * @param  Table<TModel, TBuilder>  $table
+     * @param  Closure(Table<TModel, TBuilder>): Table<TModel, TBuilder>  $next
+     * @return Table<TModel, TBuilder>
      */
     public function __invoke($table, $next)
     {
@@ -33,17 +38,17 @@ class SelectColumns
             if ($column->isSelectable()) {
                 $selecting = $column->getSelects();
 
-                $select = \array_map(
+                $select = array_map(
                     static fn ($select) => $column
                         ->qualifyColumn($select, $resource),
                     Arr::wrap($selecting)
                 );
 
-                $selects = \array_merge($selects, $select);
+                $selects = array_merge($selects, $select);
             }
         }
 
-        $selects = \array_unique(Arr::flatten($selects), SORT_STRING);
+        $selects = array_unique(Arr::flatten($selects), SORT_STRING);
 
         $resource->select($selects);
 

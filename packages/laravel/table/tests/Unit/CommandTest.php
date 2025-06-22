@@ -39,4 +39,3 @@ it('prompts for a column name', function () {
     ])->expectsQuestion('What should the column be named?', 'UserColumn')
         ->assertSuccessful();
 });
-

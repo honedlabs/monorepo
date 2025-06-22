@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Table\Concerns;
 
 use Honed\Table\Columns\Column;
-use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -16,26 +15,26 @@ trait HasColumns
     /**
      * The columns to be used for the table.
      *
-     * @var array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>
+     * @var array<int,Column<TModel, TBuilder>>
      */
     protected $columns = [];
 
     /**
      * The cached column headings.
      *
-     * @var array<int,\Honed\Table\Columns\Column>
+     * @var array<int,Column>
      */
     protected $headings = [];
 
     /**
      * Merge a set of columns with the existing columns.
      *
-     * @param  \Honed\Table\Columns\Column|array<int,\Honed\Table\Columns\Column>  $columns
+     * @param  Column|array<int,Column>  $columns
      * @return $this
      */
     public function columns($columns)
     {
-        /** @var array<int,\Honed\Table\Columns\Column> */
+        /** @var array<int,Column> */
         $columns = is_array($columns) ? $columns : func_get_args();
 
         $this->columns = [...$this->columns, ...$columns];
@@ -46,7 +45,7 @@ trait HasColumns
     /**
      * Retrieve the columns.
      *
-     * @return array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>
+     * @return array<int,Column<TModel, TBuilder>>
      */
     public function getColumns()
     {
@@ -61,7 +60,7 @@ trait HasColumns
     /**
      * Set the cached headings.
      *
-     * @param  array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>  $headings
+     * @param  array<int,Column<TModel, TBuilder>>  $headings
      * @return void
      */
     public function setHeadings($headings)
@@ -72,7 +71,7 @@ trait HasColumns
     /**
      * Get the cached heading columns.
      *
-     * @return array<int,\Honed\Table\Columns\Column<TModel, TBuilder>>
+     * @return array<int,Column<TModel, TBuilder>>
      */
     public function getHeadings()
     {

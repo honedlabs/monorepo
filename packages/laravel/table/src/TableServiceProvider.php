@@ -12,11 +12,13 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
+use function trim;
+
 class TableServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services
-     * 
+     *
      * @return void
      */
     public function register()
@@ -31,7 +33,7 @@ class TableServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap the application services.
-     * 
+     *
      * @return void
      */
     public function boot()
@@ -72,12 +74,12 @@ class TableServiceProvider extends ServiceProvider
     protected function registerMacros()
     {
         Router::macro('table', function () {
-            /** @var \Illuminate\Routing\Router $this */
+            /** @var Router $this */
 
             /** @var string $endpoint */
             $endpoint = config('table.endpoint', 'table');
 
-            $endpoint = \trim($endpoint, '/');
+            $endpoint = trim($endpoint, '/');
 
             $methods = ['post', 'patch', 'put'];
 

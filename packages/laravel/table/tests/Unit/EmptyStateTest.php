@@ -42,21 +42,21 @@ it('has refining state', function () {
     expect($this->state)
         ->getRefiningState()->toBe(config('table.empty_state.refining'))
         ->refining(fn ($state) => $state->title('Refining'))->toBe($this->state)
-        ->getRefiningState()->toBeInstanceOf(\Closure::class);
+        ->getRefiningState()->toBeInstanceOf(Closure::class);
 });
 
 it('has filtering state', function () {
     expect($this->state)
         ->getFilteringState()->toBeNull()
         ->filtering(fn ($state) => $state->title('Filtering'))->toBe($this->state)
-        ->getFilteringState()->toBeInstanceOf(\Closure::class);
+        ->getFilteringState()->toBeInstanceOf(Closure::class);
 });
 
 it('has searching state', function () {
     expect($this->state)
         ->getSearchingState()->toBe(config('table.empty_state.searching'))
         ->searching(fn ($state) => $state->title('Searching'))->toBe($this->state)
-        ->getSearchingState()->toBeInstanceOf(\Closure::class);
+        ->getSearchingState()->toBeInstanceOf(Closure::class);
 });
 
 it('has array representation', function () {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
+use Closure;
 use Illuminate\Support\Arr;
 
 class BadgeColumn extends Column
@@ -12,7 +13,7 @@ class BadgeColumn extends Column
      * {@inheritdoc}
      */
     protected $type = 'badge';
-    
+
     /**
      * How to map the value to a badge variant.
      *
@@ -30,7 +31,7 @@ class BadgeColumn extends Column
     /**
      * {@inheritdoc}
      *
-     * @return \Closure(mixed):array{variant:mixed}
+     * @return Closure(mixed):array{variant:mixed}
      */
     public function defineExtra()
     {

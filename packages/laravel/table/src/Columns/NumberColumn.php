@@ -6,13 +6,17 @@ namespace Honed\Table\Columns;
 
 use Illuminate\Support\Number;
 
+use function is_null;
+use function is_numeric;
+use function number_format;
+
 class NumberColumn extends Column
 {
     /**
      * {@inheritdoc}
      */
     protected $type = 'number';
-    
+
     /**
      * The number of decimal places to display.
      *
@@ -32,7 +36,7 @@ class NumberColumn extends Column
      */
     public function formatValue($value)
     {
-        if (\is_null($value) || ! \is_numeric($value)) {
+        if (is_null($value) || ! is_numeric($value)) {
             return $this->getFallback();
         }
 
@@ -40,7 +44,7 @@ class NumberColumn extends Column
         $abbreviate = $this->isAbbreviated();
 
         return match (true) {
-            isset($decimals) => \number_format((float) $value, $decimals),
+            isset($decimals) => number_format((float) $value, $decimals),
             $abbreviate => Number::abbreviate((int) $value),
             default => $value,
         };

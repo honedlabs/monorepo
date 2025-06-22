@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Table;
 use Honed\Table\PerPageRecord;
+use Honed\Table\Table;
 use Honed\Table\Tests\Stubs\Product;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Request;
 
 beforeEach(function () {
     $this->table = Table::make();
@@ -78,19 +76,19 @@ it('has records per page', function () {
         ->toBeArray()
         ->toHaveCount(3)
         ->{0}->scoped(fn ($perPage) => $perPage
-            ->toBeInstanceOf(PerPageRecord::class)
-            ->getValue()->toBe(5)
-            ->isActive()->toBeFalse()
+        ->toBeInstanceOf(PerPageRecord::class)
+        ->getValue()->toBe(5)
+        ->isActive()->toBeFalse()
         )
         ->{1}->scoped(fn ($perPage) => $perPage
-            ->toBeInstanceOf(PerPageRecord::class)
-            ->getValue()->toBe(10)
-            ->isActive()->toBeFalse()
+        ->toBeInstanceOf(PerPageRecord::class)
+        ->getValue()->toBe(10)
+        ->isActive()->toBeFalse()
         )
         ->{2}->scoped(fn ($perPage) => $perPage
-            ->toBeInstanceOf(PerPageRecord::class)
-            ->getValue()->toBe(20)
-            ->isActive()->toBeTrue()
+        ->toBeInstanceOf(PerPageRecord::class)
+        ->getValue()->toBe(20)
+        ->isActive()->toBeTrue()
         );
 
     expect($this->table)
@@ -120,7 +118,6 @@ it('checks simple paginator', function () {
     expect($this->table->isSimple('cursor'))->toBeFalse();
 });
 
-
 it('checks cursor paginator', function () {
     expect($this->table->isCursor('cursor'))->toBeTrue();
     expect($this->table->isCursor('simple'))->toBeFalse();
@@ -130,7 +127,6 @@ it('checks collection paginator', function () {
     expect($this->table->isCollector('collection'))->toBeTrue();
     expect($this->table->isCollector('cursor'))->toBeFalse();
 });
-
 
 it('paginates collection', function () {
     $paginated = Product::query()->get();

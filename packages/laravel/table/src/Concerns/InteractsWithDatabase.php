@@ -31,5 +31,4 @@ trait InteractsWithDatabase
         /** @var string */
         return ($table === null || $table === 'null') ? 'views' : $table;
     }
-
 }

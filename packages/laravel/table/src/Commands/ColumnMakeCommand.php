@@ -8,6 +8,8 @@ use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
+use function trim;
+
 #[AsCommand(name: 'make:column')]
 class ColumnMakeCommand extends GeneratorCommand
 {
@@ -50,7 +52,7 @@ class ColumnMakeCommand extends GeneratorCommand
      */
     protected function resolveStubPath($stub)
     {
-        return file_exists($customPath = $this->laravel->basePath(\trim($stub, '/')))
+        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
             : __DIR__.'/../..'.$stub;
     }
