@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Table\Tests\Stubs;
 
-use Honed\Action\BulkAction;
-use Honed\Action\InlineAction;
 use Honed\Action\Operations\BulkOperation;
 use Honed\Action\Operations\InlineOperation;
 use Honed\Action\Operations\PageOperation;
-use Honed\Action\PageAction;
 use Honed\Refine\Filters\Filter;
 use Honed\Refine\Searches\Search;
 use Honed\Refine\Sorts\Sort;
 use Honed\Table\Columns\BooleanColumn;
 use Honed\Table\Columns\Column;
 use Honed\Table\Columns\DateColumn;
-use Honed\Table\Columns\HiddenColumn;
 use Honed\Table\Columns\KeyColumn;
 use Honed\Table\Columns\NumberColumn;
 use Honed\Table\Columns\TextColumn;
@@ -27,12 +23,12 @@ use Workbench\App\Models\Product;
 /**
  * @template TModel of \Workbench\App\Models\Product
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- * 
+ *
  * @extends Table<TModel, TBuilder>
  */
-class ProductTable extends Table implements ShouldToggle//, ShouldOrder
+class ProductTable extends Table implements ShouldToggle // , ShouldOrder
 {
-        /**
+    /**
      * Define the table.
      *
      * @param  $this  $table
@@ -49,32 +45,32 @@ class ProductTable extends Table implements ShouldToggle//, ShouldOrder
                     ->defaultToggled()
                     ->always()
                     ->searchable(),
-    
+
                 TextColumn::make('description')
                     ->defaultToggled()
                     ->filterable()
                     ->placeholder('-'),
-    
+
                 BooleanColumn::make('best_seller', 'Favourite')
                     ->trueText('Favourite')
                     ->falseText('Not favourite'),
-    
+
                 TextColumn::make('seller.name', 'Sold by')
                     ->defaultToggled(),
-    
+
                 Column::make('status'),
-    
+
                 NumberColumn::make('price')
                     ->alias('cost')
                     ->sortable(),
-    
+
                 DateColumn::make('created_at')
                     ->sortable(),
-    
+
                 Column::make('public_id')
                     ->hidden()
                     ->always(),
-    
+
                 DateColumn::make('updated_at')
                     ->filterable()
                     ->allow(false),
@@ -89,24 +85,24 @@ class ProductTable extends Table implements ShouldToggle//, ShouldOrder
                     ->strict()
                     ->operator('<=')
                     ->options([10, 20, 50, 100]),
-    
+
                 Filter::make('status')
                     ->enum(Status::class)
                     ->multiple(),
-    
+
                 Filter::make('status', 'Single')
                     ->alias('only')
                     ->enum(Status::class),
-    
+
                 Filter::make('best_seller', 'Favourite')
                     ->boolean()
                     ->alias('favourite'),
-    
+
                 Filter::make('created_at', 'Oldest')
                     ->alias('oldest')
                     ->date()
                     ->operator('>='),
-    
+
                 Filter::make('created_at', 'Newest')
                     ->alias('newest')
                     ->operator('<=')
@@ -126,7 +122,7 @@ class ProductTable extends Table implements ShouldToggle//, ShouldOrder
                     ->alias('favourite'),
 
                 Sort::make('updated_at')
-                    ->allow(false)
+                    ->allow(false),
             ])
             ->searches([
                 Search::make('description'),
@@ -161,7 +157,7 @@ class ProductTable extends Table implements ShouldToggle//, ShouldOrder
 
                         return to_route('products.show', $product);
                     }),
-                
+
             ]);
     }
 }

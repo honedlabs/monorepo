@@ -37,7 +37,7 @@ class EmptyState extends Primitive // implements NullAsUndefined
     /**
      * The operations of the empty state.
      *
-     * @var array<int, \Honed\Action\Operations\PageOperation>
+     * @var array<int, PageOperation>
      */
     protected $operations = [];
 
@@ -63,10 +63,10 @@ class EmptyState extends Primitive // implements NullAsUndefined
     public static function make($heading = null, $description = null)
     {
         return resolve(static::class)
-            ->when($heading, 
+            ->when($heading,
                 fn ($emptyState, $heading) => $emptyState->heading($heading)
             )
-            ->when($description, 
+            ->when($description,
                 fn ($emptyState, $description) => $emptyState->description($description)
             );
     }
@@ -149,7 +149,7 @@ class EmptyState extends Primitive // implements NullAsUndefined
     /**
      * Get the operations of the empty state.
      *
-     * @return array<int, \Honed\Action\Operations\PageOperation>
+     * @return array<int, PageOperation>
      */
     public function getOperations()
     {

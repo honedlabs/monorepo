@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns\Concerns;
 
+use Closure;
 use Honed\Infolist\Entries\Concerns\HasClasses as HasHeadingClasses;
 
 trait HasClasses
@@ -13,7 +14,7 @@ trait HasClasses
     /**
      * The classes to apply to an individual cell.
      *
-     * @var array<int, string|\Closure(mixed...):string>
+     * @var array<int, string|Closure(mixed...):string>
      */
     protected $cellClasses = [];
 
@@ -27,7 +28,7 @@ trait HasClasses
     /**
      * Set the classes to apply to an individual cell.
      *
-     * @param  string|\Closure(mixed...):string  $classes
+     * @param  string|Closure(mixed...):string  $classes
      * @return $this
      */
     public function cellClasses($classes)
@@ -78,9 +79,10 @@ trait HasClasses
             return null;
         }
 
-        return implode(
-            ' ',
-            array_map($this->evaluate(...), $this->classes)
+        $classes = implode(
+            ' ', array_map($this->evaluate(...), $this->classes)
         );
+
+        return ! $classes ? null : $classes;
     }
 }

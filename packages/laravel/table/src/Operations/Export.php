@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Table\Actions;
 
 use Closure;
-use Honed\Action\Action;
 use Honed\Action\Operations\Operation;
 use Honed\Table\Contracts\ExportsTable;
 use Illuminate\Support\Facades\App;

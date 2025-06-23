@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipes;
 
-use Closure;
 use Honed\Core\Pipe;
 use Illuminate\Support\Str;
 
@@ -117,8 +116,7 @@ class PrepareColumns extends Pipe
 
         $instance->select(
             array_map(
-                static fn ($select) => 
-                    $column->qualifyColumn($select, $builder),
+                static fn ($select) => $column->qualifyColumn($select, $builder),
                 $selects
             )
         );
@@ -149,7 +147,7 @@ class PrepareColumns extends Pipe
     protected function prepare($instance)
     {
         $methods = [];
-        
+
         foreach ($this->getMethods($instance) as $method => $value) {
             if ($value) {
                 $methods[] = $method;

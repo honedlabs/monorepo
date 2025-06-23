@@ -5,46 +5,44 @@ declare(strict_types=1);
 namespace Honed\Table;
 
 use Closure;
-use Throwable;
-use function array_merge;
+use Honed\Action\Concerns\CanHandleOperations;
+use Honed\Action\Contracts\HandlesOperations;
 use Honed\Action\Handler;
-use Honed\Core\Primitive;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Honed\Table\Pipes\Query;
-use Illuminate\Http\Request;
-use Honed\Table\Pipes\Select;
-use Honed\Table\Pipes\Toggle;
-use Honed\Table\Columns\Column;
+use Honed\Action\Handlers\BatchHandler;
 use Honed\Core\Concerns\HasMeta;
-use Honed\Refine\Pipes\SortQuery;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Core\Primitive;
+use Honed\Refine\Concerns\CanBeRefined;
+use Honed\Refine\Contracts\RefinesData;
+use Honed\Refine\Pipes\AfterRefining;
+use Honed\Refine\Pipes\BeforeRefining;
 use Honed\Refine\Pipes\FilterQuery;
 use Honed\Refine\Pipes\PersistData;
 use Honed\Refine\Pipes\SearchQuery;
-use Illuminate\Container\Container;
+use Honed\Refine\Pipes\SortQuery;
 use Honed\Refine\Stores\CookieStore;
+use Honed\Refine\Stores\SessionStore;
+use Honed\Table\Columns\Column;
 use Honed\Table\Concerns\HasColumns;
+use Honed\Table\Concerns\HasEmptyState;
 use Honed\Table\Concerns\HasRecords;
+use Honed\Table\Concerns\Orderable;
 use Honed\Table\Concerns\Selectable;
 use Honed\Table\Concerns\Toggleable;
-use Honed\Refine\Pipes\AfterRefining;
-use Honed\Refine\Stores\SessionStore;
-use Honed\Table\Pipes\PrepareColumns;
-use Honed\Refine\Pipes\BeforeRefining;
-use Honed\Action\Handlers\BatchHandler;
-use Honed\Refine\Concerns\CanBeRefined;
-use Honed\Refine\Contracts\RefinesData;
-use Honed\Table\Concerns\HasEmptyState;
-use Honed\Table\Pipes\CreateEmptyState;
-use Illuminate\Database\Eloquent\Builder;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Action\Contracts\HandlesOperations;
-
-use Honed\Action\Concerns\CanHandleOperations;
 use Honed\Table\Exceptions\KeyNotFoundException;
-use Illuminate\Contracts\Foundation\Application;
+use Honed\Table\Pipes\CreateEmptyState;
+use Honed\Table\Pipes\PrepareColumns;
+use Honed\Table\Pipes\Query;
+use Honed\Table\Pipes\Select;
+use Honed\Table\Pipes\Toggle;
+use Illuminate\Container\Container;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
-use Honed\Table\Concerns\Orderable;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Throwable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -60,9 +58,9 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     use HasEmptyState;
     use HasMeta;
     use HasRecords;
+    use Orderable;
     use Selectable;
     use Toggleable;
-    use Orderable;
 
     /**
      * The default namespace where tables reside.
@@ -80,7 +78,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
 
     /**
      * The store to use for persisting the toggled columns.
-     * 
+     *
      * @var bool|string|null
      */
     protected $persistColumns = null;

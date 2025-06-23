@@ -5,30 +5,27 @@ declare(strict_types=1);
 namespace Honed\Table\Columns;
 
 use Closure;
-use Honed\Refine\Sorts\Sort;
-use function array_merge;
-use Honed\Core\Primitive;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use InvalidArgumentException;
-use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasExtra;
+use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasQuery;
+use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\IsActive;
-use Honed\Core\Concerns\Allowable;
-use Honed\Table\Concerns\Selectable;
+use Honed\Core\Primitive;
+use Honed\Infolist\Entries\Concerns\CanBeAggregated;
+use Honed\Infolist\Entries\Concerns\HasPlaceholder;
+use Honed\Infolist\Entries\Concerns\HasState;
 use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
-use Illuminate\Database\Eloquent\Model;
+use Honed\Refine\Sorts\Sort;
+use Honed\Table\Concerns\Selectable;
 use Illuminate\Database\Eloquent\Builder;
-
-use Honed\Infolist\Entries\Concerns\HasState;
-use Honed\Infolist\Entries\Concerns\HasPlaceholder;
-use Honed\Infolist\Entries\Concerns\CanBeAggregated;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -53,8 +50,10 @@ class Column extends Primitive
     use HasName;
     use HasPlaceholder;
     use HasQualifier;
+
     /** @use \Honed\Core\Concerns\HasQuery<TModel, TBuilder> */
     use HasQuery;
+
     use HasState;
     use HasType;
     use IsActive;
@@ -128,44 +127,6 @@ class Column extends Primitive
     public function formatValue($value)
     {
         return $value ?? $this->getFallback();
-    }
-
-    /**
-     * Create a record entry for the column.
-     *
-     * @param  TModel  $record
-     * @param  array<string,mixed>  $named
-     * @param  array<class-string,mixed>  $typed
-     * @return array<string,array{value:mixed, extra:array<string,mixed>}>
-     */
-    public function entry($record, $named = [], $typed = [])
-    {
-        $valueUsing = $this->getValue();
-
-        $value = $this->apply((bool) $valueUsing
-            ? $this->evaluate($valueUsing, $named, $typed)
-            : Arr::get($record, $this->getName())
-        );
-
-        /**
-         * [
-         *  'v' => mixed // value
-         *  'e' => mixed // extra
-         *  'c' => string|null // class
-         *  'f' => boolean // fallback
-         *  ]
-         * ]
-         */
-
-        return [
-            $this->getParameter() => [
-                'value' => $value,
-                'extra' => $this->getExtra(
-                    array_merge($named, ['value' => $value]),
-                    $typed,
-                ),
-            ],
-        ];
     }
 
     /**

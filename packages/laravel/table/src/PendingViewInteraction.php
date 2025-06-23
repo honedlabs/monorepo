@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
-use JsonSerializable;
-
 class PendingViewInteraction
 {
     /**
      * The view driver.
-     * 
-     * @var \Honed\Table\Drivers\Driver
+     *
+     * @var Drivers\Driver
      */
     protected $driver;
 }

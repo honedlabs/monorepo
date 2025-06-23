@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipes;
 
+use Closure;
 use Honed\Core\Pipe;
 use Honed\Table\EmptyState;
 
@@ -24,21 +25,50 @@ class CreateEmptyState extends Pipe
     {
         if (filled($instance->getRecords())) {
             $instance->emptyState(null);
-            
+
             return;
         }
 
-        if (! $instance->getEmptyState()) {
-            $instance->emptyState(EmptyState::make());
+        $emptyState = $instance->getEmptyState() ?? EmptyState::make();
+
+        $instance->emptyState($emptyState);
+
+        $callback = $this->resolveCallback($instance, $emptyState);
+
+        if ($callback) {
+            $instance->evaluate($callback);
+        }
+    }
+
+    /**
+     * Resolve the appropriate callback for the current table state.
+     *
+     * @param  TClass  $instance
+     * @param  EmptyState  $emptyState
+     * @return Closure(mixed...):$this|null
+     */
+    protected function resolveCallback($instance, $emptyState)
+    {
+        $states = [
+            'filtering' => $instance->isFiltering(),
+            'searching' => $instance->isSearching(),
+            'refining' => $instance->isFiltering() || $instance->isSearching(),
+        ];
+
+        foreach ($states as $type => $isActive) {
+            if ($isActive) {
+                $callback = match ($type) {
+                    'filtering' => $emptyState->getFilteringCallback(),
+                    'searching' => $emptyState->getSearchingCallback(),
+                    'refining' => $emptyState->getRefiningCallback(),
+                };
+
+                if ($callback) {
+                    return $callback;
+                }
+            }
         }
 
-        $emptyState = $instance->getEmptyState();
-
-        $emptyState->evaluate(match (true) {
-            $instance->isFiltering() => $instance->getFilteringCallback(),
-            $instance->isSearching() => $instance->getSearchingCallback(),
-            $instance->isRefining() => $instance->getRefiningCallback(),
-            default => null
-        });
+        return null;
     }
 }

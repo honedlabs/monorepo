@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns\Concerns;
 
-use Honed\Table\Concerns\Toggleable as BaseToggleable;
-
 trait Toggleable
 {
     /**
@@ -24,7 +22,7 @@ trait Toggleable
 
     /**
      * Whether the instance should always be shown, just hidden if it is inactive.
-     * 
+     *
      * @var bool
      */
     protected $always = false;

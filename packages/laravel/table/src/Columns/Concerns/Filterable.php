@@ -55,8 +55,7 @@ trait Filterable
         }
 
         return match (true) {
-            $this->filterable instanceof Closure =>
-                $this->newFilter()->query($this->filterable),
+            $this->filterable instanceof Closure => $this->newFilter()->query($this->filterable),
 
             default => $this->newFilter()
         };

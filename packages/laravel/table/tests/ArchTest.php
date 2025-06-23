@@ -37,3 +37,8 @@ arch('commands')
 arch('exceptions')
     ->expect('Honed\Table\Exceptions')
     ->toExtend(Exception::class);
+
+it('hits', function () {
+    $v = '';
+    dd((bool) $v);
+})->only();

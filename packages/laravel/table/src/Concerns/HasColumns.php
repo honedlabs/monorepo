@@ -6,25 +6,21 @@ namespace Honed\Table\Concerns;
 
 use Honed\Table\Columns\Column;
 
-/**
- * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
- * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
- */
 trait HasColumns
 {
     /**
      * The columns to be used for the table.
      *
-     * @var array<int,Column<TModel, TBuilder>>
+     * @var array<int,Column>
      */
     protected $columns = [];
 
     /**
      * The cached column headings.
      *
-     * @var array<int,Column>
+     * @var array<int,Column>|null
      */
-    protected $headings = [];
+    protected $headings;
 
     /**
      * Merge a set of columns with the existing columns.
@@ -45,7 +41,7 @@ trait HasColumns
     /**
      * Retrieve the columns.
      *
-     * @return array<int,Column<TModel, TBuilder>>
+     * @return array<int,Column>
      */
     public function getColumns()
     {
@@ -60,7 +56,7 @@ trait HasColumns
     /**
      * Set the cached headings.
      *
-     * @param  array<int,Column<TModel, TBuilder>>  $headings
+     * @param  array<int,Column>  $headings
      * @return void
      */
     public function setHeadings($headings)
@@ -71,7 +67,7 @@ trait HasColumns
     /**
      * Set the columns by overriding the existing columns.
      *
-     * @param  array<int,Column<TModel, TBuilder>>  $columns
+     * @param  array<int,Column>  $columns
      * @return void
      */
     public function setColumns($columns)
@@ -82,7 +78,7 @@ trait HasColumns
     /**
      * Get the cached heading columns.
      *
-     * @return array<int,Column<TModel, TBuilder>>
+     * @return array<int,Column>
      */
     public function getHeadings()
     {

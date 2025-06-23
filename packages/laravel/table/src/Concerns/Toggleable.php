@@ -14,6 +14,13 @@ trait Toggleable
     protected $toggleable = false;
 
     /**
+     * The query parameter for which columns to display.
+     *
+     * @var string
+     */
+    protected $columnKey = 'columns';
+
+    /**
      * Set the instance to be toggleable.
      *
      * @param  bool  $value
@@ -34,5 +41,28 @@ trait Toggleable
     public function isToggleable()
     {
         return $this->toggleable;
+    }
+
+    /**
+     * Set the query parameter for which columns to display.
+     *
+     * @param  string  $columnKey
+     * @return $this
+     */
+    public function columnKey($columnKey): static
+    {
+        $this->columnKey = $columnKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the query parameter for which columns to display.
+     *
+     * @return string
+     */
+    public function getColumnKey()
+    {
+        return $this->columnKey;
     }
 }

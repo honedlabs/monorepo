@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Table\Http\Controllers;
 
+use Honed\Action\Http\Controllers\Controller;
 use Honed\Action\Http\Requests\InvokableRequest;
 use Honed\Table\Table;
-use Honed\Action\Http\Controllers\Controller;
 
 class TableController extends Controller
 {

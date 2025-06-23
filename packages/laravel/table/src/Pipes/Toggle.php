@@ -33,7 +33,7 @@ class Toggle extends Pipe
         }
 
         $names = $this->getColumns($instance);
-        
+
         if ($orderable) {
             $this->order($instance, $names);
         }
@@ -49,7 +49,7 @@ class Toggle extends Pipe
      * Get the columns which should be displayed.
      *
      * @param  TClass  $instance
-     * @return array{string|null, 'asc'|'desc'|null}
+     * @return array<int, string>|null
      */
     protected function getColumns($instance)
     {
@@ -70,7 +70,7 @@ class Toggle extends Pipe
 
     /**
      * Toggle and order the columns, setting the active status.
-     * 
+     *
      * @param  TClass  $instance
      * @param  array<int, string>|null  $names
      * @return void
@@ -88,14 +88,14 @@ class Toggle extends Pipe
                     $column->active($active);
 
                     if (
-                        ! $active 
+                        ! $active
                         && (
-                            $column->isAlways() 
+                            $column->isAlways()
                             || $column->isKey()
                         )
                     ) {
                         $column->hidden();
-                        
+
                         return true;
                     }
 

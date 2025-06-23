@@ -107,13 +107,9 @@ class ViewManager
     /**
      * Pending view retrieval
      */
-    public function for($scope = null)
-    {
-
-    }
+    public function for($scope = null) {}
 
     public function all() {}
-
 
     /**
      * Retrieve the value for the given name and scope from storage.
@@ -147,26 +143,6 @@ class ViewManager
             static::CREATED_AT => $now,
             static::UPDATED_AT => $now,
         ], uniqueBy: ['name', 'scope'], update: ['view', static::UPDATED_AT]);
-    }
-
-
-    /**
-     * Update the value for the given feature and scope in storage.
-     *
-     * @param  string  $feature
-     * @param  mixed  $scope
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function update($feature, $scope, $value)
-    {
-        return (bool) $this->newQuery()
-            ->where('name', $feature)
-            ->where('scope', $this->serializeScope($scope))
-            ->update([
-                'view' => json_encode($value, flags: JSON_THROW_ON_ERROR),
-                static::UPDATED_AT => Carbon::now(),
-            ]);
     }
 
     /**
@@ -218,6 +194,25 @@ class ViewManager
             ->where('name', $name)
             ->where('scope', static::serializeScope($scope))
             ->delete();
+    }
+
+    /**
+     * Update the value for the given feature and scope in storage.
+     *
+     * @param  string  $feature
+     * @param  mixed  $scope
+     * @param  mixed  $value
+     * @return bool
+     */
+    protected function update($feature, $scope, $value)
+    {
+        return (bool) $this->newQuery()
+            ->where('name', $feature)
+            ->where('scope', $this->serializeScope($scope))
+            ->update([
+                'view' => json_encode($value, flags: JSON_THROW_ON_ERROR),
+                static::UPDATED_AT => Carbon::now(),
+            ]);
     }
 
     /**

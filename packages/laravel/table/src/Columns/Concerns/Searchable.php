@@ -6,21 +6,20 @@ namespace Honed\Table\Columns\Concerns;
 
 use Closure;
 use Honed\Refine\Searches\Search;
-use Illuminate\Support\Arr;
 
 trait Searchable
 {
     /**
      * The searchable state of the column.
      *
-     * @var bool|string|\Closure
+     * @var bool|string|Closure
      */
     protected $searchable = false;
 
     /**
      * Set the searchable state of the column.
      *
-     * @param  bool|string|\Closure  $searches
+     * @param  bool|string|Closure  $searches
      * @return $this
      */
     public function searchable($searches = true)
@@ -52,11 +51,9 @@ trait Searchable
         }
 
         return match (true) {
-            $this->searchable instanceof Closure =>
-                $this->newSearch()->query($this->searchable),
+            $this->searchable instanceof Closure => $this->newSearch()->query($this->searchable),
 
-            is_string($this->searchable) =>
-                $this->newSearch($this->searchable),
+            is_string($this->searchable) => $this->newSearch($this->searchable),
 
             default => $this->newSearch()
         };
@@ -65,7 +62,7 @@ trait Searchable
     /**
      * Create a new search instance.
      *
-     * @param string|null $name
+     * @param  string|null  $name
      * @return Search
      */
     protected function newSearch($name = null)

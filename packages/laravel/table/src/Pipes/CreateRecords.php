@@ -27,8 +27,7 @@ class CreateRecords extends Pipe
 
         $operations = $instance->getInlineOperations();
 
-        $records = array_map(fn ($record) => 
-            $this->createRecord($record, $columns, $operations),
+        $records = array_map(fn ($record) => $this->createRecord($record, $columns, $operations),
             $instance->getRecords()
         );
 
@@ -38,9 +37,9 @@ class CreateRecords extends Pipe
     /**
      * Create a record for the table.
      *
-     * @param \Illuminate\Database\Eloquent\Model $record
-     * @param array<int, \Honed\Table\Columns\Column> $columns
-     * @param array<int, \Honed\Table\Operations\InlineOperation> $operations
+     * @param  array<string, mixed>|\Illuminate\Database\Eloquent\Model  $record
+     * @param  array<int, \Honed\Table\Columns\Column>  $columns
+     * @param  array<int, InlineOperation>  $operations
      * @return array<string, mixed>
      */
     protected function createRecord($record, $columns, $operations)
@@ -54,20 +53,18 @@ class CreateRecords extends Pipe
     /**
      * Get the operations for a record.
      *
-     * @param \Illuminate\Database\Eloquent\Model $record
-     * @param array<int, \Honed\Table\Operations\InlineOperation> $operations
+     * @param  array<string, mixed>|\Illuminate\Database\Eloquent\Model  $record
+     * @param  array<int, InlineOperation>  $operations
      * @return array<int, array<string, mixed>>
      */
     protected function getOperations($record, $operations)
     {
         return array_map(
-            static fn (InlineOperation $operation) => 
-                $operation->record($record)->toArray(),
+            static fn (InlineOperation $operation) => $operation->record($record)->toArray(),
             array_values(
                 array_filter(
                     $operations,
-                    static fn (InlineOperation $operation) => 
-                        $operation->record($record)->isAllowed()
+                    static fn (InlineOperation $operation) => $operation->record($record)->isAllowed()
                 )
             )
         );
@@ -75,9 +72,9 @@ class CreateRecords extends Pipe
 
     /**
      * Get the column values for a record.
-     * 
-     * @param \Illuminate\Database\Eloquent\Model $record
-     * @param array<int, \Honed\Table\Columns\Column> $columns
+     *
+     * @param  array<string, mixed>|\Illuminate\Database\Eloquent\Model  $record
+     * @param  array<int, \Honed\Table\Columns\Column>  $columns
      * @return array<string, array<string, mixed>>
      */
     protected function getColumns($record, $columns)
@@ -91,8 +88,8 @@ class CreateRecords extends Pipe
     /**
      * Get the column value for a record.
      *
-     * @param \Illuminate\Database\Eloquent\Model $record
-     * @param \Honed\Table\Columns\Column $column
+     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $record
+     * @param  \Honed\Table\Columns\Column  $column
      * @return array<string, mixed>
      */
     protected function getColumn($record, $column)
@@ -101,4 +98,42 @@ class CreateRecords extends Pipe
 
         return [];
     }
+
+    // /**
+    //  * Create a record entry for the column.
+    //  *
+    //  * @param  TModel  $record
+    //  * @param  array<string,mixed>  $named
+    //  * @param  array<class-string,mixed>  $typed
+    //  * @return array<string,array{value:mixed, extra:array<string,mixed>}>
+    //  */
+    // public function entry($record, $named = [], $typed = [])
+    // {
+    //     $valueUsing = $this->getValue();
+
+    //     $value = $this->apply((bool) $valueUsing
+    //         ? $this->evaluate($valueUsing, $named, $typed)
+    //         : Arr::get($record, $this->getName())
+    //     );
+
+    //     /**
+    //      * [
+    //      *  'v' => mixed // value
+    //      *  'e' => mixed // extra
+    //      *  'c' => string|null // class
+    //      *  'f' => boolean // fallback
+    //      *  ]
+    //      * ]
+    //      */
+
+    //     return [
+    //         $this->getParameter() => [
+    //             'value' => $value,
+    //             'extra' => $this->getExtra(
+    //                 array_merge($named, ['value' => $value]),
+    //                 $typed,
+    //             ),
+    //         ],
+    //     ];
+    // }
 }

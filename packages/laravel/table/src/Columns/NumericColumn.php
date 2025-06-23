@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
-use Illuminate\Support\Number;
-
 use function is_null;
-use function is_numeric;
-use function number_format;
 
 class NumberColumn extends Column
 {

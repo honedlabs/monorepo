@@ -9,7 +9,7 @@ trait HasRecords
     /**
      * The records.
      *
-     * @var array<int,mixed>
+     * @var array<int,array<string,mixed>|\Illuminate\Database\Eloquent\Model>
      */
     protected $records = [];
 
@@ -23,7 +23,7 @@ trait HasRecords
     /**
      * Set the records.
      *
-     * @param  array<int,mixed>  $records
+     * @param  array<int,array<string,mixed>|\Illuminate\Database\Eloquent\Model>  $records
      * @return void
      */
     public function setRecords($records)
@@ -34,7 +34,7 @@ trait HasRecords
     /**
      * Get the records.
      *
-     * @return array<int,mixed>
+     * @return array<int,array<string,mixed>|\Illuminate\Database\Eloquent\Model>
      */
     public function getRecords()
     {

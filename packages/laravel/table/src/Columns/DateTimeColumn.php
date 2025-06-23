@@ -6,7 +6,6 @@ namespace Honed\Table\Columns;
 
 class DateTimeColumn extends Column
 {
-
     /**
      * Provide the instance with any necessary setup.
      *

@@ -82,14 +82,17 @@ trait HasEmptyState
     }
 
     /**
-     * Set the actions of the empty state.
+     * Set the operations of the empty state.
      *
-     * @param  \Honed\Action\Action|iterable<int, \Honed\Action\Action>  ...$actions
+     * @param  \Honed\Action\Operations\PageOperation|array<int, \Honed\Action\Operations\PageOperation>  $operations
      * @return $this
      */
-    public function emptyStateActions(...$actions)
+    public function emptyStateOperations($operations)
     {
-        $this->newEmptyState()->actions(...$actions);
+        /** @var array<int, \Honed\Action\Operations\PageOperation> */
+        $operations = is_array($operations) ? $operations : func_get_args();
+
+        $this->newEmptyState()->operations($operations);
 
         return $this;
     }

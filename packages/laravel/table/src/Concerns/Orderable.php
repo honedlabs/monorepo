@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Table\Concerns;
 
 trait Orderable
 {
     /**
      * Whether the columns are orderable.
-     * 
+     *
      * @var bool
      */
     protected $orderable = false;
