@@ -25,12 +25,6 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
     use HasLabel;
     use HasType;
 
-    public const NUMERIC = 'numeric';
-
-    public const TEXT = 'text';
-
-    public const TIME = 'time';
-
     /**
      * Format the value of the entry.
      *
@@ -89,7 +83,7 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return match ($parameterName) {
-            'record', 'row' => [$this->getRecord()],
+            'model', 'record', 'row' => [$this->getRecord()],
             'state' => [$this->getState()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };

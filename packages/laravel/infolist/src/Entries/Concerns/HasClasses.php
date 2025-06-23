@@ -35,13 +35,23 @@ trait HasClasses
      */
     public function getClasses()
     {
-        if (empty($this->classes)) {
+        return $this->createClass($this->classes);
+    }
+
+    /**
+     * Create a class from a string or closure.
+     *
+     * @param  array<int, string|Closure(mixed...):string>  $class
+     * @return string|null
+     */
+    protected function createClass($classes)
+    {
+        if (empty($classes)) {
             return null;
         }
 
-        return implode(
-            ' ',
-            array_map($this->evaluate(...), $this->classes)
-        );
+        $classes = implode(' ', array_map($this->evaluate(...), $classes));
+
+        return $classes === '' ? null : $classes;
     }
 }
