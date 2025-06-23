@@ -43,13 +43,35 @@ class DatabaseDriver implements Driver
     protected $db;
 
     /**
+     * The store's name.
+     *
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * The event dispatcher.
+     *
+     * @var \Illuminate\Contracts\Events\Dispatcher
+     */
+    protected $events;
+
+    /**
      * Create a new view resolver.
      *
-     * @return void
+     * @param \Illuminate\Database\DatabaseManager $db
+     * @param \Illuminate\Contracts\Events\Dispatcher $events
+     * @param string $name
      */
     public function __construct(
-        protected Container $container,
-    ) {}
+        DatabaseManager $db,
+        Dispatcher $events,
+        string $name
+    ) {
+        $this->db = $db;
+        $this->events = $events;
+        $this->name = $name;
+    }
 
     /**
      * Retrieve the value for the given name and scope from storage.
@@ -68,8 +90,8 @@ class DatabaseDriver implements Driver
      * Retrieve the views for the given table and scopes from storage.
      *
      * @param  string  $table
-     * @param  array<mixed>  $scopes
-     * @return array<object>
+     * @param  array<int, mixed>  $scopes
+     * @return array<int, object>
      */
     public function list($table, $scopes)
     {
@@ -81,7 +103,8 @@ class DatabaseDriver implements Driver
         return $this->newQuery()
             ->where('table', $table)
             ->whereIn('scope', $scopes)
-            ->get(['id', 'name', 'view']);
+            ->get(['id', 'name', 'view'])
+            ->all();
     }
 
     /**

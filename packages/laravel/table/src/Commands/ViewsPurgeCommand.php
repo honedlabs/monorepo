@@ -10,7 +10,7 @@ use Laravel\Pennant\FeatureManager;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'views:purge', aliases: ['views:clear'])]
-class PurgeCommand extends Command
+class ViewsPurgeCommand extends Command
 {
     /**
      * The console command name.

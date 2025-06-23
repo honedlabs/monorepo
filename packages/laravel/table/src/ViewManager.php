@@ -6,12 +6,15 @@ namespace Honed\Table;
 
 use Closure;
 use Honed\Table\Contracts\ViewScopeSerializeable;
+use Honed\Table\Drivers\ArrayDriver;
+use Honed\Table\Drivers\DatabaseDriver;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use InvalidArgumentException;
 use RuntimeException;
 
 class ViewManager
@@ -33,14 +36,14 @@ class ViewManager
     /**
      * The registered custom driver creators.
      *
-     * @var array<string, (callable(string): \Honed\Table\Contracts\Driver)>
+     * @var array<string, (\Closure(string, \Illuminate\Contracts\Container\Container): \Honed\Table\Contracts\Driver)>
      */
     protected $customCreators = [];
 
     /**
      * The default scope resolver.
      *
-     * @var (callable(string): mixed)|null
+     * @var (\Closure(string): mixed)|null
      */
     protected $defaultScopeResolver;
 
@@ -52,8 +55,11 @@ class ViewManager
     protected $useMorphMap = false;
 
     /**
-     * 
+     * The default driver name.
+     *
+     * @var string
      */
+    protected $defaultDriver = 'database';
 
     /**
      * Create a new view resolver.
@@ -99,10 +105,122 @@ class ViewManager
      *
      * @param  string  $name
      * @return \Honed\Table\Contracts\Driver
+     * 
+     * @throws \InvalidArgumentException
      */
     protected function get($name)
     {
-        return $this->stores[$name];
+        return $this->stores[$name] ?? $this->resolve($name);
+    }
+
+    /**
+     * Resolve a view store instance.
+     *
+     * @param  string  $name
+     * @return \Honed\Table\Contracts\Driver
+     * 
+     * @throws \InvalidArgumentException
+     */
+    protected function resolve($name)
+    {
+        if (isset($this->customCreators[$name])) {
+            return $this->callCustomCreator($name);
+        }
+
+        $method = 'create'.ucfirst($name).'Driver';
+
+        if (method_exists($this, $method)) {
+            /** @var \Honed\Table\Contracts\Driver */
+            return $this->{$method}($name);
+        }
+
+        throw new InvalidArgumentException(
+            "Driver [{$name}] not supported."
+        );
+    }
+
+    /**
+     * Call a custom driver creator.
+     *
+     * @param string $name
+     * @return \Honed\Table\Contracts\Driver
+     */
+    protected function callCustomCreator($name)
+    {
+        return $this->customCreators[$name]($name, $this->container);
+    }
+
+    /**
+     * Create an instance of the array driver.
+     *
+     * @param string $name
+     * @return ArrayDriver
+     */
+    public function createArrayDriver($name)
+    {
+        return new ArrayDriver(
+            $this->getDispatcher(), $name
+        );
+    }
+
+    /**
+     * Create an instance of the database driver.
+     *
+     * @param string $name
+     * @return DatabaseDriver
+     */
+    public function createDatabaseDriver($name)
+    {
+        return new DatabaseDriver(
+            $this->getDatabaseManager(), $this->getDispatcher(), $name
+        );
+    }
+
+    /**
+     * Get the default driver name.
+     *
+     * @return string
+     */
+    public function getDefaultDriver()
+    {
+        return $this->defaultDriver;
+    }
+
+    /**
+     * Set the default driver name.
+     *
+     * @param string $name
+     * @return void
+     */
+    public function setDefaultDriver($name)
+    {
+        $this->defaultDriver = $name;
+    }
+
+    /**
+     * Forget all of the resolved store instances.
+     *
+     * @return $this
+     */
+    public function forgetDrivers()
+    {
+        $this->stores = [];
+
+        return $this;
+    }
+
+    /**
+     * Register a custom driver creator Closure.
+     *
+     * @param  string  $driver
+     * @param  \Closure(string, \Illuminate\Contracts\Container\Container): \Honed\Table\Contracts\Driver  $callback
+     * @return $this
+     */
+    public function extend($driver, $callback)
+    {
+        $this->customCreators[$driver] = $callback->bindTo($this, $this);
+
+        return $this;
     }
 
     /**
@@ -146,7 +264,7 @@ class ViewManager
     /**
      * Set the default scope resolver.
      *
-     * @param  (callable(string): mixed)  $resolver
+     * @param  (\Closure(string): mixed)  $resolver
      * @return void
      */
     public function resolveScopeUsing($resolver)
@@ -183,7 +301,7 @@ class ViewManager
      * The default scope resolver.
      *
      * @param  string  $driver
-     * @return callable(): mixed
+     * @return \Closure(): mixed
      */
     protected function defaultScopeResolver($driver)
     {
@@ -206,17 +324,6 @@ class ViewManager
     {
         /** @var DatabaseManager */
         return $this->container['db']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
-    }
-
-    /**
-     * Get the config instance from the container.
-     *
-     * @return Repository
-     */
-    protected function getConfig()
-    {
-        /** @var Repository */
-        return $this->container['config']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 
     /**
