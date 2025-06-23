@@ -8,12 +8,10 @@ use Closure;
 use Honed\Table\Contracts\ViewScopeSerializeable;
 use Honed\Table\Drivers\ArrayDriver;
 use Honed\Table\Drivers\DatabaseDriver;
-use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -22,28 +20,28 @@ class ViewManager
     /**
      * The container instance.
      *
-     * @var \Illuminate\Contracts\Container\Container
+     * @var Container
      */
     protected $container;
 
     /**
      * The array of resolved view stores.
      *
-     * @var array<string, \Honed\Table\Contracts\Driver>
+     * @var array<string, Contracts\Driver>
      */
     protected $stores = [];
 
     /**
      * The registered custom driver creators.
      *
-     * @var array<string, (\Closure(string, \Illuminate\Contracts\Container\Container): \Honed\Table\Contracts\Driver)>
+     * @var array<string, (Closure(string, Container): Contracts\Driver)>
      */
     protected $customCreators = [];
 
     /**
      * The default scope resolver.
      *
-     * @var (\Closure(string): mixed)|null
+     * @var (Closure(string): mixed)|null
      */
     protected $defaultScopeResolver;
 
@@ -64,7 +62,6 @@ class ViewManager
     /**
      * Create a new view resolver.
      *
-     * @param \Illuminate\Contracts\Container\Container $container
      * @return void
      */
     public function __construct(Container $container)
@@ -73,12 +70,24 @@ class ViewManager
     }
 
     /**
+     * Dynamically call the default store instance.
+     *
+     * @param  string  $method
+     * @param  array<int, mixed>  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->store()->{$method}(...$parameters);
+    }
+
+    /**
      * Get a view store instance.
      *
      * @param  string|null  $store
-     * @return \Honed\Table\Contracts\Driver
+     * @return Contracts\Driver
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function store($store = null)
     {
@@ -89,9 +98,9 @@ class ViewManager
      * Get a view store instance by name.
      *
      * @param  string|null  $name
-     * @return \Honed\Table\Contracts\Driver
+     * @return Contracts\Driver
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function driver($name = null)
     {
@@ -101,59 +110,9 @@ class ViewManager
     }
 
     /**
-     * Attempt to get the store from the local cache.
-     *
-     * @param  string  $name
-     * @return \Honed\Table\Contracts\Driver
-     * 
-     * @throws \InvalidArgumentException
-     */
-    protected function get($name)
-    {
-        return $this->stores[$name] ?? $this->resolve($name);
-    }
-
-    /**
-     * Resolve a view store instance.
-     *
-     * @param  string  $name
-     * @return \Honed\Table\Contracts\Driver
-     * 
-     * @throws \InvalidArgumentException
-     */
-    protected function resolve($name)
-    {
-        if (isset($this->customCreators[$name])) {
-            return $this->callCustomCreator($name);
-        }
-
-        $method = 'create'.ucfirst($name).'Driver';
-
-        if (method_exists($this, $method)) {
-            /** @var \Honed\Table\Contracts\Driver */
-            return $this->{$method}($name);
-        }
-
-        throw new InvalidArgumentException(
-            "Driver [{$name}] not supported."
-        );
-    }
-
-    /**
-     * Call a custom driver creator.
-     *
-     * @param string $name
-     * @return \Honed\Table\Contracts\Driver
-     */
-    protected function callCustomCreator($name)
-    {
-        return $this->customCreators[$name]($name, $this->container);
-    }
-
-    /**
      * Create an instance of the array driver.
      *
-     * @param string $name
+     * @param  string  $name
      * @return ArrayDriver
      */
     public function createArrayDriver($name)
@@ -166,7 +125,7 @@ class ViewManager
     /**
      * Create an instance of the database driver.
      *
-     * @param string $name
+     * @param  string  $name
      * @return DatabaseDriver
      */
     public function createDatabaseDriver($name)
@@ -189,7 +148,7 @@ class ViewManager
     /**
      * Set the default driver name.
      *
-     * @param string $name
+     * @param  string  $name
      * @return void
      */
     public function setDefaultDriver($name)
@@ -213,7 +172,7 @@ class ViewManager
      * Register a custom driver creator Closure.
      *
      * @param  string  $driver
-     * @param  \Closure(string, \Illuminate\Contracts\Container\Container): \Honed\Table\Contracts\Driver  $callback
+     * @param  Closure(string, Container): Contracts\Driver  $callback
      * @return $this
      */
     public function extend($driver, $callback)
@@ -264,7 +223,7 @@ class ViewManager
     /**
      * Set the default scope resolver.
      *
-     * @param  (\Closure(string): mixed)  $resolver
+     * @param  (Closure(string): mixed)  $resolver
      * @return void
      */
     public function resolveScopeUsing($resolver)
@@ -288,8 +247,8 @@ class ViewManager
 
     /**
      * Create a pending view retrieval.
-     * 
-     * @param mixed|array<int, mixed> $scope
+     *
+     * @param  mixed|array<int, mixed>  $scope
      * @return PendingViewInteraction
      */
     public function for($scope = null)
@@ -298,10 +257,60 @@ class ViewManager
     }
 
     /**
+     * Attempt to get the store from the local cache.
+     *
+     * @param  string  $name
+     * @return Contracts\Driver
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function get($name)
+    {
+        return $this->stores[$name] ?? $this->resolve($name);
+    }
+
+    /**
+     * Resolve a view store instance.
+     *
+     * @param  string  $name
+     * @return Contracts\Driver
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function resolve($name)
+    {
+        if (isset($this->customCreators[$name])) {
+            return $this->callCustomCreator($name);
+        }
+
+        $method = 'create'.ucfirst($name).'Driver';
+
+        if (method_exists($this, $method)) {
+            /** @var Contracts\Driver */
+            return $this->{$method}($name);
+        }
+
+        throw new InvalidArgumentException(
+            "Driver [{$name}] not supported."
+        );
+    }
+
+    /**
+     * Call a custom driver creator.
+     *
+     * @param  string  $name
+     * @return Contracts\Driver
+     */
+    protected function callCustomCreator($name)
+    {
+        return $this->customCreators[$name]($name, $this->container);
+    }
+
+    /**
      * The default scope resolver.
      *
      * @param  string  $driver
-     * @return \Closure(): mixed
+     * @return Closure(): mixed
      */
     protected function defaultScopeResolver($driver)
     {
@@ -335,17 +344,5 @@ class ViewManager
     {
         /** @var Dispatcher */
         return $this->container['events']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
-    }
-
-    /**
-     * Dynamically call the default store instance.
-     *
-     * @param  string  $method
-     * @param  array<int, mixed>  $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        return $this->store()->{$method}(...$parameters);
     }
 }

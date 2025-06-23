@@ -6,7 +6,6 @@ namespace Honed\Table\Commands;
 
 use Honed\Table\ViewManager;
 use Illuminate\Console\Command;
-use Laravel\Pennant\FeatureManager;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'views:purge', aliases: ['views:clear'])]

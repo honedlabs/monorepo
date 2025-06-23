@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Honed\Table;
 
 use Honed\Table\Facades\Views;
-use JsonSerializable;
 
 class PendingViewInteraction
 {
     /**
      * The view driver.
      *
-     * @var \Honed\Table\Contracts\Driver
+     * @var Contracts\Driver
      */
     protected $driver;
 
@@ -26,7 +25,7 @@ class PendingViewInteraction
     /**
      * Create a new pending view interaction.
      *
-     * @param \Honed\Table\Contracts\Driver $driver
+     * @param  Contracts\Driver  $driver
      */
     public function __construct($driver)
     {
@@ -35,8 +34,8 @@ class PendingViewInteraction
 
     /**
      * Set the scope for the pending view interaction.
-     * 
-     * @param mixed|array<int, mixed> $scope
+     *
+     * @param  mixed|array<int, mixed>  $scope
      * @return $this
      */
     public function for($scope)
@@ -50,8 +49,8 @@ class PendingViewInteraction
 
     /**
      * Load the pending view interaction for the given table.
-     * 
-     * @param \Honed\Table\Table|class-string<\Honed\Table\Table> $table
+     *
+     * @param  Table|class-string<Table>  $table
      * @return object|null
      */
     public function load($table)

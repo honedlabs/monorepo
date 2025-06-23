@@ -136,7 +136,8 @@ class ProductTable extends Table implements ShouldToggle // , ShouldOrder
                     ->action(fn ($product) => $product->delete())
                     ->confirm(fn ($confirm) => $confirm
                         ->title(fn ($product) => 'You are about to delete '.$product->name)
-                        ->description('Are you sure?')),
+                        ->description('Are you sure?')
+                    ),
 
                 InlineOperation::make('show')
                     ->route(fn ($product) => route('products.show', $product)),

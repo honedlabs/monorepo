@@ -8,14 +8,14 @@ trait CanLimitRecords
 {
     /**
      * Whether to display the export as a page operation.
-     * 
+     *
      * @var bool
      */
     protected $page = true;
 
     /**
      * Whether to display the export as a bulk operation.
-     * 
+     *
      * @var bool
      */
     protected $bulk = false;

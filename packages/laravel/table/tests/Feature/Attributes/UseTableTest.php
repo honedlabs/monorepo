@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Table\Attributes\UseTable;
-use Workbench\App\Tables\UserTable;
 use Workbench\App\Models\User;
+use Workbench\App\Tables\UserTable;
 
 it('has attribute', function () {
     $attribute = new UseTable(UserTable::class);

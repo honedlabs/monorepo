@@ -20,12 +20,12 @@ class User extends Authenticatable
      */
     use HasFactory;
 
-    use Notifiable;
-
-    /** 
+    /**
      * @use \Honed\Table\Concerns\HasTable<\Workbench\App\Tables\UserTable>
      */
     use HasTable;
+
+    use Notifiable;
 
     /**
      * The factory for the model.

@@ -20,7 +20,7 @@ class ArrayDriver implements Driver
     /**
      * The event dispatcher.
      *
-     * @var \Illuminate\Contracts\Events\Dispatcher
+     * @var Dispatcher
      */
     protected $events;
 
@@ -33,9 +33,6 @@ class ArrayDriver implements Driver
 
     /**
      * Create a new view resolver.
-     *
-     * @param \Illuminate\Contracts\Events\Dispatcher $events
-     * @param string $name
      */
     public function __construct(
         Dispatcher $events,
@@ -45,7 +42,7 @@ class ArrayDriver implements Driver
         $this->name = $name;
     }
 
-        /**
+    /**
      * Retrieve the view for the given table, name, and scope from storage.
      *
      * @param  string  $table
@@ -82,6 +79,7 @@ class ArrayDriver implements Driver
                 }
             }
         }
+
         return $views;
     }
 

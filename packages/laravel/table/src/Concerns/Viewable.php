@@ -12,7 +12,7 @@ trait CanHaveViews
     /**
      * The table views to utilise.
      *
-     * @var bool|array<int, \Honed\Table\PendingViewInteraction>
+     * @var bool|array<int, PendingViewInteraction>
      */
     protected $views = false;
 
@@ -45,7 +45,7 @@ trait CanHaveViews
     /**
      * Get the views for the table.
      *
-     * @return \Honed\Table\PendingViewInteraction|null
+     * @return PendingViewInteraction|null
      */
     public function getViews()
     {

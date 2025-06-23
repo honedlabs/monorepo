@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipes;
 
+use Generator;
 use Honed\Action\Operations\InlineOperation;
 use Honed\Core\Pipe;
 use Illuminate\Support\Arr;
@@ -41,7 +42,7 @@ class CreateRecords extends Pipe
      * @param  array<int, array<string, mixed>|\Illuminate\Database\Eloquent\Model>  $records
      * @param  array<int, \Honed\Table\Columns\Column>  $columns
      * @param  array<int, InlineOperation>  $operations
-     * @return \Generator<int, array<string, mixed>>
+     * @return Generator<int, array<string, mixed>>
      */
     protected function createRecordsGenerator($records, $columns, $operations)
     {
@@ -76,13 +77,11 @@ class CreateRecords extends Pipe
     protected function getOperations($record, $operations)
     {
         return array_map(
-            static fn (InlineOperation $operation) => 
-                $operation->record($record)->toArray(),
+            static fn (InlineOperation $operation) => $operation->record($record)->toArray(),
             array_values(
                 array_filter(
                     $operations,
-                    static fn (InlineOperation $operation) => 
-                        $operation->record($record)->isAllowed()
+                    static fn (InlineOperation $operation) => $operation->record($record)->isAllowed()
                 )
             )
         );

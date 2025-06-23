@@ -390,7 +390,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     /**
      * Get the pipes to be used for refining.
      *
-     * @return array<int,class-string<\Honed\Core\Pipe<\Honed\Table\Table>>>
+     * @return array<int,class-string<\Honed\Core\Pipe<Table>>>
      */
     protected function pipes()
     {

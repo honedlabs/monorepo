@@ -4,18 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Table\Drivers;
 
-use Closure;
 use Honed\Table\Concerns\InteractsWithDatabase;
 use Honed\Table\Contracts\Driver;
-use Honed\Table\Contracts\ViewScopeSerializeable;
 use Honed\Table\Facades\Views;
-use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use RuntimeException;
 
 class DatabaseDriver implements Driver
 {
@@ -52,16 +46,12 @@ class DatabaseDriver implements Driver
     /**
      * The event dispatcher.
      *
-     * @var \Illuminate\Contracts\Events\Dispatcher
+     * @var Dispatcher
      */
     protected $events;
 
     /**
      * Create a new view resolver.
-     *
-     * @param \Illuminate\Database\DatabaseManager $db
-     * @param \Illuminate\Contracts\Events\Dispatcher $events
-     * @param string $name
      */
     public function __construct(
         DatabaseManager $db,
@@ -96,7 +86,7 @@ class DatabaseDriver implements Driver
     public function list($table, $scopes)
     {
         $scopes = array_map(
-            static fn ($scope) => Views::serializeScope($scope), 
+            static fn ($scope) => Views::serializeScope($scope),
             $scopes
         );
 
@@ -183,6 +173,19 @@ class DatabaseDriver implements Driver
     }
 
     /**
+     * Purge all views for the given table.
+     *
+     * @param  string  $table
+     * @return void
+     */
+    public function purge($table)
+    {
+        $this->newQuery()
+            ->where('table', $table)
+            ->delete();
+    }
+
+    /**
      * Update the value for the given feature and scope in storage.
      *
      * @param  string  $table
@@ -198,19 +201,6 @@ class DatabaseDriver implements Driver
                 'view' => json_encode($value, flags: JSON_THROW_ON_ERROR),
                 static::UPDATED_AT => Carbon::now(),
             ]);
-    }
-
-    /**
-     * Purge all views for the given table.
-     *
-     * @param  string  $table
-     * @return void
-     */
-    public function purge($table)
-    {
-        $this->newQuery()
-            ->where('table', $table)
-            ->delete();
     }
 
     /**
