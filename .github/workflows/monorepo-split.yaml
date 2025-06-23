@@ -15,25 +15,25 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - abn
+          # - abn
           - action
-          - bind
+          # - bind
           # - chart
-          - command
-          - core
-          - crumb
-          - flash
+          # - command
+          # - core
+          # - crumb
+          # - flash
           # - form
           - infolist
-          - layout
-          - lock
+          # - layout
+          # - lock
           # - modal
-          - nav
-          - page
+          # - nav
+          # - page
           - refine
           # - registry
-          # - table
-          - upload
+          - table
+          # - upload
           # - widget
     steps:
       - name: Checkout
