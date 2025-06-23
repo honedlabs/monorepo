@@ -56,6 +56,8 @@ class PendingViewInteraction
      */
     public function load($table)
     {
-        return $this->driver->list(Views::getTableName($table), $this->scope);
+        $views = $this->driver->list(Views::getTableName($table), $this->scope);
+
+        return $views;
     }
 }

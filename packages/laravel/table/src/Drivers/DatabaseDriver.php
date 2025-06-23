@@ -81,9 +81,8 @@ class DatabaseDriver implements Driver
         return $this->newQuery()
             ->where('table', $table)
             ->whereIn('scope', $scopes)
-            ->get();
+            ->get(['id', 'name', 'view']);
     }
-
 
     /**
      * Set a view for the given table and scope.

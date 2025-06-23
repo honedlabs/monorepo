@@ -12,7 +12,6 @@ interface Driver
      * @param  string  $table
      * @param  string  $name
      * @param  mixed  $scope
-     * @param  array<string>|null  $columns
      * @return object|null
      */
     public function get($table, $name, $scope);

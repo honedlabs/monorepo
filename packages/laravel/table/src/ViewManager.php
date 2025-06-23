@@ -17,9 +17,30 @@ use RuntimeException;
 class ViewManager
 {
     /**
+     * The container instance.
+     *
+     * @var \Illuminate\Contracts\Container\Container
+     */
+    protected $container;
+
+    /**
+     * The array of resolved view stores.
+     *
+     * @var array<string, \Honed\Table\Contracts\Driver>
+     */
+    protected $stores = [];
+
+    /**
+     * The registered custom driver creators.
+     *
+     * @var array<string, (callable(string): \Honed\Table\Contracts\Driver)>
+     */
+    protected $customCreators = [];
+
+    /**
      * The default scope resolver.
      *
-     * @var (Closure(string): mixed)|null
+     * @var (callable(string): mixed)|null
      */
     protected $defaultScopeResolver;
 
@@ -37,11 +58,52 @@ class ViewManager
     /**
      * Create a new view resolver.
      *
+     * @param \Illuminate\Contracts\Container\Container $container
      * @return void
      */
-    public function __construct(
-        protected Container $container,
-    ) {}
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * Get a view store instance.
+     *
+     * @param  string|null  $store
+     * @return \Honed\Table\Contracts\Driver
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function store($store = null)
+    {
+        return $this->driver($store);
+    }
+
+    /**
+     * Get a view store instance by name.
+     *
+     * @param  string|null  $name
+     * @return \Honed\Table\Contracts\Driver
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function driver($name = null)
+    {
+        $name = $name ?: $this->getDefaultDriver();
+
+        return $this->stores[$name] = $this->get($name);
+    }
+
+    /**
+     * Attempt to get the store from the local cache.
+     *
+     * @param  string  $name
+     * @return \Honed\Table\Contracts\Driver
+     */
+    protected function get($name)
+    {
+        return $this->stores[$name];
+    }
 
     /**
      * Serialize the given scope for storage.
@@ -59,9 +121,9 @@ class ViewManager
             is_string($scope) => $scope,
             is_numeric($scope) => (string) $scope,
             $scope instanceof Model
-                && $this->useMorphMap => $scope->getMorphClass().'|'.(string) $scope->getKey(),
+                && $this->useMorphMap => $scope->getMorphClass().'|'.(string) $scope->getKey(), // @phpstan-ignore cast.string
             $scope instanceof Model
-                && ! $this->useMorphMap => $scope::class.'|'.(string) $scope->getKey(),
+                && ! $this->useMorphMap => $scope::class.'|'.(string) $scope->getKey(), // @phpstan-ignore cast.string
             default => throw new RuntimeException(
                 'Unable to serialize the view scope to a string. You should implement the ViewScopeSerializeable contract.'
             )
@@ -109,13 +171,12 @@ class ViewManager
     /**
      * Create a pending view retrieval.
      * 
-     * @param mixed $scope
-     * @return PendingViewRetrieval
+     * @param mixed|array<int, mixed> $scope
+     * @return PendingViewInteraction
      */
     public function for($scope = null)
     {
-
-
+        return (new PendingViewInteraction($this->store()))->for($scope);
     }
 
     /**
@@ -173,11 +234,11 @@ class ViewManager
      * Dynamically call the default store instance.
      *
      * @param  string  $method
-     * @param  array  $parameters
+     * @param  array<int, mixed>  $parameters
      * @return mixed
      */
     public function __call($method, $parameters)
     {
-        return $this->store()->$method(...$parameters);
+        return $this->store()->{$method}(...$parameters);
     }
 }
