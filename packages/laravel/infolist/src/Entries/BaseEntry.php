@@ -19,19 +19,12 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
 {
     use Allowable;
     use Concerns\CanBeBadge;
+    use Concerns\CanFormatValues;
     use Concerns\HasClasses;
     use Concerns\HasPlaceholder;
     use Concerns\HasState;
     use HasLabel;
     use HasType;
-
-    /**
-     * Format the value of the entry.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    abstract public function format($value);
 
     /**
      * Create a new list entry.
@@ -58,10 +51,7 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
     {
         $state = $this->getState();
 
-        [$state, $placehold] = match (true) {
-            is_null($state) => [$this->getPlaceholder(), (bool) $this->getPlaceholder()],
-            default => [$this->format($state), false],
-        };
+        [$state, $placehold] = $this->apply($state);
 
         return [
             'type' => $this->getType(),

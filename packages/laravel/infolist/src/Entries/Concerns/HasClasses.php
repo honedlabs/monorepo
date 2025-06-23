@@ -41,7 +41,7 @@ trait HasClasses
     /**
      * Create a class from a string or closure.
      *
-     * @param  array<int, string|Closure(mixed...):string>  $class
+     * @param  array<int, string|Closure(mixed...):string>  $classes
      * @return string|null
      */
     protected function createClass($classes)
@@ -50,6 +50,7 @@ trait HasClasses
             return null;
         }
 
+        /** @var string */
         $classes = implode(' ', array_map($this->evaluate(...), $classes));
 
         return $classes === '' ? null : $classes;

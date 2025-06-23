@@ -20,12 +20,12 @@ trait CanFormatValues
     abstract public function format($value);
 
     /**
-     * Get the formatted value of the entry, and whether a placeholder was used.
+     * Apply the entry to the value.
      *
      * @param  mixed  $value
      * @return array{mixed, bool}
      */
-    public function getFormattedValue($value)
+    public function apply($value)
     {
         $value = $this->transform($value);
 

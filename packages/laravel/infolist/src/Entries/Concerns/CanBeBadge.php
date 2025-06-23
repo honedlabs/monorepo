@@ -13,14 +13,14 @@ trait CanBeBadge
      *
      * @var true|null
      */
-    protected ?bool $isBadge = null;
+    protected $isBadge;
 
     /**
      * The variant of the badge.
      *
      * @var string|(Closure(mixed...): string)|null
      */
-    protected $variant = null;
+    protected $variant;
 
     /**
      * Set whether the entry should be displayed as a badge.
