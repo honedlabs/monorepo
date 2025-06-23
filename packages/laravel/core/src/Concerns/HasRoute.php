@@ -38,6 +38,13 @@ trait HasRoute
     protected $external = false;
 
     /**
+     * Whether to open the url in a new tab.
+     *
+     * @var bool
+     */
+    protected $newTab = false;
+
+    /**
      * Set the route.
      *
      * @param  string|(\Closure(...mixed):string)|null  $route
@@ -149,6 +156,29 @@ trait HasRoute
     }
 
     /**
+     * Set the url to open in a new tab.
+     *
+     * @param  bool  $value
+     * @return $this
+     */
+    public function openUrlInNewTab($value = true)
+    {
+        $this->newTab = $value;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the url should be opened in a new tab.
+     *
+     * @return bool
+     */
+    public function shouldOpenUrlInNewTab()
+    {
+        return $this->newTab;
+    }
+
+    /**
      * Get the array representation of the route.
      *
      * @param  array<string,mixed>  $parameters
@@ -167,6 +197,7 @@ trait HasRoute
             'url' => $route,
             'method' => $this->getMethod(),
             'external' => $this->isExternal(),
+            'newTab' => $this->shouldOpenUrlInNewTab(),
         ];
     }
 

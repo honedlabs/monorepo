@@ -55,6 +55,13 @@ it('sets method', function () {
         ->getMethod()->toBe(Request::METHOD_POST);
 });
 
+it('sets new tab', function () {
+    expect($this->test)
+        ->shouldOpenUrlInNewTab()->toBeFalse()
+        ->openUrlInNewTab()->toBe($this->test)
+        ->shouldOpenUrlInNewTab()->toBeTrue();
+});
+
 it('sets external', function () {
     expect($this->test)
         ->isExternal()->toBeFalse()
@@ -79,5 +86,6 @@ it('has array representation', function () {
             'url' => route('users.show', $this->user),
             'method' => Request::METHOD_GET,
             'external' => false,
+            'newTab' => false,
         ]);
 });
