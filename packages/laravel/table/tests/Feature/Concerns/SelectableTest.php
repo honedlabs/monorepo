@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Contracts\ShouldSelect;
 use Honed\Table\Table;
 use Workbench\App\Tables\ProductTable;
 

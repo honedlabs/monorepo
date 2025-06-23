@@ -15,18 +15,6 @@ use Illuminate\Support\Str;
 class PrepareColumns extends Pipe
 {
     /**
-     * The methods to prepare.
-     *
-     * @var array<int, string>
-     */
-    protected $methods = [
-        'search',
-        'filter',
-        'sort',
-        'select',
-    ];
-
-    /**
      * Run the after refining logic.
      *
      * @param  TClass  $instance
@@ -36,7 +24,7 @@ class PrepareColumns extends Pipe
     {
         foreach ($instance->getColumns() as $column) {
             foreach ($this->prepare($instance) as $method) {
-                $column->{'prepare'.Str::studly($method)}($instance, $column);
+                $this->{'prepare'.Str::studly($method)}($instance, $column);
             }
         }
     }
@@ -122,7 +110,6 @@ class PrepareColumns extends Pipe
         );
     }
 
-
     /**
      * Get the methods to prepare.
      *
@@ -155,7 +142,6 @@ class PrepareColumns extends Pipe
             'filter' => $instance->isFilterable(),
             'sort' => $instance->isSortable(),
             'select' => $instance->isSelectable(),
-            'query' => true,
         ];
     }
 }

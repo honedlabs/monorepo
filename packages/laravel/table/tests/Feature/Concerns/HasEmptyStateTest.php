@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Table\EmptyState;
 use Honed\Action\Operations\PageOperation;
+use Honed\Table\EmptyState;
 use Honed\Table\Table;
 use Workbench\App\Models\User;
 

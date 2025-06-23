@@ -64,4 +64,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the products for the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
+     * Get the products that the user has.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Product, $this>
+     */
+    public function purchasedProducts()
+    {
+        return $this->belongsToMany(Product::class);
+    }
 }

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Table\PageOption;
-use Honed\Table\PerPageRecord;
 use Honed\Table\Table;
 use Honed\Table\Tests\Stubs\Product;
 
@@ -105,7 +104,6 @@ it('has page options', function () {
             ],
         ]);
 });
-
 
 // it('paginates collection', function () {
 //     $paginated = Product::query()->get();

@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 
 use function array_map;
 use function array_merge;
-use function in_array;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Honed\Table\Columns\ArrayColumn;
 use Honed\Table\Columns\Column;
-use Illuminate\Support\Arr;
 
 beforeEach(function () {
     $this->column = ArrayColumn::make('categories');

@@ -14,7 +14,6 @@ use Honed\Table\Columns\BooleanColumn;
 use Honed\Table\Columns\Column;
 use Honed\Table\Columns\DateColumn;
 use Honed\Table\Columns\KeyColumn;
-use Honed\Table\Columns\NumberColumn;
 use Honed\Table\Columns\NumericColumn;
 use Honed\Table\Columns\TextColumn;
 use Honed\Table\Contracts\IsOrderable;
@@ -30,7 +29,7 @@ use Workbench\App\Models\Product;
  *
  * @extends Table<TModel, TBuilder>
  */
-class ProductTable extends Table implements IsToggleable, IsSelectable, IsOrderable
+class ProductTable extends Table implements IsOrderable, IsSelectable, IsToggleable
 {
     /**
      * Define the table.
@@ -41,7 +40,7 @@ class ProductTable extends Table implements IsToggleable, IsSelectable, IsOrdera
     protected function definition(Table $table): Table
     {
         return $table
-            ->for(Product::query()->with(['seller']))
+            ->for(Product::query())
             ->columns([
                 KeyColumn::make('id'),
 

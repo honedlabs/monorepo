@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
-use Closure;
-use Honed\Core\Concerns\HasIcon;
-
 class IconColumn extends Column
 {
     /**

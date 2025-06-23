@@ -16,7 +16,7 @@ class NumericColumn extends Column
     protected function setUp()
     {
         $this->placeholder('0');
-        
+
         parent::setUp();
 
         $this->type(self::NUMERIC);

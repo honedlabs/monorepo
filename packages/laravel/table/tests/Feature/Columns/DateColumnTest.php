@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Columns\DateColumn;
 use Honed\Table\Columns\Column;
-use Illuminate\Support\Arr;
+use Honed\Table\Columns\DateColumn;
 use Illuminate\Support\Carbon;
 
 beforeEach(function () {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Honed\Table\Migrations\ViewMigration;
 
 beforeEach(function () {
-    $this->migration = new class extends ViewMigration {};
+    $this->migration = new class() extends ViewMigration {};
 });
 
 it('has connection', function () {

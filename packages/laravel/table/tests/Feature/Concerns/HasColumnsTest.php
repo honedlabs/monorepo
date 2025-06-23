@@ -9,7 +9,6 @@ beforeEach(function () {
     $this->table = Table::make();
 });
 
-
 it('adds columns', function () {
     expect($this->table)
         ->columns(Column::make('id'))->toBe($this->table)

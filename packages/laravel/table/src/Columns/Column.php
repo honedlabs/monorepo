@@ -63,6 +63,7 @@ class Column extends Primitive implements NullsAsUndefined
     use Selectable;
 
     public const COLOR = 'color';
+
     public const ICON = 'icon';
 
     /**

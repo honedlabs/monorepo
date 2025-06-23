@@ -67,7 +67,6 @@ class Export extends Operation
      */
     protected $disk;
 
-
     /**
      * Register the callback to be used to create the export from the table.
      *

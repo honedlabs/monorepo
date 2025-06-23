@@ -25,7 +25,6 @@ use Honed\Refine\Stores\SessionStore;
 use Honed\Table\Columns\Column;
 use Honed\Table\Concerns\HasColumns;
 use Honed\Table\Concerns\HasEmptyState;
-use Honed\Table\Concerns\HasPagination;
 use Honed\Table\Concerns\HasRecords;
 use Honed\Table\Concerns\Orderable;
 use Honed\Table\Concerns\Paginable;
@@ -62,9 +61,9 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     use HasMeta;
     use HasRecords;
     use Orderable;
+    use Paginable;
     use Selectable;
     use Toggleable;
-    use Paginable;
     use Viewable;
 
     /**
@@ -73,6 +72,13 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
      * @var string
      */
     public static $namespace = 'App\\Tables\\';
+
+    /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'table';
 
     /**
      * The unique identifier key for table records.
@@ -87,13 +93,6 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
      * @var bool|string|null
      */
     protected $persistColumns = null;
-
-    /**
-     * The identifier to use for evaluation.
-     *
-     * @var string
-     */
-    protected $evaluationIdentifier = 'table';
 
     /**
      * How to resolve the table for the given model name.
@@ -115,18 +114,6 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     }
 
     /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array<int,mixed>  $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        return $this->macroCall($method, $parameters);
-    }
-
-    /**
      * Create a new table instance.
      *
      * @param  Closure(TBuilder):void|null  $before
@@ -135,7 +122,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     public static function make($before = null)
     {
         return resolve(static::class)
-            ->before($before);
+            ->when($before, fn ($table, $before) => $table->before($before));
     }
 
     /**
@@ -199,14 +186,16 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     }
 
     /**
-     * Flush the table class global configuration state.
+     * Flush the global configuration state.
      *
      * @return void
      */
     public static function flushState()
     {
-        static::$namespace = 'App\\Tables\\';
+        static::$encoder = null;
+        static::$decoder = null;
         static::$tableNameResolver = null;
+        static::$namespace = 'App\\Tables\\';
     }
 
     /**
@@ -402,13 +391,13 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
         // @phpstan-ignore-next-line
         return [
             Toggle::class,
-            PrepareColumns::class,
             BeforeRefining::class,
+            PrepareColumns::class,
             Select::class,
             SearchQuery::class,
             FilterQuery::class,
             SortQuery::class,
-            Query::class,
+            Query::class, // Must be applied after the select statement
             AfterRefining::class,
             CreateEmptyState::class,
             PersistData::class,

@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Models\User;
-use Workbench\App\Tables\UserTable;
-use Workbench\App\Infolists\UserInfolist;
 use Workbench\App\Models\Product;
+use Workbench\App\Models\User;
 use Workbench\App\Tables\ProductTable;
+use Workbench\App\Tables\UserTable;
 
 it('has table via attribute', function () {
     expect(User::table())

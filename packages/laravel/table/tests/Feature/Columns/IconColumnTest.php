@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Columns\ColorColumn;
 use Honed\Table\Columns\Column;
 use Honed\Table\Columns\IconColumn;
 

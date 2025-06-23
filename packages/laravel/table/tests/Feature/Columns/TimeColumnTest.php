@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Columns\BooleanColumn;
 use Honed\Table\Columns\Column;
 use Honed\Table\Columns\TimeColumn;
 use Illuminate\Support\Carbon;
 
 beforeEach(function () {
-    $this->column = TimeColumn::make('created_at');    
+    $this->column = TimeColumn::make('created_at');
 });
 
 it('is type time', function () {

@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Honed\Table\PendingViewInteraction for(mixed|array<int, mixed> $scope = null) Create a pending view retrieval
  * @method static mixed __call(string $method, array<int, mixed> $parameters) Dynamically call the default store instance
  *
- * @see \Honed\Table\ViewManager
+ * @see ViewManager
  */
 class Views extends Facade
 {

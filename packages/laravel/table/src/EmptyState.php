@@ -15,6 +15,7 @@ class EmptyState extends Primitive implements NullsAsUndefined
     use HasIcon;
 
     public const DEFAULT_HEADING = 'No results found';
+
     public const DEFAULT_DESCRIPTION = 'There are no results to display.';
 
     /**

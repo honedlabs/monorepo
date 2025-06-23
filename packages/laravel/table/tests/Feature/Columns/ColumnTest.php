@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Sorts\Sort;
 use Honed\Table\Columns\Column;
 use Illuminate\Database\Eloquent\Model;
 use Workbench\App\Models\User;

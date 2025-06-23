@@ -3,11 +3,10 @@
 declare(strict_types=1);
 
 use Honed\Table\Columns\KeyColumn;
-use Honed\Table\EmptyState;
 use Honed\Table\Exceptions\KeyNotFoundException;
 use Honed\Table\Table;
-use Honed\Table\Tests\Stubs\Product;
-use Honed\Table\Tests\Stubs\ProductTable;
+use Workbench\App\Models\Product;
+use Workbench\App\Tables\ProductTable;
 
 beforeEach(function () {
     $this->table = Table::make();
@@ -24,64 +23,6 @@ it('has key', function () {
 it('requires key', function () {
     $this->table->getKey();
 })->throws(KeyNotFoundException::class);
-
-it('has endpoint', function () {
-    expect($this->table)
-        ->getEndpoint()->toBe(config('table.endpoint'))
-        ->endpoint('/other')->toBe($this->table)
-        ->getEndpoint()->toBe('/other')
-        ->getDefaultEndpoint()->toBe(config('table.endpoint'));
-});
-
-
-it('has records', function () {
-    expect($this->table)
-        ->getRecords()->toBeEmpty();
-
-    $this->table->setRecords([
-        [
-            'id' => 1,
-        ],
-    ]);
-
-    expect($this->table)
-        ->getRecords()->not->toBeEmpty();
-});
-
-it('has pagination data', function () {
-    expect($this->table)
-        ->getPaginationData()->toBeEmpty();
-
-    $this->table->setPaginationData([
-        'empty' => true,
-    ]);
-
-    expect($this->table)
-        ->getPaginationData()->not->toBeEmpty();
-});
-
-it('has empty state', function () {
-    expect($this->table)
-        ->getEmptyState()->toBeInstanceOf(EmptyState::class)
-        ->emptyState('string')->toBe($this->table)
-        ->getEmptyState()->scoped(fn ($state) => $state
-        ->getMessage()->toBe('string')
-        )->emptyState(fn ($state) => $state->message('closure'))->toBe($this->table)
-        ->getEmptyState()->scoped(fn ($state) => $state
-        ->getMessage()->toBe('closure')
-        )->emptyState(EmptyState::make('title'))->toBe($this->table)
-        ->getEmptyState()->scoped(fn ($state) => $state
-        ->getTitle()->toBe('title')
-        );
-});
-
-it('overrides refine fallbacks', function () {
-    expect($this->table)
-        ->getDelimiter()->toBe(config('table.delimiter'))
-        ->getSearchKey()->toBe(config('table.search_key'))
-        ->getMatchKey()->toBe(config('table.match_key'))
-        ->isMatching()->toBe(config('table.match'));
-});
 
 it('is url routable', function () {
     expect($this->table)
@@ -108,7 +49,7 @@ it('resolves table', function () {
     });
 
     expect(ProductTable::resolveTableName(Product::class))
-        ->toBe('Honed\\Table\\Tests\\Stubs\\ProductTable');
+        ->toBe('Workbench\\App\\Tables\\ProductTable');
 
     expect(ProductTable::tableForModel(Product::class))
         ->toBeInstanceOf(ProductTable::class);
