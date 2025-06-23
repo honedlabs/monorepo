@@ -6,12 +6,16 @@ namespace Honed\Table;
 
 use Honed\Action\Operations\PageOperation;
 use Honed\Core\Concerns\HasIcon;
+use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
-class EmptyState extends Primitive // implements NullAsUndefined
+class EmptyState extends Primitive implements NullsAsUndefined
 {
     use Concerns\AdaptsToRefinements;
     use HasIcon;
+
+    public const DEFAULT_HEADING = 'No results found';
+    public const DEFAULT_DESCRIPTION = 'There are no results to display.';
 
     /**
      * The identifier to use for evaluation.
@@ -25,14 +29,14 @@ class EmptyState extends Primitive // implements NullAsUndefined
      *
      * @var string
      */
-    protected $heading = 'No results found';
+    protected $heading = self::DEFAULT_HEADING;
 
     /**
      * The description of the empty state.
      *
      * @var string
      */
-    protected $description = 'There are no results to display.';
+    protected $description = self::DEFAULT_DESCRIPTION;
 
     /**
      * The operations of the empty state.

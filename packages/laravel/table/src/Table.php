@@ -420,7 +420,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     {
         return match ($parameterName) {
             'columns' => [$this->getColumns()],
-            'emptyState' => [$this->getEmptyState()],
+            'emptyState' => [$this->newEmptyState()],
             'request' => [$this->getRequest()],
             'builder', 'query', 'q' => [$this->getBuilder()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
@@ -438,7 +438,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
         $builder = $this->getBuilder();
 
         return match ($parameterType) {
-            EmptyState::class => [$this->getEmptyState()],
+            EmptyState::class => [$this->newEmptyState()],
             Request::class => [$this->getRequest()],
             $builder::class, Builder::class, BuilderContract::class => [$builder],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),

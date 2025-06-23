@@ -9,41 +9,23 @@ beforeEach(function () {
     $this->table = Table::make();
 });
 
-it('is empty by default', function () {
-    expect($this->table)
-        ->hasColumns()->toBeFalse()
-        ->getColumns()->toBeEmpty();
-});
 
 it('adds columns', function () {
     expect($this->table)
-        ->columns([Column::make('id')])->toBe($this->table)
+        ->columns(Column::make('id'))->toBe($this->table)
         ->columns([Column::make('public_id')])->toBe($this->table)
-        ->hasColumns()->toBeTrue()
         ->getColumns()->toHaveCount(2);
 });
 
-it('adds columns variadically', function () {
+it('adds column', function () {
     expect($this->table)
-        ->columns(Column::make('id'), Column::make('public_id'))->toBe($this->table)
-        ->hasColumns()->toBeTrue()
-        ->getColumns()->toHaveCount(2);
-});
-
-it('adds columns collection', function () {
-    expect($this->table)
-        ->columns(collect([Column::make('id'), Column::make('public_id')]))->toBe($this->table)
-        ->hasColumns()->toBeTrue()
-        ->getColumns()->toHaveCount(2);
+        ->column(Column::make('id'))->toBe($this->table)
+        ->getColumns()->toHaveCount(1);
 });
 
 it('retrieves with authorization', function () {
     expect($this->table)
-        ->columns([
-            Column::make('id')->allow(false),
-            Column::make('public_id'),
-        ])->toBe($this->table)
-        ->hasColumns()->toBeTrue()
+        ->columns(Column::make('id')->allow(false))->toBe($this->table)
         ->getColumns()->toHaveCount(1);
 });
 
@@ -58,18 +40,24 @@ it('caches columns', function () {
         ->getCachedColumns()->toBeEmpty();
 });
 
-it('can be without columns', function () {
+it('sets columns', function () {
     expect($this->table)
-        ->isWithoutColumns()->toBeFalse()
-        ->columns(Column::make('public_id'))->toBe($this->table)
-        ->hasColumns()->toBeTrue()
-        ->getColumns()->toHaveCount(1)
-        ->withoutColumns()->toBe($this->table)
-        ->hasColumns()->toBeFalse()
-        ->getColumns()->toBeEmpty();
+        ->getColumns()->toBeEmpty()
+        ->setColumns([Column::make('id')])->toBeNull()
+        ->getColumns()->toHaveCount(1);
+});
+
+it('sets headings', function () {
+    expect($this->table)
+        ->columns(Column::make('id'))->toBe($this->table)
+        ->getHeadings()->toHaveCount(1)
+        ->setHeadings([Column::make('public_id'), Column::make('name')])->toBeNull()
+        ->getHeadings()->toHaveCount(2);
 });
 
 it('has array representation', function () {
     expect($this->table)
-        ->columnsToArray()->toBeEmpty();
+        ->columnsToArray()->toBeEmpty()
+        ->columns(Column::make('id'))->toBe($this->table)
+        ->columnsToArray()->toHaveCount(1);
 });

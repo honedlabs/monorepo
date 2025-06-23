@@ -2,70 +2,63 @@
 
 declare(strict_types=1);
 
+use Honed\Action\Operations\PageOperation;
 use Honed\Table\EmptyState;
 
 beforeEach(function () {
     $this->state = EmptyState::make();
+})->only();
+
+it('makes with heading and description', function () {
+    expect(EmptyState::make('Missing', 'Missing data'))
+        ->getHeading()->toBe('Missing')
+        ->getDescription()->toBe('Missing data');
 });
 
-it('has title', function () {
+it('has heading', function () {
     expect($this->state)
-        ->getTitle()->toBe(config('table.empty_state.title'))
-        ->title('Title')->toBe($this->state)
-        ->getTitle()->toBe('Title');
+        ->getHeading()->toBe(EmptyState::DEFAULT_HEADING)
+        ->heading('Missing')->toBe($this->state)
+        ->getHeading()->toBe('Missing');
 });
 
-it('has message', function () {
+it('has description', function () {
     expect($this->state)
-        ->getMessage()->toBe(config('table.empty_state.message'))
-        ->message('Message')->toBe($this->state)
-        ->getMessage()->toBe('Message');
+        ->getDescription()->toBe(EmptyState::DEFAULT_DESCRIPTION)
+        ->description('Missing data')->toBe($this->state)
+        ->getDescription()->toBe('Missing data');
 });
 
-it('has icon', function () {
+it('adds operations', function () {
     expect($this->state)
-        ->getIcon()->toBe(config('table.empty_state.icon'))
-        ->icon('Icon')->toBe($this->state)
-        ->getIcon()->toBe('Icon');
+        ->getOperations()->toBeEmpty()
+        ->operations(PageOperation::make('create')->label('Create'))->toBe($this->state)
+        ->operation([PageOperation::make('edit')->label('Edit')])->toBe($this->state)
+        ->getOperations()->toHaveCount(2);
 });
 
-it('has action', function () {
+it('adds operation', function () {
     expect($this->state)
-        ->getLabel()->toBeNull()
-        ->getAction()->toBeNull()
-        ->action('Create', '/products')->toBe($this->state)
-        ->getLabel()->toBe('Create')
-        ->getAction()->toBe('/products');
-});
-
-it('has refining state', function () {
-    expect($this->state)
-        ->getRefiningState()->toBe(config('table.empty_state.refining'))
-        ->refining(fn ($state) => $state->title('Refining'))->toBe($this->state)
-        ->getRefiningState()->toBeInstanceOf(Closure::class);
-});
-
-it('has filtering state', function () {
-    expect($this->state)
-        ->getFilteringState()->toBeNull()
-        ->filtering(fn ($state) => $state->title('Filtering'))->toBe($this->state)
-        ->getFilteringState()->toBeInstanceOf(Closure::class);
-});
-
-it('has searching state', function () {
-    expect($this->state)
-        ->getSearchingState()->toBe(config('table.empty_state.searching'))
-        ->searching(fn ($state) => $state->title('Searching'))->toBe($this->state)
-        ->getSearchingState()->toBeInstanceOf(Closure::class);
+        ->getOperations()->toBeEmpty()
+        ->operation(PageOperation::make('create')->label('Create'))->toBe($this->state)
+        ->getOperations()->toHaveCount(1);
 });
 
 it('has array representation', function () {
     expect($this->state)
         ->toArray()->toEqual([
-            'title' => config('table.empty_state.title'),
-            'message' => config('table.empty_state.message'),
-            'icon' => config('table.empty_state.icon'),
-            'label' => null,
-            'action' => null,
+            'heading' => EmptyState::DEFAULT_HEADING,
+            'description' => EmptyState::DEFAULT_DESCRIPTION,
+            'icon' => null,
+            'operations' => [],
+        ]);
+});
+
+it('serializes to json', function () {
+    expect($this->state)
+        ->jsonSerialize()->toEqual([
+            'heading' => EmptyState::DEFAULT_HEADING,
+            'description' => EmptyState::DEFAULT_DESCRIPTION,
+            'operations' => [],
         ]);
 });

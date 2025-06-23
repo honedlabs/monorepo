@@ -39,6 +39,19 @@ trait HasColumns
     }
 
     /**
+     * Add a column to the table.
+     *
+     * @param  Column  $column
+     * @return $this
+     */
+    public function column($column)
+    {
+        $this->columns[] = $column;
+
+        return $this;
+    }
+
+    /**
      * Retrieve the columns.
      *
      * @return array<int,Column>
