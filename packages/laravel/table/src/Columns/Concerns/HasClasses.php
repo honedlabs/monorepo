@@ -45,14 +45,7 @@ trait HasClasses
      */
     public function getCellClasses()
     {
-        if (empty($this->cellClasses)) {
-            return null;
-        }
-
-        return implode(
-            ' ',
-            array_map($this->evaluate(...), $this->cellClasses)
-        );
+        return $this->createClass($this->cellClasses);
     }
 
     /**
@@ -75,14 +68,6 @@ trait HasClasses
      */
     public function getRecordClasses()
     {
-        if (empty($this->classes)) {
-            return null;
-        }
-
-        $classes = implode(
-            ' ', array_map($this->evaluate(...), $this->classes)
-        );
-
-        return ! $classes ? null : $classes;
+        return $this->createClass($this->recordClasses);
     }
 }

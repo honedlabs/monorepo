@@ -5,27 +5,28 @@ declare(strict_types=1);
 namespace Honed\Table\Columns;
 
 use Closure;
-use Honed\Core\Concerns\Allowable;
+use Honed\Core\Primitive;
+use Illuminate\Support\Str;
+use Honed\Refine\Sorts\Sort;
+use InvalidArgumentException;
+use Honed\Core\Concerns\HasIcon;
+use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasAlias;
 use Honed\Core\Concerns\HasExtra;
-use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasQuery;
-use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\IsActive;
-use Honed\Core\Primitive;
-use Honed\Infolist\Entries\Concerns\CanBeAggregated;
-use Honed\Infolist\Entries\Concerns\HasPlaceholder;
-use Honed\Infolist\Entries\Concerns\HasState;
+use Honed\Core\Concerns\Allowable;
+use Honed\Table\Concerns\Selectable;
 use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
-use Honed\Refine\Sorts\Sort;
-use Honed\Table\Concerns\Selectable;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
-use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Builder;
+use Honed\Infolist\Entries\Concerns\HasState;
+use Honed\Infolist\Entries\Concerns\HasPlaceholder;
+use Honed\Infolist\Entries\Concerns\CanBeAggregated;
+use Honed\Infolist\Entries\Concerns\CanFormatValues;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -43,6 +44,7 @@ class Column extends Primitive
     use Concerns\Searchable;
     use Concerns\Sortable;
     use Concerns\Toggleable;
+    use CanFormatValues;
     use HasAlias;
     use HasExtra;
     use HasIcon;
@@ -103,30 +105,6 @@ class Column extends Primitive
     {
         return $this->getAlias()
             ?? str_replace('.', '-', $this->getName());
-    }
-
-    /**
-     * Apply the column's transform and format value.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    public function apply($value)
-    {
-        $value = $this->transform($value);
-
-        return $this->formatValue($value);
-    }
-
-    /**
-     * Format the value of the column.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    public function formatValue($value)
-    {
-        return $value ?? $this->getFallback();
     }
 
     /**

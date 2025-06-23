@@ -14,6 +14,8 @@ use function array_merge;
 
 class Export extends Operation
 {
+    use Concerns\CanLimitRecords;
+
     /**
      * The callback to be used to create the export from the table.
      *
@@ -62,25 +64,6 @@ class Export extends Operation
      * @var string|null
      */
     protected $disk;
-
-    /**
-     * Whether to only use records that have been filtered.
-     *
-     * @var bool|null
-     */
-    protected $filtered = true;
-
-    /**
-     * Whether to only use records that have been selected.
-     *
-     * @var bool|null
-     */
-    protected $selected = true;
-
-    public function all()
-    {
-        //
-    }
 
     /**
      * Register the callback to be used to create the export from the table.
@@ -234,16 +217,6 @@ class Export extends Operation
         }
 
         return $this;
-    }
-
-    /**
-     * Get the method to be used for generating the export.
-     *
-     * @return 'download'|'queue'|'store'
-     */
-    public function getMethod()
-    {
-        return $this->method;
     }
 
     /**

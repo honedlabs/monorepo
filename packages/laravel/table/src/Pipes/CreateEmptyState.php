@@ -45,7 +45,7 @@ class CreateEmptyState extends Pipe
      *
      * @param  TClass  $instance
      * @param  EmptyState  $emptyState
-     * @return Closure(mixed...):$this|null
+     * @return (Closure(mixed...):\Honed\Table\EmptyState|void)|null
      */
     protected function resolveCallback($instance, $emptyState)
     {

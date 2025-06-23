@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Honed\Table\PendingViewInteraction;
+
 trait CanHaveViews
 {
     /**
      * The table views to utilise.
      *
-     * @var bool|array<int, mixed>
+     * @var array<int, PendingViewInteraction>
      */
     protected $views = false;
 
@@ -21,6 +23,7 @@ trait CanHaveViews
      */
     public function viewable($scopes = true)
     {
+        // PendingViewInteraction
         $this->views = $scopes;
 
         return $this;
@@ -35,19 +38,4 @@ trait CanHaveViews
     {
         return (bool) $this->views;
     }
-
-    /**
-     * Get the views for the table.
-     */
-    public function getViews()
-    {
-        if (! $this->views) {
-            return null;
-        }
-
-    }
-
-    // ->viewable(Auth::user(), AppSession::organisation())
-
-    // Gets the views it needs to
 }

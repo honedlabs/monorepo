@@ -16,11 +16,12 @@ return new class() extends ViewMigration
         Schema::create($this->getTableName(), function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('table');
             $table->string('scope');
             $table->text('data');
             $table->timestamps();
 
-            $table->unique(['name', 'scope']);
+            $table->unique(['table', 'scope', 'name']);
         });
     }
 

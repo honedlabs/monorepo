@@ -8,6 +8,7 @@ use Closure;
 use Honed\Table\Concerns\InteractsWithDatabase;
 use Honed\Table\Contracts\Driver;
 use Honed\Table\Contracts\ViewScopeSerializeable;
+use Honed\Table\Facades\Views;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -42,20 +43,6 @@ class DatabaseDriver implements Driver
     protected $db;
 
     /**
-     * The default scope resolver.
-     *
-     * @var (Closure(string): mixed)|null
-     */
-    protected $defaultScopeResolver;
-
-    /**
-     * Indicates if the Eloquent "morph map" should be used when serializing.
-     *
-     * @var bool
-     */
-    protected $useMorphMap = false;
-
-    /**
      * Create a new view resolver.
      *
      * @return void
@@ -65,106 +52,75 @@ class DatabaseDriver implements Driver
     ) {}
 
     /**
-     * Serialize the given scope for storage.
-     *
-     * @param  mixed  $scope
-     * @return string
-     *
-     * @throws RuntimeException
-     */
-    public function serializeScope($scope)
-    {
-        return match (true) {
-            $scope instanceof ViewScopeSerializeable => $scope->viewScopeSerialize(),
-            $scope === null => '__laravel_null',
-            is_string($scope) => $scope,
-            is_numeric($scope) => (string) $scope,
-            $scope instanceof Model
-                && $this->useMorphMap => $scope->getMorphClass().'|'.(string) $scope->getKey(),
-            $scope instanceof Model
-                && ! $this->useMorphMap => $scope::class.'|'.(string) $scope->getKey(),
-            default => throw new RuntimeException(
-                'Unable to serialize the view scope to a string. You should implement the ViewScopeSerializeable contract.'
-            )
-        };
-    }
-
-    /**
-     * Specify that the Eloquent morph map should be used when serializing.
-     *
-     * @param  bool  $value
-     * @return $this
-     */
-    public function useMorphMap($value = true)
-    {
-        $this->useMorphMap = $value;
-
-        return $this;
-    }
-
-    /**
-     * Set the default scope resolver.
-     *
-     * @param  (callable(string): mixed)  $resolver
-     * @return void
-     */
-    public function resolveScopeUsing($resolver)
-    {
-        $this->defaultScopeResolver = $resolver;
-    }
-
-    /**
-     * Pending view retrieval
-     */
-    public function for($scope = null) {}
-
-    public function all() {}
-
-    /**
      * Retrieve the value for the given name and scope from storage.
      *
+     * @param  string  $table
      * @param  string  $name
      * @param  mixed  $scope
      * @return object|null
      */
-    public function retrieve($name, $scope)
+    public function get($table, $name, $scope)
     {
-        return $this->newQuery()
-            ->where('name', $name)
-            ->where('scope', $this->serializeScope($scope))
-            ->first();
+        return $this->scoped($table, $name, $scope)->first();
     }
 
     /**
-     * Set a feature flag's value.
+     * Retrieve the views for the given table and scopes from storage.
      *
-     * @param  string  $feature
+     * @param  string  $table
+     * @param  array<mixed>  $scopes
+     * @return array<object>
+     */
+    public function list($table, $scopes)
+    {
+        $scopes = array_map(
+            static fn ($scope) => Views::serializeScope($scope), 
+            $scopes
+        );
+
+        return $this->newQuery()
+            ->where('table', $table)
+            ->whereIn('scope', $scopes)
+            ->get();
+    }
+
+
+    /**
+     * Set a view for the given table and scope.
+     *
+     * @param  string  $table
+     * @param  string  $name
      * @param  mixed  $scope
      * @param  mixed  $value
+     * @return void
      */
-    public function set($feature, $scope, $value): void
+    public function set($table, $name, $scope, $value)
     {
         $now = Carbon::now();
+
         $this->newQuery()->upsert([
-            'name' => $feature,
-            'scope' => $this->serializeScope($scope),
+            'table' => $table,
+            'name' => $name,
+            'scope' => Views::serializeScope($scope),
             'view' => json_encode($value, flags: JSON_THROW_ON_ERROR),
             static::CREATED_AT => $now,
             static::UPDATED_AT => $now,
-        ], uniqueBy: ['name', 'scope'], update: ['view', static::UPDATED_AT]);
+        ], uniqueBy: ['table', 'scope', 'name'], update: ['view', static::UPDATED_AT]);
     }
 
     /**
      * Insert the table view for the given scope into storage.
      *
-     * @param  Table|string  $name
-     * @param  array<string, mixed>  $scope
+     * @param  string  $table
+     * @param  string  $name
+     * @param  mixed  $scope
      * @param  array<string, mixed>  $value
      * @return bool
      */
-    public function insert($name, $scope, $value)
+    public function insert($table, $name, $scope, $value)
     {
         return $this->insertMany([[
+            'table' => $table,
             'name' => $name,
             'scope' => $scope,
             'view' => $value,
@@ -174,7 +130,7 @@ class DatabaseDriver implements Driver
     /**
      * Insert the table views into storage.
      *
-     * @param  array<array<string, mixed>>  $inserts
+     * @param  array<int, array{table: string, name: string, scope: mixed, view: array<string, mixed>}>  $inserts
      * @return bool
      */
     public function insertMany($inserts)
@@ -183,7 +139,8 @@ class DatabaseDriver implements Driver
 
         return $this->newQuery()->insert(array_map(fn ($insert) => [
             'name' => $insert['name'],
-            'scope' => $this->serializeScope($insert['scope']),
+            'table' => $insert['table'],
+            'scope' => Views::serializeScope($insert['scope']),
             'view' => json_encode($insert['view'], flags: JSON_THROW_ON_ERROR),
             static::CREATED_AT => $now,
             static::UPDATED_AT => $now,
@@ -193,31 +150,28 @@ class DatabaseDriver implements Driver
     /**
      * Delete a view.
      *
-     * @param  Table|string  $name
+     * @param  string  $table
+     * @param  string  $name
      * @param  array<string, mixed>  $scope
      * @return void
      */
-    public function delete($name, $scope)
+    public function delete($table, $name, $scope)
     {
-        $this->newQuery()
-            ->where('name', $name)
-            ->where('scope', static::serializeScope($scope))
-            ->delete();
+        $this->scoped($table, $name, $scope)->delete();
     }
 
     /**
      * Update the value for the given feature and scope in storage.
      *
-     * @param  string  $feature
+     * @param  string  $table
+     * @param  string  $name
      * @param  mixed  $scope
      * @param  mixed  $value
      * @return bool
      */
-    protected function update($feature, $scope, $value)
+    protected function update($table, $name, $scope, $value)
     {
-        return (bool) $this->newQuery()
-            ->where('name', $feature)
-            ->where('scope', $this->serializeScope($scope))
+        return (bool) $this->scoped($table, $name, $scope)
             ->update([
                 'view' => json_encode($value, flags: JSON_THROW_ON_ERROR),
                 static::UPDATED_AT => Carbon::now(),
@@ -225,54 +179,32 @@ class DatabaseDriver implements Driver
     }
 
     /**
-     * The default scope resolver.
+     * Purge all views for the given table.
      *
-     * @param  string  $driver
-     * @return callable(): mixed
+     * @param  string  $table
+     * @return void
      */
-    protected function defaultScopeResolver($driver)
+    public function purge($table)
     {
-        return function () use ($driver) {
-            if ($this->defaultScopeResolver !== null) {
-                return ($this->defaultScopeResolver)($driver);
-            }
-
-            // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
-            return $this->container['auth']->guard()->user();
-        };
+        $this->newQuery()
+            ->where('table', $table)
+            ->delete();
     }
 
     /**
-     * Get the database manager instance from the container.
+     * Get a new query builder for the given table, name, and scope.
      *
-     * @return DatabaseManager
+     * @param  string  $table
+     * @param  string  $name
+     * @param  mixed  $scope
+     * @return \Illuminate\Database\Query\Builder
      */
-    protected function getDatabaseManager()
+    protected function scoped($table, $name, $scope)
     {
-        /** @var DatabaseManager */
-        return $this->container['db']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
-    }
-
-    /**
-     * Get the config instance from the container.
-     *
-     * @return Repository
-     */
-    protected function getConfig()
-    {
-        /** @var Repository */
-        return $this->container['config']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
-    }
-
-    /**
-     * Get the event dispatcher instance from the container.
-     *
-     * @return Dispatcher
-     */
-    protected function getDispatcher()
-    {
-        /** @var Dispatcher */
-        return $this->container['events']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+        return $this->newQuery()
+            ->where('table', $table)
+            ->where('name', $name)
+            ->where('scope', Views::serializeScope($scope));
     }
 
     /**
@@ -293,7 +225,6 @@ class DatabaseDriver implements Driver
      */
     protected function connection()
     {
-        return $this->getDatabaseManager()
-            ->connection($this->getConnection());
+        return $this->db->connection($this->getConnection());
     }
 }

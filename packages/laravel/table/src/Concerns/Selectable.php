@@ -61,6 +61,7 @@ trait Selectable
      */
     public function getSelects()
     {
+        /** @var array<int, string> */
         return match (true) {
             is_array($this->selectable) => $this->selectable,
             is_string($this->selectable) => [$this->selectable],

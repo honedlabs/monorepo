@@ -390,10 +390,11 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     /**
      * Get the pipes to be used for refining.
      *
-     * @return array<int,class-string<\Honed\Core\Pipe<mixed>>>
+     * @return array<int,class-string<\Honed\Core\Pipe<\Honed\Table\Table>>>
      */
     protected function pipes()
     {
+        // @phpstan-ignore-next-line
         return [
             Toggle::class,
             PrepareColumns::class,

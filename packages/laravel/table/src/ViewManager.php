@@ -16,22 +16,6 @@ use RuntimeException;
 
 class ViewManager
 {
-    use Concerns\InteractsWithDatabase;
-
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
-    public const CREATED_AT = 'created_at';
-
-    /**
-     * The name of the "updated at" column.
-     *
-     * @var string
-     */
-    public const UPDATED_AT = 'updated_at';
-
     /**
      * The default scope resolver.
      *
@@ -45,6 +29,10 @@ class ViewManager
      * @var bool
      */
     protected $useMorphMap = false;
+
+    /**
+     * 
+     */
 
     /**
      * Create a new view resolver.
@@ -105,114 +93,29 @@ class ViewManager
     }
 
     /**
-     * Pending view retrieval
-     */
-    public function for($scope = null) {}
-
-    public function all() {}
-
-    /**
-     * Retrieve the value for the given name and scope from storage.
+     * Get the table name for the given table.
      *
-     * @param  string  $name
-     * @param  mixed  $scope
-     * @return object|null
+     * @param  string|Table  $table
+     * @return string
      */
-    public function retrieve($name, $scope)
+    public function getTableName($table)
     {
-        return $this->newQuery()
-            ->where('name', $name)
-            ->where('scope', $this->serializeScope($scope))
-            ->first();
+        return match (true) {
+            $table instanceof Table => $table::class,
+            default => $table,
+        };
     }
 
     /**
-     * Set a feature flag's value.
-     *
-     * @param  string  $feature
-     * @param  mixed  $scope
-     * @param  mixed  $value
+     * Create a pending view retrieval.
+     * 
+     * @param mixed $scope
+     * @return PendingViewRetrieval
      */
-    public function set($feature, $scope, $value): void
+    public function for($scope = null)
     {
-        $now = Carbon::now();
-        $this->newQuery()->upsert([
-            'name' => $feature,
-            'scope' => $this->serializeScope($scope),
-            'view' => json_encode($value, flags: JSON_THROW_ON_ERROR),
-            static::CREATED_AT => $now,
-            static::UPDATED_AT => $now,
-        ], uniqueBy: ['name', 'scope'], update: ['view', static::UPDATED_AT]);
-    }
 
-    /**
-     * Insert the table view for the given scope into storage.
-     *
-     * @param  Table|string  $name
-     * @param  array<string, mixed>  $scope
-     * @param  array<string, mixed>  $value
-     * @return bool
-     */
-    public function insert($name, $scope, $value)
-    {
-        return $this->insertMany([[
-            'name' => $name,
-            'scope' => $scope,
-            'view' => $value,
-        ]]);
-    }
 
-    /**
-     * Insert the table views into storage.
-     *
-     * @param  array<array<string, mixed>>  $inserts
-     * @return bool
-     */
-    public function insertMany($inserts)
-    {
-        $now = Carbon::now();
-
-        return $this->newQuery()->insert(array_map(fn ($insert) => [
-            'name' => $insert['name'],
-            'scope' => $this->serializeScope($insert['scope']),
-            'view' => json_encode($insert['view'], flags: JSON_THROW_ON_ERROR),
-            static::CREATED_AT => $now,
-            static::UPDATED_AT => $now,
-        ], $inserts));
-    }
-
-    /**
-     * Delete a view.
-     *
-     * @param  Table|string  $name
-     * @param  array<string, mixed>  $scope
-     * @return void
-     */
-    public function delete($name, $scope)
-    {
-        $this->newQuery()
-            ->where('name', $name)
-            ->where('scope', static::serializeScope($scope))
-            ->delete();
-    }
-
-    /**
-     * Update the value for the given feature and scope in storage.
-     *
-     * @param  string  $feature
-     * @param  mixed  $scope
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function update($feature, $scope, $value)
-    {
-        return (bool) $this->newQuery()
-            ->where('name', $feature)
-            ->where('scope', $this->serializeScope($scope))
-            ->update([
-                'view' => json_encode($value, flags: JSON_THROW_ON_ERROR),
-                static::UPDATED_AT => Carbon::now(),
-            ]);
     }
 
     /**
@@ -267,24 +170,14 @@ class ViewManager
     }
 
     /**
-     * Create a new table query.
+     * Dynamically call the default store instance.
      *
-     * @return \Illuminate\Database\Query\Builder
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
      */
-    protected function newQuery()
+    public function __call($method, $parameters)
     {
-        return $this->connection()
-            ->table($this->getTableName());
-    }
-
-    /**
-     * The database connection.
-     *
-     * @return \Illuminate\Database\Connection
-     */
-    protected function connection()
-    {
-        return $this->getDatabaseManager()
-            ->connection($this->getConnection());
+        return $this->store()->$method(...$parameters);
     }
 }
