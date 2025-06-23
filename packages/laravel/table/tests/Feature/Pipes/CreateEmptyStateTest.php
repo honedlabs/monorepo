@@ -3,62 +3,80 @@
 declare(strict_types=1);
 
 use Honed\Refine\Filters\Filter;
-use Honed\Table\Pipelines\CreateEmptyState;
+use Honed\Table\EmptyState;
+use Honed\Table\Pipes\CreateEmptyState;
 use Honed\Table\Table;
 use Honed\Table\Tests\Stubs\Product;
+use Workbench\App\Tables\ProductTable;
 
 beforeEach(function () {
     $this->pipe = new CreateEmptyState();
-    $this->next = fn ($table) => $table;
 
-    $this->table = Table::make()
-        ->resource(Product::query());
-});
+    $this->table = ProductTable::make()
+        ->whenEmptyStateSearching(fn ($emptyState) => $emptyState->heading('Searching'))
+        ->whenEmptyStateFiltering(fn ($emptyState) => $emptyState->heading('Filtering'));
+})->only();
 
-it('has default empty state', function () {
-    $this->pipe->__invoke($this->table, $this->next);
+it('creates empty state', function () {
+    $this->pipe->run($this->table);
 
     expect($this->table->getEmptyState())
-        ->getTitle()->toBe(config('table.empty_state.title'))
-        ->getMessage()->toBe(config('table.empty_state.message'))
-        ->getIcon()->toBe(config('table.empty_state.icon'))
-        ->getLabel()->toBeNull()
-        ->getAction()->toBeNull();
+        ->toBeInstanceOf(EmptyState::class)
+        ->getHeading()->toBe(EmptyState::DEFAULT_HEADING)
+        ->getDescription()->toBe(EmptyState::DEFAULT_DESCRIPTION);
 });
 
 it('has searching state', function () {
-    $this->table->emptyState(fn ($emptyState) => $emptyState
-        ->searching(fn ($emptyState) => $emptyState->title('Searching'))
+    $this->table->setTerm('term');
+
+    $this->pipe->run(
+        $this->table
     );
 
-    $this->pipe->__invoke($this->table->term('term'), $this->next);
-
-    expect($this->table->getEmptyState())
-        ->getTitle()->toBe('Searching');
+    expect($this->table)
+        ->isSearching()->toBeTrue()
+        ->getEmptyState()
+        ->scoped(fn ($emptyState) => $emptyState
+            ->toBeInstanceOf(EmptyState::class)
+            ->getHeading()->toBe('Searching')
+        );
 });
 
 it('has filtering state', function () {
-    $this->table->emptyState(fn ($emptyState) => $emptyState
-        ->filtering('A refining message')
+
+    $this->pipe->run(
+        $this->table->filters(
+            Filter::make('filter')
+                ->value('value')
+                ->active(true)
+        )
     );
 
-    $filter = Filter::make('filter')->value('non-null');
-
-    $this->pipe->__invoke($this->table->filters($filter), $this->next);
-
-    expect($this->table->getEmptyState())
-        ->getMessage()->toBe('A refining message');
-
+    expect($this->table)
+        ->isFiltering()->toBeTrue()
+        ->getEmptyState()
+        ->scoped(fn ($emptyState) => $emptyState
+            ->toBeInstanceOf(EmptyState::class)
+            ->getHeading()->toBe('Filtering')
+        );
 });
 
 it('has refining state', function () {
-    $this->table->emptyState(fn ($emptyState) => $emptyState
-        ->refining(fn ($emptyState) => $emptyState->title('Refining'))
+    $this->table->setTerm('term');
+
+    $this->pipe->run(
+        $this->table
+
+            ->emptyState(EmptyState::make()
+                ->whenRefining(fn ($emptyState) => $emptyState->heading('Refining'))
+            )
     );
 
-    $this->pipe->__invoke($this->table->term('term'), $this->next);
-
-    expect($this->table->getEmptyState())
-        ->getTitle()->toBe('Refining');
-
+    expect($this->table)
+        ->isSearching()->toBeTrue()
+        ->getEmptyState()
+        ->scoped(fn ($emptyState) => $emptyState
+            ->toBeInstanceOf(EmptyState::class)
+            ->getHeading()->toBe('Refining')
+        );
 });

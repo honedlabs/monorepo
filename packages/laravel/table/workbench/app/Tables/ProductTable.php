@@ -15,8 +15,11 @@ use Honed\Table\Columns\Column;
 use Honed\Table\Columns\DateColumn;
 use Honed\Table\Columns\KeyColumn;
 use Honed\Table\Columns\NumberColumn;
+use Honed\Table\Columns\NumericColumn;
 use Honed\Table\Columns\TextColumn;
-use Honed\Table\Contracts\ShouldToggle;
+use Honed\Table\Contracts\IsOrderable;
+use Honed\Table\Contracts\IsSelectable;
+use Honed\Table\Contracts\IsToggleable;
 use Honed\Table\Table;
 use Workbench\App\Enums\Status;
 use Workbench\App\Models\Product;
@@ -27,7 +30,7 @@ use Workbench\App\Models\Product;
  *
  * @extends Table<TModel, TBuilder>
  */
-class ProductTable extends Table implements ShouldToggle // , ShouldOrder
+class ProductTable extends Table implements IsToggleable, IsSelectable, IsOrderable
 {
     /**
      * Define the table.
@@ -61,7 +64,7 @@ class ProductTable extends Table implements ShouldToggle // , ShouldOrder
 
                 Column::make('status'),
 
-                NumberColumn::make('price')
+                NumericColumn::make('price')
                     ->alias('cost')
                     ->sortable(),
 
@@ -109,7 +112,7 @@ class ProductTable extends Table implements ShouldToggle // , ShouldOrder
                     ->operator('<=')
                     ->date(),
             ])
-            ->sort([
+            ->sorts([
                 Sort::make('name', 'A-Z')
                     ->desc()
                     ->default(),
@@ -135,7 +138,7 @@ class ProductTable extends Table implements ShouldToggle // , ShouldOrder
                 InlineOperation::make('delete')
                     ->allow(fn ($product) => $product->id % 2 === 0)
                     ->action(fn ($product) => $product->delete())
-                    ->confirm(fn ($confirm) => $confirm
+                    ->confirmable(fn ($confirm) => $confirm
                         ->title(fn ($product) => 'You are about to delete '.$product->name)
                         ->description('Are you sure?')),
 

@@ -25,10 +25,13 @@ use Honed\Refine\Stores\SessionStore;
 use Honed\Table\Columns\Column;
 use Honed\Table\Concerns\HasColumns;
 use Honed\Table\Concerns\HasEmptyState;
+use Honed\Table\Concerns\HasPagination;
 use Honed\Table\Concerns\HasRecords;
 use Honed\Table\Concerns\Orderable;
+use Honed\Table\Concerns\Paginable;
 use Honed\Table\Concerns\Selectable;
 use Honed\Table\Concerns\Toggleable;
+use Honed\Table\Concerns\Viewable;
 use Honed\Table\Exceptions\KeyNotFoundException;
 use Honed\Table\Pipes\CreateEmptyState;
 use Honed\Table\Pipes\PrepareColumns;
@@ -61,6 +64,8 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     use Orderable;
     use Selectable;
     use Toggleable;
+    use Paginable;
+    use Viewable;
 
     /**
      * The default namespace where tables reside.

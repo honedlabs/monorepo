@@ -7,7 +7,7 @@ use Honed\Table\EmptyState;
 
 beforeEach(function () {
     $this->state = EmptyState::make();
-})->only();
+});
 
 it('makes with heading and description', function () {
     expect(EmptyState::make('Missing', 'Missing data'))

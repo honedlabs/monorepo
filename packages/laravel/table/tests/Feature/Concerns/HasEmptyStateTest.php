@@ -9,7 +9,7 @@ use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->table = Table::make()->for(User::class);
-})->only();
+});
 
 it('has empty state', function () {
     expect($this->table)

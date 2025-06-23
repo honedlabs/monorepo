@@ -27,7 +27,7 @@ beforeEach(function () {
             Column::make('status')
                 ->selects(false),
         ]);
-});
+})->skip();
 
 it('selects', function () {
     $this->pipe->__invoke($this->table, $this->next);

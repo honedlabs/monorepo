@@ -7,14 +7,14 @@ namespace Honed\Table\Concerns;
 use Honed\Table\Facades\Views;
 use Honed\Table\PendingViewInteraction;
 
-trait CanHaveViews
+trait Viewable
 {
     /**
      * The table views to utilise.
      *
      * @var bool|array<int, PendingViewInteraction>
      */
-    protected $views = false;
+    protected $viewable = false;
 
     /**
      * Set whether the table is viewable, or the specific views you want to use.
@@ -24,7 +24,7 @@ trait CanHaveViews
      */
     public function viewable($scope = true)
     {
-        $this->views = match (true) {
+        $this->viewable = match (true) {
             is_bool($scope) => $scope,
             default => is_array($scope) ? $scope : func_get_args()
         };
@@ -39,7 +39,7 @@ trait CanHaveViews
      */
     public function isViewable()
     {
-        return (bool) $this->views;
+        return (bool) $this->viewable;
     }
 
     /**
@@ -50,9 +50,9 @@ trait CanHaveViews
     public function getViews()
     {
         return match (true) {
-            ! $this->views => null,
-            $this->views === true => Views::for(),
-            is_array($this->views) => Views::for($this->views),
+            ! $this->viewable => null,
+            $this->viewable === true => Views::for(),
+            is_array($this->viewable) => Views::for($this->viewable),
         };
     }
 }

@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Honed\Table\Contracts\IsToggleable;
+
 trait Toggleable
 {
+    public const COLUMN_KEY = 'columns';
+
     /**
      * Whether the instance supports toggling.
      *
@@ -18,7 +22,7 @@ trait Toggleable
      *
      * @var string
      */
-    protected $columnKey = 'columns';
+    protected $columnKey = self::COLUMN_KEY;
 
     /**
      * Set the instance to be toggleable.
@@ -40,7 +44,7 @@ trait Toggleable
      */
     public function isToggleable()
     {
-        return $this->toggleable;
+        return $this->toggleable || $this instanceof IsToggleable;
     }
 
     /**

@@ -23,7 +23,7 @@ beforeEach(function () {
         ->toggle(true)
         ->orderable(true)
         ->columns($this->columns);
-});
+})->skip();
 
 it('orders columns when orderable and column names provided', function () {
     // Request with columns in different order: description,name

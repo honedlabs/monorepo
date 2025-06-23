@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Honed\Table\Contracts\IsOrderable;
+
 trait Orderable
 {
     /**
@@ -33,6 +35,6 @@ trait Orderable
      */
     public function isOrderable()
     {
-        return (bool) $this->orderable;
+        return $this->orderable || $this instanceof IsOrderable;
     }
 }

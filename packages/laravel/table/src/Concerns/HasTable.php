@@ -60,9 +60,9 @@ trait HasTable
         if ($attributes !== []) {
             $useTable = $attributes[0]->newInstance();
 
-            $table = new $useTable->tableClass();
+            $table = $useTable->tableClass::make();
 
-            $table->guessModelNamesUsing(fn () => static::class);
+            // $table->guessModelNamesUsing(fn () => static::class);
 
             return $table;
         }

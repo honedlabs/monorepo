@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns\Concerns;
 
+use Honed\Table\Contracts\IsToggleable;
+
 trait Toggleable
 {
     /**
@@ -49,7 +51,7 @@ trait Toggleable
      */
     public function isToggleable()
     {
-        return $this->toggleable;
+        return $this->toggleable || $this instanceof IsToggleable;
     }
 
     /**

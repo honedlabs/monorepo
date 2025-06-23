@@ -23,7 +23,7 @@ class PrepareColumns extends Pipe
         'search',
         'filter',
         'sort',
-        'query',
+        'select',
     ];
 
     /**
@@ -122,21 +122,6 @@ class PrepareColumns extends Pipe
         );
     }
 
-    /**
-     * Prepare the column query state.
-     *
-     * @param  TClass  $instance
-     * @param  \Honed\Table\Columns\Column  $column
-     * @return void
-     */
-    protected function prepareQuery($instance, $column)
-    {
-        if (! $column->isActive()) {
-            return;
-        }
-
-        $instance->evaluate($column->getQuery());
-    }
 
     /**
      * Get the methods to prepare.

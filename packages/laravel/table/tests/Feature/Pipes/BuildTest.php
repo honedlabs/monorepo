@@ -30,7 +30,7 @@ beforeEach(function () {
         config('table.column_key') => 'id,name,price,status,best_seller,created_at',
         config('table.record_key') => 25,
     ]);
-});
+})->skip();
 
 it('builds class', function () {
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Honed\Table\Contracts\ShouldSelect;
+use Honed\Table\Contracts\IsSelectable;
 
 trait Selectable
 {
@@ -51,7 +51,7 @@ trait Selectable
      */
     public function isSelectable()
     {
-        return ((bool) $this->selectable) || $this instanceof ShouldSelect;
+        return ((bool) $this->selectable) || $this instanceof IsSelectable;
     }
 
     /**

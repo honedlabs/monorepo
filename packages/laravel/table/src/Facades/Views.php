@@ -8,7 +8,22 @@ use Honed\Table\ViewManager;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see ViewManager
+ * @method static \Honed\Table\Contracts\Driver store(string|null $store = null) Get a view store instance
+ * @method static \Honed\Table\Contracts\Driver driver(string|null $name = null) Get a view store instance by name
+ * @method static \Honed\Table\Drivers\ArrayDriver createArrayDriver(string $name) Create an instance of the array driver
+ * @method static \Honed\Table\Drivers\DatabaseDriver createDatabaseDriver(string $name) Create an instance of the database driver
+ * @method static string getDefaultDriver() Get the default driver name
+ * @method static void setDefaultDriver(string $name) Set the default driver name
+ * @method static \Honed\Table\ViewManager forgetDrivers() Forget all of the resolved store instances
+ * @method static \Honed\Table\ViewManager extend(string $driver, \Closure $callback) Register a custom driver creator Closure
+ * @method static string serializeScope(mixed $scope) Serialize the given scope for storage
+ * @method static \Honed\Table\ViewManager useMorphMap(bool $value = true) Specify that the Eloquent morph map should be used when serializing
+ * @method static void resolveScopeUsing(\Closure $resolver) Set the default scope resolver
+ * @method static string getTableName(string|\Honed\Table\Table $table) Get the table name for the given table
+ * @method static \Honed\Table\PendingViewInteraction for(mixed|array<int, mixed> $scope = null) Create a pending view retrieval
+ * @method static mixed __call(string $method, array<int, mixed> $parameters) Dynamically call the default store instance
+ *
+ * @see \Honed\Table\ViewManager
  */
 class Views extends Facade
 {

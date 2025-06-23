@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Table\Concerns;
 
 use Honed\Table\PageOption;
-use Honed\Table\PerPageRecord;
 use Illuminate\Support\Collection;
 
 use function array_map;
@@ -17,7 +16,7 @@ use function in_array;
  *
  * @template-covariant TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  */
-trait HasPagination
+trait Paginable
 {
     public const CURSOR = 'cursor';
 
@@ -27,67 +26,75 @@ trait HasPagination
 
     public const COLLECTION = 'collection';
 
+    public const PAGE_KEY = 'page';
+
+    public const RECORD_KEY = 'rows';
+
+    public const PER_PAGE = 10;
+
+    public const WINDOW = 2;
+
     /**
      * The paginator to use.
      *
-     * @var string|null
+     * @var string
      */
-    protected $paginate;
+    protected $paginate = self::LENGTH_AWARE;
 
     /**
      * The pagination options.
      *
      * @var int|array<int,int>
      */
-    protected $perPage = 10;
+    protected $perPage = self::PER_PAGE;
 
     /**
      * The default pagination amount if pagination is an array.
      *
      * @var int
      */
-    protected $defaultPerPage = 10;
+    protected $defaultPerPage = self::PER_PAGE;
 
     /**
      * The query parameter for the page number.
      *
      * @var string
      */
-    protected $pageKey = 'page';
+    protected $pageKey = self::PAGE_KEY;
 
     /**
      * The query parameter for the number of records to show per page.
      *
      * @var string
      */
-    protected $recordKey = 'rows';
+    protected $recordKey = self::RECORD_KEY;
 
     /**
      * The number of page links to show either side of the current page.
      *
      * @var int
      */
-    protected $window = 2;
+    protected $window = self::WINDOW;
 
     /**
      * The records per page options if dynamic.
      *
-     * @var array<int,PerPageRecord>
+     * @var array<int,PageOption>
      */
-    protected $recordsPerPage = [];
+    protected $pageOptions = [];
 
     /**
      * Set the paginator type.
      *
-     * @param  bool|string  $paginator
+     * @param  bool|string  $paginate
      * @return $this
      */
-    public function paginate($paginator = self::LENGTH_AWARE)
+    public function paginate($paginate = true)
     {
-        $this->paginator = match ($paginator) {
-            true => $paginator = self::LENGTH_AWARE,
-            false => $paginator = self::COLLECTION,
-            default => $paginator,
+        $this->paginate = match ($paginate) {
+            true => self::LENGTH_AWARE,
+            false => self::COLLECTION,
+            default => $paginate,
         };
 
         return $this;
@@ -124,23 +131,13 @@ trait HasPagination
     }
 
     /**
-     * Set the paginator type to be 'collection'.
-     *
-     * @return $this
-     */
-    public function collectionPaginate()
-    {
-        return $this->paginate(self::COLLECTION);
-    }
-
-    /**
      * Get the paginator type.
      *
      * @return string
      */
-    public function getPaginator()
+    public function getPaginate()
     {
-        return $this->paginator;
+        return $this->paginate;
     }
 
     /**
@@ -265,10 +262,10 @@ trait HasPagination
      * @param  int  $active
      * @return void
      */
-    public function createRecordsPerPage($pagination, $active)
+    public function createPageOptions($pagination, $active)
     {
-        $this->recordsPerPage = array_map(
-            static fn (int $amount) => PerPageRecord::make($amount, $active),
+        $this->pageOptions = array_map(
+            static fn (int $amount) => PageOption::make($amount, $active),
             $pagination
         );
     }
@@ -276,9 +273,9 @@ trait HasPagination
     /**
      * Get records per page options.
      *
-     * @return array<int,PerPageRecord>
+     * @return array<int,PageOption>
      */
-    public function getRecordsPerPage()
+    public function getPageOptions()
     {
         return $this->pageOptions;
     }
@@ -288,72 +285,12 @@ trait HasPagination
      *
      * @return array<int,array<string,mixed>>
      */
-    public function recordsPerPageToArray()
+    public function pageOptionsToArray()
     {
         return array_map(
             static fn (PageOption $record) => $record->toArray(),
-            $this->getRecordsPerPage()
+            $this->getPageOptions()
         );
-    }
-
-    /**
-     * Determine if the paginator is a length-aware paginator.
-     *
-     * @param  string  $paginator
-     * @return bool
-     */
-    public function isLengthAware($paginator)
-    {
-        return in_array($paginator, [
-            'length-aware',
-            \Illuminate\Contracts\Pagination\LengthAwarePaginator::class,
-            \Illuminate\Pagination\LengthAwarePaginator::class,
-        ]);
-    }
-
-    /**
-     * Determine if the paginator is a simple paginator.
-     *
-     * @param  string  $paginator
-     * @return bool
-     */
-    public function isSimple($paginator)
-    {
-        return in_array($paginator, [
-            'simple',
-            \Illuminate\Contracts\Pagination\Paginator::class,
-            \Illuminate\Pagination\Paginator::class,
-        ]);
-    }
-
-    /**
-     * Determine if the paginator is a cursor paginator.
-     *
-     * @param  string  $paginator
-     * @return bool
-     */
-    public function isCursor($paginator)
-    {
-        return in_array($paginator, [
-            'cursor',
-            \Illuminate\Contracts\Pagination\CursorPaginator::class,
-            \Illuminate\Pagination\CursorPaginator::class,
-        ]);
-    }
-
-    /**
-     * Determine if the paginator is a collection.
-     *
-     * @param  string  $paginator
-     * @return bool
-     */
-    public function isCollector($paginator)
-    {
-        return in_array($paginator, [
-            'none',
-            'collection',
-            Collection::class,
-        ]);
     }
 
     /**

@@ -50,8 +50,8 @@ class CreateEmptyState extends Pipe
     protected function resolveCallback($instance, $emptyState)
     {
         $states = [
-            'filtering' => $instance->isFiltering(),
             'searching' => $instance->isSearching(),
+            'filtering' => $instance->isFiltering(),
             'refining' => $instance->isFiltering() || $instance->isSearching(),
         ];
 

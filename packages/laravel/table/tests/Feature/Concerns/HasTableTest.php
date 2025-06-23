@@ -2,26 +2,18 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Concerns\HasTable;
-use Honed\Table\Tests\Stubs\Product;
-use Honed\Table\Tests\Stubs\ProductTable;
-use Illuminate\Database\Eloquent\Model;
+use Workbench\App\Models\User;
+use Workbench\App\Tables\UserTable;
+use Workbench\App\Infolists\UserInfolist;
+use Workbench\App\Models\Product;
+use Workbench\App\Tables\ProductTable;
 
-class TableModel extends Model
-{
-    use HasTable;
-
-    protected static $tableClass = ProductTable::class;
-}
-
-it('has a table', function () {
-    expect(Product::table())
-        ->toBeInstanceOf(ProductTable::class);
+it('has table via attribute', function () {
+    expect(User::table())
+        ->toBeInstanceOf(UserTable::class);
 });
 
-it('can set table', function () {
-    $model = new TableModel();
-
-    expect($model)
-        ->table()->toBeInstanceOf(ProductTable::class);
+it('has table via guess', function () {
+    expect(Product::table())
+        ->toBeInstanceOf(ProductTable::class);
 });

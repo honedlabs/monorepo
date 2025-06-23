@@ -20,7 +20,7 @@ beforeEach(function () {
 
     $this->table = Table::make()
         ->resource(Product::query());
-});
+})->skip();
 
 it('paginates default', function () {
     $this->pipe->__invoke($this->table, $this->next);

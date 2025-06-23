@@ -6,13 +6,13 @@ namespace Workbench\App\Models;
 
 use Honed\Table\Attributes\UseTable;
 use Honed\Table\Concerns\HasTable;
-use Honed\Table\Tests\Stubs\ProductTable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Workbench\App\Tables\UserTable;
 use Workbench\Database\Factories\UserFactory;
 
-#[UseTable(ProductTable::class)]
+#[UseTable(UserTable::class)]
 class User extends Authenticatable
 {
     /**
