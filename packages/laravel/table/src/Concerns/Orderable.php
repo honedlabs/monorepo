@@ -1,0 +1,36 @@
+<?php
+
+namespace Honed\Table\Concerns;
+
+trait Orderable
+{
+    /**
+     * Whether the columns are orderable.
+     * 
+     * @var bool
+     */
+    protected $orderable = false;
+
+    /**
+     * Set the instance to be orderable.
+     *
+     * @param  bool  $value
+     * @return $this
+     */
+    public function orderable($value = true)
+    {
+        $this->orderable = $value;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the instance is orderable.
+     *
+     * @return bool
+     */
+    public function isOrderable()
+    {
+        return (bool) $this->orderable;
+    }
+}

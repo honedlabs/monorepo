@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Table;
 
 use Honed\Action\Operations\PageOperation;
-use Honed\Action\PageAction;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Primitive;
 
@@ -64,9 +63,11 @@ class EmptyState extends Primitive // implements NullAsUndefined
     public static function make($heading = null, $description = null)
     {
         return resolve(static::class)
-            ->when($heading, fn ($emptyState, $heading) => $emptyState->heading($heading)
+            ->when($heading, 
+                fn ($emptyState, $heading) => $emptyState->heading($heading)
             )
-            ->when($description, fn ($emptyState, $description) => $emptyState->description($description)
+            ->when($description, 
+                fn ($emptyState, $description) => $emptyState->description($description)
             );
     }
 
@@ -119,15 +120,28 @@ class EmptyState extends Primitive // implements NullAsUndefined
     /**
      * Sets the operations of the empty state. This will replace any existing actions.
      *
-     * @param  PageAction|array<int, PageAction>  $actions
+     * @param  PageOperation|array<int, PageOperation>  $operations
      * @return $this
      */
     public function operations($operations)
     {
-        /** @var array<int, PageAction> */
+        /** @var array<int, PageOperation> */
         $operations = is_array($operations) ? $operations : func_get_args();
 
         $this->operations = [...$this->operations, ...$operations];
+
+        return $this;
+    }
+
+    /**
+     * Add an operation to the empty state.
+     *
+     * @param  PageOperation  $operation
+     * @return $this
+     */
+    public function operation($operation)
+    {
+        $this->operations[] = $operation;
 
         return $this;
     }

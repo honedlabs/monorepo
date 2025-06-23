@@ -54,12 +54,26 @@ trait Filterable
             return null;
         }
 
+        return match (true) {
+            $this->filterable instanceof Closure =>
+                $this->newFilter()->query($this->filterable),
+
+            default => $this->newFilter()
+        };
+    }
+
+    /**
+     * Create a new filter instance.
+     *
+     * @return Filter
+     */
+    protected function newFilter()
+    {
         return Filter::make($this->getName(), $this->getLabel())
             ->hidden()
             ->alias($this->getAlias())
             ->as($this->getFilterableType())
-            ->qualify($this->getQualifier())
-            ->query($this->filterable instanceof Closure ? $this->filterable : null);
+            ->qualify($this->getQualifier());
     }
 
     /**

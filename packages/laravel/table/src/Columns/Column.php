@@ -5,29 +5,30 @@ declare(strict_types=1);
 namespace Honed\Table\Columns;
 
 use Closure;
-use Honed\Core\Concerns\Allowable;
-use Honed\Core\Concerns\HasAlias;
-use Honed\Core\Concerns\HasExtra;
-use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasQuery;
-use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\IsActive;
+use Honed\Refine\Sorts\Sort;
+use function array_merge;
 use Honed\Core\Primitive;
-use Honed\Infolist\Entries\Concerns\CanBeAggregated;
-use Honed\Infolist\Entries\Concerns\HasPlaceholder;
-use Honed\Refine\Concerns\CanBeHidden;
-use Honed\Refine\Concerns\HasQualifier;
-use Honed\Refine\Sort;
-use Honed\Table\Columns\Concerns\HasState;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Honed\Core\Concerns\HasIcon;
+use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\HasAlias;
+use Honed\Core\Concerns\HasExtra;
+use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasQuery;
+use Honed\Core\Concerns\IsActive;
+use Honed\Core\Concerns\Allowable;
+use Honed\Table\Concerns\Selectable;
+use Honed\Refine\Concerns\CanBeHidden;
+use Honed\Refine\Concerns\HasQualifier;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
-use function array_merge;
+use Honed\Infolist\Entries\Concerns\HasState;
+use Honed\Infolist\Entries\Concerns\HasPlaceholder;
+use Honed\Infolist\Entries\Concerns\CanBeAggregated;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -42,9 +43,7 @@ class Column extends Primitive
     use Concerns\Exportable;
     use Concerns\Filterable;
     use Concerns\HasClasses;
-
     use Concerns\Searchable;
-
     use Concerns\Sortable;
     use Concerns\Toggleable;
     use HasAlias;
@@ -59,6 +58,7 @@ class Column extends Primitive
     use HasState;
     use HasType;
     use IsActive;
+    use Selectable;
 
     /**
      * The identifier to use for evaluation.

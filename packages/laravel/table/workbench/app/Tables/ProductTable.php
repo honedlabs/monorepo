@@ -7,9 +7,9 @@ namespace Workbench\App\Tables;
 use Honed\Action\BulkAction;
 use Honed\Action\InlineAction;
 use Honed\Action\PageAction;
-use Honed\Refine\Filter;
-use Honed\Refine\Search;
-use Honed\Refine\Sort;
+use Honed\Refine\Filters\Filter;
+use Honed\Refine\Searches\Search;
+use Honed\Refine\Sorts\Sort;
 use Honed\Table\Columns\BooleanColumn;
 use Honed\Table\Columns\Column;
 use Honed\Table\Columns\DateColumn;
@@ -27,6 +27,11 @@ class ProductTable extends Table
      * {@inheritdoc}
      */
     protected $toggle = true;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $orderable = true;
 
     /**
      * {@inheritdoc}

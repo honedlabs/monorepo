@@ -42,7 +42,7 @@ trait Sortable
     /**
      * Get the sortable state of the column.
      *
-     * @return \Honed\Refine\Sort|null
+     * @return \Honed\Refine\Sorts\Sort|null
      */
     public function getSort()
     {
@@ -50,12 +50,28 @@ trait Sortable
             return null;
         }
 
-        $name = is_string($this->sortable) ? $this->sortable : $this->getName();
+        return match (true) {
+            $this->sortable instanceof Closure =>
+                $this->newSort()->query($this->sortable),
 
-        return Sort::make($name, $this->getLabel())
+            is_string($this->sortable) =>
+                $this->newSort($this->sortable),
+
+            default => $this->newSort()
+        };
+    }
+
+    /**
+     * Create a new sort instance.
+     *
+     * @param string|null $name
+     * @return Sort
+     */
+    protected function newSort($name = null)
+    {
+        return Sort::make($name ?? $this->getName(), $this->getLabel())
             ->hidden()
             ->alias($this->getParameter())
-            ->qualify($this->getQualifier())
-            ->query($this->sortable instanceof Closure ? $this->sortable : null);
+            ->qualify($this->getQualifier());
     }
 }

@@ -31,9 +31,11 @@ class Select extends Pipe
 
         $resource = $instance->getBuilder();
 
-        match (true) {
-            $resource instanceof Builder => $resource->select($selects),
-            default => Arr::select($resource, $selects)
-        };
+        $resource->select($selects);
+
+        // match (true) {
+        //     $resource instanceof Builder => $resource->select($selects),
+        //     default => Arr::select($resource, $selects)
+        // };
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Table\Pipes;
 
 use Honed\Core\Pipe;
+use Honed\Table\EmptyState;
 
 /**
  * @template TClass of \Honed\Table\Table
@@ -21,6 +22,23 @@ class CreateEmptyState extends Pipe
      */
     public function run($instance)
     {
-        // Check if the table has no records
+        if (filled($instance->getRecords())) {
+            $instance->emptyState(null);
+            
+            return;
+        }
+
+        if (! $instance->getEmptyState()) {
+            $instance->emptyState(EmptyState::make());
+        }
+
+        $emptyState = $instance->getEmptyState();
+
+        $emptyState->evaluate(match (true) {
+            $instance->isFiltering() => $instance->getFilteringCallback(),
+            $instance->isSearching() => $instance->getSearchingCallback(),
+            $instance->isRefining() => $instance->getRefiningCallback(),
+            default => null
+        });
     }
 }

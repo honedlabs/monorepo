@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Sort;
+use Honed\Refine\Sorts\Sort;
 use Honed\Table\Columns\Column;
 
 beforeEach(function () {

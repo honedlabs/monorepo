@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns\Concerns;
 
+use Closure;
+use Honed\Refine\Searches\Search;
+use Illuminate\Support\Arr;
+
 trait Searchable
 {
     /**
      * The searchable state of the column.
      *
-     * @var bool|string|array<int,string>
+     * @var bool|string|\Closure
      */
     protected $searchable = false;
 
     /**
      * Set the searchable state of the column.
      *
-     * @param  bool|string|array<int,string>  $searches
+     * @param  bool|string|\Closure  $searches
      * @return $this
      */
     public function searchable($searches = true)
@@ -39,18 +43,35 @@ trait Searchable
     /**
      * Get the columns to search on.
      *
-     * @return array<int, string>
+     * @return Search|null
      */
     public function getSearch()
     {
         if (! $this->searchable) {
-            return [];
+            return null;
         }
 
         return match (true) {
-            is_array($this->searchable) => $this->searchable,
-            is_string($this) => [$this->searchable],
-            default => [$this->getName()]
+            $this->searchable instanceof Closure =>
+                $this->newSearch()->query($this->searchable),
+
+            is_string($this->searchable) =>
+                $this->newSearch($this->searchable),
+
+            default => $this->newSearch()
         };
+    }
+
+    /**
+     * Create a new search instance.
+     *
+     * @param string|null $name
+     * @return Search
+     */
+    protected function newSearch($name = null)
+    {
+        return Search::make($name ?? $this->getName(), $this->getLabel())
+            ->alias($this->getAlias())
+            ->qualify($this->getQualifier());
     }
 }

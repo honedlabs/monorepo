@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filter;
+use Honed\Refine\Filters\Filter;
 use Honed\Table\Columns\BooleanColumn;
 use Honed\Table\Columns\Column;
 use Honed\Table\Columns\DateColumn;

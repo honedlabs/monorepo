@@ -16,12 +16,12 @@ trait Toggleable
     /**
      * Set the instance to be toggleable.
      *
-     * @param  bool  $enable
+     * @param  bool  $value
      * @return $this
      */
-    public function toggleable($enable = true)
+    public function toggleable($value = true)
     {
-        $this->toggleable = $enable;
+        $this->toggleable = $value;
 
         return $this;
     }

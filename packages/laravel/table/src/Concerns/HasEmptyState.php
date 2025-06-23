@@ -19,7 +19,7 @@ trait HasEmptyState
     /**
      * Set the empty state of the table.
      *
-     * @param  EmptyState|Closure  $emptyState
+     * @param  EmptyState|Closure|null  $emptyState
      * @return $this
      */
     public function emptyState($emptyState)
@@ -102,7 +102,7 @@ trait HasEmptyState
      */
     public function whenEmptyStateFiltering($callback)
     {
-        $this->newEmptyState()->filtering($callback);
+        $this->newEmptyState()->whenFiltering($callback);
 
         return $this;
     }
@@ -115,7 +115,7 @@ trait HasEmptyState
      */
     public function whenEmptyStateSearching($callback)
     {
-        $this->newEmptyState()->searching($callback);
+        $this->newEmptyState()->whenSearching($callback);
 
         return $this;
     }
@@ -128,7 +128,7 @@ trait HasEmptyState
      */
     public function whenEmptyStateRefining($callback)
     {
-        $this->newEmptyState()->refining($callback);
+        $this->newEmptyState()->whenRefining($callback);
 
         return $this;
     }

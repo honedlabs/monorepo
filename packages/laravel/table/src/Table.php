@@ -5,42 +5,46 @@ declare(strict_types=1);
 namespace Honed\Table;
 
 use Closure;
-use Honed\Action\Concerns\CanHandleOperations;
-use Honed\Action\Contracts\HandlesOperations;
+use Throwable;
+use function array_merge;
 use Honed\Action\Handler;
-use Honed\Action\Handlers\BatchHandler;
-use Honed\Core\Concerns\HasMeta;
-use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
-use Honed\Refine\Concerns\CanBeRefined;
-use Honed\Refine\Contracts\RefinesData;
-use Honed\Refine\Pipes\AfterRefining;
-use Honed\Refine\Pipes\BeforeRefining;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Honed\Table\Pipes\Query;
+use Illuminate\Http\Request;
+use Honed\Table\Pipes\Select;
+use Honed\Table\Pipes\Toggle;
+use Honed\Table\Columns\Column;
+use Honed\Core\Concerns\HasMeta;
+use Honed\Refine\Pipes\SortQuery;
 use Honed\Refine\Pipes\FilterQuery;
 use Honed\Refine\Pipes\PersistData;
 use Honed\Refine\Pipes\SearchQuery;
-use Honed\Refine\Pipes\SortQuery;
-use Honed\Table\Columns\Column;
+use Illuminate\Container\Container;
+use Honed\Refine\Stores\CookieStore;
 use Honed\Table\Concerns\HasColumns;
-use Honed\Table\Concerns\HasEmptyState;
 use Honed\Table\Concerns\HasRecords;
 use Honed\Table\Concerns\Selectable;
 use Honed\Table\Concerns\Toggleable;
-use Honed\Table\Exceptions\KeyNotFoundException;
-use Honed\Table\Pipes\CreateEmptyState;
+use Honed\Refine\Pipes\AfterRefining;
+use Honed\Refine\Stores\SessionStore;
 use Honed\Table\Pipes\PrepareColumns;
-use Honed\Table\Pipes\Select;
-use Honed\Table\Pipes\Toggle;
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
-use Illuminate\Contracts\Foundation\Application;
+use Honed\Refine\Pipes\BeforeRefining;
+use Honed\Action\Handlers\BatchHandler;
+use Honed\Refine\Concerns\CanBeRefined;
+use Honed\Refine\Contracts\RefinesData;
+use Honed\Table\Concerns\HasEmptyState;
+use Honed\Table\Pipes\CreateEmptyState;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Throwable;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Action\Contracts\HandlesOperations;
 
-use function array_merge;
+use Honed\Action\Concerns\CanHandleOperations;
+use Honed\Table\Exceptions\KeyNotFoundException;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Honed\Table\Concerns\Orderable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -58,6 +62,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     use HasRecords;
     use Selectable;
     use Toggleable;
+    use Orderable;
 
     /**
      * The default namespace where tables reside.
@@ -72,6 +77,13 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
      * @var string|null
      */
     protected $key;
+
+    /**
+     * The store to use for persisting the toggled columns.
+     * 
+     * @var bool|string|null
+     */
+    protected $persistColumns = null;
 
     /**
      * The identifier to use for evaluation.
@@ -205,6 +217,27 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     }
 
     /**
+     * Get the route key for the instance.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'table';
+    }
+
+    /**
+     * Get the handler for the instance.
+     *
+     * @return class-string<\Honed\Action\Handlers\Handler<self>>
+     */
+    public function getHandler() // @phpstan-ignore-line
+    {
+        /** @var class-string<\Honed\Action\Handlers\Handler<self>> */
+        return config('table.handler', BatchHandler::class);
+    }
+
+    /**
      * Set the record key to use.
      *
      * @param  string|null  $key
@@ -236,6 +269,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
         );
 
         if ($keyColumn) {
+            /** @var string */
             return $keyColumn->getName();
         }
 
@@ -243,37 +277,69 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     }
 
     /**
-     * Get the route key for the instance.
+     * Set the store to use for persisting toggled columns.
      *
-     * @return string
+     * @param  bool|string|null  $store
+     * @return $this
      */
-    public function getRouteKeyName()
+    public function persistColumns($store = true)
     {
-        return 'table';
+        $this->persistColumns = $store;
+
+        return $this;
     }
 
     /**
-     * Get the handler for the instance.
+     * Set the session store to be used for persisting toggled columns.
      *
-     * @return class-string<\Honed\Action\Handlers\Handler<self>>
+     * @return $this
      */
-    public function getHandler() // @phpstan-ignore-line
+    public function persistColumnsInSession()
     {
-        /** @var class-string<Handlers\Handler<self>> */
-        return config('action.handler', BatchHandler::class);
+        return $this->persistColumns(SessionStore::NAME);
     }
 
     /**
-     * Get the actions for the table as an array.
+     * Set the cookie store to be used for persisting toggled columns.
+     *
+     * @return $this
+     */
+    public function persistColumnsInCookie()
+    {
+        return $this->persistColumns(CookieStore::NAME);
+    }
+
+    /**
+     * Determine if the toggled columns should be persisted.
+     *
+     * @return bool
+     */
+    public function shouldPersistColumns()
+    {
+        return (bool) $this->persistColumns;
+    }
+
+    /**
+     * Get the store to use for persisting toggled columns.
+     *
+     * @return \Honed\Refine\Stores\Store|null
+     */
+    public function getColumnStore()
+    {
+        return $this->getStore($this->persistColumns);
+    }
+
+    /**
+     * Get the operations for the table as an array.
      *
      * @return array<string, mixed>
      */
-    public function actionsToArray()
+    public function operationsToArray()
     {
         return [
-            'inline' => filled($this->getInlineActions()),
-            'bulk' => $this->getBulkActions(),
-            'page' => $this->getPageActions(),
+            'inline' => filled($this->getInlineOperations()),
+            'bulk' => $this->getBulkOperations(),
+            'page' => $this->getPageOperations(),
         ];
     }
 
@@ -289,9 +355,9 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
             'records' => $this->getRecords(),
             'paginate' => $this->getPagination(),
             'columns' => $this->columnsToArray(),
-            'pages' => $this->pageToArray(),
+            // 'pages' => $this->pageToArray(),
             'toggleable' => $this->isToggleable(),
-            'actions' => $this->actionsToArray(),
+            'operations' => $this->operationsToArray(),
             'meta' => $this->getMeta(),
         ];
     }
@@ -338,6 +404,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
             SearchQuery::class,
             FilterQuery::class,
             SortQuery::class,
+            Query::class,
             AfterRefining::class,
             CreateEmptyState::class,
             PersistData::class,

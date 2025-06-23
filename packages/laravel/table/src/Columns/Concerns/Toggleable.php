@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns\Concerns;
 
+use Honed\Table\Concerns\Toggleable as BaseToggleable;
+
 trait Toggleable
 {
     /**
@@ -11,24 +13,33 @@ trait Toggleable
      *
      * @var bool
      */
-    protected $toggleable = false;
+    protected $toggleable = true;
 
     /**
      * Whether the instance is toggled active by default.
      *
      * @var bool
      */
-    protected $defaultToggled = true;
+    protected $defaultToggled = false;
+
+    /**
+     * Whether the instance should always be shown, just hidden if it is inactive.
+     * 
+     * @var bool
+     */
+    protected $always = false;
 
     /**
      * Set the instance to be toggleable.
      *
-     * @param  bool  $enable
+     * @param  bool  $value
+     * @param  bool  $default
      * @return $this
      */
-    public function toggleable($enable = true)
+    public function toggleable($value = true, $default = false)
     {
-        $this->toggleable = $enable;
+        $this->toggleable = $value;
+        $this->defaultToggled = $default;
 
         return $this;
     }
@@ -64,5 +75,28 @@ trait Toggleable
     public function isDefaultToggled()
     {
         return $this->defaultToggled;
+    }
+
+    /**
+     * Set whether the instance should always be shown, just hidden if it is inactive.
+     *
+     * @param  bool  $always
+     * @return $this
+     */
+    public function always($always = true)
+    {
+        $this->always = $always;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the instance should always be shown, just hidden if it is inactive.
+     *
+     * @return bool
+     */
+    public function isAlways()
+    {
+        return $this->always;
     }
 }

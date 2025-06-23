@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Search;
+use Honed\Refine\Searches\Search;
 use Honed\Table\Columns\Column;
 use Honed\Table\Pipelines\RefineSearches;
 use Honed\Table\Table;

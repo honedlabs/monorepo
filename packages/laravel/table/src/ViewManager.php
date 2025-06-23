@@ -104,9 +104,70 @@ class ViewManager
         $this->defaultScopeResolver = $resolver;
     }
 
-    public function for($scope) {}
+    /**
+     * Pending view retrieval
+     */
+    public function for($scope = null)
+    {
+
+    }
 
     public function all() {}
+
+
+    /**
+     * Retrieve the value for the given name and scope from storage.
+     *
+     * @param  string  $name
+     * @param  mixed  $scope
+     * @return object|null
+     */
+    public function retrieve($name, $scope)
+    {
+        return $this->newQuery()
+            ->where('name', $name)
+            ->where('scope', $this->serializeScope($scope))
+            ->first();
+    }
+
+    /**
+     * Set a feature flag's value.
+     *
+     * @param  string  $feature
+     * @param  mixed  $scope
+     * @param  mixed  $value
+     */
+    public function set($feature, $scope, $value): void
+    {
+        $now = Carbon::now();
+        $this->newQuery()->upsert([
+            'name' => $feature,
+            'scope' => $this->serializeScope($scope),
+            'view' => json_encode($value, flags: JSON_THROW_ON_ERROR),
+            static::CREATED_AT => $now,
+            static::UPDATED_AT => $now,
+        ], uniqueBy: ['name', 'scope'], update: ['view', static::UPDATED_AT]);
+    }
+
+
+    /**
+     * Update the value for the given feature and scope in storage.
+     *
+     * @param  string  $feature
+     * @param  mixed  $scope
+     * @param  mixed  $value
+     * @return bool
+     */
+    protected function update($feature, $scope, $value)
+    {
+        return (bool) $this->newQuery()
+            ->where('name', $feature)
+            ->where('scope', $this->serializeScope($scope))
+            ->update([
+                'view' => json_encode($value, flags: JSON_THROW_ON_ERROR),
+                static::UPDATED_AT => Carbon::now(),
+            ]);
+    }
 
     /**
      * Insert the table view for the given scope into storage.
@@ -135,28 +196,13 @@ class ViewManager
     {
         $now = Carbon::now();
 
-        return $this->newQuery()->insert(array_map(static fn ($insert) => [
+        return $this->newQuery()->insert(array_map(fn ($insert) => [
             'name' => $insert['name'],
-            'scope' => static::serializeScope($insert['scope']),
+            'scope' => $this->serializeScope($insert['scope']),
             'view' => json_encode($insert['view'], flags: JSON_THROW_ON_ERROR),
             static::CREATED_AT => $now,
             static::UPDATED_AT => $now,
         ], $inserts));
-    }
-
-    /**
-     * Retrieve the value for the given name and scope from storage.
-     *
-     * @param  string  $name
-     * @param  mixed  $scope
-     * @return object|null
-     */
-    public function retrieve($name, $scope)
-    {
-        return $this->newQuery()
-            ->where('name', $name)
-            ->where('scope', static::serializeScope($scope))
-            ->first();
     }
 
     /**

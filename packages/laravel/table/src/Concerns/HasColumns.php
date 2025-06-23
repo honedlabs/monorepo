@@ -69,13 +69,24 @@ trait HasColumns
     }
 
     /**
+     * Set the columns by overriding the existing columns.
+     *
+     * @param  array<int,Column<TModel, TBuilder>>  $columns
+     * @return void
+     */
+    public function setColumns($columns)
+    {
+        $this->columns = $columns;
+    }
+
+    /**
      * Get the cached heading columns.
      *
      * @return array<int,Column<TModel, TBuilder>>
      */
     public function getHeadings()
     {
-        return $this->headings;
+        return $this->headings ?? $this->getColumns();
     }
 
     /**

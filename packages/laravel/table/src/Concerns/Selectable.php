@@ -11,19 +11,35 @@ trait Selectable
     /**
      * The columns to select, indicative of whether the instance is selectable.
      *
-     * @param  bool|array<int, string>  $selectable
+     * @var bool|string|array<int, string>
      */
     protected $selectable = false;
 
     /**
      * Set the instance to be selectable, optionally with a list of columns to select.
      *
-     * @param  bool|array<int, string>  $select
+     * @param  bool|array<int, string>  $value
      * @return $this
      */
-    public function selectable($select = true)
+    public function selectable($value = true)
     {
-        $this->selectable = $select;
+        $this->selectable = $value;
+
+        return $this;
+    }
+
+    /**
+     * Select the columns to be displayed.
+     *
+     * @param  string|array<int, string>  $selects
+     * @return $this
+     */
+    public function select($selects)
+    {
+        /** @var array<int, string> */
+        $selects = is_array($selects) ? $selects : func_get_args();
+
+        $this->selectable = array_merge($this->getSelects(), $selects);
 
         return $this;
     }
@@ -43,8 +59,12 @@ trait Selectable
      *
      * @return array<int, string>
      */
-    public function getSelectableColumns()
+    public function getSelects()
     {
-        return is_array($this->selectable) ? $this->selectable : [];
+        return match (true) {
+            is_array($this->selectable) => $this->selectable,
+            is_string($this->selectable) => [$this->selectable],
+            default => []
+        };
     }
 }
