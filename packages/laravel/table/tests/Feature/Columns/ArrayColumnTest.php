@@ -3,65 +3,25 @@
 declare(strict_types=1);
 
 use Honed\Table\Columns\ArrayColumn;
+use Honed\Table\Columns\Column;
 use Illuminate\Support\Arr;
 
 beforeEach(function () {
     $this->column = ArrayColumn::make('categories');
 });
 
-it('sets up', function () {
+it('is type array', function () {
     expect($this->column)
-        ->isActive()->toBeTrue()
-        ->getType()->toBe('array');
+        ->getType()->toBe(Column::ARRAY);
 });
 
-it('has pluck', function () {
+it('does not format null values', function () {
     expect($this->column)
-        ->getPluck()->toBeNull()
-        ->pluck('name')->toBe($this->column)
-        ->getPluck()->toBe('name');
+        ->format(null)->toBeNull();
 });
 
-it('has glue', function () {
+it('formats array', function () {
     expect($this->column)
-        ->getGlue()->toBeNull()
         ->glue(', ')->toBe($this->column)
-        ->getGlue()->toBe(', ');
-});
-
-describe('applies', function () {
-    beforeEach(function () {
-        $product = product();
-
-        $product->categories()->attach(category('A'));
-        $product->categories()->attach(category('B'));
-
-        $product->load('categories');
-
-        $this->value = Arr::get($product, 'categories');
-    });
-
-    it('falls back when not iterable', function () {
-        expect($this->column->name('name')->fallback('-')
-            ->apply(null))->toBe('-');
-    });
-
-    it('formats', function () {
-        expect($this->column->apply($this->value))
-            ->toBeArray()
-            ->toHaveCount(2);
-    });
-
-    it('plucks', function () {
-        expect($this->column->pluck('name')->apply($this->value))
-            ->toBeArray()
-            ->toHaveCount(2)
-            ->toEqual(['A', 'B']);
-    });
-
-    it('glues', function () {
-        expect($this->column->pluck('name')->glue(', ')->apply($this->value))
-            ->toBeString()
-            ->toEqual('A, B');
-    });
+        ->format([1, 2, 3])->toBe('1, 2, 3');
 });

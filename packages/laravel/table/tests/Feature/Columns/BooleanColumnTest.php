@@ -3,46 +3,27 @@
 declare(strict_types=1);
 
 use Honed\Table\Columns\BooleanColumn;
+use Honed\Table\Columns\Column;
 
 beforeEach(function () {
-    $this->param = 'is_active';
-    $this->column = BooleanColumn::make($this->param);
+    $this->column = BooleanColumn::make('is_active')
+        ->trueText('Yes')
+        ->falseText('No');
 });
 
-it('makes', function () {
+it('is type array', function () {
     expect($this->column)
-        ->getName()->toBe($this->param)
-        ->getLabel()->toBe('Is active')
-        ->getType()->toBe('boolean')
-        ->getTrueLabel()->toBe('True')
-        ->getFalseLabel()->toBe('False');
+        ->getType()->toBe(Column::BOOLEAN);
 });
 
-it('has true label', function () {
+it('formats boolean values', function ($value, $expected) {
     expect($this->column)
-        ->getTrueLabel()->toBe('True')
-        ->trueLabel('Yes')->toBe($this->column)
-        ->getTrueLabel()->toBe('Yes');
-});
-
-it('has false label', function () {
-    expect($this->column)
-        ->getFalseLabel()->toBe('False')
-        ->falseLabel('No')->toBe($this->column)
-        ->getFalseLabel()->toBe('No');
-});
-
-it('sets labels', function () {
-    expect($this->column)
-        ->labels('Yes', 'No')->toBe($this->column)
-        ->getTrueLabel()->toBe('Yes')
-        ->getFalseLabel()->toBe('No');
-});
-
-it('applies', function () {
-
-    expect($this->column)
-        ->labels('Yes', 'No')->toBe($this->column)
-        ->apply(true)->toBe('Yes')
-        ->apply(false)->toBe('No');
-});
+        ->format($value)->toBe($expected);
+})->with([
+    [false, 'No'],
+    [null, 'No'],
+    [0, 'No'],
+    [1, 'Yes'],
+    ['string', 'Yes'],
+    [true, 'Yes'],
+]);

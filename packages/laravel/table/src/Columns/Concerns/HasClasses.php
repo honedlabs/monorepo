@@ -56,7 +56,7 @@ trait HasClasses
      */
     public function recordClasses($classes)
     {
-        $this->classes[] = $classes;
+        $this->recordClasses[] = $classes;
 
         return $this;
     }

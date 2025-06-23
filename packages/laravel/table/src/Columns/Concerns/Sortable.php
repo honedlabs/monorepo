@@ -69,7 +69,7 @@ trait Sortable
     {
         return Sort::make($name ?? $this->getName(), $this->getLabel())
             ->hidden()
-            ->alias($this->getParameter())
+            ->alias($this->getAlias())
             ->qualify($this->getQualifier());
     }
 }

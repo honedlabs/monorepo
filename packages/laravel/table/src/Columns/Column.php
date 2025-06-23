@@ -14,6 +14,7 @@ use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\IsActive;
+use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Honed\Infolist\Entries\Concerns\CanBeAggregated;
 use Honed\Infolist\Entries\Concerns\CanFormatValues;
@@ -32,7 +33,7 @@ use InvalidArgumentException;
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  */
-class Column extends Primitive
+class Column extends Primitive implements NullsAsUndefined
 {
     use Allowable;
     use CanBeAggregated;
@@ -60,6 +61,8 @@ class Column extends Primitive
     use HasType;
     use IsActive;
     use Selectable;
+
+    public const COLOR = 'color';
 
     /**
      * The identifier to use for evaluation.
@@ -224,7 +227,7 @@ class Column extends Primitive
             'active' => $this->isActive(),
             'toggleable' => $this->isToggleable(),
             'class' => $this->getClasses(),
-            'recordClass' => $this->getRecordClasses(),
+            'record_class' => $this->getRecordClasses(),
             'icon' => $this->getIcon(),
             'sort' => $this->sortToArray(),
         ];
@@ -250,14 +253,12 @@ class Column extends Primitive
      */
     protected function addSimpleRelationship($relationship, $method)
     {
-        $this->query(match (true) {
+        return $this->query(match (true) {
             (bool) $relationship => fn (Builder $query) => $query->{'with'.Str::studly($method)}($relationship),
             default => fn (Builder $query) => $query->{'with'.Str::studly($method)}(
                 Str::beforeLast($this->getName(), '_'.$method),
             ),
         });
-
-        return $this;
     }
 
     /**
@@ -276,15 +277,13 @@ class Column extends Primitive
             );
         }
 
-        $this->query(match (true) {
+        return $this->query(match (true) {
             (bool) $relationship => fn (Builder $query) => $query->{'with'.Str::studly($method)}($relationship, $column),
             default => fn (Builder $query) => $query->{'with'.Str::studly($method)}(
                 Str::beforeLast($this->getName(), '_'.$method),
                 Str::afterLast($this->getName(), $method.'_'),
             ),
         });
-
-        return $this;
     }
 
     /**
@@ -296,8 +295,8 @@ class Column extends Primitive
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return match ($parameterName) {
+            // 'state' => [$this->getState()],
             'model', 'record', 'row' => [$this->getRecord()],
-            'state' => [$this->getState()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }

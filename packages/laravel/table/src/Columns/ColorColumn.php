@@ -6,8 +6,6 @@ namespace Honed\Table\Columns;
 
 class ColorColumn extends Column
 {
-    public const COLOR = 'color';
-
     /**
      * Provide the instance with any necessary setup.
      *
