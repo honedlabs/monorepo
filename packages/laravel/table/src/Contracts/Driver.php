@@ -20,8 +20,8 @@ interface Driver
      * Retrieve the views for the given table and scopes from storage.
      *
      * @param  string  $table
-     * @param  array<mixed>  $scopes
-     * @return array<object>
+     * @param  array<int, mixed>  $scopes
+     * @return array<int, object>
      */
     public function list($table, $scopes);
 

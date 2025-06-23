@@ -76,8 +76,8 @@ class ProductTable extends Table implements ShouldToggle // , ShouldOrder
                     ->allow(false),
             ])
             ->persistColumnsInCookie()
-            ->perPage([10, 25, 50])
-            ->defaultPerPage(15)
+            // ->perPage([10, 25, 50])
+            // ->defaultPerPage(15)
             ->filters([
                 Filter::make('name')->operator('like'),
 

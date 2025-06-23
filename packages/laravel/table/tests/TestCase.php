@@ -33,8 +33,8 @@ class TestCase extends Orchestra
      */
     protected function defineDatabaseMigrations()
     {
-        $this->loadMigrationsFrom(
+        $this->loadMigrationsFrom([
             workbench_path('database/migrations')
-        );
+        ]);
     }
 }
