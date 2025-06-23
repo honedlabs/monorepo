@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-use Honed\Table\PerPageRecord;
+use Honed\Table\PageOption;
 
 it('makes', function () {
-    expect(PerPageRecord::make(10))
-        ->toBeInstanceOf(PerPageRecord::class)
+    expect(PageOption::make(10))
+        ->toBeInstanceOf(PageOption::class)
         ->getValue()->toBe(10)
         ->isActive()->toBeFalse();
 });
 
 it('has array representation', function () {
-    expect(PerPageRecord::make(10, 10)->toArray())
+    expect(PageOption::make(10, 10)->toArray())
         ->toEqual([
             'value' => 10,
             'active' => true,

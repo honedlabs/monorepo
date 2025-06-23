@@ -8,6 +8,10 @@ beforeEach(function () {
     File::cleanDirectory(app_path('Columns'));
 });
 
+afterEach(function () {
+    File::cleanDirectory(app_path('Columns'));
+});
+
 it('makes', function () {
     $this->artisan('make:column', [
         'name' => 'UserColumn',

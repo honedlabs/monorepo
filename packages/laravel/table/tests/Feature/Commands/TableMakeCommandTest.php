@@ -8,6 +8,10 @@ beforeEach(function () {
     File::cleanDirectory(app_path('Tables'));
 });
 
+afterEach(function () {
+    File::cleanDirectory(app_path('Tables'));
+});
+
 it('makes', function () {
     $this->artisan('make:table', [
         'name' => 'UserTable',
