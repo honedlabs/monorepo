@@ -6,7 +6,7 @@ namespace Honed\Table\Columns;
 
 use function is_null;
 
-class NumberColumn extends Column
+class NumericColumn extends Column
 {
     /**
      * Provide the instance with any necessary setup.
@@ -15,9 +15,12 @@ class NumberColumn extends Column
      */
     protected function setUp()
     {
+        $this->placeholder('0');
+        
         parent::setUp();
 
         $this->type(self::NUMERIC);
+
     }
 
     /**

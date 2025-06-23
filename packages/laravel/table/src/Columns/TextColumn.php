@@ -15,6 +15,8 @@ class TextColumn extends Column
      */
     protected function setUp()
     {
+        $this->placeholder('N/A');
+
         parent::setUp();
 
         $this->type(self::TEXT);

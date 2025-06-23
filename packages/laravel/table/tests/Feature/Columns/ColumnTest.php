@@ -11,7 +11,7 @@ beforeEach(function () {
     $this->name = 'name';
     $this->label = ucfirst($this->name);
     $this->column = Column::make($this->name);
-})->only();
+});
 
 it('makes', function () {
     expect($this->column)

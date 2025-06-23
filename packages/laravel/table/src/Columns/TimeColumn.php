@@ -13,6 +13,8 @@ class TimeColumn extends Column
      */
     protected function setUp()
     {
+        $this->placeholder('-');
+        
         parent::setUp();
 
         $this->time();

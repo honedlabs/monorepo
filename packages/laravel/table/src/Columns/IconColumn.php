@@ -9,22 +9,15 @@ use Honed\Core\Concerns\HasIcon;
 
 class IconColumn extends Column
 {
-    use HasIcon;
-
     /**
-     * {@inheritdoc}
-     */
-    protected $type = 'icon';
-
-    /**
-     * {@inheritdoc}
+     * Provide the instance with any necessary setup.
      *
-     * @return Closure(mixed):array{icon:mixed}
+     * @return void
      */
-    public function defineExtra()
+    protected function setUp()
     {
-        return fn ($value) => [
-            'icon' => $this->getIcon(),
-        ];
+        parent::setUp();
+
+        $this->type(self::ICON);
     }
 }

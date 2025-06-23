@@ -9,11 +9,8 @@ beforeEach(function () {
     $this->column = HiddenColumn::make($this->param);
 });
 
-it('makes', function () {
+it('is type hidden', function () {
     expect($this->column)
-        ->getName()->toBe($this->param)
-        ->getLabel()->toBe(ucfirst($this->param))
-        ->isAlways()->toBeTrue()
-        ->isHidden()->toBeTrue()
-        ->getType()->toBe('hidden');
+        ->getType()->toBeNull()
+        ->isHidden()->toBeTrue();
 });

@@ -13,6 +13,8 @@ class DateTimeColumn extends Column
      */
     protected function setUp()
     {
+        $this->placeholder('-');
+        
         parent::setUp();
 
         $this->dateTime();
