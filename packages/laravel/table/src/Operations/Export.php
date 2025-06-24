@@ -25,7 +25,7 @@ class Export extends Operation implements Action
     /**
      * The callback to be used to create the export from the table.
      *
-     * @var Closure(Table, ExportsTable, \Illuminate\Http\Request):mixed
+     * @var (Closure(Table, ExportsTable, \Illuminate\Http\Request):mixed)|null
      */
     protected $using;
 
@@ -59,7 +59,7 @@ class Export extends Operation implements Action
     /**
      * Get the callback to be used to create the export from the table.
      *
-     * @return Closure(Table, ExportsTable, \Illuminate\Http\Request):mixed
+     * @return (Closure(Table, ExportsTable, \Illuminate\Http\Request):mixed)|null
      */
     public function getUsingCallback()
     {
@@ -87,10 +87,11 @@ class Export extends Operation implements Action
      */
     public function getExporter($table)
     {
-        return $this->exporter ?? match (true) {
-            false => $this->getArrayExporter(),
-            default => $this->getEloquentExporter()
-        };
+        return $this->exporter ?? $this->getEloquentExporter();
+        // return $this->exporter ?? match (true) {
+        //     false => $this->getArrayExporter(),
+        //     default => $this->getEloquentExporter()
+        // };
     }
 
     /**

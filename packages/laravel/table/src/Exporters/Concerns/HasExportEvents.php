@@ -16,14 +16,14 @@ trait HasExportEvents
     /**
      * Register the events that the export should listen to.
      *
-     * @template class-string<T> of \Maatwebsite\Excel\Events\Event
+     * @template T of \Maatwebsite\Excel\Events\Event
      *
-     * @param  T|array<T, callable>  $events
+     * @param  class-string<T>|array<class-string<T>, callable>  $events
      * @return $this
      */
     public function events($events)
     {
-        /** @var array<T, callable> */
+        /** @var array<class-string<T>, callable> */
         $events = is_array($events) ? $events : func_get_args();
 
         $this->events = [...$this->events, ...$events];
@@ -34,7 +34,7 @@ trait HasExportEvents
     /**
      * Hook into the underlying event that the export should listen to.
      *
-     * @param  \Maatwebsite\Excel\Events\Event  $event
+     * @param  class-string<\Maatwebsite\Excel\Events\Event>  $event
      * @param  callable  $callback
      * @return $this
      */

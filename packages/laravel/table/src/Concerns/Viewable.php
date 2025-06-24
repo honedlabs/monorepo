@@ -12,7 +12,7 @@ trait Viewable
     /**
      * The table views to utilise.
      *
-     * @var bool|array<int, PendingViewInteraction>
+     * @var bool|array<int, mixed>
      */
     protected $viewable = false;
 
@@ -54,5 +54,15 @@ trait Viewable
             $this->viewable === true => Views::for(),
             is_array($this->viewable) => Views::for($this->viewable),
         };
+    }
+
+    /**
+     * Load the views for the table.
+     *
+     * @return array<int, object>|null
+     */
+    public function loadViews()
+    {
+        return $this->getViews()?->load($this);
     }
 }

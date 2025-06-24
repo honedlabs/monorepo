@@ -330,7 +330,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
      */
     public function isEmpty()
     {
-        return Arr::get($this->getPagination(), 'empty', true);
+        return (bool) Arr::get($this->getPagination(), 'empty', true);
     }
 
     /**
@@ -365,7 +365,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
             'toggleable' => $this->isToggleable(),
             'operations' => $this->operationsToArray(),
             'emptyState' => $this->getEmptyState()?->toArray(),
-            'views' => $this->getViews()?->load($this),
+            'views' => $this->loadViews(),
             'meta' => $this->getMeta(),
         ];
     }

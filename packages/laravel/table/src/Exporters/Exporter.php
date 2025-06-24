@@ -59,7 +59,7 @@ abstract class Exporter implements ExportsTable, ShouldAutoSize, WithStrictNullC
     /**
      * Get the headings for the export.
      *
-     * @return array<int, string>
+     * @return array<int, string|null>
      */
     public function headings(): array
     {
@@ -71,6 +71,9 @@ abstract class Exporter implements ExportsTable, ShouldAutoSize, WithStrictNullC
 
     /**
      * Map the records to the export.
+     *
+     * @param  array<string, mixed>|\Illuminate\Database\Eloquent\Model  $row
+     * @return array<int, mixed>
      */
     public function map($row): array
     {

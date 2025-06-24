@@ -31,7 +31,7 @@ class PurgeCommand extends Command
     /**
      * The console command name aliases.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $aliases = ['views:clear'];
 
@@ -48,7 +48,7 @@ class PurgeCommand extends Command
         $store = $manager->store($store);
 
         /** @var array<int, class-string<\Honed\Table\Table>>|null */
-        $tables = $this->argument('tables') ?: null;
+        $tables = $this->argument('tables') ?: null; // @phpstan-ignore varTag.nativeType
 
         if ($tables) {
             $tables = array_map(

@@ -25,3 +25,10 @@ it('is viewable with scopes', function () {
         ->viewable(Product::factory()->create())->toBe($this->table)
         ->getViews()->toBeInstanceOf(PendingViewInteraction::class);
 });
+
+it('loads views', function () {
+    expect($this->table)
+        ->loadViews()->toBeNull()
+        ->viewable(Product::factory()->create())->toBe($this->table)
+        ->loadViews()->toBeArray();
+});

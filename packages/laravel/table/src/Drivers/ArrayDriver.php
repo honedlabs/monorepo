@@ -27,7 +27,7 @@ class ArrayDriver implements Driver
     /**
      * The resolved views.
      *
-     * @var array<int, array<string, mixed>>
+     * @var array<string, array<string, array<string, mixed>>>
      */
     protected $resolved = [];
 
@@ -48,7 +48,7 @@ class ArrayDriver implements Driver
      * @param  string  $table
      * @param  string  $name
      * @param  mixed  $scope
-     * @return array<string, mixed>|null
+     * @return object|null
      */
     public function get($table, $name, $scope)
     {
@@ -73,7 +73,7 @@ class ArrayDriver implements Driver
      *
      * @param  string  $table
      * @param  mixed|array<int, mixed>  $scopes
-     * @return array<int, array<string, mixed>>
+     * @return array<int, object>
      */
     public function list($table, $scopes)
     {

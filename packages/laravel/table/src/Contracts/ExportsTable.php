@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 
 /**
- * @implements WithMapping<array<string, mixed>|\Illuminate\Database\Eloquent\Model>
+ * @extends WithMapping<array<string, mixed>|\Illuminate\Database\Eloquent\Model>
  */
 interface ExportsTable extends WithEvents, WithHeadings, WithMapping, WithStyles
 {
