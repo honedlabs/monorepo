@@ -23,7 +23,7 @@ class CreateEmptyState extends Pipe
      */
     public function run($instance)
     {
-        if (filled($instance->getRecords())) {
+        if ($instance->isEmpty()) {
             $instance->emptyState(null);
 
             return;

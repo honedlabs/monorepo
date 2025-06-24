@@ -13,11 +13,23 @@ beforeEach(function () {
     $this->table = ProductTable::make()
         ->whenEmptyStateSearching(fn ($emptyState) => $emptyState->heading('Searching'))
         ->whenEmptyStateFiltering(fn ($emptyState) => $emptyState->heading('Filtering'));
+
+    $this->table->setPagination([
+        'empty' => false,
+    ]);
 });
 
 it('requires records to create empty state', function () {
+    $this->table->setPagination([
+        'empty' => true,
+    ]);
+
     $this->pipe->run($this->table);
-})->todo();
+
+    expect($this->table)
+        ->isEmpty()->toBeTrue()
+        ->getEmptyState()->toBeNull();
+});
 
 it('creates empty state', function () {
     $this->pipe->run($this->table);
@@ -26,7 +38,7 @@ it('creates empty state', function () {
         ->toBeInstanceOf(EmptyState::class)
         ->getHeading()->toBe(EmptyState::DEFAULT_HEADING)
         ->getDescription()->toBe(EmptyState::DEFAULT_DESCRIPTION);
-})->todo();
+});
 
 it('has searching state', function () {
     $this->table->setTerm('term');

@@ -79,9 +79,15 @@ it('uses namespace', function () {
         );
 });
 
-it('has array representation', function () {})->todo();
+it('has array representation', function () {
+    expect($this->table->toArray())
+        ->toBeArray();
+})->todo();
 
-it('serializes to json', function () {})->todo();
+it('serializes to json', function () {
+    expect($this->table->jsonSerialize())
+        ->toBeArray();
+})->todo();
 
 describe('evaluation', function () {
     it('named dependencies', function ($closure, $class) {

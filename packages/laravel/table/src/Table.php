@@ -324,6 +324,16 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     }
 
     /**
+     * Determine if the table is empty using the pagination metadata.
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return Arr::get($this->getPagination(), 'empty', true);
+    }
+
+    /**
      * Get the operations for the table as an array.
      *
      * @return array<string, mixed>
