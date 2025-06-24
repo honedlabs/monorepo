@@ -9,7 +9,7 @@ use Workbench\App\Tables\UserTable;
 
 beforeEach(function () {
     /** @var Honed\Table\Drivers\ArrayDriver */
-    $this->driver = Views::store('array');
+    $this->driver = Views::store('array')->getDriver();
 
     $this->table = Views::serializeTable(ProductTable::make());
 

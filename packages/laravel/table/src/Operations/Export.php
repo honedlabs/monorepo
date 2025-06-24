@@ -101,23 +101,28 @@ class Export extends Operation implements Action
      */
     public function handle(Table $table)
     {
+        if ($use = $this->getUsingCallback()) {
+            return $this->evaluate($use, [
+                'table' => $table,
+            ], [
+                $table::class => $table,
+                Table::class => $table,
+            ]);
+        }
+
         $exporter = $this->getExporter($table);
 
         $export = new $exporter($table, $this->getEvents());
 
-        $filename = $this->getFilename();
-
-        if ($use = $this->getUsingCallback()) {
-            return $this->evaluate($use);
-        }
+        $fileName = $this->getFilename();
 
         $response = match (true) {
-            $this->isDownload() => Excel::download($export, $filename, $this->getFileType()),
+            $this->isDownload() => Excel::download($export, $fileName, $this->getFileType()),
             $this->isQueued() => Excel::queue(
-                $export, $filename, $this->getDisk(), $this->getFileType()
+                $export, $fileName, $this->getDisk(), $this->getFileType()
             )->onQueue($this->getQueue()),
             default => Excel::store(
-                $export, $filename, $this->getDisk(), $this->getFileType()
+                $export, $fileName, $this->getDisk(), $this->getFileType()
             ),
         };
 
