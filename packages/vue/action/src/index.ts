@@ -1,12 +1,13 @@
-import { useActions } from "./action";
+import { useBatch } from "./batch";
 import { useBulk } from "./bulk";
 
 export type { BulkSelection } from "./bulk";
-export type * from "./action";
 
-export { executeAction } from "./action";
+export type * from "./types";
 
-export type UseActions = typeof useActions;
+export { executeOperation } from "./execute";
+
+export type UseBatch = typeof useBatch;
 export type UseBulk = typeof useBulk;
 
-export { useActions, useBulk };
+export { useBatch, useBulk };
