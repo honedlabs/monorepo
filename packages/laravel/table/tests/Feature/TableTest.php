@@ -130,7 +130,7 @@ it('has array representation', function () {
         ->{'toggleable'}->toBeFalse()
         ->{'pages'}->toBeArray()
         ->{'emptyState'}->toBeNull()
-        ->{'views'}->toBeArray()
+        ->{'views'}->toBeNull()
         ->{'meta'}->toBeNull();
 });
 

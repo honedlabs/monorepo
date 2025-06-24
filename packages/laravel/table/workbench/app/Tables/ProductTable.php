@@ -19,6 +19,7 @@ use Honed\Table\Columns\TextColumn;
 use Honed\Table\Contracts\IsOrderable;
 use Honed\Table\Contracts\IsSelectable;
 use Honed\Table\Contracts\IsToggleable;
+use Honed\Table\Contracts\IsViewable;
 use Honed\Table\Table;
 use Workbench\App\Enums\Status;
 use Workbench\App\Models\Product;
@@ -29,7 +30,7 @@ use Workbench\App\Models\Product;
  *
  * @extends Table<TModel, TBuilder>
  */
-class ProductTable extends Table implements IsOrderable, IsSelectable, IsToggleable
+class ProductTable extends Table implements IsOrderable, IsSelectable, IsToggleable, IsViewable
 {
     /**
      * Define the table.

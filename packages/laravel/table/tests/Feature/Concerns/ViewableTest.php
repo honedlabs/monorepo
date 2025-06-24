@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Honed\Table\PendingViewInteraction;
 use Honed\Table\Table;
 use Workbench\App\Models\Product;
+use Workbench\App\Tables\ProductTable;
 
 beforeEach(function () {
     $this->table = Table::make();
@@ -18,6 +19,12 @@ it('is viewable', function () {
         ->isViewable()->toBeTrue()
         ->getViews()->toBeInstanceOf(PendingViewInteraction::class);
 });
+
+it('is orderable via contract', function () {
+    expect(ProductTable::make())
+        ->isOrderable()->toBeTrue();
+});
+
 
 it('is viewable with scopes', function () {
     expect($this->table)

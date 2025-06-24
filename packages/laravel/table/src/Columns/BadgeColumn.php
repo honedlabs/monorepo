@@ -16,5 +16,7 @@ class BadgeColumn extends Column
         parent::setUp();
 
         $this->type(self::BADGE);
+
+        $this->badge();
     }
 }

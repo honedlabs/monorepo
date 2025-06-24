@@ -11,5 +11,6 @@ beforeEach(function () {
 
 it('is type badge', function () {
     expect($this->column)
-        ->getType()->toBe(Column::BADGE);
+        ->getType()->toBe(Column::BADGE)
+        ->isBadge()->toBeTrue();
 });
