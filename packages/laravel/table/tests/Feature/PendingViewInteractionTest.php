@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Drivers\ArrayDriver;
 use Honed\Table\Facades\Views;
-use Honed\Table\PendingViewInteraction;
 use Honed\Table\Table;
 use Workbench\App\Models\Product;
 

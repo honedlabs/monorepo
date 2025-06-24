@@ -226,8 +226,8 @@ class Column extends Primitive implements NullsAsUndefined
 
     /**
      * Get the column value for a record.
-     * 
-     * @param array<string, mixed>|\Illuminate\Database\Eloquent\Model $value
+     *
+     * @param  array<string, mixed>|Model  $value
      * @return array{mixed, bool}
      */
     public function value($value)

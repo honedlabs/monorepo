@@ -12,7 +12,7 @@ trait Exportable
     /**
      * The name of the file to be generated.
      *
-     * @var string|\Closure(mixed...):string|null
+     * @var string|Closure(mixed...):string|null
      */
     protected $fileName;
 
@@ -54,7 +54,7 @@ trait Exportable
     /**
      * Set the name of the file to be generated.
      *
-     * @param  string|\Closure(mixed...):string|null  $value
+     * @param  string|Closure(mixed...):string|null  $value
      * @return $this
      */
     public function fileName($value = null)
@@ -198,7 +198,7 @@ trait Exportable
     public function disk($value = null)
     {
         $this->disk = $value;
-        
+
         return $this->store();
     }
 

@@ -81,32 +81,88 @@ it('uses namespace', function () {
 
 it('has array representation', function () {
     expect($this->table->toArray())
-        ->toBeArray();
-})->todo();
+        ->toBeArray()
+        ->toHaveKeys([
+            'sort',
+            'search',
+            'match',
+            'term',
+            'delimiter',
+            'placeholder',
+            'sorts',
+            'filters',
+            'searches',
+            'records',
+            'paginate',
+            'columns',
+            'toggleable',
+            'pages',
+            'emptyState',
+            'operations',
+            'views',
+            'meta',
+        ])
+        ->{'sort'}->toBe($this->table->getSortKey())
+        ->{'search'}->toBe($this->table->getSearchKey())
+        // ->{'match'}->toBe($this->table->getMatchKey())
+        ->{'delimiter'}->toBe($this->table->getDelimiter())
+        ->{'sorts'}->toBeArray()
+        ->{'filters'}->toBeArray()
+        ->{'searches'}->toBeArray()
+        ->{'records'}->toBeArray()
+        ->{'paginate'}->toBeArray()
+        ->{'paginate'}->toBeArray()
+        ->{'columns'}->toBeArray()
+        ->{'toggleable'}->toBeFalse()
+        ->{'operations'}
+        ->scoped(fn ($operations) => $operations
+            ->toBeArray()
+            ->toHaveCount(3)
+            ->toHaveKeys([
+                'inline',
+                'bulk',
+                'page',
+            ])
+            ->{'inline'}->toBeFalse()
+            ->{'bulk'}->toBeArray()
+            ->{'page'}->toBeArray()
+        )
+        ->{'toggleable'}->toBeFalse()
+        ->{'pages'}->toBeArray()
+        ->{'emptyState'}->toBeNull()
+        ->{'views'}->toBeArray()
+        ->{'meta'}->toBeNull();
+});
 
 it('serializes to json', function () {
     expect($this->table->jsonSerialize())
-        ->toBeArray();
-})->todo();
+        ->toBeArray()
+        ->not->toHaveKeys([
+            'emptyState',
+            'term',
+            'placeholder',
+        ]);
+});
 
 describe('evaluation', function () {
     it('named dependencies', function ($closure, $class) {
         expect($this->table->evaluate($closure))->toBeInstanceOf($class);
     })->with([
-        fn () => [fn ($emptyState) => $emptyState, EmptyState::class],
-        fn () => [fn ($builder) => $builder, Builder::class],
-        fn () => [fn ($query) => $query, Builder::class],
-        fn () => [fn ($q) => $q, Builder::class],
-        fn () => [fn ($request) => $request, Request::class],
+        'emptyState' => fn () => [fn ($emptyState) => $emptyState, EmptyState::class],
+        'builder' => fn () => [fn ($builder) => $builder, Builder::class],
+        'query' => fn () => [fn ($query) => $query, Builder::class],
+        'q' => fn () => [fn ($q) => $q, Builder::class],
+        'request' => fn () => [fn ($request) => $request, Request::class],
+        'table' => fn () => [fn ($table) => $table, Table::class],
     ]);
 
     it('typed dependencies', function ($closure, $class) {
         expect($this->table->evaluate($closure))->toBeInstanceOf($class);
     })->with([
-        fn () => [fn (EmptyState $arg) => $arg, EmptyState::class],
-        fn () => [fn (Request $arg) => $arg, Request::class],
-        fn () => [fn (Builder $arg) => $arg, Builder::class],
-        fn () => [fn (BuilderContract $arg) => $arg, Builder::class],
-        fn () => [fn (Table $arg) => $arg, Table::class],
+        'emptyState' => fn () => [fn (EmptyState $arg) => $arg, EmptyState::class],
+        'request' => fn () => [fn (Request $arg) => $arg, Request::class],
+        'builder' => fn () => [fn (Builder $arg) => $arg, Builder::class],
+        'builder contract' => fn () => [fn (BuilderContract $arg) => $arg, Builder::class],
+        'table' => fn () => [fn (Table $arg) => $arg, Table::class],
     ]);
 });

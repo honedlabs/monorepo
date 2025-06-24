@@ -34,4 +34,3 @@ it('sets event', function () {
             ->{BeforeExport::class}->toBeInstanceof(Closure::class)
         );
 });
-    

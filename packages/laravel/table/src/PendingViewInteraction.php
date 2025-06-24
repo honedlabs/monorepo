@@ -61,7 +61,7 @@ class PendingViewInteraction
      * Load the pending view interaction for the given table.
      *
      * @param  Table|class-string<Table>  $table
-     * @return object|null
+     * @return array<int, object>
      */
     public function load($table)
     {

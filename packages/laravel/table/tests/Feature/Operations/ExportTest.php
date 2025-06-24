@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Contracts\ExportsTable;
 use Honed\Table\Exporters\EloquentExporter;
 use Honed\Table\Operations\Export;
-use Honed\Table\Exports\TableExport;
 use Workbench\App\Models\Product;
 use Workbench\App\Tables\ProductTable;
 

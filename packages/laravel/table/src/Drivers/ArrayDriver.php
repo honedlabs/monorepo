@@ -76,7 +76,7 @@ class ArrayDriver implements Driver
      * @return array<int, array<string, mixed>>
      */
     public function list($table, $scopes)
-    {        
+    {
         $scopes = array_map(
             static fn ($scope) => Views::serializeScope($scope),
             (array) $scopes

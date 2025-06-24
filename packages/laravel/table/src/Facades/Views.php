@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void delete(string $table, string $name, mixed $scope) Delete the view for the given table and scope from storage
  * @method static void purge(string|array<int, string>|null $table = null) Purge all views for the given table
  *
- * @see \Honed\Table\ViewManager
+ * @see ViewManager
  */
 class Views extends Facade
 {

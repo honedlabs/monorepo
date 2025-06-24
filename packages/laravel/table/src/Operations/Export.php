@@ -6,18 +6,14 @@ namespace Honed\Table\Operations;
 
 use Closure;
 use Honed\Action\Contracts\Action;
-use Honed\Action\Operations\Concerns\CanBeChunked;
 use Honed\Action\Operations\Operation;
 use Honed\Table\Contracts\ExportsTable;
 use Honed\Table\Exporters\ArrayExporter;
-use Honed\Table\Exporters\EloquentExporter;
 use Honed\Table\Exporters\Concerns\HasExportEvents;
+use Honed\Table\Exporters\EloquentExporter;
 use Honed\Table\Table;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Maatwebsite\Excel\Facades\Excel;
-
-use function array_merge;
 
 class Export extends Operation implements Action
 {
@@ -29,7 +25,7 @@ class Export extends Operation implements Action
     /**
      * The callback to be used to create the export from the table.
      *
-     * @var Closure(\Honed\Table\Table, ExportsTable, \Illuminate\Http\Request):mixed
+     * @var Closure(Table, ExportsTable, \Illuminate\Http\Request):mixed
      */
     protected $using;
 
@@ -50,7 +46,7 @@ class Export extends Operation implements Action
     /**
      * Register the callback to be used to create the export from the table.
      *
-     * @param  (Closure(\Honed\Table\Table, ExportsTable, \Illuminate\Http\Request):mixed)|null  $callback
+     * @param  (Closure(Table, ExportsTable, \Illuminate\Http\Request):mixed)|null  $callback
      * @return $this
      */
     public function using($callback)
@@ -63,7 +59,7 @@ class Export extends Operation implements Action
     /**
      * Get the callback to be used to create the export from the table.
      *
-     * @return Closure(\Honed\Table\Table, ExportsTable, \Illuminate\Http\Request):mixed
+     * @return Closure(Table, ExportsTable, \Illuminate\Http\Request):mixed
      */
     public function getUsingCallback()
     {
@@ -86,7 +82,7 @@ class Export extends Operation implements Action
     /**
      * Get the exporter class to be used to generate the export.
      *
-     * @param  \Honed\Table\Table  $table
+     * @param  Table  $table
      * @return class-string<ExportsTable>
      */
     public function getExporter($table)
@@ -95,6 +91,36 @@ class Export extends Operation implements Action
             false => $this->getArrayExporter(),
             default => $this->getEloquentExporter()
         };
+    }
+
+    /**
+     * Handle the exporting of the table.
+     *
+     * @return mixed
+     */
+    public function handle(Table $table)
+    {
+        $exporter = $this->getExporter($table);
+
+        $export = new $exporter($table, $this->getEvents());
+
+        $filename = $this->getFilename();
+
+        if ($use = $this->getUsingCallback()) {
+            return $this->evaluate($use);
+        }
+
+        $response = match (true) {
+            $this->isDownload() => Excel::download($export, $filename, $this->getFileType()),
+            $this->isQueued() => Excel::queue(
+                $export, $filename, $this->getDisk(), $this->getFileType()
+            )->onQueue($this->getQueue()),
+            default => Excel::store(
+                $export, $filename, $this->getDisk(), $this->getFileType()
+            ),
+        };
+
+        return $response;
     }
 
     /**
@@ -117,36 +143,5 @@ class Export extends Operation implements Action
     {
         /** @var class-string<ExportsTable> */
         return Config::get('table.exporters.array', ArrayExporter::class);
-    }
-
-    /**
-     * Handle the exporting of the table.
-     * 
-     * @param  \Honed\Table\Table  $table
-     * @return mixed
-     */
-    public function handle(Table $table)
-    {
-        $exporter = $this->getExporter($table);
-
-        $export = new $exporter($table, $this->getEvents());
-
-        $filename = $this->getFilename();
-
-        if ($use = $this->getUsingCallback()) {
-            return $this->evaluate($use);
-        }
-
-        $response = match (true) {
-            $this->isDownload() => Excel::download($export, $filename, $this->getFileType()),
-            $this->isQueued() => Excel::queue(
-                    $export, $filename, $this->getDisk(), $this->getFileType()
-                )->onQueue($this->getQueue()),
-            default => Excel::store(
-                $export, $filename, $this->getDisk(), $this->getFileType()
-            ),
-        };
-
-        return $response;
     }
 }

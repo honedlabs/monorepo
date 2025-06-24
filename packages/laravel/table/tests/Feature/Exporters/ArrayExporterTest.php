@@ -15,4 +15,3 @@ it('can export', function () {
     expect($this->exporter->array())
         ->toBeArray();
 });
-

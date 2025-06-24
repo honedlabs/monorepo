@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Table\Facades\Views;
-use Workbench\App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Workbench\App\Tables\UserTable;
+use Workbench\App\Models\User;
 use Workbench\App\Tables\ProductTable;
+use Workbench\App\Tables\UserTable;
 
 beforeEach(function () {
     $scope = Views::serializeScope(User::factory()->create());
-    
+
     $this->userTable = Views::serializeTable(UserTable::make());
     $this->productTable = Views::serializeTable(ProductTable::make());
 

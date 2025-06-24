@@ -8,13 +8,13 @@ use Workbench\App\Tables\ProductTable;
 use Workbench\App\Tables\UserTable;
 
 beforeEach(function () {
-    /** @var \Honed\Table\Drivers\ArrayDriver */
+    /** @var Honed\Table\Drivers\ArrayDriver */
     $this->driver = Views::store('array');
 
     $this->table = Views::serializeTable(ProductTable::make());
 
     $this->user = User::factory()->create();
-    
+
     $this->scope = Views::serializeScope($this->user);
 
     $this->driver->set($this->table, 'Filter view', $this->scope, ['name' => 'test']);
@@ -38,9 +38,9 @@ it('lists views', function () {
         ->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($view) => $view
-            ->toBeObject()
-            ->name->toBe('Filter view')
-            ->view->toEqual(['name' => 'test'])
+        ->toBeObject()
+        ->name->toBe('Filter view')
+        ->view->toEqual(['name' => 'test'])
         );
 });
 
@@ -84,7 +84,7 @@ describe('purge', function () {
 
     it('purges by table', function () {
         $this->driver->purge($this->table);
-    
+
         expect($this->driver->list($this->table, $this->scope))
             ->toBeEmpty();
 
@@ -97,12 +97,11 @@ describe('purge', function () {
                 ->view->toEqual(['name' => 'test'])
             );
     });
-    
+
     it('purges all', function () {
         $this->driver->purge();
-    
+
         expect($this->driver->list($this->table, $this->scope))
             ->toHaveCount(0);
     });
 });
-

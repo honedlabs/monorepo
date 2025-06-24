@@ -207,7 +207,6 @@ class ViewManager
         };
     }
 
-
     /**
      * Get the scope for the given table.
      *

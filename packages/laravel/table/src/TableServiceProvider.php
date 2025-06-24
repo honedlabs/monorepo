@@ -7,10 +7,8 @@ namespace Honed\Table;
 use Honed\Table\Commands\ColumnMakeCommand;
 use Honed\Table\Commands\PurgeCommand;
 use Honed\Table\Commands\TableMakeCommand;
-use Honed\Table\Contracts\ExportsTable;
 use Honed\Table\Http\Controllers\TableController;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
 use function trim;

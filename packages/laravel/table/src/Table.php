@@ -348,7 +348,9 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     }
 
     /**
-     * {@inheritdoc}
+     * Get the instance as an array.
+     *
+     * @return array<string, mixed>
      */
     public function toArray()
     {
@@ -359,9 +361,11 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
             'records' => $this->getRecords(),
             'paginate' => $this->getPagination(),
             'columns' => $this->columnsToArray(),
-            // 'pages' => $this->pageToArray(),
+            'pages' => $this->pageOptionsToArray(),
             'toggleable' => $this->isToggleable(),
             'operations' => $this->operationsToArray(),
+            'emptyState' => $this->getEmptyState()?->toArray(),
+            'views' => $this->getViews()?->load($this),
             'meta' => $this->getMeta(),
         ];
     }
@@ -428,6 +432,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     {
         return match ($parameterName) {
             'columns' => [$this->getColumns()],
+            'headings' => [$this->getHeadings()],
             'emptyState' => [$this->newEmptyState()],
             'request' => [$this->getRequest()],
             'builder', 'query', 'q' => [$this->getBuilder()],

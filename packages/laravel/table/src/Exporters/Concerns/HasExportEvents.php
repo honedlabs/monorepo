@@ -6,7 +6,6 @@ namespace Honed\Table\Exporters\Concerns;
 
 trait HasExportEvents
 {
-
     /**
      * The events that this export should listen to.
      *
@@ -18,6 +17,7 @@ trait HasExportEvents
      * Register the events that the export should listen to.
      *
      * @template class-string<T> of \Maatwebsite\Excel\Events\Event
+     *
      * @param  T|array<T, callable>  $events
      * @return $this
      */

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 use Honed\Table\Facades\Views;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\View;
 use Workbench\App\Models\User;
 use Workbench\App\Tables\ProductTable;
 use Workbench\App\Tables\UserTable;
 
 beforeEach(function () {
-    /** @var \Honed\Table\Drivers\DatabaseDriver */
+    /** @var Honed\Table\Drivers\DatabaseDriver */
     $this->driver = Views::store('database');
 
     $this->table = Views::serializeTable(ProductTable::make());
@@ -126,7 +125,7 @@ describe('purge', function () {
 
     it('purges by table', function () {
         $this->driver->purge($this->table);
-    
+
         $this->assertDatabaseCount($this->driver->getTableName(), 1);
 
         $this->assertDatabaseHas($this->driver->getTableName(), [
@@ -143,11 +142,10 @@ describe('purge', function () {
             'view' => json_encode(['name' => 'test']),
         ]);
     });
-    
+
     it('purges all', function () {
         $this->driver->purge();
-    
+
         $this->assertDatabaseEmpty($this->driver->getTableName());
     });
 });
-

@@ -5,33 +5,28 @@ declare(strict_types=1);
 namespace Honed\Table\Exporters;
 
 use Closure;
-use Generator;
 use Honed\Table\Contracts\ExportsTable;
-use Honed\Table\Exports\Concerns\HasExportEvents;
 use Honed\Table\Table;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromGenerator;
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
-use Maatwebsite\Excel\Events\BeforeExport;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 abstract class Exporter implements ExportsTable, ShouldAutoSize, WithStrictNullComparison
 {
-    use Exportable;
     use Concerns\HasExportEvents;
+    use Exportable;
 
     /**
      * The query to export.
      *
-     * @var \Honed\Table\Table
+     * @var Table
      */
     protected $table;
 
     /**
      * The headings to export, cached.
-     * 
+     *
      * @var array<int, \Honed\Table\Columns\Column>|null
      */
     protected $headings;
@@ -39,7 +34,6 @@ abstract class Exporter implements ExportsTable, ShouldAutoSize, WithStrictNullC
     /**
      * Create a new table export.
      *
-     * @param  \Honed\Table\Table  $table
      * @param  array<class-string<\Maatwebsite\Excel\Events\Event>, callable>  $events
      * @return void
      */
@@ -52,7 +46,7 @@ abstract class Exporter implements ExportsTable, ShouldAutoSize, WithStrictNullC
     /**
      * Set the table to export.
      *
-     * @param  \Honed\Table\Table  $table
+     * @param  Table  $table
      * @return $this
      */
     public function table($table)
@@ -76,8 +70,8 @@ abstract class Exporter implements ExportsTable, ShouldAutoSize, WithStrictNullC
     }
 
     /**
-    * Map the records to the export.
-    */
+     * Map the records to the export.
+     */
     public function map($row): array
     {
         $this->getHeadings();
@@ -87,11 +81,10 @@ abstract class Exporter implements ExportsTable, ShouldAutoSize, WithStrictNullC
             $this->getHeadings()
         );
     }
-    
+
     /**
      * Get the styles for the export.
      *
-     * @param  \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet  $sheet
      * @return void
      */
     public function styles(Worksheet $sheet)

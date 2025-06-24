@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 use Honed\Table\Columns\Column;
 use Honed\Table\Exporters\EloquentExporter;
-use Honed\Table\Exporters\TableExport;
 use Honed\Table\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Events\BeforeExport;
 use Maatwebsite\Excel\Excel as ExcelClass;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Style\Style;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Workbench\App\Models\Product;
-use Workbench\App\Tables\ProductTable;
 
 beforeEach(function () {
     Excel::fake();
@@ -76,7 +72,7 @@ it('has style sheet', function () {
 
 it('can register events', function () {
     $this->export->events([
-        BeforeExport::class => fn (BeforeExport $event) => $event
+        BeforeExport::class => fn (BeforeExport $event) => $event,
     ]);
 
     expect($this->export->registerEvents())
