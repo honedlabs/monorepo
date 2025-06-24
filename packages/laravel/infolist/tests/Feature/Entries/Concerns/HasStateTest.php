@@ -23,7 +23,7 @@ it('can have string state', function () {
     $user = User::factory()->create();
 
     expect($this->entry)
-        ->getState()->toBeNull()
+        ->getStateResolver()->toBe('misc')
         ->state('name')->toBe($this->entry)
         ->record($user)->toBe($this->entry)
         ->getState()->toBe($user->name);
@@ -33,7 +33,7 @@ it('can have closure state', function () {
     $user = User::factory()->create();
 
     expect($this->entry)
-        ->getState()->toBeNull()
+        ->getStateResolver()->toBe('misc')
         ->state(fn () => $user->name)->toBe($this->entry)
         ->record($user)->toBe($this->entry)
         ->getState()->toBe($user->name);

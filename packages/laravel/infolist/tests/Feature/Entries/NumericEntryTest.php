@@ -8,7 +8,7 @@ beforeEach(function () {
     $this->entry = NumericEntry::make('age');
 });
 
-it('has text type', function () {
+it('has numeric type', function () {
     expect($this->entry)
         ->getType()->toBe(NumericEntry::NUMERIC);
 });

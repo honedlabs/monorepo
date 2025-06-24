@@ -14,6 +14,7 @@ beforeEach(function () {
 
 it('makes an entry', function () {
     expect(Entry::make('name'))
+        ->getStateResolver()->toBe('name')
         ->getState()->toBeNull()
         ->getLabel()->toBe('Name');
 });

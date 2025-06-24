@@ -40,17 +40,23 @@ trait HasState
     }
 
     /**
+     * Get the state of the entry.
+     *
+     * @return mixed
+     */
+    public function getStateResolver()
+    {
+        return $this->state;
+    }
+
+    /**
      * Get the resolved state of the entry.
      *
      * @return mixed
      */
     public function getState()
     {
-        if (is_null($this->resolved)) {
-            $this->resolveState();
-        }
-
-        return $this->resolved;
+        return $this->resolved ??= $this->resolveState();
     }
 
     /**
@@ -62,11 +68,8 @@ trait HasState
     {
         $record = $this->getRecord();
 
-        if (is_null($record)) {
-            return null;
-        }
-
         return $this->resolved = match (true) {
+            is_null($record) => null,
             is_string($this->state) => Arr::get($record, $this->state),
             is_callable($this->state) => $this->evaluate($this->state),
             default => null,

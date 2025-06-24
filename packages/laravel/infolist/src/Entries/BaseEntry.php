@@ -73,8 +73,8 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return match ($parameterName) {
-            'model', 'record', 'row' => [$this->getRecord()],
             'state' => [$this->getState()],
+            'model', 'record', 'row' => [$this->getRecord()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
