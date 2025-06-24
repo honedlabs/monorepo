@@ -9,40 +9,47 @@ import type {
 	Search,
 	Direction,
 	BindingOptions,
+	Refiner,
+	FilterValue,
 } from "./types";
 
-export function useRefine<
-	T extends object,
-	K extends T[keyof T] extends Refine ? keyof T : never,
->(props: T, key: K, defaultOptions: VisitOptions = {}) {
-	const refinements = computed(() => props[key] as Refine);
+export function useRefine<T extends Record<string, Refine>>(
+	props: T,
+	key: keyof T,
+	defaults: VisitOptions = {},
+) {
+	const refinements = computed(() => props[key]);
+
+	const isSortable = computed(() => !!refinements.value.sort);
+
+	const isSearchable = computed(() => !!refinements.value.search);
+
+	const isMatchable = computed(() => !!refinements.value.match);
 
 	/**
 	 * The available filters.
 	 */
-	const filters = computed(
-		() =>
-			refinements.value.filters?.map((filter) => ({
-				...filter,
-				apply: (value: T, options: VisitOptions = {}) =>
-					applyFilter(filter, value, options),
-				clear: (options: VisitOptions = {}) => clearFilter(filter, options),
-				bind: () => bindFilter(filter.name),
-			})) ?? [],
+	const filters = computed(() =>
+		refinements.value.filters?.map((filter) => ({
+			...filter,
+			apply: (value: T, options: VisitOptions = {}) =>
+				applyFilter(filter, value, options),
+			clear: (options: VisitOptions = {}) => clearFilter(filter, options),
+			bind: () => bindFilter(filter.name),
+		})),
 	);
 
 	/**
 	 * The available sorts.
 	 */
-	const sorts = computed(
-		() =>
-			refinements.value.sorts?.map((sort) => ({
-				...sort,
-				apply: (options: VisitOptions = {}) =>
-					applySort(sort, sort.direction, options),
-				clear: (options: VisitOptions = {}) => clearSort(options),
-				bind: () => bindSort(sort),
-			})) ?? [],
+	const sorts = computed(() =>
+		refinements.value.sorts?.map((sort) => ({
+			...sort,
+			apply: (options: VisitOptions = {}) =>
+				applySort(sort, sort.direction, options),
+			clear: (options: VisitOptions = {}) => clearSort(options),
+			bind: () => bindSort(sort),
+		})),
 	);
 
 	/**
@@ -58,33 +65,38 @@ export function useRefine<
 	);
 
 	/**
+	 * Get the active refiners.
+	 */
+	function active(refiners: Refiner[]) {
+		return refiners.filter(({ active }) => active);
+	}
+
+	/**
 	 * The current filters.
 	 */
 	const currentFilters = computed(
-		() => refinements.value.filters?.filter(({ active }) => active) ?? [],
+		() => active(refinements.value.filters) as Filter[],
 	);
 
 	/**
 	 * The current sort.
 	 */
-	const currentSort = computed(() =>
-		refinements.value.sorts?.find(({ active }) => active),
+	const currentSort = computed(
+		() => active(refinements.value.sorts)?.[0] as Sort | undefined,
 	);
 
 	/**
 	 * The current searches.
 	 */
 	const currentSearches = computed(
-		() => refinements.value.searches?.filter(({ active }) => active) ?? [],
+		() => active(refinements.value.searches) as Search[],
 	);
 
 	/**
 	 * Converts an array parameter to a comma-separated string for URL parameters.
 	 */
 	function delimitArray(value: any) {
-		if (Array.isArray(value)) {
-			return value.join(refinements.value.config.delimiter);
-		}
+		if (Array.isArray(value)) return value.join(refinements.value.delimiter);
 
 		return value;
 	}
@@ -93,9 +105,7 @@ export function useRefine<
 	 * Formats a string value for search parameters.
 	 */
 	function stringValue(value: any) {
-		if (typeof value !== "string") {
-			return value;
-		}
+		if (typeof value !== "string") return value;
 
 		return value.trim().replace(/\s+/g, "+");
 	}
@@ -104,9 +114,7 @@ export function useRefine<
 	 * Returns undefined if the value is an empty string, null, or undefined.
 	 */
 	function omitValue(value: any) {
-		if (["", null, undefined, []].includes(value)) {
-			return undefined;
-		}
+		if (["", null, undefined, []].includes(value)) return undefined;
 
 		return value;
 	}
@@ -127,9 +135,8 @@ export function useRefine<
 	function toggleValue(value: any, values: any) {
 		values = Array.isArray(values) ? values : [values];
 
-		if (values.includes(value)) {
+		if (values.includes(value))
 			return values.filter((item: any) => item !== value);
-		}
 
 		return [...values, value];
 	}
@@ -137,27 +144,33 @@ export function useRefine<
 	/**
 	 * Gets a filter by name.
 	 */
-	function getFilter(name: string): Filter | undefined {
-		return refinements.value.filters?.find((filter) => filter.name === name);
+	function getFilter(filter: Filter | string): Filter | undefined {
+		if (typeof filter !== "string") return filter;
+
+		return refinements.value.filters?.find(({ name }) => name === filter);
 	}
 
 	/**
 	 * Gets a sort by name.
 	 */
 	function getSort(
-		name: string,
-		direction: Direction = null,
+		sort: Sort | string,
+		dir: Direction = null,
 	): Sort | undefined {
+		if (typeof sort !== "string") return sort;
+
 		return refinements.value.sorts?.find(
-			(sort) => sort.name === name && sort.direction === direction,
+			({ name, direction }) => name === sort && direction === dir,
 		);
 	}
 
 	/**
 	 * Gets a search by name.
 	 */
-	function getSearch(name: string): Search | undefined {
-		return refinements.value.searches?.find((search) => search.name === name);
+	function getSearch(search: Search | string): Search | undefined {
+		if (typeof search !== "string") return search;
+
+		return refinements.value.searches?.find(({ name }) => name === search);
 	}
 
 	/**
@@ -195,7 +208,7 @@ export function useRefine<
 	 */
 	function isSearching(name?: Search | string): boolean {
 		if (!name) {
-			return !!refinements.value.config.term;
+			return !!refinements.value.term;
 		}
 
 		if (typeof name === "string") {
@@ -208,13 +221,16 @@ export function useRefine<
 	/**
 	 * Apply the given values in bulk.
 	 */
-	function apply(values: Record<string, any>, options: VisitOptions = {}) {
+	function apply(
+		values: Record<string, FilterValue>,
+		options: VisitOptions = {},
+	) {
 		const data = Object.fromEntries(
 			Object.entries(values).map(([key, value]) => [key, pipe(value)]),
 		);
 
 		router.reload({
-			...defaultOptions,
+			...defaults,
 			...options,
 			data,
 		});
@@ -228,15 +244,12 @@ export function useRefine<
 		value: any,
 		options: VisitOptions = {},
 	) {
-		const refiner = typeof filter === "string" ? getFilter(filter) : filter;
+		const refiner = getFilter(filter);
 
-		if (!refiner) {
-			console.warn(`Filter [${filter}] does not exist.`);
-			return;
-		}
+		if (!refiner) return console.warn(`Filter [${filter}] does not exist.`);
 
 		router.reload({
-			...defaultOptions,
+			...defaults,
 			...options,
 			data: {
 				[refiner.name]: pipe(value),
@@ -252,18 +265,18 @@ export function useRefine<
 		direction: Direction = null,
 		options: VisitOptions = {},
 	) {
-		const refiner = typeof sort === "string" ? getSort(sort, direction) : sort;
+		const refiner = getSort(sort, direction);
 
-		if (!refiner) {
-			console.warn(`Sort [${sort}] does not exist.`);
-			return;
-		}
+		if (!refiner) return console.warn(`Sort [${sort}] does not exist.`);
+
+		if (!isSortable.value)
+			return console.warn("Refine cannot perform sorting.");
 
 		router.reload({
-			...defaultOptions,
+			...defaults,
 			...options,
 			data: {
-				[refinements.value.config.sort]: omitValue(refiner.next),
+				[refinements.value.sort as string]: omitValue(refiner.next),
 			},
 		});
 	}
@@ -280,11 +293,14 @@ export function useRefine<
 			value,
 		);
 
+		if (!isSearchable.value)
+			return console.warn("Refine cannot perform searching.");
+
 		router.reload({
-			...defaultOptions,
+			...defaults,
 			...options,
 			data: {
-				[refinements.value.config.search]: value,
+				[refinements.value.search as string]: value,
 			},
 		});
 	}
@@ -293,12 +309,12 @@ export function useRefine<
 	 * Applies the given match.
 	 */
 	function applyMatch(search: Search | string, options: VisitOptions = {}) {
-		const refiner = typeof search === "string" ? getSearch(search) : search;
+		const refiner = getSearch(search);
 
-		if (!refiner) {
-			console.warn(`Match [${search}] does not exist.`);
-			return;
-		}
+		if (!refiner) return console.warn(`Match [${search}] does not exist.`);
+
+		if (!isMatchable.value || !isSearchable.value)
+			return console.warn("Refine cannot perform matching.");
 
 		const matches = toggleValue(
 			refiner.name,
@@ -306,10 +322,10 @@ export function useRefine<
 		);
 
 		router.reload({
-			...defaultOptions,
+			...defaults,
 			...options,
 			data: {
-				[refinements.value.config.match]: delimitArray(matches),
+				[refinements.value.match as string]: delimitArray(matches),
 			},
 		});
 	}
@@ -318,19 +334,14 @@ export function useRefine<
 	 * Clear the given filter.
 	 */
 	function clearFilter(filter?: Filter | string, options: VisitOptions = {}) {
-		if (filter) {
-			applyFilter(filter, undefined, options);
-			return;
-		}
-
-		const data = Object.fromEntries(
-			currentFilters.value.map(({ name }) => [name, undefined]),
-		);
+		if (filter) return applyFilter(filter, null, options);
 
 		router.reload({
-			...defaultOptions,
+			...defaults,
 			...options,
-			data,
+			data: Object.fromEntries(
+				currentFilters.value.map(({ name }) => [name, null]),
+			),
 		});
 	}
 
@@ -338,11 +349,14 @@ export function useRefine<
 	 * Clear the sort.
 	 */
 	function clearSort(options: VisitOptions = {}) {
+		if (!isSortable.value)
+			return console.warn("Refine cannot perform sorting.");
+
 		router.reload({
-			...defaultOptions,
+			...defaults,
 			...options,
 			data: {
-				[refinements.value.config.sort]: undefined,
+				[refinements.value.sort as string]: null,
 			},
 		});
 	}
@@ -351,23 +365,21 @@ export function useRefine<
 	 * Clear the search.
 	 */
 	function clearSearch(options: VisitOptions = {}) {
-		applySearch(undefined, options);
+		applySearch(null, options);
 	}
 
 	/**
 	 * Clear the matching columns.
 	 */
 	function clearMatch(options: VisitOptions = {}) {
-		if (!refinements.value.config.match) {
-			console.warn("Matches key is not set.");
-			return;
-		}
+		if (!isMatchable.value)
+			return console.warn("Refine cannot perform matching.");
 
 		router.reload({
-			...defaultOptions,
+			...defaults,
 			...options,
 			data: {
-				[refinements.value.config.match]: undefined,
+				[refinements.value.match as string]: null,
 			},
 		});
 	}
@@ -377,12 +389,12 @@ export function useRefine<
 	 */
 	function reset(options: VisitOptions = {}) {
 		router.reload({
-			...defaultOptions,
+			...defaults,
 			...options,
 			data: {
-				[refinements.value.config.search]: undefined,
-				[refinements.value.config.sort]: undefined,
-				[refinements.value.config.match]: undefined,
+				[refinements.value.search ?? ""]: undefined,
+				[refinements.value.sort ?? ""]: undefined,
+				[refinements.value.match ?? ""]: undefined,
 				...Object.fromEntries(
 					refinements.value.filters?.map((filter) => [
 						filter.name,
@@ -396,18 +408,10 @@ export function useRefine<
 	/**
 	 * Binds a filter to a form input.
 	 */
-	function bindFilter<T extends any>(
-		filter: Filter | string,
-		options: BindingOptions = {},
-	) {
-		const refiner = typeof filter === "string" ? getFilter(filter) : filter;
+	function bindFilter(filter: Filter | string, options: BindingOptions = {}) {
+		const refiner = getFilter(filter);
 
-		if (!refiner) {
-			console.warn(`Filter [${filter}] does not exist.`);
-			return;
-		}
-
-		const value = refiner.value as T;
+		if (!refiner) return console.warn(`Filter [${filter}] does not exist.`);
 
 		const {
 			debounce = 250,
@@ -419,7 +423,7 @@ export function useRefine<
 			"onUpdate:modelValue": useDebounceFn((value: any) => {
 				applyFilter(refiner, transform(value), visitOptions);
 			}, debounce),
-			modelValue: value,
+			modelValue: refiner.value,
 		};
 	}
 
@@ -427,12 +431,9 @@ export function useRefine<
 	 * Binds a sort to a button.
 	 */
 	function bindSort(sort: Sort | string, options: BindingOptions = {}) {
-		const refiner = typeof sort === "string" ? getSort(sort) : sort;
+		const refiner = getSort(sort);
 
-		if (!refiner) {
-			console.warn(`Sort [${sort}] does not exist.`);
-			return;
-		}
+		if (!refiner) return console.warn(`Sort [${sort}] does not exist.`);
 
 		const { debounce = 0, transform, ...visitOptions } = options;
 		return {
@@ -455,7 +456,7 @@ export function useRefine<
 				},
 				debounce,
 			),
-			modelValue: refinements.value.config.term ?? "",
+			modelValue: refinements.value.term ?? "",
 		};
 	}
 
@@ -463,12 +464,9 @@ export function useRefine<
 	 * Binds a match to a checkbox.
 	 */
 	function bindMatch(match: Search | string, options: BindingOptions = {}) {
-		const refiner = typeof match === "string" ? getSearch(match) : match;
+		const refiner = getSearch(match);
 
-		if (!refiner) {
-			console.warn(`Match [${match}] does not exist.`);
-			return;
-		}
+		if (!refiner) return console.warn(`Match [${match}] does not exist.`);
 
 		const { debounce = 0, transform, ...visitOptions } = options;
 
@@ -485,15 +483,18 @@ export function useRefine<
 		filters,
 		sorts,
 		searches,
-		getFilter,
-		getSort,
-		getSearch,
 		currentFilters,
 		currentSort,
 		currentSearches,
+		isSortable,
+		isSearchable,
+		isMatchable,
 		isFiltering,
 		isSorting,
 		isSearching,
+		getFilter,
+		getSort,
+		getSearch,
 		apply,
 		applyFilter,
 		applySort,
@@ -508,7 +509,6 @@ export function useRefine<
 		bindSort,
 		bindSearch,
 		bindMatch,
-
 		stringValue,
 		omitValue,
 		toggleValue,

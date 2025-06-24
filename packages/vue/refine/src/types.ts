@@ -12,7 +12,7 @@ export interface Option {
 export interface Refiner {
 	name: string;
 	label: string;
-	type: string;
+	type?: string;
 	active: boolean;
 	meta: Record<string, any>;
 }
@@ -21,11 +21,12 @@ export type FilterType =
 	| "boolean"
 	| "date"
 	| "datetime"
-	| "filter"
 	| "multiple"
 	| "number"
+	| "select"
 	| "text"
 	| "time"
+	| "trashed"
 	| string;
 
 export type FilterValue = string | number | boolean | null;
@@ -46,19 +47,16 @@ export interface Search extends Refiner {
 	type: "search" | string;
 }
 
-export interface Config {
-	delimiter: string;
-	term: string | null;
-	sort: string;
-	search: string;
-	match: string;
-}
-
 export interface Refine {
-	config: Config;
-	sorts?: Sort[];
-	filters?: Filter[];
-	searches?: Search[];
+	sort?: string;
+	search?: string;
+	match?: string;
+	term?: string;
+	placeholder?: string;
+	delimiter: string;
+	sorts: Sort[];
+	filters: Filter[];
+	searches: Search[];
 }
 
 export interface HonedFilter extends Filter {
