@@ -80,14 +80,14 @@ class DatabaseDriver implements Driver
      * Retrieve the views for the given table and scopes from storage.
      *
      * @param  string  $table
-     * @param  array<int, mixed>  $scopes
+     * @param  mixed|array<int, mixed>  $scopes
      * @return array<int, object>
      */
     public function list($table, $scopes)
     {
         $scopes = array_map(
             static fn ($scope) => Views::serializeScope($scope),
-            $scopes
+            (array) $scopes
         );
 
         return $this->newQuery()
@@ -175,14 +175,21 @@ class DatabaseDriver implements Driver
     /**
      * Purge all views for the given table.
      *
-     * @param  string  $table
+     * @param  string|array<int, string>|null  $table
      * @return void
      */
-    public function purge($table)
+    public function purge($table = null)
     {
-        $this->newQuery()
-            ->where('table', $table)
-            ->delete();
+        if ($table === null) {
+            $this->newQuery()->delete();
+        } else {
+            /** @var array<int, string> */
+            $tables = is_array($table) ? $table : [$table];
+
+            $this->newQuery()
+                ->whereIn('table', $tables)
+                ->delete();
+        }
     }
 
     /**
@@ -194,7 +201,7 @@ class DatabaseDriver implements Driver
      * @param  mixed  $value
      * @return bool
      */
-    protected function update($table, $name, $scope, $value)
+    public function update($table, $name, $scope, $value)
     {
         return (bool) $this->scoped($table, $name, $scope)
             ->update([

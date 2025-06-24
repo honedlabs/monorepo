@@ -49,8 +49,8 @@ interface Driver
     /**
      * Purge all views for the given table.
      *
-     * @param  string  $table
+     * @param  string|array<int, string>|null  $table
      * @return void
      */
-    public function purge($table);
+    public function purge($table = null);
 }

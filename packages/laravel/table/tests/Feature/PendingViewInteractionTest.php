@@ -12,7 +12,7 @@ beforeEach(function () {
     $this->product = Product::factory()->create();
 
     $this->interaction = Views::for($this->product);
-})->only();
+});
 
 it('has scope', function () {
     $product = Product::factory()->create();

@@ -18,7 +18,7 @@ return new class() extends ViewMigration
             $table->string('name');
             $table->string('table');
             $table->string('scope');
-            $table->text('data');
+            $table->text('view');
             $table->timestamps();
 
             $table->unique(['table', 'scope', 'name']);

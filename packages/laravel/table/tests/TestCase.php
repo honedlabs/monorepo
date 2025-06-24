@@ -36,6 +36,7 @@ class TestCase extends Orchestra
         $this->artisan('vendor:publish', [
             '--provider' => 'Honed\Table\TableServiceProvider',
             '--tag' => 'table-migrations',
+            '--force' => true,
         ]);
 
         $this->loadMigrationsFrom([

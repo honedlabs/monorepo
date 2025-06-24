@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'views:purge', aliases: ['views:clear'])]
-class ViewsPurgeCommand extends Command
+class PurgeCommand extends Command
 {
     /**
      * The console command name.
@@ -17,10 +17,10 @@ class ViewsPurgeCommand extends Command
      * @var string
      */
     protected $signature = 'views:purge
-                            {features?* : The features to purge}
-                            {--except=* : The features that should be excluded from purging}
-                            {--except-registered : Purge all features except those registered}
-                            {--store= : The store to purge the features from}';
+                            {tables?* : The tables to purge}
+                            {--except=* : The tables that should be excluded from purging}
+                            {--except-registered : Purge all tables except those registered}
+                            {--store= : The store to purge the tables from}';
 
     /**
      * The console command description.
@@ -43,7 +43,7 @@ class ViewsPurgeCommand extends Command
      */
     public function handle(ViewManager $manager)
     {
-        // $store = $manager->store($this->option('store'));
+        $store = $manager->store($this->option('store'));
 
         // $features = $this->argument('features') ?: null;
 
@@ -61,7 +61,7 @@ class ViewsPurgeCommand extends Command
         //         ->all();
         // }
 
-        // $store->purge($features);
+        // $store->purge($table);
 
         // if ($features) {
         //     $this->components->info(implode(', ', $features).' successfully purged from storage.');
@@ -71,6 +71,6 @@ class ViewsPurgeCommand extends Command
         //     $this->components->info('All features successfully purged from storage.');
         // }
 
-        // return self::SUCCESS;
+        return self::SUCCESS;
     }
 }
