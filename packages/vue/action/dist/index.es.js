@@ -1,153 +1,127 @@
-import { router as m } from "@inertiajs/vue3";
-import { computed as r, reactive as x, ref as h } from "vue";
-function p(l, a, o = {}, t = {}) {
-  return l.route ? (m.visit(l.route.url, {
-    ...t,
-    method: l.route.method
-  }), !0) : l.action && a ? (m.post(
-    a,
+import { computed as f, reactive as b, ref as g } from "vue";
+import { router as x } from "@inertiajs/vue3";
+function y(e, c, o = {}, u = {}) {
+  return e.route ? (x.visit(e.route.url, {
+    ...u,
+    method: e.route.method
+  }), !0) : e.action && c ? (x.post(
+    c,
     {
       ...o,
-      name: l.name,
-      type: l.type
+      name: e.name,
+      type: e.type
     },
-    t
+    u
   ), !0) : !1;
 }
-function b(l, a, o = {}) {
-  if (!l || !a || !l[a])
+function S(e, c, o = {}) {
+  if (!(e != null && e[c]))
     throw new Error(
-      "The action group must be provided with valid props and key."
+      "The operation group must be provided with valid props and key."
     );
-  const t = r(() => l[a]), v = r(
-    () => t.value.inline.map((n) => ({
-      ...n,
-      execute: (e, u = {}) => c(n, e, u)
-    }))
-  ), s = r(
-    () => t.value.bulk.map((n) => ({
-      ...n,
-      execute: (e, u = {}) => f(n, e, u)
-    }))
-  ), i = r(
-    () => t.value.page.map((n) => ({
-      ...n,
-      execute: (e = {}, u = {}) => d(n, e, u)
-    }))
-  );
-  function c(n, e, u = {}) {
-    p(
-      n,
-      t.value.endpoint,
+  const u = f(() => e[c]);
+  function r(l, n = {}, a = {}) {
+    y(
+      l,
+      u.value.endpoint,
       {
-        ...e,
-        id: t.value.id
+        ...n,
+        id: u.value.id
       },
       {
         ...o,
-        ...u
+        ...a
       }
     );
   }
-  function f(n, e, u = {}) {
-    p(
-      n,
-      t.value.endpoint,
-      {
-        ...e,
-        id: t.value.id
-      },
-      {
-        ...o,
-        ...u
-      }
-    );
+  function v(l) {
+    return l.map((n) => ({
+      ...n,
+      execute: (a = {}, p = {}) => r(n, a, p)
+    }));
   }
-  function d(n, e = {}, u = {}) {
-    p(
-      n,
-      t.value.endpoint,
-      {
-        ...e,
-        id: t.value.id
-      },
-      {
-        ...o,
-        ...u
-      }
-    );
+  const i = f(
+    () => v(u.value.inline)
+  ), s = f(() => v(u.value.bulk)), d = f(() => v(u.value.page));
+  function h(l, n, a = {}) {
+    r(l, n, a);
   }
-  return x({
-    inline: v,
+  function m(l, n, a = {}) {
+    r(l, n, a);
+  }
+  function t(l, n = {}, a = {}) {
+    r(l, n, a);
+  }
+  return b({
+    inline: i,
     bulk: s,
-    page: i,
-    executeInlineAction: c,
-    executeBulkAction: f,
-    executePageAction: d
+    page: d,
+    executeInline: h,
+    executeBulk: m,
+    executePage: t
   });
 }
-function w() {
-  const l = h({
+function V() {
+  const e = g({
     all: !1,
     only: /* @__PURE__ */ new Set(),
     except: /* @__PURE__ */ new Set()
   });
-  function a() {
-    l.value.all = !0, l.value.only.clear(), l.value.except.clear();
+  function c() {
+    e.value.all = !0, e.value.only.clear(), e.value.except.clear();
   }
   function o() {
-    l.value.all = !1, l.value.only.clear(), l.value.except.clear();
+    e.value.all = !1, e.value.only.clear(), e.value.except.clear();
   }
-  function t(...e) {
-    e.forEach((u) => l.value.except.delete(u)), e.forEach((u) => l.value.only.add(u));
+  function u(...t) {
+    t.forEach((l) => e.value.except.delete(l)), t.forEach((l) => e.value.only.add(l));
   }
-  function v(...e) {
-    e.forEach((u) => l.value.except.add(u)), e.forEach((u) => l.value.only.delete(u));
+  function r(...t) {
+    t.forEach((l) => e.value.except.add(l)), t.forEach((l) => e.value.only.delete(l));
   }
-  function s(e, u) {
-    if (i(e) || u === !1)
-      return v(e);
-    if (!i(e) || u === !0)
-      return t(e);
+  function v(t, l) {
+    if (i(t) || l === !1)
+      return r(t);
+    if (!i(t) || l === !0)
+      return u(t);
   }
-  function i(e) {
-    return l.value.all ? !l.value.except.has(e) : l.value.only.has(e);
+  function i(t) {
+    return e.value.all ? !e.value.except.has(t) : e.value.only.has(t);
   }
-  const c = r(() => l.value.all && l.value.except.size === 0), f = r(() => l.value.only.size > 0 || c.value);
-  function d(e) {
+  const s = f(() => e.value.all && e.value.except.size === 0), d = f(() => e.value.only.size > 0 || s.value);
+  function h(t) {
     return {
-      "onUpdate:modelValue": (u) => {
-        u ? t(e) : v(e);
+      "onUpdate:modelValue": (l) => {
+        l ? u(t) : r(t);
       },
-      modelValue: i(e),
-      value: e
+      modelValue: i(t),
+      value: t
     };
   }
-  function n() {
+  function m() {
     return {
-      "onUpdate:modelValue": (e) => {
-        e ? a() : o();
+      "onUpdate:modelValue": (t) => {
+        t ? c() : o();
       },
-      modelValue: c.value,
-      value: c.value
+      modelValue: s.value
     };
   }
   return {
-    allSelected: c,
-    selection: l,
-    hasSelected: f,
-    selectAll: a,
+    allSelected: s,
+    selection: e,
+    hasSelected: d,
+    selectAll: c,
     deselectAll: o,
-    select: t,
-    deselect: v,
-    toggle: s,
+    select: u,
+    deselect: r,
+    toggle: v,
     selected: i,
-    bind: d,
-    bindAll: n
+    bind: h,
+    bindAll: m
   };
 }
 export {
-  p as executeAction,
-  b as useActions,
-  w as useBulk
+  y as executeOperation,
+  S as useBatch,
+  V as useBulk
 };

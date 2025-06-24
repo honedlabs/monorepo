@@ -1,24 +1,24 @@
 import type { VisitOptions } from "@inertiajs/core";
 import { router } from "@inertiajs/vue3";
-import type { 
-    OperationType,
-    InlineOperation,
-    BulkOperation,
-    PageOperation,
-    InlineOperationData,
-    BulkOperationData
+import type {
+	OperationType,
+	InlineOperation,
+	BulkOperation,
+	PageOperation,
+	InlineOperationData,
+	BulkOperationData,
 } from "./types";
 
 type OperationMap = {
-    inline: InlineOperation;
-    bulk: BulkOperation;
-    page: PageOperation;
+	inline: InlineOperation;
+	bulk: BulkOperation;
+	page: PageOperation;
 };
 
 type DataMap = {
-    inline: InlineOperationData;
-    bulk: BulkOperationData;
-    page: Record<string, any>;
+	inline: InlineOperationData;
+	bulk: BulkOperationData;
+	page: Record<string, any>;
 };
 
 /**
@@ -39,11 +39,15 @@ export function executeOperation<T extends OperationType>(
 	}
 
 	if (action.action && endpoint) {
-		router.post(endpoint, {
-			...data,
-			name: action.name,
-			type: action.type,
-		}, options);
+		router.post(
+			endpoint,
+			{
+				...data,
+				name: action.name,
+				type: action.type,
+			},
+			options,
+		);
 		return true;
 	}
 

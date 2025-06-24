@@ -3,33 +3,20 @@ import { Method } from '@inertiajs/core';
 import { Ref } from 'vue';
 import { VisitOptions } from '@inertiajs/core';
 
-export declare interface Action {
-    name: string;
-    label: string;
-    type: ActionType;
-    icon?: string;
-    extra?: Record<string, unknown>;
-    action?: boolean;
-    confirm?: Confirm;
-    route?: Route;
-}
-
-export declare interface ActionGroup {
+export declare interface Batch {
     id?: string;
     endpoint?: string;
-    inline: InlineAction[];
-    bulk: BulkAction[];
-    page: PageAction[];
+    inline: InlineOperation[];
+    bulk: BulkOperation[];
+    page: PageOperation[];
 }
 
-export declare type ActionType = "inline" | "page" | "bulk";
-
-export declare interface BulkAction extends Action {
+export declare interface BulkOperation extends Operation {
     type: "bulk";
     keepSelected: boolean;
 }
 
-export declare interface BulkActionData extends Record<string, any> {
+export declare interface BulkOperationData extends Record<string, any> {
     all: boolean;
     only: Identifier[];
     except: Identifier[];
@@ -49,23 +36,48 @@ export declare interface Confirm {
     intent: "constructive" | "destructive" | "informative" | string;
 }
 
+declare type DataMap = {
+    inline: InlineOperationData;
+    bulk: BulkOperationData;
+    page: Record<string, any>;
+};
+
 /**
- * Execute the action.
+ * Execute an operation with full type safety.
  */
-export declare function executeAction<T extends ActionType = any>(action: T extends "inline" ? InlineAction : T extends "bulk" ? BulkAction : T extends "page" ? PageAction : Action, endpoint?: string, data?: T extends "inline" ? InlineActionData : T extends "bulk" ? BulkActionData : Record<string, any>, options?: VisitOptions): boolean;
+export declare function executeOperation<T extends OperationType>(action: OperationMap[T], endpoint?: string, data?: DataMap[T], options?: VisitOptions): boolean;
 
 export declare type Identifier = string | number;
 
-export declare interface InlineAction extends Action {
+export declare interface InlineOperation extends Operation {
     type: "inline";
     default: boolean;
 }
 
-export declare interface InlineActionData extends Record<string, any> {
+export declare interface InlineOperationData extends Record<string, any> {
     record: Identifier;
 }
 
-export declare interface PageAction extends Action {
+export declare interface Operation {
+    name: string;
+    label: string;
+    type: OperationType;
+    icon?: string;
+    extra?: Record<string, unknown>;
+    action?: boolean;
+    confirm?: Confirm;
+    route?: Route;
+}
+
+declare type OperationMap = {
+    inline: InlineOperation;
+    bulk: BulkOperation;
+    page: PageOperation;
+};
+
+export declare type OperationType = "inline" | "page" | "bulk";
+
+export declare interface PageOperation extends Operation {
     type: "page";
 }
 
@@ -74,47 +86,21 @@ export declare interface Route {
     method: Method;
 }
 
-export declare type UseActions = typeof useActions;
+export declare type UseBatch = typeof useBatch;
 
-export declare function useActions<Props extends object, Key extends Props[keyof Props] extends ActionGroup ? keyof Props : never>(props: Props, key: Key, defaultOptions?: VisitOptions): {
-    inline: {
-        execute: (data: InlineActionData, options?: VisitOptions) => void;
-        type: "inline";
-        default: boolean;
-        name: string;
-        label: string;
-        icon?: string | undefined;
-        extra?: Record<string, unknown> | undefined;
-        action?: boolean | undefined;
-        confirm?: Confirm | undefined;
-        route?: Route | undefined;
-    }[];
-    bulk: {
-        execute: (data: BulkActionData, options?: VisitOptions) => void;
-        type: "bulk";
-        keepSelected: boolean;
-        name: string;
-        label: string;
-        icon?: string | undefined;
-        extra?: Record<string, unknown> | undefined;
-        action?: boolean | undefined;
-        confirm?: Confirm | undefined;
-        route?: Route | undefined;
-    }[];
-    page: {
+export declare function useBatch<T extends Record<string, Batch>>(props: T, key: keyof T, defaults?: VisitOptions): {
+    inline: (InlineOperation & {
+        execute: (data?: InlineOperationData, options?: VisitOptions) => void;
+    })[];
+    bulk: (BulkOperation & {
+        execute: (data?: BulkOperationData, options?: VisitOptions) => void;
+    })[];
+    page: (PageOperation & {
         execute: (data?: Record<string, any>, options?: VisitOptions) => void;
-        type: "page";
-        name: string;
-        label: string;
-        icon?: string | undefined;
-        extra?: Record<string, unknown> | undefined;
-        action?: boolean | undefined;
-        confirm?: Confirm | undefined;
-        route?: Route | undefined;
-    }[];
-    executeInlineAction: (action: InlineAction, data: InlineActionData, options?: VisitOptions) => void;
-    executeBulkAction: (action: BulkAction, data: BulkActionData, options?: VisitOptions) => void;
-    executePageAction: (action: PageAction, data?: Record<string, any>, options?: VisitOptions) => void;
+    })[];
+    executeInline: (operation: InlineOperation, data: InlineOperationData, options?: VisitOptions) => void;
+    executeBulk: (operation: BulkOperation, data: BulkOperationData, options?: VisitOptions) => void;
+    executePage: (operation: PageOperation, data?: Record<string, any>, options?: VisitOptions) => void;
 };
 
 export declare type UseBulk = typeof useBulk;
@@ -137,7 +123,6 @@ export declare function useBulk<T = any>(): {
     bindAll: () => {
         "onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
         modelValue: boolean;
-        value: boolean;
     };
 };
 
