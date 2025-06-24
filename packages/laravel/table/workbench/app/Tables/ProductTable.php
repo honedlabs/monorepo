@@ -132,23 +132,23 @@ class ProductTable extends Table implements IsOrderable, IsSelectable, IsTogglea
             ])
             ->operations([
                 InlineOperation::make('edit')
-                    ->action(fn ($product) => $product->update(['name' => 'Inline'])),
+                    ->action(fn ($record) => $record->update(['name' => 'Inline'])),
 
                 InlineOperation::make('delete')
-                    ->allow(fn ($product) => $product->id % 2 === 0)
-                    ->action(fn ($product) => $product->delete())
+                    ->allow(fn ($record) => $record->id % 2 === 0)
+                    ->action(fn ($record) => $record->delete())
                     ->confirmable(fn ($confirm) => $confirm
-                        ->title(fn ($product) => 'You are about to delete '.$product->name)
+                        ->title(fn ($record) => 'You are about to delete '.$record->name)
                         ->description('Are you sure?')),
 
                 InlineOperation::make('show')
-                    ->route(fn ($product) => route('products.show', $product)),
+                    ->route(fn ($record) => route('products.show', $record)),
 
                 BulkOperation::make('edit')
-                    ->action(fn ($product) => $product->update(['name' => 'Bulk'])),
+                    ->action(fn ($record) => $record->update(['name' => 'Bulk'])),
 
                 BulkOperation::make('delete')
-                    ->action(fn ($product) => $product->delete())
+                    ->action(fn ($record) => $record->delete())
                     ->allow(false),
 
                 PageOperation::make('create')
@@ -156,9 +156,9 @@ class ProductTable extends Table implements IsOrderable, IsSelectable, IsTogglea
 
                 PageOperation::make('factory')
                     ->action(function () {
-                        $product = product('test');
+                        $record = Product::factory()->create();
 
-                        return to_route('products.show', $product);
+                        return to_route('products.show', $record);
                     }),
 
             ]);

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Refine\Pipes\SortQuery;
-use Honed\Refine\Refine;
 use Honed\Refine\Sorts\Sort;
 use Honed\Table\Table;
 use Illuminate\Support\Facades\Request;

@@ -16,7 +16,7 @@ it('adds columns', function () {
         ->getColumns()->toHaveCount(2);
 });
 
-it('adds column', function () {
+it('inserts a column', function () {
     expect($this->table)
         ->column(Column::make('id'))->toBe($this->table)
         ->getColumns()->toHaveCount(1);

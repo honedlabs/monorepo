@@ -3,12 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Table\Columns\Column;
-use Honed\Table\Columns\KeyColumn;
-use Honed\Table\Pipelines\ToggleColumns;
 use Honed\Table\Pipes\Toggle;
 use Honed\Table\Table;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Workbench\App\Models\Product;
@@ -25,7 +21,7 @@ beforeEach(function () {
             Column::make('description'),
             Column::make('price'),
         ]);
-})->only();
+});
 
 it('uses defaults', function () {
     $this->pipe->run(
@@ -40,18 +36,18 @@ it('uses defaults', function () {
 
     'clear' => function () {
         $request = Request::create('/', 'GET', [
-            $this->table->getColumnKey() => null
+            $this->table->getColumnKey() => null,
         ]);
 
         return $this->table->request($request);
     },
     'orderable' => function () {
         $request = Request::create('/', 'GET', [
-            $this->table->getColumnKey() => ['price']
+            $this->table->getColumnKey() => ['price'],
         ]);
 
         return $this->table->request($request)->orderable(false);
-    }
+    },
 ]);
 
 it('retrieves from sources', function ($table) {
@@ -60,11 +56,21 @@ it('retrieves from sources', function ($table) {
     expect(array_map(fn ($column) => $column->getName(), $table->getColumns()))
         ->toBe(['price', 'id', 'name', 'description']);
 })->with([
-    'request' =>function () {
+    'request' => function () {
         $request = Request::create('/', 'GET', [
-            $this->table->getColumnKey() => ['price']
+            $this->table->getColumnKey() => ['price'],
         ]);
-    
+
+        return $this->table->request($request);
+    },
+
+    'scope' => function () {
+        $this->table->scope('scope');
+
+        $request = Request::create('/', 'GET', [
+            $this->table->getColumnKey() => ['price'],
+        ]);
+
         return $this->table->request($request);
     },
 
@@ -79,13 +85,12 @@ it('retrieves from sources', function ($table) {
 
     'cookie' => function () {
         $request = Request::create('/', 'GET', cookies: [
-            $this->table->getPersistKey() => 
-                json_encode([$this->table->getColumnKey() => ['price']])
-            
+            $this->table->getPersistKey() => json_encode([$this->table->getColumnKey() => ['price']]),
+
         ]);
 
         return $this->table
             ->request($request)
             ->persistColumnsInCookie();
-    }
+    },
 ]);

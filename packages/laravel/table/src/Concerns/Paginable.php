@@ -5,16 +5,9 @@ declare(strict_types=1);
 namespace Honed\Table\Concerns;
 
 use Honed\Table\PageOption;
-use Illuminate\Support\Collection;
 
 use function array_map;
-use function array_merge;
 
-/**
- * @template TModel of \Illuminate\Database\Eloquent\Model
- *
- * @template-covariant TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
- */
 trait Paginable
 {
     public const CURSOR = 'cursor';
@@ -205,7 +198,7 @@ trait Paginable
      */
     public function getPageKey()
     {
-        return $this->pageKey;
+        return $this->formatScope($this->pageKey);
     }
 
     /**
@@ -228,7 +221,7 @@ trait Paginable
      */
     public function getRecordKey()
     {
-        return $this->recordKey;
+        return $this->formatScope($this->recordKey);
     }
 
     /**
@@ -290,89 +283,5 @@ trait Paginable
             static fn (PageOption $record) => $record->toArray(),
             $this->getPageOptions()
         );
-    }
-
-    /**
-     * Get the pagination data for the length-aware paginator.
-     *
-     * @param  \Illuminate\Contracts\Pagination\LengthAwarePaginator<TModel>  $paginator
-     * @return array<string, mixed>
-     */
-    public function lengthAwarePaginator($paginator)
-    {
-        return array_merge($this->simplePaginator($paginator), [
-            'total' => $paginator->total(),
-            'from' => $paginator->firstItem(),
-            'to' => $paginator->lastItem(),
-            'firstLink' => $paginator->url(1),
-            'lastLink' => $paginator->url($paginator->lastPage()),
-            'links' => $this->createPaginatorLinks($paginator),
-        ]);
-    }
-
-    /**
-     * Create pagination links with a sliding window around the current page.
-     *
-     * @param  \Illuminate\Contracts\Pagination\LengthAwarePaginator<TModel>  $paginator
-     * @return array<int, array<string, mixed>>
-     */
-    public function createPaginatorLinks($paginator)
-    {
-        $currentPage = $paginator->currentPage();
-        $lastPage = $paginator->lastPage();
-        $onEachSide = $this->getWindow();
-
-        $start = max(1, min($currentPage - $onEachSide, $lastPage - ($onEachSide * 2)));
-        $end = min($lastPage, max($currentPage + $onEachSide, ($onEachSide * 2 + 1)));
-
-        return array_map(
-            static fn (int $page) => [
-                'url' => $paginator->url($page),
-                'label' => (string) $page,
-                'active' => $currentPage === $page,
-            ],
-            range($start, $end)
-        );
-    }
-
-    /**
-     * Get the pagination data for the simple paginator.
-     *
-     * @param  \Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
-     * @return array<string, mixed>
-     */
-    public function simplePaginator($paginator)
-    {
-        return array_merge($this->cursorPaginator($paginator), [
-            'currentPage' => $paginator->currentPage(),
-        ]);
-    }
-
-    /**
-     * Get the pagination data for the cursor paginator.
-     *
-     * @param  \Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
-     * @return array<string, mixed>
-     */
-    public function cursorPaginator($paginator)
-    {
-        return array_merge($this->collectionPaginator($paginator), [
-            'prevLink' => $paginator->previousPageUrl(),
-            'nextLink' => $paginator->nextPageUrl(),
-            'perPage' => $paginator->perPage(),
-        ]);
-    }
-
-    /**
-     * Get the base metadata for the collection paginator, and all others.
-     *
-     * @param  Collection<int,TModel>|\Illuminate\Pagination\AbstractCursorPaginator<TModel>|\Illuminate\Contracts\Pagination\Paginator<TModel>  $paginator
-     * @return array<string, mixed>
-     */
-    public function collectionPaginator($paginator)
-    {
-        return [
-            'empty' => $paginator->isEmpty(),
-        ];
     }
 }

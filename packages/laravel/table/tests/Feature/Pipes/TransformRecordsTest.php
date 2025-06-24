@@ -2,87 +2,62 @@
 
 declare(strict_types=1);
 
-use Honed\Action\InlineAction;
+use Honed\Action\Actions\DestroyAction;
+use Honed\Action\Operations\InlineOperation;
 use Honed\Table\Columns\Column;
 use Honed\Table\Columns\KeyColumn;
-use Honed\Table\Pipelines\TransformRecords;
+use Honed\Table\Pipes\TransformRecords;
 use Honed\Table\Table;
-use Honed\Table\Tests\Stubs\Product;
-use Honed\Table\Tests\Stubs\Status;
-use Illuminate\Support\Arr;
+use Workbench\App\Enums\Status;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
-    foreach (range(1, 10) as $i) {
-        product();
-    }
+    Product::factory()->count(100)->create();
 
     $this->pipe = new TransformRecords();
-    $this->next = fn ($table) => $table;
 
-    $this->columns = [
+    $this->table = Table::make()
+        ->operations([
+            InlineOperation::make('view')
+                ->route('products.show', '{id}'),
+
+            InlineOperation::make('edit')
+                ->allow(fn ($record) => $record->id % 2 === 0),
+
+            InlineOperation::make('delete')
+                ->action(DestroyAction::class),
+        ]);
+
+    $this->table->setHeadings([
         KeyColumn::make('id'),
 
         Column::make('name')
-            ->always(),
-
-        Column::make('price'),
-
-        Column::make('description')
-            ->sometimes(),
+            ->alias('title'),
 
         Column::make('status')
-            ->extra(fn ($record) => [
-                'variant' => match ($record->status) {
+            ->transformer(fn ($state) => $state?->name)
+            ->state(fn ($record) => $record->status)
+            ->extra(fn ($state) => [
+                'variant' => match ($state) {
                     Status::Available => 'success',
                     Status::Unavailable => 'danger',
                     Status::ComingSoon => 'info',
+                    default => dd($state),
                 },
-            ])
-            ->value(fn ($record) => $record->status?->name),
+            ]),
+    ]);
 
-        Column::make('fixed')
-            ->value('Constant'),
-    ];
-
-    $this->actions = [
-        InlineAction::make('view'),
-
-        InlineAction::make('edit')
-            ->allow(fn ($record) => $record->id % 2 === 0),
-
-        InlineAction::make('delete'),
-    ];
-
-    $this->table = Table::make()
-        ->actions($this->actions);
-
-    $this->table->cacheColumns($this->columns);
-
-    $this->table->setRecords(Product::query()->orderBy('id')->get()->all());
-})->skip();
-
-it('transforms records', function () {
-    $this->pipe->__invoke($this->table, $this->next);
-
-    expect($this->table->getRecords())
-        ->each->toHaveCount(\count($this->columns) + 1);
-
-    $first = Arr::first($this->table->getRecords());
-
-    expect($first)
-        ->{'actions'}->toHaveCount(2);
-
-    $last = Arr::last($this->table->getRecords());
-
-    expect($last)
-        ->{'actions'}->toHaveCount(3);
+    $this->table->setRecords(
+        Product::query()->paginate(10)->items()
+    );
 });
 
-it('serializes', function () {
-    $this->table->serializes(true);
-
-    $this->pipe->__invoke($this->table, $this->next);
+it('transforms records', function () {
+    $this->pipe->run($this->table);
 
     expect($this->table->getRecords())
-        ->each->toHaveCount(11 + 1);
+        ->each(fn ($record) => $record
+            ->toBeArray()
+            ->toHaveKeys(['id', 'title', 'status', 'operations'])
+        );
 });

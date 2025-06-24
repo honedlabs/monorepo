@@ -9,11 +9,16 @@ use Honed\Table\Table;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Workbench\App\Models\Product;
 use Workbench\App\Tables\ProductTable;
 
 beforeEach(function () {
     $this->table = Table::make()->for(Product::class);
+});
+
+afterEach(function () {
+    Table::flushState();
 });
 
 it('has key', function () {
@@ -49,26 +54,34 @@ it('is url routable', function () {
 
 it('resolves table', function () {
     ProductTable::guessTableNamesUsing(function ($class) {
-        return $class.'Table';
+        return Str::of($class)
+            ->classBasename()
+            ->prepend('Workbench\\App\\Tables\\')
+            ->append('Table')
+            ->value();
     });
 
     expect(ProductTable::resolveTableName(Product::class))
-        ->toBe('Workbench\\App\\Tables\\ProductTable');
+        ->toBe(ProductTable::class);
 
     expect(ProductTable::tableForModel(Product::class))
         ->toBeInstanceOf(ProductTable::class);
-
-    ProductTable::flushState();
 });
 
 it('uses namespace', function () {
     ProductTable::useNamespace('');
 
     expect(ProductTable::resolveTableName(Product::class))
-        ->toBe('Honed\\Table\\Tests\\Stubs\\ProductTable');
-
-    ProductTable::flushState();
+        ->toBe(Str::of(ProductTable::class)
+            ->classBasename()
+            ->prepend('Models\\')
+            ->value()
+        );
 });
+
+it('has array representation', function () {})->todo();
+
+it('serializes to json', function () {})->todo();
 
 describe('evaluation', function () {
     it('named dependencies', function ($closure, $class) {

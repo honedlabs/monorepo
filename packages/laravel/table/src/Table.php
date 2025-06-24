@@ -33,10 +33,12 @@ use Honed\Table\Concerns\Toggleable;
 use Honed\Table\Concerns\Viewable;
 use Honed\Table\Exceptions\KeyNotFoundException;
 use Honed\Table\Pipes\CreateEmptyState;
+use Honed\Table\Pipes\Paginate;
 use Honed\Table\Pipes\PrepareColumns;
 use Honed\Table\Pipes\Query;
 use Honed\Table\Pipes\Select;
 use Honed\Table\Pipes\Toggle;
+use Honed\Table\Pipes\TransformRecords;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Contracts\Foundation\Application;
@@ -399,6 +401,8 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
             SortQuery::class,
             Query::class, // Must be applied after the select statement
             AfterRefining::class,
+            Paginate::class,
+            TransformRecords::class,
             CreateEmptyState::class,
             PersistData::class,
         ];

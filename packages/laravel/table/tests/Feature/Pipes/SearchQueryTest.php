@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Refine\Pipes\SearchQuery;
-use Honed\Refine\Refine;
 use Honed\Refine\Searches\Search;
 use Honed\Table\Table;
 use Illuminate\Http\Request;
@@ -60,7 +59,6 @@ it('applies search', function () {
     expect($this->table->getTerm())
         ->toBe($this->term);
 });
-
 
 it('applies search with matching', function () {
     $this->table->matchable();

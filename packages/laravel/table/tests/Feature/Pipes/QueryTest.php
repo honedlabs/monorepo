@@ -20,8 +20,7 @@ beforeEach(function () {
         Column::make('user_exists')->exists(),
 
         Column::make('public_id')
-            ->query(fn (Builder $query) => 
-                $query->where('public_id', '!=', null)
+            ->query(fn (Builder $query) => $query->where('public_id', '!=', null)
             ),
     ]);
 });

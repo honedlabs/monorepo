@@ -18,3 +18,10 @@ it('has array representation', function () {
             'active' => true,
         ]);
 });
+
+it('serializes to json', function () {
+    $pageOption = PageOption::make(10, 10);
+
+    expect($pageOption->jsonSerialize())
+        ->toEqual($pageOption->toArray());
+});

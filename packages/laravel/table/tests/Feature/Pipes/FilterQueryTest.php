@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 use Honed\Refine\Filters\Filter;
 use Honed\Refine\Pipes\FilterQuery;
-use Honed\Table\Columns\Column;
-use Honed\Table\Columns\DateColumn;
 use Honed\Table\Table;
 use Illuminate\Support\Facades\Request;
 use Workbench\App\Models\User;

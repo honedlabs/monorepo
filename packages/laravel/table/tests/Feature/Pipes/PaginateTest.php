@@ -2,34 +2,30 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Exceptions\InvalidPaginatorException;
-use Honed\Table\Pipelines\Paginate;
+use Honed\Table\Pipes\Paginate;
 use Honed\Table\Table;
-use Honed\Table\Tests\Stubs\Product;
 use Illuminate\Support\Facades\Request;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
-    $this->records = 100;
-
-    foreach (range(1, $this->records) as $i) {
-        product();
-    }
+    Product::factory(100)->create();
 
     $this->pipe = new Paginate();
     $this->next = fn ($table) => $table;
 
-    $this->table = Table::make()
-        ->resource(Product::query());
-})->skip();
+    $this->table = Table::make()->for(Product::class);
+});
 
-it('paginates default', function () {
-    $this->pipe->__invoke($this->table, $this->next);
+it('paginates length aware', function () {
+    $this->pipe->run(
+        $this->table->lengthAwarePaginate()
+    );
 
     expect($this->table->getRecords())
         ->toBeArray()
-        ->toHaveCount(config('table.default_pagination'));
+        ->toHaveCount($this->table->getDefaultPerPage());
 
-    expect($this->table->getPaginationData())
+    expect($this->table->getPagination())
         ->toHaveKeys([
             'empty',
             'prevLink',
@@ -41,19 +37,20 @@ it('paginates default', function () {
             'firstLink',
             'lastLink',
             'links',
-        ])->{'links'}->toHaveCount(config('table.window') * 2 + 1);
+        ])
+        ->{'links'}->toHaveCount($this->table->getWindow() * 2 + 1);
 });
 
 it('paginates simple', function () {
-    $this->table->paginator('simple');
-
-    $this->pipe->__invoke($this->table, $this->next);
+    $this->pipe->run(
+        $this->table->simplePaginate()
+    );
 
     expect($this->table->getRecords())
         ->toBeArray()
-        ->toHaveCount(config('table.default_pagination'));
+        ->toHaveCount($this->table->getDefaultPerPage());
 
-    expect($this->table->getPaginationData())
+    expect($this->table->getPagination())
         ->toHaveKeys([
             'empty',
             'prevLink',
@@ -64,15 +61,15 @@ it('paginates simple', function () {
 });
 
 it('paginates cursor', function () {
-    $this->table->paginator('cursor');
-
-    $this->pipe->__invoke($this->table, $this->next);
+    $this->pipe->run(
+        $this->table->cursorPaginate()
+    );
 
     expect($this->table->getRecords())
         ->toBeArray()
-        ->toHaveCount(config('table.default_pagination'));
+        ->toHaveCount($this->table->getDefaultPerPage());
 
-    expect($this->table->getPaginationData())
+    expect($this->table->getPagination())
         ->toHaveKeys([
             'empty',
             'prevLink',
@@ -82,42 +79,43 @@ it('paginates cursor', function () {
 });
 
 it('paginates collection', function () {
-    $this->table->paginator('collection');
-
-    $this->pipe->__invoke($this->table, $this->next);
+    $this->pipe->run(
+        $this->table->paginate(false)
+    );
 
     expect($this->table->getRecords())
         ->toBeArray()
-        ->toHaveCount($this->records);
+        ->toHaveCount(100);
 
-    expect($this->table->getPaginationData())
+    expect($this->table->getPagination())
         ->toHaveKeys([
             'empty',
         ]);
 });
 
-it('paginate fails', function () {
-    $this->table->paginator('invalid');
-
-    $this->pipe->__invoke($this->table, $this->next);
-
-})->throws(InvalidPaginatorException::class);
+it('errors if an invalid paginator is passed', function () {
+    $this->pipe->run(
+        $this->table->paginate('invalid')
+    );
+})->throws(InvalidArgumentException::class);
 
 it('changes per page', function () {
     $count = 25;
 
     $request = Request::create('/', 'GET', [
-        config('table.record_key') => $count,
+        $this->table->getRecordKey() => $count,
     ]);
 
-    $this->table->pagination([10, 25, 50])->request($request);
+    $this->table->perPage([10, 25, 50])->request($request);
 
-    $this->pipe->__invoke($this->table, $this->next);
+    $this->pipe->run(
+        $this->table->paginate()
+    );
 
     expect($this->table->getRecords())
         ->toHaveCount($count);
 
-    expect($this->table->getRecordsPerPage())
+    expect($this->table->getPageOptions())
         ->toHaveCount(3);
 });
 
@@ -125,17 +123,19 @@ it('changes per page with restrictions', function () {
     $count = 20;
 
     $request = Request::create('/', 'GET', [
-        config('table.record_key') => $count,
+        $this->table->getRecordKey() => $count,
     ]);
 
-    $this->table->pagination([10, 25, 50])->request($request);
+    $this->table->perPage([10, 25, 50])->request($request);
 
-    $this->pipe->__invoke($this->table, $this->next);
+    $this->pipe->run(
+        $this->table->paginate()
+    );
 
     expect($this->table->getRecords())
-        ->toHaveCount(config('table.default_pagination'));
+        ->toHaveCount($this->table->getDefaultPerPage());
 
-    expect($this->table->getRecordsPerPage())
+    expect($this->table->getPageOptions())
         ->toHaveCount(3);
 });
 
@@ -143,77 +143,21 @@ it('changes default per page', function () {
     $count = 25;
 
     $request = Request::create('/', 'GET', [
-        config('table.record_key') => 20,
+        $this->table->getRecordKey() => 20,
     ]);
 
-    $this->table->pagination([10, 25, 50])
-        ->defaultPagination($count)
+    $this->table
+        ->perPage([10, 25, 50])
+        ->defaultPerPage($count)
         ->request($request);
 
-    $this->pipe->__invoke($this->table, $this->next);
+    $this->pipe->run(
+        $this->table->paginate()
+    );
 
     expect($this->table->getRecords())
         ->toHaveCount($count);
 
-    expect($this->table->getRecordsPerPage())
-        ->toHaveCount(3);
-});
-
-it('preserves query string', function () {
-    $request = Request::create('/', 'GET', [
-        'name' => 'test',
-    ]);
-
-    $this->table->request($request);
-
-    $this->pipe->__invoke($this->table, $this->next);
-
-    expect($this->table->getRecords())
-        ->toBeArray()
-        ->toHaveCount(config('table.default_pagination'));
-});
-
-it('fails to paginate scope', function () {
-    $this->table->scope('scope')
-        ->pagination([10, 25, 50]);
-
-    $request = Request::create('/', 'GET', [
-        config('table.record_key') => 25,
-        config('table.page_key') => 2,
-    ]);
-
-    $this->table->request($request);
-
-    $this->pipe->__invoke($this->table, $this->next);
-
-    expect($this->table->getRecords())
-        ->toBeArray()
-        ->toHaveCount(config('table.default_pagination'));
-
-    expect($this->table->getPaginationData())
-        ->{'currentPage'}->toBe(1);
-
-    expect($this->table->getRecordsPerPage())
-        ->toHaveCount(3);
-});
-
-it('paginates scope', function () {
-    $this->table->scope('scope')
-        ->pagination([10, 25, 50]);
-
-    $request = Request::create('/', 'GET', [
-        $this->table->formatScope(config('table.record_key')) => 25,
-        $this->table->formatScope(config('table.page_key')) => 2,
-    ]);
-
-    $this->table->request($request);
-
-    $this->pipe->__invoke($this->table, $this->next);
-
-    expect($this->table->getRecords())
-        ->toBeArray()
-        ->toHaveCount(25);
-
-    expect($this->table->getRecordsPerPage())
+    expect($this->table->getPageOptions())
         ->toHaveCount(3);
 });

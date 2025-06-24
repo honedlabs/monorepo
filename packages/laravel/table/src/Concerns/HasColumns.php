@@ -39,7 +39,7 @@ trait HasColumns
     }
 
     /**
-     * Add a column to the table.
+     * Insert a column.
      *
      * @param  Column  $column
      * @return $this

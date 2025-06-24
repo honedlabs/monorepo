@@ -14,7 +14,7 @@ use Illuminate\Support\Arr;
  *
  * @extends Pipe<TClass>
  */
-class CreateRecords extends Pipe
+class TransformRecords extends Pipe
 {
     /**
      * Run the after refining logic.
@@ -28,9 +28,8 @@ class CreateRecords extends Pipe
         $operations = $instance->getInlineOperations();
         $records = $instance->getRecords();
 
-        // Use generator for memory-efficient processing
         $processedRecords = iterator_to_array(
-            $this->createRecordsGenerator($records, $columns, $operations)
+            $this->generator($records, $columns, $operations)
         );
 
         $instance->setRecords($processedRecords);
@@ -44,10 +43,10 @@ class CreateRecords extends Pipe
      * @param  array<int, InlineOperation>  $operations
      * @return Generator<int, array<string, mixed>>
      */
-    protected function createRecordsGenerator($records, $columns, $operations)
+    protected function generator($records, $columns, $operations)
     {
         foreach ($records as $record) {
-            yield $this->createRecord($record, $columns, $operations);
+            yield $this->create($record, $columns, $operations);
         }
     }
 
@@ -59,7 +58,7 @@ class CreateRecords extends Pipe
      * @param  array<int, InlineOperation>  $operations
      * @return array<string, mixed>
      */
-    protected function createRecord($record, $columns, $operations)
+    protected function create($record, $columns, $operations)
     {
         return [
             ...$this->getColumns($record, $columns),
@@ -113,44 +112,20 @@ class CreateRecords extends Pipe
     {
         $column->record($record);
 
-        return [];
+        if (! $column->getResolvedState()) {
+            $column->state($column->getName());
+        }
+
+        $state = $column->getState();
+
+        [$value, $placeholder] = $column->apply($state);
+
+        return [$column->getParameter() => [
+            'v' => $value,
+            'e' => $column->getExtra(),
+            'c' => $column->getCellClasses(),
+            'f' => $placeholder,
+        ],
+        ];
     }
-
-    // /**
-    //  * Create a record entry for the column.
-    //  *
-    //  * @param  TModel  $record
-    //  * @param  array<string,mixed>  $named
-    //  * @param  array<class-string,mixed>  $typed
-    //  * @return array<string,array{value:mixed, extra:array<string,mixed>}>
-    //  */
-    // public function entry($record, $named = [], $typed = [])
-    // {
-    //     $valueUsing = $this->getValue();
-
-    //     $value = $this->apply((bool) $valueUsing
-    //         ? $this->evaluate($valueUsing, $named, $typed)
-    //         : Arr::get($record, $this->getName())
-    //     );
-
-    //     /**
-    //      * [
-    //      *  'v' => mixed // value
-    //      *  'e' => mixed // extra
-    //      *  'c' => string|null // class
-    //      *  'f' => boolean // fallback
-    //      *  ]
-    //      * ]
-    //      */
-
-    //     return [
-    //         $this->getParameter() => [
-    //             'value' => $value,
-    //             'extra' => $this->getExtra(
-    //                 array_merge($named, ['value' => $value]),
-    //                 $typed,
-    //             ),
-    //         ],
-    //     ];
-    // }
 }

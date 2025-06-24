@@ -104,6 +104,14 @@ class Column extends Primitive implements NullsAsUndefined
     }
 
     /**
+     * @experimental
+     */
+    public function getResolvedState()
+    {
+        return $this->state;
+    }
+
+    /**
      * Get the parameter for the column.
      *
      * @return string
@@ -299,7 +307,7 @@ class Column extends Primitive implements NullsAsUndefined
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
         return match ($parameterName) {
-            // 'state' => [$this->getState()],
+            'state' => [$this->getState()],
             'model', 'record', 'row' => [$this->getRecord()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };

@@ -3,13 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Table\Table;
-use Honed\Table\Tests\Stubs\Category;
-use Honed\Table\Tests\Stubs\Product;
-use Honed\Table\Tests\Stubs\Seller;
-use Honed\Table\Tests\Stubs\Status;
 use Honed\Table\Tests\TestCase;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 uses(TestCase::class)->in(__DIR__);
 
