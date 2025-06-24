@@ -48,6 +48,16 @@ class PendingViewInteraction
     }
 
     /**
+     * Get the scope for the pending view interaction.
+     *
+     * @return array<int, mixed>
+     */
+    public function getScope()
+    {
+        return $this->scope;
+    }
+
+    /**
      * Load the pending view interaction for the given table.
      *
      * @param  Table|class-string<Table>  $table

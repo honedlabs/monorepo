@@ -33,6 +33,11 @@ class TestCase extends Orchestra
      */
     protected function defineDatabaseMigrations()
     {
+        $this->artisan('vendor:publish', [
+            '--provider' => 'Honed\Table\TableServiceProvider',
+            '--tag' => 'table-migrations',
+        ]);
+
         $this->loadMigrationsFrom([
             workbench_path('database/migrations'),
         ]);

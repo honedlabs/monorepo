@@ -41,6 +41,7 @@ class TableServiceProvider extends ServiceProvider
             $this->commands([
                 TableMakeCommand::class,
                 ColumnMakeCommand::class,
+                
             ]);
         }
     }
@@ -59,6 +60,10 @@ class TableServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/table.php' => config_path('table.php'),
         ], 'table-config');
+
+        $this->publishes([
+            __DIR__.'/../database/migrations' => database_path('migrations'),
+        ], 'table-migrations');
     }
 
     /**
