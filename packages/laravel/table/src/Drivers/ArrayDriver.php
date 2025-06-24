@@ -48,14 +48,21 @@ class ArrayDriver implements Driver
      * @param  string  $table
      * @param  string  $name
      * @param  mixed  $scope
-     * @return object|null
+     * @return array<string, mixed>|null
      */
     public function get($table, $name, $scope)
     {
         $scopeKey = Views::serializeScope($scope);
 
-        if (isset($this->resolved[$table][$name][$scopeKey])) {
-            return $this->resolved[$table][$name][$scopeKey];
+        if (isset($this->resolved[$table][$scopeKey][$name])) {
+            $view = $this->resolved[$table][$scopeKey][$name];
+
+            return (object) [
+                'name' => $name,
+                'table' => $table,
+                'scope' => $scope,
+                'view' => $view,
+            ];
         }
 
         return null;
@@ -65,17 +72,25 @@ class ArrayDriver implements Driver
      * Retrieve the views for the given table and scopes from storage.
      *
      * @param  string  $table
-     * @param  array<mixed>  $scopes
-     * @return array<object>
+     * @param  mixed|array<int, mixed>  $scopes
+     * @return array<int, array<string, mixed>>
      */
     public function list($table, $scopes)
-    {
+    {        
+        $scopes = array_map(
+            static fn ($scope) => Views::serializeScope($scope),
+            (array) $scopes
+        );
+
         $views = [];
 
-        foreach ($this->resolved[$table] ?? [] as $name => $scopedViews) {
-            foreach ($scopedViews as $scopeKey => $view) {
-                if (in_array($scopeKey, $scopes)) {
-                    $views[] = $view;
+        foreach ($this->resolved[$table] ?? [] as $scopeKeys => $scoped) {
+            if (in_array($scopeKeys, $scopes)) {
+                foreach ($scoped as $name => $view) {
+                    $views[] = (object) [
+                        'name' => $name,
+                        'view' => $view,
+                    ];
                 }
             }
         }
@@ -95,7 +110,8 @@ class ArrayDriver implements Driver
     public function set($table, $name, $scope, $value)
     {
         $scopeKey = Views::serializeScope($scope);
-        $this->resolved[$table][$name][$scopeKey] = $value;
+
+        $this->resolved[$table][$scopeKey][$name] = $value;
     }
 
     /**
@@ -110,7 +126,7 @@ class ArrayDriver implements Driver
     {
         $scopeKey = Views::serializeScope($scope);
 
-        unset($this->resolved[$table][$name][$scopeKey]);
+        unset($this->resolved[$table][$scopeKey][$name]);
     }
 
     /**
@@ -121,6 +137,15 @@ class ArrayDriver implements Driver
      */
     public function purge($table = null)
     {
-        unset($this->resolved[$table]);
+        if ($table === null) {
+            $this->resolved = [];
+        } else {
+            /** @var array<int, string> */
+            $tables = is_array($table) ? $table : func_get_args();
+
+            foreach ($tables as $table) {
+                unset($this->resolved[$table]);
+            }
+        }
     }
 }

@@ -17,13 +17,17 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Honed\Table\ViewManager forgetDrivers() Forget all of the resolved store instances
  * @method static \Honed\Table\ViewManager extend(string $driver, \Closure $callback) Register a custom driver creator Closure
  * @method static string serializeScope(mixed $scope) Serialize the given scope for storage
+ * @method static string serializeTable(string|\Honed\Table\Table $table) Get the table name for the given table
  * @method static \Honed\Table\ViewManager useMorphMap(bool $value = true) Specify that the Eloquent morph map should be used when serializing
  * @method static void resolveScopeUsing(\Closure $resolver) Set the default scope resolver
- * @method static string getTableName(string|\Honed\Table\Table $table) Get the table name for the given table
  * @method static \Honed\Table\PendingViewInteraction for(mixed|array<int, mixed> $scope = null) Create a pending view retrieval
- * @method static mixed __call(string $method, array<int, mixed> $parameters) Dynamically call the default store instance
+ * @method static object|null get(string $table, string $name, mixed $scope) Retrieve the view for the given table, name, and scope from storage
+ * @method static array<int, object> list(string $table, array<int, mixed> $scopes) Retrieve the views for the given table and scopes from storage
+ * @method static void set(string $table, string $name, mixed $scope, array<string, mixed> $value) Set the view for the given table and scope
+ * @method static void delete(string $table, string $name, mixed $scope) Delete the view for the given table and scope from storage
+ * @method static void purge(string|array<int, string>|null $table = null) Purge all views for the given table
  *
- * @see ViewManager
+ * @see \Honed\Table\ViewManager
  */
 class Views extends Facade
 {

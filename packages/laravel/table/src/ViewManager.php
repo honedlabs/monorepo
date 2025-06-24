@@ -207,6 +207,21 @@ class ViewManager
         };
     }
 
+
+    /**
+     * Get the scope for the given table.
+     *
+     * @param  string|Table  $table
+     * @return string
+     */
+    public function serializeTable($table)
+    {
+        return match (true) {
+            $table instanceof Table => $table::class,
+            default => $table,
+        };
+    }
+
     /**
      * Specify that the Eloquent morph map should be used when serializing.
      *
@@ -229,20 +244,6 @@ class ViewManager
     public function resolveScopeUsing($resolver)
     {
         $this->defaultScopeResolver = $resolver;
-    }
-
-    /**
-     * Get the table name for the given table.
-     *
-     * @param  string|Table  $table
-     * @return string
-     */
-    public function getTableName($table)
-    {
-        return match (true) {
-            $table instanceof Table => $table::class,
-            default => $table,
-        };
     }
 
     /**

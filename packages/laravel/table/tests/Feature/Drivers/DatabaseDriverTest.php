@@ -13,7 +13,7 @@ beforeEach(function () {
     /** @var \Honed\Table\Drivers\DatabaseDriver */
     $this->driver = Views::store('database');
 
-    $this->table = Views::getTableName(ProductTable::make());
+    $this->table = Views::serializeTable(ProductTable::make());
 
     $this->user = User::factory()->create();
 
@@ -27,7 +27,7 @@ beforeEach(function () {
         'scope' => $this->scope,
         'view' => json_encode(['name' => 'test']),
     ]);
-})->only();
+});
 
 it('gets first matching view', function () {
     $view = $this->driver->get($this->table, 'Filter view', $this->scope);
@@ -35,6 +35,7 @@ it('gets first matching view', function () {
     expect($view)
         ->toBeObject()
         ->name->toBe('Filter view')
+        ->table->toBe($this->table)
         ->scope->toBe($this->scope)
         ->view->toBe(json_encode(['name' => 'test']));
 });
@@ -112,7 +113,7 @@ it('deletes a view', function () {
 
 describe('purge', function () {
     beforeEach(function () {
-        $this->userTable = Views::getTableName(UserTable::make());
+        $this->userTable = Views::serializeTable(UserTable::make());
         $this->userScope = Views::serializeScope($this->user);
 
         DB::table($this->driver->getTableName())->insert([

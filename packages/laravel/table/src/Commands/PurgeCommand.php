@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Commands;
 
+use Honed\Table\Facades\Views;
 use Honed\Table\ViewManager;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -17,10 +18,8 @@ class PurgeCommand extends Command
      * @var string
      */
     protected $signature = 'views:purge
-                            {tables?* : The tables to purge}
-                            {--except=* : The tables that should be excluded from purging}
-                            {--except-registered : Purge all tables except those registered}
-                            {--store= : The store to purge the tables from}';
+        {tables?* : The tables to purge}
+        {--store= : The store to purge the tables from}';
 
     /**
      * The console command description.
@@ -43,33 +42,28 @@ class PurgeCommand extends Command
      */
     public function handle(ViewManager $manager)
     {
-        $store = $manager->store($this->option('store'));
+        /** @var string|null */
+        $store = $this->option('store');
 
-        // $features = $this->argument('features') ?: null;
+        $store = $manager->store($store);
 
-        // $except = collect($this->option('except'))
-        //     ->when($this->option('except-registered'), fn ($except) => $except->merge($store->defined()))
-        //     ->unique()
-        //     ->all();
+        /** @var array<int, class-string<\Honed\Table\Table>>|null */
+        $tables = $this->argument('tables') ?: null;
 
-        // if ($except) {
-        //     $features = collect($features ?: $store->stored())
-        //         ->flip()
-        //         ->forget($except)
-        //         ->flip()
-        //         ->values()
-        //         ->all();
-        // }
+        if ($tables) {
+            $tables = array_map(
+                static fn ($table) => Views::serializeTable($table),
+                (array) $tables
+            );
+        }
 
-        // $store->purge($table);
+        $store->purge($tables);
 
-        // if ($features) {
-        //     $this->components->info(implode(', ', $features).' successfully purged from storage.');
-        // } elseif ($except) {
-        //     $this->components->info('No features to purge from storage.');
-        // } else {
-        //     $this->components->info('All features successfully purged from storage.');
-        // }
+        if ($tables) {
+            $this->components->info(implode(', ', $tables).' successfully purged from storage.');
+        } else {
+            $this->components->info('All views successfully purged from storage.');
+        }
 
         return self::SUCCESS;
     }
