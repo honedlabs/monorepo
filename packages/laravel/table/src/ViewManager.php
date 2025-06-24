@@ -28,14 +28,14 @@ class ViewManager
     /**
      * The array of resolved view stores.
      *
-     * @var array<string, Drivers\Decorator>
+     * @var array<string, Decorator>
      */
     protected $stores = [];
 
     /**
      * The registered custom driver creators.
      *
-     * @var array<string, \Closure(string, Container): Contracts\Driver>
+     * @var array<string, Closure(string, Container): Contracts\Driver>
      */
     protected $customCreators = [];
 
@@ -52,13 +52,6 @@ class ViewManager
      * @var bool
      */
     protected $useMorphMap = false;
-
-    /**
-     * The default driver name.
-     *
-     * @var string
-     */
-    protected $defaultDriver = 'database';
 
     /**
      * Create a new view resolver.
@@ -86,7 +79,7 @@ class ViewManager
      * Get a view store instance.
      *
      * @param  string|null  $store
-     * @return Drivers\Decorator
+     * @return Decorator
      *
      * @throws InvalidArgumentException
      */
@@ -99,7 +92,7 @@ class ViewManager
      * Get a view store instance by name.
      *
      * @param  string|null  $name
-     * @return Drivers\Decorator
+     * @return Decorator
      *
      * @throws InvalidArgumentException
      */
@@ -143,7 +136,8 @@ class ViewManager
      */
     public function getDefaultDriver()
     {
-        return $this->defaultDriver;
+        // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
+        return $this->container['config']->get('table.views.driver', 'database');
     }
 
     /**
@@ -154,7 +148,8 @@ class ViewManager
      */
     public function setDefaultDriver($name)
     {
-        $this->defaultDriver = $name;
+        // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
+        $this->container['config']->set('table.views.driver', $name);
     }
 
     /**
@@ -192,7 +187,7 @@ class ViewManager
      * Register a custom driver creator closure.
      *
      * @param  string  $driver
-     * @param  \Closure(string, Container): Contracts\Driver  $callback
+     * @param  Closure(string, Container): Contracts\Driver  $callback
      * @return $this
      */
     public function extend($driver, $callback)
@@ -213,19 +208,18 @@ class ViewManager
     public function serializeScope($scope)
     {
         return match (true) {
-            $scope instanceof ViewScopeSerializeable => 
-                $scope->viewScopeSerialize(),
+            $scope instanceof ViewScopeSerializeable => $scope->viewScopeSerialize(),
             $scope === null => '__laravel_null',
             is_string($scope) => $scope,
             is_numeric($scope) => (string) $scope,
             $scope instanceof Model
-                && $this->usesMorphMap() => 
+                && $this->usesMorphMap() =>
                     // @phpstan-ignore-next-line cast.string
-                    $scope->getMorphClass().'|'.(string) $scope->getKey(), 
+                    $scope->getMorphClass().'|'.(string) $scope->getKey(),
             $scope instanceof Model
-                && ! $this->usesMorphMap() => 
+                && ! $this->usesMorphMap() =>
                     // @phpstan-ignore-next-line cast.string
-                    $scope::class.'|'.(string) $scope->getKey(), 
+                    $scope::class.'|'.(string) $scope->getKey(),
             default => throw new RuntimeException(
                 'Unable to serialize the view scope to a string. You should implement the ViewScopeSerializeable contract.'
             )
@@ -245,7 +239,7 @@ class ViewManager
             $table instanceof Table => $table::class,
             is_string($table) => $table,
             default => throw new RuntimeException(
-                "Unable to serialize the provided value to a table scope."
+                'Unable to serialize the provided value to a table scope.'
             )
         };
     }
@@ -296,10 +290,28 @@ class ViewManager
     }
 
     /**
+     * The default scope resolver.
+     *
+     * @param  string  $driver
+     * @return callable(): mixed
+     */
+    public function defaultScopeResolver($driver)
+    {
+        return function () use ($driver) {
+            if ($this->defaultScopeResolver !== null) {
+                return ($this->defaultScopeResolver)($driver);
+            }
+
+            // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
+            return $this->container['auth']->guard()->user();
+        };
+    }
+
+    /**
      * Attempt to get the store from the local cache.
      *
      * @param  string  $name
-     * @return Drivers\Decorator
+     * @return Decorator
      *
      * @throws InvalidArgumentException
      */
@@ -312,7 +324,7 @@ class ViewManager
      * Resolve a view store instance.
      *
      * @param  string  $name
-     * @return Drivers\Decorator
+     * @return Decorator
      *
      * @throws InvalidArgumentException
      */
@@ -349,24 +361,6 @@ class ViewManager
     protected function callCustomCreator($name)
     {
         return $this->customCreators[$name]($name, $this->container);
-    }
-
-    /**
-     * The default scope resolver.
-     *
-     * @param  string  $driver
-     * @return callable(): mixed
-     */
-    protected function defaultScopeResolver($driver)
-    {
-        return function () use ($driver) {
-            if ($this->defaultScopeResolver !== null) {
-                return ($this->defaultScopeResolver)($driver);
-            }
-
-            // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
-            return $this->container['auth']->guard()->user();
-        };
     }
 
     /**

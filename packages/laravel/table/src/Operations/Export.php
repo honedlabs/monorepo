@@ -11,6 +11,7 @@ use Honed\Table\Contracts\ExportsTable;
 use Honed\Table\Exporters\ArrayExporter;
 use Honed\Table\Exporters\Concerns\HasExportEvents;
 use Honed\Table\Exporters\EloquentExporter;
+use Honed\Table\Exporters\Exporter;
 use Honed\Table\Table;
 use Illuminate\Support\Facades\Config;
 use Maatwebsite\Excel\Facades\Excel;
@@ -18,9 +19,8 @@ use Maatwebsite\Excel\Facades\Excel;
 class Export extends Operation implements Action
 {
     use Concerns\CanLimitRecords;
-    use Concerns\Exportable;
+    use Concerns\HasExport;
     use HasExportEvents;
-    // use HasExport;
 
     /**
      * The callback to be used to create the export from the table.
@@ -102,31 +102,81 @@ class Export extends Operation implements Action
     public function handle(Table $table)
     {
         if ($use = $this->getUsingCallback()) {
-            return $this->evaluate($use, [
-                'table' => $table,
-            ], [
-                $table::class => $table,
-                Table::class => $table,
-            ]);
+            return $this->useCallback($use, $table);
         }
 
+        $exporter = $this->getExporter($table);
+        $export = new $exporter($table, $this->getEvents());
+        $fileName = $this->getFilename();
+
+        return match (true) {
+            $this->isDownload() => $this->downloadExport($export, $fileName),
+            $this->isQueued() => $this->queueExport($export, $fileName),
+            $this->isStored() => $this->storeExport($export, $fileName),
+        };
+    }
+
+    /**
+     * Download the export file.
+     *
+     * @param  ExportsTable  $export
+     * @param  string  $fileName
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    protected function downloadExport($export, $fileName)
+    {
+        return Excel::download($export, $fileName, $this->getFileType());
+    }
+
+    /**
+     * Queue the export for background processing.
+     *
+     * @param  ExportsTable  $export
+     * @param  string  $fileName
+     * @return \Illuminate\Foundation\Bus\PendingDispatch
+     */
+    protected function queueExport($export, $fileName)
+    {
+        return Excel::queue(
+            $export, $fileName, $this->getDisk(), $this->getFileType()
+        )->onQueue($this->getQueue());
+    }
+
+    /**
+     * Store the export file.
+     *
+     * @param  ExportsTable  $export
+     * @param  string  $fileName
+     * @return bool
+     */
+    protected function storeExport($export, $fileName)
+    {
+        return Excel::store(
+            $export, $fileName, $this->getDisk(), $this->getFileType()
+        );
+    }
+
+    /**
+     * Use a callback to create the export.
+     *
+     * @param  (Closure(mixed...):mixed)  $use
+     * @return mixed
+     */
+    protected function useCallback($use, Table $table)
+    {
         $exporter = $this->getExporter($table);
 
         $export = new $exporter($table, $this->getEvents());
 
-        $fileName = $this->getFilename();
-
-        $response = match (true) {
-            $this->isDownload() => Excel::download($export, $fileName, $this->getFileType()),
-            $this->isQueued() => Excel::queue(
-                $export, $fileName, $this->getDisk(), $this->getFileType()
-            )->onQueue($this->getQueue()),
-            default => Excel::store(
-                $export, $fileName, $this->getDisk(), $this->getFileType()
-            ),
-        };
-
-        return $response;
+        return $this->evaluate($use, [
+            'table' => $table,
+            'export' => $export,
+        ], [
+            $table::class => $table,
+            Table::class => $table,
+            $export::class => $export,
+            Exporter::class => $export,
+        ]);
     }
 
     /**

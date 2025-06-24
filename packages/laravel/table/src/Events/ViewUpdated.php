@@ -12,8 +12,8 @@ class ViewUpdated
 
     /**
      * Create a new view updated event.
-     * 
-     * @param array<string, mixed> $view
+     *
+     * @param  array<string, mixed>  $view
      */
     public function __construct(
         public string $table,

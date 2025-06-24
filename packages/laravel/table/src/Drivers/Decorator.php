@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Table\Drivers;
 
-use RuntimeException;
-use Honed\Table\Facades\Views;
+use Honed\Table\Contracts\CanListViews;
 use Honed\Table\Contracts\Driver;
 use Honed\Table\Events\ViewDeleted;
 use Honed\Table\Events\ViewsPurged;
 use Honed\Table\Events\ViewUpdated;
+use Honed\Table\Facades\Views;
 use Illuminate\Support\Facades\Event;
-use Honed\Table\Contracts\CanListViews;
-use Honed\Table\PendingViewInteraction;
 use Illuminate\Support\Traits\Macroable;
+use RuntimeException;
 
-class Decorator implements Driver, CanListViews
+class Decorator implements CanListViews, Driver
 {
     use Macroable {
         __call as macroCall;
@@ -31,7 +30,7 @@ class Decorator implements Driver, CanListViews
     /**
      * The driver instance.
      *
-     * @var \Honed\Table\Contracts\Driver
+     * @var Driver
      */
     protected $driver;
 
@@ -46,7 +45,7 @@ class Decorator implements Driver, CanListViews
      * Create a new driver decorator instance.
      *
      * @param  string  $name
-     * @param  \Honed\Table\Contracts\Driver  $driver
+     * @param  Driver  $driver
      * @param  (callable(): mixed)  $defaultScopeResolver
      */
     public function __construct($name, $driver, $defaultScopeResolver)
@@ -54,6 +53,22 @@ class Decorator implements Driver, CanListViews
         $this->name = $name;
         $this->driver = $driver;
         $this->defaultScopeResolver = $defaultScopeResolver;
+    }
+
+    /**
+     * Dynamically call the underlying driver instance.
+     *
+     * @param  string  $name
+     * @param  array<int, mixed>  $parameters
+     * @return mixed
+     */
+    public function __call($name, $parameters)
+    {
+        if (static::hasMacro($name)) {
+            return $this->macroCall($name, $parameters);
+        }
+
+        return $this->getDriver()->{$name}(...$parameters);
     }
 
     /**
@@ -91,8 +106,8 @@ class Decorator implements Driver, CanListViews
 
     /**
      * Get the views stored for a given table or tables.
-     * 
-     * @param mixed|array<int, mixed> $table
+     *
+     * @param  mixed|array<int, mixed>  $table
      * @return array<int, object>
      */
     public function stored($table)
@@ -110,8 +125,8 @@ class Decorator implements Driver, CanListViews
 
     /**
      * Get the views stored for a given scope or scopes.
-     * 
-     * @param mixed|array<int, mixed> $scope
+     *
+     * @param  mixed|array<int, mixed>  $scope
      * @return array<int, object>
      */
     public function scoped($scope)
@@ -184,19 +199,9 @@ class Decorator implements Driver, CanListViews
     }
 
     /**
-    * Retrieve the default scope.
-    *
-    * @return mixed
-    */
-   protected function defaultScope()
-   {
-       return ($this->defaultScopeResolver)();
-   }
-
-    /**
      * Get the underlying view driver.
      *
-     * @return \Honed\Table\Contracts\Driver
+     * @return Driver
      */
     public function getDriver()
     {
@@ -204,46 +209,44 @@ class Decorator implements Driver, CanListViews
     }
 
     /**
+     * Retrieve the default scope.
+     *
+     * @return mixed
+     */
+    protected function defaultScope()
+    {
+        return ($this->defaultScopeResolver)();
+    }
+
+    /**
      * Resolve the scopes.
-     * 
-     * @param mixed|array<int, mixed> $scopes
+     *
+     * @param  mixed|array<int, mixed>  $scopes
      * @return array<int, string>
      */
     protected function resolveScopes($scopes)
     {
+        $scopes = is_array($scopes) ? $scopes : [$scopes];
+
         return array_map(
             static fn ($scope) => Views::serializeScope($scope),
-            (array) $scopes
+            $scopes
         );
     }
 
     /**
      * Resolve the tables.
-     * 
-     * @param mixed|array<int, mixed> $tables
+     *
+     * @param  mixed|array<int, mixed>  $tables
      * @return array<int, string>
      */
     protected function resolveTables($tables)
     {
+        $tables = is_array($tables) ? $tables : [$tables];
+
         return array_map(
             static fn ($table) => Views::serializeTable($table),
-            (array) $tables
+            $tables
         );
-    }
-
-    /**
-     * Dynamically call the underlying driver instance.
-     *
-     * @param  string  $name
-     * @param  array<int, mixed>  $parameters
-     * @return mixed
-     */
-    public function __call($name, $parameters)
-    {
-        if (static::hasMacro($name)) {
-            return $this->macroCall($name, $parameters);
-        }
-
-        return $this->getDriver()->{$name}(...$parameters);
     }
 }

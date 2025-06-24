@@ -70,7 +70,7 @@ class ArrayDriver implements Driver
      * Retrieve the views for the given table and scopes from storage.
      *
      * @param  string  $table
-     * @param  array<int, string>  $scopes
+     * @param  string|array<int, string>  $scopes
      * @return array<int, object>
      */
     public function list($table, $scopes)
@@ -78,7 +78,7 @@ class ArrayDriver implements Driver
         $views = [];
 
         foreach ($this->resolved[$table] ?? [] as $scope => $scoped) {
-            if (in_array($scope, $scopes)) {
+            if (in_array($scope, (array) $scopes)) {
                 foreach ($scoped as $name => $view) {
                     $views[] = (object) [
                         'name' => $name,
@@ -121,7 +121,7 @@ class ArrayDriver implements Driver
     /**
      * Purge all views for the given table.
      *
-     * @param  array<int, string>|null  $table
+     * @param  string|array<int, string>|null  $table
      * @return void
      */
     public function purge($table = null)
@@ -129,7 +129,7 @@ class ArrayDriver implements Driver
         if ($table === null) {
             $this->resolved = [];
         } else {
-            foreach ($table as $t) {
+            foreach ((array) $table as $t) {
                 unset($this->resolved[$t]);
             }
         }

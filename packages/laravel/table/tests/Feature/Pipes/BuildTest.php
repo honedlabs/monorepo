@@ -36,7 +36,7 @@ beforeEach(function () {
     $this->table->request($this->request);
 
     Views::set($this->table::class, 'Filter view', null, [
-        'name' => 'joshua'
+        'name' => 'joshua',
     ]);
 });
 

@@ -52,6 +52,32 @@ it('lists views', function () {
         );
 });
 
+it('gets stored views', function () {
+    $views = $this->driver->stored($this->table);
+
+    expect($views)
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}
+        ->scoped(fn ($view) => $view
+            ->name->toBe('Filter view')
+            ->view->toBe(json_encode(['name' => 'test']))
+        );
+});
+
+it('gets scoped views', function () {
+    $views = $this->driver->scoped($this->scope);
+
+    expect($views)
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}
+        ->scoped(fn ($view) => $view
+            ->name->toBe('Filter view')
+            ->view->toBe(json_encode(['name' => 'test']))
+        );
+});
+
 it('sets existing view', function () {
     $this->driver->set($this->table, 'Filter view', $this->scope, ['name' => 'updated']);
 
@@ -87,7 +113,6 @@ it('inserts a view', function () {
         'name' => 'Search view',
         'table' => $this->table,
         'scope' => $this->scope,
-        'view' => json_encode(['name' => 'created']),
     ]);
 });
 

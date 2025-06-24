@@ -12,7 +12,7 @@ class ViewsPurged
 
     /**
      * Create a new views purged event.
-     * 
+     *
      * @param  array<int, string>|null  $tables
      */
     public function __construct(

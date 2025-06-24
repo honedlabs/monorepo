@@ -23,7 +23,6 @@ use Illuminate\Support\Facades\Facade;
  * @method static void resolveScopeUsing(\Closure $resolver) Set the default scope resolver
  * @method static callable|null getDefaultScopeResolver(string $driver) Get the default scope resolver
  * @method static \Honed\Table\PendingViewInteraction for(mixed|array<int, mixed> $scope = null) Create a pending view retrieval
- * 
  * @method static object|null get(string|\Honed\Table\Table $table, string $name, mixed $scope) Retrieve the view for the given table, name, and scope from storage
  * @method static array<int, object> list(mixed $table, array<int, mixed> $scopes) Retrieve the views for the given table and scopes from storage
  * @method static array<int, object> stored(mixed|array<int, mixed> $table) Get the views stored for a given table or tables
