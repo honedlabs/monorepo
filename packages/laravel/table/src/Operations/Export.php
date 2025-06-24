@@ -2,20 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Honed\Table\Actions;
+namespace Honed\Table\Operations;
 
 use Closure;
+use Honed\Action\Contracts\Action;
+use Honed\Action\Operations\Concerns\CanBeChunked;
 use Honed\Action\Operations\Operation;
 use Honed\Table\Contracts\ExportsTable;
+use Honed\Table\Exports\Concerns\HasExportEvents;
+use Honed\Table\Table;
 use Illuminate\Support\Facades\App;
 use Maatwebsite\Excel\Facades\Excel;
 
 use function array_merge;
 
-class Export extends Operation
+class Export extends Operation implements Action
 {
     use Concerns\CanLimitRecords;
-    // use Concerns\InteractsWithExporter;
+    use Concerns\Exportable;
+    use HasExportEvents;
     // use HasExport;
 
     /**
@@ -28,7 +33,7 @@ class Export extends Operation
     /**
      * The exporter to be used for the export.
      *
-     * @var ExportsTable|null
+     * @var class-string<ExportsTable>|null
      */
     protected $exporter;
 
@@ -38,34 +43,6 @@ class Export extends Operation
      * @var callable
      */
     protected $after;
-
-    /**
-     * The events that this export should listen to.
-     *
-     * @var array<class-string<\Maatwebsite\Excel\Events\Event>, callable>
-     */
-    protected $events = [];
-
-    /**
-     * The method to be used for generating the export.
-     *
-     * @var 'download'|'queue'|'store'
-     */
-    protected $method = 'download';
-
-    /**
-     * The queue to be used for the export.
-     *
-     * @var bool|string
-     */
-    protected $queue = 'default';
-
-    /**
-     * The disk for the export to be stored on.
-     *
-     * @var string|null
-     */
-    protected $disk;
 
     /**
      * Register the callback to be used to create the export from the table.
@@ -85,7 +62,7 @@ class Export extends Operation
      *
      * @return Closure(\Honed\Table\Table, ExportsTable, \Illuminate\Http\Request):mixed
      */
-    public function uses()
+    public function getUsingCallback()
     {
         return $this->using;
     }
@@ -93,7 +70,7 @@ class Export extends Operation
     /**
      * Set the exporter class to be used to generate the export.
      *
-     * @param  ExportsTable|null  $exporter
+     * @param  class-string<ExportsTable>|null  $exporter
      * @return $this
      */
     public function exporter($exporter)
@@ -106,187 +83,46 @@ class Export extends Operation
     /**
      * Get the exporter class to be used to generate the export.
      *
-     * @return ExportsTable|null
+     * @return class-string<ExportsTable>
      */
     public function getExporter()
     {
-        return $this->exporter;
-    }
-
-    /**
-     * Register a callback to be called after generating the export, assuming
-     * that the export is not downloaded.
-     *
-     * @param  callable  $callback
-     * @return $this
-     */
-    public function after($callback)
-    {
-        $this->after = $callback;
-
-        return $this;
-    }
-
-    /**
-     * Get the callback to be called after generating the export, assuming
-     * that the export is not downloaded.
-     *
-     * @return callable|null
-     */
-    public function getAfter()
-    {
-        return $this->after;
-    }
-
-    /**
-     * Hook into the underlying event that the export should listen to.
-     *
-     * @param  \Maatwebsite\Excel\Events\Event  $event
-     * @param  callable  $callback
-     * @return $this
-     */
-    public function event($event, $callback)
-    {
-        $this->events[$event] = $callback;
-
-        return $this;
-    }
-
-    /**
-     * Register the events that the export should listen to.
-     *
-     * @param  array<class-string<\Maatwebsite\Excel\Events\Event>, callable>  $events
-     * @return $this
-     */
-    public function events($events)
-    {
-        $this->events = array_merge($this->events, $events);
-
-        return $this;
-    }
-
-    /**
-     * Get the events that the export should listen to.
-     *
-     * @return array<class-string<\Maatwebsite\Excel\Events\Event>, callable>
-     */
-    public function getEvents()
-    {
-        return $this->events;
-    }
-
-    /**
-     * Set the export to be downloaded as the actionable response.
-     *
-     * @return $this
-     */
-    public function download()
-    {
-        $this->method = 'download';
-
-        return $this;
-    }
-
-    /**
-     * Set the export to be stored on a disk.
-     *
-     * @param  string|null  $disk
-     * @return $this
-     */
-    public function store($disk = null)
-    {
-        $this->method = 'store';
-
-        if ($disk) {
-            $this->disk = $disk;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the export to be queued.
-     *
-     * @param  string|null  $queue
-     * @return $this
-     */
-    public function queue($queue = null)
-    {
-        $this->method = 'queue';
-
-        if ($queue) {
-            $this->queue = $queue;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get the queue to be used for the export.
-     *
-     * @return string
-     */
-    public function getQueue()
-    {
-        return $this->queue;
-    }
-
-    /**
-     * Get the disk to be used for the export.
-     *
-     * @return string|null
-     */
-    public function getDisk()
-    {
-        return $this->disk;
+        return $this->exporter ?? ExportsTable::class;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function resolveToArray($parameters = [], $typed = [])
+    public function toArray()
     {
         return [
-            'name' => $this->getName(),
-            'label' => $this->getLabel(),
-            'type' => $this->getType(),
-            'icon' => $this->getIcon(),
-            'extra' => $this->getExtra(),
+            ...parent::toArray(),
             'actionable' => true,
-            'confirm' => $this->getConfirm()?->resolveToArray($parameters, $typed),
         ];
     }
 
-    public function execute($record)
+    public function handle(Table $table)
     {
         /** @var ExportsTable */
-        $export = App::make(ExportsTable::class);
+        $export = App::make($this->getExporter(), [
+            'table' => $table,
+            'events' => $this->getEvents(),
+        ]);
 
-        $filename = $this->getFileName();
+        $filename = $this->getFilename();
 
-        $type = $this->getType();
+        $type = $this->getFileType();
 
-        return match (true) {
-            $this->downloads() => Excel::download($export, $filename, $type),
-            $this->queues() => Excel::queue($export, $filename, $type)->onQueue($this->getQueue()),
+        if ($use = $this->getUsingCallback()) {
+            return $this->evaluate($use);
+        }
+
+        $response = match (true) {
+            $this->isDownload() => Excel::download($export, $filename, $type),
+            $this->isQueued() => Excel::queue($export, $filename, $type)->onQueue($this->getQueue()),
             default => Excel::store($export, $filename, $this->getDisk()),
         };
-    }
 
-    /**
-     * Methods
-     * events
-     * queue
-     * download
-     * exporter
-     * using
-     *
-     * Column methods
-     * export
-     * exportFormat
-     * dontExport
-     * exportStyle
-     *
-     * We feed in the table to this class.
-     */
+        return $response;
+    }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Table\Actions\Concerns;
+namespace Honed\Table\Operations\Concerns;
 
 trait CanLimitRecords
 {

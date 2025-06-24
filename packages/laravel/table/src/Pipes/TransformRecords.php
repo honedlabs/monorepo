@@ -110,15 +110,7 @@ class TransformRecords extends Pipe
      */
     protected function getColumn($record, $column)
     {
-        $column->record($record);
-
-        if (! $column->getResolvedState()) {
-            $column->state($column->getName());
-        }
-
-        $state = $column->getState();
-
-        [$value, $placeholder] = $column->apply($state);
+        [$value, $placeholder] = $column->value($record);
 
         return [$column->getParameter() => [
             'v' => $value,
