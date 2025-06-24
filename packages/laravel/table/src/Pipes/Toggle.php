@@ -15,8 +15,6 @@ use Honed\Table\Columns\Column;
  */
 class Toggle extends Pipe
 {
-    public const KEY = 'cols';
-
     /**
      * Run the after refining logic.
      *
@@ -168,7 +166,7 @@ class Toggle extends Pipe
      */
     protected function persisted($instance)
     {
-        $data = $instance->getColumnStore()?->get(self::KEY);
+        $data = $instance->getColumnStore()?->get($instance->getColumnKey());
 
         if (! is_array($data)) {
             return null;
@@ -187,6 +185,6 @@ class Toggle extends Pipe
      */
     protected function persist($instance, $params)
     {
-        $instance->getColumnStore()?->put(self::KEY, $params);
+        $instance->getColumnStore()?->put($instance->getColumnKey(), $params);
     }
 }

@@ -3,13 +3,17 @@
 declare(strict_types=1);
 
 use Honed\Table\Columns\KeyColumn;
+use Honed\Table\EmptyState;
 use Honed\Table\Exceptions\KeyNotFoundException;
 use Honed\Table\Table;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Workbench\App\Models\Product;
 use Workbench\App\Tables\ProductTable;
 
 beforeEach(function () {
-    $this->table = Table::make();
+    $this->table = Table::make()->for(Product::class);
 });
 
 it('has key', function () {
@@ -66,11 +70,24 @@ it('uses namespace', function () {
     ProductTable::flushState();
 });
 
-it('calls macro', function () {
-    Table::macro('test', function () {
-        return $this->getEndpoint();
-    });
+describe('evaluation', function () {
+    it('named dependencies', function ($closure, $class) {
+        expect($this->table->evaluate($closure))->toBeInstanceOf($class);
+    })->with([
+        fn () => [fn ($emptyState) => $emptyState, EmptyState::class],
+        fn () => [fn ($builder) => $builder, Builder::class],
+        fn () => [fn ($query) => $query, Builder::class],
+        fn () => [fn ($q) => $q, Builder::class],
+        fn () => [fn ($request) => $request, Request::class],
+    ]);
 
-    expect($this->table)
-        ->test()->toBe(config('table.endpoint'));
+    it('typed dependencies', function ($closure, $class) {
+        expect($this->table->evaluate($closure))->toBeInstanceOf($class);
+    })->with([
+        fn () => [fn (EmptyState $arg) => $arg, EmptyState::class],
+        fn () => [fn (Request $arg) => $arg, Request::class],
+        fn () => [fn (Builder $arg) => $arg, Builder::class],
+        fn () => [fn (BuilderContract $arg) => $arg, Builder::class],
+        fn () => [fn (Table $arg) => $arg, Table::class],
+    ]);
 });

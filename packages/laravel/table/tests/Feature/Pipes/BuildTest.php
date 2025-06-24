@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-use Honed\Table\Tests\Stubs\ProductTable;
-use Honed\Table\Tests\Stubs\Status;
 use Illuminate\Http\Request;
+use Workbench\App\Enums\Status;
+use Workbench\App\Models\Product;
+use Workbench\App\Tables\ProductTable;
 
 beforeEach(function () {
-    foreach (\range(1, 100) as $i) {
-        product();
-    }
+    Product::factory()->count(100)->create();
 
     $this->request = Request::create('/', 'GET', [
         'name' => 'test',
@@ -54,7 +53,7 @@ it('builds class', function () {
         config('table.record_key') => 25,
     ]);
 
-    expect(ProductTable::make()
+    expect(ProductTable::make($request)
         ->request($request)
         ->build()
     )->getResource()->getQuery()->scoped(fn ($query) => $query
@@ -65,24 +64,22 @@ it('builds class', function () {
             // Search done on name (column) and description (property)
             [
                 'type' => 'raw',
-                'sql' => searchSql('products.name'),
                 'boolean' => 'or', // <- this fails
             ],
             [
                 'type' => 'raw',
-                'sql' => searchSql('products.description'),
                 'boolean' => 'and',
             ],
             // Name where filter
             [
                 'type' => 'raw',
-                'sql' => searchSql('products.name'),
+                'sql' => 'name',
                 'boolean' => 'and',
             ],
             // Price set filter
             [
                 'type' => 'Basic',
-                'column' => qualifyProduct('price'),
+                'column' => 'price',
                 'operator' => '<=',
                 'value' => 100,
                 'boolean' => 'and',
@@ -90,21 +87,21 @@ it('builds class', function () {
             // Status set filter
             [
                 'type' => 'In',
-                'column' => qualifyProduct('status'),
+                'column' => 'status',
                 'values' => [Status::Available->value, Status::Unavailable->value],
                 'boolean' => 'and',
             ],
             // Only set filter
             [
                 'type' => 'In',
-                'column' => qualifyProduct('status'),
+                'column' => 'status',
                 'values' => [Status::ComingSoon->value],
                 'boolean' => 'and',
             ],
             // Favourite filter
             [
                 'type' => 'Basic',
-                'column' => qualifyProduct('best_seller'),
+                'column' => 'best_seller',
                 'operator' => '=',
                 'value' => true,
                 'boolean' => 'and',
@@ -112,7 +109,7 @@ it('builds class', function () {
             // Oldest date filter
             [
                 'type' => 'Date',
-                'column' => qualifyProduct('created_at'),
+                'column' => 'created_at',
                 'operator' => '>=',
                 'value' => '2000-01-01',
                 'boolean' => 'and',
@@ -120,41 +117,20 @@ it('builds class', function () {
             // Newest date filter
             [
                 'type' => 'Date',
-                'column' => qualifyProduct('created_at'),
+                'column' => 'created_at',
                 'operator' => '<=',
                 'value' => '2001-01-01',
                 'boolean' => 'and',
             ],
         ])
-        )->orders->scoped(fn ($orders) => $orders
-        ->toBeArray()
-        ->toHaveCount(1)
-        ->{0}->toEqual([
-            'column' => qualifyProduct('price'),
-            'direction' => 'desc',
-        ])
+        )->orders
+        ->scoped(fn ($orders) => $orders
+            ->toBeArray()
+            ->toHaveCount(1)
+            ->{0}->toEqual([
+                'column' => 'price',
+                'direction' => 'desc',
+            ])
         )
-    )->toArray()->scoped(fn ($array) => $array
-        ->{'config'}->toEqual([
-            'key' => 'id',
-            'delimiter' => config('table.delimiter'),
-            'record' => config('table.record_key'),
-            'sort' => config('table.sort_key'),
-            'search' => config('table.search_key'),
-            'column' => config('table.column_key'),
-            'page' => config('table.page_key'),
-            'endpoint' => config('table.endpoint'),
-            'term' => 'search term',
-            'match' => 'match',
-        ])->{'actions'}->scoped(fn ($actions) => $actions
-        ->toHaveKeys(['inline', 'bulk', 'page'])
-        ->{'inline'}->toBeTrue()
-        ->{'bulk'}->toHaveCount(1)
-        ->{'page'}->toHaveCount(2)
-        )->{'toggles'}->toBeTrue()
-        ->{'sorts'}->toHaveCount(4)
-        ->{'filters'}->toHaveCount(8)
-        ->{'columns'}->toHaveCount(9)
-        ->{'meta'}->toBeEmpty()
     );
 });

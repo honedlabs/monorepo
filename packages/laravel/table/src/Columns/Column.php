@@ -62,6 +62,8 @@ class Column extends Primitive implements NullsAsUndefined
     use IsActive;
     use Selectable;
 
+    public const BADGE = 'badge';
+
     public const COLOR = 'color';
 
     public const ICON = 'icon';
