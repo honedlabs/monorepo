@@ -13,9 +13,9 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 
 /**
- * @implements WithMapping<mixed>
+ * @implements WithMapping<array<string, mixed>|\Illuminate\Database\Eloquent\Model>
  */
-interface ExportsTable extends WithEvents, WithHeadings, WithStyles
+interface ExportsTable extends WithEvents, WithHeadings, WithStyles, WithMapping
 {
     /**
      * Create a new table export.

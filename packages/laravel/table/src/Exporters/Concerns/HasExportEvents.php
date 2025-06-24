@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Table\Exports\Concerns;
+namespace Honed\Table\Exporters\Concerns;
 
 trait HasExportEvents
 {

@@ -30,7 +30,10 @@ return [
     |
     */
 
-    'exporter' => Honed\Table\Exports\TableExport::class,
+    'exporters' => [
+        'eloquent' => Honed\Table\Exporters\EloquentExporter::class,
+        'array' => Honed\Table\Exporters\ArrayExporter::class,
+    ],
 
     /*
     |--------------------------------------------------------------------------

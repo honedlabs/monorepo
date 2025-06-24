@@ -124,7 +124,7 @@ trait Exportable
      *
      * @return bool
      */
-    public function isDownloaded()
+    public function isDownload()
     {
         return $this->download;
     }
@@ -182,7 +182,11 @@ trait Exportable
      */
     public function getQueue()
     {
-        return $this->queue === true ? null : $this->queue;
+        if (is_bool($this->queue)) {
+            return null;
+        }
+
+        return $this->queue;
     }
 
     /**

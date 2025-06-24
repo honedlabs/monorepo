@@ -24,11 +24,6 @@ class TableServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/table.php', 'table');
-
-        /** @var string */
-        $exporter = Config::get('table.exporter');
-
-        $this->app->bind(ExportsTable::class, $exporter);
     }
 
     /**

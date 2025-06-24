@@ -9,9 +9,12 @@ use Honed\Action\Contracts\Action;
 use Honed\Action\Operations\Concerns\CanBeChunked;
 use Honed\Action\Operations\Operation;
 use Honed\Table\Contracts\ExportsTable;
-use Honed\Table\Exports\Concerns\HasExportEvents;
+use Honed\Table\Exporters\ArrayExporter;
+use Honed\Table\Exporters\EloquentExporter;
+use Honed\Table\Exporters\Concerns\HasExportEvents;
 use Honed\Table\Table;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Maatwebsite\Excel\Facades\Excel;
 
 use function array_merge;
@@ -83,44 +86,65 @@ class Export extends Operation implements Action
     /**
      * Get the exporter class to be used to generate the export.
      *
+     * @param  \Honed\Table\Table  $table
      * @return class-string<ExportsTable>
      */
-    public function getExporter()
+    public function getExporter($table)
     {
-        return $this->exporter ?? ExportsTable::class;
+        return $this->exporter ?? match (true) {
+            false => $this->getArrayExporter(),
+            default => $this->getEloquentExporter()
+        };
     }
 
     /**
-     * {@inheritdoc}
+     * Get the eloquent exporter class to be used to generate the export.
+     *
+     * @return class-string<ExportsTable>
      */
-    public function toArray()
+    protected function getEloquentExporter()
     {
-        return [
-            ...parent::toArray(),
-            'actionable' => true,
-        ];
+        /** @var class-string<ExportsTable> */
+        return Config::get('table.exporters.eloquent', EloquentExporter::class);
     }
 
+    /**
+     * Get the array exporter class to be used to generate the export.
+     *
+     * @return class-string<ExportsTable>
+     */
+    protected function getArrayExporter()
+    {
+        /** @var class-string<ExportsTable> */
+        return Config::get('table.exporters.array', ArrayExporter::class);
+    }
+
+    /**
+     * Handle the exporting of the table.
+     * 
+     * @param  \Honed\Table\Table  $table
+     * @return mixed
+     */
     public function handle(Table $table)
     {
-        /** @var ExportsTable */
-        $export = App::make($this->getExporter(), [
-            'table' => $table,
-            'events' => $this->getEvents(),
-        ]);
+        $exporter = $this->getExporter($table);
+
+        $export = new $exporter($table, $this->getEvents());
 
         $filename = $this->getFilename();
-
-        $type = $this->getFileType();
 
         if ($use = $this->getUsingCallback()) {
             return $this->evaluate($use);
         }
 
         $response = match (true) {
-            $this->isDownload() => Excel::download($export, $filename, $type),
-            $this->isQueued() => Excel::queue($export, $filename, $type)->onQueue($this->getQueue()),
-            default => Excel::store($export, $filename, $this->getDisk()),
+            $this->isDownload() => Excel::download($export, $filename, $this->getFileType()),
+            $this->isQueued() => Excel::queue(
+                    $export, $filename, $this->getDisk(), $this->getFileType()
+                )->onQueue($this->getQueue()),
+            default => Excel::store(
+                $export, $filename, $this->getDisk(), $this->getFileType()
+            ),
         };
 
         return $response;
