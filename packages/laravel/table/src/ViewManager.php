@@ -279,17 +279,6 @@ class ViewManager
     }
 
     /**
-     * Create a pending view retrieval.
-     *
-     * @param  mixed|array<int, mixed>  $scope
-     * @return PendingViewInteraction
-     */
-    public function for($scope = null)
-    {
-        return (new PendingViewInteraction($this->store()))->for($scope);
-    }
-
-    /**
      * The default scope resolver.
      *
      * @param  string  $driver

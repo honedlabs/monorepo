@@ -50,7 +50,7 @@ it('handles action via download', function () {
 
 it('handles action via store', function () {
     $this->export->store()->handle($this->table);
-    
+
     Excel::assertStored('products.xlsx');
 });
 
@@ -62,12 +62,11 @@ it('handles action via queue', function () {
 
 it('handles action with callback', function () {
     $this->export->using(
-        fn (Exporter $export) => 
-            Excel::store(
-                $export,
-                'callback.xlsx'
-            )
-        )->handle($this->table);
+        fn (Exporter $export) => Excel::store(
+            $export,
+            'callback.xlsx'
+        )
+    )->handle($this->table);
 
     Excel::assertStored('callback.xlsx');
 });

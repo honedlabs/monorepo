@@ -14,14 +14,15 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Honed\Table\Drivers\DatabaseDriver createDatabaseDriver(string $name) Create an instance of the database driver
  * @method static string getDefaultDriver() Get the default driver name
  * @method static void setDefaultDriver(string $name) Set the default driver name
+ * @method static \Honed\Table\ViewManager forgetDriver(string|array<int, string>|null $name = null) Unset the given store instances
  * @method static \Honed\Table\ViewManager forgetDrivers() Forget all of the resolved store instances
  * @method static \Honed\Table\ViewManager extend(string $driver, \Closure $callback) Register a custom driver creator Closure
  * @method static string serializeScope(mixed $scope) Serialize the given scope for storage
  * @method static string serializeTable(mixed $table) Get the table name for the given table
  * @method static \Honed\Table\ViewManager useMorphMap(bool $value = true) Specify that the Eloquent morph map should be used when serializing
  * @method static bool usesMorphMap() Determine if the Eloquent morph map should be used when serializing
- * @method static void resolveScopeUsing(\Closure $resolver) Set the default scope resolver
- * @method static callable|null getDefaultScopeResolver(string $driver) Get the default scope resolver
+ * @method static void resolveScopeUsing(callable $resolver) Set the default scope resolver
+ * @method static callable defaultScopeResolver(string $driver) Get the default scope resolver
  * @method static \Honed\Table\PendingViewInteraction for(mixed|array<int, mixed> $scope = null) Create a pending view retrieval
  * @method static object|null get(string|\Honed\Table\Table $table, string $name, mixed $scope) Retrieve the view for the given table, name, and scope from storage
  * @method static array<int, object> list(mixed $table, array<int, mixed> $scopes) Retrieve the views for the given table and scopes from storage

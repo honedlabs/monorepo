@@ -25,7 +25,7 @@ class Export extends Operation implements Action
     /**
      * The callback to be used to create the export from the table.
      *
-     * @var (Closure(Table, ExportsTable, \Illuminate\Http\Request):mixed)|null
+     * @var (Closure(mixed...):mixed)|null
      */
     protected $using;
 
@@ -46,7 +46,7 @@ class Export extends Operation implements Action
     /**
      * Register the callback to be used to create the export from the table.
      *
-     * @param  (Closure(Table, ExportsTable, \Illuminate\Http\Request):mixed)|null  $callback
+     * @param  (Closure(mixed...):mixed)|null  $callback
      * @return $this
      */
     public function using($callback)
@@ -59,7 +59,7 @@ class Export extends Operation implements Action
     /**
      * Get the callback to be used to create the export from the table.
      *
-     * @return (Closure(Table, ExportsTable, \Illuminate\Http\Request):mixed)|null
+     * @return (Closure(mixed...):mixed)|null
      */
     public function getUsingCallback()
     {
@@ -113,6 +113,7 @@ class Export extends Operation implements Action
             $this->isDownload() => $this->downloadExport($export, $fileName),
             $this->isQueued() => $this->queueExport($export, $fileName),
             $this->isStored() => $this->storeExport($export, $fileName),
+            default => $this->storeExport($export, $fileName),
         };
     }
 

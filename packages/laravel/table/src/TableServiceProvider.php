@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Table;
 
 use Honed\Table\Commands\ColumnMakeCommand;
-use Honed\Table\Commands\ExportMakeCommand;
 use Honed\Table\Commands\PurgeCommand;
 use Honed\Table\Commands\TableMakeCommand;
 use Honed\Table\Http\Controllers\TableController;
@@ -40,7 +39,6 @@ class TableServiceProvider extends ServiceProvider
 
             $this->commands([
                 ColumnMakeCommand::class,
-                ExportMakeCommand::class,
                 PurgeCommand::class,
                 TableMakeCommand::class,
             ]);

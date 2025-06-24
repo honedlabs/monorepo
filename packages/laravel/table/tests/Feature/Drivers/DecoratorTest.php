@@ -17,6 +17,8 @@ beforeEach(function () {
 
     $this->scope = User::factory()->create();
 
+    $this->actingAs($this->scope);
+
     $this->decorator = Views::store();
 
     /** @var DatabaseDriver */
@@ -32,6 +34,27 @@ beforeEach(function () {
 it('gets driver', function () {
     expect($this->decorator->getDriver())
         ->toBeInstanceOf(DatabaseDriver::class);
+});
+
+it('creates pending view interaction', function () {
+    expect($this->decorator->for())
+        ->getScope()
+        ->scoped(fn ($scopes) => $scopes
+            ->toBeArray()
+            ->toHaveCount(1)
+            ->{0}->toBeInstanceOf(User::class)
+        )
+        ->load($this->table)
+        ->scoped(fn ($views) => $views
+            ->toBeArray()
+            ->toHaveCount(1)
+            ->{0}
+            ->scoped(fn ($view) => $view
+                ->toBeObject()
+                ->name->toBe('Filter view')
+                ->view->toBe(json_encode(['name' => 'test']))
+            )
+        );
 });
 
 it('gets views', function () {

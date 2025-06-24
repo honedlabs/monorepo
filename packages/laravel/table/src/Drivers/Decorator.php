@@ -10,6 +10,7 @@ use Honed\Table\Events\ViewDeleted;
 use Honed\Table\Events\ViewsPurged;
 use Honed\Table\Events\ViewUpdated;
 use Honed\Table\Facades\Views;
+use Honed\Table\PendingViewInteraction;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Traits\Macroable;
 use RuntimeException;
@@ -69,6 +70,18 @@ class Decorator implements CanListViews, Driver
         }
 
         return $this->getDriver()->{$name}(...$parameters);
+    }
+
+    /**
+     * Create a pending view retrieval.
+     *
+     * @param  mixed|array<int, mixed>  $scope
+     * @return PendingViewInteraction
+     */
+    public function for($scope = null)
+    {
+        return (new PendingViewInteraction($this))
+            ->for($scope ?? $this->defaultScope());
     }
 
     /**
