@@ -52,13 +52,9 @@ export function useBulk<T = any>() {
 	 * Toggles selection for the given records.
 	 */
 	function toggle(record: T, force?: boolean) {
-		if (selected(record) || force === false) {
-			return deselect(record);
-		}
+		if (selected(record) || force === false) return deselect(record);
 
-		if (!selected(record) || force === true) {
-			return select(record);
-		}
+		if (!selected(record) || force === true) return select(record);
 	}
 
 	/**
@@ -92,11 +88,8 @@ export function useBulk<T = any>() {
 	function bind(key: T) {
 		return {
 			"onUpdate:modelValue": (checked: boolean | "indeterminate") => {
-				if (checked) {
-					select(key);
-				} else {
-					deselect(key);
-				}
+				if (checked) select(key);
+				else deselect(key);
 			},
 			modelValue: selected(key),
 			value: key,
@@ -109,11 +102,8 @@ export function useBulk<T = any>() {
 	function bindAll() {
 		return {
 			"onUpdate:modelValue": (checked: boolean | "indeterminate") => {
-				if (checked) {
-					selectAll();
-				} else {
-					deselectAll();
-				}
+				if (checked) selectAll();
+				else deselectAll();
 			},
 			modelValue: allSelected.value,
 		};

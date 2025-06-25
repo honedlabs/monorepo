@@ -5,7 +5,7 @@ export type { BulkSelection } from "./bulk";
 
 export type * from "./types";
 
-export { executeOperation } from "./execute";
+export { execute, executor, executables } from "./utils";
 
 export type UseBatch = typeof useBatch;
 export type UseBulk = typeof useBulk;

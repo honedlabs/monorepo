@@ -1,46 +1,14 @@
-import type { Method, VisitOptions } from "@inertiajs/core";
+import type {
+	OperationType,
+	Confirm,
+	Operation,
+	InlineOperation,
+	BulkOperation,
+	PageOperation,
+    Operations,
+} from "./operations";
 
 export type Identifier = string | number;
-
-export interface Route {
-	url: string;
-	method: Method;
-}
-
-export type OperationType = "inline" | "page" | "bulk";
-
-export interface Confirm {
-	title: string;
-	description: string | null;
-	dismiss: string;
-	submit: string;
-	intent: "constructive" | "destructive" | "informative" | string;
-}
-
-export interface Operation {
-	name: string;
-	label: string;
-	type: OperationType;
-	icon?: string;
-	extra?: Record<string, unknown>;
-	action?: boolean;
-	confirm?: Confirm;
-	route?: Route;
-}
-
-export interface InlineOperation extends Operation {
-	type: "inline";
-	default: boolean;
-}
-
-export interface BulkOperation extends Operation {
-	type: "bulk";
-	keepSelected: boolean;
-}
-
-export interface PageOperation extends Operation {
-	type: "page";
-}
 
 export interface Batch {
 	id?: string;
@@ -59,3 +27,36 @@ export interface BulkOperationData extends Record<string, any> {
 	only: Identifier[];
 	except: Identifier[];
 }
+
+export interface PageOperationData extends Record<string, any> {}
+
+export type OperationData =
+	| InlineOperationData
+	| BulkOperationData
+	| PageOperationData;
+
+export type MaybeEndpoint = string | null | undefined;
+
+export type MaybeId = string | null | undefined;
+
+export type OperationMap = {
+	inline: InlineOperation;
+	bulk: BulkOperation;
+	page: PageOperation;
+};
+
+export type OperationDataMap = {
+	inline: InlineOperationData;
+	bulk: BulkOperationData;
+	page: PageOperationData
+};
+
+export type {
+	OperationType,
+	Confirm,
+	Operation,
+	InlineOperation,
+	BulkOperation,
+	PageOperation,
+    Operations,
+};

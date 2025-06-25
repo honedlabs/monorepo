@@ -7,8 +7,13 @@ import type {
 	BulkOperation,
 	BulkOperationData,
 	PageOperation,
+	PageOperationData,
+	Operations,
 } from "./types";
-import { executeOperation } from "./execute";
+import {
+	executor as operationExecutor,
+	executables as operationExecutables,
+} from "./utils";
 
 export function useBatch<T extends Record<string, Batch>>(
 	props: T,
@@ -16,9 +21,7 @@ export function useBatch<T extends Record<string, Batch>>(
 	defaults: VisitOptions = {},
 ) {
 	if (!props?.[key]) {
-		throw new Error(
-			"The operation group must be provided with valid props and key.",
-		);
+		throw new Error("The batch must be provided with valid props and key.");
 	}
 
 	const batch = computed(() => props[key]);
@@ -27,50 +30,33 @@ export function useBatch<T extends Record<string, Batch>>(
 	 * Execute an operation with common logic
 	 */
 	function executor(
-		operation: InlineOperation | BulkOperation | PageOperation,
+		operation: Operations,
 		data: InlineOperationData | BulkOperationData | Record<string, any> = {},
 		options: VisitOptions = {},
 	) {
-		executeOperation(
-			operation,
-			batch.value.endpoint,
-			{
-				...data,
-				id: batch.value.id,
-			},
-			{
-				...defaults,
-				...options,
-			},
-		);
+		operationExecutor(operation, batch.value.endpoint, batch.value.id, data, {
+			...defaults,
+			...options,
+		});
 	}
+
+	const inline = computed(() => executables(batch.value.inline));
+
+	const bulk = computed(() => executables(batch.value.bulk));
+
+	const page = computed(() => executables(batch.value.page));
 
 	/**
 	 * Create operations with execute methods
 	 */
-	function createOperationsWithExecute<
-		T extends InlineOperation | BulkOperation | PageOperation,
-	>(operations: T[]) {
-		return operations.map((operation) => ({
-			...operation,
-			execute: (
-				data: T extends InlineOperation
-					? InlineOperationData
-					: T extends BulkOperation
-						? BulkOperationData
-						: Record<string, any> = {} as any,
-				options: VisitOptions = {},
-			) => executor(operation, data, options),
-		}));
+	function executables<T extends Operations>(operations: T[]) {
+		return operationExecutables(
+			operations,
+			batch.value.endpoint,
+			batch.value.id,
+			defaults,
+		);
 	}
-
-	const inline = computed(() =>
-		createOperationsWithExecute(batch.value.inline),
-	);
-
-	const bulk = computed(() => createOperationsWithExecute(batch.value.bulk));
-
-	const page = computed(() => createOperationsWithExecute(batch.value.page));
 
 	function executeInline(
 		operation: InlineOperation,
@@ -90,7 +76,7 @@ export function useBatch<T extends Record<string, Batch>>(
 
 	function executePage(
 		operation: PageOperation,
-		data: Record<string, any> = {},
+		data: PageOperationData = {},
 		options: VisitOptions = {},
 	) {
 		executor(operation, data, options);

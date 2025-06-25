@@ -1,9 +1,11 @@
 import { ComputedRef } from 'vue';
 import { Method } from '@inertiajs/core';
 import { Ref } from 'vue';
+import { Visit } from '@inertiajs/core';
+import { VisitCallbacks } from '@inertiajs/core';
 import { VisitOptions } from '@inertiajs/core';
 
-export declare interface Batch {
+declare interface Batch {
     id?: string;
     endpoint?: string;
     inline: InlineOperation[];
@@ -11,12 +13,12 @@ export declare interface Batch {
     page: PageOperation[];
 }
 
-export declare interface BulkOperation extends Operation {
+declare interface BulkOperation extends Operation {
     type: "bulk";
     keepSelected: boolean;
 }
 
-export declare interface BulkOperationData extends Record<string, any> {
+declare interface BulkOperationData extends Record<string, any> {
     all: boolean;
     only: Identifier[];
     except: Identifier[];
@@ -28,7 +30,7 @@ export declare interface BulkSelection<T = any> {
     except: Set<T>;
 }
 
-export declare interface Confirm {
+declare interface Confirm {
     title: string;
     description: string | null;
     dismiss: string;
@@ -43,22 +45,38 @@ declare type DataMap = {
 };
 
 /**
+ * Create operations with execute methods
+ */
+export declare function executables<T extends InlineOperation | BulkOperation | PageOperation>(operations: T[], endpoint: MaybeEndpoint, id: MaybeId, defaults?: VisitOptions): (T & {
+    execute: (data?: any, options?: VisitOptions) => void;
+})[];
+
+/**
  * Execute an operation with full type safety.
  */
-export declare function executeOperation<T extends OperationType>(action: OperationMap[T], endpoint?: string, data?: DataMap[T], options?: VisitOptions): boolean;
+export declare function execute<T extends OperationType>(operation: OperationMap[T], endpoint: string | null | undefined, data?: DataMap[T], options?: VisitOptions): boolean;
 
-export declare type Identifier = string | number;
+/**
+ * Execute an operation with common logic
+ */
+export declare function executor(operation: InlineOperation | BulkOperation | PageOperation, endpoint: MaybeEndpoint, id: MaybeId, data?: OperationData, options?: VisitOptions): void;
 
-export declare interface InlineOperation extends Operation {
+declare type Identifier = string | number;
+
+declare interface InlineOperation extends Operation {
     type: "inline";
     default: boolean;
 }
 
-export declare interface InlineOperationData extends Record<string, any> {
+declare interface InlineOperationData extends Record<string, any> {
     record: Identifier;
 }
 
-export declare interface Operation {
+declare type MaybeEndpoint = string | null | undefined;
+
+declare type MaybeId = string | null | undefined;
+
+declare interface Operation {
     name: string;
     label: string;
     type: OperationType;
@@ -69,19 +87,24 @@ export declare interface Operation {
     route?: Route;
 }
 
+declare type OperationData = InlineOperationData | BulkOperationData | PageOperationData;
+
 declare type OperationMap = {
     inline: InlineOperation;
     bulk: BulkOperation;
     page: PageOperation;
 };
 
-export declare type OperationType = "inline" | "page" | "bulk";
+declare type OperationType = "inline" | "page" | "bulk";
 
-export declare interface PageOperation extends Operation {
+declare interface PageOperation extends Operation {
     type: "page";
 }
 
-export declare interface Route {
+declare interface PageOperationData extends Record<string, any> {
+}
+
+declare interface Route {
     url: string;
     method: Method;
 }
@@ -90,17 +113,17 @@ export declare type UseBatch = typeof useBatch;
 
 export declare function useBatch<T extends Record<string, Batch>>(props: T, key: keyof T, defaults?: VisitOptions): {
     inline: (InlineOperation & {
-        execute: (data?: InlineOperationData, options?: VisitOptions) => void;
+        execute: (data?: any, options?: Partial<Visit & VisitCallbacks>) => void;
     })[];
     bulk: (BulkOperation & {
-        execute: (data?: BulkOperationData, options?: VisitOptions) => void;
+        execute: (data?: any, options?: Partial<Visit & VisitCallbacks>) => void;
     })[];
     page: (PageOperation & {
-        execute: (data?: Record<string, any>, options?: VisitOptions) => void;
+        execute: (data?: any, options?: Partial<Visit & VisitCallbacks>) => void;
     })[];
     executeInline: (operation: InlineOperation, data: InlineOperationData, options?: VisitOptions) => void;
     executeBulk: (operation: BulkOperation, data: BulkOperationData, options?: VisitOptions) => void;
-    executePage: (operation: PageOperation, data?: Record<string, any>, options?: VisitOptions) => void;
+    executePage: (operation: PageOperation, data?: PageOperationData, options?: VisitOptions) => void;
 };
 
 export declare type UseBulk = typeof useBulk;
