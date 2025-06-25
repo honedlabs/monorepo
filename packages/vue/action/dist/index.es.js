@@ -1,56 +1,50 @@
-import { computed as v, reactive as p, ref as y } from "vue";
+import { computed as v, ref as p } from "vue";
 import { router as m } from "@inertiajs/vue3";
-function g(e, n, a, l = {}) {
+function y(e, n, a, l = {}) {
   return e.route ? (m.visit(e.route.url, {
     ...l,
     method: e.route.method
   }), !0) : e.action && n ? (m.post(
     n,
-    {
-      ...a,
-      name: e.name,
-      type: e.type
-    },
+    { ...a, name: e.name, type: e.type },
     l
   ), !0) : !1;
 }
 function b(e, n, a, l = {}, c = {}) {
-  return g(
+  return y(
     e,
     n,
-    {
-      ...l,
-      id: a ?? void 0
-    },
-    {
-      ...c
-    }
+    { ...l, id: a ?? void 0 },
+    c
   );
 }
-function w(e, n, a, l = {}) {
+function g(e, n, a, l = {}) {
   return e.map((c) => ({
     ...c,
     execute: (d = {}, r = {}) => b(c, n, a, d, { ...l, ...r })
   }));
 }
-function V(e, n, a = {}) {
+function S(e, n, a = {}) {
   if (!(e != null && e[n]))
     throw new Error("The batch must be provided with valid props and key.");
-  const l = v(() => e[n]), c = v(() => s(l.value.inline)), d = v(() => s(l.value.bulk)), r = v(() => s(l.value.page));
+  const l = v(() => e[n]), c = v(
+    () => s(l.value.inline)
+  ), d = v(
+    () => s(l.value.bulk)
+  ), r = v(
+    () => s(l.value.page)
+  );
   function i(u, o = {}, f = {}) {
     return b(
       u,
       l.value.endpoint,
       l.value.id,
       o,
-      {
-        ...a,
-        ...f
-      }
+      { ...a, ...f }
     );
   }
   function s(u) {
-    return w(
+    return g(
       u,
       l.value.endpoint,
       l.value.id,
@@ -66,17 +60,17 @@ function V(e, n, a = {}) {
   function t(u, o = {}, f = {}) {
     return i(u, o, f);
   }
-  return p({
+  return {
     inline: c,
     bulk: d,
     page: r,
     executeInline: x,
     executeBulk: h,
     executePage: t
-  });
+  };
 }
-function A() {
-  const e = y({
+function V() {
+  const e = p({
     all: !1,
     only: /* @__PURE__ */ new Set(),
     except: /* @__PURE__ */ new Set()
@@ -133,9 +127,9 @@ function A() {
   };
 }
 export {
-  w as executables,
-  g as execute,
+  g as executables,
+  y as execute,
   b as executor,
-  V as useBatch,
-  A as useBulk
+  S as useBatch,
+  V as useBulk
 };

@@ -1,8 +1,6 @@
 import { ComputedRef } from 'vue';
 import { Method } from '@inertiajs/core';
 import { Ref } from 'vue';
-import { Visit } from '@inertiajs/core';
-import { VisitCallbacks } from '@inertiajs/core';
 import { VisitOptions } from '@inertiajs/core';
 
 export declare interface Batch {
@@ -38,6 +36,10 @@ export declare interface Confirm {
     intent: "constructive" | "destructive" | "informative" | string;
 }
 
+export declare type Executable<T extends Operation> = T & {
+    execute: (data: OperationDataMap[T["type"]], options?: VisitOptions) => boolean;
+};
+
 /**
  * Create operations with execute methods
  */
@@ -53,7 +55,16 @@ export declare function execute<T extends Operations>(operation: T, endpoint: st
 /**
  * Execute an operation with common logic
  */
-export declare function executor(operation: InlineOperation | BulkOperation | PageOperation, endpoint: MaybeEndpoint, id: MaybeId, data?: OperationData, options?: VisitOptions): boolean;
+export declare function executor(operation: Operations, endpoint: MaybeEndpoint, id: MaybeId, data?: OperationData, options?: VisitOptions): boolean;
+
+export declare interface HonedBatch {
+    inline: ComputedRef<Executable<InlineOperation>[]>;
+    bulk: ComputedRef<Executable<BulkOperation>[]>;
+    page: ComputedRef<Executable<PageOperation>[]>;
+    executeInline: (operation: InlineOperation, data: InlineOperationData, options?: VisitOptions) => boolean;
+    executeBulk: (operation: BulkOperation, data: BulkOperationData, options?: VisitOptions) => boolean;
+    executePage: (operation: PageOperation, data?: PageOperationData, options?: VisitOptions) => boolean;
+}
 
 export declare type Identifier = string | number;
 
@@ -106,27 +117,14 @@ export declare interface PageOperation extends Operation {
 export declare interface PageOperationData extends Record<string, any> {
 }
 
-declare interface Route {
+export declare interface Route {
     url: string;
     method: Method;
 }
 
 export declare type UseBatch = typeof useBatch;
 
-export declare function useBatch<T extends Record<string, Batch>>(props: T, key: keyof T, defaults?: VisitOptions): {
-    inline: (InlineOperation & {
-        execute: (data?: any, options?: Partial<Visit & VisitCallbacks>) => boolean;
-    })[];
-    bulk: (BulkOperation & {
-        execute: (data?: any, options?: Partial<Visit & VisitCallbacks>) => boolean;
-    })[];
-    page: (PageOperation & {
-        execute: (data?: any, options?: Partial<Visit & VisitCallbacks>) => boolean;
-    })[];
-    executeInline: (operation: InlineOperation, data: InlineOperationData, options?: VisitOptions) => boolean;
-    executeBulk: (operation: BulkOperation, data: BulkOperationData, options?: VisitOptions) => boolean;
-    executePage: (operation: PageOperation, data?: PageOperationData, options?: VisitOptions) => boolean;
-};
+export declare function useBatch<T extends Record<string, Batch>>(props: T, key: keyof T, defaults?: VisitOptions): HonedBatch;
 
 export declare type UseBulk = typeof useBulk;
 

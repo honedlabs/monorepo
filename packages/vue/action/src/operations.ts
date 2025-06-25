@@ -1,6 +1,6 @@
 import type { Method } from "@inertiajs/core";
 
-interface Route {
+export interface Route {
 	url: string;
 	method: Method;
 }

@@ -1,9 +1,6 @@
 import type { VisitOptions } from "@inertiajs/core";
 import { router } from "@inertiajs/vue3";
 import type {
-	InlineOperation,
-	BulkOperation,
-	PageOperation,
 	MaybeEndpoint,
 	MaybeId,
 	OperationData,
@@ -31,11 +28,7 @@ export function execute<T extends Operations>(
 	if (operation.action && endpoint) {
 		router.post(
 			endpoint,
-			{
-				...data,
-				name: operation.name,
-				type: operation.type,
-			},
+			{ ...data, name: operation.name, type: operation.type },
 			options,
 		);
 		return true;
@@ -48,7 +41,7 @@ export function execute<T extends Operations>(
  * Execute an operation with common logic
  */
 export function executor(
-	operation: InlineOperation | BulkOperation | PageOperation,
+	operation: Operations,
 	endpoint: MaybeEndpoint,
 	id: MaybeId,
 	data: OperationData = {},
@@ -57,13 +50,8 @@ export function executor(
 	return execute(
 		operation,
 		endpoint,
-		{
-			...data,
-			id: id ?? undefined,
-		},
-		{
-			...options,
-		},
+		{ ...data, id: id ?? undefined },
+		options,
 	);
 }
 

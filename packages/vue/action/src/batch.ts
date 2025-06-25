@@ -1,14 +1,17 @@
 import type { VisitOptions } from "@inertiajs/core";
 import { computed, reactive } from "vue";
-import type {
-	Batch,
-	InlineOperation,
-	InlineOperationData,
-	BulkOperation,
-	BulkOperationData,
-	PageOperation,
-	PageOperationData,
-	Operations,
+import {
+	type Batch,
+	type InlineOperation,
+	type InlineOperationData,
+	type BulkOperation,
+	type BulkOperationData,
+	type PageOperation,
+	type PageOperationData,
+	type Operations,
+	type OperationDataMap,
+	type HonedBatch,
+	Executable,
 } from "./types";
 import {
 	executor as operationExecutor,
@@ -19,25 +22,43 @@ export function useBatch<T extends Record<string, Batch>>(
 	props: T,
 	key: keyof T,
 	defaults: VisitOptions = {},
-) {
+): HonedBatch {
 	if (!props?.[key]) {
 		throw new Error("The batch must be provided with valid props and key.");
 	}
 
-	const batch = computed(() => props[key]);
+	/**
+	 * The batch of operations.
+	 */
+	const batch = computed<Batch>(() => props[key]);
 
-	const inline = computed(() => executables(batch.value.inline));
+	/**
+	 * The inline operations available.
+	 */
+	const inline = computed<Executable<InlineOperation>[]>(() =>
+		executables(batch.value.inline),
+	);
 
-	const bulk = computed(() => executables(batch.value.bulk));
+	/**
+	 * The bulk operations available.
+	 */
+	const bulk = computed<Executable<BulkOperation>[]>(() =>
+		executables(batch.value.bulk),
+	);
 
-	const page = computed(() => executables(batch.value.page));
+	/**
+	 * The page operations available.
+	 */
+	const page = computed<Executable<PageOperation>[]>(() =>
+		executables(batch.value.page),
+	);
 
 	/**
 	 * Execute an operation with common logic
 	 */
-	function executor(
-		operation: Operations,
-		data: InlineOperationData | BulkOperationData | Record<string, any> = {},
+	function executor<T extends Operations>(
+		operation: T,
+		data: OperationDataMap[typeof operation.type] = {},
 		options: VisitOptions = {},
 	) {
 		return operationExecutor(
@@ -45,10 +66,7 @@ export function useBatch<T extends Record<string, Batch>>(
 			batch.value.endpoint,
 			batch.value.id,
 			data,
-			{
-				...defaults,
-				...options,
-			},
+			{ ...defaults, ...options },
 		);
 	}
 
@@ -64,6 +82,9 @@ export function useBatch<T extends Record<string, Batch>>(
 		);
 	}
 
+	/**
+	 * Execute an inline operation
+	 */
 	function executeInline(
 		operation: InlineOperation,
 		data: InlineOperationData,
@@ -72,6 +93,9 @@ export function useBatch<T extends Record<string, Batch>>(
 		return executor(operation, data, options);
 	}
 
+	/**
+	 * Execute a bulk operation
+	 */
 	function executeBulk(
 		operation: BulkOperation,
 		data: BulkOperationData,
@@ -80,6 +104,9 @@ export function useBatch<T extends Record<string, Batch>>(
 		return executor(operation, data, options);
 	}
 
+	/**
+	 * Execute a page operation
+	 */
 	function executePage(
 		operation: PageOperation,
 		data: PageOperationData = {},
@@ -88,12 +115,12 @@ export function useBatch<T extends Record<string, Batch>>(
 		return executor(operation, data, options);
 	}
 
-	return reactive({
+	return {
 		inline,
 		bulk,
 		page,
 		executeInline,
 		executeBulk,
 		executePage,
-	});
+	};
 }
