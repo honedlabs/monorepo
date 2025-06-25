@@ -1,51 +1,8 @@
+import type { ComputedRef } from "vue";
 import type { VisitOptions } from "@inertiajs/core";
-import type { PromisifyFn } from "@vueuse/shared";
-
-export type Direction = "asc" | "desc" | null;
-
-export interface Option {
-	label: string;
-	value: FilterValue;
-	active: boolean;
-}
-
-export interface Refiner {
-	name: string;
-	label: string;
-	type?: string;
-	active: boolean;
-	meta: Record<string, any>;
-}
-
-export type FilterType =
-	| "boolean"
-	| "date"
-	| "datetime"
-	| "multiple"
-	| "number"
-	| "select"
-	| "text"
-	| "time"
-	| "trashed"
-	| string;
-
-export type FilterValue = string | number | boolean | null;
-
-export interface Filter extends Refiner {
-	type: FilterType;
-	value: FilterValue;
-	options: Option[];
-}
-
-export interface Sort extends Refiner {
-	type: "sort" | string;
-	direction: Direction;
-	next: string | null;
-}
-
-export interface Search extends Refiner {
-	type: "search" | string;
-}
+import type { Filter, FilterBinding, FilterValue, HonedFilter } from "./filters";
+import type { Sort, HonedSort, Direction, SortBinding } from "./sorts";
+import type { Search, HonedSearch, SearchBinding, MatchBinding } from "./searches";
 
 export interface Refine {
 	sort?: string;
@@ -57,39 +14,6 @@ export interface Refine {
 	sorts: Sort[];
 	filters: Filter[];
 	searches: Search[];
-}
-
-export interface HonedFilter extends Filter {
-	apply: (value: any, options?: VisitOptions) => void;
-	clear: (options?: VisitOptions) => void;
-	bind: () =>
-		| {
-				"onUpdate:modelValue": PromisifyFn<(value: any) => void>;
-				modelValue: unknown;
-		  }
-		| undefined;
-}
-
-export interface HonedSort extends Sort {
-	apply: (options?: VisitOptions) => void;
-	clear: (options?: VisitOptions) => void;
-	bind: () =>
-		| {
-				onClick: PromisifyFn<() => void>;
-		  }
-		| undefined;
-}
-
-export interface HonedSearch extends Search {
-	apply: (options?: VisitOptions) => void;
-	clear: (options?: VisitOptions) => void;
-	bind: () =>
-		| {
-				"onUpdate:modelValue": PromisifyFn<(value: any) => void>;
-				modelValue: boolean;
-				value: string;
-		  }
-		| undefined;
 }
 
 export interface BindingOptions extends VisitOptions {
@@ -105,3 +29,44 @@ export interface BindingOptions extends VisitOptions {
 	 */
 	debounce?: number;
 }
+
+export interface HonedRefine {
+	filters: ComputedRef<HonedFilter[]>;
+	sorts: ComputedRef<HonedSort[]>;
+	searches: ComputedRef<HonedSearch[]>;
+	currentFilters: ComputedRef<HonedFilter[]>;
+	currentSort: ComputedRef<HonedSort | undefined>;
+	currentSearches: ComputedRef<HonedSearch[]>;
+	isSortable: ComputedRef<boolean>;
+	isSearchable: ComputedRef<boolean>;
+	isMatchable: ComputedRef<boolean>;
+	isFiltering: (name?: Filter | string) => boolean;
+	isSorting: (name?: Sort | string) => boolean;
+	isSearching: (name?: Search | string) => boolean;
+	getFilter: (filter: Filter | string) => Filter | undefined;
+	getSort: (sort: Sort | string, dir?: Direction) => Sort | undefined;
+	getSearch: (search: Search | string) => Search | undefined;
+	apply: (values: Record<string, FilterValue>, options?: VisitOptions) => void;
+	applyFilter: (filter: Filter | string, value: any, options?: VisitOptions) => void;
+	applySort: (sort: Sort | string, direction?: Direction, options?: VisitOptions) => void;
+	applySearch: (value: string | null | undefined, options?: VisitOptions) => void;
+	applyMatch: (search: Search | string, options?: VisitOptions) => void;
+	clearFilter: (filter?: Filter | string, options?: VisitOptions) => void;
+	clearSort: (options?: VisitOptions) => void;
+	clearSearch: (options?: VisitOptions) => void;
+	clearMatch: (options?: VisitOptions) => void;
+	reset: (options?: VisitOptions) => void;
+	bindFilter: (filter: Filter | string, options?: BindingOptions) => FilterBinding | void;
+	bindSort: (sort: Sort | string, options?: BindingOptions) => SortBinding | void;
+	bindSearch: (options?: BindingOptions) => SearchBinding | void;
+	bindMatch: (match: Search | string, options?: BindingOptions) => MatchBinding | void;
+	stringValue: (value: any) => any;
+	omitValue: (value: any) => any;
+	toggleValue: (value: any, values: any) => any;
+	delimitArray: (value: any) => string;
+}
+
+export type * from "./filters";
+export type * from "./sorts";
+export type * from "./searches";
+export type * from "./refiner";
