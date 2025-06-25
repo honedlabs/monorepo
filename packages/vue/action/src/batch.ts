@@ -26,6 +26,12 @@ export function useBatch<T extends Record<string, Batch>>(
 
 	const batch = computed(() => props[key]);
 
+	const inline = computed(() => executables(batch.value.inline));
+
+	const bulk = computed(() => executables(batch.value.bulk));
+
+	const page = computed(() => executables(batch.value.page));
+
 	/**
 	 * Execute an operation with common logic
 	 */
@@ -34,17 +40,17 @@ export function useBatch<T extends Record<string, Batch>>(
 		data: InlineOperationData | BulkOperationData | Record<string, any> = {},
 		options: VisitOptions = {},
 	) {
-		operationExecutor(operation, batch.value.endpoint, batch.value.id, data, {
-			...defaults,
-			...options,
-		});
+		return operationExecutor(
+			operation,
+			batch.value.endpoint,
+			batch.value.id,
+			data,
+			{
+				...defaults,
+				...options,
+			},
+		);
 	}
-
-	const inline = computed(() => executables(batch.value.inline));
-
-	const bulk = computed(() => executables(batch.value.bulk));
-
-	const page = computed(() => executables(batch.value.page));
 
 	/**
 	 * Create operations with execute methods
@@ -63,7 +69,7 @@ export function useBatch<T extends Record<string, Batch>>(
 		data: InlineOperationData,
 		options: VisitOptions = {},
 	) {
-		executor(operation, data, options);
+		return executor(operation, data, options);
 	}
 
 	function executeBulk(
@@ -71,7 +77,7 @@ export function useBatch<T extends Record<string, Batch>>(
 		data: BulkOperationData,
 		options: VisitOptions = {},
 	) {
-		executor(operation, data, options);
+		return executor(operation, data, options);
 	}
 
 	function executePage(
@@ -79,7 +85,7 @@ export function useBatch<T extends Record<string, Batch>>(
 		data: PageOperationData = {},
 		options: VisitOptions = {},
 	) {
-		executor(operation, data, options);
+		return executor(operation, data, options);
 	}
 
 	return reactive({

@@ -54,7 +54,7 @@ export function executor(
 	data: OperationData = {},
 	options: VisitOptions = {},
 ) {
-	execute(
+	return execute(
 		operation,
 		endpoint,
 		{

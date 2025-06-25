@@ -1,73 +1,78 @@
-import { computed as f, reactive as p, ref as y } from "vue";
+import { computed as v, reactive as p, ref as y } from "vue";
 import { router as m } from "@inertiajs/vue3";
-function g(e, n, c = {}, u = {}) {
+function g(e, n, a, l = {}) {
   return e.route ? (m.visit(e.route.url, {
-    ...u,
+    ...l,
     method: e.route.method
   }), !0) : e.action && n ? (m.post(
     n,
     {
-      ...c,
+      ...a,
       name: e.name,
       type: e.type
     },
-    u
+    l
   ), !0) : !1;
 }
-function b(e, n, c, u = {}, a = {}) {
-  g(
+function b(e, n, a, l = {}, c = {}) {
+  return g(
     e,
     n,
     {
-      ...u,
-      id: c ?? void 0
+      ...l,
+      id: a ?? void 0
     },
     {
-      ...a
+      ...c
     }
   );
 }
-function w(e, n, c, u = {}) {
-  return e.map((a) => ({
-    ...a,
-    execute: (v = {}, i = {}) => b(a, n, c, v, { ...u, ...i })
+function w(e, n, a, l = {}) {
+  return e.map((c) => ({
+    ...c,
+    execute: (d = {}, r = {}) => b(c, n, a, d, { ...l, ...r })
   }));
 }
-function V(e, n, c = {}) {
+function V(e, n, a = {}) {
   if (!(e != null && e[n]))
     throw new Error("The batch must be provided with valid props and key.");
-  const u = f(() => e[n]);
-  function a(t, o = {}, r = {}) {
-    b(t, u.value.endpoint, u.value.id, o, {
-      ...c,
-      ...r
-    });
-  }
-  const v = f(() => s(u.value.inline)), i = f(() => s(u.value.bulk)), d = f(() => s(u.value.page));
-  function s(t) {
-    return w(
-      t,
-      u.value.endpoint,
-      u.value.id,
-      c
+  const l = v(() => e[n]), c = v(() => s(l.value.inline)), d = v(() => s(l.value.bulk)), r = v(() => s(l.value.page));
+  function i(u, o = {}, f = {}) {
+    return b(
+      u,
+      l.value.endpoint,
+      l.value.id,
+      o,
+      {
+        ...a,
+        ...f
+      }
     );
   }
-  function x(t, o, r = {}) {
-    a(t, o, r);
+  function s(u) {
+    return w(
+      u,
+      l.value.endpoint,
+      l.value.id,
+      a
+    );
   }
-  function h(t, o, r = {}) {
-    a(t, o, r);
+  function x(u, o, f = {}) {
+    return i(u, o, f);
   }
-  function l(t, o = {}, r = {}) {
-    a(t, o, r);
+  function h(u, o, f = {}) {
+    return i(u, o, f);
+  }
+  function t(u, o = {}, f = {}) {
+    return i(u, o, f);
   }
   return p({
-    inline: v,
-    bulk: i,
-    page: d,
+    inline: c,
+    bulk: d,
+    page: r,
     executeInline: x,
     executeBulk: h,
-    executePage: l
+    executePage: t
   });
 }
 function A() {
@@ -79,50 +84,50 @@ function A() {
   function n() {
     e.value.all = !0, e.value.only.clear(), e.value.except.clear();
   }
-  function c() {
+  function a() {
     e.value.all = !1, e.value.only.clear(), e.value.except.clear();
   }
-  function u(...l) {
-    l.forEach((t) => e.value.except.delete(t)), l.forEach((t) => e.value.only.add(t));
+  function l(...t) {
+    t.forEach((u) => e.value.except.delete(u)), t.forEach((u) => e.value.only.add(u));
   }
-  function a(...l) {
-    l.forEach((t) => e.value.except.add(t)), l.forEach((t) => e.value.only.delete(t));
+  function c(...t) {
+    t.forEach((u) => e.value.except.add(u)), t.forEach((u) => e.value.only.delete(u));
   }
-  function v(l, t) {
-    if (i(l) || t === !1) return a(l);
-    if (!i(l) || t === !0) return u(l);
+  function d(t, u) {
+    if (r(t) || u === !1) return c(t);
+    if (!r(t) || u === !0) return l(t);
   }
-  function i(l) {
-    return e.value.all ? !e.value.except.has(l) : e.value.only.has(l);
+  function r(t) {
+    return e.value.all ? !e.value.except.has(t) : e.value.only.has(t);
   }
-  const d = f(() => e.value.all && e.value.except.size === 0), s = f(() => e.value.only.size > 0 || d.value);
-  function x(l) {
+  const i = v(() => e.value.all && e.value.except.size === 0), s = v(() => e.value.only.size > 0 || i.value);
+  function x(t) {
     return {
-      "onUpdate:modelValue": (t) => {
-        t ? u(l) : a(l);
+      "onUpdate:modelValue": (u) => {
+        u ? l(t) : c(t);
       },
-      modelValue: i(l),
-      value: l
+      modelValue: r(t),
+      value: t
     };
   }
   function h() {
     return {
-      "onUpdate:modelValue": (l) => {
-        l ? n() : c();
+      "onUpdate:modelValue": (t) => {
+        t ? n() : a();
       },
-      modelValue: d.value
+      modelValue: i.value
     };
   }
   return {
-    allSelected: d,
+    allSelected: i,
     selection: e,
     hasSelected: s,
     selectAll: n,
-    deselectAll: c,
-    select: u,
-    deselect: a,
-    toggle: v,
-    selected: i,
+    deselectAll: a,
+    select: l,
+    deselect: c,
+    toggle: d,
+    selected: r,
     bind: x,
     bindAll: h
   };

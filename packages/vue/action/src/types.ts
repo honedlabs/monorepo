@@ -5,7 +5,7 @@ import type {
 	InlineOperation,
 	BulkOperation,
 	PageOperation,
-    Operations,
+	Operations,
 } from "./operations";
 
 export type Identifier = string | number;
@@ -48,7 +48,7 @@ export type OperationMap = {
 export type OperationDataMap = {
 	inline: InlineOperationData;
 	bulk: BulkOperationData;
-	page: PageOperationData
+	page: PageOperationData;
 };
 
 export type {
@@ -58,5 +58,5 @@ export type {
 	InlineOperation,
 	BulkOperation,
 	PageOperation,
-    Operations,
+	Operations,
 };
