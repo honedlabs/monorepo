@@ -1,8 +1,18 @@
 import type { ComputedRef } from "vue";
 import type { VisitOptions } from "@inertiajs/core";
-import type { Filter, FilterBinding, FilterValue, HonedFilter } from "./filters";
+import type {
+	Filter,
+	FilterBinding,
+	FilterValue,
+	HonedFilter,
+} from "./filters";
 import type { Sort, HonedSort, Direction, SortBinding } from "./sorts";
-import type { Search, HonedSearch, SearchBinding, MatchBinding } from "./searches";
+import type {
+	Search,
+	HonedSearch,
+	SearchBinding,
+	MatchBinding,
+} from "./searches";
 
 export interface Refine {
 	sort?: string;
@@ -47,19 +57,39 @@ export interface HonedRefine {
 	getSort: (sort: Sort | string, dir?: Direction) => Sort | undefined;
 	getSearch: (search: Search | string) => Search | undefined;
 	apply: (values: Record<string, FilterValue>, options?: VisitOptions) => void;
-	applyFilter: (filter: Filter | string, value: any, options?: VisitOptions) => void;
-	applySort: (sort: Sort | string, direction?: Direction, options?: VisitOptions) => void;
-	applySearch: (value: string | null | undefined, options?: VisitOptions) => void;
+	applyFilter: (
+		filter: Filter | string,
+		value: any,
+		options?: VisitOptions,
+	) => void;
+	applySort: (
+		sort: Sort | string,
+		direction?: Direction,
+		options?: VisitOptions,
+	) => void;
+	applySearch: (
+		value: string | null | undefined,
+		options?: VisitOptions,
+	) => void;
 	applyMatch: (search: Search | string, options?: VisitOptions) => void;
 	clearFilter: (filter?: Filter | string, options?: VisitOptions) => void;
 	clearSort: (options?: VisitOptions) => void;
 	clearSearch: (options?: VisitOptions) => void;
 	clearMatch: (options?: VisitOptions) => void;
 	reset: (options?: VisitOptions) => void;
-	bindFilter: (filter: Filter | string, options?: BindingOptions) => FilterBinding | void;
-	bindSort: (sort: Sort | string, options?: BindingOptions) => SortBinding | void;
+	bindFilter: (
+		filter: Filter | string,
+		options?: BindingOptions,
+	) => FilterBinding | void;
+	bindSort: (
+		sort: Sort | string,
+		options?: BindingOptions,
+	) => SortBinding | void;
 	bindSearch: (options?: BindingOptions) => SearchBinding | void;
-	bindMatch: (match: Search | string, options?: BindingOptions) => MatchBinding | void;
+	bindMatch: (
+		match: Search | string,
+		options?: BindingOptions,
+	) => MatchBinding | void;
 	stringValue: (value: any) => any;
 	omitValue: (value: any) => any;
 	toggleValue: (value: any, values: any) => any;

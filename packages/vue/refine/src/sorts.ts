@@ -17,5 +17,5 @@ export interface HonedSort extends Sort {
 }
 
 export interface SortBinding {
-    onClick: PromisifyFn<() => void>;
+	onClick: PromisifyFn<() => void>;
 }

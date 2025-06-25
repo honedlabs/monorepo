@@ -81,15 +81,15 @@ export function useRefine<T extends Record<string, Refine>>(
 	/**
 	 * The current sort.
 	 */
-	const currentSort = computed<HonedSort | undefined>(
-		() => sorts.value.find(({ active }) => active),
+	const currentSort = computed<HonedSort | undefined>(() =>
+		sorts.value.find(({ active }) => active),
 	);
 
 	/**
 	 * The current searches.
 	 */
-	const currentSearches = computed<HonedSearch[]>(
-		() => searches.value.filter(({ active }) => active),
+	const currentSearches = computed<HonedSearch[]>(() =>
+		searches.value.filter(({ active }) => active),
 	);
 
 	/**
@@ -177,8 +177,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	 * Whether the given filter is currently active.
 	 */
 	function isFiltering(name?: Filter | string): boolean {
-		if (!name)
-			return !!currentFilters.value.length;
+		if (!name) return !!currentFilters.value.length;
 
 		if (typeof name === "string")
 			return currentFilters.value.some((filter) => filter.name === name);
@@ -190,11 +189,9 @@ export function useRefine<T extends Record<string, Refine>>(
 	 * Whether the given sort is currently active.
 	 */
 	function isSorting(name?: Sort | string): boolean {
-		if (!name)
-			return !!currentSort.value;
+		if (!name) return !!currentSort.value;
 
-		if (typeof name === "string")
-			return currentSort.value?.name === name;
+		if (typeof name === "string") return currentSort.value?.name === name;
 
 		return name.active;
 	}
@@ -203,8 +200,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	 * Whether the search is currently active, or on a given match.
 	 */
 	function isSearching(name?: Search | string): boolean {
-		if (!name)
-			return !!refinements.value.term;
+		if (!name) return !!refinements.value.term;
 
 		if (typeof name === "string")
 			return currentSearches.value?.some((search) => search.name === name);
@@ -264,8 +260,7 @@ export function useRefine<T extends Record<string, Refine>>(
 
 		const refiner = getSort(sort, direction);
 
-		if (!refiner)
-			return console.warn(`Sort [${sort}] does not exist.`);
+		if (!refiner) return console.warn(`Sort [${sort}] does not exist.`);
 
 		router.reload({
 			...defaults,
@@ -303,10 +298,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	/**
 	 * Applies the given match.
 	 */
-	function applyMatch(
-		search: Search | string,
-		options: VisitOptions = {},
-	) {
+	function applyMatch(search: Search | string, options: VisitOptions = {}) {
 		if (!isMatchable.value || !isSearchable.value)
 			return console.warn("Refine cannot perform matching.");
 
@@ -331,12 +323,8 @@ export function useRefine<T extends Record<string, Refine>>(
 	/**
 	 * Clear the given filter.
 	 */
-	function clearFilter(
-		filter?: Filter | string,
-		options: VisitOptions = {}
-	) {
-		if (filter)
-			return applyFilter(filter, null, options);
+	function clearFilter(filter?: Filter | string, options: VisitOptions = {}) {
+		if (filter) return applyFilter(filter, null, options);
 
 		router.reload({
 			...defaults,
@@ -413,8 +401,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	function bindFilter(filter: Filter | string, options: BindingOptions = {}) {
 		const refiner = getFilter(filter);
 
-		if (!refiner)
-				return console.warn(`Filter [${filter}] does not exist.`);
+		if (!refiner) return console.warn(`Filter [${filter}] does not exist.`);
 
 		const {
 			debounce = 250,
@@ -436,11 +423,10 @@ export function useRefine<T extends Record<string, Refine>>(
 	function bindSort(sort: Sort | string, options: BindingOptions = {}) {
 		const refiner = getSort(sort);
 
-		if (!refiner)
-				return console.warn(`Sort [${sort}] does not exist.`);
+		if (!refiner) return console.warn(`Sort [${sort}] does not exist.`);
 
 		const { debounce = 0, transform, ...visitOptions } = options;
-		
+
 		return {
 			onClick: useDebounceFn(() => {
 				applySort(refiner, currentSort.value?.direction, visitOptions);
