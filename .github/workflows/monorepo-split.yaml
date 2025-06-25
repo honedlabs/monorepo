@@ -18,22 +18,21 @@ jobs:
           # - abn
           - action
           # - bind
-          # - chart
+          - chart
           # - command
-          - core
+          # - core
           # - crumb
-          # - flash
-          # - form
+          - flash
           - infolist
           # - layout
           # - lock
           # - modal
-          # - nav
+          - nav
           # - page
           - refine
           # - registry
           - table
-          # - upload
+          - upload
           # - widget
     steps:
       - name: Checkout
