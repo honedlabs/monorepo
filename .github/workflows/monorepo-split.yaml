@@ -20,7 +20,7 @@ jobs:
           # - bind
           # - chart
           # - command
-          # - core
+          - core
           # - crumb
           # - flash
           # - form
