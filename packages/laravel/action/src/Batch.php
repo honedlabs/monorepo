@@ -36,13 +36,6 @@ class Batch extends Primitive implements HandlesOperations
     use HasResource;
 
     /**
-     * The identifier to use for evaluation.
-     *
-     * @var string
-     */
-    protected $evaluationIdentifier = 'batch';
-
-    /**
      * The default namespace where batches reside.
      *
      * @var string
@@ -50,23 +43,18 @@ class Batch extends Primitive implements HandlesOperations
     public static $namespace = 'App\\Batches\\';
 
     /**
-     * How to resolve the batch for the given model name.
+     * The identifier to use for evaluation.
      *
-     * @var (Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<Batch>)|null
+     * @var string
      */
-    protected static $batchNameResolver = null;
+    protected $evaluationIdentifier = 'batch';
 
     /**
-     * Provide the instance with any necessary setup.
+     * How to resolve the batch for the given model name.
      *
-     * @return void
+     * @var (Closure(class-string<Model>):class-string<Batch>)|null
      */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->definition($this);
-    }
+    protected static $batchNameResolver = null;
 
     /**
      * Create a new batch instance.
@@ -98,7 +86,7 @@ class Batch extends Primitive implements HandlesOperations
     /**
      * Get the table name for the given model name.
      *
-     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $className
+     * @param  class-string<Model>  $className
      * @return class-string<Batch>
      */
     public static function resolveBatchName($className)
@@ -131,7 +119,7 @@ class Batch extends Primitive implements HandlesOperations
     /**
      * Specify the callback that should be invoked to guess the name of a model batch.
      *
-     * @param  Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<Batch>  $callback
+     * @param  Closure(class-string<Model>):class-string<Batch>  $callback
      * @return void
      */
     public static function guessBatchNamesUsing($callback)
@@ -150,16 +138,6 @@ class Batch extends Primitive implements HandlesOperations
         static::$decoder = null;
         static::$batchNameResolver = null;
         static::$namespace = 'App\\Batches\\';
-    }
-
-    /**
-     * Get the parent class for the instance.
-     *
-     * @return class-string<Batch>
-     */
-    public static function getParentClass()
-    {
-        return self::class;
     }
 
     /**
@@ -184,33 +162,6 @@ class Batch extends Primitive implements HandlesOperations
     }
 
     /**
-     * Get the instance as an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray()
-    {
-        $operations = [
-            'inline' => $this->inlineOperationsToArray($this->getRecord()),
-            'bulk' => $this->bulkOperationsToArray(),
-            'page' => $this->pageOperationsToArray(),
-        ];
-
-        if (
-            $this->isActionable()
-            && is_subclass_of($this, static::getParentClass())
-        ) {
-            return [
-                ...$operations,
-                'id' => $this->getRouteKey(),
-                'endpoint' => $this->getEndpoint(),
-            ];
-        }
-
-        return $operations;
-    }
-
-    /**
      * Get the application namespace for the application.
      *
      * @return string
@@ -224,6 +175,30 @@ class Batch extends Primitive implements HandlesOperations
         } catch (Throwable) {
             return 'App\\';
         }
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array<string, mixed>
+     */
+    protected function representation(): array
+    {
+        $operations = [
+            'inline' => $this->inlineOperationsToArray($this->getRecord()),
+            'bulk' => $this->bulkOperationsToArray(),
+            'page' => $this->pageOperationsToArray(),
+        ];
+
+        if ($this->isActionable()) {
+            return [
+                'id' => $this->getRouteKey(),
+                'endpoint' => $this->getEndpoint(),
+                ...$operations,
+            ];
+        }
+
+        return $operations;
     }
 
     /**
