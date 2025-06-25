@@ -11,7 +11,7 @@ export type {
 	LengthAwarePaginator,
 	PerPageRecord,
 	Column,
-	AsRecord,
+	TableEntry,
 	Table,
 	TableRecord,
 	TableHeading,

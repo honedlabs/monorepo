@@ -18,7 +18,7 @@ import { Visit } from '@inertiajs/core';
 import { VisitCallbacks } from '@inertiajs/core';
 import { VisitOptions } from '@inertiajs/core';
 
-export declare type AsRecord<RecordType extends Record<string, any> = any> = {
+export declare type TableEntry<RecordType extends Record<string, any> = any> = {
     [K in keyof RecordType]: {
         value: RecordType[K];
         extra: Record<string, any>;
@@ -90,7 +90,7 @@ export declare interface SimplePaginator extends CursorPaginator {
 export declare interface Table<RecordType extends Record<string, any> = any, Paginator extends PaginatorKind = "length-aware"> extends Refine {
     config: Config;
     id: string;
-    records: Array<AsRecord<RecordType> & {
+    records: Array<TableEntry<RecordType> & {
         actions: InlineAction[];
     }>;
     paginator: Paginator extends "length-aware" ? LengthAwarePaginator : Paginator extends "simple" ? SimplePaginator : Paginator extends "cursor" ? CursorPaginator : CollectionPaginator;
@@ -118,7 +118,7 @@ export declare interface TableOptions<RecordType extends Record<string, any> = R
     /**
      * Actions to be applied on a record in JavaScript.
      */
-    recordActions?: Record<string, (record: AsRecord<RecordType>) => void>;
+    recordActions?: Record<string, (record: TableEntry<RecordType>) => void>;
 }
 
 export declare interface TableRecord<RecordType extends Record<string, any> = Record<string, any>> {
@@ -219,7 +219,7 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
     omitValue: (value: any) => any;
     toggleValue: (value: any, values: any) => any;
     delimitArray: (value: any) => any;
-    getRecordKey: (record: AsRecord<RecordType>) => Identifier;
+    getRecordKey: (record: TableEntry<RecordType>) => Identifier;
     meta: Record<string, any>;
     headings: {
         isSorting: boolean | undefined;
@@ -261,7 +261,7 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
         } | undefined;
     }[];
     records: {
-        record: Omit<AsRecord<RecordType> & {
+        record: Omit<TableEntry<RecordType> & {
             actions: InlineAction[];
         }, "actions">;
         /** The actions available for the record */
@@ -341,22 +341,22 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
         first: (options?: VisitOptions) => void;
         last: (options?: VisitOptions) => void;
     };
-    executeInlineAction: (action: InlineAction, record: AsRecord<RecordType>, options?: VisitOptions) => void;
+    executeInlineAction: (action: InlineAction, record: TableEntry<RecordType>, options?: VisitOptions) => void;
     executeBulkAction: (action: BulkAction, options?: VisitOptions) => void;
     executePageAction: (action: PageAction, options?: VisitOptions) => void;
     applyPage: (page: PerPageRecord, options?: VisitOptions) => void;
     selection: BulkSelection<Identifier>;
-    select: (record: AsRecord<RecordType>) => void;
-    deselect: (record: AsRecord<RecordType>) => void;
+    select: (record: TableEntry<RecordType>) => void;
+    deselect: (record: TableEntry<RecordType>) => void;
     selectPage: () => void;
     deselectPage: () => void;
-    toggle: (record: AsRecord<RecordType>) => void;
-    selected: (record: AsRecord<RecordType>) => boolean;
+    toggle: (record: TableEntry<RecordType>) => void;
+    selected: (record: TableEntry<RecordType>) => boolean;
     selectAll: () => void;
     deselectAll: () => void;
     isPageSelected: boolean;
     hasSelected: boolean;
-    bindCheckbox: (record: AsRecord<RecordType>) => {
+    bindCheckbox: (record: TableEntry<RecordType>) => {
         "onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
         modelValue: boolean;
         value: Identifier;
