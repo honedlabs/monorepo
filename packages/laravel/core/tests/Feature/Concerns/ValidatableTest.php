@@ -28,6 +28,8 @@ it('sets', function () {
 it('evaluates', function () {
     expect($this->test)
         ->validate($this->user)->toBeTrue()
+        ->isValid($this->user)->toBeTrue()
         ->validator($this->fn)->toBe($this->test)
-        ->validate($this->user)->toBeFalse();
+        ->validate($this->user)->toBeFalse()
+        ->isValid($this->user)->toBeFalse();
 });

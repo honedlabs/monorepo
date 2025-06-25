@@ -10,10 +10,15 @@ afterEach(function () {
 
 it('can be configured using a callback', function () {
     expect(Component::make())
-        ->getName()->toBe('Products');
+        ->getName()->toBeNull();
 
     Component::configureUsing(fn (Component $component) => $component->name('Users'));
 
     expect(Component::make())
         ->getName()->toBe('Users');
+});
+
+it('call the definition method', function () {
+    expect(Component::make())
+        ->getType()->toBe('component');
 });

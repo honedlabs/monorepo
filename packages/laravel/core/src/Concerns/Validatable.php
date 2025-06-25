@@ -38,11 +38,6 @@ trait Validatable
         return $this->validator;
     }
 
-    public function validates()
-    {
-        return filled($this->validator);
-    }
-
     /**
      * Determine if the argument passes the validation function.
      *

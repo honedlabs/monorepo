@@ -16,6 +16,8 @@ use function in_array;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
+ *
+ * @deprecated
  */
 trait HasParameterNames
 {

@@ -12,19 +12,19 @@ beforeEach(function () {
 it('makes', function () {
     expect(Component::make())->toBeInstanceOf(Component::class)
         ->getType()->toBe('component')
-        ->getName()->toBe('Products');
+        ->getName()->toBeNull();
 });
 
-it('has array representation', function () {
+it('has representation', function () {
     expect($this->test)
         ->toArray()->toEqual([
             'type' => 'component',
-            'name' => 'Products',
+            'name' => null,
             'meta' => null,
         ]);
 });
 
-it('serializes', function () {
+it('serializes to json', function () {
     expect($this->test)
         ->jsonSerialize()->toEqual($this->test->toArray());
 });
@@ -32,11 +32,19 @@ it('serializes', function () {
 it('serializes without null values', function () {
     $test = new class() extends Component implements NullsAsUndefined {};
 
+    $expected = [
+        'type' => 'component',
+    ];
+
     expect($test)
-        ->jsonSerialize()->toEqual([
-            'type' => 'component',
-            'name' => 'Products',
-        ]);
+        ->toArray()->toEqual($expected)
+        ->jsonSerialize()->toEqual($expected);
+});
+
+it('encodes as json', function () {
+    expect($this->test->toJson())
+        ->toBeJson()
+        ->json()->toEqual($this->test->jsonSerialize());
 });
 
 it('is macroable', function () {

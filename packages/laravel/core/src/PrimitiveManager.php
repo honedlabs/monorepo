@@ -1,21 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Core;
 
 use Closure;
-use ReflectionClass;
-use ReflectionMethod;
-use RuntimeException;
-use Honed\Core\Primitive;
-use Illuminate\Support\Facades\App;
 use Honed\Core\Contracts\ScopedPrimitiveManager;
 
 class PrimitiveManager implements ScopedPrimitiveManager
 {
     /**
      * The configurations for the primitive.
-     * 
-     * @var array<class-string<\Honed\Core\Primitive>, array<int, (\Closure(\Honed\Core\Primitive):mixed|void)>>
+     *
+     * @var array<class-string, array<int, Closure>>
      */
     protected $configurations = [];
 
@@ -23,64 +20,52 @@ class PrimitiveManager implements ScopedPrimitiveManager
 
     /**
      * Resolve the scoped primitive manager.
-     * 
-     * @return static
      */
     public static function resolve(): static
     {
-        if (app()->resolved(PrimitiveManager::class)) {
+        if (app()->resolved(ScopedPrimitiveManager::class)) {
             return static::resolveScoped();
         }
 
-
         app()->singletonIf(
-            PrimitiveManager::class,
-            fn () => new PrimitiveManager,
+            static::class,
+            fn () => new PrimitiveManager(),
         );
 
-        return app(PrimitiveManager::class);
+        return app(static::class);
     }
 
     /**
      * Get the already resolved scoped primitive manager.
-     * 
-     * @return static
      */
     public static function resolveScoped(): static
     {
-        return app(PrimitiveManager::class);
+        /** @phpstan-ignore-next-line */
+        return app(ScopedPrimitiveManager::class);
     }
 
     /**
-     * Set the primitive's configuration.
-     * 
-     * @template T of \Honed\Core\Primitive
-     * 
-     * @param  class-string<T>  $component
-     * @param  (\Closure(T):mixed|void)  $modifyUsing
-     * @return void
+     * Configure the primitive using a closure.
+     *
+     * @param  class-string  $primitive
      */
-    public function configureUsing(string $component, Closure $modifyUsing): void
+    public function configureUsing(string $primitive, Closure $modifyUsing): void
     {
-        $this->configurations[$component] ??= [];
-        $this->configurations[$component][] = $modifyUsing;
+        $this->configurations[$primitive] ??= [];
+        $this->configurations[$primitive][] = $modifyUsing;
     }
 
     /**
      * Configure the primitive
-     *
-     * @param  \Honed\Core\Primitive  $primitive
-     * @param  \Closure  $setUp
-     * @return void
      */
     public function configure(Primitive $primitive, Closure $setUp): void
     {
-        foreach ($this->configurations as $configurable => $configurationCallbacks) {
+        foreach ($this->configurations as $configurable => $callbacks) {
             if (! $primitive instanceof $configurable) {
                 continue;
             }
 
-            foreach ($configurationCallbacks as $configure) {
+            foreach ($callbacks as $configure) {
                 $configure($primitive);
             }
         }
@@ -90,8 +75,6 @@ class PrimitiveManager implements ScopedPrimitiveManager
 
     /**
      * Clone the primitive manager.
-     * 
-     * @return static
      */
     public function clone(): static
     {

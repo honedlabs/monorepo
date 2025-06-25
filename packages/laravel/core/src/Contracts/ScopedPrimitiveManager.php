@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Core\Contracts;
 
 use Closure;
@@ -9,28 +11,18 @@ interface ScopedPrimitiveManager
 {
     /**
      * Resolve the scoped primitive manager.
-     * 
-     * @return static
      */
     public static function resolve(): static;
 
     /**
      * Configure the primitive using a closure.
-     * 
-     * @template T of \Honed\Core\Primitive
-     * 
-     * @param  class-string<T>  $component
-     * @param  (\Closure(T):mixed|void)  $modifyUsing
-     * @return void
+     *
+     * @param  class-string  $primitive
      */
-    public function configureUsing(string $component, Closure $modifyUsing): void;
+    public function configureUsing(string $primitive, Closure $modifyUsing): void;
 
     /**
      * Configure the primitive.
-     * 
-     * @param  \Honed\Core\Primitive  $component
-     * @param  \Closure  $setUp
-     * @return void
      */
-    public function configure(Primitive $component, Closure $setUp): void;
+    public function configure(Primitive $primitive, Closure $setUp): void;
 }

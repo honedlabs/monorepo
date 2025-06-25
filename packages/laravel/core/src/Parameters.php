@@ -6,6 +6,9 @@ namespace Honed\Core;
 
 use Honed\Core\Concerns\HasParameterNames;
 
+/**
+ * @deprecated
+ */
 class Parameters
 {
     /**

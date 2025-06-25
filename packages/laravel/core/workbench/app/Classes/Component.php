@@ -27,18 +27,6 @@ class Component extends Primitive
     protected $evaluationIdentifier = 'component';
 
     /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        $this->type('component');
-        $this->name('Products');
-
-        // Keep after to allow for configurable tests.
-        parent::setUp();
-    }
-
-    /**
      * Make a new instance of the component.
      *
      * @return static
@@ -49,15 +37,29 @@ class Component extends Primitive
     }
 
     /**
-     * {@inheritdoc}
+     * Get the representation of the instance.
+     *
+     * @return array<string,mixed>
      */
-    public function toArray()
+    protected function representation(): array
     {
         return [
             'type' => $this->getType(),
             'name' => $this->getName(),
             'meta' => $this->getMeta(),
         ];
+    }
+
+    /**
+     * Define the instance.
+     *
+     * @param  $this  $component
+     * @return $this
+     */
+    protected function definition(self $component): self
+    {
+        return $component
+            ->type('component');
     }
 
     /**
@@ -73,7 +75,10 @@ class Component extends Primitive
     }
 
     /**
-     * {@inheritdoc}
+     * Provide a selection of default dependencies for evaluation by name.
+     *
+     * @param  string  $parameterName
+     * @return array<int,mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
     {
@@ -84,7 +89,10 @@ class Component extends Primitive
     }
 
     /**
-     * {@inheritdoc}
+     * Provide a selection of default dependencies for evaluation by type.
+     *
+     * @param  string  $parameterType
+     * @return array<int,mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
