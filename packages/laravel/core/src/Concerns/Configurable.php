@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Closure;
+use Honed\Core\Primitive;
+use Honed\Core\PrimitiveManager;
 
 /**
  * @phpstan-require-extends \Honed\Core\Primitive
@@ -12,21 +14,11 @@ use Closure;
 trait Configurable
 {
     /**
-     * The configuration callback for the instance.
-     *
-     * @var (Closure(static):static|void)|null
-     */
-    protected static $configuration;
-
-    /**
      * Provide the instance with any necessary setup.
      *
      * @return void
      */
-    protected function setUp()
-    {
-        $this->configure();
-    }
+    protected function setUp() { }
 
     /**
      * Set the configuration for the instance.
@@ -36,7 +28,10 @@ trait Configurable
      */
     public static function configureUsing($configuration)
     {
-        static::$configuration = $configuration;
+        PrimitiveManager::resolve()->configureUsing(
+            static::class,
+            $configuration,
+        );
     }
 
     /**
@@ -46,10 +41,9 @@ trait Configurable
      */
     protected function configure()
     {
-        if (isset(static::$configuration)) {
-            $configuration = static::$configuration;
-
-            $configuration($this); // @phpstan-ignore callable.nonCallable
-        }
+        PrimitiveManager::resolve()->configure(
+            $this,
+            $this->setUp(...),
+        );
     }
 }

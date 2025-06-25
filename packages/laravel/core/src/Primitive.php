@@ -9,6 +9,7 @@ use Honed\Core\Concerns\Configurable;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
@@ -22,7 +23,7 @@ use function array_filter;
  *
  * @implements Arrayable<TKey,TValue>
  */
-abstract class Primitive implements Arrayable, JsonSerializable
+abstract class Primitive implements Jsonable, Arrayable, JsonSerializable
 {
     use Conditionable;
     use Configurable;
@@ -52,6 +53,17 @@ abstract class Primitive implements Arrayable, JsonSerializable
     public function __call($method, $parameters)
     {
         return $this->macroCall($method, $parameters);
+    }
+
+    /**
+     * Convert the object to its JSON representation.
+     *
+     * @param  int  $options
+     * @return string
+     */
+    public function toJson($options = 0)
+    {
+        return json_encode($this->jsonSerialize(), $options);
     }
 
     /**
