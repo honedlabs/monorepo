@@ -1,7 +1,7 @@
 {
   "name": "@honed/table",
   "private": false,
-  "version": "0.7.1",
+  "version": "0.8.0",
   "license": "MIT",
   "description": "-",
   "keywords": [
@@ -57,7 +57,7 @@
     }
   },
   "peerDependencies": {
-    "@honed/action": "^0.8.1",
+    "@honed/action": "^0.8.2",
     "@honed/refine": "^0.6.0",
     "@inertiajs/vue3": "^1.2.0||^2.0.0",
     "@vueuse/core": "^11.0.0||^12.0.0",

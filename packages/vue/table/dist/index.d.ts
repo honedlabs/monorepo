@@ -1,67 +1,70 @@
 import { BindingOptions } from '@honed/refine';
-import { BulkAction } from '@honed/action';
+import { BulkOperation } from '@honed/action';
 import { BulkSelection } from '@honed/action';
-import { Config as Config_2 } from '@honed/refine';
-import { Confirm } from '@honed/action';
 import { Direction } from '@honed/refine';
 import { Filter } from '@honed/refine';
 import { FilterValue } from '@honed/refine';
-import { InlineAction } from '@honed/action';
+import { InlineOperation } from '@honed/action';
+import { MaybeEndpoint } from '@honed/action';
+import { MaybeId } from '@honed/action';
 import { Option as Option_2 } from '@honed/refine';
-import { PageAction } from '@honed/action';
+import { PageOperation } from '@honed/action';
+import { PageOperationData } from '@honed/action';
 import { PromisifyFn } from '@vueuse/shared';
 import { Refine } from '@honed/refine';
-import { Route } from '@honed/action';
 import { Search } from '@honed/refine';
 import { Sort } from '@honed/refine';
 import { Visit } from '@inertiajs/core';
 import { VisitCallbacks } from '@inertiajs/core';
 import { VisitOptions } from '@inertiajs/core';
 
-export declare type TableEntry<RecordType extends Record<string, any> = any> = {
-    [K in keyof RecordType]: {
-        value: RecordType[K];
-        extra: Record<string, any>;
-    };
-};
+export declare interface BaseColumn<T extends Record<string, any> = Record<string, any>> {
+    name: keyof T;
+    label: string;
+    type?: ColumnType;
+    hidden: boolean;
+    active: boolean;
+    badge?: boolean;
+    toggleable: boolean;
+    class?: string;
+    record_class?: string;
+    icon?: string;
+    sort?: Pick<Sort, "active" | "direction" | "next">;
+}
 
-export declare interface CollectionPaginator {
+export declare interface CollectionPaginate {
     empty: boolean;
 }
 
-export declare interface Column<T extends Record<string, any> = Record<string, any>> {
-    name: keyof T;
-    label: string;
-    type: "array" | "badge" | "boolean" | "currency" | "date" | "hidden" | "key" | "number" | "text" | string;
-    hidden: boolean;
-    active: boolean;
-    toggleable: boolean;
-    icon?: string;
-    class?: string;
-    sort?: {
-        active: boolean;
-        direction: Direction;
-        next: string | null;
-    };
+export declare interface Column<T extends Record<string, any> = Record<string, any>> extends BaseColumn<T> {
+    toggle: (options: VisitOptions) => void;
 }
 
-export declare interface Config extends Config_2 {
-    endpoint: string;
-    key: string;
-    record: string;
-    column: string;
-    page: string;
-}
+export declare type ColumnType = "array" | "badge" | "boolean" | "color" | "date" | "datetime" | "icon" | "image" | "numeric" | "text" | "time" | string;
 
-export declare interface CursorPaginator extends CollectionPaginator {
+export declare interface CursorPaginate extends CollectionPaginate {
     prevLink: string | null;
     nextLink: string | null;
     perPage: number;
 }
 
+export declare interface EmptyState {
+    title: string;
+    description: string;
+    icon?: string;
+    operations: PageOperation[];
+}
+
+export declare interface Heading<T extends Record<string, any> = Record<string, any>> extends BaseColumn<T> {
+    isSorting: boolean;
+    toggleSort: (options: VisitOptions) => void;
+}
+
 export declare type Identifier = string | number;
 
-export declare interface LengthAwarePaginator extends SimplePaginator {
+export declare function is(column: Column | string | null | undefined, type: ColumnType): boolean;
+
+export declare interface LengthAwarePaginate extends SimplePaginate {
     total: number;
     from: number;
     to: number;
@@ -70,7 +73,19 @@ export declare interface LengthAwarePaginator extends SimplePaginator {
     links: PaginatorLink[];
 }
 
-export declare type PaginatorKind = "cursor" | "length-aware" | "simple" | "collection";
+export declare interface PageOption {
+    value: number;
+    active: boolean;
+}
+
+export declare type Paginate = "cursor" | "length-aware" | "simple" | "collection";
+
+export declare type PaginateMap = {
+    cursor: CursorPaginate;
+    "length-aware": LengthAwarePaginate;
+    simple: SimplePaginate;
+    collection: CollectionPaginate;
+};
 
 export declare interface PaginatorLink {
     url: string | null;
@@ -78,45 +93,46 @@ export declare interface PaginatorLink {
     active: boolean;
 }
 
-export declare interface PerPageRecord {
-    value: number;
-    active: boolean;
-}
-
-export declare interface SimplePaginator extends CursorPaginator {
+export declare interface SimplePaginate extends CursorPaginate {
     currentPage: number;
 }
 
-export declare interface Table<RecordType extends Record<string, any> = any, Paginator extends PaginatorKind = "length-aware"> extends Refine {
-    config: Config;
-    id: string;
-    records: Array<TableEntry<RecordType> & {
-        actions: InlineAction[];
+export declare interface Table<T extends Record<string, any> = Record<string, any>, K extends Paginate = "length-aware"> extends Refine {
+    id: MaybeId;
+    endpoint: MaybeEndpoint;
+    key: string;
+    column?: string;
+    record?: string;
+    page?: string;
+    records: Array<TableEntry<T> & {
+        actions: InlineOperation[];
     }>;
-    paginator: Paginator extends "length-aware" ? LengthAwarePaginator : Paginator extends "simple" ? SimplePaginator : Paginator extends "cursor" ? CursorPaginator : CollectionPaginator;
-    columns?: Column<RecordType>[];
-    recordsPerPage?: PerPageRecord[];
+    paginate: PaginateMap[K];
+    columns: BaseColumn<T>[];
+    pages: PageOption[];
     toggleable: boolean;
-    actions: {
+    operations: {
         inline: boolean;
-        bulk: BulkAction[];
-        page: PageAction[];
+        bulk: BulkOperation[];
+        page: PageOperation[];
     };
+    emptyState?: EmptyState;
+    views?: View[];
     meta: Record<string, any>;
 }
 
-export declare interface TableColumn<T extends Record<string, any> = Record<string, any>> extends Column<T> {
-    toggle: (options: VisitOptions) => void;
-}
+export declare type TableEntry<RecordType extends Record<string, any> = any> = {
+    [K in keyof RecordType]: {
+        v: RecordType[K];
+        e: any;
+        c: string | null;
+        f: boolean;
+    };
+};
 
-export declare interface TableHeading<T extends Record<string, any> = Record<string, any>> extends Column<T> {
-    isSorting: boolean;
-    toggleSort: (options: VisitOptions) => void;
-}
-
-export declare interface TableOptions<RecordType extends Record<string, any> = Record<string, any>> {
+export declare interface TableOptions<RecordType extends Record<string, any> = Record<string, any>> extends VisitOptions {
     /**
-     * Actions to be applied on a record in JavaScript.
+     * Mappings of operations to be applied on a record in JavaScript.
      */
     recordActions?: Record<string, (record: TableEntry<RecordType>) => void>;
 }
@@ -124,7 +140,7 @@ export declare interface TableOptions<RecordType extends Record<string, any> = R
 export declare interface TableRecord<RecordType extends Record<string, any> = Record<string, any>> {
     record: RecordType;
     default: (options?: VisitOptions) => void;
-    actions: InlineAction[];
+    actions: InlineOperation[];
     select: () => void;
     deselect: () => void;
     toggle: () => void;
@@ -136,18 +152,18 @@ export declare interface TableRecord<RecordType extends Record<string, any> = Re
 
 export declare type UseTable = typeof useTable;
 
-export declare function useTable<Props extends object, Key extends Props[keyof Props] extends Refine ? keyof Props : never, RecordType extends Record<string, any> = any, Paginator extends PaginatorKind = "length-aware">(props: Props, key: Key, tableOptions?: TableOptions<RecordType>, defaultOptions?: VisitOptions): {
+export declare function useTable<T extends Record<string, Table>, K extends Record<string, any> = Record<string, any>, U extends Paginate = "length-aware">(props: T, key: keyof T, defaults?: TableOptions): {
     filters: {
-        apply: (value: Props, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
+        apply: (value: T, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
         clear: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
-        bind: () => {
+        bind: () => void | {
             "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
-            modelValue: unknown;
-        } | undefined;
+            modelValue: FilterValue;
+        }; /** Bind the record to a checkbox */
         type: string;
         value: FilterValue;
         options: Option_2[];
-        name: string;
+        name: string; /** Get the value of the record for the column */
         label: string;
         active: boolean;
         meta: Record<string, any>;
@@ -155,9 +171,9 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
     sorts: {
         apply: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
         clear: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
-        bind: () => {
+        bind: () => void | {
             onClick: PromisifyFn<() => void>;
-        } | undefined;
+        };
         type: string;
         direction: Direction;
         next: string | null;
@@ -169,115 +185,72 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
     searches: {
         apply: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
         clear: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
-        bind: () => {
+        bind: () => void | {
             "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
             modelValue: boolean;
             value: string;
-        } | undefined;
+        };
         type: string;
         name: string;
         label: string;
         active: boolean;
         meta: Record<string, any>;
-    }[] | undefined;
-    getFilter: (name: string) => Filter | undefined;
-    getSort: (name: string, direction?: Direction | undefined) => Sort | undefined;
-    getSearch: (name: string) => Search | undefined;
+    }[];
     currentFilters: Filter[];
     currentSort: Sort | undefined;
     currentSearches: Search[];
+    isSortable: boolean;
+    isSearchable: boolean;
+    isMatchable: boolean;
     isFiltering: (name?: string | Filter | undefined) => boolean;
     isSorting: (name?: string | Sort | undefined) => boolean;
     isSearching: (name?: string | Search | undefined) => boolean;
-    apply: (values: Record<string, any>, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
+    getFilter: (filter: string | Filter) => Filter | undefined;
+    getSort: (sort: string | Sort, dir?: Direction | undefined) => Sort | undefined;
+    getSearch: (search: string | Search) => Search | undefined;
+    apply: (values: Record<string, FilterValue>, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     applyFilter: (filter: string | Filter, value: any, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     applySort: (sort: string | Sort, direction?: Direction | undefined, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     applySearch: (value: string | null | undefined, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     applyMatch: (search: string | Search, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
-    clearFilter: (filter: string | Filter, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
+    clearFilter: (filter?: string | Filter | undefined, options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     clearSort: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     clearSearch: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     clearMatch: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
     reset: (options?: Partial<Visit & VisitCallbacks> | undefined) => void;
-    bindFilter: <T_1 extends unknown>(filter: string | Filter, options?: BindingOptions | undefined) => {
+    bindFilter: (filter: string | Filter, options?: BindingOptions | undefined) => void | {
         "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
-        modelValue: T_1;
-    } | undefined;
-    bindSort: (sort: string | Sort, options?: BindingOptions | undefined) => {
+        modelValue: FilterValue;
+    };
+    bindSort: (sort: string | Sort, options?: BindingOptions | undefined) => void | {
         onClick: PromisifyFn<() => void>;
-    } | undefined;
+    };
     bindSearch: (options?: BindingOptions | undefined) => {
         "onUpdate:modelValue": PromisifyFn<(value: string | null | undefined) => void>;
         modelValue: string;
     };
-    bindMatch: (match: string | Search, options?: BindingOptions | undefined) => {
+    bindMatch: (match: string | Search, options?: BindingOptions | undefined) => void | {
         "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
         modelValue: boolean;
         value: string;
-    } | undefined;
+    };
     stringValue: (value: any) => any;
     omitValue: (value: any) => any;
     toggleValue: (value: any, values: any) => any;
     delimitArray: (value: any) => any;
-    getRecordKey: (record: TableEntry<RecordType>) => Identifier;
+    table: Table<K, U>;
+    getRecordKey: (record: TableEntry<K>) => Identifier;
     meta: Record<string, any>;
-    headings: {
-        isSorting: boolean | undefined;
-        toggleSort: (options?: VisitOptions) => void;
-        name: keyof RecordType;
-        /**
-         * The heading columns for the table.
-         */
-        label: string;
-        type: string;
-        hidden: boolean;
-        active: boolean;
-        toggleable: boolean;
-        icon?: string | undefined;
-        class?: string | undefined;
-        sort?: {
-            active: boolean;
-            direction: Direction;
-            next: string | null;
-        } | undefined;
-    }[];
-    columns: {
-        toggle: (options?: VisitOptions) => void;
-        name: keyof RecordType;
-        /**
-         * The heading columns for the table.
-         */
-        label: string;
-        type: string;
-        hidden: boolean;
-        active: boolean;
-        toggleable: boolean;
-        icon?: string | undefined;
-        class?: string | undefined;
-        sort?: {
-            active: boolean;
-            direction: Direction;
-            next: string | null;
-        } | undefined;
-    }[];
+    headings: Heading<K>[];
+    columns: Column<K>[];
     records: {
-        record: Omit<TableEntry<RecordType> & {
-            actions: InlineAction[];
+        record: Omit<TableEntry<K> & {
+            actions: InlineOperation[];
         }, "actions">;
         /** The actions available for the record */
-        actions: {
-            /** Executes this action */
-            execute: (options?: VisitOptions) => void;
-            type: "inline";
-            default: boolean;
-            name: string;
-            label: string;
-            icon?: string | undefined;
-            extra?: Record<string, unknown> | undefined;
-            action?: boolean | undefined;
-            confirm?: Confirm | undefined;
-            route?: Route | undefined;
-        }[];
+        actions: (InlineOperation & {
+            execute: (data?: any, options?: Partial<Visit & VisitCallbacks> | undefined) => boolean;
+        })[];
         /** Perform this action when the record is clicked */
         default: (options?: VisitOptions) => void;
         /** Selects this record */
@@ -295,41 +268,23 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
             value: Identifier;
         };
         /** Get the value of the record for the column */
-        value: (column: Column<RecordType> | string) => RecordType[string] | RecordType[number] | RecordType[symbol] | null;
+        value: (column: Column<K> | string) => K[string] | K[number] | K[symbol] | null;
         /** Get the extra data of the record for the column */
-        extra: (column: Column<RecordType> | string) => Record<string, any> | null;
+        extra: (column: Column<K> | string) => any;
     }[];
     inline: boolean;
-    bulkActions: {
-        execute: (options?: VisitOptions) => void;
-        type: "bulk";
-        keepSelected: boolean;
-        name: string;
-        label: string;
-        icon?: string | undefined;
-        extra?: Record<string, unknown> | undefined;
-        action?: boolean | undefined;
-        confirm?: Confirm | undefined;
-        route?: Route | undefined;
-    }[];
-    pageActions: {
-        execute: (options?: VisitOptions) => void;
-        type: "page";
-        name: string;
-        label: string;
-        icon?: string | undefined;
-        extra?: Record<string, unknown> | undefined;
-        action?: boolean | undefined;
-        confirm?: Confirm | undefined;
-        route?: Route | undefined;
-    }[];
-    rowsPerPage: {
-        apply: (options?: VisitOptions) => void;
+    bulk: (BulkOperation & {
+        execute: (data?: any, options?: Partial<Visit & VisitCallbacks> | undefined) => boolean;
+    })[];
+    page: (PageOperation & {
+        execute: (data?: any, options?: Partial<Visit & VisitCallbacks> | undefined) => boolean;
+    })[];
+    pages: {
         value: number;
         active: boolean;
     }[];
-    currentPage: PerPageRecord | undefined;
-    paginator: (Paginator extends "length-aware" ? LengthAwarePaginator : Paginator extends "simple" ? SimplePaginator : Paginator extends "cursor" ? CursorPaginator : CollectionPaginator) & {
+    currentPage: PageOption | undefined;
+    paginator: PaginateMap[U] & {
         links?: {
             navigate: (options?: VisitOptions) => void | "" | null;
             url: string | null;
@@ -341,22 +296,22 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
         first: (options?: VisitOptions) => void;
         last: (options?: VisitOptions) => void;
     };
-    executeInlineAction: (action: InlineAction, record: TableEntry<RecordType>, options?: VisitOptions) => void;
-    executeBulkAction: (action: BulkAction, options?: VisitOptions) => void;
-    executePageAction: (action: PageAction, options?: VisitOptions) => void;
-    applyPage: (page: PerPageRecord, options?: VisitOptions) => void;
+    executeInline: (operation: InlineOperation, data: TableEntry<K>, options?: VisitOptions) => void;
+    executeBulk: (operation: BulkOperation, options?: VisitOptions) => void;
+    executePage: (operation: PageOperation, data?: PageOperationData, options?: VisitOptions) => boolean;
+    applyPage: (page: PageOption, options?: VisitOptions) => void;
     selection: BulkSelection<Identifier>;
-    select: (record: TableEntry<RecordType>) => void;
-    deselect: (record: TableEntry<RecordType>) => void;
+    select: (record: TableEntry<K>) => void;
+    deselect: (record: TableEntry<K>) => void;
     selectPage: () => void;
     deselectPage: () => void;
-    toggle: (record: TableEntry<RecordType>) => void;
-    selected: (record: TableEntry<RecordType>) => boolean;
+    toggle: (record: TableEntry<K>) => void;
+    selected: (record: TableEntry<K>) => boolean;
     selectAll: () => void;
     deselectAll: () => void;
     isPageSelected: boolean;
     hasSelected: boolean;
-    bindCheckbox: (record: TableEntry<RecordType>) => {
+    bindCheckbox: (record: TableEntry<K>) => {
         "onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
         modelValue: boolean;
         value: Identifier;
@@ -368,8 +323,13 @@ export declare function useTable<Props extends object, Key extends Props[keyof P
     bindAll: () => {
         "onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
         modelValue: boolean;
-        value: boolean;
     };
 };
+
+export declare interface View {
+    id: number;
+    name: string;
+    view: string;
+}
 
 export { }

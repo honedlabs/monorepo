@@ -1,82 +1,81 @@
 import { computed, reactive } from "vue";
-import type { Page, VisitOptions } from "@inertiajs/core";
 import { router } from "@inertiajs/vue3";
-import { 
+import type { Page, VisitOptions } from "@inertiajs/core";
+import {
 	useBulk,
 	executor as operationExecutor,
 	executables as operationExecutables,
 } from "@honed/action";
-import type { 
-	InlineOperation, BulkOperation, PageOperation,
+import type {
+	InlineOperation,
+	BulkOperation,
+	PageOperation,
 	Operations,
 	PageOperationData,
 	OperationDataMap,
 } from "@honed/action";
-import { Sort, useRefine } from "@honed/refine";
+import { useRefine, type Sort } from "@honed/refine";
 import type {
 	Identifier,
 	TableEntry,
 	Table,
 	TableOptions,
+	EmptyState,
+	PageOption,
+	Paginate,
+	Column,
+	Heading,
 } from "./types";
-import type { PageOption, Paginate } from "./paginate";
-import { Column, type Heading } from "./columns";
 
 export function useTable<
 	T extends Record<string, Table>,
 	K extends Record<string, any> = Record<string, any>,
 	U extends Paginate = "length-aware",
->(
-	props: T,
-	key: keyof T,
-	defaults: VisitOptions = {},
-) {
+>(props: T, key: keyof T, defaults: TableOptions = {}) {
 	if (!props?.[key]) {
 		throw new Error("The table must be provided with valid props and key.");
 	}
 
-	defaults = {
-		...defaults,
+	const { recordActions = {}, ...visitOptions } = {
 		only: [...((defaults.only ?? []) as string[]), key.toString()],
+		...defaults,
 	};
 
 	const table = computed(() => props[key] as Table<K, U>);
 
 	const select = useBulk<Identifier>();
 
-	const refine = useRefine<T>(props, key, defaults);
+	const refine = useRefine<T>(props, key, visitOptions);
 
-	const isPageable = computed(() => !! table.value.page && !! table.value.record);
+	const isPageable = computed(() => !!table.value.page && !!table.value.record);
 
-	const isToggleable = computed(() => !! table.value.column);
+	const isToggleable = computed(() => !!table.value.column);
 
 	/**
 	 * The heading columns for the table.
 	 */
-	const headings = computed<Heading<K>[]>(
-		() =>
-			table.value.columns
-				.filter(({ active, hidden }) => active && ! hidden)
-				.map((column) => ({
-					...column,
-					isSorting: !! column.sort?.active,
-					toggleSort: (options: VisitOptions = {}) => 
-						refine.applySort(column.sort as Sort, null, options),
-				}))
+	const headings = computed<Heading<K>[]>(() =>
+		table.value.columns
+			.filter(({ active, hidden }) => active && !hidden)
+			.map((column) => ({
+				...column,
+				isSorting: !!column.sort?.active,
+				toggleSort: (options: VisitOptions = {}) =>
+					refine.applySort(column.sort as Sort, null, options),
+			})),
 	);
 
 	/**
 	 * All of the table's columns
 	 */
-	const columns = computed<Column<K>[]>(
-		() =>
-			table.value.columns
-				.filter(({ hidden }) => ! hidden)
-				.map((column) => ({
-					...column,
-					toggle: (options: VisitOptions = {}) => 
-						toggle(column.name as string, options),
-				})),
+	const columns = computed<Column<K>[]>(() =>
+		table.value.columns
+			.filter(({ hidden }) => !hidden)
+			.map((column) => ({
+				...column,
+				toggle: (options: VisitOptions = {}) =>
+					toggle(column.name as string, options),
+			})),
 	);
 
 	/**
@@ -91,8 +90,7 @@ export function useTable<
 			default: (options: VisitOptions = {}) => {
 				const use = record.actions.find(({ default: isDefault }) => isDefault);
 
-				if (use)
-					executeInline(use, record, options);
+				if (use) executeInline(use, record, options);
 			},
 			/** Selects this record */
 			select: () => select.select(getRecordKey(record)),
@@ -130,8 +128,8 @@ export function useTable<
 	/**
 	 * The current number of records to display per page.
 	 */
-	const currentPage = computed(() => 
-		table.value.pages.find(({ active }) => active)
+	const currentPage = computed(() =>
+		table.value.pages.find(({ active }) => active),
 	);
 
 	/**
@@ -209,7 +207,7 @@ export function useTable<
 			table.value.id,
 			data,
 			{
-				...defaults,
+				...visitOptions,
 				...options,
 			},
 		);
@@ -223,10 +221,10 @@ export function useTable<
 			operations,
 			table.value.endpoint,
 			table.value.id,
-			defaults,
+			visitOptions,
 		);
 	}
-	
+
 	/**
 	 * Visit a page.
 	 */
@@ -234,7 +232,7 @@ export function useTable<
 		router.visit(link, {
 			preserveScroll: true,
 			preserveState: true,
-			...defaults,
+			...visitOptions,
 			...options,
 			method: "get",
 		});
@@ -245,37 +243,37 @@ export function useTable<
 		data: TableEntry<K>,
 		options: VisitOptions = {},
 	) {
-		const success = executor(operation, {
-			record: getRecordKey(data),
-		}, options)
+		const success = executor(
+			operation,
+			{
+				record: getRecordKey(data),
+			},
+			options,
+		);
 
-	
-		// if (!success)
-		// 	tableOptions.recordActions?.[action.name]?.(record);
+		if (!success) recordActions?.[operation.name]?.(data);
 	}
 
 	/**
 	 * Execute a bulk action.
 	 */
-	function executeBulk(
-		operation: BulkOperation,
-		options: VisitOptions = {}
-	) {
-		const success = executor(operation, {
-			all: select.selection.value.all,
-			only: Array.from(select.selection.value.only),
-			except: Array.from(select.selection.value.except),
-		}, {
-			...options,
-			onSuccess: (page: Page) => {
-				options.onSuccess?.(page);
+	function executeBulk(operation: BulkOperation, options: VisitOptions = {}) {
+		executor(
+			operation,
+			{
+				all: select.selection.value.all,
+				only: Array.from(select.selection.value.only),
+				except: Array.from(select.selection.value.except),
+			},
+			{
+				...options,
+				onSuccess: (page: Page) => {
+					options.onSuccess?.(page);
 
-				if (! operation.keepSelected)
-					select.deselectAll();
-			}
-		})
-
-		// if (!success) 
+					if (!operation.keepSelected) select.deselectAll();
+				},
+			},
+		);
 	}
 
 	function executePage(
@@ -290,11 +288,11 @@ export function useTable<
 	 * Apply a new page by changing the number of records to display.
 	 */
 	function applyPage(page: PageOption, options: VisitOptions = {}) {
-		if (! isPageable.value)
-			return console.warn("The table is not pageable");
+		if (!isPageable.value)
+			return console.warn("The table does not support pagination changes.");
 
 		router.reload({
-			...defaults,
+			...visitOptions,
 			...options,
 			data: {
 				[table.value.record as string]: page.value,
@@ -306,17 +304,13 @@ export function useTable<
 	/**
 	 * Toggle a column's visibility.
 	 */
-	function toggle(
-		column: Column<K> | string,
-		options: VisitOptions = {}
-	) {
-		if (! isToggleable.value)
-			return console.warn("The table is not toggleable");
+	function toggle(column: Column<K> | string, options: VisitOptions = {}) {
+		if (!isToggleable.value)
+			return console.warn("The table does not support column toggling.");
 
 		const name = getColumnName(column);
 
-		if (! name)
-			return console.log(`Column [${column}] does not exist.`);
+		if (!name) return console.log(`Column [${column}] does not exist.`);
 
 		const params = refine.toggleValue(
 			name,
@@ -324,7 +318,7 @@ export function useTable<
 		);
 
 		router.reload({
-			...defaults,
+			...visitOptions,
 			...options,
 			data: {
 				[table.value.column as string]: refine.delimitArray(params),
@@ -360,16 +354,16 @@ export function useTable<
 	function bindPage() {
 		return {
 			"onUpdate:modelValue": (checked: boolean | "indeterminate") => {
-				if (checked)
-					selectPage();
-				else
-					deselectPage();
+				if (checked) selectPage();
+				else deselectPage();
 			},
 			modelValue: isPageSelected.value,
 		};
 	}
 
 	return reactive({
+		/** The table's configuration */
+		table,
 		/** Retrieve a record's identifier */
 		getRecordKey,
 		/** Table-specific metadata */
@@ -405,8 +399,7 @@ export function useTable<
 		/** Select the given records */
 		select: (record: TableEntry<K>) => select.select(getRecordKey(record)),
 		/** Deselect the given records */
-		deselect: (record: TableEntry<K>) =>
-			select.deselect(getRecordKey(record)),
+		deselect: (record: TableEntry<K>) => select.deselect(getRecordKey(record)),
 		/** Select records on the current page */
 		selectPage,
 		/** Deselect records on the current page */
@@ -414,8 +407,7 @@ export function useTable<
 		/** Toggle the selection of the given records */
 		toggle: (record: TableEntry<K>) => select.toggle(getRecordKey(record)),
 		/** Determine if the given record is selected */
-		selected: (record: TableEntry<K>) =>
-			select.selected(getRecordKey(record)),
+		selected: (record: TableEntry<K>) => select.selected(getRecordKey(record)),
 		/** Select all records */
 		selectAll: select.selectAll,
 		/** Deselect all records */
@@ -425,8 +417,7 @@ export function useTable<
 		/** Determine if any records are selected */
 		hasSelected: select.hasSelected,
 		/** Bind the given record to a checkbox */
-		bindCheckbox: (record: TableEntry<K>) =>
-			select.bind(getRecordKey(record)),
+		bindCheckbox: (record: TableEntry<K>) => select.bind(getRecordKey(record)),
 		/** Bind the select all checkbox to the current page */
 		bindPage,
 		/** Bind select all records to the checkbox */

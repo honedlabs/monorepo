@@ -1,23 +1,9 @@
 import { useTable } from "./table";
 
-export type {
-	Identifier,
-	Config,
-	PaginatorKind,
-	PaginatorLink,
-	CollectionPaginator,
-	CursorPaginator,
-	SimplePaginator,
-	LengthAwarePaginator,
-	PerPageRecord,
-	Column,
-	TableEntry,
-	Table,
-	TableRecord,
-	TableHeading,
-	TableColumn,
-	TableOptions,
-} from "./types";
-export { useTable };
+export type * from "./types";
+
+export { is } from "./utils";
 
 export type UseTable = typeof useTable;
+
+export { useTable };

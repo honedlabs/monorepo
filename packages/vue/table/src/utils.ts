@@ -1,12 +1,12 @@
-import { ColumnType } from "./columns";
-import { Column } from "./types";
+import type { Column, ColumnType } from "./types";
 
-export function is(column: Column|string|null|undefined, type: ColumnType) {
-    if (!column)
-        return false
+export function is(
+	column: Column | string | null | undefined,
+	type: ColumnType,
+) {
+	if (!column) return false;
 
-    if (typeof column === "object")
-        return column.type === type
+	if (typeof column === "object") return column.type === type;
 
-    return column === type
+	return column === type;
 }

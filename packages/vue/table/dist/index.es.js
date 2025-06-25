@@ -1,695 +1,685 @@
-import { ref as _, computed as g, toValue as J, reactive as Q } from "vue";
-import { router as x } from "@inertiajs/vue3";
-function I(o, m, v = {}, a = {}) {
-  return o.route ? (x.visit(o.route.url, {
-    ...a,
-    method: o.route.method
-  }), !0) : o.action && m ? (x.post(
-    m,
+import { ref as q, computed as p, toValue as Q, reactive as Z } from "vue";
+import { router as S } from "@inertiajs/vue3";
+function ee(r, v, c, l = {}) {
+  return r.route ? (S.visit(r.route.url, {
+    ...l,
+    method: r.route.method
+  }), !0) : r.action && v ? (S.post(
+    v,
     {
-      ...v,
-      name: o.name,
-      type: o.type
+      ...c,
+      name: r.name,
+      type: r.type
     },
-    a
+    l
   ), !0) : !1;
 }
-function X() {
-  const o = _({
+function Y(r, v, c, l = {}, f = {}) {
+  return ee(
+    r,
+    v,
+    {
+      ...l,
+      id: c ?? void 0
+    },
+    {
+      ...f
+    }
+  );
+}
+function ne(r, v, c, l = {}) {
+  return r.map((f) => ({
+    ...f,
+    execute: (o = {}, u = {}) => Y(f, v, c, o, { ...l, ...u })
+  }));
+}
+function te() {
+  const r = q({
     all: !1,
     only: /* @__PURE__ */ new Set(),
     except: /* @__PURE__ */ new Set()
   });
-  function m() {
-    o.value.all = !0, o.value.only.clear(), o.value.except.clear();
-  }
   function v() {
-    o.value.all = !1, o.value.only.clear(), o.value.except.clear();
+    r.value.all = !0, r.value.only.clear(), r.value.except.clear();
   }
-  function a(...s) {
-    s.forEach((p) => o.value.except.delete(p)), s.forEach((p) => o.value.only.add(p));
+  function c() {
+    r.value.all = !1, r.value.only.clear(), r.value.except.clear();
   }
-  function i(...s) {
-    s.forEach((p) => o.value.except.add(p)), s.forEach((p) => o.value.only.delete(p));
+  function l(...s) {
+    s.forEach((g) => r.value.except.delete(g)), s.forEach((g) => r.value.only.add(g));
   }
-  function u(s, p) {
-    if (b(s) || p === !1)
-      return i(s);
-    if (!b(s) || p === !0)
-      return a(s);
+  function f(...s) {
+    s.forEach((g) => r.value.except.add(g)), s.forEach((g) => r.value.only.delete(g));
   }
-  function b(s) {
-    return o.value.all ? !o.value.except.has(s) : o.value.only.has(s);
+  function o(s, g) {
+    if (u(s) || g === !1) return f(s);
+    if (!u(s) || g === !0) return l(s);
   }
-  const f = g(() => o.value.all && o.value.except.size === 0), A = g(() => o.value.only.size > 0 || f.value);
-  function S(s) {
+  function u(s) {
+    return r.value.all ? !r.value.except.has(s) : r.value.only.has(s);
+  }
+  const b = p(() => r.value.all && r.value.except.size === 0), V = p(() => r.value.only.size > 0 || b.value);
+  function w(s) {
     return {
-      "onUpdate:modelValue": (p) => {
-        p ? a(s) : i(s);
+      "onUpdate:modelValue": (g) => {
+        g ? l(s) : f(s);
       },
-      modelValue: b(s),
+      modelValue: u(s),
       value: s
     };
   }
-  function k() {
+  function x() {
     return {
       "onUpdate:modelValue": (s) => {
-        s ? m() : v();
+        s ? v() : c();
       },
-      modelValue: f.value,
-      value: f.value
+      modelValue: b.value
     };
   }
   return {
-    allSelected: f,
-    selection: o,
-    hasSelected: A,
-    selectAll: m,
-    deselectAll: v,
-    select: a,
-    deselect: i,
-    toggle: u,
-    selected: b,
-    bind: S,
-    bindAll: k
+    allSelected: b,
+    selection: r,
+    hasSelected: V,
+    selectAll: v,
+    deselectAll: c,
+    select: l,
+    deselect: f,
+    toggle: o,
+    selected: u,
+    bind: w,
+    bindAll: x
   };
 }
 typeof WorkerGlobalScope < "u" && globalThis instanceof WorkerGlobalScope;
-const Y = () => {
+const X = () => {
 };
-function Z(o, m) {
-  function v(...a) {
-    return new Promise((i, u) => {
-      Promise.resolve(o(() => m.apply(this, a), { fn: m, thisArg: this, args: a })).then(i).catch(u);
+function le(r, v) {
+  function c(...l) {
+    return new Promise((f, o) => {
+      Promise.resolve(r(() => v.apply(this, l), { fn: v, thisArg: this, args: l })).then(f).catch(o);
     });
   }
-  return v;
+  return c;
 }
-function O(o, m = {}) {
-  let v, a, i = Y;
-  const u = (f) => {
-    clearTimeout(f), i(), i = Y;
+function ae(r, v = {}) {
+  let c, l, f = X;
+  const o = (b) => {
+    clearTimeout(b), f(), f = X;
   };
-  let b;
-  return (f) => {
-    const A = J(o), S = J(m.maxWait);
-    return v && u(v), A <= 0 || S !== void 0 && S <= 0 ? (a && (u(a), a = null), Promise.resolve(f())) : new Promise((k, s) => {
-      i = m.rejectOnCancel ? s : k, b = f, S && !a && (a = setTimeout(() => {
-        v && u(v), a = null, k(b());
-      }, S)), v = setTimeout(() => {
-        a && u(a), a = null, k(f());
-      }, A);
+  let u;
+  return (b) => {
+    const V = Q(r), w = Q(v.maxWait);
+    return c && o(c), V <= 0 || w !== void 0 && w <= 0 ? (l && (o(l), l = null), Promise.resolve(b())) : new Promise((x, s) => {
+      f = v.rejectOnCancel ? s : x, u = b, w && !l && (l = setTimeout(() => {
+        c && o(c), l = null, x(u());
+      }, w)), c = setTimeout(() => {
+        l && o(l), l = null, x(b());
+      }, V);
     });
   };
 }
-function q(o, m = 200, v = {}) {
-  return Z(
-    O(m, v),
-    o
+function N(r, v = 200, c = {}) {
+  return le(
+    ae(v, c),
+    r
   );
 }
-function ee(o, m, v = {}) {
-  const a = g(() => o[m]), i = g(
+function re(r, v, c = {}) {
+  const l = p(() => r[v]), f = p(() => !!l.value.sort), o = p(() => !!l.value.search), u = p(() => !!l.value.match), b = p(
     () => {
       var e;
-      return ((e = a.value.filters) == null ? void 0 : e.map((n) => ({
-        ...n,
-        apply: (r, d = {}) => L(n, r, d),
-        clear: (r = {}) => N(n, r),
-        bind: () => l(n.name)
-      }))) ?? [];
-    }
-  ), u = g(
-    () => {
-      var e;
-      return ((e = a.value.sorts) == null ? void 0 : e.map((n) => ({
-        ...n,
-        apply: (r = {}) => M(n, n.direction, r),
-        clear: (r = {}) => W(r),
-        bind: () => c(n)
-      }))) ?? [];
-    }
-  ), b = g(
-    () => {
-      var e;
-      return (e = a.value.searches) == null ? void 0 : e.map((n) => ({
-        ...n,
-        apply: (r = {}) => U(n, r),
-        clear: (r = {}) => U(n, r),
-        bind: () => F(n)
+      return (e = l.value.filters) == null ? void 0 : e.map((t) => ({
+        ...t,
+        apply: (a, m = {}) => M(t, a, m),
+        clear: (a = {}) => K(t, a),
+        bind: () => $(t.name)
       }));
     }
-  ), f = g(
+  ), V = p(
     () => {
       var e;
-      return ((e = a.value.filters) == null ? void 0 : e.filter(({ active: n }) => n)) ?? [];
+      return (e = l.value.sorts) == null ? void 0 : e.map((t) => ({
+        ...t,
+        apply: (a = {}) => z(t, t.direction, a),
+        clear: (a = {}) => n(a),
+        bind: () => H(t)
+      }));
     }
-  ), A = g(
+  ), w = p(
     () => {
       var e;
-      return (e = a.value.sorts) == null ? void 0 : e.find(({ active: n }) => n);
-    }
-  ), S = g(
-    () => {
-      var e;
-      return ((e = a.value.searches) == null ? void 0 : e.filter(({ active: n }) => n)) ?? [];
+      return (e = l.value.searches) == null ? void 0 : e.map((t) => ({
+        ...t,
+        apply: (a = {}) => j(t, a),
+        clear: (a = {}) => j(t, a),
+        bind: () => J(t)
+      }));
     }
   );
-  function k(e) {
-    return Array.isArray(e) ? e.join(a.value.config.delimiter) : e;
+  function x(e) {
+    return e.filter(({ active: t }) => t);
   }
-  function s(e) {
+  const s = p(
+    () => x(l.value.filters)
+  ), g = p(
+    () => {
+      var e;
+      return (e = x(l.value.sorts)) == null ? void 0 : e[0];
+    }
+  ), R = p(
+    () => x(l.value.searches)
+  );
+  function U(e) {
+    return Array.isArray(e) ? e.join(l.value.delimiter) : e;
+  }
+  function C(e) {
     return typeof e != "string" ? e : e.trim().replace(/\s+/g, "+");
   }
-  function p(e) {
+  function h(e) {
     if (!["", null, void 0, []].includes(e))
       return e;
   }
-  function G(e) {
-    return [k, s, p].reduce(
-      (n, r) => r(n),
+  function W(e) {
+    return [U, C, h].reduce(
+      (t, a) => a(t),
       e
     );
   }
-  function B(e, n) {
-    return n = Array.isArray(n) ? n : [n], n.includes(e) ? n.filter((r) => r !== e) : [...n, e];
+  function y(e, t) {
+    return t = Array.isArray(t) ? t : [t], t.includes(e) ? t.filter((a) => a !== e) : [...t, e];
   }
-  function j(e) {
-    var n;
-    return (n = a.value.filters) == null ? void 0 : n.find((r) => r.name === e);
+  function L(e) {
+    var t;
+    return typeof e != "string" ? e : (t = l.value.filters) == null ? void 0 : t.find(({ name: a }) => a === e);
   }
-  function h(e, n = null) {
-    var r;
-    return (r = a.value.sorts) == null ? void 0 : r.find(
-      (d) => d.name === e && d.direction === n
+  function T(e, t = null) {
+    var a;
+    return typeof e != "string" ? e : (a = l.value.sorts) == null ? void 0 : a.find(
+      ({ name: m, direction: k }) => m === e && k === t
     );
   }
   function E(e) {
-    var n;
-    return (n = a.value.searches) == null ? void 0 : n.find((r) => r.name === e);
+    var t;
+    return typeof e != "string" ? e : (t = l.value.searches) == null ? void 0 : t.find(({ name: a }) => a === e);
   }
-  function y(e) {
-    return e ? typeof e == "string" ? f.value.some((n) => n.name === e) : e.active : !!f.value.length;
+  function F(e) {
+    return e ? typeof e == "string" ? s.value.some((t) => t.name === e) : e.active : !!s.value.length;
   }
-  function K(e) {
-    var n;
-    return e ? typeof e == "string" ? ((n = A.value) == null ? void 0 : n.name) === e : e.active : !!A.value;
+  function B(e) {
+    var t;
+    return e ? typeof e == "string" ? ((t = g.value) == null ? void 0 : t.name) === e : e.active : !!g.value;
   }
-  function w(e) {
-    var n;
-    return e ? typeof e == "string" ? (n = S.value) == null ? void 0 : n.some((r) => r.name === e) : e.active : !!a.value.config.term;
+  function I(e) {
+    var t;
+    return e ? typeof e == "string" ? (t = R.value) == null ? void 0 : t.some((a) => a.name === e) : e.active : !!l.value.term;
   }
-  function C(e, n = {}) {
-    const r = Object.fromEntries(
-      Object.entries(e).map(([d, P]) => [d, G(P)])
+  function D(e, t = {}) {
+    const a = Object.fromEntries(
+      Object.entries(e).map(([m, k]) => [m, W(k)])
     );
-    x.reload({
-      ...v,
-      ...n,
-      data: r
+    S.reload({
+      ...c,
+      ...t,
+      data: a
     });
   }
-  function L(e, n, r = {}) {
-    const d = typeof e == "string" ? j(e) : e;
-    if (!d) {
-      console.warn(`Filter [${e}] does not exist.`);
-      return;
-    }
-    x.reload({
-      ...v,
-      ...r,
+  function M(e, t, a = {}) {
+    const m = L(e);
+    if (!m) return console.warn(`Filter [${e}] does not exist.`);
+    S.reload({
+      ...c,
+      ...a,
       data: {
-        [d.name]: G(n)
+        [m.name]: W(t)
       }
     });
   }
-  function M(e, n = null, r = {}) {
-    const d = typeof e == "string" ? h(e, n) : e;
-    if (!d) {
-      console.warn(`Sort [${e}] does not exist.`);
-      return;
-    }
-    x.reload({
-      ...v,
-      ...r,
+  function z(e, t = null, a = {}) {
+    const m = T(e, t);
+    if (!m) return console.warn(`Sort [${e}] does not exist.`);
+    if (!f.value)
+      return console.warn("Refine cannot perform sorting.");
+    S.reload({
+      ...c,
+      ...a,
       data: {
-        [a.value.config.sort]: p(d.next)
+        [l.value.sort]: h(m.next)
       }
     });
   }
-  function T(e, n = {}) {
-    e = [s, p].reduce(
-      (r, d) => d(r),
+  function O(e, t = {}) {
+    if (e = [C, h].reduce(
+      (a, m) => m(a),
       e
-    ), x.reload({
-      ...v,
-      ...n,
+    ), !o.value)
+      return console.warn("Refine cannot perform searching.");
+    S.reload({
+      ...c,
+      ...t,
       data: {
-        [a.value.config.search]: e
+        [l.value.search]: e
       }
     });
   }
-  function U(e, n = {}) {
-    const r = typeof e == "string" ? E(e) : e;
-    if (!r) {
-      console.warn(`Match [${e}] does not exist.`);
-      return;
-    }
-    const d = B(
-      r.name,
-      S.value.map(({ name: P }) => P)
+  function j(e, t = {}) {
+    const a = E(e);
+    if (!a) return console.warn(`Match [${e}] does not exist.`);
+    if (!u.value || !o.value)
+      return console.warn("Refine cannot perform matching.");
+    const m = y(
+      a.name,
+      R.value.map(({ name: k }) => k)
     );
-    x.reload({
-      ...v,
-      ...n,
+    S.reload({
+      ...c,
+      ...t,
       data: {
-        [a.value.config.match]: k(d)
+        [l.value.match]: U(m)
       }
     });
   }
-  function N(e, n = {}) {
-    L(e, void 0, n);
+  function K(e, t = {}) {
+    if (e) return M(e, null, t);
+    S.reload({
+      ...c,
+      ...t,
+      data: Object.fromEntries(
+        s.value.map(({ name: a }) => [a, null])
+      )
+    });
   }
-  function W(e = {}) {
-    x.reload({
-      ...v,
+  function n(e = {}) {
+    if (!f.value)
+      return console.warn("Refine cannot perform sorting.");
+    S.reload({
+      ...c,
       ...e,
       data: {
-        [a.value.config.sort]: void 0
+        [l.value.sort]: null
       }
     });
   }
-  function R(e = {}) {
-    T(void 0, e);
+  function i(e = {}) {
+    O(null, e);
   }
-  function D(e = {}) {
-    if (!a.value.config.match) {
-      console.warn("Matches key is not set.");
-      return;
-    }
-    x.reload({
-      ...v,
+  function d(e = {}) {
+    if (!u.value)
+      return console.warn("Refine cannot perform matching.");
+    S.reload({
+      ...c,
       ...e,
       data: {
-        [a.value.config.match]: void 0
+        [l.value.match]: null
       }
     });
   }
-  function t(e = {}) {
-    var n;
-    x.reload({
-      ...v,
+  function A(e = {}) {
+    var t;
+    S.reload({
+      ...c,
       ...e,
       data: {
-        [a.value.config.search]: void 0,
-        [a.value.config.sort]: void 0,
-        [a.value.config.match]: void 0,
+        [l.value.search ?? ""]: void 0,
+        [l.value.sort ?? ""]: void 0,
+        [l.value.match ?? ""]: void 0,
         ...Object.fromEntries(
-          ((n = a.value.filters) == null ? void 0 : n.map((r) => [
-            r.name,
+          ((t = l.value.filters) == null ? void 0 : t.map((a) => [
+            a.name,
             void 0
           ])) ?? []
         )
       }
     });
   }
-  function l(e, n = {}) {
-    const r = typeof e == "string" ? j(e) : e;
-    if (!r) {
-      console.warn(`Filter [${e}] does not exist.`);
-      return;
-    }
-    const d = r.value, {
-      debounce: P = 250,
-      transform: z = (H) => H,
-      ...$
-    } = n;
+  function $(e, t = {}) {
+    const a = L(e);
+    if (!a) return console.warn(`Filter [${e}] does not exist.`);
+    const {
+      debounce: m = 250,
+      transform: k = (P) => P,
+      ...G
+    } = t;
     return {
-      "onUpdate:modelValue": q((H) => {
-        L(r, z(H), $);
-      }, P),
-      modelValue: d
+      "onUpdate:modelValue": N((P) => {
+        M(a, k(P), G);
+      }, m),
+      modelValue: a.value
     };
   }
-  function c(e, n = {}) {
-    const r = typeof e == "string" ? h(e) : e;
-    if (!r) {
-      console.warn(`Sort [${e}] does not exist.`);
-      return;
-    }
-    const { debounce: d = 0, transform: P, ...z } = n;
+  function H(e, t = {}) {
+    const a = T(e);
+    if (!a) return console.warn(`Sort [${e}] does not exist.`);
+    const { debounce: m = 0, transform: k, ...G } = t;
     return {
-      onClick: q(() => {
-        var $;
-        M(r, ($ = A.value) == null ? void 0 : $.direction, z);
-      }, d)
+      onClick: N(() => {
+        var P;
+        z(a, (P = g.value) == null ? void 0 : P.direction, G);
+      }, m)
     };
   }
-  function V(e = {}) {
-    const { debounce: n = 700, transform: r, ...d } = e;
+  function _(e = {}) {
+    const { debounce: t = 700, transform: a, ...m } = e;
     return {
-      "onUpdate:modelValue": q(
-        (P) => {
-          T(P, d);
+      "onUpdate:modelValue": N(
+        (k) => {
+          O(k, m);
         },
-        n
+        t
       ),
-      modelValue: a.value.config.term ?? ""
+      modelValue: l.value.term ?? ""
     };
   }
-  function F(e, n = {}) {
-    const r = typeof e == "string" ? E(e) : e;
-    if (!r) {
-      console.warn(`Match [${e}] does not exist.`);
-      return;
-    }
-    const { debounce: d = 0, transform: P, ...z } = n;
+  function J(e, t = {}) {
+    const a = E(e);
+    if (!a) return console.warn(`Match [${e}] does not exist.`);
+    const { debounce: m = 0, transform: k, ...G } = t;
     return {
-      "onUpdate:modelValue": q(($) => {
-        U($, z);
-      }, d),
-      modelValue: w(r),
-      value: r.name
+      "onUpdate:modelValue": N((P) => {
+        j(P, G);
+      }, m),
+      modelValue: I(a),
+      value: a.name
     };
   }
   return {
-    filters: i,
-    sorts: u,
-    searches: b,
-    getFilter: j,
-    getSort: h,
+    filters: b,
+    sorts: V,
+    searches: w,
+    currentFilters: s,
+    currentSort: g,
+    currentSearches: R,
+    isSortable: f,
+    isSearchable: o,
+    isMatchable: u,
+    isFiltering: F,
+    isSorting: B,
+    isSearching: I,
+    getFilter: L,
+    getSort: T,
     getSearch: E,
-    currentFilters: f,
-    currentSort: A,
-    currentSearches: S,
-    isFiltering: y,
-    isSorting: K,
-    isSearching: w,
-    apply: C,
-    applyFilter: L,
-    applySort: M,
-    applySearch: T,
-    applyMatch: U,
-    clearFilter: N,
-    clearSort: W,
-    clearSearch: R,
-    clearMatch: D,
-    reset: t,
-    bindFilter: l,
-    bindSort: c,
-    bindSearch: V,
-    bindMatch: F,
-    stringValue: s,
-    omitValue: p,
-    toggleValue: B,
-    delimitArray: k
+    apply: D,
+    applyFilter: M,
+    applySort: z,
+    applySearch: O,
+    applyMatch: j,
+    clearFilter: K,
+    clearSort: n,
+    clearSearch: i,
+    clearMatch: d,
+    reset: A,
+    bindFilter: $,
+    bindSort: H,
+    bindSearch: _,
+    bindMatch: J,
+    stringValue: C,
+    omitValue: h,
+    toggleValue: y,
+    delimitArray: U
   };
 }
-function le(o, m, v = {}, a = {}) {
-  if (!o || !m || !o[m])
-    throw new Error("Table has not been provided with valid props and key.");
-  a = {
-    ...a,
-    only: [...a.only ?? [], m.toString()]
-  };
-  const i = g(() => o[m]), u = X(), b = ee(o, m, a), f = g(() => i.value.config), A = g(() => i.value.meta), S = g(
-    () => {
-      var t;
-      return ((t = i.value.columns) == null ? void 0 : t.filter(({ active: l, hidden: c }) => l && !c).map((l) => {
-        var c;
-        return {
-          ...l,
-          isSorting: (c = l.sort) == null ? void 0 : c.active,
-          toggleSort: (V = {}) => U(l, V)
-        };
-      })) ?? [];
-    }
-  ), k = g(
-    () => {
-      var t;
-      return ((t = i.value.columns) == null ? void 0 : t.filter(({ hidden: l }) => !l).map((l) => ({
-        ...l,
-        toggle: (c = {}) => N(l, c)
-      }))) ?? [];
-    }
-  ), s = g(
-    () => i.value.records.map((t) => ({
-      record: (({ actions: l, ...c }) => c)(t),
+function ie(r, v, c = {}) {
+  if (!(r != null && r[v]))
+    throw new Error("The table must be provided with valid props and key.");
+  const { recordActions: l = {}, ...f } = {
+    only: [...c.only ?? [], v.toString()],
+    ...c
+  }, o = p(() => r[v]), u = te(), b = re(r, v, f), V = p(() => !!o.value.page && !!o.value.record), w = p(() => !!o.value.column), x = p(
+    () => o.value.columns.filter(({ active: n, hidden: i }) => n && !i).map((n) => {
+      var i;
+      return {
+        ...n,
+        isSorting: !!((i = n.sort) != null && i.active),
+        toggleSort: (d = {}) => b.applySort(n.sort, null, d)
+      };
+    })
+  ), s = p(
+    () => o.value.columns.filter(({ hidden: n }) => !n).map((n) => ({
+      ...n,
+      toggle: (i = {}) => z(n.name, i)
+    }))
+  ), g = p(
+    () => o.value.records.map((n) => ({
+      record: (({ actions: i, ...d }) => d)(n),
       /** The actions available for the record */
-      actions: t.actions.map((l) => ({
-        ...l,
-        /** Executes this action */
-        execute: (c = {}) => C(l, t, c)
-      })),
+      actions: E(n.actions),
       /** Perform this action when the record is clicked */
-      default: (l = {}) => {
-        const c = t.actions.find(
-          (V) => V.default
-        );
-        c && C(c, t, l);
+      default: (i = {}) => {
+        const d = n.actions.find(({ default: A }) => A);
+        d && B(d, n, i);
       },
       /** Selects this record */
-      select: () => u.select(y(t)),
+      select: () => u.select(y(n)),
       /** Deselects this record */
-      deselect: () => u.deselect(y(t)),
+      deselect: () => u.deselect(y(n)),
       /** Toggles the selection of this record */
-      toggle: () => u.toggle(y(t)),
+      toggle: () => u.toggle(y(n)),
       /** Determine if the record is selected */
-      selected: u.selected(y(t)),
+      selected: u.selected(y(n)),
       /** Bind the record to a checkbox */
-      bind: () => u.bind(y(t)),
+      bind: () => u.bind(y(n)),
       /** Get the value of the record for the column */
-      value: (l) => {
-        const c = K(l);
-        return c in t ? t[c].value : null;
+      value: (i) => {
+        const d = L(i);
+        return d in n ? n[d].v : null;
       },
       /** Get the extra data of the record for the column */
-      extra: (l) => {
-        const c = K(l);
-        return c in t ? t[c].extra : null;
+      extra: (i) => {
+        const d = L(i);
+        return d in n ? n[d].e : null;
       }
     }))
-  ), p = g(
-    () => i.value.actions.bulk.map((t) => ({
-      ...t,
-      execute: (l = {}) => L(t, l)
-    }))
-  ), G = g(
-    () => i.value.actions.page.map((t) => ({
-      ...t,
-      execute: (l = {}) => M(t, l)
-    }))
-  ), B = g(
-    () => {
-      var t;
-      return ((t = i.value.recordsPerPage) == null ? void 0 : t.map((l) => ({
-        ...l,
-        apply: (c = {}) => T(l, c)
-      }))) ?? [];
-    }
-  ), j = g(
-    () => {
-      var t;
-      return (t = i.value.recordsPerPage) == null ? void 0 : t.find(({ active: l }) => l);
-    }
-  ), h = g(() => ({
-    ...i.value.paginator,
-    next: (t = {}) => {
-      "nextLink" in h.value && h.value.nextLink && w(h.value.nextLink, t);
+  ), R = p(() => E(o.value.operations.bulk)), U = p(() => E(o.value.operations.page)), C = p(
+    () => o.value.pages.find(({ active: n }) => n)
+  ), h = p(() => ({
+    ...o.value.paginate,
+    next: (n = {}) => {
+      "nextLink" in h.value && h.value.nextLink && F(h.value.nextLink, n);
     },
-    previous: (t = {}) => {
-      "prevLink" in h.value && h.value.prevLink && w(h.value.prevLink, t);
+    previous: (n = {}) => {
+      "prevLink" in h.value && h.value.prevLink && F(h.value.prevLink, n);
     },
-    first: (t = {}) => {
-      "firstLink" in h.value && h.value.firstLink && w(h.value.firstLink, t);
+    first: (n = {}) => {
+      "firstLink" in h.value && h.value.firstLink && F(h.value.firstLink, n);
     },
-    last: (t = {}) => {
-      "lastLink" in h.value && h.value.lastLink && w(h.value.lastLink, t);
+    last: (n = {}) => {
+      "lastLink" in h.value && h.value.lastLink && F(h.value.lastLink, n);
     },
-    ..."links" in i.value.paginator && i.value.paginator.links ? {
-      links: i.value.paginator.links.map((t) => ({
-        ...t,
-        navigate: (l = {}) => t.url && w(t.url, l)
+    ..."links" in o.value.paginate && o.value.paginate.links ? {
+      links: o.value.paginate.links.map((n) => ({
+        ...n,
+        navigate: (i = {}) => n.url && F(n.url, i)
       }))
     } : {}
-  })), E = g(
-    () => i.value.records.length > 0 && i.value.records.every(
-      (t) => u.selected(y(t))
+  })), W = p(
+    () => o.value.records.length > 0 && o.value.records.every(
+      (n) => u.selected(y(n))
     )
   );
-  function y(t) {
-    return t[f.value.key].value;
+  function y(n) {
+    return n[o.value.key].v;
   }
-  function K(t) {
-    return typeof t == "string" ? t : t.name;
+  function L(n) {
+    return typeof n == "string" ? n : n.name;
   }
-  function w(t, l = {}) {
-    x.visit(t, {
+  function T(n, i = {}, d = {}) {
+    return Y(
+      n,
+      o.value.endpoint,
+      o.value.id,
+      i,
+      {
+        ...f,
+        ...d
+      }
+    );
+  }
+  function E(n) {
+    return ne(
+      n,
+      o.value.endpoint,
+      o.value.id,
+      f
+    );
+  }
+  function F(n, i = {}) {
+    S.visit(n, {
       preserveScroll: !0,
       preserveState: !0,
-      ...a,
-      ...l,
+      ...f,
+      ...i,
       method: "get"
     });
   }
-  function C(t, l, c = {}) {
-    var F, e;
-    I(
-      t,
-      f.value.endpoint,
+  function B(n, i, d = {}) {
+    var $;
+    T(
+      n,
       {
-        id: i.value.id,
-        record: y(l)
+        record: y(i)
       },
-      c
-    ) || (e = (F = v.recordActions) == null ? void 0 : F[t.name]) == null || e.call(F, l);
+      d
+    ) || ($ = l == null ? void 0 : l[n.name]) == null || $.call(l, i);
   }
-  function L(t, l = {}) {
-    I(
-      t,
-      f.value.endpoint,
+  function I(n, i = {}) {
+    T(
+      n,
       {
-        id: i.value.id,
         all: u.selection.value.all,
         only: Array.from(u.selection.value.only),
         except: Array.from(u.selection.value.except)
       },
       {
-        ...l,
-        onSuccess: (c) => {
-          var V;
-          (V = l.onSuccess) == null || V.call(l, c), t.keepSelected || u.deselectAll();
+        ...i,
+        onSuccess: (d) => {
+          var A;
+          (A = i.onSuccess) == null || A.call(i, d), n.keepSelected || u.deselectAll();
         }
       }
     );
   }
-  function M(t, l = {}) {
-    I(
-      t,
-      f.value.endpoint,
-      {
-        id: i.value.id
-      },
-      l
+  function D(n, i = {}, d = {}) {
+    return T(n, i, d);
+  }
+  function M(n, i = {}) {
+    if (!V.value)
+      return console.warn("The table does not support pagination changes.");
+    S.reload({
+      ...f,
+      ...i,
+      data: {
+        [o.value.record]: n.value,
+        [o.value.page]: void 0
+      }
+    });
+  }
+  function z(n, i = {}) {
+    if (!w.value)
+      return console.warn("The table does not support column toggling.");
+    const d = L(n);
+    if (!d) return console.log(`Column [${n}] does not exist.`);
+    const A = b.toggleValue(
+      d,
+      x.value.map(({ name: $ }) => $)
     );
-  }
-  function T(t, l = {}) {
-    x.reload({
-      ...a,
-      ...l,
+    S.reload({
+      ...f,
+      ...i,
       data: {
-        [f.value.record]: t.value,
-        [f.value.page]: void 0
+        [o.value.column]: b.delimitArray(A)
       }
     });
   }
-  function U(t, l = {}) {
-    t.sort && x.reload({
-      ...a,
-      ...l,
-      data: {
-        [f.value.sort]: b.omitValue(t.sort.next)
-      }
-    });
-  }
-  function N(t, l = {}) {
-    const c = b.toggleValue(
-      t.name,
-      S.value.map(({ name: V }) => V)
-    );
-    x.reload({
-      ...a,
-      ...l,
-      data: {
-        [f.value.column]: b.delimitArray(c)
-      }
-    });
-  }
-  function W() {
+  function O() {
     u.select(
-      ...i.value.records.map(
-        (t) => y(t)
+      ...o.value.records.map(
+        (n) => y(n)
       )
     );
   }
-  function R() {
+  function j() {
     u.deselect(
-      ...i.value.records.map(
-        (t) => y(t)
+      ...o.value.records.map(
+        (n) => y(n)
       )
     );
   }
-  function D() {
+  function K() {
     return {
-      "onUpdate:modelValue": (t) => {
-        t ? W() : R();
+      "onUpdate:modelValue": (n) => {
+        n ? O() : j();
       },
-      modelValue: E.value
+      modelValue: W.value
     };
   }
-  return Q({
+  return Z({
+    /** The table's configuration */
+    table: o,
     /** Retrieve a record's identifier */
     getRecordKey: y,
     /** Table-specific metadata */
-    meta: A,
+    meta: o.value.meta,
     /** The heading columns for the table */
-    headings: S,
+    headings: x,
     /** All of the table's columns */
-    columns: k,
+    columns: s,
     /** The records of the table */
-    records: s,
+    records: g,
     /** Whether the table has record actions */
-    inline: i.value.actions.inline,
+    inline: o.value.operations.inline,
     /** The available bulk actions */
-    bulkActions: p,
+    bulk: R,
     /** The available page actions */
-    pageActions: G,
+    page: U,
     /** The available number of records to display per page */
-    rowsPerPage: B,
+    pages: o.value.pages,
     /** The current record per page item */
-    currentPage: j,
+    currentPage: C,
     /** The pagination metadata */
     paginator: h,
     /** Execute an inline action */
-    executeInlineAction: C,
+    executeInline: B,
     /** Execute a bulk action */
-    executeBulkAction: L,
+    executeBulk: I,
     /** Execute a page action */
-    executePageAction: M,
+    executePage: D,
     /** Apply a new page by changing the number of records to display */
-    applyPage: T,
+    applyPage: M,
     /** The current selection of records */
     selection: u.selection,
     /** Select the given records */
-    select: (t) => u.select(y(t)),
+    select: (n) => u.select(y(n)),
     /** Deselect the given records */
-    deselect: (t) => u.deselect(y(t)),
+    deselect: (n) => u.deselect(y(n)),
     /** Select records on the current page */
-    selectPage: W,
+    selectPage: O,
     /** Deselect records on the current page */
-    deselectPage: R,
+    deselectPage: j,
     /** Toggle the selection of the given records */
-    toggle: (t) => u.toggle(y(t)),
+    toggle: (n) => u.toggle(y(n)),
     /** Determine if the given record is selected */
-    selected: (t) => u.selected(y(t)),
+    selected: (n) => u.selected(y(n)),
     /** Select all records */
     selectAll: u.selectAll,
     /** Deselect all records */
     deselectAll: u.deselectAll,
     /** Whether all records on the current page are selected */
-    isPageSelected: E,
+    isPageSelected: W,
     /** Determine if any records are selected */
     hasSelected: u.hasSelected,
     /** Bind the given record to a checkbox */
-    bindCheckbox: (t) => u.bind(y(t)),
+    bindCheckbox: (n) => u.bind(y(n)),
     /** Bind the select all checkbox to the current page */
-    bindPage: D,
+    bindPage: K,
     /** Bind select all records to the checkbox */
     bindAll: u.bindAll,
     /** Include the sorts, filters, and search query */
     ...b
   });
 }
+function ce(r, v) {
+  return r ? typeof r == "object" ? r.type === v : r === v : !1;
+}
 export {
-  le as useTable
+  ce as is,
+  ie as useTable
 };
