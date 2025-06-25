@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Flash;
 
-use Honed\Flash\Contracts\Message as MessageContract;
+use Honed\Flash\Contracts\Flashable;
 use Honed\Flash\Facades\Flash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
@@ -23,10 +23,10 @@ class FlashServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/flash.php', 'flash');
 
-        /** @var class-string<MessageContract> */
+        /** @var class-string<Flashable> */
         $implementation = config('flash.implementation', Message::class);
 
-        $this->app->bind(MessageContract::class, $implementation);
+        $this->app->bind(Flashable::class, $implementation);
     }
 
     /**
@@ -38,6 +38,7 @@ class FlashServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
+
             $this->publishes([
                 __DIR__.'/../config/flash.php' => config_path('flash.php'),
             ], 'config');
@@ -80,7 +81,7 @@ class FlashServiceProvider extends ServiceProvider
     protected function registerRedirectResponseMacros()
     {
         RedirectResponse::macro('flash', function (
-            string|MessageContract $message,
+            string|Flashable $message,
             ?string $type = null,
             ?int $duration = null,
         ) {
@@ -99,7 +100,7 @@ class FlashServiceProvider extends ServiceProvider
     protected function registerInertiaMacros()
     {
         ResponseFactory::macro('flash', function (
-            string|MessageContract $message,
+            string|Flashable $message,
             ?string $type = null,
             ?int $duration = null,
         ) {
@@ -110,7 +111,7 @@ class FlashServiceProvider extends ServiceProvider
         });
 
         Response::macro('flash', function (
-            string|MessageContract $message,
+            string|Flashable $message,
             ?string $type = null,
             ?int $duration = null,
         ) {

@@ -52,7 +52,7 @@ return [
     | Globally configure the concrete implementation of the flash message. By
     | default, the implementation is the `Message` class provided by the
     | package - but you can customise these by implementing the
-    | `Honed\Flash\Contracts\Message` contract.
+    | `Honed\Flash\Contracts\Flashable` contract.
     */
 
     'implementation' => Honed\Flash\Message::class,

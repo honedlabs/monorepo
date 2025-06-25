@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Flash;
 
-use Honed\Flash\Contracts\Message;
+use Honed\Flash\Contracts\Flashable;
 use Illuminate\Session\Store;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -18,15 +18,15 @@ class FlashFactory
     /**
      * Flash a new message to the session.
      *
-     * @param  string|Message  $message
+     * @param  string|Flashable  $message
      * @param  string|null  $type
      * @param  int|null  $duration
      * @return $this
      */
     public function message($message, $type = null, $duration = null)
     {
-        if (! $message instanceof Message) {
-            $message = App::make(Message::class)->make($message, $type, $duration);
+        if (! $message instanceof Flashable) {
+            $message = App::make(Flashable::class)->make($message, $type, $duration);
         }
 
         $this->session->flash($this->getProperty(), $message->toArray());

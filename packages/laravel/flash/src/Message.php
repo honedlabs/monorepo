@@ -6,9 +6,12 @@ namespace Honed\Flash;
 
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Primitive;
-use Honed\Flash\Contracts\Message as MessageContract;
+use Honed\Flash\Contracts\Flashable;
 
-class Message extends Primitive implements MessageContract
+/**
+ * @extends \Honed\Core\Primitive<string,mixed>
+ */
+class Message extends Primitive implements Flashable
 {
     use HasType {
         getType as protected getBaseType;
@@ -197,7 +200,7 @@ class Message extends Primitive implements MessageContract
      *
      * @return array<string,mixed>
      */
-    public function toArray()
+    protected function representation(): array
     {
         return [
             'message' => $this->getMessage(),

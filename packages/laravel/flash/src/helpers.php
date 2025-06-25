@@ -6,7 +6,7 @@ if (! \function_exists('flash')) {
     /**
      * Flash a new message to the session.
      *
-     * @param  string|Honed\Flash\Contracts\Message|null  $message
+     * @param  string|Honed\Flash\Contracts\Flashable|null  $flash
      * @param  string|null  $type
      * @param  string|null  $title
      * @param  int|null  $duration
@@ -14,7 +14,7 @@ if (! \function_exists('flash')) {
      * @return Honed\Flash\FlashFactory
      */
     function flash(
-        $message = null,
+        $flash = null,
         $type = null,
         $title = null,
         $duration = null,
@@ -22,7 +22,7 @@ if (! \function_exists('flash')) {
     ) {
         $instance = Honed\Flash\Facades\Flash::getFacadeRoot();
 
-        if ($message) {
+        if ($flash) {
             // @phpstan-ignore-next-line
             return $instance->message(...\func_get_args());
         }

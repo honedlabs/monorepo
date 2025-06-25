@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Flash\Contracts;
 
-interface Message
+interface Flashable
 {
     /**
      * Create a new flash message.
