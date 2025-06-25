@@ -5,10 +5,13 @@ import type {
 	PageOperation,
 	MaybeId,
 	MaybeEndpoint,
+	PageOperationData,
+	BulkSelection,
 } from "@honed/action";
 import type { Refine } from "@honed/refine";
 import type { Paginate, PaginateMap, PageOption } from "./paginate";
 import type { BaseColumn, Column, Heading } from "./columns";
+import { ComputedRef, Ref } from "vue";
 
 export type Identifier = string | number;
 
@@ -44,7 +47,7 @@ export interface Table<
 	column?: string;
 	record?: string;
 	page?: string;
-	records: Array<TableEntry<T> & { actions: InlineOperation[] }>;
+	records: Array<TableEntry<T> & { operations: InlineOperation[] }>;
 	paginate: PaginateMap[K];
 	columns: BaseColumn<T>[];
 	pages: PageOption[];
@@ -64,7 +67,7 @@ export interface TableRecord<
 > {
 	record: RecordType;
 	default: (options?: VisitOptions) => void;
-	actions: InlineOperation[];
+	operations: InlineOperation[];
 	select: () => void;
 	deselect: () => void;
 	toggle: () => void;
@@ -80,7 +83,42 @@ export interface TableOptions<
 	/**
 	 * Mappings of operations to be applied on a record in JavaScript.
 	 */
-	recordActions?: Record<string, (record: TableEntry<RecordType>) => void>;
+	recordOperations?: Record<string, (record: TableEntry<RecordType>) => void>;
+}
+
+export interface HonedTable<
+	T extends Record<string, any> = Record<string, any>,
+	K extends Paginate = "length-aware",
+> {
+	meta: ComputedRef<Record<string, any>|null>;
+	isPageable: ComputedRef<boolean>;
+	isToggleable: ComputedRef<boolean>;
+	getRecordKey: (record: TableEntry<T>) => Identifier;
+	headings: ComputedRef<Heading<T>[]>;
+	columns: ComputedRef<Column<T>[]>;
+	records: ComputedRef<TableRecord<T>[]>;
+	inline: ComputedRef<boolean>;
+	bulk: ComputedRef<InlineOperation[]>;
+	page: ComputedRef<PageOperation[]>;
+	pages: ComputedRef<PageOption[]>;
+	currentPage: ComputedRef<PageOption|null>;
+	paginator: ComputedRef<PaginateMap[K]>;
+	executeInline: (operation: InlineOperation, data: TableEntry<T>, options?: VisitOptions) => void;
+	executeBulk: (operation: BulkOperation, options?: VisitOptions) => void;
+	executePage: (operation: PageOperation, data?: PageOperationData, options?: VisitOptions) => void;
+	applyPage: (page: PageOption, options?: VisitOptions) => void;
+	selection: Ref<BulkSelection<Identifier>, BulkSelection<Identifier>>
+	select: (record: TableEntry<T>) => void;
+	deselect: (record: TableEntry<T>) => void;
+	toggle: (record: TableEntry<T>) => void;
+	selected: (record: TableEntry<T>) => boolean;
+	selectAll: () => void;
+	deselectAll: () => void;
+	isPageSelected: ComputedRef<boolean>;
+	hasSelection: ComputedRef<boolean>;
+	bindCheckbox: (record: TableEntry<T>) => void;
+	bindPage: () => void
+	bindAll: () => void	
 }
 
 export * from "./columns";

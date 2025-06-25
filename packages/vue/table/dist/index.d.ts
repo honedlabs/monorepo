@@ -105,7 +105,7 @@ export declare interface Table<T extends Record<string, any> = Record<string, an
     record?: string;
     page?: string;
     records: Array<TableEntry<T> & {
-        actions: InlineOperation[];
+        operations: InlineOperation[];
     }>;
     paginate: PaginateMap[K];
     columns: BaseColumn<T>[];
@@ -134,13 +134,13 @@ export declare interface TableOptions<RecordType extends Record<string, any> = R
     /**
      * Mappings of operations to be applied on a record in JavaScript.
      */
-    recordActions?: Record<string, (record: TableEntry<RecordType>) => void>;
+    recordOperations?: Record<string, (record: TableEntry<RecordType>) => void>;
 }
 
 export declare interface TableRecord<RecordType extends Record<string, any> = Record<string, any>> {
     record: RecordType;
     default: (options?: VisitOptions) => void;
-    actions: InlineOperation[];
+    operations: InlineOperation[];
     select: () => void;
     deselect: () => void;
     toggle: () => void;
@@ -159,11 +159,11 @@ export declare function useTable<T extends Record<string, Table>, K extends Reco
         bind: () => void | {
             "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
             modelValue: FilterValue;
-        }; /** Bind the record to a checkbox */
+        };
         type: string;
         value: FilterValue;
         options: Option_2[];
-        name: string; /** Get the value of the record for the column */
+        name: string;
         label: string;
         active: boolean;
         meta: Record<string, any>;
@@ -231,6 +231,9 @@ export declare function useTable<T extends Record<string, Table>, K extends Reco
     };
     bindMatch: (match: string | Search, options?: BindingOptions | undefined) => void | {
         "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
+        /**
+         * Create operations with execute methods
+         */
         modelValue: boolean;
         value: string;
     };
@@ -245,13 +248,13 @@ export declare function useTable<T extends Record<string, Table>, K extends Reco
     columns: Column<K>[];
     records: {
         record: Omit<TableEntry<K> & {
-            actions: InlineOperation[];
-        }, "actions">;
-        /** The actions available for the record */
-        actions: (InlineOperation & {
+            operations: InlineOperation[];
+        }, "operations">;
+        /** The operations available for the record */
+        operations: (InlineOperation & {
             execute: (data?: any, options?: Partial<Visit & VisitCallbacks> | undefined) => boolean;
         })[];
-        /** Perform this action when the record is clicked */
+        /** Perform this operation when the record is clicked */
         default: (options?: VisitOptions) => void;
         /** Selects this record */
         select: () => void;

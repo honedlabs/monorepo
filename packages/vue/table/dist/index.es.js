@@ -14,7 +14,7 @@ function ee(r, v, c, l = {}) {
     l
   ), !0) : !1;
 }
-function Y(r, v, c, l = {}, f = {}) {
+function Y(r, v, c, l = {}, d = {}) {
   return ee(
     r,
     v,
@@ -23,14 +23,14 @@ function Y(r, v, c, l = {}, f = {}) {
       id: c ?? void 0
     },
     {
-      ...f
+      ...d
     }
   );
 }
 function ne(r, v, c, l = {}) {
-  return r.map((f) => ({
-    ...f,
-    execute: (o = {}, u = {}) => Y(f, v, c, o, { ...l, ...u })
+  return r.map((d) => ({
+    ...d,
+    execute: (o = {}, u = {}) => Y(d, v, c, o, { ...l, ...u })
   }));
 }
 function te() {
@@ -48,11 +48,11 @@ function te() {
   function l(...s) {
     s.forEach((g) => r.value.except.delete(g)), s.forEach((g) => r.value.only.add(g));
   }
-  function f(...s) {
+  function d(...s) {
     s.forEach((g) => r.value.except.add(g)), s.forEach((g) => r.value.only.delete(g));
   }
   function o(s, g) {
-    if (u(s) || g === !1) return f(s);
+    if (u(s) || g === !1) return d(s);
     if (!u(s) || g === !0) return l(s);
   }
   function u(s) {
@@ -62,7 +62,7 @@ function te() {
   function w(s) {
     return {
       "onUpdate:modelValue": (g) => {
-        g ? l(s) : f(s);
+        g ? l(s) : d(s);
       },
       modelValue: u(s),
       value: s
@@ -83,7 +83,7 @@ function te() {
     selectAll: v,
     deselectAll: c,
     select: l,
-    deselect: f,
+    deselect: d,
     toggle: o,
     selected: u,
     bind: w,
@@ -95,22 +95,22 @@ const X = () => {
 };
 function le(r, v) {
   function c(...l) {
-    return new Promise((f, o) => {
-      Promise.resolve(r(() => v.apply(this, l), { fn: v, thisArg: this, args: l })).then(f).catch(o);
+    return new Promise((d, o) => {
+      Promise.resolve(r(() => v.apply(this, l), { fn: v, thisArg: this, args: l })).then(d).catch(o);
     });
   }
   return c;
 }
 function ae(r, v = {}) {
-  let c, l, f = X;
+  let c, l, d = X;
   const o = (b) => {
-    clearTimeout(b), f(), f = X;
+    clearTimeout(b), d(), d = X;
   };
   let u;
   return (b) => {
     const V = Q(r), w = Q(v.maxWait);
     return c && o(c), V <= 0 || w !== void 0 && w <= 0 ? (l && (o(l), l = null), Promise.resolve(b())) : new Promise((x, s) => {
-      f = v.rejectOnCancel ? s : x, u = b, w && !l && (l = setTimeout(() => {
+      d = v.rejectOnCancel ? s : x, u = b, w && !l && (l = setTimeout(() => {
         c && o(c), l = null, x(u());
       }, w)), c = setTimeout(() => {
         l && o(l), l = null, x(b());
@@ -125,7 +125,7 @@ function N(r, v = 200, c = {}) {
   );
 }
 function re(r, v, c = {}) {
-  const l = p(() => r[v]), f = p(() => !!l.value.sort), o = p(() => !!l.value.search), u = p(() => !!l.value.match), b = p(
+  const l = p(() => r[v]), d = p(() => !!l.value.sort), o = p(() => !!l.value.search), u = p(() => !!l.value.match), b = p(
     () => {
       var e;
       return (e = l.value.filters) == null ? void 0 : e.map((t) => ({
@@ -166,13 +166,13 @@ function re(r, v, c = {}) {
       var e;
       return (e = x(l.value.sorts)) == null ? void 0 : e[0];
     }
-  ), R = p(
+  ), U = p(
     () => x(l.value.searches)
   );
-  function U(e) {
+  function C(e) {
     return Array.isArray(e) ? e.join(l.value.delimiter) : e;
   }
-  function C(e) {
+  function O(e) {
     return typeof e != "string" ? e : e.trim().replace(/\s+/g, "+");
   }
   function h(e) {
@@ -180,7 +180,7 @@ function re(r, v, c = {}) {
       return e;
   }
   function W(e) {
-    return [U, C, h].reduce(
+    return [C, O, h].reduce(
       (t, a) => a(t),
       e
     );
@@ -211,7 +211,7 @@ function re(r, v, c = {}) {
   }
   function I(e) {
     var t;
-    return e ? typeof e == "string" ? (t = R.value) == null ? void 0 : t.some((a) => a.name === e) : e.active : !!l.value.term;
+    return e ? typeof e == "string" ? (t = U.value) == null ? void 0 : t.some((a) => a.name === e) : e.active : !!l.value.term;
   }
   function D(e, t = {}) {
     const a = Object.fromEntries(
@@ -237,7 +237,7 @@ function re(r, v, c = {}) {
   function z(e, t = null, a = {}) {
     const m = T(e, t);
     if (!m) return console.warn(`Sort [${e}] does not exist.`);
-    if (!f.value)
+    if (!d.value)
       return console.warn("Refine cannot perform sorting.");
     S.reload({
       ...c,
@@ -247,8 +247,8 @@ function re(r, v, c = {}) {
       }
     });
   }
-  function O(e, t = {}) {
-    if (e = [C, h].reduce(
+  function R(e, t = {}) {
+    if (e = [O, h].reduce(
       (a, m) => m(a),
       e
     ), !o.value)
@@ -268,13 +268,13 @@ function re(r, v, c = {}) {
       return console.warn("Refine cannot perform matching.");
     const m = y(
       a.name,
-      R.value.map(({ name: k }) => k)
+      U.value.map(({ name: k }) => k)
     );
     S.reload({
       ...c,
       ...t,
       data: {
-        [l.value.match]: U(m)
+        [l.value.match]: C(m)
       }
     });
   }
@@ -289,7 +289,7 @@ function re(r, v, c = {}) {
     });
   }
   function n(e = {}) {
-    if (!f.value)
+    if (!d.value)
       return console.warn("Refine cannot perform sorting.");
     S.reload({
       ...c,
@@ -300,9 +300,9 @@ function re(r, v, c = {}) {
     });
   }
   function i(e = {}) {
-    O(null, e);
+    R(null, e);
   }
-  function d(e = {}) {
+  function f(e = {}) {
     if (!u.value)
       return console.warn("Refine cannot perform matching.");
     S.reload({
@@ -362,7 +362,7 @@ function re(r, v, c = {}) {
     return {
       "onUpdate:modelValue": N(
         (k) => {
-          O(k, m);
+          R(k, m);
         },
         t
       ),
@@ -387,8 +387,8 @@ function re(r, v, c = {}) {
     searches: w,
     currentFilters: s,
     currentSort: g,
-    currentSearches: R,
-    isSortable: f,
+    currentSearches: U,
+    isSortable: d,
     isSearchable: o,
     isMatchable: u,
     isFiltering: F,
@@ -400,36 +400,36 @@ function re(r, v, c = {}) {
     apply: D,
     applyFilter: M,
     applySort: z,
-    applySearch: O,
+    applySearch: R,
     applyMatch: j,
     clearFilter: K,
     clearSort: n,
     clearSearch: i,
-    clearMatch: d,
+    clearMatch: f,
     reset: A,
     bindFilter: $,
     bindSort: H,
     bindSearch: _,
     bindMatch: J,
-    stringValue: C,
+    stringValue: O,
     omitValue: h,
     toggleValue: y,
-    delimitArray: U
+    delimitArray: C
   };
 }
 function ie(r, v, c = {}) {
   if (!(r != null && r[v]))
     throw new Error("The table must be provided with valid props and key.");
-  const { recordActions: l = {}, ...f } = {
+  const { recordOperations: l = {}, ...d } = {
     only: [...c.only ?? [], v.toString()],
     ...c
-  }, o = p(() => r[v]), u = te(), b = re(r, v, f), V = p(() => !!o.value.page && !!o.value.record), w = p(() => !!o.value.column), x = p(
+  }, o = p(() => r[v]), u = te(), b = re(r, v, d), V = p(() => !!o.value.page && !!o.value.record), w = p(() => !!o.value.column), x = p(
     () => o.value.columns.filter(({ active: n, hidden: i }) => n && !i).map((n) => {
       var i;
       return {
         ...n,
         isSorting: !!((i = n.sort) != null && i.active),
-        toggleSort: (d = {}) => b.applySort(n.sort, null, d)
+        toggleSort: (f = {}) => b.applySort(n.sort, null, f)
       };
     })
   ), s = p(
@@ -439,13 +439,15 @@ function ie(r, v, c = {}) {
     }))
   ), g = p(
     () => o.value.records.map((n) => ({
-      record: (({ actions: i, ...d }) => d)(n),
-      /** The actions available for the record */
-      actions: E(n.actions),
-      /** Perform this action when the record is clicked */
+      record: (({ operations: i, ...f }) => f)(n),
+      /** The operations available for the record */
+      operations: E(n.operations),
+      /** Perform this operation when the record is clicked */
       default: (i = {}) => {
-        const d = n.actions.find(({ default: A }) => A);
-        d && B(d, n, i);
+        const f = n.operations.find(
+          ({ default: A }) => A
+        );
+        f && B(f, n, i);
       },
       /** Selects this record */
       select: () => u.select(y(n)),
@@ -459,16 +461,16 @@ function ie(r, v, c = {}) {
       bind: () => u.bind(y(n)),
       /** Get the value of the record for the column */
       value: (i) => {
-        const d = L(i);
-        return d in n ? n[d].v : null;
+        const f = L(i);
+        return f in n ? n[f].v : null;
       },
       /** Get the extra data of the record for the column */
       extra: (i) => {
-        const d = L(i);
-        return d in n ? n[d].e : null;
+        const f = L(i);
+        return console.log(f, n), f in n ? n[f].e : null;
       }
     }))
-  ), R = p(() => E(o.value.operations.bulk)), U = p(() => E(o.value.operations.page)), C = p(
+  ), U = p(() => E(o.value.operations.bulk)), C = p(() => E(o.value.operations.page)), O = p(
     () => o.value.pages.find(({ active: n }) => n)
   ), h = p(() => ({
     ...o.value.paginate,
@@ -501,15 +503,15 @@ function ie(r, v, c = {}) {
   function L(n) {
     return typeof n == "string" ? n : n.name;
   }
-  function T(n, i = {}, d = {}) {
+  function T(n, i = {}, f = {}) {
     return Y(
       n,
       o.value.endpoint,
       o.value.id,
       i,
       {
-        ...f,
-        ...d
+        ...d,
+        ...f
       }
     );
   }
@@ -518,26 +520,26 @@ function ie(r, v, c = {}) {
       n,
       o.value.endpoint,
       o.value.id,
-      f
+      d
     );
   }
   function F(n, i = {}) {
     S.visit(n, {
       preserveScroll: !0,
       preserveState: !0,
-      ...f,
+      ...d,
       ...i,
       method: "get"
     });
   }
-  function B(n, i, d = {}) {
+  function B(n, i, f = {}) {
     var $;
     T(
       n,
       {
         record: y(i)
       },
-      d
+      f
     ) || ($ = l == null ? void 0 : l[n.name]) == null || $.call(l, i);
   }
   function I(n, i = {}) {
@@ -550,21 +552,21 @@ function ie(r, v, c = {}) {
       },
       {
         ...i,
-        onSuccess: (d) => {
+        onSuccess: (f) => {
           var A;
-          (A = i.onSuccess) == null || A.call(i, d), n.keepSelected || u.deselectAll();
+          (A = i.onSuccess) == null || A.call(i, f), n.keepSelected || u.deselectAll();
         }
       }
     );
   }
-  function D(n, i = {}, d = {}) {
-    return T(n, i, d);
+  function D(n, i = {}, f = {}) {
+    return T(n, i, f);
   }
   function M(n, i = {}) {
     if (!V.value)
       return console.warn("The table does not support pagination changes.");
     S.reload({
-      ...f,
+      ...d,
       ...i,
       data: {
         [o.value.record]: n.value,
@@ -575,21 +577,21 @@ function ie(r, v, c = {}) {
   function z(n, i = {}) {
     if (!w.value)
       return console.warn("The table does not support column toggling.");
-    const d = L(n);
-    if (!d) return console.log(`Column [${n}] does not exist.`);
+    const f = L(n);
+    if (!f) return console.log(`Column [${n}] does not exist.`);
     const A = b.toggleValue(
-      d,
+      f,
       x.value.map(({ name: $ }) => $)
     );
     S.reload({
-      ...f,
+      ...d,
       ...i,
       data: {
         [o.value.column]: b.delimitArray(A)
       }
     });
   }
-  function O() {
+  function R() {
     u.select(
       ...o.value.records.map(
         (n) => y(n)
@@ -606,7 +608,7 @@ function ie(r, v, c = {}) {
   function K() {
     return {
       "onUpdate:modelValue": (n) => {
-        n ? O() : j();
+        n ? R() : j();
       },
       modelValue: W.value
     };
@@ -624,23 +626,23 @@ function ie(r, v, c = {}) {
     columns: s,
     /** The records of the table */
     records: g,
-    /** Whether the table has record actions */
+    /** Whether the table has record operations */
     inline: o.value.operations.inline,
-    /** The available bulk actions */
-    bulk: R,
-    /** The available page actions */
-    page: U,
+    /** The available bulk operations */
+    bulk: U,
+    /** The available page operations */
+    page: C,
     /** The available number of records to display per page */
     pages: o.value.pages,
     /** The current record per page item */
-    currentPage: C,
+    currentPage: O,
     /** The pagination metadata */
     paginator: h,
-    /** Execute an inline action */
+    /** Execute an inline operation */
     executeInline: B,
-    /** Execute a bulk action */
+    /** Execute a bulk operation */
     executeBulk: I,
-    /** Execute a page action */
+    /** Execute a page operation */
     executePage: D,
     /** Apply a new page by changing the number of records to display */
     applyPage: M,
@@ -651,7 +653,7 @@ function ie(r, v, c = {}) {
     /** Deselect the given records */
     deselect: (n) => u.deselect(y(n)),
     /** Select records on the current page */
-    selectPage: O,
+    selectPage: R,
     /** Deselect records on the current page */
     deselectPage: j,
     /** Toggle the selection of the given records */

@@ -31,12 +31,17 @@ export function useTable<
 	T extends Record<string, Table>,
 	K extends Record<string, any> = Record<string, any>,
 	U extends Paginate = "length-aware",
->(props: T, key: keyof T, defaults: TableOptions = {}) {
+>(
+	props: T,
+	key: keyof T,
+	defaults: TableOptions = {}
+) {
+
 	if (!props?.[key]) {
 		throw new Error("The table must be provided with valid props and key.");
 	}
 
-	const { recordActions = {}, ...visitOptions } = {
+	const { recordOperations = {}, ...visitOptions } = {
 		only: [...((defaults.only ?? []) as string[]), key.toString()],
 		...defaults,
 	};
@@ -46,6 +51,8 @@ export function useTable<
 	const select = useBulk<Identifier>();
 
 	const refine = useRefine<T>(props, key, visitOptions);
+
+	const meta = computed(() => table.value.meta)
 
 	const isPageable = computed(() => !!table.value.page && !!table.value.record);
 
@@ -83,12 +90,14 @@ export function useTable<
 	 */
 	const records = computed(() =>
 		table.value.records.map((record) => ({
-			record: (({ actions, ...rest }) => rest)(record),
-			/** The actions available for the record */
-			actions: executables(record.actions),
-			/** Perform this action when the record is clicked */
+			record: (({ operations, ...rest }) => rest)(record),
+			/** The operations available for the record */
+			operations: executables(record.operations),
+			/** Perform this operation when the record is clicked */
 			default: (options: VisitOptions = {}) => {
-				const use = record.actions.find(({ default: isDefault }) => isDefault);
+				const use = record.operations.find(
+					({ default: isDefault }) => isDefault,
+				);
 
 				if (use) executeInline(use, record, options);
 			},
@@ -110,18 +119,21 @@ export function useTable<
 			/** Get the extra data of the record for the column */
 			extra: (column: Column<K> | string) => {
 				const name = getColumnName(column);
+				console.log(name, record);
 				return name in record ? record[name].e : null;
 			},
 		})),
 	);
 
+	const inline = computed(() => table.value.operations.inline)
+
 	/**
-	 * Get the bulk actions.
+	 * Get the bulk operations.
 	 */
 	const bulk = computed(() => executables(table.value.operations.bulk));
 
 	/**
-	 * Get page actions.
+	 * Get page operations.
 	 */
 	const page = computed(() => executables(table.value.operations.page));
 
@@ -131,6 +143,11 @@ export function useTable<
 	const currentPage = computed(() =>
 		table.value.pages.find(({ active }) => active),
 	);
+
+	/**
+	 * The available number of records to display per page.
+	 */
+	const pages = computed(() => table.value.pages)
 
 	/**
 	 * The paginator metadata.
@@ -251,11 +268,11 @@ export function useTable<
 			options,
 		);
 
-		if (!success) recordActions?.[operation.name]?.(data);
+		if (!success) recordOperations?.[operation.name]?.(data);
 	}
 
 	/**
-	 * Execute a bulk action.
+	 * Execute a bulk operation.
 	 */
 	function executeBulk(operation: BulkOperation, options: VisitOptions = {}) {
 		executor(
@@ -362,35 +379,37 @@ export function useTable<
 	}
 
 	return reactive({
-		/** The table's configuration */
-		table,
+		/** Table-specific metadata */
+		meta,
+		/** Whether the table supports changing the number of records to display per page */
+		isPageable,
+		/** Whether the table supports toggling columns */
+		isToggleable,
 		/** Retrieve a record's identifier */
 		getRecordKey,
-		/** Table-specific metadata */
-		meta: table.value.meta,
 		/** The heading columns for the table */
 		headings,
 		/** All of the table's columns */
 		columns,
 		/** The records of the table */
 		records,
-		/** Whether the table has record actions */
-		inline: table.value.operations.inline,
-		/** The available bulk actions */
+		/** Whether the table has record operations */
+		inline,
+		/** The available bulk operations */
 		bulk,
-		/** The available page actions */
+		/** The available page operations */
 		page,
 		/** The available number of records to display per page */
-		pages: table.value.pages,
+		pages,
 		/** The current record per page item */
 		currentPage,
 		/** The pagination metadata */
 		paginator,
-		/** Execute an inline action */
+		/** Execute an inline operation */
 		executeInline,
-		/** Execute a bulk action */
+		/** Execute a bulk operation */
 		executeBulk,
-		/** Execute a page action */
+		/** Execute a page operation */
 		executePage,
 		/** Apply a new page by changing the number of records to display */
 		applyPage,
