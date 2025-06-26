@@ -113,7 +113,7 @@ class Export extends Operation implements Action
             $this->isDownload() => $this->downloadExport($export, $fileName),
             $this->isQueued() => $this->queueExport($export, $fileName),
             $this->isStored() => $this->storeExport($export, $fileName),
-            default => $this->storeExport($export, $fileName),
+            default => $this->defaultExport($export, $fileName),
         };
     }
 
@@ -155,6 +155,18 @@ class Export extends Operation implements Action
         return Excel::store(
             $export, $fileName, $this->getDisk(), $this->getFileType()
         );
+    }
+
+    /**
+     * Default the export to be stored on disk if no other method is specified.
+     *
+     * @param  ExportsTable  $export
+     * @param  string  $fileName
+     * @return bool
+     */
+    protected function defaultExport($export, $fileName)
+    {
+        return $this->storeExport($export, $fileName);
     }
 
     /**

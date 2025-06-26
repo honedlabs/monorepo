@@ -20,7 +20,7 @@ trait Toggleable
      *
      * @var bool
      */
-    protected $defaultToggled = false;
+    protected $toggledByDefault = false;
 
     /**
      * Whether the instance should always be shown, just hidden if it is inactive.
@@ -39,9 +39,20 @@ trait Toggleable
     public function toggleable($value = true, $default = false)
     {
         $this->toggleable = $value;
-        $this->defaultToggled = $default;
+        $this->toggledByDefault = $default;
 
         return $this;
+    }
+
+    /**
+     * Set the instance to not be toggleable.
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function notToggleable($value = true)
+    {
+        return $this->toggleable(! $value);
     }
 
     /**
@@ -55,16 +66,37 @@ trait Toggleable
     }
 
     /**
-     * Set the default toggled state.
+     * Determine if the instance is not toggleable.
      *
-     * @param  bool  $default
+     * @return bool
+     */
+    public function isNotToggleable()
+    {
+        return ! $this->isToggleable();
+    }
+
+    /**
+     * Set the instance to be toggled active by default.
+     *
+     * @param  bool  $value
      * @return $this
      */
-    public function defaultToggled($default = true)
+    public function toggledByDefault($value = true)
     {
-        $this->defaultToggled = $default;
+        $this->toggledByDefault = $value;
 
         return $this;
+    }
+
+    /**
+     * Set the instance to not be toggled active by default.
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function notToggledByDefault($value = true)
+    {
+        return $this->toggledByDefault(! $value);
     }
 
     /**
@@ -72,22 +104,43 @@ trait Toggleable
      *
      * @return bool
      */
-    public function isDefaultToggled()
+    public function isToggledByDefault()
     {
-        return $this->defaultToggled;
+        return $this->toggledByDefault;
+    }
+
+    /**
+     * Determine if the instance is not toggled active by default.
+     *
+     * @return bool
+     */
+    public function isNotToggledByDefault()
+    {
+        return ! $this->isToggledByDefault();
     }
 
     /**
      * Set whether the instance should always be shown, just hidden if it is inactive.
      *
-     * @param  bool  $always
+     * @param  bool  $value
      * @return $this
      */
-    public function always($always = true)
+    public function always($value = true)
     {
-        $this->always = $always;
+        $this->always = $value;
 
         return $this;
+    }
+
+    /**
+     * Set the instance to not always be shown.
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function notAlways($value = true)
+    {
+        return $this->always(! $value);
     }
 
     /**
@@ -98,5 +151,15 @@ trait Toggleable
     public function isAlways()
     {
         return $this->always;
+    }
+
+    /**
+     * Determine if the instance is not always shown.
+     *
+     * @return bool
+     */
+    public function isNotAlways()
+    {
+        return ! $this->isAlways();
     }
 }

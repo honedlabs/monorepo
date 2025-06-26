@@ -56,13 +56,28 @@ class PendingViewInteraction
     }
 
     /**
-     * Load the pending view interaction for the given table.
+     * Retrieve the views for the given table and scopes from storage.
      *
      * @param  mixed  $table
      * @return array<int, object>
      */
-    public function load($table)
+    public function list($table)
     {
-        return $this->driver->list($table, $this->scope);
+        return $this->driver->list($table, $this->getScope());
     }
+
+    /**
+     * Set the view for the given table and scope.
+     *
+     * @param  mixed  $table
+     * @param  string  $name
+     * @param  mixed  $view
+     * @return void
+     */
+    public function set($table, $name)
+    {
+        $this->driver->set($table, $name, $this->getScope(), $table);
+    }
+
+    /** */
 }
