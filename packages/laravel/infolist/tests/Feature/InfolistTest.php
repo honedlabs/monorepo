@@ -17,9 +17,9 @@ afterEach(function () {
 
 it('has resource', function () {
     expect($this->infolist)
-        ->getResource()->toBe($this->user)
+        ->getRecord()->toBe($this->user)
         ->for($this->user)->toBe($this->infolist)
-        ->getResource()->toBe($this->user);
+        ->getRecord()->toBe($this->user);
 });
 
 it('resolves infolist for model', function () {

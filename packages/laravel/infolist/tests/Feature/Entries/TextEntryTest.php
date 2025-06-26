@@ -19,19 +19,11 @@ it('has array representation', function () {
         ->toEqual([
             'type' => TextEntry::TEXT,
             'label' => 'Name',
-            'state' => null,
-            'placehold' => null,
-            'badge' => null,
-            'variant' => null,
-            'class' => null,
         ]);
 });
 
 it('serializes to json', function () {
     expect($this->entry->jsonSerialize())
         ->toBeArray()
-        ->toEqual([
-            'type' => TextEntry::TEXT,
-            'label' => 'Name',
-        ]);
+        ->toEqual($this->entry->toArray());
 });

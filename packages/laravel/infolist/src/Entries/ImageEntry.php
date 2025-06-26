@@ -30,17 +30,4 @@ class ImageEntry extends BaseEntry
     {
         return is_null($value) ? null : $this->formatImage($value);
     }
-
-    /**
-     * Get the instance as an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray()
-    {
-        return [
-            ...parent::toArray(),
-            'shape' => $this->getShape(),
-        ];
-    }
 }

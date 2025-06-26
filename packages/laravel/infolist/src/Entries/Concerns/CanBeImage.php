@@ -18,13 +18,6 @@ trait CanBeImage
     protected $disk = null;
 
     /**
-     * The shape of the image.
-     *
-     * @var string|null
-     */
-    protected $shape = null;
-
-    /**
      * Whether to create a temporary file url for the image.
      *
      * @var int
@@ -52,49 +45,6 @@ trait CanBeImage
     public function getDisk()
     {
         return $this->disk;
-    }
-
-    /**
-     * Set whether the image should be displayed as a square.
-     *
-     * @param  string  $shape
-     * @return $this
-     */
-    public function shape($shape = 'square')
-    {
-        $this->shape = $shape;
-
-        return $this;
-    }
-
-    /**
-     * Set the shape of the image to square.
-     *
-     * @return $this
-     */
-    public function square()
-    {
-        return $this->shape('square');
-    }
-
-    /**
-     * Set the shape of the image to circular.
-     *
-     * @return $this
-     */
-    public function circular()
-    {
-        return $this->shape('circle');
-    }
-
-    /**
-     * Get the shape of the image.
-     *
-     * @return string|null
-     */
-    public function getShape()
-    {
-        return $this->shape;
     }
 
     /**

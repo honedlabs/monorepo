@@ -19,21 +19,13 @@ it('has array representation', function () {
         ->toEqual([
             'type' => ArrayEntry::ARRAY,
             'label' => 'Products',
-            'state' => null,
-            'placehold' => null,
-            'badge' => null,
-            'variant' => null,
-            'class' => null,
         ]);
 });
 
 it('serializes to json', function () {
     expect($this->entry->jsonSerialize())
         ->toBeArray()
-        ->toEqual([
-            'type' => ArrayEntry::ARRAY,
-            'label' => 'Products',
-        ]);
+        ->toEqual($this->entry->toArray());
 });
 
 it('does not format null values', function () {

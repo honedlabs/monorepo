@@ -19,19 +19,11 @@ it('has array representation', function () {
         ->toEqual([
             'type' => BooleanEntry::BOOLEAN,
             'label' => 'Is active',
-            'state' => null,
-            'placehold' => null,
-            'badge' => null,
-            'variant' => null,
-            'class' => null,
         ]);
 });
 
 it('serializes to json', function () {
     expect($this->entry->jsonSerialize())
         ->toBeArray()
-        ->toEqual([
-            'type' => BooleanEntry::BOOLEAN,
-            'label' => 'Is active',
-        ]);
+        ->toEqual($this->entry->toArray());
 });

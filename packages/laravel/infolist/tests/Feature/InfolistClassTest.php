@@ -22,20 +22,17 @@ it('has an infolist', function () {
                 'type' => Entry::TEXT,
                 'label' => 'Name',
                 'state' => $this->user->name,
-                'placehold' => null,
-                'badge' => null,
-                'variant' => null,
-                'class' => null,
             ],
             [
                 'type' => Entry::DATETIME,
                 'label' => 'Account made',
                 'state' => $this->user->created_at->format('Y-m-d H:i:s'),
-                'placehold' => null,
-                'badge' => null,
-                'variant' => null,
-                'shape' => null,
-                'class' => null,
             ],
         ]);
 });
+
+it('throws an exception when no record is set', function () {
+    $infolist = UserInfolist::make();
+
+    $infolist->toArray();
+})->throws(RuntimeException::class);

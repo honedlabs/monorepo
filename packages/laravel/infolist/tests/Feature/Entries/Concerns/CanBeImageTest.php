@@ -30,15 +30,6 @@ it('can have a disk', function () {
         ->getDisk()->toBe('s3');
 });
 
-it('can have a shape', function () {
-    expect($this->entry)
-        ->getShape()->toBeNull()
-        ->square()->toBe($this->entry)
-        ->getShape()->toBe('square')
-        ->circular()->toBe($this->entry)
-        ->getShape()->toBe('circle');
-});
-
 it('can have a temporary url', function () {
     expect($this->entry)
         ->isTemporaryUrl()->toBeFalse()

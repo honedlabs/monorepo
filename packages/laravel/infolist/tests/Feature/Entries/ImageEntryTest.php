@@ -19,20 +19,11 @@ it('has array representation', function () {
         ->toEqual([
             'type' => ImageEntry::IMAGE,
             'label' => 'Avatar',
-            'state' => null,
-            'placehold' => null,
-            'badge' => null,
-            'variant' => null,
-            'class' => null,
-            'shape' => null,
         ]);
 });
 
 it('serializes to json', function () {
     expect($this->entry->jsonSerialize())
         ->toBeArray()
-        ->toEqual([
-            'type' => ImageEntry::IMAGE,
-            'label' => 'Avatar',
-        ]);
+        ->toEqual($this->entry->toArray());
 });

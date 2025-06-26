@@ -24,7 +24,8 @@ trait HasEntries
      */
     public function entries($entries)
     {
-        $entries = is_array($entries) ? $entries : [$entries];
+        /** @var array<int, BaseEntry> */
+        $entries = is_array($entries) ? $entries : func_get_args();
 
         $this->entries = [...$this->entries, ...$entries];
 

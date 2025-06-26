@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Honed\Infolist;
 
 use Closure;
-use Honed\Core\Exceptions\ResourceNotSetException;
+use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Primitive;
 use Honed\Infolist\Entries\BaseEntry;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -20,6 +21,7 @@ use Throwable;
 class Infolist extends Primitive
 {
     use Concerns\HasEntries;
+    use HasRecord;
 
     /**
      * The default namespace where refiners reside.
@@ -41,16 +43,6 @@ class Infolist extends Primitive
      * @var array<string, mixed>|Model
      */
     protected $resource;
-
-    /**
-     * Create a new infolist instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->definition($this);
-    }
 
     /**
      * Create a new infolist instance.
@@ -140,40 +132,7 @@ class Infolist extends Primitive
      */
     public function for($resource)
     {
-        $this->resource = $resource;
-
-        return $this;
-    }
-
-    /**
-     * Get the resource to be used to generate the list.
-     *
-     * @return array<string, mixed>|Model
-     */
-    public function getResource()
-    {
-        if (! $this->resource) {
-            ResourceNotSetException::throw(static::class);
-        }
-
-        return $this->resource;
-    }
-
-    /**
-     * Get the instance as an array.
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    public function toArray()
-    {
-        $resource = $this->getResource();
-
-        return array_map(
-            static fn (BaseEntry $entry) => $entry
-                ->record($resource)
-                ->toArray(),
-            $this->getEntries()
-        );
+        return $this->record($resource);
     }
 
     /**
@@ -190,6 +149,31 @@ class Infolist extends Primitive
         } catch (Throwable) {
             return 'App\\';
         }
+    }
+
+    /**
+     * Get the representation of the instance.
+     *
+     * @return array<int, mixed>
+     *
+     * @throws RuntimeException
+     */
+    protected function representation(): array
+    {
+        $record = $this->getRecord();
+
+        if (! $record) {
+            throw new RuntimeException(
+                'The infolist ['.get_class($this).'] has no record set.'
+            );
+        }
+
+        return array_map(
+            static fn (BaseEntry $entry) => $entry
+                ->record($record)
+                ->toArray(),
+            $this->getEntries()
+        );
     }
 
     /**

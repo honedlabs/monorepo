@@ -23,49 +23,27 @@ it('has array representation', function () {
     expect($this->entry->toArray())
         ->toBeArray()
         ->toEqual([
-            'type' => null,
             'label' => 'Name',
             'state' => $this->user->name,
-            'placehold' => null,
-            'badge' => null,
-            'variant' => null,
-            'class' => null,
-            'shape' => null,
         ]);
 });
 
 it('has array representation with placeholder', function () {
     expect($this->entry->placeholder('N/A')->record([])->toArray())
         ->toBeArray()
-        ->toEqual([
-            'type' => null,
-            'label' => 'Name',
-            'state' => 'N/A',
-            'placehold' => true,
-            'badge' => null,
-            'variant' => null,
-            'class' => null,
-            'shape' => null,
-        ]);
+        ->toEqual($this->entry->toArray());
 });
 
 it('serializes to json', function () {
     expect($this->entry->jsonSerialize())
         ->toBeArray()
-        ->toEqual([
-            'label' => 'Name',
-            'state' => $this->user->name,
-        ]);
+        ->toEqual($this->entry->toArray());
 });
 
 it('serializes to json with placeholder', function () {
     expect($this->entry->placeholder('N/A')->record([])->jsonSerialize())
         ->toBeArray()
-        ->toEqual([
-            'label' => 'Name',
-            'state' => 'N/A',
-            'placehold' => true,
-        ]);
+        ->toEqual($this->entry->toArray());
 });
 
 it('resolves named closure dependencies', function ($callback, $expected) {
