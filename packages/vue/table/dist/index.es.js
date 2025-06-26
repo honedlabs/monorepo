@@ -425,7 +425,7 @@ function ce(l, d, s = {}) {
       /** The operations available for the record */
       operations: z(t.operations),
       /** The classes to apply to the record */
-      classes: t.classes ?? null,
+      class: t.class ?? null,
       /** Perform this operation when the record is clicked */
       default: (r = {}) => {
         const c = t.operations.find(

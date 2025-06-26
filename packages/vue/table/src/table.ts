@@ -101,7 +101,7 @@ export function useTable<
 			/** The operations available for the record */
 			operations: executables(record.operations),
 			/** The classes to apply to the record */
-			classes: record.classes ?? null,
+			class: record.class ?? null,
 			/** Perform this operation when the record is clicked */
 			default: (options: VisitOptions = {}) => {
 				const use = record.operations.find(

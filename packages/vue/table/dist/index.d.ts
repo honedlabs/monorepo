@@ -13,10 +13,6 @@ import { Refine } from '@honed/refine';
 import { Sort } from '@honed/refine';
 import { VisitOptions } from '@inertiajs/core';
 
-export declare interface Classes {
-    classes?: string;
-}
-
 export declare interface CollectionPaginate {
     empty: boolean;
 }
@@ -173,7 +169,9 @@ export declare type TableEntry<T extends Record<string, any> = Record<string, an
         c: string | null;
         f: boolean;
     };
-} & Classes;
+} & {
+    class: string | null;
+};
 
 export declare interface TableOptions<T extends Record<string, any> = Record<string, any>> extends VisitOptions {
     /**
@@ -184,7 +182,7 @@ export declare interface TableOptions<T extends Record<string, any> = Record<str
 
 export declare interface TableRecord<T extends Record<string, any> = Record<string, any>> {
     operations: Executable<InlineOperation>[];
-    classes: string | null;
+    class: string | null;
     default: (options?: VisitOptions) => void;
     select: () => void;
     deselect: () => void;

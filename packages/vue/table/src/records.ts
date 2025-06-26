@@ -4,10 +4,6 @@ import type { HonedColumn } from "./columns";
 
 export type Identifier = string | number;
 
-export interface Classes {
-	classes?: string;
-}
-
 export type TableEntry<T extends Record<string, any> = Record<string, any>> = {
 	[K in keyof T]: {
 		v: T[K];
@@ -15,13 +11,15 @@ export type TableEntry<T extends Record<string, any> = Record<string, any>> = {
 		c: string | null;
 		f: boolean;
 	};
-} & Classes;
+} & {
+	class: string | null;
+};
 
 export interface TableRecord<
 	T extends Record<string, any> = Record<string, any>,
 > {
 	operations: Executable<InlineOperation>[];
-	classes: string | null;
+	class: string | null;
 	default: (options?: VisitOptions) => void;
 	select: () => void;
 	deselect: () => void;
