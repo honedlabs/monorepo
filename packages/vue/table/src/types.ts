@@ -1,7 +1,9 @@
-import { ComputedRef, Ref } from "vue";
+import { Ref } from "vue";
 import type { VisitOptions } from "@inertiajs/core";
 import type { HonedRefine, Refine } from "@honed/refine";
 import type {
+	RecordBinding,
+	Binding,
 	InlineOperation,
 	BulkOperation,
 	PageOperation,
@@ -12,7 +14,7 @@ import type {
 	Executable,
 } from "@honed/action";
 import type { Paginate, PaginateMap, PageOption } from "./paginate";
-import type { BaseColumn, Column, Heading } from "./columns";
+import type { Column, HonedColumn, Heading } from "./columns";
 import type { TableEntry, TableRecord, Identifier } from "./records";
 
 export interface EmptyState {
@@ -28,11 +30,6 @@ export interface View {
 	view: string;
 }
 
-export interface PageBinding {
-	"onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
-	modelValue: boolean;
-}
-
 export interface Table<
 	T extends Record<string, any> = Record<string, any>,
 	K extends Paginate = "length-aware",
@@ -45,7 +42,7 @@ export interface Table<
 	page?: string;
 	records: Array<TableEntry<T> & { operations: InlineOperation[] }>;
 	paginate: PaginateMap[K];
-	columns: BaseColumn<T>[];
+	columns: Column<T>[];
 	pages: PageOption[];
 	toggleable: boolean;
 	operations: {
@@ -62,19 +59,30 @@ export interface HonedTable<
 	T extends Record<string, any> = Record<string, any>,
 	K extends Paginate = "length-aware",
 > extends HonedRefine {
-	meta: ComputedRef<Record<string, any> | null>;
-	isPageable: ComputedRef<boolean>;
-	isToggleable: ComputedRef<boolean>;
+	id: Exclude<MaybeId, undefined>;
+	meta: Record<string, any> | null;
+	emptyState: EmptyState | null;
+	views: View[];
+	placeholder: string | null;
+	isEmpty: boolean;
+	isPageable: boolean;
+	isToggleable: boolean;
 	getRecordKey: (record: TableEntry<T>) => Identifier;
-	headings: ComputedRef<Heading<T>[]>;
-	columns: ComputedRef<Column<T>[]>;
-	records: ComputedRef<TableRecord<T>[]>;
-	inline: ComputedRef<boolean>;
-	bulk: ComputedRef<Executable<BulkOperation>[]>;
-	page: ComputedRef<Executable<PageOperation>[]>;
-	pages: ComputedRef<PageOption[]>;
-	currentPage: ComputedRef<PageOption | undefined>;
-	paginator: ComputedRef<PaginateMap[K]>;
+	getEntry: (
+		record: TableEntry<T>,
+		column: Column<T> | string,
+	) => { v: any; e: any; c: string | null; f: boolean } | null;
+	getValue: (record: TableEntry<T>, column: Column<T> | string) => any;
+	getExtra: (record: TableEntry<T>, column: Column<T> | string) => any;
+	headings: Heading<T>[];
+	columns: HonedColumn<T>[];
+	records: TableRecord<T>[];
+	inline: boolean;
+	bulk: Executable<BulkOperation>[];
+	page: Executable<PageOperation>[];
+	pages: PageOption[];
+	currentPage: PageOption | undefined;
+	paginator: PaginateMap[K];
 	executeInline: (
 		operation: InlineOperation,
 		data: TableEntry<T>,
@@ -87,7 +95,8 @@ export interface HonedTable<
 		options?: VisitOptions,
 	) => void;
 	applyPage: (page: PageOption, options?: VisitOptions) => void;
-	selection: Ref<BulkSelection<Identifier>, BulkSelection<Identifier>>;
+
+	selection: BulkSelection<Identifier>;
 	select: (record: TableEntry<T>) => void;
 	deselect: (record: TableEntry<T>) => void;
 	toggle: (record: TableEntry<T>) => void;
@@ -96,11 +105,11 @@ export interface HonedTable<
 	selected: (record: TableEntry<T>) => boolean;
 	selectAll: () => void;
 	deselectAll: () => void;
-	isPageSelected: ComputedRef<boolean>;
-	hasSelected: ComputedRef<boolean>;
-	bindCheckbox: (record: TableEntry<T>) => void;
-	bindPage: () => void;
-	bindAll: () => void;
+	isPageSelected: boolean;
+	hasSelected: boolean;
+	bindCheckbox: (record: TableEntry<T>) => RecordBinding<Identifier>;
+	bindPage: () => Binding;
+	bindAll: () => Binding;
 }
 
 export * from "./columns";

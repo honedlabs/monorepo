@@ -16,25 +16,25 @@ import type {
 	OperationDataMap,
 } from "@honed/action";
 import { useRefine, type Sort } from "@honed/refine";
-import {
-	type Identifier,
-	type TableEntry,
-	type Table,
-	type TableOptions,
-	type EmptyState,
-	type PageOption,
-	type Paginate,
-	type Column,
-	type Heading,
+import type {
+	Identifier,
+	TableEntry,
+	Table,
+	TableOptions,
+	PageOption,
+	Paginate,
+	Column,
+	Heading,
 	TableRecord,
 	HonedTable,
+	HonedColumn,
 } from "./types";
 
 export function useTable<
 	T extends Record<string, Table>,
 	K extends Record<string, any> = Record<string, any>,
 	U extends Paginate = "length-aware",
->(props: T, key: keyof T, defaults: TableOptions = {}) {
+>(props: T, key: keyof T, defaults: TableOptions = {}): HonedTable<K, U> {
 	if (!props?.[key]) {
 		throw new Error("The table must be provided with valid props and key.");
 	}
@@ -50,7 +50,17 @@ export function useTable<
 
 	const refine = useRefine<T>(props, key, visitOptions);
 
+	const id = computed(() => table.value.id ?? null);
+
 	const meta = computed(() => table.value.meta);
+
+	const views = computed(() => table.value.views ?? []);
+
+	const emptyState = computed(() => table.value.emptyState ?? null);
+
+	const placeholder = computed(() => table.value.placeholder ?? null);
+
+	const isEmpty = computed(() => !!table.value.emptyState);
 
 	const isPageable = computed(() => !!table.value.page && !!table.value.record);
 
@@ -73,7 +83,7 @@ export function useTable<
 	/**
 	 * All of the table's columns
 	 */
-	const columns = computed<Column<K>[]>(() =>
+	const columns = computed<HonedColumn<K>[]>(() =>
 		table.value.columns
 			.filter(({ hidden }) => !hidden)
 			.map((column) => ({
@@ -90,6 +100,8 @@ export function useTable<
 		table.value.records.map((record) => ({
 			/** The operations available for the record */
 			operations: executables(record.operations),
+			/** The classes to apply to the record */
+			classes: record.classes ?? null,
 			/** Perform this operation when the record is clicked */
 			default: (options: VisitOptions = {}) => {
 				const use = record.operations.find(
@@ -111,11 +123,9 @@ export function useTable<
 			/** Get the entry of the record for the column */
 			entry: (column: Column<K> | string) => getEntry(record, column),
 			/** Get the value of the record for the column */
-			value: (column: Column<K> | string) =>
-				getEntry(record, column)?.v ?? null,
+			value: (column: Column<K> | string) => getValue(record, column),
 			/** Get the extra data of the record for the column */
-			extra: (column: Column<K> | string) =>
-				getEntry(record, column)?.e ?? null,
+			extra: (column: Column<K> | string) => getExtra(record, column),
 		})),
 	);
 
@@ -191,58 +201,80 @@ export function useTable<
 	);
 
 	/**
-	 * Get the identifier of the record.
-	 */
-	function getRecordKey(record: TableEntry<K>) {
-		return record[table.value.key].v as Identifier;
-	}
-
-	/**
 	 * Get the name of the column.
+	 *
+	 * @internal
 	 */
-	function getColumnName(column: Column<K> | string) {
+	function getColumn(column: Column<K> | string) {
 		return typeof column === "string" ? column : column.name;
 	}
 
+	/**
+	 * Get the identifier of the record.
+	 */
+	function getRecordKey(record: TableEntry<K>) {
+		return getEntry(record, table.value.key)?.v as Identifier;
+	}
+
+	/**
+	 * Get the entry of the record for the column.
+	 */
 	function getEntry(record: TableEntry<K>, column: Column<K> | string) {
-		const name = getColumnName(column);
-		return name in record ? record[name] : null;
+		const name = getColumn(column);
+
+		if (name in record && name !== "classes") return record[name as keyof K];
+
+		return null;
+	}
+
+	/**
+	 * Get the value of the record for the column.
+	 */
+	function getValue(record: TableEntry<K>, column: Column<K> | string) {
+		return getEntry(record, column)?.v ?? null;
+	}
+
+	/**
+	 * Get the extra data of the record for the column.
+	 */
+	function getExtra(record: TableEntry<K>, column: Column<K> | string) {
+		return getEntry(record, column)?.e;
 	}
 
 	/**
 	 * Execute an operation with common logic
+	 *
+	 * @internal
 	 */
 	function executor<T extends Operations>(
 		operation: T,
 		data: OperationDataMap[typeof operation.type] = {},
 		options: VisitOptions = {},
 	) {
-		return operationExecutor(
-			operation,
-			table.value.endpoint,
-			table.value.id,
-			data,
-			{
-				...visitOptions,
-				...options,
-			},
-		);
+		return operationExecutor(operation, table.value.endpoint, id.value, data, {
+			...visitOptions,
+			...options,
+		});
 	}
 
 	/**
 	 * Create operations with execute methods
+	 *
+	 * @internal
 	 */
 	function executables<T extends Operations>(operations: T[]): Executable<T>[] {
 		return operationExecutables(
 			operations,
 			table.value.endpoint,
-			table.value.id,
+			id.value,
 			visitOptions,
 		);
 	}
 
 	/**
 	 * Visit a page.
+	 *
+	 * @internal
 	 */
 	function toPage(link: string, options: VisitOptions = {}) {
 		router.visit(link, {
@@ -254,6 +286,9 @@ export function useTable<
 		});
 	}
 
+	/**
+	 * Execute an inline operation.
+	 */
 	function executeInline(
 		operation: InlineOperation,
 		data: TableEntry<K>,
@@ -292,6 +327,9 @@ export function useTable<
 		);
 	}
 
+	/**
+	 * Execute a page operation.
+	 */
 	function executePage(
 		operation: PageOperation,
 		data: PageOperationData = {},
@@ -324,7 +362,7 @@ export function useTable<
 		if (!isToggleable.value)
 			return console.warn("The table does not support column toggling.");
 
-		const name = getColumnName(column);
+		const name = getColumn(column);
 
 		if (!name) return console.log(`Column [${column}] does not exist.`);
 
@@ -378,12 +416,28 @@ export function useTable<
 	}
 
 	return reactive({
+		/** The identifier of the table */
+		id,
 		/** Table-specific metadata */
 		meta,
+		/** The views for the table */
+		views,
+		/** The empty state for the table */
+		emptyState,
+		/** The placeholder for the search term.*/
+		placeholder,
+		/** Whether the table is empty */
+		isEmpty,
 		/** Whether the table supports changing the number of records to display per page */
 		isPageable,
 		/** Whether the table supports toggling columns */
 		isToggleable,
+		/** Get the entry of the record for the column */
+		getEntry,
+		/** Get the value of the record for the column */
+		getValue,
+		/** Get the extra data of the record for the column */
+		getExtra,
 		/** Retrieve a record's identifier */
 		getRecordKey,
 		/** The heading columns for the table */
