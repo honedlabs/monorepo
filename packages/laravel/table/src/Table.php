@@ -111,8 +111,6 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
         parent::__construct();
 
         $this->request($request);
-
-        $this->definition($this);
     }
 
     /**
@@ -397,8 +395,8 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
         return [
             ...$this->refineToArray(),
             'key' => $this->getKey(),
-            'column' => $this->getColumnKey(),
-            'record' => $this->getRecordKey(),
+            'column' => $this->isToggleable() ? $this->getColumnKey() : null,
+            'record' => is_array($this->getPerPage()) ? $this->getRecordKey() : null,
             'page' => $this->getPageKey(),
             'records' => $this->getRecords(),
             'paginate' => $this->getPagination(),
