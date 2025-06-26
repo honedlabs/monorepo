@@ -1,4 +1,3 @@
-import { ComputedRef } from 'vue';
 import { PromisifyFn } from '@vueuse/shared';
 import { VisitOptions } from '@inertiajs/core';
 
@@ -39,15 +38,15 @@ export declare interface HonedFilter extends Filter {
 }
 
 export declare interface HonedRefine {
-    filters: ComputedRef<HonedFilter[]>;
-    sorts: ComputedRef<HonedSort[]>;
-    searches: ComputedRef<HonedSearch[]>;
-    currentFilters: ComputedRef<HonedFilter[]>;
-    currentSort: ComputedRef<HonedSort | undefined>;
-    currentSearches: ComputedRef<HonedSearch[]>;
-    isSortable: ComputedRef<boolean>;
-    isSearchable: ComputedRef<boolean>;
-    isMatchable: ComputedRef<boolean>;
+    filters: HonedFilter[];
+    sorts: HonedSort[];
+    searches: HonedSearch[];
+    currentFilters: HonedFilter[];
+    currentSort: HonedSort | undefined;
+    currentSearches: HonedSearch[];
+    isSortable: boolean;
+    isSearchable: boolean;
+    isMatchable: boolean;
     isFiltering: (name?: Filter | string) => boolean;
     isSorting: (name?: Sort | string) => boolean;
     isSearching: (name?: Search | string) => boolean;

@@ -1,4 +1,3 @@
-import type { ComputedRef } from "vue";
 import type { VisitOptions } from "@inertiajs/core";
 import type {
 	Filter,
@@ -41,15 +40,15 @@ export interface BindingOptions extends VisitOptions {
 }
 
 export interface HonedRefine {
-	filters: ComputedRef<HonedFilter[]>;
-	sorts: ComputedRef<HonedSort[]>;
-	searches: ComputedRef<HonedSearch[]>;
-	currentFilters: ComputedRef<HonedFilter[]>;
-	currentSort: ComputedRef<HonedSort | undefined>;
-	currentSearches: ComputedRef<HonedSearch[]>;
-	isSortable: ComputedRef<boolean>;
-	isSearchable: ComputedRef<boolean>;
-	isMatchable: ComputedRef<boolean>;
+	filters: HonedFilter[];
+	sorts: HonedSort[];
+	searches: HonedSearch[];
+	currentFilters: HonedFilter[];
+	currentSort: HonedSort | undefined;
+	currentSearches: HonedSearch[];
+	isSortable: boolean;
+	isSearchable: boolean;
+	isMatchable: boolean;
 	isFiltering: (name?: Filter | string) => boolean;
 	isSorting: (name?: Sort | string) => boolean;
 	isSearching: (name?: Search | string) => boolean;

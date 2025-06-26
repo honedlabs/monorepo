@@ -1,4 +1,4 @@
-import { computed } from "vue";
+import { computed, reactive } from "vue";
 import { router } from "@inertiajs/vue3";
 import { useDebounceFn } from "@vueuse/core";
 import type { VisitOptions } from "@inertiajs/core";
@@ -470,7 +470,7 @@ export function useRefine<T extends Record<string, Refine>>(
 		};
 	}
 
-	return {
+	return reactive({
 		filters,
 		sorts,
 		searches,
@@ -504,5 +504,5 @@ export function useRefine<T extends Record<string, Refine>>(
 		omitValue,
 		toggleValue,
 		delimitArray,
-	};
+	});
 }
