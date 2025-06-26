@@ -359,33 +359,6 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     }
 
     /**
-     * Get the instance as an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray()
-    {
-        $this->build();
-
-        return [
-            ...$this->refineToArray(),
-            'key' => $this->getKey(),
-            'column' => $this->getColumnKey(),
-            'record' => $this->getRecordKey(),
-            'page' => $this->getPageKey(),
-            'records' => $this->getRecords(),
-            'paginate' => $this->getPagination(),
-            'columns' => $this->columnsToArray(),
-            'pages' => $this->pageOptionsToArray(),
-            'toggleable' => $this->isToggleable(),
-            'operations' => $this->operationsToArray(),
-            'emptyState' => $this->getEmptyState()?->toArray(),
-            'views' => $this->loadViews(),
-            'meta' => $this->getMeta(),
-        ];
-    }
-
-    /**
      * Get the application namespace for the application.
      *
      * @return string
@@ -410,6 +383,33 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     protected function definition(self $table): self
     {
         return $table;
+    }
+
+    /**
+     * Get the representation of the instance.
+     *
+     * @return array<string, mixed>
+     */
+    protected function representation(): array
+    {
+        $this->build();
+
+        return [
+            ...$this->refineToArray(),
+            'key' => $this->getKey(),
+            'column' => $this->getColumnKey(),
+            'record' => $this->getRecordKey(),
+            'page' => $this->getPageKey(),
+            'records' => $this->getRecords(),
+            'paginate' => $this->getPagination(),
+            'columns' => $this->columnsToArray(),
+            'pages' => $this->pageOptionsToArray(),
+            'toggleable' => $this->isToggleable(),
+            'operations' => $this->operationsToArray(),
+            'emptyState' => $this->getEmptyState()?->toArray(),
+            'views' => $this->loadViews(),
+            'meta' => $this->getMeta(),
+        ];
     }
 
     /**
