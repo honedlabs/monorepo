@@ -1,13 +1,8 @@
 import type { Ref } from "vue";
 import { computed, ref } from "vue";
+import type { Bulk, BulkSelection } from "./bulk-types";
 
-export interface BulkSelection<T = any> {
-	all: boolean;
-	only: Set<T>;
-	except: Set<T>;
-}
-
-export function useBulk<T = any>() {
+export function useBulk<T = any>(): Bulk<T> {
 	const selection = ref<BulkSelection<T>>({
 		all: false,
 		only: new Set(),

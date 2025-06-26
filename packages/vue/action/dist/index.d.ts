@@ -11,6 +11,25 @@ export declare interface Batch {
     page: PageOperation[];
 }
 
+export declare interface Binding {
+    "onUpdate:modelValue": (value: boolean | "indeterminate") => void;
+    modelValue: boolean;
+}
+
+export declare interface Bulk<T = any> {
+    allSelected: ComputedRef<boolean>;
+    selection: Ref<BulkSelection<T>>;
+    hasSelected: ComputedRef<boolean>;
+    selectAll: () => void;
+    deselectAll: () => void;
+    select: (...records: T[]) => void;
+    deselect: (...records: T[]) => void;
+    toggle: (record: T, force?: boolean) => void;
+    selected: (record: T) => boolean;
+    bind: (key: T) => RecordBinding<T>;
+    bindAll: () => Binding;
+}
+
 export declare interface BulkOperation extends Operation {
     type: "bulk";
     keepSelected: boolean;
@@ -117,6 +136,10 @@ export declare interface PageOperation extends Operation {
 export declare interface PageOperationData extends Record<string, any> {
 }
 
+export declare interface RecordBinding<T = any> extends Binding {
+    value: T;
+}
+
 export declare interface Route {
     url: string;
     method: Method;
@@ -128,25 +151,6 @@ export declare function useBatch<T extends Record<string, Batch>>(props: T, key:
 
 export declare type UseBulk = typeof useBulk;
 
-export declare function useBulk<T = any>(): {
-    allSelected: ComputedRef<boolean>;
-    selection: Ref<BulkSelection<T>, BulkSelection<T>>;
-    hasSelected: ComputedRef<boolean>;
-    selectAll: () => void;
-    deselectAll: () => void;
-    select: (...records: T[]) => void;
-    deselect: (...records: T[]) => void;
-    toggle: (record: T, force?: boolean) => void;
-    selected: (record: T) => boolean;
-    bind: (key: T) => {
-        "onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
-        modelValue: boolean;
-        value: T;
-    };
-    bindAll: () => {
-        "onUpdate:modelValue": (checked: boolean | "indeterminate") => void;
-        modelValue: boolean;
-    };
-};
+export declare function useBulk<T = any>(): Bulk<T>;
 
 export { }

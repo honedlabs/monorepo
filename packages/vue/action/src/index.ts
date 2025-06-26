@@ -1,9 +1,8 @@
 import { useBatch } from "./batch";
 import { useBulk } from "./bulk";
 
-export type { BulkSelection } from "./bulk";
-
 export type * from "./types";
+export type * from "./bulk-types";
 
 export { execute, executor, executables } from "./utils";
 
