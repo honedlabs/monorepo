@@ -10,33 +10,31 @@ import type {
 	InlineOperation,
 	BulkOperation,
 	PageOperation,
+	Executable,
 	Operations,
 	PageOperationData,
 	OperationDataMap,
 } from "@honed/action";
 import { useRefine, type Sort } from "@honed/refine";
-import type {
-	Identifier,
-	TableEntry,
-	Table,
-	TableOptions,
-	EmptyState,
-	PageOption,
-	Paginate,
-	Column,
-	Heading,
+import {
+	type Identifier,
+	type TableEntry,
+	type Table,
+	type TableOptions,
+	type EmptyState,
+	type PageOption,
+	type Paginate,
+	type Column,
+	type Heading,
+	TableRecord,
+	HonedTable,
 } from "./types";
 
 export function useTable<
 	T extends Record<string, Table>,
 	K extends Record<string, any> = Record<string, any>,
 	U extends Paginate = "length-aware",
->(
-	props: T,
-	key: keyof T,
-	defaults: TableOptions = {}
-) {
-
+>(props: T, key: keyof T, defaults: TableOptions = {}) {
 	if (!props?.[key]) {
 		throw new Error("The table must be provided with valid props and key.");
 	}
@@ -52,7 +50,7 @@ export function useTable<
 
 	const refine = useRefine<T>(props, key, visitOptions);
 
-	const meta = computed(() => table.value.meta)
+	const meta = computed(() => table.value.meta);
 
 	const isPageable = computed(() => !!table.value.page && !!table.value.record);
 
@@ -88,9 +86,8 @@ export function useTable<
 	/**
 	 * The records of the table.
 	 */
-	const records = computed(() =>
+	const records = computed<TableRecord<K>[]>(() =>
 		table.value.records.map((record) => ({
-			record: (({ operations, ...rest }) => rest)(record),
 			/** The operations available for the record */
 			operations: executables(record.operations),
 			/** Perform this operation when the record is clicked */
@@ -111,21 +108,18 @@ export function useTable<
 			selected: select.selected(getRecordKey(record)),
 			/** Bind the record to a checkbox */
 			bind: () => select.bind(getRecordKey(record)),
+			/** Get the entry of the record for the column */
+			entry: (column: Column<K> | string) => getEntry(record, column),
 			/** Get the value of the record for the column */
-			value: (column: Column<K> | string) => {
-				const name = getColumnName(column);
-				return name in record ? record[name].v : null;
-			},
+			value: (column: Column<K> | string) =>
+				getEntry(record, column)?.v ?? null,
 			/** Get the extra data of the record for the column */
-			extra: (column: Column<K> | string) => {
-				const name = getColumnName(column);
-				console.log(name, record);
-				return name in record ? record[name].e : null;
-			},
+			extra: (column: Column<K> | string) =>
+				getEntry(record, column)?.e ?? null,
 		})),
 	);
 
-	const inline = computed(() => table.value.operations.inline)
+	const inline = computed(() => !!table.value.operations.inline);
 
 	/**
 	 * Get the bulk operations.
@@ -140,14 +134,14 @@ export function useTable<
 	/**
 	 * The current number of records to display per page.
 	 */
-	const currentPage = computed(() =>
+	const currentPage = computed<PageOption | undefined>(() =>
 		table.value.pages.find(({ active }) => active),
 	);
 
 	/**
 	 * The available number of records to display per page.
 	 */
-	const pages = computed(() => table.value.pages)
+	const pages = computed<PageOption[]>(() => table.value.pages);
 
 	/**
 	 * The paginator metadata.
@@ -210,6 +204,11 @@ export function useTable<
 		return typeof column === "string" ? column : column.name;
 	}
 
+	function getEntry(record: TableEntry<K>, column: Column<K> | string) {
+		const name = getColumnName(column);
+		return name in record ? record[name] : null;
+	}
+
 	/**
 	 * Execute an operation with common logic
 	 */
@@ -233,7 +232,7 @@ export function useTable<
 	/**
 	 * Create operations with execute methods
 	 */
-	function executables<T extends Operations>(operations: T[]) {
+	function executables<T extends Operations>(operations: T[]): Executable<T>[] {
 		return operationExecutables(
 			operations,
 			table.value.endpoint,
