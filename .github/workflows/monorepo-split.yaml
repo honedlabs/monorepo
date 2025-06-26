@@ -16,14 +16,14 @@ jobs:
       matrix:
         package:
           # - abn
-          - action
+          # - action
           # - bind
           # - chart
           # - command
           # - core
           # - crumb
           # - flash
-          # - infolist
+          - infolist
           # - layout
           # - lock
           # - modal
