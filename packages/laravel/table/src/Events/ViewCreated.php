@@ -12,13 +12,11 @@ class ViewCreated
 
     /**
      * Create a new view created event.
-     *
-     * @param  array<string, mixed>  $view
      */
     public function __construct(
         public string $table,
         public string $name,
         public string $scope,
-        public array $view,
+        public mixed $view,
     ) {}
 }

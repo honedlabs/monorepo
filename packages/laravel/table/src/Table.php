@@ -358,6 +358,11 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
         ];
     }
 
+    /**
+     * @experimental
+     * 
+     * @return mixed
+     */
     public function toState()
     {
         //

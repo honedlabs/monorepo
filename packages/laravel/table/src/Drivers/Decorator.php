@@ -122,6 +122,8 @@ class Decorator implements CanListViews, Driver
      * Get all the views stored for all tables.
      *
      * @return array<int, object>
+     * 
+     * @throws RuntimeException
      */
     public function all()
     {
@@ -135,6 +137,8 @@ class Decorator implements CanListViews, Driver
      *
      * @param  mixed|array<int, mixed>  $table
      * @return array<int, object>
+     * 
+     * @throws RuntimeException
      */
     public function stored($table)
     {
@@ -150,6 +154,8 @@ class Decorator implements CanListViews, Driver
      *
      * @param  mixed|array<int, mixed>  $scope
      * @return array<int, object>
+     * 
+     * @throws RuntimeException
      */
     public function scoped($scope)
     {
@@ -161,12 +167,12 @@ class Decorator implements CanListViews, Driver
     }
 
     /**
-     * Create a new view for the given table and scope.
+     * Create a new view for the given table, name and scope.
      *
      * @param  mixed  $table
      * @param  string  $name
      * @param  mixed  $scope
-     * @param  mixed  $view
+     * @param  array<string, mixed>  $view
      * @return void
      */
     public function create($table, $name, $scope, $view)

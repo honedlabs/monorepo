@@ -36,5 +36,5 @@ export interface HonedFilter extends Filter {
 
 export interface FilterBinding {
 	"onUpdate:modelValue": PromisifyFn<(value: any) => void>;
-	modelValue: unknown;
+	modelValue: any;
 }

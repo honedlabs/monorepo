@@ -31,7 +31,7 @@ interface Driver
      * @param  mixed  $table
      * @param  string  $name
      * @param  mixed  $scope
-     * @param  mixed  $view
+     * @param  array<string, mixed>  $view
      * @return void
      */
     public function create($table, $name, $scope, $view);
@@ -42,7 +42,7 @@ interface Driver
      * @param  mixed  $table
      * @param  string  $name
      * @param  mixed  $scope
-     * @param  mixed  $view
+     * @param  array<string, mixed>  $view
      * @return void
      */
     public function set($table, $name, $scope, $view);

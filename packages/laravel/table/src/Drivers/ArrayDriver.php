@@ -92,12 +92,12 @@ class ArrayDriver implements Driver
     }
 
     /**
-     * Create a new view for the given table and scope.
+     * Create a new view for the given table, name and scope.
      *
      * @param  string  $table
      * @param  string  $name
      * @param  string  $scope
-     * @param  mixed  $view
+     * @param  array<string, mixed>  $view
      * @return void
      */
     public function create($table, $name, $scope, $view)
