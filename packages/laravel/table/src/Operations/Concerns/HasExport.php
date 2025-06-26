@@ -125,7 +125,7 @@ trait HasExport
      * @param bool $value
      * @return $this
      */
-    public function notDownload($value = true)
+    public function dontDownload($value = true)
     {
         return $this->download(! $value);
     }

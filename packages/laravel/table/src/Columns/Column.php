@@ -44,10 +44,10 @@ class Column extends Primitive implements NullsAsUndefined
     use Concerns\CanBeKey;
     use Concerns\Exportable;
     use Concerns\Filterable;
-    use Concerns\HasClasses;
+    use Concerns\HasCellClasses;
     use Concerns\Searchable;
     use Concerns\Sortable;
-    use Concerns\Toggleable;
+    use Concerns\CanBeToggled;
     use HasAlias;
     use HasExtra;
     use HasIcon;

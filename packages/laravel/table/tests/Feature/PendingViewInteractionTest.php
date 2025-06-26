@@ -24,7 +24,7 @@ it('has scope', function () {
 });
 
 it('loads', function () {
-    expect($this->interaction->load(Table::make()))
+    expect($this->interaction->list(Table::make()))
         ->toBeArray()
         ->toBeEmpty();
 });

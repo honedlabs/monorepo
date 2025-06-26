@@ -151,7 +151,7 @@ class Toggle extends Pipe
     {
         return match (true) {
             ! $column->isToggleable() => true,
-            ! $names => $column->isDefaultToggled(),
+            ! $names => $column->isToggledByDefault(),
             default => in_array($column->getParameter(), $names),
         };
     }

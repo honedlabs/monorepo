@@ -23,7 +23,7 @@ beforeEach(function () {
                 ->toggleable(false),
 
             Column::make('description')
-                ->defaultToggled(),
+                ->toggledByDefault(),
 
             Column::make('price'),
         ]);
@@ -54,7 +54,7 @@ it('uses defaults', function () {
 
     expect(getColumn($this->table, 'description'))
         ->isAlways()->toBeFalse()
-        ->isDefaultToggled()->toBeTrue()
+        ->isToggledByDefault()->toBeTrue()
         ->isActive()->toBeTrue()
         ->isHidden()->toBeFalse();
 
@@ -105,7 +105,7 @@ it('retrieves from sources', function ($table) {
 
     expect(getColumn($table, 'description'))
         ->isAlways()->toBeFalse()
-        ->isDefaultToggled()->toBeTrue()
+        ->isToggledByDefault()->toBeTrue()
         ->isActive()->toBeFalse()
         ->isHidden()->toBeFalse();
 

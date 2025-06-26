@@ -6,7 +6,7 @@ namespace Honed\Table\Columns\Concerns;
 
 use Honed\Table\Contracts\IsToggleable;
 
-trait Toggleable
+trait CanBeToggled
 {
     /**
      * Whether the instance supports toggling.
@@ -52,7 +52,9 @@ trait Toggleable
      */
     public function notToggleable($value = true)
     {
-        return $this->toggleable(! $value);
+        $this->toggleable = false;
+
+        return $this;
     }
 
     /**

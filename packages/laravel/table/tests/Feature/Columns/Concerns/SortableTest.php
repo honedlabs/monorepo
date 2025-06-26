@@ -22,7 +22,10 @@ it('is sortable', function () {
             ->getLabel()->toBe('Name')
             ->getQuery()->toBeNull()
             ->isHidden()->toBeTrue()
-        );
+        )
+        ->notSortable()->toBe($this->column)
+        ->isNotSortable()->toBeTrue()
+        ->getSort()->toBeNull();
 });
 
 it('is sortable with string', function () {

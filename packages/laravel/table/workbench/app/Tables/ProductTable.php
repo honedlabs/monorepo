@@ -48,12 +48,12 @@ class ProductTable extends Table implements IsOrderable, IsSelectable, IsTogglea
                 KeyColumn::make('id'),
 
                 TextColumn::make('name')
-                    ->defaultToggled()
+                    ->toggledByDefault()
                     ->always()
                     ->searchable(),
 
                 TextColumn::make('description')
-                    ->defaultToggled()
+                    ->toggledByDefault()
                     ->filterable()
                     ->placeholder('-'),
 
@@ -62,7 +62,7 @@ class ProductTable extends Table implements IsOrderable, IsSelectable, IsTogglea
                     ->falseText('Not favourite'),
 
                 TextColumn::make('seller.name', 'Sold by')
-                    ->defaultToggled(),
+                    ->toggledByDefault(),
 
                 Column::make('status'),
 

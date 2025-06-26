@@ -11,6 +11,7 @@ beforeEach(function () {
 
 it('is searchable', function () {
     expect($this->column)
+        ->isNotSearchable()->toBeTrue()
         ->isSearchable()->toBeFalse()
         ->getSearch()->toBeNull()
         ->searchable()->toBe($this->column)
@@ -21,7 +22,10 @@ it('is searchable', function () {
             ->getName()->toBe($this->column->getName())
             ->getLabel()->toBe('Name')
             ->getQuery()->toBeNull()
-        );
+        )
+        ->notSearchable()->toBe($this->column)
+        ->isNotSearchable()->toBeTrue()
+        ->getSearch()->toBeNull();
 });
 
 it('is searchable with string', function () {

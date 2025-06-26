@@ -65,19 +65,4 @@ class PendingViewInteraction
     {
         return $this->driver->list($table, $this->getScope());
     }
-
-    /**
-     * Set the view for the given table and scope.
-     *
-     * @param  mixed  $table
-     * @param  string  $name
-     * @param  mixed  $view
-     * @return void
-     */
-    public function set($table, $name)
-    {
-        $this->driver->set($table, $name, $this->getScope(), $table);
-    }
-
-    /** */
 }

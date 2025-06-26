@@ -94,6 +94,18 @@ class DatabaseDriver implements CanListViews, Driver
     }
 
     /**
+     * Get all the views stored for all tables.
+     *
+     * @return array<int, object>
+     */
+    public function all()
+    {
+        return $this->newQuery()
+            ->get()
+            ->all();
+    }
+
+    /**
      * Get the views stored for a given table or tables.
      *
      * @param  string|array<int, string>  $table
@@ -119,6 +131,22 @@ class DatabaseDriver implements CanListViews, Driver
             ->whereIn('scope', (array) $scope)
             ->get()
             ->all();
+    }
+
+    /**
+     * Create a new view for the given table and scope.
+     *
+     * @param  string  $table
+     * @param  string  $name
+     * @param  string  $scope
+     * @param  mixed  $view
+     * @return void
+     * 
+     * @throws \Illuminate\Database\UniqueConstraintViolationException
+     */
+    public function create($table, $name, $scope, $view)
+    {
+        return $this->insert($table, $name, $scope, $view);
     }
 
     /**
@@ -150,12 +178,7 @@ class DatabaseDriver implements CanListViews, Driver
      */
     public function insert($table, $name, $scope, $view)
     {
-        /** @var array<int, array{table: string, name: string, scope: mixed, view: mixed}> */
-        $inserts = [
-            $this->fill(compact('table', 'name', 'scope', 'view')),
-        ];
-
-        return $this->insertMany($inserts);
+        return $this->insertMany([compact('table', 'name', 'scope', 'view')]);
     }
 
     /**

@@ -358,6 +358,11 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
         ];
     }
 
+    public function toState()
+    {
+        //
+    }
+
     /**
      * Get the application namespace for the application.
      *
@@ -408,7 +413,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
             'toggleable' => $this->isToggleable(),
             'operations' => $this->operationsToArray(),
             'emptyState' => $this->getEmptyState()?->toArray(),
-            'views' => $this->loadViews(),
+            'views' => $this->listViews(),
             'meta' => $this->getMeta(),
         ];
     }
