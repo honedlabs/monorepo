@@ -37,6 +37,7 @@ it('has array representation', function () {
             'label',
             'type',
             'action',
+            'inertia',
         ]);
 });
 
@@ -49,6 +50,7 @@ it('has array representation with route', function () {
             'type' => 'inline',
             'action' => false,
             'default' => false,
+            'inertia' => true,
             'route' => [
                 'url' => route('users.index'),
                 'method' => Request::METHOD_GET,
@@ -68,6 +70,7 @@ it('resolves to array', function () {
             'type' => 'inline',
             'action' => true,
             'default' => false,
+            'inertia' => true,
         ]);
 });
 

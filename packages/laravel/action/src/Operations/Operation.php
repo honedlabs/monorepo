@@ -22,6 +22,7 @@ abstract class Operation extends Primitive implements NullsAsUndefined
     use Concerns\CanBeRateLimited;
     use Concerns\Confirmable;
     use Concerns\HasAction;
+    use Concerns\IsInertia;
     use HasExtra;
     use HasIcon;
     use HasLabel;
@@ -112,6 +113,7 @@ abstract class Operation extends Primitive implements NullsAsUndefined
             'action' => $this->hasAction(),
             'confirm' => $this->getConfirm()?->toArray(),
             'route' => $this->routeToArray(),
+            'inertia' => $this->isInertia() ?: null,
         ];
     }
 
