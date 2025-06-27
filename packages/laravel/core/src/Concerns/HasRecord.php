@@ -35,14 +35,4 @@ trait HasRecord
     {
         return $this->record;
     }
-
-    /**
-     * Determine if a record is set.
-     *
-     * @return bool
-     */
-    public function hasRecord()
-    {
-        return isset($this->record);
-    }
 }

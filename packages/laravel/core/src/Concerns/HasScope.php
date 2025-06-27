@@ -6,8 +6,6 @@ namespace Honed\Core\Concerns;
 
 use Illuminate\Support\Str;
 
-use function sprintf;
-
 trait HasScope
 {
     public const SCOPE_SEPARATOR = ':';
@@ -22,14 +20,24 @@ trait HasScope
     /**
      * Set the scope.
      *
-     * @param  string|null  $scope
+     * @param  string|null  $value
      * @return $this
      */
-    public function scope($scope)
+    public function scope($value)
     {
-        $this->scope = $scope;
+        $this->scope = $value;
 
         return $this;
+    }
+
+    /**
+     * Remove the scope
+     *
+     * @return $this
+     */
+    public function dontScope()
+    {
+        return $this->scope(null);
     }
 
     /**
@@ -66,7 +74,7 @@ trait HasScope
             return $value;
         }
 
-        return sprintf('%s%s%s', $scope, self::SCOPE_SEPARATOR, $value);
+        return $scope.self::SCOPE_SEPARATOR.$value;
     }
 
     /**
@@ -78,9 +86,7 @@ trait HasScope
     public function decodeScope($value)
     {
         if ($this->hasScope()) {
-            return Str::of($value)
-                ->after(self::SCOPE_SEPARATOR)
-                ->toString();
+            return Str::after($value, self::SCOPE_SEPARATOR);
         }
 
         return $value;

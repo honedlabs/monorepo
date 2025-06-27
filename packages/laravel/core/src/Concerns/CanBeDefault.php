@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-trait IsDefault
+trait CanBeDefault
 {
     /**
      * Whether the instance is the default.
@@ -27,6 +27,16 @@ trait IsDefault
     }
 
     /**
+     * Set the instance to not the default.
+     *
+     * @return $this
+     */
+    public function notDefault()
+    {
+        return $this->default(false);
+    }
+
+    /**
      * Determine if the instance is the default.
      *
      * @return bool
@@ -34,5 +44,15 @@ trait IsDefault
     public function isDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * Determine if the instance is not the default.
+     *
+     * @return bool
+     */
+    public function isNotDefault()
+    {
+        return ! $this->isDefault();
     }
 }

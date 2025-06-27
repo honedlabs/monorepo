@@ -24,7 +24,7 @@ trait HasQuery
     /**
      * Set the query closure.
      *
-     * @param  (\Closure(TBuilder, ...mixed):TBuilder|null)|void|null  $query
+     * @param  (\Closure(TBuilder, ...mixed):TBuilder|null)|null  $query
      * @return $this
      */
     public function query($query)

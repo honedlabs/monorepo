@@ -27,6 +27,16 @@ trait HasAlias
     }
 
     /**
+     * Set there to be no alias.
+     *
+     * @return $this
+     */
+    public function dontAlias()
+    {
+        return $this->alias(null);
+    }
+
+    /**
      * Get the alias.
      *
      * @return string|null

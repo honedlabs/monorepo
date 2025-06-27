@@ -25,7 +25,7 @@ it('handles instance', function () {
 
     expect($this->pipe)
         ->handle($component, fn ($component) => $component)->toBeInstanceOf(Component::class);
-    
+
     expect($component)
         ->getName()->toBe('Pipeline 0');
 });

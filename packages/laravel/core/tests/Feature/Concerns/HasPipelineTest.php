@@ -15,9 +15,12 @@ afterEach(function () {
 
 it('can be completed', function () {
     expect($this->component)
+        ->isNotCompleted()->toBeTrue()
         ->isCompleted()->toBeFalse()
         ->complete()->toBe($this->component)
-        ->isCompleted()->toBeTrue();
+        ->isCompleted()->toBeTrue()
+        ->notComplete()->toBe($this->component)
+        ->isNotCompleted()->toBeTrue();
 });
 
 it('builds the pipeline', function () {

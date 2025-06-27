@@ -2,18 +2,21 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\IsDefault;
+use Honed\Core\Concerns\CanBeDefault;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use IsDefault;
+        use CanBeDefault;
     };
 });
 
 it('sets', function () {
     expect($this->test)
+        ->isNotDefault()->toBeTrue()
         ->isDefault()->toBeFalse()
         ->default()->toBe($this->test)
-        ->isDefault()->toBeTrue();
+        ->isDefault()->toBeTrue()
+        ->notDefault()->toBe($this->test)
+        ->isNotDefault()->toBeTrue();
 });

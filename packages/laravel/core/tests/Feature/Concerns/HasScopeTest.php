@@ -17,7 +17,9 @@ it('sets', function () {
         ->hasScope()->toBeFalse()
         ->scope('scope')->toBe($this->test)
         ->getScope()->toBe('scope')
-        ->hasScope()->toBeTrue();
+        ->hasScope()->toBeTrue()
+        ->dontScope()->toBe($this->test)
+        ->getScope()->toBeNull();
 });
 
 it('formats', function () {

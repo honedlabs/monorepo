@@ -13,7 +13,7 @@ abstract class Pipe
 {
     /**
      * The instance to pipe.
-     * 
+     *
      * @var TClass
      */
     protected $instance;

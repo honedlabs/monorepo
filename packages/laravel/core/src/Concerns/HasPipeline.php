@@ -18,7 +18,7 @@ trait HasPipeline
     /**
      * Get the pipes to be used.
      *
-     * @return array<int,class-string<\Honed\Core\Pipe<mixed>>>
+     * @return array<int,class-string<\Honed\Core\Pipe>>
      */
     abstract protected function pipes();
 
@@ -56,6 +56,16 @@ trait HasPipeline
     }
 
     /**
+     * Set the pipeline completion status to be incomplete.
+     *
+     * @return $this
+     */
+    public function notComplete()
+    {
+        return $this->complete(false);
+    }
+
+    /**
      * Determine if the pipeline has been completed.
      *
      * @return bool
@@ -63,5 +73,15 @@ trait HasPipeline
     public function isCompleted()
     {
         return $this->complete;
+    }
+
+    /**
+     * Determine if the pipeline has not been completed.
+     *
+     * @return bool
+     */
+    public function isNotCompleted()
+    {
+        return ! $this->isCompleted();
     }
 }

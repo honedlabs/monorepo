@@ -2,18 +2,21 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\IsActive;
+use Honed\Core\Concerns\CanBeActive;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use IsActive;
+        use CanBeActive;
     };
 });
 
 it('sets', function () {
     expect($this->test)
+        ->isNotActive()->toBeTrue()
         ->isActive()->toBeFalse()
         ->active()->toBe($this->test)
-        ->isActive()->toBeTrue();
+        ->isActive()->toBeTrue()
+        ->notActive()->toBe($this->test)
+        ->isNotActive()->toBeTrue();
 });
