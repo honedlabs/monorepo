@@ -11,22 +11,18 @@ use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Concerns\HasResource;
 use Honed\Core\Pipes\CallsAfter;
 use Honed\Core\Pipes\CallsBefore;
-use Honed\Refine\Filters\Concerns\HasFilters;
 use Honed\Refine\Pipes\FilterQuery;
 use Honed\Refine\Pipes\PersistData;
 use Honed\Refine\Pipes\SearchQuery;
 use Honed\Refine\Pipes\SortQuery;
-use Honed\Refine\Searches\Concerns\HasSearches;
-use Honed\Refine\Sorts\Concerns\HasSorts;
 use Honed\Refine\Stores\CookieStore;
 use Honed\Refine\Stores\SessionStore;
 
 /**
  * @phpstan-require-implements \Honed\Core\Contracts\HooksIntoLifecycle
  */
-trait CanBeRefined
+trait CanRefine
 {
-    use CanBePersisted;
     use CanScope;
     use HasDelimiter;
     use HasFilters;
@@ -36,6 +32,7 @@ trait CanBeRefined
     use HasResource;
     use HasSearches;
     use HasSorts;
+    use Persistent;
 
     /**
      * The store to use for persisting search data.

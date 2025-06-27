@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Searches\Concerns;
+namespace Honed\Refine\Concerns;
 
 use Closure;
 use Honed\Refine\Searches\Search;

@@ -7,6 +7,7 @@ namespace Honed\Refine\Filters;
 use BackedEnum;
 use Carbon\CarbonInterface;
 use Honed\Core\Concerns\CanHaveDefault;
+use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
@@ -33,6 +34,7 @@ class Filter extends Refiner
     use HasOptions {
         multiple as protected setMultiple;
     }
+    use HasType;
     use HasValue;
     use InterpretsRequest;
     use Validatable;
@@ -66,18 +68,6 @@ class Filter extends Refiner
      * @var bool
      */
     protected $presence = false;
-
-    /**
-     * Provide the instance with any necessary setup.
-     *
-     * @return void
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->type('filter');
-    }
 
     /**
      * Set the filter to be for boolean values.
@@ -319,6 +309,7 @@ class Filter extends Refiner
         }
 
         return array_merge(parent::representation(), [
+            'type' => $this->getType(),
             'value' => $this->getNormalizedValue(),
             'options' => $this->optionsToArray(),
         ]);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Sorts\Concerns;
+namespace Honed\Refine\Concerns;
 
 use Honed\Refine\Sorts\Sort;
 use Illuminate\Support\Arr;

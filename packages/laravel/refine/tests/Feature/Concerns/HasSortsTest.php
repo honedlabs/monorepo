@@ -90,7 +90,6 @@ it('sorts to array', function () {
             ->toHaveKeys([
                 'name',
                 'label',
-                'type',
                 'active',
                 'meta',
                 'direction',

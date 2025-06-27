@@ -12,7 +12,6 @@ use Honed\Core\Concerns\CanQuery;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasType;
 use Honed\Core\Primitive;
 use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
@@ -30,15 +29,14 @@ abstract class Refiner extends Primitive
     use CanBeActive;
     use CanBeHidden;
     use CanHaveAlias;
+
     /** @use CanQuery<TModel, TBuilder> */
     use CanQuery;
+
     use HasLabel;
     use HasMeta;
     use HasName;
-
     use HasQualifier;
-
-    use HasType;
 
     /**
      * Create a new refiner instance.
@@ -72,7 +70,6 @@ abstract class Refiner extends Primitive
         return [
             'name' => $this->getParameter(),
             'label' => $this->getLabel(),
-            'type' => $this->getType(),
             'active' => $this->isActive(),
             'meta' => $this->getMeta(),
         ];

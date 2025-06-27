@@ -8,7 +8,7 @@ use Closure;
 use Honed\Core\Contracts\HooksIntoLifecycle;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
-use Honed\Refine\Concerns\CanBeRefined;
+use Honed\Refine\Concerns\CanRefine;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Contracts\Foundation\Application;
@@ -26,7 +26,7 @@ use Throwable;
  */
 class Refine extends Primitive implements HooksIntoLifecycle, NullsAsUndefined
 {
-    use CanBeRefined;
+    use CanRefine;
     use ForwardsCalls;
 
     /**

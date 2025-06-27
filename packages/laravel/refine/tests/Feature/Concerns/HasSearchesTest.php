@@ -109,7 +109,6 @@ it('searches to array', function () {
             ->toHaveKeys([
                 'name',
                 'label',
-                'type',
                 'active',
                 'meta',
             ])

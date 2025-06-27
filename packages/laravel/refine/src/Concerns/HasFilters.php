@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Filters\Concerns;
+namespace Honed\Refine\Concerns;
 
 use Honed\Refine\Filters\Filter;
 

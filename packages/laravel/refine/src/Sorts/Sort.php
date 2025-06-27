@@ -30,18 +30,6 @@ class Sort extends Refiner
     protected $evaluationIdentifier = 'sort';
 
     /**
-     * Provide the instance with any necessary setup.
-     *
-     * @return void
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->type('sort');
-    }
-
-    /**
      * Get the value for the sort indicating an ascending direction.
      *
      * @return string
