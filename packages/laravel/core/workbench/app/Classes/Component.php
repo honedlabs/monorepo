@@ -6,7 +6,7 @@ namespace Workbench\App\Classes;
 
 use Honed\Core\Concerns\CanDeferLoading;
 use Honed\Core\Concerns\CanQuery;
-use Honed\Core\Concerns\HasLifecycleEvents;
+use Honed\Core\Concerns\HasLifecycleHooks;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasPipeline;
@@ -22,7 +22,7 @@ class Component extends Primitive implements HooksIntoLifecycle
 {
     use CanDeferLoading;
     use CanQuery;
-    use HasLifecycleEvents;
+    use HasLifecycleHooks;
     use HasMeta;
     use HasName;
     use HasPipeline;

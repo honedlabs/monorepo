@@ -33,10 +33,10 @@ trait Evaluable
      *
      * @template T
      *
-     * @param  T|callable(mixed...):T  $value
+     * @param  T|(callable(mixed...):T|null)|null  $value
      * @param  array<string, mixed>  $named
      * @param  array<class-string, mixed>  $typed
-     * @return T
+     * @return T|null
      *
      * @throws BindingResolutionException
      */

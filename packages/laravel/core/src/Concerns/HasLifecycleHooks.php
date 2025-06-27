@@ -9,7 +9,7 @@ use Closure;
 /**
  * @phpstan-require-implements \Honed\Core\Contracts\HooksIntoLifecycle
  */
-trait HasLifecycleEvents
+trait HasLifecycleHooks
 {
     /**
      * The callback to be called before the pipeline has finished.
