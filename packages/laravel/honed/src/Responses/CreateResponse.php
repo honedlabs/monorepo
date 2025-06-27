@@ -18,12 +18,11 @@ abstract class EditResponse extends InertiaResponse
     /**
      * Create a new edit response.
      * 
-     * @param TModel $model
-     * @param string $updateUrl
+     * @param string $store
      */
-    public function __construct($storeUrl)
+    public function __construct($store)
     {
-        $this->storeUrl($storeUrl);
+        $this->storeUrl($store);
     }
 
     /**

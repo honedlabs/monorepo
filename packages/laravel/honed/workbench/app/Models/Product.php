@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
+use Honed\Honed\Concerns\Authorable;
 use Honed\Honed\Concerns\HasAuthor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,7 @@ class Product extends Model
      */
     use HasFactory;
     use SoftDeletes;
-    use HasAuthor;
+    use Authorable;
 
     /**
      * The factory for the model.

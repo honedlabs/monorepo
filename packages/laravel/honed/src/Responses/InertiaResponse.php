@@ -101,7 +101,7 @@ abstract class InertiaResponse implements Responsable
     /**
      * Get the title of the page.
      * 
-     * @return string
+     * @return string|null
      */
     public function getTitle()
     {
@@ -125,7 +125,7 @@ abstract class InertiaResponse implements Responsable
     /**
      * Get the head of the page.
      * 
-     * @return string
+     * @return string|null
      */
     public function getHead()
     {
@@ -136,6 +136,7 @@ abstract class InertiaResponse implements Responsable
      * Set the props for the view.
      * 
      * @param array<string, mixed> $props
+     * @return $this
      */
     public function props($props)
     {
@@ -158,7 +159,6 @@ abstract class InertiaResponse implements Responsable
      * The page to be rendered.
      * 
      * @param string $page
-     * 
      * @return $this
      */
     public function page($page)
@@ -182,7 +182,6 @@ abstract class InertiaResponse implements Responsable
      * The modal to be rendered.
      * 
      * @param string $modal
-     * 
      * @return $this
      */
     public function modal($modal)
@@ -206,7 +205,6 @@ abstract class InertiaResponse implements Responsable
      * Set the base url to be used for modals.
      * 
      * @param string $base
-     * 
      * @return $this
      */
     public function base($base)
@@ -229,8 +227,7 @@ abstract class InertiaResponse implements Responsable
      * Create an HTTP response that represents the object.
      * 
      * @param \Illuminate\Http\Request $request
-     * 
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function toResponse($request)
     {

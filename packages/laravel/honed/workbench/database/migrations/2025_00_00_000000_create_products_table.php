@@ -25,7 +25,7 @@ return new class() extends Migration
             $table->boolean('best_seller')->default(false);
             $table->softDeletes();
             $table->timestamps();
-            $table->authors();
+            $table->authorable();
         });
     }
 

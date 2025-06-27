@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Honed\Responses\Concerns;
 
-use Illuminate\Bus\Batch;
+use Honed\Action\Batch;
 
 /**
  * @template TBatch of \Honed\Action\Batch = \Honed\Action\Batch
@@ -41,8 +41,8 @@ trait CanHaveBatch
     public function getBatch()
     {
         return match (true) {
-            $this->batch instanceof Batch => $this->batch,
             is_string($this->batch) => ($this->batch)::make(),
+            $this->batch instanceof Batch => $this->batch,
             default => null,
         };
     }

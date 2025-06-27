@@ -4,9 +4,6 @@ namespace Honed\Honed\Concerns;
 
 use Illuminate\Support\Str;
 
-/**
- * @phpstan-require-extends \BackedEnum
- */
 trait IsResource
 {
     /**

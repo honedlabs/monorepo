@@ -9,7 +9,7 @@ use Honed\Honed\Responses\Concerns\HasModel;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class EditResponse extends InertiaResponse
+abstract class DeleteResponse extends InertiaResponse
 {
     public const DESTROY_PROP = 'destroy';
 

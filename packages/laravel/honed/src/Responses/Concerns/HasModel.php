@@ -21,7 +21,7 @@ trait HasModel
     /**
      * The data object to use.
      * 
-     * @param class-string<\Spatie\LaravelData\Data>|null
+     * @var class-string<\Spatie\LaravelData\Data>|null
      */
     protected $data;
 
@@ -36,6 +36,7 @@ trait HasModel
      * Set the model for the view.
      * 
      * @param TModel $value
+     * @return $this
      */
     public function model($value)
     {
