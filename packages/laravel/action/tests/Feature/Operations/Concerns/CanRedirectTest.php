@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use Illuminate\Http\RedirectResponse;
 use Honed\Action\Operations\InlineOperation;
+use Illuminate\Http\RedirectResponse;
 
 use function Pest\Laravel\get;
 
 beforeEach(function () {
     $this->operation = InlineOperation::make('test');
-})->only();
+});
 
 it('can redirect', function () {
     expect($this->operation)

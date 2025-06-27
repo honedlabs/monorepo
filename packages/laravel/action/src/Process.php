@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Throwable;
-use RuntimeException;
-use function array_map;
+use Honed\Action\Concerns\Transactable;
 use Honed\Action\Contracts\Action;
 use Honed\Core\Concerns\HasContainer;
-use Honed\Action\Concerns\Transactable;
-
-use Illuminate\Support\Facades\Pipeline;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Facades\Pipeline;
+use Throwable;
+
+use function array_map;
 
 /**
  * @template TPayload
@@ -20,8 +19,8 @@ use Illuminate\Contracts\Container\Container;
  */
 abstract class Process implements Action
 {
-    use Transactable;
     use HasContainer;
+    use Transactable;
 
     /**
      * Create a new class instance.

@@ -10,7 +10,6 @@ class PageOperation extends Operation
 {
     use CanBeChunked;
 
-    
     /**
      * Get the type of the operation.
      */

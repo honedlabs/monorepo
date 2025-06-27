@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Action\Operations;
 
-use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Concerns\CanBeDefault;
+use Honed\Core\Concerns\HasRecord;
 use Illuminate\Database\Eloquent\Model;
 
 class InlineOperation extends Operation
 {
-    use HasRecord;
     use CanBeDefault;
+    use HasRecord;
 
     /**
      * Get the type of the operation.

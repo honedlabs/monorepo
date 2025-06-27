@@ -53,7 +53,7 @@ it('has array representation with route', function () {
             'inertia' => true,
             'route' => [
                 'url' => route('users.index'),
-                'method' => Request::METHOD_GET
+                'method' => Request::METHOD_GET,
             ],
         ]);
 });

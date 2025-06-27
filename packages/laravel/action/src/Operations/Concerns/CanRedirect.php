@@ -11,15 +11,15 @@ trait CanRedirect
 {
     /**
      * The redirect for when the operation is executed.
-     * 
-     * @var string|(\Closure(mixed...):\Illuminate\Http\RedirectResponse)|null
+     *
+     * @var string|(Closure(mixed...):\Illuminate\Http\RedirectResponse)|null
      */
     protected $redirect;
 
     /**
      * Set the redirect for when the operation is executed.
      *
-     * @param  string|(\Closure(mixed...):\Illuminate\Http\RedirectResponse)|null  $redirect
+     * @param  string|(Closure(mixed...):\Illuminate\Http\RedirectResponse)|null  $redirect
      * @return $this
      */
     public function redirect($redirect)
@@ -32,7 +32,7 @@ trait CanRedirect
     /**
      * Get the redirect for when the operation is executed.
      *
-     * @return string|(\Closure(mixed...):\Illuminate\Http\RedirectResponse)|null
+     * @return string|(Closure(mixed...):\Illuminate\Http\RedirectResponse)|null
      */
     public function getRedirect()
     {
@@ -58,6 +58,7 @@ trait CanRedirect
     {
         $redirect = $this->getRedirect();
 
+        /** @var \Illuminate\Http\RedirectResponse */
         return match (true) {
             ! $redirect => back(),
             $redirect instanceof Closure => $this->evaluate($redirect),
