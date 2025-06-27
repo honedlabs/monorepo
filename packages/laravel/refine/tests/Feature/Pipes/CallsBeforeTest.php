@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Pipes\BeforeRefining;
+use Honed\Core\Pipes\CallsBefore;
 use Honed\Refine\Refine;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {
-    $this->pipe = new BeforeRefining();
+    $this->pipe = new CallsBefore();
 
     $this->refine = Refine::make(Product::class);
 });

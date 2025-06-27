@@ -159,7 +159,7 @@ trait HasSorts
      */
     public function getSortKey()
     {
-        return $this->formatScope($this->sortKey);
+        return $this->scoped($this->sortKey);
     }
 
     /**

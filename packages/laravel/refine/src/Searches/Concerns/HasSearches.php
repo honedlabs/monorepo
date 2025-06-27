@@ -269,7 +269,7 @@ trait HasSearches
      */
     public function getSearchKey()
     {
-        return $this->formatScope($this->searchKey);
+        return $this->scoped($this->searchKey);
     }
 
     /**
@@ -292,7 +292,7 @@ trait HasSearches
      */
     public function getMatchKey()
     {
-        return $this->formatScope($this->matchKey);
+        return $this->scoped($this->matchKey);
     }
 
     /**

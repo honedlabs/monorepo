@@ -6,6 +6,7 @@ namespace Honed\Refine\Sorts;
 
 use Honed\Core\Concerns\CanBeDefault;
 use Honed\Refine\Refiner;
+use Honed\Refine\Sorts\Concerns\HasDirection;
 
 use function array_merge;
 use function sprintf;
@@ -19,7 +20,7 @@ use function sprintf;
 class Sort extends Refiner
 {
     use CanBeDefault;
-    use Concerns\HasDirection;
+    use HasDirection;
 
     /**
      * The identifier to use for evaluation.

@@ -78,7 +78,7 @@ class FilterQuery extends Pipe
      */
     protected function getParameter($filter)
     {
-        return $this->instance->formatScope($filter->getParameter());
+        return $this->instance->scoped($filter->getParameter());
     }
 
     /**

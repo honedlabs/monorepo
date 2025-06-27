@@ -96,7 +96,7 @@ it('passes', function (Refine $refine, string $name = 'price', mixed $value = 10
         $this->refine->scope('scope');
 
         $request = Request::create('/', 'GET', [
-            $this->refine->formatScope('price') => 100,
+            $this->refine->scoped('price') => 100,
         ]);
 
         return $this->refine->request($request);

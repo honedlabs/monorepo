@@ -10,7 +10,7 @@ use Honed\Refine\Stores\Data\SortData;
 use InvalidArgumentException;
 
 /**
- * @template TClass of \Honed\Refine\Contracts\RefinesData
+ * @template TClass of \Honed\Refine\Refine
  *
  * @extends Pipe<TClass>
  */

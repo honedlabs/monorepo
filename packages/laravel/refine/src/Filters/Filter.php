@@ -6,10 +6,12 @@ namespace Honed\Refine\Filters;
 
 use BackedEnum;
 use Carbon\CarbonInterface;
+use Honed\Core\Concerns\CanHaveDefault;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
-use Honed\Refine\Contracts\Stateful;
+use Honed\Refine\Filters\Concerns\HasOperator;
+use Honed\Refine\Filters\Concerns\HasOptions;
 use Honed\Refine\Refiner;
 use Honed\Refine\Searches\Search;
 use ReflectionEnum;
@@ -23,13 +25,12 @@ use function is_string;
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
  * @extends \Honed\Refine\Refiner<TModel, TBuilder>
- *
- * @implements \Honed\Refine\Contracts\Stateful<string,mixed>
  */
-class Filter extends Refiner implements Stateful
+class Filter extends Refiner
 {
-    use Concerns\HasOperator;
-    use Concerns\HasOptions {
+    use CanHaveDefault;
+    use HasOperator;
+    use HasOptions {
         multiple as protected setMultiple;
     }
     use HasValue;
@@ -65,13 +66,6 @@ class Filter extends Refiner implements Stateful
      * @var bool
      */
     protected $presence = false;
-
-    /**
-     * The default value to use for the filter even if it is not active.
-     *
-     * @var mixed
-     */
-    protected $default;
 
     /**
      * Provide the instance with any necessary setup.
@@ -237,29 +231,6 @@ class Filter extends Refiner implements Stateful
     }
 
     /**
-     * Set a default value to use for the filter if the filter is not active.
-     *
-     * @param  mixed  $default
-     * @return $this
-     */
-    public function default($default)
-    {
-        $this->default = $default;
-
-        return $this;
-    }
-
-    /**
-     * Get the default value to use for the filter if the filter is not active.
-     *
-     * @return mixed
-     */
-    public function getDefault()
-    {
-        return $this->default;
-    }
-
-    /**
      * Handle refining the query.
      *
      * @param  TBuilder  $query
@@ -321,21 +292,11 @@ class Filter extends Refiner implements Stateful
     }
 
     /**
-     * Get an array representation of the state at the current point in time.
-     */
-    public function toState(): array
-    {
-        return [
-            $this->getParameter() => $this->normalizedValue(),
-        ];
-    }
-
-    /**
      * Get the value of the instance as a normalized date.
      *
      * @return mixed
      */
-    protected function normalizedValue()
+    protected function getNormalizedValue()
     {
         $value = $this->getValue();
 
@@ -358,7 +319,7 @@ class Filter extends Refiner implements Stateful
         }
 
         return array_merge(parent::representation(), [
-            'value' => $this->normalizedValue(),
+            'value' => $this->getNormalizedValue(),
             'options' => $this->optionsToArray(),
         ]);
     }
