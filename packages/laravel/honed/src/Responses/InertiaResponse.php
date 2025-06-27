@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Honed\Responses;
 
-use Inertia\Inertia;
+use BadMethodCallException;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
+use Inertia\Inertia;
 use RuntimeException;
 
-abstract class InertiaResponse implements Responsable
+class InertiaResponse implements Responsable
 {
     use Conditionable;
     use Macroable {
@@ -18,57 +19,50 @@ abstract class InertiaResponse implements Responsable
     }
 
     public const TITLE_PROP = 'title';
+
     public const HEAD_PROP = 'head';
 
     /**
      * The title for the page.
-     * 
+     *
      * @var string|null
      */
     protected $title;
 
     /**
      * The head of the page.
-     * 
+     *
      * @var string|null
      */
     protected $head;
 
     /**
      * The props for the view.
-     * 
+     *
      * @var array<string, mixed>
      */
     protected $props = [];
 
     /**
      * The page to be rendered.
-     * 
+     *
      * @var string|null
      */
     protected $page;
 
     /**
      * The modal to be rendered.
-     * 
+     *
      * @var string|null
      */
     protected $modal;
 
     /**
      * The base url to be used for modals.
-     * 
+     *
      * @var string|null
      */
     protected $base;
-
-    /**
-     * Define the response.
-     * 
-     * @param $this $response
-     * @return $this
-     */
-    abstract protected function definition(self $response): self;
 
     /**
      * Handle dynamic method calls into the instance.
@@ -77,7 +71,7 @@ abstract class InertiaResponse implements Responsable
      * @param  array<int,mixed>  $parameters
      * @return mixed
      *
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function __call($method, $parameters)
     {
@@ -85,10 +79,19 @@ abstract class InertiaResponse implements Responsable
     }
 
     /**
+     * Provide the instance with any necessary setup.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        //
+    }
+
+    /**
      * Set the title for the page.
-     * 
-     * @param string $title
-     * 
+     *
+     * @param  string  $title
      * @return $this
      */
     public function title($title)
@@ -100,7 +103,7 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Get the title of the page.
-     * 
+     *
      * @return string|null
      */
     public function getTitle()
@@ -110,9 +113,8 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Set the head of the page.
-     * 
-     * @param string $head
-     * 
+     *
+     * @param  string  $head
      * @return $this
      */
     public function head($head)
@@ -124,7 +126,7 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Get the head of the page.
-     * 
+     *
      * @return string|null
      */
     public function getHead()
@@ -134,8 +136,8 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Set the props for the view.
-     * 
-     * @param array<string, mixed> $props
+     *
+     * @param  array<string, mixed>  $props
      * @return $this
      */
     public function props($props)
@@ -147,7 +149,7 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Get the props for the view.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getProps()
@@ -157,8 +159,8 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * The page to be rendered.
-     * 
-     * @param string $page
+     *
+     * @param  string  $page
      * @return $this
      */
     public function page($page)
@@ -170,7 +172,7 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Get the page to be rendered.
-     * 
+     *
      * @return string|null
      */
     public function getPage()
@@ -180,8 +182,8 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * The modal to be rendered.
-     * 
-     * @param string $modal
+     *
+     * @param  string  $modal
      * @return $this
      */
     public function modal($modal)
@@ -193,7 +195,7 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Get the modal to be rendered.
-     * 
+     *
      * @return string|null
      */
     public function getModal()
@@ -203,8 +205,8 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Set the base url to be used for modals.
-     * 
-     * @param string $base
+     *
+     * @param  string  $base
      * @return $this
      */
     public function base($base)
@@ -216,17 +218,18 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Get the base url to be used for modals.
-     * 
+     *
      * @return string|null
      */
     public function getBaseUrl()
     {
         return $this->base;
     }
+
     /**
      * Create an HTTP response that represents the object.
-     * 
-     * @param \Illuminate\Http\Request $request
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function toResponse($request)
@@ -239,19 +242,20 @@ abstract class InertiaResponse implements Responsable
     }
 
     /**
-     * Provide the instance with any necessary setup.
-     * 
-     * @return void
+     * Define the response.
+     *
+     * @param  $this  $response
+     * @return $this
      */
-    protected function setUp()
+    protected function definition(self $response): self
     {
-        //
+        return $response;
     }
 
     /**
      * Render the page or modal.
-     * 
-     * @return \Illuminate\Contracts\Support\Responsable
+     *
+     * @return Responsable
      */
     protected function render()
     {
@@ -266,8 +270,8 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Render the page.
-     * 
-     * @param string $page
+     *
+     * @param  string  $page
      * @return \Inertia\Response
      */
     protected function renderPage($page)
@@ -277,8 +281,8 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Render the modal.
-     * 
-     * @param string $modal
+     *
+     * @param  string  $modal
      * @return \Inertia\Response
      */
     protected function renderModal($modal)
@@ -296,7 +300,7 @@ abstract class InertiaResponse implements Responsable
 
     /**
      * Generate the props for the view.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function generateProps()

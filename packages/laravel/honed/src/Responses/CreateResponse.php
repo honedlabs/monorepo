@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Honed\Responses;
 
-abstract class EditResponse extends InertiaResponse
+class CreateResponse extends InertiaResponse
 {
     public const STORE_PROP = 'store';
 
     /**
      * The route to store the model.
-     * 
+     *
      * @var string
      */
     protected $store;
 
     /**
      * Create a new edit response.
-     * 
-     * @param string $store
+     *
+     * @param  string  $store
      */
     public function __construct($store)
     {
@@ -27,8 +27,8 @@ abstract class EditResponse extends InertiaResponse
 
     /**
      * Set the route to store the model.
-     * 
-     * @param string $value
+     *
+     * @param  string  $value
      * @return $this
      */
     public function storeUrl($value)
@@ -40,7 +40,7 @@ abstract class EditResponse extends InertiaResponse
 
     /**
      * Get the route to store the model.
-     * 
+     *
      * @return string
      */
     public function getStoreUrl()
@@ -50,7 +50,7 @@ abstract class EditResponse extends InertiaResponse
 
     /**
      * Get the props for the view.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getProps()

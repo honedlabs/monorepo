@@ -13,9 +13,9 @@ use Honed\Table\Concerns\HasTable;
  */
 trait IsHoned
 {
-    /** @use HasTable<TTable> */
-    use HasTable;
-
     /** @use HasBatch<TActions> */
     use HasBatch;
+
+    /** @use HasTable<TTable> */
+    use HasTable;
 }

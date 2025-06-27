@@ -13,29 +13,29 @@ trait HasModel
 {
     /**
      * The model to be passed to the view.
-     * 
+     *
      * @var TModel
      */
     protected $model;
 
     /**
      * The data object to use.
-     * 
+     *
      * @var class-string<\Spatie\LaravelData\Data>|null
      */
     protected $data;
 
     /**
      * The name of the model prop for the view.
-     * 
+     *
      * @var string|null
      */
     protected $propName;
 
     /**
      * Set the model for the view.
-     * 
-     * @param TModel $value
+     *
+     * @param  TModel  $value
      * @return $this
      */
     public function model($value)
@@ -47,7 +47,7 @@ trait HasModel
 
     /**
      * Get the model for the view.
-     * 
+     *
      * @return TModel
      */
     public function getModel()
@@ -57,8 +57,8 @@ trait HasModel
 
     /**
      * Set the data object for the view.
-     * 
-     * @param class-string<\Spatie\LaravelData\Data>|null $value
+     *
+     * @param  class-string<\Spatie\LaravelData\Data>|null  $value
      * @return $this
      */
     public function data($value)
@@ -70,7 +70,7 @@ trait HasModel
 
     /**
      * Get the data object for the view.
-     * 
+     *
      * @return class-string<\Spatie\LaravelData\Data>|null
      */
     public function getData()
@@ -80,8 +80,8 @@ trait HasModel
 
     /**
      * Set the name of the model prop for the view.
-     * 
-     * @param string $value
+     *
+     * @param  string  $value
      * @return $this
      */
     public function propName($value)
@@ -93,7 +93,7 @@ trait HasModel
 
     /**
      * Get the name of the model prop for the view.
-     * 
+     *
      * @return string
      */
     public function getPropName()
@@ -103,7 +103,7 @@ trait HasModel
 
     /**
      * Get the prepared model for the view.
-     * 
+     *
      * @return mixed
      */
     public function getPropModel()
@@ -113,7 +113,7 @@ trait HasModel
 
     /**
      * Guess the name of the model prop for the view.
-     * 
+     *
      * @return string
      */
     protected function guessPropName()
@@ -127,8 +127,8 @@ trait HasModel
 
     /**
      * Prepare the model prop for serialization.
-     * 
-     * @param TModel $model
+     *
+     * @param  TModel  $model
      * @return mixed
      */
     protected function prepare($model)
@@ -142,11 +142,11 @@ trait HasModel
 
     /**
      * Convert the model to an array of props.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function modelToArray()
-    {        
+    {
         return [$this->getPropName() => $this->getPropModel()];
     }
 }

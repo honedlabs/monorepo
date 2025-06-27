@@ -15,15 +15,15 @@ trait CanHaveTable
 
     /**
      * The table to be rendered.
-     * 
+     *
      * @var class-string<TTable>|TTable|null
      */
     protected $table;
 
     /**
      * Set the table for the response.
-     * 
-     * @param class-string<TTable>|TTable $table
+     *
+     * @param  class-string<TTable>|TTable  $table
      * @return $this
      */
     public function table($table)
@@ -35,7 +35,7 @@ trait CanHaveTable
 
     /**
      * Get the table to be rendered.
-     * 
+     *
      * @return TTable|null
      */
     public function getTable()
@@ -45,11 +45,11 @@ trait CanHaveTable
             $this->table instanceof Table => $this->table,
             default => null,
         };
-    }   
-    
+    }
+
     /**
      * Convert the table to an array of props.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function tableToArray()

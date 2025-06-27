@@ -9,25 +9,25 @@ use Honed\Honed\Responses\Concerns\HasModel;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class DeleteResponse extends InertiaResponse
+class DeleteResponse extends InertiaResponse
 {
-    public const DESTROY_PROP = 'destroy';
-
     /** @use HasModel<TModel> */
     use HasModel;
 
+    public const DESTROY_PROP = 'destroy';
+
     /**
      * The route to delete the model.
-     * 
+     *
      * @var string
      */
     protected $delete;
 
     /**
      * Create a new edit response.
-     * 
-     * @param TModel $model
-     * @param string $deleteUrl
+     *
+     * @param  TModel  $model
+     * @param  string  $deleteUrl
      */
     public function __construct($model, $deleteUrl)
     {
@@ -37,8 +37,8 @@ abstract class DeleteResponse extends InertiaResponse
 
     /**
      * Set the route to delete the model.
-     * 
-     * @param string $value
+     *
+     * @param  string  $value
      * @return $this
      */
     public function deleteUrl($value)
@@ -50,7 +50,7 @@ abstract class DeleteResponse extends InertiaResponse
 
     /**
      * Get the route to delete the model.
-     * 
+     *
      * @return string
      */
     public function getDeleteUrl()
@@ -60,7 +60,7 @@ abstract class DeleteResponse extends InertiaResponse
 
     /**
      * Get the props for the view.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getProps()

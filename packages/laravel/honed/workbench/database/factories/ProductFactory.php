@@ -41,6 +41,8 @@ class ProductFactory extends Factory
             'status' => fake()->randomElement(Status::cases()),
             'created_at' => now()->subDays(fake()->numberBetween(16, 30)),
             'updated_at' => now()->subDays(fake()->numberBetween(1, 15)),
+            'created_by' => User::factory(),
+            'updated_by' => User::factory(),
         ];
     }
 }

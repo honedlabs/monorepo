@@ -9,7 +9,7 @@ use Honed\Honed\Concerns\IsResource;
 enum Status: string
 {
     use IsResource;
-    
+
     case Available = 'available';
     case Unavailable = 'unavailable';
     case ComingSoon = 'coming-soon';

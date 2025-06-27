@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Honed\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
@@ -9,14 +11,14 @@ use Illuminate\Support\Facades\Config;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Foundation\Auth\User
- * 
+ *
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
  */
 trait Authorable
 {
     /**
      * Boot the HasAuthor trait.
-     * 
+     *
      * @return void
      */
     public static function bootAuthorable()
@@ -32,9 +34,10 @@ trait Authorable
             $model->setUpdatedBy($model->getTouchedByKey());
         });
     }
+
     /**
      * Get the user that created the model.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TModel, $this>
      */
     public function author()
@@ -50,7 +53,7 @@ trait Authorable
 
     /**
      * Get the user that last edited the model.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TModel, $this>
      */
     public function editor()
@@ -65,47 +68,9 @@ trait Authorable
     }
 
     /**
-     * Get the user model for the application.
-     * 
-     * @return class-string<\Illuminate\Database\Eloquent\Model>
-     */
-    protected function getAuthorModel()
-    {
-        /** @var class-string<\Illuminate\Database\Eloquent\Model> */
-        return Config::get('auth.providers.users.model', User::class);
-    }
-
-    /**
-     * Get the model which is initiating the action.
-     * 
-     * @return \Illuminate\Database\Eloquent\Model|int|string|null
-     */
-    protected function getTouchedBy()
-    {
-        return Auth::id();
-    }
-
-    /**
-     * Get the identifying key of the initiating model to update this model.
-     * 
-     * @return int|string|null
-     */
-    protected function getTouchedByKey()
-    {
-        $touchedBy = $this->getTouchedBy();
-
-        if ($touchedBy instanceof Model) {
-            /** @var int|string */
-            return $touchedBy->getRouteKey();
-        }
-
-        return $touchedBy;
-    }
-
-    /**
      * Set the author of the model to be the initiating user.
-     * 
-     * @param int|string|null $id
+     *
+     * @param  int|string|null  $id
      * @return void
      */
     public function setCreatedBy($id)
@@ -115,8 +80,8 @@ trait Authorable
 
     /**
      * Set the editor of the model to be the initiating user.
-     * 
-     * @param int|string|null $id
+     *
+     * @param  int|string|null  $id
      * @return void
      */
     public function setUpdatedBy($id)
@@ -126,7 +91,7 @@ trait Authorable
 
     /**
      * Get the name of the "created by" column.
-     * 
+     *
      * @return string
      */
     public function getCreatedByColumn()
@@ -140,7 +105,7 @@ trait Authorable
 
     /**
      * Get the name of the "updated by" column.
-     * 
+     *
      * @return string
      */
     public function getUpdatedByColumn()
@@ -148,7 +113,45 @@ trait Authorable
         if (defined('self::UPDATED_BY')) {
             return self::UPDATED_BY;
         }
-        
+
         return 'updated_by';
+    }
+
+    /**
+     * Get the user model for the application.
+     *
+     * @return class-string<Model>
+     */
+    protected function getAuthorModel()
+    {
+        /** @var class-string<Model> */
+        return Config::get('auth.providers.users.model', User::class);
+    }
+
+    /**
+     * Get the model which is initiating the action.
+     *
+     * @return Model|int|string|null
+     */
+    protected function getTouchedBy()
+    {
+        return Auth::id();
+    }
+
+    /**
+     * Get the identifying key of the initiating model to update this model.
+     *
+     * @return int|string|null
+     */
+    protected function getTouchedByKey()
+    {
+        $touchedBy = $this->getTouchedBy();
+
+        if ($touchedBy instanceof Model) {
+            /** @var int|string */
+            return $touchedBy->getRouteKey();
+        }
+
+        return $touchedBy;
     }
 }

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Honed\Concerns;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Config;
 
 /**
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
@@ -12,12 +14,12 @@ trait HasUser
 {
     /**
      * Get the user that owns the model.
-     * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\Illuminate\Foundation\Auth\User, $this>
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
      */
     public function user()
     {
-        /** @var class-string<\Illuminate\Foundation\Auth\User> */
+        /** @var class-string<User> */
         $user = Config::get('auth.providers.users.model', User::class);
 
         return $this->belongsTo(

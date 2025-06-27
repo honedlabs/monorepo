@@ -13,16 +13,16 @@ use Honed\Honed\Responses\Concerns\HasModel;
  */
 abstract class ShowResponse extends InertiaResponse
 {
-    /** @use HasModel<TModel> */
-    use HasModel;
-
     /** @use CanHaveBatch<TBatch> */
     use CanHaveBatch;
 
+    /** @use HasModel<TModel> */
+    use HasModel;
+
     /**
      * Create a new show response.
-     * 
-     * @param TModel $model
+     *
+     * @param  TModel  $model
      */
     public function __construct($model)
     {
@@ -31,7 +31,7 @@ abstract class ShowResponse extends InertiaResponse
 
     /**
      * Get the props for the view.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getProps()
@@ -42,5 +42,4 @@ abstract class ShowResponse extends InertiaResponse
             ...$this->modelToArray(),
         ];
     }
-
 }

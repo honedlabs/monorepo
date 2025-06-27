@@ -15,15 +15,15 @@ trait CanHaveBatch
 
     /**
      * The batch to use for actions.
-     * 
+     *
      * @var class-string<TBatch>|TBatch|null
      */
     protected $batch;
 
     /**
      * Set the batch to use for actions.
-     * 
-     * @param class-string<TBatch>|TBatch|null $value
+     *
+     * @param  class-string<TBatch>|TBatch|null  $value
      * @return $this
      */
     public function batch($value)
@@ -35,7 +35,7 @@ trait CanHaveBatch
 
     /**
      * Get the batch to use for actions.
-     * 
+     *
      * @return TBatch|null
      */
     public function getBatch()
@@ -46,10 +46,10 @@ trait CanHaveBatch
             default => null,
         };
     }
-        
+
     /**
      * Convert the batch an array of props.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function batchToArray()

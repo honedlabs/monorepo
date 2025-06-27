@@ -9,25 +9,25 @@ use Honed\Honed\Responses\Concerns\HasModel;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class EditResponse extends InertiaResponse
+class EditResponse extends InertiaResponse
 {
-    public const UPDATE_PROP = 'update';
-
     /** @use HasModel<TModel> */
     use HasModel;
 
+    public const UPDATE_PROP = 'update';
+
     /**
      * The route to update the model.
-     * 
+     *
      * @var string
      */
     protected $update;
 
     /**
      * Create a new edit response.
-     * 
-     * @param TModel $model
-     * @param string $update
+     *
+     * @param  TModel  $model
+     * @param  string  $update
      */
     public function __construct($model, $update)
     {
@@ -37,8 +37,8 @@ abstract class EditResponse extends InertiaResponse
 
     /**
      * Set the route to update the model.
-     * 
-     * @param string $value
+     *
+     * @param  string  $value
      * @return $this
      */
     public function updateUrl($value)
@@ -50,7 +50,7 @@ abstract class EditResponse extends InertiaResponse
 
     /**
      * Get the route to update the model.
-     * 
+     *
      * @return string
      */
     public function getUpdateUrl()
@@ -60,7 +60,7 @@ abstract class EditResponse extends InertiaResponse
 
     /**
      * Get the props for the view.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getProps()
