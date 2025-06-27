@@ -109,6 +109,7 @@ export declare interface Operation {
     action?: boolean;
     confirm?: Confirm;
     route?: Route;
+    inertia?: boolean;
 }
 
 export declare type OperationData = InlineOperationData | BulkOperationData | PageOperationData;

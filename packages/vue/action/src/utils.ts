@@ -3,10 +3,13 @@ import { router } from "@inertiajs/vue3";
 import type {
 	MaybeEndpoint,
 	MaybeId,
+	Operation,
 	OperationData,
 	OperationDataMap,
+	OperationType,
 } from "./types";
 import { Operations } from "./operations";
+import axios from "axios";
 
 /**
  * Execute an operation with full type safety.
@@ -18,23 +21,28 @@ export function execute<T extends Operations>(
 	options: VisitOptions = {},
 ): boolean {
 	if (operation.route) {
-		router.visit(operation.route.url, {
-			...options,
-			method: operation.route.method,
-		});
+		const { url, method } = operation.route;
+
+		if (operation.inertia) window.location.href = url;
+		else router.visit(url, { ...options, method });
+
 		return true;
 	}
 
-	if (operation.action && endpoint) {
-		router.post(
-			endpoint,
-			{ ...data, name: operation.name, type: operation.type },
-			options,
-		);
-		return true;
+	if (!operation.action || !endpoint) {
+		return false;
 	}
 
-	return false;
+	const payload = {
+		...data,
+		name: operation.name,
+		type: operation.type,
+	};
+
+	if (operation.inertia) router.post(endpoint, payload, options);
+	else axios.post(endpoint, payload).catch((e) => options.onError?.(e));
+
+	return true;
 }
 
 /**

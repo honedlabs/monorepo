@@ -24,6 +24,7 @@ export interface Operation {
 	action?: boolean;
 	confirm?: Confirm;
 	route?: Route;
+	inertia?: boolean;
 }
 
 export interface InlineOperation extends Operation {

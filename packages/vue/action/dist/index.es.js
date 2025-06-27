@@ -1,76 +1,84 @@
-import { computed as v, ref as p } from "vue";
+import { computed as d, ref as w } from "vue";
 import { router as m } from "@inertiajs/vue3";
-function y(e, n, a, l = {}) {
-  return e.route ? (m.visit(e.route.url, {
-    ...l,
-    method: e.route.method
-  }), !0) : e.action && n ? (m.post(
-    n,
-    { ...a, name: e.name, type: e.type },
-    l
-  ), !0) : !1;
+import y from "axios";
+function E(e, n, r, u = {}) {
+  if (e.route) {
+    const { url: i, method: c } = e.route;
+    return e.inertia ? window.location.href = i : m.visit(i, { ...u, method: c }), !0;
+  }
+  if (!e.action || !n)
+    return !1;
+  const a = {
+    ...r,
+    name: e.name,
+    type: e.type
+  };
+  return e.inertia ? m.post(n, a, u) : y.post(n, a).catch((i) => {
+    var c;
+    return (c = u.onError) == null ? void 0 : c.call(u, i);
+  }), !0;
 }
-function b(e, n, a, l = {}, c = {}) {
-  return y(
+function b(e, n, r, u = {}, a = {}) {
+  return E(
     e,
     n,
-    { ...l, id: a ?? void 0 },
-    c
+    { ...u, id: r ?? void 0 },
+    a
   );
 }
-function g(e, n, a, l = {}) {
-  return e.map((c) => ({
-    ...c,
-    execute: (d = {}, r = {}) => b(c, n, a, d, { ...l, ...r })
+function g(e, n, r, u = {}) {
+  return e.map((a) => ({
+    ...a,
+    execute: (i = {}, c = {}) => b(a, n, r, i, { ...u, ...c })
   }));
 }
-function S(e, n, a = {}) {
+function B(e, n, r = {}) {
   if (!(e != null && e[n]))
     throw new Error("The batch must be provided with valid props and key.");
-  const l = v(() => e[n]), c = v(
-    () => s(l.value.inline)
-  ), d = v(
-    () => s(l.value.bulk)
-  ), r = v(
-    () => s(l.value.page)
+  const u = d(() => e[n]), a = d(
+    () => s(u.value.inline)
+  ), i = d(
+    () => s(u.value.bulk)
+  ), c = d(
+    () => s(u.value.page)
   );
-  function i(u, o = {}, f = {}) {
+  function f(t, o = {}, v = {}) {
     return b(
-      u,
-      l.value.endpoint,
-      l.value.id,
+      t,
+      u.value.endpoint,
+      u.value.id,
       o,
-      { ...a, ...f }
+      { ...r, ...v }
     );
   }
-  function s(u) {
+  function s(t) {
     return g(
-      u,
-      l.value.endpoint,
-      l.value.id,
-      a
+      t,
+      u.value.endpoint,
+      u.value.id,
+      r
     );
   }
-  function x(u, o, f = {}) {
-    return i(u, o, f);
+  function x(t, o, v = {}) {
+    return f(t, o, v);
   }
-  function h(u, o, f = {}) {
-    return i(u, o, f);
+  function h(t, o, v = {}) {
+    return f(t, o, v);
   }
-  function t(u, o = {}, f = {}) {
-    return i(u, o, f);
+  function l(t, o = {}, v = {}) {
+    return f(t, o, v);
   }
   return {
-    inline: c,
-    bulk: d,
-    page: r,
+    inline: a,
+    bulk: i,
+    page: c,
     executeInline: x,
     executeBulk: h,
-    executePage: t
+    executePage: l
   };
 }
-function V() {
-  const e = p({
+function p() {
+  const e = w({
     all: !1,
     only: /* @__PURE__ */ new Set(),
     except: /* @__PURE__ */ new Set()
@@ -78,58 +86,58 @@ function V() {
   function n() {
     e.value.all = !0, e.value.only.clear(), e.value.except.clear();
   }
-  function a() {
+  function r() {
     e.value.all = !1, e.value.only.clear(), e.value.except.clear();
   }
-  function l(...t) {
-    t.forEach((u) => e.value.except.delete(u)), t.forEach((u) => e.value.only.add(u));
+  function u(...l) {
+    l.forEach((t) => e.value.except.delete(t)), l.forEach((t) => e.value.only.add(t));
   }
-  function c(...t) {
-    t.forEach((u) => e.value.except.add(u)), t.forEach((u) => e.value.only.delete(u));
+  function a(...l) {
+    l.forEach((t) => e.value.except.add(t)), l.forEach((t) => e.value.only.delete(t));
   }
-  function d(t, u) {
-    if (r(t) || u === !1) return c(t);
-    if (!r(t) || u === !0) return l(t);
+  function i(l, t) {
+    if (c(l) || t === !1) return a(l);
+    if (!c(l) || t === !0) return u(l);
   }
-  function r(t) {
-    return e.value.all ? !e.value.except.has(t) : e.value.only.has(t);
+  function c(l) {
+    return e.value.all ? !e.value.except.has(l) : e.value.only.has(l);
   }
-  const i = v(() => e.value.all && e.value.except.size === 0), s = v(() => e.value.only.size > 0 || i.value);
-  function x(t) {
+  const f = d(() => e.value.all && e.value.except.size === 0), s = d(() => e.value.only.size > 0 || f.value);
+  function x(l) {
     return {
-      "onUpdate:modelValue": (u) => {
-        u ? l(t) : c(t);
+      "onUpdate:modelValue": (t) => {
+        t ? u(l) : a(l);
       },
-      modelValue: r(t),
-      value: t
+      modelValue: c(l),
+      value: l
     };
   }
   function h() {
     return {
-      "onUpdate:modelValue": (t) => {
-        t ? n() : a();
+      "onUpdate:modelValue": (l) => {
+        l ? n() : r();
       },
-      modelValue: i.value
+      modelValue: f.value
     };
   }
   return {
-    allSelected: i,
+    allSelected: f,
     selection: e,
     hasSelected: s,
     selectAll: n,
-    deselectAll: a,
-    select: l,
-    deselect: c,
-    toggle: d,
-    selected: r,
+    deselectAll: r,
+    select: u,
+    deselect: a,
+    toggle: i,
+    selected: c,
     bind: x,
     bindAll: h
   };
 }
 export {
   g as executables,
-  y as execute,
+  E as execute,
   b as executor,
-  S as useBatch,
-  V as useBulk
+  B as useBatch,
+  p as useBulk
 };
