@@ -29,7 +29,7 @@ it('has props', function () {
 
 it('is ineertia response', function () {
     $is = 'Index';
-    
+
     get(route('products.index'))
         ->assertInertia(fn ($page) => $page
             ->component($is)

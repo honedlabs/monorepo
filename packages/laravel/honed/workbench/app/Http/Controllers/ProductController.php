@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Workbench\App\Models\Product;
 use Illuminate\Routing\Controller;
-use Workbench\App\Http\Responses\EditProduct;
-use Workbench\App\Http\Responses\ShowProduct;
-use Workbench\App\Http\Responses\IndexProduct;
 use Workbench\App\Http\Responses\CreateProduct;
 use Workbench\App\Http\Responses\DeleteProduct;
+use Workbench\App\Http\Responses\EditProduct;
+use Workbench\App\Http\Responses\IndexProduct;
+use Workbench\App\Http\Responses\ShowProduct;
+use Workbench\App\Models\Product;
 
 class ProductController extends Controller
 {

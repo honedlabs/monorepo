@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use Honed\Action\Batch;
 use Workbench\App\Batches\ProductBatch;
-use Workbench\App\Models\Product;
 use Workbench\App\Http\Responses\ShowProduct;
+use Workbench\App\Models\Product;
 
 use function Pest\Laravel\get;
 

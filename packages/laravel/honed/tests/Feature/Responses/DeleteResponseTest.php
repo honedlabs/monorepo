@@ -2,13 +2,10 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Batch;
-use function Pest\Laravel\get;
-use Workbench\App\Models\Product;
-use Workbench\App\Batches\ProductBatch;
-
-use Workbench\App\Http\Responses\EditProduct;
 use Workbench\App\Http\Responses\DeleteProduct;
+use Workbench\App\Models\Product;
+
+use function Pest\Laravel\get;
 
 beforeEach(function () {
     $this->product = Product::factory()->create();

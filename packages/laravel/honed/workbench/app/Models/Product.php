@@ -19,6 +19,7 @@ class Product extends Model
      * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\ProductFactory>
      */
     use HasFactory;
+
     use SoftDeletes;
 
     /**

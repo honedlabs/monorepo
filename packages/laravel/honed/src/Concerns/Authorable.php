@@ -42,7 +42,7 @@ trait Authorable
      */
     public function author()
     {
-        $model = $this->authorModel();
+        $model = $this->getAuthorModel();
 
         return $this->belongsTo(
             $model,

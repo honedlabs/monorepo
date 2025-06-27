@@ -3,13 +3,12 @@
 declare(strict_types=1);
 
 use Workbench\App\Http\Responses\CreateProduct;
-use Workbench\App\Tables\ProductTable;
 
 use function Pest\Laravel\get;
 
 beforeEach(function () {
     $this->store = route('products.store');
-    
+
     $this->response = new CreateProduct($this->store);
 });
 
@@ -27,12 +26,12 @@ it('has props', function () {
             ->toBeArray()
             ->toHaveCount(1)
             ->toHaveKey(CreateProduct::STORE_PROP)
-    );
+        );
 });
 
 it('is ineertia response', function () {
     $is = 'Create';
-    
+
     get(route('products.create'))
         ->assertInertia(fn ($page) => $page
             ->component($is)
