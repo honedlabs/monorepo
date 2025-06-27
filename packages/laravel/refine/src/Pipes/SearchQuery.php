@@ -10,7 +10,7 @@ use Honed\Refine\Stores\Data\SearchData;
 use InvalidArgumentException;
 
 /**
- * @template TClass of \Honed\Refine\Contracts\RefinesData
+ * @template TClass of \Honed\Refine\Refine
  *
  * @extends Pipe<TClass>
  */
@@ -18,48 +18,46 @@ class SearchQuery extends Pipe
 {
     /**
      * Run the search query logic.
-     *
-     * @param  TClass  $instance
-     * @return void
      */
-    public function run($instance)
+    public function run(): void
     {
-        if (! $instance->isSearchable()) {
+        if ($this->instance->isNotSearchable()) {
             return;
         }
 
-        [$term, $columns] = $this->getValues($instance);
+        [$term, $columns] = $this->getValues();
 
-        $instance->setTerm($term);
+        $this->instance->setTerm($term);
+
+        $builder = $this->instance->getBuilder();
 
         match (true) {
-            $instance->isScout() => $this->scout($instance),
-            default => $this->search($instance, $columns)
+            $this->instance->isScout() => $this->scout($builder),
+            default => $this->search($builder, $columns)
         };
 
-        $this->persist($instance, $term, $columns);
+        $this->persist($term, $columns);
     }
 
     /**
      * Set the search term, and if applicable, the search columns on the instance.
      *
-     * @param  TClass  $instance
      * @return array{string|null, array<int,string>|null}
      */
-    public function getValues($instance)
+    protected function getValues()
     {
-        $request = $instance->getRequest();
+        $request = $this->instance->getRequest();
 
-        $key = $instance->getSearchKey();
+        $key = $this->instance->getSearchKey();
 
         $term = Interpret::string($request, $key);
 
         return match (true) {
             (bool) $term => [
                 str_replace('+', ' ', trim($term)),
-                $this->getColumns($instance),
+                $this->getColumns($request),
             ],
-            $request->missing($key) => $this->persisted($instance),
+            $request->missing($key) => $this->persisted($key),
             default => [null, null]
         };
     }
@@ -67,19 +65,19 @@ class SearchQuery extends Pipe
     /**
      * Get the search columns from the instance's request.
      *
-     * @param  TClass  $instance
+     * @param  \Illuminate\Http\Request  $request
      * @return array<int,string>|null
      */
-    public function getColumns($instance)
+    protected function getColumns($request)
     {
-        if (! $instance->isMatchable()) {
+        if ($this->instance->isNotMatchable()) {
             return null;
         }
 
         return Interpret::array(
-            $instance->getRequest(),
-            $instance->getMatchKey(),
-            $instance->getDelimiter(),
+            $request,
+            $this->instance->getMatchKey(),
+            $this->instance->getDelimiter(),
             'string'
         );
     }
@@ -87,18 +85,18 @@ class SearchQuery extends Pipe
     /**
      * Perform the search using Scout.
      *
-     * @param  TClass  $instance
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @return void
      */
-    public function scout($instance)
+    protected function scout($builder)
     {
-        $model = $instance->getModel();
+        $model = $this->instance->getModel();
 
-        if (! $term = $instance->getTerm()) {
+        if (! $term = $this->instance->getTerm()) {
             return;
         }
 
-        $builder = $instance->getBuilder();
+        $builder = $this->instance->getBuilder();
 
         $builder->whereIn(
             $builder->qualifyColumn($model->getKeyName()),
@@ -110,19 +108,17 @@ class SearchQuery extends Pipe
     /**
      * Perform the search using the default search logic.
      *
-     * @param  TClass  $instance
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  array<int,string>|null  $columns
      * @return bool
      */
-    public function search($instance, $columns)
+    protected function search($builder, $columns)
     {
-        $builder = $instance->getBuilder();
-
-        $term = $instance->getTerm();
+        $term = $this->instance->getTerm();
 
         $applied = false;
 
-        foreach ($instance->getSearches() as $search) {
+        foreach ($this->instance->getSearches() as $search) {
             if ($search->handle($builder, $term, $columns, $applied)) {
                 $applied = true;
             }
@@ -134,15 +130,14 @@ class SearchQuery extends Pipe
     /**
      * Persist the search value to the internal data store.
      *
-     * @param  TClass  $instance
      * @param  string|null  $term
      * @param  array<int,string>|null  $columns
      * @return void
      */
-    public function persist($instance, $term, $columns)
+    protected function persist($term, $columns)
     {
-        $instance->getSearchStore()?->put([
-            $instance->getSearchKey() => [
+        $this->instance->getSearchStore()?->put([
+            $this->instance->getSearchKey() => [
                 'term' => $term,
                 'cols' => $columns ?? [],
             ],
@@ -152,17 +147,17 @@ class SearchQuery extends Pipe
     /**
      * Get the search data from the store.
      *
-     * @param  TClass  $instance
+     * @param  string  $key
      * @return array{string|null, array<int, string>|null}
      */
-    protected function persisted($instance)
+    protected function persisted($key)
     {
         try {
             $data = SearchData::from(
-                $instance->getSearchStore()?->get($instance->getSearchKey())
+                $this->instance->getSearchStore()?->get($key)
             );
 
-            $columns = $instance->isMatchable() ? $data->columns : null;
+            $columns = $this->instance->isMatchable() ? $data->columns : null;
 
             return [$data->term, $columns];
         } catch (InvalidArgumentException) {

@@ -6,12 +6,12 @@ namespace Honed\Refine;
 
 use Closure;
 use Honed\Core\Concerns\Allowable;
+use Honed\Core\Concerns\CanBeActive;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\IsActive;
 use Honed\Core\Primitive;
 use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
@@ -26,18 +26,18 @@ use Illuminate\Support\Str;
 abstract class Refiner extends Primitive
 {
     use Allowable;
+    use CanBeActive;
     use CanBeHidden;
     use Concerns\CanHaveAlias;
     use HasLabel;
     use HasMeta;
     use HasName;
+
     use HasQualifier;
 
     /** @use HasQuery<TModel, TBuilder> */
     use HasQuery;
-
     use HasType;
-    use IsActive;
 
     /**
      * Create a new refiner instance.

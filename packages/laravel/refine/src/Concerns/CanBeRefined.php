@@ -298,7 +298,7 @@ trait CanBeRefined
     /**
      * Get the pipes to be used for refining.
      *
-     * @return array<int,class-string<\Honed\Core\Pipe<\Honed\Refine\Contracts\RefinesData>>>
+     * @return array<int, class-string<\Honed\Core\Pipe>>
      */
     protected function pipes()
     {

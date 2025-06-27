@@ -20,7 +20,9 @@ beforeEach(function () {
 });
 
 it('fails', function (Refine $refine) {
-    $this->pipe->run($this->refine);
+    $this->pipe->instance($refine);
+
+    $this->pipe->run();
 
     expect($refine->getBuilder()->getQuery()->wheres)
         ->toBeEmpty();
@@ -69,7 +71,9 @@ it('fails', function (Refine $refine) {
 ]);
 
 it('passes', function (Refine $refine, string $name = 'price', mixed $value = 100) {
-    $this->pipe->run($refine);
+    $this->pipe->instance($refine);
+
+    $this->pipe->run();
 
     expect($refine->getBuilder()->getQuery()->wheres)
         ->toBeOnlyWhere($name, $value);

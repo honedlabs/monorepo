@@ -7,7 +7,7 @@ namespace Honed\Refine\Pipes;
 use Honed\Core\Pipe;
 
 /**
- * @template TClass of \Honed\Refine\Contracts\RefinesData
+ * @template TClass of \Honed\Refine\Refine
  *
  * @extends Pipe<TClass>
  */
@@ -15,14 +15,11 @@ class AfterRefining extends Pipe
 {
     /**
      * Run the after refining logic.
-     *
-     * @param  TClass  $instance
-     * @return void
      */
-    public function run($instance)
+    public function run(): void
     {
-        $after = $instance->getAfterCallback();
+        $after = $this->instance->getAfterCallback();
 
-        $instance->evaluate($after);
+        $this->instance->evaluate($after);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Sorts;
 
-use Honed\Core\Concerns\IsDefault;
+use Honed\Core\Concerns\CanBeDefault;
 use Honed\Refine\Refiner;
 
 use function array_merge;
@@ -18,8 +18,8 @@ use function sprintf;
  */
 class Sort extends Refiner
 {
+    use CanBeDefault;
     use Concerns\HasDirection;
-    use IsDefault;
 
     /**
      * The identifier to use for evaluation.

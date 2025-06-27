@@ -18,38 +18,35 @@ class SortQuery extends Pipe
 {
     /**
      * Run the sort query logic.
-     *
-     * @param  TClass  $instance
-     * @return void
      */
-    public function run($instance)
+    public function run(): void
     {
-        [$parameter, $direction] = $this->getValues($instance);
+        $builder = $this->instance->getBuilder();
 
-        if ($this->sort($instance, $parameter, $direction)) {
-            $this->persist($instance, $parameter, $direction);
+        [$parameter, $direction] = $this->getValues();
+
+        if ($this->sort($builder, $parameter, $direction)) {
+            $this->persist($parameter, $direction);
 
             return;
         }
 
-        $this->defaultSort($instance);
+        $this->defaultSort($builder);
     }
 
     /**
      * Apply the sort to the resource.
      *
-     * @param  TClass  $instance
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  string|null  $parameter
      * @param  'asc'|'desc'|null  $direction
      * @return bool
      */
-    protected function sort($instance, $parameter, $direction)
+    protected function sort($builder, $parameter, $direction)
     {
-        $builder = $instance->getBuilder();
-
         $applied = false;
 
-        foreach ($instance->getSorts() as $sort) {
+        foreach ($this->instance->getSorts() as $sort) {
             if ($sort->handle($builder, $parameter, $direction)) {
                 $applied = true;
             }
@@ -61,14 +58,12 @@ class SortQuery extends Pipe
     /**
      * Apply the default sort to the resource.
      *
-     * @param  TClass  $instance
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @return void
      */
-    protected function defaultSort($instance)
+    protected function defaultSort($builder)
     {
-        $builder = $instance->getBuilder();
-
-        if ($sort = $instance->getDefaultSort()) {
+        if ($sort = $this->instance->getDefaultSort()) {
             $parameter = $sort->getParameter();
 
             $sort->handle($builder, $parameter, null);
@@ -79,20 +74,19 @@ class SortQuery extends Pipe
      * Get the sort name and direction from the request, or from a persisted
      * value.
      *
-     * @param  TClass  $instance
      * @return array{string|null, 'asc'|'desc'|null}
      */
-    protected function getValues($instance)
+    protected function getValues()
     {
-        $request = $instance->getRequest();
+        $request = $this->instance->getRequest();
 
-        $key = $instance->getSortKey();
+        $key = $this->instance->getSortKey();
 
         [$parameter, $direction] = $this->getOrder($request, $key);
 
         return match (true) {
             (bool) $parameter => [$parameter, $direction],
-            $request->missing($key) => $this->persisted($instance),
+            $request->missing($key) => $this->persisted($key),
             default => [null, null]
         };
     }
@@ -118,12 +112,11 @@ class SortQuery extends Pipe
     /**
      * Persist the sort value to the internal data store.
      *
-     * @param  TClass  $instance
      * @param  string|null  $parameter
      * @param  'asc'|'desc'|null  $direction
      * @return void
      */
-    protected function persist($instance, $parameter, $direction)
+    protected function persist($parameter, $direction)
     {
         try {
             $data = SortData::from([
@@ -131,8 +124,8 @@ class SortQuery extends Pipe
                 'dir' => $direction,
             ]);
 
-            $instance->getSortStore()?->put([
-                $instance->getSortKey() => $data->toArray(),
+            $this->instance->getSortStore()?->put([
+                $this->instance->getSortKey() => $data->toArray(),
             ]);
         } catch (InvalidArgumentException $e) {
         }
@@ -141,14 +134,14 @@ class SortQuery extends Pipe
     /**
      * Get the sort data from the store.
      *
-     * @param  TClass  $instance
+     * @param  string  $key
      * @return array{string|null, 'asc'|'desc'|null}
      */
-    protected function persisted($instance)
+    protected function persisted($key)
     {
         try {
             $data = SortData::from(
-                $instance->getSortStore()?->get($instance->getSortKey())
+                $this->instance->getSortStore()?->get($key)
             );
 
             return [$data->column, $data->direction];

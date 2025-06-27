@@ -7,29 +7,17 @@ namespace Honed\Refine\Pipes;
 use Honed\Core\Pipe;
 
 /**
- * @template TClass of \Honed\Refine\Contracts\RefinesData
+ * @template TClass of \Honed\Refine\Refine
  *
  * @extends Pipe<TClass>
  */
 class FilterQuery extends Pipe
 {
     /**
-     * The instance of the refine.
-     *
-     * @var TClass
+     * Run the filter query logic.
      */
-    protected $instance;
-
-    /**
-     * Run the after refining logic.
-     *
-     * @param  TClass  $instance
-     * @return void
-     */
-    public function run($instance)
+    public function run(): void
     {
-        $this->instance = $instance;
-
         $builder = $this->instance->getBuilder();
 
         if ($this->filter($builder, $this->getFilterValue(...))) {
