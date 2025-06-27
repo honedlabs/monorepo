@@ -15,7 +15,7 @@ use function in_array;
 use function is_string;
 use function mb_strtoupper;
 
-trait HasUrl
+trait CanBeUrl
 {
     /**
      * The route to visit.
@@ -34,18 +34,18 @@ trait HasUrl
     /**
      * Set the url to visit.
      *
-     * @param  string|(\Closure(...mixed):string)|null  $url
+     * @param  string|(\Closure(...mixed):string)|null  $value
      * @param  mixed  $parameters
      * @return $this
      */
-    public function url($url, $parameters = [])
+    public function url($value, $parameters = [])
     {
         $this->url = match (true) {
-            ! $url => null,
-            $url instanceof Closure => $url,
-            $this->implicitRoute($parameters) => fn ($record) => route($url, $record, true),
-            Str::startsWith($url, ['http://', 'https://', '/']) => URL::to($url),
-            default => route($url, $parameters, true),
+            ! $value => null,
+            $value instanceof Closure => $value,
+            $this->implicitRoute($parameters) => fn ($record) => route($value, $record, true),
+            Str::startsWith($value, ['http://', 'https://', '/']) => URL::to($value),
+            default => route($value, $parameters, true),
         };
 
         return $this;

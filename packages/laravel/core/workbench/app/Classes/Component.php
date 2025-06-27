@@ -5,18 +5,23 @@ declare(strict_types=1);
 namespace Workbench\App\Classes;
 
 use Honed\Core\Concerns\CanDeferLoading;
+use Honed\Core\Concerns\CanQuery;
 use Honed\Core\Concerns\HasLifecycleEvents;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasPipeline;
 use Honed\Core\Concerns\HasType;
+use Honed\Core\Contracts\HooksIntoLifecycle;
+use Honed\Core\Pipes\CallsAfter;
+use Honed\Core\Pipes\CallsBefore;
 use Honed\Core\Primitive;
 use Workbench\App\Models\User;
 use Workbench\App\Pipes\SetName;
 
-class Component extends Primitive
+class Component extends Primitive implements HooksIntoLifecycle
 {
     use CanDeferLoading;
+    use CanQuery;
     use HasLifecycleEvents;
     use HasMeta;
     use HasName;
@@ -74,7 +79,9 @@ class Component extends Primitive
     protected function pipes()
     {
         return [
+            CallsBefore::class,
             SetName::class,
+            CallsAfter::class,
         ];
     }
 

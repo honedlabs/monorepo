@@ -11,13 +11,13 @@ trait HasRequest
     /**
      * The request instance.
      *
-     * @var \Illuminate\Http\Request
+     * @var Request
      */
     protected $request;
 
     /**
      * Set the request instance.
-     * 
+     *
      * @return $this
      */
     public function request(Request $request)

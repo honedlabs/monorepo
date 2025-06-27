@@ -16,7 +16,7 @@ afterEach(function () {
 it('sets instance', function () {
     expect($this->pipe)
         ->getInstance()->toBeNull()
-        ->instance(new Component())->toBeNull()
+        ->instance(new Component())->toBe($this->pipe)
         ->getInstance()->toBeInstanceOf(Component::class);
 });
 

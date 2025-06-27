@@ -11,8 +11,8 @@ namespace Honed\Core\Contracts;
 interface Stateful
 {
     /**
-     * Get a snapshot of the state of the instance.
-     * 
+     * Get a snapshot of the current state of the instance.
+     *
      * @return array<TKey,TValue>
      */
     public function toState(): array;

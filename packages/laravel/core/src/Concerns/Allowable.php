@@ -16,12 +16,12 @@ trait Allowable
     /**
      * Set the allow condition.
      *
-     * @param  (\Closure(...mixed):bool)|bool  $allow
+     * @param  (\Closure(...mixed):bool)|bool  $value
      * @return $this
      */
-    public function allow($allow)
+    public function allow($value)
     {
-        $this->allow = $allow;
+        $this->allow = $value;
 
         return $this;
     }

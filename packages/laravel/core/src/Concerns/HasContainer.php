@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Http\Request;
 
-trait HasRequest
+trait HasContainer
 {
     /**
      * The container instance.
      *
-     * @var \Illuminate\Contracts\Container\Container
+     * @var Container
      */
     protected $container;
 

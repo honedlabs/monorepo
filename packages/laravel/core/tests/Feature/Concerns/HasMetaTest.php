@@ -2,20 +2,19 @@
 
 declare(strict_types=1);
 
+use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Concerns\HasMeta;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use HasMeta;
+        use Evaluable, HasMeta;
     };
 });
 
 it('sets', function () {
     expect($this->test)
-        ->getMeta()->toBeNull()
-        ->hasMeta()->toBeFalse()
+        ->getMeta()->toBe([])
         ->meta(['name' => 'test'])->toBe($this->test)
-        ->getMeta()->toBe(['name' => 'test'])
-        ->hasMeta()->toBeTrue();
+        ->getMeta()->toBe(['name' => 'test']);
 });

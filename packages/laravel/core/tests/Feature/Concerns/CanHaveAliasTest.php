@@ -2,23 +2,20 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\HasAlias;
+use Honed\Core\Concerns\CanHaveAlias;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use HasAlias;
+        use CanHaveAlias;
     };
 });
 
 it('sets', function () {
     expect($this->test)
         ->getAlias()->toBeNull()
-        ->hasAlias()->toBeFalse()
         ->alias('test')->toBe($this->test)
         ->getAlias()->toBe('test')
-        ->hasAlias()->toBeTrue()
         ->dontAlias()->toBe($this->test)
-        ->getAlias()->toBeNull()
-        ->hasAlias()->toBeFalse();
+        ->getAlias()->toBeNull();
 });

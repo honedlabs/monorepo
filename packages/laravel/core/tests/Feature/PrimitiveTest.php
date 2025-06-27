@@ -20,7 +20,7 @@ it('has representation', function () {
         ->toArray()->toEqual([
             'type' => 'component',
             'name' => null,
-            'meta' => null,
+            'meta' => [],
         ]);
 });
 
@@ -34,6 +34,7 @@ it('serializes without null values', function () {
 
     $expected = [
         'type' => 'component',
+        'meta' => [],
     ];
 
     expect($test)

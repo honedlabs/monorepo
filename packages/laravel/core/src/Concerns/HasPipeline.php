@@ -45,12 +45,12 @@ trait HasPipeline
     /**
      * Set the pipeline completion status.
      *
-     * @param  bool  $complete
+     * @param  bool  $value
      * @return $this
      */
-    public function complete($complete = true)
+    public function complete($value = true)
     {
-        $this->complete = $complete;
+        $this->complete = $value;
 
         return $this;
     }
@@ -58,11 +58,12 @@ trait HasPipeline
     /**
      * Set the pipeline completion status to be incomplete.
      *
+     * @param  bool  $value
      * @return $this
      */
-    public function notComplete()
+    public function notComplete($value = true)
     {
-        return $this->complete(false);
+        return $this->complete(! $value);
     }
 
     /**

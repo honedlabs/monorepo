@@ -9,17 +9,17 @@ trait HasMeta
     /**
      * The meta data.
      *
-     * @var array<string,mixed>|(\Closure(...mixed):array<string,mixed>)|null
+     * @var array<string,mixed>|(\Closure(...mixed):array<string,mixed>)
      */
     protected $meta = [];
 
     /**
      * Set the meta data.
      *
-     * @param  array<string,mixed>|(\Closure(...mixed):array<string,mixed>)|null  $meta
+     * @param  array<string,mixed>|(\Closure(...mixed):array<string,mixed>)  $meta
      * @return $this
      */
-    public function meta($meta = null)
+    public function meta($meta)
     {
         $this->meta = $meta;
 

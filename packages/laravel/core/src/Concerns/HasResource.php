@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Honed\Core\Exceptions\InvalidResourceException;
-use Honed\Core\Exceptions\ResourceNotSetException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -29,7 +28,7 @@ trait HasResource
     /**
      * Set the resource to be used.
      *
-     * @param  TModel|array<int, array<string, mixed>>|\Illuminate\Contracts\Support\Arrayable<int, mixed>|TBuilder|class-string<TModel>  $resource
+     * @param  TModel|array<int, array<string, mixed>>|Arrayable<int, mixed>|TBuilder|class-string<TModel>  $resource
      * @return $this
      *
      * @throws InvalidResourceException
@@ -44,7 +43,7 @@ trait HasResource
     /**
      * Set the resource to be used.
      *
-     * @param  TModel|array<int, array<string, mixed>>|\Illuminate\Contracts\Support\Arrayable<int, mixed>|TBuilder|class-string<TModel>  $resource
+     * @param  TModel|array<int, array<string, mixed>>|Arrayable<int, mixed>|TBuilder|class-string<TModel>  $resource
      * @return $this
      */
     public function for($resource)

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Closure;
+
 /**
  * @phpstan-require-implements \Honed\Core\Contracts\HooksIntoLifecycle
  */
@@ -11,22 +13,22 @@ trait HasLifecycleEvents
 {
     /**
      * The callback to be called before the pipeline has finished.
-     * 
-     * @var (\Closure(mixed...):mixed|void)|null
+     *
+     * @var (Closure(mixed...):mixed|void)|null
      */
     protected $before;
 
     /**
      * The callback to be called after the pipeline has finished.
-     * 
-     * @var (\Closure(mixed...):mixed|void)|null
+     *
+     * @var (Closure(mixed...):mixed|void)|null
      */
     protected $after;
 
     /**
      * Set a callback to be called after the pipeline has finished.
-     * 
-     * @param  (\Closure(mixed...):mixed|void)|null  $callback
+     *
+     * @param  (Closure(mixed...):mixed|void)|null  $callback
      * @return $this
      */
     public function after($callback)
@@ -38,8 +40,8 @@ trait HasLifecycleEvents
 
     /**
      * Get the callback to be called after the pipeline has finished.
-     * 
-     * @return (\Closure(mixed...):mixed|void)|null
+     *
+     * @return (Closure(mixed...):mixed|void)|null
      */
     public function afterCallback()
     {
@@ -48,18 +50,18 @@ trait HasLifecycleEvents
 
     /**
      * Call the after callback.
-     * 
+     *
      * @return mixed
      */
     public function callAfter()
     {
-        return $this->evaluate($this->after);
+        return $this->evaluate($this->afterCallback());
     }
 
     /**
      * Set a callback to be called before the pipeline has begun.
-     * 
-     * @param  (\Closure(mixed...):mixed|void)|null  $callback
+     *
+     * @param  (Closure(mixed...):mixed|void)|null  $callback
      * @return $this
      */
     public function before($callback)
@@ -71,8 +73,8 @@ trait HasLifecycleEvents
 
     /**
      * Get the callback to be called before the pipeline has begun.
-     * 
-     * @return (\Closure(mixed...):mixed|void)|null
+     *
+     * @return (Closure(mixed...):mixed|void)|null
      */
     public function beforeCallback()
     {
@@ -81,11 +83,11 @@ trait HasLifecycleEvents
 
     /**
      * Call the before callback.
-     * 
+     *
      * @return mixed
      */
     public function callBefore()
     {
-        return $this->evaluate($this->before);
+        return $this->evaluate($this->beforeCallback());
     }
 }

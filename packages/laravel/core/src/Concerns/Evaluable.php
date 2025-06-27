@@ -32,13 +32,13 @@ trait Evaluable
      * Evaluate an expression with correct dependencies.
      *
      * @template T
-     * 
+     *
      * @param  T|callable(mixed...):T  $value
      * @param  array<string, mixed>  $named
      * @param  array<class-string, mixed>  $typed
      * @return T
-     * 
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @throws BindingResolutionException
      */
     public function evaluate($value, $named = [], $typed = [])
     {
@@ -47,6 +47,7 @@ trait Evaluable
         }
 
         if (! $value instanceof Closure) {
+            /** @var T */
             return $value instanceof BackedEnum ? $value->value : $value;
         }
 

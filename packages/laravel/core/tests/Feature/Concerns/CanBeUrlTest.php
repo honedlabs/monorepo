@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
+use Honed\Core\Concerns\CanBeUrl;
 use Honed\Core\Concerns\Evaluable;
-use Honed\Core\Concerns\HasUrl;
 use Symfony\Component\HttpFoundation\Request;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use Evaluable, HasUrl;
+        use CanBeUrl, Evaluable;
     };
 
     $this->user = User::factory()->create();
@@ -19,8 +19,10 @@ beforeEach(function () {
 it('sets route', function () {
     expect($this->test)
         ->getUrl()->toBeNull()
+        ->hasUrl()->toBeFalse()
         ->url('users.show', $this->user)->toBe($this->test)
-        ->getUrl()->toBe(route('users.show', $this->user));
+        ->getUrl()->toBe(route('users.show', $this->user))
+        ->hasUrl()->toBeTrue();
 });
 
 it('sets closure', function () {

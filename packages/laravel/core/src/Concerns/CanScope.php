@@ -6,7 +6,7 @@ namespace Honed\Core\Concerns;
 
 use Illuminate\Support\Str;
 
-trait HasScope
+trait CanScope
 {
     public const SCOPE = ':';
 
@@ -20,12 +20,12 @@ trait HasScope
     /**
      * Set the scope.
      *
-     * @param  string|null  $value
+     * @param  string|null  $scope
      * @return $this
      */
-    public function scope($value)
+    public function scope($scope)
     {
-        $this->scope = $value;
+        $this->scope = $scope;
 
         return $this;
     }

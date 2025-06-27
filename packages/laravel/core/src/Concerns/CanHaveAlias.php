@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-trait HasAlias
+trait CanHaveAlias
 {
     /**
      * The alias to use to hide the underlying value.

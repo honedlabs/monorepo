@@ -16,12 +16,12 @@ trait CanBeDefault
     /**
      * Set the instance to the default.
      *
-     * @param  bool  $default
+     * @param  bool  $value
      * @return $this
      */
-    public function default($default = true)
+    public function default($value = true)
     {
-        $this->default = $default;
+        $this->default = $value;
 
         return $this;
     }

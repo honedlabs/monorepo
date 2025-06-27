@@ -16,12 +16,12 @@ trait CanBeActive
     /**
      * Set the instance to active.
      *
-     * @param  bool  $active
+     * @param  bool  $value
      * @return $this
      */
-    public function active($active = true)
+    public function active($value = true)
     {
-        $this->active = $active;
+        $this->active = $value;
 
         return $this;
     }

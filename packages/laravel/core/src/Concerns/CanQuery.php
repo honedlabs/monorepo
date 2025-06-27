@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Closure;
-use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -24,12 +23,12 @@ trait CanQuery
     /**
      * Set a callback to modify the Eloquent builder.
      *
-     * @param  (\Closure(TBuilder, ...mixed):mixed|void)|null  $query
+     * @param  (\Closure(TBuilder, ...mixed):mixed|void)|null  $callback
      * @return $this
      */
-    public function query($query)
+    public function query($callback)
     {
-        $this->query = $query;
+        $this->query = $callback;
 
         return $this;
     }

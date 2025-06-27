@@ -32,9 +32,7 @@ abstract class Pipe
      */
     public function handle($instance, $next)
     {
-        $this->instance($instance);
-
-        $this->run();
+        $this->instance($instance)->run();
 
         return $next($this->instance);
     }
@@ -43,11 +41,13 @@ abstract class Pipe
      * Set the instance to pipe.
      *
      * @param  TClass  $instance
-     * @return void
+     * @return $this
      */
     public function instance($instance)
     {
         $this->instance = $instance;
+
+        return $this;
     }
 
     /**

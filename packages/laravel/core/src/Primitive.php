@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Core;
 
 use BadMethodCallException;
-use Honed\Core\Concerns\CanDeferLoading;
 use Honed\Core\Concerns\Configurable;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Contracts\NullsAsUndefined;

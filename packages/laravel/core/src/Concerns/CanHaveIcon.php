@@ -6,7 +6,7 @@ namespace Honed\Core\Concerns;
 
 use BackedEnum;
 
-trait HasIcon
+trait CanHaveIcon
 {
     /**
      * The icon of the instance.
