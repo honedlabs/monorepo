@@ -29,18 +29,6 @@ class Search extends Refiner
     protected $fullText = false;
 
     /**
-     * Provide the instance with any necessary setup.
-     *
-     * @return void
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->definition($this);
-    }
-
-    /**
      * Perform a wildcard search on the query.
      *
      * @param  TBuilder  $query
@@ -71,14 +59,25 @@ class Search extends Refiner
     /**
      * Set whether to use a full-text search.
      *
-     * @param  bool  $fullText
+     * @param  bool  $value
      * @return $this
      */
-    public function fullText($fullText = true)
+    public function fullText($value = true)
     {
-        $this->fullText = $fullText;
+        $this->fullText = $value;
 
         return $this;
+    }
+
+    /**
+     * Set whether to not use a full-text search.
+     *
+     * @param  bool  $value
+     * @return $this
+     */
+    public function notFullText($value = true)
+    {
+        return $this->fullText(! $value);
     }
 
     /**
@@ -89,6 +88,16 @@ class Search extends Refiner
     public function isFullText()
     {
         return $this->fullText;
+    }
+
+    /**
+     * Determine if the search is not a full-text search.
+     *
+     * @return bool
+     */
+    public function isNotFullText()
+    {
+        return ! $this->fullText;
     }
 
     /**

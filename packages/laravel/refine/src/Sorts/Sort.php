@@ -38,8 +38,6 @@ class Sort extends Refiner
         parent::setUp();
 
         $this->type('sort');
-
-        $this->definition($this);
     }
 
     /**

@@ -79,11 +79,6 @@ it('has sort store', function () {
         ->shouldPersistSort()->toBeTrue();
 });
 
-it('sets persistent store', function () {
-    expect($this->refine)
-        ->persistent()->toBe($this->refine);
-})->todo();
-
 it('has array representation', function () {
     expect($this->refine->refineToArray())->toBeArray()
         ->toHaveKeys([

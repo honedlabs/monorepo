@@ -15,8 +15,7 @@ beforeEach(function () {
 
     $this->name = 'name';
 
-    $this->refine = Refine::make(User::class)
-        ->sorts(Sort::make($this->name));
+    $this->refine = Refine::make(User::class)->sort(Sort::make($this->name));
 });
 
 it('fails', function ($refine) {
@@ -56,6 +55,7 @@ it('fails', function ($refine) {
 
         return $this->refine->scope('scope')->request($request);
     },
+
     'session' => function () {
         $data = new SortData($this->name, Sort::ASCENDING);
 

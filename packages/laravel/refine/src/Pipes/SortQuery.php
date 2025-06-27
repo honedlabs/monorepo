@@ -28,7 +28,7 @@ class SortQuery extends Pipe
 
         if ($this->sort($instance, $parameter, $direction)) {
             $this->persist($instance, $parameter, $direction);
-            
+
             return;
         }
 

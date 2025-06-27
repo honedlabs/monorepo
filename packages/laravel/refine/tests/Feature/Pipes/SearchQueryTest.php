@@ -134,7 +134,7 @@ it('passes non-matchable', function ($refine) {
         ]);
 
         return $this->refine->request($request)->persistSearchInCookie();
-    }
+    },
 ]);
 
 it('passes matchable', function ($refine) {
@@ -166,7 +166,7 @@ it('passes matchable', function ($refine) {
 
         return $this->refine->request($request);
     },
-    
+
     'session' => function () {
         $data = new SearchData($this->term, [$this->match]);
 

@@ -17,7 +17,7 @@ abstract class StoreData implements Arrayable, JsonSerializable
      * Attempt to create the object from a given value.
      *
      * @param  mixed  $value
-     * @return self|null
+     * @return static|null
      *
      * @throws InvalidArgumentException
      */

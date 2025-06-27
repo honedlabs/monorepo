@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 use Honed\Refine\Searches\Search;
 
-it('has type', function () {
-    expect(Search::make('name'))
-        ->getType()->toBe('search');
-})->skip();
+beforeEach(function () {
+    $this->search = Search::make('name');
+});
 
-it('has definition', function () {
-    // expect(new NameSearch())
-
-})->todo();
+it('can be full text', function () {
+    expect($this->search)
+        ->isFullText()->toBeFalse()
+        ->isNotFullText()->toBeTrue()
+        ->fullText()->toBe($this->search)
+        ->isFullText()->toBeTrue()
+        ->notFullText()->toBe($this->search)
+        ->isNotFullText()->toBeTrue();
+});

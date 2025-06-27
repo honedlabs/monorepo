@@ -83,8 +83,6 @@ class Filter extends Refiner implements Stateful
         parent::setUp();
 
         $this->type('filter');
-
-        $this->definition($this);
     }
 
     /**
