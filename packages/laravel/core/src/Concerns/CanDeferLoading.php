@@ -6,6 +6,9 @@ namespace Honed\Core\Concerns;
 
 use Inertia\Inertia;
 
+/**
+ * @phpstan-require-implements \Illuminate\Contracts\Support\Arrayable
+ */
 trait CanDeferLoading
 {
     /**

@@ -6,8 +6,10 @@ namespace Honed\Core\Concerns;
 
 use Honed\Core\Exceptions\InvalidResourceException;
 use Honed\Core\Exceptions\ResourceNotSetException;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 
 use function is_string;
 
@@ -20,21 +22,21 @@ trait HasResource
     /**
      * The builder instance.
      *
-     * @var TBuilder|null
+     * @var TBuilder|array<int, array<string, mixed>>|null
      */
     protected $resource;
 
     /**
      * Set the resource to be used.
      *
-     * @param  TBuilder|TModel|class-string<TModel>  $resource
+     * @param  TModel|array<int, array<string, mixed>>|\Illuminate\Contracts\Support\Arrayable<int, mixed>|TBuilder|class-string<TModel>  $resource
      * @return $this
      *
      * @throws InvalidResourceException
      */
     public function resource($resource)
     {
-        $this->resource = $this->throughBuilder($resource);
+        $this->resource = $this->resolveResource($resource);
 
         return $this;
     }
@@ -42,7 +44,7 @@ trait HasResource
     /**
      * Set the resource to be used.
      *
-     * @param  TBuilder|TModel|class-string<TModel>  $resource
+     * @param  TModel|array<int, array<string, mixed>>|\Illuminate\Contracts\Support\Arrayable<int, mixed>|TBuilder|class-string<TModel>  $resource
      * @return $this
      */
     public function for($resource)
@@ -55,15 +57,15 @@ trait HasResource
      *
      * @return TBuilder
      *
-     * @throws ResourceNotSetException
+     * @throws InvalidArgumentException
      */
     public function getBuilder()
     {
-        if (! $this->resource) {
-            throw ResourceNotSetException::throw(static::class);
+        if ($this->resource && $this->resource instanceof Builder) {
+            return $this->resource;
         }
 
-        return $this->resource;
+        $this->throwMissingResource();
     }
 
     /**
@@ -71,11 +73,21 @@ trait HasResource
      *
      * @return TModel
      *
-     * @throws ResourceNotSetException
+     * @throws InvalidArgumentException
      */
     public function getModel()
     {
         return $this->getBuilder()->getModel();
+    }
+
+    /**
+     * Get the resource.
+     *
+     * @return TBuilder|array<int, array<string, mixed>>|null
+     */
+    public function getResource()
+    {
+        return $this->resource;
     }
 
     /**
@@ -84,15 +96,33 @@ trait HasResource
      * @param  TBuilder|TModel|class-string<TModel>|null  $resource
      * @return TBuilder|null
      *
-     * @throws InvalidResourceException
+     * @throws InvalidArgumentException
      */
-    protected function throughBuilder($resource)
+    protected function resolveResource($resource)
     {
         return match (true) {
             $resource instanceof Builder => $resource,
             $resource instanceof Model => $resource::query(),
             is_string($resource) => $resource::query(),
-            default => InvalidResourceException::throw(static::class),
+            $resource instanceof Arrayable => $resource->toArray(),
+            is_array($resource) => $resource,
+            default => throw new InvalidArgumentException(
+                'The provided resource for ['.get_class($this).'] is invalid.'
+            ),
         };
+    }
+
+    /**
+     * Throw an invalid resource exception.
+     *
+     * @return never
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function throwMissingResource()
+    {
+        throw new InvalidArgumentException(
+            'No resource has been set for ['.get_class($this).'].'
+        );
     }
 }

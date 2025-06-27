@@ -28,7 +28,6 @@ use function array_filter;
  */
 abstract class Primitive implements Arrayable, Jsonable, JsonSerializable
 {
-    use CanDeferLoading;
     use Conditionable;
     use Configurable;
     use Evaluable;

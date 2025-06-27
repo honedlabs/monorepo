@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Workbench\App\Classes;
 
+use Honed\Core\Concerns\CanDeferLoading;
+use Honed\Core\Concerns\HasLifecycleEvents;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasPipeline;
@@ -14,6 +16,8 @@ use Workbench\App\Pipes\SetName;
 
 class Component extends Primitive
 {
+    use CanDeferLoading;
+    use HasLifecycleEvents;
     use HasMeta;
     use HasName;
     use HasPipeline;

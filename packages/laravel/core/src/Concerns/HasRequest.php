@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Illuminate\Http\Request;
+
 trait HasRequest
 {
     /**
@@ -15,11 +17,10 @@ trait HasRequest
 
     /**
      * Set the request instance.
-     *
-     * @param  \Illuminate\Http\Request  $request
+     * 
      * @return $this
      */
-    public function request($request)
+    public function request(Request $request)
     {
         $this->request = $request;
 
@@ -28,10 +29,8 @@ trait HasRequest
 
     /**
      * Get the request instance.
-     *
-     * @return \Illuminate\Http\Request
      */
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->request;
     }

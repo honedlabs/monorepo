@@ -35,14 +35,4 @@ trait HasType
     {
         return $this->type;
     }
-
-    /**
-     * Determine if the type is set.
-     *
-     * @return bool
-     */
-    public function hasType()
-    {
-        return isset($this->type);
-    }
 }

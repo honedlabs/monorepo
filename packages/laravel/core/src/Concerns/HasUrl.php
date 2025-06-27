@@ -64,6 +64,16 @@ trait HasUrl
     }
 
     /**
+     * Determine if there is a URL set.
+     *
+     * @return bool
+     */
+    public function hasUrl()
+    {
+        return isset($this->url);
+    }
+
+    /**
      * Set the HTTP method for the route.
      *
      * @param  string|null  $method

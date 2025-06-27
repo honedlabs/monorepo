@@ -45,14 +45,4 @@ trait HasAlias
     {
         return $this->alias;
     }
-
-    /**
-     * Determine if an alias is set.
-     *
-     * @return bool
-     */
-    public function hasAlias()
-    {
-        return isset($this->alias);
-    }
 }

@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 trait HasScope
 {
-    public const SCOPE_SEPARATOR = ':';
+    public const SCOPE = ':';
 
     /**
      * The scope to use.
@@ -51,30 +51,16 @@ trait HasScope
     }
 
     /**
-     * Determine if the scope is set.
-     *
-     * @return bool
-     */
-    public function hasScope()
-    {
-        return isset($this->scope);
-    }
-
-    /**
      * Format a value using the scope.
      *
      * @param  string  $value
      * @return string
      */
-    public function formatScope($value)
+    public function scoped($value)
     {
         $scope = $this->getScope();
 
-        if (! $scope) {
-            return $value;
-        }
-
-        return $scope.self::SCOPE_SEPARATOR.$value;
+        return $scope ? $scope.self::SCOPE.$value : $value;
     }
 
     /**
@@ -83,12 +69,10 @@ trait HasScope
      * @param  string  $value
      * @return string
      */
-    public function decodeScope($value)
+    public function unscoped($value)
     {
-        if ($this->hasScope()) {
-            return Str::after($value, self::SCOPE_SEPARATOR);
-        }
+        $scope = $this->getScope();
 
-        return $value;
+        return $scope ? Str::after($value, $scope.self::SCOPE) : $value;
     }
 }
