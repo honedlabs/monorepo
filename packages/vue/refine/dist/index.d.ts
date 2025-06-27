@@ -24,7 +24,7 @@ export declare interface Filter extends Refiner {
 
 export declare interface FilterBinding {
     "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
-    modelValue: unknown;
+    modelValue: any;
 }
 
 export declare type FilterType = "boolean" | "date" | "datetime" | "multiple" | "number" | "select" | "text" | "time" | "trashed" | string;
@@ -84,6 +84,11 @@ export declare interface HonedSort extends Sort {
     clear: (options?: VisitOptions) => void;
     bind: () => SortBinding | void;
 }
+
+/**
+ * Check if a refiner is of a given type.
+ */
+export declare function is(refiner: Refiner | string | null | undefined, type: string): boolean;
 
 export declare interface MatchBinding {
     "onUpdate:modelValue": PromisifyFn<(value: any) => void>;

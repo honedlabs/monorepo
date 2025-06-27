@@ -1,32 +1,12 @@
-/**
- * Converts an array parameter to a comma-separated string for URL parameters.
- */
-export function delimitArray(value: any, delimiter: string = ",") {
-	if (Array.isArray(value)) {
-		return value.join(delimiter);
-	}
-
-	return value;
-}
+import type { Refiner } from "./types";
 
 /**
- * Formats a string value for search parameters.
+ * Check if a refiner is of a given type.
  */
-export function stringValue(value: any) {
-	if (typeof value !== "string") {
-		return value;
-	}
+export function is(refiner: Refiner | string | null | undefined, type: string) {
+	if (!refiner) return false;
 
-	return value.trim().replace(/\s+/g, "+");
-}
+	if (typeof refiner === "object") return refiner?.type === type;
 
-/**
- * Returns undefined if the value is an empty string, null, or undefined.
- */
-export function omitValue(value: any) {
-	if (["", null, undefined, []].includes(value)) {
-		return undefined;
-	}
-
-	return value;
+	return refiner === type;
 }

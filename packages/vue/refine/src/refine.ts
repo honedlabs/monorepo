@@ -14,6 +14,9 @@ import type {
 	HonedSort,
 	HonedSearch,
 	HonedRefine,
+	SortBinding,
+	SearchBinding,
+	MatchBinding,
 } from "./types";
 
 export function useRefine<T extends Record<string, Refine>>(
@@ -25,7 +28,7 @@ export function useRefine<T extends Record<string, Refine>>(
 		throw new Error("The refine must be provided with valid props and key.");
 	}
 
-	const refinements = computed(() => props[key]);
+	const refinements = computed(() => props[key] as Refine);
 
 	const isSortable = computed(() => !!refinements.value.sort);
 
@@ -404,7 +407,7 @@ export function useRefine<T extends Record<string, Refine>>(
 		if (!refiner) return console.warn(`Filter [${filter}] does not exist.`);
 
 		const {
-			debounce = 250,
+			debounce = 150,
 			transform = (value: any) => value,
 			...visitOptions
 		} = options;
@@ -420,7 +423,13 @@ export function useRefine<T extends Record<string, Refine>>(
 	/**
 	 * Binds a sort to a button.
 	 */
-	function bindSort(sort: Sort | string, options: BindingOptions = {}) {
+	function bindSort(
+		sort: Sort | string,
+		options: BindingOptions = {},
+	): SortBinding | void {
+		if (!isSortable.value)
+			return console.warn("Refine cannot perform sorting.");
+
 		const refiner = getSort(sort);
 
 		if (!refiner) return console.warn(`Sort [${sort}] does not exist.`);
@@ -437,7 +446,10 @@ export function useRefine<T extends Record<string, Refine>>(
 	/**
 	 * Binds a search input to a form input.
 	 */
-	function bindSearch(options: BindingOptions = {}) {
+	function bindSearch(options: BindingOptions = {}): SearchBinding | void {
+		if (!isSearchable.value)
+			return console.warn("Refine cannot perform searching.");
+
 		const { debounce = 700, transform, ...visitOptions } = options;
 
 		return {
@@ -454,7 +466,13 @@ export function useRefine<T extends Record<string, Refine>>(
 	/**
 	 * Binds a match to a checkbox.
 	 */
-	function bindMatch(match: Search | string, options: BindingOptions = {}) {
+	function bindMatch(
+		match: Search | string,
+		options: BindingOptions = {},
+	): MatchBinding | void {
+		if (!isMatchable.value)
+			return console.warn("Refine cannot perform matching.");
+
 		const refiner = getSearch(match);
 
 		if (!refiner) return console.warn(`Match [${match}] does not exist.`);
