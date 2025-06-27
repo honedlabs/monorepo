@@ -26,18 +26,4 @@ trait HasUser
             (new $user())->getKeyName(),
         );
     }
-
-    /**
-     * Get the column name for the user relationship.
-     * 
-     * @return string
-     */
-    protected function getUserIdColumn()
-    {
-        if (defined('self::USER_ID_COLUMN')) {
-            return self::USER_ID_COLUMN;
-        }
-
-        return 'user_id';
-    }
 }
