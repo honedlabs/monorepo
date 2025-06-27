@@ -14,8 +14,6 @@ use Honed\Action\Operations\Operation;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,7 +50,7 @@ abstract class Handler
      *
      * @param  TClass  $instance
      * @param  \Honed\Action\Http\Requests\InvokableRequest  $request
-     * @return Responsable|RedirectResponse
+     * @return Responsable|Response
      */
     public function handle($instance, $request)
     {
@@ -86,7 +84,7 @@ abstract class Handler
      * Handle the incoming request using the operations from the source, and the resource provided.
      *
      * @param  \Honed\Action\Http\Requests\InvokableRequest  $request
-     * @return Responsable|RedirectResponse
+     * @return Responsable|Response
      *
      * @throws InvalidOperationException
      * @throws OperationNotFoundException
