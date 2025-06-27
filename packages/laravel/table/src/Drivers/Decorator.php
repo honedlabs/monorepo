@@ -122,7 +122,7 @@ class Decorator implements CanListViews, Driver
      * Get all the views stored for all tables.
      *
      * @return array<int, object>
-     * 
+     *
      * @throws RuntimeException
      */
     public function all()
@@ -137,7 +137,7 @@ class Decorator implements CanListViews, Driver
      *
      * @param  mixed|array<int, mixed>  $table
      * @return array<int, object>
-     * 
+     *
      * @throws RuntimeException
      */
     public function stored($table)
@@ -154,7 +154,7 @@ class Decorator implements CanListViews, Driver
      *
      * @param  mixed|array<int, mixed>  $scope
      * @return array<int, object>
-     * 
+     *
      * @throws RuntimeException
      */
     public function scoped($scope)
@@ -296,9 +296,9 @@ class Decorator implements CanListViews, Driver
 
     /**
      * Check if the driver supports listing views.
-     * 
-     * @return \Honed\Table\Contracts\CanListViews|never
-     * 
+     *
+     * @return CanListViews|never
+     *
      * @throws RuntimeException
      */
     protected function checkIfCanListViews()
@@ -309,7 +309,7 @@ class Decorator implements CanListViews, Driver
             );
         }
 
-        /** @var \Honed\Table\Contracts\CanListViews */
+        /** @var CanListViews */
         return $this->driver;
     }
 }

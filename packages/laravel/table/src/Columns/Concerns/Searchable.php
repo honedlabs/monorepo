@@ -32,7 +32,7 @@ trait Searchable
     /**
      * Set the instance to not be searchable.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notSearchable($value = true)
@@ -72,10 +72,8 @@ trait Searchable
         }
 
         return match (true) {
-            $this->searchable instanceof Closure => 
-                $this->newSearch()->query($this->searchable),
-            is_string($this->searchable) => 
-                $this->newSearch($this->searchable),
+            $this->searchable instanceof Closure => $this->newSearch()->query($this->searchable),
+            is_string($this->searchable) => $this->newSearch($this->searchable),
             default => $this->newSearch()
         };
     }

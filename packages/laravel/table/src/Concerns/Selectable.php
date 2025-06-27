@@ -31,7 +31,7 @@ trait Selectable
     /**
      * Set the instance to not be selectable.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notSelectable($value = true)

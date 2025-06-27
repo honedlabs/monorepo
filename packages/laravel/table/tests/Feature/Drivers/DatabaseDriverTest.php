@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use Honed\Table\Facades\Views;
-use Workbench\App\Models\User;
-use Illuminate\Support\Facades\DB;
-use Workbench\App\Tables\UserTable;
-use Workbench\App\Tables\ProductTable;
 use Illuminate\Database\UniqueConstraintViolationException;
+use Illuminate\Support\Facades\DB;
+use Workbench\App\Models\User;
+use Workbench\App\Tables\ProductTable;
+use Workbench\App\Tables\UserTable;
 
 beforeEach(function () {
     /** @var Honed\Table\Drivers\DatabaseDriver */

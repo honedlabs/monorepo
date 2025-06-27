@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Honed\Table\Drivers\DatabaseDriver;
 use Honed\Table\Drivers\Decorator;
 use Honed\Table\Facades\Views;
-use Honed\Table\Table;
 use Illuminate\Support\Facades\DB;
 use Workbench\App\Models\Product;
 use Workbench\App\Tables\ProductTable;
@@ -17,7 +16,7 @@ beforeEach(function () {
 
     $this->table = ProductTable::make();
 
-    /** @var \Honed\Table\Drivers\DatabaseDriver */
+    /** @var DatabaseDriver */
     $this->driver = $this->interaction->getDriver();
 
     DB::table($this->driver->getTableName())->insert([

@@ -42,12 +42,12 @@ class Column extends Primitive implements NullsAsUndefined
     use CanBeHidden;
     use CanFormatValues;
     use Concerns\CanBeKey;
+    use Concerns\CanBeToggled;
     use Concerns\Exportable;
     use Concerns\Filterable;
     use Concerns\HasCellClasses;
     use Concerns\Searchable;
     use Concerns\Sortable;
-    use Concerns\CanBeToggled;
     use HasAlias;
     use HasExtra;
     use HasIcon;

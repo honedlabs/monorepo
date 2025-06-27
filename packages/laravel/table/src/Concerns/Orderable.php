@@ -31,7 +31,7 @@ trait Orderable
     /**
      * Set the instance to not be orderable.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notOrderable($value = true)

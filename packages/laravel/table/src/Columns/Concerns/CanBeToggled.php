@@ -47,7 +47,7 @@ trait CanBeToggled
     /**
      * Set the instance to not be toggleable.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notToggleable($value = true)
@@ -93,7 +93,7 @@ trait CanBeToggled
     /**
      * Set the instance to not be toggled active by default.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notToggledByDefault($value = true)
@@ -137,7 +137,7 @@ trait CanBeToggled
     /**
      * Set the instance to not always be shown.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notAlways($value = true)

@@ -12,7 +12,7 @@ interface CanListViews
      * @return array<int, object>
      */
     public function all();
-    
+
     /**
      * Get the views stored for a given table or tables.
      *

@@ -36,7 +36,7 @@ trait Filterable
     /**
      * Set the instance to not be filterable.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notFilterable($value = true)

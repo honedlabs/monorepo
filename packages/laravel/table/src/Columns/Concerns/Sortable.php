@@ -39,7 +39,7 @@ trait Sortable
     /**
      * Set the instance to not be sortable.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notSortable($value = true)

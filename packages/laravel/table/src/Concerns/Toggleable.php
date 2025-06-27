@@ -40,7 +40,7 @@ trait Toggleable
     /**
      * Set the instance to not be toggleable.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notToggleable($value = true)

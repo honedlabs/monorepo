@@ -95,7 +95,7 @@ trait Paginable
     /**
      * Set the instance to not be paginable.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function dontPaginate($value = true)

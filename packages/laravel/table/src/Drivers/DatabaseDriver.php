@@ -141,7 +141,7 @@ class DatabaseDriver implements CanListViews, Driver
      * @param  string  $scope
      * @param  array<string, mixed>  $view
      * @return void
-     * 
+     *
      * @throws \Illuminate\Database\UniqueConstraintViolationException
      */
     public function create($table, $name, $scope, $view)

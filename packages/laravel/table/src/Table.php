@@ -5,49 +5,50 @@ declare(strict_types=1);
 namespace Honed\Table;
 
 use Closure;
-use Throwable;
+use Honed\Action\Concerns\CanHandleOperations;
+use Honed\Action\Contracts\HandlesOperations;
 use Honed\Action\Handler;
-use Honed\Core\Primitive;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Honed\Table\Pipes\Query;
-use Illuminate\Http\Request;
-use Honed\Table\Pipes\Select;
-use Honed\Table\Pipes\Toggle;
-use Honed\Table\Columns\Column;
-use Honed\Table\Pipes\Paginate;
+use Honed\Action\Handlers\BatchHandler;
 use Honed\Core\Concerns\HasMeta;
-use Honed\Refine\Pipes\SortQuery;
-use Honed\Table\Concerns\Viewable;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Core\Primitive;
+use Honed\Infolist\Entries\Concerns\HasClasses;
+use Honed\Refine\Concerns\CanBeRefined;
+use Honed\Refine\Contracts\RefinesData;
+use Honed\Refine\Pipes\AfterRefining;
+use Honed\Refine\Pipes\BeforeRefining;
 use Honed\Refine\Pipes\FilterQuery;
 use Honed\Refine\Pipes\PersistData;
 use Honed\Refine\Pipes\SearchQuery;
+use Honed\Refine\Pipes\SortQuery;
+use Honed\Refine\Stores\CookieStore;
+use Honed\Refine\Stores\SessionStore;
+use Honed\Table\Columns\Column;
+use Honed\Table\Concerns\HasColumns;
+use Honed\Table\Concerns\HasEmptyState;
+use Honed\Table\Concerns\HasRecords;
 use Honed\Table\Concerns\Orderable;
 use Honed\Table\Concerns\Paginable;
-use Illuminate\Container\Container;
-use Honed\Refine\Stores\CookieStore;
-use Honed\Table\Concerns\HasColumns;
-use Honed\Table\Concerns\HasRecords;
 use Honed\Table\Concerns\Selectable;
 use Honed\Table\Concerns\Toggleable;
-use Honed\Refine\Pipes\AfterRefining;
-use Honed\Refine\Stores\SessionStore;
-use Honed\Table\Pipes\PrepareColumns;
-use Honed\Refine\Pipes\BeforeRefining;
-use Honed\Action\Handlers\BatchHandler;
-use Honed\Refine\Concerns\CanBeRefined;
-use Honed\Refine\Contracts\RefinesData;
-use Honed\Table\Concerns\HasEmptyState;
-use Honed\Table\Pipes\CreateEmptyState;
-use Honed\Table\Pipes\TransformRecords;
-use Illuminate\Database\Eloquent\Builder;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Action\Contracts\HandlesOperations;
-use Honed\Action\Concerns\CanHandleOperations;
-use Honed\Infolist\Entries\Concerns\HasClasses;
+use Honed\Table\Concerns\Viewable;
 use Honed\Table\Exceptions\KeyNotFoundException;
-use Illuminate\Contracts\Foundation\Application;
+use Honed\Table\Pipes\Count;
+use Honed\Table\Pipes\CreateEmptyState;
+use Honed\Table\Pipes\Paginate;
+use Honed\Table\Pipes\PrepareColumns;
+use Honed\Table\Pipes\Query;
+use Honed\Table\Pipes\Select;
+use Honed\Table\Pipes\Toggle;
+use Honed\Table\Pipes\TransformRecords;
+use Illuminate\Container\Container;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Throwable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -360,12 +361,19 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
 
     /**
      * @experimental
-     * 
+     *
      * @return mixed
      */
     public function toState()
     {
-        //
+        // $this->partial();
+        return [
+            ...($this->isSearchable() ? [$this->getSearchKey() => $this->getTerm()] : []),
+            ...($this->isSortable() ? [$this->getSortKey() => ''] : []),
+            ...($this->isToggleable() ? [$this->getColumnKey() => ''] : []),
+            ...($this->isFilterable() ? ['filter' => ''] : []),
+
+        ];
     }
 
     /**
@@ -424,13 +432,13 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     }
 
     /**
-     * Get the pipes to be used for refining.
+     * Get a partial set of pipes to be used for refining the resource, without
+     * executing or persisting the data.
      *
      * @return array<int,class-string<\Honed\Core\Pipe<Table>>>
      */
-    protected function pipes()
+    protected function refinements()
     {
-        // @phpstan-ignore-next-line
         return [
             Toggle::class,
             BeforeRefining::class,
@@ -439,8 +447,21 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
             SearchQuery::class,
             FilterQuery::class,
             SortQuery::class,
-            Query::class, // Must be applied after the select statement
+            Query::class,
             AfterRefining::class,
+        ];
+    }
+
+    /**
+     * Get the pipes to be used for building the table.
+     *
+     * @return array<int,class-string<\Honed\Core\Pipe<Table>>>
+     */
+    protected function pipes()
+    {
+        // @phpstan-ignore-next-line
+        return [
+            ...$this->refinements(),
             Paginate::class,
             TransformRecords::class,
             CreateEmptyState::class,

@@ -45,7 +45,7 @@ trait Exportable
     /**
      * Set the instance to not be exportable.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notExportable($value = true)

@@ -36,7 +36,7 @@ trait Viewable
     /**
      * Set whether the table is not viewable.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notViewable($value = true)

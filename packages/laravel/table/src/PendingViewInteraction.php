@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Table;
 
+use RuntimeException;
+
 class PendingViewInteraction
 {
     /**
@@ -78,11 +80,11 @@ class PendingViewInteraction
 
     /**
      * Get the views stored for the given table.
-     * 
+     *
      * @param  mixed  $table
      * @return array<int, object>
-     * 
-     * @throws \RuntimeException
+     *
+     * @throws RuntimeException
      */
     public function stored($table)
     {
@@ -91,10 +93,10 @@ class PendingViewInteraction
 
     /**
      * Get the views stored.
-     * 
+     *
      * @return array<int, object>
-     * 
-     * @throws \RuntimeException
+     *
+     * @throws RuntimeException
      */
     public function scoped()
     {

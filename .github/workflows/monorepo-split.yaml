@@ -16,23 +16,23 @@ jobs:
       matrix:
         package:
           # - abn
-          - action
+          # - action
           - bind
           # - chart
           # - command
-          # - core
+          - core
           # - crumb
           # - flash
-          - honed
+          # - honed
           # - infolist
           # - layout
           # - lock
           # - modal
           # - nav
           # - page
-          - refine
+          # - refine
           # - registry
-          - table
+          # - table
           # - upload
           # - widget
     steps:

@@ -122,7 +122,7 @@ trait HasExport
     /**
      * Set the export to not be downloaded.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function dontDownload($value = true)
@@ -162,11 +162,11 @@ trait HasExport
 
         return $this;
     }
-    
+
     /**
      * Set the export to not be stored on disk.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function dontStore($value = true)
@@ -210,7 +210,7 @@ trait HasExport
     /**
      * Set the export to not be queued.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function dontQueue($value = true)

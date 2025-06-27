@@ -29,7 +29,7 @@ trait CanBeKey
     /**
      * Set the instance to not the key.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function notKey($value = true)
