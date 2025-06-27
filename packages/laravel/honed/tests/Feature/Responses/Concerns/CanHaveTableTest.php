@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Responses\IndexProduct;
+use Workbench\App\Http\Responses\IndexProduct;
 use Workbench\App\Tables\ProductTable;
 
 beforeEach(function () {

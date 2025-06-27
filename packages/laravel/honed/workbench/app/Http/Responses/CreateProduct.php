@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Responses;
+namespace Workbench\App\Http\Responses;
 
 use Honed\Honed\Responses\CreateResponse;
 use Honed\Honed\Responses\InertiaResponse;

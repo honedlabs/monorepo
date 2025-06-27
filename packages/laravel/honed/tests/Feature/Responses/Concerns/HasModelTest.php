@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Workbench\App\Data\ProductData;
 use Workbench\App\Models\Product;
-use Workbench\App\Responses\ShowProduct;
+use Workbench\App\Http\Responses\ShowProduct;
 
 beforeEach(function () {
     $this->product = Product::factory()->create();

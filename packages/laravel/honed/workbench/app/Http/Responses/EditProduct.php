@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Responses;
+namespace Workbench\App\Http\Responses;
 
-use Honed\Honed\Responses\DeleteResponse;
+use Honed\Honed\Responses\EditResponse;
 use Honed\Honed\Responses\InertiaResponse;
 
 /**
- * @extends DeleteResponse<\Workbench\App\Models\Product>
+ * @extends EditResponse<\Workbench\App\Models\Product>
  */
-class DeleteProduct extends DeleteResponse
+class EditProduct extends EditResponse
 {
     protected function definition(InertiaResponse $response): InertiaResponse
     {

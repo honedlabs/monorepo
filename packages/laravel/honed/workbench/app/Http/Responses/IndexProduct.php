@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Responses;
+namespace Workbench\App\Http\Responses;
 
+use Honed\Honed\Responses\IndexResponse;
 use Honed\Honed\Responses\InertiaResponse;
-use Honed\Honed\Responses\ShowResponse;
+use Workbench\App\Tables\ProductTable;
 
 /**
- * @extends ShowResponse<\Workbench\App\Models\Product>
+ * @extends IndexResponse<ProductTable>
  */
-class ShowProduct extends ShowResponse
+class IndexProduct extends IndexResponse
 {
     protected function definition(InertiaResponse $response): InertiaResponse
     {

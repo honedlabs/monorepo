@@ -17,45 +17,45 @@ class DeleteResponse extends InertiaResponse
     public const DESTROY_PROP = 'destroy';
 
     /**
-     * The route to delete the model.
+     * The route to destroy the model.
      *
      * @var string
      */
-    protected $delete;
+    protected $destroy;
 
     /**
      * Create a new edit response.
      *
      * @param  TModel  $model
-     * @param  string  $deleteUrl
+     * @param  string  $destroyUrl
      */
-    public function __construct($model, $deleteUrl)
+    public function __construct($model, $destroyUrl)
     {
         $this->model($model);
-        $this->deleteUrl($deleteUrl);
+        $this->destroyUrl($destroyUrl);
     }
 
     /**
-     * Set the route to delete the model.
+     * Set the route to destroy the model.
      *
      * @param  string  $value
      * @return $this
      */
-    public function deleteUrl($value)
+    public function destroyUrl($value)
     {
-        $this->delete = $value;
+        $this->destroy = $value;
 
         return $this;
     }
 
     /**
-     * Get the route to delete the model.
+     * Get the route to destroy the model.
      *
      * @return string
      */
-    public function getDeleteUrl()
+    public function getDestroyUrl()
     {
-        return $this->delete;
+        return $this->destroy;
     }
 
     /**
@@ -67,7 +67,7 @@ class DeleteResponse extends InertiaResponse
     {
         return [
             ...parent::getProps(),
-            self::DESTROY_PROP => $this->getDeleteUrl(),
+            self::DESTROY_PROP => $this->getDestroyUrl(),
             $this->getPropName() => $this->getPropModel(),
         ];
     }

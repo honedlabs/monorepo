@@ -2,16 +2,13 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Responses\IndexProduct;
+use Workbench\App\Http\Responses\IndexProduct;
 use Workbench\App\Tables\ProductTable;
+
+use function Pest\Laravel\get;
 
 beforeEach(function () {
     $this->response = new IndexProduct();
-});
-
-it('has index page', function () {
-    expect($this->response)
-        ->getPage()->toBe('Index');
 });
 
 it('has props', function () {
@@ -27,5 +24,16 @@ it('has props', function () {
             ->toBeArray()
             ->toHaveCount(1)
             ->toHaveKey(IndexProduct::TABLE_PROP)
+        );
+});
+
+it('is ineertia response', function () {
+    $is = 'Index';
+    
+    get(route('products.index'))
+        ->assertInertia(fn ($page) => $page
+            ->component($is)
+            ->where('title', $is)
+            ->where('head', $is)
         );
 });
