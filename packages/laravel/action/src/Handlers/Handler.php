@@ -14,8 +14,10 @@ use Honed\Action\Operations\Operation;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 use function array_fill_keys;
 
@@ -115,9 +117,11 @@ abstract class Handler
             $operation->callback(), $named, $typed
         );
 
-        return $this->isResponsable($response)
-            ? $response
-            : Redirect::back();
+        return match (true) {
+            $operation->hasRedirect() => $operation->callRedirect(),
+            $response instanceof Responsable || $response instanceof Response => $response,
+            default => back()
+        };
     }
 
     /**
@@ -235,18 +239,6 @@ abstract class Handler
             [Model::class, $resource::class],
             $resource
         );
-    }
-
-    /**
-     * Determine if the result is a responsable or redirect response.
-     *
-     * @param  mixed  $result
-     * @return ($result is Responsable|RedirectResponse ? true : false)
-     */
-    protected function isResponsable($result)
-    {
-        return $result instanceof Responsable
-            || $result instanceof RedirectResponse;
     }
 
     /**

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Honed\Action\Concerns\Transactable;
-use Honed\Action\Contracts\Action;
-use Illuminate\Contracts\Container\Container;
-use Illuminate\Support\Facades\Pipeline;
-use RuntimeException;
 use Throwable;
-
+use RuntimeException;
 use function array_map;
+use Honed\Action\Contracts\Action;
+use Honed\Core\Concerns\HasContainer;
+use Honed\Action\Concerns\Transactable;
+
+use Illuminate\Support\Facades\Pipeline;
+use Illuminate\Contracts\Container\Container;
 
 /**
  * @template TPayload
@@ -20,22 +21,14 @@ use function array_map;
 abstract class Process implements Action
 {
     use Transactable;
-
-    /**
-     * The container implementation.
-     *
-     * @var Container|null
-     */
-    protected $container;
+    use HasContainer;
 
     /**
      * Create a new class instance.
-     *
-     * @return void
      */
-    public function __construct(?Container $container = null)
+    public function __construct(Container $container)
     {
-        $this->container = $container;
+        $this->container($container);
     }
 
     /**
@@ -81,34 +74,6 @@ abstract class Process implements Action
         return $this->transact(
             fn () => $this->pipe($payload)
         );
-    }
-
-    /**
-     * Set the container instance.
-     *
-     * @return $this
-     */
-    public function setContainer(Container $container)
-    {
-        $this->container = $container;
-
-        return $this;
-    }
-
-    /**
-     * Get the container instance.
-     *
-     * @return Container
-     *
-     * @throws RuntimeException
-     */
-    protected function getContainer()
-    {
-        if (! $this->container) {
-            throw new RuntimeException('A container instance has not been passed to the Pipeline.');
-        }
-
-        return $this->container;
     }
 
     /**

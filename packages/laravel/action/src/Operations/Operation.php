@@ -6,29 +6,31 @@ namespace Honed\Action\Operations;
 
 use Closure;
 use Honed\Action\Confirm;
-use Honed\Core\Concerns\Allowable;
-use Honed\Core\Concerns\HasExtra;
-use Honed\Core\Concerns\HasIcon;
-use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasRoute;
-use Honed\Core\Concerns\HasType;
-use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
+use Honed\Core\Concerns\CanBeUrl;
+use Honed\Core\Concerns\CanHaveIcon;
+use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\Allowable;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Action\Operations\Concerns\HasAction;
+use Honed\Action\Operations\Concerns\IsInertia;
+use Honed\Action\Operations\Concerns\Confirmable;
+use Honed\Action\Operations\Concerns\CanBeRateLimited;
+use Honed\Action\Operations\Concerns\CanRedirect;
 
 abstract class Operation extends Primitive implements NullsAsUndefined
 {
     use Allowable;
-    use Concerns\CanBeRateLimited;
-    use Concerns\Confirmable;
-    use Concerns\HasAction;
-    use Concerns\IsInertia;
-    use HasExtra;
-    use HasIcon;
+    use CanBeRateLimited;
+    use Confirmable;
+    use HasAction;
+    use CanRedirect;
+    use IsInertia;
+    use CanHaveIcon;
     use HasLabel;
     use HasName;
-    use HasRoute;
-    use HasType;
+    use CanBeUrl;
 
     public const INLINE = 'inline';
 
@@ -98,6 +100,11 @@ abstract class Operation extends Primitive implements NullsAsUndefined
     }
 
     /**
+     * Get the type of the operation.
+     */
+    abstract protected function type(): string;
+
+    /**
      * Get the representation of the instance.
      *
      * @return array<string, mixed>
@@ -107,12 +114,11 @@ abstract class Operation extends Primitive implements NullsAsUndefined
         return [
             'name' => $this->getName(),
             'label' => $this->getLabel(),
-            'type' => $this->getType(),
+            'type' => $this->type(),
             'icon' => $this->getIcon(),
-            'extra' => $this->getExtra(),
             'action' => $this->hasAction(),
             'confirm' => $this->getConfirm()?->toArray(),
-            'route' => $this->routeToArray(),
+            'route' => $this->urlToArray(),
             'inertia' => $this->isInertia() ?: null,
         ];
     }
@@ -144,6 +150,7 @@ abstract class Operation extends Primitive implements NullsAsUndefined
     protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
     {
         return match ($parameterType) {
+            Operation::class => [$this],
             Confirm::class => [$this->newConfirm()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
