@@ -46,10 +46,12 @@ trait CanQuery
     /**
      * Call the callback to modify the Eloquent builder.
      *
+     * @param  array<string, mixed>  $named
+     * @param  array<class-string, mixed>  $typed
      * @return mixed
      */
-    public function callQuery()
+    public function callQuery($named = [], $typed = [])
     {
-        return $this->evaluate($this->queryCallback());
+        return $this->evaluate($this->queryCallback(), $named, $typed);
     }
 }

@@ -51,11 +51,13 @@ trait HasLifecycleHooks
     /**
      * Call the after callback.
      *
+     * @param  array<string, mixed>  $named
+     * @param  array<class-string, mixed>  $typed
      * @return mixed
      */
-    public function callAfter()
+    public function callAfter($named = [], $typed = [])
     {
-        return $this->evaluate($this->afterCallback());
+        return $this->evaluate($this->afterCallback(), $named, $typed);
     }
 
     /**
@@ -84,10 +86,12 @@ trait HasLifecycleHooks
     /**
      * Call the before callback.
      *
+     * @param  array<string, mixed>  $named
+     * @param  array<class-string, mixed>  $typed
      * @return mixed
      */
-    public function callBefore()
+    public function callBefore($named = [], $typed = [])
     {
-        return $this->evaluate($this->beforeCallback());
+        return $this->evaluate($this->beforeCallback(), $named, $typed);
     }
 }
