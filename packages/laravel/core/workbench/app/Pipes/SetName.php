@@ -31,8 +31,8 @@ class SetName extends Pipe
     /**
      * Run the pipe logic.
      */
-    public function run($instance)
+    public function run(): void
     {
-        $instance->name('Pipeline '.static::$count++);
+        $this->instance->name('Pipeline '.static::$count++);
     }
 }

@@ -7,17 +7,21 @@ namespace Honed\Core;
 use Closure;
 
 /**
- * @template TClass
+ * @template TClass = mixed
  */
 abstract class Pipe
 {
     /**
-     * Run the pipe logic.
-     *
-     * @param  TClass  $instance
-     * @return void
+     * The instance to pipe.
+     * 
+     * @var TClass
      */
-    abstract public function run($instance);
+    protected $instance;
+
+    /**
+     * Run the pipe logic.
+     */
+    abstract public function run(): void;
 
     /**
      * Apply the pipe.
@@ -28,8 +32,31 @@ abstract class Pipe
      */
     public function handle($instance, $next)
     {
-        $this->run($instance);
+        $this->instance($instance);
 
-        return $next($instance);
+        $this->run();
+
+        return $next($this->instance);
+    }
+
+    /**
+     * Set the instance to pipe.
+     *
+     * @param  TClass  $instance
+     * @return void
+     */
+    public function instance($instance)
+    {
+        $this->instance = $instance;
+    }
+
+    /**
+     * Get the instance to pipe.
+     *
+     * @return TClass
+     */
+    public function getInstance()
+    {
+        return $this->instance;
     }
 }
