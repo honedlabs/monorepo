@@ -34,12 +34,7 @@ class HonedServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->bootCommands();
-        $this->bootDates();
-        $this->bootModels();
-        $this->bootUrl();
-        $this->bootVite();
-        $this->bootStrayRequests();
+        
     }
 
     /**
@@ -59,75 +54,5 @@ class HonedServiceProvider extends ServiceProvider
             $this->foreignId($createdBy)->nullable()->constrained($table);
             $this->foreignId($updatedBy)->nullable()->constrained($table);
         });
-    }
-
-    /**
-     * Configure the application's dates.
-     *
-     * @see https://dyrynda.com.au/blog/laravel-immutable-dates
-     * 
-     * @return void
-     */
-    protected function bootDates()
-    {
-        Date::use(CarbonImmutable::class);
-    }
-
-    /**
-     * Configure the application's commands.
-     * 
-     * @return void
-     */
-    protected function bootCommands()
-    {
-        DB::prohibitDestructiveCommands(App::isProduction());
-    }
-
-    /**
-     * Configure the application's models.
-     * This is optional, but it's recommended to enable strict mode and disable mass assignment.
-     *
-     * @see https://laravel.com/docs/eloquent#configuring-eloquent-strictness
-     * 
-     * @return void
-     */
-    protected function bootModels()
-    {
-        Model::shouldBeStrict();
-        Model::unguard();
-        Model::automaticallyEagerLoadRelationships();
-    }
-
-    /**
-     * Configure the application's URL.
-     * This is optional, but it's recommended to force HTTPS in production.
-     *
-     * @see https://laravel.com/docs/octane#serving-your-application-via-https
-     * 
-     * @return void
-     */
-    protected function bootUrl()
-    {
-        URL::forceHttps(App::isProduction());
-    }
-
-    /**
-     * Configure the application's Vite loading strategy.
-     * 
-     * @return void
-     */
-    protected function bootVite()
-    {
-        Vite::useAggressivePrefetching();
-    }
-
-    /**
-     * Throw an exception if any request is not faked.
-     * 
-     * @return void
-     */
-    protected function bootStrayRequests()
-    {
-        Http::preventStrayRequests();
     }
 }
