@@ -56,6 +56,27 @@ it('fails', function ($refine) {
 
         return $this->refine->scope('scope')->request($request);
     },
+    'session' => function () {
+        $data = new SortData($this->name, Sort::ASCENDING);
+
+        Session::put($this->refine->getPersistKey(), [
+            $this->refine->getSortKey() => $data->toArray(),
+        ]);
+
+        return $this->refine;
+    },
+
+    'cookie' => function () {
+        $data = new SortData($this->name, Sort::ASCENDING);
+
+        $request = Request::create('/', 'GET', cookies: [
+            $this->refine->getPersistKey() => json_encode([
+                $this->refine->getSortKey() => $data->toArray(),
+            ]),
+        ]);
+
+        return $this->refine->request($request);
+    },
 ]);
 
 it('passes', function ($refine, $direction = Sort::ASCENDING) {

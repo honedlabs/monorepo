@@ -34,6 +34,14 @@ interface SearchesData
      */
     public function getMatchKey();
 
+
+    /**
+     * Determine if search is enabled.
+     *
+     * @return bool
+     */
+    public function isSearchable();
+
     /**
      * Determine if matching is enabled
      *

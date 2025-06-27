@@ -6,6 +6,8 @@ namespace Honed\Refine\Pipes;
 
 use Honed\Core\Interpret;
 use Honed\Core\Pipe;
+use Honed\Refine\Stores\Data\SearchData;
+use InvalidArgumentException;
 
 /**
  * @template TClass of \Honed\Refine\Contracts\RefinesData
@@ -22,6 +24,10 @@ class SearchQuery extends Pipe
      */
     public function run($instance)
     {
+        if (! $instance->isSearchable()) {
+            return;
+        }
+
         [$term, $columns] = $this->getValues($instance);
 
         $instance->setTerm($term);
@@ -42,25 +48,20 @@ class SearchQuery extends Pipe
      */
     public function getValues($instance)
     {
-        return [
-            $this->getTerm($instance),
-            $this->getColumns($instance),
-        ];
-    }
+        $request = $instance->getRequest();
 
-    /**
-     * Get the search term from the instance's request.
-     *
-     * @param  TClass  $instance
-     * @return string|null
-     */
-    public function getTerm($instance)
-    {
-        $term = Interpret::string(
-            $instance->getRequest(), $instance->getSearchKey()
-        );
+        $key = $instance->getSearchKey();
 
-        return $term ? str_replace('+', ' ', trim($term)) : null;
+        $term = Interpret::string($request, $key);
+
+        return match (true) {
+            (bool) $term => [
+                str_replace('+', ' ', trim($term)),
+                $this->getColumns($instance),
+            ],
+            $request->missing($key) => $this->persisted($instance),
+            default => [null, null]
+        };
     }
 
     /**
@@ -152,17 +153,20 @@ class SearchQuery extends Pipe
      * Get the search data from the store.
      *
      * @param  TClass  $instance
-     * @return array{term: string, cols: array<int, string>}|null
+     * @return array{string|null, array<int, string>|null}
      */
     protected function persisted($instance)
     {
-        $data = $instance->getSearchStore()?->get($instance->getSearchKey());
+        try {
+            $data = SearchData::from(
+                $instance->getSearchStore()?->get($instance->getSearchKey())
+            );
 
-        if (! is_array($data) || ! isset($data['term'], $data['cols'])) {
-            return null;
+            $columns = $instance->isMatchable() ? $data->columns : null;
+
+            return [$data->term, $columns];
+        } catch (InvalidArgumentException) {
+            return [null, null];
         }
-
-        /** @var array{term: string, cols: array<int, string>} $data */
-        return $data;
     }
 }

@@ -26,11 +26,9 @@ class SortQuery extends Pipe
     {
         [$parameter, $direction] = $this->getValues($instance);
 
-        $this->persist($instance, $parameter, $direction);
-
         if ($this->sort($instance, $parameter, $direction)) {
             $this->persist($instance, $parameter, $direction);
-
+            
             return;
         }
 
@@ -90,9 +88,7 @@ class SortQuery extends Pipe
 
         $key = $instance->getSortKey();
 
-        [$parameter, $direction] = $this->getOrder(
-            $request, $key
-        );
+        [$parameter, $direction] = $this->getOrder($request, $key);
 
         return match (true) {
             (bool) $parameter => [$parameter, $direction],
