@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\CanBeUrl;
+use Honed\Core\Concerns\CanHaveUrl;
 use Honed\Core\Concerns\Evaluable;
 use Symfony\Component\HttpFoundation\Request;
 use Workbench\App\Models\User;
@@ -10,7 +10,7 @@ use Workbench\App\Models\User;
 beforeEach(function () {
     $this->test = new class()
     {
-        use CanBeUrl, Evaluable;
+        use CanHaveUrl, Evaluable;
     };
 
     $this->user = User::factory()->create();

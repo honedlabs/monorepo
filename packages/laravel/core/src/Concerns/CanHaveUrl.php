@@ -15,7 +15,7 @@ use function in_array;
 use function is_string;
 use function mb_strtoupper;
 
-trait CanBeUrl
+trait CanHaveUrl
 {
     /**
      * The route to visit.
