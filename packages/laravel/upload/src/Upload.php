@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Upload;
 
-use Honed\Core\Concerns\HasLifecycleEvents;
+use Honed\Core\Concerns\HasLifecycleHooks;
 use Honed\Core\Concerns\HasPipeline;
 use Honed\Core\Concerns\HasRequest;
 use Honed\Core\Contracts\HooksIntoLifecycle;
@@ -15,6 +15,7 @@ use Honed\Upload\Concerns\BridgesSerialization;
 use Honed\Upload\Concerns\HasFile;
 use Honed\Upload\Concerns\HasRules;
 use Honed\Upload\Concerns\InteractsWithS3;
+use Honed\Upload\Concerns\Returnable;
 use Honed\Upload\Concerns\ValidatesUpload;
 use Honed\Upload\Exceptions\PresignNotGeneratedException;
 use Honed\Upload\Pipes\CreateRules;
@@ -31,12 +32,13 @@ class Upload extends Primitive implements HooksIntoLifecycle, Responsable
 {
     use BridgesSerialization;
     use HasFile;
-    use HasLifecycleEvents;
+    use HasLifecycleHooks;
     use HasPipeline;
     use HasRequest;
     use HasRules;
     use InteractsWithS3;
     use ValidatesUpload;
+    use Returnable;
 
     /**
      * The identifier to use for evaluation.
@@ -126,7 +128,7 @@ class Upload extends Primitive implements HooksIntoLifecycle, Responsable
         return [
             'attributes' => $presign->getFormAttributes(),
             'inputs' => $presign->getFormInputs(),
-            'data' => $this->getResponse(),
+            'data' => $this->getReturn(),
         ];
     }
 
