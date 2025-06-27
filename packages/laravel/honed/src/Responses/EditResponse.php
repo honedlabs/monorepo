@@ -11,6 +11,8 @@ use Honed\Honed\Responses\Concerns\HasModel;
  */
 abstract class EditResponse extends InertiaResponse
 {
+    public const UPDATE_PROP = 'update';
+
     /** @use HasModel<TModel> */
     use HasModel;
 
@@ -65,7 +67,7 @@ abstract class EditResponse extends InertiaResponse
     {
         return [
             ...parent::getProps(),
-            'update' => $this->getUpdateUrl(),
+            self::UPDATE_PROP => $this->getUpdateUrl(),
             $this->getPropName() => $this->getPropModel(),
         ];
     }

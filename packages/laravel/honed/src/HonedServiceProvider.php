@@ -34,7 +34,7 @@ class HonedServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        
+
     }
 
     /**
@@ -44,7 +44,7 @@ class HonedServiceProvider extends ServiceProvider
      */
     protected function registerMacros()
     {
-        Blueprint::macro('authors', function (
+        Blueprint::macro('authorable', function (
             string $createdBy = 'created_by',
             string $updatedBy = 'updated_by',
             string $table = 'users',

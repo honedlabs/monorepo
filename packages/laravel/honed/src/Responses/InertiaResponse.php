@@ -6,11 +6,21 @@ namespace Honed\Honed\Responses;
 
 use Inertia\Inertia;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
 use RuntimeException;
 
 abstract class InertiaResponse implements Responsable
 {
-        /**
+    use Conditionable;
+    use Macroable {
+        __call as macroCall;
+    }
+
+    public const TITLE_PROP = 'title';
+    public const HEAD_PROP = 'head';
+
+    /**
      * The title for the page.
      * 
      * @var string|null
@@ -59,6 +69,20 @@ abstract class InertiaResponse implements Responsable
      * @return $this
      */
     abstract protected function definition(self $response): self;
+
+    /**
+     * Handle dynamic method calls into the instance.
+     *
+     * @param  string  $method
+     * @param  array<int,mixed>  $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->macroCall($method, $parameters);
+    }
 
     /**
      * Set the title for the page.
@@ -281,8 +305,8 @@ abstract class InertiaResponse implements Responsable
     protected function generateProps()
     {
         return [
-            'title' => $this->getTitle(),
-            'head' => $this->getHead(),
+            self::TITLE_PROP => $this->getTitle(),
+            self::HEAD_PROP => $this->getHead(),
             ...$this->getProps(),
         ];
     }

@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Config;
  * 
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
  */
-trait HasAuthor
+trait Authorable
 {
     /**
      * Boot the HasAuthor trait.
      * 
      * @return void
      */
-    public static function bootHasAuthor()
+    public static function bootAuthorable()
     {
         static::creating(function (self $model) {
             $touchedBy = $model->getTouchedByKey();

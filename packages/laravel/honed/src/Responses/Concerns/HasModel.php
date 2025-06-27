@@ -138,4 +138,14 @@ trait HasModel
 
         return $model;
     }
+
+    /**
+     * Convert the model to an array of props.
+     * 
+     * @return array<string, mixed>
+     */
+    protected function modelToArray()
+    {        
+        return [$this->getPropName() => $this->getPropModel()];
+    }
 }
