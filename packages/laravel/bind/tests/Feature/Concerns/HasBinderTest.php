@@ -78,9 +78,9 @@ it('gets models', function () {
         ->toHaveCount(1)
         ->first()->scoped(fn ($user) => $user
         ->getAttributes()->toEqual([
-                'id' => $this->user->id,
-                'name' => $this->user->name,
-            ])
+            'id' => $this->user->id,
+            'name' => $this->user->name,
+        ])
         );
 
     expect(User::getBound('false', $this->user->id))
