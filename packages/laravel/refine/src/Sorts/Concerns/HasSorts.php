@@ -163,16 +163,26 @@ trait HasSorts
     }
 
     /**
+     * Get the sort being applied.
+     *
+     * @return Sort|null
+     */
+    public function getActiveSort()
+    {
+        return Arr::first(
+            $this->getSorts(),
+            static fn (Sort $sort) => $sort->isActive()
+        );
+    }
+
+    /**
      * Determine if there is a sort being applied.
      *
      * @return bool
      */
     public function isSorting()
     {
-        return (bool) Arr::first(
-            $this->getSorts(),
-            static fn (Sort $sort) => $sort->isActive()
-        );
+        return (bool) $this->getActiveSort();
     }
 
     /**

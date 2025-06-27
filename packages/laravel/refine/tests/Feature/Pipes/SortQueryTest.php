@@ -5,7 +5,9 @@ declare(strict_types=1);
 use Honed\Refine\Pipes\SortQuery;
 use Honed\Refine\Refine;
 use Honed\Refine\Sorts\Sort;
+use Honed\Refine\Stores\Data\SortData;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Session;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
@@ -17,37 +19,105 @@ beforeEach(function () {
         ->sorts(Sort::make($this->name));
 });
 
-it('needs a sort key', function () {
-    $request = Request::create('/', 'GET', [
-        'invalid' => $this->name,
-    ]);
+it('fails', function ($refine) {
+    $this->pipe->run($refine);
 
-    $this->pipe->run(
-        $this->refine->request($request)
-    );
-
-    expect($this->refine->getBuilder()->getQuery()->orders)
+    expect($refine->getBuilder()->getQuery()->orders)
         ->toBeEmpty();
-});
+})->with([
+    'no sort key' => function () {
+        $request = Request::create('/', 'GET', [
+            'invalid' => $this->name,
+        ]);
 
-it('applies sort', function () {
-    $request = Request::create('/', 'GET', [
-        $this->refine->getSortKey() => $this->name,
-    ]);
+        return $this->refine->request($request);
+    },
 
-    $this->pipe->run(
-        $this->refine->request($request)
-    );
+    'no matching sort' => function () {
+        $request = Request::create('/', 'GET', [
+            $this->refine->getSortKey() => 'missing',
+        ]);
 
-    expect($this->refine->getBuilder()->getQuery()->orders)
-        ->toBeOnlyOrder($this->name, Sort::ASCENDING);
-});
+        return $this->refine->request($request);
+    },
+
+    'disabled' => function () {
+        $request = Request::create('/', 'GET', [
+            $this->refine->getSortKey() => $this->name,
+        ]);
+
+        return $this->refine->notSortable()->request($request);
+    },
+
+    'scope' => function () {
+        $request = Request::create('/', 'GET', [
+            $this->refine->getSortKey() => $this->name,
+        ]);
+
+        return $this->refine->scope('scope')->request($request);
+    },
+]);
+
+it('passes', function ($refine, $direction = Sort::ASCENDING) {
+    $this->pipe->run($refine);
+
+    expect($refine->getBuilder()->getQuery()->orders)
+        ->toBeOnlyOrder($this->name, $direction);
+})->with([
+    'request' => function () {
+        $request = Request::create('/', 'GET', [
+            $this->refine->getSortKey() => $this->name,
+        ]);
+
+        return $this->refine->request($request);
+    },
+
+    'direction' => function () {
+        $request = Request::create('/', 'GET', [
+            $this->refine->getSortKey() => '-'.$this->name,
+        ]);
+
+        return [$this->refine->request($request), Sort::DESCENDING];
+    },
+
+    'scope' => function () {
+        $this->refine->scope('scope');
+
+        $request = Request::create('/', 'GET', [
+            $this->refine->getSortKey() => $this->name,
+        ]);
+
+        return $this->refine->request($request);
+    },
+
+    'session' => function () {
+        $data = new SortData($this->name, Sort::ASCENDING);
+
+        Session::put($this->refine->getPersistKey(), [
+            $this->refine->getSortKey() => $data->toArray(),
+        ]);
+
+        return $this->refine->persistSortInSession();
+    },
+
+    'cookie' => function () {
+        $data = new SortData($this->name, Sort::ASCENDING);
+
+        $request = Request::create('/', 'GET', cookies: [
+            $this->refine->getPersistKey() => json_encode([
+                $this->refine->getSortKey() => $data->toArray(),
+            ]),
+        ]);
+
+        return $this->refine->request($request)->persistSortInCookie();
+    },
+]);
 
 it('applies default sort', function () {
     $name = 'price';
 
     $request = Request::create('/', 'GET', [
-        $this->refine->getSortKey() => $name,
+        $this->refine->getSortKey() => 'missing',
     ]);
 
     $this->pipe->run(
@@ -58,62 +128,4 @@ it('applies default sort', function () {
 
     expect($this->refine->getBuilder()->getQuery()->orders)
         ->toBeOnlyOrder($name, Sort::ASCENDING);
-});
-
-it('applies sort with direction', function () {
-    $request = Request::create('/', 'GET', [
-        $this->refine->getSortKey() => '-'.$this->name,
-    ]);
-
-    $this->pipe->run(
-        $this->refine->request($request)
-    );
-
-    expect($this->refine->getBuilder()->getQuery()->orders)
-        ->toBeOnlyOrder($this->name, Sort::DESCENDING);
-});
-
-it('disables sort', function () {
-    $request = Request::create('/', 'GET', [
-        $this->refine->getSortKey() => $this->name,
-    ]);
-
-    $this->pipe->run(
-        $this->refine
-            ->sortable(false)
-            ->request($request)
-    );
-
-    expect($this->refine->getBuilder()->getQuery()->orders)
-        ->toBeEmpty();
-});
-
-it('does not apply sort if key is not scoped', function () {
-    $request = Request::create('/', 'GET', [
-        $this->refine->getSortKey() => $this->name,
-    ]);
-
-    $this->pipe->run(
-        $this->refine
-            ->scope('scope')
-            ->request($request)
-    );
-
-    expect($this->refine->getBuilder()->getQuery()->orders)
-        ->toBeEmpty();
-});
-
-it('applies sort with scoped key', function () {
-    $this->refine->scope('scope');
-
-    $request = Request::create('/', 'GET', [
-        $this->refine->getSortKey() => $this->name,
-    ]);
-
-    $this->pipe->run(
-        $this->refine->request($request)
-    );
-
-    expect($this->refine->getBuilder()->getQuery()->orders)
-        ->toBeOnlyOrder($this->name, Sort::ASCENDING);
 });

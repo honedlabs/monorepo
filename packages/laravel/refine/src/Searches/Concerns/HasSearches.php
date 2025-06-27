@@ -360,6 +360,21 @@ trait HasSearches
     }
 
     /**
+     * Get the searches being applied.
+     *
+     * @return array<int,Search>
+     */
+    public function getActiveSearches()
+    {
+        return array_values(
+            array_filter(
+                $this->getSearches(),
+                static fn (Search $search) => $search->isActive()
+            )
+        );
+    }
+
+    /**
      * Get the searches as an array.
      *
      * @return array<int,array<string,mixed>>

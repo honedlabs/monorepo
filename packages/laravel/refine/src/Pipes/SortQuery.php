@@ -6,6 +6,8 @@ namespace Honed\Refine\Pipes;
 
 use Honed\Core\Interpret;
 use Honed\Core\Pipe;
+use Honed\Refine\Stores\Data\SortData;
+use InvalidArgumentException;
 
 /**
  * @template TClass of \Honed\Refine\Contracts\RefinesData
@@ -43,7 +45,7 @@ class SortQuery extends Pipe
      * @param  'asc'|'desc'|null  $direction
      * @return bool
      */
-    public function sort($instance, $parameter, $direction)
+    protected function sort($instance, $parameter, $direction)
     {
         $builder = $instance->getBuilder();
 
@@ -64,7 +66,7 @@ class SortQuery extends Pipe
      * @param  TClass  $instance
      * @return void
      */
-    public function defaultSort($instance)
+    protected function defaultSort($instance)
     {
         $builder = $instance->getBuilder();
 
@@ -82,7 +84,7 @@ class SortQuery extends Pipe
      * @param  TClass  $instance
      * @return array{string|null, 'asc'|'desc'|null}
      */
-    public function getValues($instance)
+    protected function getValues($instance)
     {
         $request = $instance->getRequest();
 
@@ -94,8 +96,7 @@ class SortQuery extends Pipe
 
         return match (true) {
             (bool) $parameter => [$parameter, $direction],
-            $instance->shouldPersistSort()
-                && ! $request->has($key) => [null, null],
+            $request->missing($key) => $this->persisted($instance),
             default => [null, null]
         };
     }
@@ -107,7 +108,7 @@ class SortQuery extends Pipe
      * @param  string  $key
      * @return array{string|null, 'asc'|'desc'|null}
      */
-    public function getOrder($request, $key)
+    protected function getOrder($request, $key)
     {
         $sort = Interpret::string($request, $key);
 
@@ -126,31 +127,37 @@ class SortQuery extends Pipe
      * @param  'asc'|'desc'|null  $direction
      * @return void
      */
-    public function persist($instance, $parameter, $direction)
+    protected function persist($instance, $parameter, $direction)
     {
-        $instance->getSortStore()?->put([
-            $instance->getSortKey() => [
+        try {
+            $data = SortData::from([
                 'col' => $parameter,
                 'dir' => $direction,
-            ],
-        ]);
+            ]);
+
+            $instance->getSortStore()?->put([
+                $instance->getSortKey() => $data->toArray(),
+            ]);
+        } catch (InvalidArgumentException $e) {
+        }
     }
 
     /**
      * Get the sort data from the store.
      *
      * @param  TClass  $instance
-     * @return array{col: string, dir: 'asc'|'desc'}|null
+     * @return array{string|null, 'asc'|'desc'|null}
      */
     protected function persisted($instance)
     {
-        $data = $instance->getSortStore()?->get($instance->getSortKey());
+        try {
+            $data = SortData::from(
+                $instance->getSortStore()?->get($instance->getSortKey())
+            );
 
-        if (! is_array($data) || ! isset($data['col'], $data['dir'])) {
-            return null;
+            return [$data->column, $data->direction];
+        } catch (InvalidArgumentException) {
+            return [null, null];
         }
-
-        /** @var array{col: string, dir: 'asc'|'desc'} $data */
-        return $data;
     }
 }

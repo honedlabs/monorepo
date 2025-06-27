@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Refine\Filters\Filter;
+use Illuminate\Support\Carbon;
 use Workbench\App\Enums\Status;
 
 beforeEach(function () {
@@ -101,4 +102,13 @@ it('can be multiple', function () {
         ->multiple()->toBe($this->filter)
         ->isMultiple()->toBeTrue()
         ->interpretsAs()->toBe('array');
+});
+
+it('has state', function () {
+    expect($this->filter)
+        ->toState()->toEqual([$this->filter->getParameter() => null])
+        ->value('test')->toBe($this->filter)
+        ->toState()->toEqual([$this->filter->getParameter() => 'test'])
+        ->value(Carbon::now())->toBe($this->filter)
+        ->toState()->toEqual([$this->filter->getParameter() => Carbon::now()->format('Y-m-d\TH:i:s')]);
 });

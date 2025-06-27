@@ -9,6 +9,7 @@ use Carbon\CarbonInterface;
 use Honed\Core\Concerns\HasValue;
 use Honed\Core\Concerns\InterpretsRequest;
 use Honed\Core\Concerns\Validatable;
+use Honed\Refine\Contracts\Stateful;
 use Honed\Refine\Refiner;
 use Honed\Refine\Searches\Search;
 use ReflectionEnum;
@@ -22,8 +23,10 @@ use function is_string;
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
  * @extends \Honed\Refine\Refiner<TModel, TBuilder>
+ *
+ * @implements \Honed\Refine\Contracts\Stateful<string,mixed>
  */
-class Filter extends Refiner
+class Filter extends Refiner implements Stateful
 {
     use Concerns\HasOperator;
     use Concerns\HasOptions {
@@ -320,6 +323,30 @@ class Filter extends Refiner
     }
 
     /**
+     * Get an array representation of the state at the current point in time.
+     */
+    public function toState(): array
+    {
+        return [
+            $this->getParameter() => $this->normalizedValue(),
+        ];
+    }
+
+    /**
+     * Get the value of the instance as a normalized date.
+     *
+     * @return mixed
+     */
+    protected function normalizedValue()
+    {
+        $value = $this->getValue();
+
+        return $value instanceof CarbonInterface
+            ? $value->format('Y-m-d\TH:i:s')
+            : $value;
+    }
+
+    /**
      * Get the representation of the instance.
      *
      * @return array<string, mixed>
@@ -333,7 +360,7 @@ class Filter extends Refiner
         }
 
         return array_merge(parent::representation(), [
-            'value' => $value,
+            'value' => $this->normalizedValue(),
             'options' => $this->optionsToArray(),
         ]);
     }
