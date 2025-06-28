@@ -123,7 +123,7 @@ class ViewManager
     public function getDefaultDriver()
     {
         // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
-        return $this->container['config']->get('persist.driver', 'session');
+        return $this->container['config']->get('persist.driver', SessionDriver::NAME);
     }
 
     /**
