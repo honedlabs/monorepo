@@ -8,7 +8,7 @@ use Closure;
 use Honed\Persist\Drivers\ArrayDriver;
 use Honed\Persist\Drivers\SessionDriver;
 use Honed\Persist\Drivers\CookieDriver;
-use Honed\Persist\Drivers\Decorator;
+use Honed\Persist\Drivers\Driver;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\DatabaseManager;
@@ -26,32 +26,11 @@ class ViewManager
     protected $container;
 
     /**
-     * The array of resolved view stores.
-     *
-     * @var array<string, Decorator>
-     */
-    protected $stores = [];
-
-    /**
      * The registered custom driver creators.
      *
      * @var array<string, Closure(string, Container): Contracts\Driver>
      */
     protected $customCreators = [];
-
-    /**
-     * The default scope resolver.
-     *
-     * @var (callable(mixed...): mixed)|null
-     */
-    protected $defaultScopeResolver;
-
-    /**
-     * Indicates if the Eloquent "morph map" should be used when serializing.
-     *
-     * @var bool
-     */
-    protected $useMorphMap = false;
 
     /**
      * Create a new view resolver.
@@ -76,10 +55,10 @@ class ViewManager
     }
 
     /**
-     * Get a view store instance.
+     * Get a persist store instance.
      *
      * @param  string|null  $store
-     * @return Decorator
+     * @return Driver
      *
      * @throws InvalidArgumentException
      */
@@ -89,10 +68,10 @@ class ViewManager
     }
 
     /**
-     * Get a view store instance by name.
+     * Get a persist store instance by name.
      *
      * @param  string|null  $name
-     * @return Decorator
+     * @return Driver
      *
      * @throws InvalidArgumentException
      */
@@ -208,7 +187,7 @@ class ViewManager
      * Attempt to get the store from the local cache.
      *
      * @param  string  $name
-     * @return Decorator
+     * @return Driver
      *
      * @throws InvalidArgumentException
      */
@@ -221,7 +200,7 @@ class ViewManager
      * Resolve a view store instance.
      *
      * @param  string  $name
-     * @return Decorator
+     * @return Driver
      *
      * @throws InvalidArgumentException
      */
@@ -242,7 +221,7 @@ class ViewManager
             }
         }
 
-        return new Decorator(
+        return new Driver(
             $name,
             $driver
         );

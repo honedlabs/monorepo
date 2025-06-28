@@ -12,6 +12,20 @@ class CookieDriver extends Driver
     public const NAME = 'cookie';
 
     /**
+     * The cookie jar to use for the driver.
+     *
+     * @var CookieJar
+     */
+    protected $cookieJar;
+
+    /**
+     * The request to use for the driver.
+     *
+     * @var Request
+     */
+    protected $request;
+
+    /**
      * The default lifetime for the cookie.
      *
      * @var int
@@ -19,19 +33,26 @@ class CookieDriver extends Driver
     protected $lifetime = 31536000;
 
     /**
-     * Create a new cookie store instance.
+     * Create a new cookie driver instance.
      */
     public function __construct(
-        protected CookieJar $cookieJar,
-        protected Request $request,
-    ) {}
+        string $name,
+        string $key,
+        CookieJar $cookieJar,
+        Request $request,
+    ) {
+        parent::__construct($name, $key);
+
+        $this->cookieJar = $cookieJar;
+        $this->request = $request;
+    }
 
     /**
-     * Retrieve the data from the store and store it in memory.
+     * Retrieve the data from the driver and driver it in memory.
      *
      * @return $this
      */
-    public function resolve()
+    public function resolve(): self
     {
         /** @var array<string,mixed>|null $data */
         $data = json_decode(
@@ -46,11 +67,24 @@ class CookieDriver extends Driver
     }
 
     /**
-     * Set the request to use for the store.
+     * Persist the data to a cookie.
+     */
+    public function persist(): void
+    {
+        match (true) {
+            empty($this->data) => $this->cookieJar->forget($this->key),
+            default => $this->cookieJar->queue(
+                $this->key, json_encode($this->data, JSON_THROW_ON_ERROR), $this->lifetime
+            ),
+        };
+    }
+
+    /**
+     * Set the request to use for the driver.
      *
      * @return $this
      */
-    public function request(Request $request)
+    public function request(Request $request): self
     {
         $this->request = $request;
 
@@ -58,11 +92,19 @@ class CookieDriver extends Driver
     }
 
     /**
-     * Set the cookie jar to use for the store.
+     * Get the request to use for the driver.
+     */
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
+
+    /**
+     * Set the cookie jar to use for the driver.
      *
      * @return $this
      */
-    public function cookieJar(CookieJar $cookieJar)
+    public function cookieJar(CookieJar $cookieJar): self
     {
         $this->cookieJar = $cookieJar;
 
@@ -70,12 +112,19 @@ class CookieDriver extends Driver
     }
 
     /**
+     * Get the cookie jar to use for the driver.
+     */
+    public function getCookieJar(): CookieJar
+    {
+        return $this->cookieJar;
+    }
+
+    /**
      * Set the lifetime for the cookie.
      *
-     * @param  int  $seconds
      * @return $this
      */
-    public function lifetime($seconds)
+    public function lifetime(int $seconds): self
     {
         $this->lifetime = $seconds;
 
@@ -83,17 +132,10 @@ class CookieDriver extends Driver
     }
 
     /**
-     * Persist the data to the session.
-     *
-     * @return void
+     * Get the lifetime for the cookie.
      */
-    public function persist()
+    public function getLifetime(): int
     {
-        match (true) {
-            empty($this->data) => $this->cookieJar->forget($this->key),
-            default => $this->cookieJar->queue(
-                $this->key, json_encode($this->data), $this->lifetime
-            ),
-        };
+        return $this->lifetime;
     }
 }
