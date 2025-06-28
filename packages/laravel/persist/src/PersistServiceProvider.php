@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Persist;
 
+use Honed\Persist\PersistManager;
 use Illuminate\Support\ServiceProvider;
 
 class PersistServiceProvider extends ServiceProvider
@@ -14,6 +15,8 @@ class PersistServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/persist.php', 'persist');
+
+        $this->app->singleton(PersistManager::class, fn ($app) => new PersistManager($app));
     }
 
     /**
@@ -24,11 +27,5 @@ class PersistServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/persist.php' => config_path('persist.php'),
         ], 'persist-config');
-
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                //
-            ]);
-        }
     }
 }

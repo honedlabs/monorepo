@@ -8,8 +8,6 @@ use Illuminate\Contracts\Session\Session;
 
 class SessionDriver extends Driver
 {
-    public const NAME = 'session';
-
     /**
      * The session to use for the driver.
      *
@@ -19,10 +17,9 @@ class SessionDriver extends Driver
 
     public function __construct(
         string $name,
-        string $key,
         Session $session,
     ) {
-        parent::__construct($name, $key);
+        parent::__construct($name);
 
         $this->session = $session;
     }
@@ -30,28 +27,24 @@ class SessionDriver extends Driver
     /**
      * Retrieve the data from the driver and put it in memory.
      *
-     * @return $this
+     * @return array<string,mixed>
      */
-    public function resolve(): self
+    public function value(string $scope): array
     {
         /** @var array<string,mixed>|null $data */
-        $data = $this->session->get($this->key, []);
+        $data = $this->session->get($scope, []);
 
-        if (is_array($data)) {
-            $this->resolved = $data;
-        }
-
-        return $this;
+        return $data ?? [];
     }
 
     /**
      * Persist the data to the session.
      */
-    public function persist(): void
+    public function persist(string $scope): void
     {
         match (true) {
-            empty($this->data) => $this->session->forget($this->key),
-            default => $this->session->put($this->key, $this->data),
+            empty($this->data) => $this->session->forget($scope),
+            default => $this->session->put($scope, $this->data),
         };
     }
 
@@ -69,8 +62,6 @@ class SessionDriver extends Driver
 
     /**
      * Get the session being used by the driver.
-     *
-     * @return Session
      */
     public function getSession(): Session
     {

@@ -13,6 +13,6 @@ class Persist extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Honed\Persist\Persist::class;
+        return \Honed\Persist\PersistManager::class;
     }
 }

@@ -9,11 +9,6 @@ use Illuminate\Support\Arr;
 abstract class Driver
 {
     /**
-     * The key to be used for the instance.
-     */
-    protected string $key;
-
-    /**
      * The name of the driver.
      */
     protected string $name;
@@ -28,49 +23,45 @@ abstract class Driver
     /**
      * The resolved data from the driver.
      *
-     * @var array<string,mixed>|null
+     * @var array<string,array<string,mixed>>
      */
-    protected ?array $resolved = null;
+    protected array $resolved = [];
 
     /**
-     * Retrieve the data from the driver and set it in memory.
+     * Retrieve the data from the driver and set it in memory for the given key.
      *
-     * @return $this
+     * @return array<string,mixed>
      */
-    abstract public function resolve(): self;
+    abstract public function value(string $scope): array;
 
     /**
      * Persist the current data to the driver.
      */
-    abstract public function persist(): void;
+    abstract public function persist(string $scope): void;
 
     /**
      * Create a new instance of the driver.
-     *
-     * @param  string  $name
-     * @param  string  $key
      */
-    public function __construct($name, $key)
+    public function __construct(string $name)
     {
         $this->name = $name;
-        $this->key = $key;
     }
 
     /**
      * Get a value from the resolved data.
      *
      * @param  string|null  $key
-     * @return mixed
+     * @return array<string,mixed>
      */
-    public function get($key = null)
+    public function get(string $scope, ?string $key = null): mixed
     {
-        if (! $this->resolved) {
-            $this->resolve();
+        if (! isset($this->resolved[$scope])) {
+            $this->resolve($scope);
         }
 
         return match (true) {
-            $key => Arr::get($this->resolved ?? [], $key, null),
-            default => $this->resolved,
+            $key => Arr::get($this->resolved[$scope] ?? [], $key, []),
+            default => $this->resolved[$scope] ?? [],
         };
     }
 
@@ -82,14 +73,23 @@ abstract class Driver
      * @param  mixed  $value
      * @return $this
      */
-    public function put($key, $value = null)
+    public function put(string $scope, string|array $key, mixed $value = null): self
     {
         if (is_array($key)) {
-            $this->data = [...$this->data, ...$key];
+            $this->data[$scope] = [...$this->data[$scope] ?? [], ...$key];
         } else {
-            $this->data[$key] = $value;
+            $this->data[$scope][$key] ??= [];
+            $this->data[$scope][$key] = $value;
         }
 
         return $this;
+    }
+
+    /**
+     * Resolve the data from the driver.
+     */
+    protected function resolve(string $scope): void
+    {
+        $this->resolved[$scope] = $this->value($scope);
     }
 }

@@ -6,8 +6,6 @@ namespace Honed\Persist\Drivers;
 
 class ArrayDriver extends Driver
 {
-    public const NAME = 'array';
-
     /**
      * The persisted data.
      *
@@ -16,22 +14,20 @@ class ArrayDriver extends Driver
     protected array $persisted = [];
 
     /**
-     * Retrieve the data from the driver and put it in memory.
+     * Retrieve the data from the driver and put it in memory for the given key.
      *
      * @return $this
      */
-    public function resolve(): self
+    public function value(string $scope): array
     {
-        $this->resolved = $this->persisted;
-
-        return $this;
+        return $this->persisted[$scope] ?? [];
     }
 
     /**
      * Persist the data to the array.
      */
-    public function persist(): void
+    public function persist(string $scope): void
     {
-        $this->persisted = $this->resolved;
+        $this->persisted[$scope] = $this->data[$scope] ?? [];
     }
 }

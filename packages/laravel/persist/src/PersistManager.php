@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 use RuntimeException;
 
-class ViewManager
+class PersistManager
 {
     /**
      * The container instance.
@@ -24,6 +24,13 @@ class ViewManager
      * @var Container
      */
     protected $container;
+
+    /**
+     * The array of resolved persist stores.
+     *
+     * @var array<string, Decorator>
+     */
+    protected $stores = [];
 
     /**
      * The registered custom driver creators.
@@ -43,41 +50,31 @@ class ViewManager
     }
 
     /**
-     * Dynamically call the default store instance.
+     * Get a new driver instance.
      *
-     * @param  string  $method
-     * @param  array<int, mixed>  $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        return $this->store()->{$method}(...$parameters);
-    }
-
-    /**
-     * Get a persist store instance.
-     *
+     * @param  string  $key
      * @param  string|null  $store
      * @return Driver
      *
      * @throws InvalidArgumentException
      */
-    public function store($store = null)
+    public function store(string $key, ?string $store = null): Driver
     {
-        return $this->driver($store);
+        return $this->driver($key, $store);
     }
 
     /**
-     * Get a persist store instance by name.
+     * Get a new driver instance.
      *
-     * @param  string|null  $name
+     * @param  string  $key
+     * @param  string  $store
      * @return Driver
      *
      * @throws InvalidArgumentException
      */
-    public function driver($name = null)
+    public function driver(string $key, ?string $store = null): Driver
     {
-        $name = $name ?: $this->getDefaultDriver();
+        $store = $store ?: $this->getDefaultDriver();
 
         return $this->stores[$name] = $this->cached($name);
     }
@@ -99,9 +96,9 @@ class ViewManager
      * @param  string  $name
      * @return DatabaseDriver
      */
-    public function createSessionDriver($name)
+    public function createCookieDriver($name)
     {
-        return new SessionDriver($name);
+        return new CookieDriver($name);
     }
 
     /**
@@ -110,9 +107,9 @@ class ViewManager
      * @param  string  $name
      * @return DatabaseDriver
      */
-    public function createCookieDriver($name)
+    public function createSessionDriver($name)
     {
-        return new CookieDriver($name);
+        return new SessionDriver($name);
     }
 
     /**

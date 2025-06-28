@@ -46,7 +46,7 @@ abstract class Persisted implements Arrayable, JsonSerializable
      *
      * @return never
      *
-     * @throws InvalidArgumentException
+     * @throws ValidationException
      */
     public static function fail()
     {

@@ -4,49 +4,54 @@ declare(strict_types=1);
 
 namespace Honed\Persist\Concerns;
 
+use Honed\Persist\Drivers\CookieDriver;
+use Honed\Persist\Drivers\Decorator;
+use Honed\Persist\Facades\Persist;
 use Illuminate\Support\Str;
 
 /**
  * @implements \Honed\Persist\Contracts\CanPersistData
  */
-trait Persistent
+trait Persistable
 {
     /**
      * The name of the key when persisting data.
-     *
-     * @var bool|string|null
      */
-    protected $persist = false;
+    protected bool|string $persistKey = false;
 
     /**
      * The mapping of persistable properties to their drivers.
      *
      * @var array<string, \Honed\Persist\Drivers\Decorator>
      */
-    protected $persistables = [];
+    protected array $persistables = [];
 
     /**
-     * The default driver to use for persisting data.
-     *
-     * @var string
+     * The default driver to use for persisting data for this instance.
      */
-    protected $driver = SessionStore::NAME;
+    protected ?string $driver;
 
     /**
      * Get the request to use for the store.
      *
      * @return \Illuminate\Http\Request
      */
-    abstract public function getRequest();
+    abstract public function getRequest(); 
 
     /**
      * Define the names of different persistable properties.
      *
      * @return array<int, string>
      */
-    abstract protected function persistables();
+    abstract public function persistables(): array;
 
-    public function hasPersistable
+    /**
+     * Determine if the given key is persistable.
+     */
+    public function hasPersistable(string $key): bool
+    {
+        return isset($this->persistables[$key]);
+    }
 
     /**
      * Dynamically handle calls to a persist method
@@ -59,27 +64,14 @@ trait Persistent
      */
     public function __call($method, $parameters)
     {
-        if (! static::hasMacro($method)) {
-            throw new BadMethodCallException(sprintf(
-                'Method %s::%s does not exist.', static::class, $method
-            ));
-        }
-
-        $macro = static::$macros[$method];
-
-        if ($macro instanceof Closure) {
-            $macro = $macro->bindTo($this, static::class);
-        }
-
-        return $macro(...$parameters);
+        
     }
     /**
      * Set the name of the key to use when persisting data to a store.
      *
-     * @param  string  $key
      * @return $this
      */
-    public function persistKey($key)
+    public function persistKey(string $key): self
     {
         $this->persistKey = $key;
 
@@ -88,10 +80,8 @@ trait Persistent
 
     /**
      * Get the name of the key to use when persisting data.
-     *
-     * @return string
      */
-    public function getPersistKey()
+    public function getPersistKey(): string
     {
         return $this->persistKey ??= $this->guessPersistKey();
     }
@@ -99,39 +89,21 @@ trait Persistent
     /**
      * Set the store to use for persisting data by default.
      *
-     * @param  string  $store
      * @return $this
      */
-    public function persistIn($store)
+    public function persistIn(string $driver): self
     {
-        $this->store = $store;
+        $this->driver = $driver;
 
         return $this;
     }
 
     /**
-     * Set the store to use for persisting data to the session.
-     *
-     * @return $this
+     * Get the driver being used for persisting data for this instance by default.
      */
-    public function persistInSession()
+    public function getDefaultDriver(): ?string
     {
-        return $this->persistIn(SessionStore::NAME);
-    }
-
-    /**
-     * Set the store to use for persisting data to the cookie.
-     *
-     * @return $this
-     */
-    public function persistInCookie()
-    {
-        return $this->persistIn(CookieDriver::NAME);
-    }
-
-    public function persistInDatabase()
-    {
-        return $this->persistIn(DatabaseStore::NAME);
+        return $this->driver;
     }
 
     /**
@@ -140,43 +112,14 @@ trait Persistent
      * @param  int  $seconds
      * @return $this
      */
-    public function lifetime($seconds = 15724800)
+    public function lifetime(int $seconds = 15724800): self
     {
-        /** @var CookieStore $store */
-        $store = $this->getStore(CookieStore::NAME);
+        /** @var CookieStore $driver */
+        $driver = $this->getDriver('cookie');
 
-        $store->lifetime($seconds);
+        $driver->lifetime($seconds);
 
         return $this;
-    }
-
-    /**
-     * Get the stores to use for persisting data.
-     *
-     * @return array<string,\Honed\Refine\Stores\Store>
-     */
-    public function getStores()
-    {
-        return $this->stores;
-    }
-
-    /**
-     * Get the store to use for persisting data.
-     *
-     * @param  bool|string|null  $type
-     * @return Store|null
-     */
-    public function getStore($type = null)
-    {
-        if ($type === true) {
-            $type = $this->store;
-        }
-
-        return match ($type) {
-            CookieStore::NAME => $this->newCookieStore(),
-            SessionStore::NAME => $this->newSessionStore(),
-            default => null,
-        };
     }
 
     /**
@@ -190,5 +133,41 @@ trait Persistent
             ->classBasename()
             ->snake('-')
             ->toString();
+    }
+
+    /**
+     * Determine if the given key is apart of persistable values.
+     */
+    protected function isPersisting(string $key): bool
+    {
+        return in_array($key, $this->persistables());
+    }
+
+    /**
+     * Get the store to use for persisting data.
+     */
+    protected function getDriver(bool|string $type): ?Decorator
+    {
+        if (! $type) {
+            return null;
+        }
+
+        if ($type === true) {
+            $type = $this->getDefaultDriver();
+        }
+
+        return Persist::store($type);
+    }
+
+    /**
+     * Get the driver to use for a given key.
+     * 
+     * @return $this
+     */
+    protected function setDriver(string $name, string|bool $driver): self
+    {
+        $this->persistables[$name] = $driver;
+
+        return $this;
     }
 }

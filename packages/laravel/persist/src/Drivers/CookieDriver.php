@@ -9,8 +9,6 @@ use Illuminate\Http\Request;
 
 class CookieDriver extends Driver
 {
-    public const NAME = 'cookie';
-
     /**
      * The cookie jar to use for the driver.
      *
@@ -37,11 +35,10 @@ class CookieDriver extends Driver
      */
     public function __construct(
         string $name,
-        string $key,
         CookieJar $cookieJar,
         Request $request,
     ) {
-        parent::__construct($name, $key);
+        parent::__construct($name);
 
         $this->cookieJar = $cookieJar;
         $this->request = $request;
@@ -50,31 +47,27 @@ class CookieDriver extends Driver
     /**
      * Retrieve the data from the driver and driver it in memory.
      *
-     * @return $this
+     * @return array<string,mixed>
      */
-    public function resolve(): self
+    public function value(string $scope): array
     {
         /** @var array<string,mixed>|null $data */
         $data = json_decode(
-            $this->request->cookie($this->key, '[]'), true // @phpstan-ignore argument.type
+            $this->request->cookie($scope, '[]'), true // @phpstan-ignore argument.type
         );
 
-        if (is_array($data)) {
-            $this->resolved = $data;
-        }
-
-        return $this;
+        return $data ?? [];
     }
 
     /**
      * Persist the data to a cookie.
      */
-    public function persist(): void
+    public function persist(string $scope): void
     {
         match (true) {
-            empty($this->data) => $this->cookieJar->forget($this->key),
+            empty($this->data) => $this->cookieJar->forget($scope),
             default => $this->cookieJar->queue(
-                $this->key, json_encode($this->data, JSON_THROW_ON_ERROR), $this->lifetime
+                $scope, json_encode($this->data, JSON_THROW_ON_ERROR), $this->lifetime
             ),
         };
     }
