@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Contracts;
+namespace Honed\Persist\Contracts;
 
 interface CanPersistData
 {
@@ -12,12 +12,4 @@ interface CanPersistData
      * @return string
      */
     public function getPersistKey();
-
-    /**
-     * Get the store to use for persisting data.
-     *
-     * @param  bool|string|null  $type
-     * @return Store|null
-     */
-    public function getStore($type = null);
 }

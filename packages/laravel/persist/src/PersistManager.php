@@ -11,8 +11,11 @@ use Honed\Persist\Drivers\CookieDriver;
 use Honed\Persist\Drivers\Driver;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Cookie\CookieJar;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -26,23 +29,21 @@ class PersistManager
     protected $container;
 
     /**
-     * The array of resolved persist stores.
+     * The array of resolved persist drivers.
      *
-     * @var array<string, Decorator>
+     * @var array<string, Driver>
      */
-    protected $stores = [];
+    protected $drivers = [];
 
     /**
      * The registered custom driver creators.
      *
-     * @var array<string, Closure(string, Container): Contracts\Driver>
+     * @var array<string, Closure(string, Container): Driver>
      */
     protected $customCreators = [];
 
     /**
      * Create a new view resolver.
-     *
-     * @return void
      */
     public function __construct(Container $container)
     {
@@ -52,102 +53,74 @@ class PersistManager
     /**
      * Get a new driver instance.
      *
-     * @param  string  $key
-     * @param  string|null  $store
-     * @return Driver
-     *
      * @throws InvalidArgumentException
      */
-    public function store(string $key, ?string $store = null): Driver
+    public function driver(?string $name = null): Driver
     {
-        return $this->driver($key, $store);
-    }
+        $name = $name ?: $this->getDefaultDriver();
 
-    /**
-     * Get a new driver instance.
-     *
-     * @param  string  $key
-     * @param  string  $store
-     * @return Driver
-     *
-     * @throws InvalidArgumentException
-     */
-    public function driver(string $key, ?string $store = null): Driver
-    {
-        $store = $store ?: $this->getDefaultDriver();
-
-        return $this->stores[$name] = $this->cached($name);
+        return $this->drivers[$name] = $this->resolve($name);
     }
 
     /**
      * Create an instance of the array driver.
-     *
-     * @param  string  $name
-     * @return ArrayDriver
      */
-    public function createArrayDriver($name)
+    public function createArrayDriver(string $name): ArrayDriver
     {
         return new ArrayDriver($name);
     }
 
     /**
      * Create an instance of the database driver.
-     *
-     * @param  string  $name
-     * @return DatabaseDriver
      */
-    public function createCookieDriver($name)
+    public function createCookieDriver(string $name): CookieDriver
     {
-        return new CookieDriver($name);
+        return new CookieDriver(
+            $name, $this->getCookieJar(), $this->getRequest()
+        );
     }
 
     /**
      * Create an instance of the database driver.
-     *
-     * @param  string  $name
-     * @return DatabaseDriver
      */
-    public function createSessionDriver($name)
+    public function createSessionDriver(string $name): SessionDriver
     {
-        return new SessionDriver($name);
+        return new SessionDriver(
+            $name, $this->getSession()
+        );
     }
 
     /**
      * Get the default driver name.
-     *
-     * @return string
      */
-    public function getDefaultDriver()
+    public function getDefaultDriver(): string
     {
         // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
-        return $this->container['config']->get('persist.driver', SessionDriver::NAME);
+        return $this->container['config']->get('persist.driver', 'session');
     }
 
     /**
      * Set the default driver name.
-     *
-     * @param  string  $name
-     * @return void
      */
-    public function setDefaultDriver($name)
+    public function setDefaultDriver(string $name): void
     {
         // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
         $this->container['config']->set('persist.driver', $name);
     }
 
     /**
-     * Unset the given store instances.
+     * Unset the given driver instances.
      *
      * @param  string|array<int, string>|null  $name
      * @return $this
      */
-    public function forgetDriver($name = null)
+    public function forgetDriver(string|array|null $name = null): self
     {
         $name ??= $this->getDefaultDriver();
 
-        foreach ((array) $name as $storeName) {
-            if (isset($this->stores[$storeName])) {
-                unset($this->stores[$storeName]);
+        foreach ((array) $name as $driverName) {
+            if (isset($this->drivers[$driverName])) {
+                unset($this->drivers[$driverName]);
             }
         }
 
@@ -155,13 +128,13 @@ class PersistManager
     }
 
     /**
-     * Forget all of the resolved store instances.
+     * Forget all of the resolved driver instances.
      *
      * @return $this
      */
-    public function forgetDrivers()
+    public function forgetDrivers(): self
     {
-        $this->stores = [];
+        $this->drivers = [];
 
         return $this;
     }
@@ -169,11 +142,10 @@ class PersistManager
     /**
      * Register a custom driver creator closure.
      *
-     * @param  string  $driver
-     * @param  Closure(string, Container): Contracts\Driver  $callback
+     * @param  Closure(string, Container): Driver  $callback
      * @return $this
      */
-    public function extend($driver, $callback)
+    public function extend(string $driver, Closure $callback): self
     {
         $this->customCreators[$driver] = $callback->bindTo($this, $this);
 
@@ -181,57 +153,112 @@ class PersistManager
     }
 
     /**
-     * Attempt to get the store from the local cache.
-     *
-     * @param  string  $name
-     * @return Driver
+     * Resolve the given driver.
      *
      * @throws InvalidArgumentException
      */
-    protected function cached($name)
+    protected function resolve(string $name): Driver
     {
-        return $this->stores[$name] ?? $this->resolve($name);
-    }
+        $config = $this->getConfig($name);
 
-    /**
-     * Resolve a view store instance.
-     *
-     * @param  string  $name
-     * @return Driver
-     *
-     * @throws InvalidArgumentException
-     */
-    protected function resolve($name)
-    {
+        if (is_null($config)) {
+            throw new InvalidArgumentException(
+                "Persist driver [{$name}] is not defined."
+            );
+        }
+
         if (isset($this->customCreators[$name])) {
             $driver = $this->callCustomCreator($name);
         } else {
-            $method = 'create'.ucfirst($name).'Driver';
+            /** @var string */
+            $driverName = $config['driver'];
+
+            $method = 'create'.ucfirst($driverName).'Driver';
 
             if (method_exists($this, $method)) {
-                /** @var Contracts\Driver */
+                /** @var Driver */
                 $driver = $this->{$method}($name);
             } else {
                 throw new InvalidArgumentException(
-                    "Driver [{$name}] not supported."
+                    "Driver [{$name}] is not supported."
                 );
             }
         }
 
-        return new Driver(
-            $name,
-            $driver
-        );
+        return $driver;
     }
 
     /**
      * Call a custom driver creator.
-     *
-     * @param  string  $name
-     * @return Contracts\Driver
      */
-    protected function callCustomCreator($name)
+    protected function callCustomCreator(string $name): Driver
     {
         return $this->customCreators[$name]($name, $this->container);
+    }
+
+    /**
+     * Get the driver configuration.
+     *
+     * @return array<string, mixed>|null
+     */
+    protected function getConfig(string $name): array|null
+    {
+        /** @var array<string, mixed>|null */
+        return $this->container['config']["persist.drivers.{$name}"]; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Dynamically call the default driver instance.
+     *
+     * @param  array<array-key, mixed>  $parameters
+     */
+    public function __call(string $method, array $parameters): mixed
+    {
+        return $this->driver()->$method(...$parameters);
+    }
+
+    /**
+     * Get the database manager instance from the container.
+     */
+    protected function getDatabaseManager(): DatabaseManager
+    {
+        /** @var DatabaseManager */
+        return $this->container['db']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Get the event dispatcher instance from the container.
+     */
+    protected function getDispatcher(): Dispatcher
+    {
+        /** @var Dispatcher */
+        return $this->container['events']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Get the cookie jar instance from the container.
+     */
+    protected function getCookieJar(): CookieJar
+    {
+        /** @var CookieJar */
+        return $this->container['cookie']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Get the request instance from the container.
+     */
+    protected function getRequest(): Request
+    {
+        /** @var Request */
+        return $this->container['request']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Get the session instance from the container.
+     */
+    protected function getSession(): Session
+    {
+        /** @var Session */
+        return $this->container['session']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 }

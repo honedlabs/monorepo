@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Persist\Concerns;
 
-use Honed\Persist\Drivers\CookieDriver;
-use Honed\Persist\Drivers\Decorator;
-use Honed\Persist\Facades\Persist;
+use BadMethodCallException;
 use Illuminate\Support\Str;
+use Honed\Persist\Facades\Persist;
+use Honed\Persist\Drivers\Decorator;
+use Honed\Persist\Drivers\CookieDriver;
 
 /**
- * @implements \Honed\Persist\Contracts\CanPersistData
+ * @phpstan-require-implements \Honed\Persist\Contracts\CanPersistData
  */
 trait Persistable
 {
@@ -64,8 +65,13 @@ trait Persistable
      */
     public function __call($method, $parameters)
     {
-        
+        if ($call = $this->getPersistableCall($method)) {
+            return $this->callPersistable($call, $parameters);
+        }
+
+        throw new BadMethodCallException("Method {$method} does not exist.");
     }
+
     /**
      * Set the name of the key to use when persisting data to a store.
      *

@@ -37,10 +37,7 @@
     "autoload": {
         "psr-4": {
             "Honed\\Persist\\": "src/"
-        },
-        "files": [
-            "./src/helpers.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

@@ -16,7 +16,7 @@ abstract class Driver
     /**
      * The data to persist.
      *
-     * @var array<string,mixed>
+     * @var array<string,array<string,mixed>>
      */
     protected array $data = [];
 
@@ -70,13 +70,13 @@ abstract class Driver
      * to persist it.
      *
      * @param  string|array<string,mixed>  $key
-     * @param  mixed  $value
+     * @param  ($key is array ? array<string,mixed> : mixed)  $value
      * @return $this
      */
     public function put(string $scope, string|array $key, mixed $value = null): self
     {
         if (is_array($key)) {
-            $this->data[$scope] = [...$this->data[$scope] ?? [], ...$key];
+            $this->data[$scope] = [...Arr::wrap($this->data[$scope] ?? []), ...$key];
         } else {
             $this->data[$scope][$key] ??= [];
             $this->data[$scope][$key] = $value;

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Honed\Persist\Drivers;
+
 use Honed\Persist\Drivers\Driver;
 use Illuminate\Support\Traits\Macroable;
 
@@ -56,6 +58,9 @@ class Decorator
 
     /**
      * Put a value into the store.
+     * 
+     * @param  string|array<string,mixed>  $key
+     * @param  ($key is array ? array<string,mixed> : mixed)  $value
      */
     public function put(string|array $key, mixed $value = null): self
     {
