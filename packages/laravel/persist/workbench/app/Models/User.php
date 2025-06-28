@@ -12,7 +12,7 @@ use Workbench\Database\Factories\UserFactory;
 class User extends Authenticatable
 {
     /**
-     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\UserFactory>
+     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Workbench\Database\Factories\UserFactory>
      */
     use HasFactory;
 
