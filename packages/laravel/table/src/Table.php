@@ -10,17 +10,23 @@ use Honed\Action\Contracts\HandlesOperations;
 use Honed\Action\Handler;
 use Honed\Action\Handlers\BatchHandler;
 use Honed\Core\Concerns\HasMeta;
+use Honed\Core\Contracts\HooksIntoLifecycle;
 use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Core\Contracts\Stateful;
+use Honed\Core\Pipes\CallsAfter;
+use Honed\Core\Pipes\CallsBefore;
 use Honed\Core\Primitive;
 use Honed\Infolist\Entries\Concerns\HasClasses;
-use Honed\Refine\Concerns\CanBeRefined;
+use Honed\Refine\Concerns\CanRefine;
 use Honed\Refine\Contracts\RefinesData;
+use Honed\Refine\Filters\Filter;
 use Honed\Refine\Pipes\AfterRefining;
 use Honed\Refine\Pipes\BeforeRefining;
 use Honed\Refine\Pipes\FilterQuery;
 use Honed\Refine\Pipes\PersistData;
 use Honed\Refine\Pipes\SearchQuery;
 use Honed\Refine\Pipes\SortQuery;
+use Honed\Refine\Searches\Search;
 use Honed\Refine\Stores\CookieStore;
 use Honed\Refine\Stores\SessionStore;
 use Honed\Table\Columns\Column;
@@ -47,6 +53,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Pipeline;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -55,10 +62,12 @@ use Throwable;
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  *
  * @extends Primitive<string, mixed>
+ * 
+ * @implements Stateful<string, mixed>
  */
-class Table extends Primitive implements HandlesOperations, NullsAsUndefined, RefinesData
+class Table extends Primitive implements HandlesOperations, NullsAsUndefined, HooksIntoLifecycle, Stateful
 {
-    use CanBeRefined;
+    use CanRefine;
     use CanHandleOperations;
     use HasClasses;
     use HasColumns;
@@ -275,7 +284,6 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
         );
 
         if ($keyColumn) {
-            /** @var string */
             return $keyColumn->getName();
         }
 
@@ -360,20 +368,108 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
     }
 
     /**
-     * @experimental
-     *
-     * @return mixed
+     * Get a snapshot of the current state of the instance.
      */
-    public function toState()
+    public function toState(): array
     {
-        // $this->partial();
-        return [
-            ...($this->isSearchable() ? [$this->getSearchKey() => $this->getTerm()] : []),
-            ...($this->isSortable() ? [$this->getSortKey() => ''] : []),
-            ...($this->isToggleable() ? [$this->getColumnKey() => ''] : []),
-            ...($this->isFilterable() ? ['filter' => ''] : []),
+        Pipeline::send($this)
+            ->through($this->refinements())
+            ->thenReturn();
 
+        return [
+            ...$this->getSearchState(),
+            ...$this->getSearchColumnsState(),
+            ...$this->getSortState(),
+            ...$this->getColumnsState(),
+            ...$this->getFiltersState(),
         ];
+    }
+
+    /**
+     * Get the search term for the table.
+     * 
+     * @return array<string, mixed>
+     */
+    protected function getSearchState()
+    {
+        if ($this->isNotSearchable()) {
+            return [];
+        }
+
+        return [$this->getSearchKey() => $this->getTerm()];
+    }
+
+    /**
+     * Get the search column state for the table.
+     * 
+     * @return array<string, mixed>
+     */
+    public function getSearchColumnsState()
+    {
+        if ($this->isNotMatchable()) {
+            return [];
+        }
+
+        $searches = array_map(
+            static fn (Search $search) => $search->getParameter(),
+            $this->getActiveSearches()
+        );
+
+        return [$this->getMatchKey() => implode($this->getDelimiter(), $searches)];
+    }
+
+    /**
+     * Get the sort state for the table.
+     * 
+     * @return array<string, mixed>
+     */
+    public function getSortState()
+    {
+        $sort = $this->getActiveSort();
+
+        if ($sort) {
+            return [$this->getSortKey() => $sort->getAscendingValue()];
+        }
+
+        return [];
+    }
+
+    /**
+     * Get the filter state for the table.
+     * 
+     * @return array<string, mixed>
+     */
+    public function getFiltersState()
+    {
+        if ($this->isNotFilterable()) {
+            return [];
+        }
+
+        $filters = $this->getActiveFilters();
+
+        return Arr::mapWithKeys(
+            $filters,
+            static fn (Filter $filter) => [$filter->getParameter() => $filter->getValue()]
+        );
+    }
+
+    /**
+     * Get the column state for the table.
+     * 
+     * @return array<string, mixed>
+     */
+    public function getColumnsState()
+    {
+        if ($this->isNotToggleable()) {
+            return [];
+        }
+
+        $columns = array_map(
+            static fn (Column $column) => $column->getParameter(),
+            $this->getActiveColumns()
+        );
+
+        return [$this->getColumnKey() => implode($this->getDelimiter(), $columns)];
     }
 
     /**
@@ -435,31 +531,30 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
      * Get a partial set of pipes to be used for refining the resource, without
      * executing or persisting the data.
      *
-     * @return array<int,class-string<\Honed\Core\Pipe<Table>>>
+     * @return array<int,class-string<\Honed\Core\Pipe>>
      */
     protected function refinements()
     {
         return [
             Toggle::class,
-            BeforeRefining::class,
+            CallsBefore::class,
             PrepareColumns::class,
             Select::class,
             SearchQuery::class,
             FilterQuery::class,
             SortQuery::class,
             Query::class,
-            AfterRefining::class,
+            CallsAfter::class,
         ];
     }
 
     /**
      * Get the pipes to be used for building the table.
      *
-     * @return array<int,class-string<\Honed\Core\Pipe<Table>>>
+     * @return array<int,class-string<\Honed\Core\Pipe>>
      */
     protected function pipes()
     {
-        // @phpstan-ignore-next-line
         return [
             ...$this->refinements(),
             Paginate::class,
@@ -498,6 +593,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Re
         $builder = $this->getBuilder();
 
         return match ($parameterType) {
+            Table::class => [$this],
             EmptyState::class => [$this->newEmptyState()],
             Request::class => [$this->getRequest()],
             $builder::class, Builder::class, BuilderContract::class => [$builder],

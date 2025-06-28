@@ -38,7 +38,7 @@ it('is filterable with closure', function () {
         ->scoped(fn ($filter) => $filter
             ->toBeInstanceOf(Filter::class)
             ->getLabel()->toBe('Name')
-            ->getQuery()->toBeInstanceOf(Closure::class)
+            ->queryCallback()->toBeInstanceOf(Closure::class)
         );
 });
 

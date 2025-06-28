@@ -209,7 +209,7 @@ trait Paginable
      */
     public function getPageKey()
     {
-        return $this->formatScope($this->pageKey);
+        return $this->scoped($this->pageKey);
     }
 
     /**
@@ -232,7 +232,7 @@ trait Paginable
      */
     public function getRecordKey()
     {
-        return $this->formatScope($this->recordKey);
+        return $this->scoped($this->recordKey);
     }
 
     /**

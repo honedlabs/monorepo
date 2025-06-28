@@ -147,10 +147,10 @@ it('builds class', function () {
                 'operations',
                 'views',
                 'emptyState',
+                'meta'
             ])
             ->not->toHaveKeys([
-                'match',
-                'meta',
+                'match'
             ])
             ->{'sort'}->toBe($this->table->getSortKey())
             ->{'search'}->toBe($this->table->getSearchKey())
@@ -228,5 +228,6 @@ it('builds class', function () {
                 ->toHaveKeys(['heading', 'description', 'operations'])
                 ->not->toHaveKey('icon')
             )
+            ->{'meta'}->toBe([])
         );
 });

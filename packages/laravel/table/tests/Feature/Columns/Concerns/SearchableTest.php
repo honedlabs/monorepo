@@ -21,7 +21,7 @@ it('is searchable', function () {
             ->toBeInstanceOf(Search::class)
             ->getName()->toBe($this->column->getName())
             ->getLabel()->toBe('Name')
-            ->getQuery()->toBeNull()
+            ->queryCallback()->toBeNull()
         )
         ->notSearchable()->toBe($this->column)
         ->isNotSearchable()->toBeTrue()
@@ -38,7 +38,7 @@ it('is searchable with string', function () {
             ->toBeInstanceOf(Search::class)
             ->getName()->toBe('description')
             ->getLabel()->toBe('Name')
-            ->getQuery()->toBeNull()
+            ->queryCallback()->toBeNull()
         );
 });
 
@@ -53,6 +53,6 @@ it('is searchable with closure', function () {
             ->toBeInstanceOf(Search::class)
             ->getName()->toBe($this->column->getName())
             ->getLabel()->toBe('Name')
-            ->getQuery()->toBeInstanceOf(Closure::class)
+            ->queryCallback()->toBeInstanceOf(Closure::class)
         );
 });

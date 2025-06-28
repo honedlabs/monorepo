@@ -106,7 +106,9 @@ class Export extends Operation implements Action
         }
 
         $exporter = $this->getExporter($table);
+
         $export = new $exporter($table, $this->getEvents());
+
         $fileName = $this->getFilename();
 
         return match (true) {
@@ -115,6 +117,14 @@ class Export extends Operation implements Action
             $this->isStored() => $this->storeExport($export, $fileName),
             default => $this->defaultExport($export, $fileName),
         };
+    }
+
+    /**
+     * Get the type of the operation.
+     */
+    public function type(): string
+    {
+        return 'bulk';
     }
 
     /**
