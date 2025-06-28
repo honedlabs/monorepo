@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Refine\Stores\Data;
+namespace Honed\Persist;
 
 use JsonSerializable;
 use InvalidArgumentException;
@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 /**
  * @implements Arrayable<string, mixed>
  */
-abstract class StoreData implements Arrayable, JsonSerializable
+abstract class Persisted implements Arrayable, JsonSerializable
 {
     /**
      * Attempt to create the object from a given value.

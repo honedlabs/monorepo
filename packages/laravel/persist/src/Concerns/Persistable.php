@@ -14,16 +14,23 @@ trait Persistent
     /**
      * The name of the key when persisting data.
      *
-     * @var string|null
+     * @var bool|string|null
      */
-    protected $persistKey = null;
+    protected $persist = false;
 
     /**
-     * The default store to use for persisting data.
+     * The mapping of persistable properties to their drivers.
+     *
+     * @var array<string, \Honed\Persist\Drivers\Decorator>
+     */
+    protected $persistables = [];
+
+    /**
+     * The default driver to use for persisting data.
      *
      * @var string
      */
-    protected $store = SessionStore::NAME;
+    protected $driver = SessionStore::NAME;
 
     /**
      * Get the request to use for the store.
@@ -32,6 +39,40 @@ trait Persistent
      */
     abstract public function getRequest();
 
+    /**
+     * Define the names of different persistable properties.
+     *
+     * @return array<int, string>
+     */
+    abstract protected function persistables();
+
+    public function hasPersistable
+
+    /**
+     * Dynamically handle calls to a persist method
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        if (! static::hasMacro($method)) {
+            throw new BadMethodCallException(sprintf(
+                'Method %s::%s does not exist.', static::class, $method
+            ));
+        }
+
+        $macro = static::$macros[$method];
+
+        if ($macro instanceof Closure) {
+            $macro = $macro->bindTo($this, static::class);
+        }
+
+        return $macro(...$parameters);
+    }
     /**
      * Set the name of the key to use when persisting data to a store.
      *
