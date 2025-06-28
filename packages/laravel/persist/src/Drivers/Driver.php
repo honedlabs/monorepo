@@ -28,6 +28,14 @@ abstract class Driver
     protected array $resolved = [];
 
     /**
+     * Create a new instance of the driver.
+     */
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
+
+    /**
      * Retrieve the data from the driver and set it in memory for the given key.
      *
      * @return array<string,mixed>
@@ -40,17 +48,8 @@ abstract class Driver
     abstract public function persist(string $scope): void;
 
     /**
-     * Create a new instance of the driver.
-     */
-    public function __construct(string $name)
-    {
-        $this->name = $name;
-    }
-
-    /**
      * Get a value from the resolved data.
      *
-     * @param  string|null  $key
      * @return array<string,mixed>
      */
     public function get(string $scope, ?string $key = null): mixed

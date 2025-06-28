@@ -41,7 +41,7 @@ return [
         'database' => [
             'driver' => 'database',
             'connection' => null,
-            'table' => 'persisted_data'
+            'table' => 'persisted_data',
         ],
         'session' => [
             'driver' => 'session',

@@ -6,18 +6,16 @@ namespace Honed\Persist;
 
 use Closure;
 use Honed\Persist\Drivers\ArrayDriver;
-use Honed\Persist\Drivers\SessionDriver;
 use Honed\Persist\Drivers\CookieDriver;
 use Honed\Persist\Drivers\Driver;
+use Honed\Persist\Drivers\SessionDriver;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
-use RuntimeException;
 
 class PersistManager
 {
@@ -48,6 +46,16 @@ class PersistManager
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    /**
+     * Dynamically call the default driver instance.
+     *
+     * @param  array<array-key, mixed>  $parameters
+     */
+    public function __call(string $method, array $parameters): mixed
+    {
+        return $this->driver()->$method(...$parameters);
     }
 
     /**
@@ -201,20 +209,10 @@ class PersistManager
      *
      * @return array<string, mixed>|null
      */
-    protected function getConfig(string $name): array|null
+    protected function getConfig(string $name): ?array
     {
         /** @var array<string, mixed>|null */
         return $this->container['config']["persist.drivers.{$name}"]; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
-    }
-
-    /**
-     * Dynamically call the default driver instance.
-     *
-     * @param  array<array-key, mixed>  $parameters
-     */
-    public function __call(string $method, array $parameters): mixed
-    {
-        return $this->driver()->$method(...$parameters);
     }
 
     /**

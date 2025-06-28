@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Persist;
 
-use JsonSerializable;
-use InvalidArgumentException;
-use Illuminate\Contracts\Support\Arrayable;
 use Honed\Persist\Exceptions\DriverDataIntegrityException;
+use Illuminate\Contracts\Support\Arrayable;
+use JsonSerializable;
 
 /**
  * @implements Arrayable<string, mixed>

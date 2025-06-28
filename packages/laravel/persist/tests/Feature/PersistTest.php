@@ -7,14 +7,14 @@ it('tests', function () {
     // dd(Str::match('/persist([A-Z].+)$/', 'persistTest')); -> setDriver $ [$parameter]
     // dd(Str::match('/isPersisting([A-Z].+)$/', 'isPersistingTest')); -> isPersisting $
     // dd(Str::match('/get([A-Z].+)Store/', 'getTestCaseStore')); -> getDriver $
-    preg_match('/persist([A-Z].+)In([A-Z].+)$/', 'persistUserInDatabase', $matches); // -> setDriver $0 $1
-    dd(array_slice($matches, 1));
+    // preg_match('/persist([A-Z].+)In([A-Z].+)$/', 'persistUserInDatabase', $matches); // -> setDriver $0 $1
+    // dd(array_slice($matches, 1));
 })->only();
 
-    // persist[name]
+// persist[name]
 
-    // isPersisting[name]
+// isPersisting[name]
 
-    // get[name]Store
-    
-    // persist[name]In[driver]
+// get[name]Store
+
+// persist[name]In[driver]

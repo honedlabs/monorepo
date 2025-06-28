@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Persist;
 
-use Honed\Persist\PersistManager;
 use Illuminate\Support\ServiceProvider;
 
 class PersistServiceProvider extends ServiceProvider

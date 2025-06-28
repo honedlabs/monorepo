@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Honed\Persist\Concerns;
 
 use BadMethodCallException;
-use Illuminate\Support\Str;
-use Honed\Persist\Facades\Persist;
-use Honed\Persist\Drivers\Decorator;
 use Honed\Persist\Drivers\CookieDriver;
+use Honed\Persist\Drivers\Decorator;
+use Honed\Persist\Facades\Persist;
+use Illuminate\Support\Str;
 
 /**
  * @phpstan-require-implements \Honed\Persist\Contracts\CanPersistData
@@ -18,41 +18,26 @@ trait Persistable
     /**
      * The name of the key when persisting data.
      */
-    protected bool|string $persistKey = false;
+    protected ?string $persistKey;
 
     /**
      * The mapping of persistable properties to their drivers.
      *
-     * @var array<string, \Honed\Persist\Drivers\Decorator>
+     * @var array<string, string|bool>
      */
     protected array $persistables = [];
+
+    /**
+     * The available drivers.
+     *
+     * @var array<int, Decorator>
+     */
+    protected array $drivers = [];
 
     /**
      * The default driver to use for persisting data for this instance.
      */
     protected ?string $driver;
-
-    /**
-     * Get the request to use for the store.
-     *
-     * @return \Illuminate\Http\Request
-     */
-    abstract public function getRequest(); 
-
-    /**
-     * Define the names of different persistable properties.
-     *
-     * @return array<int, string>
-     */
-    abstract public function persistables(): array;
-
-    /**
-     * Determine if the given key is persistable.
-     */
-    public function hasPersistable(string $key): bool
-    {
-        return isset($this->persistables[$key]);
-    }
 
     /**
      * Dynamically handle calls to a persist method
@@ -61,7 +46,7 @@ trait Persistable
      * @param  array  $parameters
      * @return mixed
      *
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function __call($method, $parameters)
     {
@@ -71,6 +56,13 @@ trait Persistable
 
         throw new BadMethodCallException("Method {$method} does not exist.");
     }
+
+    /**
+     * Define the names of different persistable properties.
+     *
+     * @return array<int, string>
+     */
+    abstract public function persistables(): array;
 
     /**
      * Set the name of the key to use when persisting data to a store.
@@ -107,23 +99,62 @@ trait Persistable
     /**
      * Get the driver being used for persisting data for this instance by default.
      */
-    public function getDefaultDriver(): ?string
+    public function getDefaultDriver(): string
     {
-        return $this->driver;
+        return $this->driver ??= Persist::getDefaultDriver();
     }
 
     /**
      * Set the time to live for the persistent data, if using the cookie store.
      *
-     * @param  int  $seconds
      * @return $this
      */
-    public function lifetime(int $seconds = 15724800): self
+    public function lifetime(int $seconds): self
     {
-        /** @var CookieStore $driver */
+        /** @var CookieDriver $driver */
         $driver = $this->getDriver('cookie');
 
         $driver->lifetime($seconds);
+
+        return $this;
+    }
+
+    /**
+     * Determine if the given key is apart of persistable values.
+     */
+    public function isPersisting(string $key): bool
+    {
+        if (isset($this->persistables[$key])) {
+            return (bool) $this->persistables[$key];
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the store to use for persisting data.
+     */
+    public function getDriver(bool|string $type): ?Decorator
+    {
+        if (! $type) {
+            return null;
+        }
+
+        if ($type === true) {
+            $type = $this->getDefaultDriver();
+        }
+
+        return $this->drivers[$type] ??= $this->newDriver($type);
+    }
+
+    /**
+     * Get the driver to use for a given key.
+     *
+     * @return $this
+     */
+    public function setDriver(string $name, string|bool $driver): self
+    {
+        $this->persistables[$name] = $driver;
 
         return $this;
     }
@@ -142,38 +173,62 @@ trait Persistable
     }
 
     /**
-     * Determine if the given key is apart of persistable values.
+     * Create a new driver instance.
      */
-    protected function isPersisting(string $key): bool
+    protected function newDriver(string $type): Decorator
     {
-        return in_array($key, $this->persistables());
+        return new Decorator(
+            $this->getPersistKey(),
+            Persist::driver($type)
+        );
     }
 
     /**
-     * Get the store to use for persisting data.
+     * Get the call to a persistable method.
+     *
+     * @return null|array{0: string, 1: string, 2: string|bool|null}
      */
-    protected function getDriver(bool|string $type): ?Decorator
+    protected function getPersistableCall(string $method): ?array
     {
-        if (! $type) {
-            return null;
+        if ($match = Str::match('/persist([A-Z].+)$/', $method)) {
+            return ['setDriver', $match, null];
         }
 
-        if ($type === true) {
-            $type = $this->getDefaultDriver();
+        if ($match = Str::match('/isPersisting([A-Z].+)$/', $method)) {
+            return ['isPersisting', $match, null];
         }
 
-        return Persist::store($type);
+        if ($match = Str::match('/get([A-Z].+)Store/', $method)) {
+            return ['getDriver', $match, null];
+        }
+
+        preg_match('/persist([A-Z].+)In([A-Z].+)$/', $method, $matches);
+
+        if (count($matches) === 3) {
+            return ['setDriver', $matches[1], $matches[2]];
+        }
+
+        return null;
     }
 
     /**
-     * Get the driver to use for a given key.
-     * 
-     * @return $this
+     * Call a persistable method.
+     *
+     * @param  array{0: string, 1: string, 2: string|null}  $call
+     * @param  array<array-key, mixed>  $parameters
+     *
+     * @throws BadMethodCallException
      */
-    protected function setDriver(string $name, string|bool $driver): self
+    protected function callPersistable(array $call, array $parameters): mixed
     {
-        $this->persistables[$name] = $driver;
+        [$method, $p1, $p2] = $call;
 
-        return $this;
+        if (! in_array($p1, $this->persistables())) {
+            throw new BadMethodCallException(
+                "Property {$p1} is not a defined persistable property."
+            );
+        }
+
+        return $this->{$method}(Str::camel($p1), $p2 ?? $parameters[0] ?? true);
     }
 }

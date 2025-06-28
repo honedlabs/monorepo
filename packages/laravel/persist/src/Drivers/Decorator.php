@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Persist\Drivers;
 
-use Honed\Persist\Drivers\Driver;
 use Illuminate\Support\Traits\Macroable;
 
 class Decorator
 {
     use Macroable;
-    
+
     /**
      * The scope of the decorator.
      */
@@ -58,7 +57,7 @@ class Decorator
 
     /**
      * Put a value into the store.
-     * 
+     *
      * @param  string|array<string,mixed>  $key
      * @param  ($key is array ? array<string,mixed> : mixed)  $value
      */
