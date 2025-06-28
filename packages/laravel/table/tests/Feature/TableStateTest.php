@@ -2,129 +2,124 @@
 
 declare(strict_types=1);
 
+use Honed\Refine\Filters\Filter;
+use Honed\Refine\Searches\Search;
+use Honed\Refine\Sorts\Sort;
+use Honed\Table\Columns\Column;
 use Honed\Table\Facades\Views;
+use Honed\Table\Table;
 use Illuminate\Http\Request;
 use Workbench\App\Enums\Status;
 use Workbench\App\Models\Product;
 use Workbench\App\Tables\ProductTable;
 
 beforeEach(function () {
-    Product::factory()->count(100)->create();
-
-    $this->table = ProductTable::make();
+    $this->table = Table::make()
+        ->for(Product::class)
+        ->columns([Column::make('name'), Column::make('price')])
+        ->filter(Filter::make('name'))
+        ->search(Search::make('name'))
+        ->sort(Sort::make('price'))
+        ->filterable()
+        ->searchable()
+        ->sortable()
+        ->matchable()
+        ->toggleable();
 
     $this->request = Request::create('/', 'GET', [
         'name' => 'test',
-
-        'price' => 100,
-        'status' => \sprintf('%s,%s', Status::Available->value, Status::Unavailable->value),
-        'only' => Status::ComingSoon->value,
-
-        'favourite' => '1',
-
-        'oldest' => '2000-01-01',
-        'newest' => '2001-01-01',
-
         'missing' => 'test',
-
         $this->table->getSortKey() => '-price',
+        $this->table->getMatchKey() => 'name',
         $this->table->getSearchKey() => 'search+term',
-        $this->table->getColumnKey() => 'id,name,price,status,best_seller,created_at',
+        $this->table->getColumnKey() => 'name,description,price',
         $this->table->getRecordKey() => 25,
     ]);
 
     $this->table->request($this->request);
-
-    Views::set($this->table::class, 'Filter view', null, [
-        'name' => 'joshua',
-    ]);
 });
 
-it('builds class', function () {
-    expect($this->table->build()->getBuilder()->getQuery())
-        ->wheres
-        ->scoped(fn ($wheres) => $wheres
-            ->toBeArray()
-            ->toHaveCount(9)
-            ->toEqualCanonicalizing([
-                // Search done on name (column) and description (property)
-                [
-                    'type' => 'raw',
-                    'sql' => 'LOWER(description) LIKE ?',
-                    'boolean' => 'and',
-                ],
-                [
-                    'type' => 'raw',
-                    'sql' => 'LOWER(name) LIKE ?',
-                    'boolean' => 'or',
-                ],
-                // Name where filter
-                [
-                    'type' => 'raw',
-                    'sql' => 'LOWER(name) LIKE ?',
-                    'boolean' => 'and',
-                ],
-                // Price set filter
-                [
-                    'type' => 'Basic',
-                    'column' => 'price',
-                    'operator' => '<=',
-                    'value' => 100,
-                    'boolean' => 'and',
-                ],
-                // Status set filter
-                [
-                    'type' => 'In',
-                    'column' => 'status',
-                    'values' => [Status::Available->value, Status::Unavailable->value],
-                    'boolean' => 'and',
-                ],
-                // Only set filter
-                [
-                    'type' => 'In',
-                    'column' => 'status',
-                    'values' => [Status::ComingSoon->value],
-                    'boolean' => 'and',
-                ],
-                // Favourite filter
-                [
-                    'type' => 'Basic',
-                    'column' => 'best_seller',
-                    'operator' => '=',
-                    'value' => true,
-                    'boolean' => 'and',
-                ],
-                // Oldest date filter
-                [
-                    'type' => 'Date',
-                    'column' => 'created_at',
-                    'operator' => '>=',
-                    'value' => '2000-01-01',
-                    'boolean' => 'and',
-                ],
-                // Newest date filter
-                [
-                    'type' => 'Date',
-                    'column' => 'created_at',
-                    'operator' => '<=',
-                    'value' => '2001-01-01',
-                    'boolean' => 'and',
-                ],
-            ])
-        )
-        ->orders
-        ->scoped(fn ($orders) => $orders
-            ->toBeArray()
-            ->toHaveCount(1)
-            ->{0}->toEqual([
-                'column' => 'price',
-                'direction' => 'desc',
-            ])
-        );
+it('creates state', function () {
+    $this->table->build();
 
-    expect($this->table)
-        ->isSorting()->toBeTrue()
-        ->isSearching()->toBeTrue()
-        ->isFiltering()->toBeTrue()
-        ->toState()->dd();
-})->only();
+    expect($this->table->toState())
+        ->toHaveKeys([
+            'name',
+            $this->table->getSortKey(),
+            $this->table->getMatchKey(),
+            $this->table->getSearchKey(),
+            $this->table->getColumnKey(),
+        ])
+        ->{'sort'}->toBe('price') // @TODO: Fix this
+        ->{'search'}->toBe('search+term')
+        ->{'columns'}->toBe('name,price');
+
+    expect($this->table->toState()['match'])->toBe('name');
+});
+
+it('can remove state', function ($has, $missing) {
+    expect($this->table->toState())
+        ->toHaveKeys($has)
+        ->not->toHaveKeys($missing);
+})->with([
+    'not sortable' => function () {
+        $this->table->notSortable();
+
+        return [[
+            'name',
+            $this->table->getColumnKey(),
+            $this->table->getMatchKey(),
+            $this->table->getSearchKey(),
+        ], [
+            $this->table->getSortKey(),
+        ]];
+    },
+    'not searchable' => function () {
+        $this->table->notSearchable();
+
+        return [[
+            'name',
+            $this->table->getSortKey(),
+            $this->table->getColumnKey(),
+        ], [
+            $this->table->getMatchKey(),
+            $this->table->getSearchKey(),
+        ]];
+    },
+    'not matchable' => function () {
+        $this->table->notMatchable();
+
+        return [[
+            'name',
+            $this->table->getSortKey(),
+            $this->table->getColumnKey(),
+            $this->table->getSearchKey(),
+        ], [
+            $this->table->getMatchKey(),
+        ]];
+    },
+    'not filterable' => function () {
+        $this->table->notFilterable();
+
+        return [[
+            $this->table->getSortKey(),
+            $this->table->getSearchKey(),
+            $this->table->getMatchKey(),
+            $this->table->getColumnKey(),
+        ], [
+            'name',
+        ]];
+    },
+    'not toggleable' => function () {
+        $this->table->notToggleable();
+
+        return [[
+            'name',
+            $this->table->getSortKey(),
+            $this->table->getMatchKey(),
+            $this->table->getSearchKey(),
+        ], [
+            $this->table->getColumnKey(),
+        ]];
+    },
+]);

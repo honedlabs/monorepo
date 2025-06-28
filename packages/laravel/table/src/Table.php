@@ -396,7 +396,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Ho
             return [];
         }
 
-        return [$this->getSearchKey() => $this->getTerm()];
+        return [$this->getSearchKey() => str_replace(' ', '+', $this->getTerm() ?? '')];
     }
 
     /**
@@ -406,7 +406,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Ho
      */
     public function getSearchColumnsState()
     {
-        if ($this->isNotMatchable()) {
+        if ($this->isNotMatchable() || $this->isNotSearchable()) {
             return [];
         }
 
