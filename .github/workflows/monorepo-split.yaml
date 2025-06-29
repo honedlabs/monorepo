@@ -23,7 +23,7 @@ jobs:
           # - core
           # - crumb
           # - flash
-          # - honed
+          - honed
           # - infolist
           # - layout
           # - lock
