@@ -9,9 +9,6 @@ use Honed\Refine\Stores\SessionStore;
 use Honed\Refine\Stores\Store;
 use Illuminate\Support\Str;
 
-/**
- * @implements \Honed\Refine\Contracts\CanPersistData
- */
 trait Persistent
 {
     /**
@@ -43,7 +40,7 @@ trait Persistent
     abstract public function getRequest();
 
     /**
-     * Get the 
+     * Get the
      */
 
     /**
@@ -121,7 +118,7 @@ trait Persistent
     /**
      * Get the stores to use for persisting data.
      *
-     * @return array<string,\Honed\Refine\Stores\Store>
+     * @return array<string,Store>
      */
     public function getStores()
     {
