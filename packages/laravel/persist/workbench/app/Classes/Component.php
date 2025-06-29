@@ -42,8 +42,9 @@ class Component implements CanPersistData
     public function persistables(): array
     {
         return [
-            'sort',
+            'sortQuery',
             'search',
+            'other',
         ];
     }
 }

@@ -31,17 +31,8 @@ return [
         'array' => [
             'driver' => 'array',
         ],
-        'cache' => [
-            'driver' => 'cache',
-            'connection' => 'default',
-        ],
         'cookie' => [
             'driver' => 'cookie',
-        ],
-        'database' => [
-            'driver' => 'database',
-            'connection' => null,
-            'table' => 'persisted_data',
         ],
         'session' => [
             'driver' => 'session',

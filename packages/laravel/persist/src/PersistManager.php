@@ -15,6 +15,7 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\Request;
+use Illuminate\Session\SessionManager;
 use InvalidArgumentException;
 
 class PersistManager
@@ -252,11 +253,11 @@ class PersistManager
     }
 
     /**
-     * Get the session instance from the container.
+     * Get the session manager instance from the container.
      */
-    protected function getSession(): Session
+    protected function getSession(): SessionManager
     {
-        /** @var Session */
+        /** @var SessionManager */
         return $this->container['session']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 }

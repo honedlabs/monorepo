@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace Honed\Persist\Drivers;
 
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Session\SessionManager;
 
 class SessionDriver extends Driver
 {
     /**
-     * The session to use for the driver.
-     *
-     * @var Session
+     * The session manager to use for the driver.
      */
-    protected $session;
+    protected SessionManager $session;
 
     public function __construct(
         string $name,
-        Session $session,
+        SessionManager $session,
     ) {
         parent::__construct($name);
 
@@ -53,7 +52,7 @@ class SessionDriver extends Driver
      *
      * @return $this
      */
-    public function session(Session $session): self
+    public function session(SessionManager $session): self
     {
         $this->session = $session;
 
@@ -63,7 +62,7 @@ class SessionDriver extends Driver
     /**
      * Get the session being used by the driver.
      */
-    public function getSession(): Session
+    public function getSession(): SessionManager
     {
         return $this->session;
     }

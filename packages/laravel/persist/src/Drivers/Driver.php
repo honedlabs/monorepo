@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Persist\Drivers;
 
+use Honed\Persist\PersistData;
 use Illuminate\Support\Arr;
 
 abstract class Driver
@@ -48,6 +49,14 @@ abstract class Driver
     abstract public function persist(string $scope): void;
 
     /**
+     * Get the name of the driver.
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
      * Get a value from the resolved data.
      *
      * @return array<string,mixed>
@@ -59,7 +68,7 @@ abstract class Driver
         }
 
         return match (true) {
-            $key => Arr::get($this->resolved[$scope] ?? [], $key, []),
+            $key !== null => Arr::get($this->resolved[$scope] ?? [], $key, []),
             default => $this->resolved[$scope] ?? [],
         };
     }
@@ -72,12 +81,14 @@ abstract class Driver
      * @param  ($key is array ? array<string,mixed> : mixed)  $value
      * @return $this
      */
-    public function put(string $scope, string|array $key, mixed $value = null): self
+    public function put(string $scope, string|array|PersistData $key, mixed $value = null): self
     {
         if (is_array($key)) {
             $this->data[$scope] = [...Arr::wrap($this->data[$scope] ?? []), ...$key];
+        } elseif ($key instanceof PersistData) {
+            $this->data[$scope] = [...Arr::wrap($this->data[$scope] ?? []), ...$key->toArray()];
         } else {
-            $this->data[$scope][$key] ??= [];
+            $this->data[$scope] ??= [];
             $this->data[$scope][$key] = $value;
         }
 
@@ -87,7 +98,7 @@ abstract class Driver
     /**
      * Resolve the data from the driver.
      */
-    protected function resolve(string $scope): void
+    public function resolve(string $scope): void
     {
         $this->resolved[$scope] = $this->value($scope);
     }

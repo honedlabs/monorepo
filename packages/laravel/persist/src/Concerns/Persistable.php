@@ -124,11 +124,7 @@ trait Persistable
      */
     public function isPersisting(string $key): bool
     {
-        if (isset($this->persistables[$key])) {
-            return (bool) $this->persistables[$key];
-        }
-
-        return false;
+        return (bool) ($this->persistables[$key] ?? false);
     }
 
     /**
@@ -149,6 +145,18 @@ trait Persistable
 
     /**
      * Get the driver to use for a given key.
+     */
+    public function getDriverFor(string $key): ?Decorator
+    {
+        if (! isset($this->persistables[$key])) {
+            return null;
+        }
+
+        return $this->getDriver($this->persistables[$key]);
+    }
+
+    /**
+     * Get the driver to use for a given key.
      *
      * @return $this
      */
@@ -160,16 +168,11 @@ trait Persistable
     }
 
     /**
-     * Guess the name of the key to use when persisting data.
-     *
-     * @return string
+     * Determine if the given key is valid for persisting data.
      */
-    protected function guessPersistKey()
+    public function isPersistable(string $key): bool
     {
-        return Str::of(static::class)
-            ->classBasename()
-            ->snake('-')
-            ->toString();
+        return in_array($key, $this->persistables());
     }
 
     /**
@@ -184,12 +187,31 @@ trait Persistable
     }
 
     /**
+     * Guess the name of the key to use when persisting data.
+     */
+    protected function guessPersistKey(): string
+    {
+        return Str::of(static::class)
+            ->classBasename()
+            ->snake('_')
+            ->toString();
+    }
+
+    /**
      * Get the call to a persistable method.
      *
      * @return null|array{0: string, 1: string, 2: string|bool|null}
      */
     protected function getPersistableCall(string $method): ?array
     {
+        preg_match('/persist([A-Z].+)In([A-Z].+)$/', $method, $matches);
+        
+        if (count($matches) === 3) {
+            $store = Str::camel($matches[2]);
+
+            return ['setDriver', $matches[1], $store];
+        }
+
         if ($match = Str::match('/persist([A-Z].+)$/', $method)) {
             return ['setDriver', $match, null];
         }
@@ -198,14 +220,8 @@ trait Persistable
             return ['isPersisting', $match, null];
         }
 
-        if ($match = Str::match('/get([A-Z].+)Store/', $method)) {
-            return ['getDriver', $match, null];
-        }
-
-        preg_match('/persist([A-Z].+)In([A-Z].+)$/', $method, $matches);
-
-        if (count($matches) === 3) {
-            return ['setDriver', $matches[1], $matches[2]];
+        if ($match = Str::match('/get([A-Z].+)Driver/', $method)) {
+            return ['getDriverFor', $match, null];
         }
 
         return null;
@@ -223,12 +239,14 @@ trait Persistable
     {
         [$method, $p1, $p2] = $call;
 
-        if (! in_array($p1, $this->persistables())) {
+        $p1 = Str::camel($p1);
+
+        if (! $this->isPersistable($p1)) {
             throw new BadMethodCallException(
                 "Property {$p1} is not a defined persistable property."
             );
         }
 
-        return $this->{$method}(Str::camel($p1), $p2 ?? $parameters[0] ?? true);
+        return $this->{$method}($p1, $p2 ?? $parameters[0] ?? true);
     }
 }

@@ -15,18 +15,15 @@ abstract class PersistData implements Arrayable, JsonSerializable
 {
     /**
      * Attempt to create the object from a given value.
-     *
-     * @throws DriverDataIntegrityException
      */
     abstract public static function from(mixed $value): ?static;
 
     /**
      * Create a new store data object.
-
      *
      * @throws DriverDataIntegrityException
      */
-    public static function create(mixed $value): static
+    public static function make(mixed $value): static
     {
         if ($data = static::from($value)) {
             return $data;

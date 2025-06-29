@@ -8,7 +8,9 @@ use Illuminate\Support\Traits\Macroable;
 
 class Decorator
 {
-    use Macroable;
+    use Macroable {
+        __call as macroCall;
+    }
 
     /**
      * The scope of the decorator.
@@ -29,6 +31,22 @@ class Decorator
     ) {
         $this->scope = $scope;
         $this->driver = $driver;
+    }
+
+    /**
+     * Dynamically create a pending feature interaction.
+     *
+     * @param  string  $name
+     * @param  array<mixed>  $parameters
+     * @return mixed
+     */
+    public function __call($name, $parameters)
+    {
+        if (static::hasMacro($name)) {
+            return $this->macroCall($name, $parameters);
+        }
+
+        return $this->getDriver()->{$name}(...$parameters);
     }
 
     /**
