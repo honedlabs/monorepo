@@ -39,7 +39,7 @@ it('needs a search term', function () {
     expect($this->table->getBuilder()->getQuery()->wheres)
         ->toBeEmpty();
 
-    expect($this->table->getTerm())
+    expect($this->table->getSearchTerm())
         ->toBeNull();
 });
 
@@ -56,7 +56,7 @@ it('applies search', function () {
         ->{0}->toBeSearch('name', 'and')
         ->{1}->toBeSearch('description', 'or');
 
-    expect($this->table->getTerm())
+    expect($this->table->getSearchTerm())
         ->toBe($this->term);
 });
 
@@ -75,6 +75,6 @@ it('applies search with matching', function () {
     expect($this->table->getBuilder()->getQuery()->wheres)
         ->toBeOnlySearch('name');
 
-    expect($this->table->getTerm())
+    expect($this->table->getSearchTerm())
         ->toBe($this->term);
 });

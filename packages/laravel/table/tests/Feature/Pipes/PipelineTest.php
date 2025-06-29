@@ -154,7 +154,7 @@ it('builds class', function () {
             ])
             ->{'sort'}->toBe($this->table->getSortKey())
             ->{'search'}->toBe($this->table->getSearchKey())
-            ->{'term'}->toBe($this->table->getTerm())
+            ->{'term'}->toBe($this->table->getSearchTerm())
             ->{'delimiter'}->toBe($this->table->getDelimiter())
             ->{'sorts'}
             ->scoped(fn ($sorts) => $sorts

@@ -45,7 +45,7 @@ it('creates empty state', function () {
 });
 
 it('has searching state', function () {
-    $this->table->setTerm('term');
+    $this->table->setSearchTerm('term');
 
     $this->pipe->instance($this->table);
 
@@ -82,7 +82,7 @@ it('has filtering state', function () {
 });
 
 it('has refining state', function () {
-    $this->table->setTerm('term');
+    $this->table->setSearchTerm('term');
 
     $this->pipe->instance(
         $this->table

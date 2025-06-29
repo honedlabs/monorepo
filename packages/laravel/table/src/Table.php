@@ -396,7 +396,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Ho
             return [];
         }
 
-        return [$this->getSearchKey() => str_replace(' ', '+', $this->getTerm() ?? '')];
+        return [$this->getSearchKey() => $this->encodeSearchTerm($this->getSearchTerm())];
     }
 
     /**
@@ -449,7 +449,7 @@ class Table extends Primitive implements HandlesOperations, NullsAsUndefined, Ho
 
         return Arr::mapWithKeys(
             $filters,
-            static fn (Filter $filter) => [$filter->getParameter() => $filter->getValue()]
+            static fn (Filter $filter) => [$filter->getParameter() => $filter->getNormalizedValue()]
         );
     }
 
