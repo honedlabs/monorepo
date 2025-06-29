@@ -31,10 +31,10 @@ jobs:
           # - nav
           # - page
           # - persist
-          # - refine
+          - refine
           # - registry
-          - table
-          - upload
+          # - table
+          # - upload
           # - widget
     steps:
       - name: Checkout
