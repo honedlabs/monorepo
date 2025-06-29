@@ -205,7 +205,7 @@ trait Persistable
     protected function getPersistableCall(string $method): ?array
     {
         preg_match('/persist([A-Z].+)In([A-Z].+)$/', $method, $matches);
-        
+
         if (count($matches) === 3) {
             $store = Str::camel($matches[2]);
 

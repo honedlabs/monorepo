@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Persist\Drivers\CookieDriver;
-use Honed\Persist\Drivers\DatabaseDriver;
 use Honed\Persist\Drivers\Decorator;
 use Honed\Persist\Drivers\SessionDriver;
 use Honed\Persist\Facades\Persist;
@@ -87,26 +86,26 @@ describe('calls', function () {
     it('fails setting driver', function (string $method, array $parameters = []) {
         $this->component->{$method}(...$parameters);
     })->throws(BadMethodCallException::class)
-    ->with([
-        'non existent method' => ['missingTest'],
-        'non existent key' => ['persistTest', [true]],
-    ]);
+        ->with([
+            'non existent method' => ['missingTest'],
+            'non existent key' => ['persistTest', [true]],
+        ]);
 
     it('fails getting driver', function (string $method, array $parameters = []) {
         $this->component->{$method}(...$parameters);
     })->throws(BadMethodCallException::class)
-    ->with([
-        'non existent method' => ['missingTest'],
-        'non existent key' => ['getMissingDriver'],
-    ]);
+        ->with([
+            'non existent method' => ['missingTest'],
+            'non existent key' => ['getMissingDriver'],
+        ]);
 
     it('fails checking if persisting', function (string $method, array $parameters = []) {
         $this->component->{$method}(...$parameters);
     })->throws(BadMethodCallException::class)
-    ->with([
-        'non existent method' => ['missingTest'],
-        'non existent key' => ['isPersistingTest'],
-    ]);
+        ->with([
+            'non existent method' => ['missingTest'],
+            'non existent key' => ['isPersistingTest'],
+        ]);
 
     it('passes setting driver', function (string $method, string $key, string $store, array $parameters = []) {
         expect($this->component->{$method}(...$parameters))

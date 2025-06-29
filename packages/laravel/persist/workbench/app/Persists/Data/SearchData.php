@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Workbench\App\Persists\Data;
 
 use Honed\Persist\PersistData;
-use Illuminate\Support\Arr;
 
 class SearchData extends PersistData
 {
@@ -30,7 +29,7 @@ class SearchData extends PersistData
 
     /**
      * Convert the object to an array.
-     * 
+     *
      * @return array<string,mixed>
      */
     public function toArray(): array

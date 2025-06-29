@@ -67,6 +67,7 @@ abstract class Driver
             $this->resolve($scope);
         }
 
+        /** @var array<string,mixed> */
         return match (true) {
             $key !== null => Arr::get($this->resolved[$scope] ?? [], $key, []),
             default => $this->resolved[$scope] ?? [],
@@ -89,6 +90,9 @@ abstract class Driver
             $this->data[$scope] = [...Arr::wrap($this->data[$scope] ?? []), ...$key->toArray()];
         } else {
             $this->data[$scope] ??= [];
+
+            $value = $value instanceof PersistData ? $value->toArray() : $value;
+
             $this->data[$scope][$key] = $value;
         }
 

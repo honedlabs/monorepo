@@ -12,7 +12,7 @@ beforeEach(function () {
     $this->scope = 'component';
 
     Session::put($this->scope, (new SearchData('test', ['id', 'name']))->toArray());
-})->only();
+});
 
 it('has a name', function () {
     expect($this->driver)
@@ -38,7 +38,7 @@ it('puts key value into store', function () {
         ->toEqual([
             'component' => [
                 'term' => 'test',
-            ]
+            ],
         ]);
 });
 
@@ -52,7 +52,7 @@ it('puts array into store', function () {
         ->toEqual([
             'component' => [
                 'term' => 'test',
-            ]
+            ],
         ]);
 });
 
@@ -67,6 +67,6 @@ it('puts persist data into store', function () {
             'component' => [
                 'term' => 'test',
                 'cols' => 'id,name',
-            ]
+            ],
         ]);
 });
