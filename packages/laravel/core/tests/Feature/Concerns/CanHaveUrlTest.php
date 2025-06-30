@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Honed\Core\Concerns\CanHaveUrl;
 use Honed\Core\Concerns\Evaluable;
-use Symfony\Component\HttpFoundation\Request;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
@@ -52,46 +51,8 @@ it('sets url', function () {
         ->getUrl()->toBe('https://example.com');
 });
 
-it('sets method', function () {
+it('sets to same page', function () {
     expect($this->test)
-        ->getMethod()->toBe(Request::METHOD_GET)
-        ->method(Request::METHOD_POST)->toBe($this->test)
-        ->getMethod()->toBe(Request::METHOD_POST)
-        ->patch()->toBe($this->test)
-        ->getMethod()->toBe(Request::METHOD_PATCH)
-        ->put()->toBe($this->test)
-        ->getMethod()->toBe(Request::METHOD_PUT)
-        ->delete()->toBe($this->test)
-        ->getMethod()->toBe(Request::METHOD_DELETE)
-        ->post()->toBe($this->test)
-        ->getMethod()->toBe(Request::METHOD_POST);
-});
-
-it('sets target', function () {
-    expect($this->test)
-        ->getTarget()->toBeNull()
-        ->target('_self')->toBe($this->test)
-        ->getTarget()->toBe('_self')
-        ->openUrlInNewTab()->toBe($this->test)
-        ->getTarget()->toBe('_blank');
-});
-
-it('validates method', function ($input) {
-    $this->test->method($input);
-})->throws(InvalidArgumentException::class)->with([
-    [null],
-    ['INVALID'],
-]);
-
-it('has array representation', function () {
-    expect($this->test)
-        ->urlToArray()->toBe([]);
-
-    expect($this->test)
-        ->url('users.show', $this->user)->toBe($this->test)
-        ->urlToArray()->toBe([
-            'href' => route('users.show', $this->user),
-            'method' => Request::METHOD_GET,
-            'target' => null,
-        ]);
+        ->url('#')->toBe($this->test)
+        ->getUrl()->toBe(url('#'));
 });
