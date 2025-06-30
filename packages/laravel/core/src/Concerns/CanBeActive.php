@@ -8,18 +8,15 @@ trait CanBeActive
 {
     /**
      * Whether the instance is active.
-     *
-     * @var bool
      */
-    protected $active = false;
+    protected bool $active = false;
 
     /**
      * Set the instance to active.
      *
-     * @param  bool  $value
      * @return $this
      */
-    public function active($value = true)
+    public function active(bool $value = true): static
     {
         $this->active = $value;
 
@@ -31,27 +28,23 @@ trait CanBeActive
      *
      * @return $this
      */
-    public function notActive()
+    public function notActive(bool $value = true): static
     {
-        return $this->active(false);
+        return $this->active(! $value);
     }
 
     /**
      * Determine if the instance is active.
-     *
-     * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active;
     }
 
     /**
      * Determine if the instance is not active.
-     *
-     * @return bool
      */
-    public function isNotActive()
+    public function isNotActive(): bool
     {
         return ! $this->isActive();
     }

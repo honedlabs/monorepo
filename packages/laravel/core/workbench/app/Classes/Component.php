@@ -20,7 +20,6 @@ use Workbench\App\Pipes\SetName;
 
 class Component extends Primitive implements HooksIntoLifecycle
 {
-    use CanDeferLoading;
     use CanQuery;
     use HasLifecycleHooks;
     use HasMeta;

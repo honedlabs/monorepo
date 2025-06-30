@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Closure;
+
 trait Allowable
 {
     /**
@@ -11,7 +13,7 @@ trait Allowable
      *
      * @var (\Closure(...mixed):bool)|bool
      */
-    protected $allow = true;
+    protected Closure|bool $allow = true;
 
     /**
      * Set the allow condition.
@@ -19,7 +21,7 @@ trait Allowable
      * @param  (\Closure(...mixed):bool)|bool  $value
      * @return $this
      */
-    public function allow($value)
+    public function allow(Closure|bool $value): static
     {
         $this->allow = $value;
 
@@ -31,7 +33,7 @@ trait Allowable
      *
      * @return (\Closure(...mixed):bool)|bool
      */
-    public function allowCallback()
+    public function allowCallback(): Closure|bool
     {
         return $this->allow;
     }
@@ -41,9 +43,8 @@ trait Allowable
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<class-string,mixed>  $typed
-     * @return bool
      */
-    public function isAllowed($parameters = [], $typed = [])
+    public function isAllowed(array $parameters = [], array $typed = []): bool
     {
         return (bool) $this->evaluate($this->allowCallback(), $parameters, $typed);
     }

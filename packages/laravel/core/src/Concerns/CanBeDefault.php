@@ -8,18 +8,15 @@ trait CanBeDefault
 {
     /**
      * Whether the instance is the default.
-     *
-     * @var bool
      */
-    protected $default = false;
+    protected bool $default = false;
 
     /**
      * Set the instance to the default.
      *
-     * @param  bool  $value
      * @return $this
      */
-    public function default($value = true)
+    public function default(bool $value = true): static
     {
         $this->default = $value;
 
@@ -31,27 +28,23 @@ trait CanBeDefault
      *
      * @return $this
      */
-    public function notDefault()
+    public function notDefault(bool $value = true): static
     {
-        return $this->default(false);
+        return $this->default(! $value);
     }
 
     /**
      * Determine if the instance is the default.
-     *
-     * @return bool
      */
-    public function isDefault()
+    public function isDefault(): bool
     {
         return $this->default;
     }
 
     /**
      * Determine if the instance is not the default.
-     *
-     * @return bool
      */
-    public function isNotDefault()
+    public function isNotDefault(): bool
     {
         return ! $this->isDefault();
     }
