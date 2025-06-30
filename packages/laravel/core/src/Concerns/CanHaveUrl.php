@@ -7,7 +7,6 @@ namespace Honed\Core\Concerns;
 use Closure;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Request;
 
 use function is_string;
 
@@ -19,16 +18,6 @@ trait CanHaveUrl
      * @var string|\Closure(...mixed):string|null
      */
     protected string|Closure|null $url = null;
-
-    /**
-     * The method for visiting the URL.
-     */
-    protected string $method = Request::METHOD_GET;
-
-    /**
-     * The target for the URL
-     */
-    protected ?string $target = null;
 
     /**
      * Set the url to visit.
