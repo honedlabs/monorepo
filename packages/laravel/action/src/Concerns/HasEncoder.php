@@ -27,7 +27,7 @@ trait HasEncoder
     /**
      * Set the encoder.
      *
-     * @param  (Closure(mixed):string)|null  $encoder
+     * @param  (Closure(string):string)|null  $encoder
      * @return void
      */
     public static function encoder($encoder = null)
@@ -38,7 +38,7 @@ trait HasEncoder
     /**
      * Set the decoder.
      *
-     * @param  (Closure(string):mixed)|null  $decoder
+     * @param  (Closure(string):string)|null  $decoder
      * @return void
      */
     public static function decoder($decoder = null)
@@ -49,7 +49,7 @@ trait HasEncoder
     /**
      * Encode a value using the encoder.
      *
-     * @param  mixed  $value
+     * @param  string  $value
      * @return string
      */
     public static function encode($value)
@@ -63,7 +63,7 @@ trait HasEncoder
      * Decode a value using the decoder.
      *
      * @param  string  $value
-     * @return mixed
+     * @return string
      */
     public static function decode($value)
     {

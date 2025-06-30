@@ -10,7 +10,7 @@ use Honed\Action\Commands\AssemblerMakeCommand;
 use Honed\Action\Commands\BatchMakeCommand;
 use Honed\Action\Commands\OperationMakeCommand;
 use Honed\Action\Commands\ProcessMakeCommand;
-use Honed\Action\Http\Controllers\ActionController;
+use Honed\Action\Http\Controllers\BatchController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
@@ -78,7 +78,7 @@ class ActionServiceProvider extends ServiceProvider
 
             $endpoint = Batch::getDefaultEndpoint();
 
-            $this->any($endpoint.'/{batch}/{operation}', ActionController::class)
+            $this->any($endpoint.'/{batch}/{operation}', BatchController::class)
                 ->name('batches')
                 ->scopeBindings();
         });

@@ -33,6 +33,7 @@ class UserBatch extends Batch
                     ->url('users.show', '{user}'),
 
                 InlineOperation::make('update-name')
+                    ->method('post')
                     ->action(fn ($record) => $record->update(['name' => 'test'])),
 
                 InlineOperation::make('update.description')

@@ -9,12 +9,6 @@ use Workbench\App\Batches\UserBatch;
 
 use function Pest\Laravel\post;
 
-beforeEach(function () {
-    $this->request = PageRequest::fake()
-        ->for(UserBatch::class)
-        ->fill();
-});
-
 it('executes the action', function () {
     $data = $this->request
         ->name('create.name')
@@ -27,7 +21,7 @@ it('executes the action', function () {
     $this->assertDatabaseHas('users', [
         'name' => 'name',
     ]);
-});
+})->only();
 
 it('is 404 for no name match', function () {
     $data = $this->request

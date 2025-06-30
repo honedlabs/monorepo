@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
@@ -60,15 +61,22 @@ abstract class Handler
     /**
      * Handle the incoming request using the operations from the source, and the resource provided.
      *
-     * @return Responsable|Response
-     *
+     * @throws MethodNotAllowedHttpException
+     * @throws NotFoundHttpException
      * @throws AccessDeniedHttpException
      * @throws TooManyRequestsHttpException
      */
-    public function handle(Operation $operation, Request $request): mixed
+    public function handle(Operation $operation, Request $request): Responsable|Response
     {
+        if (! $request->isMethod($operation->getMethod())) {
+            throw new MethodNotAllowedHttpException(
+                [$operation->getMethod()],
+                "The {$request->getMethod()} method is not supported for this action."
+            );
+        }
+        
         $this->prepare($operation, $request);
-
+        
         if ($this->isForbidden($operation)) {
             throw new AccessDeniedHttpException(
                 'You are not allowed to perform this action.'
@@ -106,7 +114,7 @@ abstract class Handler
 
         if (RateLimiter::tooManyAttempts($key, $attempts)) {
             throw new TooManyRequestsHttpException(
-                message: 'You have made too many requests. Please try again later.'
+                message: 'You have made too many requests for this action. Please try again later.'
             );
         }
 
@@ -124,7 +132,9 @@ abstract class Handler
             return $this->evaluate($operation->getHandler(), $this->named, $this->typed);
         }
 
-        return Redirect::to($operation->getUrl($this->named, $this->typed));
+        $url = $operation->getUrl($this->named, $this->typed);
+
+        return $url ? redirect($url) : back();
     }
 
     /**
@@ -137,7 +147,7 @@ abstract class Handler
             $operation->isBulk() => $this->prepareForBulkOperation($operation, $request),
             default => null,
         };
-
+        
         $this->parameterise($resource);
     }
 
@@ -164,9 +174,7 @@ abstract class Handler
     {
         /** @var array<string, mixed>|Model|null */
         return $this->instance->evaluate(
-            fn ($builder) => $builder
-                ->where('id', $id)
-                ->first()
+            fn (Builder $builder) => $builder->firstWhere($this->getKey(), $id)
         );
     }
 

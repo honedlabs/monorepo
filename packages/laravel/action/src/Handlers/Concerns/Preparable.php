@@ -93,6 +93,4 @@ trait Preparable
             'except' => ['required', 'array', Rule::each('regex:/^[\w-]*$/')],
         ])->safe();
     }
-
-
 }

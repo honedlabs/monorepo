@@ -155,12 +155,11 @@ class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
         return [
             'name' => $this->getName(),
             'label' => $this->getLabel(),
-            'type' => $this->type(),
             'icon' => $this->getIcon(),
-            'action' => $this->hasAction(),
             'confirm' => $this->getConfirm()?->toArray(),
-            'route' => $this->urlToArray(),
+            'action' => $this->hasAction(),
             'inertia' => $this->isInertia() ?: null,
+            ...$this->urlToArray(),
         ];
     }
 
