@@ -12,10 +12,8 @@ final class CoreServiceProvider extends ServiceProvider
 {
     /**
      * Register the bindings.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->scoped(
             ScopedPrimitiveManager::class,
@@ -28,10 +26,8 @@ final class CoreServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
@@ -44,10 +40,8 @@ final class CoreServiceProvider extends ServiceProvider
 
     /**
      * Register the publishing for the package.
-     *
-     * @return void
      */
-    public function offerPublishing()
+    public function offerPublishing(): void
     {
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Closure;
 use Illuminate\Support\Str;
 
 use function is_string;
@@ -15,15 +16,12 @@ trait HasLabel
      *
      * @var string|(\Closure(...mixed):string)|null
      */
-    protected $label;
+    protected string|Closure|null $label = null;
 
     /**
      * Convert a string to the label format.
-     *
-     * @param  string|null  $name
-     * @return string|null
      */
-    public static function makeLabel($name)
+    public static function makeLabel(?string $name): ?string
     {
         if (! is_string($name)) {
             return null;
@@ -43,7 +41,7 @@ trait HasLabel
      * @param  string|(\Closure(...mixed):string)|null  $label
      * @return $this
      */
-    public function label($label)
+    public function label(string|Closure|null $label): static
     {
         $this->label = $label;
 
@@ -52,20 +50,16 @@ trait HasLabel
 
     /**
      * Get the label.
-     *
-     * @return string|null
      */
-    public function getLabel()
+    public function getLabel(): ?string
     {
         return $this->evaluate($this->label);
     }
 
     /**
      * Determine if a label is set.
-     *
-     * @return bool
      */
-    public function hasLabel()
+    public function hasLabel(): bool
     {
         return isset($this->label);
     }

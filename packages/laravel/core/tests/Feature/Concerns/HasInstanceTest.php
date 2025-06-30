@@ -6,7 +6,8 @@ use Honed\Core\Concerns\HasInstance;
 use Workbench\App\Classes\Component;
 
 beforeEach(function () {
-    $this->test = new class() {
+    $this->test = new class()
+    {
         use HasInstance;
     };
 

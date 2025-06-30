@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Closure;
+
 trait HasMeta
 {
     /**
@@ -11,7 +13,7 @@ trait HasMeta
      *
      * @var array<string,mixed>|(\Closure(...mixed):array<string,mixed>)
      */
-    protected $meta = [];
+    protected array|Closure $meta = [];
 
     /**
      * Set the meta data.
@@ -19,7 +21,7 @@ trait HasMeta
      * @param  array<string,mixed>|(\Closure(...mixed):array<string,mixed>)  $meta
      * @return $this
      */
-    public function meta($meta)
+    public function meta(array|Closure $meta): static
     {
         $this->meta = $meta;
 
@@ -31,7 +33,7 @@ trait HasMeta
      *
      * @return array<string,mixed>
      */
-    public function getMeta()
+    public function getMeta(): array
     {
         return $this->evaluate($this->meta);
     }

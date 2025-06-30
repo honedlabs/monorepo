@@ -16,10 +16,9 @@ trait HasName
     /**
      * Set the name.
      *
-     * @param  string  $name
      * @return $this
      */
-    public function name($name)
+    public function name(string $name): static
     {
         $this->name = $name;
 
@@ -28,10 +27,8 @@ trait HasName
 
     /**
      * Get the name.
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }

@@ -40,7 +40,7 @@ trait Evaluable
      *
      * @throws BindingResolutionException
      */
-    public function evaluate($value, $named = [], $typed = [])
+    public function evaluate(mixed $value, array $named = [], array $typed = []): mixed
     {
         if (is_object($value) && method_exists($value, '__invoke')) {
             $value = $value->__invoke(...); // @phpstan-ignore-line
@@ -63,12 +63,10 @@ trait Evaluable
     /**
      * Resolve a closure dependency for evaluation.
      *
-     * @param  ReflectionParameter  $parameter
      * @param  array<string,mixed>  $named
      * @param  array<string,mixed>  $typed
-     * @return mixed
      */
-    protected function resolveClosureDependencyForEvaluation($parameter, $named = [], $typed = [])
+    protected function resolveClosureDependencyForEvaluation(ReflectionParameter $parameter, array $named = [], array $typed = []): mixed
     {
         $parameterName = $parameter->getName();
 
@@ -129,11 +127,8 @@ trait Evaluable
 
     /**
      * Retrieve the typed reflection parameter class name.
-     *
-     * @param  ReflectionParameter  $parameter
-     * @return string|null
      */
-    protected function getTypedReflectionParameterClassName($parameter)
+    protected function getTypedReflectionParameterClassName(ReflectionParameter $parameter): ?string
     {
         $type = $parameter->getType();
 
@@ -167,10 +162,9 @@ trait Evaluable
     /**
      * Provide a selection of default dependencies for evaluation by name.
      *
-     * @param  string  $parameterName
      * @return array<int,mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         return [];
     }
@@ -178,10 +172,9 @@ trait Evaluable
     /**
      * Provide a selection of default dependencies for evaluation by type.
      *
-     * @param  string  $parameterType
      * @return array<int,mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
         return [App::make($parameterType)];
     }

@@ -9,46 +9,48 @@ use Closure;
 interface HooksIntoLifecycle
 {
     /**
-     * Set a callback to be called after the pipeline has finished.
-     *
-     * @param  (Closure(mixed...):mixed|void)|null  $callback
-     * @return $this
-     */
-    public function after($callback);
-
-    /**
-     * Get the callback to be called after the pipeline has finished.
-     *
-     * @return (Closure(mixed...):mixed|void)|null
-     */
-    public function afterCallback();
-
-    /**
-     * Call the after callback.
-     *
-     * @return mixed
-     */
-    public function callAfter();
-
-    /**
      * Set a callback to be called before the pipeline has begun.
      *
-     * @param  (Closure(mixed...):mixed|void)|null  $callback
+     * @param  (Closure(mixed...):mixed)|null  $callback
      * @return $this
      */
-    public function before($callback);
+    public function before(?Closure $callback): static;
 
     /**
      * Get the callback to be called before the pipeline has begun.
      *
-     * @return (Closure(mixed...):mixed|void)|null
+     * @return (Closure(mixed...):mixed)|null
      */
-    public function beforeCallback();
+    public function beforeCallback(): ?Closure;
 
     /**
      * Call the before callback.
      *
-     * @return mixed
+     * @param  array<string, mixed>  $named
+     * @param  array<class-string, mixed>  $typed
      */
-    public function callBefore();
+    public function callBefore(array $named = [], array $typed = []): mixed;
+
+    /**
+     * Set a callback to be called after the pipeline has finished.
+     *
+     * @param  (Closure(mixed...):mixed)|null  $callback
+     * @return $this
+     */
+    public function after(?Closure $callback): static;
+
+    /**
+     * Get the callback to be called after the pipeline has finished.
+     *
+     * @return (Closure(mixed...):mixed)|null
+     */
+    public function afterCallback(): ?Closure;
+
+    /**
+     * Call the after callback.
+     *
+     * @param  array<string, mixed>  $named
+     * @param  array<class-string, mixed>  $typed
+     */
+    public function callAfter(array $named = [], array $typed = []): mixed;
 }

@@ -10,24 +10,22 @@ trait HasPipeline
 {
     /**
      * Whether the pipeline has been completed.
-     *
-     * @var bool
      */
-    protected $complete = false;
+    protected bool $complete = false;
 
     /**
      * Get the pipes to be used.
      *
      * @return array<int,class-string<\Honed\Core\Pipe>>
      */
-    abstract protected function pipes();
+    abstract protected function pipes(): array;
 
     /**
      * Build the pipeline and return the instance.
      *
      * @return $this
      */
-    public function build()
+    public function build(): static
     {
         if ($this->isCompleted()) {
             return $this;
@@ -45,10 +43,9 @@ trait HasPipeline
     /**
      * Set the pipeline completion status.
      *
-     * @param  bool  $value
      * @return $this
      */
-    public function complete($value = true)
+    public function complete(bool $value = true): static
     {
         $this->complete = $value;
 
@@ -58,30 +55,25 @@ trait HasPipeline
     /**
      * Set the pipeline completion status to be incomplete.
      *
-     * @param  bool  $value
      * @return $this
      */
-    public function notComplete($value = true)
+    public function notComplete(bool $value = true): static
     {
         return $this->complete(! $value);
     }
 
     /**
      * Determine if the pipeline has been completed.
-     *
-     * @return bool
      */
-    public function isCompleted()
+    public function isCompleted(): bool
     {
         return $this->complete;
     }
 
     /**
      * Determine if the pipeline has not been completed.
-     *
-     * @return bool
      */
-    public function isNotCompleted()
+    public function isNotCompleted(): bool
     {
         return ! $this->isCompleted();
     }

@@ -11,18 +11,13 @@ trait HasValue
 {
     /**
      * The value of the instance.
-     *
-     * @var mixed
      */
-    protected $value;
+    protected mixed $value = null;
 
     /**
      * Set the value of the instance.
-     *
-     * @param  mixed  $value
-     * @return $this
      */
-    public function value($value)
+    public function value(mixed $value): static
     {
         $this->value = $value;
 
@@ -31,31 +26,24 @@ trait HasValue
 
     /**
      * Get the value of the instance.
-     *
-     * @return mixed
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
     /**
      * Get the normalized value of the instance.
-     *
-     * @return mixed
      */
-    public function getNormalizedValue()
+    public function getNormalizedValue(): mixed
     {
         return $this->normalizeValue($this->getValue());
     }
 
     /**
      * Normalize the value of the instance.
-     *
-     * @param  mixed  $value
-     * @return mixed
      */
-    public function normalizeValue($value)
+    public function normalizeValue(mixed $value): mixed
     {
         return match (true) {
             $value instanceof Arrayable => $value->toArray(),

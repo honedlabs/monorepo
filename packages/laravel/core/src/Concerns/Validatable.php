@@ -11,17 +11,17 @@ trait Validatable
     /**
      * The validation function.
      *
-     * @var Closure(mixed):bool
+     * @var (Closure(mixed):bool)|bool|null
      */
-    protected $validator;
+    protected Closure|bool|null $validator = null;
 
     /**
      * Set the validation function.
      *
-     * @param  Closure(mixed):bool  $validator
+     * @param  (Closure(mixed):bool)|bool|null  $validator
      * @return $this
      */
-    public function validator($validator)
+    public function validator(Closure|bool|null $validator): static
     {
         $this->validator = $validator;
 
@@ -31,24 +31,21 @@ trait Validatable
     /**
      * Get the validation function.
      *
-     * @return Closure(mixed):bool|bool|null
+     * @return (Closure(mixed):bool)|bool|null
      */
-    public function getValidator()
+    public function getValidator(): Closure|bool|null
     {
         return $this->validator;
     }
 
     /**
      * Determine if the argument passes the validation function.
-     *
-     * @param  mixed  $value  The value to validate.
-     * @return bool
      */
-    public function validate($value)
+    public function validate(mixed $value): bool
     {
         $validator = $this->getValidator();
 
-        if (! $validator) {
+        if ($validator === null) {
             return true;
         }
 
@@ -57,11 +54,8 @@ trait Validatable
 
     /**
      * Determine if the argument passes the validation function.
-     *
-     * @param  mixed  $value  The value to validate.
-     * @return bool
      */
-    public function isValid($value)
+    public function isValid(mixed $value): bool
     {
         return $this->validate($value);
     }

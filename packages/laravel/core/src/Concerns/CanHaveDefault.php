@@ -8,18 +8,15 @@ trait CanHaveDefault
 {
     /**
      * The default value to use if one is not provided.
-     *
-     * @var mixed
      */
-    protected $default;
+    protected mixed $default = null;
 
     /**
      * Set a default value to use if one is not provided.
      *
-     * @param  mixed  $default
      * @return $this
      */
-    public function default($default)
+    public function default(mixed $default): static
     {
         $this->default = $default;
 
@@ -28,20 +25,16 @@ trait CanHaveDefault
 
     /**
      * Get the default value to use if one is not provided.
-     *
-     * @return mixed
      */
-    public function getDefault()
+    public function getDefault(): mixed
     {
         return $this->default;
     }
 
     /**
      * Check if the instance has a default value.
-     *
-     * @return bool
      */
-    public function hasDefault()
+    public function hasDefault(): bool
     {
         return isset($this->default);
     }

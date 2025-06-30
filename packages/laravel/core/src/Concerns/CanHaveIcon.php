@@ -13,15 +13,14 @@ trait CanHaveIcon
      *
      * @var string|(\Closure(...mixed):string)|null
      */
-    protected $icon;
+    protected string|BackedEnum|null $icon = null;
 
     /**
      * Set the icon.
      *
-     * @param  string|BackedEnum|null  $icon
      * @return $this
      */
-    public function icon($icon)
+    public function icon(string|BackedEnum|null $icon): static
     {
         $this->icon = $icon;
 
@@ -30,20 +29,16 @@ trait CanHaveIcon
 
     /**
      * Get the icon.
-     *
-     * @return string|null
      */
-    public function getIcon()
+    public function getIcon(): ?string
     {
         return $this->evaluate($this->icon);
     }
 
     /**
      * Determine if an icon is set.
-     *
-     * @return bool
      */
-    public function hasIcon()
+    public function hasIcon(): bool
     {
         return isset($this->icon);
     }

@@ -10,10 +10,8 @@ trait HasRequest
 {
     /**
      * The request instance.
-     *
-     * @var Request
      */
-    protected $request;
+    protected Request $request;
 
     /**
      * Set the request instance.

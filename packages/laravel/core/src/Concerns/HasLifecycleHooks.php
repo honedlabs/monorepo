@@ -16,49 +16,14 @@ trait HasLifecycleHooks
      *
      * @var (Closure(mixed...):mixed|void)|null
      */
-    protected $before;
+    protected ?Closure $before = null;
 
     /**
      * The callback to be called after the pipeline has finished.
      *
      * @var (Closure(mixed...):mixed|void)|null
      */
-    protected $after;
-
-    /**
-     * Set a callback to be called after the pipeline has finished.
-     *
-     * @param  (Closure(mixed...):mixed|void)|null  $callback
-     * @return $this
-     */
-    public function after($callback)
-    {
-        $this->after = $callback;
-
-        return $this;
-    }
-
-    /**
-     * Get the callback to be called after the pipeline has finished.
-     *
-     * @return (Closure(mixed...):mixed|void)|null
-     */
-    public function afterCallback()
-    {
-        return $this->after;
-    }
-
-    /**
-     * Call the after callback.
-     *
-     * @param  array<string, mixed>  $named
-     * @param  array<class-string, mixed>  $typed
-     * @return mixed
-     */
-    public function callAfter($named = [], $typed = [])
-    {
-        return $this->evaluate($this->afterCallback(), $named, $typed);
-    }
+    protected ?Closure $after = null;
 
     /**
      * Set a callback to be called before the pipeline has begun.
@@ -66,7 +31,7 @@ trait HasLifecycleHooks
      * @param  (Closure(mixed...):mixed|void)|null  $callback
      * @return $this
      */
-    public function before($callback)
+    public function before(?Closure $callback): static
     {
         $this->before = $callback;
 
@@ -78,7 +43,7 @@ trait HasLifecycleHooks
      *
      * @return (Closure(mixed...):mixed|void)|null
      */
-    public function beforeCallback()
+    public function beforeCallback(): ?Closure
     {
         return $this->before;
     }
@@ -88,10 +53,43 @@ trait HasLifecycleHooks
      *
      * @param  array<string, mixed>  $named
      * @param  array<class-string, mixed>  $typed
-     * @return mixed
      */
-    public function callBefore($named = [], $typed = [])
+    public function callBefore(array $named = [], array $typed = []): mixed
     {
         return $this->evaluate($this->beforeCallback(), $named, $typed);
+    }
+
+    /**
+     * Set a callback to be called after the pipeline has finished.
+     *
+     * @param  (Closure(mixed...):mixed|void)|null  $callback
+     * @return $this
+     */
+    public function after(?Closure $callback): static
+    {
+        $this->after = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Get the callback to be called after the pipeline has finished.
+     *
+     * @return (Closure(mixed...):mixed|void)|null
+     */
+    public function afterCallback(): ?Closure
+    {
+        return $this->after;
+    }
+
+    /**
+     * Call the after callback.
+     *
+     * @param  array<string, mixed>  $named
+     * @param  array<class-string, mixed>  $typed
+     */
+    public function callAfter(array $named = [], array $typed = []): mixed
+    {
+        return $this->evaluate($this->afterCallback(), $named, $typed);
     }
 }

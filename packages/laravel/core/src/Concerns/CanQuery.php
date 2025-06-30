@@ -18,7 +18,7 @@ trait CanQuery
      *
      * @var (\Closure(TBuilder, ...mixed):mixed|void)|null
      */
-    protected $query;
+    protected ?Closure $query = null;
 
     /**
      * Set a callback to modify the Eloquent builder.
@@ -26,7 +26,7 @@ trait CanQuery
      * @param  (\Closure(TBuilder, ...mixed):mixed|void)|null  $callback
      * @return $this
      */
-    public function query($callback)
+    public function query(?Closure $callback): static
     {
         $this->query = $callback;
 
@@ -38,7 +38,7 @@ trait CanQuery
      *
      * @return (\Closure(TBuilder, ...mixed):mixed|void)|null
      */
-    public function queryCallback()
+    public function queryCallback(): ?Closure
     {
         return $this->query;
     }
@@ -48,9 +48,8 @@ trait CanQuery
      *
      * @param  array<string, mixed>  $named
      * @param  array<class-string, mixed>  $typed
-     * @return mixed
      */
-    public function callQuery($named = [], $typed = [])
+    public function callQuery(array $named = [], array $typed = []): mixed
     {
         return $this->evaluate($this->queryCallback(), $named, $typed);
     }

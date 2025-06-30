@@ -14,10 +14,8 @@ trait Configurable
 {
     /**
      * Provide the instance with any necessary setup.
-     *
-     * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (method_exists($this, 'definition')) {
             $this->definition($this);
@@ -26,11 +24,8 @@ trait Configurable
 
     /**
      * Set the configuration for the instance.
-     *
-     * @param  Closure  $configuration
-     * @return void
      */
-    public static function configureUsing($configuration)
+    public static function configureUsing(Closure $configuration): void
     {
         PrimitiveManager::resolve()->configureUsing(
             static::class,
@@ -40,10 +35,8 @@ trait Configurable
 
     /**
      * Configure the instance.
-     *
-     * @return void
      */
-    protected function configure()
+    protected function configure(): void
     {
         PrimitiveManager::resolve()->configure(
             $this,

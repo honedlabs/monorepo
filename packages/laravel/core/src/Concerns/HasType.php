@@ -8,18 +8,15 @@ trait HasType
 {
     /**
      * The type for the instance.
-     *
-     * @var string|null
      */
-    protected $type;
+    protected ?string $type = null;
 
     /**
      * Set the type.
      *
-     * @param  string|null  $type
      * @return $this
      */
-    public function type($type)
+    public function type(?string $type): static
     {
         $this->type = $type;
 
@@ -28,10 +25,8 @@ trait HasType
 
     /**
      * Get the type.
-     *
-     * @return string|null
      */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }

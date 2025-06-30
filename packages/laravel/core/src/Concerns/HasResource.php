@@ -23,7 +23,7 @@ trait HasResource
      *
      * @var TBuilder|array<int, array<string, mixed>>|null
      */
-    protected $resource;
+    protected Builder|array|null $resource = null;
 
     /**
      * Set the resource to be used.
@@ -33,7 +33,7 @@ trait HasResource
      *
      * @throws InvalidResourceException
      */
-    public function resource($resource)
+    public function resource(mixed $resource): static
     {
         $this->resource = $this->resolveResource($resource);
 
@@ -46,7 +46,7 @@ trait HasResource
      * @param  TModel|array<int, array<string, mixed>>|Arrayable<int, mixed>|TBuilder|class-string<TModel>  $resource
      * @return $this
      */
-    public function for($resource)
+    public function for(mixed $resource): static
     {
         return $this->resource($resource);
     }
@@ -58,7 +58,7 @@ trait HasResource
      *
      * @throws InvalidArgumentException
      */
-    public function getBuilder()
+    public function getBuilder(): Builder
     {
         if ($this->resource && $this->resource instanceof Builder) {
             return $this->resource;
@@ -74,7 +74,7 @@ trait HasResource
      *
      * @throws InvalidArgumentException
      */
-    public function getModel()
+    public function getModel(): Model
     {
         return $this->getBuilder()->getModel();
     }
@@ -84,7 +84,7 @@ trait HasResource
      *
      * @return TBuilder|array<int, array<string, mixed>>|null
      */
-    public function getResource()
+    public function getResource(): Builder|array|null
     {
         return $this->resource;
     }
@@ -97,7 +97,7 @@ trait HasResource
      *
      * @throws InvalidArgumentException
      */
-    protected function resolveResource($resource)
+    protected function resolveResource(mixed $resource): Builder|array|null
     {
         return match (true) {
             $resource instanceof Builder => $resource,
@@ -114,11 +114,9 @@ trait HasResource
     /**
      * Throw an invalid resource exception.
      *
-     * @return never
-     *
      * @throws InvalidArgumentException
      */
-    protected function throwMissingResource()
+    protected function throwMissingResource(): never
     {
         throw new InvalidArgumentException(
             'No resource has been set for ['.get_class($this).'].'

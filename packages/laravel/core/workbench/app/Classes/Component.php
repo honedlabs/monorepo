@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Workbench\App\Classes;
 
-use Honed\Core\Concerns\CanDeferLoading;
 use Honed\Core\Concerns\CanQuery;
 use Honed\Core\Concerns\HasLifecycleHooks;
 use Honed\Core\Concerns\HasMeta;
@@ -75,7 +74,7 @@ class Component extends Primitive implements HooksIntoLifecycle
      *
      * @return array<int,class-string<\Honed\Core\Pipe<$this>>>
      */
-    protected function pipes()
+    protected function pipes(): array
     {
         return [
             CallsBefore::class,
@@ -87,10 +86,9 @@ class Component extends Primitive implements HooksIntoLifecycle
     /**
      * Provide a selection of default dependencies for evaluation by name.
      *
-     * @param  string  $parameterName
      * @return array<int,mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         return match ($parameterName) {
             'user' => [User::query()->first()],
@@ -101,10 +99,9 @@ class Component extends Primitive implements HooksIntoLifecycle
     /**
      * Provide a selection of default dependencies for evaluation by type.
      *
-     * @param  string  $parameterType
      * @return array<int,mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
         return match ($parameterType) {
             User::class => [User::query()->first()],

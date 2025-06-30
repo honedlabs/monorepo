@@ -15,7 +15,7 @@ trait Transformable
      *
      * @var Closure(mixed):mixed|null
      */
-    protected $transformer = null;
+    protected ?Closure $transformer = null;
 
     /**
      * Set the transformer function.
@@ -23,7 +23,7 @@ trait Transformable
      * @param  Closure(mixed):mixed  $transformer
      * @return $this
      */
-    public function transformer($transformer)
+    public function transformer(?Closure $transformer): static
     {
         $this->transformer = $transformer;
 
@@ -35,28 +35,23 @@ trait Transformable
      *
      * @return Closure(mixed):mixed|null
      */
-    public function getTransformer()
+    public function getTransformer(): ?Closure
     {
         return $this->transformer;
     }
 
     /**
      * Determine if a transformer function is set.
-     *
-     * @return bool
      */
-    public function transforms()
+    public function transforms(): bool
     {
         return isset($this->transformer);
     }
 
     /**
      * Transform the argument using the transformer function.
-     *
-     * @param  mixed  $value
-     * @return mixed
      */
-    public function transform($value)
+    public function transform(mixed $value): mixed
     {
         $transformer = $this->getTransformer();
 

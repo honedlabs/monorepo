@@ -4,22 +4,24 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Illuminate\Database\Eloquent\Model;
+
 trait HasRecord
 {
     /**
      * The record to be used to generate a state.
      *
-     * @var array<string, mixed>|\Illuminate\Database\Eloquent\Model|null
+     * @var array<string, mixed>|Model|null
      */
-    protected $record = null;
+    protected array|Model|null $record = null;
 
     /**
      * Set the record to be used to generate a state.
      *
-     * @param  array<string, mixed>|\Illuminate\Database\Eloquent\Model|null  $record
+     * @param  array<string, mixed>|Model|null  $record
      * @return $this
      */
-    public function record($record)
+    public function record(array|Model|null $record): static
     {
         $this->record = $record;
 
@@ -29,9 +31,9 @@ trait HasRecord
     /**
      * Get the record to be used to generate a state.
      *
-     * @return array<string, mixed>|\Illuminate\Database\Eloquent\Model|null
+     * @return array<string, mixed>|Model|null
      */
-    public function getRecord()
+    public function getRecord(): array|Model|null
     {
         return $this->record;
     }

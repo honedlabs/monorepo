@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Closure;
+
 trait CanHaveExtra
 {
     /**
@@ -11,7 +13,7 @@ trait CanHaveExtra
      *
      * @var array<string,mixed>|(\Closure(...mixed):array<string,mixed>)|null
      */
-    protected $extra;
+    protected array|Closure|null $extra = null;
 
     /**
      * Set the extra data.
@@ -19,7 +21,7 @@ trait CanHaveExtra
      * @param  array<string,mixed>|(\Closure(...mixed):array<string,mixed>)|null  $extra
      * @return $this
      */
-    public function extra($extra)
+    public function extra(array|Closure|null $extra): static
     {
         $this->extra = $extra;
 
@@ -29,19 +31,17 @@ trait CanHaveExtra
     /**
      * Get the extra data.
      *
-     * @return array<string,mixed>
+     * @return array<string,mixed>|null
      */
-    public function getExtra()
+    public function getExtra(): ?array
     {
         return $this->evaluate($this->extra);
     }
 
     /**
      * Determine if extra data is set.
-     *
-     * @return bool
      */
-    public function hasExtra()
+    public function hasExtra(): bool
     {
         return isset($this->extra);
     }

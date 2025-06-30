@@ -10,10 +10,8 @@ trait HasContainer
 {
     /**
      * The container instance.
-     *
-     * @var Container
      */
-    protected $container;
+    protected Container $container;
 
     /**
      * Set the request instance.

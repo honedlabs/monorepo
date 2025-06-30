@@ -12,18 +12,15 @@ trait CanScope
 
     /**
      * The scope to use.
-     *
-     * @var string|null
      */
-    protected $scope;
+    protected ?string $scope = null;
 
     /**
      * Set the scope.
      *
-     * @param  string|null  $scope
      * @return $this
      */
-    public function scope($scope)
+    public function scope(?string $scope): static
     {
         $this->scope = $scope;
 
@@ -35,28 +32,23 @@ trait CanScope
      *
      * @return $this
      */
-    public function dontScope()
+    public function dontScope(): static
     {
         return $this->scope(null);
     }
 
     /**
      * Get the scope.
-     *
-     * @return string|null
      */
-    public function getScope()
+    public function getScope(): ?string
     {
         return $this->scope;
     }
 
     /**
      * Format a value using the scope.
-     *
-     * @param  string  $value
-     * @return string
      */
-    public function scoped($value)
+    public function scoped(string $value): string
     {
         $scope = $this->getScope();
 
@@ -65,11 +57,8 @@ trait CanScope
 
     /**
      * Retrieve a value from a formatted scope.
-     *
-     * @param  string  $value
-     * @return string
      */
-    public function unscoped($value)
+    public function unscoped(string $value): string
     {
         $scope = $this->getScope();
 

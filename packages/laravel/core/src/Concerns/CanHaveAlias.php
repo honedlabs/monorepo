@@ -8,18 +8,15 @@ trait CanHaveAlias
 {
     /**
      * The alias to use to hide the underlying value.
-     *
-     * @var string|null
      */
-    protected $alias;
+    protected ?string $alias = null;
 
     /**
      * Set the alias.
      *
-     * @param  string|null  $alias
      * @return $this
      */
-    public function alias($alias)
+    public function alias(?string $alias): static
     {
         $this->alias = $alias;
 
@@ -31,17 +28,15 @@ trait CanHaveAlias
      *
      * @return $this
      */
-    public function dontAlias()
+    public function dontAlias(): static
     {
         return $this->alias(null);
     }
 
     /**
      * Get the alias.
-     *
-     * @return string|null
      */
-    public function getAlias()
+    public function getAlias(): ?string
     {
         return $this->alias;
     }
