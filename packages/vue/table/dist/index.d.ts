@@ -63,7 +63,7 @@ export declare interface HonedTable<T extends Record<string, any> = Record<strin
     isEmpty: boolean;
     isPageable: boolean;
     isToggleable: boolean;
-    getRecordKey: (record: TableEntry<T>) => Identifier;
+    getRecordKey: (record: TableEntry<T> | TableRecord<T>) => Identifier;
     getEntry: (record: TableEntry<T>, column: Column<T> | string) => {
         v: any;
         e: any;
@@ -103,6 +103,9 @@ export declare interface HonedTable<T extends Record<string, any> = Record<strin
 
 export declare type Identifier = string | number;
 
+/**
+ * Check if a column is of a given type.
+ */
 export declare function is(column: Column | string | null | undefined, type: ColumnType): boolean;
 
 export declare interface LengthAwarePaginate extends SimplePaginate {

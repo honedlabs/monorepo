@@ -99,7 +99,7 @@ export function useTable<
 	const records = computed<TableRecord<K>[]>(() =>
 		table.value.records.map((record) => ({
 			/** The operations available for the record */
-			operations: executables(record.operations),
+			operations: executables(record.operations, getRecordPayload(record)),
 			/** The classes to apply to the record */
 			class: record.class ?? null,
 			/** Perform this operation when the record is clicked */
@@ -134,7 +134,9 @@ export function useTable<
 	/**
 	 * Get the bulk operations.
 	 */
-	const bulk = computed(() => executables(table.value.operations.bulk));
+	const bulk = computed(() =>
+		executables(table.value.operations.bulk, getBulkPayload()),
+	);
 
 	/**
 	 * Get page operations.
@@ -195,7 +197,7 @@ export function useTable<
 	const isPageSelected = computed(
 		() =>
 			table.value.records.length > 0 &&
-			table.value.records.every((record: TableEntry<K>) =>
+			table.value.records.every((record: TableEntry<K> | TableRecord<K>) =>
 				select.selected(getRecordKey(record)),
 			),
 	);
@@ -212,8 +214,11 @@ export function useTable<
 	/**
 	 * Get the identifier of the record.
 	 */
-	function getRecordKey(record: TableEntry<K>) {
-		return getEntry(record, table.value.key)?.v as Identifier;
+	function getRecordKey(record: TableEntry<K> | TableRecord<K>) {
+		if ("value" in record && typeof record.value === "function")
+			return (record as TableRecord<K>).value(table.value.key) as Identifier;
+
+		return getValue(record as TableEntry<K>, table.value.key) as Identifier;
 	}
 
 	/**
@@ -242,6 +247,28 @@ export function useTable<
 	}
 
 	/**
+	 * Get the payload for the record operations.
+	 *
+	 * @internal
+	 */
+	function getRecordPayload(record: TableEntry<K>) {
+		return { record: getRecordKey(record) };
+	}
+
+	/**
+	 * Get the payload for the bulk operations.
+	 *
+	 * @internal
+	 */
+	function getBulkPayload() {
+		return {
+			all: select.selection.value.all,
+			only: Array.from(select.selection.value.only),
+			except: Array.from(select.selection.value.except),
+		};
+	}
+
+	/**
 	 * Execute an operation with common logic
 	 *
 	 * @internal
@@ -262,12 +289,16 @@ export function useTable<
 	 *
 	 * @internal
 	 */
-	function executables<T extends Operations>(operations: T[]): Executable<T>[] {
+	function executables<T extends Operations>(
+		operations: T[],
+		data: OperationDataMap[T["type"]] = {} as OperationDataMap[T["type"]],
+	): Executable<T>[] {
 		return operationExecutables(
 			operations,
 			table.value.endpoint,
 			id.value,
 			visitOptions,
+			data,
 		);
 	}
 
@@ -309,22 +340,14 @@ export function useTable<
 	 * Execute a bulk operation.
 	 */
 	function executeBulk(operation: BulkOperation, options: VisitOptions = {}) {
-		executor(
-			operation,
-			{
-				all: select.selection.value.all,
-				only: Array.from(select.selection.value.only),
-				except: Array.from(select.selection.value.except),
-			},
-			{
-				...options,
-				onSuccess: (page: Page) => {
-					options.onSuccess?.(page);
+		executor(operation, getBulkPayload(), {
+			...options,
+			onSuccess: (page: Page) => {
+				options.onSuccess?.(page);
 
-					if (!operation.keepSelected) select.deselectAll();
-				},
+				if (!operation.keepSelected) select.deselectAll();
 			},
-		);
+		});
 	}
 
 	/**
@@ -469,17 +492,21 @@ export function useTable<
 		/** The current selection of records */
 		selection: select.selection,
 		/** Select the given records */
-		select: (record: TableEntry<K>) => select.select(getRecordKey(record)),
+		select: (record: TableEntry<K> | TableRecord<K>) =>
+			select.select(getRecordKey(record)),
 		/** Deselect the given records */
-		deselect: (record: TableEntry<K>) => select.deselect(getRecordKey(record)),
+		deselect: (record: TableEntry<K> | TableRecord<K>) =>
+			select.deselect(getRecordKey(record)),
 		/** Select records on the current page */
 		selectPage,
 		/** Deselect records on the current page */
 		deselectPage,
 		/** Toggle the selection of the given records */
-		toggle: (record: TableEntry<K>) => select.toggle(getRecordKey(record)),
+		toggle: (record: TableEntry<K> | TableRecord<K>) =>
+			select.toggle(getRecordKey(record)),
 		/** Determine if the given record is selected */
-		selected: (record: TableEntry<K>) => select.selected(getRecordKey(record)),
+		selected: (record: TableEntry<K> | TableRecord<K>) =>
+			select.selected(getRecordKey(record)),
 		/** Select all records */
 		selectAll: select.selectAll,
 		/** Deselect all records */
@@ -489,7 +516,8 @@ export function useTable<
 		/** Determine if any records are selected */
 		hasSelected: select.hasSelected,
 		/** Bind the given record to a checkbox */
-		bindCheckbox: (record: TableEntry<K>) => select.bind(getRecordKey(record)),
+		bindCheckbox: (record: TableEntry<K> | TableRecord<K>) =>
+			select.bind(getRecordKey(record)),
 		/** Bind the select all checkbox to the current page */
 		bindPage,
 		/** Bind select all records to the checkbox */

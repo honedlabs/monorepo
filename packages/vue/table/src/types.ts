@@ -67,7 +67,7 @@ export interface HonedTable<
 	isEmpty: boolean;
 	isPageable: boolean;
 	isToggleable: boolean;
-	getRecordKey: (record: TableEntry<T>) => Identifier;
+	getRecordKey: (record: TableEntry<T> | TableRecord<T>) => Identifier;
 	getEntry: (
 		record: TableEntry<T>,
 		column: Column<T> | string,
