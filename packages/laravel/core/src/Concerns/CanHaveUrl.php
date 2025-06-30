@@ -22,14 +22,17 @@ trait CanHaveUrl
      *
      * @var string|\Closure(...mixed):string|null
      */
-    protected $url;
+    protected string|Closure|null $url = null;
 
     /**
      * The method for visiting the URL.
-     *
-     * @var string
      */
-    protected $method = Request::METHOD_GET;
+    protected string $method = Request::METHOD_GET;
+
+    /**
+     * The target for the URL
+     */
+    protected ?string $target = null;
 
     /**
      * Set the url to visit.
@@ -147,23 +150,54 @@ trait CanHaveUrl
     }
 
     /**
+     * Set the target for the URL.
+     *
+     * @return $this
+     */
+    public function target(?string $target): static
+    {
+        $this->target = $target;
+
+        return $this;
+    }
+
+    /**
+     * Open the URL in a new tab.
+     *
+     * @return $this
+     */
+    public function openUrlInNewTab(): static
+    {
+        return $this->target('_blank');
+    }
+
+    /**
+     * Get the target for the URL.
+     */
+    public function getTarget(): ?string
+    {
+        return $this->target;
+    }
+
+    /**
      * Get the array representation of the route.
      *
      * @param  array<string,mixed>  $parameters
      * @param  array<class-string,mixed>  $typed
-     * @return array{url:string|null,method:string}|null
+     * @return array{href:string|null,method:string,target:string|null}
      */
     public function urlToArray($parameters = [], $typed = [])
     {
         $url = $this->getUrl($parameters, $typed);
 
         if (! $url) {
-            return null;
+            return [];
         }
 
         return [
-            'url' => $url,
+            'href' => $url,
             'method' => $this->getMethod(),
+            'target' => $this->getTarget(),
         ];
     }
 

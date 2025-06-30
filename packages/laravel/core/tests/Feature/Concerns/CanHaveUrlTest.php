@@ -67,6 +67,15 @@ it('sets method', function () {
         ->getMethod()->toBe(Request::METHOD_POST);
 });
 
+it('sets target', function () {
+    expect($this->test)
+        ->getTarget()->toBeNull()
+        ->target('_self')->toBe($this->test)
+        ->getTarget()->toBe('_self')
+        ->openUrlInNewTab()->toBe($this->test)
+        ->getTarget()->toBe('_blank');
+});
+
 it('validates method', function ($input) {
     $this->test->method($input);
 })->throws(InvalidArgumentException::class)->with([
@@ -76,12 +85,13 @@ it('validates method', function ($input) {
 
 it('has array representation', function () {
     expect($this->test)
-        ->urlToArray()->toBeNull();
+        ->urlToArray()->toBe([]);
 
     expect($this->test)
         ->url('users.show', $this->user)->toBe($this->test)
         ->urlToArray()->toBe([
-            'url' => route('users.show', $this->user),
+            'href' => route('users.show', $this->user),
             'method' => Request::METHOD_GET,
+            'target' => null,
         ]);
 });
