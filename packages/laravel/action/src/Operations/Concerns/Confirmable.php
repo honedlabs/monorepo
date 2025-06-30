@@ -20,7 +20,6 @@ trait Confirmable
     /**
      * Set the confirm for the instance.
      *
-     * @param  Confirm|Closure|string|bool  $confirm
      * @param  string|null  $description
      * @return $this
      */

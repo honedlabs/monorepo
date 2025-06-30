@@ -42,7 +42,6 @@ class InlineOperation extends Operation
     /**
      * Provide a selection of default dependencies for evaluation by type.
      *
-     * @param  string  $parameterType
      * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array

@@ -130,7 +130,7 @@ trait CanBeChunked
     /**
      * Execute the inline action on the given record.
      */
-    public function callback(): Closure|null
+    public function callback(): ?Closure
     {
         $handler = $this->getHandler();
 

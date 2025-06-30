@@ -13,23 +13,28 @@ use Honed\Action\Operations\Concerns\HasAction;
 use Honed\Action\Operations\Concerns\IsInertia;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\CanHaveIcon;
+use Honed\Core\Concerns\CanHaveTarget;
 use Honed\Core\Concerns\CanHaveUrl;
 use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasMethod;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Http\Request;
 
 class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
 {
     use Allowable;
     use CanBeRateLimited;
     use CanHaveIcon;
+    use CanHaveTarget;
     use CanHaveUrl;
     use CanRedirect;
     use Confirmable;
     use HasAction;
     use HasLabel;
+    use HasMethod;
     use HasName;
     use IsInertia;
 
@@ -43,11 +48,9 @@ class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
     /**
      * Create a new action instance.
      *
-     * @param  string  $name
      * @param  string|Closure(mixed...):string|null  $label
-     * @return static
      */
-    public static function make($name, $label = null)
+    public static function make(string $name, string|Closure|null $label = null): static
     {
         return resolve(static::class)
             ->name($name)
@@ -56,21 +59,18 @@ class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
 
     /**
      * Get the route key for the model.
-     *
-     * @return string
      */
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'operation';
     }
 
     /**
      * Get the value of the model's route key.
-     *
-     * @return string
      */
-    public function getRouteKey()
+    public function getRouteKey(): string
     {
+        /** @var string */
         return $this->getName();
     }
 
@@ -101,40 +101,32 @@ class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
 
     /**
      * Execute the inline action on the given record.
-     *
-     * @return Closure|null
      */
-    public function callback()
+    public function callback(): ?Closure
     {
         return $this->getHandler();
     }
 
     /**
      * Determine if the action is an inline action.
-     *
-     * @return bool
      */
-    public function isInline()
+    public function isInline(): bool
     {
         return $this instanceof InlineOperation;
     }
 
     /**
      * Determine if the action is a bulk action.
-     *
-     * @return bool
      */
-    public function isBulk()
+    public function isBulk(): bool
     {
         return $this instanceof BulkOperation;
     }
 
     /**
      * Determine if the action is a page action.
-     *
-     * @return bool
      */
-    public function isPage()
+    public function isPage(): bool
     {
         return $this instanceof PageOperation;
     }
@@ -157,6 +149,14 @@ class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
             'href' => $this->getUrl(),
             'target' => $this->getTarget(),
         ];
+    }
+
+    /**
+     * Get the fallback method
+     */
+    protected function getFallbackMethod(): string
+    {
+        return $this->hasAction() ? Request::METHOD_POST : Request::METHOD_GET;
     }
 
     /**

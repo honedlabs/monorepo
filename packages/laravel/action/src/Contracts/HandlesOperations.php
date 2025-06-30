@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Action\Contracts;
 
-use Honed\Action\Http\Requests\ActionRequest;
 use Honed\Action\Operations\Operation;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @template TClass of \Honed\Core\Primitive
- */
 interface HandlesOperations extends UrlRoutable
 {
     /**
@@ -24,14 +20,14 @@ interface HandlesOperations extends UrlRoutable
     /**
      * Get the parent class for the instance.
      *
-     * @return class-string<TClass>
+     * @return class-string<self>
      */
     public static function getParentClass(): string;
 
     /**
      * Get the handler for the instance.
      *
-     * @return class-string<\Honed\Action\Handlers\Handler<static>>
+     * @return class-string
      */
     public function getHandler(): string;
 

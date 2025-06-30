@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Testing\InlineRequest;
-use Illuminate\Support\Str;
 use Workbench\App\Batches\UserBatch;
 use Workbench\App\Models\User;
 
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
+use function Pest\Laravel\get;
+use function Pest\Laravel\patch;
 use function Pest\Laravel\post;
 
 beforeEach(function () {
@@ -15,73 +17,105 @@ beforeEach(function () {
     $this->batch = UserBatch::make();
 });
 
-// it('executes the action', function () {
-//     $data = $this->request
-//         ->record($this->user->id)
-//         ->name('update.name')
-//         ->getData();
+it('handles a url', function () {
+    get(route('batch', [$this->batch, 'show', 'id' => $this->user->id]))
+        ->assertRedirect(route('users.show', $this->user->id));
+});
 
-//     $response = post(route('actions'), $data);
+it('handles an action', function () {
+    patch(route('batch', [$this->batch, 'inline-name']), [
+        'id' => $this->user->id,
+    ])->assertRedirect(route('users.show', $this->user->id));
 
-//     $response->assertRedirect();
+    $this->assertDatabaseHas('users', [
+        'id' => $this->user->id,
+        'name' => 'test',
+    ]);
+});
 
-//     $this->assertDatabaseHas('users', [
-//         'id' => $this->user->id,
-//         'name' => 'test',
-//     ]);
-// });
+it('requires a record id', function () {
+    patch(route('batch', [$this->batch, 'inline-name']))
+        ->assertInvalid(['id' => 'required']);
 
-// it('is 404 for no name match', function () {
-//     $data = $this->request
-//         ->record($this->user->id)
-//         ->name('missing')
-//         ->getData();
+    assertDatabaseMissing('users', [
+        'id' => $this->user->id,
+        'name' => 'test',
+    ]);
+});
 
-//     $response = post(route('actions'), $data);
+it('requires a valid record id', function () {
+    patch(route('batch', [$this->batch, 'inline-name']), [
+        'id' => [1],
+    ])->assertInvalid(['id']);
 
-//     $response->assertNotFound();
-// });
+    assertDatabaseMissing('users', [
+        'id' => $this->user->id,
+        'name' => 'test',
+    ]);
+});
 
-// it('is 404 if no model is found', function () {
-//     $data = $this->request
-//         ->record(Str::uuid()->toString())
-//         ->name('update.name')
-//         ->getData();
+it('returns 403 if the action is not allowed', function () {
+    post(route('batch', [$this->batch, 'inline-description']), [
+        'id' => $this->user->id,
+    ])->assertForbidden();
 
-//     $response = post(route('actions'), $data);
+    assertDatabaseMissing('users', [
+        'id' => $this->user->id,
+        'name' => 'test',
+    ]);
+});
 
-//     $response->assertNotFound();
-// });
+it('returns 404 if the action is not found', function () {
+    post(route('batch', [$this->batch, 'missing']), [
+        'id' => $this->user->id,
+    ])->assertNotFound();
 
-// it('is 403 if the action is not allowed', function () {
-//     $data = $this->request
-//         ->record($this->user->id)
-//         ->name('update.description')
-//         ->getData();
+    assertDatabaseMissing('users', [
+        'id' => $this->user->id,
+        'name' => 'test',
+    ]);
+});
 
-//     $response = post(route('actions'), $data);
+it('returns 405 if the method is not supported', function () {
+    post(route('batch', [$this->batch, 'inline-name']), [
+        'id' => $this->user->id,
+    ])->assertMethodNotAllowed();
 
-//     $response->assertForbidden();
-// });
+    assertDatabaseMissing('users', [
+        'id' => $this->user->id,
+        'name' => 'test',
+    ]);
+});
 
-// it('does not mix action types', function () {
-//     $data = $this->request
-//         ->record($this->user->id)
-//         ->name('create.name')
-//         ->getData();
+it('returns 429 if the rate limit is exceeded', function () {
+    patch(route('batch', [$this->batch, 'inline-name']), [
+        'id' => $this->user->id,
+    ])->assertRedirect();
 
-//     $response = post(route('actions'), $data);
+    assertDatabaseHas('users', [
+        'id' => $this->user->id,
+        'name' => 'test',
+    ]);
 
-//     $response->assertNotFound();
-// });
+    $this->user->refresh()->update(['name' => 'new']);
 
-// it('does not execute route actions', function () {
-//     $data = $this->request
-//         ->record($this->user->id)
-//         ->name('show')
-//         ->getData();
+    patch(route('batch', [$this->batch, 'inline-name']), [
+        'id' => $this->user->id,
+    ])->assertStatus(429);
 
-//     $response = post(route('actions'), $data);
+    assertDatabaseHas('users', [
+        'id' => $this->user->id,
+        'name' => 'new',
+    ]);
+});
 
-//     $response->assertRedirect(); // Returns back
-// });
+it('returns 404 if the record is not found', function () {
+    patch(route('batch', [$this->batch, 'inline-name']), [
+        'id' => 2,
+    ])->assertNotFound();
+
+    assertDatabaseMissing('users', [
+        'id' => 2,
+        'name' => 'test',
+    ]);
+});

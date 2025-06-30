@@ -47,8 +47,6 @@ class Confirm extends Primitive implements NullsAsUndefined
 
     /**
      * The intent of the confirm.
-     *
-     * @var string|null
      */
     protected ?string $intent = null;
 
@@ -239,7 +237,6 @@ class Confirm extends Primitive implements NullsAsUndefined
     /**
      * Provide a selection of default dependencies for evaluation by name.
      *
-     * @param  string  $parameterName
      * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array

@@ -3,8 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Action\Batch;
-use Honed\Action\Testing\RequestFactory;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Workbench\App\Batches\UserBatch;
 
 beforeEach(function () {

@@ -11,23 +11,22 @@ trait Parameterisable
 {
     /**
      * The named parameters.
-     * 
+     *
      * @var array<string,mixed>
      */
     protected array $named = [];
 
     /**
      * The typed parameters.
-     * 
+     *
      * @var array<class-string,mixed>
      */
     protected array $typed = [];
 
     /**
      * Parameterise the resource.
-     * 
-     * @param  array<array-key,mixed>|\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $resource
-     * @return void
+     *
+     * @param  array<array-key,mixed>|Model|Builder<Model>  $resource
      */
     public function parameterise(array|Model|Builder $resource): void
     {
@@ -37,8 +36,8 @@ trait Parameterisable
 
     /**
      * Get the named parameters.
-     * 
-     * @param  array<array-key,mixed>|\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $resource
+     *
+     * @param  array<array-key,mixed>|Model|Builder<Model>  $resource
      * @return array<string,mixed>
      */
     protected function getNamedParameters($resource)
@@ -55,8 +54,8 @@ trait Parameterisable
 
     /**
      * Get the typed parameters.
-     * 
-     * @param  array<array-key,mixed>|\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $resource
+     *
+     * @param  array<array-key,mixed>|Model|Builder<Model>  $resource
      * @return array<class-string,mixed>
      */
     protected function getTypedParameters($resource)

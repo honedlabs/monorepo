@@ -7,7 +7,7 @@ namespace Honed\Action\Http\Controllers;
 use Honed\Action\Batch;
 use Honed\Action\Operations\Operation;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as Controller;
+use Illuminate\Routing\Controller;
 
 class BatchController extends Controller
 {

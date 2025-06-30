@@ -27,8 +27,6 @@ use Throwable;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
- * 
- * @implements \Honed\Action\Contracts\HandlesOperations<self>
  */
 class Batch extends Primitive implements HandlesOperations
 {
@@ -61,7 +59,7 @@ class Batch extends Primitive implements HandlesOperations
      *
      * @param  Operation|Batch|array<int, Operation|Batch>  $operations
      */
-    public static function make(Operation|Batch|array $operations = []): static
+    public static function make(Operation|self|array $operations = []): static
     {
         return resolve(static::class)
             ->operations($operations);
@@ -143,7 +141,7 @@ class Batch extends Primitive implements HandlesOperations
     /**
      * Get the handler for the instance.
      *
-     * @return class-string<\Honed\Action\Handlers\Handler<\Honed\Action\Contracts\HandlesOperations<static>>>
+     * @return class-string<Handlers\Handler<self>>
      */
     public function getHandler(): string
     {
@@ -194,7 +192,6 @@ class Batch extends Primitive implements HandlesOperations
     /**
      * Provide a selection of default dependencies for evaluation by name.
      *
-     * @param  string  $parameterName
      * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
@@ -210,7 +207,6 @@ class Batch extends Primitive implements HandlesOperations
     /**
      * Provide a selection of default dependencies for evaluation by type.
      *
-     * @param  string  $parameterType
      * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
@@ -230,7 +226,6 @@ class Batch extends Primitive implements HandlesOperations
     /**
      * Provide a base selection of default dependencies for evaluation by type.
      *
-     * @param  string  $parameterType
      * @return array<int, mixed>
      */
     protected function resolveBatchClosureDependencyForEvaluationByType(string $parameterType): array

@@ -63,7 +63,6 @@ abstract class AssociateAction extends DatabaseAction implements Relatable
      *
      * @param  TModel  $model
      * @param  int|string|TParent  $parent
-     * @return void
      */
     protected function after(Model $model, int|string|Model $parent): void
     {

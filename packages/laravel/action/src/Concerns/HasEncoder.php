@@ -28,9 +28,8 @@ trait HasEncoder
      * Set the encoder.
      *
      * @param  (Closure(string):string)|null  $encoder
-     * @return void
      */
-    public static function encoder(Closure|null $encoder = null): void
+    public static function encoder(?Closure $encoder = null): void
     {
         static::$encoder = $encoder;
     }
@@ -40,14 +39,14 @@ trait HasEncoder
      *
      * @param  (Closure(string):string)|null  $decoder
      */
-    public static function decoder(Closure|null $decoder = null): void
+    public static function decoder(?Closure $decoder = null): void
     {
         static::$decoder = $decoder;
     }
 
     /**
      * Encode a value using the encoder.
-     * 
+     *
      * @return string
      */
     public static function encode(string $value)
@@ -59,7 +58,7 @@ trait HasEncoder
 
     /**
      * Decode a value using the decoder.
-     * 
+     *
      * @return string
      */
     public static function decode(string $value)
@@ -72,7 +71,7 @@ trait HasEncoder
 
     /**
      * Get the id of the instance.
-     * 
+     *
      * @return string
      */
     public function getId()

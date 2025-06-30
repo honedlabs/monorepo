@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Pest\Handler;
 
-use Honed\Action\Testing\PageRequest;
 use Workbench\App\Batches\UserBatch;
 
 use function Pest\Laravel\assertDatabaseHas;

@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-use Honed\Action\Http\Requests\ActionRequest;
 use Honed\Action\Operations\Operation;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -116,9 +114,6 @@ trait CanHandleOperations
 
     /**
      * Determine if the primitive can handle operations.
-     *
-     * @param  mixed  $primitive
-     * @return bool
      */
     protected static function canHandleOperations(mixed $primitive): bool
     {

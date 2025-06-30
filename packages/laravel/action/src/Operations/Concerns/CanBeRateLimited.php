@@ -76,7 +76,7 @@ trait CanBeRateLimited
      */
     public function getRateLimitBy(array $named = [], array $typed = []): string
     {
-        return $this->evaluate($this->rateLimitBy, $named, $typed) 
+        return $this->evaluate($this->rateLimitBy, $named, $typed)
             ?? static::class.':'.(string) Auth::id();
     }
 }

@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Action\Handlers\Concerns;
 
-use Illuminate\Http\Request;
 use Honed\Action\Operations\Operation;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\ValidatedInput;
-use Illuminate\Validation\Rule;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 trait Preparable
@@ -18,28 +16,30 @@ trait Preparable
     /**
      * Get the record for the given id.
      */
-    abstract protected function getRecord(int|string $id): Model|null;
+    abstract protected function getRecord(int|string $id): array|Model|null;
 
     /**
      * Apply an exception clause to the record builder.
-     * 
+     *
      * @param  array<int, mixed>  $except
-     * @return array|Builder<Model>
+     * @return array<int, mixed>|Builder<Model>
      */
     abstract protected function getException(array $except): array|Builder;
 
     /**
      * Apply an inclusion clause to the record builder.
-     * 
+     *
      * @param  array<int, mixed>  $only
-     * @return array|Builder<Model>
+     * @return array<int, mixed>|Builder<Model>
      */
     abstract protected function getOnly(array $only): array|Builder;
 
     /**
      * Prepare the data and instance to handle the inline operation.
+     *
+     * @throws NotFoundHttpException
      */
-    protected function prepareForInlineOperation(Operation $operation, Request $request): Model
+    protected function prepareForInlineOperation(Request $request): Model
     {
         $id = $this->validateInline($request);
 
@@ -57,10 +57,10 @@ trait Preparable
 
     /**
      * Prepare the data and instance to handle the bulk operation.
-     * 
-     * @return array<int, array<string, mixed>>|Builder<Model>
+     *
+     * @return array<int, mixed>|Builder<Model>
      */
-    protected function prepareForBulkOperation(Operation $operation, Request $request): mixed
+    protected function prepareForBulkOperation(Request $request): mixed
     {
         $validated = $this->validateBulk($request);
 
@@ -71,13 +71,23 @@ trait Preparable
     }
 
     /**
+     * Prepare the data and instance to handle the page operation.
+     *
+     * @return array<array-key, mixed>|Builder<Model>
+     */
+    protected function prepareForPageOperation(Request $request): array|Builder
+    {
+        return $this->getResource();
+    }
+
+    /**
      * Validate the request for an inline operation.
      */
     protected function validateInline(Request $request): int|string
     {
         /** @var array{id: int|string} */
         $validated = Validator::make($request->all(), [
-            'id' => ['required', 'regex:/^[\w-]*$/']
+            'id' => ['required', 'regex:/^[\w-]*$/'],
         ])->validate();
 
         return $validated['id'];
@@ -85,16 +95,26 @@ trait Preparable
 
     /**
      * Validate the request for a bulk operation.
-     * 
+     *
      * @return array{all: bool, only: array<int, string|int>, except: array<int, string|int>}
      */
     protected function validateBulk(Request $request): array
     {
+        $each = function ($attribute, $value, $fail) {
+            if (is_array($value) && filled($value)) {
+                foreach ($value as $item) {
+                    if (! is_scalar($item) || ! preg_match('/^[\w-]*$/', (string) $item)) {
+                        $fail('The '.$attribute.' field must contain only alphanumeric characters and dashes.');
+                    }
+                }
+            }
+        };
+
         /** @var array{all: bool, only: array<int, string|int>, except: array<int, string|int>} */
         return Validator::make($request->all(), [
             'all' => ['required', 'boolean'],
-            'only' => ['required', 'array', Rule::forEach(fn () => 'regex:/^[\w-]*$/')],
-            'except' => ['required', 'array', Rule::forEach(fn () => 'regex:/^[\w-]*$/')],
+            'only' => ['array', $each],
+            'except' => ['array', $each],
         ])->validate();
     }
 }

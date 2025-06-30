@@ -32,34 +32,43 @@ class UserBatch extends Batch
                 InlineOperation::make('show')
                     ->url('users.show', '{user}'),
 
-                InlineOperation::make('update-name')
-                    ->method('post')
+                InlineOperation::make('inline-name')
+                    ->patch()
+                    ->rateLimit(1)
+                    ->redirect('users.show', '{user}')
                     ->action(fn ($record) => $record->update(['name' => 'test'])),
 
-                InlineOperation::make('update.description')
+                InlineOperation::make('inline-description')
                     ->action(fn ($record) => $record->update(['name' => 'description']))
                     ->allow(false),
             ])
             ->bulkOperations([
 
-                // BulkOperation::make('update.name')
-                //     ->action(fn ($builder) => $builder->update(['name' => 'test']))
-                //     ->allow(false),
+                BulkOperation::make('bulk-name')
+                    ->patch()
+                    ->rateLimit(1)
+                    ->redirect('/users')
+                    ->action(fn ($builder) => $builder->update([
+                        'name' => 'test',
+                    ])),
 
-                // Bulk
-
-                BulkOperation::make('update.description')
-                    ->action(fn ($builder) => $builder->update(['name' => 'description'])),
+                BulkOperation::make('bulk-description')
+                    ->action(fn ($builder) => $builder->update([
+                        'description' => 'test',
+                    ]))
+                    ->allow(false),
 
                 BulkOperation::make('chunk')
                     ->chunk()
-                    ->action(fn ($collection) => $collection->each(fn ($record) => $record->update(['name' => 'chunk']))
-                    ),
+                    ->action(fn ($collection) => $collection->each(fn ($record) => $record->update([
+                        'name' => 'chunk',
+                    ]))),
 
-                BulkOperation::make('chunk.id')
+                BulkOperation::make('chunk-id')
                     ->chunkById()
-                    ->action(fn ($collection) => $collection->each(fn ($record) => $record->update(['name' => 'chunk.id']))
-                    ),
+                    ->action(fn ($collection) => $collection->each(fn ($record) => $record->update([
+                        'name' => 'chunk.id',
+                    ]))),
             ])
             ->pageOperations([
 

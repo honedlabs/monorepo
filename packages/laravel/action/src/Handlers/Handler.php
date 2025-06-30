@@ -4,34 +4,20 @@ declare(strict_types=1);
 
 namespace Honed\Action\Handlers;
 
-use Honed\Action\Exceptions\InvalidOperationException;
-use Honed\Action\Exceptions\OperationForbiddenException;
-use Honed\Action\Exceptions\OperationNotFoundException;
 use Honed\Action\Handlers\Concerns\Parameterisable;
 use Honed\Action\Handlers\Concerns\Preparable;
-use Honed\Action\Http\Data\BulkData;
-use Honed\Action\Http\Data\InlineData;
-use Honed\Action\Http\Data\PageData;
-use Honed\Action\Http\Requests\ActionRequest;
 use Honed\Action\Operations\Operation;
 use Honed\Core\Concerns\HasInstance;
-use Honed\Core\Primitive;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
-
-use function array_fill_keys;
 
 /**
  * @template TClass of \Honed\Core\Primitive
@@ -44,9 +30,21 @@ abstract class Handler
      * @use HasInstance<TClass>
      */
     use HasInstance;
+
     use Parameterisable;
     use Preparable;
 
+    /**
+     * Get the resource for the handler.
+     *
+     * @return array<array-key, mixed>|Builder<Model>
+     */
+    abstract protected function getResource(): array|Builder;
+
+    /**
+     * Get the key to use for selecting records.
+     */
+    abstract protected function getKey(): string;
 
     /**
      * Create a new instance of the handler.
@@ -74,9 +72,9 @@ abstract class Handler
                 "The {$request->getMethod()} method is not supported for this action."
             );
         }
-        
+
         $this->prepare($operation, $request);
-        
+
         if ($this->isForbidden($operation)) {
             throw new AccessDeniedHttpException(
                 'You are not allowed to perform this action.'
@@ -103,9 +101,8 @@ abstract class Handler
 
     /**
      * Call the operation callback with a rate limit in place.
-     * 
-     * @return mixed
-     * 
+     *
+     *
      * @throws TooManyRequestsHttpException
      */
     protected function callRateLimited(Operation $operation, int $attempts): mixed
@@ -119,7 +116,7 @@ abstract class Handler
         }
 
         RateLimiter::increment($key);
-        
+
         return $this->call($operation);
     }
 
@@ -142,13 +139,16 @@ abstract class Handler
      */
     protected function prepare(Operation $operation, Request $request): void
     {
+        /** @var array<array-key, mixed>|Model|Builder<Model> */
         $resource = match (true) {
-            $operation->isInline() => $this->prepareForInlineOperation($operation, $request),
-            $operation->isBulk() => $this->prepareForBulkOperation($operation, $request),
-            default => null,
+            $operation->isInline() => $this->prepareForInlineOperation($request),
+            $operation->isBulk() => $this->prepareForBulkOperation($request),
+            default => $this->prepareForPageOperation($request)
         };
-        
-        $this->parameterise($resource);
+
+        if ($resource) {
+            $this->parameterise($resource);
+        }
     }
 
     /**
@@ -158,9 +158,9 @@ abstract class Handler
         Operation $operation,
         mixed $response
     ): Response|Responsable {
-    
+
         return match (true) {
-            $operation->hasRedirect() => $operation->callRedirect(),
+            $operation->hasRedirect() => $operation->callRedirect($this->named, $this->typed),
             $response instanceof Responsable,
             $response instanceof Response => $response,
             default => back()
@@ -170,13 +170,13 @@ abstract class Handler
     /**
      * Get the record for the given id.
      *
-     * @param  int|string  $id
      * @return array<string, mixed>|Model|null
      */
     protected function getRecord(int|string $id): array|Model|null
     {
         /** @var array<string, mixed>|Model|null */
         return $this->instance->evaluate(
+            // @phpstan-ignore-next-line
             fn (Builder $builder) => $builder->firstWhere($this->getKey(), $id)
         );
     }
@@ -185,11 +185,13 @@ abstract class Handler
      * Apply an exception clause to the record builder.
      *
      * @param  array<int, mixed>  $ids
-     * @return array|Builder<Model>
+     * @return array<int, mixed>|Builder<Model>
      */
     protected function getException(array $ids): array|Builder
     {
+        /** @var array<int, mixed>|Builder<Model> */
         return $this->instance->evaluate(
+            // @phpstan-ignore-next-line
             fn (Builder $builder) => $builder->whereNotIn($this->getKey(), $ids)
         );
     }
@@ -198,11 +200,13 @@ abstract class Handler
      * Apply an inclusion clause to the record builder.
      *
      * @param  array<int, mixed>  $ids
-     * @return array|Builder<Model>
+     * @return array<int, mixed>|Builder<Model>
      */
     protected function getOnly(array $ids): array|Builder
     {
+        /** @var array<int, mixed>|Builder<Model> */
         return $this->instance->evaluate(
+            // @phpstan-ignore-next-line
             fn (Builder $builder) => $builder->whereIn($this->getKey(), $ids)
         );
     }

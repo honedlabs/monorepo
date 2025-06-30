@@ -17,7 +17,7 @@ trait Actionable
     /**
      * Get the parent class for the instance.
      *
-     * @return class-string<\Honed\Action\Contracts\HandlesOperations<static>>
+     * @return class-string<\Honed\Action\Contracts\HandlesOperations>
      */
     public static function getParentClass(): string
     {
@@ -32,7 +32,6 @@ trait Actionable
         /** @var string */
         return config('action.endpoint', '_batch_actions');
     }
-
 
     /**
      * Set whether the instance can execute server actions.

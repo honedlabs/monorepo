@@ -67,7 +67,6 @@ class ActionServiceProvider extends ServiceProvider
     {
         Router::macro('batch', function () {
             /** @var Router $this */
-
             $endpoint = Batch::getEndpoint();
 
             $this->any($endpoint.'/{batch}/{operation}', BatchController::class)

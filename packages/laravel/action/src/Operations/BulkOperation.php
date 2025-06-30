@@ -11,7 +11,7 @@ class BulkOperation extends Operation
 {
     use CanBeChunked;
     use CanKeepSelected;
-    
+
     /**
      * Get the representation of the instance.
      *

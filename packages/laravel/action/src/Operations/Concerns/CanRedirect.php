@@ -13,19 +13,32 @@ trait CanRedirect
     /**
      * The redirect for when the operation is executed.
      *
-     * @var string|(Closure(mixed...):\Illuminate\Http\RedirectResponse)|null
+     * @var RedirectResponse|(Closure(mixed...):RedirectResponse)|null
      */
-    protected string|Closure|null $redirect = null;
+    protected RedirectResponse|Closure|null $redirect = null;
+
+    /**
+     * Determine if the parameters are a route bound.
+     */
+    abstract protected function implicitRoute(mixed $parameters): bool;
 
     /**
      * Set the redirect for when the operation is executed.
      *
-     * @param  string|(Closure(mixed...):\Illuminate\Http\RedirectResponse)|null  $redirect
+     * @param  string|RedirectResponse|(Closure(mixed...):RedirectResponse)|null  $value
+     * @param  array<string, mixed>  $parameters
      * @return $this
      */
-    public function redirect(string|Closure|null $redirect): static
+    public function redirect(string|RedirectResponse|Closure|null $value, mixed $parameters = []): static
     {
-        $this->redirect = $redirect;
+        $this->redirect = match (true) {
+            ! $value => null,
+            $value instanceof Closure => $value,
+            $value instanceof RedirectResponse => $value,
+            $this->implicitRoute($parameters) => fn ($record = null) => to_route($value, $record),
+            Str::startsWith($value, ['http://', 'https://', '/', '#']) => redirect($value),
+            default => to_route($value, $parameters),
+        };
 
         return $this;
     }
@@ -33,9 +46,9 @@ trait CanRedirect
     /**
      * Get the redirect for when the operation is executed.
      *
-     * @return string|(Closure(mixed...):\Illuminate\Http\RedirectResponse)|null
+     * @return RedirectResponse|(Closure(mixed...):RedirectResponse)|null
      */
-    public function getRedirect(): string|Closure|null
+    public function getRedirect(): RedirectResponse|Closure|null
     {
         return $this->redirect;
     }
@@ -50,17 +63,19 @@ trait CanRedirect
 
     /**
      * Call the redirect for when the operation is executed.
+     *
+     * @param  array<string, mixed>  $named
+     * @param  array<class-string, mixed>  $typed
      */
-    public function callRedirect(): RedirectResponse
+    public function callRedirect(array $named = [], array $typed = []): RedirectResponse
     {
         $redirect = $this->getRedirect();
 
-        /** @var \Illuminate\Http\RedirectResponse */
+        /** @var RedirectResponse */
         return match (true) {
             ! $redirect => back(),
-            $redirect instanceof Closure => $this->evaluate($redirect),
-            Str::startsWith($redirect, ['http://', 'https://', '/']) => redirect($redirect),
-            default => to_route($redirect)
+            $redirect instanceof Closure => $this->evaluate($redirect, $named, $typed),
+            default => $redirect,
         };
     }
 }

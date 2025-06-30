@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Testing\BulkRequest;
 use Workbench\App\Batches\UserBatch;
 use Workbench\App\Models\User;
 
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
+use function Pest\Laravel\patch;
 use function Pest\Laravel\post;
 
 beforeEach(function () {
@@ -14,111 +16,199 @@ beforeEach(function () {
     $this->batch = UserBatch::make();
 });
 
-// it('executes the action', function () {
-//     $data = $this->request
-//         ->all()
-//         ->name('update.description')
-//         ->getData();
+it('handles an action', function () {
+    patch(route('batch', [$this->batch, 'bulk-name']), [
+        'all' => true,
+        'except' => [],
+        'only' => [],
+    ])->assertRedirect();
 
-//     $response = post(route('actions'), $data);
+    foreach (User::all() as $user) {
+        assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'test',
+        ]);
+    }
+});
 
-//     $response->assertRedirect();
+it('returns 403 if the action is not allowed', function () {
+    post(route('batch', [$this->batch, 'bulk-description']), [
+        'all' => true,
+        'except' => [],
+        'only' => [],
+    ])->assertForbidden();
 
-//     expect(User::all())
-//         ->each(fn ($user) => $user
-//             ->name->toBe('description')
-//         );
-// });
+    foreach (User::all() as $user) {
+        assertDatabaseMissing('users', [
+            'id' => $user->id,
+            'description' => 'test',
+        ]);
+    }
+});
 
-// it('is 404 for no name match', function () {
-//     $data = $this->request
-//         ->all()
-//         ->name('missing')
-//         ->getData();
+it('returns 404 if the action is not found', function () {
+    post(route('batch', [$this->batch, 'missing']), [
+        'all' => true,
+        'except' => [],
+        'only' => [],
+    ])->assertNotFound();
+});
 
-//     $response = post(route('actions'), $data);
+it('returns 405 if the method is not supported', function () {
+    post(route('batch', [$this->batch, 'bulk-name']), [
+        'all' => true,
+        'except' => [],
+        'only' => [],
+    ])->assertMethodNotAllowed();
 
-//     $response->assertNotFound();
-// });
+    foreach (User::all() as $user) {
+        assertDatabaseMissing('users', [
+            'id' => $user->id,
+            'name' => 'test',
+        ]);
+    }
+});
 
-// it('does not mix action types', function () {
-//     $data = $this->request
-//         ->all()
-//         ->name('create.name')
-//         ->getData();
+it('returns 429 if the rate limit is exceeded', function () {
+    patch(route('batch', [$this->batch, 'bulk-name']), [
+        'all' => true,
+        'except' => [],
+        'only' => [],
+    ])->assertRedirect();
 
-//     $response = post(route('actions'), $data);
+    foreach (User::all() as $user) {
+        assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'test',
+        ]);
+    }
 
-//     $response->assertNotFound();
-// });
+    patch(route('batch', [$this->batch, 'bulk-name']), [
+        'all' => true,
+        'except' => [],
+        'only' => [],
+    ])->assertStatus(429);
+});
 
-// it('applies only to selected records', function () {
-//     $ids = [1, 2, 3, 4, 5];
-//     $data = $this->request
-//         ->only($ids)
-//         ->name('update.description')
-//         ->getData();
+it('validates all', function () {
+    patch(route('batch', [$this->batch, 'bulk-name']), [
+        'only' => [],
+        'except' => [],
+    ])->assertInvalid([
+        'all' => 'required',
+    ]);
+});
 
-//     $response = post(route('actions'), $data);
+it('validates only', function () {
+    patch(route('batch', [$this->batch, 'bulk-name']), [
+        'all' => false,
+        'only' => 'missing',
+        'except' => [],
+    ])->assertInvalid([
+        'only' => 'array',
+    ]);
+});
 
-//     $response->assertRedirect();
+it('validates except', function () {
+    patch(route('batch', [$this->batch, 'bulk-name']), [
+        'all' => false,
+        'only' => [],
+        'except' => 'missing',
+    ])->assertInvalid([
+        'except' => 'array',
+    ]);
+});
 
-//     expect(User::query()->whereIn('id', $ids)->get())
-//         ->each(fn ($user) => $user
-//             ->name->toBe('description')
-//         );
+it('validates inputs', function () {
+    patch(route('batch', [$this->batch, 'bulk-name']), [
+        'all' => false,
+        'only' => [['missing']],
+        'except' => [['missing']],
+    ])->assertInvalid(['only', 'except']);
+});
 
-//     expect(User::query()->whereNotIn('id', $ids)->get())
-//         ->each(fn ($user) => $user
-//             ->name->not->toBe('description')
-//         );
-// });
+it('applies only to selected records', function () {
+    patch(route('batch', [$this->batch, 'bulk-name']), [
+        'all' => false,
+        'only' => [1, 2],
+        'except' => [],
+    ])->assertRedirect();
 
-// it('applies all excepted records', function () {
-//     $ids = [1, 2];
+    foreach (User::query()->whereIn('id', [1, 2])->get() as $user) {
+        assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'test',
+        ]);
+    }
 
-//     $data = $this->request
-//         ->all()
-//         ->except($ids)
-//         ->name('update.description')
-//         ->getData();
+    foreach (User::query()->whereNotIn('id', [1, 2])->get() as $user) {
+        assertDatabaseMissing('users', [
+            'id' => $user->id,
+            'name' => 'test',
+        ]);
+    }
+});
 
-//     $response = post(route('actions'), $data);
+it('applies except to all records', function () {
+    patch(route('batch', [$this->batch, 'bulk-name']), [
+        'all' => true,
+        'only' => [],
+        'except' => [1, 2],
+    ])->assertRedirect();
 
-//     $response->assertRedirect();
+    foreach (User::query()->whereIn('id', [1, 2])->get() as $user) {
+        assertDatabaseMissing('users', [
+            'id' => $user->id,
+            'name' => 'test',
+        ]);
+    }
 
-//     expect(User::query()->whereIn('id', $ids)->get())
-//         ->each(fn ($user) => $user
-//             ->name->not->toBe('description')
-//         );
+    foreach (User::query()->whereNotIn('id', [1, 2])->get() as $user) {
+        assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'test',
+        ]);
+    }
+});
 
-//     expect(User::query()->whereNotIn('id', $ids)->get())
-//         ->each(fn ($user) => $user
-//             ->name->toBe('description')
-//         );
-// });
+it('affects no records', function () {
+    patch(route('batch', [$this->batch, 'bulk-name']), [
+        'all' => false,
+        'only' => [],
+        'except' => [],
+    ])->assertRedirect();
 
-// it('applies with chunking', function ($name) {
-//     $ids = [1, 2, 3, 4, 5];
-//     $data = $this->request
-//         ->only($ids)
-//         ->name($name)
-//         ->getData();
+    assertDatabaseMissing('users', [
+        'name' => 'test',
+    ]);
+});
 
-//     $response = post(route('actions'), $data);
+it('handles a chunked operation', function () {
+    post(route('batch', [$this->batch, 'chunk']), [
+        'all' => true,
+        'only' => [],
+        'except' => [],
+    ])->assertRedirect();
 
-//     $response->assertRedirect();
+    foreach (User::all() as $user) {
+        assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'chunk',
+        ]);
+    }
+});
 
-//     expect(User::query()->whereIn('id', $ids)->get())
-//         ->each(fn ($user) => $user
-//             ->name->toBe($name)
-//         );
+it('handles a chunked by id operation', function () {
+    post(route('batch', [$this->batch, 'chunk-id']), [
+        'all' => true,
+        'only' => [],
+        'except' => [],
+    ])->assertRedirect();
 
-//     expect(User::query()->whereNotIn('id', $ids)->get())
-//         ->each(fn ($user) => $user
-//             ->name->not->toBe($name)
-//         );
-// })->with([
-//     'chunk',
-//     'chunk.id',
-// ]);
+    foreach (User::all() as $user) {
+        assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'chunk.id',
+        ]);
+    }
+});

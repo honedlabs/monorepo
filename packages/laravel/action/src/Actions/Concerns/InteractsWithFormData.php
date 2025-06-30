@@ -34,7 +34,6 @@ trait InteractsWithFormData
      * Get the validated input data.
      *
      * @param  TInput  $input
-     * @return ValidatedInput
      */
     protected function input($input): ValidatedInput
     {
