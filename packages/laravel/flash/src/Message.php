@@ -40,13 +40,8 @@ class Message extends Primitive implements Flashable
 
     /**
      * Create a new message instance.
-     *
-     * @param  string  $message
-     * @param  string|null  $type
-     * @param  int|null  $duration
-     * @return static
      */
-    public static function make($message, $type = null, $duration = null)
+    public static function make(string $message, ?string $type = null, ?int $duration = null): static
     {
         return resolve(static::class)
             ->message($message)
@@ -56,10 +51,8 @@ class Message extends Primitive implements Flashable
 
     /**
      * Get the default type.
-     *
-     * @return string|null
      */
-    public static function getDefaultType()
+    public static function getDefaultType(): ?string
     {
         /** @var string|null */
         return config('flash.type', null);
@@ -67,10 +60,8 @@ class Message extends Primitive implements Flashable
 
     /**
      * Get the default duration.
-     *
-     * @return int|null
      */
-    public static function getDefaultDuration()
+    public static function getDefaultDuration(): ?int
     {
         /** @var int|null */
         return config('flash.duration', 3000);
@@ -79,10 +70,9 @@ class Message extends Primitive implements Flashable
     /**
      * Set the message.
      *
-     * @param  string  $message
      * @return $this
      */
-    public function message($message)
+    public function message(string $message): static
     {
         $this->message = $message;
 
@@ -91,10 +81,8 @@ class Message extends Primitive implements Flashable
 
     /**
      * Get the message.
-     *
-     * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
@@ -102,10 +90,9 @@ class Message extends Primitive implements Flashable
     /**
      * Set the title.
      *
-     * @param  string|null  $title
      * @return $this
      */
-    public function title($title)
+    public function title(?string $title): static
     {
         $this->title = $title;
 
@@ -114,20 +101,16 @@ class Message extends Primitive implements Flashable
 
     /**
      * Get the title.
-     *
-     * @return string|null
      */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
     /**
      * Get the type.
-     *
-     * @return string|null
      */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->getBaseType() ?? $this->getDefaultType();
     }
@@ -137,7 +120,7 @@ class Message extends Primitive implements Flashable
      *
      * @return $this
      */
-    public function success()
+    public function success(): static
     {
         return $this->type('success');
     }
@@ -147,7 +130,7 @@ class Message extends Primitive implements Flashable
      *
      * @return $this
      */
-    public function error()
+    public function error(): static
     {
         return $this->type('error');
     }
@@ -157,7 +140,7 @@ class Message extends Primitive implements Flashable
      *
      * @return $this
      */
-    public function info()
+    public function info(): static
     {
         return $this->type('info');
     }
@@ -167,7 +150,7 @@ class Message extends Primitive implements Flashable
      *
      * @return $this
      */
-    public function warning()
+    public function warning(): static
     {
         return $this->type('warning');
     }
@@ -175,10 +158,9 @@ class Message extends Primitive implements Flashable
     /**
      * Set the duration.
      *
-     * @param  int|null  $duration
      * @return $this
      */
-    public function duration($duration)
+    public function duration(?int $duration): static
     {
         $this->duration = $duration;
 
@@ -187,10 +169,8 @@ class Message extends Primitive implements Flashable
 
     /**
      * Get the duration.
-     *
-     * @return int|null
      */
-    public function getDuration()
+    public function getDuration(): ?int
     {
         return $this->duration ?? $this->getDefaultDuration();
     }

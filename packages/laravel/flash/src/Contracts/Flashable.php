@@ -8,42 +8,34 @@ interface Flashable
 {
     /**
      * Create a new flash message.
-     *
-     * @param  string  $message
-     * @param  string|null  $type
-     * @param  int|null  $duration
-     * @return static
      */
-    public static function make($message, $type = null, $duration = null);
+    public static function make(string $message, ?string $type = null, ?int $duration = null): static;
 
     /**
      * Set the message content.
      *
-     * @param  string  $message
      * @return $this
      */
-    public function message($message);
+    public function message(string $message): static;
 
     /**
      * Set the type of the message.
      *
-     * @param  string  $type
      * @return $this
      */
-    public function type($type);
+    public function type(string $type): static;
 
     /**
      * Set the duration of the message.
      *
-     * @param  int  $duration
      * @return $this
      */
-    public function duration($duration);
+    public function duration(int $duration): static;
 
     /**
      * Get the array representation of the message.
      *
      * @return array<string,mixed>
      */
-    public function toArray();
+    public function toArray(): array;
 }

@@ -18,12 +18,9 @@ class FlashFactory
     /**
      * Flash a new message to the session.
      *
-     * @param  string|Flashable  $message
-     * @param  string|null  $type
-     * @param  int|null  $duration
      * @return $this
      */
-    public function message($message, $type = null, $duration = null)
+    public function message(string|Flashable $message, ?string $type = null, ?int $duration = null): static
     {
         if (! $message instanceof Flashable) {
             $message = App::make(Flashable::class)->make($message, $type, $duration);
@@ -37,11 +34,9 @@ class FlashFactory
     /**
      * Flash a new success message to the session.
      *
-     * @param  string  $message
-     * @param  int|null  $duration
      * @return $this
      */
-    public function success($message, $duration = null)
+    public function success(string $message, ?int $duration = null): static
     {
         return $this->message($message, 'success', $duration);
     }
@@ -49,11 +44,9 @@ class FlashFactory
     /**
      * Flash a new error message to the session.
      *
-     * @param  string  $message
-     * @param  int|null  $duration
      * @return $this
      */
-    public function error($message, $duration = null)
+    public function error(string $message, ?int $duration = null): static
     {
         return $this->message($message, 'error', $duration);
     }
@@ -61,11 +54,9 @@ class FlashFactory
     /**
      * Flash a new info message to the session.
      *
-     * @param  string  $message
-     * @param  int|null  $duration
      * @return $this
      */
-    public function info($message, $duration = null)
+    public function info(string $message, ?int $duration = null): static
     {
         return $this->message($message, 'info', $duration);
     }
@@ -73,11 +64,9 @@ class FlashFactory
     /**
      * Flash a new warning message to the session.
      *
-     * @param  string  $message
-     * @param  int|null  $duration
      * @return $this
      */
-    public function warning($message, $duration = null)
+    public function warning(string $message, ?int $duration = null): static
     {
         return $this->message($message, 'warning', $duration);
     }
@@ -85,10 +74,8 @@ class FlashFactory
     /**
      * Get the property name that will be used to share the flash messages with
      * Inertia.
-     *
-     * @return string
      */
-    public function getProperty()
+    public function getProperty(): string
     {
         /** @var string */
         return Config::get('flash.property', 'flash');
@@ -98,10 +85,9 @@ class FlashFactory
      * Set the property name that will be used to share the flash messages with
      * Inertia.
      *
-     * @param  string  $property
      * @return $this
      */
-    public function property($property)
+    public function property(string $property): static
     {
         Config::set('flash.property', $property);
 

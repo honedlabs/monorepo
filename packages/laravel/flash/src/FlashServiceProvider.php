@@ -16,10 +16,8 @@ class FlashServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/flash.php', 'flash');
 
@@ -31,10 +29,8 @@ class FlashServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
@@ -51,10 +47,8 @@ class FlashServiceProvider extends ServiceProvider
 
     /**
      * Register the publishing for the package.
-     *
-     * @return void
      */
-    protected function offerPublishing()
+    protected function offerPublishing(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -65,20 +59,16 @@ class FlashServiceProvider extends ServiceProvider
 
     /**
      * Register the middleware alias for flash messages.
-     *
-     * @return void
      */
-    protected function registerMiddlewareAlias()
+    protected function registerMiddlewareAlias(): void
     {
         Route::aliasMiddleware('flash', Middleware\ShareFlash::class);
     }
 
     /**
      * Register the redirect response macros.
-     *
-     * @return void
      */
-    protected function registerRedirectResponseMacros()
+    protected function registerRedirectResponseMacros(): void
     {
         RedirectResponse::macro('flash', function (
             string|Flashable $message,
@@ -94,10 +84,8 @@ class FlashServiceProvider extends ServiceProvider
 
     /**
      * Register the inertia response macros.
-     *
-     * @return void
      */
-    protected function registerInertiaMacros()
+    protected function registerInertiaMacros(): void
     {
         ResponseFactory::macro('flash', function (
             string|Flashable $message,
