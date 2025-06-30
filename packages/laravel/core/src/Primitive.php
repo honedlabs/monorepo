@@ -79,7 +79,7 @@ abstract class Primitive implements Arrayable, Jsonable, JsonSerializable
      *
      * @return array<TKey, TValue>
      */
-    public function toArray()
+    public function toArray(): array
     {
         if ($this instanceof NullsAsUndefined) {
             return $this->undefine($this->representation());
@@ -92,11 +92,10 @@ abstract class Primitive implements Arrayable, Jsonable, JsonSerializable
      * Convert the primitive instance to JSON.
      *
      * @param  int  $options
-     * @return string
      *
      * @throws JsonEncodingException
      */
-    public function toJson($options = 0)
+    public function toJson($options = 0): string
     {
         try {
             $json = json_encode($this->jsonSerialize(), $options | JSON_THROW_ON_ERROR);
@@ -115,7 +114,7 @@ abstract class Primitive implements Arrayable, Jsonable, JsonSerializable
      * @param  array<TKey,TValue>  $value
      * @return array<TKey,TValue>
      */
-    protected function undefine($value)
+    protected function undefine(array $value): array
     {
         return array_filter(
             $value,

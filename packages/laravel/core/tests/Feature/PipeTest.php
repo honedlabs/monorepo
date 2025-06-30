@@ -29,3 +29,10 @@ it('handles instance', function () {
     expect($component)
         ->getName()->toBe('Pipeline 0');
 });
+
+it('calls instance methods', function () {
+    $component = new Component();
+
+    expect($this->pipe->instance($component))
+        ->getName()->toBeNull();
+});

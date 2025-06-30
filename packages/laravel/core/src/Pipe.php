@@ -5,18 +5,29 @@ declare(strict_types=1);
 namespace Honed\Core;
 
 use Closure;
+use Honed\Core\Concerns\HasInstance;
 
 /**
- * @template TClass = mixed
+ * @template TClass
  */
 abstract class Pipe
 {
+    /** @use HasInstance<TClass> */
+    use HasInstance {
+        __call as instanceCall;
+    }
+
     /**
-     * The instance to pipe.
+     * Dynamically handle calls to the class.
      *
-     * @var TClass
+     * @param  string  $method
+     * @param  array<array-key,mixed>  $parameters
+     * @return mixed
      */
-    protected $instance;
+    public function __call($method, $parameters)
+    {
+        return $this->instanceCall($method, $parameters);
+    }
 
     /**
      * Run the pipe logic.
@@ -30,33 +41,20 @@ abstract class Pipe
      * @param  Closure(TClass): TClass  $next
      * @return TClass
      */
-    public function handle($instance, $next)
+    public function handle($instance, Closure $next)
     {
-        $this->instance($instance)->run();
+        $this->through($instance);
 
-        return $next($this->instance);
+        return $next($instance);
     }
 
     /**
-     * Set the instance to pipe.
+     * Run the instance through the pipe.
      *
      * @param  TClass  $instance
-     * @return $this
      */
-    public function instance($instance)
+    public function through($instance): void
     {
-        $this->instance = $instance;
-
-        return $this;
-    }
-
-    /**
-     * Get the instance to pipe.
-     *
-     * @return TClass
-     */
-    public function getInstance()
-    {
-        return $this->instance;
+        $this->instance($instance)->run();
     }
 }
