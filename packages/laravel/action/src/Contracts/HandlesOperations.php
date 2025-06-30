@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Action\Contracts;
 
+use Honed\Action\Http\Requests\ActionRequest;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Contracts\Support\Responsable;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @phpstan-require-extends \Honed\Core\Primitive
@@ -35,9 +38,6 @@ interface HandlesOperations extends UrlRoutable
 
     /**
      * Handle the incoming action request.
-     *
-     * @param  \Honed\Action\Http\Requests\InvokableRequest  $request
-     * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function handle($request);
+    public function handle(ActionRequest $request): Responsable|Response;
 }

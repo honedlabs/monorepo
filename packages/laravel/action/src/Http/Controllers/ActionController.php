@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Honed\Action\Http\Controllers;
 
 use Honed\Action\Batch;
-use Honed\Action\Http\Requests\InvokableRequest;
+use Honed\Action\Http\Requests\ActionRequest;
+use Honed\Action\Operations\Operation;
+use Illuminate\Routing\Controller as Controller;
 
 class ActionController extends Controller
 {
@@ -17,18 +19,11 @@ class ActionController extends Controller
      * @throws \Honed\Action\Exceptions\InvalidOperationException
      * @throws \Honed\Action\Exceptions\OperationNotFoundException
      */
-    public function invoke(InvokableRequest $request, Batch $action)
-    {
-        return $action->handle($request);
-    }
-
-    /**
-     * Get the class containing the action handler.
-     *
-     * @return class-string<\Honed\Action\Contracts\HandlesOperations>
-     */
-    protected function from()
-    {
-        return Batch::class;
+    public function __invoke(
+        ActionRequest $request,
+        Batch $batch,
+        Operation $operation
+    ) {
+        return $batch->handle($operation, $request);
     }
 }

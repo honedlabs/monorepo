@@ -147,7 +147,7 @@ class Batch extends Primitive implements HandlesOperations
      */
     public function getRouteKeyName()
     {
-        return 'action';
+        return 'batch';
     }
 
     /**

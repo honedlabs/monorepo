@@ -73,17 +73,14 @@ class ActionServiceProvider extends ServiceProvider
      */
     protected function registerRoutesMacro()
     {
-        Router::macro('actions', function () {
+        Router::macro('batches', function () {
             /** @var Router $this */
-            $methods = ['post', 'patch', 'put'];
 
             $endpoint = Batch::getDefaultEndpoint();
 
-            $this->match($methods, $endpoint, [ActionController::class, 'dispatch'])
-                ->name('actions');
-
-            $this->match($methods, $endpoint.'/{action}', [ActionController::class, 'invoke'])
-                ->name('actions.invoke');
+            $this->any($endpoint.'/{batch}/{operation}', ActionController::class)
+                ->name('batches')
+                ->scopeBindings();
         });
     }
 }

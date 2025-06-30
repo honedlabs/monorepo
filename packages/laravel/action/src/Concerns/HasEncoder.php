@@ -56,7 +56,7 @@ trait HasEncoder
     {
         return isset(static::$encoder)
             ? call_user_func(static::$encoder, $value)
-            : encrypt($value);
+            : base64_encode($value);
     }
 
     /**
@@ -70,6 +70,6 @@ trait HasEncoder
         // @phpstan-ignore-next-line
         return isset(static::$decoder)
             ? call_user_func(static::$decoder, $value)
-            : decrypt($value);
+            : base64_decode($value);
     }
 }

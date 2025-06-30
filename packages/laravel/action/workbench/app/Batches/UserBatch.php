@@ -32,16 +32,16 @@ class UserBatch extends Batch
                 InlineOperation::make('show')
                     ->url('users.show', '{user}'),
 
-                InlineOperation::make('update.name')
+                InlineOperation::make('update-name')
                     ->action(fn ($record) => $record->update(['name' => 'test'])),
 
                 InlineOperation::make('update.description')
                     ->action(fn ($record) => $record->update(['name' => 'description']))
                     ->allow(false),
 
-                BulkOperation::make('update.name')
-                    ->action(fn ($builder) => $builder->update(['name' => 'test']))
-                    ->allow(false),
+                // BulkOperation::make('update.name')
+                //     ->action(fn ($builder) => $builder->update(['name' => 'test']))
+                //     ->allow(false),
 
                 BulkOperation::make('update.description')
                     ->action(fn ($builder) => $builder->update(['name' => 'description'])),

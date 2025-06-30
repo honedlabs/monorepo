@@ -41,7 +41,7 @@ trait Actionable
     public static function getDefaultEndpoint()
     {
         /** @var string */
-        return config('action.endpoint', 'actions');
+        return config('action.endpoint', '_actions');
     }
 
     /**

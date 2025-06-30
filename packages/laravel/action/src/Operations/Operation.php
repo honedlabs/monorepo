@@ -18,8 +18,9 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
+use Illuminate\Contracts\Routing\UrlRoutable;
 
-abstract class Operation extends Primitive implements NullsAsUndefined
+class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
 {
     use Allowable;
     use CanBeRateLimited;
@@ -46,11 +47,6 @@ abstract class Operation extends Primitive implements NullsAsUndefined
     protected $evaluationIdentifier = 'operation';
 
     /**
-     * Get the type of the operation.
-     */
-    abstract protected function type(): string;
-
-    /**
      * Create a new action instance.
      *
      * @param  string  $name
@@ -62,6 +58,51 @@ abstract class Operation extends Primitive implements NullsAsUndefined
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
+    }
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'operation';
+    }
+
+    /**
+     * Get the value of the model's route key.
+     *
+     * @return string
+     */
+    public function getRouteKey()
+    {
+        return $this->getName();
+    }
+
+    /**
+     * Retrieve the model for a bound value.
+     *
+     * @param  string  $value
+     * @param  string|null  $field
+     * @return static|null
+     */
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->getName() === $value ? $this : null;
+    }
+
+    /**
+     * Retrieve the child model for a bound value.
+     *
+     * @param  string  $childType
+     * @param  string  $value
+     * @param  string|null  $field
+     * @return static|null
+     */
+    public function resolveChildRouteBinding($childType, $value, $field = null)
+    {
+        return $this->resolveRouteBinding($value, $field);
     }
 
     /**

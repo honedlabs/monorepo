@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
+use Honed\Action\Http\Requests\ActionRequest;
+use Honed\Action\Operations\Operation;
+use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 /**
@@ -48,7 +53,14 @@ trait CanHandleOperations
      */
     public function resolveChildRouteBinding($childType, $value, $field = null)
     {
-        return $this->resolveRouteBinding($value, $field);
+        if ($childType === 'operation') {
+            return Arr::first(
+                $this->getOperations(),
+                static fn ($operation) => $operation->getName() === $value
+            );
+        }
+
+        return null;
     }
 
     /**
@@ -77,18 +89,13 @@ trait CanHandleOperations
 
     /**
      * Handle the incoming action request.
-     *
-     * @param  \Honed\Action\Http\Requests\InvokableRequest  $request
-     * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function handle($request)
-    {
-        if ($this->isNotActionable()) {
-            abort(404);
-        }
-
+    public function handle(
+        Operation $operation,
+        ActionRequest $request
+    ): Responsable|Response {
         return App::make($this->getHandler())
-            ->handle($this, $request);
+            ->handle($this, $operation, $request);
     }
 
     /**
