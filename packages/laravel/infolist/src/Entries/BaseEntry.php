@@ -67,10 +67,9 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
     /**
      * Provide a selection of default dependencies for evaluation by name.
      *
-     * @param  string  $parameterName
      * @return array<int, mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         return match ($parameterName) {
             'state' => [$this->getState()],
@@ -85,7 +84,7 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
      * @param  class-string  $parameterType
      * @return array<mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
         $record = $this->getRecord();
 

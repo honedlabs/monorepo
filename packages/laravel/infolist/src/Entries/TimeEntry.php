@@ -10,10 +10,8 @@ class TimeEntry extends BaseEntry
 
     /**
      * Provide the instance with any necessary setup.
-     *
-     * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

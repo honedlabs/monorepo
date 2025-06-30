@@ -15,6 +15,7 @@ it('does not format null values', function () {
 
 it('does not format by default', function () {
     expect($this->entry)
+        ->format(0)->toBe('0')
         ->format(123)->toBe('123');
 });
 

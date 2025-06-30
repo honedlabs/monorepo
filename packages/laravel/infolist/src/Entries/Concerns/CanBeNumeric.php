@@ -251,6 +251,6 @@ trait CanBeNumeric
             $value, $this->getDecimals(), locale: $this->getLocale()
         );
 
-        return $formatted ?: null;
+        return $formatted === false ? null : $formatted;
     }
 }
