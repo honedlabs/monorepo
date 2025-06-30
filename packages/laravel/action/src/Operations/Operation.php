@@ -167,10 +167,9 @@ class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
     /**
      * Provide a selection of default dependencies for evaluation by name.
      *
-     * @param  string  $parameterName
      * @return array<int, mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         if (isset($this->parameters[$parameterName])) {
             return [$this->parameters[$parameterName]];
@@ -185,10 +184,9 @@ class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
     /**
      * Provide a selection of default dependencies for evaluation by type.
      *
-     * @param  string  $parameterType
      * @return array<int, mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
         return match ($parameterType) {
             self::class => [$this],

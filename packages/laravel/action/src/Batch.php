@@ -209,7 +209,7 @@ class Batch extends Primitive implements HandlesOperations
      * @param  string  $parameterName
      * @return array<int, mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         return match ($parameterName) {
             'model', 'record', 'row' => [$this->getRecord()],
@@ -225,7 +225,7 @@ class Batch extends Primitive implements HandlesOperations
      * @param  string  $parameterType
      * @return array<int, mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
         $record = $this->getRecord();
 
@@ -245,7 +245,7 @@ class Batch extends Primitive implements HandlesOperations
      * @param  string  $parameterType
      * @return array<int, mixed>
      */
-    protected function resolveBatchClosureDependencyForEvaluationByType($parameterType)
+    protected function resolveBatchClosureDependencyForEvaluationByType(string $parameterType): array
     {
         return match ($parameterType) {
             Builder::class, BuilderContract::class => [$this->getBuilder()],

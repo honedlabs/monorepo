@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Operations\Concerns;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 trait CanBeRateLimited
 {
@@ -74,11 +75,13 @@ trait CanBeRateLimited
     /**
      * Get the key to use for the rate limit.
      *
-     * @return string|null
+     * @param  array<string,mixed>  $named
+     * @param  array<class-string,mixed>  $typed
+     * @return string
      */
-    public function getRateLimitBy()
+    public function getRateLimitBy($named = [], $typed = []): string
     {
-        /** @var string|null */
-        return $this->evaluate($this->rateLimitBy);
+        return $this->evaluate($this->rateLimitBy, $named, $typed) 
+            ?? static::class.':'.(string) Auth::id();
     }
 }

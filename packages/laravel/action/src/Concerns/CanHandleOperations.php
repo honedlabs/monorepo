@@ -7,6 +7,7 @@ namespace Honed\Action\Concerns;
 use Honed\Action\Http\Requests\ActionRequest;
 use Honed\Action\Operations\Operation;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpFoundation\Response;
@@ -89,13 +90,14 @@ trait CanHandleOperations
 
     /**
      * Handle the incoming action request.
+     *
+     * @return Responsable|Response
      */
-    public function handle(
-        Operation $operation,
-        ActionRequest $request
-    ): Responsable|Response {
-        return App::make($this->getHandler())
-            ->handle($this, $operation, $request);
+    public function handle(Operation $operation, Request $request): mixed
+    {
+        $handler = $this->getHandler();
+
+        return $handler::make($this)->handle($operation, $request);
     }
 
     /**

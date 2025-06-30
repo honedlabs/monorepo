@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Contracts;
 
 use Honed\Action\Http\Requests\ActionRequest;
+use Honed\Action\Operations\Operation;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Contracts\Support\Responsable;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,6 +39,8 @@ interface HandlesOperations extends UrlRoutable
 
     /**
      * Handle the incoming action request.
+     *
+     * @return Responsable|Response
      */
-    public function handle(ActionRequest $request): Responsable|Response;
+    public function handle(Operation $operation, ActionRequest $request): mixed;
 }
