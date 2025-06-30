@@ -20,10 +20,10 @@ jobs:
           # - bind
           # - chart
           # - command
-          # - core
+          - core
           # - crumb
           # - flash
-          - honed
+          # - honed
           # - infolist
           # - layout
           # - lock
