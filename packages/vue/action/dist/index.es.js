@@ -3,43 +3,49 @@ import { router as m } from "@inertiajs/vue3";
 import y from "axios";
 function E(e, n, r, u = {}) {
   if (e.route) {
-    const { url: i, method: c } = e.route;
-    return e.inertia ? window.location.href = i : m.visit(i, { ...u, method: c }), !0;
+    const { url: i, method: a } = e.route;
+    return e.inertia ? window.location.href = i : m.visit(i, { ...u, method: a }), !0;
   }
   if (!e.action || !n)
     return !1;
-  const a = {
+  const c = {
     ...r,
     name: e.name,
     type: e.type
   };
-  return e.inertia ? m.post(n, a, u) : y.post(n, a).catch((i) => {
-    var c;
-    return (c = u.onError) == null ? void 0 : c.call(u, i);
+  return e.inertia ? m.post(n, c, u) : y.post(n, c).catch((i) => {
+    var a;
+    return (a = u.onError) == null ? void 0 : a.call(u, i);
   }), !0;
 }
-function b(e, n, r, u = {}, a = {}) {
+function b(e, n, r, u = {}, c = {}) {
   return E(
     e,
     n,
     { ...u, id: r ?? void 0 },
-    a
+    c
   );
 }
-function g(e, n, r, u = {}) {
-  return e.map((a) => ({
-    ...a,
-    execute: (i = {}, c = {}) => b(a, n, r, i, { ...u, ...c })
+function g(e, n, r, u = {}, c = {}) {
+  return e.map((i) => ({
+    ...i,
+    execute: (a = {}, f = {}) => b(
+      i,
+      n,
+      r,
+      { ...c, ...a },
+      { ...u, ...f }
+    )
   }));
 }
 function B(e, n, r = {}) {
   if (!(e != null && e[n]))
     throw new Error("The batch must be provided with valid props and key.");
-  const u = d(() => e[n]), a = d(
+  const u = d(() => e[n]), c = d(
     () => s(u.value.inline)
   ), i = d(
     () => s(u.value.bulk)
-  ), c = d(
+  ), a = d(
     () => s(u.value.page)
   );
   function f(t, o = {}, v = {}) {
@@ -69,9 +75,9 @@ function B(e, n, r = {}) {
     return f(t, o, v);
   }
   return {
-    inline: a,
+    inline: c,
     bulk: i,
-    page: c,
+    page: a,
     executeInline: x,
     executeBulk: h,
     executePage: l
@@ -92,23 +98,23 @@ function p() {
   function u(...l) {
     l.forEach((t) => e.value.except.delete(t)), l.forEach((t) => e.value.only.add(t));
   }
-  function a(...l) {
+  function c(...l) {
     l.forEach((t) => e.value.except.add(t)), l.forEach((t) => e.value.only.delete(t));
   }
   function i(l, t) {
-    if (c(l) || t === !1) return a(l);
-    if (!c(l) || t === !0) return u(l);
+    if (a(l) || t === !1) return c(l);
+    if (!a(l) || t === !0) return u(l);
   }
-  function c(l) {
+  function a(l) {
     return e.value.all ? !e.value.except.has(l) : e.value.only.has(l);
   }
   const f = d(() => e.value.all && e.value.except.size === 0), s = d(() => e.value.only.size > 0 || f.value);
   function x(l) {
     return {
       "onUpdate:modelValue": (t) => {
-        t ? u(l) : a(l);
+        t ? u(l) : c(l);
       },
-      modelValue: c(l),
+      modelValue: a(l),
       value: l
     };
   }
@@ -127,9 +133,9 @@ function p() {
     selectAll: n,
     deselectAll: r,
     select: u,
-    deselect: a,
+    deselect: c,
     toggle: i,
-    selected: c,
+    selected: a,
     bind: x,
     bindAll: h
   };

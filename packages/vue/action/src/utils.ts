@@ -3,10 +3,8 @@ import { router } from "@inertiajs/vue3";
 import type {
 	MaybeEndpoint,
 	MaybeId,
-	Operation,
 	OperationData,
 	OperationDataMap,
-	OperationType,
 } from "./types";
 import { Operations } from "./operations";
 import axios from "axios";
@@ -71,12 +69,20 @@ export function executables<T extends Operations>(
 	endpoint: MaybeEndpoint,
 	id: MaybeId,
 	defaults: VisitOptions = {},
+	payload: OperationDataMap[T["type"]] = {} as OperationDataMap[T["type"]],
 ) {
 	return operations.map((operation) => ({
 		...operation,
 		execute: (
-			data: OperationData[typeof operation.type] = {},
+			data: OperationDataMap[typeof operation.type] = {},
 			options: VisitOptions = {},
-		) => executor(operation, endpoint, id, data, { ...defaults, ...options }),
+		) =>
+			executor(
+				operation,
+				endpoint,
+				id,
+				{ ...payload, ...data },
+				{ ...defaults, ...options },
+			),
 	}));
 }

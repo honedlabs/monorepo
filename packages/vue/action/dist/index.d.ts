@@ -62,8 +62,8 @@ export declare type Executable<T extends Operation> = T & {
 /**
  * Create operations with execute methods
  */
-export declare function executables<T extends Operations>(operations: T[], endpoint: MaybeEndpoint, id: MaybeId, defaults?: VisitOptions): (T & {
-    execute: (data?: any, options?: VisitOptions) => boolean;
+export declare function executables<T extends Operations>(operations: T[], endpoint: MaybeEndpoint, id: MaybeId, defaults?: VisitOptions, payload?: OperationDataMap[T["type"]]): (T & {
+    execute: (data?: InlineOperationData | BulkOperationData | PageOperationData, options?: VisitOptions) => boolean;
 })[];
 
 /**
