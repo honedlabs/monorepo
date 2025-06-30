@@ -239,7 +239,7 @@ class Column extends Primitive implements NullsAsUndefined
             $this->state($this->getName());
         }
 
-        return $this->apply($this->getState());
+        return $this->apply($this->resolveState());
     }
 
     /**
