@@ -28,7 +28,7 @@ class UserBatch extends Batch
     {
         return $batch
             ->for(User::class)
-            ->operations([
+            ->inlineOperations([
                 InlineOperation::make('show')
                     ->url('users.show', '{user}'),
 
@@ -39,10 +39,14 @@ class UserBatch extends Batch
                 InlineOperation::make('update.description')
                     ->action(fn ($record) => $record->update(['name' => 'description']))
                     ->allow(false),
+            ])
+            ->bulkOperations([
 
                 // BulkOperation::make('update.name')
                 //     ->action(fn ($builder) => $builder->update(['name' => 'test']))
                 //     ->allow(false),
+
+                // Bulk
 
                 BulkOperation::make('update.description')
                     ->action(fn ($builder) => $builder->update(['name' => 'description'])),
@@ -56,16 +60,22 @@ class UserBatch extends Batch
                     ->chunkById()
                     ->action(fn ($collection) => $collection->each(fn ($record) => $record->update(['name' => 'chunk.id']))
                     ),
+            ])
+            ->pageOperations([
 
+                // Page
                 PageOperation::make('create')
                     ->url('users.create'),
 
                 PageOperation::make('create.name')
+                    ->post()
+                    ->rateLimit(1)
                     ->action(fn () => User::factory()->create([
                         'name' => 'name',
                     ])),
 
                 PageOperation::make('create.description')
+                    ->post()
                     ->action(fn () => User::factory()->create([
                         'name' => 'description',
                     ]))

@@ -21,12 +21,8 @@ it('has implicit route bindings', function () {
     $this->operation->url('users.show', '{user}');
 
     expect($this->operation->record($user)->toArray())
-        ->toHaveKey('route')
-        ->{'route'}
-        ->scoped(fn ($route) => $route
-            ->toHaveKey('url')
-            ->{'url'}->toBe(route('users.show', $user))
-        );
+        ->toHaveKey('href')
+        ->{'href'}->toBe(route('users.show', $user));
 });
 
 it('has array representation', function () {
@@ -35,7 +31,6 @@ it('has array representation', function () {
         ->toHaveKeys([
             'name',
             'label',
-            'type',
             'action',
             'inertia',
         ]);
@@ -47,14 +42,11 @@ it('has array representation with route', function () {
         ->toEqual([
             'name' => 'test',
             'label' => 'Test',
-            'type' => InlineOperation::INLINE,
             'action' => false,
             'default' => false,
             'inertia' => true,
-            'route' => [
-                'url' => route('users.index'),
-                'method' => Request::METHOD_GET,
-            ],
+            'href' => route('users.index'),
+            'method' => Request::METHOD_GET
         ]);
 });
 
@@ -65,10 +57,10 @@ it('resolves to array', function () {
         ->toEqual([
             'name' => 'destroy',
             'label' => 'Destroy '.$user->name,
-            'type' => 'inline',
             'action' => true,
             'default' => false,
             'inertia' => true,
+            'method' => Request::METHOD_GET,
         ]);
 });
 

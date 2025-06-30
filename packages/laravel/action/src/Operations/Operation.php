@@ -33,12 +33,6 @@ class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
     use HasName;
     use IsInertia;
 
-    public const INLINE = 'inline';
-
-    public const BULK = 'bulk';
-
-    public const PAGE = 'page';
-
     /**
      * The identifier to use for evaluation.
      *
@@ -159,7 +153,9 @@ class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
             'confirm' => $this->getConfirm()?->toArray(),
             'action' => $this->hasAction(),
             'inertia' => $this->isInertia() ?: null,
-            ...$this->urlToArray(),
+            'method' => $this->getMethod(),
+            'href' => $this->getUrl(),
+            'target' => $this->getTarget(),
         ];
     }
 

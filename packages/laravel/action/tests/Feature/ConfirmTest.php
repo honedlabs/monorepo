@@ -57,7 +57,6 @@ it('has array representation', function () {
         ->toEqual([
             'title' => Confirm::TITLE,
             'description' => Confirm::DESCRIPTION,
-            'intent' => null,
             'submit' => Confirm::SUBMIT,
             'dismiss' => Confirm::DISMISS,
         ]);

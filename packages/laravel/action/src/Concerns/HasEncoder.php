@@ -13,14 +13,14 @@ trait HasEncoder
     /**
      * The encoding closure.
      *
-     * @var Closure(mixed):string|null
+     * @var Closure(string):string|null
      */
     protected static $encoder;
 
     /**
      * The decoding closure.
      *
-     * @var Closure(string):mixed|null
+     * @var Closure(string):string|null
      */
     protected static $decoder;
 
@@ -30,7 +30,7 @@ trait HasEncoder
      * @param  (Closure(string):string)|null  $encoder
      * @return void
      */
-    public static function encoder($encoder = null)
+    public static function encoder(Closure|null $encoder = null): void
     {
         static::$encoder = $encoder;
     }
@@ -39,20 +39,18 @@ trait HasEncoder
      * Set the decoder.
      *
      * @param  (Closure(string):string)|null  $decoder
-     * @return void
      */
-    public static function decoder($decoder = null)
+    public static function decoder(Closure|null $decoder = null): void
     {
         static::$decoder = $decoder;
     }
 
     /**
      * Encode a value using the encoder.
-     *
-     * @param  string  $value
+     * 
      * @return string
      */
-    public static function encode($value)
+    public static function encode(string $value)
     {
         return isset(static::$encoder)
             ? call_user_func(static::$encoder, $value)
@@ -61,15 +59,24 @@ trait HasEncoder
 
     /**
      * Decode a value using the decoder.
-     *
-     * @param  string  $value
+     * 
      * @return string
      */
-    public static function decode($value)
+    public static function decode(string $value)
     {
         // @phpstan-ignore-next-line
         return isset(static::$decoder)
             ? call_user_func(static::$decoder, $value)
             : base64_decode($value);
+    }
+
+    /**
+     * Get the id of the instance.
+     * 
+     * @return string
+     */
+    public function getId()
+    {
+        return static::encode(static::class);
     }
 }

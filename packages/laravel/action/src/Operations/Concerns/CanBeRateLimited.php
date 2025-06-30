@@ -14,14 +14,14 @@ trait CanBeRateLimited
      *
      * @var int|(Closure(mixed...):int|null)|null
      */
-    protected $rateLimit = null;
+    protected int|Closure|null $rateLimit = null;
 
     /**
      * The key to use for the rate limit.
      *
      * @var string|(Closure(mixed...):string|null)
      */
-    protected $rateLimitBy;
+    protected string|Closure|null $rateLimitBy = null;
 
     /**
      * Set the number of attempts allowed within a minute.
@@ -29,7 +29,7 @@ trait CanBeRateLimited
      * @param  int|(Closure(mixed...):int|null)|null  $attempts
      * @return $this
      */
-    public function rateLimit($attempts)
+    public function rateLimit(int|Closure|null $attempts): static
     {
         $this->rateLimit = $attempts;
 
@@ -41,19 +41,15 @@ trait CanBeRateLimited
      *
      * @return $this
      */
-    public function dontRateLimit()
+    public function dontRateLimit(): static
     {
-        $this->rateLimit = null;
-
-        return $this;
+        return $this->rateLimit(null);
     }
 
     /**
      * Get the number of attempts allowed within a minute.
-     *
-     * @return int|null
      */
-    public function getRateLimit()
+    public function getRateLimit(): ?int
     {
         /** @var int|null */
         return $this->evaluate($this->rateLimit);
@@ -65,7 +61,7 @@ trait CanBeRateLimited
      * @param  string|(Closure(mixed...):string|null)  $key
      * @return $this
      */
-    public function rateLimitBy($key)
+    public function rateLimitBy(string|Closure|null $key): static
     {
         $this->rateLimitBy = $key;
 
@@ -77,9 +73,8 @@ trait CanBeRateLimited
      *
      * @param  array<string,mixed>  $named
      * @param  array<class-string,mixed>  $typed
-     * @return string
      */
-    public function getRateLimitBy($named = [], $typed = []): string
+    public function getRateLimitBy(array $named = [], array $typed = []): string
     {
         return $this->evaluate($this->rateLimitBy, $named, $typed) 
             ?? static::class.':'.(string) Auth::id();

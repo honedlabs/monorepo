@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Operations\Concerns;
 
 use Closure;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 
 trait CanRedirect
@@ -14,7 +15,7 @@ trait CanRedirect
      *
      * @var string|(Closure(mixed...):\Illuminate\Http\RedirectResponse)|null
      */
-    protected $redirect;
+    protected string|Closure|null $redirect = null;
 
     /**
      * Set the redirect for when the operation is executed.
@@ -22,7 +23,7 @@ trait CanRedirect
      * @param  string|(Closure(mixed...):\Illuminate\Http\RedirectResponse)|null  $redirect
      * @return $this
      */
-    public function redirect($redirect)
+    public function redirect(string|Closure|null $redirect): static
     {
         $this->redirect = $redirect;
 
@@ -34,27 +35,23 @@ trait CanRedirect
      *
      * @return string|(Closure(mixed...):\Illuminate\Http\RedirectResponse)|null
      */
-    public function getRedirect()
+    public function getRedirect(): string|Closure|null
     {
         return $this->redirect;
     }
 
     /**
      * Determine if the operation has a redirect.
-     *
-     * @return bool
      */
-    public function hasRedirect()
+    public function hasRedirect(): bool
     {
         return isset($this->redirect);
     }
 
     /**
      * Call the redirect for when the operation is executed.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
-    public function callRedirect()
+    public function callRedirect(): RedirectResponse
     {
         $redirect = $this->getRedirect();
 

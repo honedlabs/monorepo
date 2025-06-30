@@ -154,8 +154,11 @@ abstract class Handler
     /**
      * Respond to the operation.
      */
-    protected function respond(Operation $operation, mixed $response): Response|Responsable
-    {
+    protected function respond(
+        Operation $operation,
+        mixed $response
+    ): Response|Responsable {
+    
         return match (true) {
             $operation->hasRedirect() => $operation->callRedirect(),
             $response instanceof Responsable,
@@ -170,7 +173,7 @@ abstract class Handler
      * @param  int|string  $id
      * @return array<string, mixed>|Model|null
      */
-    protected function getRecord(int|string $id): Model|null
+    protected function getRecord(int|string $id): array|Model|null
     {
         /** @var array<string, mixed>|Model|null */
         return $this->instance->evaluate(

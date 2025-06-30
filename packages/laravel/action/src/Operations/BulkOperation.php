@@ -11,15 +11,7 @@ class BulkOperation extends Operation
 {
     use CanBeChunked;
     use CanKeepSelected;
-
-    /**
-     * Get the type of the operation.
-     */
-    protected function type(): string
-    {
-        return self::BULK;
-    }
-
+    
     /**
      * Get the representation of the instance.
      *

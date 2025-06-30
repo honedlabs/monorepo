@@ -24,11 +24,8 @@ trait CanHandleOperations
 
     /**
      * Decode and retrieve a primitive class.
-     *
-     * @param  string  $value
-     * @return static|null
      */
-    public static function find($value)
+    public static function find(string $value): ?static
     {
         try {
             $primitive = static::decode($value);
@@ -50,7 +47,7 @@ trait CanHandleOperations
      * @param  string  $childType
      * @param  string  $value
      * @param  string|null  $field
-     * @return static|null
+     * @return mixed
      */
     public function resolveChildRouteBinding($childType, $value, $field = null)
     {
@@ -61,7 +58,7 @@ trait CanHandleOperations
             );
         }
 
-        return null;
+        return $this->resolveRouteBinding($value, $field);
     }
 
     /**
@@ -105,7 +102,7 @@ trait CanHandleOperations
      *
      * @return array<string, mixed>
      */
-    public function actionableToArray()
+    public function actionableToArray(): array
     {
         if ($this->isActionable()) {
             return [
@@ -123,7 +120,7 @@ trait CanHandleOperations
      * @param  mixed  $primitive
      * @return bool
      */
-    protected static function canHandleOperations($primitive)
+    protected static function canHandleOperations(mixed $primitive): bool
     {
         return is_string($primitive)
             && class_exists($primitive)

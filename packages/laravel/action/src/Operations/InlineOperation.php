@@ -14,14 +14,6 @@ class InlineOperation extends Operation
     use HasRecord;
 
     /**
-     * Get the type of the operation.
-     */
-    protected function type(): string
-    {
-        return self::INLINE;
-    }
-
-    /**
      * Get the instance as an array.
      *
      * @return array<string, mixed>

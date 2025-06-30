@@ -69,8 +69,8 @@ class Confirm extends Primitive implements NullsAsUndefined
     /**
      * Create a new confirm instance.
      *
-     * @param  string|Closure(mixed...):string|null  $title
-     * @param  string|Closure(mixed...):string|null  $description
+     * @param  string|Closure(mixed...):string  $title
+     * @param  string|Closure(mixed...):string  $description
      * @return static
      */
     public static function make(
@@ -100,13 +100,14 @@ class Confirm extends Primitive implements NullsAsUndefined
      */
     public function getTitle(): string
     {
+        /** @var string */
         return $this->evaluate($this->title);
     }
 
     /**
      * Set the description of the confirm.
      *
-     * @param  string|Closure(mixed...):string|null  $description
+     * @param  string|Closure(mixed...):string  $description
      * @return $this
      */
     public function description(string|Closure $description): static
@@ -121,6 +122,7 @@ class Confirm extends Primitive implements NullsAsUndefined
      */
     public function getDescription(): ?string
     {
+        /** @var string */
         return $this->evaluate($this->description);
     }
 
@@ -192,6 +194,7 @@ class Confirm extends Primitive implements NullsAsUndefined
      */
     public function getSubmit(): string
     {
+        /** @var string */
         return $this->evaluate($this->submit);
     }
 
@@ -213,6 +216,7 @@ class Confirm extends Primitive implements NullsAsUndefined
      */
     public function getDismiss(): string
     {
+        /** @var string */
         return $this->evaluate($this->dismiss);
     }
 

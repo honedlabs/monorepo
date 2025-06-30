@@ -29,10 +29,6 @@ it('resolves route binding', function () {
         ->toBeInstanceOf(UserBatch::class);
 });
 
-it('fails handling', function () {
-    $this->batch->handle(RequestFactory::page());
-})->throws(NotFoundHttpException::class);
-
 it('has actionable array', function () {
     expect($this->batch->actionableToArray())
         ->toBeEmpty();

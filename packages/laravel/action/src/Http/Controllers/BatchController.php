@@ -14,7 +14,7 @@ class BatchController extends Controller
     /**
      * Find and execute the appropriate action from route binding.
      *
-     * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @return \Illuminate\Contracts\Support\Responsable|\Symfony\Component\HttpFoundation\Response
      */
     public function __invoke(Request $request, Batch $batch, Operation $operation)
     {

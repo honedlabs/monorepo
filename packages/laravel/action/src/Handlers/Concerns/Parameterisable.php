@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Action\Handlers\Concerns;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 trait Parameterisable
@@ -25,10 +26,10 @@ trait Parameterisable
     /**
      * Parameterise the resource.
      * 
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $resource
+     * @param  array<array-key,mixed>|\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $resource
      * @return void
      */
-    public function parameterise($resource): void
+    public function parameterise(array|Model|Builder $resource): void
     {
         $this->named = $this->getNamedParameters($resource);
         $this->typed = $this->getTypedParameters($resource);
@@ -37,7 +38,7 @@ trait Parameterisable
     /**
      * Get the named parameters.
      * 
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $resource
+     * @param  array<array-key,mixed>|\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $resource
      * @return array<string,mixed>
      */
     protected function getNamedParameters($resource)
@@ -55,7 +56,7 @@ trait Parameterisable
     /**
      * Get the typed parameters.
      * 
-     * @param  array<string,mixed>|\Illuminate\Database\Eloquent\Model  $resource
+     * @param  array<array-key,mixed>|\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $resource
      * @return array<class-string,mixed>
      */
     protected function getTypedParameters($resource)

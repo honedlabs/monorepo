@@ -20,7 +20,7 @@ trait InteractsWithFormData
      * @param  TInput  $input
      * @return array<string, mixed>
      */
-    protected function normalize($input)
+    protected function normalize($input): array
     {
         return match (true) {
             $input instanceof Arrayable => $input->toArray(),
@@ -36,7 +36,7 @@ trait InteractsWithFormData
      * @param  TInput  $input
      * @return ValidatedInput
      */
-    protected function input($input)
+    protected function input($input): ValidatedInput
     {
         return match (true) {
             $input instanceof FormRequest => $input->safe(),
@@ -50,7 +50,7 @@ trait InteractsWithFormData
      *
      * @return array<string>
      */
-    protected function fields()
+    protected function fields(): array
     {
         return [];
     }
@@ -61,7 +61,7 @@ trait InteractsWithFormData
      * @param  array<string, mixed>  $input
      * @return array<string, mixed>
      */
-    protected function only($input)
+    protected function only(array $input): array
     {
         $fields = $this->fields();
 
