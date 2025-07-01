@@ -14,12 +14,12 @@ import type {
 } from "./searches";
 
 export interface Refine {
-	sort?: string;
-	search?: string;
-	match?: string;
+	_sort_key?: string;
+	_search_key?: string;
+	_match_key?: string;
+	_delimiter: string;
 	term?: string;
 	placeholder?: string;
-	delimiter: string;
 	sorts: Sort[];
 	filters: Filter[];
 	searches: Search[];

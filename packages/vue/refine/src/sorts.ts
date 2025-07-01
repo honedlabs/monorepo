@@ -5,7 +5,6 @@ import type { Refiner } from "./refiner";
 export type Direction = "asc" | "desc" | null;
 
 export interface Sort extends Refiner {
-	type: "sort" | string;
 	direction: Direction;
 	next: string | null;
 }

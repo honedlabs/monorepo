@@ -30,11 +30,11 @@ export function useRefine<T extends Record<string, Refine>>(
 
 	const refinements = computed(() => props[key] as Refine);
 
-	const isSortable = computed(() => !!refinements.value.sort);
+	const isSortable = computed(() => !!refinements.value._sort_key);
 
-	const isSearchable = computed(() => !!refinements.value.search);
+	const isSearchable = computed(() => !!refinements.value._search_key);
 
-	const isMatchable = computed(() => !!refinements.value.match);
+	const isMatchable = computed(() => !!refinements.value._match_key);
 
 	/**
 	 * The available filters.
@@ -99,7 +99,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	 * Converts an array parameter to a comma-separated string for URL parameters.
 	 */
 	function delimitArray(value: any) {
-		if (Array.isArray(value)) return value.join(refinements.value.delimiter);
+		if (Array.isArray(value)) return value.join(refinements.value._delimiter);
 
 		return value;
 	}
@@ -269,7 +269,7 @@ export function useRefine<T extends Record<string, Refine>>(
 			...defaults,
 			...options,
 			data: {
-				[refinements.value.sort as string]: omitValue(refiner.next),
+				[refinements.value._sort_key as string]: omitValue(refiner.next),
 			},
 		});
 	}
@@ -293,7 +293,7 @@ export function useRefine<T extends Record<string, Refine>>(
 			...defaults,
 			...options,
 			data: {
-				[refinements.value.search as string]: value,
+				[refinements.value._search_key as string]: value,
 			},
 		});
 	}
@@ -318,7 +318,7 @@ export function useRefine<T extends Record<string, Refine>>(
 			...defaults,
 			...options,
 			data: {
-				[refinements.value.match as string]: delimitArray(matches),
+				[refinements.value._match_key as string]: delimitArray(matches),
 			},
 		});
 	}
@@ -349,7 +349,7 @@ export function useRefine<T extends Record<string, Refine>>(
 			...defaults,
 			...options,
 			data: {
-				[refinements.value.sort as string]: null,
+				[refinements.value._sort_key as string]: null,
 			},
 		});
 	}
@@ -372,7 +372,7 @@ export function useRefine<T extends Record<string, Refine>>(
 			...defaults,
 			...options,
 			data: {
-				[refinements.value.match as string]: null,
+				[refinements.value._match_key as string]: null,
 			},
 		});
 	}
@@ -385,9 +385,9 @@ export function useRefine<T extends Record<string, Refine>>(
 			...defaults,
 			...options,
 			data: {
-				[refinements.value.search ?? ""]: undefined,
-				[refinements.value.sort ?? ""]: undefined,
-				[refinements.value.match ?? ""]: undefined,
+				[refinements.value._search_key ?? ""]: undefined,
+				[refinements.value._sort_key ?? ""]: undefined,
+				[refinements.value._match_key ?? ""]: undefined,
 				...Object.fromEntries(
 					refinements.value.filters?.map((filter) => [
 						filter.name,

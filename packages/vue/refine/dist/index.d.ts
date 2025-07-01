@@ -104,12 +104,12 @@ declare interface Option_2 {
 export { Option_2 as Option }
 
 export declare interface Refine {
-    sort?: string;
-    search?: string;
-    match?: string;
+    _sort_key?: string;
+    _search_key?: string;
+    _match_key?: string;
+    _delimiter: string;
     term?: string;
     placeholder?: string;
-    delimiter: string;
     sorts: Sort[];
     filters: Filter[];
     searches: Search[];
@@ -132,7 +132,6 @@ export declare interface SearchBinding {
 }
 
 export declare interface Sort extends Refiner {
-    type: "sort" | string;
     direction: Direction;
     next: string | null;
 }
