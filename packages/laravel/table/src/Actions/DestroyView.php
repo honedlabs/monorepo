@@ -8,7 +8,7 @@ use Honed\Table\Facades\Views;
 use Honed\Table\Table;
 use Illuminate\Http\Request;
 
-class UpdateView extends ViewAction
+class DestroyView extends ViewAction
 {
     /**
      * Update, or create, a view.
