@@ -31,9 +31,9 @@ jobs:
           # - nav
           # - page
           # - persist
-          - refine
+          # - refine
           # - registry
-          # - table
+          - table
           # - upload
           # - widget
     steps:
