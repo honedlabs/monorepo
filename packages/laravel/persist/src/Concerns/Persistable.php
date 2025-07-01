@@ -230,7 +230,7 @@ trait Persistable
     /**
      * Call a persistable method.
      *
-     * @param  array{0: string, 1: string, 2: string|null}  $call
+     * @param  array{0: string, 1: string, 2: string|bool|null}  $call
      * @param  array<array-key, mixed>  $parameters
      *
      * @throws BadMethodCallException
