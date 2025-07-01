@@ -24,6 +24,8 @@ class TableServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'table');
+
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
 
@@ -51,5 +53,9 @@ class TableServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../database/migrations' => database_path('migrations'),
         ], 'table-migrations');
+
+        $this->publishes([
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/table'),
+        ], 'table-lang');
     }
 }

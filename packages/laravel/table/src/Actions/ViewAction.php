@@ -6,12 +6,28 @@ namespace Honed\Table\Actions;
 
 use Honed\Action\Contracts\Action;
 use Honed\Table\Table;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 abstract class ViewAction extends Action
 {
+    /**
+     * The translator instance.
+     *
+     * @var \Illuminate\Contracts\Translation\Translator
+     */
+    protected Translator $translator;
+
+    /**
+     * Create a new action instance.
+     */
+    public function __construct()
+    {
+        $this->translator = app(Translator::class);
+    }
+
     /**
      * Get the name of the view from a request.
      *
@@ -54,5 +70,35 @@ abstract class ViewAction extends Action
         throw ValidationException::withMessages([
             $field => $message,
         ]);
+    }
+
+    /**
+     * Fail the action due to the table not being viewable.
+     *
+     * @param string $field
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function invalid(string $field, ?string $action): void
+    {
+        $this->fail($field, $this->translator->get('table::messages.view.missing', [
+            'action' => $action ?? 'access',
+        ]));
+    }
+
+    /**
+     * Fail the action due to the view name not being unique.
+     *
+     * @param string $field
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function notUnique(string $field): void
+    {
+        $this->fail($field, $this->translator->get('table::messages.view.name.unique', [
+            'attribute' => $field,
+        ]));
     }
 }

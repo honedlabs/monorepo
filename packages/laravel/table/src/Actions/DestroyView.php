@@ -27,7 +27,7 @@ class UpdateView extends ViewAction
         ?string $field = null
     ): void {
         if ($table->isNotViewable()) {
-            $this->fail($field, 'We were unable to delete the view.');
+            $this->invalid($field, 'delete');
         }
 
         if ($field) {

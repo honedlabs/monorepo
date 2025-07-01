@@ -28,7 +28,7 @@ class StoreView extends ViewAction
         mixed $scope = null
     ): void {
         if ($table->isNotViewable()) {
-            $this->fail($field, 'We were unable to store the view.');
+            $this->invalid($field, 'create');
         }
 
         try {
@@ -37,9 +37,9 @@ class StoreView extends ViewAction
             $view = $this->state($table, $request);
 
             $this->store($table, $scope, $name, $view);
-            
+
         } catch (UniqueConstraintViolationException $e) {
-            $this->fail($field, 'The view name must be unique.');
+            $this->notUnique($field);
         }
     }
 
