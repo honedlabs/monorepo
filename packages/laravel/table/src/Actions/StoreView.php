@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Table\Actions;
 
-use Honed\Action\Contracts\Action;
 use Honed\Table\Facades\Views;
 use Honed\Table\Table;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class StoreView extends ViewAction
@@ -17,9 +15,7 @@ class StoreView extends ViewAction
     /**
      * Store a new view.
      *
-     * @return object
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function handle(
         Table $table,
@@ -46,11 +42,7 @@ class StoreView extends ViewAction
     /**
      * Store a view.
      *
-     * @param \Honed\Table\Table $table
-     * @param mixed $scope
-     * @param string $name
-     * @param array<string, mixed> $view
-     * @return void
+     * @param  array<string, mixed>  $view
      */
     protected function store(Table $table, mixed $scope, string $name, array $view): void
     {

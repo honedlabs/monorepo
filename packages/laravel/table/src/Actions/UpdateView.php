@@ -4,20 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Table\Actions;
 
-use Honed\Action\Contracts\Action;
 use Honed\Table\Facades\Views;
 use Honed\Table\Table;
-use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 class UpdateView extends ViewAction
 {
     /**
      * Update, or create, a view.
-     *
-     * @return object
      */
     public function handle(
         Table $table,
@@ -30,9 +24,7 @@ class UpdateView extends ViewAction
             $this->invalid($field, 'update');
         }
 
-        if ($field) {
-            $name ??= $this->getName($request, $field);
-        }
+        $name ??= $this->getName($request, $field);
 
         $view = $this->state($table, $request);
 
@@ -42,11 +34,7 @@ class UpdateView extends ViewAction
     /**
      * Update a view.
      *
-     * @param \Honed\Table\Table $table
-     * @param mixed $scope
-     * @param string $name
-     * @param array<string, mixed> $view
-     * @return void
+     * @param  array<string, mixed>  $view
      */
     protected function update(Table $table, mixed $scope, string $name, array $view): void
     {
