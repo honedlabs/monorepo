@@ -7,7 +7,10 @@ namespace Honed\Table;
 use Honed\Table\Commands\ColumnMakeCommand;
 use Honed\Table\Commands\PurgeCommand;
 use Honed\Table\Commands\TableMakeCommand;
+use Honed\Table\Http\Controllers\TableViewController;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Routing\Router;
+
 
 class TableServiceProvider extends ServiceProvider
 {
@@ -17,6 +20,8 @@ class TableServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/table.php', 'table');
+
+        $this->registerViewsMacro();
     }
 
     /**
@@ -57,5 +62,27 @@ class TableServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/lang' => resource_path('lang/vendor/table'),
         ], 'table-lang');
+    }
+
+    /**
+     * Register the route macro for the action handler.
+     */
+    protected function registerViewsMacro(): void
+    {
+        Router::macro('tableViews', function () {
+            /** @var Router $this */
+
+            /** @var string $endpoint */
+            $endpoint = config('table.views.uri', '_views/{table}');
+
+            $this->post($endpoint, [TableViewController::class, 'store'])
+                ->name('table.views.store');
+
+            $this->patch($endpoint, [TableViewController::class, 'update'])
+                ->name('table.views.update');
+
+            $this->put($endpoint, [TableViewController::class, 'destroy'])
+                ->name('table.views.destroy');
+        });
     }
 }

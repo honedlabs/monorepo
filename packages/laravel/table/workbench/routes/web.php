@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::actions();
 
+Route::tableViews();
+
 Route::get('/', fn () => view('welcome'))
     ->name('home');
 
