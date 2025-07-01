@@ -66,15 +66,13 @@ it('has array representation', function () {
     expect($this->table->toArray())
         ->toBeArray()
         ->toHaveKeys([
-            'id',
-            'sort',
-            'search',
-            'delimiter',
+            '_page_key',
+            '_sort_key',
+            '_search_key',
+            '_delimiter',
             'sorts',
             'filters',
             'searches',
-            'key',
-            'page',
             'records',
             'paginate',
             'columns',
@@ -92,16 +90,14 @@ it('has array representation', function () {
             'placeholder',
             'views',
         ])
-        ->{'sort'}->toBe($this->table->getSortKey())
-        ->{'search'}->toBe($this->table->getSearchKey())
-        ->{'delimiter'}->toBe($this->table->getDelimiter())
+        ->{'_page_key'}->toBe($this->table->getPageKey())
+        ->{'_sort_key'}->toBe($this->table->getSortKey())
+        ->{'_search_key'}->toBe($this->table->getSearchKey())
+        ->{'_delimiter'}->toBe($this->table->getDelimiter())
         ->{'sorts'}->toBeArray()
         ->{'filters'}->toBeArray()
         ->{'searches'}->toBeArray()
-        ->{'key'}->toBe($this->table->getKey())
-        ->{'page'}->toBe($this->table->getPageKey())
         ->{'records'}->toBeArray()
-        ->{'paginate'}->toBeArray()
         ->{'paginate'}->toBeArray()
         ->{'columns'}->toBeArray()
         ->{'toggleable'}->toBeFalse()

@@ -399,16 +399,14 @@ class Table extends Unit implements CanPersistData, HooksIntoLifecycle, NullsAsU
         $this->build();
 
         return [
-            'id' => $this->getId(),
-            'key' => $this->getKey(),
-            'column' => $this->isToggleable() ? $this->getColumnKey() : null,
-            'record' => is_array($this->getPerPage()) ? $this->getRecordKey() : null,
-            'page' => $this->getPageKey(),
+            '_column_key' => $this->isToggleable() ? $this->getColumnKey() : null,
+            '_record_key' => is_array($this->getPerPage()) ? $this->getRecordKey() : null,
+            '_page_key' => $this->getPageKey(),
+            'toggleable' => $this->isToggleable(),
             'records' => $this->getRecords(),
             'paginate' => $this->getPagination(),
             'columns' => $this->columnsToArray(),
             'pages' => $this->pageOptionsToArray(),
-            'toggleable' => $this->isToggleable(),
             'operations' => $this->operationsToArray(),
             'state' => $this->getEmptyState()?->toArray(),
             'views' => $this->listViews(),

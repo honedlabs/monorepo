@@ -58,6 +58,7 @@ class TransformRecords extends Pipe
             'class' => $this->instance->getClasses(
                 $this->getNamedParameters($record), $this->getTypedParameters($record)
             ),
+            '_key' => Arr::get($record, $this->instance->getKey()),
             'operations' => array_map(
                 static fn (InlineOperation $operation) => $operation->record($record)->toArray(),
                 array_values(
