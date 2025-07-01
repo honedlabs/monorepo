@@ -7,10 +7,12 @@ namespace Honed\Table\Actions;
 use Honed\Action\Contracts\Action;
 use Honed\Table\Facades\Views;
 use Honed\Table\Table;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
-class StoreView extends Action
+class StoreView extends ViewAction
 {
     /**
      * Store a new view.
@@ -24,43 +26,34 @@ class StoreView extends Action
         Request $request,
         string $field = 'name',
         mixed $scope = null
-    ) {
+    ): void {
         if ($table->isNotViewable()) {
             $this->fail($field, 'We were unable to store the view.');
         }
 
+        try {
+            $name = $this->getName($request, $field);
 
-        Views::for($scope)->create(
-            $table, $this->getName($request, $field), $this->state($table, $request)
-        );
+            $view = $this->state($table, $request);
+
+            $this->store($table, $scope, $name, $view);
+            
+        } catch (UniqueConstraintViolationException $e) {
+            $this->fail($field, 'The view name must be unique.');
+        }
     }
 
     /**
-     * Get the name of the view from the request.
+     * Store a view.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string $field
-     * @return string
+     * @param \Honed\Table\Table $table
+     * @param mixed $scope
+     * @param string $name
+     * @param array<string, mixed> $view
+     * @return void
      */
-    protected function getName(Request $request, string $field): string
+    protected function store(Table $table, mixed $scope, string $name, array $view): void
     {
-        Validator::make($request->all(), [
-            $field => ['required', 'string', 'max:255'],
-        ])->validate();
-
-        return $request->input($field);
+        Views::for($scope)->create($table, $name, $view);
     }
-
-    /**
-     * Create the state of the view from the request.
-     *
-     * @return array<string, mixed>
-     */
-    protected function state(Table $table, Request $request): array
-    {
-        $incoming = Request::create($request->header('referer'), Request::METHOD_GET);
-
-        return $table->request($incoming)->toState();
-    }
-
 }
