@@ -11,15 +11,15 @@ beforeEach(function () {
 
 it('makes', function () {
     expect(Component::make())->toBeInstanceOf(Component::class)
-        ->getType()->toBe('component')
-        ->getName()->toBeNull();
+        ->getName()->toBe('component')
+        ->getType()->toBeNull();
 });
 
 it('has representation', function () {
     expect($this->test)
         ->toArray()->toEqual([
-            'type' => 'component',
-            'name' => null,
+            'name' => 'component',
+            'type' => null,
             'meta' => [],
         ]);
 });
@@ -33,7 +33,7 @@ it('serializes without null values', function () {
     $test = new class() extends Component implements NullsAsUndefined {};
 
     $expected = [
-        'type' => 'component',
+        'name' => 'component',
         'meta' => [],
     ];
 

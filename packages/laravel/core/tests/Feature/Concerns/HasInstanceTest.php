@@ -23,5 +23,5 @@ it('sets instance', function () {
 
 it('calls instance methods', function () {
     expect($this->test->instance($this->component))
-        ->getType()->toBe('component');
+        ->getName()->toBe('component');
 });

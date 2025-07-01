@@ -15,7 +15,7 @@ use Honed\Core\Pipes\CallsAfter;
 use Honed\Core\Pipes\CallsBefore;
 use Honed\Core\Primitive;
 use Workbench\App\Models\User;
-use Workbench\App\Pipes\SetName;
+use Workbench\App\Pipes\SetType;
 
 class Component extends Primitive implements HooksIntoLifecycle
 {
@@ -66,7 +66,7 @@ class Component extends Primitive implements HooksIntoLifecycle
     protected function definition(self $component): self
     {
         return $component
-            ->type('component');
+            ->name('component');
     }
 
     /**
@@ -78,7 +78,7 @@ class Component extends Primitive implements HooksIntoLifecycle
     {
         return [
             CallsBefore::class,
-            SetName::class,
+            SetType::class,
             CallsAfter::class,
         ];
     }

@@ -32,7 +32,7 @@ it('evaluates return types', function ($input, $output) {
     'default value' => [fn (string $name = 'default') => $name, 'default'],
     'default by type' => fn () => [fn (User $u) => $u->email, $this->user->email],
     'default by name' => fn () => [fn ($user) => $user->email, $this->user->email],
-    'static' => [fn (Component $c) => $c->getType(), 'component'],
+    'static' => [fn (Component $c) => $c->getName(), 'component'],
     'evaluation identifier' => fn () => [fn ($component) => $component, $this->component],
     'container' => fn () => [fn (Container $container) => $container, app()],
 ]);

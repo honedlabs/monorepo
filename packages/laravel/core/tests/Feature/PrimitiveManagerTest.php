@@ -21,35 +21,35 @@ it('resolves', function () {
     expect(PrimitiveManager::resolve())
         ->toBeInstanceOf(PrimitiveManager::class);
 
-    Component::configureUsing(fn (Component $component) => $component->name('Users'));
+    Component::configureUsing(fn (Component $component) => $component->type('Users'));
 
     expect(Component::make())
-        ->getName()->toBe('Users');
+        ->getType()->toBe('Users');
 });
 
 it('sets configuration', function () {
-    Component::configureUsing(fn (Component $component) => $component->name('Users'));
+    Component::configureUsing(fn (Component $component) => $component->type('Users'));
 
     expect(Component::make())
-        ->getName()->toBe('Users');
+        ->getType()->toBe('Users');
 });
 
 it('configure children primitives', function () {
-    Component::configureUsing(fn (Component $component) => $component->name('Parent'));
+    Component::configureUsing(fn (Component $component) => $component->type('Parent'));
 
     expect(Component::make())
-        ->getName()->toBe('Parent');
+        ->getType()->toBe('Parent');
 
     expect(ChildComponent::make())
-        ->getName()->toBe('Parent');
+        ->getType()->toBe('Parent');
 });
 
 it('does not configure non-matching primitives', function () {
-    ChildComponent::configureUsing(fn (ChildComponent $component) => $component->name('Child'));
+    ChildComponent::configureUsing(fn (ChildComponent $component) => $component->type('Child'));
 
     expect(Component::make())
-        ->getName()->toBeNull();
+        ->getType()->toBeNull();
 
     expect(ChildComponent::make())
-        ->getName()->toBe('Child');
+        ->getType()->toBe('Child');
 });

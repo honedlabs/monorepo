@@ -9,7 +9,7 @@ use Honed\Core\Pipe;
 /**
  * @extends Pipe<\Workbench\App\Classes\Component>
  */
-class SetName extends Pipe
+class SetType extends Pipe
 {
     /**
      * The count of the pipe.
@@ -33,6 +33,6 @@ class SetName extends Pipe
      */
     public function run(): void
     {
-        $this->instance->name('Pipeline '.static::$count++);
+        $this->instance->type('Pipeline '.static::$count++);
     }
 }

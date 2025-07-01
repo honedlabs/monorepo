@@ -8,7 +8,7 @@ use Closure;
 use Honed\Core\Concerns\HasInstance;
 
 /**
- * @template TClass
+ * @template TClass = mixed
  */
 abstract class Pipe
 {

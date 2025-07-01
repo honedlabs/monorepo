@@ -28,7 +28,7 @@ trait HasName
     /**
      * Get the name.
      */
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
