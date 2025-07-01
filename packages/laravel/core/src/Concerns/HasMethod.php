@@ -10,7 +10,6 @@ use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 
 use function in_array;
-use function mb_strtoupper;
 
 trait HasMethod
 {
@@ -28,9 +27,9 @@ trait HasMethod
      */
     public function method(?string $method): static
     {
-        $method = mb_strtoupper($method ?? '');
+        $method = mb_strtolower($method ?? '');
 
-        if ($this->invalidMethod($method)) {
+        if (! in_array($method, ['get', 'post', 'put', 'delete', 'patch'])) {
             throw new InvalidArgumentException(
                 "The provided method [{$method}] is invalid."
             );
@@ -96,28 +95,14 @@ trait HasMethod
      */
     public function getMethod(): string
     {
-        return $this->method ?? $this->getFallbackMethod();
+        return $this->method ?? mb_strtolower($this->defaultMethod());
     }
 
     /**
      * Get the fallback method
      */
-    protected function getFallbackMethod(): string
+    protected function defaultMethod(): string
     {
         return Request::METHOD_GET;
-    }
-
-    /**
-     * Determine if the HTTP method is invalid.
-     */
-    protected function invalidMethod(string $method): bool
-    {
-        return ! in_array($method, [
-            Request::METHOD_GET,
-            Request::METHOD_POST,
-            Request::METHOD_PUT,
-            Request::METHOD_DELETE,
-            Request::METHOD_PATCH,
-        ]);
     }
 }

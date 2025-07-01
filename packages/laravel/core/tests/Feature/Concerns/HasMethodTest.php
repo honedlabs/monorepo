@@ -14,19 +14,19 @@ beforeEach(function () {
 
 it('sets method', function () {
     expect($this->test)
-        ->getMethod()->toBe(Request::METHOD_GET)
+        ->getMethod()->toBe('get')
         ->method(Request::METHOD_POST)->toBe($this->test)
-        ->getMethod()->toBe(Request::METHOD_POST)
+        ->getMethod()->toBe('post')
         ->patch()->toBe($this->test)
-        ->getMethod()->toBe(Request::METHOD_PATCH)
+        ->getMethod()->toBe('patch')
         ->put()->toBe($this->test)
-        ->getMethod()->toBe(Request::METHOD_PUT)
+        ->getMethod()->toBe('put')
         ->delete()->toBe($this->test)
-        ->getMethod()->toBe(Request::METHOD_DELETE)
+        ->getMethod()->toBe('delete')
         ->post()->toBe($this->test)
-        ->getMethod()->toBe(Request::METHOD_POST)
+        ->getMethod()->toBe('post')
         ->get()->toBe($this->test)
-        ->getMethod()->toBe(Request::METHOD_GET);
+        ->getMethod()->toBe('get');
 });
 
 it('validates method', function ($input) {
