@@ -30,7 +30,7 @@ jobs:
           # - modal
           # - nav
           # - page
-          # - persist
+          - persist
           # - refine
           # - registry
           # - table
