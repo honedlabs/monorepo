@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Honed\Persist\PersistManager forgetDriver(string|array<int, string>|null $name = null) Unset the given driver instances
  * @method static \Honed\Persist\PersistManager forgetDrivers() Forget all of the resolved driver instances
  * @method static \Honed\Persist\PersistManager extend(string $driver, \Closure $callback) Register a custom driver creator closure
+ * @method static \Honed\Persist\PersistManager setRequest(\Illuminate\Http\Request $request) Set the request to use for all drivers
+ * @method static \Honed\Persist\PersistManager setSession(\Illuminate\Session\SessionManager $session) Set the session to use for all drivers
  * @method static mixed get(string $scope, ?string $key = null) Get a value from the resolved data (delegated to driver)
  * @method static \Honed\Persist\Drivers\Driver put(string $scope, string|array<string, mixed> $key, mixed $value = null) Put the value for the given key in preparation to persist it (delegated to driver)
  * @method static array<string,mixed> value(string $scope) Retrieve the data from the driver and set it in memory for the given key (delegated to driver)
