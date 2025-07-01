@@ -31,8 +31,7 @@ export declare interface Bulk<T = any> {
 }
 
 export declare interface BulkOperation extends Operation {
-    type: "bulk";
-    keepSelected: boolean;
+    keep: boolean;
 }
 
 export declare interface BulkOperationData extends Record<string, any> {
@@ -56,25 +55,20 @@ export declare interface Confirm {
 }
 
 export declare type Executable<T extends Operation> = T & {
-    execute: (data: OperationDataMap[T["type"]], options?: VisitOptions) => boolean;
+    execute: (data?: OperationData<T>, options?: VisitOptions) => boolean;
 };
 
 /**
  * Create operations with execute methods
  */
-export declare function executables<T extends Operations>(operations: T[], endpoint: MaybeEndpoint, id: MaybeId, defaults?: VisitOptions, payload?: OperationDataMap[T["type"]]): (T & {
-    execute: (data?: InlineOperationData | BulkOperationData | PageOperationData, options?: VisitOptions) => boolean;
+export declare function executables<T extends Operations>(operations: T[], defaults?: VisitOptions, payload?: OperationData<T>): (T & {
+    execute: (data?: OperationData<T>, options?: VisitOptions) => boolean;
 })[];
 
 /**
  * Execute an operation with full type safety.
  */
-export declare function execute<T extends Operations>(operation: T, endpoint: string | null | undefined, data: OperationDataMap[typeof operation.type], options?: VisitOptions): boolean;
-
-/**
- * Execute an operation with common logic
- */
-export declare function executor(operation: Operations, endpoint: MaybeEndpoint, id: MaybeId, data?: OperationData, options?: VisitOptions): boolean;
+export declare function execute<T extends Operations>(operation: T, data?: OperationData<T>, options?: VisitOptions): boolean;
 
 export declare interface HonedBatch {
     inline: ComputedRef<Executable<InlineOperation>[]>;
@@ -88,7 +82,6 @@ export declare interface HonedBatch {
 export declare type Identifier = string | number;
 
 export declare interface InlineOperation extends Operation {
-    type: "inline";
     default: boolean;
 }
 
@@ -96,42 +89,24 @@ export declare interface InlineOperationData extends Record<string, any> {
     record: Identifier;
 }
 
-export declare type MaybeEndpoint = string | null | undefined;
-
-export declare type MaybeId = string | null | undefined;
-
 export declare interface Operation {
     name: string;
     label: string;
-    type: OperationType;
     icon?: string;
-    extra?: Record<string, unknown>;
-    action?: boolean;
     confirm?: Confirm;
-    route?: Route;
-    inertia?: boolean;
+    type?: OperationType;
+    href?: string;
+    method?: Method;
+    target?: string;
 }
 
-export declare type OperationData = InlineOperationData | BulkOperationData | PageOperationData;
-
-export declare type OperationDataMap = {
-    inline: InlineOperationData;
-    bulk: BulkOperationData;
-    page: PageOperationData;
-};
-
-export declare type OperationMap = {
-    inline: InlineOperation;
-    bulk: BulkOperation;
-    page: PageOperation;
-};
+export declare type OperationData<T extends Operation> = T extends InlineOperation ? InlineOperationData : T extends BulkOperation ? BulkOperationData : PageOperationData;
 
 export declare type Operations = InlineOperation | BulkOperation | PageOperation;
 
-export declare type OperationType = "inline" | "page" | "bulk";
+export declare type OperationType = "inertia" | "anchor";
 
 export declare interface PageOperation extends Operation {
-    type: "page";
 }
 
 export declare interface PageOperationData extends Record<string, any> {

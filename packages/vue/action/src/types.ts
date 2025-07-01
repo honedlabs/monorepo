@@ -21,26 +21,11 @@ export interface BulkOperationData extends Record<string, any> {
 
 export interface PageOperationData extends Record<string, any> {}
 
-export type OperationData =
-	| InlineOperationData
-	| BulkOperationData
-	| PageOperationData;
-
-export type MaybeEndpoint = string | null | undefined;
-
-export type MaybeId = string | null | undefined;
-
-export type OperationMap = {
-	inline: InlineOperation;
-	bulk: BulkOperation;
-	page: PageOperation;
-};
-
-export type OperationDataMap = {
-	inline: InlineOperationData;
-	bulk: BulkOperationData;
-	page: PageOperationData;
-};
+export type OperationData<T extends Operation> = T extends InlineOperation
+	? InlineOperationData
+	: T extends BulkOperation
+		? BulkOperationData
+		: PageOperationData;
 
 export interface Batch {
 	id?: string;
@@ -51,10 +36,7 @@ export interface Batch {
 }
 
 export type Executable<T extends Operation> = T & {
-	execute: (
-		data: OperationDataMap[T["type"]],
-		options?: VisitOptions,
-	) => boolean;
+	execute: (data?: OperationData<T>, options?: VisitOptions) => boolean;
 };
 
 export interface HonedBatch {

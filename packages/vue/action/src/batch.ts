@@ -1,22 +1,17 @@
 import type { VisitOptions } from "@inertiajs/core";
 import { computed } from "vue";
-import {
-	type Batch,
-	type InlineOperation,
-	type InlineOperationData,
-	type BulkOperation,
-	type BulkOperationData,
-	type PageOperation,
-	type PageOperationData,
-	type Operations,
-	type OperationDataMap,
-	type HonedBatch,
+import type {
+	Batch,
+	InlineOperation,
+	InlineOperationData,
+	BulkOperation,
+	BulkOperationData,
+	PageOperation,
+	PageOperationData,
+	HonedBatch,
 	Executable,
 } from "./types";
-import {
-	executor as operationExecutor,
-	executables as operationExecutables,
-} from "./utils";
+import { executables, execute } from "./utils";
 
 export function useBatch<T extends Record<string, Batch>>(
 	props: T,
@@ -54,35 +49,6 @@ export function useBatch<T extends Record<string, Batch>>(
 	);
 
 	/**
-	 * Execute an operation with common logic
-	 */
-	function executor<T extends Operations>(
-		operation: T,
-		data: OperationDataMap[typeof operation.type] = {},
-		options: VisitOptions = {},
-	) {
-		return operationExecutor(
-			operation,
-			batch.value.endpoint,
-			batch.value.id,
-			data,
-			{ ...defaults, ...options },
-		);
-	}
-
-	/**
-	 * Create operations with execute methods
-	 */
-	function executables<T extends Operations>(operations: T[]) {
-		return operationExecutables(
-			operations,
-			batch.value.endpoint,
-			batch.value.id,
-			defaults,
-		);
-	}
-
-	/**
 	 * Execute an inline operation
 	 */
 	function executeInline(
@@ -90,7 +56,7 @@ export function useBatch<T extends Record<string, Batch>>(
 		data: InlineOperationData,
 		options: VisitOptions = {},
 	) {
-		return executor(operation, data, options);
+		return execute(operation, data, { ...defaults, ...options });
 	}
 
 	/**
@@ -101,7 +67,7 @@ export function useBatch<T extends Record<string, Batch>>(
 		data: BulkOperationData,
 		options: VisitOptions = {},
 	) {
-		return executor(operation, data, options);
+		return execute(operation, data, { ...defaults, ...options });
 	}
 
 	/**
@@ -112,7 +78,7 @@ export function useBatch<T extends Record<string, Batch>>(
 		data: PageOperationData = {},
 		options: VisitOptions = {},
 	) {
-		return executor(operation, data, options);
+		return execute(operation, data, { ...defaults, ...options });
 	}
 
 	return {

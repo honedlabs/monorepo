@@ -1,11 +1,6 @@
 import type { VisitOptions } from "@inertiajs/core";
 import { router } from "@inertiajs/vue3";
-import type {
-	MaybeEndpoint,
-	MaybeId,
-	OperationData,
-	OperationDataMap,
-} from "./types";
+import type { OperationData } from "./types";
 import { Operations } from "./operations";
 import axios from "axios";
 
@@ -14,51 +9,26 @@ import axios from "axios";
  */
 export function execute<T extends Operations>(
 	operation: T,
-	endpoint: string | null | undefined,
-	data: OperationDataMap[typeof operation.type],
+	data: OperationData<T> = {} as OperationData<T>,
 	options: VisitOptions = {},
 ): boolean {
-	if (operation.route) {
-		const { url, method } = operation.route;
-
-		if (operation.inertia) window.location.href = url;
-		else router.visit(url, { ...options, method });
-
-		return true;
-	}
-
-	if (!operation.action || !endpoint) {
+	if (!operation.href || !operation.method) {
 		return false;
 	}
 
-	const payload = {
-		...data,
-		name: operation.name,
-		type: operation.type,
-	};
+	if (operation.type === "inertia") {
+		if (operation.method === "delete") router.delete(operation.href, options);
+		else router[operation.method](operation.href, data, options);
+	} else {
+		const handler = (error: any) => options.onError?.(error);
 
-	if (operation.inertia) router.post(endpoint, payload, options);
-	else axios.post(endpoint, payload).catch((e) => options.onError?.(e));
+		if (operation.method === "get") window.location.href = operation.href;
+		else if (operation.method === "delete")
+			axios.delete(operation.href).catch(handler);
+		else axios[operation.method](operation.href, data).catch(handler);
+	}
 
 	return true;
-}
-
-/**
- * Execute an operation with common logic
- */
-export function executor(
-	operation: Operations,
-	endpoint: MaybeEndpoint,
-	id: MaybeId,
-	data: OperationData = {},
-	options: VisitOptions = {},
-) {
-	return execute(
-		operation,
-		endpoint,
-		{ ...data, id: id ?? undefined },
-		options,
-	);
 }
 
 /**
@@ -66,23 +36,15 @@ export function executor(
  */
 export function executables<T extends Operations>(
 	operations: T[],
-	endpoint: MaybeEndpoint,
-	id: MaybeId,
 	defaults: VisitOptions = {},
-	payload: OperationDataMap[T["type"]] = {} as OperationDataMap[T["type"]],
+	payload: OperationData<T> = {} as OperationData<T>,
 ) {
 	return operations.map((operation) => ({
 		...operation,
 		execute: (
-			data: OperationDataMap[typeof operation.type] = {},
+			data: OperationData<T> = {} as OperationData<T>,
 			options: VisitOptions = {},
 		) =>
-			executor(
-				operation,
-				endpoint,
-				id,
-				{ ...payload, ...data },
-				{ ...defaults, ...options },
-			),
+			execute(operation, { ...payload, ...data }, { ...defaults, ...options }),
 	}));
 }

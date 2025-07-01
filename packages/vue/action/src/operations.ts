@@ -5,7 +5,7 @@ export interface Route {
 	method: Method;
 }
 
-export type OperationType = "inline" | "page" | "bulk";
+export type OperationType = "inertia" | "anchor";
 
 export interface Confirm {
 	title: string;
@@ -18,27 +18,22 @@ export interface Confirm {
 export interface Operation {
 	name: string;
 	label: string;
-	type: OperationType;
 	icon?: string;
-	extra?: Record<string, unknown>;
-	action?: boolean;
 	confirm?: Confirm;
-	route?: Route;
-	inertia?: boolean;
+	type?: OperationType;
+	href?: string;
+	method?: Method;
+	target?: string;
 }
 
 export interface InlineOperation extends Operation {
-	type: "inline";
 	default: boolean;
 }
 
 export interface BulkOperation extends Operation {
-	type: "bulk";
-	keepSelected: boolean;
+	keep: boolean;
 }
 
-export interface PageOperation extends Operation {
-	type: "page";
-}
+export interface PageOperation extends Operation {}
 
 export type Operations = InlineOperation | BulkOperation | PageOperation;
