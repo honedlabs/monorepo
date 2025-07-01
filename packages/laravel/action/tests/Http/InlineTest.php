@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Action\Testing\InlineRequest;
-use Illuminate\Support\Str;
 use Workbench\App\Batches\UserBatch;
 use Workbench\App\Models\User;
 
@@ -26,7 +24,7 @@ it('handles a url', function () {
 
 it('handles an action', function () {
     patch(route('actions', [$this->batch, 'inline-name']), [
-        'id' => $this->user->id
+        'id' => $this->user->id,
     ])->assertRedirect(route('users.show', $this->user->id));
 
     $this->assertDatabaseHas('users', [
@@ -47,7 +45,7 @@ it('requires a record id', function () {
 
 it('requires a valid record id', function () {
     patch(route('actions', [$this->batch, 'inline-name']), [
-        'id' => [1]
+        'id' => [1],
     ])->assertInvalid(['id']);
 
     assertDatabaseMissing('users', [
@@ -58,7 +56,7 @@ it('requires a valid record id', function () {
 
 it('returns 403 if the action is not allowed', function () {
     post(route('actions', [$this->batch, 'inline-description']), [
-        'id' => $this->user->id
+        'id' => $this->user->id,
     ])->assertForbidden();
 
     assertDatabaseMissing('users', [
@@ -69,7 +67,7 @@ it('returns 403 if the action is not allowed', function () {
 
 it('returns 404 if the action is not found', function () {
     post(route('actions', [$this->batch, 'missing']), [
-        'id' => $this->user->id
+        'id' => $this->user->id,
     ])->assertNotFound();
 
     assertDatabaseMissing('users', [
@@ -80,7 +78,7 @@ it('returns 404 if the action is not found', function () {
 
 it('returns 405 if the method is not supported', function () {
     post(route('actions', [$this->batch, 'inline-name']), [
-        'id' => $this->user->id
+        'id' => $this->user->id,
     ])->assertMethodNotAllowed();
 
     assertDatabaseMissing('users', [
@@ -91,7 +89,7 @@ it('returns 405 if the method is not supported', function () {
 
 it('returns 429 if the rate limit is exceeded', function () {
     patch(route('actions', [$this->batch, 'inline-name']), [
-        'id' => $this->user->id
+        'id' => $this->user->id,
     ])->assertRedirect();
 
     assertDatabaseHas('users', [
@@ -102,7 +100,7 @@ it('returns 429 if the rate limit is exceeded', function () {
     $this->user->refresh()->update(['name' => 'new']);
 
     patch(route('actions', [$this->batch, 'inline-name']), [
-        'id' => $this->user->id
+        'id' => $this->user->id,
     ])->assertStatus(429);
 
     assertDatabaseHas('users', [
@@ -113,7 +111,7 @@ it('returns 429 if the rate limit is exceeded', function () {
 
 it('returns 404 if the record is not found', function () {
     patch(route('actions', [$this->batch, 'inline-name']), [
-        'id' => 2
+        'id' => 2,
     ])->assertNotFound();
 
     assertDatabaseMissing('users', [

@@ -4,28 +4,25 @@ declare(strict_types=1);
 
 namespace Honed\Action;
 
-use Closure;
 use Honed\Action\Concerns\Actionable;
-use Honed\Action\Concerns\CanHandleOperations;
 use Honed\Action\Concerns\HasEncoder;
 use Honed\Action\Concerns\HasKey;
 use Honed\Action\Concerns\HasOperations;
 use Honed\Action\Contracts\HandlesOperations;
-use Honed\Action\Handlers\BatchHandler;
 use Honed\Action\Handlers\Handler;
 use Honed\Action\Operations\Operation;
 use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Concerns\HasResource;
 use Honed\Core\Primitive;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 /**
@@ -36,8 +33,8 @@ class Unit extends Primitive implements HandlesOperations
 {
     use Actionable;
     use HasEncoder;
-    use HasOperations;
     use HasKey;
+    use HasOperations;
     use HasRecord;
     use HasResource;
 
@@ -50,7 +47,7 @@ class Unit extends Primitive implements HandlesOperations
             $primitive = static::decode($value);
 
             if (static::canHandleOperations($primitive)) {
-                return $primitive::make(); // @phpstan-ignore-line
+                return $primitive::make();
             }
 
             return null;
@@ -129,17 +126,24 @@ class Unit extends Primitive implements HandlesOperations
         return $this->resolveRouteBinding($value, $field);
     }
 
-
     /**
      * Handle the incoming action request.
-     *
-     * @return Responsable|Response
      */
-    public function handle(Operation $operation, Request $request): mixed
+    public function handle(Operation $operation, Request $request): Responsable|Response
     {
         $handler = $this->getHandler();
 
         return $handler::make($this)->handle($operation, $request);
+    }
+
+    /**
+     * Determine if the primitive can handle operations.
+     */
+    protected static function canHandleOperations(mixed $primitive): bool
+    {
+        return is_string($primitive)
+            && class_exists($primitive)
+            && is_subclass_of($primitive, static::getParentClass());
     }
 
     /**
@@ -154,16 +158,6 @@ class Unit extends Primitive implements HandlesOperations
             'bulk' => $this->bulkOperationsToArray(),
             'page' => $this->pageOperationsToArray(),
         ];
-    }
-
-    /**
-     * Determine if the primitive can handle operations.
-     */
-    protected static function canHandleOperations(mixed $primitive): bool
-    {
-        return is_string($primitive)
-            && class_exists($primitive)
-            && is_subclass_of($primitive, static::getParentClass()); // @phpstan-ignore function.alreadyNarrowedType
     }
 
     /**

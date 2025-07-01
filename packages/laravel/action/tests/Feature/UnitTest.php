@@ -3,11 +3,10 @@
 declare(strict_types=1);
 
 use Honed\Action\Unit;
-use Honed\Action\Batch;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
-use Workbench\App\Batches\UserBatch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Workbench\App\Batches\UserBatch;
 use Workbench\App\Models\User;
 
 beforeEach(function () {

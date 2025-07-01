@@ -30,7 +30,9 @@ trait Actionable
     public static function getEndpoint(): string
     {
         /** @var string */
-        return trim(config('action.endpoint', '_actions'), '/');
+        $endpoint = config('action.endpoint', '_actions');
+
+        return trim($endpoint, '/');
     }
 
     /**

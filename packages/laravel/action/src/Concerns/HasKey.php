@@ -16,7 +16,6 @@ trait HasKey
     /**
      * Set the key to use for selecting records.
      *
-     * @param  string|null  $key
      * @return $this
      */
     public function key(?string $key): static

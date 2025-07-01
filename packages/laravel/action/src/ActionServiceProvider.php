@@ -11,7 +11,6 @@ use Honed\Action\Commands\BatchMakeCommand;
 use Honed\Action\Commands\OperationMakeCommand;
 use Honed\Action\Commands\ProcessMakeCommand;
 use Honed\Action\Http\Controllers\ActionController;
-use Honed\Action\Http\Controllers\BatchController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Action\Handlers;
 
-use Honed\Action\Container;
 use Honed\Action\Handlers\Concerns\Parameterisable;
 use Honed\Action\Handlers\Concerns\Preparable;
 use Honed\Action\Operations\Operation;
@@ -22,7 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 /**
- * @template TClass of \Honed\Action\Container = \Honed\Action\Container
+ * @template TClass of \Honed\Action\Unit = \Honed\Action\Unit
  *
  * @mixin TClass
  */
@@ -32,27 +31,9 @@ class Handler
      * @use HasInstance<TClass>
      */
     use HasInstance;
+
     use Parameterisable;
     use Preparable;
-
-    /**
-     * Get the resource for the handler.
-     *
-     * @return array<array-key, mixed>|Builder<Model>
-     */
-    protected function getResource(): array|Builder
-    {
-        return $this->instance->getBuilder();
-    }
-
-    /**
-     * Get the key to use for selecting records.
-     */
-    protected function getKey(): string
-    {
-        return $this->instance->getKey() 
-            ?? $this->getResource()->getModel()->getKeyName();
-    }
 
     /**
      * Create a new instance of the handler.
@@ -97,6 +78,25 @@ class Handler
         };
 
         return $this->respond($operation, $response);
+    }
+
+    /**
+     * Get the resource for the handler.
+     *
+     * @return array<array-key, mixed>|Builder<Model>
+     */
+    protected function getResource(): array|Builder
+    {
+        return $this->instance->getBuilder();
+    }
+
+    /**
+     * Get the key to use for selecting records.
+     */
+    protected function getKey(): string
+    {
+        return $this->instance->getKey()
+            ?? $this->getBuilder()->getModel()->getKeyName();
     }
 
     /**
