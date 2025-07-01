@@ -17,7 +17,7 @@ trait Actionable
     /**
      * Get the parent class for the instance.
      *
-     * @return class-string<\Honed\Action\Contracts\HandlesOperations>
+     * @return class-string<self>
      */
     public static function getParentClass(): string
     {
@@ -30,7 +30,7 @@ trait Actionable
     public static function getEndpoint(): string
     {
         /** @var string */
-        return config('action.endpoint', '_batch_actions');
+        return trim(config('action.endpoint', '_actions'), '/');
     }
 
     /**

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Action\Handlers;
 
+use Honed\Action\Container;
 use Honed\Action\Handlers\Concerns\Parameterisable;
 use Honed\Action\Handlers\Concerns\Preparable;
 use Honed\Action\Operations\Operation;
+use Honed\Action\Unit;
 use Honed\Core\Concerns\HasInstance;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,17 +22,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
 /**
- * @template TClass of \Honed\Core\Primitive
+ * @template TClass of \Honed\Action\Container = \Honed\Action\Container
  *
  * @mixin TClass
  */
-abstract class Handler
+class Handler
 {
     /**
      * @use HasInstance<TClass>
      */
     use HasInstance;
-
     use Parameterisable;
     use Preparable;
 
@@ -39,19 +40,26 @@ abstract class Handler
      *
      * @return array<array-key, mixed>|Builder<Model>
      */
-    abstract protected function getResource(): array|Builder;
+    protected function getResource(): array|Builder
+    {
+        return $this->instance->getBuilder();
+    }
 
     /**
      * Get the key to use for selecting records.
      */
-    abstract protected function getKey(): string;
+    protected function getKey(): string
+    {
+        return $this->instance->getKey() 
+            ?? $this->getResource()->getModel()->getKeyName();
+    }
 
     /**
      * Create a new instance of the handler.
      *
      * @param  TClass  $instance
      */
-    public static function make($instance): static
+    public static function make(Unit $instance): static
     {
         return resolve(static::class)->instance($instance);
     }

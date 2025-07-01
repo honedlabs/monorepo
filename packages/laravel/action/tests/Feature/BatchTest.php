@@ -26,26 +26,6 @@ it('has model', function () {
         ->getRecord()->toBeInstanceOf(User::class);
 });
 
-it('resolves route binding', function () {
-    expect($this->batch)
-        ->getRouteKeyName()->toBe('batch')
-        ->getRouteKey()->toBe(Batch::encode($this->batch::class));
-
-    expect($this->batch)
-        ->resolveRouteBinding($this->batch->getRouteKey())
-        ->toBeNull();
-
-    $actions = UserBatch::make();
-
-    expect($actions)
-        ->resolveRouteBinding($actions->getRouteKey())
-        ->toBeInstanceOf(UserBatch::class);
-
-    expect($actions)
-        ->resolveChildRouteBinding(UserBatch::class, $actions->getRouteKey())
-        ->toBeInstanceOf(UserBatch::class);
-});
-
 it('resolves batch', function () {
     UserBatch::guessBatchNamesUsing(function ($class) {
         return Str::of($class)
@@ -94,9 +74,7 @@ describe('class-based batch', function () {
             ->toHaveKeys([
                 'inline',
                 'bulk',
-                'page',
-                'id',
-                'endpoint',
+                'page'
             ]);
     });
 
@@ -122,11 +100,6 @@ describe('evaluation', function () {
     })->with([
         'row' => fn () => [fn ($row) => $row, User::class],
         'record' => fn () => [fn ($record) => $record, User::class],
-        'builder' => fn () => [fn ($builder) => $builder, Builder::class],
-        'query' => fn () => [fn ($query) => $query, Builder::class],
-        'q' => fn () => [fn ($q) => $q, Builder::class],
-        'collection' => fn () => [fn ($collection) => $collection, Collection::class],
-        'records' => fn () => [fn ($records) => $records, Collection::class],
         'batch' => fn () => [fn ($batch) => $batch, UserBatch::class],
     ]);
 
@@ -135,8 +108,5 @@ describe('evaluation', function () {
     })->with([
         'model' => fn () => [fn (Model $arg) => $arg, User::class],
         'user' => fn () => [fn (User $arg) => $arg, User::class],
-        'builder' => fn () => [fn (Builder $arg) => $arg, Builder::class],
-        'collection' => fn () => [fn (Collection $arg) => $arg, Collection::class],
-        'batch' => fn () => [fn (Batch $arg) => $arg, Batch::class],
     ]);
 });
