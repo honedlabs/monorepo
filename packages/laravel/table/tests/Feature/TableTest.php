@@ -35,25 +35,6 @@ it('requires key', function () {
     $this->table->key(null)->getKey();
 })->throws(KeyNotFoundException::class);
 
-it('is url routable', function () {
-    expect($this->table)
-        ->getRouteKeyName()->toBe('table');
-
-    expect($this->table)
-        ->resolveRouteBinding($this->table->getRouteKey())
-        ->toBeNull();
-
-    $table = ProductTable::make();
-
-    expect($table)
-        ->resolveRouteBinding($table->getRouteKey())
-        ->toBeInstanceOf(ProductTable::class);
-
-    expect($table)
-        ->resolveChildRouteBinding(null, $table->getRouteKey())
-        ->toBeInstanceOf(ProductTable::class);
-});
-
 it('resolves table', function () {
     ProductTable::guessTableNamesUsing(function ($class) {
         return Str::of($class)

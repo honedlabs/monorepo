@@ -11,7 +11,7 @@ class DateTimeColumn extends Column
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->placeholder('-');
 

@@ -35,7 +35,7 @@ trait Exportable
      * @param  bool|Closure(mixed...):mixed  $value
      * @return $this
      */
-    public function exportable($value = true)
+    public function exportable(bool|Closure $value = true): static
     {
         $this->exportable = $value;
 
@@ -48,7 +48,7 @@ trait Exportable
      * @param  bool  $value
      * @return $this
      */
-    public function notExportable($value = true)
+    public function notExportable(bool $value = true): static
     {
         return $this->exportable(! $value);
     }
@@ -58,7 +58,7 @@ trait Exportable
      *
      * @return bool
      */
-    public function isExportable()
+    public function isExportable(): bool
     {
         return (bool) $this->exportable;
     }
@@ -68,7 +68,7 @@ trait Exportable
      *
      * @return bool
      */
-    public function isNotExportable()
+    public function isNotExportable(): bool
     {
         return ! $this->isExportable();
     }
@@ -78,7 +78,7 @@ trait Exportable
      *
      * @return bool|Closure(mixed...):mixed
      */
-    public function getExportable()
+    public function getExportable(): bool|Closure
     {
         return $this->exportable;
     }
@@ -89,7 +89,7 @@ trait Exportable
      * @param  array<string,mixed>|(Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)  $style
      * @return $this
      */
-    public function exportStyle($style)
+    public function exportStyle(array|Closure $style): static
     {
         $this->exportStyle = $style;
 
@@ -101,7 +101,7 @@ trait Exportable
      *
      * @return array<string,mixed>|(Closure(\PhpOffice\PhpSpreadsheet\Style\Style):void)|null
      */
-    public function getExportStyle()
+    public function getExportStyle(): array|Closure|null
     {
         return $this->exportStyle;
     }
@@ -112,7 +112,7 @@ trait Exportable
      * @param  string  $format
      * @return $this
      */
-    public function exportFormat($format)
+    public function exportFormat(string $format): static
     {
         $this->exportFormat = $format;
 
@@ -124,7 +124,7 @@ trait Exportable
      *
      * @return string|null
      */
-    public function getExportFormat()
+    public function getExportFormat(): ?string
     {
         return $this->exportFormat;
     }

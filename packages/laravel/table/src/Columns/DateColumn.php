@@ -11,11 +11,11 @@ class DateColumn extends Column
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->placeholder('-');
-
         parent::setUp();
+        
+        $this->placeholder('-');
 
         $this->date();
     }

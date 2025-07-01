@@ -22,7 +22,7 @@ trait Searchable
      * @param  bool|string|Closure  $value
      * @return $this
      */
-    public function searchable($value = true)
+    public function searchable(bool|string|Closure $value = true): static
     {
         $this->searchable = $value;
 
@@ -35,7 +35,7 @@ trait Searchable
      * @param  bool  $value
      * @return $this
      */
-    public function notSearchable($value = true)
+    public function notSearchable(bool $value = true): static
     {
         return $this->searchable(! $value);
     }
@@ -45,7 +45,7 @@ trait Searchable
      *
      * @return bool
      */
-    public function isSearchable()
+    public function isSearchable(): bool
     {
         return (bool) $this->searchable;
     }
@@ -55,7 +55,7 @@ trait Searchable
      *
      * @return bool
      */
-    public function isNotSearchable()
+    public function isNotSearchable(): bool
     {
         return ! $this->isSearchable();
     }
@@ -65,7 +65,7 @@ trait Searchable
      *
      * @return Search|null
      */
-    public function getSearch()
+    public function getSearch(): ?Search
     {
         if (! $this->searchable) {
             return null;
@@ -84,9 +84,12 @@ trait Searchable
      * @param  string|null  $name
      * @return Search
      */
-    protected function newSearch($name = null)
+    protected function newSearch(?string $name = null): Search
     {
-        return Search::make($name ?? $this->getName(), $this->getLabel())
+        /** @var string */
+        $name = $name ?? $this->getName();
+
+        return Search::make($name, $this->getLabel())
             ->alias($this->getAlias())
             ->qualify($this->getQualifier());
     }

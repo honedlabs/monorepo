@@ -55,7 +55,7 @@ class EmptyState extends Primitive implements NullsAsUndefined
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -29,7 +29,7 @@ trait Sortable
      * @param  bool|string|Closure  $value
      * @return $this
      */
-    public function sortable($value = true)
+    public function sortable(bool|string|Closure $value = true): static
     {
         $this->sortable = $value;
 
@@ -42,7 +42,7 @@ trait Sortable
      * @param  bool  $value
      * @return $this
      */
-    public function notSortable($value = true)
+    public function notSortable(bool $value = true): static
     {
         return $this->sortable(! $value);
     }
@@ -52,7 +52,7 @@ trait Sortable
      *
      * @return bool
      */
-    public function isSortable()
+    public function isSortable(): bool
     {
         return (bool) $this->sortable;
     }
@@ -62,7 +62,7 @@ trait Sortable
      *
      * @return bool
      */
-    public function isNotSortable()
+    public function isNotSortable(): bool
     {
         return ! $this->isSortable();
     }
@@ -72,7 +72,7 @@ trait Sortable
      *
      * @return Sort|null
      */
-    public function getSort()
+    public function getSort(): ?Sort
     {
         if (! $this->sortable) {
             return null;
@@ -93,9 +93,12 @@ trait Sortable
      * @param  string|null  $name
      * @return Sort
      */
-    protected function newSort($name = null)
+    protected function newSort(?string $name = null): Sort
     {
-        return Sort::make($name ?? $this->getName(), $this->getLabel())
+        /** @var string */
+        $name = $name ?? $this->getName();
+
+        return Sort::make($name, $this->getLabel())
             ->hidden()
             ->alias($this->getAlias())
             ->qualify($this->getQualifier());

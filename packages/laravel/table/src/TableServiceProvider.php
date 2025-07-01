@@ -32,8 +32,6 @@ class TableServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerMacros();
-
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
 
@@ -63,30 +61,5 @@ class TableServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../database/migrations' => database_path('migrations'),
         ], 'table-migrations');
-    }
-
-    /**
-     * Register the router macros for the package.
-     *
-     * @return void
-     */
-    protected function registerMacros()
-    {
-        Router::macro('table', function () {
-            /** @var Router $this */
-
-            /** @var string $endpoint */
-            $endpoint = config('table.endpoint', 'tables');
-
-            $endpoint = trim($endpoint, '/');
-
-            $methods = ['post', 'patch', 'put'];
-
-            $this->match($methods, $endpoint, [TableController::class, 'dispatch'])
-                ->name('tables');
-
-            $this->match($methods, $endpoint.'/{table}', [TableController::class, 'invoke'])
-                ->name('tables.invoke');
-        });
     }
 }
