@@ -5,73 +5,60 @@ declare(strict_types=1);
 namespace Honed\Table;
 
 use Closure;
-use Throwable;
 use Honed\Action\Unit;
-use Honed\Action\Handler;
-use Honed\Core\Primitive;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Honed\Table\Pipes\Count;
-use Honed\Table\Pipes\Query;
-use Illuminate\Http\Request;
-use Honed\Table\Pipes\Select;
-use Honed\Table\Pipes\Toggle;
-use Honed\Table\Columns\Column;
-use Honed\Table\Pipes\Paginate;
 use Honed\Core\Concerns\HasMeta;
-use Honed\Core\Pipes\CallsAfter;
-use Honed\Refine\Filters\Filter;
-use Honed\Core\Pipes\CallsBefore;
-use Honed\Refine\Pipes\SortQuery;
-use Honed\Refine\Searches\Search;
+use Honed\Core\Contracts\HooksIntoLifecycle;
+use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Contracts\Stateful;
-use Honed\Table\Concerns\Viewable;
+use Honed\Core\Pipes\CallsAfter;
+use Honed\Core\Pipes\CallsBefore;
+use Honed\Infolist\Entries\Concerns\HasClasses;
+use Honed\Persist\Contracts\CanPersistData;
+use Honed\Refine\Concerns\CanRefine;
+use Honed\Refine\Filters\Filter;
 use Honed\Refine\Pipes\FilterQuery;
 use Honed\Refine\Pipes\PersistData;
 use Honed\Refine\Pipes\SearchQuery;
+use Honed\Refine\Pipes\SortQuery;
+use Honed\Refine\Searches\Search;
+use Honed\Table\Columns\Column;
+use Honed\Table\Concerns\HasColumns;
+use Honed\Table\Concerns\HasEmptyState;
+use Honed\Table\Concerns\HasRecords;
 use Honed\Table\Concerns\Orderable;
 use Honed\Table\Concerns\Paginable;
-use Illuminate\Container\Container;
-use Honed\Refine\Concerns\CanRefine;
-use Honed\Refine\Stores\CookieStore;
-use Honed\Table\Concerns\HasColumns;
-use Honed\Table\Concerns\HasRecords;
 use Honed\Table\Concerns\Selectable;
 use Honed\Table\Concerns\Toggleable;
-use Honed\Refine\Pipes\AfterRefining;
-use Honed\Refine\Stores\SessionStore;
-use Honed\Table\Pipes\PrepareColumns;
-use Honed\Refine\Pipes\BeforeRefining;
-use Honed\Action\Handlers\BatchHandler;
-use Honed\Refine\Contracts\RefinesData;
-use Honed\Table\Concerns\HasEmptyState;
-use Honed\Table\Pipes\CreateEmptyState;
-use Honed\Table\Pipes\TransformRecords;
-use Illuminate\Support\Facades\Pipeline;
-use Illuminate\Database\Eloquent\Builder;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Persist\Contracts\CanPersistData;
-use Honed\Core\Contracts\HooksIntoLifecycle;
-use Honed\Action\Contracts\HandlesOperations;
-use Honed\Action\Concerns\CanHandleOperations;
-use Honed\Infolist\Entries\Concerns\HasClasses;
+use Honed\Table\Concerns\Viewable;
 use Honed\Table\Exceptions\KeyNotFoundException;
+use Honed\Table\Pipes\CreateEmptyState;
+use Honed\Table\Pipes\Paginate;
+use Honed\Table\Pipes\PrepareColumns;
+use Honed\Table\Pipes\Query;
+use Honed\Table\Pipes\Select;
+use Honed\Table\Pipes\Toggle;
+use Honed\Table\Pipes\TransformRecords;
+use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Pipeline;
+use Illuminate\Support\Str;
+use Throwable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
- * 
+ *
  * @implements Stateful<string, mixed>
- * 
+ *
  * @method self persistColumns(string|bool $driver = true)
  * @method self persistColumnsInSession()
  * @method self persistColumnsInCookie()
  * @method bool isPersistingColumns()
  * @method \Honed\Persist\Drivers\Decorator|null getColumnsDriver()
  */
-class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoLifecycle, Stateful
+class Table extends Unit implements CanPersistData, HooksIntoLifecycle, NullsAsUndefined, Stateful
 {
     use CanRefine {
         persist as refinePersist;
@@ -187,7 +174,6 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
      * Specify the callback that should be invoked to guess the name of a model table.
      *
      * @param  Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<Table>  $callback
-     * @return void
      */
     public static function guessTableNamesUsing(Closure $callback): void
     {
@@ -214,18 +200,22 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
         return self::class;
     }
 
+    /**
+     * Define the names of persistable properties.
+     *
+     * @return array<int, string>
+     */
     public function persist(): array
     {
         return [
             ...$this->refinePersist(),
-            'columns'
+            'columns',
         ];
     }
 
     /**
      * Get the unique identifier key for table records.
      *
-     * @return string
      *
      * @throws KeyNotFoundException
      */
@@ -249,8 +239,6 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
 
     /**
      * Determine if the table is empty using the pagination metadata.
-     *
-     * @return bool
      */
     public function isEmpty(): bool
     {
@@ -290,22 +278,8 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
     }
 
     /**
-     * Get the search term for the table.
-     * 
-     * @return array<string, mixed>
-     */
-    protected function getSearchState(): array
-    {
-        if ($this->isNotSearchable()) {
-            return [];
-        }
-
-        return [$this->getSearchKey() => $this->encodeSearchTerm($this->getSearchTerm())];
-    }
-
-    /**
      * Get the search column state for the table.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getSearchColumnsState(): array
@@ -324,7 +298,7 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
 
     /**
      * Get the sort state for the table.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getSortState(): array
@@ -340,7 +314,7 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
 
     /**
      * Get the filter state for the table.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getFiltersState(): array
@@ -359,7 +333,7 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
 
     /**
      * Get the column state for the table.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getColumnsState(): array
@@ -391,6 +365,20 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
     }
 
     /**
+     * Get the search term for the table.
+     *
+     * @return array<string, mixed>
+     */
+    protected function getSearchState(): array
+    {
+        if ($this->isNotSearchable()) {
+            return [];
+        }
+
+        return [$this->getSearchKey() => $this->encodeSearchTerm($this->getSearchTerm())];
+    }
+
+    /**
      * Define the table.
      *
      * @param  $this  $table
@@ -412,6 +400,7 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
 
         return [
             ...$this->refineToArray(),
+            'id' => $this->getId(),
             'key' => $this->getKey(),
             'column' => $this->isToggleable() ? $this->getColumnKey() : null,
             'record' => is_array($this->getPerPage()) ? $this->getRecordKey() : null,
@@ -434,7 +423,7 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
      *
      * @return array<int,class-string<\Honed\Core\Pipe<self>>>
      */
-    protected function refinements()
+    protected function refinements(): array
     {
         // @phpstan-ignore-next-line
         return [
@@ -470,7 +459,6 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
     /**
      * Provide a selection of default dependencies for evaluation by name.
      *
-     * @param  string  $parameterName
      * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
@@ -493,7 +481,7 @@ class Table extends Unit implements CanPersistData, NullsAsUndefined, HooksIntoL
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
         return match ($parameterType) {
-            Table::class => [$this],
+            self::class => [$this],
             EmptyState::class => [$this->newEmptyState()],
             Request::class => [$this->getRequest()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),

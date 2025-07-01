@@ -98,7 +98,7 @@ class PrepareColumns extends Pipe
         if (empty($selects)) {
             /** @var string $name */
             $name = $column->getName();
-            
+
             $selects[] = $name;
         }
 

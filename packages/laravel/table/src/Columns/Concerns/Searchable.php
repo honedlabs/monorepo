@@ -19,7 +19,6 @@ trait Searchable
     /**
      * Set the instance to be searchable.
      *
-     * @param  bool|string|Closure  $value
      * @return $this
      */
     public function searchable(bool|string|Closure $value = true): static
@@ -32,7 +31,6 @@ trait Searchable
     /**
      * Set the instance to not be searchable.
      *
-     * @param  bool  $value
      * @return $this
      */
     public function notSearchable(bool $value = true): static
@@ -42,8 +40,6 @@ trait Searchable
 
     /**
      * Determine if the instance is searchable.
-     *
-     * @return bool
      */
     public function isSearchable(): bool
     {
@@ -52,8 +48,6 @@ trait Searchable
 
     /**
      * Determine if the instance is not searchable.
-     *
-     * @return bool
      */
     public function isNotSearchable(): bool
     {
@@ -62,8 +56,6 @@ trait Searchable
 
     /**
      * Get the search instance.
-     *
-     * @return Search|null
      */
     public function getSearch(): ?Search
     {
@@ -80,9 +72,6 @@ trait Searchable
 
     /**
      * Create a new search instance.
-     *
-     * @param  string|null  $name
-     * @return Search
      */
     protected function newSearch(?string $name = null): Search
     {

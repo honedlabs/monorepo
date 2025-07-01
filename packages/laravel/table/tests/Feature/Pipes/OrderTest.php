@@ -95,4 +95,4 @@ it('retrieves from sources', function ($table) {
 
         return $this->table;
     },
-])->only();
+]);

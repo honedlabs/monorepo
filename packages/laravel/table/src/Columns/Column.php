@@ -5,37 +5,37 @@ declare(strict_types=1);
 namespace Honed\Table\Columns;
 
 use Closure;
-use Honed\Core\Primitive;
-use Illuminate\Support\Str;
-use Honed\Refine\Sorts\Sort;
-use InvalidArgumentException;
-use Honed\Core\Concerns\CanHaveIcon;
-use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\Allowable;
+use Honed\Core\Concerns\CanBeActive;
 use Honed\Core\Concerns\CanHaveAlias;
 use Honed\Core\Concerns\CanHaveExtra;
-use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\CanHaveIcon;
 use Honed\Core\Concerns\CanQuery;
-use Honed\Core\Concerns\CanBeActive;
-use Honed\Core\Concerns\Allowable;
-use Honed\Table\Concerns\Selectable;
+use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasType;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Core\Primitive;
+use Honed\Infolist\Entries\Concerns\CanBeAggregated;
+use Honed\Infolist\Entries\Concerns\CanBeBadge;
+use Honed\Infolist\Entries\Concerns\CanFormatValues;
+use Honed\Infolist\Entries\Concerns\HasPlaceholder;
+use Honed\Infolist\Entries\Concerns\HasState;
 use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Refine\Sorts\Sort;
 use Honed\Table\Columns\Concerns\CanBeKey;
-use Honed\Table\Columns\Concerns\Sortable;
+use Honed\Table\Columns\Concerns\CanBeToggled;
 use Honed\Table\Columns\Concerns\Exportable;
 use Honed\Table\Columns\Concerns\Filterable;
-use Honed\Table\Columns\Concerns\Searchable;
-use Honed\Infolist\Entries\Concerns\HasState;
-use Honed\Table\Columns\Concerns\CanBeToggled;
-use Honed\Infolist\Entries\Concerns\CanBeBadge;
 use Honed\Table\Columns\Concerns\HasCellClasses;
-use Honed\Infolist\Entries\Concerns\HasPlaceholder;
-use Honed\Infolist\Entries\Concerns\CanBeAggregated;
-use Honed\Infolist\Entries\Concerns\CanFormatValues;
+use Honed\Table\Columns\Concerns\Searchable;
+use Honed\Table\Columns\Concerns\Sortable;
+use Honed\Table\Concerns\Selectable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -44,32 +44,32 @@ use Honed\Infolist\Entries\Concerns\CanFormatValues;
 class Column extends Primitive implements NullsAsUndefined
 {
     use Allowable;
+    use CanBeActive;
     use CanBeAggregated;
     use CanBeBadge;
     use CanBeHidden;
-    use CanFormatValues;
     use CanBeKey;
     use CanBeToggled;
-    use Exportable;
-    use Filterable;
-    use HasCellClasses;
-    use Searchable;
-    use Sortable;
+    use CanFormatValues;
     use CanHaveAlias;
     use CanHaveExtra;
     use CanHaveIcon;
+    /** @use \Honed\Core\Concerns\CanQuery<TModel, TBuilder> */
+    use CanQuery;
+    use Exportable;
+    use Filterable;
+    use HasCellClasses;
     use HasLabel;
     use HasName;
     use HasPlaceholder;
     use HasQualifier;
 
-    /** @use \Honed\Core\Concerns\CanQuery<TModel, TBuilder> */
-    use CanQuery;
-
     use HasState;
+
     use HasType;
-    use CanBeActive;
+    use Searchable;
     use Selectable;
+    use Sortable;
 
     public const BADGE = 'badge';
 
@@ -96,10 +96,6 @@ class Column extends Primitive implements NullsAsUndefined
 
     /**
      * Create a new column instance.
-     *
-     * @param  string  $name
-     * @param  string|null  $label
-     * @return static
      */
     public static function make(string $name, ?string $label = null): static
     {
@@ -110,8 +106,6 @@ class Column extends Primitive implements NullsAsUndefined
 
     /**
      * Get the parameter for the column.
-     *
-     * @return string
      */
     public function getParameter(): string
     {
@@ -145,7 +139,6 @@ class Column extends Primitive implements NullsAsUndefined
      * Add an average aggregate to the column state.
      *
      * @param  string|array<string, Closure>|null  $relationship
-     * @param  string|null  $column
      * @return $this
      */
     public function avg(string|array|null $relationship = null, ?string $column = null): static
@@ -157,7 +150,6 @@ class Column extends Primitive implements NullsAsUndefined
      * Add an average aggregate to the column state.
      *
      * @param  string|array<string, Closure>|null  $relationship
-     * @param  string|null  $column
      * @return $this
      */
     public function average(string|array|null $relationship = null, ?string $column = null): static
@@ -169,7 +161,6 @@ class Column extends Primitive implements NullsAsUndefined
      * Add a sum aggregate to the column state.
      *
      * @param  string|array<string, Closure>|null  $relationship
-     * @param  string|null  $column
      * @return $this
      */
     public function sum(string|array|null $relationship = null, ?string $column = null): static
@@ -181,7 +172,6 @@ class Column extends Primitive implements NullsAsUndefined
      * Add a maximum aggregate to the column state.
      *
      * @param  string|array<string, Closure>|null  $relationship
-     * @param  string|null  $column
      * @return $this
      */
     public function max(string|array|null $relationship = null, ?string $column = null): static
@@ -193,7 +183,6 @@ class Column extends Primitive implements NullsAsUndefined
      * Add a minimum aggregate to the column state.
      *
      * @param  string|array<string, Closure>|null  $relationship
-     * @param  string|null  $column
      * @return $this
      */
     public function min(string|array|null $relationship = null, ?string $column = null): static
@@ -274,7 +263,6 @@ class Column extends Primitive implements NullsAsUndefined
      * Add a simple relationship to the column state.
      *
      * @param  string|array<string, Closure>|null  $relationship
-     * @param  string  $method
      * @return $this
      */
     protected function addSimpleRelationship(string|array|null $relationship, string $method): static
@@ -291,8 +279,6 @@ class Column extends Primitive implements NullsAsUndefined
      * Add an aggregate relationship to the column state.
      *
      * @param  string|array<string, Closure>|null  $relationship
-     * @param  string|null  $column
-     * @param  string  $method
      * @return $this
      */
     protected function addAggregateRelationship(string|array|null $relationship, ?string $column, string $method): static
@@ -315,7 +301,6 @@ class Column extends Primitive implements NullsAsUndefined
     /**
      * Provide a selection of default dependencies for evaluation by name.
      *
-     * @param  string  $parameterName
      * @return array<int, mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array

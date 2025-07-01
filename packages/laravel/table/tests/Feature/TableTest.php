@@ -89,7 +89,7 @@ it('has array representation', function () {
             'match',
             'term',
             'placeholder',
-            'views'
+            'views',
         ])
         ->{'sort'}->toBe($this->table->getSortKey())
         ->{'search'}->toBe($this->table->getSearchKey())

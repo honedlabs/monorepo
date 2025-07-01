@@ -23,7 +23,6 @@ trait Filterable
     /**
      * Set the instance to be filterable.
      *
-     * @param  bool|Closure  $value
      * @return $this
      */
     public function filterable(bool|Closure $value = true): static
@@ -36,7 +35,6 @@ trait Filterable
     /**
      * Set the instance to not be filterable.
      *
-     * @param  bool  $value
      * @return $this
      */
     public function notFilterable(bool $value = true): static
@@ -46,8 +44,6 @@ trait Filterable
 
     /**
      * Determine if the column is filterable.
-     *
-     * @return bool
      */
     public function isFilterable(): bool
     {
@@ -56,8 +52,6 @@ trait Filterable
 
     /**
      * Determine if the column is not filterable.
-     *
-     * @return bool
      */
     public function isNotFilterable(): bool
     {
@@ -66,8 +60,6 @@ trait Filterable
 
     /**
      * Get the filterable state of the column.
-     *
-     * @return Filter|null
      */
     public function getFilter(): ?Filter
     {
@@ -84,8 +76,6 @@ trait Filterable
 
     /**
      * Create a new filter instance.
-     *
-     * @return Filter
      */
     protected function newFilter(): Filter
     {

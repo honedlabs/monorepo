@@ -26,7 +26,6 @@ trait Sortable
     /**
      * Set the instance to be sortable.
      *
-     * @param  bool|string|Closure  $value
      * @return $this
      */
     public function sortable(bool|string|Closure $value = true): static
@@ -39,7 +38,6 @@ trait Sortable
     /**
      * Set the instance to not be sortable.
      *
-     * @param  bool  $value
      * @return $this
      */
     public function notSortable(bool $value = true): static
@@ -49,8 +47,6 @@ trait Sortable
 
     /**
      * Determine if the instance is sortable.
-     *
-     * @return bool
      */
     public function isSortable(): bool
     {
@@ -59,8 +55,6 @@ trait Sortable
 
     /**
      * Determine if the instance is not sortable.
-     *
-     * @return bool
      */
     public function isNotSortable(): bool
     {
@@ -69,8 +63,6 @@ trait Sortable
 
     /**
      * Get the sort instance.
-     *
-     * @return Sort|null
      */
     public function getSort(): ?Sort
     {
@@ -89,9 +81,6 @@ trait Sortable
 
     /**
      * Create a new sort instance.
-     *
-     * @param  string|null  $name
-     * @return Sort
      */
     protected function newSort(?string $name = null): Sort
     {

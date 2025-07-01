@@ -48,6 +48,7 @@ class TransformRecords extends Pipe
     {
         return [
             ...$this->getColumns($record, $columns),
+            // '_primary_key' =>
             'class' => $instance->getClasses($this->named($record), $this->typed($record)),
             'operations' => $this->getOperations($record, $operations),
         ];

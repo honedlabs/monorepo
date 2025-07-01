@@ -7,30 +7,22 @@ namespace Honed\Table;
 use Honed\Table\Commands\ColumnMakeCommand;
 use Honed\Table\Commands\PurgeCommand;
 use Honed\Table\Commands\TableMakeCommand;
-use Honed\Table\Http\Controllers\TableController;
-use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
-
-use function trim;
 
 class TableServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/table.php', 'table');
     }
 
     /**
      * Bootstrap the application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
@@ -45,10 +37,8 @@ class TableServiceProvider extends ServiceProvider
 
     /**
      * Register the publishing for the package.
-     *
-     * @return void
      */
-    protected function offerPublishing()
+    protected function offerPublishing(): void
     {
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),

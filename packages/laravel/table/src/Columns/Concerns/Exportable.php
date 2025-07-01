@@ -45,7 +45,6 @@ trait Exportable
     /**
      * Set the instance to not be exportable.
      *
-     * @param  bool  $value
      * @return $this
      */
     public function notExportable(bool $value = true): static
@@ -55,8 +54,6 @@ trait Exportable
 
     /**
      * Check if the column is exportable.
-     *
-     * @return bool
      */
     public function isExportable(): bool
     {
@@ -65,8 +62,6 @@ trait Exportable
 
     /**
      * Determine if the column is not exportable.
-     *
-     * @return bool
      */
     public function isNotExportable(): bool
     {
@@ -109,7 +104,6 @@ trait Exportable
     /**
      * Set the format to export the column as.
      *
-     * @param  string  $format
      * @return $this
      */
     public function exportFormat(string $format): static
@@ -121,8 +115,6 @@ trait Exportable
 
     /**
      * Get the format to export the column as.
-     *
-     * @return string|null
      */
     public function getExportFormat(): ?string
     {
