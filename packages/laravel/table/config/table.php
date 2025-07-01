@@ -27,7 +27,7 @@ return [
     | Views
     |--------------------------------------------------------------------------
     |
-    | You can store the state of a filter view within a specific driver. 
+    | You can store the state of a filter view within a specific driver.
     |
     */
     'views' => [

@@ -66,6 +66,7 @@ it('has array representation', function () {
     expect($this->table->toArray())
         ->toBeArray()
         ->toHaveKeys([
+            'id',
             'sort',
             'search',
             'delimiter',
@@ -80,7 +81,7 @@ it('has array representation', function () {
             'toggleable',
             'pages',
             'operations',
-            'emptyState',
+            'state',
             'meta',
         ])
         ->not->toHaveKeys([
@@ -119,7 +120,7 @@ it('has array representation', function () {
         )
         ->{'toggleable'}->toBeFalse()
         ->{'pages'}->toBeArray()
-        ->{'emptyState'}
+        ->{'state'}
         ->scoped(fn ($emptyState) => $emptyState
             ->toBeArray()
             ->toHaveKeys(['heading', 'description', 'operations'])

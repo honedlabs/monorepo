@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Honed\Table\Actions\DestroyView;
 use Honed\Table\Facades\Views;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Workbench\App\Tables\ProductTable;
 use Workbench\App\Tables\UserTable;
@@ -57,4 +56,3 @@ it('does not destroy a view which does not match the request', function () {
 
     assertDatabaseCount(config('table.views.table'), 1);
 });
-

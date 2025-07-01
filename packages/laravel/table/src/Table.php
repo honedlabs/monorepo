@@ -399,7 +399,6 @@ class Table extends Unit implements CanPersistData, HooksIntoLifecycle, NullsAsU
         $this->build();
 
         return [
-            ...$this->refineToArray(),
             'id' => $this->getId(),
             'key' => $this->getKey(),
             'column' => $this->isToggleable() ? $this->getColumnKey() : null,
@@ -411,9 +410,10 @@ class Table extends Unit implements CanPersistData, HooksIntoLifecycle, NullsAsU
             'pages' => $this->pageOptionsToArray(),
             'toggleable' => $this->isToggleable(),
             'operations' => $this->operationsToArray(),
-            'emptyState' => $this->getEmptyState()?->toArray(),
+            'state' => $this->getEmptyState()?->toArray(),
             'views' => $this->listViews(),
             'meta' => $this->getMeta(),
+            ...$this->refineToArray(),
         ];
     }
 

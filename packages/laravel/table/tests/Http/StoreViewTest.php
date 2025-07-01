@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Honed\Table\Actions\ViewAction;
 use Honed\Table\Facades\Views;
-use Illuminate\Support\Facades\DB;
 use Workbench\App\Models\User;
 use Workbench\App\Tables\ProductTable;
 use Workbench\App\Tables\UserTable;
@@ -27,7 +26,7 @@ it('stores a view', function () {
     assertDatabaseEmpty(config('table.views.table'));
 
     post(route('table.views.store', $this->table), [
-        ViewAction::FIELD => $this->name
+        ViewAction::FIELD => $this->name,
     ])->assertRedirect();
 
     assertDatabaseHas(config('table.views.table'), [
@@ -40,7 +39,7 @@ it('throws exception when the table is not viewable', function () {
     $table = UserTable::make();
 
     post(route('table.views.store', $table), [
-        ViewAction::FIELD => 'View'
+        ViewAction::FIELD => 'View',
     ])->assertSessionHasErrors(ViewAction::FIELD);
 });
 
@@ -50,6 +49,6 @@ it('throws exception when the view name is not unique', function () {
     );
 
     post(route('table.views.store', $this->table), [
-        ViewAction::FIELD => $this->name
+        ViewAction::FIELD => $this->name,
     ])->assertSessionHasErrors(ViewAction::FIELD);
 });

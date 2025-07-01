@@ -8,9 +8,8 @@ use Honed\Table\Commands\ColumnMakeCommand;
 use Honed\Table\Commands\PurgeCommand;
 use Honed\Table\Commands\TableMakeCommand;
 use Honed\Table\Http\Controllers\TableViewController;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
-
+use Illuminate\Support\ServiceProvider;
 
 class TableServiceProvider extends ServiceProvider
 {

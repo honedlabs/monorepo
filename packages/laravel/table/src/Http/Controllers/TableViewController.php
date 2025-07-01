@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Honed\Table\Http\Controllers;
 
+use Honed\Table\Actions\DestroyView;
+use Honed\Table\Actions\StoreView;
+use Honed\Table\Actions\UpdateView;
 use Honed\Table\Table;
 use Illuminate\Http\Request;
-use Honed\Table\Actions\StoreView;
 use Illuminate\Routing\Controller;
-use Honed\Table\Actions\UpdateView;
-use Honed\Table\Actions\DestroyView;
 
 class TableViewController extends Controller
 {
     /**
      * Store a newly created view in storage.
-     * 
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request, Table $table, StoreView $action)
@@ -27,7 +27,7 @@ class TableViewController extends Controller
 
     /**
      * Update a view in storage.
-     * 
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Table $table, UpdateView $action)
@@ -39,7 +39,7 @@ class TableViewController extends Controller
 
     /**
      * Delete a view from storage.
-     * 
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request, Table $table, DestroyView $action)

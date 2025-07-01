@@ -146,7 +146,7 @@ it('builds class', function () {
                 'toggleable',
                 'operations',
                 'views',
-                'emptyState',
+                'state',
                 'meta',
             ])
             ->not->toHaveKeys([
@@ -222,7 +222,7 @@ it('builds class', function () {
                     ->name->toBe('Filter view')
                 )
             )
-            ->{'emptyState'}
+            ->{'state'}
             ->scoped(fn ($emptyState) => $emptyState
                 ->toBeArray()
                 ->toHaveKeys(['heading', 'description', 'operations'])

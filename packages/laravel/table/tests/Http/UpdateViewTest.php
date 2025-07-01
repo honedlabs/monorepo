@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 use Honed\Table\Actions\ViewAction;
 use Honed\Table\Facades\Views;
-use Illuminate\Support\Facades\DB;
 use Workbench\App\Models\User;
 use Workbench\App\Tables\ProductTable;
 use Workbench\App\Tables\UserTable;
 
 use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseEmpty;
-use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\patch;
-use function Pest\Laravel\post;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -33,7 +30,7 @@ it('updates a view', function () {
     assertDatabaseCount(config('table.views.table'), 1);
 
     patch(route('table.views.update', $this->table), [
-        ViewAction::FIELD => $this->name
+        ViewAction::FIELD => $this->name,
     ])->assertRedirect();
 
     assertDatabaseCount(config('table.views.table'), 1);
@@ -43,7 +40,7 @@ it('creates a new view', function () {
     assertDatabaseEmpty(config('table.views.table'));
 
     patch(route('table.views.update', $this->table), [
-        ViewAction::FIELD => $this->name
+        ViewAction::FIELD => $this->name,
     ])->assertRedirect();
 
     assertDatabaseCount(config('table.views.table'), 1);
@@ -53,6 +50,6 @@ it('throws exception when the table is not viewable', function () {
     $table = UserTable::make();
 
     patch(route('table.views.store', $table), [
-        ViewAction::FIELD => 'View'
+        ViewAction::FIELD => 'View',
     ])->assertSessionHasErrors(ViewAction::FIELD);
 });

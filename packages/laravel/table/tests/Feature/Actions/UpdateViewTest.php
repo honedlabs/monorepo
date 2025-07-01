@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Honed\Table\Actions\UpdateView;
 use Honed\Table\Facades\Views;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Workbench\App\Tables\ProductTable;
 use Workbench\App\Tables\UserTable;
