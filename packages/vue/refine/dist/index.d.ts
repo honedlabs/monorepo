@@ -1,3 +1,4 @@
+import { ComputedRef } from 'vue';
 import { PromisifyFn } from '@vueuse/shared';
 import { VisitOptions } from '@inertiajs/core';
 
@@ -142,6 +143,43 @@ export declare interface SortBinding {
 
 export declare type UseRefine = typeof useRefine;
 
-export declare function useRefine<T extends Record<string, Refine>>(props: T, key: keyof T, defaults?: VisitOptions): HonedRefine;
+export declare function useRefine<T extends Record<string, Refine>>(props: T, key: keyof T, defaults?: VisitOptions): {
+    filters: ComputedRef<HonedFilter[]>;
+    sorts: ComputedRef<HonedSort[]>;
+    searches: ComputedRef<HonedSearch[]>;
+    currentFilters: ComputedRef<HonedFilter[]>;
+    currentSort: ComputedRef<HonedSort | undefined>;
+    currentSearches: ComputedRef<HonedSearch[]>;
+    isSortable: ComputedRef<boolean>;
+    isSearchable: ComputedRef<boolean>;
+    isMatchable: ComputedRef<boolean>;
+    isFiltering: (name?: Filter | string) => boolean;
+    isSorting: (name?: Sort | string) => boolean;
+    isSearching: (name?: Search | string) => boolean;
+    getFilter: (filter: Filter | string) => Filter | undefined;
+    getSort: (sort: Sort | string, dir?: Direction) => Sort | undefined;
+    getSearch: (search: Search | string) => Search | undefined;
+    apply: (values: Record<string, FilterValue>, options?: VisitOptions) => void;
+    applyFilter: (filter: Filter | string, value: any, options?: VisitOptions) => void;
+    applySort: (sort: Sort | string, direction?: Direction, options?: VisitOptions) => void;
+    applySearch: (value: string | null | undefined, options?: VisitOptions) => void;
+    applyMatch: (search: Search | string, options?: VisitOptions) => void;
+    clearFilter: (filter?: Filter | string, options?: VisitOptions) => void;
+    clearSort: (options?: VisitOptions) => void;
+    clearSearch: (options?: VisitOptions) => void;
+    clearMatch: (options?: VisitOptions) => void;
+    reset: (options?: VisitOptions) => void;
+    bindFilter: (filter: Filter | string, options?: BindingOptions) => void | {
+        "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
+        modelValue: FilterValue;
+    };
+    bindSort: (sort: Sort | string, options?: BindingOptions) => SortBinding | void;
+    bindSearch: (options?: BindingOptions) => SearchBinding | void;
+    bindMatch: (match: Search | string, options?: BindingOptions) => MatchBinding | void;
+    stringValue: (value: any) => any;
+    omitValue: (value: any) => any;
+    toggleValue: (value: any, values: any) => any;
+    delimitArray: (value: any) => any;
+};
 
 export { }

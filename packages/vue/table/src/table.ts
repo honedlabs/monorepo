@@ -39,6 +39,8 @@ export function useTable<
 
 	const table = computed(() => props[key] as Table<K, U>);
 
+	const id = computed(() => table.value._id);
+
 	const select = useBulk<Identifier>();
 
 	const refine = useRefine<T>(props, key, visitOptions);
@@ -399,6 +401,8 @@ export function useTable<
 	}
 
 	return reactive({
+		/** The identifier of the table */
+		id,
 		/** Table-specific metadata */
 		meta,
 		/** The views for the table */
@@ -484,38 +488,6 @@ export function useTable<
 		bindPage,
 		/** Bind select all records to the checkbox */
 		bindAll: select.bindAll,
-		filters: refine.filters,
-		sorts: refine.sorts,
-		searches: refine.searches,
-		currentFilters: refine.currentFilters,
-		currentSort: refine.currentSort,
-		currentSearches: refine.currentSearches,
-		isSortable: refine.isSortable,
-		isSearchable: refine.isSearchable,
-		isMatchable: refine.isMatchable,
-		isFiltering: refine.isFiltering,
-		isSorting: refine.isSorting,
-		isSearching: refine.isSearching,
-		getFilter: refine.getFilter,
-		getSort: refine.getSort,
-		getSearch: refine.getSearch,
-		apply: refine.apply,
-		applyFilter: refine.applyFilter,
-		applySort: refine.applySort,
-		applySearch: refine.applySearch,
-		applyMatch: refine.applyMatch,
-		clearFilter: refine.clearFilter,
-		clearSort: refine.clearSort,
-		clearSearch: refine.clearSearch,
-		clearMatch: refine.clearMatch,
-		reset: refine.reset,
-		bindFilter: refine.bindFilter,
-		bindSort: refine.bindSort,
-		bindSearch: refine.bindSearch,
-		bindMatch: refine.bindMatch,
-		stringValue: refine.stringValue,
-		omitValue: refine.omitValue,
-		toggleValue: refine.toggleValue,
-		delimitArray: refine.delimitArray,
+		...refine,
 	});
 }

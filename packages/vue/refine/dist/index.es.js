@@ -1,9 +1,9 @@
-import { toValue as I, computed as f, reactive as Q } from "vue";
+import { toValue as I, computed as f } from "vue";
 import { router as p } from "@inertiajs/vue3";
 typeof WorkerGlobalScope < "u" && globalThis instanceof WorkerGlobalScope;
 const q = () => {
 };
-function X(a, u) {
+function Q(a, u) {
   function i(...r) {
     return new Promise((l, c) => {
       Promise.resolve(a(() => u.apply(this, r), { fn: u, thisArg: this, args: r })).then(l).catch(c);
@@ -11,7 +11,7 @@ function X(a, u) {
   }
   return i;
 }
-function Y(a, u = {}) {
+function X(a, u = {}) {
   let i, r, l = q;
   const c = (s) => {
     clearTimeout(s), l(), l = q;
@@ -29,12 +29,12 @@ function Y(a, u = {}) {
   };
 }
 function F(a, u = 200, i = {}) {
-  return X(
-    Y(u, i),
+  return Q(
+    X(u, i),
     a
   );
 }
-function ne(a, u, i = {}) {
+function ee(a, u, i = {}) {
   if (!(a != null && a[u]))
     throw new Error("The refine must be provided with valid props and key.");
   const r = f(() => a[u]), l = f(() => !!r.value._sort_key), c = f(() => !!r.value._search_key), h = f(() => !!r.value._match_key), w = f(
@@ -289,7 +289,7 @@ function ne(a, u, i = {}) {
       value: t.name
     };
   }
-  return Q({
+  return {
     filters: w,
     sorts: s,
     searches: g,
@@ -323,12 +323,12 @@ function ne(a, u, i = {}) {
     omitValue: S,
     toggleValue: E,
     delimitArray: R
-  });
+  };
 }
-function te(a, u) {
+function ne(a, u) {
   return a ? typeof a == "object" ? (a == null ? void 0 : a.type) === u : a === u : !1;
 }
 export {
-  te as is,
-  ne as useRefine
+  ne as is,
+  ee as useRefine
 };

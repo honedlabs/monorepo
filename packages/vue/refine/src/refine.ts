@@ -13,7 +13,6 @@ import type {
 	HonedFilter,
 	HonedSort,
 	HonedSearch,
-	HonedRefine,
 	SortBinding,
 	SearchBinding,
 	MatchBinding,
@@ -23,7 +22,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	props: T,
 	key: keyof T,
 	defaults: VisitOptions = {},
-): HonedRefine {
+) {
 	if (!props?.[key]) {
 		throw new Error("The refine must be provided with valid props and key.");
 	}
@@ -488,7 +487,7 @@ export function useRefine<T extends Record<string, Refine>>(
 		};
 	}
 
-	return reactive({
+	return {
 		filters,
 		sorts,
 		searches,
@@ -522,5 +521,5 @@ export function useRefine<T extends Record<string, Refine>>(
 		omitValue,
 		toggleValue,
 		delimitArray,
-	});
+	};
 }

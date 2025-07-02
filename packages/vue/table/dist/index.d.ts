@@ -52,6 +52,7 @@ export declare interface HonedColumn<T extends Record<string, any> = Record<stri
 }
 
 export declare interface HonedTable<T extends Record<string, any> = Record<string, any>, K extends Paginate = "length-aware"> extends HonedRefine {
+    id: string;
     meta: Record<string, any> | null;
     emptyState: EmptyState | null;
     views: View[];
@@ -150,6 +151,7 @@ export declare interface SimplePaginate extends CursorPaginate {
 }
 
 export declare interface Table<T extends Record<string, any> = Record<string, any>, K extends Paginate = "length-aware"> extends Refine {
+    _id: string;
     _column_key?: string;
     _record_key?: string;
     _page_key?: string;
