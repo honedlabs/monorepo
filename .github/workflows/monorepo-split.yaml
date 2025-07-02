@@ -33,7 +33,7 @@ jobs:
           # - persist
           # - refine
           # - registry
-          # - table
+          - table
           # - upload
           # - widget
     steps:
