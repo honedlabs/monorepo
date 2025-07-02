@@ -1,4 +1,3 @@
-import { Ref } from "vue";
 import type { VisitOptions } from "@inertiajs/core";
 import type { HonedRefine, Refine } from "@honed/refine";
 import type {
@@ -7,8 +6,6 @@ import type {
 	InlineOperation,
 	BulkOperation,
 	PageOperation,
-	MaybeId,
-	MaybeEndpoint,
 	PageOperationData,
 	BulkSelection,
 	Executable,
@@ -34,23 +31,20 @@ export interface Table<
 	T extends Record<string, any> = Record<string, any>,
 	K extends Paginate = "length-aware",
 > extends Refine {
-	id: MaybeId;
-	endpoint: MaybeEndpoint;
-	key: string;
-	column?: string;
-	record?: string;
-	page?: string;
+	_column_key?: string;
+	_record_key?: string;
+	_page_key?: string;
+	toggleable: boolean;
 	records: Array<TableEntry<T> & { operations: InlineOperation[] }>;
 	paginate: PaginateMap[K];
 	columns: Column<T>[];
 	pages: PageOption[];
-	toggleable: boolean;
 	operations: {
 		inline: boolean;
 		bulk: BulkOperation[];
 		page: PageOperation[];
 	};
-	emptyState?: EmptyState;
+	state?: EmptyState;
 	views?: View[];
 	meta: Record<string, any>;
 }
@@ -59,7 +53,6 @@ export interface HonedTable<
 	T extends Record<string, any> = Record<string, any>,
 	K extends Paginate = "length-aware",
 > extends HonedRefine {
-	id: Exclude<MaybeId, undefined>;
 	meta: Record<string, any> | null;
 	emptyState: EmptyState | null;
 	views: View[];
@@ -78,8 +71,8 @@ export interface HonedTable<
 	columns: HonedColumn<T>[];
 	records: TableRecord<T>[];
 	inline: boolean;
-	bulk: Executable<BulkOperation>[];
-	page: Executable<PageOperation>[];
+	bulk: (BulkOperation & { execute: (options?: VisitOptions) => void })[];
+	page: (PageOperation & { execute: (options?: VisitOptions) => void })[];
 	pages: PageOption[];
 	currentPage: PageOption | undefined;
 	paginator: PaginateMap[K];
@@ -94,6 +87,14 @@ export interface HonedTable<
 		data?: PageOperationData,
 		options?: VisitOptions,
 	) => void;
+	getBulkData: () => {
+		all: boolean;
+		only: Identifier[];
+		except: Identifier[];
+	};
+	getRecordData: (record: TableEntry<T>) => {
+		id: Identifier;
+	};
 	applyPage: (page: PageOption, options?: VisitOptions) => void;
 
 	selection: BulkSelection<Identifier>;

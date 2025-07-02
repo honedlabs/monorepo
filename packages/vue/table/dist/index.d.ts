@@ -1,11 +1,8 @@
 import { Binding } from '@honed/action';
 import { BulkOperation } from '@honed/action';
 import { BulkSelection } from '@honed/action';
-import { Executable } from '@honed/action';
 import { HonedRefine } from '@honed/refine';
 import { InlineOperation } from '@honed/action';
-import { MaybeEndpoint } from '@honed/action';
-import { MaybeId } from '@honed/action';
 import { PageOperation } from '@honed/action';
 import { PageOperationData } from '@honed/action';
 import { RecordBinding } from '@honed/action';
@@ -55,7 +52,6 @@ export declare interface HonedColumn<T extends Record<string, any> = Record<stri
 }
 
 export declare interface HonedTable<T extends Record<string, any> = Record<string, any>, K extends Paginate = "length-aware"> extends HonedRefine {
-    id: Exclude<MaybeId, undefined>;
     meta: Record<string, any> | null;
     emptyState: EmptyState | null;
     views: View[];
@@ -76,14 +72,26 @@ export declare interface HonedTable<T extends Record<string, any> = Record<strin
     columns: HonedColumn<T>[];
     records: TableRecord<T>[];
     inline: boolean;
-    bulk: Executable<BulkOperation>[];
-    page: Executable<PageOperation>[];
+    bulk: (BulkOperation & {
+        execute: (options?: VisitOptions) => void;
+    })[];
+    page: (PageOperation & {
+        execute: (options?: VisitOptions) => void;
+    })[];
     pages: PageOption[];
     currentPage: PageOption | undefined;
     paginator: PaginateMap[K];
     executeInline: (operation: InlineOperation, data: TableEntry<T>, options?: VisitOptions) => void;
     executeBulk: (operation: BulkOperation, options?: VisitOptions) => void;
     executePage: (operation: PageOperation, data?: PageOperationData, options?: VisitOptions) => void;
+    getBulkData: () => {
+        all: boolean;
+        only: Identifier[];
+        except: Identifier[];
+    };
+    getRecordData: (record: TableEntry<T>) => {
+        id: Identifier;
+    };
     applyPage: (page: PageOption, options?: VisitOptions) => void;
     selection: BulkSelection<Identifier>;
     select: (record: TableEntry<T>) => void;
@@ -142,25 +150,22 @@ export declare interface SimplePaginate extends CursorPaginate {
 }
 
 export declare interface Table<T extends Record<string, any> = Record<string, any>, K extends Paginate = "length-aware"> extends Refine {
-    id: MaybeId;
-    endpoint: MaybeEndpoint;
-    key: string;
-    column?: string;
-    record?: string;
-    page?: string;
+    _column_key?: string;
+    _record_key?: string;
+    _page_key?: string;
+    toggleable: boolean;
     records: Array<TableEntry<T> & {
         operations: InlineOperation[];
     }>;
     paginate: PaginateMap[K];
     columns: Column<T>[];
     pages: PageOption[];
-    toggleable: boolean;
     operations: {
         inline: boolean;
         bulk: BulkOperation[];
         page: PageOperation[];
     };
-    emptyState?: EmptyState;
+    state?: EmptyState;
     views?: View[];
     meta: Record<string, any>;
 }
@@ -173,6 +178,7 @@ export declare type TableEntry<T extends Record<string, any> = Record<string, an
         f: boolean;
     };
 } & {
+    _key: Identifier;
     class: string | null;
 };
 
@@ -183,19 +189,20 @@ export declare interface TableOptions<T extends Record<string, any> = Record<str
     recordOperations?: Record<string, (record: TableEntry<T>) => void>;
 }
 
-export declare interface TableRecord<T extends Record<string, any> = Record<string, any>> {
-    operations: Executable<InlineOperation>[];
-    class: string | null;
+export declare type TableRecord<T extends Record<string, any> = Record<string, any>> = TableEntry<T> & {
+    operations: (InlineOperation & {
+        execute: (options?: VisitOptions) => void;
+    })[];
+    selected: boolean;
     default: (options?: VisitOptions) => void;
     select: () => void;
     deselect: () => void;
     toggle: () => void;
-    selected: boolean;
     bind: () => RecordBinding<Identifier>;
-    entry: (column: HonedColumn<T> | string) => TableEntry<T>[keyof T] | null;
-    value: (column: HonedColumn<T> | string) => TableEntry<T>[keyof T]["v"] | null;
-    extra: (column: HonedColumn<T> | string) => TableEntry<T>[keyof T]["e"] | null;
-}
+    entry: (column: Column<T> | string) => TableEntry<T>[keyof T] | null;
+    value: (column: Column<T> | string) => TableEntry<T>[keyof T]["v"] | null;
+    extra: (column: Column<T> | string) => TableEntry<T>[keyof T]["e"] | null;
+};
 
 export declare type UseTable = typeof useTable;
 

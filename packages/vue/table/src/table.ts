@@ -1,19 +1,12 @@
 import { computed, reactive } from "vue";
 import { router } from "@inertiajs/vue3";
 import type { Page, VisitOptions } from "@inertiajs/core";
-import {
-	useBulk,
-	executor as operationExecutor,
-	executables as operationExecutables,
-} from "@honed/action";
+import { useBulk, execute } from "@honed/action";
 import type {
 	InlineOperation,
 	BulkOperation,
 	PageOperation,
-	Executable,
-	Operations,
 	PageOperationData,
-	OperationDataMap,
 } from "@honed/action";
 import { useRefine, type Sort } from "@honed/refine";
 import type {
@@ -50,21 +43,21 @@ export function useTable<
 
 	const refine = useRefine<T>(props, key, visitOptions);
 
-	const id = computed(() => table.value.id ?? null);
-
 	const meta = computed(() => table.value.meta);
 
 	const views = computed(() => table.value.views ?? []);
 
-	const emptyState = computed(() => table.value.emptyState ?? null);
+	const emptyState = computed(() => table.value.state ?? null);
 
 	const placeholder = computed(() => table.value.placeholder ?? null);
 
-	const isEmpty = computed(() => !!table.value.emptyState);
+	const isEmpty = computed(() => !!table.value.state);
 
-	const isPageable = computed(() => !!table.value.page && !!table.value.record);
+	const isPageable = computed(
+		() => !!table.value._page_key && !!table.value._record_key,
+	);
 
-	const isToggleable = computed(() => !!table.value.column);
+	const isToggleable = computed(() => !!table.value._column_key);
 
 	/**
 	 * The heading columns for the table.
@@ -98,10 +91,15 @@ export function useTable<
 	 */
 	const records = computed<TableRecord<K>[]>(() =>
 		table.value.records.map((record) => ({
+			...record,
 			/** The operations available for the record */
-			operations: executables(record.operations, getRecordPayload(record)),
-			/** The classes to apply to the record */
-			class: record.class ?? null,
+			operations: record.operations.map((operation) => ({
+				...operation,
+				execute: (options: VisitOptions = {}) =>
+					executeInline(operation, record, options),
+			})),
+			/** Determine if the record is selected */
+			selected: select.selected(getRecordKey(record)),
 			/** Perform this operation when the record is clicked */
 			default: (options: VisitOptions = {}) => {
 				const use = record.operations.find(
@@ -116,8 +114,6 @@ export function useTable<
 			deselect: () => select.deselect(getRecordKey(record)),
 			/** Toggles the selection of this record */
 			toggle: () => select.toggle(getRecordKey(record)),
-			/** Determine if the record is selected */
-			selected: select.selected(getRecordKey(record)),
 			/** Bind the record to a checkbox */
 			bind: () => select.bind(getRecordKey(record)),
 			/** Get the entry of the record for the column */
@@ -135,13 +131,21 @@ export function useTable<
 	 * Get the bulk operations.
 	 */
 	const bulk = computed(() =>
-		executables(table.value.operations.bulk, getBulkPayload()),
+		table.value.operations.bulk.map((operation) => ({
+			...operation,
+			execute: (options: VisitOptions = {}) => executeBulk(operation, options),
+		})),
 	);
 
 	/**
 	 * Get page operations.
 	 */
-	const page = computed(() => executables(table.value.operations.page));
+	const page = computed(() =>
+		table.value.operations.page.map((operation) => ({
+			...operation,
+			execute: (options: VisitOptions = {}) => executePage(operation, options),
+		})),
+	);
 
 	/**
 	 * The current number of records to display per page.
@@ -214,11 +218,8 @@ export function useTable<
 	/**
 	 * Get the identifier of the record.
 	 */
-	function getRecordKey(record: TableEntry<K> | TableRecord<K>) {
-		if ("value" in record && typeof record.value === "function")
-			return (record as TableRecord<K>).value(table.value.key) as Identifier;
-
-		return getValue(record as TableEntry<K>, table.value.key) as Identifier;
+	function getRecordKey(record: TableEntry<K>) {
+		return record._key;
 	}
 
 	/**
@@ -227,9 +228,7 @@ export function useTable<
 	function getEntry(record: TableEntry<K>, column: Column<K> | string) {
 		const name = getColumn(column);
 
-		if (name in record && name !== "classes") return record[name as keyof K];
-
-		return null;
+		return record[name as keyof K];
 	}
 
 	/**
@@ -247,59 +246,21 @@ export function useTable<
 	}
 
 	/**
-	 * Get the payload for the record operations.
-	 *
-	 * @internal
+	 * Get the data for the record operations.
 	 */
-	function getRecordPayload(record: TableEntry<K>) {
-		return { record: getRecordKey(record) };
+	function getRecordData(record: TableEntry<K>) {
+		return { id: getRecordKey(record) };
 	}
 
 	/**
-	 * Get the payload for the bulk operations.
-	 *
-	 * @internal
+	 * Get the data for the bulk operations.
 	 */
-	function getBulkPayload() {
+	function getBulkData() {
 		return {
 			all: select.selection.value.all,
 			only: Array.from(select.selection.value.only),
 			except: Array.from(select.selection.value.except),
 		};
-	}
-
-	/**
-	 * Execute an operation with common logic
-	 *
-	 * @internal
-	 */
-	function executor<T extends Operations>(
-		operation: T,
-		data: OperationDataMap[typeof operation.type] = {},
-		options: VisitOptions = {},
-	) {
-		return operationExecutor(operation, table.value.endpoint, id.value, data, {
-			...visitOptions,
-			...options,
-		});
-	}
-
-	/**
-	 * Create operations with execute methods
-	 *
-	 * @internal
-	 */
-	function executables<T extends Operations>(
-		operations: T[],
-		data: OperationDataMap[T["type"]] = {} as OperationDataMap[T["type"]],
-	): Executable<T>[] {
-		return operationExecutables(
-			operations,
-			table.value.endpoint,
-			id.value,
-			visitOptions,
-			data,
-		);
 	}
 
 	/**
@@ -325,13 +286,10 @@ export function useTable<
 		data: TableEntry<K>,
 		options: VisitOptions = {},
 	) {
-		const success = executor(
-			operation,
-			{
-				record: getRecordKey(data),
-			},
-			options,
-		);
+		const success = execute(operation, getRecordData(data), {
+			...defaults,
+			...options,
+		});
 
 		if (!success) recordOperations?.[operation.name]?.(data);
 	}
@@ -340,12 +298,14 @@ export function useTable<
 	 * Execute a bulk operation.
 	 */
 	function executeBulk(operation: BulkOperation, options: VisitOptions = {}) {
-		executor(operation, getBulkPayload(), {
+		return execute(operation, getBulkData(), {
+			...defaults,
 			...options,
 			onSuccess: (page: Page) => {
 				options.onSuccess?.(page);
+				defaults.onSuccess?.(page);
 
-				if (!operation.keepSelected) select.deselectAll();
+				if (!operation.keep) select.deselectAll();
 			},
 		});
 	}
@@ -358,7 +318,7 @@ export function useTable<
 		data: PageOperationData = {},
 		options: VisitOptions = {},
 	) {
-		return executor(operation, data, options);
+		return execute(operation, data, { ...defaults, ...options });
 	}
 
 	/**
@@ -372,8 +332,8 @@ export function useTable<
 			...visitOptions,
 			...options,
 			data: {
-				[table.value.record as string]: page.value,
-				[table.value.page as string]: undefined,
+				[table.value._record_key as string]: page.value,
+				[table.value._page_key as string]: undefined,
 			},
 		});
 	}
@@ -398,7 +358,7 @@ export function useTable<
 			...visitOptions,
 			...options,
 			data: {
-				[table.value.column as string]: refine.delimitArray(params),
+				[table.value._column_key as string]: refine.delimitArray(params),
 			},
 		});
 	}
@@ -439,8 +399,6 @@ export function useTable<
 	}
 
 	return reactive({
-		/** The identifier of the table */
-		id,
 		/** Table-specific metadata */
 		meta,
 		/** The views for the table */
@@ -487,6 +445,10 @@ export function useTable<
 		executeBulk,
 		/** Execute a page operation */
 		executePage,
+		/** The bulk data */
+		getBulkData,
+		/** The record data */
+		getRecordData,
 		/** Apply a new page by changing the number of records to display */
 		applyPage,
 		/** The current selection of records */
