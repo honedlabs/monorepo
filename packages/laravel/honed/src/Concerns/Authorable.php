@@ -37,7 +37,7 @@ trait Authorable
     /**
      * Get the user that created the model.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TModel, $this>
+     * @return BelongsTo<TModel, $this>
      */
     public function author(): BelongsTo
     {
@@ -53,7 +53,7 @@ trait Authorable
     /**
      * Get the user that last edited the model.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TModel, $this>
+     * @return BelongsTo<TModel, $this>
      */
     public function editor(): BelongsTo
     {
