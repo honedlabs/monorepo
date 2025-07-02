@@ -10,7 +10,7 @@ import type {
 export type Identifier = string | number;
 
 export interface InlineOperationData extends Record<string, any> {
-	record: Identifier;
+	id: Identifier;
 }
 
 export interface BulkOperationData extends Record<string, any> {

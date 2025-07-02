@@ -86,7 +86,7 @@ export declare interface InlineOperation extends Operation {
 }
 
 export declare interface InlineOperationData extends Record<string, any> {
-    record: Identifier;
+    id: Identifier;
 }
 
 export declare interface Operation {
