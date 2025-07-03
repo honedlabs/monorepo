@@ -5,14 +5,16 @@ namespace {{ namespace }};
 use Honed\Core\Pipe;
 
 /**
- * @extends \Honed\Core\Pipe<mixed>
+ * @template T of mixed
+ *
+ * @extends \Honed\Core\Pipe<T>
  */
 class {{ class }} extends Pipe
 {
     /**
      * Run the pipe logic.
      */
-    public function run($instance)
+    public function run($instance): void
     {
         //
     }
