@@ -8,8 +8,10 @@ trait CanBeDefault
 {
     /**
      * Whether the instance is the default.
+     *
+     * @var bool
      */
-    protected bool $default = false;
+    protected $default = false;
 
     /**
      * Set the instance to the default.

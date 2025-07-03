@@ -11,8 +11,10 @@ trait HasValue
 {
     /**
      * The value of the instance.
+     *
+     * @var mixed
      */
-    protected mixed $value = null;
+    protected $value;
 
     /**
      * Set the value of the instance.

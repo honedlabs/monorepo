@@ -11,14 +11,14 @@ trait Allowable
     /**
      * The allow condition.
      *
-     * @var (\Closure(...mixed):bool)|bool
+     * @var (Closure():bool)|bool
      */
-    protected Closure|bool $allow = true;
+    protected $allow = true;
 
     /**
      * Set the allow condition.
      *
-     * @param  (\Closure(...mixed):bool)|bool  $value
+     * @param  (Closure():bool)|bool  $value
      * @return $this
      */
     public function allow(Closure|bool $value): static
@@ -31,7 +31,7 @@ trait Allowable
     /**
      * Get the allow condition callback.
      *
-     * @return (\Closure(...mixed):bool)|bool
+     * @return (Closure():bool)|bool
      */
     public function allowCallback(): Closure|bool
     {

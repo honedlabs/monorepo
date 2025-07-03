@@ -8,8 +8,10 @@ trait CanBeActive
 {
     /**
      * Whether the instance is active.
+     *
+     * @var bool
      */
-    protected bool $active = false;
+    protected $active = false;
 
     /**
      * Set the instance to active.

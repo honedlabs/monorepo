@@ -14,9 +14,9 @@ trait HasLabel
     /**
      * The label.
      *
-     * @var string|(\Closure(...mixed):string)|null
+     * @var string|(Closure():string)|null
      */
-    protected string|Closure|null $label = null;
+    protected $label;
 
     /**
      * Convert a string to the label format.
@@ -38,7 +38,7 @@ trait HasLabel
     /**
      * Set the label.
      *
-     * @param  string|(\Closure(...mixed):string)|null  $label
+     * @param  string|Closure():string|null  $label
      * @return $this
      */
     public function label(string|Closure|null $label): static

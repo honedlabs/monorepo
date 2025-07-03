@@ -14,21 +14,21 @@ trait HasLifecycleHooks
     /**
      * The callback to be called before the pipeline has finished.
      *
-     * @var (Closure(mixed...):mixed|void)|null
+     * @var (Closure():mixed|void)|null
      */
-    protected ?Closure $before = null;
+    protected $before;
 
     /**
      * The callback to be called after the pipeline has finished.
      *
-     * @var (Closure(mixed...):mixed|void)|null
+     * @var (Closure():mixed|void)|null
      */
     protected ?Closure $after = null;
 
     /**
      * Set a callback to be called before the pipeline has begun.
      *
-     * @param  (Closure(mixed...):mixed|void)|null  $callback
+     * @param  (Closure():mixed|void)|null  $callback
      * @return $this
      */
     public function before(?Closure $callback): static
@@ -41,7 +41,7 @@ trait HasLifecycleHooks
     /**
      * Get the callback to be called before the pipeline has begun.
      *
-     * @return (Closure(mixed...):mixed|void)|null
+     * @return (Closure():mixed|void)|null
      */
     public function beforeCallback(): ?Closure
     {
@@ -62,7 +62,7 @@ trait HasLifecycleHooks
     /**
      * Set a callback to be called after the pipeline has finished.
      *
-     * @param  (Closure(mixed...):mixed|void)|null  $callback
+     * @param  (Closure():mixed|void)|null  $callback
      * @return $this
      */
     public function after(?Closure $callback): static
@@ -75,7 +75,7 @@ trait HasLifecycleHooks
     /**
      * Get the callback to be called after the pipeline has finished.
      *
-     * @return (Closure(mixed...):mixed|void)|null
+     * @return (Closure():mixed|void)|null
      */
     public function afterCallback(): ?Closure
     {

@@ -8,8 +8,10 @@ trait CanHaveAlias
 {
     /**
      * The alias to use to hide the underlying value.
+     *
+     * @var string|null
      */
-    protected ?string $alias = null;
+    protected $alias;
 
     /**
      * Set the alias.

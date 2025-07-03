@@ -8,8 +8,10 @@ trait CanHavePlaceholder
 {
     /**
      * The placeholder.
+     *
+     * @var string|null
      */
-    protected ?string $placeholder = null;
+    protected $placeholder;
 
     /**
      * Set the placeholder.

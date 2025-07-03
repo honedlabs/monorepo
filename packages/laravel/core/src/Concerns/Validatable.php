@@ -13,7 +13,7 @@ trait Validatable
      *
      * @var (Closure(mixed):bool)|bool|null
      */
-    protected Closure|bool|null $validator = null;
+    protected $validator;
 
     /**
      * Set the validation function.

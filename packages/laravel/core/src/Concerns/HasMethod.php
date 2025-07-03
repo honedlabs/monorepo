@@ -15,8 +15,10 @@ trait HasMethod
 {
     /**
      * The method for visiting the URL.
+     *
+     * @var string|null
      */
-    protected ?string $method = null;
+    protected $method;
 
     /**
      * Set the HTTP method for the route.

@@ -15,14 +15,14 @@ trait CanHaveUrl
     /**
      * The route to visit.
      *
-     * @var string|\Closure(...mixed):string|null
+     * @var string|Closure():string|null
      */
-    protected string|Closure|null $url = null;
+    protected $url;
 
     /**
      * Set the url to visit.
      *
-     * @param  string|(\Closure(...mixed):string)|null  $value
+     * @param  string|Closure():string|null  $value
      * @return $this
      */
     public function url(string|Closure|null $value, mixed $parameters = []): static

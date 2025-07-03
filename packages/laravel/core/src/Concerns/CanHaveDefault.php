@@ -8,8 +8,10 @@ trait CanHaveDefault
 {
     /**
      * The default value to use if one is not provided.
+     *
+     * @var mixed
      */
-    protected mixed $default = null;
+    protected $default;
 
     /**
      * Set a default value to use if one is not provided.

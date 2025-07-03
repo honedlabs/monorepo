@@ -5,22 +5,24 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use BackedEnum;
+use Closure;
 
 trait CanHaveIcon
 {
     /**
      * The icon of the instance.
      *
-     * @var string|(\Closure(...mixed):string)|null
+     * @var string|BackedEnum|(Closure():string)|null
      */
-    protected string|BackedEnum|null $icon = null;
+    protected $icon;
 
     /**
      * Set the icon.
      *
+     * @param  string|Closure():string|BackedEnum|null  $icon
      * @return $this
      */
-    public function icon(string|BackedEnum|null $icon): static
+    public function icon(string|Closure|BackedEnum|null $icon): static
     {
         $this->icon = $icon;
 

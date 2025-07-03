@@ -11,14 +11,14 @@ trait HasMeta
     /**
      * The meta data.
      *
-     * @var array<string,mixed>|(\Closure(...mixed):array<string,mixed>)
+     * @var array<string,mixed>|Closure():array<string,mixed>
      */
-    protected array|Closure $meta = [];
+    protected $meta = [];
 
     /**
      * Set the meta data.
      *
-     * @param  array<string,mixed>|(\Closure(...mixed):array<string,mixed>)  $meta
+     * @param  array<string,mixed>|Closure():array<string,mixed>  $meta
      * @return $this
      */
     public function meta(array|Closure $meta): static

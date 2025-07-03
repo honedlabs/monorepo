@@ -17,9 +17,7 @@ trait Configurable
      */
     protected function setUp(): void
     {
-        if (method_exists($this, 'definition')) {
-            $this->definition($this);
-        }
+        //
     }
 
     /**
@@ -42,5 +40,9 @@ trait Configurable
             $this,
             $this->setUp(...),
         );
+
+        if (method_exists($this, 'definition')) {
+            $this->definition($this);
+        }
     }
 }

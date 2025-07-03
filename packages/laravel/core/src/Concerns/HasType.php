@@ -8,8 +8,10 @@ trait HasType
 {
     /**
      * The type for the instance.
+     *
+     * @var string|null
      */
-    protected ?string $type = null;
+    protected $type;
 
     /**
      * Set the type.

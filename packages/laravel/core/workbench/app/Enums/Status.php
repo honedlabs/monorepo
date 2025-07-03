@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Workbench\App\Enums;
 
-enum Status: int
+enum Status: string
 {
-    case Available = 0;
-    case Unavailable = 1;
-    case ComingSoon = 2;
+    case Available = 'available';
+    case Unavailable = 'unavailable';
+    case ComingSoon = 'coming-soon';
 }

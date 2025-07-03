@@ -12,8 +12,10 @@ trait CanScope
 
     /**
      * The scope to use.
+     *
+     * @var string|null
      */
-    protected ?string $scope = null;
+    protected $scope;
 
     /**
      * Set the scope.

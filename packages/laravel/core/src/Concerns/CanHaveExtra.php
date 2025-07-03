@@ -11,14 +11,14 @@ trait CanHaveExtra
     /**
      * Extra data.
      *
-     * @var array<string,mixed>|(\Closure(...mixed):array<string,mixed>)|null
+     * @var array<string,mixed>|Closure():array<string,mixed>|null
      */
-    protected array|Closure|null $extra = null;
+    protected $extra;
 
     /**
      * Set the extra data.
      *
-     * @param  array<string,mixed>|(\Closure(...mixed):array<string,mixed>)|null  $extra
+     * @param  array<string,mixed>|Closure():array<string,mixed>|null  $extra
      * @return $this
      */
     public function extra(array|Closure|null $extra): static

@@ -10,17 +10,16 @@ trait Transformable
 {
     /**
      * The transformer function.
+
      *
-     * @default null
-     *
-     * @var Closure(mixed):mixed|null
+     * @var Closure():mixed|null
      */
-    protected ?Closure $transformer = null;
+    protected $transformer;
 
     /**
      * Set the transformer function.
      *
-     * @param  Closure(mixed):mixed  $transformer
+     * @param  Closure():mixed  $transformer
      * @return $this
      */
     public function transformer(?Closure $transformer): static
@@ -33,7 +32,7 @@ trait Transformable
     /**
      * Get the transformer function.
      *
-     * @return Closure(mixed):mixed|null
+     * @return Closure():mixed|null
      */
     public function getTransformer(): ?Closure
     {

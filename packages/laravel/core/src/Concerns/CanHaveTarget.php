@@ -10,8 +10,10 @@ trait CanHaveTarget
 {
     /**
      * The target for the URL
+     *
+     * @var string|null
      */
-    protected ?string $target = null;
+    protected $target;
 
     /**
      * Set the target for the URL.

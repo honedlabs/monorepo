@@ -23,7 +23,7 @@ trait HasResource
      *
      * @var TBuilder|array<int, array<string, mixed>>|null
      */
-    protected Builder|array|null $resource = null;
+    protected $resource;
 
     /**
      * Set the resource to be used.

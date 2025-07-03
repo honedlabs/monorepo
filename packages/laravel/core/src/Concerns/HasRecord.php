@@ -13,7 +13,7 @@ trait HasRecord
      *
      * @var array<string, mixed>|Model|null
      */
-    protected array|Model|null $record = null;
+    protected $record;
 
     /**
      * Set the record to be used to generate a state.

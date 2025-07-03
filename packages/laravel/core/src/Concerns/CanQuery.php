@@ -16,14 +16,14 @@ trait CanQuery
     /**
      * The query closure to modify the Eloquent builder.
      *
-     * @var (\Closure(TBuilder, ...mixed):mixed|void)|null
+     * @var (Closure():mixed)|null
      */
-    protected ?Closure $query = null;
+    protected $query;
 
     /**
      * Set a callback to modify the Eloquent builder.
      *
-     * @param  (\Closure(TBuilder, ...mixed):mixed|void)|null  $callback
+     * @param  (Closure():mixed)|null  $callback
      * @return $this
      */
     public function query(?Closure $callback): static
@@ -36,7 +36,7 @@ trait CanQuery
     /**
      * Get the callback to modify the Eloquent builder.
      *
-     * @return (\Closure(TBuilder, ...mixed):mixed|void)|null
+     * @return (Closure():mixed)|null
      */
     public function queryCallback(): ?Closure
     {

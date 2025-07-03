@@ -10,8 +10,10 @@ trait HasPipeline
 {
     /**
      * Whether the pipeline has been completed.
+     *
+     * @var bool
      */
-    protected bool $complete = false;
+    protected $complete = false;
 
     /**
      * Get the pipes to be used.
