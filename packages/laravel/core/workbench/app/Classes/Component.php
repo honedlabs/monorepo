@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Workbench\App\Classes;
 
-use Honed\Core\Concerns\Encodable;
 use Honed\Core\Concerns\CanQuery;
+use Honed\Core\Concerns\Encodable;
 use Honed\Core\Concerns\HasLifecycleHooks;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
