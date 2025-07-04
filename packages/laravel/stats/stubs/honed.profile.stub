@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ namespace }};
+
+use Honed\Stat\Profile;
+
+class {{ class }} extends Column
+{
+    /**
+     * Define the profile.
+     *
+     * @return $this
+     */
+    protected function definition(): static
+    {
+        return $this;
+    }
+}

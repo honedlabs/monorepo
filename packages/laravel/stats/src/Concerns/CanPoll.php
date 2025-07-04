@@ -8,14 +8,14 @@ trait CanPoll
 {
     /**
      * Whether to poll for changes to the data.
-     * 
+     *
      * @var bool
      */
     protected $poll = false;
 
     /**
      * Set whether to poll for changes to the data.
-     * 
+     *
      * @return $this
      */
     public function poll(bool $value = true): static
@@ -27,7 +27,7 @@ trait CanPoll
 
     /**
      * Set whether to not poll for changes to the data.
-     * 
+     *
      * @return $this
      */
     public function dontPoll(bool $value = true): static

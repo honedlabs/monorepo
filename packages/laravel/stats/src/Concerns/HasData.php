@@ -8,14 +8,14 @@ trait HasData
 {
     /**
      * The data to evaluate.
-     * 
+     *
      * @var mixed
      */
     protected $data;
 
     /**
      * Set the value to evaluate.
-     * 
+     *
      * @return $this
      */
     public function data(mixed $data): static
@@ -35,5 +35,5 @@ trait HasData
         }
 
         return $this->data;
-    }    
+    }
 }

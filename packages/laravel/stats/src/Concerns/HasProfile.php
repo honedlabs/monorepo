@@ -14,8 +14,8 @@ trait HasProfile
 {
     /**
      * The profile.
-     * 
-     * @var \Honed\Stat\Profile|null
+     *
+     * @var Profile|null
      */
     protected $stats;
 
@@ -28,13 +28,13 @@ trait HasProfile
 
         return $this;
     }
-    
+
     /**
      * Set stats to use for the profile.
      */
     public function stats(array|Stat $stats): static
     {
-        /** @var array<int,\Honed\Stat\Stat> */
+        /** @var array<int,Stat> */
         $stats = is_array($stats) ? $stats : func_get_args();
 
         $this->getProfile()->stats($stats);
@@ -47,12 +47,12 @@ trait HasProfile
      */
     public function getProfile(): Profile
     {
-        return $this->newProfile();   
+        return $this->newProfile();
     }
 
     /**
      * Get the profile as an array for spreading.
-     * 
+     *
      * @return array<string,mixed>
      */
     public function profiler(): array

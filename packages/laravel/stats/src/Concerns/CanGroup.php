@@ -8,14 +8,14 @@ trait CanGroup
 {
     /**
      * Whether to group the data.
-     * 
+     *
      * @var bool|string
      */
     protected $group = false;
 
     /**
      * Set whether to group the data.
-     * 
+     *
      * @return $this
      */
     public function group(bool|string $value = true): static
@@ -27,7 +27,7 @@ trait CanGroup
 
     /**
      * Set whether to not group the data.
-     * 
+     *
      * @return $this
      */
     public function dontGroup(bool $value = true): static

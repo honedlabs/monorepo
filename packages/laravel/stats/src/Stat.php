@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Stat;
 
-use Honed\Core\Primitive;
-use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasName;
 use Honed\Stat\Concerns\CanGroup;
 use Honed\Stat\Concerns\HasData;
-use Inertia\Inertia;
 
 class Stat
 {
-    use HasName;
-    use HasLabel;
-    use HasData;
     use CanGroup;
+    use HasData;
+    use HasLabel;
+    use HasName;
 
     /**
      * Create a new stat instance.

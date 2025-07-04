@@ -18,18 +18,12 @@ use Inertia\Inertia;
  */
 class Profile extends Primitive
 {
-    public const PROP = 'stats';
-
-    use CanPoll;
     use CanGroup;
+    use CanPoll;
     use Deferrable;
+    use HasStats;
 
-    /**
-     * The stats.
-     * 
-     * @var array<int,\Honed\Stat\Stat>
-     */
-    protected $stats = [];
+    public const PROP = 'stats';
 
     /**
      * Create a new profile instance.
@@ -40,31 +34,15 @@ class Profile extends Primitive
     }
 
     /**
-     * Get the stats.
+     * Define the profile.
      *
-     * @param array<int,\Honed\Stats\Stat> $stats
      * @return $this
      */
-    public function stats(array|Stat $stats): static
+    protected function definition(): static
     {
-        /** @var array<int,\Honed\Stat\Stat> */
-        $stats = is_array($stats) ? $stats : func_get_args();
-
-        $this->stats = [...$this->stats, ...$stats];
-
         return $this;
     }
 
-    /**
-     * Get the stats for serialization.
-     * 
-     * @return array<int,\Honed\Stat\Stat>
-     */
-    public function getStats(): array
-    {
-        return $this->stats;
-    }
-    
     /**
      * Get the representation of the instance.
      *
@@ -112,28 +90,27 @@ class Profile extends Primitive
     protected function deferredProps()
     {
         $stats = $this->getStats();
-        
+
         if ($key = $this->getStatKey()) {
             return [
                 $key => Inertia::lazy(
                     Arr::mapWithKeys(
                         $stats,
                         static fn (Stat $stat) => [
-                            $stat->getName() => $stat->getData()
+                            $stat->getName() => $stat->getData(),
                         ]
                     )
-                )
+                ),
             ];
         }
 
         return Arr::mapWithKeys(
             $stats,
             fn (Stat $stat) => [
-                $stat->getName() => $this->deferredProp($stat)
+                $stat->getName() => $this->deferredProp($stat),
             ]
         );
     }
-
 
     /**
      * Create the deferred prop.

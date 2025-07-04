@@ -8,15 +8,15 @@ trait Deferrable
 {
     /**
      * Set the strategy for deferring the data.
-     * 
+     *
      * @var 'defer'|'lazy'
      */
     protected $defer = 'defer';
 
     /**
      * Set the strategy for deferring the data.
-     * 
-     * @param 'defer'|'lazy' $strategy
+     *
+     * @param  'defer'|'lazy'  $strategy
      * @return $this
      */
     public function defer(string $strategy = 'defer'): static
@@ -28,7 +28,7 @@ trait Deferrable
 
     /**
      * Set the strategy for deferring the data to lazy.
-     * 
+     *
      * @return $this
      */
     public function lazy(): static
