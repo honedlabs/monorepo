@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use Honed\Stat\Profile;
+use Honed\Stats\Profile;
 
 class {{ class }} extends Column
 {

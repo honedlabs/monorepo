@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\Stat\Concerns;
+namespace Honed\Stats\Concerns;
 
-use Honed\Stat\Stat;
+use Honed\Stats\Stat;
 
 trait HasStats
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\Stat\Contracts;
+namespace Honed\Stats\Contracts;
 
-use Honed\Stat\Profile;
+use Honed\Stats\Profile;
 
 interface Profilable
 {

@@ -12,7 +12,6 @@ use function Orchestra\Testbench\workbench_path;
 
 class TestCase extends Orchestra
 {
-    use RefreshDatabase;
     use WithWorkbench;
 
     /**

@@ -1,5 +1,5 @@
 {
-    "name": "honed/stat",
+    "name": "honed/stats",
     "description": "Create stats with Inertia.",
     "keywords": [
         "honed",
@@ -7,7 +7,7 @@
         "stat",
         "inertia"
     ],
-    "homepage": "https://github.com/honedlabs/stat",
+    "homepage": "https://github.com/honedlabs/stats",
     "license": "MIT",
     "authors": [
         {
@@ -39,12 +39,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Honed\\Stat\\": "src/"
+            "Honed\\Stats\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Honed\\Stat\\Tests\\": "tests/",
+            "Honed\\Stats\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/",
             "Workbench\\Database\\Factories\\": "workbench/database/factories/",
             "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
@@ -88,7 +88,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Honed\\Stat\\StatsServiceProvider"
+                "Honed\\Stats\\StatsServiceProvider"
             ]
         }
     },

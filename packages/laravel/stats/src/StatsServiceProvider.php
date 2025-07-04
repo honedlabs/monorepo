@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Honed\Stat;
+namespace Honed\Stats;
 
-use Honed\Stat\Commands\ProfileMakeCommand;
-use Honed\Stat\Commands\StatMakeCommand;
+use Honed\Stats\Commands\ProfileMakeCommand;
+use Honed\Stats\Commands\StatMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 class StatsServiceProvider extends ServiceProvider
@@ -32,6 +32,6 @@ class StatsServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),
-        ], 'stat-stubs');
+        ], 'stats-stubs');
     }
 }

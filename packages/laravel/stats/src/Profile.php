@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Honed\Stat;
+namespace Honed\Stats;
 
 use Honed\Core\Primitive;
-use Honed\Stat\Concerns\CanGroup;
-use Honed\Stat\Concerns\CanPoll;
-use Honed\Stat\Concerns\Deferrable;
-use Honed\Stat\Concerns\HasStats;
+use Honed\Stats\Concerns\CanGroup;
+use Honed\Stats\Concerns\CanPoll;
+use Honed\Stats\Concerns\Deferrable;
+use Honed\Stats\Concerns\HasStats;
 use Illuminate\Support\Arr;
 use Inertia\IgnoreFirstLoad;
 use Inertia\Inertia;
@@ -27,6 +27,8 @@ class Profile extends Primitive
 
     /**
      * Create a new profile instance.
+     * 
+     * @param  array<int,\Honed\Stats\Stat>|Stat  $stats
      */
     public static function make(array|Stat $stats = []): static
     {
@@ -72,7 +74,7 @@ class Profile extends Primitive
     /**
      * Get the values of the stats.
      *
-     * @return array<string,mixed>
+     * @return array<int, string>
      */
     protected function getValues(): array
     {
@@ -85,22 +87,20 @@ class Profile extends Primitive
     /**
      * Get the stats.
      *
-     * @return array<array-key, Inertia\IgnoreFirstLoad>
+     * @return array<array-key, \Inertia\IgnoreFirstLoad>
      */
-    protected function deferredProps()
+    protected function deferredProps(): array
     {
         $stats = $this->getStats();
 
         if ($key = $this->getStatKey()) {
             return [
-                $key => Inertia::lazy(
-                    Arr::mapWithKeys(
-                        $stats,
-                        static fn (Stat $stat) => [
-                            $stat->getName() => $stat->getData(),
-                        ]
-                    )
-                ),
+                $key => Inertia::lazy(fn () => Arr::mapWithKeys(
+                    $stats,
+                    static fn (Stat $stat) => [
+                        $stat->getName() => $stat->getData(),
+                    ]
+                )),
             ];
         }
 
@@ -118,11 +118,11 @@ class Profile extends Primitive
     protected function deferredProp(Stat $stat): IgnoreFirstLoad
     {
         if ($this->isLazy()) {
-            return Inertia::lazy($stat->getData(...));
+            return Inertia::lazy(fn () => $stat->getData());
         }
 
         return Inertia::defer(
-            $stat->getData(...),
+            fn () => $stat->getData(),
             $stat->getGroup() ?? 'default'
         );
     }

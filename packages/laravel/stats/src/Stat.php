@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Honed\Stat;
+namespace Honed\Stats;
 
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
-use Honed\Stat\Concerns\CanGroup;
-use Honed\Stat\Concerns\HasData;
+use Honed\Stats\Concerns\CanGroup;
+use Honed\Stats\Concerns\HasData;
 
 class Stat
 {
@@ -19,7 +19,7 @@ class Stat
     /**
      * Create a new stat instance.
      */
-    public static function make(string $name, ?string $label = null)
+    public static function make(string $name, ?string $label = null): static
     {
         return resolve(static::class)
             ->name($name)
@@ -31,6 +31,7 @@ class Stat
      */
     public function getLabel(): ?string
     {
+        /** @var string|null */
         return $this->label;
     }
 

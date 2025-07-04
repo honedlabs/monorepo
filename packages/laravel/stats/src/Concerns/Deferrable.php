@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Stat\Concerns;
+namespace Honed\Stats\Concerns;
 
 trait Deferrable
 {
@@ -42,5 +42,21 @@ trait Deferrable
     public function getDeferStrategy(): string
     {
         return $this->defer;
+    }
+
+    /**
+     * Determine if the defer strategy is lazy.
+     */
+    public function isLazy(): bool
+    {
+        return $this->getDeferStrategy() === 'lazy';
+    }
+
+    /**
+     * Determine if the defer strategy is defer.
+     */
+    public function isDefer(): bool
+    {
+        return $this->getDeferStrategy() === 'defer';
     }
 }

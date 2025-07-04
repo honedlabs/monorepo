@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Honed\Stat\Concerns;
+namespace Honed\Stats\Concerns;
 
-use Honed\Stat\Profile;
-use Honed\Stat\Stat;
+use Honed\Stats\Profile;
+use Honed\Stats\Stat;
 
 /**
- * @phpstan-require-extends \Honed\Stat\Contracts\Profilable
+ * @phpstan-require-implements \Honed\Stats\Contracts\Profilable
  */
 trait HasProfile
 {
