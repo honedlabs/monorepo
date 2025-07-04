@@ -10,29 +10,29 @@ use Symfony\Component\Console\Input\InputOption;
 
 use function trim;
 
-#[AsCommand(name: 'make:stat')]
-class StatMakeCommand extends GeneratorCommand
+#[AsCommand(name: 'make:stats')]
+class StatsMakeCommand extends GeneratorCommand
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:stat';
+    protected $name = 'make:stats';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new table stat class.';
+    protected $description = 'Create a new table stats class.';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Stat';
+    protected $type = 'Stats';
 
     /**
      * Get the stub file for the generator.
@@ -41,7 +41,7 @@ class StatMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return $this->resolveStubPath('/stubs/honed.stat.stub');
+        return $this->resolveStubPath('/stubs/honed.stats.stub');
     }
 
     /**
@@ -65,7 +65,7 @@ class StatMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Stats';
+        return $rootNamespace.'\Statss';
     }
 
     /**
@@ -76,7 +76,7 @@ class StatMakeCommand extends GeneratorCommand
     protected function getOptions()
     {
         return [
-            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the stat already exists'],
+            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the stats already exists'],
         ];
     }
 
@@ -90,7 +90,7 @@ class StatMakeCommand extends GeneratorCommand
         return [
             'name' => [
                 'What should the '.strtolower($this->type).' be named?',
-                'E.g. UserStat',
+                'E.g. UserStats',
             ],
         ];
     }

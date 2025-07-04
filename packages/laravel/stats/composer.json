@@ -1,13 +1,13 @@
 {
-    "name": "honed/stats",
+    "name": "honed/stat",
     "description": "Create stats with Inertia.",
     "keywords": [
         "honed",
         "laravel",
-        "stats",
+        "stat",
         "inertia"
     ],
-    "homepage": "https://github.com/honedlabs/stats",
+    "homepage": "https://github.com/honedlabs/stat",
     "license": "MIT",
     "authors": [
         {
@@ -22,7 +22,7 @@
         "illuminate/contracts": "^11.0||^12.0",
         "illuminate/support": "^11.0||^12.0",
         "honed/core": "^0.45.0",
-        "inertiajs/inertia-laravel": "^1.2||^2.0"
+        "inertiajs/inertia-laravel": "^2.0"
     },
     "require-dev": {
         "larastan/larastan": "^3.0",
@@ -39,15 +39,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Honed\\Stats\\": "src/"
-        },
-        "files": [
-            "./src/helpers.php"
-        ]
+            "Honed\\Stat\\": "src/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "Honed\\Stats\\Tests\\": "tests/",
+            "Honed\\Stat\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/",
             "Workbench\\Database\\Factories\\": "workbench/database/factories/",
             "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
@@ -91,11 +88,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Honed\\Stats\\StatsServiceProvider"
-            ],
-            "aliases": {
-                "Stats": "Honed\\Stats\\Facades\\Stats"
-            }
+                "Honed\\Stat\\StatsServiceProvider"
+            ]
         }
     },
     "minimum-stability": "dev",
