@@ -2,12 +2,12 @@
 
 namespace {{ namespace }};
 
-use Honed\Stats\Profile;
+use Honed\Stats\Overviw;
 
-class {{ class }} extends Column
+class {{ class }} extends Overview
 {
     /**
-     * Define the profile.
+     * Define the overview.
      *
      * @return $this
      */

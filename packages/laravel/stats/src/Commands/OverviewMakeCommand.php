@@ -10,29 +10,29 @@ use Symfony\Component\Console\Input\InputOption;
 
 use function trim;
 
-#[AsCommand(name: 'make:profile')]
-class ProfileMakeCommand extends GeneratorCommand
+#[AsCommand(name: 'make:overview')]
+class OverviewMakeCommand extends GeneratorCommand
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:profile';
+    protected $name = 'make:overview';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new profile class.';
+    protected $description = 'Create a new overview class.';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Profile';
+    protected $type = 'Overview';
 
     /**
      * Get the stub file for the generator.
@@ -41,7 +41,7 @@ class ProfileMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return $this->resolveStubPath('/stubs/honed.profile.stub');
+        return $this->resolveStubPath('/stubs/honed.overview.stub');
     }
 
     /**
@@ -65,7 +65,7 @@ class ProfileMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Profiles';
+        return $rootNamespace.'\Overviews';
     }
 
     /**
@@ -76,7 +76,7 @@ class ProfileMakeCommand extends GeneratorCommand
     protected function getOptions()
     {
         return [
-            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the profile already exists'],
+            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the overview already exists'],
         ];
     }
 
@@ -90,7 +90,7 @@ class ProfileMakeCommand extends GeneratorCommand
         return [
             'name' => [
                 'What should the '.strtolower($this->type).' be named?',
-                'E.g. UserProfile',
+                'E.g. UserOverview',
             ],
         ];
     }

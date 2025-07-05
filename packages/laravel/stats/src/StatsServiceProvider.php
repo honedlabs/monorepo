@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Stats;
 
-use Honed\Stats\Commands\ProfileMakeCommand;
+use Honed\Stats\Commands\OverviewMakeCommand;
 use Honed\Stats\Commands\StatMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,7 +20,7 @@ class StatsServiceProvider extends ServiceProvider
 
             $this->commands([
                 StatMakeCommand::class,
-                ProfileMakeCommand::class,
+                OverviewMakeCommand::class,
             ]);
         }
     }
