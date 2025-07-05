@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Workbench\App\Responses;
 
-class IndexUserResponse
+use Honed\Stats\Concerns\Statistical;
+use Honed\Stats\Contracts\DisplaysStats;
+
+class IndexUserResponse implements DisplaysStats
 {
-    
+    use Statistical;
 }

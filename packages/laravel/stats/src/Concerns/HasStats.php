@@ -16,7 +16,7 @@ trait HasStats
     protected $stats = [];
 
     /**
-     * Get the stats.
+     * Add stats to the instance.
      *
      * @param  array<int,\Honed\Stats\Stat>  $stats
      * @return $this
@@ -29,6 +29,17 @@ trait HasStats
         $this->stats = [...$this->stats, ...$stats];
 
         return $this;
+    }
+
+    /**
+     * Add a stat to the instance.
+     *
+     * @param  \Honed\Stats\Stat  $stat
+     * @return $this
+     */
+    public function stat(Stat $stat): static
+    {
+        return $this->stats($stat);
     }
 
     /**

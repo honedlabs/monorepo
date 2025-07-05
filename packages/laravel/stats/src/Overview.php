@@ -156,9 +156,9 @@ class Overview extends Primitive
     protected function representation(): array
     {
         return [
-            '_values' => $this->getValues(),
+            '_values' => $this->getPairs(),
             '_stat_key' => self::PROP,
-            ...$this->deferredProps(),
+            ...$this->getProps(),
         ];
     }
 
@@ -179,13 +179,10 @@ class Overview extends Primitive
      *
      * @return array<int, string>
      */
-    protected function getValues(): array
+    public function getPairs(): array
     {
         return array_map(
-            static fn (Stat $stat) => [
-                $stat->getName(),
-                $stat->getLabel(),
-            ],
+            static fn (Stat $stat) => $stat->toArray(),
             $this->getStats()
         );
     }
@@ -195,7 +192,7 @@ class Overview extends Primitive
      *
      * @return array<array-key, \Inertia\IgnoreFirstLoad>
      */
-    protected function deferredProps(): array
+    protected function getProps(): array
     {
         $stats = $this->getStats();
 
@@ -213,15 +210,15 @@ class Overview extends Primitive
         return Arr::mapWithKeys(
             $stats,
             fn (Stat $stat) => [
-                $stat->getName() => $this->deferredProp($stat),
+                $stat->getName() => $this->newProp($stat),
             ]
         );
     }
 
     /**
-     * Create the deferred prop.
+     * Create the deferred newProp.
      */
-    protected function deferredProp(Stat $stat): IgnoreFirstLoad
+    protected function newProp(Stat $stat): IgnoreFirstLoad
     {
         if ($this->isLazy()) {
             return Inertia::lazy(fn () => $stat->dataFrom());

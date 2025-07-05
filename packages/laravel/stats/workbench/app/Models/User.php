@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
+use Honed\Stats\Attributes\UseOverview;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Workbench\Workbench\Database\Factories\UserFactory;
+use Workbench\App\Overviews\UserOverview;
+use Workbench\Database\Factories\UserFactory;
 
+#[UseOverview(UserOverview::class)]
 class User extends Authenticatable
 {
     /**
-     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Workbench\Database\Factories\UserFactory>
+     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\UserFactory>
      */
     use HasFactory;
 

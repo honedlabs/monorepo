@@ -5,27 +5,27 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\File;
 
 beforeEach(function () {
-    File::cleanDirectory(app_path('Profiles'));
+    File::cleanDirectory(app_path('Overviews'));
 });
 
 afterEach(function () {
-    File::cleanDirectory(app_path('Profiles'));
+    File::cleanDirectory(app_path('Overviews'));
 });
 
 it('makes', function () {
-    $this->artisan('make:profile', [
-        'name' => 'UserProfile',
+    $this->artisan('make:overview', [
+        'name' => 'UserOverview',
         '--force' => true,
     ])->assertSuccessful();
 
-    $this->assertFileExists(app_path('Profiles/UserProfile.php'));
+    $this->assertFileExists(app_path('Overviews/UserOverview.php'));
 });
 
 it('bindings for a name', function () {
-    $this->artisan('make:profile', [
+    $this->artisan('make:overview', [
         '--force' => true,
-    ])->expectsQuestion('What should the profile be named?', 'UserProfile')
+    ])->expectsQuestion('What should the overview be named?', 'UserOverview')
         ->assertSuccessful();
 
-    $this->assertFileExists(app_path('Profiles/UserProfile.php'));
+    $this->assertFileExists(app_path('Overviews/UserOverview.php'));
 });
