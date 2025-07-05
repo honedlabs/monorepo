@@ -7,12 +7,12 @@ namespace Honed\Stats;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Stats\Concerns\CanGroup;
-use Honed\Stats\Concerns\HasData;
+use Honed\Stats\Concerns\FromData;
 
 class Stat
 {
     use CanGroup;
-    use HasData;
+    use FromData;
     use HasLabel;
     use HasName;
 

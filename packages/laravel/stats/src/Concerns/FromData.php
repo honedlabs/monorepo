@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Stats\Concerns;
 
-trait HasData
+trait FromData
 {
     /**
      * The data to evaluate.
@@ -18,7 +18,7 @@ trait HasData
      *
      * @return $this
      */
-    public function data(mixed $data): static
+    public function from(mixed $data): static
     {
         $this->data = $data;
 
@@ -28,7 +28,7 @@ trait HasData
     /**
      * Get the value to evaluate.
      */
-    public function getData(): mixed
+    public function dataFrom(): mixed
     {
         if (is_callable($this->data)) {
             return call_user_func($this->data);

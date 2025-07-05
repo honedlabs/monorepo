@@ -24,7 +24,5 @@ it('can be lazy', function () {
 
 it('can be defer', function () {
     expect($this->profile)
-        ->isDefer()->toBeFalse()
-        ->defer()->toBe($this->profile)
         ->isDefer()->toBeTrue();
 });

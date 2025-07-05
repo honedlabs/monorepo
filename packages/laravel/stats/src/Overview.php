@@ -16,10 +16,9 @@ use Inertia\Inertia;
 /**
  * @extends \Honed\Core\Primitive<string,mixed>
  */
-class Profile extends Primitive
+class Overview extends Primitive
 {
     use CanGroup;
-    use CanPoll;
     use Deferrable;
     use HasStats;
 
@@ -98,7 +97,7 @@ class Profile extends Primitive
                 $key => Inertia::lazy(fn () => Arr::mapWithKeys(
                     $stats,
                     static fn (Stat $stat) => [
-                        $stat->getName() => $stat->getData(),
+                        $stat->getName() => $stat->dataFrom(),
                     ]
                 )),
             ];
@@ -118,11 +117,11 @@ class Profile extends Primitive
     protected function deferredProp(Stat $stat): IgnoreFirstLoad
     {
         if ($this->isLazy()) {
-            return Inertia::lazy(fn () => $stat->getData());
+            return Inertia::lazy(fn () => $stat->dataFrom());
         }
 
         return Inertia::defer(
-            fn () => $stat->getData(),
+            fn () => $stat->dataFrom(),
             $stat->getGroup() ?? 'default'
         );
     }
