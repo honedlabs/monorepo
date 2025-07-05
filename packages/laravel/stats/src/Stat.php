@@ -5,23 +5,24 @@ declare(strict_types=1);
 namespace Honed\Stats;
 
 use Honed\Core\Concerns\CanHaveAttributes;
+use Honed\Core\Concerns\CanHaveIcon;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Concerns\HasValue;
+use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Honed\Stats\Concerns\CanGroup;
 use Honed\Stats\Concerns\CanHaveDescription;
-use Honed\Stats\Concerns\FromData;
 
-class Stat extends Primitive
+class Stat extends Primitive implements NullsAsUndefined
 {
     use CanGroup;
+    use CanHaveAttributes;
+    use CanHaveDescription;
+    use CanHaveIcon;
     use HasLabel;
     use HasName;
-    use CanHaveAttributes;
     use HasValue;
-    use CanHaveDescription;
 
     /**
      * Create a new stat instance.
@@ -55,7 +56,7 @@ class Stat extends Primitive
 
     /**
      * Define the stat.
-     * 
+     *
      * @return $this
      */
     protected function definition(): static
@@ -73,6 +74,7 @@ class Stat extends Primitive
         return [
             'name' => $this->getName(),
             'label' => $this->getLabel(),
+            'icon' => $this->getIcon(),
             'description' => $this->getDescription(),
             'attributes' => $this->getAttributes(),
         ];

@@ -19,3 +19,10 @@ it('adds stats', function () {
         ->stats(Stat::make('refunds'), Stat::make('products'))->toBe($this->overview)
         ->getStats()->toHaveCount(4);
 });
+
+it('adds a stat', function () {
+    expect($this->overview)
+        ->getStats()->toBeEmpty()
+        ->stat(Stat::make('orders'))->toBe($this->overview)
+        ->getStats()->toHaveCount(1);
+});

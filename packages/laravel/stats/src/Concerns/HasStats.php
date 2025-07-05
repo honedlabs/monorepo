@@ -18,7 +18,7 @@ trait HasStats
     /**
      * Add stats to the instance.
      *
-     * @param  array<int,\Honed\Stats\Stat>  $stats
+     * @param  array<int,Stat>  $stats
      * @return $this
      */
     public function stats(array|Stat $stats): static
@@ -34,7 +34,6 @@ trait HasStats
     /**
      * Add a stat to the instance.
      *
-     * @param  \Honed\Stats\Stat  $stat
      * @return $this
      */
     public function stat(Stat $stat): static

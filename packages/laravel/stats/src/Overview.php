@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Honed\Stats;
 
 use Closure;
-use Inertia\Inertia;
+use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Primitive;
+use Honed\Stats\Concerns\CanGroup;
+use Honed\Stats\Concerns\Deferrable;
+use Honed\Stats\Concerns\HasStats;
+use Illuminate\Container\Container;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Inertia\IgnoreFirstLoad;
-use Honed\Stats\Concerns\CanPoll;
-use Honed\Stats\Concerns\CanGroup;
-use Honed\Stats\Concerns\HasStats;
-use Honed\Stats\Concerns\Deferrable;
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Foundation\Application;
+use Inertia\Inertia;
 use Throwable;
 
 /**
@@ -25,6 +26,7 @@ class Overview extends Primitive
 {
     use CanGroup;
     use Deferrable;
+    use HasRecord;
     use HasStats;
 
     public const PROP = 'stats';
@@ -46,14 +48,14 @@ class Overview extends Primitive
     /**
      * How to resolve the overview for the given model name.
      *
-     * @var (Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<Overview>)|null
+     * @var (Closure(class-string<Model>):class-string<Overview>)|null
      */
     protected static $overviewResolver;
 
     /**
      * Create a new profile instance.
-     * 
-     * @param  array<int,\Honed\Stats\Stat>|Stat  $stats
+     *
+     * @param  array<int,Stat>|Stat  $stats
      */
     public static function make(array|Stat $stats = []): static
     {
@@ -63,12 +65,9 @@ class Overview extends Primitive
     /**
      * Get a new table instance for the given model name.
      *
-     * @template TClass of \Illuminate\Database\Eloquent\Model
-     *
-     * @param  class-string<TClass>  $modelName
-     * @return Overview<TClass>
+     * @param  class-string<Model>  $modelName
      */
-    public static function overviewForModel(string $modelName): static
+    public static function overviewForModel(string $modelName): self
     {
         $overview = static::resolveOverview($modelName);
 
@@ -78,7 +77,7 @@ class Overview extends Primitive
     /**
      * Get the overview name for the given model name.
      *
-     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $className
+     * @param  class-string<Model>  $className
      * @return class-string<Overview>
      */
     public static function resolveOverview(string $className): string
@@ -108,7 +107,7 @@ class Overview extends Primitive
     /**
      * Specify the callback that should be invoked to guess the name of a model table.
      *
-     * @param  Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<Table>  $callback
+     * @param  Closure(class-string<Model>):class-string<Overview>  $callback
      */
     public static function guessOverviewNamesUsing(Closure $callback): void
     {
@@ -122,6 +121,19 @@ class Overview extends Primitive
     {
         static::$overviewResolver = null;
         static::$namespace = 'App\\Overviews\\';
+    }
+
+    /**
+     * Get the values of the stats.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getPairs(): array
+    {
+        return array_map(
+            static fn (Stat $stat) => $stat->toArray(),
+            $this->getStats()
+        );
     }
 
     /**
@@ -175,22 +187,9 @@ class Overview extends Primitive
     }
 
     /**
-     * Get the values of the stats.
-     *
-     * @return array<int, string>
-     */
-    public function getPairs(): array
-    {
-        return array_map(
-            static fn (Stat $stat) => $stat->toArray(),
-            $this->getStats()
-        );
-    }
-
-    /**
      * Get the stats.
      *
-     * @return array<array-key, \Inertia\IgnoreFirstLoad>
+     * @return array<string, IgnoreFirstLoad>
      */
     protected function getProps(): array
     {
@@ -201,7 +200,7 @@ class Overview extends Primitive
                 $key => Inertia::lazy(fn () => Arr::mapWithKeys(
                     $stats,
                     static fn (Stat $stat) => [
-                        $stat->getName() => $stat->dataFrom(),
+                        $stat->getName() => $stat->getValue(),
                     ]
                 )),
             ];
@@ -221,12 +220,46 @@ class Overview extends Primitive
     protected function newProp(Stat $stat): IgnoreFirstLoad
     {
         if ($this->isLazy()) {
-            return Inertia::lazy(fn () => $stat->dataFrom());
+            return Inertia::lazy(fn () => $stat->getValue());
         }
 
         return Inertia::defer(
-            fn () => $stat->dataFrom(),
+            fn () => $stat->getValue(),
             $stat->getGroup() ?? 'default'
         );
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by name.
+     *
+     * @return array<int, mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    {
+        return match ($parameterName) {
+            'model', 'record', 'row' => [$this->getRecord()],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
+        };
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by type.
+     *
+     * @param  class-string  $parameterType
+     * @return array<int, mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
+    {
+        $record = $this->getRecord();
+
+        if (! $record instanceof Model) {
+            return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
+        }
+
+        return match ($parameterType) {
+            self::class => [$this],
+            Model::class, $record::class => [$record],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
+        };
     }
 }

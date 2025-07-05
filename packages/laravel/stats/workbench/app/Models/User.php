@@ -6,6 +6,7 @@ namespace Workbench\App\Models;
 
 use Honed\Stats\Attributes\UseOverview;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Workbench\App\Overviews\UserOverview;
@@ -58,4 +59,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the products for the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
+     * Get the products that the user has.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Order, $this>
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
 }

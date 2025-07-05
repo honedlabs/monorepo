@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Stats\Overview;
 use Honed\Stats\Stat;
 use Inertia\IgnoreFirstLoad;
@@ -8,7 +10,6 @@ use Workbench\App\Responses\IndexUserResponse;
 beforeEach(function () {
     $this->response = new IndexUserResponse();
 });
-
 
 it('adds stats to overview', function () {
     expect($this->response)

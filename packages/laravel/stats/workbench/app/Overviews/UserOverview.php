@@ -17,6 +17,6 @@ class UserOverview extends Overview
     protected function definition(): static
     {
         return $this
-            ->stat(Stat::make('users_count')->count());
+            ->stat(Stat::make('users_count'));
     }
 }

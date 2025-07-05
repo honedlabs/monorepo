@@ -21,7 +21,7 @@ trait Statistical
 
     /**
      * Set a profile to use for the stats.
-     * 
+     *
      * @return $this
      */
     public function overview(Overview $overview): static
