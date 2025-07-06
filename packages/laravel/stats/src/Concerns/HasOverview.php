@@ -16,16 +16,6 @@ use ReflectionClass;
 trait HasOverview
 {
     /**
-     * Get the overview instance for the model and bind the current model to it.
-     *
-     * @return TOverview
-     */
-    public function stats()
-    {
-        return $this->overview()->record($this);
-    }
-
-    /**
      * Get the overview instance for the model.
      *
      * @return TOverview
@@ -35,6 +25,16 @@ trait HasOverview
         return static::newOverview()
             ?? Overview::overviewForModel(static::class);
 
+    }
+
+    /**
+     * Get the overview instance for the model and bind the current model to it.
+     *
+     * @return TOverview
+     */
+    public function stats()
+    {
+        return $this->overview()->record($this);
     }
 
     /**

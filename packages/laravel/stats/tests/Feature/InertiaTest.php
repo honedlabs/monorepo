@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\UserController;
 use App\Models\Product;
 use App\Models\User;
 use Honed\Stats\Overview;
@@ -44,7 +43,7 @@ it('renders page', function () {
         );
 
     get(route('users.show', $this->user), [
-        Header::PARTIAL_COMPONENT => 'Users/Show'
+        Header::PARTIAL_COMPONENT => 'Users/Show',
     ])->assertInertia(fn (Assert $assert) => $assert
         ->where('fixed', 100)
         ->where('products_count', DB::table('products')->count())

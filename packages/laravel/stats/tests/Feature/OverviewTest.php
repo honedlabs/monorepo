@@ -113,7 +113,7 @@ it('has array representation', function () {
             ->toHaveKeys([
                 '_values',
                 '_stat_key',
-                'orders'
+                'orders',
             ])
             ->{'_values'}
             ->scoped(fn ($values) => $values
