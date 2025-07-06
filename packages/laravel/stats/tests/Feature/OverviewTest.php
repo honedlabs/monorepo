@@ -125,7 +125,7 @@ it('has array representation', function () {
                 ])
             )
             ->{'_stat_key'}->toBe(Overview::PROP)
-            ->{'orders'}->toBeInstanceOf(IgnoreFirstLoad::class)
+            ->{'orders'}->toBeInstanceOf(LazyProp::class)
         );
 });
 
