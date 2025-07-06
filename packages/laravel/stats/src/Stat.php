@@ -4,28 +4,34 @@ declare(strict_types=1);
 
 namespace Honed\Stats;
 
+use Closure;
+use Honed\Core\Concerns\CanHaveAttributes;
+use Honed\Core\Concerns\CanHaveIcon;
+use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasName;
+use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
+use Honed\Stats\Concerns\CanHaveDescription;
+use Honed\Stats\Concerns\CanHaveGroup;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Concerns\HasValue;
-use Honed\Stats\Concerns\CanGroup;
-use Honed\Core\Concerns\CanHaveIcon;
-use Illuminate\Database\Eloquent\Model;
-use Honed\Core\Concerns\CanHaveAttributes;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Stats\Concerns\CanHaveDescription;
 
 class Stat extends Primitive implements NullsAsUndefined
 {
-    use CanGroup;
     use CanHaveAttributes;
     use CanHaveDescription;
+    use CanHaveGroup;
     use CanHaveIcon;
     use HasLabel;
     use HasName;
-    use HasValue;
+
+    /**
+     * The value of the stat.
+     *
+     * @var mixed
+     */
+    protected $value;
 
     /**
      * Create a new stat instance.
@@ -38,15 +44,23 @@ class Stat extends Primitive implements NullsAsUndefined
     }
 
     /**
-     * Get the group of the data.
+     * Set the value of the stat.
+     *
+     * @return $this
      */
-    public function getGroup(): ?string
+    public function value(mixed $value): static
     {
-        if (is_string($this->group)) {
-            return $this->group;
-        }
+        $this->value = $value;
 
-        return null;
+        return $this;
+    }
+
+    /**
+     * Get the value of the stat.
+     */
+    public function getValue(): mixed
+    {
+        return $this->value;
     }
 
     /**
@@ -127,6 +141,47 @@ class Stat extends Primitive implements NullsAsUndefined
     }
 
     /**
+     * Set the value of the stat to be retrieved from a range (max - min) of a relationship.
+     *
+     * @param  string|array<string, Closure>|null  $relationship
+     * @return $this
+     */
+    public function range(string|array|null $relationship = null, ?string $column = null): static
+    {
+        if ($relationship && ! $column) {
+            $this->throwInvalidAggregateCall();
+        }
+
+        return $this->value(match (true) {
+            (bool) $relationship => fn (Model $record) => $this->loadRange($record, $relationship, $column),
+            default => fn (Model $record) => $this->loadRange(
+                $record,
+                Str::beforeLast($this->getName(), '_range'),
+                Str::afterLast($this->getName(), 'range_'),
+            ),
+        });
+    }
+
+    /**
+     * Calculate the range (max - min) for a relationship.
+     *
+     * @param  string|array<string, Closure>  $relationship
+     */
+    protected function loadRange(Model $record, string|array $relationship, string $column): float|int|null
+    {
+        $query = $record->{$relationship}();
+
+        $max = $query->max($column);
+        $min = $query->min($column);
+
+        if ($max === null || $min === null) {
+            return null;
+        }
+
+        return $max - $min;
+    }
+
+    /**
      * Get the name of the load method.
      */
     protected function load(string $method): string
@@ -159,9 +214,7 @@ class Stat extends Primitive implements NullsAsUndefined
     protected function newAggregateRelationship(string|array|null $relationship, ?string $column, string $method): static
     {
         if ($relationship && ! $column) {
-            throw new InvalidArgumentException(
-                'A column must be specified when an aggregate relationship is used.'
-            );
+            $this->throwInvalidAggregateCall();
         }
 
         return $this->value(match (true) {
@@ -171,6 +224,18 @@ class Stat extends Primitive implements NullsAsUndefined
                 Str::afterLast($this->getName(), $method.'_'),
             ),
         });
+    }
+
+    /**
+     * Throw an invalid aggregate call exception.
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function throwInvalidAggregateCall(): never
+    {
+        throw new InvalidArgumentException(
+            'A column must be specified when an aggregate relationship is used.'
+        );
     }
 
     /**

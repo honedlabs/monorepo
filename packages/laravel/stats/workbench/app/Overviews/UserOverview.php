@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Overviews;
+namespace App\Overviews;
 
+use Honed\Stats\Count;
 use Honed\Stats\Overview;
 use Honed\Stats\Stat;
+use Honed\Stats\Sum;
 
 class UserOverview extends Overview
 {
@@ -17,6 +19,14 @@ class UserOverview extends Overview
     protected function definition(): static
     {
         return $this
-            ->stat(Stat::make('users_count'));
+            ->stats([
+                Stat::make('fixed')
+                    // ->abbreviate()
+                    ->value(100),
+
+                Count::make('orders_count'),
+
+                Sum::make('products_price_sum'),
+            ]);
     }
 }

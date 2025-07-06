@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Models\User;
+use App\Overviews\UserOverview;
 use Honed\Stats\Attributes\UseOverview;
-use Workbench\App\Models\User;
-use Workbench\App\Overviews\UserOverview;
 
 it('has attribute', function () {
     $attribute = new UseOverview(UserOverview::class);

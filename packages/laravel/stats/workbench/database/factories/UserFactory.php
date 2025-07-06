@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Workbench\Database\Factories;
+namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Workbench\App\Models\User;
 
 /**
- * @template TModel of \Workbench\App\Models\User
+ * @template TModel of \App\Models\User
  *
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<TModel>
  */

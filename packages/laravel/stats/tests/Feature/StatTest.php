@@ -18,22 +18,13 @@ it('has name and label', function () {
         ->getLabel()->toBe('Label');
 });
 
-it('can have a group', function () {
-    expect($this->stat)
-        ->getGroup()->toBeNull()
-        ->group()->toBe($this->stat)
-        ->getGroup()->toBeNull()
-        ->group('group')->toBe($this->stat)
-        ->getGroup()->toBe('group');
-});
-
 it('has value', function () {
     expect($this->stat)
         ->getValue()->toBeNull()
         ->value('test')->toBe($this->stat)
         ->getValue()->toBe('test')
         ->value(fn () => 'callback')->toBe($this->stat)
-        ->getValue()->toBe('callback');
+        ->getValue()->toBeInstanceOf(Closure::class);
 });
 
 it('has array representation', function () {

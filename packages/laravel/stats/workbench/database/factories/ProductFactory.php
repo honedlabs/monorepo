@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Workbench\Database\Factories;
+namespace Database\Factories;
 
+use App\Enums\Status;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use Workbench\App\Enums\Status;
-use Workbench\App\Models\Product;
-use Workbench\App\Models\User;
 
 /**
- * @template TModel of \Workbench\App\Models\Product
+ * @template TModel of \App\Models\Product
  *
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<TModel>
  */

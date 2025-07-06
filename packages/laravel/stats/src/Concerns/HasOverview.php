@@ -38,7 +38,7 @@ trait HasOverview
 
         return $overview
             ->when(
-                static::__isStatic(),
+                ! static::__isStatic(),
                 fn (Overview $overview) => $overview->record($this)
             );
     }
@@ -48,11 +48,11 @@ trait HasOverview
      *
      * @return TOverview|null
      */
-    protected static function newOverview()
+    protected static function newOverview(): ?Overview
     {
         return match (true) {
             isset(static::$overviewClass) => static::$overviewClass::make(),
-            $overview = static::getUseOverviewAttribute() => $overview::make(),
+            (bool) $overview = static::getUseOverviewAttribute() => $overview::make(),
             default => null,
         };
     }
@@ -62,7 +62,7 @@ trait HasOverview
      *
      * @return class-string<Overview>|null
      */
-    protected static function getUseOverviewAttribute()
+    protected static function getUseOverviewAttribute(): ?string
     {
         $attributes = (new ReflectionClass(static::class))
             ->getAttributes(UseOverview::class);
@@ -70,11 +70,7 @@ trait HasOverview
         if ($attributes !== []) {
             $useOverview = $attributes[0]->newInstance();
 
-            $overview = $useOverview->overviewClass::make();
-
-            $overview->guessOverviewNamesUsing(fn () => static::class);
-
-            return $overview;
+            return $useOverview->overviewClass;
         }
 
         return null;

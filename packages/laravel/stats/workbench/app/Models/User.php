@@ -2,23 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Models;
+namespace App\Models;
 
+use App\Overviews\UserOverview;
+use Database\Factories\UserFactory;
 use Honed\Stats\Attributes\UseOverview;
+use Honed\Stats\Concerns\HasOverview;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Workbench\App\Overviews\UserOverview;
-use Workbench\Database\Factories\UserFactory;
 
 #[UseOverview(UserOverview::class)]
 class User extends Authenticatable
 {
     /**
-     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\UserFactory>
+     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserFactory>
      */
     use HasFactory;
+
+    /**
+     * @use \Honed\Stats\Concerns\HasOverview<\App\Overviews\UserOverview>
+     */
+    use HasOverview;
 
     use Notifiable;
 
@@ -63,7 +69,7 @@ class User extends Authenticatable
     /**
      * Get the products for the user.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
+     * @return HasMany<Product>
      */
     public function products(): HasMany
     {
@@ -73,7 +79,7 @@ class User extends Authenticatable
     /**
      * Get the products that the user has.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Order, $this>
+     * @return HasMany<Order, $this>
      */
     public function orders(): HasMany
     {

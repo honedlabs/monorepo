@@ -10,18 +10,14 @@ beforeEach(function () {
 
 it('groups', function () {
     expect($this->overview)
-        ->isGrouped()->toBeFalse()
+        ->isGroup()->toBeFalse()
         ->group()->toBe($this->overview)
-        ->isGrouped()->toBeTrue()
-        ->group('test')->toBe($this->overview)
-        ->isGrouped()->toBeTrue();
+        ->isGroup()->toBeTrue();
 });
 
 it('does not group', function () {
     expect($this->overview)
-        ->isNotGrouped()->toBeTrue()
-        ->group('test')->toBe($this->overview)
-        ->isNotGrouped()->toBeFalse()
+        ->isNotGroup()->toBeTrue()
         ->dontGroup()->toBe($this->overview)
-        ->isNotGrouped()->toBeTrue();
+        ->isNotGroup()->toBeTrue();
 });

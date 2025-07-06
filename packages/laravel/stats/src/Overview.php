@@ -20,7 +20,7 @@ use Inertia\Inertia;
 use Throwable;
 
 /**
- * @extends \Honed\Core\Primitive<string,mixed>
+ * @extends \Honed\Core\Primitive<string, mixed>
  */
 class Overview extends Primitive
 {
@@ -137,6 +137,14 @@ class Overview extends Primitive
     }
 
     /**
+     * Get the value from a stat.
+     */
+    public function getValue(Stat $stat): mixed
+    {
+        return $this->evaluate($stat->getValue());
+    }
+
+    /**
      * Get the application namespace for the application.
      */
     protected static function appNamespace(): string
@@ -179,7 +187,7 @@ class Overview extends Primitive
      */
     protected function getStatKey(): ?string
     {
-        if ($this->isGrouped() && $this->isLazy()) {
+        if ($this->isGroup() && $this->isLazy()) {
             return self::PROP;
         }
 
@@ -199,8 +207,8 @@ class Overview extends Primitive
             return [
                 $key => Inertia::lazy(fn () => Arr::mapWithKeys(
                     $stats,
-                    static fn (Stat $stat) => [
-                        $stat->getName() => $stat->getValue(),
+                    fn (Stat $stat) => [
+                        $stat->getName() => $this->getValue($stat),
                     ]
                 )),
             ];
@@ -219,14 +227,12 @@ class Overview extends Primitive
      */
     protected function newProp(Stat $stat): IgnoreFirstLoad
     {
-        if ($this->isLazy()) {
-            return Inertia::lazy(fn () => $stat->getValue());
-        }
+        $callback = fn () => $this->getValue($stat);
 
-        return Inertia::defer(
-            fn () => $stat->getValue(),
-            $stat->getGroup() ?? 'default'
-        );
+        return match (true) {
+            $this->isLazy() => Inertia::lazy($callback),
+            default => Inertia::defer($callback, $stat->getGroup() ?? 'default'),
+        };
     }
 
     /**

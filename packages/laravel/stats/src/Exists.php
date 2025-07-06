@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Stats;
 
-class Average extends Stat
+class Exists extends Stat
 {
     /**
      * Provide the instance with any necessary setup.
@@ -13,6 +13,6 @@ class Average extends Stat
     {
         parent::setUp();
 
-        $this->average();
+        $this->exists();
     }
 }

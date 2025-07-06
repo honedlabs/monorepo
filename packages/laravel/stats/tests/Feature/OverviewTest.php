@@ -2,18 +2,16 @@
 
 declare(strict_types=1);
 
+use App\Models\User;
+use App\Overviews\UserOverview;
 use Honed\Stats\Overview;
 use Honed\Stats\Stat;
 use Illuminate\Support\Str;
-use Workbench\App\Models\User;
-use Workbench\App\Overviews\UserOverview;
 
 beforeEach(function () {
     $this->overview = Overview::make();
 
     $this->user = class_basename(User::class);
-
-    Overview::useNamespace('Workbench\\App\\Overviews\\');
 });
 
 afterEach(function () {

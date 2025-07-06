@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Models;
+namespace App\Models;
 
 use Honed\Stats\Concerns\HasOverview;
 use Illuminate\Database\Eloquent\Model;

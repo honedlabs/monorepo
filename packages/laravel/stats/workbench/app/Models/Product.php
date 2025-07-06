@@ -2,31 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Models;
+namespace App\Models;
 
-use Laravel\Scout\Searchable;
-use Workbench\App\Enums\Status;
-use Honed\Table\Concerns\HasTable;
+use App\Enums\Status;
+use App\Overviews\ProductOverview;
+use Database\Factories\ProductFactory;
 use Honed\Stats\Concerns\HasOverview;
-use Workbench\App\Tables\ProductTable;
-use Illuminate\Database\Eloquent\Model;
-use Workbench\App\Overviews\ProductOverview;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Workbench\Database\Factories\ProductFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
     /**
-     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Workbench\Database\Factories\ProductFactory>
+     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ProductFactory>
      */
     use HasFactory;
 
     /**
-     * @use \Honed\Stats\Concerns\HasOverview<\Workbench\App\Overviews\ProductOverview>
+     * @use \Honed\Stats\Concerns\HasOverview<\App\Overviews\ProductOverview>
      */
     use HasOverview;
 
