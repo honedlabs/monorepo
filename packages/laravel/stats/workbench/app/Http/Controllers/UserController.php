@@ -17,7 +17,7 @@ class UserController extends Controller
     public function show(User $user): Response
     {
         return Inertia::render('Users/Show', [
-            ...$user->overview()->toArray(),
+            ...$user->stats()->toArray(),
         ]);
     }
 }

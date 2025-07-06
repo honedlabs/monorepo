@@ -28,3 +28,11 @@ it('guesses overview from model name', function () {
     expect(Order::overview())
         ->toBeInstanceOf(OrderOverview::class);
 });
+
+it('binds model to overview', function () {
+    $user = User::factory()->create();
+
+    expect($user->stats())
+        ->toBeInstanceOf(UserOverview::class)
+        ->getRecord()->toBe($user);
+});

@@ -23,9 +23,9 @@ class UserOverview extends Overview
                 Stat::make('fixed')
                     ->value(100),
 
-                Count::make('products_count'),
+                Count::make('products_count', 'Count'),
 
-                Sum::make('products_sum_price'),
+                Sum::make('products_sum_price', 'Sum'),
             ]);
     }
 }

@@ -16,31 +16,25 @@ use ReflectionClass;
 trait HasOverview
 {
     /**
-     * Check if the method has been called statically.
+     * Get the overview instance for the model and bind the current model to it.
+     *
+     * @return TOverview
      */
-    private static function __isStatic(): bool
+    public function stats()
     {
-        $backtrace = debug_backtrace();
-
-        return $backtrace[1]['type'] === '::';
+        return $this->overview()->record($this);
     }
 
     /**
-     * Get the table instance for the model.
+     * Get the overview instance for the model.
      *
-     * @param  Closure|null  $before
      * @return TOverview
      */
     public static function overview()
     {
-        $overview = static::newOverview()
+        return static::newOverview()
             ?? Overview::overviewForModel(static::class);
 
-        return $overview
-            ->when(
-                ! static::__isStatic(),
-                fn (Overview $overview) => $overview->record($this)
-            );
     }
 
     /**
