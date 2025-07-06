@@ -66,7 +66,7 @@ class Stat extends Primitive implements NullsAsUndefined
     /**
      * Set the value of the stat to be retrieved from a count of a relationship.
      *
-     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|array{string, Closure}|null  $relationship
      * @return $this
      */
     public function count(string|array|null $relationship = null): static
@@ -77,7 +77,7 @@ class Stat extends Primitive implements NullsAsUndefined
     /**
      * Set the value of the stat to be retrieved from a relationship exists.
      *
-     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|array{string, Closure}|null  $relationship
      * @return $this
      */
     public function exists(string|array|null $relationship = null): static
@@ -88,7 +88,7 @@ class Stat extends Primitive implements NullsAsUndefined
     /**
      * Set the value of the stat to be retrieved from an average value of a relationship.
      *
-     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|array{string, Closure}|null  $relationship
      * @return $this
      */
     public function avg(string|array|null $relationship = null, ?string $column = null): static
@@ -99,7 +99,7 @@ class Stat extends Primitive implements NullsAsUndefined
     /**
      * Set the value of the stat to be retrieved from an average value of a relationship.
      *
-     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|array{string, Closure}|null  $relationship
      * @return $this
      */
     public function average(string|array|null $relationship = null, ?string $column = null): static
@@ -110,7 +110,7 @@ class Stat extends Primitive implements NullsAsUndefined
     /**
      * Set the value of the stat to be retrieved from a sum of a relationship.
      *
-     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|array{string, Closure}|null  $relationship
      * @return $this
      */
     public function sum(string|array|null $relationship = null, ?string $column = null): static
@@ -121,7 +121,7 @@ class Stat extends Primitive implements NullsAsUndefined
     /**
      * Set the value of the stat to be retrieved from a maximum value of a relationship.
      *
-     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|array{string, Closure}|null  $relationship
      * @return $this
      */
     public function max(string|array|null $relationship = null, ?string $column = null): static
@@ -132,7 +132,7 @@ class Stat extends Primitive implements NullsAsUndefined
     /**
      * Set the value of the stat to be retrieved from a minimum value of a relationship.
      *
-     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|array{string, Closure}|null  $relationship
      * @return $this
      */
     public function min(string|array|null $relationship = null, ?string $column = null): static
@@ -143,7 +143,7 @@ class Stat extends Primitive implements NullsAsUndefined
     /**
      * Set the value of the stat to be retrieved from a range (max - min) of a relationship.
      *
-     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|array{string, Closure}|null  $relationship
      * @return $this
      */
     public function range(string|array|null $relationship = null, ?string $column = null): static
@@ -165,7 +165,7 @@ class Stat extends Primitive implements NullsAsUndefined
     /**
      * Calculate the range (max - min) for a relationship.
      *
-     * @param  string|array<string, Closure>  $relationship
+     * @param  string|array{string, Closure}  $relationship
      */
     protected function loadRange(Model $record, string|array $relationship, string $column): float|int|null
     {
@@ -190,40 +190,94 @@ class Stat extends Primitive implements NullsAsUndefined
     }
 
     /**
+     * Get the name of the attribute to be retrieved from an aggregate relationship.
+     *
+     * @param  string|array{string, Closure}|null  $relationship
+     * @param  string  $method
+     * @param  string|null  $column
+     * @return string
+     */
+    protected function getAttributeName(string|array|null $relationship, string $method, ?string $column = null): string
+    {
+        if (! $relationship) {
+            return $this->getName();
+        }
+
+        if (is_array($relationship)) {
+            $relationship = array_key_first($relationship);
+        }
+
+        if (Str::contains($relationship, ' as ')) {
+            return Str::afterLast($relationship, ' as ');
+        }
+
+        return implode('_', array_values(
+            array_filter([
+                $relationship,
+                $method,
+                $column,
+            ])
+        ));
+    }
+
+    /**
+     * Guess the name of the relationship.
+     */
+    protected function getRelationship(string|array|null $relationship, string $method): string|array
+    {
+        return match (true) {
+            (bool) $relationship => $relationship,
+            default => Str::beforeLast($this->getName(), '_'.$method),
+        };
+    }
+
+    /**
+     * Guess the name of the aggregating column.
+     */
+    protected function getColumnName(?string $column, string $method): string
+    {
+        return $column ?? Str::afterLast($this->getName(), $method.'_');
+    }
+
+    /**
      * Set the value of the stat to be retrieved from a simple relationship.
      *
-     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|array{string, Closure}|null  $relationship
      * @return $this
      */
     protected function newSimpleRelationship(string|array|null $relationship, string $method): static
     {
-        return $this->value(match (true) {
-            (bool) $relationship => fn (Model $record) => $record->{$this->load($method)}($relationship),
-            default => fn (Model $record) => $record->{$this->load($method)}(
-                Str::beforeLast($this->getName(), '_'.$method),
-            ),
-        });
+        return $this->value(
+            fn (Model $record) => $record->{$this->load($method)}(
+                $this->getRelationship($relationship, $method)
+            )->{$this->getAttributeName($relationship, $method)}
+        );
     }
 
     /**
      * Set the value of the stat to be retrieved from an aggregate relationship.
      *
-     * @param  string|array<string, Closure>|null  $relationship
+     * @param  string|array{string, Closure}|null  $relationship
      * @return $this
      */
     protected function newAggregateRelationship(string|array|null $relationship, ?string $column, string $method): static
     {
-        if ($relationship && ! $column) {
+        if ($this->invalidAggregateCall($relationship, $column)) {
             $this->throwInvalidAggregateCall();
         }
 
-        return $this->value(match (true) {
-            (bool) $relationship => fn (Model $record) => $record->{$this->load($method)}($relationship, $column),
-            default => fn (Model $record) => $record->{$this->load($method)}(
-                Str::beforeLast($this->getName(), '_'.$method),
-                Str::afterLast($this->getName(), $method.'_'),
-            ),
-        });
+        return $this->value(fn (Model $record) => $record->{$this->load($method)}(
+            $this->getRelationship($relationship, $method),
+            $this->getColumnName($column, $method),
+        )->{$this->getAttributeName($relationship, $method, $column)});
+    }
+
+    /**
+     * Determine if the aggregate call is invalid.
+     */
+    protected function invalidAggregateCall(string|array|null $relationship, ?string $column): bool
+    {
+        return $relationship && ! $column && ! is_array($relationship);
     }
 
     /**

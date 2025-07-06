@@ -27,4 +27,4 @@ it('gets overview from static property', function () {
 it('guesses overview from model name', function () {
     expect(Order::overview())
         ->toBeInstanceOf(OrderOverview::class);
-})->only();
+});
