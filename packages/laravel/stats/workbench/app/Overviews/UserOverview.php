@@ -21,12 +21,11 @@ class UserOverview extends Overview
         return $this
             ->stats([
                 Stat::make('fixed')
-                    // ->abbreviate()
                     ->value(100),
 
-                Count::make('orders_count'),
+                Count::make('products_count'),
 
-                Sum::make('products_price_sum'),
+                Sum::make('products_sum_price'),
             ]);
     }
 }

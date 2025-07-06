@@ -163,25 +163,6 @@ class Stat extends Primitive implements NullsAsUndefined
     }
 
     /**
-     * Calculate the range (max - min) for a relationship.
-     *
-     * @param  string|array{string, Closure}  $relationship
-     */
-    protected function loadRange(Model $record, string|array $relationship, string $column): float|int|null
-    {
-        $query = $record->{$relationship}();
-
-        $max = $query->max($column);
-        $min = $query->min($column);
-
-        if ($max === null || $min === null) {
-            return null;
-        }
-
-        return $max - $min;
-    }
-
-    /**
      * Get the name of the load method.
      */
     protected function load(string $method): string
@@ -193,9 +174,6 @@ class Stat extends Primitive implements NullsAsUndefined
      * Get the name of the attribute to be retrieved from an aggregate relationship.
      *
      * @param  string|array{string, Closure}|null  $relationship
-     * @param  string  $method
-     * @param  string|null  $column
-     * @return string
      */
     protected function getAttributeName(string|array|null $relationship, string $method, ?string $column = null): string
     {
@@ -204,6 +182,7 @@ class Stat extends Primitive implements NullsAsUndefined
         }
 
         if (is_array($relationship)) {
+            /** @var string */
             $relationship = array_key_first($relationship);
         }
 
@@ -222,6 +201,9 @@ class Stat extends Primitive implements NullsAsUndefined
 
     /**
      * Guess the name of the relationship.
+     *
+     * @param  string|array{string, Closure}|null  $relationship
+     * @return string|array{string, Closure}
      */
     protected function getRelationship(string|array|null $relationship, string $method): string|array
     {
@@ -237,6 +219,25 @@ class Stat extends Primitive implements NullsAsUndefined
     protected function getColumnName(?string $column, string $method): string
     {
         return $column ?? Str::afterLast($this->getName(), $method.'_');
+    }
+
+    /**
+     * Calculate the range (max - min) for a relationship.
+     *
+     * @param  string|array{string, Closure}  $relationship
+     */
+    protected function loadRange(Model $record, string|array $relationship, string $column): float|int|null
+    {
+        $query = $record->{$relationship}();
+
+        $max = $query->max($column);
+        $min = $query->min($column);
+
+        if ($max === null || $min === null) {
+            return null;
+        }
+
+        return $max - $min;
     }
 
     /**
@@ -274,6 +275,8 @@ class Stat extends Primitive implements NullsAsUndefined
 
     /**
      * Determine if the aggregate call is invalid.
+     *
+     * @param  string|array{string, Closure}|null  $relationship
      */
     protected function invalidAggregateCall(string|array|null $relationship, ?string $column): bool
     {

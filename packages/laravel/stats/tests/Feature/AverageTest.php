@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Product;
 use App\Models\User;
 use Honed\Stats\Average;
@@ -67,3 +69,8 @@ it('specifies array relationship with aliasing', function () {
 
     expect($value)->toBe($this->average);
 });
+
+it('throws exception when no column is not specified', function () {
+    $stat = Stat::make('products', 'Average')
+        ->average('products');
+})->throws(InvalidArgumentException::class);

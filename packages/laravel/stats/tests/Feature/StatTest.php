@@ -9,7 +9,7 @@ beforeEach(function () {
 });
 
 it('has name and label', function () {
-expect($this->stat)
+    expect($this->stat)
         ->getName()->toBe('name')
         ->getLabel()->toBe('Name');
 
