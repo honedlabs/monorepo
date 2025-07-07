@@ -23,7 +23,7 @@ jobs:
           # - core
           # - crumb
           # - flash
-          - honed
+          # - honed
           # - infolist
           # - layout
           # - lock
@@ -35,7 +35,7 @@ jobs:
           # - registry
           # - stats
           # - table
-          # - upload
+          - upload
           # - widget
     steps:
       - name: Checkout
