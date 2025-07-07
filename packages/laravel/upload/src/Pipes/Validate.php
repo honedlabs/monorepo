@@ -38,8 +38,7 @@ class Validate extends Pipe
                 $this->instance->getAttributes(),
             )->validate();
 
-            $this->instance->setFile(File::from($validated));
-
+            $this->instance->setValidated($validated);
         } catch (ValidationException $e) {
             PresignFailed::dispatch($this->instance::class, $request);
 
