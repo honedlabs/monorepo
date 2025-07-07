@@ -17,10 +17,8 @@ class CreateResponse extends InertiaResponse
 
     /**
      * Create a new edit response.
-     *
-     * @param  string  $store
      */
-    public function __construct($store)
+    public function __construct(string $store)
     {
         $this->storeUrl($store);
     }
@@ -28,10 +26,9 @@ class CreateResponse extends InertiaResponse
     /**
      * Set the route to store the model.
      *
-     * @param  string  $value
      * @return $this
      */
-    public function storeUrl($value)
+    public function storeUrl(string $value): static
     {
         $this->store = $value;
 
@@ -40,10 +37,8 @@ class CreateResponse extends InertiaResponse
 
     /**
      * Get the route to store the model.
-     *
-     * @return string
      */
-    public function getStoreUrl()
+    public function getStoreUrl(): string
     {
         return $this->store;
     }
@@ -53,7 +48,7 @@ class CreateResponse extends InertiaResponse
      *
      * @return array<string, mixed>
      */
-    public function getProps()
+    public function getProps(): array
     {
         return [
             ...parent::getProps(),

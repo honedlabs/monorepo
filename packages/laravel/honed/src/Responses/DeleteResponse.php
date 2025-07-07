@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Honed\Responses;
 
+use Honed\Honed\Contracts\ViewsModel;
 use Honed\Honed\Responses\Concerns\HasModel;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ *
+ * @implements ViewsModel<TModel>
  */
-class DeleteResponse extends InertiaResponse
+class DeleteResponse extends InertiaResponse implements ViewsModel
 {
     /** @use HasModel<TModel> */
     use HasModel;
@@ -27,9 +31,8 @@ class DeleteResponse extends InertiaResponse
      * Create a new edit response.
      *
      * @param  TModel  $model
-     * @param  string  $destroyUrl
      */
-    public function __construct($model, $destroyUrl)
+    public function __construct(Model $model, string $destroyUrl)
     {
         $this->model($model);
         $this->destroyUrl($destroyUrl);
@@ -38,10 +41,9 @@ class DeleteResponse extends InertiaResponse
     /**
      * Set the route to destroy the model.
      *
-     * @param  string  $value
      * @return $this
      */
-    public function destroyUrl($value)
+    public function destroyUrl(string $value): static
     {
         $this->destroy = $value;
 
@@ -50,10 +52,8 @@ class DeleteResponse extends InertiaResponse
 
     /**
      * Get the route to destroy the model.
-     *
-     * @return string
      */
-    public function getDestroyUrl()
+    public function getDestroyUrl(): string
     {
         return $this->destroy;
     }
@@ -63,7 +63,7 @@ class DeleteResponse extends InertiaResponse
      *
      * @return array<string, mixed>
      */
-    public function getProps()
+    public function getProps(): array
     {
         return [
             ...parent::getProps(),

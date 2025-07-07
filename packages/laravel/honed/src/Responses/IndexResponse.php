@@ -16,24 +16,9 @@ class IndexResponse extends InertiaResponse
 
     /**
      * Provide the instance with any necessary setup.
-     *
-     * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->page('Index');
-    }
-
-    /**
-     * Get the props for the view.
-     *
-     * @return array<string, mixed>
-     */
-    public function getProps()
-    {
-        return [
-            ...parent::getProps(),
-            ...$this->tableToArray(),
-        ];
     }
 }

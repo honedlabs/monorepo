@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Honed\Responses;
 
+use Honed\Honed\Contracts\ViewsModel;
 use Honed\Honed\Responses\Concerns\HasModel;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ *
+ * @implements ViewsModel<TModel>
  */
-class EditResponse extends InertiaResponse
+class EditResponse extends InertiaResponse implements ViewsModel
 {
     /** @use HasModel<TModel> */
     use HasModel;
@@ -27,9 +31,8 @@ class EditResponse extends InertiaResponse
      * Create a new edit response.
      *
      * @param  TModel  $model
-     * @param  string  $update
      */
-    public function __construct($model, $update)
+    public function __construct(Model $model, string $update)
     {
         $this->model($model);
         $this->updateUrl($update);
@@ -38,10 +41,9 @@ class EditResponse extends InertiaResponse
     /**
      * Set the route to update the model.
      *
-     * @param  string  $value
      * @return $this
      */
-    public function updateUrl($value)
+    public function updateUrl(string $value): static
     {
         $this->update = $value;
 
@@ -50,10 +52,8 @@ class EditResponse extends InertiaResponse
 
     /**
      * Get the route to update the model.
-     *
-     * @return string
      */
-    public function getUpdateUrl()
+    public function getUpdateUrl(): string
     {
         return $this->update;
     }
@@ -63,12 +63,11 @@ class EditResponse extends InertiaResponse
      *
      * @return array<string, mixed>
      */
-    public function getProps()
+    public function getProps(): array
     {
         return [
             ...parent::getProps(),
             self::UPDATE_PROP => $this->getUpdateUrl(),
-            $this->getPropName() => $this->getPropModel(),
         ];
     }
 }

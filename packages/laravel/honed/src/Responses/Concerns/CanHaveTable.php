@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Honed\Responses\Concerns;
 
+use Honed\Honed\Contracts\ViewsModel;
 use Honed\Table\Table;
 
 /**
@@ -16,17 +17,17 @@ trait CanHaveTable
     /**
      * The table to be rendered.
      *
-     * @var class-string<TTable>|TTable|null
+     * @var bool|class-string<TTable>|TTable
      */
-    protected $table;
+    protected $table = false;
 
     /**
      * Set the table for the response.
      *
-     * @param  class-string<TTable>|TTable  $table
+     * @param  bool|class-string<TTable>|TTable  $table
      * @return $this
      */
-    public function table($table)
+    public function table(bool|string|Table $table = true): static
     {
         $this->table = $table;
 
@@ -38,11 +39,12 @@ trait CanHaveTable
      *
      * @return TTable|null
      */
-    public function getTable()
+    public function getTable(): ?Table
     {
         return match (true) {
             is_string($this->table) => ($this->table)::make(),
             $this->table instanceof Table => $this->table,
+            $this->table === true && $this instanceof ViewsModel => $this->getModel()->table(), // @phpstan-ignore-line method.notFound
             default => null,
         };
     }
@@ -52,10 +54,12 @@ trait CanHaveTable
      *
      * @return array<string, mixed>
      */
-    protected function tableToArray()
+    protected function canHaveTableToProps(): array
     {
         if ($table = $this->getTable()) {
-            return [self::TABLE_PROP => $table];
+            return [
+                self::TABLE_PROP => $table->toArray(),
+            ];
         }
 
         return [];

@@ -7,7 +7,7 @@ use Workbench\App\Tables\ProductTable;
 
 beforeEach(function () {
     $this->response = new IndexProduct();
-});
+})->only();
 
 it('has no table by default', function () {
     expect($this->response)
