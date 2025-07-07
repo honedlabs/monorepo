@@ -2,18 +2,15 @@
 
 declare(strict_types=1);
 
-use Honed\Upload\Events\PresignFailed;
 use Honed\Upload\File;
 use Honed\Upload\Pipes\SetFile;
 use Honed\Upload\Upload;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Validation\ValidationException;
 
 beforeEach(function () {
     $this->pipe = new SetFile();
 
     $this->upload = Upload::make();
-    
+
     $this->upload->setValidated([
         'name' => 'test',
         'extension' => 'png',

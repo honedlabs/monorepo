@@ -39,10 +39,10 @@ class Upload extends Primitive implements HooksIntoLifecycle, Responsable
     use HasPipeline;
     use HasRequest;
     use HasRules;
+    use HasValidatedInput;
     use InteractsWithS3;
     use Returnable;
     use ValidatesUpload;
-    use HasValidatedInput;
 
     /**
      * The identifier to use for evaluation.

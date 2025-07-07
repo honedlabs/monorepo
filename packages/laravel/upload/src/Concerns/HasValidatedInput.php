@@ -9,14 +9,14 @@ trait HasValidatedInput
     /**
      * The validated input.
      *
-     * @var array<string, mixed>
+     * @var array{name:string,extension:string,type:string,size:int,meta:mixed}
      */
     protected $validated;
 
     /**
      * Set the validated input.
      *
-     * @param  array<string, mixed>  $validated
+     * @param  array{name:string,extension:string,type:string,size:int,meta:mixed}  $validated
      */
     public function setValidated(array $validated): void
     {
@@ -26,7 +26,7 @@ trait HasValidatedInput
     /**
      * Get the validated input.
      *
-     * @return array<string, mixed>
+     * @return array{name:string,extension:string,type:string,size:int,meta:mixed}
      */
     public function getValidated(): array
     {
