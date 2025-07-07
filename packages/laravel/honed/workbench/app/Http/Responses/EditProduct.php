@@ -11,6 +11,11 @@ use Honed\Honed\Responses\EditResponse;
  */
 class EditProduct extends EditResponse
 {
+    /**
+     * Define the response.
+     * 
+     * @return $this
+     */
     protected function definition(): static
     {
         return $this;

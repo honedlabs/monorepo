@@ -95,7 +95,7 @@ trait HasProps
     /**
      * Generate the props for the view.
      */
-    protected function toProps(): array
+    public function toProps(): array
     {
         $this->bootProps();
 

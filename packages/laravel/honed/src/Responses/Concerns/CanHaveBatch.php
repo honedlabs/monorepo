@@ -7,9 +7,6 @@ namespace Honed\Honed\Responses\Concerns;
 use Honed\Action\Batch;
 use Honed\Honed\Contracts\ViewsModel;
 
-/**
- * @template TBatch of \Honed\Action\Batch = \Honed\Action\Batch
- */
 trait CanHaveBatch
 {
     public const BATCH_PROP = 'batch';
@@ -17,14 +14,14 @@ trait CanHaveBatch
     /**
      * The batch to use for actions.
      *
-     * @var bool|class-string<TBatch>|TBatch
+     * @var bool|class-string<Batch>|Batch
      */
     protected $batch = false;
 
     /**
      * Set the batch to use for actions.
      *
-     * @param  bool|class-string<TBatch>|TBatch  $value
+     * @param  bool|class-string<Batch>|Batch  $value
      * @return $this
      */
     public function batch(bool|string|Batch $value = true): static
@@ -37,7 +34,7 @@ trait CanHaveBatch
     /**
      * Get the batch to use for actions.
      *
-     * @return TBatch|null
+     * @return Batch|null
      */
     public function getBatch(): ?Batch
     {
@@ -54,7 +51,7 @@ trait CanHaveBatch
      *
      * @return array<string, mixed>
      */
-    protected function canHaveBatchToProps(): array
+    public function canHaveBatchToProps(): array
     {
         if ($batch = $this->getBatch()) {
             return [

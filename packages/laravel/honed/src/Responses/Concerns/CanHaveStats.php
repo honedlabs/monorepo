@@ -7,22 +7,20 @@ namespace Honed\Honed\Responses\Concerns;
 use Honed\Honed\Contracts\ViewsModel;
 use Honed\Stats\Overview;
 
-/**
- * @template TStats of \Honed\Stats\Overview = \Honed\Stats\Overview
- */
+
 trait CanHaveStats
 {
     /**
      * The stats to use for the view.
      *
-     * @var bool|class-string<TStats>|TStats
+     * @var bool|class-string<Overview>|Overview
      */
     protected $stats = false;
 
     /**
      * Set the stats.
      *
-     * @param  class-string<TStats>|TStats|null  $value
+     * @param  class-string<Overview>|Overview|null  $value
      * @return $this
      */
     public function stats(bool|string|Overview $value = true): static
@@ -35,7 +33,7 @@ trait CanHaveStats
     /**
      * Get the stats to use for the view.
      *
-     * @return TStats|null
+     * @return Overview|null
      */
     public function getStats(): ?Overview
     {
@@ -53,7 +51,7 @@ trait CanHaveStats
      *
      * @return array<string, mixed>
      */
-    protected function canHaveStatsToProps(): array
+    public function canHaveStatsToProps(): array
     {
         if ($stats = $this->getStats()) {
             return $stats->toArray();

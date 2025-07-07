@@ -11,6 +11,11 @@ use Honed\Honed\Responses\DeleteResponse;
  */
 class DeleteProduct extends DeleteResponse
 {
+    /**
+     * Define the response.
+     * 
+     * @return $this
+     */
     protected function definition(): static
     {
         return $this;

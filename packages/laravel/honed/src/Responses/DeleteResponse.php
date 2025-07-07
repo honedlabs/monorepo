@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Honed\Responses;
 
 use Honed\Honed\Contracts\ViewsModel;
+use Honed\Honed\Responses\Concerns\HasDestroy;
 use Honed\Honed\Responses\Concerns\HasModel;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,58 +18,16 @@ class DeleteResponse extends InertiaResponse implements ViewsModel
 {
     /** @use HasModel<TModel> */
     use HasModel;
-
-    public const DESTROY_PROP = 'destroy';
-
-    /**
-     * The route to destroy the model.
-     *
-     * @var string
-     */
-    protected $destroy;
+    use HasDestroy;
 
     /**
      * Create a new edit response.
-     *
+     * 
      * @param  TModel  $model
      */
-    public function __construct(Model $model, string $destroyUrl)
+    public function __construct(Model $model, string $destroy)
     {
         $this->model($model);
-        $this->destroyUrl($destroyUrl);
-    }
-
-    /**
-     * Set the route to destroy the model.
-     *
-     * @return $this
-     */
-    public function destroyUrl(string $value): static
-    {
-        $this->destroy = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get the route to destroy the model.
-     */
-    public function getDestroyUrl(): string
-    {
-        return $this->destroy;
-    }
-
-    /**
-     * Get the props for the view.
-     *
-     * @return array<string, mixed>
-     */
-    public function getProps(): array
-    {
-        return [
-            ...parent::getProps(),
-            self::DESTROY_PROP => $this->getDestroyUrl(),
-            $this->getPropName() => $this->getPropModel(),
-        ];
+        $this->destroy($destroy);
     }
 }

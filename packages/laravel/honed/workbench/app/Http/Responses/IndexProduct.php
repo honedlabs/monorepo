@@ -12,6 +12,11 @@ use Workbench\App\Tables\ProductTable;
  */
 class IndexProduct extends IndexResponse
 {
+    /**
+     * Define the response.
+     * 
+     * @return $this
+     */
     protected function definition(): static
     {
         return $this;

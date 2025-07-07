@@ -6,12 +6,8 @@ namespace Honed\Honed\Responses;
 
 use Honed\Honed\Responses\Concerns\CanHaveTable;
 
-/**
- * @template TTable of \Honed\Table\Table = \Honed\Table\Table
- */
 class IndexResponse extends InertiaResponse
 {
-    /** @use CanHaveTable<TTable> */
     use CanHaveTable;
 
     /**

@@ -7,9 +7,6 @@ namespace Honed\Honed\Responses\Concerns;
 use Honed\Honed\Contracts\ViewsModel;
 use Honed\Infolist\Infolist;
 
-/**
- * @template TInfolist of \Honed\Infolist\Infolist = \Honed\Infolist\Infolist
- */
 trait CanHaveInfolist
 {
     public const INFOLIST_PROP = 'infolist';
@@ -17,14 +14,14 @@ trait CanHaveInfolist
     /**
      * The infolist to use for the view.
      *
-     * @var bool|class-string<TInfolist>|TInfolist
+     * @var bool|class-string<Infolist>|Infolist
      */
     protected $infolist = false;
 
     /**
      * Set the infolist.
      *
-     * @param  class-string<TInfolist>|TInfolist|null  $value
+     * @param  class-string<Infolist>|Infolist|null  $value
      * @return $this
      */
     public function infolist(bool|string|Infolist $value = true): static
@@ -36,15 +33,17 @@ trait CanHaveInfolist
 
     /**
      * Get the infolist to use for the view.
-     *
-     * @return TInfolist|null
      */
     public function getInfolist(): ?Infolist
     {
+        if (! $this instanceof ViewsModel) {
+            return null;
+        }
+
         return match (true) {
-            is_string($this->infolist) => ($this->infolist)::make(),
-            $this->infolist instanceof Infolist => $this->infolist,
-            $this->infolist === true && $this instanceof ViewsModel => $this->getModel()->infolist(), // @phpstan-ignore-line method.notFound
+            is_string($this->infolist) => ($this->infolist)::make()->for($this->getModel()),
+            $this->infolist instanceof Infolist => $this->infolist->for($this->getModel()),
+            $this->infolist === true => $this->getModel()->infolist(), // @phpstan-ignore-line method.notFound
             default => null,
         };
     }
@@ -54,7 +53,7 @@ trait CanHaveInfolist
      *
      * @return array<string, mixed>
      */
-    protected function canHaveInfolistToProps(): array
+    public function canHaveInfolistToProps(): array
     {
         if ($infolist = $this->getInfolist()) {
             return [

@@ -7,9 +7,6 @@ namespace Honed\Honed\Responses\Concerns;
 use Honed\Honed\Contracts\ViewsModel;
 use Honed\Table\Table;
 
-/**
- * @template TTable of \Honed\Table\Table = \Honed\Table\Table
- */
 trait CanHaveTable
 {
     public const TABLE_PROP = 'table';
@@ -17,14 +14,14 @@ trait CanHaveTable
     /**
      * The table to be rendered.
      *
-     * @var bool|class-string<TTable>|TTable
+     * @var bool|class-string<Table>|Table
      */
     protected $table = false;
 
     /**
      * Set the table for the response.
      *
-     * @param  bool|class-string<TTable>|TTable  $table
+     * @param  bool|class-string<Table>|Table  $table
      * @return $this
      */
     public function table(bool|string|Table $table = true): static
@@ -37,7 +34,7 @@ trait CanHaveTable
     /**
      * Get the table to be rendered.
      *
-     * @return TTable|null
+     * @return Table|null
      */
     public function getTable(): ?Table
     {
@@ -54,7 +51,7 @@ trait CanHaveTable
      *
      * @return array<string, mixed>
      */
-    protected function canHaveTableToProps(): array
+    public function canHaveTableToProps(): array
     {
         if ($table = $this->getTable()) {
             return [

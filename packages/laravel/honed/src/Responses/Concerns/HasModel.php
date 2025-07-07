@@ -138,7 +138,7 @@ trait HasModel
      *
      * @return array<string, mixed>
      */
-    protected function hasModelToProps(): array
+    public function hasModelToProps(): array
     {
         return [
             $this->getPropName() => $this->getPropModel(),
