@@ -1,7 +1,9 @@
 <?php
 
-use Workbench\App\Models\Product;
+declare(strict_types=1);
+
 use Workbench\App\Http\Responses\CreateProduct;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->product = Product::factory()->create();
@@ -9,7 +11,7 @@ beforeEach(function () {
     $this->store = route('products.store');
 
     $this->response = new CreateProduct($this->store);
-})->only();
+});
 
 it('has store url', function () {
     expect($this->response)

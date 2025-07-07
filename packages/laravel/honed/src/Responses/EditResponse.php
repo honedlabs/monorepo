@@ -18,6 +18,7 @@ class EditResponse extends InertiaResponse implements ViewsModel
 {
     /** @use HasModel<TModel> */
     use HasModel;
+
     use HasUpdate;
 
     /**

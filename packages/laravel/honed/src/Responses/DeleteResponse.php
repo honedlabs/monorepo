@@ -16,13 +16,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DeleteResponse extends InertiaResponse implements ViewsModel
 {
+    use HasDestroy;
+
     /** @use HasModel<TModel> */
     use HasModel;
-    use HasDestroy;
 
     /**
      * Create a new edit response.
-     * 
+     *
      * @param  TModel  $model
      */
     public function __construct(Model $model, string $destroy)

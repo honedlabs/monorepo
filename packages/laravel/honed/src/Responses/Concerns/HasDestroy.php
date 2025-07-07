@@ -45,5 +45,5 @@ trait HasDestroy
         return [
             self::DESTROY_PROP => $this->getDestroy(),
         ];
-    }   
+    }
 }

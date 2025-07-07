@@ -13,7 +13,7 @@ class DeleteProduct extends DeleteResponse
 {
     /**
      * Define the response.
-     * 
+     *
      * @return $this
      */
     protected function definition(): static

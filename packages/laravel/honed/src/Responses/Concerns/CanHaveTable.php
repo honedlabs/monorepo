@@ -33,8 +33,6 @@ trait CanHaveTable
 
     /**
      * Get the table to be rendered.
-     *
-     * @return Table|null
      */
     public function getTable(): ?Table
     {

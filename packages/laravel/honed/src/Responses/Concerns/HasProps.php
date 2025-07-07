@@ -59,6 +59,18 @@ trait HasProps
     }
 
     /**
+     * Generate the props for the view.
+     *
+     * @return array<string, mixed>
+     */
+    public function toProps(): array
+    {
+        $this->bootProps();
+
+        return $this->getProps();
+    }
+
+    /**
      * Boot the traits being used by the class.
      */
     protected function bootTraits(): void
@@ -90,15 +102,5 @@ trait HasProps
         foreach (static::$traitInitializers[static::class] as $method) {
             $this->props($this->$method());
         }
-    }
-
-    /**
-     * Generate the props for the view.
-     */
-    public function toProps(): array
-    {
-        $this->bootProps();
-
-        return $this->getProps();
     }
 }

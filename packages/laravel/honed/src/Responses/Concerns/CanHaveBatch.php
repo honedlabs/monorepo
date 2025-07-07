@@ -33,8 +33,6 @@ trait CanHaveBatch
 
     /**
      * Get the batch to use for actions.
-     *
-     * @return Batch|null
      */
     public function getBatch(): ?Batch
     {

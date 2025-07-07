@@ -13,7 +13,7 @@ class ShowProduct extends ShowResponse
 {
     /**
      * Define the response.
-     * 
+     *
      * @return $this
      */
     protected function definition(): static

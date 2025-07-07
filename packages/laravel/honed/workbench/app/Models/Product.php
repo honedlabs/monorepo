@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
-use Workbench\App\Enums\Status;
-use Honed\Honed\Concerns\IsHoned;
-use Honed\Honed\Concerns\Authorable;
-use Honed\Table\Attributes\UseTable;
 use Honed\Action\Attributes\UseBatch;
-use Workbench\App\Tables\ProductTable;
-use Honed\Stats\Attributes\UseOverview;
-use Illuminate\Database\Eloquent\Model;
-use Workbench\App\Batches\ProductBatch;
+use Honed\Honed\Concerns\Authorable;
+use Honed\Honed\Concerns\IsHoned;
 use Honed\Infolist\Attributes\UseInfolist;
+use Honed\Stats\Attributes\UseOverview;
+use Honed\Table\Attributes\UseTable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Workbench\App\Batches\ProductBatch;
+use Workbench\App\Enums\Status;
 use Workbench\App\Infolists\ProductInfolist;
 use Workbench\App\Overviews\ProductOverview;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Workbench\App\Tables\ProductTable;
 use Workbench\Database\Factories\ProductFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 #[UseTable(ProductTable::class)]
 #[UseInfolist(ProductInfolist::class)]
@@ -33,9 +33,8 @@ class Product extends Model
      */
     use HasFactory;
 
-    use SoftDeletes;
-
     use IsHoned;
+    use SoftDeletes;
 
     /**
      * The factory for the model.

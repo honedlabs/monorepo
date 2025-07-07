@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Infolists\ProductInfolist;
 use Workbench\App\Http\Responses\ShowProduct;
+use Workbench\App\Infolists\ProductInfolist;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {

@@ -108,6 +108,18 @@ trait HasModel
     }
 
     /**
+     * Convert the model to an array of props.
+     *
+     * @return array<string, mixed>
+     */
+    public function hasModelToProps(): array
+    {
+        return [
+            $this->getPropName() => $this->getPropModel(),
+        ];
+    }
+
+    /**
      * Guess the name of the model prop for the view.
      */
     protected function guessPropName(): string
@@ -131,17 +143,5 @@ trait HasModel
         }
 
         return $model;
-    }
-
-    /**
-     * Convert the model to an array of props.
-     *
-     * @return array<string, mixed>
-     */
-    public function hasModelToProps(): array
-    {
-        return [
-            $this->getPropName() => $this->getPropModel(),
-        ];
     }
 }

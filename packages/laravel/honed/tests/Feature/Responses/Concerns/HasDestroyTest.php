@@ -1,7 +1,9 @@
 <?php
 
-use Workbench\App\Models\Product;
+declare(strict_types=1);
+
 use Workbench\App\Http\Responses\DeleteProduct;
+use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->product = Product::factory()->create();

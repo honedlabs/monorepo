@@ -15,7 +15,9 @@ use RuntimeException;
 class InertiaResponse implements Responsable
 {
     use Conditionable;
-    use HasProps;
+    use HasProps {
+        getProps as baseProps;
+    }
     use Macroable {
         __call as macroCall;
     }
@@ -197,6 +199,20 @@ class InertiaResponse implements Responsable
     }
 
     /**
+     * Generate the props for the view.
+     *
+     * @return array<string, mixed>
+     */
+    public function getProps(): array
+    {
+        return [
+            self::TITLE_PROP => $this->getTitle(),
+            self::HEAD_PROP => $this->getHead(),
+            ...$this->baseProps(),
+        ];
+    }
+
+    /**
      * Define the response.
      *
      * @return $this
@@ -249,21 +265,5 @@ class InertiaResponse implements Responsable
         }
 
         return Inertia::render($modal, $this->toProps());
-    }
-
-    /**
-     * Generate the props for the view.
-     *
-     * @return array<string, mixed>
-     */
-    protected function toProps(): array
-    {
-        $this->bootProps();
-
-        return [
-            self::TITLE_PROP => $this->getTitle(),
-            self::HEAD_PROP => $this->getHead(),
-            ...$this->getProps(),
-        ];
     }
 }

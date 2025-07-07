@@ -14,7 +14,7 @@ class IndexProduct extends IndexResponse
 {
     /**
      * Define the response.
-     * 
+     *
      * @return $this
      */
     protected function definition(): static

@@ -45,5 +45,5 @@ trait HasUpdate
         return [
             self::UPDATE_PROP => $this->getUpdate(),
         ];
-    }   
+    }
 }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Overviews\ProductOverview;
 use Workbench\App\Http\Responses\ShowProduct;
 use Workbench\App\Models\Product;
+use Workbench\App\Overviews\ProductOverview;
 
 beforeEach(function () {
     $product = Product::factory()->create();

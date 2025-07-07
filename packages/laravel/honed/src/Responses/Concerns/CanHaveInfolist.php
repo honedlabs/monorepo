@@ -21,7 +21,7 @@ trait CanHaveInfolist
     /**
      * Set the infolist.
      *
-     * @param  class-string<Infolist>|Infolist|null  $value
+     * @param  bool|class-string<Infolist>|Infolist  $value
      * @return $this
      */
     public function infolist(bool|string|Infolist $value = true): static

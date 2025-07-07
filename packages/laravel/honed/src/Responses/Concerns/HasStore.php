@@ -45,5 +45,5 @@ trait HasStore
         return [
             self::STORE_PROP => $this->getStore(),
         ];
-    }   
+    }
 }

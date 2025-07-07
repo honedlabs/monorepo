@@ -7,7 +7,6 @@ namespace Honed\Honed\Responses\Concerns;
 use Honed\Honed\Contracts\ViewsModel;
 use Honed\Stats\Overview;
 
-
 trait CanHaveStats
 {
     /**
@@ -20,7 +19,7 @@ trait CanHaveStats
     /**
      * Set the stats.
      *
-     * @param  class-string<Overview>|Overview|null  $value
+     * @param  bool|class-string<Overview>|Overview  $value
      * @return $this
      */
     public function stats(bool|string|Overview $value = true): static
@@ -32,16 +31,13 @@ trait CanHaveStats
 
     /**
      * Get the stats to use for the view.
-     *
-     * @return Overview|null
      */
     public function getStats(): ?Overview
     {
         return match (true) {
             is_string($this->stats) => ($this->stats)::make(),
             $this->stats instanceof Overview => $this->stats,
-            $this->stats === true &&
-                $this instanceof ViewsModel => $this->getModel()->stats(),
+            $this->stats === true && $this instanceof ViewsModel => $this->getModel()->stats(), // @phpstan-ignore-line method.notFound
             default => null,
         };
     }

@@ -13,7 +13,7 @@ class EditProduct extends EditResponse
 {
     /**
      * Define the response.
-     * 
+     *
      * @return $this
      */
     protected function definition(): static
