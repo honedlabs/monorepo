@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Command\Concerns;
 
-use Honed\Command\Attributes\Cache;
+use Honed\Command\Attributes\UseCache;
 use Honed\Command\CacheManager;
 use ReflectionClass;
 
@@ -58,7 +58,7 @@ trait HasCache
             return resolve(static::$cache);
         }
 
-        if ($cache = static::getCacheAttribute()) {
+        if ($cache = static::getUseCacheAttribute()) {
             return resolve($cache);
         }
 
@@ -70,15 +70,15 @@ trait HasCache
      *
      * @return class-string<TCache>|null
      */
-    protected static function getCacheAttribute()
+    protected static function getUseCacheAttribute()
     {
         $attributes = (new ReflectionClass(static::class))
-            ->getAttributes(Cache::class);
+            ->getAttributes(UseCache::class);
 
         if ($attributes !== []) {
             $cache = $attributes[0]->newInstance();
 
-            return $cache->cache;
+            return $cache->cacheClass;
         }
 
         return null;
