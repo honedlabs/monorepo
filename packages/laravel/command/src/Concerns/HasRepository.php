@@ -22,7 +22,7 @@ trait HasRepository
      *
      * @return TRepository
      */
-    public static function repository()
+    public static function repository(): Repository
     {
         return static::newRepository()
             ?? Repository::repositoryForModel(static::class);
@@ -33,7 +33,7 @@ trait HasRepository
      *
      * @return TRepository|null
      */
-    protected static function newRepository()
+    protected static function newRepository(): ?Repository
     {
         if (isset(static::$repository)) {
             return resolve(static::$repository);
@@ -51,7 +51,7 @@ trait HasRepository
      *
      * @return class-string<TRepository>|null
      */
-    protected static function getUseRepositoryAttribute()
+    protected static function getUseRepositoryAttribute(): ?string
     {
         $attributes = (new ReflectionClass(static::class))
             ->getAttributes(UseRepository::class);

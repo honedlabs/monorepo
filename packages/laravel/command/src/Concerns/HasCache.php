@@ -21,7 +21,7 @@ trait HasCache
      *
      * @return TCache
      */
-    public static function cache()
+    public static function cache(): CacheManager
     {
         return static::newCache()
             ?? CacheManager::cacheForModel(static::class);
@@ -32,17 +32,15 @@ trait HasCache
      *
      * @return TReturn
      */
-    public function cached()
+    public function cached(): mixed
     {
         return static::cache()->retrieve($this);
     }
 
     /**
      * Forget the cached value for this class.
-     *
-     * @return void
      */
-    public function forgetCached()
+    public function forgetCached(): void
     {
         static::cache()->flush($this);
     }
@@ -52,7 +50,7 @@ trait HasCache
      *
      * @return TCache|null
      */
-    protected static function newCache()
+    protected static function newCache(): ?CacheManager
     {
         if (isset(static::$cache)) {
             return resolve(static::$cache);
@@ -70,7 +68,7 @@ trait HasCache
      *
      * @return class-string<TCache>|null
      */
-    protected static function getUseCacheAttribute()
+    protected static function getUseCacheAttribute(): ?string
     {
         $attributes = (new ReflectionClass(static::class))
             ->getAttributes(UseCache::class);
