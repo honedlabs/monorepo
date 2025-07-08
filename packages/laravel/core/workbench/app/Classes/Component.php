@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Workbench\App\Classes;
 
 use Honed\Core\Concerns\CanQuery;
+use Honed\Core\Concerns\Definable;
 use Honed\Core\Concerns\Encodable;
 use Honed\Core\Concerns\HasLifecycleHooks;
 use Honed\Core\Concerns\HasMeta;
@@ -21,6 +22,7 @@ use Workbench\App\Pipes\SetType;
 class Component extends Primitive implements HooksIntoLifecycle
 {
     use CanQuery;
+    use Definable;
     use Encodable;
     use HasLifecycleHooks;
     use HasMeta;
@@ -34,6 +36,13 @@ class Component extends Primitive implements HooksIntoLifecycle
      * @var string
      */
     protected $evaluationIdentifier = 'component';
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->define();
+    }
 
     /**
      * Make a new instance of the component.
@@ -62,13 +71,11 @@ class Component extends Primitive implements HooksIntoLifecycle
     /**
      * Define the instance.
      *
-     * @param  $this  $component
      * @return $this
      */
-    protected function definition(self $component): self
+    protected function definition(): static
     {
-        return $component
-            ->name('component');
+        return $this->name('component');
     }
 
     /**
@@ -101,6 +108,7 @@ class Component extends Primitive implements HooksIntoLifecycle
     /**
      * Provide a selection of default dependencies for evaluation by type.
      *
+     * @param  class-string  $parameterType
      * @return array<int,mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
