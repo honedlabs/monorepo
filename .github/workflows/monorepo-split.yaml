@@ -19,8 +19,8 @@ jobs:
           # - action
           # - bind
           # - chart
-          # - command
-          # - core
+          - command
+          - core
           # - crumb
           # - flash
           - honed
