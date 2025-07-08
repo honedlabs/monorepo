@@ -21,7 +21,7 @@ interface Modelable
     /**
      * Set the model.
      *
-     * @param TModel $model
+     * @param  TModel  $model
      * @return $this
      */
     public function model(Model $model): static;
