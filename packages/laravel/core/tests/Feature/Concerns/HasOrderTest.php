@@ -13,13 +13,17 @@ beforeEach(function () {
 
 it('sets the order', function () {
     expect($this->test)
-        ->getOrder()->toBe(0)
-        ->order(10)->toBe($this->test)
-        ->getOrder()->toBe(10)
-        ->orderFirst()->toBe($this->test)
-        ->getOrder()->toBe(-1)
-        ->orderLast()->toBe($this->test)
-        ->getOrder()->toBe(PHP_INT_MAX)
+        ->getOrder()->toBe($this->test::ORDER_DEFAULT)
+        ->order(5)->toBe($this->test)
+        ->getOrder()->toBe(5)
+        ->orderBefore()->toBe($this->test)
+        ->getOrder()->toBe($this->test::ORDER_BEFORE)
+        ->orderStart()->toBe($this->test)
+        ->getOrder()->toBe($this->test::ORDER_START)
         ->orderDefault()->toBe($this->test)
-        ->getOrder()->toBe(0);
+        ->getOrder()->toBe($this->test::ORDER_DEFAULT)
+        ->orderEnd()->toBe($this->test)
+        ->getOrder()->toBe($this->test::ORDER_END)
+        ->orderAfter()->toBe($this->test)
+        ->getOrder()->toBe($this->test::ORDER_LAST);
 });

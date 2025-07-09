@@ -73,6 +73,8 @@ trait Encodable
      * Get the id of the instance.
      *
      * @return string
+     *
+     * @internal
      */
     public function getId()
     {

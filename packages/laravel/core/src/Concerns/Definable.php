@@ -8,13 +8,15 @@ trait Definable
 {
     /**
      * Whether the instance has been defined.
-     * 
+     *
      * @var bool
      */
     protected $defined = false;
 
     /**
      * Call the definition.
+     *
+     * @internal
      */
     public function define(): void
     {

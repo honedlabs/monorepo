@@ -26,6 +26,8 @@ trait HasPipeline
      * Build the pipeline and return the instance.
      *
      * @return $this
+     *
+     * @internal
      */
     public function build(): static
     {

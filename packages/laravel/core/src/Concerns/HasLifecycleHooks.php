@@ -42,6 +42,8 @@ trait HasLifecycleHooks
      * Get the callback to be called before the pipeline has begun.
      *
      * @return (Closure():mixed|void)|null
+     *
+     * @internal
      */
     public function beforeCallback(): ?Closure
     {
@@ -76,6 +78,8 @@ trait HasLifecycleHooks
      * Get the callback to be called after the pipeline has finished.
      *
      * @return (Closure():mixed|void)|null
+     *
+     * @internal
      */
     public function afterCallback(): ?Closure
     {

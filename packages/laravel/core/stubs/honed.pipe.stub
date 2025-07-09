@@ -14,7 +14,7 @@ class {{ class }} extends Pipe
     /**
      * Run the pipe logic.
      */
-    public function run($instance): void
+    public function run(): void
     {
         //
     }

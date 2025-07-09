@@ -37,6 +37,8 @@ trait CanQuery
      * Get the callback to modify the Eloquent builder.
      *
      * @return (Closure():mixed)|null
+     *
+     * @internal
      */
     public function queryCallback(): ?Closure
     {

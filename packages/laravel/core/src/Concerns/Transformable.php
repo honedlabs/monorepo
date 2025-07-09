@@ -33,6 +33,8 @@ trait Transformable
      * Get the transformer function.
      *
      * @return Closure():mixed|null
+     *
+     * @internal
      */
     public function getTransformer(): ?Closure
     {

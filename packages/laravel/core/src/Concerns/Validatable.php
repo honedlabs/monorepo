@@ -32,6 +32,8 @@ trait Validatable
      * Get the validation function.
      *
      * @return (Closure(mixed):bool)|bool|null
+     *
+     * @internal
      */
     public function getValidator(): Closure|bool|null
     {

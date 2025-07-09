@@ -96,6 +96,8 @@ trait HasResource
      * @return TBuilder|null
      *
      * @throws InvalidArgumentException
+     *
+     * @internal
      */
     protected function resolveResource(mixed $resource): Builder|array|null
     {

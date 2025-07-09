@@ -32,6 +32,8 @@ trait Allowable
      * Get the allow condition callback.
      *
      * @return (Closure():bool)|bool
+     *
+     * @internal
      */
     public function allowCallback(): Closure|bool
     {

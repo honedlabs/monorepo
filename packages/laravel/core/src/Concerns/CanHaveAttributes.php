@@ -16,14 +16,28 @@ trait CanHaveAttributes
     /**
      * Set the attributes.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param  string|array<string, mixed>  $attributes
      * @return $this
      */
-    public function attributes(array $attributes): static
+    public function attributes(string|array $attributes, mixed $value = null): static
     {
-        $this->attributes = [...$this->attributes, ...$attributes];
+        if (is_array($attributes)) {
+            $this->attributes = [...$this->attributes, ...$attributes];
+        } else {
+            $this->attributes[$attributes] = $value;
+        }
 
         return $this;
+    }
+
+    /**
+     * Set an attribute.
+     *
+     * @return $this
+     */
+    public function attribute(string $key, mixed $value): static
+    {
+        return $this->attributes($key, $value);
     }
 
     /**

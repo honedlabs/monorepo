@@ -59,6 +59,8 @@ trait CanHaveUrl
 
     /**
      * Determine if the parameters are a route bound.
+     *
+     * @internal
      */
     protected function implicitRoute(mixed $parameters): bool
     {

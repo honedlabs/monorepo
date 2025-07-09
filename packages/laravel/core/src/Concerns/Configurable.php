@@ -33,6 +33,8 @@ trait Configurable
 
     /**
      * Configure the instance.
+     *
+     * @internal
      */
     protected function configure(): void
     {
@@ -40,9 +42,5 @@ trait Configurable
             $this,
             $this->setUp(...),
         );
-
-        if (method_exists($this, 'definition')) {
-            $this->definition($this);
-        }
     }
 }

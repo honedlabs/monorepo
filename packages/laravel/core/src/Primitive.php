@@ -30,12 +30,12 @@ abstract class Primitive implements Arrayable, Jsonable, JsonSerializable
 {
     use Conditionable;
     use Configurable;
+    use Definable;
     use Evaluable;
     use Macroable {
         __call as macroCall;
     }
     use Tappable;
-    use Definable;
 
     /**
      * Construct the instance.

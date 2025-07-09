@@ -7,6 +7,9 @@ namespace Honed\Core\Contracts;
 use Closure;
 use Honed\Core\Primitive;
 
+/**
+ * @internal
+ */
 interface ScopedPrimitiveManager
 {
     /**
