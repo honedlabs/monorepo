@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Table\Columns;
 
 use Closure;
+use Honed\Columns\Concerns\HasAlignment;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\CanBeActive;
 use Honed\Core\Concerns\CanHaveAlias;
@@ -63,13 +64,12 @@ class Column extends Primitive implements NullsAsUndefined
     use HasName;
     use HasPlaceholder;
     use HasQualifier;
-
     use HasState;
-
     use HasType;
     use Searchable;
     use Selectable;
     use Sortable;
+    use HasAlignment;
 
     public const BADGE = 'badge';
 
@@ -191,26 +191,6 @@ class Column extends Primitive implements NullsAsUndefined
     }
 
     /**
-     * Get the sort instance as an array.
-     *
-     * @return array<string,mixed>|null
-     */
-    public function sortToArray(): ?array
-    {
-        $sort = $this->getSort();
-
-        if (! $sort) {
-            return null;
-        }
-
-        return [
-            'active' => $sort->isActive(),
-            'direction' => $sort->getDirection(),
-            'next' => $sort->getNextDirection(),
-        ];
-    }
-
-    /**
      * Get the column value for a record.
      *
      * @param  array<string, mixed>|Model|null  $value
@@ -243,6 +223,7 @@ class Column extends Primitive implements NullsAsUndefined
             'badge' => $this->isBadge(),
             'toggleable' => $this->isToggleable(),
             'class' => $this->getClasses(),
+            'align' => $this->getAlignment(),
             'icon' => $this->getIcon(),
             'sort' => $this->sortToArray(),
         ];

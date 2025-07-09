@@ -16,7 +16,6 @@ use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\CanHaveIcon;
 use Honed\Core\Concerns\CanHaveTarget;
 use Honed\Core\Concerns\CanHaveUrl;
-use Honed\Core\Concerns\Definable;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasMethod;
 use Honed\Core\Concerns\HasName;
@@ -29,7 +28,6 @@ use Illuminate\Support\Facades\URL;
 
 class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
 {
-    use Definable;
     use Allowable;
     use CanBeRateLimited;
     use CanHaveIcon;

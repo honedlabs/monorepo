@@ -8,6 +8,10 @@ beforeEach(function () {
     File::cleanDirectory(app_path('Infolists'));
 });
 
+afterEach(function () {
+    File::cleanDirectory(app_path('Infolists'));
+});
+
 it('makes action group', function () {
     $this->artisan('make:infolist', [
         'name' => 'UserInfolist',

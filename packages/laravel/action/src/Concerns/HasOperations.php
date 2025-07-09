@@ -150,7 +150,7 @@ trait HasOperations
         }
 
         // Sort operations by their order (lower values first)
-        usort($operations, static fn (Operation $a, Operation $b) => $a->getOrder() <=> $b->getOrder());
+        // usort($operations, static fn (Operation $a, Operation $b) => $a->getOrder() <=> $b->getOrder());
 
         return $operations;
     }

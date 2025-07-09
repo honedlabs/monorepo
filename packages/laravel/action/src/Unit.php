@@ -12,7 +12,6 @@ use Honed\Action\Concerns\Rememberable;
 use Honed\Action\Contracts\HandlesOperations;
 use Honed\Action\Handlers\Handler;
 use Honed\Action\Operations\Operation;
-use Honed\Core\Concerns\Definable;
 use Honed\Core\Concerns\Encodable;
 use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Concerns\HasResource;
@@ -34,7 +33,6 @@ use Throwable;
  */
 class Unit extends Primitive implements HandlesOperations
 {
-    use Definable;
     use Actionable;
     use Encodable;
     use HasKey;
@@ -138,7 +136,7 @@ class Unit extends Primitive implements HandlesOperations
     {
         $this->define();
 
-        // $this->
+        $this->setRemembered($request);
         
         $handler = $this->getHandler();
 

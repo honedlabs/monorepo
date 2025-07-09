@@ -19,11 +19,19 @@ class UserProductBatch extends Batch
     protected $user;
 
     /**
-     * Set the user to remember.
+     * The scalar to remember.
+     * 
+     * @var scalar
+     */
+    #[Remember]
+    protected $scalar = 1;
+
+    /**
+     * Set the user.
      *
      * @return $this
      */
-    public function user(User $user): static
+    public function user(?User $user): static
     {
         $this->user = $user;
 
@@ -31,11 +39,34 @@ class UserProductBatch extends Batch
     }
 
     /**
-     * Get the user to remember.
+     * Get the user.
      */
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    /**
+     * Set the scalar.
+     *
+     * @param scalar $scalar
+     * @return $this
+     */
+    public function scalar($scalar): static
+    {
+        $this->scalar = $scalar;
+
+        return $this;
+    }
+
+    /**
+     * Get the scalar.
+     * 
+     * @return scalar
+     */
+    public function getScalar(): mixed
+    {
+        return $this->scalar;
     }
 
     /**
@@ -45,6 +76,7 @@ class UserProductBatch extends Batch
      */
     protected function definition(): static
     {
-        return $this;
+        return $this
+            ->rememberable();
     }
 }

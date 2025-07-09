@@ -12,6 +12,7 @@ use Honed\Action\Attributes\Remember;
 use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Contracts\RememberSerializeable;
 use Honed\Action\Contracts\RememberUnserializeable;
+use Illuminate\Support\Number;
 
 trait Rememberable
 {
@@ -68,19 +69,60 @@ trait Rememberable
     }
 
     /**
+     * Get the data to remember.
      * 
+     * @return array<string, string>
+     * 
+     * @internal
      */
-    public function remembered(Request $request)
+    public function getRemembered(): array
     {
+        if ($this->isNotRememberable()) {
+            return [];
+        }
 
+        if (! isset($this->remember)) {
+            return $this->remember();
+        }
+
+        return $this->remember;
     }
 
     /**
-     * Remember the marked properties.
+     * Unserialize the remembered properties and set them on the instance.
+     * 
+     * @internal
      */
-    public function remember(): void
+    public function setRemembered(Request $request): void
     {
+        if ($this->isNotRememberable()) {
+            return;
+        }
 
+        $properties = $this->getRememberedProperties();
+
+        foreach ($properties as $property) {
+            if ($request->has($property->getName())) {
+                $value = $this->unserializeRemember(
+                    $request->input($property->getName())
+                );
+
+                if ($value !== null) {
+                    $property->setValue($this, $value);
+                }
+            }
+        }
+    }
+
+    /**
+     * Remember the properties that are marked as remembered.
+     * 
+     * @return array<string, string>
+     * 
+     * @internal
+     */
+    protected function remember(): array
+    {
         $properties = $this->getRememberedProperties();
 
         foreach ($properties as $property) {
@@ -92,26 +134,18 @@ trait Rememberable
                 );
             }
         }
-    }
 
-    /**
-     * Get the data to remember
-     */
-    public function getRemembering()
-    {
-        if (! isset($this->remember)) {
-            $this->remember();
-        }
-
-        return $this->remember;
+        return $this->remember ??= [];
     }
 
     /**
      * Get the properties that are marked as remembered.
      * 
-     * @return array<int, ReflectionProperty>
+     * @return array<int, \ReflectionProperty>
+     * 
+     * @internal
      */
-    public function getRememberedProperties(): array
+    protected function getRememberedProperties(): array
     {
         $reflection = new ReflectionClass($this);
         $properties = $reflection->getProperties();
@@ -131,6 +165,8 @@ trait Rememberable
      * Serialize the value for remembering to a request parameter.
      * 
      * @throws \RuntimeException
+     * 
+     * @internal
      */
     protected function serializeRemember(mixed $value): string
     {
@@ -147,15 +183,18 @@ trait Rememberable
      * Unserialize the value from a request parameter.
      * 
      * @param string $data
-     * 
      * @return mixed
+     * 
+     * @internal
      */
     protected function unserializeRemember(string $data): mixed
     {
+        $data = base64_decode($data);
+
         return match (true) {
             str_contains($data, '|') => $this->unserializeModel($data),
-            is_float($data) => (float) $data,
-            is_int($data) => (int) $data,
+            filter_var($data, FILTER_VALIDATE_INT) !== false => (int) $data,
+            filter_var($data, FILTER_VALIDATE_FLOAT) !== false => (float) $data,
             is_bool($data) => (bool) $data,
             default => $data
         };
@@ -163,6 +202,8 @@ trait Rememberable
 
     /**
      * Unserialize the model from a request parameter.
+     * 
+     * @internal
      */
     protected function unserializeModel(string $data): ?Model
     {

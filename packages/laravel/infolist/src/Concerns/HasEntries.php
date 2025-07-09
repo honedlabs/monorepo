@@ -22,7 +22,7 @@ trait HasEntries
      * @param  BaseEntry|array<int, BaseEntry>  $entries
      * @return $this
      */
-    public function entries($entries)
+    public function entries($entries): static
     {
         /** @var array<int, BaseEntry> */
         $entries = is_array($entries) ? $entries : func_get_args();
@@ -38,7 +38,7 @@ trait HasEntries
      * @param  BaseEntry  $entry
      * @return $this
      */
-    public function entry($entry)
+    public function entry($entry): static
     {
         $this->entries[] = $entry;
 
@@ -50,7 +50,7 @@ trait HasEntries
      *
      * @return array<int, BaseEntry>
      */
-    public function getEntries()
+    public function getEntries(): array
     {
         return array_values(
             array_filter(
@@ -65,7 +65,7 @@ trait HasEntries
      *
      * @return array<int, array<string, mixed>>
      */
-    public function entriesToArray()
+    public function entriesToArray(): array
     {
         return array_map(
             fn (BaseEntry $entry) => $entry->toArray(),

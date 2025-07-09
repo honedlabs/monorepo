@@ -18,11 +18,12 @@ use function trim;
 
 trait ValidatesUpload
 {
+    use HasExtensions;
+    use HasMaxSize;
+    use HasMimeTypes;
+    use HasMinSize;
+
     public const LIFETIME = 2;
-
-    public const MAX_SIZE = 2147483647;
-
-    public const MIN_SIZE = 0;
 
     /**
      * The lifetime of the request in minutes.
@@ -30,20 +31,6 @@ trait ValidatesUpload
      * @var int
      */
     protected $lifetime = self::LIFETIME;
-
-    /**
-     * The maximum file size in bytes.
-     *
-     * @var int
-     */
-    protected $maxSize = self::MAX_SIZE;
-
-    /**
-     * The minimum file size in bytes.
-     *
-     * @var int
-     */
-    protected $minSize = self::MIN_SIZE;
 
     /**
      * The accepted file mime types.
@@ -93,51 +80,6 @@ trait ValidatesUpload
         return sprintf('+%d minutes', abs($minutes));
     }
 
-    /**
-     * Set the maximum file size in bytes.
-     *
-     * @param  int  $bytes
-     * @return $this
-     */
-    public function maxSize($bytes)
-    {
-        $this->maxSize = $bytes;
-
-        return $this;
-    }
-
-    /**
-     * Get the maximum file size in bytes.
-     *
-     * @return int
-     */
-    public function getMaxSize()
-    {
-        return $this->maxSize;
-    }
-
-    /**
-     * Set the minimum file size in bytes.
-     *
-     * @param  int  $bytes
-     * @return $this
-     */
-    public function minSize($bytes)
-    {
-        $this->minSize = $bytes;
-
-        return $this;
-    }
-
-    /**
-     * Get the minimum file size in bytes.
-     *
-     * @return int
-     */
-    public function getMinSize()
-    {
-        return $this->minSize;
-    }
 
     /**
      * Merge a set of accepted mime types with the existing.

@@ -160,6 +160,8 @@ class Infolist extends Primitive
      */
     protected function representation(): array
     {
+        // $this->define();
+
         $record = $this->getRecord();
 
         if (! $record) {

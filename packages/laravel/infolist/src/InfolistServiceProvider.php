@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist;
 
+use Honed\Infolist\Commands\EntryMakeCommand;
 use Honed\Infolist\Commands\InfolistMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,7 @@ class InfolistServiceProvider extends ServiceProvider
 
             $this->commands([
                 InfolistMakeCommand::class,
+                EntryMakeCommand::class,
             ]);
         }
     }
@@ -34,6 +36,6 @@ class InfolistServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),
-        ], 'stubs');
+        ], 'infolist-stubs');
     }
 }
