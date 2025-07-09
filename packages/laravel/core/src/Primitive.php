@@ -6,6 +6,7 @@ namespace Honed\Core;
 
 use BadMethodCallException;
 use Honed\Core\Concerns\Configurable;
+use Honed\Core\Concerns\Definable;
 use Honed\Core\Concerns\Evaluable;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Illuminate\Contracts\Support\Arrayable;
@@ -34,6 +35,7 @@ abstract class Primitive implements Arrayable, Jsonable, JsonSerializable
         __call as macroCall;
     }
     use Tappable;
+    use Definable;
 
     /**
      * Construct the instance.
