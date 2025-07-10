@@ -116,6 +116,8 @@ class Upload extends Primitive implements HooksIntoLifecycle, Responsable
      */
     public function create()
     {
+        $this->define();
+        
         $this->build();
 
         $presign = $this->getPresign();
