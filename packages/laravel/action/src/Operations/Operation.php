@@ -39,8 +39,8 @@ class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
     use HasLabel;
     use HasMethod;
     use HasName;
-    use IsInertia;
     use HasOrder;
+    use IsInertia;
 
     /**
      * The identifier to use for evaluation.
@@ -113,8 +113,6 @@ class Operation extends Primitive implements NullsAsUndefined, UrlRoutable
 
     /**
      * Get the order of the operation.
-     *
-     * @return int
      */
     public function getOrder(): int
     {

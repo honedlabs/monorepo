@@ -4,35 +4,34 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-use Throwable;
-use ReflectionClass;
-use RuntimeException;
-use Illuminate\Http\Request;
 use Honed\Action\Attributes\Remember;
-use Illuminate\Database\Eloquent\Model;
-use Honed\Action\Contracts\RememberSerializeable;
 use Honed\Action\Contracts\RememberUnserializeable;
-use Illuminate\Support\Number;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use ReflectionClass;
+use ReflectionProperty;
+use RuntimeException;
+use Throwable;
 
 trait Rememberable
 {
     /**
      * Whether the instance is rememberable.
-     * 
+     *
      * @var bool
      */
     protected $rememberable = false;
 
     /**
      * The data to remember.
-     * 
-     * @var array<string, mixed>|null
+     *
+     * @var array<string, string>|null
      */
     protected $remember;
 
     /**
      * Set whether the instance can remember data.
-     * 
+     *
      * @return $this
      */
     public function rememberable(bool $value = true): static
@@ -44,7 +43,7 @@ trait Rememberable
 
     /**
      * Set whether the instance cannot remember data.
-     * 
+     *
      * @return $this
      */
     public function notRememberable(bool $value = true): static
@@ -70,9 +69,9 @@ trait Rememberable
 
     /**
      * Get the data to remember.
-     * 
+     *
      * @return array<string, string>
-     * 
+     *
      * @internal
      */
     public function getRemembered(): array
@@ -90,7 +89,7 @@ trait Rememberable
 
     /**
      * Unserialize the remembered properties and set them on the instance.
-     * 
+     *
      * @internal
      */
     public function setRemembered(Request $request): void
@@ -104,7 +103,8 @@ trait Rememberable
         foreach ($properties as $property) {
             if ($request->has($property->getName())) {
                 $value = $this->unserializeRemember(
-                    $request->input($property->getName())
+                    /** @var string */
+                    $request->query($property->getName())
                 );
 
                 if ($value !== null) {
@@ -116,9 +116,9 @@ trait Rememberable
 
     /**
      * Remember the properties that are marked as remembered.
-     * 
+     *
      * @return array<string, string>
-     * 
+     *
      * @internal
      */
     protected function remember(): array
@@ -140,9 +140,9 @@ trait Rememberable
 
     /**
      * Get the properties that are marked as remembered.
-     * 
-     * @return array<int, \ReflectionProperty>
-     * 
+     *
+     * @return array<int, ReflectionProperty>
+     *
      * @internal
      */
     protected function getRememberedProperties(): array
@@ -163,14 +163,15 @@ trait Rememberable
 
     /**
      * Serialize the value for remembering to a request parameter.
-     * 
-     * @throws \RuntimeException
-     * 
+     *
+     * @throws RuntimeException
+     *
      * @internal
      */
     protected function serializeRemember(mixed $value): string
     {
         return match (true) {
+            // @phpstan-ignore-next-line binaryOp.invalid
             $value instanceof Model => $value::class.'|'.$value->getKey(),
             is_scalar($value) => (string) $value,
             default => throw new RuntimeException(
@@ -181,28 +182,30 @@ trait Rememberable
 
     /**
      * Unserialize the value from a request parameter.
-     * 
-     * @param string $data
-     * @return mixed
-     * 
+     *
+     *
      * @internal
      */
-    protected function unserializeRemember(string $data): mixed
+    protected function unserializeRemember(?string $data): mixed
     {
+        if ($data === null) {
+            return null;
+        }
+
         $data = base64_decode($data);
 
         return match (true) {
             str_contains($data, '|') => $this->unserializeModel($data),
             filter_var($data, FILTER_VALIDATE_INT) !== false => (int) $data,
             filter_var($data, FILTER_VALIDATE_FLOAT) !== false => (float) $data,
-            is_bool($data) => (bool) $data,
+            filter_var($data, FILTER_VALIDATE_BOOLEAN) !== false => (bool) $data,
             default => $data
         };
     }
 
     /**
      * Unserialize the model from a request parameter.
-     * 
+     *
      * @internal
      */
     protected function unserializeModel(string $data): ?Model
@@ -217,14 +220,13 @@ trait Rememberable
             }
             /** @var class-string<Model> $class */
 
+            // @phpstan-ignore-next-line instanceof.alwaysFalse
             if ($class instanceof RememberUnserializeable) {
                 $class->rememberUnserialize($key);
             }
 
             return $class::query()->findOrFail($key);
-        }
-
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             return null;
         }
     }

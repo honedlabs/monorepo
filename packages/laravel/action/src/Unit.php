@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Honed\Action\Concerns\Actionable;
-use Honed\Action\Concerns\HasEncoder;
 use Honed\Action\Concerns\HasKey;
 use Honed\Action\Concerns\HasOperations;
 use Honed\Action\Concerns\Rememberable;
@@ -121,7 +120,7 @@ class Unit extends Primitive implements HandlesOperations
     {
         if ($childType === 'operation') {
             $this->define();
-            
+
             return Arr::first(
                 $this->getOperations(),
                 static fn ($operation) => $operation->getName() === $value
@@ -137,7 +136,7 @@ class Unit extends Primitive implements HandlesOperations
     public function handle(Operation $operation, Request $request): Responsable|Response
     {
         $this->setRemembered($request);
-        
+
         $handler = $this->getHandler();
 
         return $handler::make($this)->handle($operation, $request);

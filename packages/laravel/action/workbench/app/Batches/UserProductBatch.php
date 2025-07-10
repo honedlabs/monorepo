@@ -13,15 +13,15 @@ class UserProductBatch extends Batch
 {
     /**
      * The user to remember.
-     * 
-     * @var \Workbench\App\Models\User|null
+     *
+     * @var User|null
      */
     #[Remember]
     protected $user;
 
     /**
      * The scalar to remember.
-     * 
+     *
      * @var scalar
      */
     #[Remember]
@@ -50,7 +50,7 @@ class UserProductBatch extends Batch
     /**
      * Set the scalar.
      *
-     * @param scalar $scalar
+     * @param  scalar  $scalar
      * @return $this
      */
     public function scalar($scalar): static
@@ -62,7 +62,7 @@ class UserProductBatch extends Batch
 
     /**
      * Get the scalar.
-     * 
+     *
      * @return scalar
      */
     public function getScalar(): mixed
@@ -80,7 +80,7 @@ class UserProductBatch extends Batch
         return $this
             ->rememberable()
             ->operations([
-                PageOperation::make('show', 'Show a product')
+                PageOperation::make('show', 'Show a product'),
             ]);
     }
 }

@@ -26,8 +26,8 @@ abstract class Process implements Action
 
     /**
      * The strategy to use for the process.
-     * 
-     * 'chain'|'drill'
+     *
+     * @var 'chain'|'drill'
      */
     protected $strategy = 'chain';
 
@@ -84,13 +84,14 @@ abstract class Process implements Action
 
     /**
      * Set the strategy of the process.
-     * 
+     *
+     * @param  'chain'|'drill'  $strategy
      * @return $this
      */
     public function strategy(string $strategy): static
     {
         $this->strategy = $strategy;
-        
+
         return $this;
     }
 
@@ -104,7 +105,7 @@ abstract class Process implements Action
 
     /**
      * Set the process to chain the payload of each task to the next.
-     * 
+     *
      * @return $this
      */
     public function chain(): static
@@ -116,7 +117,7 @@ abstract class Process implements Action
 
     /**
      * Set the process to drill the initial payload to all tasks.
-     * 
+     *
      * @return $this
      */
     public function drill(): static
@@ -203,10 +204,10 @@ abstract class Process implements Action
 
     /**
      * Call the task with the appropriate strategy.
-     * 
-     * 
+     *
+     * @param  class-string  $task
      */
-    protected function call($task): Closure
+    protected function call(string $task): Closure
     {
         if ($this->isDrilling()) {
             return $this->callDrill($task);
@@ -215,7 +216,12 @@ abstract class Process implements Action
         return $this->callChain($task);
     }
 
-    protected function callDrill($task)
+    /**
+     * Call the task in a drilling strategy.
+     *
+     * @param  class-string  $task
+     */
+    protected function callDrill(string $task): Closure
     {
         return function ($payload, $next) use ($task) {
             $this->callTask($task, $payload);
@@ -224,12 +230,24 @@ abstract class Process implements Action
         };
     }
 
-    protected function callChain($task)
+    /**
+     * Call the task in a chaining strategy.
+     *
+     * @param  class-string  $task
+     */
+    protected function callChain(string $task): Closure
     {
         return fn ($payload, $next) => $next($this->callTask($task, $payload));
     }
 
-    protected function callTask($task, $payload)
+    /**
+     * Call the task.
+     *
+     * @param  class-string  $task
+     * @param  TPayload  $payload
+     * @return TResult
+     */
+    protected function callTask(string $task, $payload)
     {
         return $this->getContainer()
             ->make($task)
