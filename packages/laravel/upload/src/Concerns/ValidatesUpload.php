@@ -18,9 +18,10 @@ use function trim;
 
 trait ValidatesUpload
 {
-    use HasExtensions;
+    // use HasExtensions;
     use HasMaxSize;
-    use HasMimeTypes;
+
+    // use HasMimeTypes;
     use HasMinSize;
 
     public const LIFETIME = 2;
@@ -79,7 +80,6 @@ trait ValidatesUpload
     {
         return sprintf('+%d minutes', abs($minutes));
     }
-
 
     /**
      * Merge a set of accepted mime types with the existing.
