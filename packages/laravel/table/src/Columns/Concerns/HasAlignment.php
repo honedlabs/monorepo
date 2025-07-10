@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Honed\Columns\Concerns;
+namespace Honed\Table\Columns\Concerns;
 
 trait HasAlignment
 {
     public const ALIGN_LEFT = 'left';
+
     public const ALIGN_CENTER = 'center';
+
     public const ALIGN_RIGHT = 'right';
 
     /**
@@ -19,8 +21,8 @@ trait HasAlignment
 
     /**
      * Set the alignment of the column.
-     * 
-     * @param 'left'|'center'|'right' $alignment
+     *
+     * @param  'left'|'center'|'right'  $alignment
      * @return $this
      */
     public function align(string $alignment): static
@@ -33,7 +35,7 @@ trait HasAlignment
     /**
      * Set the alignment of the column.
      *
-     * @param 'left'|'center'|'right' $alignment
+     * @param  'left'|'center'|'right'  $alignment
      * @return $this
      */
     public function alignment(string $alignment): static

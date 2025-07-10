@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Table\Columns;
 
 use Closure;
-use Honed\Columns\Concerns\HasAlignment;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\CanBeActive;
 use Honed\Core\Concerns\CanHaveAlias;
@@ -24,11 +23,11 @@ use Honed\Infolist\Entries\Concerns\HasPlaceholder;
 use Honed\Infolist\Entries\Concerns\HasState;
 use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
-use Honed\Refine\Sorts\Sort;
 use Honed\Table\Columns\Concerns\CanBeKey;
 use Honed\Table\Columns\Concerns\CanBeToggled;
 use Honed\Table\Columns\Concerns\Exportable;
 use Honed\Table\Columns\Concerns\Filterable;
+use Honed\Table\Columns\Concerns\HasAlignment;
 use Honed\Table\Columns\Concerns\HasCellClasses;
 use Honed\Table\Columns\Concerns\Searchable;
 use Honed\Table\Columns\Concerns\Sortable;
@@ -55,10 +54,13 @@ class Column extends Primitive implements NullsAsUndefined
     use CanHaveAlias;
     use CanHaveExtra;
     use CanHaveIcon;
+
     /** @use \Honed\Core\Concerns\CanQuery<TModel, TBuilder> */
     use CanQuery;
+
     use Exportable;
     use Filterable;
+    use HasAlignment;
     use HasCellClasses;
     use HasLabel;
     use HasName;
@@ -69,7 +71,6 @@ class Column extends Primitive implements NullsAsUndefined
     use Searchable;
     use Selectable;
     use Sortable;
-    use HasAlignment;
 
     public const BADGE = 'badge';
 
@@ -90,6 +91,8 @@ class Column extends Primitive implements NullsAsUndefined
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->define(); // @TODO
 
         $this->active();
     }
@@ -227,17 +230,6 @@ class Column extends Primitive implements NullsAsUndefined
             'icon' => $this->getIcon(),
             'sort' => $this->sortToArray(),
         ];
-    }
-
-    /**
-     * Define the column.
-     *
-     * @param  $this  $column
-     * @return $this
-     */
-    protected function definition(self $column): self
-    {
-        return $column;
     }
 
     /**
