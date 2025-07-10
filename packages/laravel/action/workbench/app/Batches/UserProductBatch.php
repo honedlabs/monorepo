@@ -6,6 +6,7 @@ namespace Workbench\App\Batches;
 
 use Honed\Action\Attributes\Remember;
 use Honed\Action\Batch;
+use Honed\Action\Operations\PageOperation;
 use Workbench\App\Models\User;
 
 class UserProductBatch extends Batch
@@ -77,6 +78,9 @@ class UserProductBatch extends Batch
     protected function definition(): static
     {
         return $this
-            ->rememberable();
+            ->rememberable()
+            ->operations([
+                PageOperation::make('show', 'Show a product')
+            ]);
     }
 }

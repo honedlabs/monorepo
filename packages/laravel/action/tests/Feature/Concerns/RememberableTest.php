@@ -12,7 +12,7 @@ beforeEach(function () {
     $this->batch = UserProductBatch::make();
 
     $this->batch->define();
-})->only();
+});
 
 it('is rememberable', function () {
     expect($this->batch)
@@ -86,6 +86,8 @@ it('sets properties from remembered data', function () {
         ->getRemembered();
 
     $batch = UserProductBatch::make();
+
+    $batch->define();
 
     $request = Request::create('/', Request::METHOD_POST, $remembered);
 

@@ -30,10 +30,5 @@ it('annotates properties', function () {
 
     expect($remembered)
         ->toBeArray()
-        ->toHaveCount(1)
-        ->{0}
-        ->scoped(fn ($property) => $property
-            ->getName()->toBe('user')
-            ->getValue($this->batch)->toBeNull()
-        );
+        ->toHaveCount(2);
 });

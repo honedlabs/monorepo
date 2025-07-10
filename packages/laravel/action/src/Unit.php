@@ -120,6 +120,8 @@ class Unit extends Primitive implements HandlesOperations
     public function resolveChildRouteBinding($childType, $value, $field = null)
     {
         if ($childType === 'operation') {
+            $this->define();
+            
             return Arr::first(
                 $this->getOperations(),
                 static fn ($operation) => $operation->getName() === $value
@@ -134,8 +136,6 @@ class Unit extends Primitive implements HandlesOperations
      */
     public function handle(Operation $operation, Request $request): Responsable|Response
     {
-        $this->define();
-
         $this->setRemembered($request);
         
         $handler = $this->getHandler();
