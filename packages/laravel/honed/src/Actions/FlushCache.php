@@ -9,35 +9,19 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @template TInput
- * @template TKey = mixed
  */
 abstract class FlushCache implements Action
 {
     /**
      * The cache to flush from.
-     * 
+     *
      * @return class-string<\Honed\Command\CacheManager>
      */
     abstract public function cache(): string;
 
     /**
-     * Create the cache key from the input.
-     *
-     * @param  TInput  $input
-     * @return TKey
-     */
-    protected function prepare($input)
-    {
-        if ($input instanceof Model) {
-            return $input->getRouteKey();
-        }
-
-        return $input;
-    }
-
-    /**
      * Flush the cache using the given input.
-     * 
+     *
      * @param  TInput  $input
      */
     public function handle($input): void
@@ -50,13 +34,25 @@ abstract class FlushCache implements Action
     }
 
     /**
+     * Create the cache key from the input.
+     *
+     * @param  TInput  $input
+     * @return mixed
+     */
+    protected function prepare($input)
+    {
+        if ($input instanceof Model) {
+            return $input->getRouteKey();
+        }
+
+        return $input;
+    }
+
+    /**
      * Perform actions after the cache has been flushed.
      *
      * @param  TInput  $input
-     * @param  TKey  $key
+     * @param  mixed  $key
      */
-    protected function after($input, $key): void
-    {
-
-    }
+    protected function after($input, $key): void {}
 }
