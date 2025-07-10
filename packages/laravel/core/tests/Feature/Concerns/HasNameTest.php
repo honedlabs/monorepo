@@ -13,6 +13,10 @@ beforeEach(function () {
 
 it('sets', function () {
     expect($this->test)
-        ->name('name')->toBe($this->test)
+        ->hasName()->toBeFalse()
+        ->missingName()->toBeTrue()
+        ->name('name')
+        ->hasName()->toBeTrue()
+        ->missingName()->toBeFalse()
         ->getName()->toBe('name');
 });

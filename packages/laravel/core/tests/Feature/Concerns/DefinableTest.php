@@ -20,6 +20,8 @@ beforeEach(function () {
 it('defines the instance', function () {
     expect($this->test)
         ->getType()->toBeNull()
-        ->define()->toBeNull()
+        ->define()->toBe($this->test)
+        ->getType()->toBe('test')
+        ->define()->toBe($this->test)
         ->getType()->toBe('test');
 });

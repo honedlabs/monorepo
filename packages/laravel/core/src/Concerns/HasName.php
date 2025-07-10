@@ -32,4 +32,20 @@ trait HasName
     {
         return $this->name;
     }
+
+    /**
+     * Determine if the name is set.
+     */
+    public function hasName(): bool
+    {
+        return isset($this->name);
+    }
+
+    /**
+     * Determine if the name is not set.
+     */
+    public function missingName(): bool
+    {
+        return ! $this->hasName();
+    }
 }

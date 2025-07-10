@@ -16,15 +16,19 @@ trait Definable
     /**
      * Call the definition.
      *
+     * @return $this
+     *
      * @internal
      */
-    public function define(): void
+    public function define(): static
     {
         if (! $this->defined) {
             $this->definition();
 
             $this->defined = true;
         }
+
+        return $this;
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use Honed\Core\Primitive;
 use Illuminate\Support\Facades\Pipeline;
 
 trait HasPipeline
@@ -33,6 +34,10 @@ trait HasPipeline
     {
         if ($this->isCompleted()) {
             return $this;
+        }
+
+        if ($this instanceof Primitive) {
+            $this->define();
         }
 
         Pipeline::send($this)
