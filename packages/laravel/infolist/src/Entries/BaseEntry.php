@@ -49,6 +49,8 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
      */
     protected function representation(): array
     {
+        $this->define();
+
         $state = $this->getState();
 
         [$state, $placehold] = $this->apply($state);

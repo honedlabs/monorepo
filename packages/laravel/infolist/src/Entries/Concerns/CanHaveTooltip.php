@@ -8,7 +8,7 @@ trait CanHaveTooltip
 {
     /**
      * The tooltip.
-     * 
+     *
      * @var mixed
      */
     protected $tooltip;

@@ -20,7 +20,6 @@ trait HasInfolist
      */
     protected $list;
 
-
     /**
      * Get the list instance for the model.
      *

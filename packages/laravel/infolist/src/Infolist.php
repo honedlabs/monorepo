@@ -115,10 +115,8 @@ class Infolist extends Primitive
 
     /**
      * Flush the global configuration state.
-     *
-     * @return void
      */
-    public static function flushState()
+    public static function flushState(): void
     {
         static::$namespace = 'App\\Infolists\\';
         static::$infolistResolver = null;
@@ -160,7 +158,7 @@ class Infolist extends Primitive
      */
     protected function representation(): array
     {
-        // $this->define();
+        $this->define();
 
         $record = $this->getRecord();
 
@@ -176,16 +174,5 @@ class Infolist extends Primitive
                 ->toArray(),
             $this->getEntries()
         );
-    }
-
-    /**
-     * Define the infolist instance.
-     *
-     * @param  $this  $list
-     * @return $this
-     */
-    protected function definition(self $list): self
-    {
-        return $list;
     }
 }

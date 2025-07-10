@@ -14,12 +14,11 @@ class UserInfolist extends Infolist
     /**
      * Define the list.
      *
-     * @param  $this  $list
      * @return $this
      */
-    public function definition(Infolist $list): Infolist
+    protected function definition(): static
     {
-        return $list
+        return $this
             ->entries([
                 TextEntry::make('name'),
 

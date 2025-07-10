@@ -2,12 +2,12 @@
 
 namespace {{ namespace }};
 
-use Honed\Infolist\Infolist;
+use Honed\Infolist\Entries\BaseEntry;
 
-class {{ class }} extends Infolist
+class {{ class }} extends BaseEntry
 {
     /**
-     * Define the list.
+     * Define the entry.
      * 
      * @return $this
      */

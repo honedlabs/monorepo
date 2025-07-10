@@ -11,6 +11,5 @@ beforeEach(function () {
 
 it('has infolist via attribute', function () {
     expect($this->user)
-        ->infolist()->toBeInstanceOf(UserInfolist::class)
-        ->toList()->toBeInstanceOf(UserInfolist::class);
+        ->infolist()->toBeInstanceOf(UserInfolist::class);
 });
