@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Model;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  * 
- * @implements \Honed\Action\Contracts\FromModel<TModel>
+ * @extends \Honed\Action\Actions\EloquentAction<TModel>
  */
-abstract class StoreAction extends DatabaseAction implements FromModel
+abstract class StoreAction extends EloquentAction
 {
     /**
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
@@ -57,7 +57,8 @@ abstract class StoreAction extends DatabaseAction implements FromModel
     {
         $prepared = $this->prepare($input);
 
-        $model = $this->model()::query()->create($prepared);
+        /** @var TModel */
+        $model = $this->query()->create($prepared);
 
         $this->after($model, $input, $prepared);
 

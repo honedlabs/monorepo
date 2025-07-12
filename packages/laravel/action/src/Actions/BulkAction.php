@@ -12,14 +12,17 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAction of \Honed\Action\Contracts\Action
  * 
+ * @extends \Honed\Action\Actions\EloquentAction<TModel>
+ * 
  * @internal
  */
-abstract class BulkAction extends DatabaseAction implements FromEloquent
+abstract class BulkAction extends EloquentAction
 {
     use CanChunk;
 
@@ -46,28 +49,23 @@ abstract class BulkAction extends DatabaseAction implements FromEloquent
      * @template T of int|string|TModel|null
      * 
      * @param T|array<int, T>|\Illuminate\Contracts\Support\Arrayable<int, T> $models
-     * @return Builder<TModel>
+     * @return \Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>
      */
-    protected function query($models): Builder
+    protected function getQuery($models): Builder
     {
         if (! Arr::accessible($models)) {
             $models = Arr::wrap($models);
         }
         
-        $source = $this->from();
+        $query = $this->query();
 
-        if (is_string($source)) {
-            $source = $source::query();
-        }
-
-        return $source->whereIn($this->getKey($source), $models);
+        return $query->whereIn($this->getKey($query), $models);
     }
 
     /**
      * Get the key for the model.
      *
-     * @param TModel|Builder<TModel> $source
-     * @return string
+     * @param \Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *> $source
      */
     protected function getKey($source): string
     {
@@ -79,24 +77,23 @@ abstract class BulkAction extends DatabaseAction implements FromEloquent
      * 
      * @template T of int|string|TModel|null
      * 
-     * @param T|iterable<int, T> $models
+     * @param T|array<int, T>|\Illuminate\Support\Collection<int, T> $models
      * @param (Closure(TModel):mixed) $callback
      */
     protected function run($models, Closure $callback): void
     {
-        $query = $this->query($models);
+        $query = $this->getQuery($models);
 
         match (true) {
             $this->isChunkedById() => $query
-                /** @var \Illuminate\Support\Collection<int, TModel> */
                 ->chunkById($this->getChunkSize(),
                     static fn (Collection $models) => $models->each($callback)
                 ),
             $this->isChunked() => $query
-                /** @var \Illuminate\Support\Collection<int, TModel> */
                 ->chunk($this->getChunkSize(), 
                     static fn (Collection $models) => $models->each($callback)
                 ),
+            // @phpstan-ignore-next-line argument.type
             default => $query->get()->each($callback)
         };
     }

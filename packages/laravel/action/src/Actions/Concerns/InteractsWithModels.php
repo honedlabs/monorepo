@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Traversable;
 
 trait InteractsWithModels
@@ -40,7 +41,7 @@ trait InteractsWithModels
         return match (true) {
             is_array($value) => $value,
             $value instanceof Traversable => iterator_to_array($value),
-            default => [$value],
+            default => Arr::wrap($value),
         };
     }
 }

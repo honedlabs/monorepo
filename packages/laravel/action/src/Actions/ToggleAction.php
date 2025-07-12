@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TToggle of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
+ * 
+ * @extends \Honed\Action\Actions\BelongsToManyAction<TModel, TToggle>
  */
 abstract class ToggleAction extends BelongsToManyAction
 {
@@ -77,9 +79,9 @@ abstract class ToggleAction extends BelongsToManyAction
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $ids
      * @param  TInput  $attributes
      */
-    protected function execute(Model $model, $toggles, $attributes): void
+    protected function execute(Model $model, $ids, $attributes): void
     {
-        $toggling = $this->prepare($toggles, $attributes);
+        $toggling = $this->prepare($ids, $attributes);
 
         /** @var array{attached: array<int, int|string>, detached: array<int, int|string>} */
         $toggled = $this->getRelationship($model)->toggle($toggling, $this->touch());

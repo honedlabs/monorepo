@@ -25,9 +25,6 @@ trait Transactable
 
     /**
      * Set whether to wrap the callback in a database transaction.
-     *
-     * @param  bool  $transaction
-     * @return void
      */
     public static function withinTransaction(bool $value = true): void
     {
@@ -45,7 +42,6 @@ trait Transactable
     /**
      * Set whether to wrap the callback in a database transaction.
      *
-     * @param  bool  $transaction
      * @return $this
      */
     public function transact(bool $value = true): static
@@ -58,7 +54,6 @@ trait Transactable
     /**
      * Set whether to not wrap the callback in a database transaction.
      *
-     * @param  bool  $transaction
      * @return $this
      */
     public function dontTransact(bool $value = true): static
@@ -68,8 +63,6 @@ trait Transactable
 
     /**
      * Determine whether to wrap the operation in a database transaction.
-     *
-     * @return bool
      */
     public function isTransaction(): bool
     {
@@ -78,8 +71,6 @@ trait Transactable
 
     /**
      * Determine whether to not wrap the operation in a database transaction.
-     *
-     * @return bool
      */
     public function isNotTransaction(): bool
     {

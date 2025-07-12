@@ -17,14 +17,11 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
  * @template TAction of \Honed\Action\Actions\DissociateAction<TModel, TParent> = \Honed\Action\Actions\DissociateAction<TModel, TParent>
+ * 
+ * @extends \Honed\Action\Actions\BulkAction<TModel, TAction>
  */
-abstract class BulkDissociateAction extends DatabaseAction implements FromEloquent
+abstract class BulkDissociateAction extends BulkAction
 {
-    /**
-     * @use \Honed\Action\Actions\Concerns\Bulkable<TModel, TAction>
-     */
-    use Bulkable;
-
     /**
      * Associate many models to one parent.
      * 
@@ -51,7 +48,7 @@ abstract class BulkDissociateAction extends DatabaseAction implements FromEloque
         $action = $this->getAction();
 
         $this->run(
-            $this->query($models),
+            $models,
             static fn (Model $model) => $action->handle($model)
         );
 

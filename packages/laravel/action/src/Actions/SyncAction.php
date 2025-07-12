@@ -43,7 +43,9 @@ abstract class SyncAction extends BelongsToManyAction
     /**
      * Prepare the sync data and attributes for the sync method.
      *
-     * @param  int|string|TSync|array<int, int|string|TSync>  $syncs
+     * @template T of int|string|TSync|null
+     * 
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $syncs
      * @param  array<string, mixed>  $attributes
      * @return array<int|string, array<string, mixed>>
      */
@@ -61,20 +63,12 @@ abstract class SyncAction extends BelongsToManyAction
     }
 
     /**
-     * Get the values to insert into the pivot table.
-     *
-     * @return array<string, mixed>
-     */
-    protected function pivot(): array
-    {
-        return [];
-    }
-
-    /**
      * Execute the action.
      *
+     * @template T of int|string|TSync|null
+     * 
      * @param  TModel  $model
-     * @param  int|string|TSync|array<int, int|string|TSync>  $syncs
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $syncs
      * @param  array<string, mixed>  $attributes
      */
     protected function execute(Model $model, $syncs, array $attributes): void
@@ -103,6 +97,16 @@ abstract class SyncAction extends BelongsToManyAction
     protected function after(Model $model, array $attached, array $detached, array $updated)
     {
         //
+    }
+
+    /**
+     * Get the values to insert into the pivot table.
+     *
+     * @return array<string, mixed>
+     */
+    protected function pivot(): array
+    {
+        return [];
     }
 
     /**

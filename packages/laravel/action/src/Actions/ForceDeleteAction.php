@@ -10,20 +10,21 @@ use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TType of TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<*, *, *> = TModel
  */
 class ForceDeleteAction extends DatabaseAction
 {
     /**
      * Force destroy the model.
      *
-     * @param  TType  $model
-     * @return TType
+     * @template T of TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>
+     * 
+     * @param  T  $model
+     * @return T
      */
     public function handle($model)
     {
         $this->transaction(
-            fn () => $this->perform($model)
+            fn () => $this->execute($model)
         );
 
         return $model;
@@ -32,9 +33,9 @@ class ForceDeleteAction extends DatabaseAction
     /**
      * Destroy the model(s).
      *
-     * @param  TType  $model
+     * @param  TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>  $model
      */
-    protected function perform($model): void
+    protected function execute($model): void
     {
         match (true) {
             $model instanceof Collection => $model->each->forceDelete(),
@@ -47,7 +48,7 @@ class ForceDeleteAction extends DatabaseAction
     /**
      * Perform additional logic after the model has been deleted.
      *
-     * @param  TModel  $model
+     * @param  TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>  $model
      */
     protected function after($model): void
     {

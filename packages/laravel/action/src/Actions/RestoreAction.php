@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
+use Illuminate\Database\Eloquent\Model;
 use Workbench\App\Models\Product;
 
 /**
@@ -17,7 +18,7 @@ class RestoreAction extends DatabaseAction
      * @param  TModel  $model
      * @return TModel
      */
-    public function handle($model)
+    public function handle(Model $model): Model
     {
         return $this->transaction(
             fn () => $this->execute($model)
@@ -30,7 +31,7 @@ class RestoreAction extends DatabaseAction
      * @param  TModel  $model
      * @return TModel
      */
-    protected function execute($model)
+    protected function execute(Model $model): Model
     {
         $model = $model->restore(); // @phpstan-ignore method.notFound
 
@@ -44,7 +45,7 @@ class RestoreAction extends DatabaseAction
      *
      * @param  TModel  $model
      */
-    protected function after($model): void
+    protected function after(Model $model): void
     {
         //
     }

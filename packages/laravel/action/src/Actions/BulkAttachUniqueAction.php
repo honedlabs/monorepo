@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Model;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<int, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
- * @template TAction of \Honed\Action\Actions\AttachAction<TModel, TAttach, TInput> = \Honed\Action\Actions\AttachAction<TModel, TAttach, TInput>
+ * @template TAction of \Honed\Action\Actions\AttachUniqueAction<TModel, TAttach, TInput> = \Honed\Action\Actions\AttachUniqueAction<TModel, TAttach, TInput>
  * 
  * @extends \Honed\Action\Actions\BulkAction<TModel, TAction>
  */
-abstract class BulkAttachAction extends BulkAction
+abstract class BulkAttachUniqueAction extends BulkAction
 {
     /**
      * Attach many models to many models.
@@ -48,7 +48,7 @@ abstract class BulkAttachAction extends BulkAction
         $action = $this->getAction();
 
         $this->run(
-            $models,
+            $this->query($models),
             static fn (Model $model) => $action->handle($model, $ids, $attributes)
         );
 

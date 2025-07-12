@@ -9,9 +9,6 @@ use Honed\Action\Contracts\ShouldChunk;
 use Honed\Action\Contracts\ShouldChunkById;
 use Illuminate\Database\Eloquent\Builder;
 
-/**
- * @phpstan-require-extends \Honed\Action\Operations\Operation
- */
 trait CanChunk
 {
     public const CHUNK_SIZE = 500;

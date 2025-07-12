@@ -16,5 +16,5 @@ interface FromModel
      *
      * @return class-string<TModel>
      */
-    public function model(): string;
+    public function from(): string;
 }

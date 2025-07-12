@@ -18,7 +18,7 @@ abstract class DestroyAction extends DatabaseAction implements FromModel
     /**
      * Destroy the given ids.
      *
-     * @template T of int|string|TModel|null
+     * @template T of int|string
      * 
      * @param T|array<int, T>|\Illuminate\Support\Collection<int, T> $ids
      */
@@ -32,13 +32,13 @@ abstract class DestroyAction extends DatabaseAction implements FromModel
     /**
      * Execute the action.
      *
-     * @template T of int|string|TModel|null
+     * @template T of int|string
      * 
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T> $ids
      */
     protected function execute($ids): void
     {
-        $this->model()::destroy($ids ?? []);
+        $this->from()::destroy($ids);
 
         $this->after($ids);
     }
@@ -46,7 +46,7 @@ abstract class DestroyAction extends DatabaseAction implements FromModel
     /**
      * Perform additional logic after the action has been executed.
      *
-     * @template T of int|string|TModel|null
+     * @template T of int|string
      * 
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T> $ids
      */

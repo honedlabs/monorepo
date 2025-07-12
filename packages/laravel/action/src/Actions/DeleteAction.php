@@ -8,15 +8,16 @@ use Illuminate\Support\Collection;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TType of TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<*, *, *> = TModel
  */
 class DeleteAction extends DatabaseAction
 {
     /**
      * Destroy the model(s).
      *
-     * @param  TType  $model
-     * @return TType
+     * @template T of TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>
+     * 
+     * @param  T  $model
+     * @return T
      */
     public function handle($model)
     {
@@ -30,7 +31,7 @@ class DeleteAction extends DatabaseAction
     /**
      * Execute the action.
      *
-     * @param  TType  $model
+     * @param  TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>  $model
      */
     protected function execute($model): void
     {
@@ -45,7 +46,7 @@ class DeleteAction extends DatabaseAction
     /**
      * Perform additional logic after the action has been executed.
      *
-     * @param  TType  $model
+     * @param  TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>  $model
      */
     protected function after($model): void
     {
