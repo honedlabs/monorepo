@@ -4,47 +4,53 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Illuminate\Database\Eloquent\Model;
+use Honed\Action\Contracts\RequiresModel;
+use Illuminate\Support\Collection;
 use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ * 
+ * @implements \Honed\Action\Contracts\RequiresModel<TModel>
  */
-class ForceDestroyAction extends DatabaseAction
+abstract class ForceDestroyAction extends DatabaseAction implements RequiresModel
 {
     /**
-     * Force destroy the model.
+     * Force destroy the given ids.
      *
-     * @param  TModel  $model
-     * @return TModel
+     * @template T of int|string|TModel|null
+     * 
+     * @param T|array<int, T>|\Illuminate\Support\Collection<int, T> $ids
      */
-    public function handle($model)
+    public function handle($ids): void
     {
-        $this->call(
-            fn () => $this->perform($model)
+        $this->transaction(
+            fn () => $this->execute($ids)
         );
-
-        return $model;
     }
 
     /**
-     * Destroy the model(s).
+     * Execute the action.
      *
-     * @param  TModel  $model
+     * @template T of int|string|TModel|null
+     * 
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T> $ids
      */
-    protected function perform($model): void
+    protected function execute($ids): void
     {
-        $model->forceDelete();
+        $this->model()::forceDestroy($ids ?? []);
 
-        $this->after($model);
+        $this->after($ids);
     }
 
     /**
-     * Perform additional logic after the model has been deleted.
+     * Perform additional logic after the action has been executed.
      *
-     * @param  TModel  $model
+     * @template T of int|string|TModel|null
+     * 
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T> $ids
      */
-    protected function after($model): void
+    protected function after($ids): void
     {
         //
     }

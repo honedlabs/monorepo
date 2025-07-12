@@ -49,11 +49,11 @@ trait Bulkable
      */
     protected function query($models): Builder
     {
-        $model = $this->getModel();
-
         if (! Arr::accessible($models)) {
             $models = Arr::wrap($models);
         }
+        
+        $model = $this->getModel();
 
         /** @var Builder<TModel> */
         return $model::query()

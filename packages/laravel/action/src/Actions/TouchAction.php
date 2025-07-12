@@ -31,8 +31,8 @@ class TouchAction extends DatabaseAction
      */
     public function handle(Model $model): Model
     {
-        return $this->transact(
-            fn () => $this->touch($model)
+        return $this->transaction(
+            fn () => $this->perform($model)
         );
     }
 
@@ -55,7 +55,7 @@ class TouchAction extends DatabaseAction
      * @param  TModel  $model
      * @return TModel
      */
-    protected function touch(Model $model): Model
+    protected function perform(Model $model): Model
     {
         $touches = $this->touches();
 

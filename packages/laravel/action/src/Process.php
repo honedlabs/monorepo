@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action;
 
 use Closure;
-use Honed\Action\Concerns\Transactable;
+use Honed\Action\Actions\Concerns\Transactable;
 use Honed\Action\Contracts\Action;
 use Honed\Core\Concerns\HasContainer;
 use Illuminate\Contracts\Container\Container;
@@ -77,7 +77,7 @@ abstract class Process implements Action
      */
     public function run($payload)
     {
-        return $this->transact(
+        return $this->transaction(
             fn () => $this->pipe($payload)
         );
     }

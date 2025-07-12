@@ -29,8 +29,8 @@ abstract class UpsertAction extends DatabaseAction implements Upsertable
      */
     public function handle($values)
     {
-        $this->call(
-            fn () => $this->upsert($values)
+        $this->transaction(
+            fn () => $this->perform($values)
         );
 
         return $values;
@@ -58,13 +58,13 @@ abstract class UpsertAction extends DatabaseAction implements Upsertable
      *
      * @param  TInput  $values
      */
-    protected function upsert($values): void
+    protected function perform($values): void
     {
         $prepared = $this->prepare($values);
 
         $model = $this->model();
 
-        (new $model())->query()
+        $model::query()
             ->upsert($prepared, $this->uniqueBy(), $this->update());
 
         $this->after($values, $prepared);

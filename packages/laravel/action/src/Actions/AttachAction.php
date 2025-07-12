@@ -36,8 +36,8 @@ abstract class AttachAction extends DatabaseAction implements Relatable
      */
     public function handle(Model $model, $attachments, $attributes = []): Model
     {
-        $this->call(
-            fn () => $this->attach($model, $attachments, $attributes)
+        $this->transaction(
+            fn () => $this->execute($model, $attachments, $attributes)
         );
 
         return $model;
@@ -75,7 +75,7 @@ abstract class AttachAction extends DatabaseAction implements Relatable
      * @param  int|string|TAttach|iterable<int, int|string|TAttach>  $attachments
      * @param  TInput  $attributes
      */
-    protected function attach(Model $model, $attachments, $attributes): void
+    protected function execute(Model $model, $attachments, $attributes): void
     {
         /** @var array<int, int|string|TAttach> */
         $attachments = $this->arrayable($attachments);

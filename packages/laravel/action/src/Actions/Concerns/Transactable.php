@@ -29,7 +29,7 @@ trait Transactable
      * @param  bool  $transaction
      * @return void
      */
-    public static function shouldBeTransaction(bool $value = true): void
+    public static function withinTransaction(bool $value = true): void
     {
         static::$transaction = $value;
     }
@@ -37,7 +37,7 @@ trait Transactable
     /**
      * Set whether to not wrap the callback in a database transaction.
      */
-    public static function shouldNotBeTransaction(bool $value = true): void
+    public static function outsideTransaction(bool $value = true): void
     {
         static::$transaction = ! $value;
     }
@@ -95,7 +95,7 @@ trait Transactable
      * @param  Closure():TReturn  $callback
      * @return TReturn
      */
-    protected function call(Closure $callback): mixed
+    protected function transaction(Closure $callback): mixed
     {
         if ($this->isTransaction()) {
             return DB::transaction($callback);

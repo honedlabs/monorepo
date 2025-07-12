@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Illuminate\Database\Eloquent\Model;
+use Honed\Action\Actions\Concerns\InteractsWithFormData;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -15,7 +16,7 @@ class UpdateAction extends DatabaseAction
     /**
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
      */
-    use Concerns\InteractsWithFormData;
+    use InteractsWithFormData;
 
     /**
      * Update the provided model using the input.
@@ -26,8 +27,8 @@ class UpdateAction extends DatabaseAction
      */
     public function handle(Model $model, $input): Model
     {
-        return $this->call(
-            fn () => $this->update($model, $input)
+        return $this->transaction(
+            fn () => $this->execute($model, $input)
         );
     }
 
@@ -52,7 +53,7 @@ class UpdateAction extends DatabaseAction
      * @param  TInput  $input
      * @return TModel
      */
-    protected function update(Model $model, $input): Model
+    protected function execute(Model $model, $input): Model
     {
         $prepared = $this->prepare($model, $input);
 
