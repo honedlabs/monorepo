@@ -19,15 +19,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<int, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  * 
- * @implements \Honed\Action\Contracts\FromRelationship<TModel, \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach>>
+ * @extends \Honed\Action\Actions\BelongsToManyAction<TModel, TAttach>
  */
-abstract class AttachUniqueAction extends DatabaseAction implements FromRelationship
+abstract class AttachUniqueAction extends BelongsToManyAction
 {
-    /**
-     * @use \Honed\Action\Actions\Concerns\Attachable<TModel, TAttach>
-     */
-    use Attachable;
-
     /**
      * Sync models to the parent without detaching, using attach.
      * 
@@ -46,7 +41,6 @@ abstract class AttachUniqueAction extends DatabaseAction implements FromRelation
 
         return $model;
     }
-
 
     /**
      * Execute the action.

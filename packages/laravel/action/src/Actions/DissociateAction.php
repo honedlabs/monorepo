@@ -12,14 +12,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
+ * 
+ * @extends \Honed\Action\Actions\BelongsToAction<TModel, TParent>
  */
-abstract class DissociateAction extends DatabaseAction implements FromRelationship
+abstract class DissociateAction extends BelongsToAction
 {
-    /**
-     * @use \Honed\Action\Actions\Concerns\Associative<TParent, TModel>
-     */
-    use Associative;
-
     /**
      * Dissociate a model from the parent model.
      *

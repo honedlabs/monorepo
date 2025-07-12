@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Illuminate\Database\Eloquent\Model;
+use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model

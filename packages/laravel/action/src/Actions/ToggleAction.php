@@ -17,14 +17,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TToggle of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  */
-abstract class ToggleAction extends DatabaseAction implements FromRelationship
+abstract class ToggleAction extends BelongsToManyAction
 {
     /**
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
      */
     use InteractsWithFormData;
     use InteractsWithModels;
-    use Attachable;
 
     /**
      * Toggle the models in the relationship.

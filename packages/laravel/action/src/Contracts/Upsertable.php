@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Action\Contracts;
 
-/**
- * @template TModel of \Illuminate\Database\Eloquent\Model
- */
 interface Upsertable extends FromEloquent
 {
     /**

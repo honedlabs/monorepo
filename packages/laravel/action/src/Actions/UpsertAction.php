@@ -11,8 +11,6 @@ use Honed\Action\Contracts\Upsertable;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<int, array<string, mixed>>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
- * 
- * @implements \Honed\Action\Contracts\Upsertable<TModel>
  */
 abstract class UpsertAction extends DatabaseAction implements Upsertable
 {

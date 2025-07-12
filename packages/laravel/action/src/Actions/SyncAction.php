@@ -15,22 +15,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TSync of \Illuminate\Database\Eloquent\Model
  * 
- * @implements \Honed\Action\Contracts\FromRelationship<TModel, BelongsToMany<TModel, TSync>>
+ * @extends \Honed\Action\Actions\BelongsToManyAction<TModel, TSync>
  */
-abstract class SyncAction extends DatabaseAction implements FromRelationship
+abstract class SyncAction extends BelongsToManyAction
 {
     use InteractsWithModels;
 
     /**
-     * @use \Honed\Action\Actions\Concerns\Attachable<TModel, TSync>
-     */
-    use Attachable;
-
-    /**
      * Sync models to the relationship.
+     * 
+     * @template T of int|string|TSync|null
      *
      * @param  TModel  $model
-     * @param  int|string|TSync|array<int, int|string|TSync>  $syncs
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $syncs
      * @param  array<string, mixed>  $attributes
      * @return TModel
      */

@@ -7,6 +7,7 @@ namespace Honed\Action\Actions;
 use Honed\Action\Contracts\FromRelationship;
 use Honed\Action\Actions\Concerns\Associative;
 use Honed\Action\Actions\Concerns\Bulkable;
+use Honed\Action\Contracts\FromEloquent;
 use Honed\Action\Contracts\FromModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @template TParent of \Illuminate\Database\Eloquent\Model
  * @template TAction of \Honed\Action\Actions\AssociateAction = \Honed\Action\Actions\AssociateAction
  */
-abstract class BulkAssociateAction extends DatabaseAction implements FromModel
+abstract class BulkAssociateAction extends DatabaseAction implements FromEloquent
 {
     /**
      * @use \Honed\Action\Actions\Concerns\Bulkable<TModel, TAction>

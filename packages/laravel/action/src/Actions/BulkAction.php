@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Actions\Concerns;
+namespace Honed\Action\Actions;
 
 use Closure;
 use Honed\Action\Contracts\Action;
+use Honed\Action\Contracts\FromEloquent;
 use Honed\Action\Operations\Concerns\CanChunk;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -16,9 +17,9 @@ use Illuminate\Support\Collection;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAction of \Honed\Action\Contracts\Action
  * 
- * @phpstan-require-implements \Honed\Action\Contracts\FromEloquent
+ * @internal
  */
-trait Bulkable
+abstract class BulkAction extends DatabaseAction implements FromEloquent
 {
     use CanChunk;
 
@@ -56,24 +57,21 @@ trait Bulkable
         $source = $this->from();
 
         if (is_string($source)) {
+            $source = $source::query();
+        }
 
-
-
-        /** @var Builder<TModel> */
-        return $model::query()
-            ->whereIn($model->getKeyName(), $models);
+        return $source->whereIn($this->getKey($source), $models);
     }
 
     /**
-     * Get the model to use.
+     * Get the key for the model.
      *
-     * @return TModel
+     * @param TModel|Builder<TModel> $source
+     * @return string
      */
-    protected function getModel(): Model
+    protected function getKey($source): string
     {
-        $model = $this->model();
-
-        return new $model();
+        return $source->getModel()->getKeyName();
     }
 
     /**
@@ -86,7 +84,7 @@ trait Bulkable
      */
     protected function run($models, Closure $callback): void
     {
-        $query = $this->getQuery($models);
+        $query = $this->query($models);
 
         match (true) {
             $this->isChunkedById() => $query

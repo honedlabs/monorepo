@@ -13,15 +13,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
  * 
- * @implements \Honed\Action\Contracts\FromRelationship<TModel, BelongsTo<TParent, TModel>>
+ * @extends \Honed\Action\Actions\BelongsToAction<TModel, TParent>
  */
-abstract class AssociateAction extends DatabaseAction implements FromRelationship
+abstract class AssociateAction extends BelongsToAction
 {
-    /**
-     * @use \Honed\Action\Actions\Concerns\Associative<TParent, TModel>
-     */
-    use Associative;
-
     /**
      * Associate a model to the parent model.
      *

@@ -17,22 +17,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<int, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  * 
- * @implements \Honed\Action\Contracts\FromRelationship<TModel, \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach>>
+ * @extends \Honed\Action\Actions\BelongsToManyAction<TModel, TAttach>
  */
-abstract class AttachAction extends DatabaseAction implements FromRelationship
+abstract class AttachAction extends BelongsToManyAction
 {
     /**
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
      */
     use InteractsWithFormData;
     use InteractsWithModels;
-    /**
-     * @use \Honed\Action\Actions\Concerns\Attachable<TModel, TAttach>
-     */
-    use Attachable;
 
     /**
-     * Attach models to the parent model.
+     * Attach models to the model.
      *
      * @template T of int|string|TAttach|null
      * 
