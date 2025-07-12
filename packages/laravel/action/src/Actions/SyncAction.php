@@ -27,7 +27,7 @@ abstract class SyncAction extends DatabaseAction implements Relatable
      */
     public function handle(Model $model, $syncs, array $attributes = []): Model
     {
-        $this->transact(
+        $this->callTransaction(
             fn () => $this->sync($model, $syncs, $attributes)
         );
 

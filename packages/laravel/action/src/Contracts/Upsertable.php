@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Action\Contracts;
 
-interface Upsertable
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ * 
+ * @extends \Honed\Action\Contracts\RequiresModel<TModel>
+ */
+interface Upsertable extends RequiresModel
 {
-    /**
-     * Get the model to perform the upsert on.
-     *
-     * @return class-string<TModel>
-     */
-    public function for(): string;
-
     /**
      * Get the unique by columns for the upsert.
      *

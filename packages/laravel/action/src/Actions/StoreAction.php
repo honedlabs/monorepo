@@ -5,25 +5,21 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Actions\Concerns\InteractsWithFormData;
+use Honed\Action\Contracts\RequiresModel;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
+ * 
+ * @implements \Honed\Action\Contracts\RequiresModel<TModel>
  */
-abstract class StoreAction extends DatabaseAction
+abstract class StoreAction extends DatabaseAction implements RequiresModel
 {
     /**
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
      */
     use InteractsWithFormData;
-
-    /**
-     * Get the model to store the input data in.
-     *
-     * @return class-string<TModel>
-     */
-    abstract protected function for(): string;
 
     /**
      * Store the input data in the database.
@@ -33,7 +29,7 @@ abstract class StoreAction extends DatabaseAction
      */
     public function handle($input): Model
     {
-        return $this->transact(
+        return $this->callTransaction(
             fn () => $this->store($input)
         );
     }
@@ -61,7 +57,7 @@ abstract class StoreAction extends DatabaseAction
     {
         $prepared = $this->prepare($input);
 
-        $class = $this->for();
+        $class = $this->model();
 
         $model = (new $class())->query()->create($prepared);
 

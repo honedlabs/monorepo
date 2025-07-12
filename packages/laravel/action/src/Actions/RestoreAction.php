@@ -17,7 +17,7 @@ class RestoreAction extends DatabaseAction
      */
     public function handle($model)
     {
-        return $this->transact(
+        return $this->callTransaction(
             fn () => $this->restore($model)
         );
     }

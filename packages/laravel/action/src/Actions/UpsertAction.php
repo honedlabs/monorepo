@@ -5,38 +5,21 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use function is_array;
+use Honed\Action\Actions\Concerns\InteractsWithFormData;
+use Honed\Action\Contracts\Upsertable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<int, array<string, mixed>>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
+ * 
+ * @implements \Honed\Action\Contracts\Upsertable<TModel>
  */
-abstract class UpsertAction extends DatabaseAction
+abstract class UpsertAction extends DatabaseAction implements Upsertable
 {
     /**
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
      */
-    use Concerns\InteractsWithFormData;
-
-    /**
-     * Get the model to perform the upsert on.
-     *
-     * @return class-string<TModel>
-     */
-    abstract protected function for(): string;
-
-    /**
-     * Get the unique by columns for the upsert.
-     *
-     * @return array<int, string>
-     */
-    abstract protected function uniqueBy(): array;
-
-    /**
-     * Get the columns to update in the upsert.
-     *
-     * @return array<int, string>
-     */
-    abstract protected function update(): array;
+    use InteractsWithFormData;
 
     /**
      * Upsert the input data in the database.
@@ -46,7 +29,7 @@ abstract class UpsertAction extends DatabaseAction
      */
     public function handle($values)
     {
-        $this->transact(
+        $this->callTransaction(
             fn () => $this->upsert($values)
         );
 
@@ -79,9 +62,9 @@ abstract class UpsertAction extends DatabaseAction
     {
         $prepared = $this->prepare($values);
 
-        $class = $this->for();
+        $model = $this->model();
 
-        (new $class())->query()
+        (new $model())->query()
             ->upsert($prepared, $this->uniqueBy(), $this->update());
 
         $this->after($values, $prepared);

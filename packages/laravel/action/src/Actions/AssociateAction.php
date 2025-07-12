@@ -18,12 +18,12 @@ abstract class AssociateAction extends DatabaseAction implements Relatable
      * Associate a model to the parent model.
      *
      * @param  TModel  $model
-     * @param  int|string|TParent  $parent
+     * @param  int|string|TParent|null  $parent
      * @return TModel
      */
-    public function handle(Model $model, int|string|Model $parent)
+    public function handle(Model $model, $parent): Model
     {
-        return $this->transact(
+        return $this->callTransaction(
             fn () => $this->associate($model, $parent)
         );
     }
@@ -44,10 +44,10 @@ abstract class AssociateAction extends DatabaseAction implements Relatable
      * Store the parent in the database.
      *
      * @param  TModel  $model
-     * @param  int|string|TParent  $parent
+     * @param  int|string|TParent|null  $parent
      * @return TModel
      */
-    protected function associate(Model $model, int|string|Model $parent): Model
+    protected function associate(Model $model, $parent): Model
     {
         $model = $this->getRelation($model)->associate($parent);
 
@@ -62,9 +62,9 @@ abstract class AssociateAction extends DatabaseAction implements Relatable
      * Perform additional logic after the model has been attached.
      *
      * @param  TModel  $model
-     * @param  int|string|TParent  $parent
+     * @param  int|string|TParent|null  $parent
      */
-    protected function after(Model $model, int|string|Model $parent): void
+    protected function after(Model $model, $parent): void
     {
         //
     }

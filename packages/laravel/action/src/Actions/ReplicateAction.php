@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Illuminate\Database\Eloquent\Model;
+use Honed\Action\Actions\Concerns\InteractsWithFormData;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -15,7 +16,7 @@ class ReplicateAction extends DatabaseAction
     /**
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
      */
-    use Concerns\InteractsWithFormData;
+    use InteractsWithFormData;
 
     /**
      * Store the input data in the database.
@@ -26,7 +27,7 @@ class ReplicateAction extends DatabaseAction
      */
     public function handle(Model $model, $attributes = []): Model
     {
-        return $this->transact(
+        return $this->callTransaction(
             fn () => $this->replicate($model, $attributes)
         );
     }

@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Action\Contracts;
 
+use Illuminate\Database\Eloquent\Model;
+
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
 interface RequiresModel
 {
     /**
-     * Get the model to store the input data in.
+     * Get the model class to use.
      *
      * @return class-string<TModel>
      */
-    public function for(): string;
+    public function model(): string;
 }

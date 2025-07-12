@@ -26,7 +26,7 @@ class UpdateAction extends DatabaseAction
      */
     public function handle(Model $model, $input): Model
     {
-        return $this->transact(
+        return $this->callTransaction(
             fn () => $this->update($model, $input)
         );
     }

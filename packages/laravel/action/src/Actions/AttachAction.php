@@ -33,7 +33,7 @@ abstract class AttachAction extends DatabaseAction implements Relatable
      */
     public function handle(Model $model, $attachments, $attributes = []): Model
     {
-        $this->transact(
+        $this->callTransaction(
             fn () => $this->attach($model, $attachments, $attributes)
         );
 
