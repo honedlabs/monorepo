@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<int, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
+ * 
+ * @implements \Honed\Action\Contracts\Relatable<TModel, \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach>>
  */
 abstract class AttachAction extends DatabaseAction implements Relatable
 {
@@ -24,13 +26,18 @@ abstract class AttachAction extends DatabaseAction implements Relatable
      */
     use InteractsWithFormData;
     use InteractsWithModels;
+    /**
+     * @use \Honed\Action\Actions\Concerns\Attachable<TModel, TAttach>
+     */
     use Attachable;
 
     /**
      * Attach models to the parent model.
      *
+     * @template T of int|string|TAttach|null
+     * 
      * @param  TModel  $model
-     * @param  int|string|TAttach|iterable<int, int|string|TAttach>  $attachments
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $attachments
      * @param  TInput  $attributes
      * @return TModel
      */
@@ -46,7 +53,9 @@ abstract class AttachAction extends DatabaseAction implements Relatable
     /**
      * Prepare the attachments and attributes for the attach method.
      *
-     * @param  int|string|TAttach|array<int, int|string|TAttach>  $attachments
+     * @template T of int|string|TAttach|null
+     * 
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $attachments
      * @param  TInput  $attributes
      * @return array<int|string, array<string, mixed>>
      */
@@ -71,8 +80,10 @@ abstract class AttachAction extends DatabaseAction implements Relatable
     /**
      * Store the attachments in the database.
      *
+     * @template T of int|string|TAttach|null
+     * 
      * @param  TModel  $model
-     * @param  int|string|TAttach|iterable<int, int|string|TAttach>  $attachments
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $attachments
      * @param  TInput  $attributes
      */
     protected function execute(Model $model, $attachments, $attributes): void
@@ -82,7 +93,7 @@ abstract class AttachAction extends DatabaseAction implements Relatable
 
         $attaching = $this->prepare($attachments, $attributes);
 
-        $this->getRelationship($model)->attach($attaching, touch: $this->shouldTouch());
+        $this->getRelationship($model)->attach($attaching, touch: $this->touch());
 
         $this->after($model, $attachments, $attributes);
     }
@@ -90,8 +101,10 @@ abstract class AttachAction extends DatabaseAction implements Relatable
     /**
      * Perform additional logic after the model has been attached.
      *
+     * @template T of int|string|TAttach|null
+     * 
      * @param  TModel  $model
-     * @param  int|string|TAttach|array<int, int|string|TAttach>  $attachments
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $attachments
      * @param  TInput  $attributes
      */
     protected function after(Model $model, $attachments, $attributes): void

@@ -5,22 +5,24 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
+ * @template TType of TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<*, *, *> = TModel
  */
-class ForceDestroyAction extends DatabaseAction
+class ForceDeleteAction extends DatabaseAction
 {
     /**
      * Force destroy the model.
      *
-     * @param  TModel  $model
-     * @return TModel
+     * @param  TType  $model
+     * @return TType
      */
     public function handle($model)
     {
-        $this->call(
+        $this->transaction(
             fn () => $this->perform($model)
         );
 
@@ -30,11 +32,14 @@ class ForceDestroyAction extends DatabaseAction
     /**
      * Destroy the model(s).
      *
-     * @param  TModel  $model
+     * @param  TType  $model
      */
     protected function perform($model): void
     {
-        $model->forceDelete();
+        match (true) {
+            $model instanceof Collection => $model->each->forceDelete(),
+            default => $model->forceDelete()
+        };
 
         $this->after($model);
     }

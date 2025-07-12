@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
+use Workbench\App\Models\Product;
+
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
@@ -12,37 +14,37 @@ class RestoreAction extends DatabaseAction
     /**
      * Restore the model(s).
      *
-     * @param  TModel|\Illuminate\Database\Eloquent\Builder<TModel>  $model
-     * @return TModel|\Illuminate\Database\Eloquent\Collection<int, TModel>
+     * @param  TModel  $model
+     * @return TModel
      */
     public function handle($model)
     {
-        return $this->call(
-            fn () => $this->perform($model)
+        return $this->transaction(
+            fn () => $this->execute($model)
         );
     }
 
     /**
-     * Restore the model(s).
+     * Execute the action.
      *
-     * @param  TModel|\Illuminate\Database\Eloquent\Builder<TModel>  $model
-     * @return TModel|\Illuminate\Database\Eloquent\Collection<int, TModel>
+     * @param  TModel  $model
+     * @return TModel
      */
-    protected function perform($model)
+    protected function execute($model)
     {
-        $models = $model->restore(); // @phpstan-ignore method.notFound
+        $model = $model->restore(); // @phpstan-ignore method.notFound
 
-        $this->after($models);
+        $this->after($model);
 
-        return $models;
+        return $model;
     }
 
     /**
      * Perform additional logic after the model(s) have been restored.
      *
-     * @param  TModel|\Illuminate\Database\Eloquent\Collection<int, TModel>  $models
+     * @param  TModel  $model
      */
-    protected function after($models): void
+    protected function after($model): void
     {
         //
     }

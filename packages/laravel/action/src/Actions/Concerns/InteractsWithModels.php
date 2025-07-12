@@ -25,7 +25,7 @@ trait InteractsWithModels
     /**
      * Indicate whether touched columns should be updated.
      */
-    protected function shouldTouch(): bool
+    protected function touch(): bool
     {
         return true;
     }

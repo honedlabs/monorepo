@@ -27,13 +27,13 @@ class ReplicateAction extends DatabaseAction
      */
     public function handle(Model $model, $attributes = []): Model
     {
-        return $this->call(
-            fn () => $this->perform($model, $attributes)
+        return $this->transaction(
+            fn () => $this->execute($model, $attributes)
         );
     }
 
     /**
-     * Prepare the attributes to override on replication
+     * Prepare the attributes to override on replication.
      *
      * @param  TInput  $attributes
      * @return array<string, mixed>
@@ -62,7 +62,7 @@ class ReplicateAction extends DatabaseAction
      * @param  TInput  $attributes
      * @return TModel
      */
-    protected function perform(Model $model, $attributes): Model
+    protected function execute(Model $model, $attributes): Model
     {
         $new = $model->replicate($this->except());
 
@@ -74,7 +74,7 @@ class ReplicateAction extends DatabaseAction
 
         $new->save();
 
-        $this->after($new, $model, $attributes);
+        $this->after($new, $model, $attributes, $prepared);
 
         return $new;
     }
@@ -85,8 +85,9 @@ class ReplicateAction extends DatabaseAction
      * @param  TModel  $new
      * @param  TModel  $old
      * @param  TInput  $attributes
+     * @param  array<string, mixed>  $prepared
      */
-    protected function after(Model $new, Model $old, $attributes): void
+    protected function after(Model $new, Model $old, $attributes, array $prepared): void
     {
         //
     }

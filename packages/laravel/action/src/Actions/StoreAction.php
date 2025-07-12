@@ -29,8 +29,8 @@ abstract class StoreAction extends DatabaseAction implements RequiresModel
      */
     public function handle($input): Model
     {
-        return $this->call(
-            fn () => $this->store($input)
+        return $this->transaction(
+            fn () => $this->execute($input)
         );
     }
 
@@ -48,18 +48,16 @@ abstract class StoreAction extends DatabaseAction implements RequiresModel
     }
 
     /**
-     * Store the record in the database.
+     * Execute the action.
      *
      * @param  TInput  $input
      * @return TModel
      */
-    protected function store($input): Model
+    protected function execute($input): Model
     {
         $prepared = $this->prepare($input);
 
-        $class = $this->model();
-
-        $model = (new $class())->query()->create($prepared);
+        $model = $this->model()::query()->create($prepared);
 
         $this->after($model, $input, $prepared);
 
@@ -73,7 +71,7 @@ abstract class StoreAction extends DatabaseAction implements RequiresModel
      * @param  TInput  $input
      * @param  array<string, mixed>  $prepared
      */
-    protected function after(Model $model, $input, $prepared): void
+    protected function after(Model $model, $input, array $prepared): void
     {
         //
     }

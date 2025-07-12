@@ -18,26 +18,30 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<int, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
+ * 
+ * @implements \Honed\Action\Contracts\Relatable<TModel, \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach>>
  */
 abstract class AttachUniqueAction extends DatabaseAction implements Relatable
 {
     /**
-     * @use \Honed\Action\Actions\Concerns\Attachable<TModel, TAttach, TInput>
+     * @use \Honed\Action\Actions\Concerns\Attachable<TModel, TAttach>
      */
-    // use Attachable;
+    use Attachable;
 
     /**
-     * Attach models to the parent model.
-     *
+     * Sync models to the parent without detaching, using attach.
+     * 
+     * @template T of int|string|TAttach|null
+     * 
      * @param  TModel  $model
-     * @param  int|string|TAttach|iterable<int, int|string|TAttach>  $attachments
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $attachments
      * @param  TInput  $attributes
      * @return TModel
      */
     public function handle(Model $model, $attachments, $attributes = []): Model
     {
-        $this->call(
-            fn () => $this->perform($model, $attachments, $attributes)
+        $this->transaction(
+            fn () => $this->execute($model, $attachments, $attributes)
         );
 
         return $model;
@@ -45,21 +49,22 @@ abstract class AttachUniqueAction extends DatabaseAction implements Relatable
 
 
     /**
-     * Sync models to the parent without detaching, using attach.
+     * Execute the action.
+     * 
+     * @template T of int|string|TAttach|null
      * 
      * @param  TModel  $model
-     * @param  int|string|TAttach|array<int, int|string|TAttach>  $attachments
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $attachments
      * @param  TInput  $attributes
-     * @return TModel
      */
-    protected function perform(Model $model, $attachments, $attributes): void
+    protected function execute(Model $model, $attachments, $attributes): void
     {
         $relation = $this->getRelationship($model);
 
         $existing = $this->getExisting($model)->all();
 
         $relation->attach(
-            array_diff($attachments, $existing),
+            array_diff($this->parseIds($attachments), $existing),
             $attributes,
         );
 
@@ -74,9 +79,24 @@ abstract class AttachUniqueAction extends DatabaseAction implements Relatable
      */
     protected function getExisting(Model $model): Collection
     {
+        /** @var \Illuminate\Support\Collection<int, int|string> */
         return $this->getRelationship($model)
             ->getQuery()
             ->getQuery()
             ->pluck('id');
+    }
+
+    /**
+     * Perform additional logic after the action has been executed.
+     * 
+     * @template T of int|string|TAttach|null
+     * 
+     * @param  TModel  $model
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $attachments
+     * @param  TInput  $attributes
+     */
+    protected function after(Model $model, $attachments, $attributes): void
+    {
+        //
     }
 }

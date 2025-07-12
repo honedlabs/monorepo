@@ -7,6 +7,7 @@ namespace Honed\Action\Actions;
 use Honed\Action\Contracts\Relatable;
 use Honed\Action\Actions\Concerns\Associative;
 use Honed\Action\Actions\Concerns\Bulkable;
+use Honed\Action\Contracts\RequiresModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @template TParent of \Illuminate\Database\Eloquent\Model
  * @template TAction of \Honed\Action\Actions\AssociateAction = \Honed\Action\Actions\AssociateAction
  */
-abstract class BulkAssociateAction extends DatabaseAction
+abstract class BulkAssociateAction extends DatabaseAction implements RequiresModel
 {
     /**
      * @use \Honed\Action\Actions\Concerns\Bulkable<TModel, TAction>
@@ -28,13 +29,13 @@ abstract class BulkAssociateAction extends DatabaseAction
      * 
      * @template T of int|string|TModel|null
      * 
-     * @param T|iterable<int, T> $models
+     * @param T|array<int, T>|\Illuminate\Support\Collection<int, T> $models
      * @param int|string|TParent|null $parent
      */
     public function handle($models, $parent): void
     {
-        $this->call(
-            fn () => $this->perform($models, $parent)
+        $this->transaction(
+            fn () => $this->execute($models, $parent)
         );
     }
 
@@ -43,10 +44,10 @@ abstract class BulkAssociateAction extends DatabaseAction
      * 
      * @template T of int|string|TModel|null
      * 
-     * @param T|iterable<int, T> $models
+     * @param T|array<int, T>|\Illuminate\Support\Collection<int, T> $models
      * @param int|string|TParent|null $parent
      */
-    protected function perform($models, $parent): void
+    protected function execute($models, $parent): void
     {
         $action = $this->getAction();
 
@@ -63,7 +64,7 @@ abstract class BulkAssociateAction extends DatabaseAction
      * 
      * @template T of int|string|TModel|null
      * 
-     * @param  T|iterable<int, T> $models
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T> $models
      * @param  int|string|TParent|null  $parent
      */
     protected function after($models, $parent): void

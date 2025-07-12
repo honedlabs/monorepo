@@ -36,8 +36,8 @@ abstract class SyncAction extends DatabaseAction implements Relatable
      */
     public function handle(Model $model, $syncs, array $attributes = []): Model
     {
-        $this->call(
-            fn () => $this->sync($model, $syncs, $attributes)
+        $this->transaction(
+            fn () => $this->execute($model, $syncs, $attributes)
         );
 
         return $model;
@@ -74,13 +74,13 @@ abstract class SyncAction extends DatabaseAction implements Relatable
     }
 
     /**
-     * Sync the relationship in the database.
+     * Execute the action.
      *
      * @param  TModel  $model
      * @param  int|string|TSync|array<int, int|string|TSync>  $syncs
      * @param  array<string, mixed>  $attributes
      */
-    protected function sync(Model $model, $syncs, array $attributes): void
+    protected function execute(Model $model, $syncs, array $attributes): void
     {
         $syncing = $this->prepare($syncs, $attributes);
 

@@ -28,8 +28,8 @@ abstract class DissociateAction extends DatabaseAction implements Relatable
      */
     public function handle(Model $model): Model
     {
-        return $this->call(
-            fn () => $this->perform($model)
+        return $this->transaction(
+            fn () => $this->execute($model)
         );
     }
 
@@ -39,7 +39,7 @@ abstract class DissociateAction extends DatabaseAction implements Relatable
      * @param  TModel  $model
      * @return TModel
      */
-    protected function perform(Model $model): Model
+    protected function execute(Model $model): Model
     {
         $this->getRelationship($model)->dissociate();
 

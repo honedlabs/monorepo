@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
- * @template TType of TModel|\Illuminate\Database\Eloquent\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, \Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Model> = TModel
+ * @template TType of TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<*, *, *> = TModel
  */
 class DeleteAction extends DatabaseAction
 {
@@ -34,13 +34,10 @@ class DeleteAction extends DatabaseAction
      */
     protected function execute($model): void
     {
-        if ($model instanceof Collection) {
-            foreach ($model as $item) {
-                $item->delete();
-            }
-        } else {
-            $model->delete();
-        }
+        match (true) {
+            $model instanceof Collection => $model->each->delete(),
+            default => $model->delete()
+        };
 
         $this->after($model);
     }

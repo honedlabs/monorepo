@@ -29,15 +29,17 @@ abstract class ToggleAction extends DatabaseAction implements Relatable
     /**
      * Toggle the models in the relationship.
      *
+     * @template T of int|string|TToggle|null
+     * 
      * @param  TModel  $model
-     * @param  int|string|TToggle|array<int, int|string|TToggle>  $toggles
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $ids
      * @param  TInput  $attributes
      * @return TModel
      */
-    public function handle(Model $model, $toggles, $attributes = []): Model
+    public function handle(Model $model, $ids, $attributes = []): Model
     {
         $this->transaction(
-            fn () => $this->execute($model, $toggles, $attributes)
+            fn () => $this->execute($model, $ids, $attributes)
         );
 
         return $model;
@@ -46,21 +48,23 @@ abstract class ToggleAction extends DatabaseAction implements Relatable
     /**
      * Prepare the models and attributes for the toggle method.
      *
-     * @param  int|string|TToggle|array<int, int|string|TToggle>  $toggles
+     * @template T of int|string|TToggle|null
+     * 
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $ids
      * @param  TInput  $attributes
      * @return array<int|string, array<string, mixed>>
      */
-    protected function prepare($toggles, $attributes): array
+    protected function prepare($ids, $attributes): array
     {
         /** @var array<int, int|string|TToggle> */
-        $toggles = $this->arrayable($toggles);
+        $ids = $this->arrayable($ids);
 
         $attributes = $this->normalize($attributes);
 
         return Arr::mapWithKeys(
-            $toggles,
-            fn ($togglement) => [
-                $this->getKey($togglement) => $attributes,
+            $ids,
+            fn ($id) => [
+                $this->getKey($id) => $attributes,
             ]
         );
     }
@@ -68,14 +72,17 @@ abstract class ToggleAction extends DatabaseAction implements Relatable
     /**
      * Toggle the models in the relationship.
      *
+     * @template T of int|string|TToggle|null
+     * 
      * @param  TModel  $model
-     * @param  int|string|TToggle|array<int, int|string|TToggle>  $toggles
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $ids
      * @param  TInput  $attributes
      */
     protected function execute(Model $model, $toggles, $attributes): void
     {
         $toggling = $this->prepare($toggles, $attributes);
 
+        /** @var array{attached: array<int, int|string>, detached: array<int, int|string>} */
         $toggled = $this->getRelationship($model)->toggle($toggling, $this->shouldTouch());
 
         $this->after($model, $toggled['attached'], $toggled['detached']);
@@ -85,7 +92,8 @@ abstract class ToggleAction extends DatabaseAction implements Relatable
      * Perform additional logic after the model has been toggleed.
      *
      * @param  TModel  $model
-     * @param  array<mixed>  $toggled
+     * @param  array<int, int|string>  $attached
+     * @param  array<int, int|string>  $detached
      */
     protected function after(Model $model, $attached, $detached): void
     {

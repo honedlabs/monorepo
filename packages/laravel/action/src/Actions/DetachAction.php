@@ -31,8 +31,8 @@ abstract class DetachAction extends DatabaseAction implements Relatable
      */
     public function handle(Model $model, $detachments): Model
     {
-        $this->call(
-            fn () => $this->perform($model, $detachments)
+        $this->transaction(
+            fn () => $this->execute($model, $detachments)
         );
 
         return $model;
@@ -61,11 +61,11 @@ abstract class DetachAction extends DatabaseAction implements Relatable
      * @param  TModel  $model
      * @param  int|string|TDetach|array<int, int|string|TDetach>  $detachments
      */
-    protected function perform(Model $model, $detachments): void
+    protected function execute(Model $model, $detachments): void
     {
         $detaching = $this->prepare($detachments);
 
-        $this->getRelationship($model)->detach($detaching, $this->shouldTouch());
+        $this->getRelationship($model)->detach($detaching, $this->touch());
 
         $this->after($model, $detachments);
     }

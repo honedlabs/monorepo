@@ -6,6 +6,7 @@ namespace Honed\Action\Actions;
 
 use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Actions\Concerns\InteractsWithFormData;
+use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Workbench\App\Models\Product;
 
 /**
@@ -29,5 +30,20 @@ trait Attachable
     {
         /** @var BelongsToMany<TModel, TAttach> */
         return $model->{$this->relationship()}();
+    }
+
+    /**
+     * @template T of int|string|TAttach|null
+     * 
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $ids
+     * @return array<int, int|string>
+     */
+    public function parseIds($ids)
+    {
+        return match (true) {
+            $ids instanceof Collection => $ids->toArray(),
+            is_array($ids) => $ids,
+            default => Arr::wrap($ids),
+        };
     }
 }
