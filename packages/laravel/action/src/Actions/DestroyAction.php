@@ -20,8 +20,8 @@ class DestroyAction extends DatabaseAction
      */
     public function handle($model)
     {
-        $this->transact(
-            fn () => $this->destroy($model)
+        $this->call(
+            fn () => $this->perform($model)
         );
 
         return $model;
@@ -32,7 +32,7 @@ class DestroyAction extends DatabaseAction
      *
      * @param  TType  $model
      */
-    protected function destroy($model): void
+    protected function perform($model): void
     {
         if ($model instanceof Collection) {
             foreach ($model as $item) {

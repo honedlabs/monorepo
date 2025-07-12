@@ -29,7 +29,7 @@ abstract class UpsertAction extends DatabaseAction implements Upsertable
      */
     public function handle($values)
     {
-        $this->callTransaction(
+        $this->call(
             fn () => $this->upsert($values)
         );
 

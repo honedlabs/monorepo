@@ -14,21 +14,14 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
- * @template TAction of \Honed\Action\Actions\AssociateAction
+ * @template TAction of \Honed\Action\Actions\AssociateAction = \Honed\Action\Actions\AssociateAction
  */
-abstract class BulkAssociateAction extends DatabaseAction implements Relatable
+abstract class BulkAssociateAction extends DatabaseAction
 {
     /**
      * @use \Honed\Action\Actions\Concerns\Bulkable<TModel, TAction>
      */
     use Bulkable;
-
-    /**
-     * Get the associate action to use.
-     * 
-     * @return class-string<TAction>
-     */
-    abstract public function action(): string;
 
     /**
      * Associate many models to one parent.
@@ -40,7 +33,7 @@ abstract class BulkAssociateAction extends DatabaseAction implements Relatable
      */
     public function handle($models, $parent): void
     {
-        $this->callTransaction(
+        $this->call(
             fn () => $this->perform($models, $parent)
         );
     }
@@ -58,23 +51,11 @@ abstract class BulkAssociateAction extends DatabaseAction implements Relatable
         $action = $this->getAction();
 
         $this->run(
-            $this->getQuery($models),
+            $this->query($models),
             static fn (Model $model) => $action->handle($model, $parent)
         );
 
         $this->after($models, $parent);
-    }
-
-    /**
-     * Get the relation for the model.
-     *
-     * @param  TModel  $model
-     * @return BelongsToMany<TParent, TModel>
-     */
-    protected function getRelationship(Model $model): Relation
-    {
-        /** @var BelongsTo<TParent, TModel> */
-        return $model->{$this->relationship()}();
     }
 
     /**

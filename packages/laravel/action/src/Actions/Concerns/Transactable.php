@@ -95,7 +95,7 @@ trait Transactable
      * @param  Closure():TReturn  $callback
      * @return TReturn
      */
-    protected function callTransaction(Closure $callback): mixed
+    protected function call(Closure $callback): mixed
     {
         if ($this->isTransaction()) {
             return DB::transaction($callback);

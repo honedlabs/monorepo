@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
+use Honed\Action\Actions\Concerns\Attachable;
 use Honed\Action\Contracts\Relatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Honed\Action\Actions\Concerns\InteractsWithModels;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TDetach of \Illuminate\Database\Eloquent\Model
+ * 
+ * @implements \Honed\Action\Contracts\Relatable<TModel, BelongsToMany<TModel, TDetach>>
  */
 abstract class DetachAction extends DatabaseAction implements Relatable
 {
-    use Concerns\InteractsWithModels;
+    use InteractsWithModels;
+    use Attachable;
 
     /**
      * Detach models from the parent model.
@@ -25,23 +31,11 @@ abstract class DetachAction extends DatabaseAction implements Relatable
      */
     public function handle(Model $model, $detachments): Model
     {
-        $this->transact(
-            fn () => $this->detach($model, $detachments)
+        $this->call(
+            fn () => $this->perform($model, $detachments)
         );
 
         return $model;
-    }
-
-    /**
-     * Get the relation for the model.
-     *
-     * @param  TModel  $model
-     * @return BelongsToMany<TModel, TDetach>
-     */
-    protected function getRelation(Model $model): BelongsToMany
-    {
-        /** @var BelongsToMany<TModel, TDetach> */
-        return $model->{$this->relationship()}();
     }
 
     /**
@@ -67,11 +61,11 @@ abstract class DetachAction extends DatabaseAction implements Relatable
      * @param  TModel  $model
      * @param  int|string|TDetach|array<int, int|string|TDetach>  $detachments
      */
-    protected function detach(Model $model, $detachments): void
+    protected function perform(Model $model, $detachments): void
     {
         $detaching = $this->prepare($detachments);
 
-        $this->getRelation($model)->detach($detaching, $this->shouldTouch());
+        $this->getRelationship($model)->detach($detaching, $this->shouldTouch());
 
         $this->after($model, $detachments);
     }

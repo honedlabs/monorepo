@@ -29,7 +29,7 @@ abstract class StoreAction extends DatabaseAction implements RequiresModel
      */
     public function handle($input): Model
     {
-        return $this->callTransaction(
+        return $this->call(
             fn () => $this->store($input)
         );
     }

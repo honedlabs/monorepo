@@ -4,18 +4,27 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
+use Honed\Action\Actions\Concerns\Attachable;
+use Illuminate\Support\Arr;
 use Honed\Action\Contracts\Relatable;
 use Illuminate\Database\Eloquent\Model;
+use Honed\Action\Actions\Concerns\InteractsWithModels;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TSync of \Illuminate\Database\Eloquent\Model
+ * 
+ * @implements \Honed\Action\Contracts\Relatable<TModel, BelongsToMany<TModel, TSync>>
  */
 abstract class SyncAction extends DatabaseAction implements Relatable
 {
-    use Concerns\InteractsWithModels;
+    use InteractsWithModels;
+
+    /**
+     * @use \Honed\Action\Actions\Concerns\Attachable<TModel, TSync>
+     */
+    use Attachable;
 
     /**
      * Sync models to the relationship.
@@ -27,23 +36,11 @@ abstract class SyncAction extends DatabaseAction implements Relatable
      */
     public function handle(Model $model, $syncs, array $attributes = []): Model
     {
-        $this->callTransaction(
+        $this->call(
             fn () => $this->sync($model, $syncs, $attributes)
         );
 
         return $model;
-    }
-
-    /**
-     * Get the relation for the model.
-     *
-     * @param  TModel  $model
-     * @return BelongsToMany<TModel, TSync>
-     */
-    protected function getRelation(Model $model): BelongsToMany
-    {
-        /** @var BelongsToMany<TModel, TSync> */
-        return $model->{$this->relationship()}();
     }
 
     /**
@@ -87,9 +84,12 @@ abstract class SyncAction extends DatabaseAction implements Relatable
     {
         $syncing = $this->prepare($syncs, $attributes);
 
-        $synced = filled($pivot = $this->pivot())
-            ? $this->getRelation($model)->syncWithPivotValues($syncing, $pivot, $this->shouldDetach())
-            : $this->getRelation($model)->sync($syncing, $this->shouldDetach());
+        $pivot = $this->pivot();
+
+        $synced = match (true) {
+            filled($pivot) => $this->getRelationship($model)->syncWithPivotValues($syncing, $pivot, $this->shouldDetach()),
+            default => $this->getRelationship($model)->sync($syncing, $this->shouldDetach()),
+        };
 
         $this->after($model, $synced['attached'], $synced['detached'], $synced['updated']);
     }

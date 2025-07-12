@@ -27,8 +27,8 @@ class ReplicateAction extends DatabaseAction
      */
     public function handle(Model $model, $attributes = []): Model
     {
-        return $this->callTransaction(
-            fn () => $this->replicate($model, $attributes)
+        return $this->call(
+            fn () => $this->perform($model, $attributes)
         );
     }
 
@@ -62,7 +62,7 @@ class ReplicateAction extends DatabaseAction
      * @param  TInput  $attributes
      * @return TModel
      */
-    protected function replicate(Model $model, $attributes): Model
+    protected function perform(Model $model, $attributes): Model
     {
         $new = $model->replicate($this->except());
 

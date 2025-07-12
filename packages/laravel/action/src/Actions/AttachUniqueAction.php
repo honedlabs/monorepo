@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Template;
+namespace Honed\Action\Actions;
 
 use Honed\Action\Actions\Concerns\Attachable;
 use Illuminate\Support\Arr;
@@ -15,8 +15,6 @@ use Honed\Action\Actions\Concerns\InteractsWithFormData;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * Optimized action to use in place of syncWithoutDetaching.
- * 
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<int, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
@@ -26,7 +24,25 @@ abstract class AttachUniqueAction extends DatabaseAction implements Relatable
     /**
      * @use \Honed\Action\Actions\Concerns\Attachable<TModel, TAttach, TInput>
      */
-    use Attachable;
+    // use Attachable;
+
+    /**
+     * Attach models to the parent model.
+     *
+     * @param  TModel  $model
+     * @param  int|string|TAttach|iterable<int, int|string|TAttach>  $attachments
+     * @param  TInput  $attributes
+     * @return TModel
+     */
+    public function handle(Model $model, $attachments, $attributes = []): Model
+    {
+        $this->call(
+            fn () => $this->perform($model, $attachments, $attributes)
+        );
+
+        return $model;
+    }
+
 
     /**
      * Sync models to the parent without detaching, using attach.
@@ -36,7 +52,7 @@ abstract class AttachUniqueAction extends DatabaseAction implements Relatable
      * @param  TInput  $attributes
      * @return TModel
      */
-    protected function attachable(Model $model, $attachments, $attributes)
+    protected function perform(Model $model, $attachments, $attributes): void
     {
         $relation = $this->getRelationship($model);
 

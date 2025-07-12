@@ -17,8 +17,8 @@ class RestoreAction extends DatabaseAction
      */
     public function handle($model)
     {
-        return $this->callTransaction(
-            fn () => $this->restore($model)
+        return $this->call(
+            fn () => $this->perform($model)
         );
     }
 
@@ -28,7 +28,7 @@ class RestoreAction extends DatabaseAction
      * @param  TModel|\Illuminate\Database\Eloquent\Builder<TModel>  $model
      * @return TModel|\Illuminate\Database\Eloquent\Collection<int, TModel>
      */
-    protected function restore($model)
+    protected function perform($model)
     {
         $models = $model->restore(); // @phpstan-ignore method.notFound
 

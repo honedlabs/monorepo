@@ -20,8 +20,8 @@ class ForceDestroyAction extends DatabaseAction
      */
     public function handle($model)
     {
-        $this->callTransaction(
-            fn () => $this->forceDestroy($model)
+        $this->call(
+            fn () => $this->perform($model)
         );
 
         return $model;
@@ -32,7 +32,7 @@ class ForceDestroyAction extends DatabaseAction
      *
      * @param  TModel  $model
      */
-    protected function forceDestroy($model): void
+    protected function perform($model): void
     {
         $model->forceDelete();
 

@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
+use Illuminate\Support\Arr;
 use Honed\Action\Contracts\Relatable;
 use Illuminate\Database\Eloquent\Model;
+use Honed\Action\Actions\Concerns\Attachable;
+use Honed\Action\Actions\Concerns\InteractsWithModels;
+use Honed\Action\Actions\Concerns\InteractsWithFormData;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -19,9 +22,9 @@ abstract class AttachAction extends DatabaseAction implements Relatable
     /**
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
      */
-    use Concerns\InteractsWithFormData;
-
-    use Concerns\InteractsWithModels;
+    use InteractsWithFormData;
+    use InteractsWithModels;
+    use Attachable;
 
     /**
      * Attach models to the parent model.
@@ -33,23 +36,11 @@ abstract class AttachAction extends DatabaseAction implements Relatable
      */
     public function handle(Model $model, $attachments, $attributes = []): Model
     {
-        $this->callTransaction(
+        $this->call(
             fn () => $this->attach($model, $attachments, $attributes)
         );
 
         return $model;
-    }
-
-    /**
-     * Get the relation for the model.
-     *
-     * @param  TModel  $model
-     * @return BelongsToMany<TModel, TAttach>
-     */
-    protected function getRelation(Model $model): BelongsToMany
-    {
-        /** @var BelongsToMany<TModel, TAttach> */
-        return $model->{$this->relationship()}();
     }
 
     /**
@@ -91,7 +82,7 @@ abstract class AttachAction extends DatabaseAction implements Relatable
 
         $attaching = $this->prepare($attachments, $attributes);
 
-        $this->getRelation($model)->attach($attaching, touch: $this->shouldTouch());
+        $this->getRelationship($model)->attach($attaching, touch: $this->shouldTouch());
 
         $this->after($model, $attachments, $attributes);
     }

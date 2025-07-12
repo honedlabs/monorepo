@@ -47,7 +47,7 @@ trait Bulkable
      * @param T|array<int, T>|\Illuminate\Contracts\Support\Arrayable<int, T> $models
      * @return Builder<TModel>
      */
-    protected function getQuery($models): Builder
+    protected function query($models): Builder
     {
         $model = $this->getModel();
 
