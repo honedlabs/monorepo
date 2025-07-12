@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
- * @template TAction of \Honed\Action\Actions\AssociateAction = \Honed\Action\Actions\AssociateAction
+ * @template TAction of \Honed\Action\Actions\AssociateAction<TModel, TParent> = \Honed\Action\Actions\AssociateAction<TModel, TParent>
  */
 abstract class BulkAssociateAction extends DatabaseAction implements FromEloquent
 {
