@@ -6,7 +6,7 @@ namespace Honed\Action\Actions;
 
 use Honed\Action\Actions\Concerns\Attachable;
 use Illuminate\Support\Arr;
-use Honed\Action\Contracts\Relatable;
+use Honed\Action\Contracts\FromRelationship;
 use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Actions\Concerns\InteractsWithModels;
 use Honed\Action\Actions\Concerns\InteractsWithFormData;
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TToggle of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  */
-abstract class ToggleAction extends DatabaseAction implements Relatable
+abstract class ToggleAction extends DatabaseAction implements FromRelationship
 {
     /**
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
@@ -70,7 +70,7 @@ abstract class ToggleAction extends DatabaseAction implements Relatable
     }
 
     /**
-     * Toggle the models in the relationship.
+     * Execute the action.
      *
      * @template T of int|string|TToggle|null
      * 
@@ -83,19 +83,19 @@ abstract class ToggleAction extends DatabaseAction implements Relatable
         $toggling = $this->prepare($toggles, $attributes);
 
         /** @var array{attached: array<int, int|string>, detached: array<int, int|string>} */
-        $toggled = $this->getRelationship($model)->toggle($toggling, $this->shouldTouch());
+        $toggled = $this->getRelationship($model)->toggle($toggling, $this->touch());
 
         $this->after($model, $toggled['attached'], $toggled['detached']);
     }
 
     /**
-     * Perform additional logic after the model has been toggleed.
+     * Perform additional logic after the action has been executed.
      *
      * @param  TModel  $model
      * @param  array<int, int|string>  $attached
      * @param  array<int, int|string>  $detached
      */
-    protected function after(Model $model, $attached, $detached): void
+    protected function after(Model $model, array $attached, array $detached): void
     {
         //
     }

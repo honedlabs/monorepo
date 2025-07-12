@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Actions\Concerns\Associative;
-use Honed\Action\Contracts\Relatable;
+use Honed\Action\Contracts\FromRelationship;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -13,9 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
  * 
- * @implements \Honed\Action\Contracts\Relatable<TModel, BelongsTo<TParent, TModel>>
+ * @implements \Honed\Action\Contracts\FromRelationship<TModel, BelongsTo<TParent, TModel>>
  */
-abstract class AssociateAction extends DatabaseAction implements Relatable
+abstract class AssociateAction extends DatabaseAction implements FromRelationship
 {
     /**
      * @use \Honed\Action\Actions\Concerns\Associative<TParent, TModel>
@@ -37,7 +37,7 @@ abstract class AssociateAction extends DatabaseAction implements Relatable
     }
 
     /**
-     * Store the parent in the database.
+     * Execute the action.
      *
      * @param  TModel  $model
      * @param  int|string|TParent|null  $parent
@@ -55,7 +55,7 @@ abstract class AssociateAction extends DatabaseAction implements Relatable
     }
 
     /**
-     * Perform additional logic after the model has been attached.
+     * Perform additional logic after the action has been executed.
      *
      * @param  TModel  $model
      * @param  int|string|TParent|null  $parent

@@ -40,7 +40,7 @@ class RestoreAction extends DatabaseAction
     }
 
     /**
-     * Perform additional logic after the model(s) have been restored.
+     * Perform additional logic after the action has been executed.
      *
      * @param  TModel  $model
      */

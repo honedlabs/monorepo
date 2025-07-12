@@ -56,7 +56,7 @@ class ReplicateAction extends DatabaseAction
     }
 
     /**
-     * Store the record in the database.
+     * Execute the action.
      *
      * @param  TModel  $model
      * @param  TInput  $attributes
@@ -80,7 +80,7 @@ class ReplicateAction extends DatabaseAction
     }
 
     /**
-     * Perform additional logic after the model has been replicated.
+     * Perform additional logic after the action has been executed.
      *
      * @param  TModel  $new
      * @param  TModel  $old

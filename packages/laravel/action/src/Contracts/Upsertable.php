@@ -6,10 +6,8 @@ namespace Honed\Action\Contracts;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
- * 
- * @extends \Honed\Action\Contracts\RequiresModel<TModel>
  */
-interface Upsertable extends RequiresModel
+interface Upsertable extends FromEloquent
 {
     /**
      * Get the unique by columns for the upsert.

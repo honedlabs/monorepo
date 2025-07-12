@@ -7,7 +7,7 @@ namespace Honed\Action\Actions;
 use Honed\Action\Actions\Concerns\Attachable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Honed\Action\Contracts\Relatable;
+use Honed\Action\Contracts\FromRelationship;
 use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Actions\DatabaseAction;
 use Honed\Action\Actions\Concerns\InteractsWithModels;
@@ -19,9 +19,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<int, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  * 
- * @implements \Honed\Action\Contracts\Relatable<TModel, \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach>>
+ * @implements \Honed\Action\Contracts\FromRelationship<TModel, \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach>>
  */
-abstract class AttachUniqueAction extends DatabaseAction implements Relatable
+abstract class AttachUniqueAction extends DatabaseAction implements FromRelationship
 {
     /**
      * @use \Honed\Action\Actions\Concerns\Attachable<TModel, TAttach>

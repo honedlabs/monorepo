@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-interface RequiresModel
+interface FromModel
 {
     /**
      * Get the model class to use.

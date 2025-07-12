@@ -16,7 +16,7 @@ use Illuminate\Support\Collection;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAction of \Honed\Action\Contracts\Action
  * 
- * @phpstan-require-implements \Honed\Action\Contracts\RequiresModel
+ * @phpstan-require-implements \Honed\Action\Contracts\FromModel
  */
 trait Bulkable
 {

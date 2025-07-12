@@ -48,7 +48,7 @@ class UpdateAction extends DatabaseAction
     }
 
     /**
-     * Update the record in the database.
+     * Execute the action.
      *
      * @param  TModel  $model
      * @param  TInput  $input
@@ -66,8 +66,8 @@ class UpdateAction extends DatabaseAction
     }
 
     /**
-     * Perform additional database transactions after the model has been updated.
-     *
+     * Perform additional logic after the action has been executed.
+     * 
      * @param  TModel  $model
      * @param  TInput  $input
      * @param  array<string, mixed>  $prepared

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TRelation of \Illuminate\Database\Eloquent\Relations\Relation
  */
-interface Relatable
+interface FromRelationship
 {
     /**
      * Get the name of the relationship to use.

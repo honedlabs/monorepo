@@ -14,8 +14,7 @@ use Workbench\App\Models\Product;
  * @template TParent of \Illuminate\Database\Eloquent\Model
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * 
- * @phpstan-require-implements \Honed\Action\Contracts\Relatable
- * @phpstan-require-extends \Honed\Action\Actions\DatabaseAction
+ * @phpstan-require-implements \Honed\Action\Contracts\FromRelationship
  */
 trait Associative
 {

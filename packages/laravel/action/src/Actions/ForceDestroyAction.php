@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\RequiresModel;
+use Honed\Action\Contracts\FromModel;
 use Illuminate\Support\Collection;
 use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * 
- * @implements \Honed\Action\Contracts\RequiresModel<TModel>
+ * @implements \Honed\Action\Contracts\FromModel<TModel>
  */
-abstract class ForceDestroyAction extends DatabaseAction implements RequiresModel
+abstract class ForceDestroyAction extends DatabaseAction implements FromModel
 {
     /**
      * Force destroy the given ids.

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Contracts\Relatable;
+use Honed\Action\Contracts\FromRelationship;
 use Honed\Action\Actions\Concerns\Associative;
 use Honed\Action\Actions\Concerns\Bulkable;
-use Honed\Action\Contracts\RequiresModel;
+use Honed\Action\Contracts\FromModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @template TParent of \Illuminate\Database\Eloquent\Model
  * @template TAction of \Honed\Action\Actions\AssociateAction = \Honed\Action\Actions\AssociateAction
  */
-abstract class BulkAssociateAction extends DatabaseAction implements RequiresModel
+abstract class BulkAssociateAction extends DatabaseAction implements FromModel
 {
     /**
      * @use \Honed\Action\Actions\Concerns\Bulkable<TModel, TAction>
@@ -40,7 +40,7 @@ abstract class BulkAssociateAction extends DatabaseAction implements RequiresMod
     }
 
     /**
-     * Perform the database action.
+     * Execute the action.
      * 
      * @template T of int|string|TModel|null
      * 
@@ -60,7 +60,7 @@ abstract class BulkAssociateAction extends DatabaseAction implements RequiresMod
     }
 
     /**
-     * Perform additional logic after the model has been associated.
+     * Perform additional logic after the action has been executed.
      * 
      * @template T of int|string|TModel|null
      * 

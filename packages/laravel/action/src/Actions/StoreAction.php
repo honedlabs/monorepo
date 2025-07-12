@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Actions\Concerns\InteractsWithFormData;
-use Honed\Action\Contracts\RequiresModel;
+use Honed\Action\Contracts\FromModel;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  * 
- * @implements \Honed\Action\Contracts\RequiresModel<TModel>
+ * @implements \Honed\Action\Contracts\FromModel<TModel>
  */
-abstract class StoreAction extends DatabaseAction implements RequiresModel
+abstract class StoreAction extends DatabaseAction implements FromModel
 {
     /**
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
@@ -65,7 +65,7 @@ abstract class StoreAction extends DatabaseAction implements RequiresModel
     }
 
     /**
-     * Perform additional database transactions after the model has been updated.
+     * Perform additional logic after the action has been executed.
      *
      * @param  TModel  $model
      * @param  TInput  $input

@@ -6,7 +6,7 @@ namespace Honed\Action\Actions;
 
 use Honed\Action\Actions\Concerns\Attachable;
 use Illuminate\Support\Arr;
-use Honed\Action\Contracts\Relatable;
+use Honed\Action\Contracts\FromRelationship;
 use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Actions\Concerns\InteractsWithModels;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -15,9 +15,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TSync of \Illuminate\Database\Eloquent\Model
  * 
- * @implements \Honed\Action\Contracts\Relatable<TModel, BelongsToMany<TModel, TSync>>
+ * @implements \Honed\Action\Contracts\FromRelationship<TModel, BelongsToMany<TModel, TSync>>
  */
-abstract class SyncAction extends DatabaseAction implements Relatable
+abstract class SyncAction extends DatabaseAction implements FromRelationship
 {
     use InteractsWithModels;
 
@@ -87,15 +87,15 @@ abstract class SyncAction extends DatabaseAction implements Relatable
         $pivot = $this->pivot();
 
         $synced = match (true) {
-            filled($pivot) => $this->getRelationship($model)->syncWithPivotValues($syncing, $pivot, $this->shouldDetach()),
-            default => $this->getRelationship($model)->sync($syncing, $this->shouldDetach()),
+            filled($pivot) => $this->getRelationship($model)->syncWithPivotValues($syncing, $pivot, $this->detach()),
+            default => $this->getRelationship($model)->sync($syncing, $this->detach()),
         };
 
         $this->after($model, $synced['attached'], $synced['detached'], $synced['updated']);
     }
 
     /**
-     * Perform additional logic after the model has been synced.
+     * Perform additional logic after the action has been executed.
      *
      * @param  TModel  $model
      * @param  array<int, int|string>  $attached
@@ -111,7 +111,7 @@ abstract class SyncAction extends DatabaseAction implements Relatable
     /**
      * Indicate whether the relationship sync should detach records.
      */
-    protected function shouldDetach(): bool
+    protected function detach(): bool
     {
         return true;
     }

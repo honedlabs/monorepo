@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Illuminate\Support\Arr;
-use Honed\Action\Contracts\Relatable;
+use Honed\Action\Contracts\FromRelationship;
 use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Actions\Concerns\Attachable;
 use Honed\Action\Actions\Concerns\InteractsWithModels;
@@ -17,9 +17,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<int, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  * 
- * @implements \Honed\Action\Contracts\Relatable<TModel, \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach>>
+ * @implements \Honed\Action\Contracts\FromRelationship<TModel, \Illuminate\Database\Eloquent\Relations\BelongsToMany<TModel, TAttach>>
  */
-abstract class AttachAction extends DatabaseAction implements Relatable
+abstract class AttachAction extends DatabaseAction implements FromRelationship
 {
     /**
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
@@ -78,7 +78,7 @@ abstract class AttachAction extends DatabaseAction implements Relatable
     }
 
     /**
-     * Store the attachments in the database.
+     * Execute the action.
      *
      * @template T of int|string|TAttach|null
      * 
@@ -99,7 +99,7 @@ abstract class AttachAction extends DatabaseAction implements Relatable
     }
 
     /**
-     * Perform additional logic after the model has been attached.
+     * Perform additional logic after the action has been executed.
      *
      * @template T of int|string|TAttach|null
      * 

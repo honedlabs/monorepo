@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Actions\Concerns\Attachable;
-use Honed\Action\Contracts\Relatable;
+use Honed\Action\Contracts\FromRelationship;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Honed\Action\Actions\Concerns\InteractsWithModels;
@@ -15,9 +15,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TDetach of \Illuminate\Database\Eloquent\Model
  * 
- * @implements \Honed\Action\Contracts\Relatable<TModel, BelongsToMany<TModel, TDetach>>
+ * @implements \Honed\Action\Contracts\FromRelationship<TModel, BelongsToMany<TModel, TDetach>>
  */
-abstract class DetachAction extends DatabaseAction implements Relatable
+abstract class DetachAction extends DatabaseAction implements FromRelationship
 {
     use InteractsWithModels;
     use Attachable;
@@ -56,7 +56,7 @@ abstract class DetachAction extends DatabaseAction implements Relatable
     }
 
     /**
-     * Store the detachments in the database.
+     * Execute the action.
      *
      * @param  TModel  $model
      * @param  int|string|TDetach|array<int, int|string|TDetach>  $detachments
@@ -71,7 +71,7 @@ abstract class DetachAction extends DatabaseAction implements Relatable
     }
 
     /**
-     * Perform additional logic after the model has been detached.
+     * Perform additional logic after the action has been executed.
      *
      * @param  TModel  $model
      * @param  int|string|TDetach|array<int, int|string|TDetach>  $detachments

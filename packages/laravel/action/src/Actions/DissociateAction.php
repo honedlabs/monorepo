@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Actions\Concerns\Associative;
-use Honed\Action\Contracts\Relatable;
+use Honed\Action\Contracts\FromRelationship;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
  */
-abstract class DissociateAction extends DatabaseAction implements Relatable
+abstract class DissociateAction extends DatabaseAction implements FromRelationship
 {
     /**
      * @use \Honed\Action\Actions\Concerns\Associative<TParent, TModel>
@@ -34,7 +34,7 @@ abstract class DissociateAction extends DatabaseAction implements Relatable
     }
 
     /**
-     * Dissociate the parent from the model.
+     * Execute the action.
      *
      * @param  TModel  $model
      * @return TModel
@@ -51,7 +51,7 @@ abstract class DissociateAction extends DatabaseAction implements Relatable
     }
 
     /**
-     * Perform additional logic after the model has been detached.
+     * Perform additional logic after the action has been executed.
      *
      * @param  TModel  $model
      */

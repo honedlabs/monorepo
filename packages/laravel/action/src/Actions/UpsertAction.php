@@ -30,7 +30,7 @@ abstract class UpsertAction extends DatabaseAction implements Upsertable
     public function handle($values)
     {
         $this->transaction(
-            fn () => $this->perform($values)
+            fn () => $this->execute($values)
         );
 
         return $values;
@@ -45,33 +45,36 @@ abstract class UpsertAction extends DatabaseAction implements Upsertable
     protected function prepare($values): array
     {
         if (! is_array($values)) {
-            return [$this->only(
-                $this->normalize($values)
-            )];
+            return [
+                $this->only($this->normalize($values)),
+            ];
         }
 
         return $values;
     }
 
     /**
-     * Upsert the record in the database.
-     *
+     * Execute the action.
+     * 
      * @param  TInput  $values
      */
-    protected function perform($values): void
+    protected function execute($values): void
     {
         $prepared = $this->prepare($values);
 
-        $model = $this->model();
+        $source = $this->from();
 
-        $model::query()
-            ->upsert($prepared, $this->uniqueBy(), $this->update());
+        if (is_string($source)) {
+            $source = $source::query();
+        }
+
+        $source->upsert($prepared, $this->uniqueBy(), $this->update());
 
         $this->after($values, $prepared);
     }
 
     /**
-     * Perform additional database transactions after the model has been updated.
+     * Perform additional logic after the action has been executed.
      *
      * @param  TInput  $values
      * @param  array<int, array<string, mixed>>  $prepared

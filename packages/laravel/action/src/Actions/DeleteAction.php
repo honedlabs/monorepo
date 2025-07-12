@@ -28,7 +28,7 @@ class DeleteAction extends DatabaseAction
     }
 
     /**
-     * Destroy the model(s).
+     * Execute the action.
      *
      * @param  TType  $model
      */
@@ -43,7 +43,7 @@ class DeleteAction extends DatabaseAction
     }
 
     /**
-     * Perform additional logic after the model has been deleted.
+     * Perform additional logic after the action has been executed.
      *
      * @param  TType  $model
      */

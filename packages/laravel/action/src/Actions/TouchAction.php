@@ -50,7 +50,7 @@ class TouchAction extends DatabaseAction
     }
 
     /**
-     * Update the record in the database.
+     * Execute the action.
      *
      * @param  TModel  $model
      * @return TModel
@@ -71,7 +71,7 @@ class TouchAction extends DatabaseAction
     }
 
     /**
-     * Perform additional database transactions after the model has been updated.
+     * Perform additional logic after the action has been executed.
      *
      * @param  TModel  $model
      * @param  true|string|array<int, string>|null  $touches
