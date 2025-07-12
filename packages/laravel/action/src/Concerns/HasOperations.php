@@ -110,7 +110,15 @@ trait HasOperations
         /** @var array<int, Operation|Batch> */
         $operations = is_array($operations) ? $operations : func_get_args();
 
-        $this->operations = [...$this->operations, ...$operations];
+        foreach ($operations as $operation) {
+            if ($operation instanceof Batch) {
+                $this->operations = [...$this->operations, ...$operation->getOperations()];
+            } else {
+                $this->operations[] = $operation;
+            }
+        }
+
+        usort($this->operations, static fn (Operation $a, Operation $b) => $a->getOrder() <=> $b->getOrder());
 
         return $this;
     }
@@ -123,9 +131,7 @@ trait HasOperations
      */
     public function operation($operation)
     {
-        $this->operations[] = $operation;
-
-        return $this;
+        return $this->operations($operation);
     }
 
     /**
@@ -138,21 +144,9 @@ trait HasOperations
         if ($this->isNotOperable()) {
             return [];
         }
-
-        $operations = [];
-
-        foreach ($this->operations as $operation) {
-            if ($operation instanceof Batch) {
-                $operations = [...$operations, ...$operation->getOperations()];
-            } else {
-                $operations[] = $operation;
-            }
-        }
-
-        // Sort operations by their order (lower values first)
         // usort($operations, static fn (Operation $a, Operation $b) => $a->getOrder() <=> $b->getOrder());
 
-        return $operations;
+        return $this->operations;
     }
 
     /**
@@ -432,7 +426,6 @@ trait HasOperations
             )
         );
 
-        // Sort page operations by their order (lower values first)
         usort($operations, static fn (Operation $a, Operation $b) => $a->getOrder() <=> $b->getOrder());
 
         return $operations;

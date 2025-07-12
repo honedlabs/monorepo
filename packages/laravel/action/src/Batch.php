@@ -128,6 +128,16 @@ class Batch extends Unit
     }
 
     /**
+     * Provide the instance with any necessary setup.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->define();
+    }
+
+    /**
      * Get the application namespace for the application.
      */
     protected static function appNamespace(): string
@@ -148,8 +158,6 @@ class Batch extends Unit
      */
     protected function representation(): array
     {
-        $this->define();
-
         return [
             'id' => $this->getId(),
             'inline' => $this->inlineOperationsToArray($this->getRecord()),
