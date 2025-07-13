@@ -15,7 +15,7 @@ class DeleteAction extends DatabaseAction
      * Delete the model(s).
      *
      * @template T of TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>
-     * 
+     *
      * @param  T  $model
      * @return T
      */

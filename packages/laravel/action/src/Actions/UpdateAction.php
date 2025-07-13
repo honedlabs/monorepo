@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Actions\Concerns\InteractsWithFormData;
-use Workbench\App\Models\Product;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -67,7 +66,7 @@ class UpdateAction extends DatabaseAction
 
     /**
      * Perform additional logic after the action has been executed.
-     * 
+     *
      * @param  TModel  $model
      * @param  TInput  $input
      * @param  array<string, mixed>  $prepared

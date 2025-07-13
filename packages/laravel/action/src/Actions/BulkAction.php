@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Closure;
-use Honed\Action\Contracts\Action;
 use Honed\Action\Concerns\CanChunk;
+use Honed\Action\Contracts\Action;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAction of \Honed\Action\Contracts\Action
- * 
+ *
  * @extends \Honed\Action\Actions\EloquentAction<TModel>
- * 
+ *
  * @internal
  */
 abstract class BulkAction extends EloquentAction
@@ -25,14 +26,14 @@ abstract class BulkAction extends EloquentAction
 
     /**
      * Get the action to use.
-     * 
+     *
      * @return class-string<TAction>
      */
     abstract public function action(): string;
 
     /**
      * Create the action from the container.
-     * 
+     *
      * @return TAction
      */
     protected function getAction(): Action
@@ -43,17 +44,18 @@ abstract class BulkAction extends EloquentAction
     /**
      * Get the query for the models.
      *
-     * @template T of int|string|TModel|null
-     * 
-     * @param T|array<int, T>|\Illuminate\Contracts\Support\Arrayable<int, T> $models
+     * @template T of int|string|null
+     *
+     * @param  T|array<int, T>|Collection<int, T>  $models
      * @return \Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>
      */
     protected function getQuery($models): Builder
     {
-        if (! Arr::accessible($models)) {
+        if (! is_array($models) && ! $models instanceof Collection) {
             $models = Arr::wrap($models);
         }
-        
+
+        /** @var array<int, T>|Collection<int, T> $models */
         $query = $this->query();
 
         return $query->whereIn($this->getKey($query), $models);
@@ -71,11 +73,11 @@ abstract class BulkAction extends EloquentAction
 
     /**
      * Run the action on the given models.
-     * 
-     * @template T of int|string|TModel|null
-     * 
-     * @param T|array<int, T>|\Illuminate\Support\Collection<int, T> $models
-     * @param (Closure(TModel):mixed) $callback
+     *
+     * @template T of int|string|null
+     *
+     * @param  T|array<int, T>|Collection<int, T>  $models
+     * @param  (Closure(TModel):mixed)  $callback
      */
     protected function run($models, Closure $callback): void
     {

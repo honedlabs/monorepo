@@ -20,7 +20,7 @@ interface FromRelationship
 
     /**
      * Get the relationship instance.
-     * 
+     *
      * @param  TModel  $model
      * @return TRelation
      */

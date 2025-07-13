@@ -8,21 +8,21 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
- * 
+ *
  * @internal
  */
 abstract class EloquentAction extends DatabaseAction
 {
     /**
-    * Get the eloquent resource to use as the source.
-    * 
-    * @return class-string<TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>
-    */
+     * Get the eloquent resource to use as the source.
+     *
+     * @return class-string<TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>
+     */
     abstract public function from(): string|Builder;
 
     /**
      * Get an eloquent builder for the source.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>
      */
     protected function query(): Builder

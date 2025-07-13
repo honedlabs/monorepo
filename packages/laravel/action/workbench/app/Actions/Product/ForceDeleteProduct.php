@@ -11,7 +11,7 @@ use Honed\Action\Actions\ForceDeleteAction;
  *
  * @extends \Honed\Action\Actions\ForceDeleteAction<TModel>
  */
-class DeleteProduct extends ForceDeleteAction
+class ForceDeleteProduct extends ForceDeleteAction
 {
     //
 }

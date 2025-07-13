@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Actions\Concerns\Attachable;
-use Illuminate\Support\Arr;
-use Honed\Action\Contracts\FromRelationship;
-use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Actions\Concerns\InteractsWithModels;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TSync of \Illuminate\Database\Eloquent\Model
- * 
+ *
  * @extends \Honed\Action\Actions\BelongsToManyAction<TModel, TSync>
  */
 abstract class SyncAction extends BelongsToManyAction
@@ -23,7 +20,7 @@ abstract class SyncAction extends BelongsToManyAction
 
     /**
      * Sync models to the relationship.
-     * 
+     *
      * @template T of int|string|TSync|null
      *
      * @param  TModel  $model
@@ -44,7 +41,7 @@ abstract class SyncAction extends BelongsToManyAction
      * Prepare the sync data and attributes for the sync method.
      *
      * @template T of int|string|TSync|null
-     * 
+     *
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $syncs
      * @param  array<string, mixed>  $attributes
      * @return array<int|string, array<string, mixed>>
@@ -66,7 +63,7 @@ abstract class SyncAction extends BelongsToManyAction
      * Execute the action.
      *
      * @template T of int|string|TSync|null
-     * 
+     *
      * @param  TModel  $model
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $syncs
      * @param  array<string, mixed>  $attributes

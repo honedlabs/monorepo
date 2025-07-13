@@ -9,22 +9,22 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAttach of \Illuminate\Database\Eloquent\Model
- * @template TInput of mixed = array<int, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
  * @template TAction of \Honed\Action\Actions\AttachUniqueAction<TModel, TAttach, TInput> = \Honed\Action\Actions\AttachUniqueAction<TModel, TAttach, TInput>
- * 
+ * @template TInput of mixed = array<int, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
+ *
  * @extends \Honed\Action\Actions\BulkAction<TModel, TAction>
  */
 abstract class BulkAttachUniqueAction extends BulkAction
 {
     /**
      * Attach many models to many models.
-     * 
-     * @template T of int|string|TModel|null
+     *
+     * @template T of int|string|null
      * @template U of int|string|TAttach|null
-     * 
-     * @param T|array<int, T>|\Illuminate\Support\Collection<int, T> $models
-     * @param U|array<int, U>|\Illuminate\Support\Collection<int, U> $ids
-     * @param TInput $attributes
+     *
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $models
+     * @param  U|array<int, U>|\Illuminate\Support\Collection<int, U>  $ids
+     * @param  TInput  $attributes
      */
     public function handle($models, $ids, $attributes = []): void
     {
@@ -35,13 +35,13 @@ abstract class BulkAttachUniqueAction extends BulkAction
 
     /**
      * Execute the action.
-     * 
-     * @template T of int|string|TModel|null
+     *
+     * @template T of int|string|null
      * @template U of int|string|TAttach|null
-     * 
-     * @param T|array<int, T>|\Illuminate\Support\Collection<int, T> $models
-     * @param U|array<int, U>|\Illuminate\Support\Collection<int, U> $ids
-     * @param TInput $attributes
+     *
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $models
+     * @param  U|array<int, U>|\Illuminate\Support\Collection<int, U>  $ids
+     * @param  TInput  $attributes
      */
     protected function execute($models, $ids, $attributes): void
     {
@@ -57,13 +57,13 @@ abstract class BulkAttachUniqueAction extends BulkAction
 
     /**
      * Perform additional logic after the action has been executed.
-     * 
-     * @template T of int|string|TModel|null
+     *
+     * @template T of int|string|null
      * @template U of int|string|TAttach|null
-     * 
-     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T> $models
-     * @param  U|array<int, U>|\Illuminate\Support\Collection<int, U> $ids
-     * @param  TInput $attributes
+     *
+     * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $models
+     * @param  U|array<int, U>|\Illuminate\Support\Collection<int, U>  $ids
+     * @param  TInput  $attributes
      */
     protected function after($models, $ids, $attributes): void
     {

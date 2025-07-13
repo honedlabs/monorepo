@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Actions\Concerns\InteractsWithFormData;
-use Honed\Action\Contracts\FromModel;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
- * 
+ *
  * @extends \Honed\Action\Actions\EloquentAction<TModel>
  */
 abstract class StoreAction extends EloquentAction

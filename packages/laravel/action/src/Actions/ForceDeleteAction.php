@@ -6,7 +6,6 @@ namespace Honed\Action\Actions;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -17,7 +16,7 @@ class ForceDeleteAction extends DatabaseAction
      * Force destroy the model.
      *
      * @template T of TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>
-     * 
+     *
      * @param  T  $model
      * @return T
      */

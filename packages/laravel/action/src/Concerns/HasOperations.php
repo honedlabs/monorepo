@@ -30,7 +30,7 @@ trait HasOperations
     /**
      * List of the operations.
      *
-     * @var array<int, \Honed\Action\Operations\Operation>
+     * @var array<int, Operation>
      */
     protected $operations = [];
 

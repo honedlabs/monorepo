@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Workbench\App\Actions\Product;
 
-use Workbench\App\Models\Product;
 use Honed\Action\Actions\ForceDestroyAction;
+use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Workbench\App\Models\Product

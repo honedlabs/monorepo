@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Actions\Concerns\Attachable;
-use Honed\Action\Contracts\FromRelationship;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Honed\Action\Actions\Concerns\InteractsWithModels;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TDetach of \Illuminate\Database\Eloquent\Model
- * 
+ *
  * @extends \Honed\Action\Actions\BelongsToManyAction<TModel, TDetach>
  */
 abstract class DetachAction extends BelongsToManyAction
@@ -25,7 +21,7 @@ abstract class DetachAction extends BelongsToManyAction
      * Detach models from the parent model.
      *
      * @template T of int|string|TDetach|null
-     * 
+     *
      * @param  TModel  $model
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $detachments
      * @return TModel
@@ -43,7 +39,7 @@ abstract class DetachAction extends BelongsToManyAction
      * Convert the detachments to an array of keys.
      *
      * @template T of int|string|TDetach|null
-     * 
+     *
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $detachments
      * @return array<int, int|string>
      */
@@ -62,7 +58,7 @@ abstract class DetachAction extends BelongsToManyAction
      * Execute the action.
      *
      * @template T of int|string|TDetach|null
-     * 
+     *
      * @param  TModel  $model
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $detachments
      */
@@ -79,7 +75,7 @@ abstract class DetachAction extends BelongsToManyAction
      * Perform additional logic after the action has been executed.
      *
      * @template T of int|string|TDetach|null
-     * 
+     *
      * @param  TModel  $model
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $detachments
      */

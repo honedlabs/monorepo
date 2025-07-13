@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Illuminate\Support\Arr;
-use Honed\Action\Contracts\FromRelationship;
-use Illuminate\Database\Eloquent\Model;
-use Honed\Action\Actions\Concerns\Attachable;
-use Honed\Action\Actions\Concerns\InteractsWithModels;
 use Honed\Action\Actions\Concerns\InteractsWithFormData;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Honed\Action\Actions\Concerns\InteractsWithModels;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TAttach of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<int, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
- * 
+ *
  * @extends \Honed\Action\Actions\BelongsToManyAction<TModel, TAttach>
  */
 abstract class AttachAction extends BelongsToManyAction
@@ -25,13 +22,14 @@ abstract class AttachAction extends BelongsToManyAction
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
      */
     use InteractsWithFormData;
+
     use InteractsWithModels;
 
     /**
      * Attach models to the model.
      *
      * @template T of int|string|TAttach|null
-     * 
+     *
      * @param  TModel  $model
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $attachments
      * @param  TInput  $attributes
@@ -50,7 +48,7 @@ abstract class AttachAction extends BelongsToManyAction
      * Prepare the attachments and attributes for the attach method.
      *
      * @template T of int|string|TAttach|null
-     * 
+     *
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $attachments
      * @param  TInput  $attributes
      * @return array<int|string, array<string, mixed>>
@@ -77,7 +75,7 @@ abstract class AttachAction extends BelongsToManyAction
      * Execute the action.
      *
      * @template T of int|string|TAttach|null
-     * 
+     *
      * @param  TModel  $model
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $attachments
      * @param  TInput  $attributes
@@ -98,7 +96,7 @@ abstract class AttachAction extends BelongsToManyAction
      * Perform additional logic after the action has been executed.
      *
      * @template T of int|string|TAttach|null
-     * 
+     *
      * @param  TModel  $model
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $attachments
      * @param  TInput  $attributes

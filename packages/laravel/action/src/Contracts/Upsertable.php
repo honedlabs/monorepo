@@ -19,5 +19,4 @@ interface Upsertable extends FromEloquent
      * @return array<int, string>
      */
     public function update(): array;
-
 }

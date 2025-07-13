@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TParent of \Illuminate\Database\Eloquent\Model
- * 
+ *
  * @extends \Honed\Action\Actions\BelongsToAction<TModel, TParent>
  */
 abstract class AssociateAction extends BelongsToAction

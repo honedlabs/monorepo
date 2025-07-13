@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Illuminate\Database\Eloquent\Model;
 use Honed\Action\Actions\Concerns\InteractsWithFormData;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model

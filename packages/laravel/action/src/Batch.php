@@ -43,6 +43,16 @@ class Batch extends Unit
     protected static $batchNameResolver = null;
 
     /**
+     * Provide the instance with any necessary setup.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->define();
+    }
+
+    /**
      * Create a new batch instance.
      *
      * @param  Operation|Batch|array<int, Operation|Batch>  $operations
@@ -125,16 +135,6 @@ class Batch extends Unit
         static::$batchNameResolver = null;
         static::$namespace = 'App\\Batches\\';
         parent::flushState();
-    }
-
-    /**
-     * Provide the instance with any necessary setup.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->define();
     }
 
     /**

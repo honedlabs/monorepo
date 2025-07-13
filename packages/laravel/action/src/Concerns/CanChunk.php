@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Action\Concerns;
 
-use Closure;
 use Honed\Action\Contracts\ShouldChunk;
 use Honed\Action\Contracts\ShouldChunkById;
-use Illuminate\Database\Eloquent\Builder;
 
 trait CanChunk
 {
@@ -15,21 +13,21 @@ trait CanChunk
 
     /**
      * Whether the action should be chunked.
-     * 
+     *
      * @var bool
      */
     protected $chunk = false;
 
     /**
      * Whether the bulk action should chunk the records by id.
-     * 
+     *
      * @var bool
      */
     protected $chunkById = false;
 
     /**
      * The size of the chunk to use when chunking the records.
-     * 
+     *
      * @var int
      */
     protected $chunkSize = self::CHUNK_SIZE;

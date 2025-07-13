@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use function is_array;
 use Honed\Action\Actions\Concerns\InteractsWithFormData;
 use Honed\Action\Contracts\Upsertable;
+
+use function is_array;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -53,7 +54,7 @@ abstract class UpsertAction extends DatabaseAction implements Upsertable
 
     /**
      * Execute the action.
-     * 
+     *
      * @param  TInput  $values
      */
     protected function execute($values): void

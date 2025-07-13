@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Action\Actions;
 
-use Honed\Action\Actions\Concerns\Attachable;
-use Illuminate\Support\Arr;
-use Honed\Action\Contracts\FromRelationship;
-use Illuminate\Database\Eloquent\Model;
-use Honed\Action\Actions\Concerns\InteractsWithModels;
 use Honed\Action\Actions\Concerns\InteractsWithFormData;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Honed\Action\Actions\Concerns\InteractsWithModels;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TToggle of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
- * 
+ *
  * @extends \Honed\Action\Actions\BelongsToManyAction<TModel, TToggle>
  */
 abstract class ToggleAction extends BelongsToManyAction
@@ -25,13 +22,14 @@ abstract class ToggleAction extends BelongsToManyAction
      * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
      */
     use InteractsWithFormData;
+
     use InteractsWithModels;
 
     /**
      * Toggle the models in the relationship.
      *
      * @template T of int|string|TToggle|null
-     * 
+     *
      * @param  TModel  $model
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $ids
      * @param  TInput  $attributes
@@ -50,7 +48,7 @@ abstract class ToggleAction extends BelongsToManyAction
      * Prepare the models and attributes for the toggle method.
      *
      * @template T of int|string|TToggle|null
-     * 
+     *
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $ids
      * @param  TInput  $attributes
      * @return array<int|string, array<string, mixed>>
@@ -74,7 +72,7 @@ abstract class ToggleAction extends BelongsToManyAction
      * Execute the action.
      *
      * @template T of int|string|TToggle|null
-     * 
+     *
      * @param  TModel  $model
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>  $ids
      * @param  TInput  $attributes
