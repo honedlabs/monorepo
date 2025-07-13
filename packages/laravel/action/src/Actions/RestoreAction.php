@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Illuminate\Database\Eloquent\Model;
-use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -33,7 +32,7 @@ class RestoreAction extends DatabaseAction
      */
     protected function execute(Model $model): Model
     {
-        $model = $model->restore(); // @phpstan-ignore method.notFound
+        $model->restore(); // @phpstan-ignore method.notFound
 
         $this->after($model);
 

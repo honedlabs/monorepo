@@ -12,7 +12,7 @@ use Honed\Action\Actions\AttachUniqueAction;
  *
  * @extends \Honed\Action\Actions\AttachUniqueAction<TModel, TUser>
  */
-class SyncUsers extends AttachUniqueAction
+class AttachUniqueUsers extends AttachUniqueAction
 {
     /**
      * Get the relation name, must be a belongs to many relationship.

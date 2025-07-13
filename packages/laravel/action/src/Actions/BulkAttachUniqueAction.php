@@ -48,7 +48,7 @@ abstract class BulkAttachUniqueAction extends BulkAction
         $action = $this->getAction();
 
         $this->run(
-            $this->query($models),
+            $models,
             static fn (Model $model) => $action->handle($model, $ids, $attributes)
         );
 

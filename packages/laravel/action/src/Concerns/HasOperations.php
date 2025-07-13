@@ -30,7 +30,7 @@ trait HasOperations
     /**
      * List of the operations.
      *
-     * @var array<int,Operation|Batch<TModel, TBuilder>>
+     * @var array<int, \Honed\Action\Operations\Operation>
      */
     protected $operations = [];
 
@@ -144,7 +144,6 @@ trait HasOperations
         if ($this->isNotOperable()) {
             return [];
         }
-        // usort($operations, static fn (Operation $a, Operation $b) => $a->getOrder() <=> $b->getOrder());
 
         return $this->operations;
     }

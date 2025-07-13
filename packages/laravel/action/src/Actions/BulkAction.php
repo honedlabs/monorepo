@@ -6,13 +6,10 @@ namespace Honed\Action\Actions;
 
 use Closure;
 use Honed\Action\Contracts\Action;
-use Honed\Action\Contracts\FromEloquent;
-use Honed\Action\Operations\Concerns\CanChunk;
+use Honed\Action\Concerns\CanChunk;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Workbench\App\Models\Product;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
@@ -90,7 +87,7 @@ abstract class BulkAction extends EloquentAction
                     static fn (Collection $models) => $models->each($callback)
                 ),
             $this->isChunked() => $query
-                ->chunk($this->getChunkSize(), 
+                ->chunk($this->getChunkSize(),
                     static fn (Collection $models) => $models->each($callback)
                 ),
             // @phpstan-ignore-next-line argument.type

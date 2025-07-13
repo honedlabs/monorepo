@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 class DeleteAction extends DatabaseAction
 {
     /**
-     * Destroy the model(s).
+     * Delete the model(s).
      *
      * @template T of TModel|\Illuminate\Support\Collection<int, TModel>|\Illuminate\Database\Eloquent\Builder<TModel>|\Illuminate\Database\Eloquent\Relations\Relation<TModel, *, *>
      * 

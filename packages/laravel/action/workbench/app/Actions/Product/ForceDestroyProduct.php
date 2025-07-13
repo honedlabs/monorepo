@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Workbench\App\Actions\Product;
 
+use Workbench\App\Models\Product;
 use Honed\Action\Actions\ForceDestroyAction;
 
 /**
@@ -13,5 +14,11 @@ use Honed\Action\Actions\ForceDestroyAction;
  */
 class ForceDestroyProduct extends ForceDestroyAction
 {
-    //
+    /**
+     * {@inheritdoc}
+     */
+    public function from(): string
+    {
+        return Product::class;
+    }
 }

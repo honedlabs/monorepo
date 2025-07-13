@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Action\Operations\Concerns;
+namespace Honed\Action\Concerns;
 
 use Closure;
 use Honed\Action\Contracts\ShouldChunk;

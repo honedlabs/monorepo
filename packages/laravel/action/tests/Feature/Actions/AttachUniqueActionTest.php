@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Actions\Product\SyncUsers;
+use Workbench\App\Actions\Product\AttachUniqueUsers;
 use Workbench\App\Models\Product;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->action = new SyncUsers();
+    $this->action = new AttachUniqueUsers();
 
     $this->product = Product::factory()->create();
 
     $this->assertDatabaseEmpty('product_user');
 });
 
-it('syncs a single model', function () {
+it('attaches a single model', function () {
     $user = User::factory()->create();
 
     $this->action->handle($this->product, $user);
@@ -28,8 +28,10 @@ it('syncs a single model', function () {
     ]);
 });
 
-it('syncs multiple models', function () {
-    $users = User::factory(3)->create();
+it('attaches multiple models', function () {
+    $users = User::factory()
+        ->count(3)
+        ->create();
 
     $this->action->handle($this->product, $users);
 
@@ -44,7 +46,7 @@ it('syncs multiple models', function () {
     });
 });
 
-it('syncs a single key', function () {
+it('attaches a single key', function () {
     $id = User::factory()
         ->create()
         ->getKey();
@@ -60,8 +62,9 @@ it('syncs a single key', function () {
     ]);
 });
 
-it('syncs multiple keys', function () {
-    $users = User::factory(3)
+it('attaches multiple keys', function () {
+    $users = User::factory()
+        ->count(3)
         ->create();
 
     $ids = $users->map(fn ($user) => $user->getKey());
@@ -79,7 +82,7 @@ it('syncs multiple keys', function () {
     });
 });
 
-it('syncs a single model with attributes', function () {
+it('attaches a single model with attributes', function () {
     $this->assertDatabaseEmpty('product_user');
 
     $user = User::factory()
@@ -96,8 +99,9 @@ it('syncs a single model with attributes', function () {
     ]);
 });
 
-it('syncs multiple models with attributes', function () {
-    $users = User::factory(3)
+it('attaches multiple models with attributes', function () {
+    $users = User::factory()
+        ->count(3)
         ->create();
 
     $this->action->handle($this->product, $users, ['is_active' => true]);
@@ -111,48 +115,4 @@ it('syncs multiple models with attributes', function () {
             'is_active' => true,
         ]);
     });
-});
-
-it('replaces existing relationships when syncing', function () {
-    $initialUsers = User::factory(2)
-        ->create();
-
-    $this->product->users()->attach($initialUsers, ['is_active' => false]);
-
-    $this->assertDatabaseCount('product_user', 2);
-
-    $newUsers = User::factory(3)
-        ->create();
-
-    $this->action->handle($this->product, $newUsers);
-
-    $this->assertDatabaseCount('product_user', 3);
-
-    $newUsers->each(function ($user) {
-        $this->assertDatabaseHas('product_user', [
-            'product_id' => $this->product->id,
-            'user_id' => $user->id,
-            'is_active' => false,
-        ]);
-    });
-
-    $initialUsers->each(function ($user) {
-        $this->assertDatabaseMissing('product_user', [
-            'product_id' => $this->product->id,
-            'user_id' => $user->id,
-        ]);
-    });
-});
-
-it('can sync with empty array to remove all relationships', function () {
-    $users = User::factory(3)
-        ->create();
-
-    $this->product->users()->attach($users, ['is_active' => false]);
-
-    $this->assertDatabaseCount('product_user', 3);
-
-    $this->action->handle($this->product, []);
-
-    $this->assertDatabaseCount('product_user', 0);
 });

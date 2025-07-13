@@ -36,7 +36,7 @@ trait Transactable
      */
     public static function outsideTransaction(bool $value = true): void
     {
-        static::$transaction = ! $value;
+        static::withinTransaction(! $value);
     }
 
     /**
