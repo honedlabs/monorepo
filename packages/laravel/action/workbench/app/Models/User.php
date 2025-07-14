@@ -7,6 +7,8 @@ namespace Workbench\App\Models;
 use Honed\Action\Attributes\UseBatch;
 use Honed\Action\Concerns\HasBatch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Workbench\App\Batches\UserBatch;
@@ -70,7 +72,7 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
      */
-    public function products()
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }
@@ -80,7 +82,7 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Product, $this>
      */
-    public function purchasedProducts()
+    public function purchasedProducts(): BelongsToMany
     {
         return $this->belongsToMany(Product::class);
     }

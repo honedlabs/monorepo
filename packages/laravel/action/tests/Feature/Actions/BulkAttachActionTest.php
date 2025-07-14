@@ -9,40 +9,50 @@ use Workbench\App\Models\User;
 beforeEach(function () {
     $this->action = new BulkAttachUsers();
 
-    $this->user = User::factory()->create();
-})->skip();
+    $this->users = User::factory(3)->create();
 
-it('associates an id', function () {
-    $product = Product::factory()->create();
-
-    $this->action->handle($product->id, $this->user);
-
-    $this->assertDatabaseHas('products', [
-        'id' => $product->id,
-        'user_id' => $this->user->id,
-    ]);
+    $this->assertDatabaseEmpty('product_user');
 });
 
-it('associates an array of ids', function () {
+it('attaches id', function () {
     $product = Product::factory()->create();
 
-    $this->action->handle([$product->id], $this->user);
+    $this->action->handle($product->id, $this->users);
 
-    $this->assertDatabaseHas('products', [
-        'id' => $product->id,
-        'user_id' => $this->user->id,
-    ]);
+    foreach ($this->users as $user) {
+        $this->assertDatabaseHas('product_user', [
+            'product_id' => $product->id,
+            'user_id' => $user->id,
+        ]);
+    }
 });
 
-it('associates a collection of ids', function () {
+it('attaches array', function () {
     $products = Product::factory(3)->create();
 
-    $this->action->handle($products->pluck('id'), $this->user);
+    $this->action->handle($products->pluck('id')->all(), $this->users);
 
-    foreach ($products as $product) {
-        $this->assertDatabaseHas('products', [
-            'id' => $product->id,
-            'user_id' => $this->user->id,
-        ]);
+    foreach ($this->users as $user) {
+        foreach ($products as $product) {
+            $this->assertDatabaseHas('product_user', [
+                'product_id' => $product->id,
+                'user_id' => $user->id,
+            ]);
+        }
+    }
+});
+
+it('attaches collection', function () {
+    $products = Product::factory(3)->create();
+
+    $this->action->handle($products->modelKeys(), $this->users);
+
+    foreach ($this->users as $user) {
+        foreach ($products as $product) {
+            $this->assertDatabaseHas('product_user', [
+                'product_id' => $product->id,
+                'user_id' => $user->id,
+            ]);
+        }
     }
 });

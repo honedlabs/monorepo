@@ -8,6 +8,7 @@ use Closure;
 use Honed\Action\Concerns\CanChunk;
 use Honed\Action\Contracts\Action;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -51,9 +52,12 @@ abstract class BulkAction extends EloquentAction
      */
     protected function getQuery($models): Builder
     {
-        if (! is_array($models) && ! $models instanceof Collection) {
-            $models = Arr::wrap($models);
-        }
+        $models = match (true) {
+            $models instanceof EloquentCollection => $models->modelKeys(),
+            is_array($models) => $models,
+            $models instanceof Collection => $models->all(),
+            default => Arr::wrap($models),
+        };
 
         /** @var array<int, T>|Collection<int, T> $models */
         $query = $this->query();

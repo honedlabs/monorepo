@@ -148,7 +148,7 @@ abstract class Process implements Action
      */
     protected function resolve(): void
     {
-        self::__construct(App::make(Container::class));
+        $this->container(App::make(Container::class));
     }
 
     /**
@@ -193,11 +193,7 @@ abstract class Process implements Action
         return array_map(
             fn ($task) => is_callable($task)
                 ? $task
-                : fn ($payload, $next) => $next(
-                    $this->getContainer()
-                        ->make($task)
-                        ->{$this->method()}($payload)
-                ),
+                : $this->call($task),
             $this->tasks()
         );
     }

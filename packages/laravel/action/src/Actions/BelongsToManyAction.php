@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Action\Actions;
 
 use Honed\Action\Contracts\FromRelationship;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -41,10 +42,19 @@ abstract class BelongsToManyAction extends DatabaseAction implements FromRelatio
      */
     public function parseIds($ids)
     {
-        return match (true) {
+        if ($ids instanceof EloquentCollection) {
+            return $ids->modelKeys();
+        }
+
+        $ids = match (true) {
             $ids instanceof Collection => $ids->all(),
             is_array($ids) => $ids,
             default => Arr::wrap($ids),
         };
+
+        return array_map(
+            static fn ($id) => $id instanceof Model ? $id->getKey() : $id,
+            $ids,
+        );
     }
 }
