@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Honed;
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Schema\Blueprint;
+use Honed\Honed\Commands\InertiaResponseMakeCommand;
 
 class HonedServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->registerMacros();
     }
@@ -24,14 +23,21 @@ class HonedServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot() {}
+    public function boot(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->offerPublishing();
+
+            $this->commands([
+                InertiaResponseMakeCommand::class,
+            ]);
+        }
+    }
 
     /**
      * Register the application's macros.
-     *
-     * @return void
      */
-    protected function registerMacros()
+    protected function registerMacros(): void
     {
         Blueprint::macro('authorable', function (
             string $createdBy = 'created_by',
@@ -42,5 +48,15 @@ class HonedServiceProvider extends ServiceProvider
             $this->foreignId($createdBy)->nullable()->constrained($table);
             $this->foreignId($updatedBy)->nullable()->constrained($table);
         });
+    }
+
+    /**
+     * Register the publishing for the package.
+     */
+    protected function offerPublishing(): void
+    {
+        $this->publishes([
+            __DIR__.'/../stubs' => base_path('stubs'),
+        ], 'honed-stubs');
     }
 }
