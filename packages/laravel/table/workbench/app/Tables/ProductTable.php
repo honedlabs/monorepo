@@ -61,6 +61,7 @@ class ProductTable extends Table implements IsOrderable, IsSelectable, IsTogglea
                     ->falseText('Not favourite'),
 
                 TextColumn::make('seller.name', 'Sold by')
+                    ->query(fn ($query) => $query->with('seller'))
                     ->toggledByDefault(),
 
                 Column::make('status'),

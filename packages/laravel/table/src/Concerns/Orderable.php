@@ -21,7 +21,7 @@ trait Orderable
      * @param  bool  $value
      * @return $this
      */
-    public function orderable($value = true)
+    public function orderable(bool $value = true): static
     {
         $this->orderable = $value;
 
@@ -34,7 +34,7 @@ trait Orderable
      * @param  bool  $value
      * @return $this
      */
-    public function notOrderable($value = true)
+    public function notOrderable(bool $value = true): static
     {
         return $this->orderable(! $value);
     }
@@ -44,7 +44,7 @@ trait Orderable
      *
      * @return bool
      */
-    public function isOrderable()
+    public function isOrderable(): bool
     {
         return $this->orderable || $this instanceof IsOrderable;
     }
@@ -54,7 +54,7 @@ trait Orderable
      *
      * @return bool
      */
-    public function isNotOrderable()
+    public function isNotOrderable(): bool
     {
         return ! $this->isOrderable();
     }
