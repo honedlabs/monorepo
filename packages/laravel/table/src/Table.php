@@ -409,6 +409,7 @@ class Table extends Unit implements CanPersistData, HooksIntoLifecycle, NullsAsU
     protected function representation(): array
     {
         $this->define(); // @TODO
+        
         $this->build();
 
         return [
