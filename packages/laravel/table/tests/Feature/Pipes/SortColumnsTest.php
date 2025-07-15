@@ -14,7 +14,7 @@ beforeEach(function () {
 
     $this->table = Table::make()
         ->for(Product::class)
-        ->columns(NumericColumn::make('price'));
+        ->columns(NumericColumn::make('price')->sortable());
 });
 
 it('creates', function () {
@@ -34,8 +34,6 @@ it('does not create if column has no sort', function () {
     $this->pipe->through($this->table
         ->columns(TextColumn::make('name'))
     );
-
-    $this->pipe->run();
 
     expect($this->table->getSorts())->toHaveCount(1);
 });

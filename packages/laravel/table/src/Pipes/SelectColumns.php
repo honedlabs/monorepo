@@ -37,7 +37,7 @@ class SelectColumns extends Pipe
      */
     protected function select(Column $column, Builder $builder): void
     {
-        if ($column->isNotActive() || $column->isNotSelectable()) {
+        if ($column->isNotSelectable()) {
             return;
         }
 

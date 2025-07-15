@@ -291,6 +291,8 @@ class Table extends Unit implements CanPersistData, HooksIntoLifecycle, NullsAsU
      */
     public function toState(): array
     {
+        $this->define();
+        
         Pipeline::send($this)
             ->through($this->refinements())
             ->thenReturn();
@@ -412,8 +414,6 @@ class Table extends Unit implements CanPersistData, HooksIntoLifecycle, NullsAsU
      */
     protected function representation(): array
     {
-        $this->define(); // @TODO
-        
         $this->build();
 
         return [

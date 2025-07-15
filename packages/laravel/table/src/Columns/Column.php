@@ -85,6 +85,13 @@ class Column extends Primitive implements NullsAsUndefined
      */
     protected $evaluationIdentifier = 'column';
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->define();
+    }
+
     /**
      * Provide the instance with any necessary setup.
      */
@@ -95,8 +102,6 @@ class Column extends Primitive implements NullsAsUndefined
         $this->active();
 
         $this->selectable();
-
-        $this->define();
     }
 
     /**

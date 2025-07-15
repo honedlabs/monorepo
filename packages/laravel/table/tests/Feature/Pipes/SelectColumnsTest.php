@@ -4,47 +4,52 @@ declare(strict_types=1);
 
 use Honed\Refine\Filters\Filter;
 use Honed\Refine\Sorts\Sort;
+use Honed\Table\Columns\BooleanColumn;
+use Honed\Table\Columns\KeyColumn;
 use Honed\Table\Columns\NumericColumn;
 use Honed\Table\Columns\TextColumn;
 use Honed\Table\Pipes\PrepareColumns;
-use Honed\Table\Pipes\SearchColumns;
+use Honed\Table\Pipes\SelectColumns;
 use Honed\Table\Table;
 use Illuminate\Support\Facades\DB;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {
-    $this->pipe = new SearchColumns();
+    $this->pipe = new SelectColumns();
 
     $this->table = Table::make()
         ->for(Product::class)
-        ->columns(NumericColumn::make('price'));
+        ->selectable()
+        ->select(['id'])
+        ->columns([
+            TextColumn::make('name')
+                ->qualify()
+                ->select('name as product_name'),
+
+            NumericColumn::make('price'),
+
+            BooleanColumn::make('best_seller')
+                ->qualify(),
+
+            TextColumn::make('name')
+                ->qualify('users'),
+
+            TextColumn::make('description')
+                ->selectable(false)
+                ->qualify(),
+        ]);
 });
 
 it('selects', function () {
-    $this->pipe->through($this->table->selectable());
+    $this->pipe->through($this->table);
 
     expect($this->table)
         ->isSelectable()->toBeTrue()
-        ->getSelects()->toBe(['price']);
-});
-
-it('does not select if not active', function () {
-    $this->pipe->through($this->table
-        ->columns(NumericColumn::make('price')->active(false))
-        ->selectable()
-    );
-
-    expect($this->table)
-        ->isSelectable()->tobeTrue()
-        ->getSelects()->toEqual(['price']);
-});
-
-it('does not select if not selectable', function () {
-    $this->pipe->through($this->table
-        ->selectable(false)
-    );
-    
-    expect($this->table)
-        ->isSelectable()->toBeFalse()
-        ->getSelects()->toBeEmpty();
+        ->getSelects()->toEqualCanonicalizing([
+            'id',
+            'products.name as product_name',
+            'price',
+            'products.best_seller',
+            'users.name',
+        ]);
 });

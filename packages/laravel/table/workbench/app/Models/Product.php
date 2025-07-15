@@ -22,9 +22,7 @@ class Product extends Model
      */
     use HasFactory;
     use HasTable;
-
     use Searchable;
-
     use SoftDeletes;
 
     /**
