@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Honed;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Schema\Blueprint;
 use Honed\Honed\Commands\InertiaResponseMakeCommand;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\ServiceProvider;
 
 class HonedServiceProvider extends ServiceProvider
 {
@@ -20,8 +20,6 @@ class HonedServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
-     *
-     * @return void
      */
     public function boot(): void
     {

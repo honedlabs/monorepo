@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Honed\Honed\Commands;
 
 use Honed\Command\Commands\ResponseMakeCommand;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use function trim;
 use function Laravel\Prompts\select;
+use function trim;
 
 #[AsCommand(name: 'make:inertia-response')]
 class InertiaResponseMakeCommand extends ResponseMakeCommand
@@ -51,7 +51,6 @@ class InertiaResponseMakeCommand extends ResponseMakeCommand
             ? $customPath
             : __DIR__.'/../..'.$stub;
     }
-
 
     /**
      * Get the console command options
@@ -118,7 +117,7 @@ class InertiaResponseMakeCommand extends ResponseMakeCommand
 
     /**
      * Get the available types.
-     * 
+     *
      * @return array<int, string>
      */
     protected function getAvailableTypes(): array

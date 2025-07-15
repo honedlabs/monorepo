@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Caches;
 
 use Honed\Command\CacheManager;
@@ -7,6 +9,7 @@ use Honed\Command\CacheManager;
 /**
  * @template T of \Workbench\App\Models\User
  * @template U of array{name: string}
+ *
  * @extends \Honed\Command\CacheManager<T, U>
  */
 class UserCache extends CacheManager
@@ -17,7 +20,7 @@ class UserCache extends CacheManager
     public function key($parameter)
     {
         return [
-            $parameter->getKey()
+            $parameter->getKey(),
         ];
     }
 
