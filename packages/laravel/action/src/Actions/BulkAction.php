@@ -52,6 +52,7 @@ abstract class BulkAction extends EloquentAction
      */
     protected function getQuery($models): Builder
     {
+        /** @var array<int, T>|Collection<int, T> $models */
         $models = match (true) {
             $models instanceof EloquentCollection => $models->modelKeys(),
             is_array($models) => $models,
@@ -59,7 +60,6 @@ abstract class BulkAction extends EloquentAction
             default => Arr::wrap($models),
         };
 
-        /** @var array<int, T>|Collection<int, T> $models */
         $query = $this->query();
 
         return $query->whereIn($this->getKey($query), $models);

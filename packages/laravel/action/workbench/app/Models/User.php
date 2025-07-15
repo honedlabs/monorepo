@@ -70,7 +70,7 @@ class User extends Authenticatable
     /**
      * Get the products for the user.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Product>
+     * @return HasMany<Product>
      */
     public function products(): HasMany
     {
@@ -80,7 +80,7 @@ class User extends Authenticatable
     /**
      * Get the products that the user has.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Product, $this>
+     * @return BelongsToMany<Product, $this>
      */
     public function purchasedProducts(): BelongsToMany
     {

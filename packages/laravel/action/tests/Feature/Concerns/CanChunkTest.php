@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+use Honed\Action\Concerns\CanChunk;
 use Honed\Action\Contracts\ShouldChunk;
 use Honed\Action\Contracts\ShouldChunkById;
 use Honed\Action\Operations\BulkOperation;
-use Honed\Action\Concerns\CanChunk;
 
 beforeEach(function () {
     $this->operation = BulkOperation::make('test');

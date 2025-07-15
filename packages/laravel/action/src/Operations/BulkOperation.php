@@ -15,19 +15,6 @@ class BulkOperation extends Operation
     use CanKeepSelected;
 
     /**
-     * Get the representation of the instance.
-     *
-     * @return array<string, mixed>
-     */
-    protected function representation(): array
-    {
-        return [
-            ...parent::representation(),
-            'keep' => $this->keepsSelected(),
-        ];
-    }
-
-    /**
      * Execute the inline action on the given record.
      */
     public function callback(): ?Closure
@@ -43,5 +30,18 @@ class BulkOperation extends Operation
             $this->isChunked() => fn (Builder $builder) => $builder->chunk($this->getChunkSize(), $handler),
             default => $handler,
         };
+    }
+
+    /**
+     * Get the representation of the instance.
+     *
+     * @return array<string, mixed>
+     */
+    protected function representation(): array
+    {
+        return [
+            ...parent::representation(),
+            'keep' => $this->keepsSelected(),
+        ];
     }
 }
