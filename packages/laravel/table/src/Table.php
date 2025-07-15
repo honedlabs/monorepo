@@ -35,7 +35,6 @@ use Honed\Table\Exceptions\KeyNotFoundException;
 use Honed\Table\Pipes\CreateEmptyState;
 use Honed\Table\Pipes\FilterColumns;
 use Honed\Table\Pipes\Paginate;
-use Honed\Table\Pipes\PrepareColumns;
 use Honed\Table\Pipes\Query;
 use Honed\Table\Pipes\SearchColumns;
 use Honed\Table\Pipes\Select;
@@ -292,7 +291,7 @@ class Table extends Unit implements CanPersistData, HooksIntoLifecycle, NullsAsU
     public function toState(): array
     {
         $this->define();
-        
+
         Pipeline::send($this)
             ->through($this->refinements())
             ->thenReturn();

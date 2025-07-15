@@ -6,7 +6,6 @@ namespace Honed\Table\Pipes;
 
 use Honed\Core\Pipe;
 use Honed\Table\Columns\Column;
-use Illuminate\Support\Str;
 
 /**
  * @template TClass of \Honed\Table\Table
@@ -30,6 +29,7 @@ class SearchColumns extends Pipe
             $this->search($column);
         }
     }
+
     /**
      * Prepare the column search state.
      */

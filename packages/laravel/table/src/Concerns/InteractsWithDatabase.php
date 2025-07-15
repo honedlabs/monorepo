@@ -8,8 +8,6 @@ trait InteractsWithDatabase
 {
     /**
      * Get the connection name for filter views.
-     *
-     * @return string
      */
     public function getConnection(): string
     {
@@ -22,8 +20,6 @@ trait InteractsWithDatabase
 
     /**
      * Get the migration table name for filter views.
-     *
-     * @return string
      */
     public function getTableName(): string
     {

@@ -27,7 +27,6 @@ trait Toggleable
     /**
      * Set the instance to be toggleable.
      *
-     * @param  bool  $value
      * @return $this
      */
     public function toggleable(bool $value = true): static
@@ -40,7 +39,6 @@ trait Toggleable
     /**
      * Set the instance to not be toggleable.
      *
-     * @param  bool  $value
      * @return $this
      */
     public function notToggleable(bool $value = true): static
@@ -50,8 +48,6 @@ trait Toggleable
 
     /**
      * Determine if the instance is toggleable.
-     *
-     * @return bool
      */
     public function isToggleable(): bool
     {
@@ -60,8 +56,6 @@ trait Toggleable
 
     /**
      * Determine if the instance is not toggleable.
-     *
-     * @return bool
      */
     public function isNotToggleable(): bool
     {
@@ -71,7 +65,6 @@ trait Toggleable
     /**
      * Set the query parameter for which columns to display.
      *
-     * @param  string  $columnKey
      * @return $this
      */
     public function columnKey(string $columnKey): static
@@ -83,8 +76,6 @@ trait Toggleable
 
     /**
      * Get the query parameter for which columns to display.
-     *
-     * @return string
      */
     public function getColumnKey(): string
     {

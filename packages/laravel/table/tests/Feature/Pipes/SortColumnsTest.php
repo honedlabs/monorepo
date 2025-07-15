@@ -42,7 +42,7 @@ it('does not create if not active', function () {
     $this->pipe->through($this->table
         ->columns(NumericColumn::make('price')->active(false))
     );
-    
+
     expect($this->table->getSorts())->toHaveCount(1);
 });
 

@@ -7,7 +7,6 @@ namespace Honed\Table\Pipes;
 use Honed\Core\Pipe;
 use Honed\Table\Columns\Column;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 /**
  * @template TClass of \Honed\Table\Table
@@ -32,8 +31,8 @@ class SelectColumns extends Pipe
 
     /**
      * Select the column.
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
+     *
+     * @param  Builder<\Illuminate\Database\Eloquent\Model>  $builder
      */
     protected function select(Column $column, Builder $builder): void
     {

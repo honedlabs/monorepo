@@ -141,9 +141,9 @@ class ProductTable extends Table implements IsOrderable, IsSelectable, IsTogglea
                     ->allow(fn ($record) => $record->id % 2 === 0)
                     ->action(fn ($record) => $record->delete())
                     ->confirmable(),
-                    // ->confirmable(fn ($confirm) => $confirm
-                    //     ->title(fn ($record) => 'You are about to delete '.$record->name)
-                    //     ->description('Are you sure?')),
+                // ->confirmable(fn ($confirm) => $confirm
+                //     ->title(fn ($record) => 'You are about to delete '.$record->name)
+                //     ->description('Are you sure?')),
 
                 InlineOperation::make('show')
                     ->url(fn ($record) => route('products.show', $record)),

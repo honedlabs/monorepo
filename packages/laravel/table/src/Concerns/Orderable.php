@@ -18,7 +18,6 @@ trait Orderable
     /**
      * Set the instance to be orderable.
      *
-     * @param  bool  $value
      * @return $this
      */
     public function orderable(bool $value = true): static
@@ -31,7 +30,6 @@ trait Orderable
     /**
      * Set the instance to not be orderable.
      *
-     * @param  bool  $value
      * @return $this
      */
     public function notOrderable(bool $value = true): static
@@ -41,8 +39,6 @@ trait Orderable
 
     /**
      * Determine if the instance is orderable.
-     *
-     * @return bool
      */
     public function isOrderable(): bool
     {
@@ -51,8 +47,6 @@ trait Orderable
 
     /**
      * Determine if the instance is not orderable.
-     *
-     * @return bool
      */
     public function isNotOrderable(): bool
     {

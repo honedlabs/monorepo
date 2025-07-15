@@ -2,16 +2,11 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filters\Filter;
-use Honed\Refine\Sorts\Sort;
 use Honed\Table\Columns\BooleanColumn;
-use Honed\Table\Columns\KeyColumn;
 use Honed\Table\Columns\NumericColumn;
 use Honed\Table\Columns\TextColumn;
-use Honed\Table\Pipes\PrepareColumns;
 use Honed\Table\Pipes\SelectColumns;
 use Honed\Table\Table;
-use Illuminate\Support\Facades\DB;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {

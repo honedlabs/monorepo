@@ -6,7 +6,6 @@ namespace Honed\Table\Pipes;
 
 use Honed\Core\Pipe;
 use Honed\Table\Columns\Column;
-use Illuminate\Support\Str;
 
 /**
  * @template TClass of \Honed\Table\Table
@@ -30,10 +29,9 @@ class SortColumns extends Pipe
             $this->sort($column);
         }
     }
+
     /**
      * Prepare the column sort state.
-     *
-     * @param  \Honed\Table\Columns\Column  $column
      */
     protected function sort(Column $column): void
     {

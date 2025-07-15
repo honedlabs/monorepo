@@ -266,7 +266,7 @@ class Column extends Primitive implements NullsAsUndefined
     protected function addAggregateRelationship(string|array|null $relationship, ?string $column, string $method): static
     {
         $this->notSelectable();
-        
+
         if ($relationship && ! $column) {
             throw new InvalidArgumentException(
                 'A column must be specified when an aggregate relationship is used.'

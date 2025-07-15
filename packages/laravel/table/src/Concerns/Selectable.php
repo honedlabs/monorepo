@@ -31,7 +31,6 @@ trait Selectable
     /**
      * Set the instance to not be selectable.
      *
-     * @param  bool  $value
      * @return $this
      */
     public function notSelectable(bool $value = true): static
@@ -57,8 +56,6 @@ trait Selectable
 
     /**
      * Determine if the instance is selectable.
-     *
-     * @return bool
      */
     public function isSelectable(): bool
     {
@@ -67,8 +64,6 @@ trait Selectable
 
     /**
      * Determine if the instance is not selectable.
-     *
-     * @return bool
      */
     public function isNotSelectable(): bool
     {

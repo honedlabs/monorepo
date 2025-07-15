@@ -41,6 +41,6 @@ it('does not create if column has no filter', function () {
     $this->pipe->through($this->table
         ->columns(TextColumn::make('name'))
     );
-    
+
     expect($this->table->getFilters())->toHaveCount(1);
 });

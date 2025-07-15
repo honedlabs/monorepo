@@ -36,7 +36,6 @@ trait Viewable
     /**
      * Set whether the table is not viewable.
      *
-     * @param  bool  $value
      * @return $this
      */
     public function notViewable(bool $value = true): static
@@ -48,8 +47,6 @@ trait Viewable
 
     /**
      * Determine if the table has views.
-     *
-     * @return bool
      */
     public function isViewable(): bool
     {
@@ -58,8 +55,6 @@ trait Viewable
 
     /**
      * Determine if the table does not have views.
-     *
-     * @return bool
      */
     public function isNotViewable(): bool
     {
@@ -68,8 +63,6 @@ trait Viewable
 
     /**
      * Get the views for the table.
-     *
-     * @return PendingViewInteraction|null
      */
     public function getViews(): ?PendingViewInteraction
     {

@@ -34,8 +34,6 @@ trait HasEmptyState
 
     /**
      * Get the empty state of the table.
-     *
-     * @return EmptyState|null
      */
     public function getEmptyState(): ?EmptyState
     {
