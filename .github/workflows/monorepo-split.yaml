@@ -23,7 +23,7 @@ jobs:
           # - core
           # - crumb
           # - flash
-          # - honed
+          - honed
           # - infolist
           # - layout
           # - lock
@@ -34,7 +34,7 @@ jobs:
           # - refine
           # - registry
           # - stats
-          - table
+          # - table
           # - upload
           # - widget
     steps:
