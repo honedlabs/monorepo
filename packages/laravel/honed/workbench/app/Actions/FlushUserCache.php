@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Honed\Actions;
+namespace Workbench\App\Actions;
 
 use Honed\Action\Contracts\Action;
 use Honed\Honed\Actions\FlushCache;

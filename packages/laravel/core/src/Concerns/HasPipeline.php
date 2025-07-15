@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Honed\Core\Primitive;
 use Illuminate\Support\Facades\Pipeline;
 
+/**
+ * @phpstan-require-extends \Honed\Core\Primitive
+ */
 trait HasPipeline
 {
     /**
@@ -36,9 +38,7 @@ trait HasPipeline
             return $this;
         }
 
-        if ($this instanceof Primitive) {
-            $this->define();
-        }
+        $this->define();
 
         Pipeline::send($this)
             ->through($this->pipes())
