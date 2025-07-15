@@ -77,7 +77,6 @@ abstract class StoreChildAction extends DatabaseAction implements FromRelationsh
 
         /** @var TNew */
         $model = $this->getRelationship($parent)
-            ->getQuery()
             ->create($prepared);
 
         $this->after($parent, $model, $input, $prepared);
