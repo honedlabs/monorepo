@@ -66,11 +66,12 @@ abstract class AttachUniqueAction extends BelongsToManyAction
      */
     protected function getExisting(Model $model): Collection
     {
+        $query = $this->getRelationship($model)->getQuery();
+
+        $column = $query->qualifyColumn('id');
+        
         /** @var Collection<int, int|string> */
-        return $this->getRelationship($model)
-            ->getQuery()
-            ->getQuery()
-            ->pluck('id');
+        return $query->pluck($column);
     }
 
     /**
