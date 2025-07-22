@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Honed\Honed\Data;
+namespace Workbench\App\Data;
 
 use Spatie\LaravelData\Data;
 
-class InlineData extends Data
+class IdData extends Data
 {
     public function __construct(
-        public int|string $id,
+        public int $id,
     ) {}
 }

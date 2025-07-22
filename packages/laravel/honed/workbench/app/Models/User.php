@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Workbench\App\Models;
 
+use Honed\Honed\Concerns\Transferable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Workbench\App\Data\IdData;
 use Workbench\Database\Factories\UserFactory;
 
 class User extends Authenticatable
@@ -17,6 +19,9 @@ class User extends Authenticatable
     use HasFactory;
 
     use Notifiable;
+    use Transferable;
+
+    protected $data = IdData::class;
 
     /**
      * The factory for the model.

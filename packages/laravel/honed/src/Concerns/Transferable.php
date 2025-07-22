@@ -9,14 +9,14 @@ use ReflectionClass;
 use Spatie\LaravelData\Data;
 
 /**
- * @property class-string<\Spatie\LaravelData\Data>|null $data
+ * @property class-string<Data>|null $data
  */
 trait Transferable
 {
     /**
      * Get the action group instance for the model.
      *
-     * @param class-string<\Spatie\LaravelData\Data>|null $data
+     * @param  class-string<Data>|null  $data
      */
     public function toData(?string $data = null): Data
     {
@@ -24,29 +24,9 @@ trait Transferable
     }
 
     /**
-     * Create a new action group instance for the model.
-     *
-     * @param class-string<\Spatie\LaravelData\Data>|null $data
-     *
-     * @internal
-     */
-    protected function newData(?string $data = null): ?Data
-    {
-        /** @var class-string<\Spatie\LaravelData\Data>|null $data */
-        $data = match (true) {
-            $data !== null => $data,
-            isset($this->$data) => $this->$data,
-            (bool) $attr = static::getUseDataAttribute() => $attr,
-            default => null,
-        };
-
-        return $data ? $data::from($this) : null;
-    }
-
-    /**
      * Get the actions from the UseBatch class attribute.
      *
-     * @return class-string<\Spatie\LaravelData\Data>|null
+     * @return class-string<Data>|null
      *
      * @internal
      */
@@ -59,6 +39,30 @@ trait Transferable
             $group = $attributes[0]->newInstance();
 
             return $group->dataClass;
+        }
+
+        return null;
+    }
+
+    /**
+     * Create a new action group instance for the model.
+     *
+     * @param  class-string<Data>|null  $data
+     *
+     * @internal
+     */
+    protected function newData(?string $data = null): ?Data
+    {
+        if ($data) {
+            return $data::from($this);
+        }
+
+        if (isset($this->$data)) {
+            return $this->$data::from($this);
+        }
+
+        if ($attr = static::getUseDataAttribute()) {
+            return $attr::from($this);
         }
 
         return null;
