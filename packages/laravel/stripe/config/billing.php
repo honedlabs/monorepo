@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Honed\Billing\Payment;
 use Honed\Billing\Period;
 
@@ -10,7 +12,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you will specify the default driver that should be used when
-    | resolving your plans and products. 
+    | resolving your plans and products.
     |
     | Supported: "config"
     |
@@ -22,7 +24,7 @@ return [
     | Billing Drivers
     |--------------------------------------------------------------------------
     |
-    | Here you may configure each of the drivers that should be available 
+    | Here you may configure each of the drivers that should be available
     | to retrieve your plans and products.
     |
     */
@@ -35,7 +37,7 @@ return [
         'database' => [
             'driver' => 'database',
             'connection' => null,
-            'table' => 'products'
+            'table' => 'products',
         ],
     ],
 
@@ -68,7 +70,7 @@ return [
         'forms_pro' => [
             'name' => 'Forms Pro',
             'group' => 'forms',
-            // 'type' => 'recurring', 
+            // 'type' => 'recurring',
             // 'price' => 1000, // Optional
             // 'period' => 'monthly',
             // 'period' => 'null|once|monthly|yearly', // Optional
@@ -80,11 +82,11 @@ return [
                     'price_id' => '',
                 ],
                 [
-                    'period' => 'yearly', // 
+                    'period' => 'yearly', //
                     'price' => 1000,
                     'price_id' => '', // REQUIRED
-                ]
-            ]
+                ],
+            ],
         ],
-    ]
+    ],
 ];

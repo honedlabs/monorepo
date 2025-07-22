@@ -8,6 +8,7 @@ use Closure;
 use Honed\Billing\Contracts\Driver;
 use Honed\Billing\Drivers\ConfigDriver;
 use Honed\Billing\Drivers\DatabaseDriver;
+use Honed\Billing\Drivers\Decorator;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Database\DatabaseManager;
 use InvalidArgumentException;
@@ -27,7 +28,7 @@ class BillingManager
     /**
      * The array of resolved drivers.
      *
-     * @var array<string, Driver>
+     * @var array<string, Decorator>
      */
     protected $drivers = [];
 
@@ -40,8 +41,8 @@ class BillingManager
 
     /**
      * The cache of retrieved products.
-     * 
-     * @var array<string, \Honed\Billing\Billing>
+     *
+     * @var array<string, Billing>
      */
     protected $cache = [];
 
@@ -78,7 +79,7 @@ class BillingManager
      *
      * @throws InvalidArgumentException
      */
-    public function driver(?string $name = null): Driver
+    public function driver(?string $name = null): Decorator
     {
         $name ??= $this->getDefaultDriver();
 
@@ -155,16 +156,6 @@ class BillingManager
     }
 
     /**
-     * Get a product by the name.
-     */
-    protected function getByName(string $product, ?string $name = null): mixed
-    {
-        return $this->driver($name)
-            ->whereProduct($product)
-            ->first();
-    }
-
-    /**
      * Register a custom driver creator closure.
      *
      * @param  Closure(string, Container): Driver  $callback
@@ -178,35 +169,48 @@ class BillingManager
     }
 
     /**
+     * Get a product by the name.
+     */
+    protected function getByName(string $product, ?string $name = null): mixed
+    {
+        return $this->driver($name)
+            ->whereProduct($product)
+            ->first();
+    }
+
+    /**
      * Attempt to get the driver from the local cache.
      *
      * @throws InvalidArgumentException
      */
-    protected function cached(string $name): Driver
+    protected function cached(string $name): Decorator
     {
         return $this->drivers[$name] ?? $this->resolve($name);
     }
+
     /**
      * Resolve a driver.
-     * 
+     *
      * @throws InvalidArgumentException
      */
-    protected function resolve(string $name): Driver
+    protected function resolve(string $name): Decorator
     {
         if (isset($this->customCreators[$name])) {
-            return $this->callCustomCreator($name);
-        }
-        
-        $method = 'create'.ucfirst($name).'Driver';
+            $driver = $this->callCustomCreator($name);
+        } else {
+            $method = 'create'.ucfirst($name).'Driver';
 
-        if (!method_exists($this, $method)) {
-            throw new InvalidArgumentException(
-                "Driver [{$name}] not supported."
-            );
+            if (method_exists($this, $method)) {
+                /** @var Driver */
+                $driver = $this->{$method}($name);
+            } else {
+                throw new InvalidArgumentException(
+                    "Driver [{$name}] not supported."
+                );
+            }
         }
 
-        /** @var Driver */
-        return $this->{$method}($name);
+        return new Decorator($name, $driver);
     }
 
     /**

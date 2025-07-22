@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Billing\Drivers;
 
-use Honed\Billing\Contracts\Driver;
 use Honed\Billing\Concerns\InteractsWithDatabase;
+use Honed\Billing\Contracts\Driver;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Connection;
@@ -18,8 +18,8 @@ use Illuminate\Support\Traits\ForwardsCalls;
  */
 class DatabaseDriver implements Driver
 {
-    use InteractsWithDatabase;
     use ForwardsCalls;
+    use InteractsWithDatabase;
 
     /**
      * The name of the driver.
@@ -37,8 +37,8 @@ class DatabaseDriver implements Driver
 
     /**
      * The query.
-     * 
-     * @var \Illuminate\Database\Query\Builder|null
+     *
+     * @var Builder|null
      */
     protected $query;
 
@@ -55,8 +55,8 @@ class DatabaseDriver implements Driver
 
     /**
      * Dynamically call the query builder.
-     * 
-     * @param array<int, mixed> $parameters
+     *
+     * @param  array<int, mixed>  $parameters
      */
     public function __call(string $method, array $parameters): mixed
     {
@@ -65,8 +65,8 @@ class DatabaseDriver implements Driver
 
     /**
      * Get the first matching product.
-     * 
-     * @param array<int,string> $columns
+     *
+     * @param  array<int,string>  $columns
      * @return array<string, mixed>|null
      */
     public function first($columns = ['*'])
@@ -76,8 +76,8 @@ class DatabaseDriver implements Driver
 
     /**
      * Get all matching products.
-     * 
-     * @param array<int,string> $columns
+     *
+     * @param  array<int,string>  $columns
      * @return array<int, array<string, mixed>>
      */
     public function get($columns = ['*'])
@@ -87,7 +87,7 @@ class DatabaseDriver implements Driver
 
     /**
      * Scope to the given product.
-     * 
+     *
      * @return $this
      */
     public function whereProduct(mixed $product): static
@@ -97,8 +97,8 @@ class DatabaseDriver implements Driver
 
     /**
      * Scope to the given products.
-     * 
-     * @param string|array<int, mixed>|\Illuminate\Contracts\Support\Arrayable<int, mixed> $products
+     *
+     * @param  string|array<int, mixed>|Arrayable<int, mixed>  $products
      * @return $this
      */
     public function whereProducts(string|array|Arrayable $products): static
@@ -108,8 +108,8 @@ class DatabaseDriver implements Driver
 
     /**
      * Scope to the given product group.
-     * 
-     * @param string|array<int, string>|\Illuminate\Contracts\Support\Arrayable<int, string> $group
+     *
+     * @param  string|array<int, string>|Arrayable<int, string>  $group
      * @return $this
      */
     public function whereGroup(string|array|Arrayable $group): static
@@ -119,7 +119,7 @@ class DatabaseDriver implements Driver
 
     /**
      * Scope to the given product type.
-     * 
+     *
      * @return $this
      */
     public function whereType(string $type): static
@@ -129,7 +129,7 @@ class DatabaseDriver implements Driver
 
     /**
      * Scope to the given payment type.
-     * 
+     *
      * @return $this
      */
     public function wherePayment(string $payment): static
@@ -140,7 +140,7 @@ class DatabaseDriver implements Driver
     /**
      * Qualify the given column name by the model's table.
      *
-     * @param  string|\Illuminate\Contracts\Database\Query\Expression  $column
+     * @param  string|Expression  $column
      * @return string
      */
     public function qualifyColumn($column)

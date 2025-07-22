@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Billing\Commands;
 
 use Honed\Billing\Schema;
@@ -26,7 +28,7 @@ class ValidateSchemaCommand extends Command
     /**
      * The console command name aliases.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $aliases = ['validate:billing'];
 

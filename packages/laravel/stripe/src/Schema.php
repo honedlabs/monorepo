@@ -85,8 +85,8 @@ class Schema
 
     /**
      * Check if the provided input contains duplicated keys.
-     * 
-     * @param array<string|int, mixed> $input
+     *
+     * @param  array<string|int, mixed>  $input
      */
     protected static function checkUniqueness(array $input): ?string
     {
@@ -119,8 +119,8 @@ class Schema
 
     /**
      * Ensure that a name is given for the product.
-     * 
-     * @param array<string, mixed> $input
+     *
+     * @param  array<string, mixed>  $input
      */
     protected static function checkName(array $input, string $key): ?string
     {
@@ -136,8 +136,8 @@ class Schema
 
     /**
      * Ensure that a group, if given, is valid.
-     * 
-     * @param array<string, mixed> $input
+     *
+     * @param  array<string, mixed>  $input
      */
     protected static function checkGroup(array $input, string $key): ?string
     {
@@ -155,8 +155,8 @@ class Schema
 
     /**
      * Ensure that a type, if given, is valid.
-     * 
-     * @param array<string, mixed> $input
+     *
+     * @param  array<string, mixed>  $input
      */
     protected static function checkType(array $input, string $key): ?string
     {
@@ -175,15 +175,14 @@ class Schema
 
     /**
      * Ensure that a price or group of prices is given.
-     * 
-     * @param array<string, mixed> $input
+     *
+     * @param  array<string, mixed>  $input
      */
     protected static function checkPricing(array $input, string $key): ?string
-    {        
+    {
         if (Arr::hasAll($input, ['price', 'period', 'price_id'])) {
             return static::checkPrice($input, $key);
         }
-
 
         if ($prices = Arr::get($input, 'prices', [])) {
             if ($message = static::checkList($prices, $key)) {
@@ -207,8 +206,8 @@ class Schema
 
     /**
      * Ensure that a price or group of prices is given.
-     * 
-     * @param array<string, mixed> $input
+     *
+     * @param  array<string, mixed>  $input
      */
     protected static function checkPrice(array $input, string $key): ?string
     {

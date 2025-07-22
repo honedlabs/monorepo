@@ -8,19 +8,20 @@ use Closure;
 use Honed\Billing\Contracts\Driver;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
+use InvalidArgumentException;
 
 class ConfigDriver implements Driver
 {
     /**
      * The name of the driver.
-     * 
+     *
      * @var string
      */
     protected $name;
 
     /**
      * The config instance.
-     * 
+     *
      * @var array<string, mixed>
      */
     protected $config;
@@ -28,14 +29,14 @@ class ConfigDriver implements Driver
     /**
      * The where constraints for the query.
      *
-     * @var array<int, \Closure(array<string, mixed>): bool>
+     * @var array<int, Closure(array<string, mixed>): bool>
      */
     protected $wheres;
 
     /**
      * Create a new config driver instance.
-     * 
-     * @param array<string, mixed> $config
+     *
+     * @param  array<string, mixed>  $config
      */
     public function __construct(
         string $name,
@@ -47,8 +48,8 @@ class ConfigDriver implements Driver
 
     /**
      * Get the first matching product.
-     * 
-     * @param array<int,string> $columns
+     *
+     * @param  array<int,string>  $columns
      * @return array<string, mixed>|null
      */
     public function first($columns = ['*'])
@@ -64,8 +65,8 @@ class ConfigDriver implements Driver
 
     /**
      * Get all matching products.
-     * 
-     * @param array<int,string> $columns
+     *
+     * @param  array<int,string>  $columns
      * @return array<int, array<string, mixed>>
      */
     public function get($columns = ['*'])
@@ -73,15 +74,15 @@ class ConfigDriver implements Driver
         $products = $this->resolve();
 
         return Arr::map(
-            $products, 
+            $products,
             fn (array $product) => $this->select($product, $columns)
         );
     }
 
     /**
      * Scope to the given callback.
-     * 
-     * @param \Closure(array<string, mixed>): bool $callback
+     *
+     * @param  Closure(array<string, mixed>): bool  $callback
      * @return $this
      */
     public function where(Closure $callback): static
@@ -93,7 +94,7 @@ class ConfigDriver implements Driver
 
     /**
      * Scope to the given column.
-     * 
+     *
      * @return $this
      */
     public function whereColumn(string $key, mixed $value, string $operator = '='): static
@@ -105,7 +106,7 @@ class ConfigDriver implements Driver
             '>=' => $product[$key] >= $value,
             '<' => $product[$key] < $value,
             '<=' => $product[$key] <= $value,
-            default => throw new \InvalidArgumentException(
+            default => throw new InvalidArgumentException(
                 "An unsupported operator: {$operator} was supplied."
             )
         });
@@ -113,8 +114,8 @@ class ConfigDriver implements Driver
 
     /**
      * Scope a column to the given values.
-     * 
-     * @param array<int, mixed> $values
+     *
+     * @param  array<int, mixed>  $values
      * @return $this
      */
     public function whereIn(string $key, array $values): static
@@ -124,7 +125,7 @@ class ConfigDriver implements Driver
 
     /**
      * Scope to the given product.
-     * 
+     *
      * @return $this
      */
     public function whereProduct(mixed $product): static
@@ -134,8 +135,8 @@ class ConfigDriver implements Driver
 
     /**
      * Scope to the given products.
-     * 
-     * @param string|array<int, mixed>|\Illuminate\Contracts\Support\Arrayable<int, mixed> $products
+     *
+     * @param  string|array<int, mixed>|Arrayable<int, mixed>  $products
      * @return $this
      */
     public function whereProducts(string|array|Arrayable $products): static
@@ -145,8 +146,8 @@ class ConfigDriver implements Driver
 
     /**
      * Scope to the given group.
-     * 
-     * @param string|array<int, string>|\Illuminate\Contracts\Support\Arrayable<int, string> $group
+     *
+     * @param  string|array<int, string>|Arrayable<int, string>  $group
      * @return $this
      */
     public function whereGroup(string|array|Arrayable $group): static
@@ -156,8 +157,7 @@ class ConfigDriver implements Driver
 
     /**
      * Scope to the given type.
-     * 
-     * @param string $type
+     *
      * @return $this
      */
     public function whereType(string $type): static
@@ -167,8 +167,7 @@ class ConfigDriver implements Driver
 
     /**
      * Scope to the given payment.
-     * 
-     * @param string $payment
+     *
      * @return $this
      */
     public function wherePayment(string $payment): static
@@ -178,9 +177,9 @@ class ConfigDriver implements Driver
 
     /**
      * Select the columns from the products.
-     * 
-     * @param array<string, array<string, mixed>> $products
-     * @param array<int,string> $columns
+     *
+     * @param  array<string, array<string, mixed>>  $products
+     * @param  array<int,string>  $columns
      * @return array<int, array<string, mixed>>
      */
     protected function select(array $products, array $columns = ['*']): array
@@ -194,7 +193,7 @@ class ConfigDriver implements Driver
 
     /**
      * Resolve the query.
-     * 
+     *
      * @return array<string, array<string, mixed>>
      */
     protected function resolve(): array
@@ -210,7 +209,7 @@ class ConfigDriver implements Driver
 
     /**
      * Get the products from the config.
-     * 
+     *
      * @return array<string, array<string, mixed>>
      */
     protected function getConfig(): array

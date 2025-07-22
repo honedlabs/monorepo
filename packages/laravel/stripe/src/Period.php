@@ -18,7 +18,7 @@ final class Period
 
     /**
      * Get the valid periods.
-     * 
+     *
      * @return array<int, string|null>
      */
     public static function values(): array

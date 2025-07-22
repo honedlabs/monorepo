@@ -12,7 +12,7 @@ final class Payment
 
     /**
      * Get the valid types of payment.
-     * 
+     *
      * @return array<int, string|null>
      */
     public static function values(): array
@@ -25,4 +25,3 @@ final class Payment
         ];
     }
 }
-

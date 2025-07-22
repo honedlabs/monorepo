@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Billing\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
@@ -14,6 +16,7 @@ abstract class BillingMigration extends Migration
         /** @var string|null $connection */
         $connection = config('billing.drivers.database.connection');
 
+        /** @var string */
         return ($connection === null || $connection === 'null') ? config('database.default') : $connection;
     }
 

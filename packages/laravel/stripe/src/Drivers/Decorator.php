@@ -4,29 +4,35 @@ declare(strict_types=1);
 
 namespace Honed\Billing\Drivers;
 
-use Honed\Billing\Concerns\Driver;
+use BadMethodCallException;
+use Honed\Billing\Contracts\Driver;
+use Honed\Billing\Payment;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
 
 class Decorator implements Driver
 {
+    use Conditionable;
     use ForwardsCalls;
     use Macroable {
         __call as macroCall;
     }
+    use Tappable;
 
     /**
      * The name of the driver.
-     * 
+     *
      * @var string
      */
     protected $name;
 
     /**
      * The driver to decorate.
-     * 
-     * @var \Honed\Billing\Concerns\Driver
+     *
+     * @var Driver
      */
     protected $driver;
 
@@ -41,14 +47,12 @@ class Decorator implements Driver
 
     /**
      * Forward the call to the decorated driver.
-     * 
-     * @param string $method
-     * @param array $parameters
-     * @return mixed
-     * 
-     * @throws \BadMethodCallException
+     *
+     * @param  array<int, mixed>  $parameters
+     *
+     * @throws BadMethodCallException
      */
-    public function __call($method, $parameters)
+    public function __call(string $method, array $parameters): mixed
     {
         if (static::hasMacro($method)) {
             return $this->macroCall($method, $parameters);
@@ -57,38 +61,111 @@ class Decorator implements Driver
         return $this->forwardDecoratedCallTo($this->driver, $method, $parameters);
     }
 
+    /**
+     * Get the first matching product.
+     *
+     * @param  array<int,string>  $columns
+     * @return mixed
+     */
     public function first($columns = ['*'])
     {
-        return $this->driver->first();
+        return $this->driver->first($columns);
     }
 
+    /**
+     * Get all matching products.
+     *
+     * @param  array<int,string>  $columns
+     * @return mixed
+     */
     public function get($columns = ['*'])
     {
-        return $this->driver->get();
+        return $this->driver->get($columns);
     }
 
+    /**
+     * Scope to the given product.
+     *
+     * @return $this
+     */
     public function whereProduct(mixed $product): static
     {
-        return $this->driver->whereProduct($product);
+        $this->driver->whereProduct($product);
+
+        return $this;
     }
 
-    public function whereProducts(mixed|array|Arrayable $products): static
+    /**
+     * Scope to the given products.
+     *
+     * @param  string|array<int, mixed>|Arrayable<int, mixed>  $products
+     * @return $this
+     */
+    public function whereProducts(string|array|Arrayable $products): static
     {
-        return $this->driver->whereProducts($products);
+        $this->driver->whereProducts($products);
+
+        return $this;
     }
 
+    /**
+     * Scope to the given product group.
+     *
+     * @param  string|array<int, string>|Arrayable<int, string>  $group
+     * @return $this
+     */
     public function whereGroup(string|array|Arrayable $group): static
     {
-        return $this->driver->whereGroup($group);
+        $this->driver->whereGroup($group);
+
+        return $this;
     }
 
+    /**
+     * Scope to the given product type.
+     *
+     * @return $this
+     */
     public function whereType(string $type): static
     {
-        return $this->driver->whereType($type);
+        $this->driver->whereType($type);
+
+        return $this;
     }
 
+    /**
+     * Scope to the given payment type.
+     *
+     * @return $this
+     */
     public function wherePayment(string $payment): static
     {
-        return $this->driver->wherePayment($payment);
+        $this->driver->wherePayment($payment);
+
+        return $this;
+    }
+
+    /**
+     * Scope to the given recurring payment type.
+     *
+     * @return $this
+     */
+    public function whereRecurring(): static
+    {
+        $this->driver->wherePayment(Payment::RECURRING);
+
+        return $this;
+    }
+
+    /**
+     * Scope to the given once payment type.
+     *
+     * @return $this
+     */
+    public function whereOnce(): static
+    {
+        $this->driver->wherePayment(Payment::ONCE);
+
+        return $this;
     }
 }

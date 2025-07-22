@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Billing\Commands;
 
 use Honed\Billing\Facades\Billing;

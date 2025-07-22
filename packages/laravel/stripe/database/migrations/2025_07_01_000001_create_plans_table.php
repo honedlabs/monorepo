@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+use Honed\Billing\Migrations\BillingMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Honed\Billing\Migrations\BillingMigration;
 
-return new class extends BillingMigration
+return new class() extends BillingMigration
 {
     /**
      * Run the migrations.
