@@ -1,5 +1,6 @@
 <?php
 
+use Honed\Billing\Payment;
 use Honed\Billing\Period;
 
 return [
@@ -49,7 +50,7 @@ return [
     |
     */
 
-    'type' => 'recurring',
+    'type' => Payment::RECURRING,
 
     'period' => Period::MONTHLY,
 
@@ -67,7 +68,7 @@ return [
         'forms_pro' => [
             'name' => 'Forms Pro',
             'group' => 'forms',
-            'type' => 'recurring', 
+            // 'type' => 'recurring', 
             // 'price' => 1000, // Optional
             // 'period' => 'monthly',
             // 'period' => 'null|once|monthly|yearly', // Optional

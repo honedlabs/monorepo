@@ -162,7 +162,7 @@ class Schema
     {
         $input = Arr::get($input, 'type');
 
-        if (! in_array($input, [null, 'null', 'recurring', 'once'])) {
+        if (! in_array($input, Payment::values())) {
             return sprintf(
                 'The type supplied for key [%s] is invalid, it must be one of: null, recurring, once - [%s] given.',
                 $key,
@@ -224,7 +224,7 @@ class Schema
     {
         $input = Arr::get($input, 'period');
 
-        if ($input && ! in_array($input, [null, 'null', 'monthly', 'yearly'])) {
+        if (! in_array($input, Period::values())) {
             return sprintf(
                 'The period supplied for key [%s] is invalid, it must be one of: null, monthly, yearly - [%s] given.',
                 $key,

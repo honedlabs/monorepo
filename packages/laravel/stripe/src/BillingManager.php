@@ -11,7 +11,7 @@ class BillingManager
      * 
      * @var array<string, \Honed\Billing\Billing>
      */
-    protected $billing = [];
+    protected $cache = [];
 
     public function call()
     {
@@ -22,7 +22,7 @@ class BillingManager
      */
     public function find(string $product): ?Billing
     {
-        return $this->billing[$product] ??= $this->resolve($product);
+        return $this->cache[$product] ??= $this->resolve($product);
     }
 
     public function driver(string $product)

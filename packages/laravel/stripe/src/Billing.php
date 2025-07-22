@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Honed\Billing;
 
 use App\Models\User;
+use Honed\Billing\Facades\Billing as FacadesBilling;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\Macroable;
 
 /**
@@ -17,6 +19,8 @@ class Billing implements UrlRoutable
 
     /**
      * The ID of the product.
+     * 
+     * @var string
      */
     protected $id;
 
@@ -25,36 +29,89 @@ class Billing implements UrlRoutable
         return static::query()->firstWhere($id);
     }
 
-    public function getRouteKey()
+    /**
+     * Get the value of the route key.
+     */
+    public function getRouteKey(): string
     {
         return $this->id;
     }
 
-    public function getRouteKeyName()
+    /**
+     * Get the route key for the class.
+     */
+    public function getRouteKeyName(): string
     {
         return 'billing';
     }
 
+    /**
+     * Retrieve the product for
+     */
     public function resolveRouteBinding($value, $field = null)
     {
-        return $this->resolveRouteBindingQuery($this, $value)->first();
+        return $this->resolveRouteBindingQuery($field, $value)->first();
+        return match ($field) {
+            Payment::RECURRING => $this->resolveRouteBindingQuery($value)
+                ->whereRecu
+            ,
+            Payment::ONCE => $this->resolveRouteBindingQuery($value),
+            default => $this->resolveRouteBindingQuery($value)->first(),
+        };
     }
 
     /**
      * Retrieve the product for a bound value.
      * 
-     * @param \Honed\Billing\BillingBuilder|\Illuminate\Database\Eloquent\Builder $query
      * @return \Honed\Billing\BillingBuilder
      */
-    public function resolveRouteBindingQuery($query, $value)
+    public function resolveRouteBindingQuery(mixed $value, string $field)
     {
-        return $query->where($value);
+        return FacadesBilling::query()
+            ->where($value)
+            ->tap(function ($query) use ($value, $field) {
+                match ($field) {
+                    Payment::RECURRING => $query->whereRecurring(),
+                    Payment::ONCE => $query->whereOnce(),
+                    default => $query,
+                };
+            });
     }
 
 
     public function resolveChildRouteBinding($childType, $value, $field)
     {
         
+    }
+
+    public function getName()
+    {
+
+    }
+
+    public function getGroup()
+    {
+
+    }
+
+    public function getType()
+    {
+
+    }
+
+    public function getPrice()
+    {
+
+    }
+
+    public function getPriceId()
+    {
+
+    }
+
+    public function getPeriod()
+    {
+
     }
 }
 
