@@ -2,33 +2,34 @@
 
 namespace Honed\Billing\Commands;
 
+use Honed\Billing\Facades\Billing;
 use Honed\Billing\Schema;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'billing:validate', aliases: ['validate:billing'])]
-class ValidateSchemaCommand extends Command
+#[AsCommand(name: 'billing:list', aliases: ['list:billing'])]
+class ListProductsCommand extends Command
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $signature = 'billing:validate';
+    protected $signature = 'billing:list';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Validate the billing schema from your config file.';
+    protected $description = 'List the products from the billing schema.';
 
     /**
      * The console command name aliases.
      *
      * @var array
      */
-    protected $aliases = ['validate:billing'];
+    protected $aliases = ['list:billing'];
 
     /**
      * Execute the console command.
@@ -47,7 +48,7 @@ class ValidateSchemaCommand extends Command
             return self::FAILURE;
         }
 
-        $this->components->info('The billing schema is valid.');
+        dd(Billing::call());
 
         return self::SUCCESS;
     }

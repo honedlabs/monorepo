@@ -40,7 +40,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Billing Drivers
+    | Configuration
     |--------------------------------------------------------------------------
     |
     | If you are using the `config` driver, you may specify your plans and
@@ -48,6 +48,8 @@ return [
     | is correct by running `php artisan billing:validate` command.
     |
     */
+
+    'type' => 'recurring',
 
     'period' => Period::MONTHLY,
 
@@ -65,10 +67,11 @@ return [
         'forms_pro' => [
             'name' => 'Forms Pro',
             'group' => 'forms',
-            'type' => 'null|recurring|once', 
-            'price' => 1000, // Optional
-            'period' => 'null|once|monthly|yearly', // Optional
-            'price_id' => '', // Optional
+            'type' => 'recurring', 
+            // 'price' => 1000, // Optional
+            // 'period' => 'monthly',
+            // 'period' => 'null|once|monthly|yearly', // Optional
+            // 'price_id' => '', // Optional
             'prices' => [
                 [
                     'period' => 'monthly',
