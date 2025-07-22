@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Billing;
 
 use App\Models\User;
-use Honed\Billing\Facades\Billing as FacadesBilling;
+use Honed\Billing\Facades\Billing as Billing;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\Macroable;
@@ -13,7 +13,7 @@ use Illuminate\Support\Traits\Macroable;
 /**
  * @mixin \Honed\Billing\BillingBuilder
  */
-class Billing implements UrlRoutable
+class Product implements UrlRoutable
 {
     use Macroable;
 
@@ -42,7 +42,7 @@ class Billing implements UrlRoutable
      */
     public function getRouteKeyName(): string
     {
-        return 'billing';
+        return 'product';
     }
 
     /**
@@ -51,31 +51,24 @@ class Billing implements UrlRoutable
     public function resolveRouteBinding($value, $field = null)
     {
         return $this->resolveRouteBindingQuery($field, $value)->first();
-        return match ($field) {
-            Payment::RECURRING => $this->resolveRouteBindingQuery($value)
-                ->whereRecu
-            ,
-            Payment::ONCE => $this->resolveRouteBindingQuery($value),
-            default => $this->resolveRouteBindingQuery($value)->first(),
-        };
     }
 
     /**
      * Retrieve the product for a bound value.
      * 
-     * @return \Honed\Billing\BillingBuilder
+     * @return \Honed\Billing\Contracts\Driver
      */
     public function resolveRouteBindingQuery(mixed $value, string $field)
     {
-        return FacadesBilling::query()
-            ->where($value)
-            ->tap(function ($query) use ($value, $field) {
-                match ($field) {
-                    Payment::RECURRING => $query->whereRecurring(),
-                    Payment::ONCE => $query->whereOnce(),
-                    default => $query,
-                };
-            });
+        return Billing::driver()
+            ->whereProduct($value);
+            // ->tap(function ($query) use ($field) {
+            //     match ($field) {
+            //         Payment::RECURRING => $query->wherePayment(Payment::RECURRING),
+            //         Payment::ONCE => $query->wherePayment(Payment::ONCE),
+            //         default => $query,
+            //     };
+            // });
     }
 
 

@@ -2,12 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Honed\Billing\Concerns;
+namespace Honed\Billing\Contracts;
 
 use Illuminate\Contracts\Support\Arrayable;
 
 interface Driver
 {
+    /**
+     * Get the first matching product.
+     * 
+     * @param array<int,string> $columns
+     * @return mixed
+     */
+    public function first($columns = ['*']);
+
+    /**
+     * Get all matching products.
+     * 
+     * @param array<int,string> $columns
+     * @return mixed
+     */
+    public function get($columns = ['*']);
+
     /**
      * Scope to the given product.
      * 
@@ -21,7 +37,7 @@ interface Driver
      * @param string|array<int, mixed>|\Illuminate\Contracts\Support\Arrayable<int, mixed> $products
      * @return $this
      */
-    public function whereProducts(mixed|array|Arrayable $products): static;
+    public function whereProducts(string|array|Arrayable $products): static;
 
     /**
      * Scope to the given product group.

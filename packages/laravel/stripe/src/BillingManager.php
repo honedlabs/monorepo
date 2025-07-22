@@ -4,8 +4,40 @@ declare(strict_types=1);
 
 namespace Honed\Billing;
 
+use Closure;
+use Honed\Billing\Contracts\Driver;
+use Honed\Billing\Drivers\ConfigDriver;
+use Honed\Billing\Drivers\DatabaseDriver;
+use Illuminate\Contracts\Container\Container;
+use Illuminate\Database\DatabaseManager;
+use InvalidArgumentException;
+
+/**
+ * @mixin \Honed\Billing\Contracts\Driver
+ */
 class BillingManager
 {
+    /**
+     * The container instance.
+     *
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * The array of resolved drivers.
+     *
+     * @var array<string, Driver>
+     */
+    protected $drivers = [];
+
+    /**
+     * The registered custom driver creators.
+     *
+     * @var array<string, Closure(string, Container): Driver>
+     */
+    protected $customCreators = [];
+
     /**
      * The cache of retrieved products.
      * 
@@ -13,28 +45,192 @@ class BillingManager
      */
     protected $cache = [];
 
-    public function call()
+    /**
+     * Create a new billing manager.
+     *
+     * @return void
+     */
+    public function __construct(Container $container)
     {
-        return 'hit';
+        $this->container = $container;
     }
+
+    /**
+     * Dynamically call the default driver instance.
+     *
+     * @param  array<int, mixed>  $parameters
+     */
+    public function __call(string $method, array $parameters): mixed
+    {
+        return $this->driver()->{$method}(...$parameters);
+    }
+
     /**
      * Find a product by name.
      */
-    public function find(string $product): ?Billing
+    public function find(mixed $product, ?string $name = null): ?Billing
     {
-        return $this->cache[$product] ??= $this->resolve($product);
+        return $this->cache[$product] ??= $this->getByName($product, $name);
     }
 
-    public function driver(string $product)
+    /**
+     * Get a driver instance by name.
+     *
+     * @throws InvalidArgumentException
+     */
+    public function driver(?string $name = null): Driver
     {
-        // Get a driver
+        $name ??= $this->getDefaultDriver();
 
+        return $this->drivers[$name] = $this->cached($name);
     }
 
-    public function resolve(string $product)
+    /**
+     * Create an instance of the array driver.
+     */
+    public function createConfigDriver(string $name): ConfigDriver
     {
-        // Driver
+        return new ConfigDriver(
+            $name, $this->getConfig()
+        );
+    }
 
-        // Use a driver to resolve the billing.
+    /**
+     * Create an instance of the database driver.
+     */
+    public function createDatabaseDriver(string $name): DatabaseDriver
+    {
+        return new DatabaseDriver(
+            $name, $this->getDatabaseManager()
+        );
+    }
+
+    /**
+     * Get the default driver name.
+     */
+    public function getDefaultDriver(): string
+    {
+        // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
+        return $this->container['config']->get('billing.driver', 'database');
+    }
+
+    /**
+     * Set the default driver name.
+     */
+    public function setDefaultDriver(string $name): void
+    {
+        // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
+        $this->container['config']->set('billing.driver', $name);
+    }
+
+    /**
+     * Unset the given store instances.
+     *
+     * @param  string|array<int, string>|null  $name
+     * @return $this
+     */
+    public function forgetDriver(string|array|null $name = null): static
+    {
+        $name ??= $this->getDefaultDriver();
+
+        foreach ((array) $name as $storeName) {
+            if (isset($this->stores[$storeName])) {
+                unset($this->stores[$storeName]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Forget all of the resolved driver instances.
+     *
+     * @return $this
+     */
+    public function forgetDrivers(): static
+    {
+        $this->drivers = [];
+
+        return $this;
+    }
+
+    /**
+     * Get a product by the name.
+     */
+    protected function getByName(string $product, ?string $name = null): mixed
+    {
+        return $this->driver($name)
+            ->whereProduct($product)
+            ->first();
+    }
+
+    /**
+     * Register a custom driver creator closure.
+     *
+     * @param  Closure(string, Container): Driver  $callback
+     * @return $this
+     */
+    public function extend(string $driver, Closure $callback): static
+    {
+        $this->customCreators[$driver] = $callback->bindTo($this, $this);
+
+        return $this;
+    }
+
+    /**
+     * Attempt to get the driver from the local cache.
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function cached(string $name): Driver
+    {
+        return $this->drivers[$name] ?? $this->resolve($name);
+    }
+    /**
+     * Resolve a driver.
+     * 
+     * @throws InvalidArgumentException
+     */
+    protected function resolve(string $name): Driver
+    {
+        if (isset($this->customCreators[$name])) {
+            return $this->callCustomCreator($name);
+        }
+        
+        $method = 'create'.ucfirst($name).'Driver';
+
+        if (!method_exists($this, $method)) {
+            throw new InvalidArgumentException(
+                "Driver [{$name}] not supported."
+            );
+        }
+
+        /** @var Driver */
+        return $this->{$method}($name);
+    }
+
+    /**
+     * Call a custom driver creator.
+     */
+    protected function callCustomCreator(string $name): Driver
+    {
+        return $this->customCreators[$name]($name, $this->container);
+    }
+
+    /**
+     * Get the database manager instance from the container.
+     */
+    protected function getDatabaseManager(): DatabaseManager
+    {
+        /** @var DatabaseManager */
+        return $this->container['db']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Get the config instance from the container.
+     */
+    protected function getConfig(): mixed
+    {
+        return $this->container['config']['billing']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 }

@@ -57,12 +57,12 @@ class Decorator implements Driver
         return $this->forwardDecoratedCallTo($this->driver, $method, $parameters);
     }
 
-    public function first()
+    public function first($columns = ['*'])
     {
         return $this->driver->first();
     }
 
-    public function get()
+    public function get($columns = ['*'])
     {
         return $this->driver->get();
     }

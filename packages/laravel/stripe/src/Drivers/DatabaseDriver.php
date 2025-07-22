@@ -4,16 +4,86 @@ declare(strict_types=1);
 
 namespace Honed\Billing\Drivers;
 
-use Honed\Billing\Concerns\Driver;
+use Honed\Billing\Contracts\Driver;
 use Honed\Billing\Concerns\InteractsWithDatabase;
-use Honed\Billing\Payment;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Connection;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Traits\ForwardsCalls;
 
-class DatabaseDriver extends Builder implements Driver
+/**
+ * @mixin \Illuminate\Database\Query\Builder
+ */
+class DatabaseDriver implements Driver
 {
     use InteractsWithDatabase;
+    use ForwardsCalls;
+
+    /**
+     * The name of the driver.
+     *
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * The database manager.
+     *
+     * @var DatabaseManager
+     */
+    protected $db;
+
+    /**
+     * The query.
+     * 
+     * @var \Illuminate\Database\Query\Builder|null
+     */
+    protected $query;
+
+    /**
+     * Create a new database driver instance.
+     */
+    public function __construct(
+        string $name,
+        DatabaseManager $db
+    ) {
+        $this->name = $name;
+        $this->db = $db;
+    }
+
+    /**
+     * Dynamically call the query builder.
+     * 
+     * @param array<int, mixed> $parameters
+     */
+    public function __call(string $method, array $parameters): mixed
+    {
+        return $this->forwardDecoratedCallTo($this->getQuery(), $method, $parameters);
+    }
+
+    /**
+     * Get the first matching product.
+     * 
+     * @param array<int,string> $columns
+     * @return array<string, mixed>|null
+     */
+    public function first($columns = ['*'])
+    {
+        return $this->getQuery()->first($columns);
+    }
+
+    /**
+     * Get all matching products.
+     * 
+     * @param array<int,string> $columns
+     * @return array<int, array<string, mixed>>
+     */
+    public function get($columns = ['*'])
+    {
+        return $this->getQuery()->get($columns);
+    }
 
     /**
      * Scope to the given product.
@@ -22,7 +92,7 @@ class DatabaseDriver extends Builder implements Driver
      */
     public function whereProduct(mixed $product): static
     {
-        return $this->where('product', $product);
+        return $this->where($this->qualifyColumn('product'), $product);
     }
 
     /**
@@ -31,10 +101,9 @@ class DatabaseDriver extends Builder implements Driver
      * @param string|array<int, mixed>|\Illuminate\Contracts\Support\Arrayable<int, mixed> $products
      * @return $this
      */
-
-    public function whereProducts(mixed|array|Arrayable $products): static
+    public function whereProducts(string|array|Arrayable $products): static
     {
-        return $this->whereIn('product', $products);
+        return $this->whereIn($this->qualifyColumn('product'), $products);
     }
 
     /**
@@ -45,7 +114,7 @@ class DatabaseDriver extends Builder implements Driver
      */
     public function whereGroup(string|array|Arrayable $group): static
     {
-        return $this->where('group', $group);
+        return $this->where($this->qualifyColumn('group'), $group);
     }
 
     /**
@@ -55,7 +124,7 @@ class DatabaseDriver extends Builder implements Driver
      */
     public function whereType(string $type): static
     {
-        return $this->where('type', $type);
+        return $this->where($this->qualifyColumn('type'), $type);
     }
 
     /**
@@ -65,7 +134,7 @@ class DatabaseDriver extends Builder implements Driver
      */
     public function wherePayment(string $payment): static
     {
-        return $this->where('payment', $payment);
+        return $this->where($this->qualifyColumn('payment'), $payment);
     }
 
     /**
@@ -76,12 +145,37 @@ class DatabaseDriver extends Builder implements Driver
      */
     public function qualifyColumn($column)
     {
-        $column = $column instanceof Expression ? $column->getValue($this->getGrammar()) : $column;
+        $column = $column instanceof Expression ? (string) $column->getValue($this->getQuery()->getGrammar()) : $column;
 
         if (str_contains($column, '.')) {
             return $column;
         }
 
         return $this->getTable().'.'.$column;
+    }
+
+    /**
+     * Get the query.
+     */
+    public function getQuery(): Builder
+    {
+        return $this->query ??= $this->newQuery();
+    }
+
+    /**
+     * Create a new billing query.
+     */
+    protected function newQuery(): Builder
+    {
+        return $this->connection()
+            ->table($this->getTable());
+    }
+
+    /**
+     * The database connection.
+     */
+    protected function connection(): Connection
+    {
+        return $this->db->connection($this->getConnection());
     }
 }
