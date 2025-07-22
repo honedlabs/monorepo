@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Stripe\Tests;
+namespace Honed\Billing\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\Concerns\WithWorkbench;

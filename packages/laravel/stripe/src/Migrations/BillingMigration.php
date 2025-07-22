@@ -1,6 +1,6 @@
 <?php
 
-namespace Honed\Stripe\Migrations;
+namespace Honed\Billing\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 
@@ -12,7 +12,7 @@ abstract class BillingMigration extends Migration
     public function getConnection(): string
     {
         /** @var string|null $connection */
-        $connection = config('stripe.drivers.database.connection');
+        $connection = config('billing.drivers.database.connection');
 
         return ($connection === null || $connection === 'null') ? config('database.default') : $connection;
     }
@@ -23,7 +23,7 @@ abstract class BillingMigration extends Migration
     public function getTable(): string
     {
         /** @var string|null $table */
-        $table = config('stripe.drivers.database.table');
+        $table = config('billing.drivers.database.table');
 
         return ($table === null || $table === 'null') ? 'products' : $table;
     }

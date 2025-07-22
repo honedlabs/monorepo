@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Honed\Stripe;
+namespace Honed\Billing;
 
 use App\Models\User;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Support\Traits\Macroable;
 
 /**
- * @mixin \Honed\Stripe\ProductBuilder
+ * @mixin \Honed\Billing\BillingBuilder
  */
-class Product implements UrlRoutable
+class Billing implements UrlRoutable
 {
     use Macroable;
 
@@ -32,7 +32,7 @@ class Product implements UrlRoutable
 
     public function getRouteKeyName()
     {
-        return 'product';
+        return 'billing';
     }
 
     public function resolveRouteBinding($value, $field = null)
@@ -43,8 +43,8 @@ class Product implements UrlRoutable
     /**
      * Retrieve the product for a bound value.
      * 
-     * @param \Honed\Stripe\ProductBuilder|\Illuminate\Database\Eloquent\Builder $query
-     * @return \Honed\Stripe\ProductBuilder
+     * @param \Honed\Billing\BillingBuilder|\Illuminate\Database\Eloquent\Builder $query
+     * @return \Honed\Billing\BillingBuilder
      */
     public function resolveRouteBindingQuery($query, $value)
     {

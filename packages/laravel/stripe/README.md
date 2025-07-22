@@ -1,19 +1,19 @@
-<a href="https://honed.dev/stripe">
+<a href="https://honed.dev/billing">
     <picture>
         <source media="(prefers-color-scheme: dark)" srcset="art/header-dark.png">
         <img alt="" src="art/header-light.png">
     </picture>
 </a>
 
-# Stripe
+# Billing
 
 <p>
-    <a href="https://github.com/honedlabs/stripe/actions"><img src="https://github.com/honedlabs/stripe/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
-    <a href="https://packagist.org/packages/honed/stripe"><img src="https://img.shields.io/packagist/dt/honed/stripe" alt="Total Downloads"></a>
-    <a href="https://packagist.org/packages/honed/stripe"><img src="https://img.shields.io/packagist/v/honed/stripe" alt="Latest Stable Version"></a>
+    <a href="https://github.com/honedlabs/billing/actions"><img src="https://github.com/honedlabs/billing/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://packagist.org/packages/honed/billing"><img src="https://img.shields.io/packagist/dt/honed/billing" alt="Total Downloads"></a>
+    <a href="https://packagist.org/packages/honed/billing"><img src="https://img.shields.io/packagist/v/honed/billing" alt="Latest Stable Version"></a>
 </p>
 
-**Stripe** Even simpler billing through Cashier for your Laravel apps. .
+**Billing** Even simpler billing through Cashier for your Laravel apps. .
 
 ## Installation
 
@@ -24,13 +24,13 @@
 Get started with the package by requiring it in your PHP project using [Composer](https://getcomposer.org/).
 
 ```bash
-composer require honed/stripe
+composer require honed/billing
 ```
 
 ## Documentation
 
-Please refer to the [documentation](https://honed.dev/stripe) for the usage of the package.
+Please refer to the [documentation](https://honed.dev/billing) for the usage of the package.
 
 ## License
 
-**Stripe** was created by [Joshua Wallace](https://joshua-wallace.com) under the [MIT license](https://opensource.org/licenses/MIT).
+**Billing** was created by [Joshua Wallace](https://joshua-wallace.com) under the [MIT license](https://opensource.org/licenses/MIT).

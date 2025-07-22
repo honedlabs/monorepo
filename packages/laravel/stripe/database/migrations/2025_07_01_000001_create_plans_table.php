@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Honed\Stripe\Migrations\BillingMigration;
+use Honed\Billing\Migrations\BillingMigration;
 
 return new class extends BillingMigration
 {

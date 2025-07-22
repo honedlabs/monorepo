@@ -1,13 +1,13 @@
 {
-    "name": "honed/stripe",
+    "name": "honed/billing",
     "description": "Even simpler billing through Cashier for your Laravel apps. ",
     "keywords": [
         "honed",
         "laravel",
-        "stripe",
+        "billing",
         "inertia"
     ],
-    "homepage": "https://github.com/honedlabs/stripe",
+    "homepage": "https://github.com/honedlabs/billing",
     "license": "MIT",
     "authors": [
         {
@@ -38,12 +38,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Honed\\Stripe\\": "src/"
+            "Honed\\Billing\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Honed\\Stripe\\Tests\\": "tests/",
+            "Honed\\Billing\\Tests\\": "tests/",
             "App\\": "workbench/app/",
             "Database\\Factories\\": "workbench/database/factories/",
             "Database\\Seeders\\": "workbench/database/seeders/"
@@ -87,10 +87,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Honed\\Stripe\\StripeServiceProvider"
+                "Honed\\Billing\\BillingServiceProvider"
             ],
             "aliases": {
-                "Stripe": "Honed\\Stripe\\Facades\\Stripe"
+                "Billing": "Honed\\Billing\\Facades\\Billing"
             }
         }
     },

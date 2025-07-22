@@ -1,5 +1,7 @@
 <?php
 
+use Honed\Billing\Period;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -46,6 +48,19 @@ return [
     | is correct by running `php artisan billing:validate` command.
     |
     */
+
+    'period' => Period::MONTHLY,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Billing Drivers
+    |--------------------------------------------------------------------------
+    |
+    | If you are using the `config` driver, you may specify your plans and
+    | products here. You can validate that the structure you have defined
+    | is correct by running `php artisan billing:validate` command.
+    |
+    */
     'products' => [
         'forms_pro' => [
             'name' => 'Forms Pro',
@@ -61,9 +76,9 @@ return [
                     'price_id' => '',
                 ],
                 [
-                    'period' => 'yearly',
+                    'period' => 'yearly', // 
                     'price' => 1000,
-                    'price_id' => '',
+                    'price_id' => '', // REQUIRED
                 ]
             ]
         ],

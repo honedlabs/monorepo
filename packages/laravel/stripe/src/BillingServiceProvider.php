@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Honed\Stripe;
+namespace Honed\Billing;
 
 use Illuminate\Support\ServiceProvider;
 
-class StripeServiceProvider extends ServiceProvider
+class BillingServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/stripe.php', 'stripe');
+        $this->mergeConfigFrom(__DIR__.'/../config/billing.php', 'billing');
     }
 
     /**
@@ -22,8 +22,8 @@ class StripeServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__.'/../config/stripe.php' => config_path('stripe.php'),
-        ], 'stripe-config');
+            __DIR__.'/../config/billing.php' => config_path('billing.php'),
+        ], 'billing-config');
 
         if ($this->app->runningInConsole()) {
             $this->commands([
