@@ -33,9 +33,9 @@ class BulkData extends Data
     public static function rules(): array
     {
         return [
-            'all' => ['boolean'],
-            'only' => ['array', 'list', static::each(...)],
-            'except' => ['array', 'list', static::each(...)],
+            'all' => ['required', 'boolean'],
+            'only' => ['bail', 'required', 'list', static::each(...)],
+            'except' => ['bail', 'required', 'list', static::each(...)],
         ];
     }
 }

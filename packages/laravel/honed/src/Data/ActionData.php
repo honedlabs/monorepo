@@ -36,9 +36,9 @@ class ActionData extends Data
     {
         return [
             'all' => ['sometimes', 'boolean'],
-            'only' => ['exclude_with:all', 'array', 'list', static::each(...)],
-            'except' => ['exclude_with:all', 'array', 'list', static::each(...)],
-            'id' => ['exclude_without:all', 'alpha_num'],
+            'only' => ['bail', 'exclude_with:all', 'array', 'list', static::each(...)],
+            'except' => ['bail', 'exclude_with:all', 'array', 'list', static::each(...)],
+            'id' => ['bail', 'exclude_without:all', 'required', 'alpha_num'],
         ];
     }
 

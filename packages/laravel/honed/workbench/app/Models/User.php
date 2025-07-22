@@ -19,9 +19,10 @@ class User extends Authenticatable
     use HasFactory;
 
     use Notifiable;
+
     use Transferable;
 
-    protected $data = IdData::class;
+    protected $dataClass = IdData::class;
 
     /**
      * The factory for the model.
@@ -60,4 +61,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Remove the data class from the model.
+     * 
+     * @internal
+     */
+    public function removeDataClass(): void
+    {
+        unset($this->dataClass);
+    }
 }

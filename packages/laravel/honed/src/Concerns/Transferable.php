@@ -9,7 +9,7 @@ use ReflectionClass;
 use Spatie\LaravelData\Data;
 
 /**
- * @property class-string<Data>|null $data
+ * @property-read class-string<Data>|null $dataClass The data class to use for the model.
  */
 trait Transferable
 {
@@ -17,6 +17,8 @@ trait Transferable
      * Get the action group instance for the model.
      *
      * @param  class-string<Data>|null  $data
+     * 
+     * @throws \TypeError If no data class exists.
      */
     public function toData(?string $data = null): Data
     {
@@ -57,8 +59,8 @@ trait Transferable
             return $data::from($this);
         }
 
-        if (isset($this->$data)) {
-            return $this->$data::from($this);
+        if (isset($this->dataClass)) {
+            return $this->dataClass::from($this);
         }
 
         if ($attr = static::getUseDataAttribute()) {
