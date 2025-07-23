@@ -17,6 +17,7 @@ jobs:
         package:
           # - abn
           # - action
+          - billing
           # - bind
           # - chart
           # - command
