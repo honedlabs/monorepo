@@ -8,7 +8,7 @@ use Honed\Billing\BillingManager;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \Honed\Billing\Billing|null find(mixed $product, ?string $name = null) Find a product by name
+ * @method static \Honed\Billing\Product|null find(mixed $product, ?string $name = null) Find a product by name
  * @method static \Honed\Billing\Drivers\Decorator driver(?string $name = null) Get a driver instance by name
  * @method static \Honed\Billing\Drivers\ConfigDriver createConfigDriver(string $name) Create an instance of the config driver
  * @method static \Honed\Billing\Drivers\DatabaseDriver createDatabaseDriver(string $name) Create an instance of the database driver

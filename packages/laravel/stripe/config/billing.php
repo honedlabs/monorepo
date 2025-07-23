@@ -67,26 +67,16 @@ return [
     |
     */
     'products' => [
-        'forms_pro' => [
+        [
+            'id' => 'forms_pro',
             'name' => 'Forms Pro',
             'group' => 'forms',
             // 'type' => 'recurring',
-            // 'price' => 1000, // Optional
+            'price' => 1000, // Optional
             // 'period' => 'monthly',
             // 'period' => 'null|once|monthly|yearly', // Optional
-            // 'price_id' => '', // Optional
-            'prices' => [
-                [
-                    'period' => 'monthly',
-                    'price' => 1000,
-                    'price_id' => '',
-                ],
-                [
-                    'period' => 'yearly', //
-                    'price' => 1000,
-                    'price_id' => '', // REQUIRED
-                ],
-            ],
+            'price_id' => '', // Optional
+            // 'product_id' => '', // Optional
         ],
     ],
 ];

@@ -69,9 +69,11 @@ class DatabaseDriver implements Driver
      * @param  array<int,string>  $columns
      * @return array<string, mixed>|null
      */
-    public function first($columns = ['*'])
+    public function first(array $columns = ['*'])
     {
-        return $this->getQuery()->first($columns);
+        $product = $this->getQuery()->first($columns);
+
+        return $product ? (array) $product : null;
     }
 
     /**
@@ -80,9 +82,12 @@ class DatabaseDriver implements Driver
      * @param  array<int,string>  $columns
      * @return array<int, array<string, mixed>>
      */
-    public function get($columns = ['*'])
+    public function get(array $columns = ['*'])
     {
-        return $this->getQuery()->get($columns);
+        return $this->getQuery()
+            ->get($columns)
+            ->map(fn (object $product) => (array) $product)
+            ->all();
     }
 
     /**
@@ -92,7 +97,9 @@ class DatabaseDriver implements Driver
      */
     public function whereProduct(mixed $product): static
     {
-        return $this->where($this->qualifyColumn('product'), $product);
+        $this->where($this->qualifyColumn('product'), $product);
+
+        return $this;
     }
 
     /**
@@ -103,7 +110,9 @@ class DatabaseDriver implements Driver
      */
     public function whereProducts(string|array|Arrayable $products): static
     {
-        return $this->whereIn($this->qualifyColumn('product'), $products);
+        $this->whereIn($this->qualifyColumn('product'), $products);
+
+        return $this;
     }
 
     /**
@@ -114,7 +123,9 @@ class DatabaseDriver implements Driver
      */
     public function whereGroup(string|array|Arrayable $group): static
     {
-        return $this->where($this->qualifyColumn('group'), $group);
+        $this->where($this->qualifyColumn('group'), $group);
+
+        return $this;
     }
 
     /**
@@ -124,7 +135,9 @@ class DatabaseDriver implements Driver
      */
     public function whereType(string $type): static
     {
-        return $this->where($this->qualifyColumn('type'), $type);
+        $this->where($this->qualifyColumn('type'), $type);
+
+        return $this;
     }
 
     /**
@@ -134,7 +147,9 @@ class DatabaseDriver implements Driver
      */
     public function wherePayment(string $payment): static
     {
-        return $this->where($this->qualifyColumn('payment'), $payment);
+        $this->where($this->qualifyColumn('payment'), $payment);
+
+        return $this;
     }
 
     /**

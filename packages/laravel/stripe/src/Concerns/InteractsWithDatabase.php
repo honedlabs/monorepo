@@ -14,6 +14,7 @@ trait InteractsWithDatabase
         /** @var string|null $connection */
         $connection = config('billing.drivers.database.connection');
 
+        /** @var string */
         return ($connection === null || $connection === 'null') ? config('database.default') : $connection;
     }
 

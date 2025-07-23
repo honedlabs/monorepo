@@ -31,7 +31,7 @@ class ConfigDriver implements Driver
      *
      * @var array<int, Closure(array<string, mixed>): bool>
      */
-    protected $wheres;
+    protected $wheres = [];
 
     /**
      * Create a new config driver instance.
@@ -52,7 +52,7 @@ class ConfigDriver implements Driver
      * @param  array<int,string>  $columns
      * @return array<string, mixed>|null
      */
-    public function first($columns = ['*'])
+    public function first(array $columns = ['*'])
     {
         $product = Arr::first($this->resolve());
 
@@ -69,7 +69,7 @@ class ConfigDriver implements Driver
      * @param  array<int,string>  $columns
      * @return array<int, array<string, mixed>>
      */
-    public function get($columns = ['*'])
+    public function get(array $columns = ['*'])
     {
         $products = $this->resolve();
 
@@ -115,12 +115,16 @@ class ConfigDriver implements Driver
     /**
      * Scope a column to the given values.
      *
-     * @param  array<int, mixed>  $values
+     * @param  string|array<int, mixed>|\Illuminate\Contracts\Support\Arrayable<int, mixed>  $values
      * @return $this
      */
-    public function whereIn(string $key, array $values): static
+    public function whereIn(string $key, string|array|Arrayable $values): static
     {
-        return $this->where(static fn (array $product) => in_array($product[$key], Arr::wrap($values)));
+        return $this->where(static function (array $product) use ($key, $values) {
+            $values = Arr::wrap($values);
+
+            return in_array($product[$key], $values, true);
+        });
     }
 
     /**
@@ -136,7 +140,7 @@ class ConfigDriver implements Driver
     /**
      * Scope to the given products.
      *
-     * @param  string|array<int, mixed>|Arrayable<int, mixed>  $products
+     * @param  string|array<int, mixed>|\Illuminate\Contracts\Support\Arrayable<int, mixed>  $products
      * @return $this
      */
     public function whereProducts(string|array|Arrayable $products): static
@@ -147,7 +151,7 @@ class ConfigDriver implements Driver
     /**
      * Scope to the given group.
      *
-     * @param  string|array<int, string>|Arrayable<int, string>  $group
+     * @param  string|array<int, mixed>|\Illuminate\Contracts\Support\Arrayable<int, mixed>  $group
      * @return $this
      */
     public function whereGroup(string|array|Arrayable $group): static
@@ -178,9 +182,9 @@ class ConfigDriver implements Driver
     /**
      * Select the columns from the products.
      *
-     * @param  array<string, array<string, mixed>>  $products
-     * @param  array<int,string>  $columns
-     * @return array<int, array<string, mixed>>
+     * @param  array<string, mixed>  $products
+     * @param  array<int, string>  $columns
+     * @return array<string, mixed>
      */
     protected function select(array $products, array $columns = ['*']): array
     {

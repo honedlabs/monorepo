@@ -13,18 +13,19 @@ class Schema
      */
     public static function validate(mixed $input): ?string
     {
-        if ($message = static::checkAssociative($input)) {
+        if ($message = static::checkList($input)) {
             return $message;
         }
 
-        if ($message = static::checkUniqueness($input)) {
-            return $message;
-        }
-
+        /** @var array<int, mixed> $input */
         foreach ($input as $key => $value) {
             if ($message = static::checkStructure($value, $key)) {
                 return $message;
             }
+        }
+
+        if ($message = static::checkUniqueness($input)) {
+            return $message;
         }
 
         return null;
@@ -33,7 +34,7 @@ class Schema
     /**
      * Check that the structure is an array.
      */
-    protected static function checkArray(mixed $input, ?string $key = null): ?string
+    protected static function checkArray(mixed $input, int|string|null $key = null): ?string
     {
         if (! is_array($input)) {
             return sprintf(
@@ -48,11 +49,13 @@ class Schema
     /**
      * Check that the structure is an associative array.
      */
-    protected static function checkAssociative(mixed $input, ?string $key = null): ?string
+    protected static function checkAssociative(mixed $input, int|string|null $key = null): ?string
     {
         if ($message = static::checkArray($input, $key)) {
             return $message;
         }
+
+        /** @var array<string|int, mixed> $input */
 
         if (! Arr::isAssoc($input)) {
             return sprintf(
@@ -67,11 +70,13 @@ class Schema
     /**
      * Check that the structure is a list array.
      */
-    protected static function checkList(mixed $input, ?string $key = null): ?string
+    protected static function checkList(mixed $input, int|string|null $key = null): ?string
     {
         if ($message = static::checkArray($input, $key)) {
             return $message;
         }
+
+        /** @var array<int, mixed> $input */
 
         if (! Arr::isList($input)) {
             return sprintf(
@@ -91,7 +96,7 @@ class Schema
     protected static function checkUniqueness(array $input): ?string
     {
         $duplicates = collect($input)
-            ->keys()
+            ->pluck('id')
             ->duplicates()
             ->values();
 
@@ -108,13 +113,17 @@ class Schema
     /**
      * Check the structure of the provided input.
      */
-    protected static function checkStructure(mixed $input, string $key): ?string
+    protected static function checkStructure(mixed $input, int $key): ?string
     {
+        /** @var array<string, mixed> $input */
         return static::checkAssociative($input, $key)
+            // ?? static::checkId($input, $key)
             ?? static::checkName($input, $key)
             ?? static::checkGroup($input, $key)
             ?? static::checkType($input, $key)
-            ?? static::checkPricing($input, $key);
+            ?? static::checkPeriod($input, $key)
+            ?? static::checkPriceId($input, $key)
+            ?? static::checkPriceAmount($input, $key);
     }
 
     /**
@@ -122,7 +131,7 @@ class Schema
      *
      * @param  array<string, mixed>  $input
      */
-    protected static function checkName(array $input, string $key): ?string
+    protected static function checkName(array $input, int $key): ?string
     {
         if (! is_string(Arr::get($input, 'name'))) {
             return sprintf(
@@ -135,11 +144,30 @@ class Schema
     }
 
     /**
+     * Ensure that an id is given for the product.
+     *
+     * @param  array<string, mixed>  $input
+     */
+    protected static function checkId(array $input, int $key): ?string
+    {
+        $input = Arr::get($input, 'id');
+
+        if (! is_string($input)) {
+            return sprintf(
+                'The id supplied for key [%s] is invalid, it must be a string.',
+                $key
+            );
+        }
+
+        return null;
+    }
+
+    /**
      * Ensure that a group, if given, is valid.
      *
      * @param  array<string, mixed>  $input
      */
-    protected static function checkGroup(array $input, string $key): ?string
+    protected static function checkGroup(array $input, int $key): ?string
     {
         $input = Arr::get($input, 'group');
 
@@ -158,7 +186,7 @@ class Schema
      *
      * @param  array<string, mixed>  $input
      */
-    protected static function checkType(array $input, string $key): ?string
+    protected static function checkType(array $input, int $key): ?string
     {
         $input = Arr::get($input, 'type');
 
@@ -166,7 +194,7 @@ class Schema
             return sprintf(
                 'The type supplied for key [%s] is invalid, it must be one of: null, recurring, once - [%s] given.',
                 $key,
-                $input
+                is_scalar($input) ? $input : gettype($input)
             );
         }
 
@@ -174,52 +202,11 @@ class Schema
     }
 
     /**
-     * Ensure that a price or group of prices is given.
-     *
-     * @param  array<string, mixed>  $input
-     */
-    protected static function checkPricing(array $input, string $key): ?string
-    {
-        if (Arr::hasAll($input, ['price', 'period', 'price_id'])) {
-            return static::checkPrice($input, $key);
-        }
-
-        if ($prices = Arr::get($input, 'prices', [])) {
-            if ($message = static::checkList($prices, $key)) {
-                return $message;
-            }
-
-            foreach ($prices as $price) {
-                if ($message = static::checkPrice($price, $key)) {
-                    return $message;
-                }
-            }
-
-            return null;
-        }
-
-        return sprintf(
-            'No pricing information found for key [%s].',
-            $key
-        );
-    }
-
-    /**
-     * Ensure that a price or group of prices is given.
-     *
-     * @param  array<string, mixed>  $input
-     */
-    protected static function checkPrice(array $input, string $key): ?string
-    {
-        return static::checkPeriod($input, $key)
-            ?? static::checkPriceId($input, $key)
-            ?? static::checkPriceAmount($input, $key);
-    }
-
-    /**
      * Ensure that the given period is valid.
+     *
+     * @param  array<string, mixed>  $input
      */
-    protected static function checkPeriod(array $input, string $key): ?string
+    protected static function checkPeriod(array $input, int $key): ?string
     {
         $input = Arr::get($input, 'period');
 
@@ -227,7 +214,7 @@ class Schema
             return sprintf(
                 'The period supplied for key [%s] is invalid, it must be one of: null, monthly, yearly - [%s] given.',
                 $key,
-                $input
+                is_scalar($input) ? $input : gettype($input)
             );
         }
 
@@ -236,8 +223,10 @@ class Schema
 
     /**
      * Ensure that the price id is given.
+     *
+     * @param  array<string, mixed>  $input
      */
-    protected static function checkPriceId(array $input, string $key): ?string
+    protected static function checkPriceId(array $input, int $key): ?string
     {
         $input = Arr::get($input, 'price_id');
 
@@ -245,7 +234,7 @@ class Schema
             return sprintf(
                 'The price id supplied for key [%s] is invalid, it must be a string or null - [%s] given.',
                 $key,
-                $input
+                is_scalar($input) ? $input : gettype($input)
             );
         }
 
@@ -254,8 +243,10 @@ class Schema
 
     /**
      * Ensure that the price amount is given.
+     *
+     * @param  array<string, mixed>  $input
      */
-    protected static function checkPriceAmount(array $input, string $key): ?string
+    protected static function checkPriceAmount(array $input, int $key): ?string
     {
         $input = Arr::get($input, 'price');
 

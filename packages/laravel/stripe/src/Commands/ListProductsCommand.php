@@ -29,7 +29,7 @@ class ListProductsCommand extends Command
     /**
      * The console command name aliases.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $aliases = ['list:billing'];
 
@@ -49,8 +49,6 @@ class ListProductsCommand extends Command
 
             return self::FAILURE;
         }
-
-        dd(Billing::call());
 
         return self::SUCCESS;
     }

@@ -14,7 +14,7 @@ interface Driver
      * @param  array<int,string>  $columns
      * @return mixed
      */
-    public function first($columns = ['*']);
+    public function first(array $columns = ['*']);
 
     /**
      * Get all matching products.
@@ -22,7 +22,7 @@ interface Driver
      * @param  array<int,string>  $columns
      * @return mixed
      */
-    public function get($columns = ['*']);
+    public function get(array $columns = ['*']);
 
     /**
      * Scope to the given product.

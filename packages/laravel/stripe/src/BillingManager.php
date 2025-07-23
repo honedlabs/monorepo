@@ -42,7 +42,7 @@ class BillingManager
     /**
      * The cache of retrieved products.
      *
-     * @var array<string, Billing>
+     * @var array<string, \Honed\Billing\Product|null>
      */
     protected $cache = [];
 
@@ -69,9 +69,17 @@ class BillingManager
     /**
      * Find a product by name.
      */
-    public function find(mixed $product, ?string $name = null): ?Billing
+    public function find(mixed $product, ?string $name = null): ?Product
     {
-        return $this->cache[$product] ??= $this->getByName($product, $name);
+        return $this->cache[$product] ??= $this->findByName($product, $name);
+    }
+
+    /**
+     * Get a builder for the products.
+     */
+    public function query(): Decorator
+    {
+        return $this->driver();
     }
 
     /**
@@ -112,7 +120,7 @@ class BillingManager
     public function getDefaultDriver(): string
     {
         // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
-        return $this->container['config']->get('billing.driver', 'database');
+        return $this->container['config']->get('billing.default', 'config');
     }
 
     /**
@@ -171,7 +179,7 @@ class BillingManager
     /**
      * Get a product by the name.
      */
-    protected function getByName(string $product, ?string $name = null): mixed
+    protected function findByName(mixed $product, ?string $name = null): ?Product
     {
         return $this->driver($name)
             ->whereProduct($product)
@@ -232,9 +240,12 @@ class BillingManager
 
     /**
      * Get the config instance from the container.
+     * 
+     * @return array<string, mixed>
      */
-    protected function getConfig(): mixed
+    protected function getConfig(): array
     {
-        return $this->container['config']['billing']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+        /** @var array<string, mixed> */
+        return $this->container['config']['billing'] ?? []; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 }

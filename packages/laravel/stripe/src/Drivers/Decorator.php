@@ -7,7 +7,10 @@ namespace Honed\Billing\Drivers;
 use BadMethodCallException;
 use Honed\Billing\Contracts\Driver;
 use Honed\Billing\Payment;
+use Honed\Billing\Product;
+use Honed\Billing\ProductCollection;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
@@ -65,22 +68,33 @@ class Decorator implements Driver
      * Get the first matching product.
      *
      * @param  array<int,string>  $columns
-     * @return mixed
+     * @return \Honed\Billing\Product|null
      */
-    public function first($columns = ['*'])
+    public function first($columns = ['*']): ?Product
     {
-        return $this->driver->first($columns);
+        /** @var array<string, mixed>|object|null */
+        $product = $this->driver->first($columns);
+
+        return $product ? $this->product((array) $product) : null;
     }
 
     /**
      * Get all matching products.
      *
      * @param  array<int,string>  $columns
-     * @return mixed
+     * @return \Honed\Billing\ProductCollection
      */
-    public function get($columns = ['*'])
+    public function get($columns = ['*']): ProductCollection
     {
-        return $this->driver->get($columns);
+        /** @var array<int, array<string, mixed>> */
+        $products = $this->driver->get($columns);
+
+        return ProductCollection::make(
+            array_map(
+                fn (array $product) => $this->product($product),
+                $products
+            )
+        );
     }
 
     /**
@@ -167,5 +181,16 @@ class Decorator implements Driver
         $this->driver->wherePayment(Payment::ONCE);
 
         return $this;
+    }
+
+    /**
+     * Create a new product instance.
+     *
+     * @param  array<string, mixed>  $product
+     */
+    protected function product(array $product): Product
+    {
+
+        return Product::from($product);
     }
 }
