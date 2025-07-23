@@ -8,9 +8,7 @@ use Honed\Billing\Drivers\Decorator;
 use Honed\Billing\Facades\Billing;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Number;
 use Illuminate\Support\Traits\Macroable;
 use JsonSerializable;
 use Laravel\Cashier\Cashier;
@@ -18,7 +16,7 @@ use Laravel\Cashier\Cashier;
 /**
  * @implements \Illuminate\Contracts\Support\Arrayable<string, mixed>
  */
-class Product implements UrlRoutable, Arrayable, JsonSerializable
+class Product implements Arrayable, JsonSerializable, UrlRoutable
 {
     use Macroable;
 
@@ -80,7 +78,7 @@ class Product implements UrlRoutable, Arrayable, JsonSerializable
 
     /**
      * Create a new product instance from attributes.
-     * 
+     *
      * @param  array<string, mixed>  $attributes
      */
     public static function from(array $attributes): static
@@ -98,13 +96,13 @@ class Product implements UrlRoutable, Arrayable, JsonSerializable
 
     /**
      * Set the identifier of the product.
-     * 
+     *
      * @return $this
      */
     public function id(string $id): static
     {
         $this->id = $id;
-        
+
         return $this;
     }
 
@@ -118,7 +116,7 @@ class Product implements UrlRoutable, Arrayable, JsonSerializable
 
     /**
      * Set the name of the product.
-     * 
+     *
      * @return $this
      */
     public function name(string $name): static
@@ -138,7 +136,7 @@ class Product implements UrlRoutable, Arrayable, JsonSerializable
 
     /**
      * Set the group of the product.
-     * 
+     *
      * @return $this
      */
     public function group(?string $group): static
@@ -158,7 +156,7 @@ class Product implements UrlRoutable, Arrayable, JsonSerializable
 
     /**
      * Set the type of the product.
-     * 
+     *
      * @return $this
      */
     public function type(?string $type): static
@@ -184,13 +182,13 @@ class Product implements UrlRoutable, Arrayable, JsonSerializable
 
     /**
      * Set the price of the product.
-     * 
+     *
      * @return $this
      */
     public function price(int|float|null $price): static
     {
         $this->price = $price;
-        
+
         return $this;
     }
 
@@ -220,7 +218,7 @@ class Product implements UrlRoutable, Arrayable, JsonSerializable
 
     /**
      * Set the price ID of the product.
-     * 
+     *
      * @return $this
      */
     public function priceId(string $price_id): static
@@ -240,7 +238,7 @@ class Product implements UrlRoutable, Arrayable, JsonSerializable
 
     /**
      * Set the period of the product.
-     * 
+     *
      * @return $this
      */
     public function period(?string $period): static
@@ -266,7 +264,7 @@ class Product implements UrlRoutable, Arrayable, JsonSerializable
 
     /**
      * Set the product id of the product.
-     * 
+     *
      * @return $this
      */
     public function productId(?string $product_id): static
@@ -302,12 +300,11 @@ class Product implements UrlRoutable, Arrayable, JsonSerializable
 
     /**
      * Retrieve the product for
-     * 
-     * @param mixed $value
-     * @param string|null $field
-     * @return \Honed\Billing\Product|null
+     *
+     * @param  mixed  $value
+     * @param  string|null  $field
      */
-    public function resolveRouteBinding($value, $field = null): ?Product
+    public function resolveRouteBinding($value, $field = null): ?self
     {
         return $this->resolveRouteBindingQuery($value, $field)->first();
     }
@@ -364,7 +361,7 @@ class Product implements UrlRoutable, Arrayable, JsonSerializable
 
     /**
      * Specify which fields should be serialized to JSON.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function jsonSerialize(): array

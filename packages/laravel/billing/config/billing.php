@@ -58,25 +58,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Billing Drivers
+    | Billing Products
     |--------------------------------------------------------------------------
     |
     | If you are using the `config` driver, you may specify your plans and
     | products here. You can validate that the structure you have defined
-    | is correct by running `php artisan billing:validate` command.
+    | is correct by running the `php artisan billing:validate` command.
     |
     */
-    'products' => [
-        [
-            'id' => 'forms_pro',
-            'name' => 'Forms Pro',
-            'group' => 'forms',
-            // 'type' => 'recurring',
-            'price' => 1000, // Optional
-            // 'period' => 'monthly',
-            // 'period' => 'null|once|monthly|yearly', // Optional
-            'price_id' => '', // Optional
-            // 'product_id' => '', // Optional
-        ],
-    ],
+
+    'products' => [],
 ];

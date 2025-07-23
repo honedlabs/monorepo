@@ -42,7 +42,7 @@ class BillingManager
     /**
      * The cache of retrieved products.
      *
-     * @var array<string, \Honed\Billing\Product|null>
+     * @var array<string, Product|null>
      */
     protected $cache = [];
 
@@ -240,7 +240,7 @@ class BillingManager
 
     /**
      * Get the config instance from the container.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function getConfig(): array

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Billing\Commands;
 
-use Honed\Billing\Facades\Billing;
 use Honed\Billing\Schema;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;

@@ -56,7 +56,6 @@ class Schema
         }
 
         /** @var array<string|int, mixed> $input */
-
         if (! Arr::isAssoc($input)) {
             return sprintf(
                 'The configuration for key [%s] is not an associative array.',
@@ -77,7 +76,6 @@ class Schema
         }
 
         /** @var array<int, mixed> $input */
-
         if (! Arr::isList($input)) {
             return sprintf(
                 'The configuration for key [%s] is not a list array.',

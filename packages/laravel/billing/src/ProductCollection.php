@@ -14,40 +14,44 @@ class ProductCollection extends Collection
     /**
      * Pluck the ids of the products.
      *
-     * @return $this
+     * @return Collection<int, string|int>
      */
-    public function ids(): static
+    public function ids(): Collection
     {
-        return $this->pluck('name');
+        /** @var Collection<int, string|int> */
+        return $this->pluck('id');
     }
 
     /**
      * Pluck the names of the products.
      *
-     * @return $this
+     * @return Collection<int, string>
      */
-    public function names(): static
+    public function names(): Collection
     {
+        /** @var Collection<int, string> */
         return $this->pluck('name');
     }
 
     /**
      * Pluck the price ids of the products.
      *
-     * @return $this
+     * @return Collection<int, string>
      */
-    public function prices(): static
+    public function prices(): Collection
     {
+        /** @var Collection<int, string> */
         return $this->pluck('price_id');
     }
 
     /**
      * Pluck the product ids of the products.
      *
-     * @return $this
+     * @return Collection<int, string|null>
      */
-    public function products(): static
+    public function products(): Collection
     {
-        return $this->pluck('product');
+        /** @var Collection<int, string|null> */
+        return $this->pluck('product_id');
     }
 }

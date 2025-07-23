@@ -115,7 +115,7 @@ class ConfigDriver implements Driver
     /**
      * Scope a column to the given values.
      *
-     * @param  string|array<int, mixed>|\Illuminate\Contracts\Support\Arrayable<int, mixed>  $values
+     * @param  string|array<int, mixed>|Arrayable<int, mixed>  $values
      * @return $this
      */
     public function whereIn(string $key, string|array|Arrayable $values): static
@@ -140,7 +140,7 @@ class ConfigDriver implements Driver
     /**
      * Scope to the given products.
      *
-     * @param  string|array<int, mixed>|\Illuminate\Contracts\Support\Arrayable<int, mixed>  $products
+     * @param  string|array<int, mixed>|Arrayable<int, mixed>  $products
      * @return $this
      */
     public function whereProducts(string|array|Arrayable $products): static
@@ -151,7 +151,7 @@ class ConfigDriver implements Driver
     /**
      * Scope to the given group.
      *
-     * @param  string|array<int, mixed>|\Illuminate\Contracts\Support\Arrayable<int, mixed>  $group
+     * @param  string|array<int, mixed>|Arrayable<int, mixed>  $group
      * @return $this
      */
     public function whereGroup(string|array|Arrayable $group): static

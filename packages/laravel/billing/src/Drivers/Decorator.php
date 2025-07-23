@@ -10,7 +10,6 @@ use Honed\Billing\Payment;
 use Honed\Billing\Product;
 use Honed\Billing\ProductCollection;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
@@ -68,7 +67,6 @@ class Decorator implements Driver
      * Get the first matching product.
      *
      * @param  array<int,string>  $columns
-     * @return \Honed\Billing\Product|null
      */
     public function first($columns = ['*']): ?Product
     {
@@ -82,7 +80,6 @@ class Decorator implements Driver
      * Get all matching products.
      *
      * @param  array<int,string>  $columns
-     * @return \Honed\Billing\ProductCollection
      */
     public function get($columns = ['*']): ProductCollection
     {
