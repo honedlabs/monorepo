@@ -4,8 +4,7 @@
     "keywords": [
         "honed",
         "laravel",
-        "billing",
-        "inertia"
+        "billing"
     ],
     "homepage": "https://github.com/honedlabs/billing",
     "license": "MIT",
@@ -19,7 +18,6 @@
     ],
     "require": {
         "php": "^8.2",
-        "honed/core": "^0.26.0",
         "illuminate/contracts": "^11.0||^12.0",
         "illuminate/support": "^11.0||^12.0",
         "laravel/cashier": "^v15.7.0"
