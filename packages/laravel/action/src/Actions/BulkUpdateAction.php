@@ -46,7 +46,7 @@ abstract class BulkUpdateAction extends EloquentAction
      * @param  TInput  $input
      * @return array<string, mixed>
      */
-    protected function attributes($input): array
+    public function attributes($input): array
     {
         return $this->normalize($input);
     }
@@ -59,7 +59,7 @@ abstract class BulkUpdateAction extends EloquentAction
      * @param  T|array<int, T>|\Illuminate\Support\Collection<int, T>|\Illuminate\Database\Eloquent\Collection<int, TModel>  $models
      * @param  TInput  $input
      */
-    protected function execute($models, $input): void
+    public function execute($models, $input): void
     {
         $attributes = $this->attributes($input);
 
@@ -77,7 +77,7 @@ abstract class BulkUpdateAction extends EloquentAction
      * @param  TInput  $input
      * @param  array<string, mixed>  $attributes
      */
-    protected function after($models, $input, array $attributes): void
+    public function after($models, $input, array $attributes): void
     {
         //
     }

@@ -2,57 +2,56 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Actions\Product\BulkAttachUsers;
+use Workbench\App\Actions\Product\BulkUpdateProducts;
 use Workbench\App\Models\Product;
-use Workbench\App\Models\User;
 
 beforeEach(function () {
-    $this->action = new BulkAttachUsers();
+    $this->action = new BulkUpdateProducts();
 
-    $this->users = User::factory(3)->create();
-
-    $this->assertDatabaseEmpty('product_user');
+    $this->products = Product::factory(3)->create();
 });
 
-it('attaches id', function () {
-    $product = Product::factory()->create();
+it('updates id', function () {
+    $id = $this->products->first()->id;
+    $this->action->handle($id, ['name' => 'Bulk']);
 
-    $this->action->handle($product->id, $this->users);
+    $this->assertDatabaseHas('products', [
+        'id' => $id,
+        'name' => 'Bulk',
+    ]);
+});
 
-    foreach ($this->users as $user) {
-        $this->assertDatabaseHas('product_user', [
-            'product_id' => $product->id,
-            'user_id' => $user->id,
+it('updates array', function () {
+    $ids = $this->products->pluck('id')->all();
+    $this->action->handle($ids, ['name' => 'Bulk']);
+
+    foreach ($ids as $id) {
+        $this->assertDatabaseHas('products', [
+            'id' => $id,
+            'name' => 'Bulk',
         ]);
     }
 });
 
-it('attaches array', function () {
-    $products = Product::factory(3)->create();
+it('updates collection', function () {
+    $ids = $this->products->modelKeys();
+    $this->action->handle($ids, ['name' => 'Bulk']);
 
-    $this->action->handle($products->pluck('id')->all(), $this->users);
-
-    foreach ($this->users as $user) {
-        foreach ($products as $product) {
-            $this->assertDatabaseHas('product_user', [
-                'product_id' => $product->id,
-                'user_id' => $user->id,
-            ]);
-        }
+    foreach ($ids as $id) {
+        $this->assertDatabaseHas('products', [
+            'id' => $id,
+            'name' => 'Bulk',
+        ]);
     }
 });
 
-it('attaches collection', function () {
-    $products = Product::factory(3)->create();
+it('updates eloquent collection', function () {
+    $this->action->handle($this->products, ['name' => 'Bulk']);
 
-    $this->action->handle($products->modelKeys(), $this->users);
-
-    foreach ($this->users as $user) {
-        foreach ($products as $product) {
-            $this->assertDatabaseHas('product_user', [
-                'product_id' => $product->id,
-                'user_id' => $user->id,
-            ]);
-        }
+    foreach ($this->products as $product) {
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'name' => 'Bulk',
+        ]);
     }
 });

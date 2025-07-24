@@ -26,16 +26,30 @@ trait InteractsWithBuilder
      */
     protected function getQuery($models): Builder
     {
-        $models = match (true) {
+        $query = $this->query();
+
+        return $query->whereIn(
+            $this->getKey($query),
+            $this->getPrimaryKeys($models)
+        );
+    }
+
+    /**
+     * Get the primary keys to scope the query by.
+     *
+     * @template T of int|string|null
+     *
+     * @param  T|array<int, T>|Collection<int, T>|EloquentCollection<int, TModel>  $models
+     * @return array<int, T>
+     */
+    protected function getPrimaryKeys($models): array
+    {
+        return match (true) {
             $models instanceof EloquentCollection => $models->modelKeys(),
             is_array($models) => $models,
             $models instanceof Collection => $models->toArray(),
             default => Arr::wrap($models),
         };
-
-        $query = $this->query();
-
-        return $query->whereIn($this->getKey($query), $models);
     }
 
     /**
