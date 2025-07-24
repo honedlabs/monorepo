@@ -68,8 +68,8 @@ abstract class AttachUniqueAction extends BelongsToManyAction
     {
         $query = $this->getRelationship($model)->getQuery();
 
-        $column = $query->qualifyColumn('id');
-        
+        $column = $query->qualifyColumn($model->getKeyName());
+
         /** @var Collection<int, int|string> */
         return $query->pluck($column);
     }
