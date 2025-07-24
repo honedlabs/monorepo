@@ -9,8 +9,8 @@ use Honed\Honed\Responses\Concerns\HasStore;
 
 class CreateResponse extends InertiaResponse
 {
-    use HasStore;
     use CanHaveSchema;
+    use HasStore;
 
     /**
      * Create a new edit response.

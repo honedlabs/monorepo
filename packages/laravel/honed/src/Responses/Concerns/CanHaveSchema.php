@@ -15,7 +15,7 @@ trait CanHaveSchema
 
     /**
      * The defaults to use in the schema.
-     * 
+     *
      * @var array<string, mixed>
      */
     protected $defaults = [];

@@ -45,7 +45,7 @@ if (! function_exists('attempt')) {
 }
 
 if (! function_exists('getKey')) {
-    
+
     /**
      * Get the key of a model.
      */

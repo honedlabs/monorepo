@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use function array_map;
 
 /**
- * @phpstan-require-extends \BackedEnum
+ * @phpstan-require-implements \BackedEnum
  */
 trait Resourceful
 {
@@ -20,7 +20,7 @@ trait Resourceful
      */
     public static function resource(): array
     {
-        return array_map(static fn (self $case) => $case->asResource(),
+        return array_map(static fn (self $case) => $case->toResource(),
             array_values(
                 array_filter(
                     static::cases(),
