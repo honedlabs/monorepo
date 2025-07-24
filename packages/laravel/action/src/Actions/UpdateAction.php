@@ -25,7 +25,7 @@ class UpdateAction extends DatabaseAction
      * @param  TInput  $input
      * @return TModel $model
      */
-    public function handle(Model $model, $input): Model
+    public function handle(Model $model, $input = []): Model
     {
         return $this->transaction(
             fn () => $this->execute($model, $input)

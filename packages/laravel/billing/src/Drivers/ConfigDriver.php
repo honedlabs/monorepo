@@ -134,7 +134,7 @@ class ConfigDriver implements Driver
      */
     public function whereProduct(mixed $product): static
     {
-        return $this->whereColumn('name', $product);
+        return $this->whereColumn('id', $product);
     }
 
     /**
@@ -145,7 +145,7 @@ class ConfigDriver implements Driver
      */
     public function whereProducts(string|array|Arrayable $products): static
     {
-        return $this->whereIn('name', $products);
+        return $this->whereIn('id', $products);
     }
 
     /**

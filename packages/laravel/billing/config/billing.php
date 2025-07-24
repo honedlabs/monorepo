@@ -14,7 +14,7 @@ return [
     | Here you will specify the default driver that should be used when
     | resolving your plans and products.
     |
-    | Supported: "config"
+    | Supported: "config", "database"
     |
     */
     'default' => env('BILLING_DRIVER', 'config'),
