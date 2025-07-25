@@ -4,8 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Concerns;
 
-trait HasSource
+trait HasData
 {
+    protected $data;
+
+    public function data($data): static
+    {
+
+    }
+
+    public function g
     XAxis::make()
         ->property('source');
 
@@ -66,7 +74,7 @@ trait HasSource
 
             BarSeries::make()
                 ->barWidth('60%')
-                ->showBackgroun()
+                ->showBackground()
                 ->backgroundStyle([
                     'color' => 'rgba(180, 180, 180, 0.2)',
                 ]),

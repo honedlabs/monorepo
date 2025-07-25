@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Concerns;
 
+use Honed\Chart\Enums\Easing;
+
 trait Animatable
 {
     /**
@@ -87,20 +89,178 @@ trait Animatable
     /**
      * Get whether to enable animation.
      * 
-     * @return bool
+     * @return true|null
      */
     public function isAnimated(): ?bool
     {
-        return $this->animation;
+        return $this->animation ?: null;
     }
 
     /**
      * Get whether to not enable animation.
      * 
-     * @return bool
+     * @return true|null
      */
     public function isNotAnimated(): ?bool
     {
-        return ! $this->isAnimated();
+        return ! $this->animation ?: null;
+    }
+
+    /**
+     * Set the animation threshold.
+     * 
+     * @return $this
+     */
+    public function animationThreshold(?int $value): static
+    {
+        $this->animationThreshold = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the animation threshold.
+     */
+    public function getAnimationThreshold(): ?int
+    {
+        return $this->animationThreshold;
+    }
+
+    /**
+     * Set the animation duration.
+     * 
+     * @return $this
+     */
+    public function animationDuration(?int $value): static
+    {
+        $this->animationDuration = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the animation duration.
+     * 
+     * @return int|null
+     */
+    public function getAnimationDuration(): ?int
+    {
+        return $this->animationDuration;
+    }
+
+    /**
+     * Set the animation easing method used for the first animation.
+     * 
+     * @param \Honed\Chart\Enums\Easing|string $value
+     * @return $this
+     * 
+     * @throws \ValueError if the easing method is not a valid easing method
+     */
+    public function animationEasing(Easing|string $value): static
+    {
+        if (! $value instanceof Easing) {
+            $value = Easing::from($value);
+        }
+
+        $this->animationEasing = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the animation easing method used for the first animation.
+     */
+    public function getAnimationEasing(): ?string
+    {
+        return $this->animationEasing?->value;
+    }
+
+    /**
+     * Set the animation delay.
+     * 
+     * @param int $value
+     * @return $this
+     */
+    public function animationDelay(?int $value): static
+    {
+        $this->animationDelay = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the animation delay.
+     */
+    public function getAnimationDelay(): ?int
+    {
+        return $this->animationDelay;
+    }
+
+    /**
+     * Set the animation duration update.
+     * 
+     * @param int $value
+     * @return $this
+     */
+    public function animationDurationUpdate(?int $value): static
+    {
+        $this->animationDurationUpdate = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the animation duration update.
+     * 
+     * @return int|null
+     */
+    public function getAnimationDurationUpdate(): ?int
+    {
+        return $this->animationDurationUpdate;
+    }
+
+    /**
+     * Set the animation easing method used for animation.
+     * 
+     * @param \Honed\Chart\Enums\Easing|string $value
+     * @return $this
+     * 
+     * @throws \ValueError if the easing method is not a valid easing method
+     */
+    public function animationEasingUpdate(Easing|string $value): static
+    {
+        if (! $value instanceof Easing) {
+            $value = Easing::from($value);
+        }
+
+        $this->animationEasingUpdate = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the animation easing method used for animation.
+     */
+    public function getAnimationEasingUpdate(): ?string
+    {
+        return $this->animationEasingUpdate?->value;
+    }
+
+    /**
+     * Get the animation parameters as an array representation.
+     * 
+     * @return array<string, mixed>
+     */
+    public function getAnimationParameters(): array
+    {
+        return [
+            'animation' => $this->isAnimated(),
+            'animationThreshold' => $this->getAnimationThreshold(),
+            'animationDuration' => $this->getAnimationDuration(),
+            'animationEasing' => $this->getAnimationEasing(),
+            'animationDelay' => $this->getAnimationDelay(),
+            'animationDurationUpdate' => $this->getAnimationDurationUpdate(),
+            'animationEasingUpdate' => $this->getAnimationEasingUpdate(),
+        ];
     }
 }

@@ -101,7 +101,7 @@ class Chart extends ChartComponent
             ->source(User::all())
             ->legend()
             ->series([
-                
+
             ])
     }
 
@@ -307,16 +307,8 @@ class Chart extends ChartComponent
     {
         return [
             'data' => $this->getFilteredData(),
-            'yDomain' => $this->getDomain(),
-            'yDomain' => $this->getRange(),
-            'series' => $this->seriesToArray(),
-            'duration' => $this->getAnimationDuration(),
             'xAxis' => $this->getXAxis()?->toArray(),
             'yAxis' => $this->getYAxis()?->toArray(),
-            'crosshair' => $this->getCrosshair()?->toArray(),
-            'tooltip' => $this->getTooltip()?->toArray(),
-            'legend' => $this->getLegend()?->toArray(),
-            ...$this->animationDurationToArray()
         ];
     }
 }
