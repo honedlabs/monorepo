@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Console\Commands\ChartMakeCommand;
-use Honed\Chart\Console\Commands\SankeyMakeCommand;
-use Honed\Chart\Console\Commands\TimelineMakeCommand;
+use Honed\Chart\Commands\ChartMakeCommand;
 use Illuminate\Support\ServiceProvider;
 
 class ChartServiceProvider extends ServiceProvider
@@ -25,10 +23,10 @@ class ChartServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
+            // $this->offerPublishing();
+
             $this->commands([
                 ChartMakeCommand::class,
-                TimelineMakeCommand::class,
-                SankeyMakeCommand::class,
             ]);
 
             $this->publishes([

@@ -5,45 +5,25 @@ declare(strict_types=1);
 namespace Honed\Chart\Series;
 
 use Honed\Chart\Enums\ChartType;
+use Honed\Chart\Series\Concerns\HasChartType;
+use Honed\Chart\Series\Concerns\RefersToAxis;
+use Honed\Core\Concerns\HasName;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
 class Series extends Primitive implements NullsAsUndefined
 {
-    /**
-     * The type of the series.
-     * 
-     * @var \Honed\Chart\Enums\ChartType
-     */
-    protected $type;
+    use HasName;
+    use HasChartType;
+    use RefersToAxis;
 
     /**
-     * Set the type of the series.
-     * 
-     * @param \Honed\Chart\Enums\ChartType|string $type
-     * @return $this
-     * 
-     * @throws \ValueError if the type is not a valid chart type
+     * Create a new series instance.
      */
-    public function type(ChartType|string $type): static
+    public static function make(?string $name = null): static
     {
-        if (! $type instanceof ChartType) {
-            $type = ChartType::from($type);
-        }
-
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get the type of the series.
-     * 
-     * @return \Honed\Chart\Enums\ChartType|string
-     */
-    public function getType(): ChartType
-    {
-        return $this->type;
+        return resolve(static::class)
+            ->name($name);
     }
 
     /**
@@ -55,6 +35,10 @@ class Series extends Primitive implements NullsAsUndefined
     {
         return [
             'type' => $this->getType(),
+            'data' => [],
+            'name' => $this->hasName() ? $this->getName() : null, // @refactor
+            // 'xAxisIndex' => $this->xAxisIndex,
+            // 'yAxisIndex' =>
         ];
     }
 }

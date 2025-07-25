@@ -15,6 +15,8 @@ use Honed\Chart\Tests\Stubs\Status;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 
+use function Orchestra\Testbench\workbench_path;
+
 class TestCase extends Orchestra
 {
     use RefreshDatabase;
@@ -26,15 +28,14 @@ class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
+        
         $this->withoutExceptionHandling();
     }
 
     /**
      * Define database migrations.
-     *
-     * @return void
      */
-    protected function defineDatabaseMigrations()
+    protected function defineDatabaseMigrations(): void
     {
         $this->loadMigrationsFrom(
             workbench_path('database/migrations')

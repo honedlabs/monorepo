@@ -15,13 +15,18 @@ class Axis extends Primitive
     use CanBeShown;
     use CanBeScaled;
     use CanAlignTicks;
-    
+
     /**
      * The type of axis.
      * 
      * @var \Honed\Chart\Enums\AxisType
      */
     protected $type;
+
+    public static function make(): static
+    {
+        return resolve(static::class);
+    }
 
     /**
      * Set the type of axis.
