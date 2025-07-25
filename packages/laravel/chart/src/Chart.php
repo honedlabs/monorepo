@@ -96,6 +96,13 @@ class Chart extends ChartComponent
     public function defineData()
     {
         return [];
+
+        Chart::make()
+            ->source(User::all())
+            ->legend()
+            ->series([
+                
+            ])
     }
 
     /**

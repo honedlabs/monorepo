@@ -61,4 +61,46 @@ trait Animatable
      * @var int|null
      */
     protected $animationDelayUpdate;
+
+    /**
+     * Set whether to enable animation.
+     * 
+     * @return $this
+     */
+    public function animate(bool $value = true): static
+    {
+        $this->animation = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set whether to not enable animation.
+     * 
+     * @return $this
+     */
+    public function dontAnimate(bool $value = true): static
+    {
+        return $this->animate(! $value);
+    }
+
+    /**
+     * Get whether to enable animation.
+     * 
+     * @return bool
+     */
+    public function isAnimated(): ?bool
+    {
+        return $this->animation;
+    }
+
+    /**
+     * Get whether to not enable animation.
+     * 
+     * @return bool
+     */
+    public function isNotAnimated(): ?bool
+    {
+        return ! $this->isAnimated();
+    }
 }
