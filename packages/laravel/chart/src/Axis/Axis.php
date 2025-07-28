@@ -6,7 +6,9 @@ namespace Honed\Chart\Axis;
 
 use Honed\Chart\Axis\Concerns\CanAlignTicks;
 use Honed\Chart\Axis\Concerns\CanBeScaled;
-use Honed\Chart\Axis\Concerns\CanBeShown;
+use Honed\Chart\Concerns\CanBeShown;
+use Honed\Chart\Concerns\Animatable;
+use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Enums\AxisType;
 use Honed\Core\Primitive;
 
@@ -15,6 +17,8 @@ class Axis extends Primitive
     use CanBeShown;
     use CanBeScaled;
     use CanAlignTicks;
+    use HasId;
+    use Animatable;
 
     /**
      * The type of axis.
@@ -73,7 +77,10 @@ class Axis extends Primitive
         $this->define();
 
         return [
+            'id' => $this->getId(),
+            'show' => $this->isShown(),
             'type' => $this->getType(),
+            ...$this->getAnimationParameters(),
         ];
     }
 }

@@ -34,6 +34,7 @@ class Line extends Series
         return [
             ...parent::representation(),
             'smooth' => $this->isSmooth(),
+            'coordinateSystem' => $this->getCoordinateSystem(),
         ];
     }
 

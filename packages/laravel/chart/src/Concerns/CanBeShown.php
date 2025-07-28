@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Axis\Concerns;
+namespace Honed\Chart\Concerns;
 
 trait CanBeShown
 {

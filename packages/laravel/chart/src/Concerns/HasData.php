@@ -6,86 +6,108 @@ namespace Honed\Chart\Concerns;
 
 trait HasData
 {
+    /**
+     * The data source.
+     * 
+     * @var mixed
+     */
     protected $data;
 
-    public function data($data): static
+    /**
+     * Set the data source.
+     * 
+     * @param mixed $data
+     * @return $this
+     */
+    public function data(mixed $data): static
     {
+        $this->data = $data;
 
+        return $this;
     }
 
-    public function g
-    XAxis::make()
-        ->property('source');
+    /**
+     * Get the data source.
+     * 
+     * @return mixed
+     */
+    public function getData(): mixed
+    {
+        return $this->data;
+    }
 
-    XAxis::make()
-        ->call('method', 'parameters');
+    // XAxis::make()
+    //     ->property('source');
 
-    XAxis::make()
-        ->pluck('key');
+    // XAxis::make()
+    //     ->call('method', 'parameters');
 
-    XAxis::make()
-        ->source(fn ($src) => $source->pluck('s'));
+    // XAxis::make()
+    //     ->pluck('key');
 
-    Axis::make()
-        ->state(SomeEnum::class)
-        ->state([1, 2, 3])
+    // XAxis::make()
+    //     ->source(fn ($src) => $source->pluck('s'));
 
-    Axis::make()
-        ->type('value' | 'category')
-        ->value()
-        ->label()
-        ->category()
-        // ->boundaryGap()
+    // Axis::make()
+    //     ->state(SomeEnum::class)
+    //     ->state([1, 2, 3])
 
-    Legend::make()
-        ->state('series')
-        ->from('series');
+    // Axis::make()
+    //     ->type('value' | 'category')
+    //     ->value()
+    //     ->label()
+    //     ->category()
+    //     // ->boundaryGap()
 
-    Tooltip::make()
-        ->trigger('axis')
-        ->trigger->axis();
+    // Legend::make()
+    //     ->state('series')
+    //     ->from('series');
 
-    ->title('Some title')
+    // Tooltip::make()
+    //     ->trigger('axis')
+    //     ->trigger->axis();
 
-    Toolbox::make()
-        ->feature(Toolbox::dataZoom)
-        ->feature(Toolbox::Save)
+    // ->title('Some title')
 
-    Chart::make()
-        ->series([
-            Series::make()
-                ->label('Video ads')
-                ->state('value')
-                ->type(Series::Line)
-                ->smooth()->notSmooth(),
+    // Toolbox::make()
+    //     ->feature(Toolbox::dataZoom)
+    //     ->feature(Toolbox::Save)
 
-            LineSeries::make()
-                ->label('Video ads')
-                // ->stack()
-                ->state('pluck'),
+    // Chart::make()
+    //     ->series([
+    //         Series::make()
+    //             ->label('Video ads')
+    //             ->state('value')
+    //             ->type(Series::Line)
+    //             ->smooth()->notSmooth(),
 
-            LineSeries::make()
-                ->state('pluck'),
+    //         LineSeries::make()
+    //             ->label('Video ads')
+    //             // ->stack()
+    //             ->state('pluck'),
 
-            AreaSeries::make()
-                // Equal to
-                ->type('line')
-                ->areaStyle([])
+    //         LineSeries::make()
+    //             ->state('pluck'),
 
-            BarSeries::make()
-                ->barWidth('60%')
-                ->showBackground()
-                ->backgroundStyle([
-                    'color' => 'rgba(180, 180, 180, 0.2)',
-                ]),
+    //         AreaSeries::make()
+    //             // Equal to
+    //             ->type('line')
+    //             ->areaStyle([])
 
-            Pie::make()
-                ->sort()
-                ->data('column')
-                ->labels('column')
-                // ->itemStyle
-                ->animationType
-                ->animationEasing
-                ->animationDelay
-        ])
+    //         BarSeries::make()
+    //             ->barWidth('60%')
+    //             ->showBackground()
+    //             ->backgroundStyle([
+    //                 'color' => 'rgba(180, 180, 180, 0.2)',
+    //             ]),
+
+    //         Pie::make()
+    //             ->sort()
+    //             ->data('column')
+    //             ->labels('column')
+    //             // ->itemStyle
+    //             ->animationType
+    //             ->animationEasing
+    //             ->animationDelay
+    //     ])
 }
