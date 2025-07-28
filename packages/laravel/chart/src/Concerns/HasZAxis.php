@@ -59,4 +59,17 @@ trait HasZAxis
     {
         return $this->zLevel;
     }
+
+    /**
+     * Get the z axis parameters as an array representation.
+     * 
+     * @return array<string, mixed>
+     */
+    public function getZAxisParameters(): array
+    {
+        return [
+            'z' => $this->getZ(),
+            'zLevel' => $this->getZLevel(),
+        ];
+    }
 }

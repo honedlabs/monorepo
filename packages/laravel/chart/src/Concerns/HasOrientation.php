@@ -11,53 +11,31 @@ trait HasOrientation
     /**
      * The orientation to use.
      * 
-     * @var string|null
+     * @var \Honed\Chart\Enums\Orientation|null
      */
     protected $orientation;
 
     /**
-     * The default orientation to be used.
+     * Set the orientation of the element.
      * 
-     * @var string|null
-     */
-    protected static $defaultOrientation;
-
-    /**
-     * Set the orientation of the bar.
-     * 
-     * @param string|\Honed\Chart\Enums\Orientation $orientation
      * @return $this
      */
-    public function orientation($orientation)
+    public function orientation(Orientation|string $orientation): static
     {
         if (! $orientation instanceof Orientation) {
-            $orientation = Orientation::tryFrom($orientation);
+            $orientation = Orientation::from($orientation);
         }
 
-        $this->orientation = $orientation?->value;
+        $this->orientation = $orientation;
 
         return $this;
     }
 
     /**
-     * Get the orientation of the bar.
-     * 
-     * @return string|null
+     * Get the orientation of the element.
      */
-    public function getOrientation()
+    public function getOrientation(): ?string
     {
-        return $this->orientation ?? static::$defaultOrientation;
+        return $this->orientation?->value;
     }
-
-    /**
-     * Set the default orientation of the bar.
-     * 
-     * @param string $orientation
-     * @return void
-     */
-    public static function useOrientation($orientation)
-    {
-        static::$defaultOrientation = $orientation;
-    }
-
 }

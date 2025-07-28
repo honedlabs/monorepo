@@ -12,9 +12,10 @@ use Honed\Chart\Concerns\Animatable;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\HasZAxis;
 use Honed\Chart\Enums\AxisType;
+use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
-abstract class Axis extends Primitive
+class Axis extends Primitive implements NullsAsUndefined
 {
     use CanBeShown;
     use CanBeScaled;

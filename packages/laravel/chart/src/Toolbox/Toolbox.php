@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace Honed\Chart\Toolbox;
 
 use Honed\Chart\Concerns\CanBeShown;
-use Honed\Chart\Tooltip\Concerns\HasTrigger;
+use Honed\Chart\Concerns\HasId;
+use Honed\Chart\Concerns\HasOrientation;
+use Honed\Chart\Concerns\HasZAxis;
+use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
-class Toolbox extends Primitive
+class Toolbox extends Primitive implements NullsAsUndefined
 {
+    use HasId;
     use CanBeShown;
-    use HasTrigger;
+    use HasZAxis;
+    use HasOrientation;
 
     /**
      * Create a new tooltip instance.
@@ -29,7 +34,10 @@ class Toolbox extends Primitive
     protected function representation(): array
     {
         return [
+            'id' => $this->getId(),
             'show' => $this->isShown(),
+            'orient' => $this->getOrientation(),
+            ...$this->getZAxisParameters(),
         ];
     }
 
