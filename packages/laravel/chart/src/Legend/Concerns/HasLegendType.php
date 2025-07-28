@@ -22,7 +22,7 @@ trait HasLegendType
      * 
      * @throws \ValueError if the legend type is not a valid legend type
      */
-    public function type(LegendType|string|null $value): static
+    public function type(LegendType|string $value): static
     {
         if (! $value instanceof LegendType) {
             $value = LegendType::from($value);

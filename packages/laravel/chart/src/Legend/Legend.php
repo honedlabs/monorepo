@@ -23,9 +23,11 @@ class Legend extends Primitive
     protected function representation(): array
     {
         return [
+            'type' => $this->getType(),
             'id' => $this->getId(),
             'show' => $this->isShown(),
-            'type' => $this->getType(),
+            'zLevel' => $this->getZLevel(),
+            'z' => $this->getZ(),
         ];
     }
 }

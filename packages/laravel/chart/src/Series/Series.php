@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Series;
 
+use Honed\Chart\Concerns\Animatable;
+use Honed\Chart\Concerns\HasId;
+use Honed\Chart\Concerns\HasZAxis;
 use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Series\Concerns\HasChartType;
 use Honed\Chart\Series\Concerns\RefersToAxis;
@@ -13,9 +16,11 @@ use Honed\Core\Primitive;
 
 class Series extends Primitive implements NullsAsUndefined
 {
-    use HasName;
+    use HasId;
     use HasChartType;
     use RefersToAxis;
+    use Animatable;
+    use HasZAxis;
 
     /**
      * Create a new series instance.
@@ -35,10 +40,12 @@ class Series extends Primitive implements NullsAsUndefined
     {
         return [
             'type' => $this->getType(),
+            'id' => $this->getId(),
+            'name' => null,
             'data' => [],
-            'name' => $this->hasName() ? $this->getName() : null, // @refactor
-            // 'xAxisIndex' => $this->xAxisIndex,
-            // 'yAxisIndex' =>
+            'z' => $this->getZ(),
+            'zLevel' => $this->getZLevel(),
+            ...$this->getAnimationParameters(),
         ];
     }
 }

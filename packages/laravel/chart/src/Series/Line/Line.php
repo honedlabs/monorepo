@@ -6,6 +6,7 @@ namespace Honed\Chart\Series\Line;
 
 use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Series\Line\Concerns\CanBeSmooth;
+use Honed\Chart\Series\Line\Concerns\CanColorBy;
 use Honed\Chart\Series\Line\Concerns\HasCoordinateSystem;
 use Honed\Chart\Series\Series;
 
@@ -13,6 +14,7 @@ class Line extends Series
 {
     use CanBeSmooth;
     use HasCoordinateSystem;
+    use CanColorBy;
 
     /**
      * Provide the series with any necessary setup.
@@ -33,8 +35,9 @@ class Line extends Series
     {
         return [
             ...parent::representation(),
-            'smooth' => $this->isSmooth(),
+            'colorBy' => $this->getColorBy(),
             'coordinateSystem' => $this->getCoordinateSystem(),
+            'smooth' => $this->isSmooth(),
         ];
     }
 
