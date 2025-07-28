@@ -25,7 +25,7 @@ trait HasTextStyle
     public function textStyle(TextStyle|Closure|null $textStyle): static
     {
         return match (true) {
-            $textStyle instanceof Closure => $this->textStyle = $textStyle($this->textStyle ?? TextStyle::make()),
+            $textStyle instanceof Closure => $this->textStyle = $textStyle($this->textStyle ??= TextStyle::make()),
             default => $this->textStyle = $textStyle,
         };
 

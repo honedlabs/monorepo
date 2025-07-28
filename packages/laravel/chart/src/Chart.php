@@ -13,12 +13,15 @@ use Honed\Chart\Concerns\HasSeries;
 use Honed\Chart\Exceptions\MissingDataException;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
+use RuntimeException;
 
 class Chart extends Primitive implements NullsAsUndefined
 {
     use HasData;
     use HasSeries;
     use Animatable;
+
+    // Chart::registerPalette(Palette::make());
 
     /**
      * Create a new chart instance.
@@ -35,10 +38,19 @@ class Chart extends Primitive implements NullsAsUndefined
     protected function resolve(): void
     {
         // If no data is set, throw an exception
-        
-        // Loop over axes
+        if (! $this->getData()) {
+            throw new RuntimeException(
+                'No data has been set for the chart ['.static::class.'].'
+            );
+        }
 
-        // Loop over series
+        foreach ($this->getAxes() as $axis) {
+            $axis->resolve($this->getData());
+        }
+
+        foreach ($this->getSeries() as $series) {
+            $series->resolve($this->getData());
+        }
     }
 
     /**
