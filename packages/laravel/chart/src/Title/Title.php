@@ -24,6 +24,7 @@ class Title extends Primitive
             'show' => $this->isShown(),
             'text' => $this->getText(),
             'link' => $this->getUrl(),
+            'target' => null,
             'textStyle' => $this->getTextStyle()?->toArray(),
         ];
     }

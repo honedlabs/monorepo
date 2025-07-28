@@ -9,7 +9,7 @@ trait HasHeight
     /**
      * The height.
      * 
-     * @var int|null
+     * @var int|string|null
      */
     protected $height;
 
@@ -18,7 +18,7 @@ trait HasHeight
      * 
      * @return $this
      */
-    public function height(int $value): static
+    public function height(int|string $value): static
     {
         $this->height = $value;
 
@@ -28,7 +28,7 @@ trait HasHeight
     /**
      * Get the height.
      */
-    public function getHeight(): ?int
+    public function getHeight(): int|string|null
     {
         return $this->height;
     }

@@ -9,7 +9,7 @@ trait HasWidth
     /**
      * The width.
      * 
-     * @var int|null
+     * @var int|string|null
      */
     protected $width;
 
@@ -18,7 +18,7 @@ trait HasWidth
      * 
      * @return $this
      */
-    public function width(int $value): static
+    public function width(int|string $value): static
     {
         $this->width = $value;
 
@@ -28,7 +28,7 @@ trait HasWidth
     /**
      * Get the width.
      */
-    public function getWidth(): ?int
+    public function getWidth(): int|string|null
     {
         return $this->width;
     }

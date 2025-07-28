@@ -41,10 +41,19 @@ class Axis extends Primitive implements NullsAsUndefined
         return [
             'id' => $this->getId(),
             'show' => $this->isShown(),
+            'alignTicks' => $this->hasAlignedTicks(),
+            'position' => $this->getPosition(),
+            'offset' => $this->getOffset(),
             'type' => $this->getType(),
-            'z' => $this->getZ(),
-            'zLevel' => $this->getZLevel(),
+            'name' => null,
+            'boundaryGap' => null,
+            'min' => null,
+            'max' => null,
+            'scale' => $this->isScaled(),
+            'axisPointer' => $this->getAxisPointer()?->toArray(),
+            'tooltip' => $this->getTooltip()?->toArray(),
             ...$this->getAnimationParameters(),
+            ...$this->getZAxisParameters(),
         ];
     }
 }

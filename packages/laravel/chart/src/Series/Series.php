@@ -43,8 +43,7 @@ class Series extends Primitive implements NullsAsUndefined
             'id' => $this->getId(),
             'name' => null,
             'data' => [],
-            'z' => $this->getZ(),
-            'zLevel' => $this->getZLevel(),
+            ...$this->getZAxisParameters(),
             ...$this->getAnimationParameters(),
         ];
     }
