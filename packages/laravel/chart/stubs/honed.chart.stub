@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+use Honed\Chart\Chart;
+
+class {{ class }} extends Chart
+{
+    /**
+     * Define the chart.
+     * 
+     * @return $this
+     */
+    protected function definition(): static
+    {
+        return $this;
+    }
+}
+

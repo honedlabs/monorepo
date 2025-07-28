@@ -7,9 +7,10 @@ namespace Honed\Chart\Legend;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Legend\Concerns\HasLegendType;
+use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
-class Legend extends Primitive
+class Legend extends Primitive implements NullsAsUndefined
 {
     use HasId;
     use CanBeShown;
