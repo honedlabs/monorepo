@@ -11,6 +11,7 @@ use Honed\Honed\Attributes\Stable;
 #[Stable]
 #[Experimental]
 #[Internal]
+#[Implementation]
 class Attributed
 {
     //
