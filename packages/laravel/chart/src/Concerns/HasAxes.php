@@ -116,6 +116,44 @@ trait HasAxes
     }
 
     /**
+     * Get the x-axes representation.
+     * 
+     * @return array<int, array<string, mixed>>
+     */
+    public function getXAxesToArray(): array
+    {
+        $axes = $this->getXAxes();
+
+        if (empty($axes)) {
+            $axes = [$this->newXAxis()];
+        }
+
+        return array_map(
+            static fn (XAxis $axis) => $axis->toArray(),
+            $axes
+        );
+    }
+
+    /**
+     * Get the y-axes representation.
+     * 
+     * @return array<int, array<string, mixed>>
+     */
+    public function getYAxesToArray(): array
+    {
+        $axes = $this->getYAxes();
+
+        if (empty($axes)) {
+            $axes = [$this->newYAxis()];
+        }
+
+        return array_map(
+            static fn (YAxis $axis) => $axis->toArray(),
+            $axes
+        );
+    }
+
+    /**
      * Get the filtered axes.
      * 
      * @param string $dimension
@@ -136,7 +174,7 @@ trait HasAxes
      */
     protected function newXAxis(): XAxis
     {
-        return $this->x ??= XAxis::make();
+        return XAxis::make();
     }
 
     /**
@@ -144,7 +182,7 @@ trait HasAxes
      */
     protected function newYAxis(): YAxis
     {
-        return $this->y ??= YAxis::make();
+        return YAxis::make();
     }
 
 }

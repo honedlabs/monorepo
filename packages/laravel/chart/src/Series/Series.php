@@ -25,6 +25,7 @@ abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
     use Animatable;
     use HasZAxis;
     use Extractable;
+    use HasName;
 
     /**
      * Create a new series instance.
@@ -32,7 +33,7 @@ abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
     public static function make(?string $name = null): static
     {
         return resolve(static::class)
-            ->name($name);
+            ->when($name, fn (self $series) => $series->name($name));
     }
 
     /**
@@ -41,7 +42,7 @@ abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
     public function resolve(mixed $data): void
     {
         $this->define();
-
+        
         $this->data($this->extract($data));
     }
     /**
@@ -56,7 +57,7 @@ abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
         return [
             'type' => $this->getType(),
             'id' => $this->getId(),
-            // 'name' => null,
+            'name' => $this->name,
             'data' => $this->getData(),
             ...$this->getZAxisParameters(),
             ...$this->getAnimationParameters(),

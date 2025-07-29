@@ -36,7 +36,7 @@ trait Extractable
      * 
      * @return $this
      */
-    public function value(mixed $value): static
+    public function values(mixed $value): static
     {
         $this->extract = self::VALUE;
         

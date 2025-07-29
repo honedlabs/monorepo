@@ -14,11 +14,12 @@ use Honed\Chart\Concerns\Extractable;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\HasTooltip;
 use Honed\Chart\Concerns\HasZAxis;
+use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\AxisType;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
-class Axis extends Primitive implements NullsAsUndefined
+class Axis extends Primitive implements NullsAsUndefined, Resolvable
 {
     use CanBeShown;
     use CanBeScaled;
@@ -84,6 +85,7 @@ class Axis extends Primitive implements NullsAsUndefined
             // 'logBase' => $this->getLogBase(),
             // 'axisPointer' => $this->getAxisPointer()?->toArray(),
             'tooltip' => $this->getTooltip()?->toArray(),
+            'data' => $this->getData(),
             ...$this->getAnimationParameters(),
             ...$this->getZAxisParameters(),
         ];

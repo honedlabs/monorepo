@@ -34,10 +34,40 @@ trait HasAxisType
     }
 
     /**
+     * Set the type of axis to value.
+     * 
+     * @return $this
+     */
+    public function value(): static
+    {
+        return $this->type(AxisType::Value);
+    }
+
+    /**
+     * Set the type of axis to category.
+     * 
+     * @return $this
+     */
+    public function category(): static
+    {
+        return $this->type(AxisType::Category);
+    }
+
+    /**
+     * Set the type of axis to time.
+     * 
+     * @return $this
+     */
+    public function time(): static
+    {
+        return $this->type(AxisType::Time);
+    }
+
+    /**
      * Get the type of axis.
      */
-    public function getType(): ?string
+    public function getType(): string
     {
-        return $this->type?->value;
+        return $this->type?->value ?? AxisType::Value->value;
     }
 }

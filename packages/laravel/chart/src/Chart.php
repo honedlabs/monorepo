@@ -17,6 +17,7 @@ use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Chart\Concerns\HasAxes;
 use Honed\Chart\Concerns\HasLegend;
+use Honed\Chart\Concerns\HasTitle;
 use Honed\Chart\Concerns\HasToolbox;
 use Honed\Chart\Exceptions\MissingDataException;
 use Honed\Chart\Style\Concerns\CanBePolar;
@@ -35,6 +36,7 @@ class Chart extends Primitive implements NullsAsUndefined
     use HasAxes;
     use CanBePolar;
     use HasToolbox;
+    use HasTitle;
 
     /**
      * Create a new chart instance.
@@ -49,12 +51,6 @@ class Chart extends Primitive implements NullsAsUndefined
      */
     protected function resolve(): void
     {
-        if (! $this->getData()) {
-            throw new RuntimeException(
-                'No data has been set for the chart ['.static::class.'].'
-            );
-        }
-
         foreach ($this->getAxes() as $axis) {
             $axis->resolve($this->getData());
         }
@@ -76,8 +72,8 @@ class Chart extends Primitive implements NullsAsUndefined
         return [
             'title' => $this->getTitle()?->toArray(),
             'legend' => $this->getLegend()?->toArray(),
-            'xAxis' => $this->getXAxes(),
-            'yAxis' => $this->getYAxes(),
+            'xAxis' => $this->getXAxesToArray(),
+            'yAxis' => $this->getYAxesToArray(),
             'polar' => $this->getPolar()?->toArray(),
             'tooltip' => $this->getTooltip()?->toArray(),
             'toolbox' => $this->getToolbox()?->toArray(),
