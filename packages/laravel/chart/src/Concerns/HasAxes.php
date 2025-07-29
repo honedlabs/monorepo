@@ -8,23 +8,17 @@ use Closure;
 use Honed\Chart\Axis\Axis;
 use Honed\Chart\Axis\XAxis;
 use Honed\Chart\Axis\YAxis;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 trait HasAxes
 {
     /**
-     * The x-axes of the chart
+     * The axes.
      * 
-     * @var \Honed\Chart\Axis\XAxis|null
+     * @var array<int, \Honed\Chart\Axis\Axis>
      */
-    protected $x = [];
-
-    /**
-     * The y-axes of the chart
-     * 
-     * @var \Honed\Chart\Axis\YAxis|null
-     */
-    protected $y = [];
+    protected $axes = [];
 
     /**
      * Add an axis to the chart.
@@ -33,67 +27,108 @@ trait HasAxes
      */
     public function axis(Axis $axis): static
     {
-        match (true) {
-            $axis instanceof XAxis => $this->xAxis($axis),
-            $axis instanceof YAxis => $this->yAxis($axis),
-            default => throw new InvalidArgumentException(
-                sprintf("Invalid axis type: %s", get_class($axis))
-            ),
-        };
+        $this->axes[] = $axis;
 
         return $this;
     }
 
     /**
-     * Add an x-axis to the chart.
+     * Add axes to the chart.
      * 
-     * @param \Honed\Chart\Axis\XAxis|(Closure(\Honed\Chart\Axis\XAxis):mixed)|null $value
+     * @param \Honed\Chart\Axis\Axis|array<int, \Honed\Chart\Axis\Axis>|\Illuminate\Support\Collection<int, \Honed\Chart\Axis\Axis> $axes
      * @return $this
      */
-    public function xAxis(XAxis|Closure|null $value): static
+    public function axes(Axis|array|Collection $axes): static
     {
-        return match (true) {
-            is_null($value) => $this->newXAxis(),
-            $value instanceof Closure => $value($this->newXAxis()),
-            default => $this->x = $value,
-        };
+        if ($axes instanceof Axis) {
+            return $this->axis($axes);
+        } elseif ($axes instanceof Collection) {
+            $axes = $axes->all();
+        }
+
+        $this->axes = [...$this->axes, ...$axes];
+
+        return $this;
+    }
+
+    /**
+     * Get the axes.
+     * 
+     * @return array<int, \Honed\Chart\Axis\Axis>
+     */
+    public function getAxes(): array
+    {
+        return $this->axes;
+    }
+
+    /**
+     * Get the x-axes.
+     * 
+     * @return array<int, \Honed\Chart\Axis\XAxis>
+     */
+    public function getXAxes(): array
+    {
+        return $this->filteredAxes(Axis::X);
+    }
+
+    /**
+     * Get the y-axes.
+     * 
+     * @return array<int, \Honed\Chart\Axis\YAxis>
+     */
+    public function getYAxes(): array
+    {
+        return $this->filteredAxes(Axis::Y);
     }
 
     /**
      * Add a y-axis to the chart.
      * 
-     * @param \Honed\Chart\Axis\YAxis|(Closure(\Honed\Chart\Axis\YAxis):mixed)|null $value
+     * @param \Honed\Chart\Axis\Axis|(Closure(\Honed\Chart\Axis\Axis):mixed)|null $value
      * @return $this
      */
     public function yAxis(YAxis|Closure|null $value): static
     {
-        return match (true) {
+        $axis = match (true) {
             is_null($value) => $this->newYAxis(),
             $value instanceof Closure => $value($this->newYAxis()),
-            default => $this->y = $value,
+            default => $value,
         };
 
-        return $this;
+        return $this->axis($axis);
     }
 
     /**
-     * Get the x-axes of the chart.
+     * Add an x-axis to the chart.
      * 
-     * @return \Honed\Chart\Axis\XAxis|null
+     * @param \Honed\Chart\Axis\Axis|(Closure(\Honed\Chart\Axis\Axis):mixed)|null $value
+     * @return $this
      */
-    public function getXAxis(): ?XAxis
+    public function xAxis(XAxis|Closure|null $value): static
     {
-        return $this->x;
+        $axis = match (true) {
+            is_null($value) => $this->newXAxis(),
+            $value instanceof Closure => $value($this->newXAxis()),
+            default => $value,
+        };
+
+        return $this->axis($axis);
     }
 
     /**
-     * Get the y-axes of the chart.
+     * Get the filtered axes.
      * 
-     * @return \Honed\Chart\Axis\YAxis|null
+     * @param string $dimension
+     * @return array<int, \Honed\Chart\Axis\Axis>
      */
-    public function getYAxis(): ?YAxis
+    protected function filteredAxes(string $dimension): array
     {
-        return $this->y;
+        return array_values(
+            array_filter(
+                $this->axes, 
+                static fn (Axis $axis) => $axis->getDimension() === $dimension
+            )
+        );
     }
 
     /**

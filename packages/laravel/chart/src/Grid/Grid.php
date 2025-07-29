@@ -2,37 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Legend;
+namespace Honed\Chart\Grid;
 
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;
-use Honed\Chart\Concerns\HasOrientation;
-use Honed\Chart\Concerns\HasTextStyle;
 use Honed\Chart\Concerns\HasTooltip;
 use Honed\Chart\Concerns\HasZAxis;
-use Honed\Chart\Legend\Concerns\HasLegendType;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
-class Legend extends Primitive implements NullsAsUndefined
+class Grid extends Primitive implements NullsAsUndefined
 {
     use HasId;
     use CanBeShown;
-    use HasLegendType;
     use HasZAxis;
-    use HasOrientation;
-    use HasTextStyle;
     use HasTooltip;
 
     /**
-     * Get the representation of the legend.
+     * Get the representation of the grid.
      * 
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     protected function representation(): array
     {
         return [
-            'type' => $this->getType(),
             'id' => $this->getId(),
             'show' => $this->isShown(),
             'z' => $this->getZ(),
@@ -42,16 +35,16 @@ class Legend extends Primitive implements NullsAsUndefined
             // 'right' => $this->getRight(),
             // 'bottom' => $this->getBottom(),
             // 'width' => $this->getWidth(),
-            'orient' => $this->getOrientation(),
-            // 'align' => $this->getAlign(),
-            // 'padding' => $this->getPadding(),
-            // 'itemGap' => $this->getItemGap(),
-            // 'itemWidth' => $this->getItemWidth(),
-            // 'itemHeight' => $this->getItemHeight(),
-            // 'lineStyle' => $this->getLineStyle()?->toArray(),
-            // '
+            // 'height' => $this->getHeight(),
+            // 'containLabel' => $this->getContainLabel(),
+            // 'backgroundColor' => $this->getBackgroundColor(),
+            // 'borderColor' => $this->getBorderColor(),
+            // 'borderWidth' => $this->getBorderWidth(),
+            // 'shadowBlur' => $this->getShadowBlur(),
+            // 'shadowColor' => $this->getShadowColor(),
+            // 'shadowOffsetX' => $this->getShadowOffsetX(),
+            // 'shadowOffsetY' => $this->getShadowOffsetY(),
             'tooltip' => $this->getTooltip()?->toArray(),
-            'textStyle' => $this->getTextStyle()?->toArray(),
         ];
     }
 }

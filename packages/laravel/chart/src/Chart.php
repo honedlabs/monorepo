@@ -20,6 +20,9 @@ use Honed\Chart\Concerns\HasLegend;
 use Honed\Chart\Concerns\HasToolbox;
 use Honed\Chart\Exceptions\MissingDataException;
 use Honed\Chart\Style\Concerns\CanBePolar;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\ForwardsCalls;
+use Pest\Factories\Concerns\HigherOrderable;
 
 class Chart extends Primitive implements NullsAsUndefined
 {
@@ -38,8 +41,7 @@ class Chart extends Primitive implements NullsAsUndefined
      */
     public static function make(mixed $data = null): static
     {
-        return resolve(static::class)
-            ->data($data);
+        return resolve(static::class)->data($data);
     }
 
     /**
@@ -74,8 +76,8 @@ class Chart extends Primitive implements NullsAsUndefined
         return [
             'title' => $this->getTitle()?->toArray(),
             'legend' => $this->getLegend()?->toArray(),
-            'xAxis' => $this->getXAxis()?->toArray(),
-            'yAxis' => $this->getYAxis()?->toArray(),
+            'xAxis' => $this->getXAxes(),
+            'yAxis' => $this->getYAxes(),
             'polar' => $this->getPolar()?->toArray(),
             'tooltip' => $this->getTooltip()?->toArray(),
             'toolbox' => $this->getToolbox()?->toArray(),

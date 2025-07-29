@@ -6,14 +6,17 @@ namespace Honed\Chart\Axis\Polar;
 
 use Honed\Chart\Axis\Axis;
 use Honed\Chart\Concerns\HasId;
+use Honed\Chart\Concerns\HasTooltip;
 use Honed\Chart\Concerns\HasZAxis;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
+use Illuminate\Support\Traits\ForwardsCalls;
 
 class Polar extends Primitive implements NullsAsUndefined
 {
     use HasId;
     use HasZAxis;
+    use HasTooltip;
     
     /**
      * Get the representation of the polar coordinate.
@@ -26,6 +29,7 @@ class Polar extends Primitive implements NullsAsUndefined
             'id' => $this->getId(),
             'z' => $this->getZ(),
             'zLevel' => $this->getZLevel(),
+            'tooltip' => $this->getTooltip()?->toArray(),
         ];
     }
     
