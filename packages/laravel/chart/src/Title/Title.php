@@ -6,6 +6,7 @@ namespace Honed\Chart\Title;
 
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;
+use Honed\Chart\Concerns\HasZAxis;
 use Honed\Chart\Title\Concerns\HasText;
 use Honed\Core\Concerns\CanHaveUrl;
 use Honed\Core\Primitive;
@@ -16,6 +17,7 @@ class Title extends Primitive
     use CanBeShown;
     use CanHaveUrl;
     use HasText;
+    use HasZAxis;
 
     protected function representation(): array
     {
@@ -26,6 +28,8 @@ class Title extends Primitive
             'link' => $this->getUrl(),
             'target' => null,
             'textStyle' => $this->getTextStyle()?->toArray(),
+            'z' => $this->getZ(),
+            'zLevel' => $this->getZLevel(),
         ];
     }
 }

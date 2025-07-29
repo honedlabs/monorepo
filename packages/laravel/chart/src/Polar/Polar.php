@@ -15,12 +15,17 @@ class Polar extends Primitive implements NullsAsUndefined
     use HasId;
     use HasZAxis;
     
+    /**
+     * Get the representation of the polar coordinate.
+     * 
+     * @return array<string, mixed>
+     */
     protected function representation(): array
     {
         return [
             'id' => $this->getId(),
-            'show' => $this->isShown(),
-            'type' => $this->getType(),
+            'z' => $this->getZ(),
+            'zLevel' => $this->getZLevel(),
         ];
     }
     

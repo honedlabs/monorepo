@@ -39,4 +39,17 @@ trait HasSeries
     {
         return $this->series;
     }
+
+    /**
+     * Get the series representation.
+     * 
+     * @return array<int, array<string, mixed>>
+     */
+    public function seriesToArray(): array
+    {
+        return array_map(
+            static fn (Series $series) => $series->toArray(),
+            $this->getSeries()
+        );
+    }
 }
