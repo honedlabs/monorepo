@@ -8,6 +8,10 @@ use RuntimeException;
 
 trait HasDimension
 {
+    public const X = 'x';
+
+    public const Y = 'y';
+    
     /**
      * The dimension of the axis.
      * 
@@ -26,6 +30,16 @@ trait HasDimension
         $this->dimension = $value;
 
         return $this;
+    }
+
+    public function x(): static
+    {
+        return $this->dimension(self::X);
+    }
+
+    public function y(): static
+    {
+        return $this->dimension(self::Y);
     }
 
     /**

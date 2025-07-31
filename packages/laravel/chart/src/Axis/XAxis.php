@@ -13,6 +13,6 @@ class XAxis extends Axis
     {
         parent::setUp();
         
-        $this->dimension('x');
+        $this->x();
     }
 }

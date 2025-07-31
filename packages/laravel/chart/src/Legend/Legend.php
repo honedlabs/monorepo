@@ -23,6 +23,7 @@ class Legend extends Primitive implements NullsAsUndefined
     use HasOrientation;
     use HasTextStyle;
     use HasTooltip;
+    // use HasItemStyle;
 
     /**
      * Get the representation of the legend.
@@ -35,8 +36,8 @@ class Legend extends Primitive implements NullsAsUndefined
             'type' => $this->getType(),
             'id' => $this->getId(),
             'show' => $this->isShown(),
-            'z' => $this->getZ(),
             'zLevel' => $this->getZLevel(),
+            'z' => $this->getZ(),
             // 'left' => $this->getLeft(),
             // 'top' => $this->getTop(),
             // 'right' => $this->getRight(),
@@ -48,10 +49,26 @@ class Legend extends Primitive implements NullsAsUndefined
             // 'itemGap' => $this->getItemGap(),
             // 'itemWidth' => $this->getItemWidth(),
             // 'itemHeight' => $this->getItemHeight(),
+            // 'itemStyle' => $this->getItemStyle()?->toArray(),
             // 'lineStyle' => $this->getLineStyle()?->toArray(),
-            // '
-            'tooltip' => $this->getTooltip()?->toArray(),
+            // 'symbolRotate' => $this->getSymbolRotate(),
+            // 'selectedMode' => $this->getSelectedMode(),
+            // 'inactiveColor' => $this->getInactiveColor(),
+            // 'inactiveBorderColor' => $this->getInactiveBorderColor(),
+            // 'inactiveBorderWidth' => $this->getInactiveBorderWidth(),
             'textStyle' => $this->getTextStyle()?->toArray(),
+            'tooltip' => $this->getTooltip()?->toArray(),
+            // 'backgroundColor' => $this->getBackgroundColor(),
+            // 'borderColor' => $this->getBorderColor(),
+            // 'borderWidth' => $this->getBorderWidth(),
+            // 'borderRadius' => $this->getBorderRadius(),
+            // 'shadowBlur' => $this->getShadowBlur(),
+            // 'shadowColor' => $this->getShadowColor(),
+            // 'shadowOffsetX' => $this->getShadowOffsetX(),
+            // 'shadowOffsetY' => $this->getShadowOffsetY(),
+            // 'animation' => $this->isAnimatable(),
+            // 'animationDurationUpdate' => $this->getAnimationDurationUpdate(),
+            // 'Emphasis' => $this->getEmphasis()?->toArray(),
         ];
     }
 }

@@ -37,7 +37,21 @@ class Toolbox extends Primitive implements NullsAsUndefined
             'id' => $this->getId(),
             'show' => $this->isShown(),
             'orient' => $this->getOrientation(),
-            ...$this->getZAxisParameters(),
+            // 'itemSize' => $this->getItemSize(),
+            // 'itemGap' => $this->getItemGap(),
+            // 'showTitle' => $this->isShowTitle(),
+            // 'feature'
+            // 'iconStyle' => $this->getIconStyle()?->toArray(),
+            // 'emphasis' => $this->getEmphasis()?->toArray(),
+            'zLevel' => $this->getZLevel(),
+            'z' => $this->getZ(),
+            // 'left' => $this->getLeft(),
+            // 'top' => $this->getTop(),
+            // 'right' => $this->getRight(),
+            // 'bottom' => $this->getBottom(),
+            // 'width' => $this->getWidth(),
+            // 'height' => $this->getHeight(),
+            // 'tooltip' => $this->getTooltip()?->toArray(),
         ];
     }
 

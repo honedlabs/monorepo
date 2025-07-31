@@ -32,10 +32,6 @@ class Axis extends Primitive implements NullsAsUndefined, Resolvable
     use HasTooltip;
     use HasDimension;
 
-    public const X = 'x';
-
-    public const Y = 'y';
-
     /**
      * Create a new axis instance.
      */
@@ -74,6 +70,10 @@ class Axis extends Primitive implements NullsAsUndefined, Resolvable
             // 'name' => null,
             // 'nameLocation' => null,
             // 'nameTextStyle' => null,
+            // 'nameGap' => $this->getNameGap(),
+            // 'nameRotate' => $this->getNameRotate(),
+            // 'nameTruncate' => $this->getTruncate()?->toArray(),
+            // 'inverse' => $this->isInverted(),
             // 'boundaryGap' => null,
             // 'min' => null,
             // 'max' => null,
@@ -83,11 +83,22 @@ class Axis extends Primitive implements NullsAsUndefined, Resolvable
             // 'maxInterval' => $this->getMaxInterval(),
             // 'interval' => $this->getInterval(),
             // 'logBase' => $this->getLogBase(),
+            // 'startValue' => $this->getStartValue(),
+            // 'silent' => $this->isSilent(),
+            // 'triggerEvent' => $this->isTriggerable(),
+            // 'axisLine',
+            // 'axisTick',
+            // 'minorTick',
+            // 'axisLabel'
+            // 'splitLine'
+            // 'minorSplitLine'
+            // 'splitArea'
+            'data' => $this->getData(),
             // 'axisPointer' => $this->getAxisPointer()?->toArray(),
             'tooltip' => $this->getTooltip()?->toArray(),
-            'data' => $this->getData(),
             ...$this->getAnimationParameters(),
-            ...$this->getZAxisParameters(),
+            'zLevel' => $this->getZLevel(),
+            'z' => $this->getZ(),
         ];
     }
 }

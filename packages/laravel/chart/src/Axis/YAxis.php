@@ -13,6 +13,6 @@ class YAxis extends Axis
     {
         parent::setUp();
         
-        $this->dimension('y');
+        $this->y();
     }
 }

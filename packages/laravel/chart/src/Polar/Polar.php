@@ -27,8 +27,10 @@ class Polar extends Primitive implements NullsAsUndefined
     {
         return [
             'id' => $this->getId(),
-            'z' => $this->getZ(),
             'zLevel' => $this->getZLevel(),
+            'z' => $this->getZ(),
+            // 'center' => $this->getCenter(),
+            // 'radius' => $this->getRadius(),
             'tooltip' => $this->getTooltip()?->toArray(),
         ];
     }

@@ -8,6 +8,10 @@ beforeEach(function () {
     File::cleanDirectory(app_path('Charts'));
 });
 
+afterEach(function () {
+    File::cleanDirectory(app_path('Charts'));
+});
+
 it('makes charts', function () {
     $this->artisan('make:chart', [
         'name' => 'UserChart',
