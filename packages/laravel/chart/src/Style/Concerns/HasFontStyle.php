@@ -11,7 +11,7 @@ trait HasFontStyle
     /**
      * The font style.
      * 
-     * @var \Honed\Chart\Enums\FontStyle|null
+     * @var string|null
      */
     protected $fontStyle;
 
@@ -19,13 +19,11 @@ trait HasFontStyle
      * Set the font style.
      * 
      * @return $this
-     * 
-     * @throws \ValueError if the font style is not a valid font style
      */
     public function fontStyle(FontStyle|string $value): static
     {
-        if (! $value instanceof FontStyle) {
-            $value = FontStyle::from($value);
+        if ($value instanceof FontStyle) {
+            $value = $value->value;
         }
 
         $this->fontStyle = $value;
@@ -58,6 +56,6 @@ trait HasFontStyle
      */
     public function getFontStyle(): ?string
     {
-        return $this->fontStyle?->value;
+        return $this->fontStyle;
     }
 }

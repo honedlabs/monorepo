@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style\Concerns;
 
+use Honed\Chart\Style\Rgba;
+use Honed\Chart\Support\Color;
+
 trait HasColor
 {
     /**
      * The color.
      * 
-     * @var string|null
+     * @var string|Rgba|null
      */
     protected $color;
 
@@ -18,9 +21,9 @@ trait HasColor
      * 
      * @return $this
      */
-    public function color(?string $color): static
+    public function color(string|Rgba|null $value): static
     {
-        $this->color = $color;
+        $this->color = $value;
 
         return $this;
     }
@@ -30,6 +33,6 @@ trait HasColor
      */
     public function getColor(): ?string
     {
-        return $this->color;
+        return Color::from($this->color);
     }
 }

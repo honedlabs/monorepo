@@ -11,7 +11,7 @@ trait HasFontWeight
     /**
      * The font weight.
      * 
-     * @var \Honed\Chart\Enums\FontWeight|int|null
+     * @var string|int|null
      */
     protected $fontWeight;
 
@@ -19,16 +19,14 @@ trait HasFontWeight
      * Set the font weight.
      * 
      * @return $this
-     * 
-     * @throws \ValueError if the axis type is not a valid axis type
      */
     public function fontWeight(FontWeight|int|string $value): static
     {
-        if (is_string($value)) {
-            $value = FontWeight::from($value);
+        if ($value instanceof FontWeight) {
+            $value = $value->value;
         }
 
-        $this->type = $value;
+        $this->fontWeight = $value;
 
         return $this;
     }
@@ -66,8 +64,8 @@ trait HasFontWeight
     /**
      * Get the font weight.
      */
-    public function getFontWeight(): ?string
+    public function getFontWeight(): string|int|null
     {
-        return $this->type?->value;
+        return $this->fontWeight;
     }
 }

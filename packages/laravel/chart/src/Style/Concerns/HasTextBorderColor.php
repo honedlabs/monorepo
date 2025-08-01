@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style\Concerns;
 
+use Honed\Chart\Style\Rgba;
+use Honed\Chart\Support\Color;
+
 trait HasFontTextBorderColor
 {
     /**
      * The text border color.
      * 
-     * @var string|null
+     * @var string|Rgba|null
      */
     protected $textBorderColor;
 
@@ -18,9 +21,9 @@ trait HasFontTextBorderColor
      * 
      * @return $this
      */
-    public function textBorderColor(?string $textBorderColor): static
+    public function textBorderColor(string|Rgba|null $value): static
     {
-        $this->textBorderColor = $textBorderColor;
+        $this->textBorderColor = $value;
 
         return $this;
     }
@@ -30,6 +33,6 @@ trait HasFontTextBorderColor
      */
     public function getTextBorderColor(): ?string
     {
-        return $this->textBorderColor;
+        return Color::from($this->textBorderColor);
     }
 }
