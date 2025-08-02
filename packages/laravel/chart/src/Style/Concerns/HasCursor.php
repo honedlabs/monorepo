@@ -28,6 +28,26 @@ trait HasCursor
     }
 
     /**
+     * Set the mouse style to be default.
+     * 
+     * @return $this
+     */
+    public function cursorDefault(): static
+    {
+        return $this->cursor(Cursor::Default);
+    }
+
+    /**
+     * Set the mouse style to be pointer.
+     * 
+     * @return $this
+     */
+    public function cursorPointer(): static
+    {
+        return $this->cursor(Cursor::Pointer);
+    }
+
+    /**
      * Get the mouse style.
      */
     public function getCursor(): ?string

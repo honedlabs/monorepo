@@ -9,6 +9,9 @@ use Honed\Chart\Style\Rgb;
 use Honed\Chart\Style\Rgba;
 use Honed\Chart\Support\Color;
 
+/**
+ * @internal
+ */
 trait HasBackgroundColor
 {
     /**

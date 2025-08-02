@@ -16,16 +16,16 @@ trait HasBorderColor
      * 
      * @var string|Rgb|Rgba|Gradient|null
      */
-    protected $color;
+    protected $borderColor;
 
     /**
      * Set the color of the border.
      * 
      * @return $this
      */
-    public function color(string|Rgb|Rgba|Gradient|null $value): static
+    public function borderColor(string|Rgb|Rgba|Gradient|null $value): static
     {
-        $this->color = $value;
+        $this->borderColor = $value;
 
         return $this;
     }
@@ -35,8 +35,8 @@ trait HasBorderColor
      * 
      * @return string|array<string, mixed>|null
      */
-    public function getColor(): string|array|null
+    public function getBorderColor(): string|array|null
     {
-        return Color::from($this->color);
+        return Color::from($this->borderColor);
     }
 }

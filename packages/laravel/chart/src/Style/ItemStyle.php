@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Chart\Style;
 
 use Honed\Chart\Style\Concerns\HasBorderColor;
+use Honed\Chart\Style\Concerns\HasBorderRadius;
 use Honed\Chart\Style\Concerns\HasBorderType;
 use Honed\Chart\Style\Concerns\HasBorderWidth;
 use Honed\Chart\Style\Concerns\HasCap;
@@ -31,6 +32,7 @@ class ItemStyle extends Primitive implements NullsAsUndefined
     use HasShadowColor;
     use HasShadowOffset;
     use HasOpacity;
+    use HasBorderRadius;
 
     /**
      * Create a new item style instance.
@@ -61,6 +63,7 @@ class ItemStyle extends Primitive implements NullsAsUndefined
             'shadowOffsetX' => $this->getShadowOffsetX(),
             'shadowOffsetY' => $this->getShadowOffsetY(),
             'opacity' => $this->getOpacity(),
+            'borderRadius' => $this->getBorderRadius(),
             // 'decal' => $this->getDecal(),
         ];
     }

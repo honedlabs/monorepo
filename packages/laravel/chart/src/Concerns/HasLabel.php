@@ -1,0 +1,49 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Honed\Chart\Concerns;
+
+use Closure;
+use Honed\Chart\Label\Label;
+
+trait HasLabel
+{
+    /**
+     * The label.
+     * 
+     * @var \Honed\Chart\Style\Label|null
+     */
+    protected $label;
+
+    /**
+     * Set the label.
+     * 
+     * @param \Honed\Chart\Style\Label|(Closure(\Honed\Chart\Style\Label):mixed)|null $label
+     * @return $this
+     */
+    public function label(Label|Closure|null $label): static
+    {
+        $this->label = $label instanceof Closure ? $label($this->withLabel()) : $label;
+
+        return $this;
+    }
+
+    /**
+     * Get the label.
+     * 
+     * @return \Honed\Chart\Style\Label|null
+     */
+    public function getLabel(): ?Label
+    {
+        return $this->label;
+    }
+
+    /**
+     * Create a new label instance.
+     */
+    protected function withLabel(): Label
+    {
+        return $this->label ??= Label::make();
+    }
+}
