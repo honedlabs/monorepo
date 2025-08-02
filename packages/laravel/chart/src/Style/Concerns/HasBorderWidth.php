@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style\Concerns;
 
-trait HasTextBorderWidth
+trait HasBorderWidth
 {
     /**
-     * The text border width.
+     * The width of the border.
      * 
      * @var int|null
      */
-    protected $textBorderWidth;
+    protected $borderWidth;
 
     /**
      * Set the text border width.
      * 
      * @return $this
      */
-    public function textBorderWidth(?int $value): static
+    public function borderWidth(int $value): static
     {
-        $this->textBorderWidth = $value;
+        $this->borderWidth = $value;
 
         return $this;
     }
@@ -28,8 +28,8 @@ trait HasTextBorderWidth
     /**
      * Get the text border width.
      */
-    public function getTextBorderWidth(): ?int
+    public function getBorderWidth(): ?int
     {
-        return $this->textBorderWidth;
+        return $this->borderWidth;
     }
 }

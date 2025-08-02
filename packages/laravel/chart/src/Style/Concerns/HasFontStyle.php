@@ -22,11 +22,7 @@ trait HasFontStyle
      */
     public function fontStyle(FontStyle|string $value): static
     {
-        if ($value instanceof FontStyle) {
-            $value = $value->value;
-        }
-
-        $this->fontStyle = $value;
+        $this->fontStyle = is_string($value) ? $value : $value->value;
 
         return $this;
     }

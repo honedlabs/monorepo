@@ -9,34 +9,34 @@ use Honed\Chart\Style\Rgb;
 use Honed\Chart\Style\Rgba;
 use Honed\Chart\Support\Color;
 
-trait HasShadowColor
+trait HasBorderColor
 {
     /**
-     * The color of the shadow.
+     * The color of the border.
      * 
      * @var string|Rgb|Rgba|Gradient|null
      */
-    protected $shadowColor;
+    protected $color;
 
     /**
-     * Set the color of the shadow.
+     * Set the color of the border.
      * 
      * @return $this
      */
-    public function shadowColor(string|Rgb|Rgba|Gradient|null $value): static
+    public function color(string|Rgb|Rgba|Gradient|null $value): static
     {
-        $this->shadowColor = $value;
+        $this->color = $value;
 
         return $this;
     }
 
     /**
-     * Get the color of the shadow.
+     * Get the color of the border.
      * 
      * @return string|array<string, mixed>|null
      */
-    public function getShadowColor(): string|array|null
+    public function getColor(): string|array|null
     {
-        return Color::from($this->shadowColor);
+        return Color::from($this->color);
     }
 }

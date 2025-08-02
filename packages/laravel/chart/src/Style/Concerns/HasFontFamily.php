@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style\Concerns;
 
+use Honed\Chart\Enums\FontFamily;
+
 trait HasFontFamily
 {
     /**
@@ -18,11 +20,31 @@ trait HasFontFamily
      * 
      * @return $this
      */
-    public function fontFamily(string $value): static
+    public function fontFamily(string|FontFamily $value): static
     {
-        $this->fontFamily = $value;
+        $this->fontFamily = is_string($value) ? $value : $value->value;
 
         return $this;
+    }
+
+    /**
+     * Set the font family to be sans-serif.
+     * 
+     * @return $this
+     */
+    public function sansSerif(): static
+    {
+        return $this->fontFamily(FontFamily::SansSerif);
+    }
+
+    /**
+     * Set the font family to be monospace.
+     * 
+     * @return $this
+     */
+    public function monospace(): static
+    {
+        return $this->fontFamily(FontFamily::Monospace);
     }
 
     /**

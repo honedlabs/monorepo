@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style;
 
+use Honed\Chart\Style\Concerns\HasBorderColor;
+use Honed\Chart\Style\Concerns\HasBorderType;
+use Honed\Chart\Style\Concerns\HasBorderWidth;
+use Honed\Chart\Style\Concerns\HasColor;
 use Honed\Chart\Style\Concerns\HasFontFamily;
 use Honed\Chart\Style\Concerns\HasFontSize;
 use Honed\Chart\Style\Concerns\HasFontWeight;
 use Honed\Chart\Style\Concerns\HasLineHeight;
-use Honed\Chart\Concerns\HasColor;
 use Honed\Chart\Style\Concerns\HasHeight;
+use Honed\Chart\Style\Concerns\HasOverflow;
+use Honed\Chart\Style\Concerns\HasShadowBlur;
+use Honed\Chart\Style\Concerns\HasShadowColor;
+use Honed\Chart\Style\Concerns\HasShadowOffset;
 use Honed\Chart\Style\Concerns\HasWidth;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
@@ -24,6 +31,21 @@ class TextStyle extends Primitive implements NullsAsUndefined
     use HasLineHeight;
     use HasWidth;
     use HasHeight;
+    use HasBorderColor;
+    use HasBorderWidth;
+    use HasBorderType;
+    use HasShadowBlur;
+    use HasShadowColor;
+    use HasShadowOffset;
+    use HasOverflow;
+
+    /**
+     * Create a new text style instance.
+     */
+    public static function make(): static
+    {
+        return resolve(static::class);
+    }
 
     /**
      * Get the representation of the text style.
@@ -41,14 +63,14 @@ class TextStyle extends Primitive implements NullsAsUndefined
             'lineHeight' => $this->getLineHeight(),
             'width' => $this->getWidth(),
             'height' => $this->getHeight(),
-            // 'textBorderColor' => $this->getTextBorderColor(),
-            // 'textBorderWidth' => $this->getTextBorderWidth(),
-            // 'textBorderType' => $this->getTextBorderType(),
-            // 'textShadowBlur' => $this->getTextShadowBlur(),
-            // 'textShadowColor' => $this->getTextShadowColor(),
-            // 'textShadowOffsetX' => $this->getTextShadowOffsetX(),
-            // 'textShadowOffsetY' => $this->getTextShadowOffsetY(),
-            // 'overflow' => $this->getOverflow(),
+            'textBorderColor' => $this->getBorderColor(),
+            'textBorderWidth' => $this->getBorderWidth(),
+            'textBorderType' => $this->getBorderType(),
+            'textShadowBlur' => $this->getTextShadowBlur(),
+            'textShadowColor' => $this->getTextShadowColor(),
+            'textShadowOffsetX' => $this->getTextShadowOffsetX(),
+            'textShadowOffsetY' => $this->getTextShadowOffsetY(),
+            'overflow' => $this->getOverflow(),
             // 'ellipsis' => $this->getEllipsis(),
         ];
     }
