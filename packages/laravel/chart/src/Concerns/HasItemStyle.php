@@ -19,12 +19,16 @@ trait HasItemStyle
     /**
      * Set the item style.
      * 
-     * @param \Honed\Chart\Style\ItemStyle|(Closure(\Honed\Chart\Style\ItemStyle):mixed)|null $itemStyle
+     * @param \Honed\Chart\Style\ItemStyle|(Closure(\Honed\Chart\Style\ItemStyle):mixed)|null $value
      * @return $this
      */
-    public function itemStyle(ItemStyle|Closure|null $itemStyle): static
+    public function itemStyle(ItemStyle|Closure|null $value = null): static
     {
-        $this->itemStyle = $itemStyle instanceof Closure ? $itemStyle($this->withItemStyle()) : $itemStyle;
+        $this->itemStyle = match (true) {
+            is_null($value) => $this->withItemStyle(),
+            $value instanceof Closure => $value($this->withItemStyle()),
+            default => $this->itemStyle = $value,
+        };
 
         return $this;
     }

@@ -22,7 +22,7 @@ trait HasTitle
      * @param \Honed\Chart\Title\Title|(Closure(\Honed\Chart\Title\Title):mixed)|null $value
      * @return $this
      */
-    public function title(Title|Closure|null $value): static
+    public function title(Title|Closure|null $value = null): static
     {
         return match (true) {
             is_null($value) => $this->newTitle(),

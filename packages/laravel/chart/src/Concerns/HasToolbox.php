@@ -22,11 +22,11 @@ trait HasToolbox
      * @param \Honed\Chart\Toolbox\Toolbox|(Closure(\Honed\Chart\Toolbox\Toolbox):mixed)|null $value
      * @return $this
      */
-    public function toolbox(Toolbox|Closure|null $value): static
+    public function toolbox(Toolbox|Closure|null $value = null): static
     {
         return match (true) {
-            is_null($value) => $this->newToolbox(),
-            $value instanceof Closure => $value($this->newToolbox()),
+            is_null($value) => $this->withToolbox(),
+            $value instanceof Closure => $value($this->withToolbox()),
             default => $this->toolbox = $value,
         };
 
@@ -46,7 +46,7 @@ trait HasToolbox
     /**
      * Create a new toolbox, or use the existing one.
      */
-    protected function newToolbox(): Toolbox
+    protected function withToolbox(): Toolbox
     {
         return $this->toolbox ??= Toolbox::make();
     }

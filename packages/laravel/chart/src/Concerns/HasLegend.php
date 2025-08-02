@@ -22,11 +22,11 @@ trait HasLegend
      * @param \Honed\Chart\Legend\Legend|(Closure(\Honed\Chart\Legend\Legend):mixed)|null $value
      * @return $this
      */
-    public function legend(Legend|Closure|null $value): static
+    public function legend(Legend|Closure|null $value = null): static
     {
-        return match (true) {
-            is_null($value) => $this->newLegend(),
-            $value instanceof Closure => $value($this->newLegend()),
+        $this->legend = match (true) {
+            is_null($value) => $this->withLegend(),
+            $value instanceof Closure => $value($this->withLegend()),
             default => $this->legend = $value,
         };
 
@@ -46,7 +46,7 @@ trait HasLegend
     /**
      * Create a new legend, or use the existing one.
      */
-    protected function newLegend(): Legend
+    protected function withLegend(): Legend
     {
         return $this->legend ??= Legend::make();
     }

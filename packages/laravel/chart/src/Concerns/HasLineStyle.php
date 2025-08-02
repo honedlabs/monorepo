@@ -19,12 +19,16 @@ trait HasLineStyle
     /**
      * Set the line style.
      * 
-     * @param \Honed\Chart\Style\LineStyle|(Closure(\Honed\Chart\Style\LineStyle):mixed)|null $lineStyle
+     * @param \Honed\Chart\Style\LineStyle|(Closure(\Honed\Chart\Style\LineStyle):mixed)|null $value
      * @return $this
      */
-    public function lineStyle(LineStyle|Closure|null $lineStyle): static
+    public function lineStyle(LineStyle|Closure|null $value = null): static
     {
-        $this->lineStyle = $lineStyle instanceof Closure ? $lineStyle($this->withLineStyle()) : $lineStyle;
+        $this->lineStyle = match (true) {
+            is_null($value) => $this->withLineStyle(),
+            $value instanceof Closure => $value($this->withLineStyle()),
+            default => $this->lineStyle = $value,
+        };
 
         return $this;
     }

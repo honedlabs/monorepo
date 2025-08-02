@@ -22,11 +22,11 @@ trait HasTooltip
      * @param \Honed\Chart\Tooltip\Tooltip|(Closure(\Honed\Chart\Tooltip\Tooltip):mixed)|null $value
      * @return $this
      */
-    public function tooltip(Tooltip|Closure|null $value): static
+    public function tooltip(Tooltip|Closure|null $value = null): static
     {
         return match (true) {
-            is_null($value) => $this->newTooltip(),
-            $value instanceof Closure => $value($this->newTooltip()),
+            is_null($value) => $this->withTooltip(),
+            $value instanceof Closure => $value($this->withTooltip()),
             default => $this->tooltip = $value,
         };
 
@@ -46,7 +46,7 @@ trait HasTooltip
     /**
      * Create a new tooltip, or use the existing one.
      */
-    protected function newTooltip(): Tooltip
+    protected function withTooltip(): Tooltip
     {
         return $this->tooltip ??= Tooltip::make();
     }

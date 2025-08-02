@@ -39,23 +39,22 @@ class Tooltip extends Primitive implements NullsAsUndefined
         return [
             'show' => $this->isShown(),
             'trigger' => $this->getTrigger(),
-            'textStyle' => $this->getTextStyle()?->toArray(),
-            // 'showContent' => 
+            // 'showContent' => $this->
             // 'alwaysShowContent' => 
-            // 'triggerOn',
-            // 'showDelay',
-            // 'hideDelay',
-            // 'enterable',
-            // 'confine',
-            // 'appendToBody',
-            // 'className',
-            // 'transitionDuration',
+            // 'triggerOn' => $this->getTriggerOn(),
+            // 'showDelay' => $this->getShowDelay(),
+            // 'hideDelay' => $this->getHideDelay(),
+            // 'enterable' => $this->isEnterable(),
+            // 'confine' => $this->isConfined(),
+            // 'appendToBody' => $this->isAppendedToBody(),
+            // 'className' => $this->getClass(),
+            // 'transitionDuration' => $this->getTransitionDuration(),
             // 'position',
             // 'backgroundColor' => $this->getBackgroundColor(),
             // 'borderColor' => $this->getBorderColor(),
             // 'borderWidth' => $this->getBorderWidth(),
             // 'padding' => $this->getPadding(),
-            // 'textStyle' => $this->getTextStyle()?->toArray(),
+            'textStyle' => $this->getTextStyle()?->toArray(),
             // 'order' => $this->getOrder(),
         ];
     }

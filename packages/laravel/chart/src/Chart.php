@@ -21,6 +21,7 @@ use Honed\Chart\Concerns\HasTitle;
 use Honed\Chart\Concerns\HasToolbox;
 use Honed\Chart\Exceptions\MissingDataException;
 use Honed\Chart\Concerns\CanBePolar;
+use Honed\Chart\Concerns\HasGrid;
 use Honed\Chart\Style\Concerns\HasBackgroundColor;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\ForwardsCalls;
@@ -39,6 +40,7 @@ class Chart extends Primitive implements NullsAsUndefined
     use HasToolbox;
     use HasTitle;
     use HasBackgroundColor;
+    use HasGrid;
 
     /**
      * Create a new chart instance.
@@ -74,14 +76,24 @@ class Chart extends Primitive implements NullsAsUndefined
         return [
             'title' => $this->getTitle()?->toArray(),
             'legend' => $this->getLegend()?->toArray(),
+            'grid' => $this->getGrid()?->toArray(),
             'xAxis' => $this->getXAxesToArray(),
             'yAxis' => $this->getYAxesToArray(),
             'polar' => $this->getPolar()?->toArray(),
+            // 'radiusAxis' => $this->getRadiusAxis()?->toArray(),
+            // 'angleAxis' => $this->getAngleAxis()?->toArray(),
+            // 'radar' => $this->getRadar()?->toArray(),
+            // 'dataZoom' => $this->getDataZoom()?->toArray(),
+            // 'visualMap' => $this->getVisualMap()?->toArray(),
             'tooltip' => $this->getTooltip()?->toArray(),
+            // 'axisPointer' => $this->getAxisPointer()?->toArray(),
             'toolbox' => $this->getToolbox()?->toArray(),
+            // 'timeline' => $this->getTimeline()?->toArray(),
+            // 'calendar' => $this->getCalendar()?->toArray(),
             'series' => $this->seriesToArray(),
-            'textStyle' => $this->getTextStyle()?->toArray(),
+            'color' => $this->getColor(),
             'backgroundColor' => $this->getBackgroundColor(),
+            'textStyle' => $this->getTextStyle()?->toArray(),
             ...$this->getAnimationParameters(),
         ];
     }

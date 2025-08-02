@@ -19,12 +19,16 @@ trait HasLabel
     /**
      * Set the label.
      * 
-     * @param \Honed\Chart\Style\Label|(Closure(\Honed\Chart\Style\Label):mixed)|null $label
+     * @param \Honed\Chart\Style\Label|(Closure(\Honed\Chart\Style\Label):mixed)|null $value
      * @return $this
      */
-    public function label(Label|Closure|null $label): static
+    public function label(Label|Closure|null $value = null): static
     {
-        $this->label = $label instanceof Closure ? $label($this->withLabel()) : $label;
+        $this->label = match (true) {
+            is_null($value) => $this->withLabel(),
+            $value instanceof Closure => $value($this->withLabel()),
+            default => $this->label = $value,
+        };
 
         return $this;
     }

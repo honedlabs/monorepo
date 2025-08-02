@@ -19,12 +19,16 @@ trait HasTextStyle
     /**
      * Set the text style.
      * 
-     * @param \Honed\Chart\Style\TextStyle|(Closure(\Honed\Chart\Style\TextStyle):mixed)|null $textStyle
+     * @param \Honed\Chart\Style\TextStyle|(Closure(\Honed\Chart\Style\TextStyle):mixed)|null $value
      * @return $this
      */
-    public function textStyle(TextStyle|Closure|null $textStyle): static
+    public function textStyle(TextStyle|Closure|null $value = null): static
     {
-        $this->textStyle = $textStyle instanceof Closure ? $textStyle($this->withTextStyle()) : $textStyle;
+        $this->textStyle = match (true) {
+            is_null($value) => $this->withTextStyle(),
+            $value instanceof Closure => $value($this->withTextStyle()),
+            default => $this->textStyle = $value,
+        };
 
         return $this;
     }

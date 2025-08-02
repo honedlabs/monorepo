@@ -30,8 +30,8 @@ class Blur extends Primitive implements NullsAsUndefined
     protected function representation(): array
     {
         return [
-            'itemStyle' => $this->getItemStyle(),
-            'label' => $this->getLabel(),
+            'itemStyle' => $this->getItemStyle()?->toArray(),
+            'label' => $this->getLabel()?->toArray(),
         ];
     }
 }

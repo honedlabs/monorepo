@@ -24,7 +24,11 @@ trait HasSubtextStyle
      */
     public function subtextStyle(TextStyle|Closure|null $value): static
     {
-        $this->subtextStyle = $value instanceof Closure ? $value($this->withSubtextStyle()) : $value;
+        $this->subtextStyle = match (true) {
+            is_null($value) => $this->withSubtextStyle(),
+            $value instanceof Closure => $value($this->withSubtextStyle()),
+            default => $this->subtextStyle = $value,
+        };
 
         return $this;
     }
