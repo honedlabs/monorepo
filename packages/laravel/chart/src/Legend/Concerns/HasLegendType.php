@@ -11,7 +11,7 @@ trait HasLegendType
     /**
      * The type of legend.
      * 
-     * @var \Honed\Chart\Enums\LegendType|null
+     * @var string|null
      */
     protected $type;
 
@@ -19,18 +19,32 @@ trait HasLegendType
      * Set the type of legend.
      * 
      * @return $this
-     * 
-     * @throws \ValueError if the legend type is not a valid legend type
      */
-    public function type(LegendType|string $value): static
+    public function type(string|LegendType $value): static
     {
-        if (! $value instanceof LegendType) {
-            $value = LegendType::from($value);
-        }
-
-        $this->type = $value;
+        $this->type = is_string($value) ? $value : $value->value;
 
         return $this;
+    }
+
+    /**
+     * Set the type of legend to be simple.
+     * 
+     * @return $this
+     */
+    public function plain(): static
+    {
+        return $this->type(LegendType::Plain);
+    }
+
+    /**
+     * Set the type of legend to be scroll.
+     * 
+     * @return $this
+     */
+    public function scroll(): static
+    {
+        return $this->type(LegendType::Scroll);
     }
 
     /**
@@ -38,6 +52,6 @@ trait HasLegendType
      */
     public function getType(): ?string
     {
-        return $this->type?->value;
+        return $this->type;
     }
 }

@@ -6,6 +6,6 @@ namespace Honed\Chart\Enums;
 
 enum LegendType: string
 {
-    case Simple = 'plain';
+    case Plain = 'plain';
     case Scroll = 'scroll';
 }

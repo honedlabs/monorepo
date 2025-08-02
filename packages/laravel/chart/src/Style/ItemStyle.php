@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style;
 
+use Honed\Chart\Style\Concerns\HasBorderColor;
 use Honed\Chart\Style\Concerns\HasBorderType;
+use Honed\Chart\Style\Concerns\HasBorderWidth;
 use Honed\Chart\Style\Concerns\HasCap;
 use Honed\Chart\Style\Concerns\HasColor;
 use Honed\Chart\Style\Concerns\HasDashOffset;
@@ -13,14 +15,14 @@ use Honed\Chart\Style\Concerns\HasOpacity;
 use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowColor;
 use Honed\Chart\Style\Concerns\HasShadowOffset;
-use Honed\Chart\Style\Concerns\HasWidth;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
-class LineStyle extends Primitive implements NullsAsUndefined
+class ItemStyle extends Primitive implements NullsAsUndefined
 {
     use HasColor;
-    use HasWidth;
+    use HasBorderColor;
+    use HasBorderWidth;
     use HasBorderType;
     use HasDashOffset;
     use HasCap;
@@ -31,7 +33,7 @@ class LineStyle extends Primitive implements NullsAsUndefined
     use HasOpacity;
 
     /**
-     * Create a new line style instance.
+     * Create a new item style instance.
      */
     public static function make(): static
     {
@@ -39,7 +41,7 @@ class LineStyle extends Primitive implements NullsAsUndefined
     }
 
     /**
-     * Get the representation of the line style.
+     * Get the representation of the item style.
      * 
      * @return array<string, mixed>
      */
@@ -47,19 +49,19 @@ class LineStyle extends Primitive implements NullsAsUndefined
     {
         return [
             'color' => $this->getColor(),
-            'width' => $this->getWidth(),
-            'type' => $this->getBorderType(),
-            'dashOffset' => $this->getDashOffset(),
-            'cap' => $this->getCap(),
-            'join' => $this->getJoin(),
-            'miterLimit' => $this->getMiterLimit(),
+            'borderColor' => $this->getBorderColor(),
+            'borderWidth' => $this->getBorderWidth(),
+            'borderType' => $this->getBorderType(),
+            'borderDashOffset' => $this->getDashOffset(),
+            'borderCap' => $this->getCap(),
+            'borderJoin' => $this->getJoin(),
+            'borderMiterLimit' => $this->getMiterLimit(),
             'shadowBlur' => $this->getShadowBlur(),
             'shadowColor' => $this->getShadowColor(),
             'shadowOffsetX' => $this->getShadowOffsetX(),
             'shadowOffsetY' => $this->getShadowOffsetY(),
             'opacity' => $this->getOpacity(),
-            // 'inactiveColor' => $this->getInactiveColor(),
-            // 'inactiveWidth' => $this->getInactiveWidth(),
+            // 'decal' => $this->getDecal(),
         ];
     }
 }

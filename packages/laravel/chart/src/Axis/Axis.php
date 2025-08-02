@@ -8,6 +8,7 @@ use Honed\Chart\Axis\Concerns\CanAlignTicks;
 use Honed\Chart\Axis\Concerns\CanBeScaled;
 use Honed\Chart\Axis\Concerns\HasAxisType;
 use Honed\Chart\Axis\Concerns\HasDimension;
+use Honed\Chart\Axis\Concerns\HasGridIndex;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\Animatable;
 use Honed\Chart\Concerns\Extractable;
@@ -31,6 +32,7 @@ class Axis extends Primitive implements NullsAsUndefined, Resolvable
     use Extractable;
     use HasTooltip;
     use HasDimension;
+    use HasGridIndex;
 
     /**
      * Create a new axis instance.
@@ -62,7 +64,7 @@ class Axis extends Primitive implements NullsAsUndefined, Resolvable
         return [
             'id' => $this->getId(),
             'show' => $this->isShown(),
-            // 'gridIndex' => $this->getGridIndex(),
+            'gridIndex' => $this->getGridIndex(),
             'alignTicks' => $this->hasAlignedTicks(),
             // 'position' => $this->getPosition(),
             // 'offset' => $this->getOffset(),

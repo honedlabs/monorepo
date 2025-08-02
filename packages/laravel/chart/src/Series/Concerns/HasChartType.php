@@ -11,25 +11,18 @@ trait HasChartType
     /**
      * The type of the series.
      * 
-     * @var \Honed\Chart\Enums\ChartType
+     * @var string|null
      */
     protected $type;
 
     /**
      * Set the type of the series.
      * 
-     * @param \Honed\Chart\Enums\ChartType|string $type
      * @return $this
-     * 
-     * @throws \ValueError if the type is not a valid chart type
      */
-    public function type(ChartType|string $type): static
+    public function type(string|ChartType $value): static
     {
-        if (! $type instanceof ChartType) {
-            $type = ChartType::from($type);
-        }
-
-        $this->type = $type;
+        $this->type = $value instanceof ChartType ? $value->value : $value;
 
         return $this;
     }
@@ -37,8 +30,8 @@ trait HasChartType
     /**
      * Get the type of the series.
      */
-    public function getType(): ?string
+    public function getType(): string
     {
-        return $this->type?->value;
+        return $this->type;
     }
 }

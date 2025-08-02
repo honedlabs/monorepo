@@ -11,7 +11,7 @@ trait HasOrientation
     /**
      * The orientation to use.
      * 
-     * @var \Honed\Chart\Enums\Orientation|null
+     * @var string|null
      */
     protected $orientation;
 
@@ -20,15 +20,31 @@ trait HasOrientation
      * 
      * @return $this
      */
-    public function orientation(Orientation|string $orientation): static
+    public function orientation(string|Orientation $orientation): static
     {
-        if (! $orientation instanceof Orientation) {
-            $orientation = Orientation::from($orientation);
-        }
-
-        $this->orientation = $orientation;
+        $this->orientation = is_string($orientation) ? $orientation : $orientation->value;
 
         return $this;
+    }
+
+    /**
+     * Set the orientation of the element to be horizontal.
+     * 
+     * @return $this
+     */
+    public function horizontal(): static
+    {
+        return $this->orientation(Orientation::Horizontal);
+    }
+
+    /**
+     * Set the orientation of the element to be vertical.
+     * 
+     * @return $this
+     */
+    public function vertical(): static
+    {
+        return $this->orientation(Orientation::Vertical);
     }
 
     /**
@@ -36,6 +52,6 @@ trait HasOrientation
      */
     public function getOrientation(): ?string
     {
-        return $this->orientation?->value;
+        return $this->orientation;
     }
 }
