@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Honed\Chart\AxisPointer;
 
-use Honed\Chart\Concerns\CanBeShown;
-use Honed\Chart\Concerns\HasId;
-use Honed\Chart\Concerns\HasTextStyle;
-use Honed\Chart\Tooltip\Concerns\HasTrigger;
-use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
+use Honed\Chart\Concerns\HasId;
+use Honed\Chart\Concerns\CanBeShown;
+use Honed\Chart\Concerns\HasTextStyle;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Chart\Tooltip\Concerns\HasTrigger;
+use Honed\Chart\AxisPointer\Concerns\CanBeSnapped;
+use Honed\Chart\AxisPointer\Concerns\HasAxisPointerType;
 
 class AxisPointer extends Primitive implements NullsAsUndefined
 {
     use HasId;
     use CanBeShown;
     use HasTrigger;
+    use CanBeSnapped;
+    use HasAxisPointerType;
     // use HasBackgroundColor;
     // use HasBorderColor;
     // use HasBorderWidth;
@@ -42,14 +46,16 @@ class AxisPointer extends Primitive implements NullsAsUndefined
             'id' => $this->getId(),
             'show' => $this->isShown(),
             'type' => $this->getType(),
-            'label' => $this->getLabel()?->toArray(),
-            'lineStyle' => $this->getLineStyle()?->toArray(),
-            'shadowStyle' => $this->getShadowStyle()?->toArray(),
-            'triggerEmphasis' => $this->isTriggerEmphasis(),
-            'triggerTooltip' => $this->isTriggerTooltip(),
+            'snap' => $this->isSnapped(),
+            'z' => $this->getZ(),
+            // 'label' => $this->getLabel()?->toArray(),
+            // 'lineStyle' => $this->getLineStyle()?->toArray(),
+            // 'shadowStyle' => $this->getShadowStyle()?->toArray(),
+            // 'triggerEmphasis' => $this->isTriggerEmphasis(),
+            // 'triggerTooltip' => $this->isTriggerTooltip(),
             // 'value',
             // 'status',
-            'triggerOn' => $this->getTriggerOn(),
+            // 'triggerOn' => $this->getTriggerOn(),
         ];
     }
 

@@ -9,23 +9,23 @@ use Honed\Chart\Style\Rgb;
 use Honed\Chart\Style\Rgba;
 use Honed\Chart\Support\Color;
 
-trait HasColor
+trait HasBackgroundColor
 {
     /**
-     * The color.
+     * The background color.
      * 
      * @var string|Rgb|Rgba|Gradient|null
      */
-    protected $color;
+    protected $backgroundColor;
 
     /**
      * Set the color.
      * 
      * @return $this
      */
-    public function color(string|Rgb|Rgba|Gradient|null $value): static
+    public function backgroundColor(string|Rgb|Rgba|Gradient|null $value): static
     {
-        $this->color = $value;
+        $this->backgroundColor = $value;
 
         return $this;
     }
@@ -35,8 +35,8 @@ trait HasColor
      * 
      * @return string|array<string, mixed>|null
      */
-    public function getColor(): string|array|null
+    public function getBackgroundColor(): string|array|null
     {
-        return Color::from($this->color);
+        return Color::from($this->backgroundColor);
     }
 }

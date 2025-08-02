@@ -54,7 +54,7 @@ class Gradient implements Arrayable
     public function x(float|int $value): static
     {
         if ($value < 0 || $value > 1) {
-            $this->invalidCoordinate('X1');
+            $this->invalidRange('X1');
         }
 
         $this->x1 = $value;
@@ -104,7 +104,7 @@ class Gradient implements Arrayable
     public function y(float|int $value): static
     {
         if ($value < 0 || $value > 1) {
-            $this->invalidCoordinate('Y1');
+            $this->invalidRange('Y1');
         }
 
         $this->y1 = $value;
@@ -152,7 +152,7 @@ class Gradient implements Arrayable
     public function x2(float|int $value): static
     {
         if ($value < 0 || $value > 1) {
-            $this->invalidCoordinate('X2');
+            $this->invalidRange('X2');
         }
 
         $this->x2 = $value;
@@ -178,7 +178,7 @@ class Gradient implements Arrayable
     public function y2(float|int $value): static
     {
         if ($value < 0 || $value > 1) {
-            $this->invalidCoordinate('Y2');
+            $this->invalidRange('Y2');
         }
 
         $this->y2 = $value;
@@ -275,6 +275,16 @@ class Gradient implements Arrayable
     }
 
     /**
+     * Set the radial gradient center to be the center of the chart.
+     * 
+     * @return $this
+     */
+    public function center(): static
+    {
+        return $this->x(0.5)->y(0.5);//->r(0.5);
+    }
+
+    /**
      * Get the gradient as an array.
      * 
      * @return array<string, mixed>
@@ -297,11 +307,11 @@ class Gradient implements Arrayable
     }
 
     /**
-     * Throw an exception if the coordinate is invalid.
+     * Throw an exception if the value is outside the allowed range.
      * 
      * @throws \InvalidArgumentException
      */
-    protected function invalidCoordinate(string $coordinate): never
+    protected function invalidRange(string $coordinate): never
     {
         throw new \InvalidArgumentException(
             "{$coordinate} must be between 0 and 1."

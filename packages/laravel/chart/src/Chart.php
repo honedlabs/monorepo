@@ -20,7 +20,8 @@ use Honed\Chart\Concerns\HasLegend;
 use Honed\Chart\Concerns\HasTitle;
 use Honed\Chart\Concerns\HasToolbox;
 use Honed\Chart\Exceptions\MissingDataException;
-use Honed\Chart\Style\Concerns\CanBePolar;
+use Honed\Chart\Concerns\CanBePolar;
+use Honed\Chart\Style\Concerns\HasBackgroundColor;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Pest\Factories\Concerns\HigherOrderable;
@@ -37,6 +38,7 @@ class Chart extends Primitive implements NullsAsUndefined
     use CanBePolar;
     use HasToolbox;
     use HasTitle;
+    use HasBackgroundColor;
 
     /**
      * Create a new chart instance.
@@ -79,6 +81,7 @@ class Chart extends Primitive implements NullsAsUndefined
             'toolbox' => $this->getToolbox()?->toArray(),
             'series' => $this->seriesToArray(),
             'textStyle' => $this->getTextStyle()?->toArray(),
+            'backgroundColor' => $this->getBackgroundColor(),
             ...$this->getAnimationParameters(),
         ];
     }

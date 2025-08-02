@@ -6,8 +6,9 @@ namespace Honed\Chart\Style;
 
 use Honed\Chart\Style\Concerns\HasRGB;
 use Honed\Chart\Style\Concerns\HasAlpha;
+use Stringable;
 
-class Rgba
+class Rgba implements Stringable
 {
     use HasRGB;
     use HasAlpha;
