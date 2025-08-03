@@ -10,6 +10,7 @@ use Honed\Chart\Style\Concerns\HasBorderWidth;
 use Honed\Chart\Style\Concerns\HasColor;
 use Honed\Chart\Style\Concerns\HasFontFamily;
 use Honed\Chart\Style\Concerns\HasFontSize;
+use Honed\Chart\Style\Concerns\HasFontStyle;
 use Honed\Chart\Style\Concerns\HasFontWeight;
 use Honed\Chart\Style\Concerns\HasLineHeight;
 use Honed\Chart\Style\Concerns\HasHeight;
@@ -38,6 +39,7 @@ class TextStyle extends Primitive implements NullsAsUndefined
     use HasShadowColor;
     use HasShadowOffset;
     use HasOverflow;
+    use HasFontStyle;
 
     /**
      * Create a new text style instance.

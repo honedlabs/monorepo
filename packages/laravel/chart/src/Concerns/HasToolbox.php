@@ -19,15 +19,15 @@ trait HasToolbox
     /**
      * Add a toolbox.
      * 
-     * @param \Honed\Chart\Toolbox\Toolbox|(Closure(\Honed\Chart\Toolbox\Toolbox):mixed)|null $value
+     * @param \Honed\Chart\Toolbox\Toolbox|(Closure(\Honed\Chart\Toolbox\Toolbox):\Honed\Chart\Toolbox\Toolbox)|null $value
      * @return $this
      */
     public function toolbox(Toolbox|Closure|null $value = null): static
     {
-        return match (true) {
+        $this->toolbox = match (true) {
             is_null($value) => $this->withToolbox(),
             $value instanceof Closure => $value($this->withToolbox()),
-            default => $this->toolbox = $value,
+            default => $value,
         };
 
         return $this;

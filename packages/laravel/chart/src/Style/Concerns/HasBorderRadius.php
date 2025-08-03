@@ -14,7 +14,7 @@ trait HasBorderRadius
     protected $borderRadius;
 
     /**
-     * Set the radius of the rounded corner in px.
+     * Set the radius of the rounded corner in pixels.
      * 
      * @param int|array<int, int> $value
      * @return $this
@@ -27,7 +27,9 @@ trait HasBorderRadius
     }
 
     /**
-     * Get the radius of the rounded corner in px.
+     * Get the radius of the rounded corner in pixels.
+     * 
+     * @return int|array<int, int>|null
      */
     public function getBorderRadius(): int|array|null
     {

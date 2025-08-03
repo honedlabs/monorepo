@@ -19,15 +19,15 @@ trait HasTitle
     /**
      * Add a title.
      * 
-     * @param \Honed\Chart\Title\Title|(Closure(\Honed\Chart\Title\Title):mixed)|null $value
+     * @param \Honed\Chart\Title\Title|(Closure(\Honed\Chart\Title\Title):\Honed\Chart\Title\Title)|null $value
      * @return $this
      */
     public function title(Title|Closure|null $value = null): static
     {
-        return match (true) {
-            is_null($value) => $this->newTitle(),
-            $value instanceof Closure => $value($this->newTitle()),
-            default => $this->title = $value,
+        $this->title = match (true) {
+            is_null($value) => $this->withTitle(),
+            $value instanceof Closure => $value($this->withTitle()),
+            default => $value,
         };
 
         return $this;
@@ -46,7 +46,7 @@ trait HasTitle
     /**
      * Create a new title, or use the existing one.
      */
-    protected function newTitle(): Title
+    protected function withTitle(): Title
     {
         return $this->title ??= Title::make();
     }

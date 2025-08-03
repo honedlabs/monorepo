@@ -19,7 +19,7 @@ trait HasLegend
     /**
      * Add a legend.
      * 
-     * @param \Honed\Chart\Legend\Legend|(Closure(\Honed\Chart\Legend\Legend):mixed)|null $value
+     * @param \Honed\Chart\Legend\Legend|(Closure(\Honed\Chart\Legend\Legend):\Honed\Chart\Legend\Legend)|null $value
      * @return $this
      */
     public function legend(Legend|Closure|null $value = null): static

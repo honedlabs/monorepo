@@ -19,7 +19,7 @@ trait HasItemStyle
     /**
      * Set the item style.
      * 
-     * @param \Honed\Chart\Style\ItemStyle|(Closure(\Honed\Chart\Style\ItemStyle):mixed)|null $value
+     * @param \Honed\Chart\Style\ItemStyle|(Closure(\Honed\Chart\Style\ItemStyle):\Honed\Chart\Style\ItemStyle)|null $value
      * @return $this
      */
     public function itemStyle(ItemStyle|Closure|null $value = null): static

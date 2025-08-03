@@ -12,14 +12,14 @@ trait HasLabel
     /**
      * The label.
      * 
-     * @var \Honed\Chart\Style\Label|null
+     * @var \Honed\Chart\Label\Label|null
      */
     protected $label;
 
     /**
      * Set the label.
      * 
-     * @param \Honed\Chart\Style\Label|(Closure(\Honed\Chart\Style\Label):mixed)|null $value
+     * @param \Honed\Chart\Label\Label|(Closure(\Honed\Chart\Label\Label):\Honed\Chart\Label\Label)|null $value
      * @return $this
      */
     public function label(Label|Closure|null $value = null): static
@@ -36,7 +36,7 @@ trait HasLabel
     /**
      * Get the label.
      * 
-     * @return \Honed\Chart\Style\Label|null
+     * @return \Honed\Chart\Label\Label|null
      */
     public function getLabel(): ?Label
     {

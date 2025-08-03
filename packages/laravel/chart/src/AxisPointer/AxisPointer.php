@@ -12,6 +12,9 @@ use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Chart\Tooltip\Concerns\HasTrigger;
 use Honed\Chart\AxisPointer\Concerns\CanBeSnapped;
 use Honed\Chart\AxisPointer\Concerns\HasAxisPointerType;
+use Honed\Chart\Concerns\HasLabel;
+use Honed\Chart\Concerns\HasLineStyle;
+use Honed\Chart\Concerns\HasShadowStyle;
 
 class AxisPointer extends Primitive implements NullsAsUndefined
 {
@@ -20,12 +23,10 @@ class AxisPointer extends Primitive implements NullsAsUndefined
     use HasTrigger;
     use CanBeSnapped;
     use HasAxisPointerType;
-    // use HasBackgroundColor;
-    // use HasBorderColor;
-    // use HasBorderWidth;
-    // use HasPadding;
+    use HasLabel;
+    use HasLineStyle;
     use HasTextStyle;
-    // use HasOrder;
+    use HasShadowStyle;
 
     /**
      * Create a new tooltip instance.
@@ -48,9 +49,9 @@ class AxisPointer extends Primitive implements NullsAsUndefined
             'type' => $this->getType(),
             'snap' => $this->isSnapped(),
             'z' => $this->getZ(),
-            // 'label' => $this->getLabel()?->toArray(),
-            // 'lineStyle' => $this->getLineStyle()?->toArray(),
-            // 'shadowStyle' => $this->getShadowStyle()?->toArray(),
+            'label' => $this->getLabel()?->toArray(),
+            'lineStyle' => $this->getLineStyle()?->toArray(),
+            'shadowStyle' => $this->getShadowStyle()?->toArray(),
             // 'triggerEmphasis' => $this->isTriggerEmphasis(),
             // 'triggerTooltip' => $this->isTriggerTooltip(),
             // 'value',

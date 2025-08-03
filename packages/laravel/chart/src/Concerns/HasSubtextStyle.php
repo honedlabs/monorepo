@@ -19,7 +19,7 @@ trait HasSubtextStyle
     /**
      * Set the subtext style.
      * 
-     * @param \Honed\Chart\Style\TextStyle|(Closure(\Honed\Chart\Style\TextStyle):mixed)|null $value
+     * @param \Honed\Chart\Style\TextStyle|(Closure(\Honed\Chart\Style\TextStyle):\Honed\Chart\Style\TextStyle)|null $value
      * @return $this
      */
     public function subtextStyle(TextStyle|Closure|null $value): static

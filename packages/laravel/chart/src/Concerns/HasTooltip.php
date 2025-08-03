@@ -19,15 +19,15 @@ trait HasTooltip
     /**
      * Add a tooltip.
      * 
-     * @param \Honed\Chart\Tooltip\Tooltip|(Closure(\Honed\Chart\Tooltip\Tooltip):mixed)|null $value
+     * @param \Honed\Chart\Tooltip\Tooltip|(Closure(\Honed\Chart\Tooltip\Tooltip):\Honed\Chart\Tooltip\Tooltip)|null $value
      * @return $this
      */
     public function tooltip(Tooltip|Closure|null $value = null): static
     {
-        return match (true) {
+        $this->tooltip = match (true) {
             is_null($value) => $this->withTooltip(),
             $value instanceof Closure => $value($this->withTooltip()),
-            default => $this->tooltip = $value,
+            default => $value,
         };
 
         return $this;

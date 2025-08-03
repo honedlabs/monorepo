@@ -19,7 +19,7 @@ trait HasLineStyle
     /**
      * Set the line style.
      * 
-     * @param \Honed\Chart\Style\LineStyle|(Closure(\Honed\Chart\Style\LineStyle):mixed)|null $value
+     * @param \Honed\Chart\Style\LineStyle|(Closure(\Honed\Chart\Style\LineStyle):\Honed\Chart\Style\LineStyle)|null $value
      * @return $this
      */
     public function lineStyle(LineStyle|Closure|null $value = null): static

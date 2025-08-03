@@ -19,15 +19,15 @@ trait HasGrid
     /**
      * Add a grid.
      * 
-     * @param \Honed\Chart\Grid\Grid|(Closure(\Honed\Chart\Grid\Grid):mixed)|null $value
+     * @param \Honed\Chart\Grid\Grid|(Closure(\Honed\Chart\Grid\Grid):\Honed\Chart\Grid\Grid)|null $value
      * @return $this
      */
     public function grid(Grid|Closure|null $value = null): static
     {
-        return match (true) {
+        $this->grid = match (true) {
             is_null($value) => $this->withGrid(),
             $value instanceof Closure => $value($this->withGrid()),
-            default => $this->grid = $value,
+            default => $value,
         };
 
         return $this;

@@ -45,6 +45,14 @@ class Grid extends Primitive implements NullsAsUndefined
     use HasTooltip;
 
     /**
+     * Create a new grid instance.
+     */
+    public static function make(): static
+    {
+        return resolve(static::class);
+    }
+
+    /**
      * Get the representation of the grid.
      * 
      * @return array<string, mixed>
