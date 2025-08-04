@@ -14,5 +14,5 @@ class Implementation
      */
     public function __construct(
         public ?string $implementationOf = null,
-    ) { }
+    ) {}
 }
