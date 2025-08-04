@@ -4,28 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use RuntimeException;
 use Honed\Core\Primitive;
-use Illuminate\Support\Arr;
 use Honed\Chart\Concerns\HasData;
-use Illuminate\Support\Collection;
 use Honed\Chart\Concerns\HasSeries;
 use Honed\Chart\Concerns\Animatable;
 use Honed\Chart\Concerns\HasTooltip;
 use Honed\Chart\Concerns\HasTextStyle;
 use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Chart\Concerns\HasAnimationDuration;
 use Honed\Chart\Concerns\HasAxes;
 use Honed\Chart\Concerns\HasLegend;
 use Honed\Chart\Concerns\HasTitle;
 use Honed\Chart\Concerns\HasToolbox;
-use Honed\Chart\Exceptions\MissingDataException;
 use Honed\Chart\Concerns\CanBePolar;
+use Honed\Chart\Concerns\HasAxisPointer;
 use Honed\Chart\Concerns\HasGrid;
 use Honed\Chart\Style\Concerns\HasBackgroundColor;
-use Illuminate\Support\Traits\Conditionable;
-use Illuminate\Support\Traits\ForwardsCalls;
-use Pest\Factories\Concerns\HigherOrderable;
 
 class Chart extends Primitive implements NullsAsUndefined
 {
@@ -41,6 +34,7 @@ class Chart extends Primitive implements NullsAsUndefined
     use HasTitle;
     use HasBackgroundColor;
     use HasGrid;
+    use HasAxisPointer;
 
     /**
      * Create a new chart instance.
@@ -86,12 +80,12 @@ class Chart extends Primitive implements NullsAsUndefined
             // 'dataZoom' => $this->getDataZoom()?->toArray(),
             // 'visualMap' => $this->getVisualMap()?->toArray(),
             'tooltip' => $this->getTooltip()?->toArray(),
-            // 'axisPointer' => $this->getAxisPointer()?->toArray(),
+            'axisPointer' => $this->getAxisPointer()?->toArray(),
             'toolbox' => $this->getToolbox()?->toArray(),
             // 'timeline' => $this->getTimeline()?->toArray(),
             // 'calendar' => $this->getCalendar()?->toArray(),
             'series' => $this->seriesToArray(),
-            'color' => $this->getColor(),
+            // 'color' => $this->getColor(),
             'backgroundColor' => $this->getBackgroundColor(),
             'textStyle' => $this->getTextStyle()?->toArray(),
             ...$this->getAnimationParameters(),

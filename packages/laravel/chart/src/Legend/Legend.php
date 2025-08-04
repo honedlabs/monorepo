@@ -17,6 +17,9 @@ use Honed\Chart\Concerns\HasTooltip;
 use Honed\Chart\Concerns\HasZAxis;
 use Honed\Chart\Legend\Concerns\HasLegendType;
 use Honed\Chart\Style\Concerns\CanBeRotated;
+use Honed\Chart\Style\Concerns\HasBackgroundColor;
+use Honed\Chart\Style\Concerns\HasBorderColor;
+use Honed\Chart\Style\Concerns\HasBorderRadius;
 use Honed\Chart\Style\Concerns\HasBottom;
 use Honed\Chart\Style\Concerns\HasHeight;
 use Honed\Chart\Style\Concerns\HasInactiveBorderColor;
@@ -25,6 +28,9 @@ use Honed\Chart\Style\Concerns\HasInactiveWidth;
 use Honed\Chart\Style\Concerns\HasLeft;
 use Honed\Chart\Style\Concerns\HasPadding;
 use Honed\Chart\Style\Concerns\HasRight;
+use Honed\Chart\Style\Concerns\HasShadowBlur;
+use Honed\Chart\Style\Concerns\HasShadowColor;
+use Honed\Chart\Style\Concerns\HasShadowOffset;
 use Honed\Chart\Style\Concerns\HasTop;
 use Honed\Chart\Style\Concerns\HasWidth;
 use Honed\Core\Contracts\NullsAsUndefined;
@@ -55,6 +61,20 @@ class Legend extends Primitive implements NullsAsUndefined
     use HasInactiveColor;
     use HasInactiveBorderColor;
     use HasInactiveWidth;
+    use HasBackgroundColor;
+    use HasBorderColor;
+    use HasBorderRadius;
+    use HasShadowBlur;
+    use HasShadowColor;
+    use HasShadowOffset;
+
+    /**
+     * Create a new legend instance.
+     */
+    public static function make(): static
+    {
+        return resolve(static::class);
+    }
 
     /**
      * Get the representation of the legend.
@@ -90,17 +110,17 @@ class Legend extends Primitive implements NullsAsUndefined
             'inactiveBorderWidth' => $this->getInactiveWidth(),
             'textStyle' => $this->getTextStyle()?->toArray(),
             'tooltip' => $this->getTooltip()?->toArray(),
-            // 'backgroundColor' => $this->getBackgroundColor(),
-            // 'borderColor' => $this->getBorderColor(),
-            // 'borderWidth' => $this->getBorderWidth(),
-            // 'borderRadius' => $this->getBorderRadius(),
-            // 'shadowBlur' => $this->getShadowBlur(),
-            // 'shadowColor' => $this->getShadowColor(),
-            // 'shadowOffsetX' => $this->getShadowOffsetX(),
-            // 'shadowOffsetY' => $this->getShadowOffsetY(),
+            'backgroundColor' => $this->getBackgroundColor(),
+            'borderColor' => $this->getBorderColor(),
+            'borderWidth' => $this->getBorderWidth(),
+            'borderRadius' => $this->getBorderRadius(),
+            'shadowBlur' => $this->getShadowBlur(),
+            'shadowColor' => $this->getShadowColor(),
+            'shadowOffsetX' => $this->getShadowOffsetX(),
+            'shadowOffsetY' => $this->getShadowOffsetY(),
             // 'animation' => $this->isAnimatable(),
             // 'animationDurationUpdate' => $this->getAnimationDurationUpdate(),
-            // 'Emphasis' => $this->getEmphasis()?->toArray(),
+            // 'emphasis' => $this->getEmphasis()?->toArray(),
         ];
     }
 }

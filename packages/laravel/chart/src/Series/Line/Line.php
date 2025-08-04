@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Series\Line;
 
+use Honed\Chart\Concerns\HasAreaStyle;
 use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Series\Line\Concerns\CanBeSmooth;
 use Honed\Chart\Series\Line\Concerns\CanColorBy;
@@ -15,6 +16,7 @@ class Line extends Series
     use CanBeSmooth;
     use HasCoordinateSystem;
     use CanColorBy;
+    use HasAreaStyle;
 
     /**
      * Provide the series with any necessary setup.
@@ -61,7 +63,7 @@ class Line extends Series
             // 'labelLine' => $this->getLabelLine()?->toArray(),
             // 'labelLayout' => $this->getLabelLayout()?->toArray(),
             // 'itemStyle' => $this->getItemStyle()?->toArray(),
-            // 'areaStyle' => $this->getAreaStyle()?->toArray(),
+            'areaStyle' => $this->getAreaStyle()?->toArray(),
             // 'emphasis' => $this->getEmphasis()?->toArray(),
             // 'blur' => $this->getBlur()?->toArray(),
             // 'select' => $this->getSelect()?->toArray(),

@@ -44,10 +44,11 @@ it('creates', function () {
         )
         ->series([
             Line::make()
-                ->area()
+                ->areaStyle()
                 ->values($this->series)
         ]);
 
     expect($chart->toArray())
+        ->dd()
         ->toEqualCanonicalizing($this->option);    
 });

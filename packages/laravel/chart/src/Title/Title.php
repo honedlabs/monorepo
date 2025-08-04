@@ -22,6 +22,7 @@ use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowColor;
 use Honed\Chart\Style\Concerns\HasShadowOffset;
 use Honed\Chart\Style\Concerns\HasTop;
+use Honed\Chart\Title\Concerns\HasSubtext;
 use Honed\Chart\Title\Concerns\HasText;
 use Honed\Core\Concerns\CanHaveUrl;
 use Honed\Core\Contracts\NullsAsUndefined;
@@ -49,6 +50,7 @@ class Title extends Primitive implements NullsAsUndefined
     use HasItemGap;
     use HasPadding;
     use HasSubtextStyle;
+    use HasSubtext;
 
     /**
      * Create a new title instance.
@@ -72,7 +74,7 @@ class Title extends Primitive implements NullsAsUndefined
             'link' => $this->getUrl(),
             'target' => null,
             'textStyle' => $this->getTextStyle()?->toArray(),
-            // 'subtext' => $this->getSubtext(),
+            'subtext' => $this->getSubtext(),
             // 'sublink' => $this->getSublink(),
             // 'subtarget' => $this->getSubtarget(),
             'subtextStyle' => $this->getSubtextStyle()?->toArray(),
