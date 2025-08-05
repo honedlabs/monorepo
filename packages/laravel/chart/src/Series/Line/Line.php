@@ -6,6 +6,7 @@ namespace Honed\Chart\Series\Line;
 
 use Honed\Chart\Concerns\HasAreaStyle;
 use Honed\Chart\Enums\ChartType;
+use Honed\Chart\Series\Line\Concerns\CanBeNullConnected;
 use Honed\Chart\Series\Line\Concerns\CanBeSmooth;
 use Honed\Chart\Series\Line\Concerns\CanColorBy;
 use Honed\Chart\Series\Line\Concerns\HasCoordinateSystem;
@@ -17,6 +18,7 @@ class Line extends Series
     use HasCoordinateSystem;
     use CanColorBy;
     use HasAreaStyle;
+    use CanBeNullConnected;
 
     /**
      * Provide the series with any necessary setup.

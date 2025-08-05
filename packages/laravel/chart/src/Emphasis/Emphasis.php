@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Emphasis;
 
-use Honed\Chart\Concerns\HasItemStyle;
-use Honed\Chart\Concerns\HasLabel;
-use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
+use Honed\Chart\Concerns\HasLabel;
+use Honed\Chart\Concerns\HasItemStyle;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Chart\Emphasis\Concerns\HasFocus;
+use Honed\Chart\Emphasis\Concerns\HasBlurScope;
+use Honed\Chart\Emphasis\Concerns\CanBeDisabled;
 
 class Emphasis extends Primitive implements NullsAsUndefined
 {
@@ -33,7 +36,7 @@ class Emphasis extends Primitive implements NullsAsUndefined
     protected function representation(): array
     {
         return [
-            'disabled' => $this->isDisabled(),
+            'disabled' => $this->isDisabled() ?: null,
             'focus' => $this->getFocus(),
             'blurScope' => $this->getBlurScope(),
             'itemStyle' => $this->getItemStyle()?->toArray(),

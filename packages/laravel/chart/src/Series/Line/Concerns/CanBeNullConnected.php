@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Series\Line\Concerns;
 
+/**
+ * @internal
+ */
 trait CanBeNullConnected
 {
     /**

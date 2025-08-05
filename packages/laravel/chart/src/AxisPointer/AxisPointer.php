@@ -15,6 +15,7 @@ use Honed\Chart\AxisPointer\Concerns\HasAxisPointerType;
 use Honed\Chart\Concerns\HasLabel;
 use Honed\Chart\Concerns\HasLineStyle;
 use Honed\Chart\Concerns\HasShadowStyle;
+use Honed\Chart\Style\Concerns\HasZ;
 
 class AxisPointer extends Primitive implements NullsAsUndefined
 {
@@ -27,6 +28,7 @@ class AxisPointer extends Primitive implements NullsAsUndefined
     use HasLineStyle;
     use HasTextStyle;
     use HasShadowStyle;
+    use HasZ;
 
     /**
      * Create a new tooltip instance.

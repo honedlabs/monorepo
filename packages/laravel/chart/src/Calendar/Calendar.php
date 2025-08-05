@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Calendar;
 
+use Honed\Chart\Calendar\Concerns\HasCellsize;
+use Honed\Chart\Calendar\Concerns\HasRange;
+use Honed\Chart\Concerns\CanBeSilent;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\HasOrientation;
 use Honed\Chart\Concerns\HasZAxis;
@@ -27,6 +30,9 @@ class Calendar extends Primitive implements NullsAsUndefined
     use HasWidth;
     use HasHeight;
     use HasOrientation;
+    use HasCellsize;
+    use HasRange;
+    use CanBeSilent;
 
     /**
      * Create a new calendar instance.
@@ -58,9 +64,9 @@ class Calendar extends Primitive implements NullsAsUndefined
             'orient' => $this->getOrientation(),
             'splitLine' => $this->getSplitLine()?->toArray(),
             'itemStyle' => $this->getItemStyle()?->toArray(),
-            'dayLabel' => $this->getDayLabel()?->toArray(),
-            'monthLabel' => $this->getMonthLabel()?->toArray(),
-            'yearLabel' => $this->getYearLabel()?->toArray(),
+            // 'dayLabel' => $this->getDayLabel()?->toArray(),
+            // 'monthLabel' => $this->getMonthLabel()?->toArray(),
+            // 'yearLabel' => $this->getYearLabel()?->toArray(),
             'silent' => $this->isSilent(),
         ];
     }

@@ -23,6 +23,7 @@ trait HasColorStops
      */
     public function colorStop(array|ColorStop $value): static
     {
+        /** @var array<int, ColorStop> */
         $value = is_array($value) ? $value : func_get_args();
 
         $this->colorStops = [...$this->colorStops, ...$value];

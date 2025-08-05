@@ -62,8 +62,8 @@ class Grid extends Primitive implements NullsAsUndefined
         return [
             'id' => $this->getId(),
             'show' => $this->isShown(),
-            'z' => $this->getZ(),
             'zLevel' => $this->getZLevel(),
+            'z' => $this->getZ(),
             'left' => $this->getLeft(),
             'top' => $this->getTop(),
             'right' => $this->getRight(),

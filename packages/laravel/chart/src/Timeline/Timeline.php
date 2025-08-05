@@ -14,13 +14,21 @@ use Honed\Chart\Style\Concerns\HasRight;
 use Honed\Chart\Style\Concerns\HasBottom;
 use Honed\Chart\Style\Concerns\HasWidth;
 use Honed\Chart\Style\Concerns\HasHeight;
+use Honed\Chart\Support\Concerns\HasSymbol;
+use Honed\Chart\Support\Concerns\HasSymbolOffset;
+use Honed\Chart\Support\Concerns\HasSymbolSize;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
 class Timeline extends Primitive implements NullsAsUndefined
 {
     use CanBeShown;
-    use HasAxisType;
+    // use HasAxisType;
+    use HasSymbol;
+    use HasSymbolSize;
+    use HasSymbolOffset;
+    // use HasSymbolPosition;
+    // use HasSymbolRotate;
 
     /**
      * Create a new calendar instance.
@@ -40,17 +48,17 @@ class Timeline extends Primitive implements NullsAsUndefined
         return [
             'show' => $this->isShown(),
             'type' => 'slider',
-            'axisType' => $this->getAxisType(),
-            'currentIndex' => $this->getCurrentIndex(),
-            'autoPlay' => $this->isAutoplayable(),
-            'rewind' => $this->isRewindable(),
-            'loop' => $this->shouldLoop(),
-            'playInterval' => $this->getPlayInterval(),
+            // 'axisType' => $this->getAxisType(),
+            // 'currentIndex' => $this->getCurrentIndex(),
+            // 'autoPlay' => $this->isAutoplayable(),
+            // 'rewind' => $this->isRewindable(),
+            // 'loop' => $this->shouldLoop(),
+            // 'playInterval' => $this->getPlayInterval(),
             'symbol' => $this->getSymbol(),
             'symbolSize' => $this->getSymbolSize(),
             'symbolOffset' => $this->getSymbolOffset(),
-            'symbolPosition' => $this->getSymbolPosition(),
-            'symbolRotate' => $this->getSymbolRotate(),
+            // 'symbolPosition' => $this->getSymbolPosition(),
+            // 'symbolRotate' => $this->getSymbolRotate(),
         ];
     }
 }

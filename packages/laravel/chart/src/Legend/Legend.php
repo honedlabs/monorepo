@@ -20,6 +20,7 @@ use Honed\Chart\Style\Concerns\CanBeRotated;
 use Honed\Chart\Style\Concerns\HasBackgroundColor;
 use Honed\Chart\Style\Concerns\HasBorderColor;
 use Honed\Chart\Style\Concerns\HasBorderRadius;
+use Honed\Chart\Style\Concerns\HasBorderWidth;
 use Honed\Chart\Style\Concerns\HasBottom;
 use Honed\Chart\Style\Concerns\HasHeight;
 use Honed\Chart\Style\Concerns\HasInactiveBorderColor;
@@ -67,6 +68,7 @@ class Legend extends Primitive implements NullsAsUndefined
     use HasShadowBlur;
     use HasShadowColor;
     use HasShadowOffset;
+    use HasBorderWidth;
 
     /**
      * Create a new legend instance.

@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Tooltip;
 
+use Honed\Core\Primitive;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasTextStyle;
-use Honed\Chart\Tooltip\Concerns\HasTrigger;
+use Honed\Chart\Style\Concerns\HasPadding;
 use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
+use Honed\Chart\Tooltip\Concerns\HasTrigger;
+use Honed\Chart\Style\Concerns\HasBorderColor;
+use Honed\Chart\Style\Concerns\HasBackgroundColor;
+use Honed\Chart\Style\Concerns\HasBorderWidth;
 
 class Tooltip extends Primitive implements NullsAsUndefined
 {
     use CanBeShown;
     use HasTrigger;
-    // use HasBackgroundColor;
-    // use HasBorderColor;
-    // use HasBorderWidth;
-    // use HasPadding;
+    use HasBackgroundColor;
+    use HasBorderColor;
+    use HasBorderWidth;
+    use HasPadding;
     use HasTextStyle;
     // use HasOrder;
 
@@ -50,10 +54,10 @@ class Tooltip extends Primitive implements NullsAsUndefined
             // 'className' => $this->getClass(),
             // 'transitionDuration' => $this->getTransitionDuration(),
             // 'position',
-            // 'backgroundColor' => $this->getBackgroundColor(),
-            // 'borderColor' => $this->getBorderColor(),
-            // 'borderWidth' => $this->getBorderWidth(),
-            // 'padding' => $this->getPadding(),
+            'backgroundColor' => $this->getBackgroundColor(),
+            'borderColor' => $this->getBorderColor(),
+            'borderWidth' => $this->getBorderWidth(),
+            'padding' => $this->getPadding(),
             'textStyle' => $this->getTextStyle()?->toArray(),
             // 'order' => $this->getOrder(),
         ];
