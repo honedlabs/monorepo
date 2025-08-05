@@ -27,7 +27,7 @@ trait HasLabel
         $this->label = match (true) {
             is_null($value) => $this->withLabel(),
             $value instanceof Closure => $value($this->withLabel()),
-            default => $this->label = $value,
+            default => $value,
         };
 
         return $this;

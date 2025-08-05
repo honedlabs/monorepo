@@ -27,7 +27,7 @@ trait HasShadowStyle
         $this->shadowStyle = match (true) {
             is_null($value) => $this->withShadowStyle(),
             $value instanceof Closure => $value($this->withShadowStyle()),
-            default => $this->shadowStyle = $value,
+            default => $value,
         };
 
         return $this;

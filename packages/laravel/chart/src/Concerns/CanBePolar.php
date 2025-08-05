@@ -27,7 +27,7 @@ trait CanBePolar
         return match (true) {
             is_null($value) => $this->newPolar(),
             $value instanceof Closure => $value($this->newPolar()),
-            default => $this->polar = $value,
+            default => $value,
         };
     }
 

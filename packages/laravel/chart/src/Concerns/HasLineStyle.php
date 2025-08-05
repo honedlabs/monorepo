@@ -27,7 +27,7 @@ trait HasLineStyle
         $this->lineStyle = match (true) {
             is_null($value) => $this->withLineStyle(),
             $value instanceof Closure => $value($this->withLineStyle()),
-            default => $this->lineStyle = $value,
+            default => $value,
         };
 
         return $this;

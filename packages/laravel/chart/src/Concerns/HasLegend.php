@@ -27,7 +27,7 @@ trait HasLegend
         $this->legend = match (true) {
             is_null($value) => $this->withLegend(),
             $value instanceof Closure => $value($this->withLegend()),
-            default => $this->legend = $value,
+            default => $value,
         };
 
         return $this;

@@ -27,7 +27,7 @@ trait HasAreaStyle
         $this->areaStyle = match (true) {
             is_null($value) => $this->withAreaStyle(),
             $value instanceof Closure => $value($this->withAreaStyle()),
-            default => $this->areaStyle = $value,
+            default => $value,
         };
 
         return $this;

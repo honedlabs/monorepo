@@ -27,7 +27,7 @@ trait HasAxisPointer
         $this->axisPointer = match (true) {
             is_null($value) => $this->withAxisPointer(),
             $value instanceof Closure => $value($this->withAxisPointer()),
-            default => $this->axisPointer = $value,
+            default => $value,
         };
 
         return $this;

@@ -27,7 +27,7 @@ trait HasTextStyle
         $this->textStyle = match (true) {
             is_null($value) => $this->withTextStyle(),
             $value instanceof Closure => $value($this->withTextStyle()),
-            default => $this->textStyle = $value,
+            default => $value,
         };
 
         return $this;

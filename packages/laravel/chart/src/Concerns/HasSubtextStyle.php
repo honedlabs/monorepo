@@ -27,7 +27,7 @@ trait HasSubtextStyle
         $this->subtextStyle = match (true) {
             is_null($value) => $this->withSubtextStyle(),
             $value instanceof Closure => $value($this->withSubtextStyle()),
-            default => $this->subtextStyle = $value,
+            default => $value,
         };
 
         return $this;

@@ -14,6 +14,7 @@ class Blur extends Primitive implements NullsAsUndefined
     use HasItemStyle;
     use HasLabel;
 
+
     /**
      * Create a new blur instance.
      */
@@ -32,6 +33,7 @@ class Blur extends Primitive implements NullsAsUndefined
         return [
             'itemStyle' => $this->getItemStyle()?->toArray(),
             'label' => $this->getLabel()?->toArray(),
+            'labelLine' => $this->getLabelLine()?->toArray(),
         ];
     }
 }
