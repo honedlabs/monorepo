@@ -19,6 +19,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "archtechx/enums": "^1.1",
         "honed/action": "^0.28.0",
         "honed/command": "^0.6.0",
         "honed/core": "^0.48.0",
