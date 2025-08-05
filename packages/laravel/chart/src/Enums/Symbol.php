@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Enums;
 
-enum Shape: string
+enum Symbol: string
 {
+    case EmptyCircle = 'emptyCircle';
     case Circle = 'circle';
-    case Cross = 'cross';
-    case Diamond = 'diamond';
-    case Line = 'line';
-    case Square = 'square';
-    case Star = 'star';
+    case Rect = 'rect';
+    case RoundRect = 'roundRect';
     case Triangle = 'triangle';
-    case Wye = 'wye';
+    case Diamond = 'diamond';
+    case Pin = 'pin';
+    case Arrow = 'arrow';
+    case None = 'none';
 }
 

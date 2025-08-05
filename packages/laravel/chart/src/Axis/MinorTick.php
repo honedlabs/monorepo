@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Axis;
 
-use Honed\Chart\Axis\Concerns\HasSplitNumber;
+use Honed\Core\Primitive;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasLineStyle;
+use Honed\Chart\Axis\Concerns\HasLength;
 use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
+use Honed\Chart\Axis\Concerns\HasSplitNumber;
 
 class MinorTick extends Primitive implements NullsAsUndefined
 {
     use CanBeShown;
     use HasSplitNumber;
-    // use HasLength;
+    use HasLength;
     use HasLineStyle;
 
     /**
@@ -35,7 +36,7 @@ class MinorTick extends Primitive implements NullsAsUndefined
         return [
             'show' => $this->isShown(),
             'splitNumber' => $this->getSplitNumber(),
-            // 'length' => $this->getLength(),
+            'length' => $this->getLength(),
             'lineStyle' => $this->getLineStyle()?->toArray(),
         ];
     }
