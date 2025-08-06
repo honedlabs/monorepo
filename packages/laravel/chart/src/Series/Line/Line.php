@@ -10,10 +10,12 @@ use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Series\Line\Concerns\CanConnectNulls;
 use Honed\Chart\Series\Line\Concerns\CanBeSmooth;
 use Honed\Chart\Series\Concerns\HasColorBy;
+use Honed\Chart\Series\Concerns\HasSampling;
 use Honed\Chart\Series\Concerns\HasStack;
 use Honed\Chart\Series\Concerns\HasStackOrder;
 use Honed\Chart\Series\Concerns\HasStackStrategy;
 use Honed\Chart\Series\Line\Concerns\HasCoordinateSystem;
+use Honed\Chart\Series\Line\Concerns\HasSmoothMonotone;
 use Honed\Chart\Series\Line\Concerns\HasStep;
 use Honed\Chart\Series\Series;
 use Honed\Chart\Support\Concerns\HasSymbol;
@@ -34,6 +36,8 @@ class Line extends Series
     use HasStackOrder;
     // use HasSymbolRotate;
     use HasStep;
+    use HasSampling;
+    use HasSmoothMonotone;
 
     /**
      * Provide the series with any necessary setup.
@@ -46,7 +50,7 @@ class Line extends Series
     }
 
     /**
-     * Get the representation of the series.
+     * Get the array representation of the line series.
      * 
      * @return array<string, mixed>
      */
@@ -70,9 +74,9 @@ class Line extends Series
             'stack' => $this->getStack(),
             'stackStrategy' => $this->getStackStrategy(),
             'stackOrder' => $this->getStackOrder(),
-            'connectNulls' => $this->isNullConnected(),
+            'connectNulls' => $this->isNullConnected() ?: null,
             // 'triggerLineEvent' => $this->isTriggeringLineEvent(),
-            'step' => $this->isStep(),
+            'step' => $this->getStep() ?: null,
             // 'label' => $this->getLabel()?->toArray(),
             // 'endLabel' => $this->getEndLabel()?->toArray(),
             // 'labelLine' => $this->getLabelLine()?->toArray(),
@@ -84,8 +88,8 @@ class Line extends Series
             // 'select' => $this->getSelect()?->toArray(),
             // 'selectedMode' => $this->getSelectedMode(),
             'smooth' => $this->isSmooth(),
-            // 'smoothMonotone' => $this->isSmoothMonotone(),
-            // 'sampling' => $this->getSampling(),
+            'smoothMonotone' => $this->getSmoothMonotone(),
+            'sampling' => $this->getSampling(),
             // 'dimensions',
             // 'encode' => $this->getEncode()?->toArray(),
             // 'seriesLayoutBy' => $this->getSeriesLayoutBy(),

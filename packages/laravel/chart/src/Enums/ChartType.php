@@ -9,8 +9,8 @@ enum ChartType: string
     case Line = 'line';
     case Bar = 'bar';
     case Pie = 'pie';
-    case Doughnut = 'doughnut';
+    case Heatmap = 'heatmap';
     case Radar = 'radar';
-    case Polar = 'polar';
+    case Sankey = 'sankey';
     case Scatter = 'scatter';
 }

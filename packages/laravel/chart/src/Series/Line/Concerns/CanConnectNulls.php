@@ -40,8 +40,6 @@ trait CanConnectNulls
 
     /**
      * Get whether to connect null values.
-     * 
-     * @return bool|null
      */
     public function isNullConnected(): bool
     {
