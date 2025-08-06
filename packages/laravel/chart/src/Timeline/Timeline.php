@@ -14,6 +14,7 @@ use Honed\Chart\Style\Concerns\HasRight;
 use Honed\Chart\Style\Concerns\HasBottom;
 use Honed\Chart\Style\Concerns\HasWidth;
 use Honed\Chart\Style\Concerns\HasHeight;
+use Honed\Chart\Support\Concerns\CanKeepAspect;
 use Honed\Chart\Support\Concerns\HasSymbol;
 use Honed\Chart\Support\Concerns\HasSymbolOffset;
 use Honed\Chart\Support\Concerns\HasSymbolSize;
@@ -29,6 +30,7 @@ class Timeline extends Primitive implements NullsAsUndefined
     use HasSymbolOffset;
     // use HasSymbolPosition;
     // use HasSymbolRotate;
+    use CanKeepAspect;
 
     /**
      * Create a new calendar instance.

@@ -12,9 +12,9 @@ trait CanBeDisabled
     /**
      * Whether to disable the emphasis state.
      * 
-     * @var bool|null
+     * @var bool
      */
-    protected $disabled;
+    protected $disabled = false;
 
     /**
      * Set whether to disable the emphasis state.

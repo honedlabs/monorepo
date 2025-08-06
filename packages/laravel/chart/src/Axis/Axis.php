@@ -11,6 +11,7 @@ use Honed\Chart\Axis\Concerns\HasAxisType;
 use Honed\Chart\Axis\Concerns\HasBoundaryGap;
 use Honed\Chart\Axis\Concerns\HasDimension;
 use Honed\Chart\Axis\Concerns\HasGridIndex;
+use Honed\Chart\Axis\Concerns\HasInterval;
 use Honed\Chart\Axis\Concerns\HasLogBase;
 use Honed\Chart\Axis\Concerns\HasMax;
 use Honed\Chart\Axis\Concerns\HasMaxInterval;
@@ -55,6 +56,7 @@ class Axis extends Primitive implements NullsAsUndefined, Resolvable
     use CanBeSilent;
     use HasStartValue;
     use HasAxisPointer;
+    use HasInterval;
 
     /**
      * Create a new axis instance.

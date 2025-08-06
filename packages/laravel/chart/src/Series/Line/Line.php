@@ -5,20 +5,35 @@ declare(strict_types=1);
 namespace Honed\Chart\Series\Line;
 
 use Honed\Chart\Concerns\HasAreaStyle;
+use Honed\Chart\Concerns\HasLabelLine;
 use Honed\Chart\Enums\ChartType;
-use Honed\Chart\Series\Line\Concerns\CanBeNullConnected;
+use Honed\Chart\Series\Line\Concerns\CanConnectNulls;
 use Honed\Chart\Series\Line\Concerns\CanBeSmooth;
-use Honed\Chart\Series\Line\Concerns\CanColorBy;
+use Honed\Chart\Series\Concerns\HasColorBy;
+use Honed\Chart\Series\Concerns\HasStack;
+use Honed\Chart\Series\Concerns\HasStackOrder;
+use Honed\Chart\Series\Concerns\HasStackStrategy;
 use Honed\Chart\Series\Line\Concerns\HasCoordinateSystem;
+use Honed\Chart\Series\Line\Concerns\HasStep;
 use Honed\Chart\Series\Series;
+use Honed\Chart\Support\Concerns\HasSymbol;
+use Honed\Chart\Support\Concerns\HasSymbolSize;
 
 class Line extends Series
 {
     use CanBeSmooth;
     use HasCoordinateSystem;
-    use CanColorBy;
+    use HasColorBy;
     use HasAreaStyle;
-    use CanBeNullConnected;
+    use CanConnectNulls;
+    use HasLabelLine;
+    use HasSymbol;
+    use HasSymbolSize;
+    use HasStack;
+    use HasStackStrategy;
+    use HasStackOrder;
+    // use HasSymbolRotate;
+    use HasStep;
 
     /**
      * Provide the series with any necessary setup.
@@ -45,21 +60,19 @@ class Line extends Series
             // 'xAxisIndex' => $this->getXAxisIndex(),
             // 'yAxisIndex' => $this->getYAxisIndex(),
             // 'polarIndex' => $this->getPolarIndex(),
-            // 'symbol' => $this->getSymbol(),
-            // 'symbolSize' => $this->getSymbolSize(),
+            'symbol' => $this->getSymbol(),
+            'symbolSize' => $this->getSymbolSize(),
             // 'symbolRotate' => $this->getSymbolRotate(),
             // 'symbolKeepAspect' => $this->isSymbolKeepAspect(),
             // 'showSymbol' => $this->isShowSymbol(),
             // 'showAllSymbol' => $this->isShowAllSymbol(),
             // 'legendHoverLink' => $this->isLegendHoverLink(),
-            // 'stack' => $this->getStack(),
-            // 'stackStrategy' => $this->getStackStrategy(),
-            // 'stackOrder' => $this->getStackOrder(),
-            // 'cursor' => $this->getCursor(),
-            // 'connectNulls' => $this->isConnectingNulls(),
-            // 'clip' => $this->isClipped(),
+            'stack' => $this->getStack(),
+            'stackStrategy' => $this->getStackStrategy(),
+            'stackOrder' => $this->getStackOrder(),
+            'connectNulls' => $this->isNullConnected(),
             // 'triggerLineEvent' => $this->isTriggeringLineEvent(),
-            // 'step' => $this->isStep(),
+            'step' => $this->isStep(),
             // 'label' => $this->getLabel()?->toArray(),
             // 'endLabel' => $this->getEndLabel()?->toArray(),
             // 'labelLine' => $this->getLabelLine()?->toArray(),
@@ -70,7 +83,7 @@ class Line extends Series
             // 'blur' => $this->getBlur()?->toArray(),
             // 'select' => $this->getSelect()?->toArray(),
             // 'selectedMode' => $this->getSelectedMode(),
-            // 'smooth' => $this->isSmooth(),
+            'smooth' => $this->isSmooth(),
             // 'smoothMonotone' => $this->isSmoothMonotone(),
             // 'sampling' => $this->getSampling(),
             // 'dimensions',

@@ -15,14 +15,14 @@ trait HasSymbol
     /**
      * The symbol.
      * 
-     * @var string|array{string, string}|null
+     * @var string|array{0: string, 1: string}|null
      */
     protected $symbol;
 
     /**
      * Set the symbol.
      * 
-     * @param string|Symbol|array{string|Symbol, string|Symbol}|null $value
+     * @param string|Symbol|array{0: string|Symbol, 1: string|Symbol}|null $value
      * @return $this
      */
     public function symbol(string|Symbol|array $value): static
@@ -42,7 +42,7 @@ trait HasSymbol
     /**
      * Get the symbol.
      * 
-     * @return string|array{string, string}|null
+     * @return string|array{0: string, 1: string}|null
      */
     public function getSymbol(): string|array|null
     {

@@ -30,7 +30,7 @@ class LabelLine extends Primitive implements NullsAsUndefined
     protected function representation(): array
     {
         return [
-            'show' => $this->getShow(),
+            'show' => $this->isShown(),
             'lineStyle' => $this->getLineStyle()?->toArray(),
         ];
     }

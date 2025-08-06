@@ -11,7 +11,7 @@ trait HasAxisType
     /**
      * The type of axis.
      * 
-     * @var \Honed\Chart\Enums\AxisType|null
+     * @var string|null
      */
     protected $type;
 
@@ -19,16 +19,10 @@ trait HasAxisType
      * Set the type of axis.
      * 
      * @return $this
-     * 
-     * @throws \ValueError if the axis type is not a valid axis type
      */
-    public function type(AxisType|string $value): static
+    public function type(string|AxisType $value): static
     {
-        if (! $value instanceof AxisType) {
-            $value = AxisType::from($value);
-        }
-
-        $this->type = $value;
+        $this->type = is_string($value) ? $value : $value->value;
 
         return $this;
     }
@@ -68,6 +62,6 @@ trait HasAxisType
      */
     public function getType(): string
     {
-        return $this->type?->value ?? AxisType::Value->value;
+        return $this->type ?? AxisType::Value->value;
     }
 }

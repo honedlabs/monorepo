@@ -8,6 +8,7 @@ use Honed\Chart\Calendar\Concerns\HasCellsize;
 use Honed\Chart\Calendar\Concerns\HasRange;
 use Honed\Chart\Concerns\CanBeSilent;
 use Honed\Chart\Concerns\HasId;
+use Honed\Chart\Concerns\HasItemStyle;
 use Honed\Chart\Concerns\HasOrientation;
 use Honed\Chart\Concerns\HasZAxis;
 use Honed\Chart\Style\Concerns\HasLeft;
@@ -33,6 +34,8 @@ class Calendar extends Primitive implements NullsAsUndefined
     use HasCellsize;
     use HasRange;
     use CanBeSilent;
+    use HasItemStyle;
+    // use HasSplitLine;
 
     /**
      * Create a new calendar instance.

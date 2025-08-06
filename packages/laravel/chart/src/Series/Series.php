@@ -11,8 +11,10 @@ use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\HasZAxis;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\ChartType;
+use Honed\Chart\Series\Concerns\CanBeClipped;
 use Honed\Chart\Series\Concerns\HasChartType;
 use Honed\Chart\Series\Concerns\RefersToAxis;
+use Honed\Chart\Style\Concerns\HasCursor;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
@@ -26,6 +28,8 @@ abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
     use HasZAxis;
     use Extractable;
     use HasName;
+    use HasCursor;
+    use CanBeClipped;
 
     /**
      * Create a new series instance.
@@ -33,7 +37,7 @@ abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
     public static function make(?string $name = null): static
     {
         return resolve(static::class)
-            ->when($name, fn (self $series) => $series->name($name));
+            ->when($name, fn (self $series, string $name) => $series->name($name));
     }
 
     /**
@@ -59,7 +63,9 @@ abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
             'id' => $this->getId(),
             'name' => $this->name,
             'data' => $this->getData(),
-            ...$this->getZAxisParameters(),
+            'cursor' => $this->getCursor(),
+            'clip' => $this->isClipped() ? null : false,
+            // ...$this->getZAxisParameters(),
             ...$this->getAnimationParameters(),
         ];
     }

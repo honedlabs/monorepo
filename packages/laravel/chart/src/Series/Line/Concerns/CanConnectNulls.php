@@ -7,14 +7,14 @@ namespace Honed\Chart\Series\Line\Concerns;
 /**
  * @internal
  */
-trait CanBeNullConnected
+trait CanConnectNulls
 {
     /**
      * Whether to connect across null values.
      * 
-     * @var bool|null
+     * @var bool
      */
-    protected $connectNulls;
+    protected $connectNulls = false;
 
     /**
      * Set whether to connect null values.
@@ -43,16 +43,16 @@ trait CanBeNullConnected
      * 
      * @return bool|null
      */
-    public function isConnectingNulls(): ?bool
+    public function isNullConnected(): bool
     {
-        return $this->connectNulls ?: null;
+        return $this->connectNulls;
     }
 
     /**
      * Get whether to not connect null values.
      */
-    public function isNotConnectingNulls(): bool
+    public function isNullDisconnected(): bool
     {
-        return ! $this->isConnectingNulls();
+        return ! $this->isNullConnected();
     }
 }

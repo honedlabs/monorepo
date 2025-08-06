@@ -19,7 +19,7 @@ trait HasSymbolOffset
     /**
      * Set the offset of the symbol relative to the original position.
      * 
-     * @param array{int, int}|null $value
+     * @param array{0: int, 1: int} $value
      * @return $this
      */
     public function symbolOffset(array $value): static
@@ -32,7 +32,7 @@ trait HasSymbolOffset
     /**
      * Get the offset of the symbol relative to the original position.
      * 
-     * @return array{int, int}|null
+     * @return array{0: int, 1: int}|null
      */
     public function getSymbolOffset(): array|null
     {

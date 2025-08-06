@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Series\Line\Concerns;
+namespace Honed\Chart\Series\Concerns;
 
 use Honed\Chart\Enums\ColorBy;
 
-trait CanColorBy
+trait HasColorBy
 {
     /**
      * The policy to take color from.
      * 
-     * @var \Honed\Chart\Enums\ColorBy|null
+     * @var string|null
      */
     protected $colorBy;
 
@@ -20,23 +20,11 @@ trait CanColorBy
      * 
      * @return $this
      */
-    public function colorBy(ColorBy|string $value): static
+    public function colorBy(string|ColorBy $value): static
     {
-        if (! $value instanceof ColorBy) {
-            $value = ColorBy::from($value);
-        }
-
-        $this->colorBy = $value;
+        $this->colorBy = is_string($value) ? $value : $value->value;
 
         return $this;
-    }
-
-    /**
-     * Get the policy to take color from.
-     */
-    public function getColorBy(): ?string
-    {
-        return $this->colorBy?->value;
     }
 
     /**
@@ -60,4 +48,12 @@ trait CanColorBy
     {
         return $this->colorBy(ColorBy::Data);
     }    
+
+    /**
+     * Get the policy to take color from.
+     */
+    public function getColorBy(): ?string
+    {
+        return $this->colorBy;
+    }
 }
