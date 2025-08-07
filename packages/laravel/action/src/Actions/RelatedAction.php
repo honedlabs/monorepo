@@ -49,6 +49,18 @@ abstract class RelatedAction extends DatabaseAction implements FromRelationship
     }
 
     /**
+     * Get the relation for the model.
+     *
+     * @param  TModel  $model
+     * @return TRelation
+     */
+    public function getRelationship(Model $model): Relation
+    {
+        /** @var TRelation */
+        return $model->{$this->relationship()}();
+    }
+
+    /**
      * Get the related model(s).
      *
      * @param  TModel  $model
