@@ -16,10 +16,10 @@ jobs:
       matrix:
         package:
           # - abn
-          - action
-          - billing
+          # - action
+          # - billing
           # - bind
-          - chart
+          # - chart
           # - command
           # - core
           # - crumb
@@ -35,7 +35,7 @@ jobs:
           # - refine
           # - registry
           # - stats
-          # - table
+          - table
           # - upload
           # - widget
     steps:
