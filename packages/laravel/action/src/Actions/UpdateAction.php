@@ -19,7 +19,7 @@ class UpdateAction extends DatabaseAction
     use InteractsWithFormData;
 
     /**
-     * Update the provided model using the input.
+     * Update the model.
      *
      * @param  TModel  $model
      * @param  TInput  $input
