@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Calendar\Concerns;
 
-/**
- * @internal
- */
 trait HasCellsize
 {
     /**
@@ -22,7 +19,7 @@ trait HasCellsize
      * @param int|'auto'|array<int, int|'auto'>|null $value
      * @return $this
      */
-    public function cellsize(int|string|array $value): static
+    public function cellsize(int|string|array|null $value): static
     {
         $this->cellsize = $value;
 

@@ -15,7 +15,7 @@ trait HasDimension
     /**
      * The dimension of the axis.
      * 
-     * @var string
+     * @var string|null
      */
     protected $dimension;
 
@@ -32,11 +32,21 @@ trait HasDimension
         return $this;
     }
 
+    /**
+     * Set the dimension of the axis to be x.
+     * 
+     * @return $this
+     */
     public function x(): static
     {
         return $this->dimension(self::X);
     }
 
+    /**
+     * Set the dimension of the axis to be y.
+     * 
+     * @return $this
+     */
     public function y(): static
     {
         return $this->dimension(self::Y);

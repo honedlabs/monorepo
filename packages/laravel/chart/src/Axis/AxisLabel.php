@@ -51,7 +51,7 @@ class AxisLabel extends Primitive implements NullsAsUndefined
             'show' => $this->isShown(),
             'interval' => $this->getInterval(),
             'inside' => $this->isInside(),
-            'rotate' => $this->getRotate(),
+            // 'rotate' => $this->getRotate(),
             // 'margin' => $this->getMargin(),
             // 'showMinLabel' => $this->isShowingMinLabel(),
             // 'showMaxLabel' => $this->isShowingMaxLabel(),

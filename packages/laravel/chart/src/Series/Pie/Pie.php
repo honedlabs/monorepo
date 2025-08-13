@@ -7,8 +7,6 @@ namespace Honed\Chart\Series\Pie;
 use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Series\Series;
 
-use function PHPSTORM_META\map;
-
 class Pie extends Series
 {
     /**

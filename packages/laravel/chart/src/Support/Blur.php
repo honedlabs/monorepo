@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Blur;
+namespace Honed\Chart\Support;
 
 use Honed\Chart\Concerns\HasItemStyle;
 use Honed\Chart\Concerns\HasLabel;
+use Honed\Chart\Concerns\HasLabelLine;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
@@ -13,7 +14,7 @@ class Blur extends Primitive implements NullsAsUndefined
 {
     use HasItemStyle;
     use HasLabel;
-
+    use HasLabelLine;
 
     /**
      * Create a new blur instance.

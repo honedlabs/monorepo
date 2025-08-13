@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Axis;
 
+use Honed\Chart\Axis\Concerns\Zeroable;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasLineStyle;
+use Honed\Chart\Support\Concerns\HasSymbol;
+use Honed\Chart\Support\Concerns\HasSymbolOffset;
+use Honed\Chart\Support\Concerns\HasSymbolSize;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
@@ -13,20 +17,10 @@ class AxisLine extends Primitive implements NullsAsUndefined
 {
     use CanBeShown;
     use HasLineStyle;
-
-    /**
-     * Whether the X or Y axis lines on the other's origin position.
-     * 
-     * @var bool|null
-     */
-    protected $onZero;
-
-    /**
-     * When multiple axes exists, this option can be used to specify which axis.
-     * 
-     * @var int|null
-     */
-    protected $onZeroAxisIndex;
+    use Zeroable;
+    use HasSymbol;
+    use HasSymbolSize;
+    use HasSymbolOffset;
 
     /**
      * Create a new axis line.
@@ -34,46 +28,6 @@ class AxisLine extends Primitive implements NullsAsUndefined
     public static function make(): static
     {
         return resolve(static::class);
-    }
-
-    /**
-     * Set whether the X or Y axis lines on the other's origin position.
-     * 
-     * @return $this
-     */
-    public function onZero(bool $value = true): static
-    {
-        $this->onZero = $value;
-
-        return $this;
-    }
-
-    /**
-     * Set whether the X or Y axis lines do not on the other's origin position.
-     * 
-     * @return $this
-     */
-    public function notOnZero(bool $value = true): static
-    {
-        return $this->onZero(! $value);
-    }
-
-    /**
-     * Get whether the X or Y axis lines on the other's origin position.
-     * 
-     * @return false|null
-     */
-    public function isOnZero(): ?bool
-    {
-        return $this->onZero ? null : false;
-    }
-
-    /**
-     * Get whether the X or Y axis lines do not on the other's origin position.
-     */
-    public function isNotOnZero(): bool
-    {
-        return ! $this->onZero;
     }
 
     /**
@@ -86,10 +40,10 @@ class AxisLine extends Primitive implements NullsAsUndefined
         return [
             'show' => $this->isShown(),
             'onZero' => $this->isOnZero(),
-            // 'onZeroAxisIndex' => $this->getOnZeroAxisIndex(),
-            // 'symbol' => $this->getSymbol(),
-            // 'symbolSize' => $this->getSymbolSize(),
-            // 'symbolOffset' => $this->getSymbolOffset(),
+            'onZeroAxisIndex' => $this->getOnZeroAxisIndex(),
+            'symbol' => $this->getSymbol(),
+            'symbolSize' => $this->getSymbolSize(),
+            'symbolOffset' => $this->getSymbolOffset(),
             'lineStyle' => $this->getLineStyle()?->toArray(),
         ];
     }

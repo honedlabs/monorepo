@@ -39,8 +39,8 @@ class Emphasis extends Primitive implements NullsAsUndefined
             'disabled' => $this->isDisabled() ?: null,
             'focus' => $this->getFocus(),
             'blurScope' => $this->getBlurScope(),
-            'itemStyle' => $this->getItemStyle()?->toArray(),
             'label' => $this->getLabel()?->toArray(),
+            'itemStyle' => $this->getItemStyle()?->toArray(),
         ];
     }
 }

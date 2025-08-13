@@ -22,7 +22,15 @@ use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowColor;
 use Honed\Chart\Style\Concerns\HasShadowOffset;
 use Honed\Chart\Style\Concerns\HasTop;
+use Honed\Chart\Style\Concerns\HasZ;
+use Honed\Chart\Style\Concerns\HasZLevel;
+use Honed\Chart\Support\Concerns\CanBeAligned;
+use Honed\Chart\Support\Concerns\CanBeVerticalAligned;
+use Honed\Chart\Support\Concerns\Triggerable;
+use Honed\Chart\Title\Concerns\HasSublink;
+use Honed\Chart\Title\Concerns\HasSubtarget;
 use Honed\Chart\Title\Concerns\HasSubtext;
+use Honed\Chart\Title\Concerns\HasTarget;
 use Honed\Chart\Title\Concerns\HasText;
 use Honed\Core\Concerns\CanHaveUrl;
 use Honed\Core\Contracts\NullsAsUndefined;
@@ -34,7 +42,8 @@ class Title extends Primitive implements NullsAsUndefined
     use CanBeShown;
     use CanHaveUrl;
     use HasText;
-    use HasZAxis;
+    use HasZ;
+    use HasZLevel;
     use HasTextStyle;
     use HasLeft;
     use HasTop;
@@ -51,6 +60,12 @@ class Title extends Primitive implements NullsAsUndefined
     use HasPadding;
     use HasSubtextStyle;
     use HasSubtext;
+    use CanBeAligned;
+    use CanBeVerticalAligned;
+    use HasTarget;
+    use HasSublink;
+    use HasSubtarget;
+    use Triggerable;
 
     /**
      * Create a new title instance.
@@ -72,14 +87,15 @@ class Title extends Primitive implements NullsAsUndefined
             'show' => $this->isShown(),
             'text' => $this->getText(),
             'link' => $this->getUrl(),
-            'target' => null,
+            'target' => $this->getTarget(),
             'textStyle' => $this->getTextStyle()?->toArray(),
             'subtext' => $this->getSubtext(),
-            // 'sublink' => $this->getSublink(),
-            // 'subtarget' => $this->getSubtarget(),
+            'sublink' => $this->getSublink(),
+            'subtarget' => $this->getSubtarget(),
             'subtextStyle' => $this->getSubtextStyle()?->toArray(),
-            // 'textAlign' => $this->getTextAlign(),
-            // 'triggerEvent' => $this->getTriggerEvent(),
+            'textAlign' => $this->getAlign(),
+            'textVerticalAlign' => $this->getVerticalAlign(),
+            'triggerEvent' => $this->isTriggerable() ?: null,
             'padding' => $this->getPadding(),
             'itemGap' => $this->getItemGap(),
             'zLevel' => $this->getZLevel(),

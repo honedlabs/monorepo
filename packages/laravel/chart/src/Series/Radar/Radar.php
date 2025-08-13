@@ -7,8 +7,6 @@ namespace Honed\Chart\Series\Radar;
 use Honed\Chart\Series\Series;
 use Honed\Chart\Enums\ChartType;
 
-use function PHPSTORM_META\map;
-
 class Radar extends Series
 {
     /**

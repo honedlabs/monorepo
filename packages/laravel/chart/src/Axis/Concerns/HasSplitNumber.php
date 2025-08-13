@@ -7,18 +7,18 @@ namespace Honed\Chart\Axis\Concerns;
 trait HasSplitNumber
 {
     /**
-     * The minimum value.
+     * The number of segments to split into.
      * 
-     * @var int|string|null
+     * @var int|null
      */
     protected $splitNumber;
 
     /**
-     * Set the minimum value.
+     * Set the number of segments to split into.
      * 
      * @return $this
      */
-    public function splitNumber(int|string $value): static
+    public function splitNumber(int $value): static
     {
         $this->splitNumber = $value;
 
@@ -26,9 +26,9 @@ trait HasSplitNumber
     }
 
     /**
-     * Get the minimum value.
+     * Get the number of segments to split into.
      */
-    public function getSplitNumber(): int|string|null
+    public function getSplitNumber(): ?int
     {
         return $this->splitNumber;
     }

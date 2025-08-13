@@ -25,7 +25,7 @@ trait HasSymbol
      * @param string|Symbol|array{0: string|Symbol, 1: string|Symbol}|null $value
      * @return $this
      */
-    public function symbol(string|Symbol|array $value): static
+    public function symbol(string|Symbol|array|null $value): static
     {
         $this->symbol = match (true) {
             $value instanceof Symbol => $value->value,

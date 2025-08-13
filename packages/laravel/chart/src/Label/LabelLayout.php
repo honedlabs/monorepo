@@ -52,7 +52,7 @@ class LabelLayout extends Primitive implements NullsAsUndefined
     protected function representation(): array
     {
         return [
-            'hideOverlap' => $this->isHidingOverlap(),
+            'hideOverlap' => $this->isHidingOverlap() ?: null,
             'moveOverlap' => $this->getMoveOverlap(),
             'x' => $this->getX(),
             'y' => $this->getY(),
