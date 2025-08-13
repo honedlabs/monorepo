@@ -10,14 +10,14 @@ trait HasCursor
 {
     /**
      * The mouse style.
-     * 
+     *
      * @var string|null
      */
     protected $cursor;
 
     /**
      * Set the mouse style.
-     * 
+     *
      * @return $this
      */
     public function cursor(string|Cursor $value): static
@@ -29,7 +29,7 @@ trait HasCursor
 
     /**
      * Set the mouse style to be default.
-     * 
+     *
      * @return $this
      */
     public function cursorDefault(): static
@@ -39,7 +39,7 @@ trait HasCursor
 
     /**
      * Set the mouse style to be pointer.
-     * 
+     *
      * @return $this
      */
     public function cursorPointer(): static

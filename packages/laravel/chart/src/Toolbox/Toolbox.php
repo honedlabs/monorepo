@@ -13,10 +13,10 @@ use Honed\Core\Primitive;
 
 class Toolbox extends Primitive implements NullsAsUndefined
 {
-    use HasId;
     use CanBeShown;
-    use HasZAxis;
+    use HasId;
     use HasOrientation;
+    use HasZAxis;
 
     /**
      * Create a new tooltip instance.
@@ -28,7 +28,7 @@ class Toolbox extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the tooltip.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array
@@ -54,5 +54,4 @@ class Toolbox extends Primitive implements NullsAsUndefined
             // 'tooltip' => $this->getTooltip()?->toArray(),
         ];
     }
-
 }

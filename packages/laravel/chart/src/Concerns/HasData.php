@@ -8,15 +8,14 @@ trait HasData
 {
     /**
      * The data source.
-     * 
+     *
      * @var mixed
      */
     protected $data;
 
     /**
      * Set the data source.
-     * 
-     * @param mixed $data
+     *
      * @return $this
      */
     public function data(mixed $data): static
@@ -28,8 +27,6 @@ trait HasData
 
     /**
      * Get the data source.
-     * 
-     * @return mixed
      */
     public function getData(): mixed
     {

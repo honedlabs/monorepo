@@ -10,14 +10,14 @@ trait HasPosition
 {
     /**
      * The position.
-     * 
+     *
      * @var string|null
      */
     protected $position;
 
     /**
      * Set the position.
-     * 
+     *
      * @return $this
      */
     public function position(string|Position $value): static
@@ -29,7 +29,7 @@ trait HasPosition
 
     /**
      * Set the position to be top.
-     * 
+     *
      * @return $this
      */
     public function positionTop(): static
@@ -39,7 +39,7 @@ trait HasPosition
 
     /**
      * Set the position to be left.
-     * 
+     *
      * @return $this
      */
     public function positionLeft(): static
@@ -49,7 +49,7 @@ trait HasPosition
 
     /**
      * Set the position to be bottom..
-     * 
+     *
      * @return $this
      */
     public function positionBottom(): static
@@ -59,7 +59,7 @@ trait HasPosition
 
     /**
      * Set the position to be right.
-     * 
+     *
      * @return $this
      */
     public function positionRight(): static

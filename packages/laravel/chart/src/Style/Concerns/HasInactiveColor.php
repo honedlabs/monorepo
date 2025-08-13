@@ -13,14 +13,14 @@ trait HasInactiveColor
 {
     /**
      * The inactive color.
-     * 
+     *
      * @var string|Rgb|Rgba|Gradient|null
      */
     protected $inactiveColor;
 
     /**
      * Set the inactive color.
-     * 
+     *
      * @return $this
      */
     public function inactiveColor(string|Rgb|Rgba|Gradient|null $value): static
@@ -32,7 +32,7 @@ trait HasInactiveColor
 
     /**
      * Get the inactive color.
-     * 
+     *
      * @return string|array<string, mixed>|null
      */
     public function getInactiveColor(): string|array|null

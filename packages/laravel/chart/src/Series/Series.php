@@ -6,11 +6,9 @@ namespace Honed\Chart\Series;
 
 use Honed\Chart\Concerns\Animatable;
 use Honed\Chart\Concerns\Extractable;
-use Honed\Chart\Concerns\HasData;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\HasZAxis;
 use Honed\Chart\Contracts\Resolvable;
-use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Series\Concerns\CanBeClipped;
 use Honed\Chart\Series\Concerns\HasChartType;
 use Honed\Chart\Series\Concerns\RefersToAxis;
@@ -21,15 +19,15 @@ use Honed\Core\Primitive;
 
 abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
 {
-    use HasId;
-    use HasChartType;
-    use RefersToAxis;
     use Animatable;
-    use HasZAxis;
-    use Extractable;
-    use HasName;
-    use HasCursor;
     use CanBeClipped;
+    use Extractable;
+    use HasChartType;
+    use HasCursor;
+    use HasId;
+    use HasName;
+    use HasZAxis;
+    use RefersToAxis;
 
     /**
      * Create a new series instance.
@@ -46,12 +44,13 @@ abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
     public function resolve(mixed $data): void
     {
         $this->define();
-        
+
         $this->data($this->extract($data));
     }
+
     /**
      * Get the representation of the series.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

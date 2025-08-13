@@ -8,15 +8,15 @@ trait HasPadding
 {
     /**
      * The padding.
-     * 
+     *
      * @var int|array<int, int>|null
      */
     protected $padding;
 
     /**
      * Set the color.
-     * 
-     * @param int|array<int, int>|null $value
+     *
+     * @param  int|array<int, int>|null  $value
      * @return $this
      */
     public function padding(int|array|null $value): static
@@ -28,7 +28,7 @@ trait HasPadding
 
     /**
      * Get the color.
-     * 
+     *
      * @return int|array<int, int>|null
      */
     public function getPadding(): int|array|null

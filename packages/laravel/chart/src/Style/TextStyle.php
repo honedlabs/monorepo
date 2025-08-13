@@ -12,8 +12,8 @@ use Honed\Chart\Style\Concerns\HasFontFamily;
 use Honed\Chart\Style\Concerns\HasFontSize;
 use Honed\Chart\Style\Concerns\HasFontStyle;
 use Honed\Chart\Style\Concerns\HasFontWeight;
-use Honed\Chart\Style\Concerns\HasLineHeight;
 use Honed\Chart\Style\Concerns\HasHeight;
+use Honed\Chart\Style\Concerns\HasLineHeight;
 use Honed\Chart\Style\Concerns\HasOverflow;
 use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowColor;
@@ -24,22 +24,22 @@ use Honed\Core\Primitive;
 
 class TextStyle extends Primitive implements NullsAsUndefined
 {
+    use HasBorderColor;
+    use HasBorderType;
+    use HasBorderWidth;
     use HasColor;
     use HasFontFamily;
-    use HasFontWeight;
     use HasFontFamily;
     use HasFontSize;
-    use HasLineHeight;
-    use HasWidth;
+    use HasFontStyle;
+    use HasFontWeight;
     use HasHeight;
-    use HasBorderColor;
-    use HasBorderWidth;
-    use HasBorderType;
+    use HasLineHeight;
+    use HasOverflow;
     use HasShadowBlur;
     use HasShadowColor;
     use HasShadowOffset;
-    use HasOverflow;
-    use HasFontStyle;
+    use HasWidth;
 
     /**
      * Create a new text style instance.
@@ -51,7 +51,7 @@ class TextStyle extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the text style.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

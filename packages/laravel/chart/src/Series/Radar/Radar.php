@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Series\Radar;
 
-use Honed\Chart\Series\Series;
 use Honed\Chart\Enums\ChartType;
+use Honed\Chart\Series\Series;
 
 class Radar extends Series
 {
@@ -21,7 +21,7 @@ class Radar extends Series
 
     /**
      * Get the array representation of the heatmap series.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

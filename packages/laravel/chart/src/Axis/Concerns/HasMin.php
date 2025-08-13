@@ -8,14 +8,14 @@ trait HasMin
 {
     /**
      * The minimum value.
-     * 
+     *
      * @var int|string|null
      */
     protected $min;
 
     /**
      * Set the minimum value.
-     * 
+     *
      * @return $this
      */
     public function min(int|string $value): static

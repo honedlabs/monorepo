@@ -8,14 +8,14 @@ trait HasOpacity
 {
     /**
      * The opacity.
-     * 
+     *
      * @var int|null
      */
     protected $opacity;
 
     /**
      * Set the opacity.
-     * 
+     *
      * @return $this
      */
     public function opacity(?int $value): static

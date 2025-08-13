@@ -11,14 +11,14 @@ trait CanBeRotated
 {
     /**
      * The rotation in degrees.
-     * 
+     *
      * @var int|null
      */
     protected $rotate;
 
     /**
      * Set the rotation in degrees.
-     * 
+     *
      * @return $this
      */
     public function rotate(int $value): static
@@ -30,9 +30,9 @@ trait CanBeRotated
 
     /**
      * Set the rotation in degrees.
-     * 
+     *
      * @return $this
-     * 
+     *
      * @see \Honed\Chart\Style\Concerns\CanBeRotated::rotate()
      */
     public function rotation(int $value): static

@@ -13,14 +13,14 @@ trait HasSampling
 {
     /**
      * The downsampling strategy.
-     * 
+     *
      * @var string|null
      */
     protected $sampling;
 
     /**
      * Set the downsampling strategy.
-     * 
+     *
      * @return $this
      */
     public function sampling(string|Sampling $value): static
@@ -32,7 +32,7 @@ trait HasSampling
 
     /**
      * Set the downsampling strategy to be lttb.
-     * 
+     *
      * @return $this
      */
     public function samplingLttb(): static
@@ -42,7 +42,7 @@ trait HasSampling
 
     /**
      * Set the downsampling strategy to be average.
-     * 
+     *
      * @return $this
      */
     public function samplingAverage(): static
@@ -52,7 +52,7 @@ trait HasSampling
 
     /**
      * Set the downsampling strategy to be max.
-     * 
+     *
      * @return $this
      */
     public function samplingMax(): static
@@ -62,7 +62,7 @@ trait HasSampling
 
     /**
      * Set the downsampling strategy to be min.
-     * 
+     *
      * @return $this
      */
     public function samplingMin(): static
@@ -72,7 +72,7 @@ trait HasSampling
 
     /**
      * Set the downsampling strategy to be minmax.
-     * 
+     *
      * @return $this
      */
     public function samplingMinMax(): static
@@ -82,7 +82,7 @@ trait HasSampling
 
     /**
      * Set the downsampling strategy to be sum.
-     * 
+     *
      * @return $this
      */
     public function samplingSum(): static

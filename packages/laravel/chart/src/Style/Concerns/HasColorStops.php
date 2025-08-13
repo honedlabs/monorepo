@@ -10,15 +10,15 @@ trait HasColorStops
 {
     /**
      * The color stops.
-     * 
+     *
      * @var array<int, ColorStop>
      */
     protected $colorStops = [];
 
     /**
      * Add a color stop.
-     * 
-     * @param array<int, ColorStop>|ColorStop $value
+     *
+     * @param  array<int, ColorStop>|ColorStop  $value
      * @return $this
      */
     public function colorStop(array|ColorStop $value): static
@@ -33,8 +33,8 @@ trait HasColorStops
 
     /**
      * Add color stops.
-     * 
-     * @param array<int, ColorStop> $value
+     *
+     * @param  array<int, ColorStop>  $value
      * @return $this
      */
     public function colorStops(array $value): static
@@ -44,7 +44,7 @@ trait HasColorStops
 
     /**
      * Get the color stops.
-     * 
+     *
      * @return array<int, ColorStop>
      */
     public function getColorStops(): array
@@ -54,7 +54,7 @@ trait HasColorStops
 
     /**
      * Get the color stops as an array.
-     * 
+     *
      * @return array<int, array<string, mixed>>
      */
     public function colorStopsToArray(): array

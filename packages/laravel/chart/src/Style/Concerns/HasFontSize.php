@@ -8,14 +8,14 @@ trait HasFontSize
 {
     /**
      * The font family.
-     * 
+     *
      * @var int|null
      */
     protected $fontSize;
 
     /**
      * Set the font family.
-     * 
+     *
      * @return $this
      */
     public function fontSize(int $value): static

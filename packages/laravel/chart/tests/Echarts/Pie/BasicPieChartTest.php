@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\Axis\XAxis;
 use Honed\Chart\Chart;
 use Honed\Chart\Legend\Legend;
-use Honed\Chart\Series\Line\Line;
 use Honed\Chart\Title\Title;
 use Honed\Chart\Tooltip\Tooltip;
 
@@ -49,38 +47,38 @@ beforeEach(function () {
     $this->values = [
         [
             'value' => 1048,
-            'name' => 'Search Engine'
+            'name' => 'Search Engine',
         ],
         [
             'value' => 735,
-            'name' => 'Direct'
+            'name' => 'Direct',
         ],
         [
             'value' => 580,
-            'name' => 'Email'
+            'name' => 'Email',
         ],
         [
             'value' => 484,
-            'name' => 'Union Ads'
+            'name' => 'Union Ads',
         ],
         [
             'value' => 300,
-            'name' => 'Video Ads'
-        ]
+            'name' => 'Video Ads',
+        ],
     ];
 
     $this->option = [
         'title' => [
             'text' => 'Referer of a Website',
             'subtext' => 'Fake Data',
-            'left' => 'center'
+            'left' => 'center',
         ],
         'tooltip' => [
-            'trigger' => 'item'
+            'trigger' => 'item',
         ],
         'legend' => [
             'orient' => 'vertical',
-            'left' => 'left'
+            'left' => 'left',
         ],
         'series' => [
             [
@@ -92,11 +90,11 @@ beforeEach(function () {
                     'itemStyle' => [
                         'shadowBlur' => 10,
                         'shadowOffsetX' => 0,
-                        'shadowColor' => 'rgba(0, 0, 0, 0.5)'
-                    ]
-                ]
-            ]
-        ]
+                        'shadowColor' => 'rgba(0, 0, 0, 0.5)',
+                    ],
+                ],
+            ],
+        ],
     ];
 })->skip();
 
@@ -128,5 +126,5 @@ it('creates', function () {
         );
 
     expect($chart->toArray())
-        ->toEqualCanonicalizing($this->option);    
+        ->toEqualCanonicalizing($this->option);
 });

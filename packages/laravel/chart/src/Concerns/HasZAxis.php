@@ -8,21 +8,21 @@ trait HasZAxis
 {
     /**
      * The z value of all graphical elements, used to control order of drawing graphical components.
-     * 
+     *
      * @var int|null
      */
     protected $z;
 
     /**
      * The z-level used to make layers with canvas, elements with different z-level values are drawn in different canvases.
-     * 
+     *
      * @var int|null
      */
     protected $zLevel;
 
     /**
      * Set the z value of all graphical elements, used to control order of drawing graphical components.
-     * 
+     *
      * @return $this
      */
     public function z(?int $value): static
@@ -42,7 +42,7 @@ trait HasZAxis
 
     /**
      * Set the z-level used to make layers with canvas, elements with different z-level values are drawn in different canvases.
-     * 
+     *
      * @return $this
      */
     public function zLevel(?int $value): static
@@ -62,7 +62,7 @@ trait HasZAxis
 
     /**
      * Get the z axis parameters as an array representation.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getZAxisParameters(): array

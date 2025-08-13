@@ -8,14 +8,14 @@ trait HasHeight
 {
     /**
      * The height.
-     * 
+     *
      * @var int|string|null
      */
     protected $height;
 
     /**
      * Set the height.
-     * 
+     *
      * @return $this
      */
     public function height(int|string $value): static

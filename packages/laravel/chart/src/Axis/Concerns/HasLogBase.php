@@ -8,14 +8,14 @@ trait HasLogBase
 {
     /**
      * The base of the logarithm.
-     * 
+     *
      * @var int|null
      */
     protected $logBase;
 
     /**
      * Set the base of the logarithm.
-     * 
+     *
      * @return $this
      */
     public function logBase(int $value): static

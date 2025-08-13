@@ -8,14 +8,14 @@ trait HasShadowBlur
 {
     /**
      * The size of the shadow blur.
-     * 
+     *
      * @var int|null
      */
     protected $shadowBlur;
 
     /**
      * Set the size of the shadow blur.
-     * 
+     *
      * @return $this
      */
     public function shadowBlur(int $value): static

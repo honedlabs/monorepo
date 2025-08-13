@@ -11,15 +11,15 @@ trait HasAreaStyle
 {
     /**
      * The area style.
-     * 
-     * @var \Honed\Chart\Style\AreaStyle|null
+     *
+     * @var AreaStyle|null
      */
     protected $areaStyle;
 
     /**
      * Set the area style.
-     * 
-     * @param \Honed\Chart\Style\AreaStyle|(Closure(\Honed\Chart\Style\AreaStyle):\Honed\Chart\Style\AreaStyle)|null $value
+     *
+     * @param  AreaStyle|(Closure(AreaStyle):AreaStyle)|null  $value
      * @return $this
      */
     public function areaStyle(AreaStyle|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasAreaStyle
 
     /**
      * Get the area style.
-     * 
-     * @return \Honed\Chart\Style\AreaStyle|null
      */
     public function getAreaStyle(): ?AreaStyle
     {

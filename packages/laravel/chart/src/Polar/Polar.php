@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Axis\Polar;
 
-use Honed\Chart\Axis\Axis;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\HasTooltip;
 use Honed\Chart\Concerns\HasZAxis;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
-use Illuminate\Support\Traits\ForwardsCalls;
 
 class Polar extends Primitive implements NullsAsUndefined
 {
     use HasId;
-    use HasZAxis;
     use HasTooltip;
-    
+    use HasZAxis;
+
     /**
      * Get the representation of the polar coordinate.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array
@@ -34,5 +32,4 @@ class Polar extends Primitive implements NullsAsUndefined
             'tooltip' => $this->getTooltip()?->toArray(),
         ];
     }
-    
 }

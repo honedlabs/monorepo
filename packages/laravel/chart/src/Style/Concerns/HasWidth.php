@@ -8,14 +8,14 @@ trait HasWidth
 {
     /**
      * The width.
-     * 
+     *
      * @var int|string|null
      */
     protected $width;
 
     /**
      * Set the width.
-     * 
+     *
      * @return $this
      */
     public function width(int|string $value): static

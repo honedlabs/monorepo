@@ -8,14 +8,14 @@ trait Triggerable
 {
     /**
      * Whether triggering events is enabled.
-     * 
+     *
      * @var bool
      */
     protected $triggerEvent = true;
 
     /**
      * Set whether triggering events is enabled.
-     * 
+     *
      * @return $this
      */
     public function triggerEvents(bool $value): static
@@ -27,9 +27,9 @@ trait Triggerable
 
     /**
      * Set whether triggering events is enabled.
-     * 
+     *
      * @return $this
-     * 
+     *
      * @see \Honed\Chart\Support\Concerns\Triggerable::triggerEvents()
      */
     public function triggerable(bool $value): static
@@ -39,7 +39,7 @@ trait Triggerable
 
     /**
      * Set whether triggering events is disabled.
-     * 
+     *
      * @return $this
      */
     public function dontTriggerEvents(): static
@@ -49,9 +49,9 @@ trait Triggerable
 
     /**
      * Set whether triggering events is disabled.
-     * 
+     *
      * @return $this
-     * 
+     *
      * @see \Honed\Chart\Support\Concerns\Triggerable::dontTriggerEvents()
      */
     public function notTriggerable(): static

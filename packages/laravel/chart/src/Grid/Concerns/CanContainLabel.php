@@ -8,14 +8,14 @@ trait CanContainLabel
 {
     /**
      * Whether the grid region should contain the axis label of the tick.
-     * 
+     *
      * @var bool
      */
     protected $containLabel = false;
 
     /**
      * Set whether the grid region should contain the axis label of the tick.
-     * 
+     *
      * @return $this
      */
     public function containLabel(bool $value = true): static
@@ -27,7 +27,7 @@ trait CanContainLabel
 
     /**
      * Set whether the grid region should not contain the axis label of the tick.
-     * 
+     *
      * @return $this
      */
     public function dontContainLabel(bool $value = true): static
@@ -37,7 +37,7 @@ trait CanContainLabel
 
     /**
      * Get whether the grid region should contain the axis label of the tick.
-     * 
+     *
      * @return true|null
      */
     public function isContainingLabel(): ?bool

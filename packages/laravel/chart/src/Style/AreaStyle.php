@@ -16,12 +16,12 @@ use Honed\Core\Primitive;
 class AreaStyle extends Primitive implements NullsAsUndefined
 {
     use HasColor;
+    use HasOpacity;
+    use HasOrigin;
     use HasShadowBlur;
     use HasShadowColor;
     use HasShadowOffset;
-    use HasOpacity;
-    use HasOrigin;
-    
+
     /**
      * Create a new area style instance.
      */
@@ -32,7 +32,7 @@ class AreaStyle extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the area style.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

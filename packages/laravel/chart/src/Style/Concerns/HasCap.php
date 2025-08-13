@@ -10,14 +10,14 @@ trait HasCap
 {
     /**
      * How the end points of the line are drawn.
-     * 
+     *
      * @var string|null
      */
     protected $cap;
 
     /**
      * Set the cap of the line.
-     * 
+     *
      * @return $this
      */
     public function cap(string|Cap $value): static
@@ -29,7 +29,7 @@ trait HasCap
 
     /**
      * Set the cap of the line to be butt.
-     * 
+     *
      * @return $this
      */
     public function butt(): static
@@ -39,7 +39,7 @@ trait HasCap
 
     /**
      * Set the cap of the line to be square.
-     * 
+     *
      * @return $this
      */
     public function square(): static

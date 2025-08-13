@@ -10,14 +10,14 @@ trait HasOverflow
 {
     /**
      * The strategy for displaying text when it overflows.
-     * 
+     *
      * @var string|null
      */
     protected $overflow;
 
     /**
      * Set the strategy for displaying text when it overflows.
-     * 
+     *
      * @return $this
      */
     public function overflow(string|Overflow $value): static
@@ -29,7 +29,7 @@ trait HasOverflow
 
     /**
      * Set the strategy for displaying text when it overflows to truncate
-     * 
+     *
      * @return $this
      */
     public function truncate(): static
@@ -39,7 +39,7 @@ trait HasOverflow
 
     /**
      * Set the strategy for displaying text when it overflows to be break.
-     * 
+     *
      * @return $this
      */
     public function break(): static
@@ -49,7 +49,7 @@ trait HasOverflow
 
     /**
      * Set the strategy for displaying text when it overflows to be break-all.
-     * 
+     *
      * @return $this
      */
     public function breakAll(): static

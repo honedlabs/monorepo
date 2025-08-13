@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Support\Concerns;
 
-use Honed\Chart\Enums\Shape;
 use Honed\Chart\Enums\Symbol;
 
 /**
@@ -14,15 +13,15 @@ trait HasSymbol
 {
     /**
      * The symbol.
-     * 
+     *
      * @var string|array{0: string, 1: string}|null
      */
     protected $symbol;
 
     /**
      * Set the symbol.
-     * 
-     * @param string|Symbol|array{0: string|Symbol, 1: string|Symbol}|null $value
+     *
+     * @param  string|Symbol|array{0: string|Symbol, 1: string|Symbol}|null  $value
      * @return $this
      */
     public function symbol(string|Symbol|array|null $value): static
@@ -41,7 +40,7 @@ trait HasSymbol
 
     /**
      * Get the symbol.
-     * 
+     *
      * @return string|array{0: string, 1: string}|null
      */
     public function getSymbol(): string|array|null

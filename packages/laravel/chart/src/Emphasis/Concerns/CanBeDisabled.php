@@ -11,14 +11,14 @@ trait CanBeDisabled
 {
     /**
      * Whether to disable the emphasis state.
-     * 
+     *
      * @var bool
      */
     protected $disabled = false;
 
     /**
      * Set whether to disable the emphasis state.
-     * 
+     *
      * @return $this
      */
     public function disabled(bool $value = true): static
@@ -30,7 +30,7 @@ trait CanBeDisabled
 
     /**
      * Set whether to not disable the emphasis state.
-     * 
+     *
      * @return $this
      */
     public function dontDisable(bool $value = true): static
@@ -40,8 +40,6 @@ trait CanBeDisabled
 
     /**
      * Get whether to disable the emphasis state.
-     * 
-     * @return bool|null
      */
     public function isDisabled(): bool
     {
@@ -50,8 +48,6 @@ trait CanBeDisabled
 
     /**
      * Get whether to not disable the emphasis state.
-     * 
-     * @return bool
      */
     public function isNotDisabled(): bool
     {

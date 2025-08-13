@@ -13,14 +13,14 @@ trait HasInactiveBorderColor
 {
     /**
      * The inactive border color.
-     * 
+     *
      * @var string|Rgb|Rgba|Gradient|null
      */
     protected $inactiveBorderColor;
 
     /**
      * Set the color.
-     * 
+     *
      * @return $this
      */
     public function inactiveBorderColor(string|Rgb|Rgba|Gradient|null $value): static
@@ -32,7 +32,7 @@ trait HasInactiveBorderColor
 
     /**
      * Get the color.
-     * 
+     *
      * @return string|array<string, mixed>|null
      */
     public function getInactiveBorderColor(): string|array|null

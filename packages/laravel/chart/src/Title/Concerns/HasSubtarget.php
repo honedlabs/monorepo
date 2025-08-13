@@ -10,14 +10,14 @@ trait HasSubtarget
 {
     /**
      * The target of the subtext hyper link.
-     * 
+     *
      * @var string|null
      */
     protected $subtarget;
 
     /**
      * Set the target of the subtext hyper link.
-     * 
+     *
      * @return $this
      */
     public function subtarget(string|Target $value): static
@@ -29,7 +29,7 @@ trait HasSubtarget
 
     /**
      * Set the target of the subtext hyper link to be blank.
-     * 
+     *
      * @return $this
      */
     public function subtargetBlank(): static
@@ -39,7 +39,7 @@ trait HasSubtarget
 
     /**
      * Set the target of the subtext hyper link to be self.
-     * 
+     *
      * @return $this
      */
     public function subtargetSelf(): static

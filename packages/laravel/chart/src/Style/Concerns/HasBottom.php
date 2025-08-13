@@ -8,15 +8,14 @@ trait HasBottom
 {
     /**
      * The distance from the bottom side of the container.
-     * 
+     *
      * @var int|string|null
      */
     protected $bottom;
 
     /**
      * Set the distance from the bottom side of the container.
-     * 
-     * @param int|string|null $value
+     *
      * @return $this
      */
     public function bottom(int|string|null $value): static
@@ -28,8 +27,6 @@ trait HasBottom
 
     /**
      * Get the distance from the bottom side of the container.
-     * 
-     * @return int|string|null
      */
     public function getBottom(): int|string|null
     {

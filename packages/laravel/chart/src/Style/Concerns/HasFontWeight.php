@@ -10,14 +10,14 @@ trait HasFontWeight
 {
     /**
      * The font weight.
-     * 
+     *
      * @var string|int|null
      */
     protected $fontWeight;
 
     /**
      * Set the font weight.
-     * 
+     *
      * @return $this
      */
     public function fontWeight(FontWeight|int|string $value): static
@@ -33,7 +33,7 @@ trait HasFontWeight
 
     /**
      * Set the font weight to bold.
-     * 
+     *
      * @return $this
      */
     public function bold(): static
@@ -43,7 +43,7 @@ trait HasFontWeight
 
     /**
      * Set the font weight to be bolder.
-     * 
+     *
      * @return $this
      */
     public function bolder(): static
@@ -53,7 +53,7 @@ trait HasFontWeight
 
     /**
      * Set the font weight to be lighter.
-     * 
+     *
      * @return $this
      */
     public function lighter(): static

@@ -10,14 +10,14 @@ trait CanBeVerticalAligned
 {
     /**
      * The vertical alignment.
-     * 
+     *
      * @var string|null
      */
     protected $verticalAlign;
 
     /**
      * Set the vertical alignment.
-     * 
+     *
      * @return $this
      */
     public function verticalAlign(string|VerticalAlign $value): static
@@ -29,7 +29,7 @@ trait CanBeVerticalAligned
 
     /**
      * Set the vertical alignment to left.
-     * 
+     *
      * @return $this
      */
     public function alignTop(): static
@@ -39,7 +39,7 @@ trait CanBeVerticalAligned
 
     /**
      * Set the vertical alignment to center.
-     * 
+     *
      * @return $this
      */
     public function alignMiddle(): static
@@ -49,7 +49,7 @@ trait CanBeVerticalAligned
 
     /**
      * Set the vertical alignment to right.
-     * 
+     *
      * @return $this
      */
     public function alignBottom(): static
@@ -59,12 +59,9 @@ trait CanBeVerticalAligned
 
     /**
      * Get the vertical alignment.
-     * 
-     * @return string|null
      */
     public function getVerticalAlign(): ?string
     {
         return $this->verticalAlign;
     }
-    
 }

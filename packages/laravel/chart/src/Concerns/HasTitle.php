@@ -11,15 +11,15 @@ trait HasTitle
 {
     /**
      * The title.
-     * 
-     * @var \Honed\Chart\Title\Title|null
+     *
+     * @var Title|null
      */
     protected $title;
 
     /**
      * Add a title.
-     * 
-     * @param \Honed\Chart\Title\Title|(Closure(\Honed\Chart\Title\Title):\Honed\Chart\Title\Title)|null $value
+     *
+     * @param  Title|(Closure(Title):Title)|null  $value
      * @return $this
      */
     public function title(Title|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasTitle
 
     /**
      * Get the title
-     * 
-     * @return \Honed\Chart\Title\Title|null
      */
     public function getTitle(): ?Title
     {

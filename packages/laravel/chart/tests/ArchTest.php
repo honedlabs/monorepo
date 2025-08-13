@@ -36,7 +36,7 @@ arch('enums')
 
 arch('exceptions')
     ->expect('Honed\Chart\Exceptions')
-    ->toExtend(\Exception::class);
+    ->toExtend(Exception::class);
 
 arch('series')
     ->expect('Honed\Chart\Series')

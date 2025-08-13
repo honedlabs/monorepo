@@ -8,6 +8,8 @@ use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
+use function trim;
+
 #[AsCommand(name: 'make:chart')]
 class ChartMakeCommand extends GeneratorCommand
 {
@@ -50,7 +52,7 @@ class ChartMakeCommand extends GeneratorCommand
      */
     protected function resolveStubPath($stub)
     {
-        return file_exists($customPath = $this->laravel->basePath(\trim($stub, '/')))
+        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
             : __DIR__.'/../../..'.$stub;
     }
@@ -72,7 +74,7 @@ class ChartMakeCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the '.strtolower($this->type).' already exists'],
+            ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the '.mb_strtolower($this->type).' already exists'],
         ];
     }
 
@@ -85,7 +87,7 @@ class ChartMakeCommand extends GeneratorCommand
     {
         return [
             'name' => [
-                'What should the '.strtolower($this->type).' be named?',
+                'What should the '.mb_strtolower($this->type).' be named?',
                 'E.g. UserChart',
             ],
         ];

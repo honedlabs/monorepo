@@ -5,68 +5,69 @@ declare(strict_types=1);
 namespace Honed\Chart\Concerns;
 
 use Honed\Chart\Enums\Easing;
+use ValueError;
 
 trait Animatable
 {
     /**
      * Whether to enable animation
-     * 
+     *
      * @var bool|null
      */
     protected $animation;
 
     /**
      * Whether to set graphic number threshold to animation. Animation will be disabled when graphic number is larger than threshold.
-     * 
+     *
      * @var int|null
      */
     protected $animationThreshold;
 
     /**
      * Duration of  the first animation.
-     * 
+     *
      * @var int|null
      */
     protected $animationDuration;
 
     /**
      * Easing method used for the first animation.
-     * 
-     * @var \Honed\Chart\Enums\Easing|null
+     *
+     * @var Easing|null
      */
     protected $animationEasing;
 
     /**
      * Delay before updating the first animation.
-     * 
+     *
      * @var int|null
      */
     protected $animationDelay;
 
     /**
      * Time for animation to complete.
-     * 
+     *
      * @var int|null
      */
     protected $animationDurationUpdate;
 
     /**
      * Easing method used for animation.
-     * 
-     * @var \Honed\Chart\Enums\Easing|null
+     *
+     * @var Easing|null
      */
     protected $animationEasingUpdate;
 
     /**
      * Delay before updating animation.
-     * 
+     *
      * @var int|null
      */
     protected $animationDelayUpdate;
 
     /**
      * Set whether to enable animation.
-     * 
+     *
      * @return $this
      */
     public function animate(bool $value = true): static
@@ -78,7 +79,7 @@ trait Animatable
 
     /**
      * Set whether to not enable animation.
-     * 
+     *
      * @return $this
      */
     public function dontAnimate(bool $value = true): static
@@ -88,7 +89,7 @@ trait Animatable
 
     /**
      * Get whether to enable animation.
-     * 
+     *
      * @return true|null
      */
     public function isAnimated(): ?bool
@@ -98,7 +99,7 @@ trait Animatable
 
     /**
      * Get whether to not enable animation.
-     * 
+     *
      * @return true|null
      */
     public function isNotAnimated(): ?bool
@@ -108,7 +109,7 @@ trait Animatable
 
     /**
      * Set the animation threshold.
-     * 
+     *
      * @return $this
      */
     public function animationThreshold(?int $value): static
@@ -128,7 +129,7 @@ trait Animatable
 
     /**
      * Set the animation duration.
-     * 
+     *
      * @return $this
      */
     public function animationDuration(?int $value): static
@@ -140,8 +141,6 @@ trait Animatable
 
     /**
      * Get the animation duration.
-     * 
-     * @return int|null
      */
     public function getAnimationDuration(): ?int
     {
@@ -150,11 +149,10 @@ trait Animatable
 
     /**
      * Set the animation easing method used for the first animation.
-     * 
-     * @param \Honed\Chart\Enums\Easing|string $value
+     *
      * @return $this
-     * 
-     * @throws \ValueError if the easing method is not a valid easing method
+     *
+     * @throws ValueError if the easing method is not a valid easing method
      */
     public function animationEasing(Easing|string $value): static
     {
@@ -177,8 +175,7 @@ trait Animatable
 
     /**
      * Set the animation delay.
-     * 
-     * @param int $value
+     *
      * @return $this
      */
     public function animationDelay(?int $value): static
@@ -198,8 +195,7 @@ trait Animatable
 
     /**
      * Set the animation duration update.
-     * 
-     * @param int $value
+     *
      * @return $this
      */
     public function animationDurationUpdate(?int $value): static
@@ -211,8 +207,6 @@ trait Animatable
 
     /**
      * Get the animation duration update.
-     * 
-     * @return int|null
      */
     public function getAnimationDurationUpdate(): ?int
     {
@@ -221,11 +215,10 @@ trait Animatable
 
     /**
      * Set the animation easing method used for animation.
-     * 
-     * @param \Honed\Chart\Enums\Easing|string $value
+     *
      * @return $this
-     * 
-     * @throws \ValueError if the easing method is not a valid easing method
+     *
+     * @throws ValueError if the easing method is not a valid easing method
      */
     public function animationEasingUpdate(Easing|string $value): static
     {
@@ -248,7 +241,7 @@ trait Animatable
 
     /**
      * Get the animation parameters as an array representation.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getAnimationParameters(): array

@@ -8,14 +8,14 @@ trait HasX
 {
     /**
      * The x position.
-     * 
+     *
      * @var int|string|null
      */
     protected $x;
 
     /**
      * Set the x.
-     * 
+     *
      * @return $this
      */
     public function x(int|string $value): static

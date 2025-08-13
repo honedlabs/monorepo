@@ -8,14 +8,14 @@ trait HasMargin
 {
     /**
      * The margin.
-     * 
+     *
      * @var int|null
      */
     protected $margin;
 
     /**
      * Set the margin.
-     * 
+     *
      * @return $this
      */
     public function margin(int $value): static

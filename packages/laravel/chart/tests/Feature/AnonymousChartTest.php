@@ -26,7 +26,7 @@ it('has chart', function () {
     dd(
         Chart::make($this->users)
             ->series([
-                Line::make('Name')->pluck('name')
+                Line::make('Name')->pluck('name'),
             ])
             ->toArray()
     );

@@ -12,20 +12,20 @@ use Honed\Core\Primitive;
 
 class SplitLine extends Primitive implements NullsAsUndefined
 {
-    use HasInterval;
     use CanBeShown;
+    use HasInterval;
     use HasLineStyle;
 
     /**
      * Whether to show the splitline of the min tick.
-     * 
+     *
      * @var bool
      */
     protected $showMinLine = true;
 
     /**
      * Whether to show the splitline of the max tick.
-     * 
+     *
      * @var bool
      */
     protected $showMaxLine = true;
@@ -40,7 +40,7 @@ class SplitLine extends Primitive implements NullsAsUndefined
 
     /**
      * Set whether to show the splitline of the min tick.
-     * 
+     *
      * @return $this
      */
     public function showMinLine(bool $value = true): static
@@ -52,7 +52,7 @@ class SplitLine extends Primitive implements NullsAsUndefined
 
     /**
      * Set whether to not show the splitline of the min tick.
-     * 
+     *
      * @return $this
      */
     public function dontShowMinLine(bool $value = true): static
@@ -62,7 +62,7 @@ class SplitLine extends Primitive implements NullsAsUndefined
 
     /**
      * Get whether to show the splitline of the min tick.
-     * 
+     *
      * @return false|null
      */
     public function isShowingMinLine(): ?bool
@@ -80,7 +80,7 @@ class SplitLine extends Primitive implements NullsAsUndefined
 
     /**
      * Set whether to show the splitline of the max tick.
-     * 
+     *
      * @return $this
      */
     public function showMaxLine(bool $value = true): static
@@ -92,7 +92,7 @@ class SplitLine extends Primitive implements NullsAsUndefined
 
     /**
      * Set whether to not show the splitline of the max tick.
-     * 
+     *
      * @return $this
      */
     public function dontShowMaxLine(bool $value = true): static
@@ -118,7 +118,7 @@ class SplitLine extends Primitive implements NullsAsUndefined
 
     /**
      * Get the array representation of the split line.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

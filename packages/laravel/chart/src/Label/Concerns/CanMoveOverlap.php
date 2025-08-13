@@ -10,14 +10,14 @@ trait CanMoveOverlap
 {
     /**
      * The configuration for moving overlaps.
-     * 
+     *
      * @var string|null
      */
     protected $moveOverlap;
 
     /**
      * Set the configuration for moving overlaps.
-     * 
+     *
      * @return $this
      */
     public function moveOverlap(string|OverlapShift $value): static
@@ -29,7 +29,7 @@ trait CanMoveOverlap
 
     /**
      * Set the configuration for moving overlaps to shift the x-axis.
-     * 
+     *
      * @return $this
      */
     public function moveOverlapX(): static
@@ -39,7 +39,7 @@ trait CanMoveOverlap
 
     /**
      * Set the configuration for moving overlaps to shift the y-axis.
-     * 
+     *
      * @return $this
      */
     public function moveOverlapY(): static
@@ -54,5 +54,4 @@ trait CanMoveOverlap
     {
         return $this->moveOverlap;
     }
-    
 }

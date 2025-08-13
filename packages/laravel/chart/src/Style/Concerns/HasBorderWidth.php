@@ -8,14 +8,14 @@ trait HasBorderWidth
 {
     /**
      * The width of the border.
-     * 
+     *
      * @var int|null
      */
     protected $borderWidth;
 
     /**
      * Set the text border width.
-     * 
+     *
      * @return $this
      */
     public function borderWidth(int $value): static

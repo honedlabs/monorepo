@@ -11,30 +11,30 @@ use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\HasItemStyle;
 use Honed\Chart\Concerns\HasOrientation;
 use Honed\Chart\Concerns\HasZAxis;
-use Honed\Chart\Style\Concerns\HasLeft;
-use Honed\Chart\Style\Concerns\HasTop;
-use Honed\Chart\Style\Concerns\HasRight;
 use Honed\Chart\Style\Concerns\HasBottom;
-use Honed\Chart\Style\Concerns\HasWidth;
 use Honed\Chart\Style\Concerns\HasHeight;
+use Honed\Chart\Style\Concerns\HasLeft;
+use Honed\Chart\Style\Concerns\HasRight;
+use Honed\Chart\Style\Concerns\HasTop;
+use Honed\Chart\Style\Concerns\HasWidth;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
 class Calendar extends Primitive implements NullsAsUndefined
 {
-    use HasId;
-    use HasZAxis;
-    use HasLeft;
-    use HasTop;
-    use HasRight;
-    use HasBottom;
-    use HasWidth;
-    use HasHeight;
-    use HasOrientation;
-    use HasCellsize;
-    use HasRange;
     use CanBeSilent;
+    use HasBottom;
+    use HasCellsize;
+    use HasHeight;
+    use HasId;
     use HasItemStyle;
+    use HasLeft;
+    use HasOrientation;
+    use HasRange;
+    use HasRight;
+    use HasTop;
+    use HasWidth;
+    use HasZAxis;
     // use HasSplitLine;
 
     /**
@@ -47,7 +47,7 @@ class Calendar extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the calendar.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

@@ -11,15 +11,15 @@ trait HasLabelLine
 {
     /**
      * The label line.
-     * 
-     * @var \Honed\Chart\Label\LabelLine|null
+     *
+     * @var LabelLine|null
      */
     protected $labelLine;
 
     /**
      * Set the label line.
-     * 
-     * @param \Honed\Chart\Label\LabelLine|(Closure(\Honed\Chart\Label\LabelLine):\Honed\Chart\Label\LabelLine)|null $value
+     *
+     * @param  LabelLine|(Closure(LabelLine):LabelLine)|null  $value
      * @return $this
      */
     public function labelLine(LabelLine|Closure|null $value = null): static

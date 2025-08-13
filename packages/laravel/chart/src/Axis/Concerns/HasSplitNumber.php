@@ -8,14 +8,14 @@ trait HasSplitNumber
 {
     /**
      * The number of segments to split into.
-     * 
+     *
      * @var int|null
      */
     protected $splitNumber;
 
     /**
      * Set the number of segments to split into.
-     * 
+     *
      * @return $this
      */
     public function splitNumber(int $value): static

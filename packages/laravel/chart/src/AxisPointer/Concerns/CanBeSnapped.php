@@ -8,14 +8,14 @@ trait CanBeSnapped
 {
     /**
      * Whether to snap to point automatically.
-     * 
+     *
      * @var bool|null
      */
     protected $snap;
 
     /**
      * Set whether to snap to point automatically.
-     * 
+     *
      * @return $this
      */
     public function snap(bool $value = true): static
@@ -27,12 +27,12 @@ trait CanBeSnapped
 
     /**
      * Set whether to not snap to point automatically.
-     * 
+     *
      * @return $this
      */
     public function dontSnap(bool $value = true): static
     {
-        return $this->snap(!$value);
+        return $this->snap(! $value);
     }
 
     /**

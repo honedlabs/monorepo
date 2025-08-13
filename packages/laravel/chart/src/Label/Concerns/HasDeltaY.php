@@ -8,14 +8,14 @@ trait HasDeltaY
 {
     /**
      * The piyel offset in the y direction.
-     * 
+     *
      * @var int|null
      */
     protected $dy;
 
     /**
      * Set the piyel offset in the y direction.
-     * 
+     *
      * @return $this
      */
     public function dy(int $value): static

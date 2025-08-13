@@ -11,14 +11,14 @@ trait CanBeAlignedWithLabel
 {
     /**
      * Whether to align the tick with the label.
-     * 
+     *
      * @var bool
      */
     protected $alignWithLabel = false;
 
     /**
      * Set whether to align the tick with the label.
-     * 
+     *
      * @return $this
      */
     public function alignWithLabel(bool $value = true): static
@@ -30,7 +30,7 @@ trait CanBeAlignedWithLabel
 
     /**
      * Set whether to not align the tick with the label.
-     * 
+     *
      * @return $this
      */
     public function dontAlignWithLabel(bool $value = true): static
@@ -40,7 +40,7 @@ trait CanBeAlignedWithLabel
 
     /**
      * Get whether to align the tick with the label.
-     * 
+     *
      * @return true|null
      */
     public function isAlignedWithLabel(): ?bool

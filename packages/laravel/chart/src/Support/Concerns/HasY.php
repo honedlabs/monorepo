@@ -8,14 +8,14 @@ trait HasY
 {
     /**
      * The y position.
-     * 
+     *
      * @var int|string|null
      */
     protected $y;
 
     /**
      * Set the y.
-     * 
+     *
      * @return $this
      */
     public function y(int|string $value): static

@@ -11,15 +11,15 @@ trait HasItemStyle
 {
     /**
      * The item style.
-     * 
-     * @var \Honed\Chart\Style\ItemStyle|null
+     *
+     * @var ItemStyle|null
      */
     protected $itemStyle;
 
     /**
      * Set the item style.
-     * 
-     * @param \Honed\Chart\Style\ItemStyle|(Closure(\Honed\Chart\Style\ItemStyle):\Honed\Chart\Style\ItemStyle)|null $value
+     *
+     * @param  ItemStyle|(Closure(ItemStyle):ItemStyle)|null  $value
      * @return $this
      */
     public function itemStyle(ItemStyle|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasItemStyle
 
     /**
      * Get the item style.
-     * 
-     * @return \Honed\Chart\Style\ItemStyle|null
      */
     public function getItemStyle(): ?ItemStyle
     {

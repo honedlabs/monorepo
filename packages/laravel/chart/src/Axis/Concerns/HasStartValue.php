@@ -8,14 +8,14 @@ trait HasStartValue
 {
     /**
      * The start value of the axis.
-     * 
+     *
      * @var int|null
      */
     protected $startValue;
 
     /**
      * Set the minimum value.
-     * 
+     *
      * @return $this
      */
     public function startValue(int $value): static

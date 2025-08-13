@@ -11,14 +11,14 @@ trait HasInterval
 {
     /**
      * The segmentation interval value.
-     * 
+     *
      * @var int|null
      */
     protected $interval;
 
     /**
      * Set the segmentation interval value.
-     * 
+     *
      * @return $this
      */
     public function interval(int $value): static

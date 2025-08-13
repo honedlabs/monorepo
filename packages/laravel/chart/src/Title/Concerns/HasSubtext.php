@@ -11,14 +11,14 @@ trait HasSubtext
 {
     /**
      * The main title subtext.
-     * 
+     *
      * @var string|null
      */
     protected $subtext;
 
     /**
      * Set the main title subtext.
-     * 
+     *
      * @return $this
      */
     public function subtext(?string $value): static

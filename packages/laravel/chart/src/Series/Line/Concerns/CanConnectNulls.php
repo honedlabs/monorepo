@@ -11,14 +11,14 @@ trait CanConnectNulls
 {
     /**
      * Whether to connect across null values.
-     * 
+     *
      * @var bool
      */
     protected $connectNulls = false;
 
     /**
      * Set whether to connect null values.
-     * 
+     *
      * @return $this
      */
     public function connectNulls(bool $value = true): static
@@ -30,7 +30,7 @@ trait CanConnectNulls
 
     /**
      * Set whether to not connect null values.
-     * 
+     *
      * @return $this
      */
     public function dontConnectNulls(bool $value = true): static

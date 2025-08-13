@@ -8,21 +8,21 @@ trait HasShadowOffset
 {
     /**
      * The offset distance on the horizontal direction of the shadow.
-     * 
+     *
      * @var int|null
      */
     protected $shadowOffsetX;
 
     /**
      * The offset distance on the vertical direction of the shadow.
-     * 
+     *
      * @var int|null
      */
     protected $shadowOffsetY;
 
     /**
      * Set the offset distance on the horizontal direction of the shadow.
-     * 
+     *
      * @return $this
      */
     public function shadowOffsetX(int $value): static
@@ -42,7 +42,7 @@ trait HasShadowOffset
 
     /**
      * Set the offset distance on the vertical direction of the shadow.
-     * 
+     *
      * @return $this
      */
     public function shadowOffsetY(int $value): static
@@ -62,7 +62,7 @@ trait HasShadowOffset
 
     /**
      * Set the offset distance on the horizontal and vertical directions of the shadow.
-     * 
+     *
      * @return $this
      */
     public function shadowOffset(int $x, int $y): static

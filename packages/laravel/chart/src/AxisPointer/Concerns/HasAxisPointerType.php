@@ -10,14 +10,14 @@ trait HasAxisPointerType
 {
     /**
      * The indicator type.
-     * 
+     *
      * @var string|null
      */
     protected $type;
 
     /**
      * Set the indicator type.
-     * 
+     *
      * @return $this
      */
     public function type(string|AxisPointerType $value): static

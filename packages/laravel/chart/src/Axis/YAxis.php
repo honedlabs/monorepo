@@ -12,7 +12,7 @@ class YAxis extends Axis
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->y();
     }
 }

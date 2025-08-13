@@ -8,15 +8,15 @@ trait HasCellsize
 {
     /**
      * The size of the calendar coordinates.
-     * 
+     *
      * @var int|'auto'|array<int, int|'auto'>|null
      */
     protected $cellsize;
 
     /**
      * Set the size of the calendar coordinates.
-     * 
-     * @param int|'auto'|array<int, int|'auto'>|null $value
+     *
+     * @param  int|'auto'|array<int, int|'auto'>|null  $value
      * @return $this
      */
     public function cellsize(int|string|array|null $value): static
@@ -28,7 +28,7 @@ trait HasCellsize
 
     /**
      * Get the size of the calendar coordinates.
-     * 
+     *
      * @return int|'auto'|array<int, int|'auto'>|null
      */
     public function getCellsize(): int|string|array|null

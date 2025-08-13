@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Axis;
 
-use Honed\Core\Primitive;
-use Honed\Chart\Concerns\HasData;
-use Honed\Chart\Concerns\CanBeShown;
-use Honed\Chart\Concerns\HasLineStyle;
-use Honed\Chart\Axis\Concerns\HasLength;
-use Honed\Chart\Axis\Concerns\HasInterval;
-use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Chart\Axis\Concerns\CanBeAlignedWithLabel;
 use Honed\Chart\Axis\Concerns\CanBeInside;
+use Honed\Chart\Axis\Concerns\HasInterval;
+use Honed\Chart\Axis\Concerns\HasLength;
+use Honed\Chart\Concerns\CanBeShown;
+use Honed\Chart\Concerns\HasData;
+use Honed\Chart\Concerns\HasLineStyle;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Core\Primitive;
 
 class AxisTick extends Primitive implements NullsAsUndefined
 {
-    use CanBeShown;
     use CanBeAlignedWithLabel;
     use CanBeInside;
-    use HasInterval;
-    use HasLineStyle;
+    use CanBeShown;
     use HasData;
+    use HasInterval;
     use HasLength;
+    use HasLineStyle;
 
     /**
      * Create a new axis tick.
@@ -34,7 +34,7 @@ class AxisTick extends Primitive implements NullsAsUndefined
 
     /**
      * Get the array representation of the axis tick.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

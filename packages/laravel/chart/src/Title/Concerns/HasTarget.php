@@ -10,14 +10,14 @@ trait HasTarget
 {
     /**
      * The target of the hyper link.
-     * 
+     *
      * @var string|null
      */
     protected $target;
 
     /**
      * Set the target of the hyper link.
-     * 
+     *
      * @return $this
      */
     public function target(string|Target $value): static
@@ -29,7 +29,7 @@ trait HasTarget
 
     /**
      * Set the target of the hyper link to be blank.
-     * 
+     *
      * @return $this
      */
     public function targetBlank(): static
@@ -39,7 +39,7 @@ trait HasTarget
 
     /**
      * Set the target of the hyper link to be self.
-     * 
+     *
      * @return $this
      */
     public function targetSelf(): static

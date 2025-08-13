@@ -11,15 +11,15 @@ trait HasToolbox
 {
     /**
      * The toolbox.
-     * 
-     * @var \Honed\Chart\Toolbox\Toolbox|null
+     *
+     * @var Toolbox|null
      */
     protected $toolbox;
 
     /**
      * Add a toolbox.
-     * 
-     * @param \Honed\Chart\Toolbox\Toolbox|(Closure(\Honed\Chart\Toolbox\Toolbox):\Honed\Chart\Toolbox\Toolbox)|null $value
+     *
+     * @param  Toolbox|(Closure(Toolbox):Toolbox)|null  $value
      * @return $this
      */
     public function toolbox(Toolbox|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasToolbox
 
     /**
      * Get the toolbox
-     * 
-     * @return \Honed\Chart\Toolbox\Toolbox|null
      */
     public function getToolbox(): ?Toolbox
     {

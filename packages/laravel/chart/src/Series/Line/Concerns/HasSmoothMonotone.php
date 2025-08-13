@@ -13,15 +13,15 @@ trait HasSmoothMonotone
 {
     /**
      * The direction in which the broken line keeps the monotonicity.
-     * 
+     *
      * @var string|null
      */
     protected $smoothMonotone;
 
     /**
      * Set the direction in which the broken line keeps the monotonicity.
-     * 
-     * @param 'x'|'y' $value
+     *
+     * @param  'x'|'y'  $value
      * @return $this
      */
     public function smoothMonotone(string $value): static
@@ -33,7 +33,7 @@ trait HasSmoothMonotone
 
     /**
      * Set the direction in which the broken line keeps the monotonicity to be x.
-     * 
+     *
      * @return $this
      */
     public function smoothInX(): static
@@ -43,7 +43,7 @@ trait HasSmoothMonotone
 
     /**
      * Set the direction in which the broken line keeps the monotonicity to be y.
-     * 
+     *
      * @return $this
      */
     public function smoothInY(): static

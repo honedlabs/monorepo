@@ -8,14 +8,14 @@ trait HasGridIndex
 {
     /**
      * The index of the grid to which the axis belongs.
-     * 
+     *
      * @var int|null
      */
     protected $gridIndex;
 
     /**
      * Set the index of the grid to which the axis belongs.
-     * 
+     *
      * @return $this
      */
     public function gridIndex(int $value): static
@@ -24,7 +24,7 @@ trait HasGridIndex
 
         return $this;
     }
-    
+
     /**
      * Get the index of the grid to which the axis belongs.
      */

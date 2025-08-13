@@ -10,14 +10,14 @@ trait HasGradientType
 {
     /**
      * The gradient type.
-     * 
+     *
      * @var string
      */
     protected $type = 'linear';
 
     /**
      * Set the gradient type.
-     * 
+     *
      * @return $this
      */
     public function type(string|GradientType $value): static
@@ -29,7 +29,7 @@ trait HasGradientType
 
     /**
      * Set the gradient type to be linear.
-     * 
+     *
      * @return $this
      */
     public function linear(): static
@@ -39,7 +39,7 @@ trait HasGradientType
 
     /**
      * Set the gradient type to be radial.
-     * 
+     *
      * @return $this
      */
     public function radial(): static

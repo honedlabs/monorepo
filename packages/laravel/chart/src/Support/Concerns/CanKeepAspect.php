@@ -11,14 +11,14 @@ trait CanKeepAspect
 {
     /**
      * Whether to keep the aspect ratio.
-     * 
+     *
      * @var bool|null
      */
     protected $keepAspect;
 
     /**
      * Set whether to keep the aspect ratio.
-     * 
+     *
      * @return $this
      */
     public function keepAspect(bool $value = true): static
@@ -30,7 +30,7 @@ trait CanKeepAspect
 
     /**
      * Set whether to not keep the aspect ratio.
-     * 
+     *
      * @return $this
      */
     public function dontKeepAspect(bool $value = true): static

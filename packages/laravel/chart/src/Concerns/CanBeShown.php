@@ -8,15 +8,14 @@ trait CanBeShown
 {
     /**
      * Whether to show the axis.
-     * 
+     *
      * @var bool|null
      */
     protected $show;
 
     /**
      * Set whether to show the axis.
-     * 
-     * @param bool $value
+     *
      * @return $this
      */
     public function show(bool $value = true): static
@@ -28,8 +27,7 @@ trait CanBeShown
 
     /**
      * Set whether to not show the axis.
-     * 
-     * @param bool $value
+     *
      * @return $this
      */
     public function dontShow(bool $value = true): static

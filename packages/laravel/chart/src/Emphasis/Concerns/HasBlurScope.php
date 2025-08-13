@@ -10,14 +10,14 @@ trait HasBlurScope
 {
     /**
      * The range of fade out when focus is enabled.
-     * 
+     *
      * @var string|null
      */
     protected $blurScope;
 
     /**
      * Set the blur scope.
-     * 
+     *
      * @return $this
      */
     public function blurScope(string|BlurScope $value): static
@@ -29,7 +29,7 @@ trait HasBlurScope
 
     /**
      * Set the blur scope to coordinate system.
-     * 
+     *
      * @return $this
      */
     public function blurScopeCoordinateSystem(): static
@@ -39,7 +39,7 @@ trait HasBlurScope
 
     /**
      * Set the blur scope to series.
-     * 
+     *
      * @return $this
      */
     public function blurScopeSeries(): static
@@ -49,7 +49,7 @@ trait HasBlurScope
 
     /**
      * Set the blur scope to global.
-     * 
+     *
      * @return $this
      */
     public function blurScopeGlobal(): static
@@ -59,12 +59,9 @@ trait HasBlurScope
 
     /**
      * Get the blur scope.
-     * 
-     * @return string|null
      */
     public function getBlurScope(): ?string
     {
         return $this->blurScope;
     }
-    
 }

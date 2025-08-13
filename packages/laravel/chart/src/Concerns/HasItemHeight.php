@@ -8,14 +8,14 @@ trait HasItemHeight
 {
     /**
      * The height of the items.
-     * 
+     *
      * @var int|null
      */
     protected $itemHeight;
 
     /**
      * Set the height of the items.
-     * 
+     *
      * @return $this
      */
     public function itemHeight(int $value): static
@@ -31,5 +31,5 @@ trait HasItemHeight
     public function getItemHeight(): ?int
     {
         return $this->itemHeight;
-    }    
+    }
 }

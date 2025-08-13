@@ -30,27 +30,27 @@ use Honed\Core\Primitive;
 
 class Label extends Primitive implements NullsAsUndefined
 {
-    use CanBeShown;
-    use HasDistance;
     use CanBeRotated;
-    use HasFontStyle;
-    use HasFontWeight;
-    use HasFontFamily;
-    use HasFontSize;
-    use HasLineHeight;
+    use CanBeShown;
     use HasBackgroundColor;
     use HasBorderColor;
-    use HasBorderWidth;
-    use HasBorderType;
-    use HasDashOffset;
     use HasBorderRadius;
-    use HasPadding;
-    use HasShadowColor;
-    use HasShadowBlur;
-    use HasShadowOffset;
-    use HasOverflow;
-    use HasWidth;
+    use HasBorderType;
+    use HasBorderWidth;
+    use HasDashOffset;
+    use HasDistance;
+    use HasFontFamily;
+    use HasFontSize;
+    use HasFontStyle;
+    use HasFontWeight;
     use HasHeight;
+    use HasLineHeight;
+    use HasOverflow;
+    use HasPadding;
+    use HasShadowBlur;
+    use HasShadowColor;
+    use HasShadowOffset;
+    use HasWidth;
 
     /**
      * Create a new label instance.
@@ -62,7 +62,7 @@ class Label extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the label.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

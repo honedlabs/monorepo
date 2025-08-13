@@ -8,14 +8,14 @@ trait CanBeScaled
 {
     /**
      * Whether to contain the zero position of the axis compulsively.
-     * 
+     *
      * @var bool
      */
     protected $scale = false;
 
     /**
      * Set whether to contain the zero position of the axis compulsively.
-     * 
+     *
      * @return $this
      */
     public function scale(bool $value = true): static
@@ -27,7 +27,7 @@ trait CanBeScaled
 
     /**
      * Set whether to not contain the zero position of the axis compulsively.
-     * 
+     *
      * @return $this
      */
     public function dontScale(bool $value = true): static
@@ -37,7 +37,7 @@ trait CanBeScaled
 
     /**
      * Get whether to contain the zero position of the axis compulsively.
-     * 
+     *
      * @return true|null
      */
     public function isScaled(): bool

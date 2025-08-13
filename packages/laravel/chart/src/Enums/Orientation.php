@@ -9,4 +9,3 @@ enum Orientation: string
     case Horizontal = 'horizontal';
     case Vertical = 'vertical';
 }
-

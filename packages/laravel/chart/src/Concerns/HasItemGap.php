@@ -8,14 +8,14 @@ trait HasItemGap
 {
     /**
      * The distance two items in pixels.
-     * 
+     *
      * @var int|null
      */
     protected $itemGap;
 
     /**
      * Set the distance two items in pixels.
-     * 
+     *
      * @return $this
      */
     public function itemGap(int $value): static

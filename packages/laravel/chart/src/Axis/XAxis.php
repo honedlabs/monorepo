@@ -12,7 +12,7 @@ class XAxis extends Axis
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->x();
     }
 }

@@ -8,28 +8,28 @@ trait HasRGB
 {
     /**
      * The red component of the color.
-     * 
+     *
      * @var int
      */
     protected $red = 0;
 
     /**
      * The green component of the color.
-     * 
+     *
      * @var int
      */
     protected $green = 0;
 
     /**
      * The blue component of the color.
-     * 
+     *
      * @var int
      */
     protected $blue = 0;
 
     /**
      * Set the red component of the color.
-     * 
+     *
      * @return $this
      */
     public function red(int $red): static
@@ -41,8 +41,6 @@ trait HasRGB
 
     /**
      * Get the red component of the color.
-     * 
-     * @return int
      */
     public function getRed(): int
     {
@@ -51,7 +49,7 @@ trait HasRGB
 
     /**
      * Set the green component of the color.
-     * 
+     *
      * @return $this
      */
     public function green(int $green): static
@@ -63,8 +61,6 @@ trait HasRGB
 
     /**
      * Get the green component of the color.
-     * 
-     * @return int
      */
     public function getGreen(): int
     {
@@ -73,7 +69,7 @@ trait HasRGB
 
     /**
      * Set the blue component of the color.
-     * 
+     *
      * @return $this
      */
     public function blue(int $blue): static
@@ -85,8 +81,6 @@ trait HasRGB
 
     /**
      * Get the blue component of the color.
-     * 
-     * @return int
      */
     public function getBlue(): int
     {
@@ -95,7 +89,7 @@ trait HasRGB
 
     /**
      * Set the red, green, and blue components of the color.
-     * 
+     *
      * @return $this
      */
     public function rgb(int $red = 0, int $green = 0, int $blue = 0): static

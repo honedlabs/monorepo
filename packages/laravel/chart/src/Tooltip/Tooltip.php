@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Tooltip;
 
-use Honed\Core\Primitive;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasTextStyle;
-use Honed\Chart\Style\Concerns\HasPadding;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Chart\Tooltip\Concerns\HasTrigger;
-use Honed\Chart\Style\Concerns\HasBorderColor;
 use Honed\Chart\Style\Concerns\HasBackgroundColor;
+use Honed\Chart\Style\Concerns\HasBorderColor;
 use Honed\Chart\Style\Concerns\HasBorderWidth;
+use Honed\Chart\Style\Concerns\HasPadding;
+use Honed\Chart\Tooltip\Concerns\HasTrigger;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Core\Primitive;
 
 class Tooltip extends Primitive implements NullsAsUndefined
 {
     use CanBeShown;
-    use HasTrigger;
     use HasBackgroundColor;
     use HasBorderColor;
     use HasBorderWidth;
     use HasPadding;
     use HasTextStyle;
+    use HasTrigger;
     // use HasOrder;
 
     /**
@@ -35,7 +35,7 @@ class Tooltip extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the tooltip.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array
@@ -44,7 +44,7 @@ class Tooltip extends Primitive implements NullsAsUndefined
             'show' => $this->isShown(),
             'trigger' => $this->getTrigger(),
             // 'showContent' => $this->
-            // 'alwaysShowContent' => 
+            // 'alwaysShowContent' =>
             // 'triggerOn' => $this->getTriggerOn(),
             // 'showDelay' => $this->getShowDelay(),
             // 'hideDelay' => $this->getHideDelay(),
@@ -62,5 +62,4 @@ class Tooltip extends Primitive implements NullsAsUndefined
             // 'order' => $this->getOrder(),
         ];
     }
-
 }

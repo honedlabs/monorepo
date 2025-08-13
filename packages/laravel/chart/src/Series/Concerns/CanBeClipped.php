@@ -11,14 +11,14 @@ trait CanBeClipped
 {
     /**
      * Whether to clip the overflow on the coordinate system.
-     * 
+     *
      * @var bool
      */
     protected $clip = true;
 
     /**
      * Set whether to clip the overflow on the coordinate system.
-     * 
+     *
      * @return $this
      */
     public function clip(bool $value = true): static
@@ -30,7 +30,7 @@ trait CanBeClipped
 
     /**
      * Set whether to not clip the overflow on the coordinate system.
-     * 
+     *
      * @return $this
      */
     public function dontClip(bool $value = true): static

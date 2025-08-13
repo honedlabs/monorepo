@@ -4,45 +4,45 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Grid;
 
-use Honed\Core\Primitive;
-use Honed\Chart\Concerns\HasId;
-use Honed\Chart\Concerns\HasZAxis;
 use Honed\Chart\Concerns\CanBeShown;
+use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\HasTooltip;
-use Honed\Chart\Style\Concerns\HasTop;
-use Honed\Chart\Style\Concerns\HasLeft;
-use Honed\Chart\Style\Concerns\HasRight;
-use Honed\Chart\Style\Concerns\HasWidth;
-use Honed\Chart\Style\Concerns\HasBottom;
-use Honed\Chart\Style\Concerns\HasHeight;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Chart\Style\Concerns\HasShadowBlur;
+use Honed\Chart\Concerns\HasZAxis;
 use Honed\Chart\Grid\Concerns\CanContainLabel;
+use Honed\Chart\Style\Concerns\HasBackgroundColor;
 use Honed\Chart\Style\Concerns\HasBorderColor;
 use Honed\Chart\Style\Concerns\HasBorderWidth;
+use Honed\Chart\Style\Concerns\HasBottom;
+use Honed\Chart\Style\Concerns\HasHeight;
+use Honed\Chart\Style\Concerns\HasLeft;
+use Honed\Chart\Style\Concerns\HasRight;
+use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowColor;
 use Honed\Chart\Style\Concerns\HasShadowOffset;
-use Honed\Chart\Style\Concerns\HasBackgroundColor;
+use Honed\Chart\Style\Concerns\HasTop;
+use Honed\Chart\Style\Concerns\HasWidth;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Core\Primitive;
 
 class Grid extends Primitive implements NullsAsUndefined
 {
-    use HasId;
     use CanBeShown;
-    use HasZAxis;
-    use HasLeft;
-    use HasTop;
-    use HasRight;
-    use HasBottom;
-    use HasWidth;
-    use HasHeight;
     use CanContainLabel;
     use HasBackgroundColor;
     use HasBorderColor;
     use HasBorderWidth;
+    use HasBottom;
+    use HasHeight;
+    use HasId;
+    use HasLeft;
+    use HasRight;
     use HasShadowBlur;
     use HasShadowColor;
     use HasShadowOffset;
     use HasTooltip;
+    use HasTop;
+    use HasWidth;
+    use HasZAxis;
 
     /**
      * Create a new grid instance.
@@ -54,7 +54,7 @@ class Grid extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the grid.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

@@ -8,7 +8,7 @@ trait HasSublink
 {
     /**
      * The hyper link of the subtext.
-     * 
+     *
      * @var string|null
      */
     protected $sublink;

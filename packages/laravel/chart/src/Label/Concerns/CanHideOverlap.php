@@ -8,14 +8,14 @@ trait CanHideOverlap
 {
     /**
      * Whether to hide overlap.
-     * 
+     *
      * @var bool
      */
     protected $hideOverlap = false;
 
     /**
      * Set whether to hide overlap.
-     * 
+     *
      * @return $this
      */
     public function hideOverlap(bool $value = true): static
@@ -27,7 +27,7 @@ trait CanHideOverlap
 
     /**
      * Set whether to not hide overlap.
-     * 
+     *
      * @return $this
      */
     public function dontHideOverlap(bool $value = true): static

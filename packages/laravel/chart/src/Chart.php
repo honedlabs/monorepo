@@ -4,37 +4,37 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Core\Primitive;
-use Honed\Chart\Concerns\HasData;
-use Honed\Chart\Concerns\HasSeries;
 use Honed\Chart\Concerns\Animatable;
-use Honed\Chart\Concerns\HasTooltip;
-use Honed\Chart\Concerns\HasTextStyle;
-use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Chart\Concerns\CanBePolar;
 use Honed\Chart\Concerns\HasAxes;
+use Honed\Chart\Concerns\HasAxisPointer;
+use Honed\Chart\Concerns\HasData;
+use Honed\Chart\Concerns\HasGrid;
 use Honed\Chart\Concerns\HasLegend;
+use Honed\Chart\Concerns\HasSeries;
+use Honed\Chart\Concerns\HasTextStyle;
 use Honed\Chart\Concerns\HasTitle;
 use Honed\Chart\Concerns\HasToolbox;
-use Honed\Chart\Concerns\CanBePolar;
-use Honed\Chart\Concerns\HasAxisPointer;
-use Honed\Chart\Concerns\HasGrid;
+use Honed\Chart\Concerns\HasTooltip;
 use Honed\Chart\Style\Concerns\HasBackgroundColor;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Core\Primitive;
 
 class Chart extends Primitive implements NullsAsUndefined
 {
-    use HasData;
-    use HasSeries;
     use Animatable;
-    use HasTextStyle;
-    use HasTooltip;
-    use HasLegend;
-    use HasAxes;
     use CanBePolar;
-    use HasToolbox;
-    use HasTitle;
-    use HasBackgroundColor;
-    use HasGrid;
+    use HasAxes;
     use HasAxisPointer;
+    use HasBackgroundColor;
+    use HasData;
+    use HasGrid;
+    use HasLegend;
+    use HasSeries;
+    use HasTextStyle;
+    use HasTitle;
+    use HasToolbox;
+    use HasTooltip;
 
     /**
      * Create a new chart instance.

@@ -16,21 +16,21 @@ beforeEach(function () {
             [
                 'type' => 'category',
                 'boundaryGap' => false,
-                'data' => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            ]
+                'data' => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            ],
         ],
         'yAxis' => [
             [
-                'type' => 'value'
-            ]
+                'type' => 'value',
+            ],
         ],
         'series' => [
             [
                 'type' => 'line',
                 'areaStyle' => [],
                 'data' => [820, 932, 901, 934, 1290, 1330, 1320],
-            ]
-        ]
+            ],
+        ],
     ];
 })->only();
 
@@ -45,10 +45,10 @@ it('creates', function () {
         ->series([
             Line::make()
                 ->areaStyle()
-                ->values($this->series)
+                ->values($this->series),
         ]);
 
     expect($chart->toArray())
         ->dd()
-        ->toEqualCanonicalizing($this->option);    
+        ->toEqualCanonicalizing($this->option);
 });

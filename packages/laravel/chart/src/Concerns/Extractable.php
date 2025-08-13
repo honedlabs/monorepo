@@ -13,41 +13,44 @@ trait Extractable
     use HasData;
 
     protected const VALUE = 'value';
+
     protected const PROPERTY = 'property';
+
     protected const PLUCK = 'pluck';
+
     protected const CALLBACK = 'callback';
 
     /**
      * The strategy to use for extracting data.
-     * 
+     *
      * @var string|null
      */
     protected $extract;
 
     /**
      * The extractor.
-     * 
+     *
      * @var mixed
      */
     protected $extractor;
 
     /**
      * Set the extractor to use a fixed value.
-     * 
+     *
      * @return $this
      */
     public function values(mixed $value): static
     {
         $this->extract = self::VALUE;
-        
+
         $this->extractor = $value;
-        
+
         return $this;
     }
 
     /**
      * Set the extractor to use the specified property.
-     * 
+     *
      * @return $this
      */
     public function property(string $value): static
@@ -61,7 +64,7 @@ trait Extractable
 
     /**
      * Set the extractor to use the specified key.
-     * 
+     *
      * @return $this
      */
     public function pluck(string $value): static
@@ -75,8 +78,8 @@ trait Extractable
 
     /**
      * Set the extractor to use the specified callback.
-     * 
-     * @param (Closure(mixed): mixed) $value
+     *
+     * @param  (Closure(mixed): mixed)  $value
      * @return $this
      */
     public function callback(Closure $value): static

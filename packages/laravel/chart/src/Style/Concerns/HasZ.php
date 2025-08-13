@@ -11,14 +11,14 @@ trait HasZ
 {
     /**
      * The z value of all graphical elements, used to control order of drawing graphical components.
-     * 
+     *
      * @var int|null
      */
     protected $z;
 
     /**
      * Set the z value of all graphical elements, used to control order of drawing graphical components.
-     * 
+     *
      * @return $this
      */
     public function z(?int $value): static

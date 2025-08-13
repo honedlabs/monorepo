@@ -11,15 +11,15 @@ trait HasLegend
 {
     /**
      * The legend.
-     * 
-     * @var \Honed\Chart\Legend\Legend|null
+     *
+     * @var Legend|null
      */
     protected $legend;
 
     /**
      * Add a legend.
-     * 
-     * @param \Honed\Chart\Legend\Legend|(Closure(\Honed\Chart\Legend\Legend):\Honed\Chart\Legend\Legend)|null $value
+     *
+     * @param  Legend|(Closure(Legend):Legend)|null  $value
      * @return $this
      */
     public function legend(Legend|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasLegend
 
     /**
      * Get the legend
-     * 
-     * @return \Honed\Chart\Legend\Legend|null
      */
     public function getLegend(): ?Legend
     {

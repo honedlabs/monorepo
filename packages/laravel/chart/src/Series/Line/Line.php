@@ -7,13 +7,13 @@ namespace Honed\Chart\Series\Line;
 use Honed\Chart\Concerns\HasAreaStyle;
 use Honed\Chart\Concerns\HasLabelLine;
 use Honed\Chart\Enums\ChartType;
-use Honed\Chart\Series\Line\Concerns\CanConnectNulls;
-use Honed\Chart\Series\Line\Concerns\CanBeSmooth;
 use Honed\Chart\Series\Concerns\HasColorBy;
 use Honed\Chart\Series\Concerns\HasSampling;
 use Honed\Chart\Series\Concerns\HasStack;
 use Honed\Chart\Series\Concerns\HasStackOrder;
 use Honed\Chart\Series\Concerns\HasStackStrategy;
+use Honed\Chart\Series\Line\Concerns\CanBeSmooth;
+use Honed\Chart\Series\Line\Concerns\CanConnectNulls;
 use Honed\Chart\Series\Line\Concerns\HasCoordinateSystem;
 use Honed\Chart\Series\Line\Concerns\HasSmoothMonotone;
 use Honed\Chart\Series\Line\Concerns\HasStep;
@@ -24,20 +24,21 @@ use Honed\Chart\Support\Concerns\HasSymbolSize;
 class Line extends Series
 {
     use CanBeSmooth;
-    use HasCoordinateSystem;
-    use HasColorBy;
-    use HasAreaStyle;
     use CanConnectNulls;
+    use HasAreaStyle;
+    use HasColorBy;
+    use HasCoordinateSystem;
     use HasLabelLine;
-    use HasSymbol;
-    use HasSymbolSize;
-    use HasStack;
-    use HasStackStrategy;
-    use HasStackOrder;
-    // use HasSymbolRotate;
-    use HasStep;
     use HasSampling;
     use HasSmoothMonotone;
+    use HasStack;
+    use HasStackOrder;
+    use HasStackStrategy;
+
+    // use HasSymbolRotate;
+    use HasStep;
+    use HasSymbol;
+    use HasSymbolSize;
 
     /**
      * Provide the series with any necessary setup.
@@ -51,7 +52,7 @@ class Line extends Series
 
     /**
      * Get the array representation of the line series.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array
@@ -99,5 +100,4 @@ class Line extends Series
             // 'tooltip' => $this->getTooltip()?->toArray(),
         ];
     }
-
 }

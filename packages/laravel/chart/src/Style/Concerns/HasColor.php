@@ -13,14 +13,14 @@ trait HasColor
 {
     /**
      * The color.
-     * 
+     *
      * @var string|Rgb|Rgba|Gradient|null
      */
     protected $color;
 
     /**
      * Set the color.
-     * 
+     *
      * @return $this
      */
     public function color(string|Rgb|Rgba|Gradient|null $value): static
@@ -32,7 +32,7 @@ trait HasColor
 
     /**
      * Get the color.
-     * 
+     *
      * @return string|array<string, mixed>|null
      */
     public function getColor(): string|array|null

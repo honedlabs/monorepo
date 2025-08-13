@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Series\Sankey;
 
-use Honed\Chart\Series\Series;
 use Honed\Chart\Enums\ChartType;
+use Honed\Chart\Series\Series;
 
 class Sankey extends Series
 {
@@ -21,7 +21,7 @@ class Sankey extends Series
 
     /**
      * Get the array representation of the heatmap series.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

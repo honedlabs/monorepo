@@ -10,14 +10,14 @@ trait CanBeAligned
 {
     /**
      * The horizontal alignment.
-     * 
+     *
      * @var string|null
      */
     protected $align;
 
     /**
      * Set the horizontal alignment.
-     * 
+     *
      * @return $this
      */
     public function align(string|Align $value): static
@@ -29,7 +29,7 @@ trait CanBeAligned
 
     /**
      * Set the horizontal alignment to left.
-     * 
+     *
      * @return $this
      */
     public function alignLeft(): static
@@ -39,7 +39,7 @@ trait CanBeAligned
 
     /**
      * Set the horizontal alignment to center.
-     * 
+     *
      * @return $this
      */
     public function alignCenter(): static
@@ -49,7 +49,7 @@ trait CanBeAligned
 
     /**
      * Set the horizontal alignment to right.
-     * 
+     *
      * @return $this
      */
     public function alignRight(): static
@@ -59,12 +59,9 @@ trait CanBeAligned
 
     /**
      * Get the horizontal alignment.
-     * 
-     * @return string|null
      */
     public function getAlign(): ?string
     {
         return $this->align;
     }
-    
 }

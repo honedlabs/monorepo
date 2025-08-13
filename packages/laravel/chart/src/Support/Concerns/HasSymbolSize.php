@@ -11,15 +11,15 @@ trait HasSymbolSize
 {
     /**
      * Symbol size at the two ends of the mark line. It can be an array for two ends, or assigned separately.
-     * 
+     *
      * @var int|array{0: int, 1: int}|null
      */
     protected $symbolSize;
 
     /**
      * Set the symbol size.
-     * 
-     * @param int|array{0: int, 1: int}|null $value
+     *
+     * @param  int|array{0: int, 1: int}|null  $value
      * @return $this
      */
     public function symbolSize(int|array|null $value): static
@@ -31,7 +31,7 @@ trait HasSymbolSize
 
     /**
      * Get the symbol size.
-     * 
+     *
      * @return int|array{0: int, 1: int}|null
      */
     public function getSymbolSize(): int|array|null

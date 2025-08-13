@@ -7,49 +7,50 @@ namespace Honed\Chart\Style;
 use Honed\Chart\Style\Concerns\HasColorStops;
 use Honed\Chart\Style\Concerns\HasGradientType;
 use Illuminate\Contracts\Support\Arrayable;
+use InvalidArgumentException;
 
 /**
  * @implements \Illuminate\Contracts\Support\Arrayable<string, mixed>
  */
 class Gradient implements Arrayable
 {
-    use HasGradientType;
     use HasColorStops;
+    use HasGradientType;
 
     /**
      * The first x coordinate.
-     * 
+     *
      * @var float|int
      */
     protected $x1 = 0;
 
     /**
      * The first y coordinate.
-     * 
+     *
      * @var float|int
      */
     protected $y1 = 0;
 
     /**
      * The second x coordinate.
-     * 
+     *
      * @var float|int
      */
     protected $x2 = 0;
 
     /**
      * The second y coordinate.
-     * 
+     *
      * @var float|int
      */
     protected $y2 = 0;
 
     /**
      * Set the first x coordinate.
-     * 
+     *
      * @return $this
-     * 
-     * @throws \InvalidArgumentException if the coordinate is not between 0 and 1
+     *
+     * @throws InvalidArgumentException if the coordinate is not between 0 and 1
      */
     public function x(float|int $value): static
     {
@@ -64,11 +65,11 @@ class Gradient implements Arrayable
 
     /**
      * Set the first x coordinate.
-     * 
+     *
      * @return $this
-     * 
-     * @throws \InvalidArgumentException if the coordinate is not between 0 and 1
-     * 
+     *
+     * @throws InvalidArgumentException if the coordinate is not between 0 and 1
+     *
      * @see \Honed\Chart\Style\Gradient::getX()
      */
     public function x1(float|int $value): static
@@ -86,7 +87,7 @@ class Gradient implements Arrayable
 
     /**
      * Get the first x coordinate
-     * 
+     *
      * @see \Honed\Chart\Style\Gradient::getX()
      */
     public function getX1(): float|int
@@ -96,10 +97,10 @@ class Gradient implements Arrayable
 
     /**
      * Set the first y coordinate.
-     * 
+     *
      * @return $this
-     * 
-     * @throws \InvalidArgumentException if the coordinate is not between 0 and 1
+     *
+     * @throws InvalidArgumentException if the coordinate is not between 0 and 1
      */
     public function y(float|int $value): static
     {
@@ -114,9 +115,9 @@ class Gradient implements Arrayable
 
     /**
      * Set the first y coordinate.
-     * 
+     *
      * @return $this
-     * 
+     *
      * @see \Honed\Chart\Style\Gradient::getY()
      */
     public function y1(float|int $value): static
@@ -134,7 +135,7 @@ class Gradient implements Arrayable
 
     /**
      * Get the first y coordinate.
-     * 
+     *
      * @see \Honed\Chart\Style\Gradient::getY()
      */
     public function getY1(): float|int
@@ -144,10 +145,10 @@ class Gradient implements Arrayable
 
     /**
      * Set the second x coordinate.
-     * 
+     *
      * @return $this
-     * 
-     * @throws \InvalidArgumentException if the coordinate is not between 0 and 1
+     *
+     * @throws InvalidArgumentException if the coordinate is not between 0 and 1
      */
     public function x2(float|int $value): static
     {
@@ -170,10 +171,10 @@ class Gradient implements Arrayable
 
     /**
      * Set the second y coordinate.
-     * 
+     *
      * @return $this
-     * 
-     * @throws \InvalidArgumentException if the coordinate is not between 0 and 1
+     *
+     * @throws InvalidArgumentException if the coordinate is not between 0 and 1
      */
     public function y2(float|int $value): static
     {
@@ -196,7 +197,7 @@ class Gradient implements Arrayable
 
     /**
      * Set the linear gradient direction to be from bottom to top.
-     * 
+     *
      * @return $this
      */
     public function toTop(): static
@@ -206,7 +207,7 @@ class Gradient implements Arrayable
 
     /**
      * Set the linear gradient direction to be from top to bottom.
-     * 
+     *
      * @return $this
      */
     public function toBottom(): static
@@ -216,7 +217,7 @@ class Gradient implements Arrayable
 
     /**
      * Set the linear gradient direction to be from left to right.
-     * 
+     *
      * @return $this
      */
     public function toRight(): static
@@ -226,7 +227,7 @@ class Gradient implements Arrayable
 
     /**
      * Set the linear gradient direction to be from right to left.
-     * 
+     *
      * @return $this
      */
     public function toLeft(): static
@@ -236,7 +237,7 @@ class Gradient implements Arrayable
 
     /**
      * Set the linear gradient direction to be from top left to bottom right.
-     * 
+     *
      * @return $this
      */
     public function toBottomRight(): static
@@ -246,7 +247,7 @@ class Gradient implements Arrayable
 
     /**
      * Set the linear gradient direction to be from top right to bottom left.
-     * 
+     *
      * @return $this
      */
     public function toTopLeft(): static
@@ -256,7 +257,7 @@ class Gradient implements Arrayable
 
     /**
      * Set the linear gradient direction to be from bottom left to top right.
-     * 
+     *
      * @return $this
      */
     public function toTopRight(): static
@@ -266,7 +267,7 @@ class Gradient implements Arrayable
 
     /**
      * Set the linear gradient direction to be from bottom right to top left.
-     * 
+     *
      * @return $this
      */
     public function toBottomLeft(): static
@@ -276,17 +277,17 @@ class Gradient implements Arrayable
 
     /**
      * Set the radial gradient center to be the center of the chart.
-     * 
+     *
      * @return $this
      */
     public function center(): static
     {
-        return $this->x(0.5)->y(0.5);//->r(0.5);
+        return $this->x(0.5)->y(0.5); // ->r(0.5);
     }
 
     /**
      * Get the gradient as an array.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray()
@@ -308,12 +309,12 @@ class Gradient implements Arrayable
 
     /**
      * Throw an exception if the value is outside the allowed range.
-     * 
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     protected function invalidRange(string $coordinate): never
     {
-        throw new \InvalidArgumentException(
+        throw new InvalidArgumentException(
             "{$coordinate} must be between 0 and 1."
         );
     }

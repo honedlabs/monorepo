@@ -11,14 +11,14 @@ trait HasStack
 {
     /**
      * The name of the stack.
-     * 
+     *
      * @var string|null
      */
     protected $stack;
 
     /**
      * Set the name of the stack.
-     * 
+     *
      * @return $this
      */
     public function stack(?string $value): static

@@ -17,10 +17,10 @@ class AxisLine extends Primitive implements NullsAsUndefined
 {
     use CanBeShown;
     use HasLineStyle;
-    use Zeroable;
     use HasSymbol;
-    use HasSymbolSize;
     use HasSymbolOffset;
+    use HasSymbolSize;
+    use Zeroable;
 
     /**
      * Create a new axis line.
@@ -32,7 +32,7 @@ class AxisLine extends Primitive implements NullsAsUndefined
 
     /**
      * Get the array representation of the axis line.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

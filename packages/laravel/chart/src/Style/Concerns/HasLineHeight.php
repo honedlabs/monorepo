@@ -8,14 +8,14 @@ trait HasLineHeight
 {
     /**
      * The line height.
-     * 
+     *
      * @var int|null
      */
     protected $lineHeight;
 
     /**
      * Set the line height.
-     * 
+     *
      * @return $this
      */
     public function lineHeight(int $value): static

@@ -9,20 +9,19 @@ use Honed\Chart\Axis\Axis;
 use Honed\Chart\Axis\XAxis;
 use Honed\Chart\Axis\YAxis;
 use Illuminate\Support\Collection;
-use InvalidArgumentException;
 
 trait HasAxes
 {
     /**
      * The axes.
-     * 
-     * @var array<int, \Honed\Chart\Axis\Axis>
+     *
+     * @var array<int, Axis>
      */
     protected $axes = [];
 
     /**
      * Add an axis to the chart.
-     * 
+     *
      * @return $this
      */
     public function axis(Axis $axis): static
@@ -34,15 +33,16 @@ trait HasAxes
 
     /**
      * Add axes to the chart.
-     * 
-     * @param \Honed\Chart\Axis\Axis|array<int, \Honed\Chart\Axis\Axis>|\Illuminate\Support\Collection<int, \Honed\Chart\Axis\Axis> $axes
+     *
+     * @param  Axis|array<int, Axis>|Collection<int, Axis>  $axes
      * @return $this
      */
     public function axes(Axis|array|Collection $axes): static
     {
         if ($axes instanceof Axis) {
             return $this->axis($axes);
-        } elseif ($axes instanceof Collection) {
+        }
+        if ($axes instanceof Collection) {
             $axes = $axes->all();
         }
 
@@ -53,8 +53,8 @@ trait HasAxes
 
     /**
      * Get the axes.
-     * 
-     * @return array<int, \Honed\Chart\Axis\Axis>
+     *
+     * @return array<int, Axis>
      */
     public function getAxes(): array
     {
@@ -63,8 +63,8 @@ trait HasAxes
 
     /**
      * Get the x-axes.
-     * 
-     * @return array<int, \Honed\Chart\Axis\XAxis>
+     *
+     * @return array<int, XAxis>
      */
     public function getXAxes(): array
     {
@@ -73,8 +73,8 @@ trait HasAxes
 
     /**
      * Get the y-axes.
-     * 
-     * @return array<int, \Honed\Chart\Axis\YAxis>
+     *
+     * @return array<int, YAxis>
      */
     public function getYAxes(): array
     {
@@ -83,8 +83,8 @@ trait HasAxes
 
     /**
      * Add a y-axis to the chart.
-     * 
-     * @param \Honed\Chart\Axis\Axis|(Closure(\Honed\Chart\Axis\Axis):mixed)|null $value
+     *
+     * @param  Axis|(Closure(Axis):mixed)|null  $value
      * @return $this
      */
     public function yAxis(YAxis|Closure|null $value): static
@@ -100,8 +100,8 @@ trait HasAxes
 
     /**
      * Add an x-axis to the chart.
-     * 
-     * @param \Honed\Chart\Axis\Axis|(Closure(\Honed\Chart\Axis\Axis):mixed)|null $value
+     *
+     * @param  Axis|(Closure(Axis):mixed)|null  $value
      * @return $this
      */
     public function xAxis(XAxis|Closure|null $value): static
@@ -117,7 +117,7 @@ trait HasAxes
 
     /**
      * Get the x-axes representation.
-     * 
+     *
      * @return array<int, array<string, mixed>>
      */
     public function getXAxesToArray(): array
@@ -136,7 +136,7 @@ trait HasAxes
 
     /**
      * Get the y-axes representation.
-     * 
+     *
      * @return array<int, array<string, mixed>>
      */
     public function getYAxesToArray(): array
@@ -155,15 +155,14 @@ trait HasAxes
 
     /**
      * Get the filtered axes.
-     * 
-     * @param string $dimension
-     * @return array<int, \Honed\Chart\Axis\Axis>
+     *
+     * @return array<int, Axis>
      */
     protected function filteredAxes(string $dimension): array
     {
         return array_values(
             array_filter(
-                $this->axes, 
+                $this->axes,
                 static fn (Axis $axis) => $axis->getDimension() === $dimension
             )
         );
@@ -184,5 +183,4 @@ trait HasAxes
     {
         return YAxis::make();
     }
-
 }

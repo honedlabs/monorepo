@@ -8,7 +8,7 @@ trait HasLink
 {
     /**
      * The hyper link of the main text.
-     * 
+     *
      * @var string|null
      */
     protected $link;

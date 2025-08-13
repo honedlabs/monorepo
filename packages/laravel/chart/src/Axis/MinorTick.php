@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Axis;
 
-use Honed\Core\Primitive;
+use Honed\Chart\Axis\Concerns\HasLength;
+use Honed\Chart\Axis\Concerns\HasSplitNumber;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasLineStyle;
-use Honed\Chart\Axis\Concerns\HasLength;
 use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Chart\Axis\Concerns\HasSplitNumber;
+use Honed\Core\Primitive;
 
 class MinorTick extends Primitive implements NullsAsUndefined
 {
     use CanBeShown;
-    use HasSplitNumber;
     use HasLength;
     use HasLineStyle;
+    use HasSplitNumber;
 
     /**
      * Create a new minor tick.
@@ -28,7 +28,7 @@ class MinorTick extends Primitive implements NullsAsUndefined
 
     /**
      * Get the array representation of the minor tick.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

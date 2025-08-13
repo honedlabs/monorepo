@@ -11,15 +11,15 @@ trait HasTextStyle
 {
     /**
      * The text style.
-     * 
-     * @var \Honed\Chart\Style\TextStyle|null
+     *
+     * @var TextStyle|null
      */
     protected $textStyle;
 
     /**
      * Set the text style.
-     * 
-     * @param \Honed\Chart\Style\TextStyle|(Closure(\Honed\Chart\Style\TextStyle):\Honed\Chart\Style\TextStyle)|null $value
+     *
+     * @param  TextStyle|(Closure(TextStyle):TextStyle)|null  $value
      * @return $this
      */
     public function textStyle(TextStyle|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasTextStyle
 
     /**
      * Get the text style.
-     * 
-     * @return \Honed\Chart\Style\TextStyle|null
      */
     public function getTextStyle(): ?TextStyle
     {

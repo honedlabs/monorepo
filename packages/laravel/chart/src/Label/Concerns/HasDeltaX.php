@@ -8,14 +8,14 @@ trait HasDeltaX
 {
     /**
      * The pixel offset in the x direction.
-     * 
+     *
      * @var int|null
      */
     protected $dx;
 
     /**
      * Set the pixel offset in the x direction.
-     * 
+     *
      * @return $this
      */
     public function dx(int $value): static

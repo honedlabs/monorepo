@@ -13,14 +13,14 @@ trait HasFocus
 {
     /**
      * When the data is highlighted, whether to fade out of other data to focus the highlighted
-     * 
+     *
      * @var string|null
      */
     protected $focus;
 
     /**
      * Set the focus highlight.
-     * 
+     *
      * @return $this
      */
     public function focus(string|Focus $value): static
@@ -32,7 +32,7 @@ trait HasFocus
 
     /**
      * Set the focus highlight to none.
-     * 
+     *
      * @return $this
      */
     public function focusNone(): static
@@ -42,7 +42,7 @@ trait HasFocus
 
     /**
      * Set the focus highlight to self.
-     * 
+     *
      * @return $this
      */
     public function focusSelf(): static
@@ -52,7 +52,7 @@ trait HasFocus
 
     /**
      * Set the focus highlight to series.
-     * 
+     *
      * @return $this
      */
     public function focusSeries(): static
@@ -67,6 +67,4 @@ trait HasFocus
     {
         return $this->focus;
     }
-    
-    
 }

@@ -19,16 +19,16 @@ use Honed\Core\Primitive;
 
 class LineStyle extends Primitive implements NullsAsUndefined
 {
-    use HasColor;
-    use HasWidth;
     use HasBorderType;
-    use HasDashOffset;
     use HasCap;
+    use HasColor;
+    use HasDashOffset;
     use HasJoin;
+    use HasOpacity;
     use HasShadowBlur;
     use HasShadowColor;
     use HasShadowOffset;
-    use HasOpacity;
+    use HasWidth;
 
     /**
      * Create a new line style instance.
@@ -40,7 +40,7 @@ class LineStyle extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the line style.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

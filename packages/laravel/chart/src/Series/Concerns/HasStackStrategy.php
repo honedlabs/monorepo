@@ -13,14 +13,14 @@ trait HasStackStrategy
 {
     /**
      * The strategy to use when stacking.
-     * 
+     *
      * @var string|null
      */
     protected $stackStrategy;
 
     /**
      * Set the strategy to use when stacking.
-     * 
+     *
      * @return $this
      */
     public function stackStrategy(string|StackStrategy $value): static
@@ -32,7 +32,7 @@ trait HasStackStrategy
 
     /**
      * Set the strategy to use when stacking to be same sign, which will stack data with the same sign.
-     * 
+     *
      * @return $this
      */
     public function stackStrategySameSign(): static
@@ -42,7 +42,7 @@ trait HasStackStrategy
 
     /**
      * Set the strategy to use when stacking to be all, which will stack all data.
-     * 
+     *
      * @return $this
      */
     public function stackStrategyAll(): static
@@ -52,7 +52,7 @@ trait HasStackStrategy
 
     /**
      * Set the strategy to use when stacking to be positive, which will stack data with positive values.
-     * 
+     *
      * @return $this
      */
     public function stackStrategyPositive(): static
@@ -62,7 +62,7 @@ trait HasStackStrategy
 
     /**
      * Set the strategy to use when stacking to be negative, which will stack data with negative values.
-     * 
+     *
      * @return $this
      */
     public function stackStrategyNegative(): static

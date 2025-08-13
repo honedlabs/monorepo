@@ -12,9 +12,9 @@ use Honed\Core\Primitive;
 
 class SplitArea extends Primitive implements NullsAsUndefined
 {
-    use HasInterval;
     use CanBeShown;
     use HasAreaStyle;
+    use HasInterval;
 
     /**
      * Create a new split area.
@@ -26,7 +26,7 @@ class SplitArea extends Primitive implements NullsAsUndefined
 
     /**
      * Get the array representation of the split area.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

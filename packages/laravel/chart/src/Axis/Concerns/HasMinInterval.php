@@ -8,14 +8,14 @@ trait HasMinInterval
 {
     /**
      * The minimum interval value.
-     * 
+     *
      * @var int|string|null
      */
     protected $minInterval;
 
     /**
      * Set the minimum interval value.
-     * 
+     *
      * @return $this
      */
     public function minInterval(int|string $value): static

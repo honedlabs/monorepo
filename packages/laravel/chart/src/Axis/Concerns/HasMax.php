@@ -8,14 +8,14 @@ trait HasMax
 {
     /**
      * The maximum value.
-     * 
+     *
      * @var int|string|null
      */
     protected $max;
 
     /**
      * Set the maximum value.
-     * 
+     *
      * @return $this
      */
     public function max(int|string $value): static

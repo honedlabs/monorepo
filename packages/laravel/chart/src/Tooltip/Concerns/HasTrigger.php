@@ -10,15 +10,14 @@ trait HasTrigger
 {
     /**
      * The type of triggering for the toolip.
-     * 
-     * @var \Honed\Chart\Enums\Trigger|null
+     *
+     * @var Trigger|null
      */
     protected $trigger;
 
     /**
      * Set the type of triggering for the toolip.
-     * 
-     * @param \Honed\Chart\Enums\Trigger|string $trigger
+     *
      * @return $this
      */
     public function trigger(Trigger|string $trigger): static
@@ -31,9 +30,10 @@ trait HasTrigger
 
         return $this;
     }
+
     /**
      * Set the type of triggering for the toolip to item.
-     * 
+     *
      * @return $this
      */
     public function triggerByItem(): static
@@ -43,7 +43,7 @@ trait HasTrigger
 
     /**
      * Set the type of triggering for the toolip to axis.
-     * 
+     *
      * @return $this
      */
     public function triggerByAxis(): static
@@ -53,7 +53,7 @@ trait HasTrigger
 
     /**
      * Set the type of triggering for the toolip to none.
-     * 
+     *
      * @return $this
      */
     public function dontTrigger(): static

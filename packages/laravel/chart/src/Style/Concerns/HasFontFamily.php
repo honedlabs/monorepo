@@ -10,14 +10,14 @@ trait HasFontFamily
 {
     /**
      * The font family.
-     * 
+     *
      * @var string|null
      */
     protected $fontFamily;
 
     /**
      * Set the font family.
-     * 
+     *
      * @return $this
      */
     public function fontFamily(string|FontFamily $value): static
@@ -29,7 +29,7 @@ trait HasFontFamily
 
     /**
      * Set the font family to be sans-serif.
-     * 
+     *
      * @return $this
      */
     public function sansSerif(): static
@@ -39,7 +39,7 @@ trait HasFontFamily
 
     /**
      * Set the font family to be monospace.
-     * 
+     *
      * @return $this
      */
     public function monospace(): static

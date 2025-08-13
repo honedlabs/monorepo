@@ -11,15 +11,15 @@ trait HasAxisPointer
 {
     /**
      * The axisPointer.
-     * 
-     * @var \Honed\Chart\AxisPointer\AxisPointer|null
+     *
+     * @var AxisPointer|null
      */
     protected $axisPointer;
 
     /**
      * Add a axisPointer.
-     * 
-     * @param \Honed\Chart\AxisPointer\AxisPointer|(Closure(\Honed\Chart\AxisPointer\AxisPointer):\Honed\Chart\AxisPointer\AxisPointer)|null $value
+     *
+     * @param  AxisPointer|(Closure(AxisPointer):AxisPointer)|null  $value
      * @return $this
      */
     public function axisPointer(AxisPointer|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasAxisPointer
 
     /**
      * Get the axisPointer
-     * 
-     * @return \Honed\Chart\AxisPointer\AxisPointer|null
      */
     public function getAxisPointer(): ?AxisPointer
     {

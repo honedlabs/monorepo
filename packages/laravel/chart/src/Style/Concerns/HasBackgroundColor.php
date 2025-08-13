@@ -16,14 +16,14 @@ trait HasBackgroundColor
 {
     /**
      * The background color.
-     * 
+     *
      * @var string|Rgb|Rgba|Gradient|null
      */
     protected $backgroundColor;
 
     /**
      * Set the color.
-     * 
+     *
      * @return $this
      */
     public function backgroundColor(string|Rgb|Rgba|Gradient|null $value): static
@@ -35,7 +35,7 @@ trait HasBackgroundColor
 
     /**
      * Get the color.
-     * 
+     *
      * @return string|array<string, mixed>|null
      */
     public function getBackgroundColor(): string|array|null

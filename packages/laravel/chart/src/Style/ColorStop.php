@@ -28,7 +28,7 @@ class ColorStop implements Arrayable
 
     /**
      * Get the color stop as an array.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray()

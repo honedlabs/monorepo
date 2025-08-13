@@ -9,7 +9,6 @@ use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\HasItemGap;
 use Honed\Chart\Concerns\HasSubtextStyle;
 use Honed\Chart\Concerns\HasTextStyle;
-use Honed\Chart\Concerns\HasZAxis;
 use Honed\Chart\Style\Concerns\HasBackgroundColor;
 use Honed\Chart\Style\Concerns\HasBorderColor;
 use Honed\Chart\Style\Concerns\HasBorderRadius;
@@ -27,44 +26,44 @@ use Honed\Chart\Style\Concerns\HasZLevel;
 use Honed\Chart\Support\Concerns\CanBeAligned;
 use Honed\Chart\Support\Concerns\CanBeVerticalAligned;
 use Honed\Chart\Support\Concerns\Triggerable;
+use Honed\Chart\Title\Concerns\HasLink;
 use Honed\Chart\Title\Concerns\HasSublink;
 use Honed\Chart\Title\Concerns\HasSubtarget;
 use Honed\Chart\Title\Concerns\HasSubtext;
 use Honed\Chart\Title\Concerns\HasTarget;
 use Honed\Chart\Title\Concerns\HasText;
-use Honed\Core\Concerns\CanHaveUrl;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
 class Title extends Primitive implements NullsAsUndefined
 {
-    use HasId;
+    use CanBeAligned;
     use CanBeShown;
-    use CanHaveUrl;
-    use HasText;
-    use HasZ;
-    use HasZLevel;
-    use HasTextStyle;
-    use HasLeft;
-    use HasTop;
-    use HasRight;
-    use HasBottom;
+    use CanBeVerticalAligned;
     use HasBackgroundColor;
     use HasBorderColor;
-    use HasBorderWidth;
     use HasBorderRadius;
+    use HasBorderWidth;
+    use HasBottom;
+    use HasId;
+    use HasItemGap;
+    use HasLeft;
+    use HasLink;
+    use HasPadding;
+    use HasRight;
     use HasShadowBlur;
     use HasShadowColor;
     use HasShadowOffset;
-    use HasItemGap;
-    use HasPadding;
-    use HasSubtextStyle;
-    use HasSubtext;
-    use CanBeAligned;
-    use CanBeVerticalAligned;
-    use HasTarget;
     use HasSublink;
     use HasSubtarget;
+    use HasSubtext;
+    use HasSubtextStyle;
+    use HasTarget;
+    use HasText;
+    use HasTextStyle;
+    use HasTop;
+    use HasZ;
+    use HasZLevel;
     use Triggerable;
 
     /**
@@ -77,7 +76,7 @@ class Title extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the title.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array
@@ -86,7 +85,7 @@ class Title extends Primitive implements NullsAsUndefined
             'id' => $this->getId(),
             'show' => $this->isShown(),
             'text' => $this->getText(),
-            'link' => $this->getUrl(),
+            'link' => $this->getLink(),
             'target' => $this->getTarget(),
             'textStyle' => $this->getTextStyle()?->toArray(),
             'subtext' => $this->getSubtext(),

@@ -10,14 +10,14 @@ trait HasAxisType
 {
     /**
      * The type of axis.
-     * 
+     *
      * @var string|null
      */
     protected $type;
 
     /**
      * Set the type of axis.
-     * 
+     *
      * @return $this
      */
     public function type(string|AxisType $value): static
@@ -29,7 +29,7 @@ trait HasAxisType
 
     /**
      * Set the type of axis to value.
-     * 
+     *
      * @return $this
      */
     public function value(): static
@@ -39,7 +39,7 @@ trait HasAxisType
 
     /**
      * Set the type of axis to category.
-     * 
+     *
      * @return $this
      */
     public function category(): static
@@ -49,7 +49,7 @@ trait HasAxisType
 
     /**
      * Set the type of axis to time.
-     * 
+     *
      * @return $this
      */
     public function time(): static

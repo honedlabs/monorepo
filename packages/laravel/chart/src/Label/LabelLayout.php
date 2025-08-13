@@ -22,19 +22,19 @@ use Honed\Core\Primitive;
 
 class LabelLayout extends Primitive implements NullsAsUndefined
 {
+    use CanBeAligned;
+    use CanBeRotated;
+    use CanBeVerticalAligned;
     use CanHideOverlap;
     use CanMoveOverlap;
-    use HasX;
-    use HasY;
+    use Draggable;
     use HasDeltaX;
     use HasDeltaY;
-    use CanBeRotated;
-    use HasWidth;
-    use HasHeight;
-    use CanBeAligned;
-    use CanBeVerticalAligned;
-    use Draggable;
     use HasFontSize;
+    use HasHeight;
+    use HasWidth;
+    use HasX;
+    use HasY;
 
     /**
      * Create a new label layout instance.
@@ -46,7 +46,7 @@ class LabelLayout extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the label layout.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

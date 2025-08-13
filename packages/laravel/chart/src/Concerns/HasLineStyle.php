@@ -11,15 +11,15 @@ trait HasLineStyle
 {
     /**
      * The line style.
-     * 
-     * @var \Honed\Chart\Style\LineStyle|null
+     *
+     * @var LineStyle|null
      */
     protected $lineStyle;
 
     /**
      * Set the line style.
-     * 
-     * @param \Honed\Chart\Style\LineStyle|(Closure(\Honed\Chart\Style\LineStyle):\Honed\Chart\Style\LineStyle)|null $value
+     *
+     * @param  LineStyle|(Closure(LineStyle):LineStyle)|null  $value
      * @return $this
      */
     public function lineStyle(LineStyle|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasLineStyle
 
     /**
      * Get the line style.
-     * 
-     * @return \Honed\Chart\Style\LineStyle|null
      */
     public function getLineStyle(): ?LineStyle
     {

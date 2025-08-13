@@ -11,18 +11,17 @@ trait HasDimension
     public const X = 'x';
 
     public const Y = 'y';
-    
+
     /**
      * The dimension of the axis.
-     * 
+     *
      * @var string|null
      */
     protected $dimension;
 
     /**
      * Set the dimension of the axis.
-     * 
-     * @param string $value
+     *
      * @return $this
      */
     public function dimension(string $value): static
@@ -34,7 +33,7 @@ trait HasDimension
 
     /**
      * Set the dimension of the axis to be x.
-     * 
+     *
      * @return $this
      */
     public function x(): static
@@ -44,7 +43,7 @@ trait HasDimension
 
     /**
      * Set the dimension of the axis to be y.
-     * 
+     *
      * @return $this
      */
     public function y(): static
@@ -54,10 +53,9 @@ trait HasDimension
 
     /**
      * Get the dimension of the axis.
-     * 
-     * @return string
-     * 
-     * @throws \RuntimeException if the dimension is not set
+     *
+     *
+     * @throws RuntimeException if the dimension is not set
      */
     public function getDimension(): string
     {

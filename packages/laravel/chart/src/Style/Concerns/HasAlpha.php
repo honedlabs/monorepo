@@ -11,14 +11,14 @@ trait HasAlpha
 {
     /**
      * The alpha component of the color.
-     * 
+     *
      * @var int
      */
     protected $alpha = 1;
 
     /**
      * Set the alpha component of the color.
-     * 
+     *
      * @return $this
      */
     public function alpha(int $alpha): static
@@ -30,8 +30,6 @@ trait HasAlpha
 
     /**
      * Get the alpha component of the color.
-     * 
-     * @return int
      */
     public function getAlpha(): int
     {

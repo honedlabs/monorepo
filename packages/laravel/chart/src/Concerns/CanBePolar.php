@@ -11,15 +11,15 @@ trait CanBePolar
 {
     /**
      * The polar coordinate.
-     * 
+     *
      * @var \Honed\Chart\Polar\Polar|null
      */
     protected $polar;
 
     /**
      * Set a polar coordinate to be used.
-     * 
-     * @param \Honed\Chart\Polar\Polar|(Closure(\Honed\Chart\Polar\Polar):mixed)|null $value
+     *
+     * @param  \Honed\Chart\Polar\Polar|(Closure(\Honed\Chart\Polar\Polar):mixed)|null  $value
      * @return $this
      */
     public function polar(Polar|Closure|null $value): static
@@ -33,7 +33,7 @@ trait CanBePolar
 
     /**
      * Get the polar coordinate.
-     * 
+     *
      * @return \Honed\Chart\Polar\Polar|null
      */
     public function getPolar(): ?Polar

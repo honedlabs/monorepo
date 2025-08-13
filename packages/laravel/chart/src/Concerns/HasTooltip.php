@@ -11,15 +11,15 @@ trait HasTooltip
 {
     /**
      * The tooltip.
-     * 
-     * @var \Honed\Chart\Tooltip\Tooltip|null
+     *
+     * @var Tooltip|null
      */
     protected $tooltip;
 
     /**
      * Add a tooltip.
-     * 
-     * @param \Honed\Chart\Tooltip\Tooltip|(Closure(\Honed\Chart\Tooltip\Tooltip):\Honed\Chart\Tooltip\Tooltip)|null $value
+     *
+     * @param  Tooltip|(Closure(Tooltip):Tooltip)|null  $value
      * @return $this
      */
     public function tooltip(Tooltip|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasTooltip
 
     /**
      * Get the tooltip
-     * 
-     * @return \Honed\Chart\Tooltip\Tooltip|null
      */
     public function getTooltip(): ?Tooltip
     {

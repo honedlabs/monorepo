@@ -11,14 +11,14 @@ trait CanBeInside
 {
     /**
      * Whether the axis labels face the inside direction.
-     * 
+     *
      * @var bool
      */
     protected $inside = false;
 
     /**
      * Set whether the axis labels face the inside direction.
-     * 
+     *
      * @return $this
      */
     public function inside(bool $value = true): static
@@ -30,7 +30,7 @@ trait CanBeInside
 
     /**
      * Set whether the axis labels do not face the inside direction.
-     * 
+     *
      * @return $this
      */
     public function notInside(bool $value = true): static
@@ -40,7 +40,7 @@ trait CanBeInside
 
     /**
      * Get whether the axis labels face the inside direction.
-     * 
+     *
      * @return true|null
      */
     public function isInside(): ?bool

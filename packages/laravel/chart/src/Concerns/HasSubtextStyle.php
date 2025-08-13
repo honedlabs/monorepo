@@ -11,15 +11,15 @@ trait HasSubtextStyle
 {
     /**
      * The subtext style.
-     * 
-     * @var \Honed\Chart\Style\TextStyle|null
+     *
+     * @var TextStyle|null
      */
     protected $subtextStyle;
 
     /**
      * Set the subtext style.
-     * 
-     * @param \Honed\Chart\Style\TextStyle|(Closure(\Honed\Chart\Style\TextStyle):\Honed\Chart\Style\TextStyle)|null $value
+     *
+     * @param  TextStyle|(Closure(TextStyle):TextStyle)|null  $value
      * @return $this
      */
     public function subtextStyle(TextStyle|Closure|null $value): static
@@ -35,8 +35,6 @@ trait HasSubtextStyle
 
     /**
      * Get the subtext style.
-     * 
-     * @return \Honed\Chart\Style\TextStyle|null
      */
     public function getSubtextStyle(): ?TextStyle
     {

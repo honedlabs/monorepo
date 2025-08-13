@@ -11,15 +11,15 @@ trait HasShadowStyle
 {
     /**
      * The shadow style.
-     * 
-     * @var \Honed\Chart\Style\ShadowStyle|null
+     *
+     * @var ShadowStyle|null
      */
     protected $shadowStyle;
 
     /**
      * Set the shadow style.
-     * 
-     * @param \Honed\Chart\Style\ShadowStyle|(Closure(\Honed\Chart\Style\ShadowStyle):\Honed\Chart\Style\ShadowStyle)|null $value
+     *
+     * @param  ShadowStyle|(Closure(ShadowStyle):ShadowStyle)|null  $value
      * @return $this
      */
     public function shadowStyle(ShadowStyle|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasShadowStyle
 
     /**
      * Get the shadow style.
-     * 
-     * @return \Honed\Chart\Style\ShadowStyle|null
      */
     public function getShadowStyle(): ?ShadowStyle
     {

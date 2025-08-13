@@ -10,21 +10,21 @@ trait HasJoin
 {
     /**
      * How the end points of the line are drawn.
-     * 
+     *
      * @var string|null
      */
     protected $join;
 
     /**
      * The miter limit.
-     * 
+     *
      * @var int|null
      */
     protected $miterLimit;
 
     /**
      * Set the join of the line.
-     * 
+     *
      * @return $this
      */
     public function join(string|Join $value): static
@@ -36,7 +36,7 @@ trait HasJoin
 
     /**
      * Set the join of the line to be butt.
-     * 
+     *
      * @return $this
      */
     public function bevel(): static
@@ -46,8 +46,8 @@ trait HasJoin
 
     /**
      * Set the join of the line to be miter.
-     * 
-     * @param int|null $value The miter limit ratio
+     *
+     * @param  int|null  $value  The miter limit ratio
      * @return $this
      */
     public function miter(?int $value = null): static
@@ -65,7 +65,7 @@ trait HasJoin
 
     /**
      * Set the miter limit.
-     * 
+     *
      * @return $this
      */
     public function miterLimit(?int $value): static

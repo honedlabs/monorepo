@@ -11,14 +11,14 @@ trait HasStep
 {
     /**
      * Whether to show the step.
-     * 
+     *
      * @var bool|string|null
      */
     protected $step;
 
     /**
      * Set whether to show the step.
-     * 
+     *
      * @return $this
      */
     public function step(bool|string $value = true): static

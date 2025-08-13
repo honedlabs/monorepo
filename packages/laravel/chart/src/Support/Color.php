@@ -7,14 +7,13 @@ namespace Honed\Chart\Support;
 use Honed\Chart\Style\Gradient;
 use Honed\Chart\Style\Rgb;
 use Honed\Chart\Style\Rgba;
-use Illuminate\Support\Str;
 use Stringable;
 
 final class Color
 {
     /**
      * Get a color value.
-     * 
+     *
      * @return string|array<string, mixed>|null
      */
     public static function from(string|Rgb|Rgba|Gradient|null $color): string|array|null

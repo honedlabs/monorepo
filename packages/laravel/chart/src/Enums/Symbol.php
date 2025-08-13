@@ -16,4 +16,3 @@ enum Symbol: string
     case Arrow = 'arrow';
     case None = 'none';
 }
-

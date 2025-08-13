@@ -10,14 +10,14 @@ trait HasLegendType
 {
     /**
      * The type of legend.
-     * 
+     *
      * @var string|null
      */
     protected $type;
 
     /**
      * Set the type of legend.
-     * 
+     *
      * @return $this
      */
     public function type(string|LegendType $value): static
@@ -29,7 +29,7 @@ trait HasLegendType
 
     /**
      * Set the type of legend to be simple.
-     * 
+     *
      * @return $this
      */
     public function plain(): static
@@ -39,7 +39,7 @@ trait HasLegendType
 
     /**
      * Set the type of legend to be scroll.
-     * 
+     *
      * @return $this
      */
     public function scroll(): static

@@ -21,18 +21,18 @@ use Honed\Core\Primitive;
 
 class ItemStyle extends Primitive implements NullsAsUndefined
 {
-    use HasColor;
     use HasBorderColor;
-    use HasBorderWidth;
+    use HasBorderRadius;
     use HasBorderType;
-    use HasDashOffset;
+    use HasBorderWidth;
     use HasCap;
+    use HasColor;
+    use HasDashOffset;
     use HasJoin;
+    use HasOpacity;
     use HasShadowBlur;
     use HasShadowColor;
     use HasShadowOffset;
-    use HasOpacity;
-    use HasBorderRadius;
 
     /**
      * Create a new item style instance.
@@ -44,7 +44,7 @@ class ItemStyle extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the item style.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

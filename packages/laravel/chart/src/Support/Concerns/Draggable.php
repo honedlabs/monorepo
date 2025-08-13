@@ -8,14 +8,12 @@ trait Draggable
 {
     /**
      * Whether to allow the user to adjust the position by dragging.
-     * 
-     * @var bool
      */
     protected bool $draggable = false;
 
     /**
      * Set whether to allow the user to adjust the position by dragging.
-     * 
+     *
      * @return $this
      */
     public function draggable(bool $value = true): static
@@ -27,7 +25,7 @@ trait Draggable
 
     /**
      * Set whether to not allow the user to adjust the position by dragging.
-     * 
+     *
      * @return $this
      */
     public function notDraggable(bool $value = true): static

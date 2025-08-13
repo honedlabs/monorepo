@@ -11,14 +11,14 @@ trait CanBeInverted
 {
     /**
      * Whether the axis should be inverted.
-     * 
+     *
      * @var bool|null
      */
     protected $invert;
 
     /**
      * Set whether to contain the zero position of the axis compulsively.
-     * 
+     *
      * @return $this
      */
     public function invert(bool $value = true): static
@@ -30,7 +30,7 @@ trait CanBeInverted
 
     /**
      * Set whether to not contain the zero position of the axis compulsively.
-     * 
+     *
      * @return $this
      */
     public function dontInvert(bool $value = true): static
@@ -40,7 +40,7 @@ trait CanBeInverted
 
     /**
      * Get whether to contain the zero position of the axis compulsively.
-     * 
+     *
      * @return true|null
      */
     public function isInverted(): ?bool

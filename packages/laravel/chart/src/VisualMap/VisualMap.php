@@ -16,8 +16,8 @@ use Honed\Core\Primitive;
 abstract class VisualMap extends Primitive implements NullsAsUndefined
 {
     use HasId;
-    use HasZAxis;
     use HasTextStyle;
+    use HasZAxis;
 
     public static function make(): static
     {

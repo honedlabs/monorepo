@@ -11,15 +11,15 @@ trait HasLabel
 {
     /**
      * The label.
-     * 
-     * @var \Honed\Chart\Label\Label|null
+     *
+     * @var Label|null
      */
     protected $label;
 
     /**
      * Set the label.
-     * 
-     * @param \Honed\Chart\Label\Label|(Closure(\Honed\Chart\Label\Label):\Honed\Chart\Label\Label)|null $value
+     *
+     * @param  Label|(Closure(Label):Label)|null  $value
      * @return $this
      */
     public function label(Label|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasLabel
 
     /**
      * Get the label.
-     * 
-     * @return \Honed\Chart\Label\Label|null
      */
     public function getLabel(): ?Label
     {

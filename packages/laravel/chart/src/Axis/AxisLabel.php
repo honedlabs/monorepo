@@ -20,17 +20,17 @@ use Honed\Core\Primitive;
 
 class AxisLabel extends Primitive implements NullsAsUndefined
 {
-    use CanBeShown;
-    use HasInterval;
     use CanBeInside;
     use CanBeRotated;
+    use CanBeShown;
+    use HasBackgroundColor;
+    use HasBorderColor;
     use HasColor;
+    use HasFontFamily;
     use HasFontSize;
     use HasFontStyle;
     use HasFontWeight;
-    use HasFontFamily;
-    use HasBackgroundColor;
-    use HasBorderColor;
+    use HasInterval;
 
     /**
      * Create a new axis label instance.
@@ -42,7 +42,7 @@ class AxisLabel extends Primitive implements NullsAsUndefined
 
     /**
      * Get the array representation of the axis label.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

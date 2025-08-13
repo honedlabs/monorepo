@@ -8,14 +8,14 @@ trait HasMaxInterval
 {
     /**
      * The maximum interval value.
-     * 
+     *
      * @var int|string|null
      */
     protected $maxInterval;
 
     /**
      * Set the maximum interval value.
-     * 
+     *
      * @return $this
      */
     public function maxInterval(int|string $value): static

@@ -8,14 +8,14 @@ trait HasDashOffset
 {
     /**
      * The offset distance of the dash.
-     * 
+     *
      * @var int|null
      */
     protected $dashOffset;
 
     /**
      * Set the offset distance of the dash.
-     * 
+     *
      * @return $this
      */
     public function dashOffset(int $value): static

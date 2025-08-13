@@ -15,20 +15,20 @@ beforeEach(function () {
         'xAxis' => [
             [
                 'type' => 'category',
-                'data' => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            ]
+                'data' => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            ],
         ],
         'yAxis' => [
             [
-                'type' => 'value'
-            ]
+                'type' => 'value',
+            ],
         ],
         'series' => [
             [
                 'type' => 'line',
                 'data' => [150, 230, 224, 218, 135, 147, 260],
-            ]
-        ]
+            ],
+        ],
     ];
 })->only();
 
@@ -42,5 +42,5 @@ it('creates', function () {
         ->series(Line::make()->values($this->series));
 
     expect($chart->toArray())
-        ->toEqualCanonicalizing($this->option);    
+        ->toEqualCanonicalizing($this->option);
 });

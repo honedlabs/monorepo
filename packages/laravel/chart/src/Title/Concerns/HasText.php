@@ -11,15 +11,14 @@ trait HasText
 {
     /**
      * The main title text.
-     * 
+     *
      * @var string|null
      */
     protected $text;
 
     /**
      * Set the main title text.
-     * 
-     * @param string|null $value
+     *
      * @return $this
      */
     public function text(?string $value): static

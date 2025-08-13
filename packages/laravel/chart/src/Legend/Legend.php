@@ -39,36 +39,36 @@ use Honed\Core\Primitive;
 
 class Legend extends Primitive implements NullsAsUndefined
 {
-    use HasId;
-    use CanBeShown;
-    use HasLegendType;
-    use HasZAxis;
-    use HasOrientation;
-    use HasTextStyle;
-    use HasTooltip;
-    use HasLeft;
-    use HasTop;
-    use HasRight;
-    use HasBottom;
-    use HasWidth;
-    use HasHeight;
-    use HasPadding;
-    use HasItemGap;
-    use HasItemWidth;
-    use HasItemHeight;
-    use HasItemStyle;
-    use HasLineStyle;
     use CanBeRotated;
-    use HasInactiveColor;
-    use HasInactiveBorderColor;
-    use HasInactiveWidth;
+    use CanBeShown;
     use HasBackgroundColor;
     use HasBorderColor;
     use HasBorderRadius;
+    use HasBorderWidth;
+    use HasBottom;
+    use HasHeight;
+    use HasId;
+    use HasInactiveBorderColor;
+    use HasInactiveColor;
+    use HasInactiveWidth;
+    use HasItemGap;
+    use HasItemHeight;
+    use HasItemStyle;
+    use HasItemWidth;
+    use HasLeft;
+    use HasLegendType;
+    use HasLineStyle;
+    use HasOrientation;
+    use HasPadding;
+    use HasRight;
     use HasShadowBlur;
     use HasShadowColor;
     use HasShadowOffset;
-    use HasBorderWidth;
+    use HasTextStyle;
+    use HasTooltip;
+    use HasTop;
+    use HasWidth;
+    use HasZAxis;
 
     /**
      * Create a new legend instance.
@@ -80,7 +80,7 @@ class Legend extends Primitive implements NullsAsUndefined
 
     /**
      * Get the representation of the legend.
-     * 
+     *
      * @return array<string,mixed>
      */
     protected function representation(): array

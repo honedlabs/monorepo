@@ -11,15 +11,15 @@ trait HasGrid
 {
     /**
      * The grid.
-     * 
-     * @var \Honed\Chart\Grid\Grid|null
+     *
+     * @var Grid|null
      */
     protected $grid;
 
     /**
      * Add a grid.
-     * 
-     * @param \Honed\Chart\Grid\Grid|(Closure(\Honed\Chart\Grid\Grid):\Honed\Chart\Grid\Grid)|null $value
+     *
+     * @param  Grid|(Closure(Grid):Grid)|null  $value
      * @return $this
      */
     public function grid(Grid|Closure|null $value = null): static
@@ -35,8 +35,6 @@ trait HasGrid
 
     /**
      * Get the grid
-     * 
-     * @return \Honed\Chart\Grid\Grid|null
      */
     public function getGrid(): ?Grid
     {

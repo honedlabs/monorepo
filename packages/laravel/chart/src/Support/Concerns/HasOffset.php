@@ -8,14 +8,14 @@ trait HasOffset
 {
     /**
      * The offset to the default position.
-     * 
+     *
      * @var int|null
      */
     protected $offset;
 
     /**
      * Set the offset.
-     * 
+     *
      * @return $this
      */
     public function offset(int $value): static
@@ -28,7 +28,7 @@ trait HasOffset
     /**
      * Get the offset.
      */
-    public function getOffset(): float|int
+    public function getOffset(): ?int
     {
         return $this->offset;
     }

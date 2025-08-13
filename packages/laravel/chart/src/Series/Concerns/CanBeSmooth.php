@@ -25,7 +25,7 @@ trait CanBeSmooth
 
     /**
      * Determine if the line is smooth.
-     * 
+     *
      * @return true|null
      */
     public function isSmooth(): ?bool

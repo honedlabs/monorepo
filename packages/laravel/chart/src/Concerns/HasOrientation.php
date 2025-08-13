@@ -10,14 +10,14 @@ trait HasOrientation
 {
     /**
      * The orientation to use.
-     * 
+     *
      * @var string|null
      */
     protected $orientation;
 
     /**
      * Set the orientation of the element.
-     * 
+     *
      * @return $this
      */
     public function orientation(string|Orientation $orientation): static
@@ -29,7 +29,7 @@ trait HasOrientation
 
     /**
      * Set the orientation of the element to be horizontal.
-     * 
+     *
      * @return $this
      */
     public function horizontal(): static
@@ -39,7 +39,7 @@ trait HasOrientation
 
     /**
      * Set the orientation of the element to be vertical.
-     * 
+     *
      * @return $this
      */
     public function vertical(): static

@@ -10,14 +10,14 @@ trait HasOrigin
 {
     /**
      * The origin position.
-     * 
+     *
      * @var string|int|null
      */
     protected $origin;
 
     /**
      * Set the origin position.
-     * 
+     *
      * @return $this
      */
     public function origin(string|int|Origin $value): static
@@ -29,7 +29,7 @@ trait HasOrigin
 
     /**
      * Set the origin position to be auto.
-     * 
+     *
      * @return $this
      */
     public function originAuto(): static
@@ -39,7 +39,7 @@ trait HasOrigin
 
     /**
      * Set the origin position to be start.
-     * 
+     *
      * @return $this
      */
     public function originStart(): static
@@ -49,7 +49,7 @@ trait HasOrigin
 
     /**
      * Set the origin position to be end.
-     * 
+     *
      * @return $this
      */
     public function originEnd(): static

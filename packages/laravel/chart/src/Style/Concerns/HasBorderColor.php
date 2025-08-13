@@ -13,14 +13,14 @@ trait HasBorderColor
 {
     /**
      * The color of the border.
-     * 
+     *
      * @var string|Rgb|Rgba|Gradient|null
      */
     protected $borderColor;
 
     /**
      * Set the color of the border.
-     * 
+     *
      * @return $this
      */
     public function borderColor(string|Rgb|Rgba|Gradient|null $value): static
@@ -32,7 +32,7 @@ trait HasBorderColor
 
     /**
      * Get the color of the border.
-     * 
+     *
      * @return string|array<string, mixed>|null
      */
     public function getBorderColor(): string|array|null

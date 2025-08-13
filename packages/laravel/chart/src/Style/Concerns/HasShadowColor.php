@@ -13,14 +13,14 @@ trait HasShadowColor
 {
     /**
      * The color of the shadow.
-     * 
+     *
      * @var string|Rgb|Rgba|Gradient|null
      */
     protected $shadowColor;
 
     /**
      * Set the color of the shadow.
-     * 
+     *
      * @return $this
      */
     public function shadowColor(string|Rgb|Rgba|Gradient|null $value): static
@@ -32,7 +32,7 @@ trait HasShadowColor
 
     /**
      * Get the color of the shadow.
-     * 
+     *
      * @return string|array<string, mixed>|null
      */
     public function getShadowColor(): string|array|null

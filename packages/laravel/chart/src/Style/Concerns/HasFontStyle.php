@@ -10,14 +10,14 @@ trait HasFontStyle
 {
     /**
      * The font style.
-     * 
+     *
      * @var string|null
      */
     protected $fontStyle;
 
     /**
      * Set the font style.
-     * 
+     *
      * @return $this
      */
     public function fontStyle(FontStyle|string $value): static
@@ -29,7 +29,7 @@ trait HasFontStyle
 
     /**
      * Set the font style to italic.
-     * 
+     *
      * @return $this
      */
     public function italic(): static
@@ -39,7 +39,7 @@ trait HasFontStyle
 
     /**
      * Set the font style to oblique.
-     * 
+     *
      * @return $this
      */
     public function oblique(): static

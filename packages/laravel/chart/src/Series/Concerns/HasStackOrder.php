@@ -13,14 +13,14 @@ trait HasStackOrder
 {
     /**
      * The stack order.
-     * 
+     *
      * @var string|null
      */
     protected $stackOrder;
 
     /**
      * Set the stack order.
-     * 
+     *
      * @return $this
      */
     public function stackOrder(string|StackOrder $value): static
@@ -32,7 +32,7 @@ trait HasStackOrder
 
     /**
      * Set the stack order to be ascending, which will stack data in ascending order.
-     * 
+     *
      * @return $this
      */
     public function stackOrderAscending(): static
@@ -42,7 +42,7 @@ trait HasStackOrder
 
     /**
      * Set the stack order to be descending, which will stack data in descending order.
-     * 
+     *
      * @return $this
      */
     public function stackOrderDescending(): static
