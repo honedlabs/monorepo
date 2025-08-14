@@ -27,7 +27,6 @@ abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
     use HasId;
     use HasName;
     use HasZAxis;
-    use RefersToAxis;
 
     /**
      * Create a new series instance.

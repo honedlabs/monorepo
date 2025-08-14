@@ -25,12 +25,13 @@ use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowColor;
 use Honed\Chart\Style\Concerns\HasShadowOffset;
 use Honed\Chart\Style\Concerns\HasWidth;
+use Honed\Chart\Support\Concerns\HasRotation;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
 class Label extends Primitive implements NullsAsUndefined
 {
-    use CanBeRotated;
+    use HasRotation;
     use CanBeShown;
     use HasBackgroundColor;
     use HasBorderColor;

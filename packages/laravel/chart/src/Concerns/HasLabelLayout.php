@@ -38,7 +38,7 @@ trait HasLabelLayout
      */
     public function getLabelLayout(): ?LabelLayout
     {
-        return $this->label;
+        return $this->labelLayout;
     }
 
     /**

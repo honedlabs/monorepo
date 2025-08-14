@@ -64,7 +64,7 @@ trait HasAxes
     /**
      * Get the x-axes.
      *
-     * @return array<int, XAxis>
+     * @return array<int, Axis>
      */
     public function getXAxes(): array
     {
@@ -74,7 +74,7 @@ trait HasAxes
     /**
      * Get the y-axes.
      *
-     * @return array<int, YAxis>
+     * @return array<int, Axis>
      */
     public function getYAxes(): array
     {
@@ -84,10 +84,10 @@ trait HasAxes
     /**
      * Add a y-axis to the chart.
      *
-     * @param  Axis|(Closure(Axis):mixed)|null  $value
+     * @param  null|Axis|(Closure(Axis):mixed)  $value
      * @return $this
      */
-    public function yAxis(YAxis|Closure|null $value): static
+    public function yAxis(YAxis|Closure|null $value = null): static
     {
         $axis = match (true) {
             is_null($value) => $this->newYAxis(),
@@ -101,10 +101,10 @@ trait HasAxes
     /**
      * Add an x-axis to the chart.
      *
-     * @param  Axis|(Closure(Axis):mixed)|null  $value
+     * @param  null|Axis|(Closure(Axis):mixed)  $value
      * @return $this
      */
-    public function xAxis(XAxis|Closure|null $value): static
+    public function xAxis(Axis|Closure|null $value = null): static
     {
         $axis = match (true) {
             is_null($value) => $this->newXAxis(),

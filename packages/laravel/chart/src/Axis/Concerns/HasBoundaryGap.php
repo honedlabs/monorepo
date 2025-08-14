@@ -9,7 +9,7 @@ trait HasBoundaryGap
     /**
      * The boundary gap on both sides of a coordinate axis.
      *
-     * @var bool|array<int, bool>|null
+     * @var null|bool|array<int, bool>
      */
     protected $boundaryGap;
 
@@ -28,7 +28,7 @@ trait HasBoundaryGap
     /**
      * Get the boundary gap on both sides of a coordinate axis.
      *
-     * @return bool|array<int, string>|null
+     * @return null|bool|array<int, string>
      */
     public function getBoundaryGap(): bool|array|null
     {

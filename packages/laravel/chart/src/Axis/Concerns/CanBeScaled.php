@@ -37,8 +37,6 @@ trait CanBeScaled
 
     /**
      * Get whether to contain the zero position of the axis compulsively.
-     *
-     * @return true|null
      */
     public function isScaled(): bool
     {

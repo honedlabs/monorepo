@@ -15,6 +15,7 @@ use Honed\Chart\Support\Concerns\CanBeAligned;
 use Honed\Chart\Support\Concerns\CanBeVerticalAligned;
 use Honed\Chart\Support\Concerns\Draggable;
 use Honed\Chart\Support\Concerns\HasDeltaY;
+use Honed\Chart\Support\Concerns\HasRotation;
 use Honed\Chart\Support\Concerns\HasX;
 use Honed\Chart\Support\Concerns\HasY;
 use Honed\Core\Contracts\NullsAsUndefined;
@@ -23,7 +24,7 @@ use Honed\Core\Primitive;
 class LabelLayout extends Primitive implements NullsAsUndefined
 {
     use CanBeAligned;
-    use CanBeRotated;
+    use HasRotation;
     use CanBeVerticalAligned;
     use CanHideOverlap;
     use CanMoveOverlap;

@@ -15,13 +15,16 @@ use Honed\Chart\Style\Concerns\HasFontFamily;
 use Honed\Chart\Style\Concerns\HasFontSize;
 use Honed\Chart\Style\Concerns\HasFontStyle;
 use Honed\Chart\Style\Concerns\HasFontWeight;
+use Honed\Chart\Style\Concerns\HasMargin;
+use Honed\Chart\Support\Concerns\HasRotation;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 
 class AxisLabel extends Primitive implements NullsAsUndefined
 {
     use CanBeInside;
-    use CanBeRotated;
+    use HasRotation;
+    use HasMargin;
     use CanBeShown;
     use HasBackgroundColor;
     use HasBorderColor;
@@ -51,8 +54,8 @@ class AxisLabel extends Primitive implements NullsAsUndefined
             'show' => $this->isShown(),
             'interval' => $this->getInterval(),
             'inside' => $this->isInside(),
-            // 'rotate' => $this->getRotate(),
-            // 'margin' => $this->getMargin(),
+            'rotate' => $this->getRotation(),
+            'margin' => $this->getMargin(),
             // 'showMinLabel' => $this->isShowingMinLabel(),
             // 'showMaxLabel' => $this->isShowingMaxLabel(),
             // 'alignMinLabel' => $this->isAligningMinLabel(),

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Honed\Chart\Series\Line;
 
 use Honed\Chart\Concerns\HasAreaStyle;
+use Honed\Chart\Concerns\HasItemStyle;
+use Honed\Chart\Concerns\HasLabelLayout;
 use Honed\Chart\Concerns\HasLabelLine;
 use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Series\Concerns\HasColorBy;
@@ -34,11 +36,12 @@ class Line extends Series
     use HasStack;
     use HasStackOrder;
     use HasStackStrategy;
-
+    use HasLabelLayout;
     // use HasSymbolRotate;
     use HasStep;
     use HasSymbol;
     use HasSymbolSize;
+    use HasItemStyle;
 
     /**
      * Provide the series with any necessary setup.
@@ -81,8 +84,8 @@ class Line extends Series
             // 'label' => $this->getLabel()?->toArray(),
             // 'endLabel' => $this->getEndLabel()?->toArray(),
             // 'labelLine' => $this->getLabelLine()?->toArray(),
-            // 'labelLayout' => $this->getLabelLayout()?->toArray(),
-            // 'itemStyle' => $this->getItemStyle()?->toArray(),
+            'labelLayout' => $this->getLabelLayout()?->toArray(),
+            'itemStyle' => $this->getItemStyle()?->toArray(),
             'areaStyle' => $this->getAreaStyle()?->toArray(),
             // 'emphasis' => $this->getEmphasis()?->toArray(),
             // 'blur' => $this->getBlur()?->toArray(),

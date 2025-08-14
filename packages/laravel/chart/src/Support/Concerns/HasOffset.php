@@ -9,16 +9,17 @@ trait HasOffset
     /**
      * The offset to the default position.
      *
-     * @var int|null
+     * @var int|array{0: int, 1:int}|null
      */
     protected $offset;
 
     /**
      * Set the offset.
      *
+     * @param int|array{0: int, 1: int} $value
      * @return $this
      */
-    public function offset(int $value): static
+    public function offset(int|array $value): static
     {
         $this->offset = $value;
 
@@ -27,8 +28,10 @@ trait HasOffset
 
     /**
      * Get the offset.
+     *
+     * @return int|array{0: int, 1: int}|null
      */
-    public function getOffset(): ?int
+    public function getOffset(): int|array|null
     {
         return $this->offset;
     }
