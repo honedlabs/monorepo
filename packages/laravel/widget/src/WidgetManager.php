@@ -2,6 +2,8 @@
 
 namespace Honed\Widget;
 
+use Closure;
+use Honed\Widget\Contracts\Driver;
 use Honed\Widget\Contracts\SerializesScope;
 use Honed\Widget\Drivers\Decorator;
 use Honed\Widget\Drivers\ArrayDriver;
@@ -12,8 +14,12 @@ use Honed\Widget\Exceptions\CannotSerializeScopeException;
 use Illuminate\Contracts\Container\Container;
 use Honed\Widget\Exceptions\InvalidDriverException;
 use Honed\Widget\Exceptions\UndefinedDriverException;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Model;
 use Inertia\Inertia;
+use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * @mixin \Honed\Widget\Drivers\Decorator
@@ -32,14 +38,14 @@ class WidgetManager
      * 
      * @var array<string, \Honed\Widget\Drivers\Decorator>
      */
-    protected $drivers = [];
+    protected $stores = [];
 
     /**
      * The registered custom drivers.
      *
      * @var array<string, \Closure(\Illuminate\Contracts\Container\Container, array<string, mixed>):mixed>
      */
-    protected $customDrivers = [];
+    protected $customCreators = [];
 
     /**
      * The default scope resolver.
@@ -67,19 +73,37 @@ class WidgetManager
     }
 
     /**
-     * Get a Widget driver instance by name.
-     * 
-     * @param string|null $name
-     * @return \Honed\Widget\Drivers\Decorator
-     * 
-     * @throws \Honed\Widget\Exceptions\UndefinedDriverException
-     * @throws \Honed\Widget\Exceptions\InvalidDriverException
+     * Dynamically call the default store instance.
+     *
+     * @param  string  $method
+     * @param  array<int, mixed>  $parameters
+     * @return mixed
      */
-    public function driver($name = null)
+    public function __call($method, $parameters)
+    {
+        return $this->store()->{$method}(...$parameters);
+    }
+
+    /**
+     * Get a widget store instance.
+     * 
+     * @throws \InvalidArgumentException
+     */
+    public function store(?string $store = null): Decorator
+    {
+        return $this->driver($store);
+    }
+
+    /**
+     * Get a widget store instance by name.
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function driver(?string $name = null): Decorator
     {
         $name = $name ?: $this->getDefaultDriver();
 
-        return $this->drivers[$name] = $this->get($name);
+        return $this->stores[$name] = $this->cached($name);
     }
 
     /**
@@ -97,147 +121,121 @@ class WidgetManager
     }
 
     /**
-     * Resolve the given driver.
-     *
-     * @param  string  $name
-     * @return \Honed\Widget\Drivers\Decorator
-     *
-     * @throws \Honed\Widget\Exceptions\UndefinedDriverException
-     * @throws \Honed\Widget\Exceptions\InvalidDriverException
+     * Create an instance of the array driver.
      */
-    protected function resolve($name)
+    public function createArrayDriver(string $name): ArrayDriver
     {
-        $config = $this->getConfig($name);
-
-        if (is_null($config)) {
-            UndefinedDriverException::throw($name);
-        }
-
-        /** @var string */
-        $driver = $config['driver'];
-
-        if (isset($this->customDrivers[$driver])) {
-            $driver = $this->callCustomDriver($config);
-        } else {
-            $driverMethod = 'create'.ucfirst($driver).'Driver';
-
-            if (method_exists($this, $driverMethod)) {
-                /** @var \Honed\Widget\Contracts\Driver */
-                $driver = $this->{$driverMethod}($config, $name);
-            } else {
-                InvalidDriverException::throw($driver);
-            }
-        }
-
-        return new Decorator(
-            $name,
-            $driver,
-            $this->defaultScopeResolver($name),
-            $this->container,
+        return new ArrayDriver(
+            $this->getDispatcher(), $name
         );
     }
 
-    /**
-     * Call a custom driver.
-     *
-     * @param array<string, mixed> $config
-     * @return \Honed\Widget\Contracts\Driver
-     */
-    protected function callCustomDriver($config)
-    {
-        /** @var string */
-        $driver = $config['driver'];
+    // /**
+    //  * Create an instance of the cache driver.
+    //  * 
+    //  * @return \Honed\Widget\Drivers\CacheDriver
+    //  */
+    // public function createCacheDriver()
+    // {
+    //     /** @var \Illuminate\Cache\CacheManager */
+    //     $cache = $this->container->get('cache');
 
-        /** @var \Honed\Widget\Contracts\Driver */
-        return $this->customDrivers[$driver]($this->container, $config);
-    }
+    //     /** @var \Illuminate\Contracts\Events\Dispatcher */
+    //     $events = $this->container->get('events');
 
-    /**
-     * Create an instance of the array driver.
-     *
-     * @return \Honed\Widget\Drivers\ArrayDriver
-     */
-    public function createArrayDriver()
-    {
-        /** @var \Illuminate\Contracts\Events\Dispatcher */
-        $events = $this->container->get('events');
+    //     /** @var \Illuminate\Contracts\Config\Repository */
+    //     $config = $this->container->get('config');
 
-        return new ArrayDriver($events);
-    }
-
-    /**
-     * Create an instance of the cache driver.
-     * 
-     * @return \Honed\Widget\Drivers\CacheDriver
-     */
-    public function createCacheDriver()
-    {
-        /** @var \Illuminate\Cache\CacheManager */
-        $cache = $this->container->get('cache');
-
-        /** @var \Illuminate\Contracts\Events\Dispatcher */
-        $events = $this->container->get('events');
-
-        /** @var \Illuminate\Contracts\Config\Repository */
-        $config = $this->container->get('config');
-
-        return new CacheDriver($cache, $events, $config);
-    }
+    //     return new CacheDriver($cache, $events, $config);
+    // }
     
-    /**
-     * Create an instance of the cookie driver.
-     * 
-     * @return \Honed\Widget\Drivers\CookieDriver
-     */
-    public function createCookieDriver()
-    {
-        /** @var \Illuminate\Cookie\CookieJar */
-        $cookies = $this->container->get('cookie');
+    // /**
+    //  * Create an instance of the cookie driver.
+    //  * 
+    //  * @return \Honed\Widget\Drivers\CookieDriver
+    //  */
+    // public function createCookieDriver()
+    // {
+    //     /** @var \Illuminate\Cookie\CookieJar */
+    //     $cookies = $this->container->get('cookie');
 
-        /** @var \Illuminate\Contracts\Events\Dispatcher */
-        $events = $this->container->get('events');
+    //     /** @var \Illuminate\Contracts\Events\Dispatcher */
+    //     $events = $this->container->get('events');
 
-        /** @var \Illuminate\Contracts\Config\Repository */
-        $config = $this->container->get('config');
+    //     /** @var \Illuminate\Contracts\Config\Repository */
+    //     $config = $this->container->get('config');
 
-        return new CookieDriver($cookies, $events, $config);
-    }
+    //     return new CookieDriver($cookies, $events, $config);
+    // }
 
     /**
      * Create an instance of the database driver.
-     *
-     * @param array<string, mixed> $config
-     * @param string $name
-     * @return \Honed\Widget\Drivers\DatabaseDriver
      */
-    public function createDatabaseDriver($config, $name)
+    public function createDatabaseDriver(string $name): DatabaseDriver
     {
-        /** @var \Illuminate\Database\DatabaseManager */
-        $db = $this->container->get('db');
-
-        /** @var \Illuminate\Contracts\Events\Dispatcher */
-        $events = $this->container->get('events');
-
-        /** @var \Illuminate\Contracts\Config\Repository */
-        $config = $this->container->get('config');
-
         return new DatabaseDriver(
-            $db,
-            $events,
-            $config,
-            $name
+            $this->getDatabaseManager(), $this->getDispatcher(), $name,
         );
     }
 
     /**
-     * Specify that the Eloquent morph map should be used when serializing.
+     * Get the default driver name.
+     */
+    public function getDefaultDriver(): string
+    {
+        // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
+        return $this->container['config']->get('widget.default', 'database');
+    }
+
+    /**
+     * Set the default driver name.
+     */
+    public function setDefaultDriver(string $name): void
+    {
+        // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
+        $this->container['config']->set('widget.default', $name);
+    }
+
+    /**
+     * Unset the given store instances.
      *
-     * @param  bool  $value
+     * @param  string|array<int, string>|null  $name
      * @return $this
      */
-    public function useMorphMap($value = true)
+    public function forgetDriver(string|array|null $name = null): static
     {
-        $this->useMorphMap = $value;
+        $name ??= $this->getDefaultDriver();
+
+        foreach ((array) $name as $driverName) {
+            if (isset($this->stores[$driverName])) {
+                unset($this->stores[$driverName]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Forget all of the resolved store instances.
+     *
+     * @return $this
+     */
+    public function forgetDrivers(): static
+    {
+        $this->stores = [];
+
+        return $this;
+    }
+
+    /**
+     * Register a custom driver creator Closure.
+     *
+     * @param  \Closure(\Illuminate\Contracts\Container\Container, array<string, mixed>):mixed  $callback
+     * @return $this
+     */
+    public function extend(string $driver, Closure $callback): static
+    {
+        $this->customCreators[$driver] = $callback->bindTo($this, $this);
 
         return $this;
     }
@@ -248,9 +246,9 @@ class WidgetManager
      * @param  mixed  $scope
      * @return string
      * 
-     * @throws \Honed\Widget\Exceptions\CannotSerializeScopeException
+     * @throws \RuntimeException
      */
-    public function serializeScope($scope)
+    public function serializeScope(mixed $scope): string
     {
         return match (true) {
             $scope instanceof SerializesScope => $scope->serializeScope(),
@@ -258,187 +256,111 @@ class WidgetManager
             is_numeric($scope) => (string) $scope,
             $scope instanceof Model && $this->useMorphMap => $scope->getMorphClass().'|'.$scope->getKey(), // @phpstan-ignore binaryOp.invalid
             $scope instanceof Model && ! $this->useMorphMap => $scope::class.'|'.$scope->getKey(), // @phpstan-ignore binaryOp.invalid
-            default => CannotSerializeScopeException::throw()
+            default => throw new RuntimeException(
+                'Unable to serialize the scope to a string. You should implement the ['.SerializesScope::class.'] contract.'
+            )
         };
     }
 
     /**
-     * The default scope resolver.
+     * Specify that the Eloquent morph map should be used when serializing.
      *
-     * @param  string  $driver
-     * @return callable(): mixed
+     * @return $this
      */
-    protected function defaultScopeResolver($driver)
+    public function useMorphMap(bool $value = true): static
     {
-        return function () use ($driver) {
-            if (isset($this->defaultScopeResolver)) {
-                return call_user_func($this->defaultScopeResolver, $driver);
-            }
+        $this->useMorphMap = $value;
 
-            /** @var \Illuminate\Contracts\Auth\Factory */
-            $auth = $this->container->get('auth');
+        return $this;
+    }
 
-            return $auth->guard()->user();
-        };
+    /**
+     * Determine if the Eloquent morph map should be used when serializing.
+     */
+    public function usesMorphMap(): bool
+    {
+        return $this->useMorphMap;
     }
 
     /**
      * Set the default scope resolver.
      *
-     * @param  (callable(string): mixed)  $resolver
-     * @return void
+     * @param  (callable(): mixed)  $resolver
      */
-    public function resolveScopeUsing($resolver)
+    public function resolveScopeUsing(callable $resolver): void
     {
         $this->defaultScopeResolver = $resolver;
     }
 
     /**
-     * Get the driver configuration.
+     * The default scope resolver.
      *
-     * @param string $name
-     * @return array<string, mixed>|null
+     * @return callable(): mixed
      */
-    public function getConfig($name)
+    public function defaultScopeResolver(string $driver): callable
     {
-        /** @var \Illuminate\Contracts\Config\Repository */
-        $config = $this->container->get('config');
-
-        /** @var array<string, mixed> */
-        return $config->get("widget.drivers.{$name}");
-    }
-
-    /**
-     * Get the default driver name.
-     *
-     * @return string
-     */
-    public function getDefaultDriver()
-    {
-        /** @var \Illuminate\Contracts\Config\Repository */
-        $config = $this->container->get('config');
-
-        /** @var string */
-        return $config->get('widget.default') ?? 'database';
-    }
-
-    /**
-     * Set the default driver name.
-     *
-     * @param  string  $name
-     * @return void
-     */
-    public function setDefaultDriver($name)
-    {
-        /** @var \Illuminate\Contracts\Config\Repository */
-        $config = $this->container->get('config');
-
-        $config->set('widget.default', $name);
-    }
-
-    /**
-     * Unset the given driver instances.
-     *
-     * @param  string|array<int, string>|null  $name
-     * @return $this
-     */
-    public function forgetDriver($name = null)
-    {
-        $name ??= $this->getDefaultDriver();
-
-        foreach ((array) $name as $driverName) {
-            if (isset($this->drivers[$driverName])) {
-                unset($this->drivers[$driverName]);
+        return function () use ($driver) {
+            if ($this->defaultScopeResolver !== null) {
+                return ($this->defaultScopeResolver)($driver);
             }
-        }
 
-        return $this;
-    }
-
-    /**
-     * Forget all of the resolved driver instances.
-     *
-     * @return $this
-     */
-    public function forgetDrivers()
-    {
-        $this->drivers = [];
-
-        return $this;
-    }
-
-    /**
-     * Register a custom driver creator Closure.
-     *
-     * @param  string  $driver
-     * @param  \Closure(\Illuminate\Contracts\Container\Container, array<string, mixed>):mixed  $callback
-     * @return $this
-     */
-    public function extend($driver, $callback)
-    {
-        $this->customDrivers[$driver] = $callback->bindTo($this, $this);
-
-        return $this;
-    }
-
-    /**
-     * Set the container instance used by the manager.
-     *
-     * @param  \Illuminate\Container\Container  $container
-     * @return $this
-     */
-    public function setContainer($container)
-    {
-        $this->container = $container;
-
-        foreach ($this->drivers as $driver) {
-            $driver->setContainer($container);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get the widgets for an inertia page.
-     * 
-     * @param string|null $scope
-     * @param string|null $group
-     * @return mixed
-     */
-    public function inertia($scope = null, $group = null)
-    {
-        $callback = fn () => $this->driver()->get($scope, $group);
-
-        return match ($this->getInertia()) {
-            'defer' => Inertia::defer($callback, 'widgets'),
-            'lazy' => Inertia::lazy($callback),
-            default => $callback(),
+            // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
+            return $this->container['auth']->guard()->user();
         };
     }
 
     /**
-     * Get the inertia retrieval method.
-     * 
-     * @return string
+     * Resolve the given driver.
+     *
+     * @throws \InvalidArgumentException
      */
-    protected function getInertia()
+    protected function resolve(string $name): Decorator
     {
-        /** @var \Illuminate\Contracts\Config\Repository */
-        $config = $this->container->get('config');
+        if (isset($this->customCreators[$name])) {
+            $driver = $this->callCustomCreator($name);
+        } else {
+            $method = 'create'.ucfirst($name).'Driver';
 
-        /** @var string */
-        return $config->get('widget.inertia') ?? 'sync';
+            if (method_exists($this, $method)) {
+                /** @var Driver */
+                $driver = $this->{$method}($name);
+            } else {
+                throw new InvalidArgumentException(
+                    "Driver [{$name}] not supported."
+                );
+            }
+        }
+
+        return new Decorator(
+            $name,
+            $driver,
+            $this->defaultScopeResolver($name),
+        );
     }
 
     /**
-     * Dynamically call the default driver instance.
-     *
-     * @param  string  $method
-     * @param  array<array-key, mixed>  $parameters
-     * @return mixed
+     * Call a custom driver creator.
      */
-    public function __call($method, $parameters)
+    protected function callCustomCreator(string $name): Driver
     {
-        return $this->driver()->{$method}(...$parameters);
+        return $this->customCreators[$name]($name, $this->container);
+    }
+
+    /**
+     * Get the database manager instance from the container.
+     */
+    protected function getDatabaseManager(): DatabaseManager
+    {
+        /** @var DatabaseManager */
+        return $this->container['db']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Get the event dispatcher instance from the container.
+     */
+    protected function getDispatcher(): Dispatcher
+    {
+        /** @var Dispatcher */
+        return $this->container['events']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 }

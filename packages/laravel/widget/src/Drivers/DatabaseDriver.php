@@ -20,18 +20,18 @@ class DatabaseDriver implements Driver
     protected $db;
 
     /**
-     * The user configuration.
-     *
-     * @var \Illuminate\Contracts\Config\Repository
-     */
-    protected $config;
-
-    /**
      * The store's name.
      *
      * @var string
      */
     protected $name;
+
+    /**
+     * The user configuration.
+     *
+     * @var \Illuminate\Contracts\Config\Repository
+     */
+    protected $config;
 
     /**
      * The event dispatcher.
@@ -62,12 +62,10 @@ class DatabaseDriver implements Driver
     public function __construct(
         DatabaseManager $db,
         Dispatcher $events,
-        Repository $config,
         string $name
     ) {
         $this->db = $db;
         $this->events = $events;
-        $this->config = $config;
         $this->name = $name;
     }
 
