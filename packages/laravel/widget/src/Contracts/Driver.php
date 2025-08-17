@@ -2,6 +2,8 @@
 
 namespace Honed\Widget\Contracts;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+
 interface Driver
 {
     /**

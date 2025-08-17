@@ -7,19 +7,16 @@ use Honed\Widget\Contracts\Driver;
 use Honed\Widget\Contracts\SerializesScope;
 use Honed\Widget\Drivers\Decorator;
 use Honed\Widget\Drivers\ArrayDriver;
-use Honed\Widget\Drivers\CacheDriver;
-use Honed\Widget\Drivers\CookieDriver;
 use Honed\Widget\Drivers\DatabaseDriver;
-use Honed\Widget\Exceptions\CannotSerializeScopeException;
 use Illuminate\Contracts\Container\Container;
-use Honed\Widget\Exceptions\InvalidDriverException;
-use Honed\Widget\Exceptions\UndefinedDriverException;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Model;
-use Inertia\Inertia;
 use InvalidArgumentException;
 use RuntimeException;
+use Illuminate\Http\Request;
+use Illuminate\Session\SessionManager;
+use Illuminate\Cookie\CookieJar;
 
 /**
  * @mixin \Honed\Widget\Drivers\Decorator
@@ -335,6 +332,7 @@ class WidgetManager
             $name,
             $driver,
             $this->defaultScopeResolver($name),
+            $this->container,
         );
     }
 
@@ -362,5 +360,34 @@ class WidgetManager
     {
         /** @var Dispatcher */
         return $this->container['events']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Get the cookie jar instance from the container.
+     */
+    protected function getCookieJar(): CookieJar
+    {
+        /** @var CookieJar */
+        return $this->container['cookie']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Get the request instance from the container.
+     */
+    protected function getRequest(): Request
+    {
+        /** @var Request */
+        return $this->request ??
+            $this->container['request']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Get the session manager instance from the container.
+     */
+    protected function getSession(): SessionManager
+    {
+        /** @var SessionManager */
+        return $this->session ??
+            $this->container['session']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 }

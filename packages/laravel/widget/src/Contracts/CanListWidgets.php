@@ -5,11 +5,17 @@ namespace Honed\Widget\Contracts;
 interface CanListWidgets
 {
     /**
-     * Clear all widgets under a given scope and group.
-     * 
-     * @param string $scope
-     * @param string|null $group
-     * @return void
+     * Get all the widgets stored.
+     *
+     * @return array<int, object>
      */
-    public function clear($scope, $group = null);
+    public function all(): array;
+
+    /**
+     * Get the widgets stored for a given scope or scopes.
+     *
+     * @param  mixed|array<int, mixed>  $scopes
+     * @return array<int, object>
+     */
+    public function stored(mixed $scopes): array;
 }

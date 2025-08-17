@@ -72,30 +72,28 @@ class DatabaseDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function get($scope, $group = null)
+    public function get($scope)
     {
         return $this->newQuery()
             ->where('scope', Widgets::serializeScope($scope))
-            ->where('group', $group)
             ->get();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function exists($widget, $scope, $group = null)
+    public function exists($widget, $scope)
     {
         return $this->newQuery()
             ->where('widget', $widget)
             ->where('scope', Widgets::serializeScope($scope))
-            ->where('group', $group)
             ->exists();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set($widget, $scope, $group = null, $order = 0)
+    public function set($widget, $scope, $order = 0)
     {
         $this->newQuery()
             ->upsert([
@@ -106,7 +104,6 @@ class DatabaseDriver implements Driver
                 self::CREATED_AT => $now = Carbon::now(),
                 self::UPDATED_AT => $now,
             ], [
-                'group',
                 'name',
                 'scope'
             ], [

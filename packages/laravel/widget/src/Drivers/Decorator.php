@@ -2,14 +2,17 @@
 
 namespace Honed\Widget\Drivers;
 
+use RuntimeException;
+use Honed\Widget\Widget;
 use Honed\Widget\Contracts\Driver;
-use Honed\Widget\Contracts\WidgetScopeable;
+use Illuminate\Support\Facades\Event;
 use Honed\Widget\Events\WidgetDeleted;
 use Honed\Widget\Events\WidgetUpdated;
 use Honed\Widget\ScopedWidgetRetrieval;
-use Honed\Widget\Widget;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Traits\Macroable;
+use Honed\Widget\Contracts\CanListWidgets;
+use Honed\Widget\Contracts\WidgetScopeable;
+use Illuminate\Contracts\Container\Container;
 
 class Decorator implements Driver
 {
@@ -18,14 +21,14 @@ class Decorator implements Driver
     }
 
     /**
-     * The driver name.
+     * The store's name.
      *
      * @var string
      */
     protected $name;
 
     /**
-     * The driver being decorated.
+     * The driver instance.
      *
      * @var \Honed\Widget\Contracts\Driver
      */
@@ -50,19 +53,38 @@ class Decorator implements Driver
      * 
      * @param string $name
      * @param \Honed\Widget\Contracts\Driver $driver
-     * @param (callable():mixed)|null $defaultScopeResolver
-     * @param \Illuminate\Contracts\Container\Container $container
+     * @param (callable():mixed) $defaultScopeResolver
      */
     public function __construct(
-        $name,
-        $driver,
-        $defaultScopeResolver,
-        $container
+        string $name,
+        Driver $driver,
+        callable $defaultScopeResolver,
+        Container $container
     ) {
         $this->name = $name;
         $this->driver = $driver;
         $this->defaultScopeResolver = $defaultScopeResolver;
         $this->container = $container;
+    }
+
+    /**
+     * Dynamically call the underlying driver instance.
+     *
+     * @param  string  $name
+     * @param  array<mixed>  $parameters
+     * @return mixed
+     */
+    public function __call($name, $parameters)
+    {
+        if (static::hasMacro($name)) {
+            return $this->macroCall($name, $parameters);
+        }
+
+        return tap(new ScopedWidgetRetrieval($this), function ($retrieval) use ($name) {
+            if ($name !== 'for' && ($scope = ($this->defaultScopeResolver)()) !== null) {
+                $retrieval->for($scope);
+            }
+        })->{$name}(...$parameters);
     }
 
     /**
@@ -157,7 +179,7 @@ class Decorator implements Driver
      * @param string $widget
      * @return string
      */
-    protected function resolveWidget($widget)
+    protected function resolveWidget(string $widget): string
     {
         if (class_exists($widget)
             && is_subclass_of($widget, Widget::class)
@@ -179,9 +201,9 @@ class Decorator implements Driver
     {
         $widget = $this->implementationClass($name);
 
-        if (is_string($widget) && class_exists($widget)) {
-            return $this->container->make($widget);
-        }
+        // if (is_string($widget) && class_exists($widget)) {
+            // return $this->container->make($widget);
+        // }
 
         return fn () => $widget;
     }
@@ -200,32 +222,20 @@ class Decorator implements Driver
     }
 
     /**
-     * Retrieve the default scope.
-     *
-     * @return mixed
-     */
-    protected function defaultScope()
-    {
-        return ($this->defaultScopeResolver)();
-    }
-
-    /**
      * Get the underlying driver instance.
-     * 
-     * @return \Honed\Widget\Contracts\Driver
      */
-    public function getDriver()
+    public function getDriver(): Driver
     {
         return $this->driver;
     }
 
+
     /**
      * Set the container instance used by the decorator.
      *
-     * @param \Illuminate\Contracts\Container\Container $container
      * @return $this
      */
-    public function setContainer($container)
+    public function setContainer(Container $container): static
     {
         $this->container = $container;
 
@@ -233,22 +243,27 @@ class Decorator implements Driver
     }
 
     /**
-     * Dynamically create a pending feature interaction.
-     *
-     * @param  string  $name
-     * @param  array<mixed>  $parameters
-     * @return mixed
+     * Retrieve the default scope.
      */
-    public function __call($name, $parameters)
+    protected function defaultScope(): mixed
     {
-        if (static::hasMacro($name)) {
-            return $this->macroCall($name, $parameters);
+        return ($this->defaultScopeResolver)();
+    }
+
+    /**
+     * Check if the driver supports listing widgets.
+     *
+     * @throws RuntimeException
+     */
+    protected function checkIfCanListWidgets(): CanListWidgets
+    {
+        if (! $this->driver instanceof CanListWidgets) {
+            throw new RuntimeException(
+                "The [{$this->name}] driver does not support listing widgets."
+            );
         }
 
-        return tap(new ScopedWidgetRetrieval($this), function ($retrieval) use ($name) {
-            if ($name !== 'for' && ($scope = ($this->defaultScopeResolver)()) !== null) {
-                $retrieval->for($scope);
-            }
-        })->{$name}(...$parameters);
+        /** @var CanListViews */
+        return $this->driver;
     }
 }
