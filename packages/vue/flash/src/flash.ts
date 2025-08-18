@@ -1,26 +1,40 @@
-import type { Message } from "./inertia";
 import { resolver } from "./resolver";
+import type { Flash, FlashType } from "./types";
 
-type MessageParam = Message | string;
+function normalise(message: Flash | string): Flash {
+	return typeof message === "string" ? { message } : message;
+}
 
-const normalise = (message: MessageParam): Message =>
-	typeof message === "string" ? { message } : message;
+export function flash(type?: FlashType) {
+	return (message: Flash | string) => {
+		const flash = normalise(message);
 
-const message = (type?: Message["type"]) => (message: MessageParam) => {
-	const baseMessage = normalise(message);
-	resolver.resolve(type ? { ...baseMessage, type } : baseMessage);
-};
+		resolver.resolve(type ? { ...flash, type } : flash);
+	};
+}
 
-export const flash = message();
-export const success = message("success");
-export const error = message("error");
-export const info = message("info");
-export const warning = message("warning");
+export function success() {
+	return flash("success");
+}
 
-export const useFlash = () => ({
-	message: flash,
-	success,
-	error,
-	info,
-	warning,
-});
+export function error() {
+	return flash("error");
+}
+
+export function info() {
+	return flash("info");
+}
+
+export function warning() {
+	return flash("warning");
+}
+
+export function useFlash() {
+	return {
+		flash,
+		success,
+		error,
+		info,
+		warning,
+	};
+}

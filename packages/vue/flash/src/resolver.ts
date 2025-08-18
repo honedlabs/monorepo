@@ -1,13 +1,11 @@
 import { ref } from "vue";
-import type { Message } from "./inertia";
+import type { FlashCallback, Flash } from "./types";
 
-export type ResolveCallback = (message: Message) => void;
-
-const resolveCallback = ref<ResolveCallback>();
+const resolveCallback = ref<FlashCallback>();
 
 export const resolver = {
-	setResolveCallback: (callback: ResolveCallback) => {
+	setResolveCallback: (callback: FlashCallback) => {
 		resolveCallback.value = callback;
 	},
-	resolve: (message: Message) => resolveCallback.value!(message),
+	resolve: (flash: Flash) => resolveCallback.value!(flash),
 };

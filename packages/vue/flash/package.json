@@ -1,9 +1,9 @@
 {
   "name": "@honed/flash",
   "private": false,
-  "version": "0.2.0",
+  "version": "0.3.1",
   "license": "MIT",
-  "description": "-",
+  "description": "Serve flash messages to your Vue + Inertia.js application",
   "keywords": [
     "honed",
     "flash",
@@ -29,9 +29,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/honedlabs/honed.git"
+    "url": "https://github.com/honedlabs/monorepo.git"
   },
-  "homepage": "https://github.com/honedlabs/honed/tree/main/packages/vue/flash",
+  "homepage": "https://github.com/honedlabs/monorepo/tree/main/packages/vue/flash",
   "files": [
     "dist"
   ],
