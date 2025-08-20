@@ -29,22 +29,10 @@ abstract class Widget
 
     /**
      * Get the name of the widget to be used.
-     * 
-     * @return string|null
      */
-    public function name()
+    public function getName(): string
     {
-        return null;
-    }
-
-    /**
-     * Get the name of the widget to be used.
-     * 
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name ?? $this->name() ?? $this->guessWidgetName();
+        return $this->name ?? $this->guessWidgetName();
     }
 
     /**
@@ -73,10 +61,5 @@ abstract class Widget
     public static function guessWidgetNameUsing($callback)
     {
         static::$guessWidgetNameUsing = $callback;
-    }
-
-    public static function register()
-    {
-        //
     }
 }

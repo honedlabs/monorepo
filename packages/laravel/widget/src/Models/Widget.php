@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Widget\Models;
 
+use Honed\Widget\Casts\PositionCast;
+use Honed\Widget\Casts\ScopeCast;
+use Honed\Widget\Casts\WidgetCast;
+use Honed\Widget\Concerns\InteractsWithDatabase;
 use Illuminate\Database\Eloquent\Model;
 
 class Widget extends Model
 {
+    use InteractsWithDatabase;
+
     /**
      * The attributes that are not mass assignable.
      * 
@@ -20,14 +26,16 @@ class Widget extends Model
      * 
      * @return array<int, string>
      */
-    public function casts()
+    public function casts(): array
     {
         return [
-            'data' => 'array',
+            'widget' => WidgetCast::class,
+            'scope' => ScopeCast::class,
+            'position' => PositionCast::class,
+            'data' => $this->dataCast(),
             'created_at' => 'immutable_datetime',
             'updated_at' => 'immutable_datetime',
-        ];
-        
+        ];        
     }
 
     /**
@@ -35,12 +43,14 @@ class Widget extends Model
      */
     public function getTable(): string
     {
-        return $this->table ?? config('widget.table');
+        return $this->table ??= $this->getTableName();
     }
 
-    // public function getWidget();
-
-    // public function putData(): void
-
-    // public function getData()
+    /**
+     * Set the cast for the data attribute.
+     */
+    public function dataCast(): string
+    {
+        return 'array';
+    }
 }

@@ -307,6 +307,42 @@ class WidgetManager
     }
 
     /**
+     * Convert a grid position to a CSS grid area.
+     */
+    public function convertToGridArea(string $position): string
+    {
+        $parts = explode(':', $position);
+
+        $from = $parts[0];
+        $to = $parts[1] ?? null;
+
+        if (strlen($from) < 2 || ($to && strlen($to) < 2)) {
+            return '';
+        }
+
+        $fromColumnNumber = substr($from, 1);
+        $areaFrom = "{$fromColumnNumber} / {$this->indexInAlphabet($from[0])}";
+
+        if (! $to) {
+            return $areaFrom;
+        }
+
+        $toStart = ((int) substr($to, 1)) + 1;
+
+        $toEnd = ((int) $this->indexInAlphabet($to[0])) + 1;
+
+        return "{$areaFrom} / {$toStart} / {$toEnd}";
+    }
+
+    /**
+     * Get the index of the given letter in the alphabet.
+     */
+    protected function indexInAlphabet(string $letter): int
+    {
+        return ord($letter) - ord('A') + 1;
+    }
+
+    /**
      * Resolve the given driver.
      *
      * @throws \InvalidArgumentException

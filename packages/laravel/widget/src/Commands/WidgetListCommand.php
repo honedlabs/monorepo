@@ -45,7 +45,6 @@ class WidgetListCommand extends Command
     {
         $widgets = $this->getWidgets()->sortKeys();
 
-        dd($widgets);
         if ($widgets->isEmpty()) {
             if ($this->option('json')) {
                 $this->output->writeln('[]');

@@ -8,6 +8,7 @@ use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 
 class DatabaseDriver implements Driver
@@ -142,10 +143,8 @@ class DatabaseDriver implements Driver
 
     /**
      * Create a new table query.
-     *
-     * @return \Illuminate\Database\Query\Builder
      */
-    protected function newQuery()
+    protected function newQuery(): Builder
     {
         return $this->connection()->table(
             $this->config->get("widget.drivers.{$this->name}.table") ?? 'widgets'
@@ -154,10 +153,8 @@ class DatabaseDriver implements Driver
 
     /**
      * The database connection.
-     *
-     * @return \Illuminate\Database\Connection
      */
-    protected function connection()
+    protected function connection(): Connection
     {
         return $this->db->connection(
             $this->config->get("widget.drivers.{$this->name}.connection") ?? null

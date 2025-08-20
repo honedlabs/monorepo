@@ -2,10 +2,13 @@
 
 namespace Honed\Widget\Migrations;
 
+use Honed\Widget\Concerns\InteractsWithDatabase;
 use Illuminate\Database\Migrations\Migration;
 
 abstract class WidgetMigration extends Migration
 {
+    use InteractsWithDatabase;
+
     /**
      * Get the migration connection name.
      */
@@ -18,17 +21,5 @@ abstract class WidgetMigration extends Migration
         return ($connection === null || $connection === 'null') 
             ? config('database.default')
             : $connection;
-    }
-
-    /**
-     * Get the migration table name.
-     */
-    public function getTable(): string
-    {
-        /** @var string */
-        $table = config('widget.drivers.database.table', 'widgets');
-
-        /** @var string */
-        return ($table === null || $table === 'null') ? 'widgets' : $table;
     }
 }

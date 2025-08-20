@@ -11,12 +11,12 @@ return new class extends WidgetMigration
      */
     public function up(): void
     {
-        Schema::create($this->getTable(), function (Blueprint $table) {
+        Schema::create($this->getTableName(), function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('widget');
             $table->string('scope');
-            $table->text('data')->nullable();
             $table->string('position')->nullable();
+            $table->text('data')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends WidgetMigration
      */
     public function down(): void
     {
-        Schema::dropIfExists($this->getTable());
+        Schema::dropIfExists($this->getTableName());
     }
 };
