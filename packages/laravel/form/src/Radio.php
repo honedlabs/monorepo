@@ -6,7 +6,7 @@ namespace Honed\Form;
 
 use Honed\Form\Contracts\DefaultComponent;
 
-class Radio extends FormField implements DefaultComponent
+class Radio extends Field implements DefaultComponent
 {
     /**
      * Provide the instance with any necessary setup.
@@ -14,7 +14,7 @@ class Radio extends FormField implements DefaultComponent
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->component($this->getConfigComponent());
     }
 

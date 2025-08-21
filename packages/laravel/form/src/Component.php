@@ -8,7 +8,7 @@ use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Honed\Form\Concerns\HasComponent;
 
-abstract class FormComponent extends Primitive implements NullsAsUndefined
+abstract class Component extends Primitive implements NullsAsUndefined
 {
     use HasComponent;
 
@@ -21,6 +21,7 @@ abstract class FormComponent extends Primitive implements NullsAsUndefined
     {
         return [
             'component' => $this->getComponent(),
+            'attributes' => null,
         ];
     }
 }

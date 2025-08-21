@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Form;
 
-use Honed\Form\Concerns\HasSchema;
 use Honed\Form\Contracts\DefaultComponent;
 
-class Fieldset extends Component implements DefaultComponent
+class Radio extends Field implements DefaultComponent
 {
-    use HasSchema;
-
     /**
      * Provide the instance with any necessary setup.
      */
@@ -27,19 +24,6 @@ class Fieldset extends Component implements DefaultComponent
     public function getConfigComponent(): string
     {
         /** @var string */
-        return config('form.components.fieldset', 'Fieldset.vue');
-    }
-
-    /**
-     * Get the array representation of the fieldset.
-     * 
-     * @return array<string, mixed>
-     */
-    protected function representation(): array
-    {
-        return [
-            'schema' => $this->getSchema(),
-            ...parent::representation(),
-        ];
+        return config('form.components.radio', 'Radio.vue');
     }
 }

@@ -6,7 +6,7 @@ namespace Honed\Form;
 
 use Honed\Form\Contracts\DefaultComponent;
 
-class Input extends FormField implements DefaultComponent
+class Input extends Field implements DefaultComponent
 {
     /**
      * Provide the instance with any necessary setup.
@@ -14,7 +14,7 @@ class Input extends FormField implements DefaultComponent
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->component($this->getConfigComponent());
     }
 

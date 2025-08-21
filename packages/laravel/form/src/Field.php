@@ -11,14 +11,13 @@ use Honed\Form\Concerns\CanBeAutofocused;
 use Honed\Form\Concerns\CanBeOptional;
 use Honed\Form\Concerns\CanBeRequired;
 
-abstract class FormField extends FormComponent
+abstract class Field extends Component
 {
     use CanBeRequired;
     use CanBeOptional;
     use CanBeAutofocused;
     use HasName;
     use HasLabel;
-    use HasDescription;
     // use HasAttri;
     // use HasHint;
 
@@ -32,7 +31,11 @@ abstract class FormField extends FormComponent
         return [
             'name' => $this->getName(),
             'label' => $this->getLabel(),
-            'description' => $this->getDescription(),
+            'hint' => $this->getHint(),
+            'required' => $this->isRequired() ?: null,
+            'disabled' => $this->isDisabled() ?: null,
+            'optional' => $this->isOptional() ?: null,
+            'autofocus' => $this->isAutofocused() ?: null,
             ...parent::representation(),
         ];
     }

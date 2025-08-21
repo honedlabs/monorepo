@@ -7,7 +7,7 @@ namespace Honed\Form;
 use Honed\Form\Concerns\HasSchema;
 use Honed\Form\Contracts\DefaultComponent;
 
-class Fieldset extends Component implements DefaultComponent
+class FieldGroup extends Component implements DefaultComponent
 {
     use HasSchema;
 
@@ -27,11 +27,11 @@ class Fieldset extends Component implements DefaultComponent
     public function getConfigComponent(): string
     {
         /** @var string */
-        return config('form.components.fieldset', 'Fieldset.vue');
+        return config('form.components.fieldgroup', 'FieldGroup.vue');
     }
 
     /**
-     * Get the array representation of the fieldset.
+     * Get the array representation of the fieldgroup.
      * 
      * @return array<string, mixed>
      */

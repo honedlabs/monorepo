@@ -6,7 +6,7 @@ namespace Honed\Form;
 
 use Honed\Form\Contracts\DefaultComponent;
 
-class Checkbox extends FormField implements DefaultComponent
+class Checkbox extends Field implements DefaultComponent
 {
     /**
      * Provide the instance with any necessary setup.

@@ -4,12 +4,20 @@ declare(strict_types=1);
 
 namespace Honed\Form;
 
-use Honed\Form\Concerns\HasSchema;
+use Honed\Core\Concerns\HasLabel;
 use Honed\Form\Contracts\DefaultComponent;
 
-class Fieldset extends Component implements DefaultComponent
+class Legend extends Component implements DefaultComponent
 {
-    use HasSchema;
+    use HasLabel;
+
+    /**
+     * Create a new legend instance.
+     */
+    public static function make(string $label): static
+    {
+        return resolve(static::class)->label($label);
+    }
 
     /**
      * Provide the instance with any necessary setup.
@@ -27,18 +35,18 @@ class Fieldset extends Component implements DefaultComponent
     public function getConfigComponent(): string
     {
         /** @var string */
-        return config('form.components.fieldset', 'Fieldset.vue');
+        return config('form.components.legend', 'Legend.vue');
     }
 
     /**
-     * Get the array representation of the fieldset.
+     * Get the array representation of the legend.
      * 
      * @return array<string, mixed>
      */
     protected function representation(): array
     {
         return [
-            'schema' => $this->getSchema(),
+            'label' => $this->getLabel(),
             ...parent::representation(),
         ];
     }
