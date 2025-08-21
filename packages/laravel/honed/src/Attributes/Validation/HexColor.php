@@ -22,7 +22,7 @@ class HexColor extends StringValidationAttribute
     /**
      * Get the parameters to pass to the validation rule.
      * 
-     * @return []
+     * @return array<int, string>
      */
     public function parameters(): array
     {
