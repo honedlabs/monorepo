@@ -17,6 +17,13 @@ abstract class Component extends Primitive implements NullsAsUndefined
      */
     protected $component;
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->define();
+    }
+
     /**
      * The name of the component.
      */

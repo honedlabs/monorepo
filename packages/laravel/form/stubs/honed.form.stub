@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ namespace }};
+
+use Honed\Form\Form;
+
+class {{ class }} extends Form
+{    
+    /**
+     * Define the form.
+     *
+     * @return $this
+     */
+    protected function definition(): static
+    {
+        return $this;
+    }
+}

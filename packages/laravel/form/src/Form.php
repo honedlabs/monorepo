@@ -28,7 +28,7 @@ class Form extends Primitive implements NullsAsUndefined
     /**
      * Create a new form instance.
      * 
-     * @param array<int, \Honed\Form\Component> $schema
+     * @param array<int, \Honed\Form\Abstracts\Component> $schema
      */
     public static function make(array $schema = []): static
     {

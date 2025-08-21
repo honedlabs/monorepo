@@ -18,6 +18,7 @@ trait HasSchema
     /**
      * Set the schema of the component.
      * 
+     * @param array<int, \Honed\Form\Abstracts\Component> $schema
      * @return $this
      */
     public function schema(array $schema = []): static

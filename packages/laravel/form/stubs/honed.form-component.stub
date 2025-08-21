@@ -1,0 +1,16 @@
+<?php
+
+namespace {{ namespace }};
+
+use Honed\Form\Abstracts\Component;
+
+class {{ class }} extends Component
+{
+    /**
+     * The name of the component.
+     */
+    public function component(): string
+    {
+        //
+    }
+}

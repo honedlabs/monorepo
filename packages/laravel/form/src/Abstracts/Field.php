@@ -7,6 +7,7 @@ namespace Honed\Form\Abstracts;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Form\Concerns\CanBeAutofocused;
+use Honed\Form\Concerns\CanBeDisabled;
 use Honed\Form\Concerns\CanBeOptional;
 use Honed\Form\Concerns\CanBeRequired;
 use Honed\Form\Concerns\HasHint;
@@ -19,6 +20,7 @@ abstract class Field extends Component
     use HasName;
     use HasLabel;
     use HasHint;
+    use CanBeDisabled;
 
     /**
      * Create a new field instance.
