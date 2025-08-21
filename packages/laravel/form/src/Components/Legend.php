@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Honed\Form;
+namespace Honed\Form\Components;
 
 use Honed\Core\Concerns\HasLabel;
+use Honed\Form\Abstracts\Component;
 use Honed\Form\Contracts\DefaultComponent;
 
 class Legend extends Component implements DefaultComponent
@@ -17,16 +18,6 @@ class Legend extends Component implements DefaultComponent
     public static function make(string $label): static
     {
         return resolve(static::class)->label($label);
-    }
-
-    /**
-     * Provide the instance with any necessary setup.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-        
-        $this->component($this->getConfigComponent());
     }
 
     /**

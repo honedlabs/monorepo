@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Form;
+namespace Honed\Form\Abstracts;
 
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
@@ -10,7 +10,22 @@ use Honed\Form\Concerns\HasComponent;
 
 abstract class Component extends Primitive implements NullsAsUndefined
 {
-    use HasComponent;
+    /**
+     * The name of the component file.
+     * 
+     * @var string|null
+     */
+    protected $component;
+
+    abstract public function component(): string;
+
+    /**
+     * Get the name of the component file.
+     */
+    public function getComponent(): string
+    {
+        return $this->component ??= $this->getDefaultComponent();
+    }
 
     /**
      * Get the array representation of the form component.

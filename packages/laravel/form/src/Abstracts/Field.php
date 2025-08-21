@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Honed\Form;
+namespace Honed\Form\Abstracts;
 
-use Honed\Core\Concerns\HasDescription;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Form\Concerns\CanBeAutofocused;
 use Honed\Form\Concerns\CanBeOptional;
 use Honed\Form\Concerns\CanBeRequired;
+use Honed\Form\Concerns\HasHint;
 
 abstract class Field extends Component
 {
@@ -19,7 +19,7 @@ abstract class Field extends Component
     use HasName;
     use HasLabel;
     // use HasAttri;
-    // use HasHint;
+    use HasHint;
 
     /**
      * Get the array representation of the form field.

@@ -2,22 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Honed\Form;
+namespace Honed\Form\Components;
 
+use Honed\Form\Abstracts\Field;
 use Honed\Form\Contracts\DefaultComponent;
 
 class Radio extends Field implements DefaultComponent
 {
-    /**
-     * Provide the instance with any necessary setup.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-        
-        $this->component($this->getConfigComponent());
-    }
-
     /**
      * Get the component to use from the config.
      */
