@@ -11,7 +11,7 @@ trait CanBeRequired
      * 
      * @var bool
      */
-    public bool $required = false;
+    protected $required = false;
 
     /**
      * Set the required state of the component.

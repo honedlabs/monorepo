@@ -11,7 +11,7 @@ trait CanBeOptional
      * 
      * @var bool
      */
-    public bool $optional = false;
+    protected $optional = false;
 
     /**
      * Set the optional state of the component.
