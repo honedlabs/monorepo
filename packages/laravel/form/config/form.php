@@ -2,7 +2,7 @@
 
 return [
     'lib' => '@/Components/Form',
-    
+
     'components' => [
         'fieldset' => 'Fieldset.vue',
         'legend' => 'Legend.vue',

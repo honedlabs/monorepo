@@ -8,14 +8,14 @@ trait CanBeDisabled
 {
     /**
      * Whether the component should be disabled.
-     * 
+     *
      * @var bool
      */
     protected $disabled = false;
 
     /**
      * Set the component to be disabled.
-     * 
+     *
      * @return $this
      */
     public function disabled(bool $value = true): static
@@ -27,7 +27,7 @@ trait CanBeDisabled
 
     /**
      * Set the component to not be disabled.
-     * 
+     *
      * @return $this
      */
     public function notDisabled(bool $value = true): static
@@ -49,5 +49,5 @@ trait CanBeDisabled
     public function isNotDisabled(): bool
     {
         return ! $this->isDisabled();
-    }    
+    }
 }

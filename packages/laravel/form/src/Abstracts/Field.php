@@ -14,13 +14,13 @@ use Honed\Form\Concerns\HasHint;
 
 abstract class Field extends Component
 {
-    use CanBeRequired;
-    use CanBeOptional;
     use CanBeAutofocused;
-    use HasName;
-    use HasLabel;
-    use HasHint;
     use CanBeDisabled;
+    use CanBeOptional;
+    use CanBeRequired;
+    use HasHint;
+    use HasLabel;
+    use HasName;
 
     /**
      * Create a new field instance.
@@ -34,7 +34,7 @@ abstract class Field extends Component
 
     /**
      * Get the array representation of the form field.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

@@ -8,14 +8,14 @@ trait CanBeAutofocused
 {
     /**
      * Whether the component should be autofocused.
-     * 
+     *
      * @var bool
      */
     protected $autofocus = false;
 
     /**
      * Set the component to be autofocused.
-     * 
+     *
      * @return $this
      */
     public function autofocus(bool $value = true): static
@@ -27,7 +27,7 @@ trait CanBeAutofocused
 
     /**
      * Set the component to not be autofocused
-     * 
+     *
      * @return $this
      */
     public function notAutofocused(bool $value = true): static

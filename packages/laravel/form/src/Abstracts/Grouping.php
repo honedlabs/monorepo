@@ -12,8 +12,8 @@ abstract class Grouping extends Component
 
     /**
      * Create a new grouping instance.
-     * 
-     * @param array<int, \Honed\Form\Abstracts\Component> $schema
+     *
+     * @param  array<int, \Honed\Form\Abstracts\Component>  $schema
      */
     public static function make(array $schema = []): static
     {
@@ -22,7 +22,7 @@ abstract class Grouping extends Component
 
     /**
      * Get the array representation of the form grouping.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

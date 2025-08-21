@@ -8,14 +8,14 @@ trait HasAction
 {
     /**
      * The action of the form.
-     * 
+     *
      * @var string|null
      */
     protected $action;
 
     /**
      * Set the action of the form.
-     * 
+     *
      * @return $this
      */
     public function action(string $value): static

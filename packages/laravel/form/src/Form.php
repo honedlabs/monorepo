@@ -4,31 +4,27 @@ declare(strict_types=1);
 
 namespace Honed\Form;
 
-use Honed\Core\Primitive;
-use Illuminate\Support\Arr;
-use Honed\Form\Concerns\HasLib;
-use Honed\Form\Contracts\ToForm;
 use Honed\Core\Concerns\HasMethod;
-use Honed\Form\Concerns\HasAction;
-use Honed\Form\Concerns\HasSchema;
-use Honed\Form\Concerns\Cancellable;
-use Illuminate\Database\Eloquent\Model;
 use Honed\Core\Contracts\NullsAsUndefined;
-use Illuminate\Foundation\Http\FormRequest;
+use Honed\Core\Primitive;
+use Honed\Form\Concerns\Cancellable;
+use Honed\Form\Concerns\HasAction;
+use Honed\Form\Concerns\HasLib;
+use Honed\Form\Concerns\HasSchema;
 use Illuminate\Http\Request;
 
 class Form extends Primitive implements NullsAsUndefined
 {
-    use HasSchema;
     use Cancellable;
+    use HasAction;
     use HasLib;
     use HasMethod;
-    use HasAction;
+    use HasSchema;
 
     /**
      * Create a new form instance.
-     * 
-     * @param array<int, \Honed\Form\Abstracts\Component> $schema
+     *
+     * @param  array<int, \Honed\Form\Abstracts\Component>  $schema
      */
     public static function make(array $schema = []): static
     {
@@ -47,7 +43,7 @@ class Form extends Primitive implements NullsAsUndefined
 
     /**
      * Get the array representation of the form.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

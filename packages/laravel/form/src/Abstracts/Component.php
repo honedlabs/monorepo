@@ -6,13 +6,12 @@ namespace Honed\Form\Abstracts;
 
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
-use Honed\Form\Concerns\HasComponent;
 
 abstract class Component extends Primitive implements NullsAsUndefined
 {
     /**
      * The name of the component.
-     * 
+     *
      * @var string|null
      */
     protected $component;
@@ -31,7 +30,7 @@ abstract class Component extends Primitive implements NullsAsUndefined
 
     /**
      * Set the name of the component.
-     * 
+     *
      * @return $this
      */
     public function asComponent(string $value): static
@@ -51,7 +50,7 @@ abstract class Component extends Primitive implements NullsAsUndefined
 
     /**
      * Get the array representation of the component.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array

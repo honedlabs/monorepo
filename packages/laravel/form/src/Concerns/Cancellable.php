@@ -10,7 +10,7 @@ trait Cancellable
 {
     /**
      * The action to take when the form is cancelled.
-     * 
+     *
      * @var string|null
      */
     protected $cancel;
@@ -22,7 +22,7 @@ trait Cancellable
 
     /**
      * Set the action to take when the form is cancelled.
-     * 
+     *
      * @return $this
      */
     public function onCancel(string|Cancel $value): static
@@ -34,7 +34,7 @@ trait Cancellable
 
     /**
      * Set the action to take when the form is cancelled to be a redirect.
-     * 
+     *
      * @return $this
      */
     public function onCancelRedirect(string $url): static
@@ -44,7 +44,7 @@ trait Cancellable
 
     /**
      * Set the action to take when the form is cancelled to be a route redirect.
-     * 
+     *
      * @return $this
      */
     public function onCancelRoute(string $name, mixed $parameters = []): static
@@ -54,7 +54,7 @@ trait Cancellable
 
     /**
      * Set the action to take when the form is cancelled to be a reset.
-     * 
+     *
      * @return $this
      */
     public function onCancelReset(): static

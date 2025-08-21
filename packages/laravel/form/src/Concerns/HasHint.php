@@ -8,14 +8,14 @@ trait HasHint
 {
     /**
      * The hint to display.
-     * 
+     *
      * @var string|null
      */
     protected $hint;
 
     /**
      * Set the hint to display.
-     * 
+     *
      * @return $this
      */
     public function hint(string $value): static

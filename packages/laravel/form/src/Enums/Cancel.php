@@ -8,4 +8,3 @@ enum Cancel: string
 {
     case Reset = 'reset';
 }
-

@@ -47,7 +47,6 @@ class FormMakeCommand extends GeneratorCommand
      * Resolve the fully-qualified path to the stub.
      *
      * @param  string  $stub
-     * @return string
      */
     protected function resolveStubPath($stub): string
     {
@@ -60,7 +59,6 @@ class FormMakeCommand extends GeneratorCommand
      * Get the default namespace for the class.
      *
      * @param  string  $rootNamespace
-     * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string
     {

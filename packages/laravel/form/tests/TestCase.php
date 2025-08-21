@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Form\Tests;
 
-use Orchestra\Testbench\TestCase as Orchestra;
 use Orchestra\Testbench\Concerns\WithWorkbench;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

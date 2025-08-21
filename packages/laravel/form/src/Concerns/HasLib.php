@@ -10,14 +10,14 @@ trait HasLib
 {
     /**
      * The location of the components.
-     * 
+     *
      * @var string|null
      */
     protected $lib;
 
     /**
      * Set the location of the components.
-     * 
+     *
      * @return $this
      */
     public function lib(string $value): static

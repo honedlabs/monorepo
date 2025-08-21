@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Form;
 
-use Illuminate\Support\ServiceProvider;
-use Honed\Form\Commands\FormMakeCommand;
 use Honed\Form\Commands\FormComponentMakeCommand;
+use Honed\Form\Commands\FormMakeCommand;
+use Illuminate\Support\ServiceProvider;
 
 class FormServiceProvider extends ServiceProvider
 {
@@ -28,7 +28,7 @@ class FormServiceProvider extends ServiceProvider
 
             $this->commands([
                 FormMakeCommand::class,
-                FormComponentMakeCommand::class
+                FormComponentMakeCommand::class,
             ]);
         }
     }

@@ -8,14 +8,14 @@ trait CanBeOptional
 {
     /**
      * Whether the component should be marked as optional.
-     * 
+     *
      * @var bool
      */
     protected $optional = false;
 
     /**
      * Set the optional state of the component.
-     * 
+     *
      * @return $this
      */
     public function optional(bool $value = true): static
@@ -27,7 +27,7 @@ trait CanBeOptional
 
     /**
      * Set the negated optional state of the component
-     * 
+     *
      * @return $this
      */
     public function notOptional(bool $value = true): static
@@ -42,7 +42,7 @@ trait CanBeOptional
     {
         return $this->optional;
     }
-    
+
     /**
      * Get the negated optional state of the component.
      */

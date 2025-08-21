@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Form\Components;
 
 use Honed\Form\Abstracts\Grouping;
-use Honed\Form\Contracts\DefaultComponent;
 
 class FieldGroup extends Grouping
 {

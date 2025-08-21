@@ -8,14 +8,14 @@ trait CanBeRequired
 {
     /**
      * Whether the component should be marked as required.
-     * 
+     *
      * @var bool
      */
     protected $required = false;
 
     /**
      * Set the required state of the component.
-     * 
+     *
      * @return $this
      */
     public function required(bool $value = true): static
@@ -27,7 +27,7 @@ trait CanBeRequired
 
     /**
      * Set the negated required state of the component
-     * 
+     *
      * @return $this
      */
     public function notRequired(bool $value = true): static
@@ -42,7 +42,7 @@ trait CanBeRequired
     {
         return $this->required;
     }
-    
+
     /**
      * Get the negated required state of the component.
      */
