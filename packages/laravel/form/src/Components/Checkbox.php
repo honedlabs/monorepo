@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Honed\Form\Components;
 
 use Honed\Form\Abstracts\Field;
-use Honed\Form\Contracts\DefaultComponent;
 
-class Checkbox extends Field implements DefaultComponent
+class Checkbox extends Field
 {
     /**
-     * Get the component to use from the config.
+     * The name of the component.
      */
-    public function getConfigComponent(): string
+    public function component(): string
     {
         /** @var string */
         return config('form.components.checkbox', 'Checkbox.vue');

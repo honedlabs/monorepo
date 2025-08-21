@@ -18,8 +18,17 @@ abstract class Field extends Component
     use CanBeAutofocused;
     use HasName;
     use HasLabel;
-    // use HasAttri;
     use HasHint;
+
+    /**
+     * Create a new field instance.
+     */
+    public static function make(string $name, ?string $label = null): static
+    {
+        return resolve(static::class)
+            ->name($name)
+            ->label($label ?? static::makeLabel($name));
+    }
 
     /**
      * Get the array representation of the form field.

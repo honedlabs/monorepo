@@ -15,6 +15,7 @@ use Honed\Form\Concerns\Cancellable;
 use Illuminate\Database\Eloquent\Model;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class Form extends Primitive implements NullsAsUndefined
 {
@@ -32,6 +33,16 @@ class Form extends Primitive implements NullsAsUndefined
     public static function make(array $schema = []): static
     {
         return resolve(static::class)->schema($schema);
+    }
+
+    /**
+     * Provide the instance with any necessary setup.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->method(Request::METHOD_POST);
     }
 
     /**

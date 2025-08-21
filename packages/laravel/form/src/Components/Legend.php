@@ -6,9 +6,8 @@ namespace Honed\Form\Components;
 
 use Honed\Core\Concerns\HasLabel;
 use Honed\Form\Abstracts\Component;
-use Honed\Form\Contracts\DefaultComponent;
 
-class Legend extends Component implements DefaultComponent
+class Legend extends Component
 {
     use HasLabel;
 
@@ -21,9 +20,9 @@ class Legend extends Component implements DefaultComponent
     }
 
     /**
-     * Get the component to use from the config.
+     * The name of the component.
      */
-    public function getConfigComponent(): string
+    public function component(): string
     {
         /** @var string */
         return config('form.components.legend', 'Legend.vue');

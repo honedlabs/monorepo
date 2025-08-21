@@ -7,12 +7,12 @@ namespace Honed\Form\Components;
 use Honed\Form\Abstracts\Grouping;
 use Honed\Form\Contracts\DefaultComponent;
 
-class Fieldset extends Grouping implements DefaultComponent
+class Fieldset extends Grouping
 {
     /**
-     * Get the component to use from the config.
+     * The name of the component.
      */
-    public function getConfigComponent(): string
+    public function component(): string
     {
         /** @var string */
         return config('form.components.fieldset', 'Fieldset.vue');

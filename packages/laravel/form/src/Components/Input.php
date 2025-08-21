@@ -7,12 +7,12 @@ namespace Honed\Form\Components;
 use Honed\Form\Abstracts\Field;
 use Honed\Form\Contracts\DefaultComponent;
 
-class Input extends Field implements DefaultComponent
+class Input extends Field
 {
     /**
-     * Get the component to use from the config.
+     * The name of the component.
      */
-    public function getConfigComponent(): string
+    public function component(): string
     {
         /** @var string */
         return config('form.components.input', 'Input.vue');

@@ -7,12 +7,12 @@ namespace Honed\Form\Components;
 use Honed\Form\Abstracts\Component;
 use Honed\Form\Contracts\DefaultComponent;
 
-class Text extends Component implements DefaultComponent
+class Text extends Component
 {
     /**
-     * Get the component to use from the config.
+     * The name of the component.
      */
-    public function getConfigComponent(): string
+    public function component(): string
     {
         /** @var string */
         return config('form.components.text', 'Text.vue');

@@ -11,24 +11,39 @@ use Honed\Form\Concerns\HasComponent;
 abstract class Component extends Primitive implements NullsAsUndefined
 {
     /**
-     * The name of the component file.
+     * The name of the component.
      * 
      * @var string|null
      */
     protected $component;
 
+    /**
+     * The name of the component.
+     */
     abstract public function component(): string;
 
     /**
-     * Get the name of the component file.
+     * Set the name of the component.
+     * 
+     * @return $this
      */
-    public function getComponent(): string
+    public function asComponent(string $value): static
     {
-        return $this->component ??= $this->getDefaultComponent();
+        $this->component = $value;
+
+        return $this;
     }
 
     /**
-     * Get the array representation of the form component.
+     * Get the name of the component.
+     */
+    public function getComponent(): string
+    {
+        return $this->component ??= $this->component();
+    }
+
+    /**
+     * Get the array representation of the component.
      * 
      * @return array<string, mixed>
      */

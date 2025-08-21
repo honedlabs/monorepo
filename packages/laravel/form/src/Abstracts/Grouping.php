@@ -11,6 +11,16 @@ abstract class Grouping extends Component
     use HasSchema;
 
     /**
+     * Create a new grouping instance.
+     * 
+     * @param array<int, \Honed\Form\Component> $schema
+     */
+    public static function make(array $schema = []): static
+    {
+        return resolve(static::class)->schema($schema);
+    }
+
+    /**
      * Get the array representation of the form grouping.
      * 
      * @return array<string, mixed>
