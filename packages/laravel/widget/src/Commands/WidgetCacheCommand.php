@@ -52,6 +52,7 @@ class WidgetCacheCommand extends Command
         foreach ($this->laravel->getProviders(WidgetServiceProvider::class) as $provider) {
             $providerWidgets = array_merge_recursive($provider->shouldDiscoverWidgets() ? $provider->discoverWidgets() : [], $provider->widgets());
 
+            dd($provider->discoverWidgets());
             $widgets[get_class($provider)] = $providerWidgets;
         }
 

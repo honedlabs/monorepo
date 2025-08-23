@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Widget\Casts;
 
-use Honed\Widget\Facades\Widgets;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @implements \Illuminate\Contracts\Database\Eloquent\CastsAttributes<string|null, string|null>
  */
-class WidgetCast implements CastsAttributes
+class GridAreaCast implements CastsAttributes
 {
     /**
      * Cast the given value.
@@ -27,10 +26,11 @@ class WidgetCast implements CastsAttributes
     /**
      * Prepare the given value for storage.
      *
+     * @param  string|null  $value
      * @param  array<string, mixed>  $attributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return Widgets::serializeWidget($value);
+        return null;
     }
 }

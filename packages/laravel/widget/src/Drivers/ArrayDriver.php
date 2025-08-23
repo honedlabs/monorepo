@@ -13,13 +13,11 @@ class ArrayDriver extends Driver
     {
         return [];
     }
+
     /**
      * {@inheritdoc}
      */
-    public function set(string $widget, mixed $scope, mixed $data = null, mixed $position = null): void
-    {
-
-    }
+    public function set(string $widget, mixed $scope, mixed $data = null, mixed $position = null): void {}
 
     /**
      * {@inheritdoc}

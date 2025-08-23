@@ -9,8 +9,7 @@ use Honed\Widget\Casts\PositionCast;
 use Honed\Widget\Casts\ScopeCast;
 use Honed\Widget\Casts\WidgetCast;
 use Honed\Widget\Concerns\InteractsWithDatabase;
-use Honed\Widget\WidgetCollection;
-use Illuminate\Database\Eloquent\Attributes\CollectedBy;
+use Honed\Widget\QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,7 +21,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\CarbonImmutable $created_at
  * @property \Carbon\CarbonImmutable $updated_at
  */
-#[CollectedBy(WidgetCollection::class)]
 class Widget extends Model
 {
     use InteractsWithDatabase;
@@ -33,6 +31,17 @@ class Widget extends Model
      * @var array<int, string>
      */
     public $guarded = [];
+
+    /**
+     * Begin querying the model.
+     *
+     * @return \Honed\Widget\Builder<*>
+     */
+    public static function query()
+    {
+        /** @var \Honed\Widget\Builder<*> */
+        return parent::query();
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -50,7 +59,7 @@ class Widget extends Model
             'updated_at' => 'immutable_datetime',
         ];
     }
-    
+
     /**
      * Set the cast for the data attribute.
      */
@@ -70,7 +79,7 @@ class Widget extends Model
     /**
      * Create a new Eloquent query builder for the model.
      *
-     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  QueryBuilder  $query
      * @return \Honed\Widget\Builder<*>
      */
     public function newEloquentBuilder($query)
@@ -79,14 +88,13 @@ class Widget extends Model
     }
 
     /**
-     * Begin querying the model.
-     * 
-     * @return \Honed\Widget\Builder<*>
+     * Get a new query builder instance for the connection.
+     *
+     * @return QueryBuilder
      */
-    public static function query()
+    protected function newBaseQueryBuilder()
     {
-        /** @var \Honed\Widget\Builder<*> */
-        return parent::query();   
+        return new QueryBuilder($this->getConnection());
     }
 
     // public function newCollection(array $models = [])

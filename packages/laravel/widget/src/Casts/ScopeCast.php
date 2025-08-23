@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Widget\Casts;
 
+use Honed\Widget\Facades\Widgets;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,6 +32,6 @@ class ScopeCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return null;
+        return Widgets::serializeScope($value);
     }
 }

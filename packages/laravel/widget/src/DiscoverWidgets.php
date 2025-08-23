@@ -25,18 +25,17 @@ class DiscoverWidgets
      *
      * @param  array<int, string>|string  $widgetPath
      * @param  string  $basePath
-     * @return array
+     * @return array<int, mixed>
      */
-    public static function within($widgetPath, $basePath)
+    public static function within(array|string $widgetPath, string $basePath): array
     {
         if (Arr::wrap($widgetPath) === []) {
             return [];
         }
 
-        $files = Finder::create()->files()->in($widgetPath);
+        $discoveredWidgets = [];
 
-        /** @var array<int, Widget> $widgets */
-        $widgets = [];
+        $files = Finder::create()->files()->in($widgetPath);
 
         foreach ($files as $file) {
             $widget = static::classFromFile($file, $basePath);
@@ -45,33 +44,26 @@ class DiscoverWidgets
                 continue;
             }
 
-            /** @var Widget $widget */
-            $widget = App::make($widget);
-
-            $widgets[$widget->getName()] = $widget;
+            $discoveredWidgets[] = App::make($widget);
         }
 
-        return $widgets;
+        return $discoveredWidgets;
     }
 
     /**
      * Specify a callback to be used to guess class names.
      *
      * @param  callable(SplFileInfo, string): class-string  $callback
-     * @return void
      */
-    public static function guessClassNamesUsing(callable $callback)
+    public static function guessClassNamesUsing(callable $callback): void
     {
         static::$guessClassNamesUsingCallback = $callback;
     }
 
     /**
      * Determine if the widget is invalid.
-     *
-     * @param  class-string  $widget
-     * @return bool
      */
-    protected static function invalidWidget($widget)
+    protected static function invalidWidget(string $widget): bool
     {
         return ! class_exists($widget)
             || ! is_subclass_of($widget, Widget::class)
@@ -80,15 +72,14 @@ class DiscoverWidgets
 
     /**
      * Extract the class name from the given file path.
-     *
-     * @param  string  $basePath
-     * @return class-string
      */
-    protected static function classFromFile(SplFileInfo $file, $basePath)
+    protected static function classFromFile(SplFileInfo $file, string $basePath): string
     {
         if (static::$guessClassNamesUsingCallback) {
             return call_user_func(static::$guessClassNamesUsingCallback, $file, $basePath);
         }
+
+        dd($file->getRealPath(), $basePath);
 
         $class = trim(Str::replaceFirst($basePath, '', $file->getRealPath()), DIRECTORY_SEPARATOR);
 

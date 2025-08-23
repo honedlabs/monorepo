@@ -6,12 +6,10 @@ namespace Honed\Widget\Drivers;
 
 use Honed\Widget\Concerns\InteractsWithDatabase;
 use Honed\Widget\Concerns\Resolvable;
-use Honed\Widget\Facades\Widgets;
 use Honed\Widget\QueryBuilder;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 
 class DatabaseDriver extends Driver
@@ -110,8 +108,8 @@ class DatabaseDriver extends Driver
 
     /**
      * Create an array of values to be inserted.
-     * 
-     * @param array{widget: string, scope: mixed, data: mixed, position: mixed} $values
+     *
+     * @param  array{widget: string, scope: mixed, data: mixed, position: mixed}  $values
      * @return array<string, mixed>
      */
     protected function fill(array $values): array

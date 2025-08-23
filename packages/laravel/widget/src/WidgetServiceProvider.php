@@ -37,10 +37,16 @@ class WidgetServiceProvider extends ServiceProvider
     protected static $widgetDiscoveryPaths;
 
     /**
+     * The base path to be used during widget discovery.
+     *
+     * @var string|null
+     */
+    protected static $widgetDiscoveryBasePath;
+
+    /**
      * Add the given widget discovery paths to the application's widget discovery paths.
      *
      * @param  string|iterable<int, string>  $paths
-     * @return void
      */
     public static function addWidgetDiscoveryPaths(iterable|string $paths): void
     {
@@ -51,13 +57,39 @@ class WidgetServiceProvider extends ServiceProvider
     }
 
     /**
-     * Set the globally configured widget discovery paths.
+     * Get the widget discovery paths.
+     *
+     * @return iterable<int, string>
+     */
+    public static function getWidgetDiscoveryPaths(): iterable
+    {
+        return static::$widgetDiscoveryPaths ?? [];
+    }
+
+    /**
+     * Set the widget discovery paths.
      *
      * @param  iterable<int, string>  $paths
      */
     public static function setWidgetDiscoveryPaths(iterable $paths): void
     {
         static::$widgetDiscoveryPaths = $paths;
+    }
+
+    /**
+     * Get the base path to be used during widget discovery.
+     */
+    public static function getWidgetDiscoveryBasePath(): string
+    {
+        return static::$widgetDiscoveryBasePath ?? base_path();
+    }
+
+    /**
+     * Set the base path to be used during widget discovery.
+     */
+    public static function setWidgetDiscoveryBasePath(string $path): void
+    {
+        static::$widgetDiscoveryBasePath = $path;
     }
 
     /**
@@ -78,13 +110,13 @@ class WidgetServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/widget.php', 'widget');
 
         App::macro('getCachedWidgetsPath', function (): string {
-            /** @var \Illuminate\Foundation\Application $this */
+            /** @var Application $this */
 
             return $this->normalizeCachePath('APP_WIDGETS_CACHE', 'cache/widgets.php'); // @phpstan-ignore-line method.protected
         });
 
         App::macro('widgetsAreCached', function (): bool {
-            /** @var \Illuminate\Foundation\Application $this */
+            /** @var Application $this */
 
             /** @var \Illuminate\Filesystem\Filesystem $files */
             $files = $this->files; // @phpstan-ignore-line varTag.nativeType
@@ -152,8 +184,6 @@ class WidgetServiceProvider extends ServiceProvider
 
     /**
      * Determine if widgets should be automatically discovered.
-     *
-     * @return bool
      */
     public function shouldDiscoverWidgets(): bool
     {
@@ -168,22 +198,22 @@ class WidgetServiceProvider extends ServiceProvider
     public function discoverWidgets(): array
     {
         return (new LazyCollection($this->discoverWidgetsWithin()))
-            ->flatMap(function ($directory) {
-                return glob($directory, GLOB_ONLYDIR);
+            ->flatMap(function (string $directory): array {
+                $result = glob($directory, GLOB_ONLYDIR);
+
+                return $result !== false ? $result : [];
             })
-            ->reject(function ($directory) {
+            ->reject(function (string $directory): bool {
                 return ! is_dir($directory);
             })
-            ->pipe(fn ($directories) => DiscoverWidgets::within(
+            ->pipe(static fn ($directories) => DiscoverWidgets::within(
                 $directories->all(),
-                $this->widgetDiscoveryBasePath(),
+                static::getWidgetDiscoveryBasePath(),
             ));
     }
 
     /**
      * Register the migrations and publishing for the package.
-     *
-     * @return void
      */
     protected function offerPublishing(): void
     {
@@ -222,21 +252,11 @@ class WidgetServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the base path to be used during widget discovery.
-     *
-     * @return string
-     */
-    protected function widgetDiscoveryBasePath(): string
-    {
-        return base_path();
-    }
-
-    /**
      * Get the application instance.
      */
     protected function getApp(): Application
     {
-        /** @var \Illuminate\Foundation\Application */
+        /** @var Application */
         return $this->app;
     }
 }

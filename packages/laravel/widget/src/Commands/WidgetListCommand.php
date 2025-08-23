@@ -6,9 +6,7 @@ namespace Honed\Widget\Commands;
 
 use Closure;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Support\Collection;
-use ReflectionFunction;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'widget:list')]
@@ -39,10 +37,8 @@ class WidgetListCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $widgets = $this->getWidgets()->sortKeys();
 
@@ -71,10 +67,9 @@ class WidgetListCommand extends Command
      */
     protected function displayJson($widgets)
     {
-        $data = $widgets->map(function ($listeners, $widget) {
+        $data = $widgets->map(function ($widget) {
             return [
                 'widget' => strip_tags($this->appendWidgetInterfaces($widget)),
-                'listeners' => collect($listeners)->map(fn ($listener) => strip_tags($listener))->values()->all(),
             ];
         })->values();
 
@@ -105,77 +100,13 @@ class WidgetListCommand extends Command
      */
     protected function getWidgets()
     {
-        $widgets = new Collection($this->getListenersOnDispatcher());
+        $widgets = new Collection([]);
 
         if ($this->filteringByWidget()) {
             $widgets = $this->filterWidgets($widgets);
         }
 
         return $widgets;
-    }
-
-    /**
-     * Get the event / listeners from the dispatcher object.
-     *
-     * @return array
-     */
-    protected function getListenersOnDispatcher()
-    {
-        $widgets = [];
-
-        foreach ($this->getRawListeners() as $widget => $rawListeners) {
-            dd($widget, $rawListeners);
-            foreach ($rawListeners as $rawListener) {
-                if (is_string($rawListener)) {
-                    $widgets[$widget][] = $this->appendListenerInterfaces($rawListener);
-                } elseif ($rawListener instanceof Closure) {
-                    $widgets[$widget][] = $this->stringifyClosure($rawListener);
-                } elseif (is_array($rawListener) && count($rawListener) === 2) {
-                    if (is_object($rawListener[0])) {
-                        $rawListener[0] = get_class($rawListener[0]);
-                    }
-
-                    $widgets[$widget][] = $this->appendListenerInterfaces(implode('@', $rawListener));
-                }
-            }
-        }
-
-        return $widgets;
-    }
-
-    /**
-     * Add the event implemented interfaces to the output.
-     *
-     * @param  string  $widget
-     * @return string
-     */
-    protected function appendWidgetInterfaces($widget)
-    {
-        if (! class_exists($widget)) {
-            return $widget;
-        }
-
-        $interfaces = class_implements($widget);
-
-        if (in_array(ShouldBroadcast::class, $interfaces)) {
-            $widget .= ' <fg=bright-blue>(ShouldBroadcast)</>';
-        }
-
-        return $widget;
-    }
-
-    /**
-     * Get a displayable string representation of a Closure listener.
-     *
-     * @return string
-     */
-    protected function stringifyClosure(Closure $rawListener)
-    {
-        $reflection = new ReflectionFunction($rawListener);
-
-        $path = str_replace([base_path(), DIRECTORY_SEPARATOR], ['', '/'], $reflection->getFileName() ?: '');
-
-        return 'Closure at: '.$path.':'.$reflection->getStartLine();
     }
 
     /**

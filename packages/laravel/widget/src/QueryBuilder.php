@@ -5,24 +5,23 @@ declare(strict_types=1);
 namespace Honed\Widget;
 
 use Honed\Widget\Concerns\Resolvable;
-use Honed\Widget\Facades\Widgets;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 
 class QueryBuilder extends Builder
 {
     use Resolvable;
-    
+
     /**
      * Create a new query builder instance.
      */
     public function __construct(Connection $connection)
     {
         parent::__construct(
-            $connection, 
-            $connection->getQueryGrammar(), 
+            $connection,
+            $connection->getQueryGrammar(),
             $connection->getPostProcessor()
-        );   
+        );
     }
 
     /**

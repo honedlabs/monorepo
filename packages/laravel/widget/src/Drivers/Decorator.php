@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Widget\Drivers;
 
-use BackedEnum;
+use Honed\Widget\Concerns\Resolvable;
 use Honed\Widget\Contracts\CanListWidgets;
 use Honed\Widget\Contracts\Driver;
 use Honed\Widget\Events\WidgetDeleted;
@@ -22,6 +22,7 @@ class Decorator implements Driver
     use Macroable {
         __call as macroCall;
     }
+    use Resolvable;
 
     /**
      * The store's name.
@@ -107,7 +108,7 @@ class Decorator implements Driver
 
         // $this->driver->set($widget, $scope, $group, $order);
 
-        Event::dispatch(new WidgetUpdated($widget, $scope));
+        Event::dispatch(new WidgetUpdated($widget, $scope, $data, $position));
     }
 
     /**
@@ -144,24 +145,6 @@ class Decorator implements Driver
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function exists($widget, $scope, $group = null)
-    {
-        $widget = $this->resolveWidget($widget);
-
-        $scope = $this->resolveScope($scope);
-    }
-
-    // /**
-    //  * {@inheritdoc}
-    //  */
-    // public function purge(...$widgets)
-    // {
-    //     $this->driver->purge(...$widgets);
-    //
-
-    /**
      * Retrieve the widget's name.
      *
      * @param  string  $widget
@@ -193,22 +176,6 @@ class Decorator implements Driver
     }
 
     /**
-     * Resolve the widget by name.
-     */
-    protected function resolveWidget(string|BackedEnum $widget): string
-    {
-        return Widgets::serializeWidget($widget);
-    }
-
-    /**
-     * Resolve the scope.
-     */
-    protected function resolveScope(mixed $scope): string
-    {
-        return Widgets::serializeScope($scope);
-    }
-
-    /**
      * Retrieve the default scope.
      */
     protected function defaultScope(): mixed
@@ -229,7 +196,7 @@ class Decorator implements Driver
             );
         }
 
-        /** @var CanListViews */
+        /** @var CanListWidgets */
         return $this->driver;
     }
 }
