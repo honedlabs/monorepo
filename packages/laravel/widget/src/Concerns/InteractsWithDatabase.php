@@ -12,7 +12,7 @@ trait InteractsWithDatabase
     /**
      * Get the connection name for widgets.
      */
-    public function getConnection(): string
+    public function getConnectionName(): string
     {
         /** @var string|null */
         $connection = config('widget.drivers.database.connection');

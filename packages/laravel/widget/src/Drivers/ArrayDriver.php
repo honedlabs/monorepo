@@ -9,28 +9,31 @@ class ArrayDriver extends Driver
     /**
      * {@inheritdoc}
      */
-    public function get($scope, $group = null)
+    public function get(mixed $scope): array
     {
         return [];
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function set(string $widget, mixed $scope, mixed $data = null, mixed $position = null): void
+    {
+
     }
 
     /**
      * {@inheritdoc}
      */
-    public function exists($widget, $scope, $group = null) {}
+    public function update(string $widget, mixed $scope, mixed $data = null, mixed $position = null): bool
+    {
+        return false;
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function set($widget, $scope, $group = null, $order = 0) {}
-
-    /**
-     * {@inheritdoc}
-     */
-    public function update($widget, $scope, $group = null, $order = 0) {}
-
-    /**
-     * {@inheritdoc}
-     */
-    public function delete($widget, $scope, $group = null) {}
+    public function delete(string $widget, mixed $scope): bool
+    {
+        return false;
+    }
 }

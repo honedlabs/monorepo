@@ -10,4 +10,12 @@ use Illuminate\Database\Migrations\Migration;
 abstract class WidgetMigration extends Migration
 {
     use InteractsWithDatabase;
+
+    /**
+     * Get the migration connection name.
+     */
+    public function getConnection(): string
+    {
+        return $this->getConnectionName();
+    }
 }

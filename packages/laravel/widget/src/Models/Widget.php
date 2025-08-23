@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Widget\Models;
 
+use Honed\Widget\Builder;
 use Honed\Widget\Casts\PositionCast;
 use Honed\Widget\Casts\ScopeCast;
 use Honed\Widget\Casts\WidgetCast;
 use Honed\Widget\Concerns\InteractsWithDatabase;
 use Honed\Widget\WidgetCollection;
 use Illuminate\Database\Eloquent\Attributes\CollectedBy;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -67,28 +67,30 @@ class Widget extends Model
         return $this->table ??= $this->getTableName();
     }
 
-    public function newCollection(array $models = [])
+    /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return \Honed\Widget\Builder<*>
+     */
+    public function newEloquentBuilder($query)
     {
-        return parent::newCollection($models);
+        return new Builder($query);
     }
 
     /**
-     * Scope a query to only include widgets for a given scope.
-     *
-     * @param  Builder<self>  $query
+     * Begin querying the model.
+     * 
+     * @return \Honed\Widget\Builder<*>
      */
-    public function scopeFor(Builder $query, mixed $scope): void
+    public static function query()
     {
-        $query->where('scope', $scope);
+        /** @var \Honed\Widget\Builder<*> */
+        return parent::query();   
     }
 
-    /**
-     * Scope a query to only include the given widget.
-     *
-     * @param  Builder<self>  $query
-     */
-    public function scopeWidget(Builder $query, string $widget): void
-    {
-        $query->where('widget', $widget);
-    }
+    // public function newCollection(array $models = [])
+    // {
+    //     return parent::newCollection($models);
+    // }
 }

@@ -8,7 +8,6 @@ use Honed\Widget\Facades\Widgets;
 
 trait Resolvable
 {
-    
     /**
      * Resolve the scope.
      */

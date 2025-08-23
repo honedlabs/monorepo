@@ -140,6 +140,6 @@ class DatabaseDriver extends Driver
      */
     protected function connection(): Connection
     {
-        return $this->db->connection($this->getConnection());
+        return $this->db->connection($this->getConnectionName());
     }
 }

@@ -8,6 +8,7 @@ use Honed\Widget\Commands\WidgetCacheCommand;
 use Honed\Widget\Commands\WidgetClearCommand;
 use Honed\Widget\Commands\WidgetListCommand;
 use Honed\Widget\Commands\WidgetMakeCommand;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\ServiceProvider;
@@ -41,7 +42,7 @@ class WidgetServiceProvider extends ServiceProvider
      * @param  string|iterable<int, string>  $paths
      * @return void
      */
-    public static function addWidgetDiscoveryPaths(iterable|string $paths)
+    public static function addWidgetDiscoveryPaths(iterable|string $paths): void
     {
         static::$widgetDiscoveryPaths = (new LazyCollection(static::$widgetDiscoveryPaths))
             ->merge(is_string($paths) ? [$paths] : $paths)
@@ -53,19 +54,16 @@ class WidgetServiceProvider extends ServiceProvider
      * Set the globally configured widget discovery paths.
      *
      * @param  iterable<int, string>  $paths
-     * @return void
      */
-    public static function setWidgetDiscoveryPaths($paths)
+    public static function setWidgetDiscoveryPaths(iterable $paths): void
     {
         static::$widgetDiscoveryPaths = $paths;
     }
 
     /**
      * Disable widget discovery for the application.
-     *
-     * @return void
      */
-    public static function disableWidgetDiscovery()
+    public static function disableWidgetDiscovery(): void
     {
         static::$shouldDiscoverWidgets = false;
     }
@@ -75,33 +73,31 @@ class WidgetServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        /** @var \Illuminate\Foundation\Application $app */
-        $app = $this->app;
-
-        $app->singleton(WidgetManager::class, fn ($app) => new WidgetManager($app));
+        $this->getApp()->singleton(WidgetManager::class, fn ($app) => new WidgetManager($app));
 
         $this->mergeConfigFrom(__DIR__.'/../config/widget.php', 'widget');
 
-        App::macro('getCachedWidgetsPath', function () {
+        App::macro('getCachedWidgetsPath', function (): string {
             /** @var \Illuminate\Foundation\Application $this */
-            return $this->normalizeCachePath('APP_WIDGETS_CACHE', 'cache/widgets.php');
+
+            return $this->normalizeCachePath('APP_WIDGETS_CACHE', 'cache/widgets.php'); // @phpstan-ignore-line method.protected
         });
 
-        App::macro('widgetsAreCached', function () {
+        App::macro('widgetsAreCached', function (): bool {
             /** @var \Illuminate\Foundation\Application $this */
-            return $this->files->exists($this->getCachedWidgetsPath());
+
+            /** @var \Illuminate\Filesystem\Filesystem $files */
+            $files = $this->files; // @phpstan-ignore-line varTag.nativeType
+
+            return $files->exists($this->getCachedWidgetsPath());
         });
 
         $this->booting(function () {
-            $widgets = $this->getWidgets();
+            // $widgets = $this->getWidgets();
 
-            foreach ($widgets as $widget) {
-
-            }
-
-            foreach ($this->widgets as $widget) {
-                $this->app->make($widget)::register();
-            }
+            // foreach ($this->widgets as $widget) {
+            //     $this->app->make($widget)::register();
+            // }
         });
     }
 
@@ -127,12 +123,12 @@ class WidgetServiceProvider extends ServiceProvider
     /**
      * Get the discovered widgets for the application.
      *
-     * @return array
+     * @return array<int, class-string<Widget>>
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
-        if ($this->app->widgetsAreCached()) {
-            $cache = require $this->app->getCachedWidgetsPath();
+        if ($this->getApp()->widgetsAreCached()) {
+            $cache = require $this->getApp()->getCachedWidgetsPath();
 
             return $cache[get_class($this)] ?? [];
         }
@@ -149,7 +145,7 @@ class WidgetServiceProvider extends ServiceProvider
      *
      * @return array<int, class-string<Widget>>
      */
-    public function widgets()
+    public function widgets(): array
     {
         return $this->widgets;
     }
@@ -159,7 +155,7 @@ class WidgetServiceProvider extends ServiceProvider
      *
      * @return bool
      */
-    public function shouldDiscoverWidgets()
+    public function shouldDiscoverWidgets(): bool
     {
         return get_class($this) === __CLASS__ && static::$shouldDiscoverWidgets;
     }
@@ -167,9 +163,9 @@ class WidgetServiceProvider extends ServiceProvider
     /**
      * Discover the widgets for the application.
      *
-     * @return array
+     * @return array<int, class-string<Widget>>
      */
-    public function discoverWidgets()
+    public function discoverWidgets(): array
     {
         return (new LazyCollection($this->discoverWidgetsWithin()))
             ->flatMap(function ($directory) {
@@ -189,7 +185,7 @@ class WidgetServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function offerPublishing()
+    protected function offerPublishing(): void
     {
         $this->publishes([
             __DIR__.'/../config/widget.php' => config_path('widget.php'),
@@ -203,9 +199,9 @@ class WidgetServiceProvider extends ServiceProvider
     /**
      * Get the discovered widgets for the application.
      *
-     * @return array
+     * @return array<int, class-string<Widget>>
      */
-    protected function discoveredWidgets()
+    protected function discoveredWidgets(): array
     {
         return $this->shouldDiscoverWidgets()
             ? $this->discoverWidgets()
@@ -217,14 +213,12 @@ class WidgetServiceProvider extends ServiceProvider
      *
      * @return iterable<int, string>
      */
-    protected function discoverWidgetsWithin()
+    protected function discoverWidgetsWithin(): iterable
     {
-        /** @var \Illuminate\Foundation\Application $app */
-        $app = $this->app;
-
         return static::$widgetDiscoveryPaths ?: [
-            $app->path('Widgets'),
+            $this->getApp()->path('Widgets'),
         ];
+
     }
 
     /**
@@ -232,8 +226,17 @@ class WidgetServiceProvider extends ServiceProvider
      *
      * @return string
      */
-    protected function widgetDiscoveryBasePath()
+    protected function widgetDiscoveryBasePath(): string
     {
         return base_path();
+    }
+
+    /**
+     * Get the application instance.
+     */
+    protected function getApp(): Application
+    {
+        /** @var \Illuminate\Foundation\Application */
+        return $this->app;
     }
 }
