@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget;
 
 use Illuminate\Support\Arr;
@@ -33,7 +35,7 @@ class DiscoverWidgets
 
         $files = Finder::create()->files()->in($widgetPath);
 
-        /** @var array<int, \Honed\Widget\Widget> $widgets */
+        /** @var array<int, Widget> $widgets */
         $widgets = [];
 
         foreach ($files as $file) {
@@ -43,7 +45,7 @@ class DiscoverWidgets
                 continue;
             }
 
-            /** @var \Honed\Widget\Widget $widget */
+            /** @var Widget $widget */
             $widget = App::make($widget);
 
             $widgets[$widget->getName()] = $widget;
@@ -53,14 +55,25 @@ class DiscoverWidgets
     }
 
     /**
+     * Specify a callback to be used to guess class names.
+     *
+     * @param  callable(SplFileInfo, string): class-string  $callback
+     * @return void
+     */
+    public static function guessClassNamesUsing(callable $callback)
+    {
+        static::$guessClassNamesUsingCallback = $callback;
+    }
+
+    /**
      * Determine if the widget is invalid.
-     * 
+     *
      * @param  class-string  $widget
      * @return bool
      */
     protected static function invalidWidget($widget)
     {
-        return ! class_exists($widget) 
+        return ! class_exists($widget)
             || ! is_subclass_of($widget, Widget::class)
             || ! (new ReflectionClass($widget))->isInstantiable();
     }
@@ -68,7 +81,6 @@ class DiscoverWidgets
     /**
      * Extract the class name from the given file path.
      *
-     * @param  \SplFileInfo  $file
      * @param  string  $basePath
      * @return class-string
      */
@@ -85,16 +97,5 @@ class DiscoverWidgets
             ['\\', app()->getNamespace()],
             ucfirst(Str::replaceLast('.php', '', $class))
         )));
-    }
-
-    /**
-     * Specify a callback to be used to guess class names.
-     *
-     * @param  callable(SplFileInfo, string): class-string  $callback
-     * @return void
-     */
-    public static function guessClassNamesUsing(callable $callback)
-    {
-        static::$guessClassNamesUsingCallback = $callback;
     }
 }

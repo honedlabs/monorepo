@@ -1,26 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget;
 
+use BackedEnum;
 use Closure;
 use Honed\Widget\Contracts\Driver;
 use Honed\Widget\Contracts\SerializesScope;
-use Honed\Widget\Drivers\Decorator;
 use Honed\Widget\Drivers\ArrayDriver;
-use Honed\Widget\Drivers\CacheDriver;
-use Honed\Widget\Drivers\CookieDriver;
 use Honed\Widget\Drivers\DatabaseDriver;
-use Honed\Widget\Models\Widget;
+use Honed\Widget\Drivers\Decorator;
+use Honed\Widget\Models\Widget as WidgetModel;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Cookie\CookieJar;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Model;
-use InvalidArgumentException;
-use RuntimeException;
 use Illuminate\Http\Request;
 use Illuminate\Session\SessionManager;
-use Illuminate\Cookie\CookieJar;
+use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * @mixin \Honed\Widget\Drivers\Decorator
@@ -30,35 +31,35 @@ class WidgetManager
     /**
      * The container instance.
      *
-     * @var \Illuminate\Contracts\Container\Container
+     * @var Container
      */
     protected $container;
 
     /**
      * The array of resolved Widget drivers.
-     * 
-     * @var array<string, \Honed\Widget\Drivers\Decorator>
+     *
+     * @var array<string, Decorator>
      */
     protected $stores = [];
 
     /**
      * The registered custom drivers.
      *
-     * @var array<string, \Closure(\Illuminate\Contracts\Container\Container, array<string, mixed>):\Honed\Widget\Contracts\Driver>
+     * @var array<string, Closure(Container, array<string, mixed>):Driver>
      */
     protected $customCreators = [];
 
     /**
      * The default scope resolver.
-     * 
-     * @var (callable(string):mixed)|null
+     *
+     * @var (callable():mixed)|null
      */
     protected $defaultScopeResolver;
 
     /**
      * Whether the Eloquent "morph map" should be used when serializing
      * the widget.
-     * 
+     *
      * @var bool
      */
     protected $useMorphMap = false;
@@ -87,19 +88,19 @@ class WidgetManager
 
     /**
      * Get the widget model class.
-     * 
-     * @return class-string<\Illuminate\Database\Eloquent\Model>
+     *
+     * @return class-string<Model>
      */
     public function model(): string
     {
-        /** @var class-string<\Illuminate\Database\Eloquent\Model> */
-        return $this->getConfig()->get('widget.model', Widget::class);
+        /** @var class-string<Model> */
+        return $this->getConfig()->get('widget.model', WidgetModel::class);
     }
 
     /**
      * Get a widget store instance.
-     * 
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     public function store(?string $store = null): Decorator
     {
@@ -109,7 +110,7 @@ class WidgetManager
     /**
      * Get a widget store instance by name.
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function driver(?string $name = null): Decorator
     {
@@ -122,10 +123,10 @@ class WidgetManager
      * Attempt to get the driver from the local cache.
      *
      * @param  string  $name
-     * @return \Honed\Widget\Drivers\Decorator
-     * 
-     * @throws \Honed\Widget\Exceptions\UndefinedDriverException
-     * @throws \Honed\Widget\Exceptions\InvalidDriverException
+     * @return Decorator
+     *
+     * @throws Exceptions\UndefinedDriverException
+     * @throws Exceptions\InvalidDriverException
      */
     public function get($name)
     {
@@ -137,28 +138,11 @@ class WidgetManager
      */
     public function createArrayDriver(string $name): ArrayDriver
     {
-        return new ArrayDriver($name, $this->getDispatcher());
+        return new ArrayDriver(
+            $name,
+            $this->getDispatcher()
+        );
     }
-
-    /**
-     * Create an instance of the cache driver.
-     */
-    // public function createCacheDriver(string $name): CacheDriver
-    // {
-    //     return new CacheDriver(
-    //         $name, $this->getCache(), $this->getDispatcher(), $this->getConfig(),
-    //     );
-    // }
-    
-    /**
-     * Create an instance of the cookie driver.
-     */
-    // public function createCookieDriver(): CookieDriver
-    // {
-    //     return new CookieDriver(
-    //         $name, $this->getCookieJar(), $this->getDispatcher()
-    //     );
-    // }
 
     /**
      * Create an instance of the database driver.
@@ -166,7 +150,9 @@ class WidgetManager
     public function createDatabaseDriver(string $name): DatabaseDriver
     {
         return new DatabaseDriver(
-            $this->getDatabaseManager(), $this->getDispatcher(), $name,
+            $name,
+            $this->getDispatcher(),
+            $this->getDatabaseManager(),
         );
     }
 
@@ -175,8 +161,8 @@ class WidgetManager
      */
     public function getDefaultDriver(): string
     {
-        // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
-        return $this->container['config']->get('widget.default', 'database');
+        /** @var string */
+        return $this->getConfig()->get('widget.default', 'database');
     }
 
     /**
@@ -184,8 +170,7 @@ class WidgetManager
      */
     public function setDefaultDriver(string $name): void
     {
-        // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
-        $this->container['config']->set('widget.default', $name);
+        $this->getConfig()->set('widget.default', $name);
     }
 
     /**
@@ -222,7 +207,7 @@ class WidgetManager
     /**
      * Register a custom driver creator Closure.
      *
-     * @param  \Closure(\Illuminate\Contracts\Container\Container, array<string, mixed>):mixed  $callback
+     * @param  Closure(string, Container): Driver  $callback
      * @return $this
      */
     public function extend(string $driver, Closure $callback): static
@@ -235,10 +220,8 @@ class WidgetManager
     /**
      * Serialize the given scope for storage.
      *
-     * @param  mixed  $scope
-     * @return string
-     * 
-     * @throws \RuntimeException
+     *
+     * @throws RuntimeException
      */
     public function serializeScope(mixed $scope): string
     {
@@ -252,6 +235,28 @@ class WidgetManager
                 'Unable to serialize the scope to a string. You should implement the ['.SerializesScope::class.'] contract.'
             )
         };
+    }
+
+    /**
+     * Serialize the widget for storage.
+     */
+    public function serializeWidget(string|Widget|BackedEnum $widget): string
+    {
+        // Refactor
+        $widget = match (true) {
+            is_string($widget) => $widget,
+            $widget instanceof Widget => $widget->getName(),
+            default => $widget->value,
+        };
+
+        if (class_exists($widget)
+            && is_subclass_of($widget, Widget::class)
+            && $name = $this->container->make($widget)->getName()
+        ) {
+            return $name;
+        }
+
+        return $widget;
     }
 
     /**
@@ -340,7 +345,7 @@ class WidgetManager
     /**
      * Resolve the given driver.
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function resolve(string $name): Decorator
     {

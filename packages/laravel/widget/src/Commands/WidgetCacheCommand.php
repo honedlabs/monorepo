@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget\Commands;
 
 use Honed\Widget\WidgetServiceProvider;
@@ -40,10 +42,10 @@ class WidgetCacheCommand extends Command
 
     /**
      * Get the widgets that should be cached.
-     * 
+     *
      * @return array
      */
-        /**
+    /**
      * Get all of the events and listeners configured for the application.
      *
      * @return array

@@ -18,14 +18,14 @@ class Widget extends Model
 
     /**
      * The attributes that are not mass assignable.
-     * 
+     *
      * @var array<int, string>
      */
     public $guarded = [];
 
     /**
      * Get the attributes that should be cast.
-     * 
+     *
      * @return array<string, string>
      */
     public function casts(): array
@@ -37,7 +37,7 @@ class Widget extends Model
             'data' => $this->dataCast(),
             'created_at' => 'immutable_datetime',
             'updated_at' => 'immutable_datetime',
-        ];        
+        ];
     }
 
     /**
@@ -58,8 +58,8 @@ class Widget extends Model
 
     /**
      * Scope a query to only include widgets for a given scope.
-     * 
-     * @param  \Illuminate\Database\Eloquent\Builder<self>  $query
+     *
+     * @param  Builder<self>  $query
      */
     public function scopeFor(Builder $query, mixed $scope): void
     {
@@ -68,8 +68,8 @@ class Widget extends Model
 
     /**
      * Scope a query to only include the given widget.
-     * 
-     * @param  \Illuminate\Database\Eloquent\Builder<self>  $query
+     *
+     * @param  Builder<self>  $query
      */
     public function scopeWidget(Builder $query, string $widget): void
     {

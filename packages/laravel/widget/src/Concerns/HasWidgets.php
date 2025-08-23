@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget\Concerns;
 
-use Honed\Widget\Attributes\Widgets as WidgetsAttribute;
 use Honed\Widget\Facades\Widgets;
-use Illuminate\Support\Arr;
 
 /**
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
@@ -13,8 +13,8 @@ trait HasWidgets
 {
     /**
      * Get the widgets active for the class.
-     * 
-     * @param string|null $driver
+     *
+     * @param  string|null  $driver
      * @return array<int, \Honed\Widget\Widget>
      */
     public function widgets()
@@ -25,7 +25,7 @@ trait HasWidgets
     /**
      * Define the default widgets for the class, which will not be
      * stored by the driver.
-     * 
+     *
      * @return array<int, class-string<\Honed\Widget\Widget>>
      */
     public function getWidgets()
@@ -35,12 +35,12 @@ trait HasWidgets
 
     /**
      * Create the widgets from the given array.
-     * 
-     * @param array<int, class-string<\Honed\Widget\Widget>> $widgets
+     *
+     * @param  array<int, class-string<\Honed\Widget\Widget>>  $widgets
      * @return array<int, \Honed\Widget\Widget>
      */
     protected function createWidgets($widgets)
     {
-        return array_map(static fn ($widget) => new $widget, $widgets);
+        return array_map(static fn ($widget) => new $widget(), $widgets);
     }
 }

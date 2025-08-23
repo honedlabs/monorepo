@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget\Drivers;
 
-use RuntimeException;
-use Honed\Widget\Widget;
+use BackedEnum;
+use Honed\Widget\Contracts\CanListWidgets;
 use Honed\Widget\Contracts\Driver;
-use Illuminate\Support\Facades\Event;
 use Honed\Widget\Events\WidgetDeleted;
 use Honed\Widget\Events\WidgetUpdated;
+use Honed\Widget\Facades\Widgets;
 use Honed\Widget\ScopedWidgetRetrieval;
-use Illuminate\Support\Traits\Macroable;
-use Honed\Widget\Contracts\CanListWidgets;
-use Honed\Widget\Contracts\WidgetScopeable;
+use Honed\Widget\Widget;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Traits\Macroable;
+use RuntimeException;
 
 class Decorator implements Driver
 {
@@ -30,7 +33,7 @@ class Decorator implements Driver
     /**
      * The driver instance.
      *
-     * @var \Honed\Widget\Contracts\Driver
+     * @var Driver
      */
     protected $driver;
 
@@ -44,16 +47,14 @@ class Decorator implements Driver
     /**
      * The container instance.
      *
-     * @var \Illuminate\Contracts\Container\Container
+     * @var Container
      */
     protected $container;
 
     /**
      * Create a new driver decorator instance.
-     * 
-     * @param string $name
-     * @param \Honed\Widget\Contracts\Driver $driver
-     * @param (callable():mixed) $defaultScopeResolver
+     *
+     * @param  (callable():mixed)  $defaultScopeResolver
      */
     public function __construct(
         string $name,
@@ -90,25 +91,21 @@ class Decorator implements Driver
     /**
      * {@inheritdoc}
      */
-    public function get($scope, $group = null)
+    public function get(mixed $scope): array
     {
-        $this->driver->get($scope, $group);
-
-        // Event::dispatch(new WidgetRetrieved($widget, $scope, $item));
-
-        return null;
+        return $this->driver->get($scope);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set($widget, $scope, $group = null, $order = 0)
+    public function set(string $widget, mixed $scope, mixed $data = null, mixed $position = null): void
     {
         $widget = $this->resolveWidget($widget);
 
         $scope = $this->resolveScope($scope);
 
-        $this->driver->set($widget, $scope, $group, $order);
+        // $this->driver->set($widget, $scope, $group, $order);
 
         Event::dispatch(new WidgetUpdated($widget, $scope));
     }
@@ -116,32 +113,34 @@ class Decorator implements Driver
     /**
      * {@inheritdoc}
      */
-    public function update($widget, $scope, $group = null, $order = 0)
+    public function update(string $widget, mixed $scope, mixed $data = null, mixed $position = null): bool
     {
         $widget = $this->resolveWidget($widget);
 
         $scope = $this->resolveScope($scope);
 
-        $outcome = $this->driver->update($widget, $scope, $group, $order);
+        // $outcome = $this->driver->update($widget, $scope, $group, $order);
 
-        Event::dispatch(new WidgetUpdated($widget, $scope, $group, $order));
-        
-        return $outcome;
+        // Event::dispatch(new WidgetUpdated($widget, $scope, $group, $order));
+
+        return true;
 
     }
 
     /**
      * {@inheritdoc}
      */
-    public function delete($widget, $scope, $group = null)
+    public function delete(string $widget, mixed $scope): bool
     {
         $widget = $this->resolveWidget($widget);
 
         $scope = $this->resolveScope($scope);
 
-        $this->driver->delete($widget, $scope, $group);
+        // $this->driver->delete($widget, $scope, $group);
 
         Event::dispatch(new WidgetDeleted($widget, $scope));
+
+        return true;
     }
 
     /**
@@ -160,65 +159,17 @@ class Decorator implements Driver
     // public function purge(...$widgets)
     // {
     //     $this->driver->purge(...$widgets);
-    // 
+    //
 
     /**
      * Retrieve the widget's name.
-     * 
-     * @param string $widget
+     *
+     * @param  string  $widget
      * @return string
      */
     public function name($widget)
     {
         return $this->resolveWidget($widget);
-    }
-
-    /**
-     * Resolve the widget by name.
-     * 
-     * @param string $widget
-     * @return string
-     */
-    protected function resolveWidget(string $widget): string
-    {
-        if (class_exists($widget)
-            && is_subclass_of($widget, Widget::class)
-            && $name = $this->container->make($widget)->getName()
-        ) {
-            return $name;
-        }
-
-        return $widget;
-    }
-
-    /**
-     * Retrieve the widget's class.
-     * 
-     * @param string $name
-     * @return \Honed\Widget\Contracts\Widget
-     */
-    public function instance($name)
-    {
-        $widget = $this->implementationClass($name);
-
-        // if (is_string($widget) && class_exists($widget)) {
-            // return $this->container->make($widget);
-        // }
-
-        return fn () => $widget;
-    }
-
-    /**
-     * Resolve the scope.
-     *
-     * @param  mixed  $scope
-     * @return mixed
-     */
-    protected function resolveScope($scope)
-    {
-        return $scope instanceof WidgetScopeable
-            ? $scope->toWidgetIdentifier($this->name)
-            : $scope;
     }
 
     /**
@@ -228,7 +179,6 @@ class Decorator implements Driver
     {
         return $this->driver;
     }
-
 
     /**
      * Set the container instance used by the decorator.
@@ -240,6 +190,22 @@ class Decorator implements Driver
         $this->container = $container;
 
         return $this;
+    }
+
+    /**
+     * Resolve the widget by name.
+     */
+    protected function resolveWidget(string|BackedEnum $widget): string
+    {
+        return Widgets::serializeWidget($widget);
+    }
+
+    /**
+     * Resolve the scope.
+     */
+    protected function resolveScope(mixed $scope): string
+    {
+        return Widgets::serializeScope($scope);
     }
 
     /**

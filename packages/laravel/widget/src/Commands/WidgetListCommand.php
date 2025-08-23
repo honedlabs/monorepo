@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget\Commands;
 
 use Closure;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use ReflectionFunction;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -32,7 +33,7 @@ class WidgetListCommand extends Command
     /**
      * The events dispatcher resolver callback.
      *
-     * @var \Closure|null
+     * @var Closure|null
      */
     protected static $widgetsResolver;
 
@@ -65,7 +66,7 @@ class WidgetListCommand extends Command
     /**
      * Display events and their listeners in JSON.
      *
-     * @param  \Illuminate\Support\Collection  $widgets
+     * @param  Collection  $widgets
      * @return void
      */
     protected function displayJson($widgets)
@@ -83,7 +84,6 @@ class WidgetListCommand extends Command
     /**
      * Display the events and their listeners for the CLI.
      *
-     * @param  \Illuminate\Support\Collection  $events
      * @return void
      */
     protected function displayForCli(Collection $events)
@@ -101,7 +101,7 @@ class WidgetListCommand extends Command
     /**
      * Get all of the events and listeners configured for the application.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     protected function getWidgets()
     {
@@ -167,7 +167,6 @@ class WidgetListCommand extends Command
     /**
      * Get a displayable string representation of a Closure listener.
      *
-     * @param  \Closure  $rawListener
      * @return string
      */
     protected function stringifyClosure(Closure $rawListener)
@@ -182,8 +181,8 @@ class WidgetListCommand extends Command
     /**
      * Filter the given events using the provided event name filter.
      *
-     * @param  \Illuminate\Support\Collection  $widgets
-     * @return \Illuminate\Support\Collection
+     * @param  Collection  $widgets
+     * @return Collection
      */
     protected function filterWidgets($widgets)
     {

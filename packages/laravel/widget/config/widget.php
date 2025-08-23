@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -17,7 +19,7 @@ return [
     */
 
     'model' => Honed\Widget\Models\Widget::class,
-    
+
     /*
     |--------------------------------------------------------------------------
     | Default Widget Driver
@@ -31,7 +33,7 @@ return [
     |
     */
 
-    'default' => env('WIDGET_DRIVER', 'database'), 
+    'default' => env('WIDGET_DRIVER', 'database'),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +41,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may configure each of the drivers that should be available to
-    | Widget. These drivers shall be used to store resolved widget values - 
+    | Widget. These drivers shall be used to store resolved widget values -
     | you may configure as many as your application requires.
     |
     */
@@ -50,11 +52,11 @@ return [
         ],
         'cache' => [
             'driver' => 'cache',
-            'expiration' => null
+            'expiration' => null,
         ],
         'cookie' => [
             'driver' => 'cookie',
-            'expiration' => 60 * 24 * 365
+            'expiration' => 60 * 24 * 365,
         ],
         'database' => [
             'driver' => 'database',

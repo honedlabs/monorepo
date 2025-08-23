@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Models\User;
 use Honed\Widget\WidgetServiceProvider;
+use Workbench\App\Models\User;
 
 use function Orchestra\Testbench\workbench_path;
 

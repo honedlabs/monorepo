@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Widget\Concerns;
 
-use Illuminate\Support\Facades\DB;
-
 /**
  * @internal
  */

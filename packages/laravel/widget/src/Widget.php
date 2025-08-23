@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget;
 
 use Illuminate\Support\Str;
@@ -8,24 +10,35 @@ abstract class Widget
 {
     /**
      * The unique name of the widget across your application's widgets.
-     * 
+     *
      * @var string|null
      */
     protected $name;
 
     /**
      * The callback to guess the widget name.
-     * 
+     *
      * @var (callable(static):string)|null
      */
     protected static $guessWidgetNameUsing;
 
     /**
      * Retrieve the value of the widget.
-     * 
+     *
      * @return mixed
      */
     abstract public function getValue();
+
+    /**
+     * Set the callback to guess the widget name.
+     *
+     * @param  callable(static):string  $callback
+     * @return void
+     */
+    public static function guessWidgetNameUsing($callback)
+    {
+        static::$guessWidgetNameUsing = $callback;
+    }
 
     /**
      * Get the name of the widget to be used.
@@ -37,7 +50,7 @@ abstract class Widget
 
     /**
      * Guess the widget name.
-     * 
+     *
      * @return string
      */
     public function guessWidgetName()
@@ -50,16 +63,5 @@ abstract class Widget
             ->basename()
             ->kebab()
             ->value();
-    }
-
-    /**
-     * Set the callback to guess the widget name.
-     * 
-     * @param callable(static):string $callback
-     * @return void
-     */
-    public static function guessWidgetNameUsing($callback)
-    {
-        static::$guessWidgetNameUsing = $callback;
     }
 }

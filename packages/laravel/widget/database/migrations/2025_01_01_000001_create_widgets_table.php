@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+use Honed\Widget\Migrations\WidgetMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Honed\Widget\Migrations\WidgetMigration;
 
-return new class extends WidgetMigration
+return new class() extends WidgetMigration
 {
     /**
      * Run the migrations.

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget\Drivers;
 
 use Honed\Widget\Contracts\Driver as DriverContract;
@@ -17,7 +19,7 @@ abstract class Driver implements DriverContract
     /**
      * The event dispatcher.
      *
-     * @var \Illuminate\Contracts\Events\Dispatcher
+     * @var Dispatcher
      */
     protected $events;
 

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget\Drivers;
 
 use Honed\Widget\Facades\Widgets;
-use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
@@ -12,20 +13,6 @@ use Illuminate\Support\Carbon;
 
 class DatabaseDriver extends Driver
 {
-    /**
-     * The database connection.
-     *
-     * @var \Illuminate\Database\DatabaseManager
-     */
-    protected $db;
-
-    /**
-     * The user configuration.
-     *
-     * @var \Illuminate\Contracts\Config\Repository
-     */
-    protected $config;
-
     /**
      * The name of the "created at" column.
      *
@@ -39,6 +26,20 @@ class DatabaseDriver extends Driver
      * @var string|null
      */
     public const UPDATED_AT = 'updated_at';
+
+    /**
+     * The database connection.
+     *
+     * @var DatabaseManager
+     */
+    protected $db;
+
+    /**
+     * The user configuration.
+     *
+     * @var \Illuminate\Contracts\Config\Repository
+     */
+    protected $config;
 
     /**
      * Create a new driver instance.
@@ -91,7 +92,7 @@ class DatabaseDriver extends Driver
                 self::UPDATED_AT => $now,
             ], [
                 'name',
-                'scope'
+                'scope',
             ], [
                 'order',
                 self::UPDATED_AT,
@@ -124,7 +125,6 @@ class DatabaseDriver extends Driver
             ->where('group', $group)
             ->delete();
     }
-    
 
     /**
      * Create a new table query.
@@ -144,5 +144,5 @@ class DatabaseDriver extends Driver
         return $this->db->connection(
             $this->config->get("widget.drivers.{$this->name}.connection") ?? null
         );
-    }    
+    }
 }

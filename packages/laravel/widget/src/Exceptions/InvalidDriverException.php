@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget\Exceptions;
 
 use InvalidArgumentException;
@@ -8,7 +10,7 @@ class InvalidDriverException extends InvalidArgumentException
 {
     /**
      * Create a new invalid driver exception.
-     * 
+     *
      * @param  string  $driver
      */
     public function __construct($driver)
@@ -23,7 +25,7 @@ class InvalidDriverException extends InvalidArgumentException
      *
      * @param  string  $driver
      * @return never
-     * 
+     *
      * @throws static
      */
     public static function throw($driver)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget\Migrations;
 
 use Honed\Widget\Concerns\InteractsWithDatabase;
@@ -18,7 +20,7 @@ abstract class WidgetMigration extends Migration
         $connection = config('widget.drivers.database.connection');
 
         /** @var string */
-        return ($connection === null || $connection === 'null') 
+        return ($connection === null || $connection === 'null')
             ? config('database.default')
             : $connection;
     }

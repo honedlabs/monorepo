@@ -1,7 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget\Events;
 
-class WidgetCreated
-{
-}
+class WidgetCreated {}

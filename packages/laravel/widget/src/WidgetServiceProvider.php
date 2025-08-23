@@ -1,21 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Widget;
 
-use Illuminate\Support\ServiceProvider;
 use Honed\Widget\Commands\WidgetCacheCommand;
 use Honed\Widget\Commands\WidgetClearCommand;
 use Honed\Widget\Commands\WidgetListCommand;
 use Honed\Widget\Commands\WidgetMakeCommand;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\LazyCollection;
+use Illuminate\Support\ServiceProvider;
 
 class WidgetServiceProvider extends ServiceProvider
 {
     /**
      * The widgets to register.
      *
-     * @var array<int, class-string<\Honed\Widget\Widget>>
+     * @var array<int, class-string<Widget>>
      */
     protected $widgets = [];
 
@@ -32,6 +34,41 @@ class WidgetServiceProvider extends ServiceProvider
      * @var iterable<int, string>|null
      */
     protected static $widgetDiscoveryPaths;
+
+    /**
+     * Add the given widget discovery paths to the application's widget discovery paths.
+     *
+     * @param  string|iterable<int, string>  $paths
+     * @return void
+     */
+    public static function addWidgetDiscoveryPaths(iterable|string $paths)
+    {
+        static::$widgetDiscoveryPaths = (new LazyCollection(static::$widgetDiscoveryPaths))
+            ->merge(is_string($paths) ? [$paths] : $paths)
+            ->unique()
+            ->values();
+    }
+
+    /**
+     * Set the globally configured widget discovery paths.
+     *
+     * @param  iterable<int, string>  $paths
+     * @return void
+     */
+    public static function setWidgetDiscoveryPaths($paths)
+    {
+        static::$widgetDiscoveryPaths = $paths;
+    }
+
+    /**
+     * Disable widget discovery for the application.
+     *
+     * @return void
+     */
+    public static function disableWidgetDiscovery()
+    {
+        static::$shouldDiscoverWidgets = false;
+    }
 
     /**
      * Register services.
@@ -88,22 +125,6 @@ class WidgetServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the migrations and publishing for the package.
-     *
-     * @return void
-     */
-    protected function offerPublishing()
-    {
-        $this->publishes([
-            __DIR__.'/../config/widget.php' => config_path('widget.php'),
-        ], 'widget-config');
-
-        $this->publishes([
-            __DIR__.'/../database/migrations' => $this->app->databasePath('migrations'),
-        ], 'widget-migrations');
-    }
-
-    /**
      * Get the discovered widgets for the application.
      *
      * @return array
@@ -114,34 +135,23 @@ class WidgetServiceProvider extends ServiceProvider
             $cache = require $this->app->getCachedWidgetsPath();
 
             return $cache[get_class($this)] ?? [];
-        } else {
-            return array_merge_recursive(
-                $this->discoveredWidgets(),
-                $this->widgets()
-            );
         }
+
+        return array_merge_recursive(
+            $this->discoveredWidgets(),
+            $this->widgets()
+        );
+
     }
 
     /**
      * Get the widgets that should be cached.
      *
-     * @return array<int, class-string<\Honed\Widget\Widget>>
+     * @return array<int, class-string<Widget>>
      */
     public function widgets()
     {
         return $this->widgets;
-    }
-
-    /**
-     * Get the discovered widgets for the application.
-     *
-     * @return array
-     */
-    protected function discoveredWidgets()
-    {
-        return $this->shouldDiscoverWidgets()
-            ? $this->discoverWidgets()
-            : [];
     }
 
     /**
@@ -175,6 +185,34 @@ class WidgetServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the migrations and publishing for the package.
+     *
+     * @return void
+     */
+    protected function offerPublishing()
+    {
+        $this->publishes([
+            __DIR__.'/../config/widget.php' => config_path('widget.php'),
+        ], 'widget-config');
+
+        $this->publishes([
+            __DIR__.'/../database/migrations' => $this->app->databasePath('migrations'),
+        ], 'widget-migrations');
+    }
+
+    /**
+     * Get the discovered widgets for the application.
+     *
+     * @return array
+     */
+    protected function discoveredWidgets()
+    {
+        return $this->shouldDiscoverWidgets()
+            ? $this->discoverWidgets()
+            : [];
+    }
+
+    /**
      * Get the directories that should be used to discover widgets.
      *
      * @return iterable<int, string>
@@ -190,31 +228,6 @@ class WidgetServiceProvider extends ServiceProvider
     }
 
     /**
-     * Add the given widget discovery paths to the application's widget discovery paths.
-     *
-     * @param  string|iterable<int, string>  $paths
-     * @return void
-     */
-    public static function addWidgetDiscoveryPaths(iterable|string $paths)
-    {
-        static::$widgetDiscoveryPaths = (new LazyCollection(static::$widgetDiscoveryPaths))
-            ->merge(is_string($paths) ? [$paths] : $paths)
-            ->unique()
-            ->values();
-    }
-
-    /**
-     * Set the globally configured widget discovery paths.
-     *
-     * @param  iterable<int, string>  $paths
-     * @return void
-     */
-    public static function setWidgetDiscoveryPaths($paths)
-    {
-        static::$widgetDiscoveryPaths = $paths;
-    }
-
-    /**
      * Get the base path to be used during widget discovery.
      *
      * @return string
@@ -222,15 +235,5 @@ class WidgetServiceProvider extends ServiceProvider
     protected function widgetDiscoveryBasePath()
     {
         return base_path();
-    }
-
-    /**
-     * Disable widget discovery for the application.
-     *
-     * @return void
-     */
-    public static function disableWidgetDiscovery()
-    {
-        static::$shouldDiscoverWidgets = false;
     }
 }
