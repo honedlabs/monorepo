@@ -10,8 +10,6 @@ use Illuminate\Contracts\Config\Repository;
 
 class CacheDriver implements Driver
 {
-    use HasWidgetKeys;
-
     /**
      * The cache manager.
      *

@@ -2,7 +2,6 @@
 
 namespace Honed\Widget\Drivers;
 
-use Honed\Widget\Contracts\Driver;
 use Honed\Widget\Facades\Widgets;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -11,7 +10,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 
-class DatabaseDriver implements Driver
+class DatabaseDriver extends Driver
 {
     /**
      * The database connection.
@@ -21,13 +20,6 @@ class DatabaseDriver implements Driver
     protected $db;
 
     /**
-     * The store's name.
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
      * The user configuration.
      *
      * @var \Illuminate\Contracts\Config\Repository
@@ -35,25 +27,18 @@ class DatabaseDriver implements Driver
     protected $config;
 
     /**
-     * The event dispatcher.
-     *
-     * @var \Illuminate\Contracts\Events\Dispatcher
-     */
-    protected $events;
-
-    /**
      * The name of the "created at" column.
      *
-     * @var string
+     * @var string|null
      */
-    const CREATED_AT = 'created_at';
+    public const CREATED_AT = 'created_at';
 
     /**
      * The name of the "updated at" column.
      *
-     * @var string
+     * @var string|null
      */
-    const UPDATED_AT = 'updated_at';
+    public const UPDATED_AT = 'updated_at';
 
     /**
      * Create a new driver instance.
@@ -61,13 +46,13 @@ class DatabaseDriver implements Driver
      * @return void
      */
     public function __construct(
-        DatabaseManager $db,
+        string $name,
         Dispatcher $events,
-        string $name
+        DatabaseManager $db,
     ) {
+        parent::__construct($name, $events);
+
         $this->db = $db;
-        $this->events = $events;
-        $this->name = $name;
     }
 
     /**

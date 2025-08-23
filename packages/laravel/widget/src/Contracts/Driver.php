@@ -7,23 +7,12 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 interface Driver
 {
     /**
-     * Get all widgets for a given scope and group.
+     * Get all widgets for a given scope.
      * 
      * @param string|null $scope
-     * @param string|null $group
      * @return array<int,mixed>
      */
-    public function get($scope, $group = null);
-
-    /**
-     * Determine if a widget exists for a given scope, widget name and group.
-     * 
-     * @param string $widget
-     * @param string $scope
-     * @param string|null $group
-     * @return bool
-     */
-    public function exists($widget, $scope, $group = null);
+    public function get($scope);
 
     /**
      * Set a widget for a given scope, widget name and group.
@@ -34,10 +23,10 @@ interface Driver
      * @param int $order
      * @return void
      */
-    public function set($widget, $scope, $group = null, $order = 0);
+    public function set($widget, $scope, $data = null, $position = null);
 
     /**
-     * Update the order of a widget for a given scope, widget name and group.
+     * Update the data and position of a widget for a given scope and widget.
      * 
      * @param string $widget
      * @param string $scope
@@ -45,7 +34,7 @@ interface Driver
      * @param int $order
      * @return bool
      */
-    public function update($widget, $scope, $group = null, $order = 0);
+    public function update($widget, $scope, $data = null, $position = null);
 
     /**
      * Delete a widget for a given scope, widget name and group.
@@ -55,7 +44,7 @@ interface Driver
      * @param string|null $group
      * @return void
      */
-    public function delete($widget, $scope, $group = null);
+    public function delete($widget, $scope);
 
     /**
      * Purge all widgets by name from storage.

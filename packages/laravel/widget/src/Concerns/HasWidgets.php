@@ -6,6 +6,9 @@ use Honed\Widget\Attributes\Widgets as WidgetsAttribute;
 use Honed\Widget\Facades\Widgets;
 use Illuminate\Support\Arr;
 
+/**
+ * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
+ */
 trait HasWidgets
 {
     /**
@@ -14,11 +17,9 @@ trait HasWidgets
      * @param string|null $driver
      * @return array<int, \Honed\Widget\Widget>
      */
-    public function widgets($driver = null)
+    public function widgets()
     {
-        $widgets = Widgets::driver($driver)->for($this);
-        
-        return $widgets;
+        return $this->hasMany(Widgets::model());
     }
 
     /**

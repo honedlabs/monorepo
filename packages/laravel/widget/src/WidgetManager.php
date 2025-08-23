@@ -7,7 +7,11 @@ use Honed\Widget\Contracts\Driver;
 use Honed\Widget\Contracts\SerializesScope;
 use Honed\Widget\Drivers\Decorator;
 use Honed\Widget\Drivers\ArrayDriver;
+use Honed\Widget\Drivers\CacheDriver;
+use Honed\Widget\Drivers\CookieDriver;
 use Honed\Widget\Drivers\DatabaseDriver;
+use Honed\Widget\Models\Widget;
+use Illuminate\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\DatabaseManager;
@@ -40,7 +44,7 @@ class WidgetManager
     /**
      * The registered custom drivers.
      *
-     * @var array<string, \Closure(\Illuminate\Contracts\Container\Container, array<string, mixed>):mixed>
+     * @var array<string, \Closure(\Illuminate\Contracts\Container\Container, array<string, mixed>):\Honed\Widget\Contracts\Driver>
      */
     protected $customCreators = [];
 
@@ -82,6 +86,17 @@ class WidgetManager
     }
 
     /**
+     * Get the widget model class.
+     * 
+     * @return class-string<\Illuminate\Database\Eloquent\Model>
+     */
+    public function model(): string
+    {
+        /** @var class-string<\Illuminate\Database\Eloquent\Model> */
+        return $this->getConfig()->get('widget.model', Widget::class);
+    }
+
+    /**
      * Get a widget store instance.
      * 
      * @throws \InvalidArgumentException
@@ -100,7 +115,7 @@ class WidgetManager
     {
         $name = $name ?: $this->getDefaultDriver();
 
-        return $this->stores[$name] = $this->cached($name);
+        return $this->stores[$name] = $this->get($name);
     }
 
     /**
@@ -122,47 +137,27 @@ class WidgetManager
      */
     public function createArrayDriver(string $name): ArrayDriver
     {
-        return new ArrayDriver(
-            $this->getDispatcher(), $name
-        );
+        return new ArrayDriver($name, $this->getDispatcher());
     }
 
-    // /**
-    //  * Create an instance of the cache driver.
-    //  * 
-    //  * @return \Honed\Widget\Drivers\CacheDriver
-    //  */
-    // public function createCacheDriver()
+    /**
+     * Create an instance of the cache driver.
+     */
+    // public function createCacheDriver(string $name): CacheDriver
     // {
-    //     /** @var \Illuminate\Cache\CacheManager */
-    //     $cache = $this->container->get('cache');
-
-    //     /** @var \Illuminate\Contracts\Events\Dispatcher */
-    //     $events = $this->container->get('events');
-
-    //     /** @var \Illuminate\Contracts\Config\Repository */
-    //     $config = $this->container->get('config');
-
-    //     return new CacheDriver($cache, $events, $config);
+    //     return new CacheDriver(
+    //         $name, $this->getCache(), $this->getDispatcher(), $this->getConfig(),
+    //     );
     // }
     
-    // /**
-    //  * Create an instance of the cookie driver.
-    //  * 
-    //  * @return \Honed\Widget\Drivers\CookieDriver
-    //  */
-    // public function createCookieDriver()
+    /**
+     * Create an instance of the cookie driver.
+     */
+    // public function createCookieDriver(): CookieDriver
     // {
-    //     /** @var \Illuminate\Cookie\CookieJar */
-    //     $cookies = $this->container->get('cookie');
-
-    //     /** @var \Illuminate\Contracts\Events\Dispatcher */
-    //     $events = $this->container->get('events');
-
-    //     /** @var \Illuminate\Contracts\Config\Repository */
-    //     $config = $this->container->get('config');
-
-    //     return new CookieDriver($cookies, $events, $config);
+    //     return new CookieDriver(
+    //         $name, $this->getCookieJar(), $this->getDispatcher()
+    //     );
     // }
 
     /**
@@ -387,6 +382,15 @@ class WidgetManager
     {
         /** @var DatabaseManager */
         return $this->container['db']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Get the config instance from the container.
+     */
+    protected function getConfig(): Repository
+    {
+        /** @var Repository */
+        return $this->container['config']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 
     /**
