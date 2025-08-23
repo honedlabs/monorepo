@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Widget\Drivers;
 
+use Honed\Widget\Concerns\InteractsWithDatabase;
+use Honed\Widget\Concerns\Resolvable;
 use Honed\Widget\Facades\Widgets;
+use Honed\Widget\QueryBuilder;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
@@ -13,6 +16,9 @@ use Illuminate\Support\Carbon;
 
 class DatabaseDriver extends Driver
 {
+    use InteractsWithDatabase;
+    use Resolvable;
+
     /**
      * The name of the "created at" column.
      *
@@ -59,57 +65,34 @@ class DatabaseDriver extends Driver
     /**
      * {@inheritdoc}
      */
-    public function get($scope)
+    public function get(mixed $scope): array
     {
         return $this->newQuery()
-            ->where('scope', Widgets::serializeScope($scope))
-            ->get();
+            ->scope($scope)
+            ->get()
+            ->all();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function exists($widget, $scope)
-    {
-        return $this->newQuery()
-            ->where('widget', $widget)
-            ->where('scope', Widgets::serializeScope($scope))
-            ->exists();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function set($widget, $scope, $order = 0)
+    public function set(string $widget, mixed $scope, mixed $data = null, mixed $position = null): void
     {
         $this->newQuery()
-            ->upsert([
-                'group' => $group,
-                'name' => $widget,
-                'scope' => Widgets::serializeScope($scope),
-                'order' => $order,
-                self::CREATED_AT => $now = Carbon::now(),
-                self::UPDATED_AT => $now,
-            ], [
-                'name',
-                'scope',
-            ], [
-                'order',
-                self::UPDATED_AT,
-            ]);
+            ->insert($this->fill(compact('widget', 'scope', 'data', 'position')));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function update($widget, $scope, $group = null, $order = 0)
+    public function update(string $widget, mixed $scope, mixed $data = null, mixed $position = null): bool
     {
         return (bool) $this->newQuery()
-            ->where('name', $widget)
-            ->where('scope', Widgets::serializeScope($scope))
-            ->where('group', $group)
+            ->scope($scope)
+            ->widget($widget)
             ->update([
-                'order' => $order,
+                'data' => $data,
+                'order' => $position,
                 self::UPDATED_AT => Carbon::now(),
             ]);
     }
@@ -117,23 +100,39 @@ class DatabaseDriver extends Driver
     /**
      * {@inheritdoc}
      */
-    public function delete($widget, $scope, $group = null)
+    public function delete(string $widget, mixed $scope): bool
     {
         return (bool) $this->newQuery()
-            ->where('name', $widget)
-            ->where('scope', Widgets::serializeScope($scope))
-            ->where('group', $group)
+            ->scope($scope)
+            ->widget($widget)
             ->delete();
+    }
+
+    /**
+     * Create an array of values to be inserted.
+     * 
+     * @param array{widget: string, scope: mixed, data: mixed, position: mixed} $values
+     * @return array<string, mixed>
+     */
+    protected function fill(array $values): array
+    {
+        return [
+            'widget' => $this->resolveWidget($values['widget']),
+            'scope' => $this->resolveScope($values['scope']),
+            'data' => $values['data'],
+            'order' => $values['position'],
+            self::CREATED_AT => $now = Carbon::now(),
+            self::UPDATED_AT => $now,
+        ];
     }
 
     /**
      * Create a new table query.
      */
-    protected function newQuery(): Builder
+    protected function newQuery(): QueryBuilder
     {
-        return $this->connection()->table(
-            $this->config->get("widget.drivers.{$this->name}.table") ?? 'widgets'
-        );
+        return (new QueryBuilder($this->connection()))
+            ->from($this->getTableName());
     }
 
     /**
@@ -141,8 +140,6 @@ class DatabaseDriver extends Driver
      */
     protected function connection(): Connection
     {
-        return $this->db->connection(
-            $this->config->get("widget.drivers.{$this->name}.connection") ?? null
-        );
+        return $this->db->connection($this->getConnection());
     }
 }

@@ -8,10 +8,21 @@ use Honed\Widget\Casts\PositionCast;
 use Honed\Widget\Casts\ScopeCast;
 use Honed\Widget\Casts\WidgetCast;
 use Honed\Widget\Concerns\InteractsWithDatabase;
-use Illuminate\Database\Eloquent\Attributes\Scope;
+use Honed\Widget\WidgetCollection;
+use Illuminate\Database\Eloquent\Attributes\CollectedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property string $widget
+ * @property string $scope
+ * @property string|null $position
+ * @property array<string, mixed>|null $data
+ * @property \Carbon\CarbonImmutable $created_at
+ * @property \Carbon\CarbonImmutable $updated_at
+ */
+#[CollectedBy(WidgetCollection::class)]
 class Widget extends Model
 {
     use InteractsWithDatabase;
@@ -39,6 +50,14 @@ class Widget extends Model
             'updated_at' => 'immutable_datetime',
         ];
     }
+    
+    /**
+     * Set the cast for the data attribute.
+     */
+    public function dataCast(): string
+    {
+        return 'array';
+    }
 
     /**
      * Get the table associated with the model.
@@ -48,12 +67,9 @@ class Widget extends Model
         return $this->table ??= $this->getTableName();
     }
 
-    /**
-     * Set the cast for the data attribute.
-     */
-    public function dataCast(): string
+    public function newCollection(array $models = [])
     {
-        return 'array';
+        return parent::newCollection($models);
     }
 
     /**

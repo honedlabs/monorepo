@@ -45,14 +45,14 @@ class WidgetManager
     /**
      * The registered custom drivers.
      *
-     * @var array<string, Closure(Container, array<string, mixed>):Driver>
+     * @var array<string, Closure(string, Container):Driver>
      */
     protected $customCreators = [];
 
     /**
      * The default scope resolver.
      *
-     * @var (callable():mixed)|null
+     * @var (callable(mixed...):mixed)|null
      */
     protected $defaultScopeResolver;
 
@@ -243,6 +243,7 @@ class WidgetManager
     public function serializeWidget(string|Widget|BackedEnum $widget): string
     {
         // Refactor
+        /** @var string */
         $widget = match (true) {
             is_string($widget) => $widget,
             $widget instanceof Widget => $widget->getName(),

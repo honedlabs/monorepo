@@ -10,6 +10,18 @@ namespace Honed\Widget\Concerns;
 trait InteractsWithDatabase
 {
     /**
+     * Get the connection name for widgets.
+     */
+    public function getConnection(): string
+    {
+        /** @var string|null */
+        $connection = config('widget.drivers.database.connection');
+
+        /** @var string */
+        return ($connection === null || $connection === 'null') ? config('database.default') : $connection;
+    }
+
+    /**
      * Get the migration table name for widgets.
      */
     public function getTableName(): string
