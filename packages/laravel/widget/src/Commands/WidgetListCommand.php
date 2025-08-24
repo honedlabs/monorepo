@@ -63,7 +63,7 @@ class WidgetListCommand extends Command
     /**
      * Display widgets and their listeners in JSON.
      *
-     * @param  \Illuminate\Support\Collection<string, class-string<\Honed\Widget\Widget>>  $widgets
+     * @param  Collection<string, class-string<\Honed\Widget\Widget>>  $widgets
      */
     protected function displayJson(Collection $widgets): void
     {
@@ -79,7 +79,7 @@ class WidgetListCommand extends Command
     /**
      * Display the widgets and their listeners for the CLI.
      *
-     * @param  \Illuminate\Support\Collection<string, class-string<\Honed\Widget\Widget>>  $widgets
+     * @param  Collection<string, class-string<\Honed\Widget\Widget>>  $widgets
      */
     protected function displayForCli(Collection $widgets): void
     {
@@ -95,7 +95,7 @@ class WidgetListCommand extends Command
     /**
      * Get all of the widgets and listeners configured for the application.
      *
-     * @return \Illuminate\Support\Collection<string, class-string<\Honed\Widget\Widget>>
+     * @return Collection<string, class-string<\Honed\Widget\Widget>>
      */
     protected function getWidgets(): Collection
     {
@@ -130,8 +130,8 @@ class WidgetListCommand extends Command
     /**
      * Filter the given widgets using the provided widget name filter.
      *
-     * @param  \Illuminate\Support\Collection<string, class-string<\Honed\Widget\Widget>>  $widgets
-     * @return \Illuminate\Support\Collection<string, class-string<\Honed\Widget\Widget>>
+     * @param  Collection<string, class-string<\Honed\Widget\Widget>>  $widgets
+     * @return Collection<string, class-string<\Honed\Widget\Widget>>
      */
     protected function filterWidgets(Collection $widgets): Collection
     {

@@ -35,11 +35,11 @@ class Widget extends Model
     /**
      * Begin querying the model.
      *
-     * @return \Honed\Widget\Builder<*>
+     * @return Builder<self>
      */
     public static function query()
     {
-        /** @var \Honed\Widget\Builder<*> */
+        /** @var Builder<self> */
         return parent::query();
     }
 
@@ -80,7 +80,7 @@ class Widget extends Model
      * Create a new Eloquent query builder for the model.
      *
      * @param  QueryBuilder  $query
-     * @return \Honed\Widget\Builder<*>
+     * @return Builder<self>
      */
     public function newEloquentBuilder($query)
     {

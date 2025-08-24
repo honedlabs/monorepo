@@ -4,33 +4,28 @@ declare(strict_types=1);
 
 namespace Honed\Widget\Casts;
 
-use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Honed\Widget\Facades\Widgets;
+use Illuminate\Contracts\Database\Eloquent\CastsInboundAttributes;
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 
-/**
- * @implements \Illuminate\Contracts\Database\Eloquent\CastsAttributes<string|null, string|null>
- */
-class PositionCast implements CastsAttributes
+class PositionCast implements CastsInboundAttributes
 {
     /**
-     * Cast the given value.
+     * Transform the attribute to its underlying model values.
      *
-     * @param  string|null  $value
-     * @param  array<string, mixed>  $attributes
-     */
-    public function get(Model $model, string $key, mixed $value, array $attributes): mixed
-    {
-        return null;
-    }
-
-    /**
-     * Prepare the given value for storage.
-     *
-     * @param  string|null  $value
      * @param  array<string, mixed>  $attributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return null;
+        return match (true) {
+            is_null($value),
+            is_string($value) => $value,
+            // @phpstan-ignore-next-line argument.type
+            is_array($value) => Widgets::convertToPosition(...$value),
+            default => throw new InvalidArgumentException(
+                'Unable to cast value to position.'
+            ),
+        };
     }
 }

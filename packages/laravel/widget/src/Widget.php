@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Widget;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 abstract class Widget
@@ -33,7 +34,6 @@ abstract class Widget
      * Set the callback to guess the widget name.
      *
      * @param  callable(static):string  $callback
-     * @return void
      */
     public static function guessWidgetNameUsing(callable $callback): void
     {
@@ -48,10 +48,13 @@ abstract class Widget
         return $this->name ?? $this->guessWidgetName();
     }
 
+    // public static function register()
+    // {
+    //     App::getProvider(WidgetServiceProvider::class)->add
+    // }
+
     /**
      * Guess the widget name.
-     *
-     * @return string
      */
     public function guessWidgetName(): string
     {

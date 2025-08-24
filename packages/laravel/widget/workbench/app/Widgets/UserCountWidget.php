@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Widgets;
 
-use Honed\Widget\Widget;
 use App\Models\User;
+use Honed\Widget\Widget;
 
 class UserCountWidget extends Widget
 {

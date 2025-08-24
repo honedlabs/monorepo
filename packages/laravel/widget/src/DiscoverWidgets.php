@@ -24,8 +24,7 @@ class DiscoverWidgets
      * Get all of the widgets by searching the given widget directory.
      *
      * @param  array<int, string>|string  $widgetPath
-     * @param  string  $basePath
-     * @return array<string, class-string<\Honed\Widget\Widget>>
+     * @return array<string, class-string<Widget>>
      */
     public static function within(array|string $widgetPath, string $basePath): array
     {
@@ -34,7 +33,7 @@ class DiscoverWidgets
         }
 
         /**
-         * @var array<string, class-string<\Honed\Widget\Widget>>
+         * @var array<string, class-string<Widget>>
          */
         $discoveredWidgets = [];
 
@@ -47,7 +46,7 @@ class DiscoverWidgets
                 continue;
             }
 
-            /** @var \Honed\Widget\Widget */
+            /** @var Widget */
             $widget = App::make($widget);
 
             if (! isset($discoveredWidgets[$widget->getName()])) {

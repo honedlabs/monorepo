@@ -27,16 +27,16 @@ class QueryBuilder extends Builder
     /**
      * Add a `where` clause to the query for the scope.
      */
-    public function scope(mixed $scope): self
+    public function scope(mixed $scope, string $column = 'scope'): self
     {
-        return $this->where('scope', $this->resolveScope($scope));
+        return $this->where($column, $this->resolveScope($scope));
     }
 
     /**
      * Add a `where` clause to the query for the widget.
      */
-    public function widget(string $widget): self
+    public function widget(string $widget, string $column = 'widget'): self
     {
-        return $this->where('widget', $this->resolveWidget($widget));
+        return $this->where($column, $this->resolveWidget($widget));
     }
 }

@@ -11,5 +11,13 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class WidgetCollection extends Collection
 {
-    //
+    /**
+     * Resolve the underlying widgets.
+     *
+     * @return $this
+     */
+    public function resolve(): static
+    {
+        return $this;
+    }
 }

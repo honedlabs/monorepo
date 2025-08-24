@@ -32,7 +32,7 @@ class WidgetManager
     /**
      * The container instance.
      *
-     * @var \Illuminate\Contracts\Container\Container
+     * @var Container
      */
     protected $container;
 
@@ -325,6 +325,17 @@ class WidgetManager
     }
 
     /**
+     * Convert a set of grid positions to a position string.
+     */
+    public function convertToPosition(int $x1 = 0, int $y1 = 0, int $x2 = 0, int $y2 = 0): string
+    {
+        $from = $this->numberToLetter($x1).($y1 + 1);
+        $to = $this->numberToLetter($x2).($y2 + 1);
+
+        return "{$from}:{$to}";
+    }
+
+    /**
      * Convert a grid position to a CSS grid area.
      */
     public function convertToGridArea(string $position): string
@@ -357,7 +368,15 @@ class WidgetManager
      */
     protected function indexInAlphabet(string $letter): int
     {
-        return ord($letter) - ord('A') + 1;
+        return array_search(strtolower($letter), range('a', 'z')) + 1;
+    }
+
+    /**
+     * Convert a numeric index to a letter.
+     */
+    protected function numberToLetter(int $number): string
+    {
+        return chr(ord('a') + $number);
     }
 
     /**

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Widget\Casts;
 
+use Honed\Widget\Facades\Widgets;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @implements \Illuminate\Contracts\Database\Eloquent\CastsAttributes<string|null, string|null>
+ * @implements \Illuminate\Contracts\Database\Eloquent\CastsAttributes<string, mixed>
  */
-class GridAreaCast implements CastsAttributes
+class GridAreaCast extends PositionCast implements CastsAttributes
 {
     /**
      * Cast the given value.
@@ -20,17 +21,10 @@ class GridAreaCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return null;
-    }
+        if (! is_string($value)) {
+            return null;
+        }
 
-    /**
-     * Prepare the given value for storage.
-     *
-     * @param  string|null  $value
-     * @param  array<string, mixed>  $attributes
-     */
-    public function set(Model $model, string $key, mixed $value, array $attributes): mixed
-    {
-        return null;
+        return Widgets::convertToGridArea($value);
     }
 }
