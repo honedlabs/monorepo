@@ -10,20 +10,24 @@ use Inertia\Inertia;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase as Orchestra;
 
+use function Orchestra\Testbench\workbench_path;
+
 class TestCase extends Orchestra
 {
     use RefreshDatabase;
     use WithWorkbench;
 
-    protected function setUp(): void
+    /**
+     * Define database migrations.
+     */
+    protected function defineDatabaseMigrations(): void
     {
-        parent::setUp();
+        $this->loadMigrationsFrom([
+            workbench_path('database/migrations'),
+        ]);
 
-        Inertia::setRootView('app');
-
-        config()->set('inertia.testing.ensure_pages_exist', false);
-        config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
-
-        Carbon::setTestNow(Carbon::now());
+        $this->loadMigrationsFrom(
+            __DIR__.'/../database/migrations',
+        );
     }
 }

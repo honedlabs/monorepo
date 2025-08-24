@@ -6,17 +6,7 @@ namespace Honed\Widget\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 
-class WidgetUpdated
+class WidgetUpdated extends WidgetCreated
 {
-    use Dispatchable;
-
-    /**
-     * Create a new widget updated event.
-     */
-    public function __construct(
-        public string $widget,
-        public mixed $scope,
-        public mixed $data,
-        public ?string $position,
-    ) {}
+    //
 }

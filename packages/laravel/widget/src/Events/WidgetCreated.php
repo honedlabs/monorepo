@@ -17,7 +17,7 @@ class WidgetCreated
     public function __construct(
         public string $widget,
         public string $scope,
-        public mixed $data,
-        public ?string $position,
+        public mixed $data = null,
+        public ?string $position = null,
     ) {}
 }

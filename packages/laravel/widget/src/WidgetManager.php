@@ -244,6 +244,7 @@ class WidgetManager
     {
         return match (true) {
             $scope instanceof SerializesScope => $scope->serializeScope(),
+            $scope === null => '__laravel_null',
             is_string($scope) => $scope,
             is_numeric($scope) => (string) $scope,
             $scope instanceof Model && $this->useMorphMap => $scope->getMorphClass().'|'.$scope->getKey(), // @phpstan-ignore binaryOp.invalid
