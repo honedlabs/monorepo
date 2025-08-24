@@ -18,6 +18,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Session\SessionManager;
 use InvalidArgumentException;
@@ -31,7 +32,7 @@ class WidgetManager
     /**
      * The container instance.
      *
-     * @var Container
+     * @var \Illuminate\Contracts\Container\Container
      */
     protected $container;
 
@@ -95,6 +96,22 @@ class WidgetManager
     {
         /** @var class-string<Model> */
         return $this->getConfig()->get('widget.model', WidgetModel::class);
+    }
+
+    /**
+     * Get an instance of a widget class by the cached name.
+     */
+    public function make(string $widget): ?Widget
+    {
+        $widgets = $this->getProvider()?->getWidgets() ?? [];
+
+        $widget = $widgets[$widget] ?? null;
+
+        if (! $widget) {
+            return null;
+        }
+
+        return $this->container->make($widget);
     }
 
     /**
@@ -382,12 +399,12 @@ class WidgetManager
     }
 
     /**
-     * Get the database manager instance from the container.
+     * Get the app instance from the container.
      */
-    protected function getDatabaseManager(): DatabaseManager
+    protected function getApp(): Application
     {
-        /** @var DatabaseManager */
-        return $this->container['db']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+        /** @var Application */
+        return $this->container['app']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
     }
 
     /**
@@ -400,6 +417,24 @@ class WidgetManager
     }
 
     /**
+     * Get the cookie jar instance from the container.
+     */
+    protected function getCookieJar(): CookieJar
+    {
+        /** @var CookieJar */
+        return $this->container['cookie']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
+     * Get the database manager instance from the container.
+     */
+    protected function getDatabaseManager(): DatabaseManager
+    {
+        /** @var DatabaseManager */
+        return $this->container['db']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+    }
+
+    /**
      * Get the event dispatcher instance from the container.
      */
     protected function getDispatcher(): Dispatcher
@@ -409,12 +444,12 @@ class WidgetManager
     }
 
     /**
-     * Get the cookie jar instance from the container.
+     * Get the widget service provider from the container.
      */
-    protected function getCookieJar(): CookieJar
+    protected function getProvider(): ?WidgetServiceProvider
     {
-        /** @var CookieJar */
-        return $this->container['cookie']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
+        /** @var WidgetServiceProvider|null */
+        return $this->getApp()->getProvider(WidgetServiceProvider::class);
     }
 
     /**

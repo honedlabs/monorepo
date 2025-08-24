@@ -147,11 +147,12 @@ class WidgetServiceProvider extends ServiceProvider
     /**
      * Get the discovered widgets for the application.
      *
-     * @return array<int, class-string<Widget>>
+     * @return array<string, class-string<\Honed\Widget\Widget>>
      */
     public function getWidgets(): array
     {
         if ($this->getApp()->widgetsAreCached()) {
+            /** @var array<string, class-string<\Honed\Widget\Widget>>|null */
             $cache = require $this->getApp()->getCachedWidgetsPath();
 
             return is_array($cache) ? $cache : [];

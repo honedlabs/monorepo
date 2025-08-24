@@ -9,7 +9,7 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @implements \Illuminate\Contracts\Database\Eloquent\CastsAttributes<string|null, string|null>
+ * @implements \Illuminate\Contracts\Database\Eloquent\CastsAttributes<\Honed\Widget\Widget, mixed>
  */
 class WidgetCast implements CastsAttributes
 {
@@ -21,7 +21,11 @@ class WidgetCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return null;
+        if (is_null($value)) {
+            return null;
+        }
+
+        return Widgets::make($value);
     }
 
     /**
