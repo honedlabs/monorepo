@@ -35,7 +35,7 @@ abstract class Widget
      * @param  callable(static):string  $callback
      * @return void
      */
-    public static function guessWidgetNameUsing($callback)
+    public static function guessWidgetNameUsing(callable $callback): void
     {
         static::$guessWidgetNameUsing = $callback;
     }
@@ -53,7 +53,7 @@ abstract class Widget
      *
      * @return string
      */
-    public function guessWidgetName()
+    public function guessWidgetName(): string
     {
         if (static::$guessWidgetNameUsing) {
             return call_user_func(static::$guessWidgetNameUsing, $this);
@@ -61,7 +61,6 @@ abstract class Widget
 
         return Str::of(static::class)
             ->basename()
-            ->kebab()
             ->value();
     }
 }

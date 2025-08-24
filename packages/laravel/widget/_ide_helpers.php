@@ -10,3 +10,11 @@ namespace Illuminate\Contracts\Foundation {
      */
     interface Application {}
 }
+
+namespace Illuminate\Support\Facades {
+    /**
+     * @method static bool widgetsAreCached() Determine if the widgets are cached.
+     * @method static string getCachedWidgetsPath() Get the path to the widgets cache file.
+     */
+    class App {}
+}

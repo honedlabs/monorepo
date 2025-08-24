@@ -43,17 +43,17 @@ class WidgetCacheCommand extends Command
     /**
      * Get all of the events and listeners configured for the application.
      *
-     * @return array<string, array<string, string>>
+     * @return array<string, class-string<\Honed\Widget\Widget>>
      */
-    protected function getWidgets()
+    protected function getWidgets(): array
     {
         $widgets = [];
 
         foreach ($this->laravel->getProviders(WidgetServiceProvider::class) as $provider) {
+            /** @var array<string, class-string<\Honed\Widget\Widget>> */
             $providerWidgets = array_merge_recursive($provider->shouldDiscoverWidgets() ? $provider->discoverWidgets() : [], $provider->widgets());
 
-            dd($provider->discoverWidgets());
-            $widgets[get_class($provider)] = $providerWidgets;
+            $widgets = array_merge($widgets, $providerWidgets);
         }
 
         return $widgets;

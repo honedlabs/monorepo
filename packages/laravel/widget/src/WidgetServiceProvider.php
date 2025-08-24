@@ -18,7 +18,7 @@ class WidgetServiceProvider extends ServiceProvider
     /**
      * The widgets to register.
      *
-     * @var array<int, class-string<Widget>>
+     * @var array<string, class-string<\Honed\Widget\Widget>>
      */
     protected $widgets = [];
 
@@ -123,14 +123,6 @@ class WidgetServiceProvider extends ServiceProvider
 
             return $files->exists($this->getCachedWidgetsPath());
         });
-
-        $this->booting(function () {
-            // $widgets = $this->getWidgets();
-
-            // foreach ($this->widgets as $widget) {
-            //     $this->app->make($widget)::register();
-            // }
-        });
     }
 
     /**
@@ -162,20 +154,34 @@ class WidgetServiceProvider extends ServiceProvider
         if ($this->getApp()->widgetsAreCached()) {
             $cache = require $this->getApp()->getCachedWidgetsPath();
 
-            return $cache[get_class($this)] ?? [];
+            return is_array($cache) ? $cache : [];
         }
 
         return array_merge_recursive(
             $this->discoveredWidgets(),
             $this->widgets()
         );
-
     }
 
     /**
-     * Get the widgets that should be cached.
+     * Register a widget with the service provider.
+     * 
+     * @param class-string<\Honed\Widget\Widget>|Widget $widget
+     */
+    public function addWidget(string|Widget $widget): void
+    {
+        $widget = is_string($widget) ? $this->getApp()->make($widget) : $widget;
+
+        if (! isset($this->widgets[$widget->getName()])) {
+            // @phpstan-ignore-next-line assign.propertyType
+            $this->widgets[$widget->getName()] = get_class($widget);
+        }
+    }
+
+    /**
+     * Get the widgets that should be cached, keyed by the widget name.
      *
-     * @return array<int, class-string<Widget>>
+     * @return array<string, class-string<\Honed\Widget\Widget>>
      */
     public function widgets(): array
     {
@@ -193,7 +199,7 @@ class WidgetServiceProvider extends ServiceProvider
     /**
      * Discover the widgets for the application.
      *
-     * @return array<int, class-string<Widget>>
+     * @return array<string, class-string<\Honed\Widget\Widget>>
      */
     public function discoverWidgets(): array
     {
@@ -229,7 +235,7 @@ class WidgetServiceProvider extends ServiceProvider
     /**
      * Get the discovered widgets for the application.
      *
-     * @return array<int, class-string<Widget>>
+     * @return array<string, class-string<\Honed\Widget\Widget>>
      */
     protected function discoveredWidgets(): array
     {

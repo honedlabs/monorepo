@@ -25,7 +25,7 @@ class DiscoverWidgets
      *
      * @param  array<int, string>|string  $widgetPath
      * @param  string  $basePath
-     * @return array<int, mixed>
+     * @return array<string, class-string<\Honed\Widget\Widget>>
      */
     public static function within(array|string $widgetPath, string $basePath): array
     {
@@ -33,6 +33,9 @@ class DiscoverWidgets
             return [];
         }
 
+        /**
+         * @var array<string, class-string<\Honed\Widget\Widget>>
+         */
         $discoveredWidgets = [];
 
         $files = Finder::create()->files()->in($widgetPath);
@@ -40,11 +43,16 @@ class DiscoverWidgets
         foreach ($files as $file) {
             $widget = static::classFromFile($file, $basePath);
 
-            if (static::invalidWidget($widget)) {
+            if (static::invalid($widget)) {
                 continue;
             }
 
-            $discoveredWidgets[] = App::make($widget);
+            /** @var \Honed\Widget\Widget */
+            $widget = App::make($widget);
+
+            if (! isset($discoveredWidgets[$widget->getName()])) {
+                $discoveredWidgets[$widget->getName()] = get_class($widget);
+            }
         }
 
         return $discoveredWidgets;
@@ -63,7 +71,7 @@ class DiscoverWidgets
     /**
      * Determine if the widget is invalid.
      */
-    protected static function invalidWidget(string $widget): bool
+    protected static function invalid(string $widget): bool
     {
         return ! class_exists($widget)
             || ! is_subclass_of($widget, Widget::class)
@@ -78,8 +86,6 @@ class DiscoverWidgets
         if (static::$guessClassNamesUsingCallback) {
             return call_user_func(static::$guessClassNamesUsingCallback, $file, $basePath);
         }
-
-        dd($file->getRealPath(), $basePath);
 
         $class = trim(Str::replaceFirst($basePath, '', $file->getRealPath()), DIRECTORY_SEPARATOR);
 

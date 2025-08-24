@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Widget\Commands;
 
 use Closure;
+use Honed\Widget\WidgetServiceProvider;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -29,7 +30,7 @@ class WidgetListCommand extends Command
     protected $description = "List the application's widgets";
 
     /**
-     * The events dispatcher resolver callback.
+     * The widgets dispatcher resolver callback.
      *
      * @var Closure|null
      */
@@ -52,7 +53,7 @@ class WidgetListCommand extends Command
             return;
         }
 
-        if ($this->option('json')) {
+        if ($this->shouldDisplayJson()) {
             $this->displayJson($widgets);
         } else {
             $this->displayForCli($widgets);
@@ -60,47 +61,45 @@ class WidgetListCommand extends Command
     }
 
     /**
-     * Display events and their listeners in JSON.
+     * Display widgets and their listeners in JSON.
      *
-     * @param  Collection  $widgets
-     * @return void
+     * @param  \Illuminate\Support\Collection<string, class-string<\Honed\Widget\Widget>>  $widgets
      */
-    protected function displayJson($widgets)
+    protected function displayJson(Collection $widgets): void
     {
         $data = $widgets->map(function ($widget) {
             return [
-                'widget' => strip_tags($this->appendWidgetInterfaces($widget)),
+                'widget' => $widget,
             ];
         })->values();
 
-        $this->output->writeln($data->toJson());
+        $this->output->writeln($data->toJson(JSON_PRETTY_PRINT));
     }
 
     /**
-     * Display the events and their listeners for the CLI.
+     * Display the widgets and their listeners for the CLI.
      *
-     * @return void
+     * @param  \Illuminate\Support\Collection<string, class-string<\Honed\Widget\Widget>>  $widgets
      */
-    protected function displayForCli(Collection $events)
+    protected function displayForCli(Collection $widgets): void
     {
         $this->newLine();
 
-        $events->each(function ($listeners, $event) {
-            $this->components->twoColumnDetail($this->appendEventInterfaces($event));
-            $this->components->bulletList($listeners);
+        $widgets->each(function ($class, $name) {
+            $this->components->twoColumnDetail($name, $class);
         });
 
         $this->newLine();
     }
 
     /**
-     * Get all of the events and listeners configured for the application.
+     * Get all of the widgets and listeners configured for the application.
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection<string, class-string<\Honed\Widget\Widget>>
      */
-    protected function getWidgets()
+    protected function getWidgets(): Collection
     {
-        $widgets = new Collection([]);
+        $widgets = new Collection($this->getRegisteredWidgets());
 
         if ($this->filteringByWidget()) {
             $widgets = $this->filterWidgets($widgets);
@@ -110,29 +109,54 @@ class WidgetListCommand extends Command
     }
 
     /**
-     * Filter the given events using the provided event name filter.
+     * Get the registered widgets.
      *
-     * @param  Collection  $widgets
-     * @return Collection
+     * @return array<string, class-string<\Honed\Widget\Widget>>
      */
-    protected function filterWidgets($widgets)
+    protected function getRegisteredWidgets(): array
+    {
+        $widgets = [];
+
+        foreach ($this->laravel->getProviders(WidgetServiceProvider::class) as $provider) {
+            /** @var array<string, class-string<\Honed\Widget\Widget>> */
+            $providerWidgets = array_merge_recursive($provider->shouldDiscoverWidgets() ? $provider->discoverWidgets() : [], $provider->widgets());
+
+            $widgets = array_merge($widgets, $providerWidgets);
+        }
+
+        return $widgets;
+    }
+
+    /**
+     * Filter the given widgets using the provided widget name filter.
+     *
+     * @param  \Illuminate\Support\Collection<string, class-string<\Honed\Widget\Widget>>  $widgets
+     * @return \Illuminate\Support\Collection<string, class-string<\Honed\Widget\Widget>>
+     */
+    protected function filterWidgets(Collection $widgets): Collection
     {
         if (! $widgetName = $this->option('widget')) {
             return $widgets;
         }
 
         return $widgets->filter(
-            fn ($listeners, $widget) => str_contains($widget, $widgetName)
+            static fn ($widget, $name) => str_contains($name, $widgetName)
         );
     }
 
     /**
-     * Determine whether the user is filtering by an event name.
-     *
-     * @return bool
+     * Determine whether the user is filtering by a widget name.
      */
-    protected function filteringByWidget()
+    protected function filteringByWidget(): bool
     {
         return filled($this->option('widget'));
+    }
+
+    /**
+     * Determine whether the user is displaying the widgets as JSON.
+     */
+    protected function shouldDisplayJson(): bool
+    {
+        return (bool) $this->option('json');
     }
 }

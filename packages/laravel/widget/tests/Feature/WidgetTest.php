@@ -7,17 +7,14 @@ use Workbench\App\Models\User;
 
 use function Orchestra\Testbench\workbench_path;
 
-beforeEach(function () {
-    WidgetServiceProvider::setWidgetDiscoveryPaths([
-        workbench_path('app/Widgets'),
-    ]);
-})->only();
+beforeEach(function () {})->only();
 
 it('tests', function () {
+    $this->artisan('widget:clear');
+
     $this->artisan('widget:cache');
-    // dd(User::query()->get());
-    // dd(app()->getCachedWidgetsPath());
-    dd(WidgetServiceProvider::getWidgetDiscoveryPaths());
+
+    // $this->artisan('widget:list');
 
     // Widget::for($user)->get();
 

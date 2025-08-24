@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Widgets;
+namespace App\Widgets;
 
 use Honed\Widget\Widget;
-use Workbench\App\Models\User;
+use App\Models\User;
 
 class UserCountWidget extends Widget
 {
-    protected $name = 'user-count';
+    protected $name = 'count';
 
     /**
      * {@inheritdoc}

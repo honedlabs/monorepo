@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Providers;
+namespace App\Providers;
 
 use Honed\Widget\WidgetServiceProvider;
 
@@ -17,6 +17,9 @@ class WorkbenchServiceProvider extends ServiceProvider
     public function register(): void
     {
         WidgetServiceProvider::setWidgetDiscoveryBasePath(workbench_path());
+        WidgetServiceProvider::setWidgetDiscoveryPaths([
+            workbench_path('app/Widgets'),
+        ]);
     }
 
     /**
