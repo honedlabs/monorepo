@@ -8,6 +8,10 @@ beforeEach(function () {
     File::cleanDirectory(app_path('Widgets'));
 });
 
+afterEach(function () {
+    File::cleanDirectory(app_path('Widgets'));
+});
+
 it('makes', function () {
     $this->artisan('make:widget', [
         'name' => 'UserCountWidget',

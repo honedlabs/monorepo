@@ -2,6 +2,22 @@
 
 declare(strict_types=1);
 
-it('makes', function () {
-    // $this->artisan('widget:cache')->assertSuccessful();
+use Illuminate\Support\Facades\App;
+
+beforeEach(function () {
+    $this->artisan('widget:clear');
+});
+
+afterEach(function () {
+    $this->artisan('widget:clear');
+});
+
+it('caches', function () {
+    $path = App::getCachedWidgetsPath();
+
+    $this->assertFileDoesNotExist($path);
+
+    $this->artisan('widget:cache');
+
+    $this->assertFileExists($path);
 });

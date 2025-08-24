@@ -33,6 +33,6 @@ arch('events')
     ->expect('Honed\Widget\Events')
     ->toBeClasses();
 
-arch('not strict')
+arch('strict')
     ->expect('Honed\Widget')
-    ->not->toUseStrictTypes();
+    ->toUseStrictTypes();
