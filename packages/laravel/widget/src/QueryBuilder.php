@@ -35,7 +35,7 @@ class QueryBuilder extends Builder
     /**
      * Add a `where` clause to the query for the widget.
      */
-    public function widget(string $widget, string $column = 'widget'): self
+    public function widget(mixed $widget, string $column = 'widget'): self
     {
         return $this->where($column, $this->resolveWidget($widget));
     }

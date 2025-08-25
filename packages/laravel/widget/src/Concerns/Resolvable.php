@@ -19,7 +19,7 @@ trait Resolvable
     /**
      * Resolve the widget name.
      */
-    public function resolveWidget(string $widget): string
+    public function resolveWidget(mixed $widget): string
     {
         return Widgets::serializeWidget($widget);
     }

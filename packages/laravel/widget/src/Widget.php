@@ -31,6 +31,14 @@ abstract class Widget
     abstract public function getValue();
 
     /**
+     * Create a new widget instance.
+     */
+    public static function make(): static
+    {
+        return resolve(static::class);
+    }
+
+    /**
      * Set the callback to guess the widget name.
      *
      * @param  callable(static):string  $callback

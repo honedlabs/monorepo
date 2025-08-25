@@ -69,7 +69,7 @@ class Builder extends EloquentBuilder
      *
      * @return $this
      */
-    public function widget(string $widget, string $column = 'widget'): static
+    public function widget(mixed $widget, string $column = 'widget'): static
     {
         $this->query->widget($widget, $this->qualifyColumn($column));
 
