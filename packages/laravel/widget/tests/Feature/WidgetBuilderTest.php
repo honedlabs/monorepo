@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
     $this->connection = DB::connection();
+    
     $this->builder = (new Builder(new QueryBuilder($this->connection)))->setModel(new Widget());
-})->only();
+});
 
 it('overrides parent methods', function () {
     expect($this->builder)

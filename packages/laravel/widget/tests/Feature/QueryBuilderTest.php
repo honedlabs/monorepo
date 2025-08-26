@@ -9,7 +9,9 @@ use Honed\Widget\QueryBuilder;
 use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
-    $this->builder = new QueryBuilder(DB::connection());
+    $this->connection = DB::connection();
+
+    $this->builder = new QueryBuilder($this->connection);
 });
 
 it('has scope where clause', function () {
