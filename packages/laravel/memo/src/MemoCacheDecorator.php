@@ -9,7 +9,7 @@ use Illuminate\Cache\Repository;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Arr;
 
-class CacheDecorator implements Store
+class MemoCacheDecorator implements Store
 {
     use Memoizable;
 
@@ -87,8 +87,8 @@ class CacheDecorator implements Store
 
         if (count($missing) > 0) {
             $found = tap($this->getRepository()->many($missing), function ($values) {
-                $this->memoize = [
-                    ...$this->memoize,
+                $this->memoized = [
+                    ...$this->memoized,
                     ...Arr::mapWithKeys(
                         $values,
                         fn ($value, $key) => [$this->prefix($key) => $value]

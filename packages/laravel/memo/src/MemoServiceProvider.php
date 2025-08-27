@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Memo;
 
+use Honed\Memo\Contracts\Memoize;
+use Illuminate\Cache\CacheManager;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Contracts\Cache\Factory;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 
-class MemoServiceProvider extends ServiceProvider implements DeferrableProvider
+class MemoServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -22,22 +27,21 @@ class MemoServiceProvider extends ServiceProvider implements DeferrableProvider
             });
         });
 
-        $this->app->bind('cache', CacheManager::class);
+        $this->app->alias(Memoize::class, 'memo');
 
-        $this->app->bind('memo', MemoManager::class);
+        $this->app->bind(Memoize::class, MemoManager::class);
     }
 
     /**
-     * Get the services provided by the provider.
-     *
-     * @return array<int, string>
+     * Bootstrap services.
      */
-    public function provides(): array
+    public function boot(): void
     {
-        return [
-            GateContract::class,
-            'cache',
-            'memo',
-        ];
+        Cache::extend('memo', function (Application $app, array $config) {
+            return Cache::repository(
+                new MemoCacheDecorator(Cache::store($config['store'])),
+                ['events' => false]
+            );
+        });
     }
 }
