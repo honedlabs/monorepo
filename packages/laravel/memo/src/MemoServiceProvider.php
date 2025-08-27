@@ -17,12 +17,12 @@ class MemoServiceProvider extends ServiceProvider implements DeferrableProvider
     public function register(): void
     {
         $this->app->bind(GateContract::class, function (Container $app) {
-            return new Gate($app, function () use ($app) {
+            return new MemoGate($app, function () use ($app) {
                 return call_user_func($app->make('auth')->userResolver());
             });
         });
 
-        // $this->app->bind('cache', CacheManager::class);
+        $this->app->bind('cache', CacheManager::class);
 
         $this->app->bind('memo', MemoManager::class);
     }

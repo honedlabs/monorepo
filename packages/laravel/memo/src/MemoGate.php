@@ -7,7 +7,7 @@ namespace Honed\Memo;
 use Honed\Memo\Concerns\Memoizable;
 use Illuminate\Auth\Access\Gate as AccessGate;
 
-class Gate extends AccessGate
+class MemoGate extends AccessGate
 {
     use Memoizable;
 
@@ -23,9 +23,9 @@ class Gate extends AccessGate
     public function raw($ability, $arguments = [])
     {
         $hash = $this->getHash($ability, $arguments);
-
+        
         if ($this->isNotMemoized($hash)) {
-            $result = parent::raw($ability, $arguments);
+            $result = $this->memoize($hash, parent::raw($ability, $arguments));
 
             return $result;
         }

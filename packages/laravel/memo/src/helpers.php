@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Honed\Memo\Facades\Memo;
+
 if (! function_exists('memo')) {
     /**
      * Memoize a value.
@@ -13,7 +15,7 @@ if (! function_exists('memo')) {
      */
     function memo(string $key, $value)
     {
-        return app('memo')->put($key, $value);
+        return Memo::put($key, $value);
     }
 }
 
@@ -25,6 +27,6 @@ if (! function_exists('memo_get')) {
      */
     function memo_get(string $key)
     {
-        return app('memo')->get($key);
+        return Memo::get($key);
     }
 }

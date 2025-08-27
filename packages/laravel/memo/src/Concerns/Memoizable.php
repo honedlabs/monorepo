@@ -10,11 +10,16 @@ namespace Honed\Memo\Concerns;
 trait Memoizable
 {
     /**
+     * Sentinel value for memoized values.
+     */
+    public const SENTINEL = '__laravel_memoized';
+
+    /**
      * The store of memoized values.
      *
      * @var array<string, T>
      */
-    protected $memoize = [];
+    protected $memoized = [];
 
     /**
      * Set a memorized value.
@@ -26,7 +31,9 @@ trait Memoizable
      */
     public function memoize(string $key, $value)
     {
-        return $this->memoize[$key] = $value;
+        $this->memoized[$key] = $value ?? self::SENTINEL;
+
+        return $value;
     }
 
     /**
@@ -34,7 +41,7 @@ trait Memoizable
      */
     public function unmemoize(string $key): void
     {
-        unset($this->memoize[$key]);
+        unset($this->memoized[$key]);
     }
 
     /**
@@ -44,7 +51,9 @@ trait Memoizable
      */
     public function memoized(string $key)
     {
-        return $this->memoize[$key];
+        $value = $this->memoized[$key] ?? null;
+
+        return $value === self::SENTINEL ? null : $value;
     }
 
     /**
@@ -52,7 +61,7 @@ trait Memoizable
      */
     public function isMemoized(string $key): bool
     {
-        return isset($this->memoize[$key]);
+        return isset($this->memoized[$key]);
     }
 
     /**
@@ -68,7 +77,7 @@ trait Memoizable
      */
     public function clearMemoized(): void
     {
-        $this->memoize = [];
+        $this->memoized = [];
     }
 
     /**
