@@ -13,11 +13,11 @@ class Gate extends AccessGate
 
     /**
      * Get the memoized, raw result from the authorization callback.
-     * 
-     * @param string $ability
-     * @param mixed $arguments
+     *
+     * @param  string  $ability
+     * @param  mixed  $arguments
      * @return mixed
-     * 
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function raw($ability, $arguments = [])
@@ -51,5 +51,4 @@ class Gate extends AccessGate
         /** @var static */
         return $this->memoized($key);
     }
-
 }

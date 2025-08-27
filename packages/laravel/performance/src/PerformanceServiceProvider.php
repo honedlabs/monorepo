@@ -16,9 +16,9 @@ class PerformanceServiceProvider extends ServiceProvider implements DeferrablePr
      */
     public function register(): void
     {
-        $this->app->singleton(GateContract::class, function (Container $app) {
+        $this->app->bind(GateContract::class, function (Container $app) {
             return new Gate($app, function () use ($app) {
-                return call_user_func($app['auth']->userResolver());
+                return call_user_func($app->make('auth')->userResolver());
             });
         });
     }

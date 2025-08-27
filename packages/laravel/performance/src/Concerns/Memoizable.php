@@ -18,10 +18,10 @@ trait Memoizable
 
     /**
      * Set a memorized value.
-     * 
+     *
      * @template TValue of T
-     * 
-     * @param TValue $value
+     *
+     * @param  TValue  $value
      * @return TValue
      */
     public function memoize(string $key, $value)
@@ -31,8 +31,7 @@ trait Memoizable
 
     /**
      * Get a memoized value.
-     * 
-     * @param string $key
+     *
      * @return T
      */
     public function memoized(string $key)
@@ -55,7 +54,6 @@ trait Memoizable
     {
         return ! $this->isMemoized($key);
     }
-
 
     /**
      * Clear the memoize cache.
