@@ -30,6 +30,14 @@ trait Memoizable
     }
 
     /**
+     * Remove a memorized value.
+     */
+    public function unmemoize(string $key): void
+    {
+        unset($this->memoize[$key]);
+    }
+
+    /**
      * Get a memoized value.
      *
      * @return T
@@ -58,7 +66,7 @@ trait Memoizable
     /**
      * Clear the memoize cache.
      */
-    public function clearMemoize(): void
+    public function clearMemoized(): void
     {
         $this->memoize = [];
     }

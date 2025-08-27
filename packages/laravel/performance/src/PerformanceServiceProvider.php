@@ -21,17 +21,20 @@ class PerformanceServiceProvider extends ServiceProvider implements DeferrablePr
                 return call_user_func($app->make('auth')->userResolver());
             });
         });
+
+        $this->app->bind('memo', MemoManager::class);
     }
 
     /**
      * Get the services provided by the provider.
      *
-     * @return array<int, class-string>
+     * @return array<int, string>
      */
     public function provides(): array
     {
         return [
             GateContract::class,
+            'memo',
         ];
     }
 }
