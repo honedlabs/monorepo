@@ -1,19 +1,19 @@
-<a href="https://honed.dev/performance">
+<a href="https://honed.dev/memo">
     <picture>
         <source media="(prefers-color-scheme: dark)" srcset="art/header-dark.png">
         <img alt="" src="art/header-light.png">
     </picture>
 </a>
 
-# Performance
+# Memo
 
 <p>
-    <a href="https://github.com/honedlabs/performance/actions"><img src="https://github.com/honedlabs/performance/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
-    <a href="https://packagist.org/packages/honed/performance"><img src="https://img.shields.io/packagist/dt/honed/performance" alt="Total Downloads"></a>
-    <a href="https://packagist.org/packages/honed/performance"><img src="https://img.shields.io/packagist/v/honed/performance" alt="Latest Stable Version"></a>
+    <a href="https://github.com/honedlabs/memo/actions"><img src="https://github.com/honedlabs/memo/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://packagist.org/packages/honed/memo"><img src="https://img.shields.io/packagist/dt/honed/memo" alt="Total Downloads"></a>
+    <a href="https://packagist.org/packages/honed/memo"><img src="https://img.shields.io/packagist/v/honed/memo" alt="Latest Stable Version"></a>
 </p>
 
-**Performance** Optimize the performance of your Laravel application out of the box..
+**Memo** Optimize the memo of your Laravel application out of the box..
 
 ## Installation
 
@@ -24,13 +24,13 @@
 Get started with the package by requiring it in your PHP project using [Composer](https://getcomposer.org/).
 
 ```bash
-composer require honed/performance
+composer require honed/memo
 ```
 
 ## Documentation
 
-Please refer to the [documentation](https://honed.dev/performance) for the usage of the package.
+Please refer to the [documentation](https://honed.dev/memo) for the usage of the package.
 
 ## License
 
-**Performance** was created by [Joshua Wallace](https://joshua-wallace.com) under the [MIT license](https://opensource.org/licenses/MIT).
+**Memo** was created by [Joshua Wallace](https://joshua-wallace.com) under the [MIT license](https://opensource.org/licenses/MIT).

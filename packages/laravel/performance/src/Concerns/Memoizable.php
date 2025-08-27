@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Performance\Concerns;
+namespace Honed\Memo\Concerns;
 
 /**
  * @template T = mixed

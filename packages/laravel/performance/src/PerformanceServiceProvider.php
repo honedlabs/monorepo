@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Honed\Performance;
+namespace Honed\Memo;
 
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
-class PerformanceServiceProvider extends ServiceProvider implements DeferrableProvider
+class MemoServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Register services.
@@ -21,6 +21,8 @@ class PerformanceServiceProvider extends ServiceProvider implements DeferrablePr
                 return call_user_func($app->make('auth')->userResolver());
             });
         });
+
+        // $this->app->bind('cache', CacheManager::class);
 
         $this->app->bind('memo', MemoManager::class);
     }

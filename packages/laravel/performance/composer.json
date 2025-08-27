@@ -1,13 +1,13 @@
 {
-    "name": "honed/performance",
-    "description": "Optimize the performance of your Laravel application out of the box.",
+    "name": "honed/memo",
+    "description": "Optimize the memo of your Laravel application out of the box.",
     "keywords": [
         "honed",
         "laravel",
-        "performance",
+        "memo",
         "inertia"
     ],
-    "homepage": "https://github.com/honedlabs/performance",
+    "homepage": "https://github.com/honedlabs/memo",
     "license": "MIT",
     "authors": [
         {
@@ -36,7 +36,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Honed\\Performance\\": "src/"
+            "Honed\\Memo\\": "src/"
         },
         "files": [
             "./src/helpers.php"
@@ -44,7 +44,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Honed\\Performance\\Tests\\": "tests/",
+            "Honed\\Memo\\Tests\\": "tests/",
             "App\\": "workbench/app/",
             "Database\\Factories\\": "workbench/database/factories/",
             "Database\\Seeders\\": "workbench/database/seeders/"
@@ -88,10 +88,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Honed\\Performance\\PerformanceServiceProvider"
+                "Honed\\Memo\\MemoServiceProvider"
             ],
             "aliases": {
-                "Performance": "Honed\\Performance\\Facades\\Performance"
+                "Memo": "Honed\\Memo\\Facades\\Memo"
             }
         }
     },

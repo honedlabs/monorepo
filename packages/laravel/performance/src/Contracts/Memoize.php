@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Honed\Performance\Contracts;
+namespace Honed\Memo\Contracts;
 
 /**
- * @see \Honed\Performance\MemoManager
+ * @see \Honed\Memo\MemoManager
  */
 interface Memoize
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Honed\Performance;
+namespace Honed\Memo;
 
-use Honed\Performance\Concerns\Memoizable;
+use Honed\Memo\Concerns\Memoizable;
 use Illuminate\Auth\Access\Gate as AccessGate;
 
 class Gate extends AccessGate

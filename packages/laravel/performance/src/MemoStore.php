@@ -2,4 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Honed\Performance;
+namespace Honed\Memo;
+
+use Illuminate\Contracts\Cache\Repository;
+
+class MemoStore implements Repository
+{
+    public function __construct(
+        protected Repository $store
+    ) {}
+
+
+}

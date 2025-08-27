@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Honed\Performance;
+namespace Honed\Memo;
 
-use Honed\Performance\Concerns\Memoizable;
-use Honed\Performance\Contracts\Memoize;
+use Honed\Memo\Concerns\Memoizable;
+use Honed\Memo\Contracts\Memoize;
 
 class MemoManager implements Memoize
 {

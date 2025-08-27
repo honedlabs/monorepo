@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Honed\Performance\Facades;
+namespace Honed\Memo\Facades;
 
-use Honed\Performance\Contracts\Memoize;
+use Honed\Memo\Contracts\Memoize;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \Honed\Performance\Contracts\Memoize get(string $key) Get a memoized value
- * @method static \Honed\Performance\Contracts\Memoize put(string $key, $value) Memoize a value
- * @method static \Honed\Performance\Contracts\Memoize pull(string $key) Get a memoized value and remove it from the store
- * @method static \Honed\Performance\Contracts\Memoize forget(string $key) Remove a memoized value from memory
+ * @method static \Honed\Memo\Contracts\Memoize get(string $key) Get a memoized value
+ * @method static \Honed\Memo\Contracts\Memoize put(string $key, $value) Memoize a value
+ * @method static \Honed\Memo\Contracts\Memoize pull(string $key) Get a memoized value and remove it from the store
+ * @method static \Honed\Memo\Contracts\Memoize forget(string $key) Remove a memoized value from memory
  * @method static void clear() Clear the memoized values
  *
  * @see Memoize
