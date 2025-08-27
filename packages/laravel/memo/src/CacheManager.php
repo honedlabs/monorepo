@@ -5,19 +5,24 @@ declare(strict_types=1);
 namespace Honed\Memo;
 
 use Illuminate\Cache\CacheManager as LaravelCacheManager;
+use Illuminate\Contracts\Cache\Store;
+use InvalidArgumentException;
 
 class CacheManager extends LaravelCacheManager
 {
     /**
      * Resolve the given store.
      *
-     * @param  string  $name
+     * @param  array<string, mixed>  $config
      * @return \Illuminate\Contracts\Cache\Repository
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function resolve($name)
+    public function repository(Store $store, array $config = [])
     {
-        return new MemoStore(parent::resolve($name));
+        return parent::repository(
+            new CacheDecorator(parent::repository($store, $config)),
+            ['events' => false]
+        );
     }
 }

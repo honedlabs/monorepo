@@ -36,6 +36,7 @@ class MemoServiceProvider extends ServiceProvider implements DeferrableProvider
     {
         return [
             GateContract::class,
+            'cache',
             'memo',
         ];
     }
