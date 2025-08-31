@@ -6,13 +6,13 @@ namespace Honed\Widget\Drivers;
 
 use Honed\Widget\Concerns\InteractsWithDatabase;
 use Honed\Widget\Concerns\Resolvable;
+use Honed\Widget\Contracts\Driver;
 use Honed\Widget\QueryBuilder;
-use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Carbon;
 
-class DatabaseDriver extends Driver
+class DatabaseDriver implements Driver
 {
     use InteractsWithDatabase;
     use Resolvable;
@@ -32,6 +32,13 @@ class DatabaseDriver extends Driver
     public const UPDATED_AT = 'updated_at';
 
     /**
+     * The store's name.
+     *
+     * @var string
+     */
+    protected $name;
+
+    /**
      * The database connection.
      *
      * @var DatabaseManager
@@ -39,24 +46,11 @@ class DatabaseDriver extends Driver
     protected $db;
 
     /**
-     * The user configuration.
-     *
-     * @var \Illuminate\Contracts\Config\Repository
+     * Create a new database driver instance.
      */
-    protected $config;
-
-    /**
-     * Create a new driver instance.
-     *
-     * @return void
-     */
-    public function __construct(
-        string $name,
-        Dispatcher $events,
-        DatabaseManager $db,
-    ) {
-        parent::__construct($name, $events);
-
+    public function __construct(string $name, DatabaseManager $db)
+    {
+        $this->name = $name;
         $this->db = $db;
     }
 
@@ -74,7 +68,7 @@ class DatabaseDriver extends Driver
     /**
      * {@inheritdoc}
      */
-    public function set(string $widget, mixed $scope, mixed $data = null, mixed $position = null): void
+    public function set(mixed $widget, mixed $scope, mixed $data = null, mixed $position = null): void
     {
         $this->newQuery()
             ->insert($this->fill(compact('widget', 'scope', 'data', 'position')));
@@ -83,7 +77,7 @@ class DatabaseDriver extends Driver
     /**
      * {@inheritdoc}
      */
-    public function update(string $widget, mixed $scope, mixed $data = null, mixed $position = null): bool
+    public function update(mixed $widget, mixed $scope, mixed $data = null, mixed $position = null): bool
     {
         return (bool) $this->newQuery()
             ->scope($scope)
@@ -98,7 +92,7 @@ class DatabaseDriver extends Driver
     /**
      * {@inheritdoc}
      */
-    public function delete(string $widget, mixed $scope): bool
+    public function delete(mixed $widget, mixed $scope): bool
     {
         return (bool) $this->newQuery()
             ->scope($scope)
@@ -109,7 +103,7 @@ class DatabaseDriver extends Driver
     /**
      * Create an array of values to be inserted.
      *
-     * @param  array{widget: string, scope: mixed, data: mixed, position: mixed}  $values
+     * @param  array{widget: mixed, scope: mixed, data: mixed, position: mixed}  $values
      * @return array<string, mixed>
      */
     protected function fill(array $values): array

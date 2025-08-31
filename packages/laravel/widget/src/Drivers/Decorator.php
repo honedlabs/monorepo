@@ -100,13 +100,9 @@ class Decorator implements Driver
     /**
      * {@inheritdoc}
      */
-    public function set(string $widget, mixed $scope, mixed $data = null, mixed $position = null): void
+    public function set(mixed $widget, mixed $scope, mixed $data = null, mixed $position = null): void
     {
-        $widget = $this->resolveWidget($widget);
-
-        $scope = $this->resolveScope($scope);
-
-        // $this->driver->set($widget, $scope, $group, $order);
+        $this->driver->set($widget, $scope, $data, $position);
 
         Event::dispatch(new WidgetUpdated($widget, $scope, $data, $position));
     }
@@ -114,34 +110,25 @@ class Decorator implements Driver
     /**
      * {@inheritdoc}
      */
-    public function update(string $widget, mixed $scope, mixed $data = null, mixed $position = null): bool
+    public function update(mixed $widget, mixed $scope, mixed $data = null, mixed $position = null): bool
     {
-        $widget = $this->resolveWidget($widget);
+        $outcome = $this->driver->update($widget, $scope, $data, $position);
 
-        $scope = $this->resolveScope($scope);
+        Event::dispatch(new WidgetUpdated($widget, $scope, $data, $position));
 
-        // $outcome = $this->driver->update($widget, $scope, $group, $order);
-
-        // Event::dispatch(new WidgetUpdated($widget, $scope, $group, $order));
-
-        return true;
-
+        return $outcome;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function delete(string $widget, mixed $scope): bool
+    public function delete(mixed $widget, mixed $scope): bool
     {
-        $widget = $this->resolveWidget($widget);
-
-        $scope = $this->resolveScope($scope);
-
-        // $this->driver->delete($widget, $scope, $group);
+        $outcome = $this->driver->delete($widget, $scope);
 
         Event::dispatch(new WidgetDeleted($widget, $scope));
 
-        return true;
+        return $outcome;
     }
 
     /**

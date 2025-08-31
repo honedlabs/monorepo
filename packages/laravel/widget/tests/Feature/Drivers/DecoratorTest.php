@@ -2,4 +2,34 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Drivers;
+use App\Models\User;
+use Honed\Widget\Facades\Widgets;
+use Illuminate\Support\Facades\Event;
+
+beforeEach(function () {
+    $this->user = User::factory()->create();
+
+    $this->actingAs($this->user);
+
+    /** @var \Honed\Widget\Drivers\Decorator */
+    $this->decorator = Widgets::store();
+
+    /** @var \Honed\Widget\Contracts\Driver */
+    $this->driver = $this->decorator->getDriver();
+
+    Event::fake();
+
+    $this->artisan('widget:cache');
+})->only();
+
+it('gets widgets', function () {
+    $this->driver->set('user.count', $this->user, ['count' => 10]);
+
+    expect($this->driver->get($this->user))->toEqual([
+        [
+            'widget' => 'user.count',
+            'scope' => $this->user,
+            'data' => ['count' => 10],
+        ],
+    ]);
+})->todo();

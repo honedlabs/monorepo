@@ -14,7 +14,7 @@ class WidgetDeleted
      * Create a new widget deleted event.
      */
     public function __construct(
-        public string $widget,
+        public mixed $widget,
         public mixed $scope,
     ) {}
 }

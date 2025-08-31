@@ -28,5 +28,6 @@ it('handles string values', function () {
     expect($this->cast)
         ->get(new User(), 'cast', 'a1:a1', [])->toBe('1 / 1 / 2 / 2')
         ->get(new User(), 'cast', 'b2:b2', [])->toBe('2 / 2 / 3 / 3')
-        ->get(new User(), 'cast', 'a1:b2', [])->toBe('1 / 1 / 3 / 3');
+        ->get(new User(), 'cast', 'a1:b2', [])->toBe('1 / 1 / 3 / 3')
+        ->get(new User(), 'cast', 'a2:a2', [])->toBe('2 / 1 / 3 / 2');
 });

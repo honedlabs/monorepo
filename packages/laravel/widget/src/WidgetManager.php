@@ -100,12 +100,14 @@ class WidgetManager
 
     /**
      * Get an instance of a widget class by the cached name.
+     * 
+     * @throws \RuntimeException
      */
-    public function make(string $widget): ?Widget
+    public function make(mixed $widget): ?Widget
     {
         $widgets = $this->getProvider()?->getWidgets() ?? [];
 
-        $widget = $widgets[$widget] ?? null;
+        $widget = $widgets[$this->serializeWidget($widget)] ?? null;
 
         if (! $widget) {
             return null;
@@ -139,13 +141,9 @@ class WidgetManager
     /**
      * Attempt to get the driver from the local cache.
      *
-     * @param  string  $name
-     * @return Decorator
-     *
-     * @throws Exceptions\UndefinedDriverException
-     * @throws Exceptions\InvalidDriverException
+     * @throws \InvalidArgumentException
      */
-    public function get($name)
+    public function get(string $name): Decorator
     {
         return $this->drivers[$name] ?? $this->resolve($name);
     }
@@ -155,10 +153,7 @@ class WidgetManager
      */
     public function createArrayDriver(string $name): ArrayDriver
     {
-        return new ArrayDriver(
-            $name,
-            $this->getDispatcher()
-        );
+        return new ArrayDriver($name);
     }
 
     /**
@@ -166,11 +161,7 @@ class WidgetManager
      */
     public function createDatabaseDriver(string $name): DatabaseDriver
     {
-        return new DatabaseDriver(
-            $name,
-            $this->getDispatcher(),
-            $this->getDatabaseManager(),
-        );
+        return new DatabaseDriver($name, $this->getDatabaseManager());
     }
 
     /**
@@ -237,7 +228,6 @@ class WidgetManager
     /**
      * Serialize the given scope for storage.
      *
-     *
      * @throws RuntimeException
      */
     public function serializeScope(mixed $scope): string
@@ -257,25 +247,25 @@ class WidgetManager
 
     /**
      * Serialize the widget for storage.
+     * 
+     * @throws RuntimeException
      */
-    public function serializeWidget(string|Widget|BackedEnum $widget): string
+    public function serializeWidget(mixed $widget): string
     {
-        // Refactor
-        /** @var string */
-        $widget = match (true) {
-            is_string($widget) => $widget,
-            $widget instanceof Widget => $widget->getName(),
-            default => $widget->value,
-        };
-
-        if (class_exists($widget)
-            && is_subclass_of($widget, Widget::class)
-            && $name = $this->container->make($widget)->getName()
-        ) {
-            return $name;
+        if ($widget instanceof Widget) {
+            return $widget->getName();
         }
 
-        return $widget;
+        if ($widget instanceof BackedEnum || is_string($widget)) {
+            /** @var string */
+            $class = is_string($widget) ? $widget : $widget->value;
+
+            if (class_exists($class) && is_subclass_of($class, Widget::class)) {
+                return $this->container->make($class)->getName();
+            }
+        }
+
+        throw new RuntimeException('Unable to serialize the provided widget to a string.');
     }
 
     /**

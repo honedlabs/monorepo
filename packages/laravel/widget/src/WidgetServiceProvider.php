@@ -130,9 +130,9 @@ class WidgetServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->optimizes(WidgetCacheCommand::class);
-
         if ($this->app->runningInConsole()) {
+            $this->optimizes(WidgetCacheCommand::class);
+
             $this->offerPublishing();
 
             $this->commands([
@@ -205,12 +205,12 @@ class WidgetServiceProvider extends ServiceProvider
     public function discoverWidgets(): array
     {
         return (new LazyCollection($this->discoverWidgetsWithin()))
-            ->flatMap(function (string $directory): array {
+            ->flatMap(static function (string $directory): array {
                 $result = glob($directory, GLOB_ONLYDIR);
 
                 return $result !== false ? $result : [];
             })
-            ->reject(function (string $directory): bool {
+            ->reject(static function (string $directory): bool {
                 return ! is_dir($directory);
             })
             ->pipe(static fn ($directories) => DiscoverWidgets::within(

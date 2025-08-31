@@ -34,6 +34,10 @@ class WidgetCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
+        if (is_null($value)) {
+            return null;
+        }
+
         return Widgets::serializeWidget($value);
     }
 }

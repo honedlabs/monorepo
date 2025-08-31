@@ -20,7 +20,7 @@ class WidgetListCommand extends Command
      */
     protected $signature = 'widget:list
                             {--widget= : Filter the widgets by name}
-                            {--json : Output the widgets and listeners as JSON}';
+                            {--json : Output the widgets as JSON}';
 
     /**
      * The console command description.
@@ -28,13 +28,6 @@ class WidgetListCommand extends Command
      * @var string
      */
     protected $description = "List the application's widgets";
-
-    /**
-     * The widgets dispatcher resolver callback.
-     *
-     * @var Closure|null
-     */
-    protected static $widgetsResolver;
 
     /**
      * Execute the console command.
@@ -61,7 +54,7 @@ class WidgetListCommand extends Command
     }
 
     /**
-     * Display widgets and their listeners in JSON.
+     * Display widgets in JSON.
      *
      * @param  Collection<string, class-string<\Honed\Widget\Widget>>  $widgets
      */
@@ -77,7 +70,7 @@ class WidgetListCommand extends Command
     }
 
     /**
-     * Display the widgets and their listeners for the CLI.
+     * Display the widgets for the CLI.
      *
      * @param  Collection<string, class-string<\Honed\Widget\Widget>>  $widgets
      */
@@ -93,7 +86,7 @@ class WidgetListCommand extends Command
     }
 
     /**
-     * Get all of the widgets and listeners configured for the application.
+     * Get all of the widgets configured for the application.
      *
      * @return Collection<string, class-string<\Honed\Widget\Widget>>
      */

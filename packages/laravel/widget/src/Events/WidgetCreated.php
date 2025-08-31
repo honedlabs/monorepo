@@ -15,9 +15,9 @@ class WidgetCreated
      * Create a new widget created event.
      */
     public function __construct(
-        public string $widget,
-        public string $scope,
+        public mixed $widget,
+        public mixed $scope,
         public mixed $data = null,
-        public ?string $position = null,
+        public mixed $position = null,
     ) {}
 }

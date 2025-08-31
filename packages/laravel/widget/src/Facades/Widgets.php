@@ -12,13 +12,15 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Honed\Widget\Drivers\Decorator store(string|null $store = null) Get a widget store instance.
  * @method static \Honed\Widget\Drivers\Decorator get(string $name) Attempt to get the driver from the local cache.
  * @method static class-string<\Illuminate\Database\Eloquent\Model> model() Get the widget model class.
+ * @method static \Honed\Widget\Widget|null make(mixed $widget) Get an instance of a widget class by the cached name.
  * @method static \Honed\Widget\WidgetManager useMorphMap(bool $value = true) Specify that the Eloquent morph map should be used when serializing.
  * @method static bool usesMorphMap() Determine if the Eloquent morph map should be used when serializing.
  * @method static string serializeScope(mixed $scope) Serialize the given scope for storage.
- * @method static string serializeWidget(string|\Honed\Widget\Widget|\BackedEnum $widget) Serialize the widget for storage.
+ * @method static string serializeWidget(mixed $widget) Serialize the widget for storage.
  * @method static void resolveScopeUsing(callable $resolver) Set the default scope resolver.
  * @method static callable defaultScopeResolver(string $driver) Get the default scope resolver.
  * @method static string convertToGridArea(string $position) Convert a grid position to a CSS grid area.
+ * @method static string convertToPosition(int $x1 = 0, int $y1 = 0, int $x2 = 0, int $y2 = 0) Convert a set of grid positions to a position string.
  * @method static \Illuminate\Config\Repository getConfig() Get the config instance from the container.
  * @method static string getDefaultDriver() Get the default driver name.
  * @method static void setDefaultDriver(string $name) Set the default driver name.
