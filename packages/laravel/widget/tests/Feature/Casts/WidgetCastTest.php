@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Widgets\TeamMembersWidget;
 use App\Widgets\UserCountWidget;
 use Honed\Widget\Casts\WidgetCast;
-use Honed\Widget\Facades\Widgets;
 
 beforeEach(function () {
     $this->artisan('widget:cache');

@@ -6,12 +6,12 @@ use App\Models\User;
 use App\Widgets\TeamMembersWidget;
 use App\Widgets\UserCountWidget;
 use Honed\Widget\Concerns\Resolvable;
-use Honed\Widget\Facades\Widgets;
 
 beforeEach(function () {
     $this->artisan('widget:cache');
 
-    $this->class = new class {
+    $this->class = new class()
+    {
         use Resolvable;
     };
 });

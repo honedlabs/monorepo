@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Session\SessionManager;
-use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -108,7 +107,7 @@ class WidgetManager
             $widgets = $this->getProvider()?->getWidgets() ?? [];
 
             $widget = $widgets[$this->serializeWidget($widget)] ?? null;
-    
+
             return $widget ? $this->container->make($widget) : null;
 
         } catch (RuntimeException $e) {
@@ -141,7 +140,7 @@ class WidgetManager
     /**
      * Attempt to get the driver from the local cache.
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function get(string $name): Decorator
     {
@@ -247,7 +246,7 @@ class WidgetManager
 
     /**
      * Serialize the widget for storage.
-     * 
+     *
      * @throws RuntimeException
      */
     public function serializeWidget(mixed $widget): string
@@ -255,7 +254,7 @@ class WidgetManager
         return match (true) {
             $widget instanceof Widget => $widget->getName(),
             is_string($widget) && (bool) $name = $this->getWidgetName($widget) => $name,
-            $widget instanceof BackedEnum && (bool) $name = $this->getWidgetName($widget->value) => $name,
+            $widget instanceof BackedEnum && (bool) $name = $this->getWidgetName((string) $widget->value) => $name,
             default => throw new RuntimeException(
                 'Unable to serialize the provided widget to a string.'
             ),
@@ -404,7 +403,7 @@ class WidgetManager
 
     /**
      * Attempt to retrieve the widget class.
-     * 
+     *
      * @return class-string<Widget>|null
      */
     protected function getWidgetName(string $widget): ?string

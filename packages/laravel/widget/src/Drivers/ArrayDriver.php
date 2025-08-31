@@ -21,11 +21,11 @@ class ArrayDriver implements Driver
 
     /**
      * The resolved widgets.
-     * 
+     *
      * @var array<string, array<int, array<string, mixed>>>
      */
     protected $widgets = [];
-    
+
     /**
      * Create a new array driver instance.
      */

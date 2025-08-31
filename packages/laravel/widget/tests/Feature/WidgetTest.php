@@ -6,5 +6,4 @@ beforeEach(function () {
     $this->artisan('widget:cache');
 });
 
-it('tests', function () {
-});
+it('tests', function () {});

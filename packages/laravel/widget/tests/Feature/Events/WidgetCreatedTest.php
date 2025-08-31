@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Models\User;
 use App\Widgets\UserCountWidget;
 use Honed\Widget\Events\WidgetCreated;
 use Honed\Widget\Facades\Widgets;
 use Illuminate\Support\Facades\Event;
-use App\Models\User;
 
 beforeEach(function () {
     Event::fake();

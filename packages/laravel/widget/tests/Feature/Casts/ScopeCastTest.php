@@ -9,7 +9,6 @@ use Honed\Widget\Casts\ScopeCast;
 use Honed\Widget\Contracts\SerializesScope;
 use Honed\Widget\Facades\Widgets;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Facades\App;
 use RuntimeException;
 use stdClass;
 
@@ -23,8 +22,9 @@ afterEach(function () {
 });
 
 it('handles scope serializers', function () {
-    
-    $scope = new class implements SerializesScope {
+
+    $scope = new class() implements SerializesScope
+    {
         public function serializeScope(): string
         {
             return 'abc';

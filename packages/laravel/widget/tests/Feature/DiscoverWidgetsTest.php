@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Str;
+use App\Widgets\TeamMembersWidget;
 use App\Widgets\UserCountWidget;
 use Honed\Widget\DiscoverWidgets;
+use Illuminate\Support\Str;
 
-use App\Widgets\TeamMembersWidget;
 use function Orchestra\Testbench\workbench_path;
 
 beforeEach(function () {});
@@ -41,7 +41,8 @@ it('can guess class names', function () {
             [DIRECTORY_SEPARATOR, ucfirst(basename(app()->path())).'\\'],
             ['\\', app()->getNamespace()],
             ucfirst(Str::replaceLast('.php', '', $class))
-        )));    });
+        )));
+    });
 
     expect(DiscoverWidgets::within([workbench_path('app/Widgets')], workbench_path()))
         ->toBeArray()

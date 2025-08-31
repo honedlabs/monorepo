@@ -6,7 +6,6 @@ namespace Tests\Feature\Casts;
 
 use App\Models\User;
 use Honed\Widget\Casts\GridAreaCast;
-use Honed\Widget\Facades\Widgets;
 
 beforeEach(function () {
     $this->cast = new GridAreaCast();

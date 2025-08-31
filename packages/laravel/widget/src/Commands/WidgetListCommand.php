@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Widget\Commands;
 
-use Closure;
 use Honed\Widget\WidgetServiceProvider;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
