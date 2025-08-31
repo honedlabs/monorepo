@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Widget\Models;
 
-use Honed\Widget\Builder;
 use Honed\Widget\Casts\PositionCast;
 use Honed\Widget\Casts\ScopeCast;
 use Honed\Widget\Casts\WidgetCast;
 use Honed\Widget\Concerns\InteractsWithDatabase;
 use Honed\Widget\QueryBuilder;
+use Honed\Widget\WidgetBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -35,11 +35,11 @@ class Widget extends Model
     /**
      * Begin querying the model.
      *
-     * @return Builder<self>
+     * @return WidgetBuilder<self>
      */
     public static function query()
     {
-        /** @var Builder<self> */
+        /** @var WidgetBuilder<self> */
         return parent::query();
     }
 
@@ -80,11 +80,11 @@ class Widget extends Model
      * Create a new Eloquent query builder for the model.
      *
      * @param  QueryBuilder  $query
-     * @return Builder<self>
+     * @return WidgetBuilder<self>
      */
     public function newEloquentBuilder($query)
     {
-        return new Builder($query);
+        return new WidgetBuilder($query);
     }
 
     /**

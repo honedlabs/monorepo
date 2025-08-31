@@ -21,7 +21,7 @@ it('makes', function () {
     $this->assertFileExists(app_path('Widgets/UserCountWidget.php'));
 });
 
-it('widgets for a name', function () {
+it('prompts for a name', function () {
     $this->artisan('make:widget', [
         '--force' => true,
     ])->expectsQuestion('What should the widget be named?', 'UserCountWidget')

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 use App\Models\User;
 use App\Widgets\UserCountWidget;
-use Honed\Widget\Builder;
 use Honed\Widget\Facades\Widgets;
 use Honed\Widget\Models\Widget;
 use Honed\Widget\QueryBuilder;
+use Honed\Widget\WidgetBuilder;
 use Illuminate\Database\Query\Builder as DatabaseQueryBuilder;
 use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
     $this->connection = DB::connection();
 
-    $this->builder = (new Builder(new QueryBuilder($this->connection)))->setModel(new Widget());
+    $this->builder = (new WidgetBuilder(new QueryBuilder($this->connection)))->setModel(new Widget());
 });
 
 it('overrides parent methods', function () {

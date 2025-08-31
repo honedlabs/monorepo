@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Models\User;
 use App\Widgets\UserCountWidget;
-use Honed\Widget\Events\WidgetCreated;
+use Honed\Widget\Events\WidgetDeleted;
 use Honed\Widget\Facades\Widgets;
 use Illuminate\Support\Facades\Event;
 
@@ -19,17 +19,17 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    Event::assertDispatched(WidgetCreated::class, function (WidgetCreated $event) {
+    Event::assertDispatched(WidgetDeleted::class, function (WidgetDeleted $event) {
         return true;
     });
 });
 
 it('dispatches event', function () {
-    WidgetCreated::dispatch(
-        $this->widget, $this->scope, ['count' => 10]
+    WidgetDeleted::dispatch(
+        $this->widget, $this->scope
     );
 });
 
-it('dispatches event when creating widget', function () {
-    Widgets::set(UserCountWidget::class, $this->user, ['count' => 10]);
+it('dispatches event when deleting widget', function () {
+    Widgets::delete(UserCountWidget::class, $this->user);
 });

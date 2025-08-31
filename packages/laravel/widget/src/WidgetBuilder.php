@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
  *
  * @mixin \Honed\Widget\QueryBuilder
  */
-class Builder extends EloquentBuilder
+class WidgetBuilder extends EloquentBuilder
 {
     /**
      * The base query builder instance.

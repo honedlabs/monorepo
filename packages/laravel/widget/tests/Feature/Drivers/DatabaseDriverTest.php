@@ -17,7 +17,7 @@ beforeEach(function () {
     $this->driver = Widgets::store('database')->getDriver();
 
     $this->table = config('widget.drivers.database.table');
-})->only();
+});
 
 it('gets widgets', function () {
     DB::table($this->table)->insert([
@@ -27,7 +27,7 @@ it('gets widgets', function () {
     ]);
 
     assertDatabaseCount($this->table, 1);
-    
+
     expect($this->driver->get($this->user))->toEqualCanonicalizing([
         (object) [
             'id' => 1,
@@ -74,7 +74,7 @@ it('updates widgets', function () {
         'scope' => Widgets::serializeScope($this->user),
         'data' => json_encode(['count' => 10]),
     ]);
-    
+
     $this->driver->update(UserCountWidget::class, $this->user, ['count' => 20]);
 
     assertDatabaseCount($this->table, 1);

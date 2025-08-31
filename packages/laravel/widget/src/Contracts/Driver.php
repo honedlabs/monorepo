@@ -14,7 +14,7 @@ interface Driver
     public function get(mixed $scope): array;
 
     /**
-     * Set a widget for a given scope, widget name and group.
+     * Set a widget for a given scope and widget name.
      */
     public function set(mixed $widget, mixed $scope, mixed $data = null, mixed $position = null): void;
 
@@ -24,7 +24,7 @@ interface Driver
     public function update(mixed $widget, mixed $scope, mixed $data = null, mixed $position = null): bool;
 
     /**
-     * Delete a widget for a given scope, widget name and group.
+     * Delete a widget for a given scope and widget.
      */
     public function delete(mixed $widget, mixed $scope): bool;
 

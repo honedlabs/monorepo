@@ -7,11 +7,10 @@ namespace Honed\Widget\Drivers;
 use Honed\Widget\Concerns\Resolvable;
 use Honed\Widget\Contracts\CanListWidgets;
 use Honed\Widget\Contracts\Driver;
+use Honed\Widget\Events\WidgetCreated;
 use Honed\Widget\Events\WidgetDeleted;
 use Honed\Widget\Events\WidgetUpdated;
-use Honed\Widget\Facades\Widgets;
-use Honed\Widget\ScopedWidgetRetrieval;
-use Honed\Widget\Widget;
+use Honed\Widget\PendingWidgetInteraction;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Traits\Macroable;
@@ -82,11 +81,20 @@ class Decorator implements Driver
             return $this->macroCall($name, $parameters);
         }
 
-        return tap(new ScopedWidgetRetrieval($this), function ($retrieval) use ($name) {
+        return tap(new PendingWidgetInteraction($this), function ($retrieval) use ($name) {
             if ($name !== 'for' && ($scope = ($this->defaultScopeResolver)()) !== null) {
                 $retrieval->for($scope);
             }
         })->{$name}(...$parameters);
+    }
+
+    /**
+     * Create a new pending widget interaction instance.
+     */
+    public function for(mixed $scope = null): PendingWidgetInteraction
+    {
+        return (new PendingWidgetInteraction($this))
+            ->for($scope ?? $this->defaultScope());
     }
 
     /**
@@ -104,7 +112,7 @@ class Decorator implements Driver
     {
         $this->driver->set($widget, $scope, $data, $position);
 
-        Event::dispatch(new WidgetUpdated($widget, $scope, $data, $position));
+        Event::dispatch(new WidgetCreated($widget, $scope, $data, $position));
     }
 
     /**

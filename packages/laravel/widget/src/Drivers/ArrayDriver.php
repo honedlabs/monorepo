@@ -39,6 +39,8 @@ class ArrayDriver implements Driver
      */
     public function get(mixed $scope): array
     {
+        $scope = $this->resolveScope($scope);
+
         if (! isset($this->widgets[$scope])) {
             return [];
         }
@@ -51,6 +53,8 @@ class ArrayDriver implements Driver
      */
     public function set(mixed $widget, mixed $scope, mixed $data = null, mixed $position = null): void
     {
+        $scope = $this->resolveScope($scope);
+
         if (! isset($this->widgets[$scope])) {
             $this->widgets[$scope] = [];
         }
@@ -63,16 +67,23 @@ class ArrayDriver implements Driver
      */
     public function update(mixed $widget, mixed $scope, mixed $data = null, mixed $position = null): bool
     {
-        $found = $this->find($widget, $scope);
+        $scope = $this->resolveScope($scope);
+        $widget = $this->resolveWidget($widget);
 
-        if (! $found) {
+        if (! isset($this->widgets[$scope])) {
             return false;
         }
 
-        $found['data'] = $data;
-        $found['order'] = $position;
+        foreach ($this->widgets[$scope] as $index => $item) {
+            if ($item['widget'] === $widget) {
+                $this->widgets[$scope][$index]['data'] = $data;
+                $this->widgets[$scope][$index]['position'] = $position;
 
-        return true;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -85,6 +96,8 @@ class ArrayDriver implements Driver
         if (! $found) {
             return false;
         }
+
+        $scope = $this->resolveScope($scope);
 
         unset($this->widgets[$scope][array_search($found, $this->widgets[$scope])]);
 
@@ -103,7 +116,7 @@ class ArrayDriver implements Driver
             'widget' => $this->resolveWidget($values['widget']),
             'scope' => $this->resolveScope($values['scope']),
             'data' => $values['data'],
-            'order' => $values['position'],
+            'position' => $values['position'],
         ];
     }
 
@@ -114,6 +127,9 @@ class ArrayDriver implements Driver
      */
     protected function find(mixed $widget, mixed $scope): ?array
     {
+        $scope = $this->resolveScope($scope);
+        $widget = $this->resolveWidget($widget);
+
         if (! isset($this->widgets[$scope])) {
             return null;
         }
