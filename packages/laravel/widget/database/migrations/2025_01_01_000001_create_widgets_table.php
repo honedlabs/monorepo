@@ -17,8 +17,8 @@ return new class() extends WidgetMigration
             $table->id();
             $table->string('widget');
             $table->string('scope');
-            $table->string('position')->nullable();
             $table->text('data')->nullable();
+            $table->string('position')->nullable();
             $table->timestamps();
         });
     }

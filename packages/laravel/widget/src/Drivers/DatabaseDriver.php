@@ -84,7 +84,7 @@ class DatabaseDriver implements Driver
             ->widget($widget)
             ->update([
                 'data' => $data,
-                'order' => $position,
+                'position' => $position,
                 self::UPDATED_AT => Carbon::now(),
             ]);
     }
@@ -111,8 +111,8 @@ class DatabaseDriver implements Driver
         return [
             'widget' => $this->resolveWidget($values['widget']),
             'scope' => $this->resolveScope($values['scope']),
-            'data' => $values['data'],
-            'order' => $values['position'],
+            'data' => json_encode($values['data'], JSON_THROW_ON_ERROR),
+            'position' => $values['position'],
             self::CREATED_AT => $now = Carbon::now(),
             self::UPDATED_AT => $now,
         ];
