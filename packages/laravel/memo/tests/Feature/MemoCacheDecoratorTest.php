@@ -19,7 +19,7 @@ it('memoizes', function () {
 it('supports null values', function () {
     expect(app('cache'))
         ->get('key')->toBeNull()
-        // ->isMemoized('key')->toBeTrue()
+        ->isMemoized('key')->toBeTrue()
         ->put('key', 'value-1', 60)->toBeTrue()
         ->get('key')->toBe('value-1')
         ->isMemoized('key')->toBeTrue()
@@ -29,67 +29,54 @@ it('supports null values', function () {
 });
 
 it('supports multiple values', function () {
-    Cache::put('key-1', 'value-1', 60);
-    Cache::put('key-2', 'value-2', 60);
-
-
-    expect(Cache::getMultiple(['key-1', 'key-2']))->toEqualCanonicalizing([
-        'key-1' => 'value-1',
-        'key-2' => 'value-2',
-    ]);
-
-    expect(Cache::isMemoized('key-1'))->toBeTrue();
-    expect(Cache::isMemoized('key-2'))->toBeTrue();
+    expect(app('cache'))
+        ->put('key-1', 'value-1', 60)->toBeTrue()
+        ->put('key-2', 'value-2', 60)->toBeTrue()
+        ->getMultiple(['key-1', 'key-2'])->toEqualCanonicalizing([
+            'key-1' => 'value-1',
+            'key-2' => 'value-2',
+        ])
+        ->isMemoized('key-1')->toBeTrue()
+        ->isMemoized('key-2')->toBeTrue()
+        ->getMultiple(['key-1', 'key-2'])->toEqualCanonicalizing([
+            'key-1' => 'value-1',
+            'key-2' => 'value-2',
+        ])
+        ->isMemoized('key-1')->toBeTrue()
+        ->isMemoized('key-2')->toBeTrue();
 });
 
 it('forgets when incrementing', function () {
-    Cache::put('count', 1, 60);
-
-    expect(Cache::get('count'))->toBe(1);
-
-    expect(Cache::isMemoized('count'))->toBeTrue();
-
-    expect(Cache::increment('count'))->toBe(2);
-
-    expect(Cache::isMemoized('count'))->toBeFalse();
-
-    expect(Cache::get('count'))->toBe(2);
-
-    expect(Cache::isMemoized('count'))->toBeTrue();
+    expect(app('cache'))
+        ->put('count', 1, 60)->toBeTrue()
+        ->isMemoized('count')->toBeFalse()
+        ->get('count')->toBe(1)
+        ->isMemoized('count')->toBeTrue()
+        ->increment('count')->toBe(2)
+        ->get('count')->toBe(2)
+        ->isMemoized('count')->toBeTrue();
 });
 
 it('forgets when decrementing', function () {
-    Cache::put('count', 1, 60);
-
-    expect(Cache::get('count'))->toBe(1);
-
-    expect(Cache::isMemoized('count'))->toBeTrue();
-
-    expect(Cache::decrement('count'))->toBe(0);
-
-    expect(Cache::isMemoized('count'))->toBeFalse();
-
-    expect(Cache::get('count'))->toBe(0);
-
-    expect(Cache::isMemoized('count'))->toBeTrue();
+    expect(app('cache'))
+        ->put('count', 1, 60)->toBeTrue()
+        ->isMemoized('count')->toBeFalse()
+        ->get('count')->toBe(1)
+        ->isMemoized('count')->toBeTrue()
+        ->decrement('count')->toBe(0)
+        ->isMemoized('count')->toBeFalse()
+        ->get('count')->toBe(0);
 });
 
 it('forgets when forever', function () {
-    Cache::put('key', 'value-1', 60);
-
-    expect(Cache::isMemoized('key'))->toBeFalse();
-
-    expect(Cache::get('key'))->toBe('value-1');
-
-    expect(Cache::isMemoized('key'))->toBeTrue();
-
-    Cache::forever('key', 'value-2');
-
-    expect(Cache::isMemoized('key'))->toBeFalse();
-
-    expect(Cache::get('key'))->toBe('value-2');
-
-    expect(Cache::isMemoized('key'))->toBeTrue();
+    expect(app('cache'))
+        ->put('key', 'value-1', 60)->toBeTrue()
+        ->isMemoized('key')->toBeFalse()
+        ->get('key')->toBe('value-1')
+        ->isMemoized('key')->toBeTrue()
+        ->forever('key', 'value-2')->toBeTrue()
+        ->isMemoized('key')->toBeFalse()
+        ->get('key')->toBe('value-2');
 });
 
 it('forgets when forgetting', function () {
@@ -144,13 +131,14 @@ it('throws when store does not support locks', function () {
 it('supports flexible', function () {
     $this->freezeTime();
 
-    Cache::flexible('key', [10, 20], 'value-1');
+    app('cache')->flexible('key', [10, 20], 'value-1');
 
     $this->travel(11)->seconds();
 
-    Cache::flexible('key', [10, 20], 'value-2');
+    app('cache')->flexible('key', [10, 20], 'value-2');
 
     defer()->invoke();
 
-    expect(Cache::get('key'))->toBe('value-2');
-})->todo();
+    expect(app('cache'))
+        ->get('key')->toBe('value-2');
+});
