@@ -11,16 +11,14 @@ beforeEach(function () {
 
     $this->actingAs($this->user);
 
-    /** @var \Honed\Widget\Drivers\Decorator */
     $this->decorator = Widgets::store();
 
-    /** @var \Honed\Widget\Contracts\Driver */
     $this->driver = $this->decorator->getDriver();
 
     Event::fake();
 
     $this->artisan('widget:cache');
-})->only();
+});
 
 it('gets widgets', function () {
     $this->driver->set('user.count', $this->user, ['count' => 10]);

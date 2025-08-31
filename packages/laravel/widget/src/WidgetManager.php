@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Session\SessionManager;
+use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -100,20 +101,19 @@ class WidgetManager
 
     /**
      * Get an instance of a widget class by the cached name.
-     * 
-     * @throws \RuntimeException
      */
     public function make(mixed $widget): ?Widget
     {
-        $widgets = $this->getProvider()?->getWidgets() ?? [];
+        try {
+            $widgets = $this->getProvider()?->getWidgets() ?? [];
 
-        $widget = $widgets[$this->serializeWidget($widget)] ?? null;
+            $widget = $widgets[$this->serializeWidget($widget)] ?? null;
+    
+            return $widget ? $this->container->make($widget) : null;
 
-        if (! $widget) {
+        } catch (RuntimeException $e) {
             return null;
         }
-
-        return $this->container->make($widget);
     }
 
     /**
@@ -252,20 +252,14 @@ class WidgetManager
      */
     public function serializeWidget(mixed $widget): string
     {
-        if ($widget instanceof Widget) {
-            return $widget->getName();
-        }
-
-        if ($widget instanceof BackedEnum || is_string($widget)) {
-            /** @var string */
-            $class = is_string($widget) ? $widget : $widget->value;
-
-            if (class_exists($class) && is_subclass_of($class, Widget::class)) {
-                return $this->container->make($class)->getName();
-            }
-        }
-
-        throw new RuntimeException('Unable to serialize the provided widget to a string.');
+        return match (true) {
+            $widget instanceof Widget => $widget->getName(),
+            is_string($widget) && (bool) $name = $this->getWidgetName($widget) => $name,
+            $widget instanceof BackedEnum && (bool) $name = $this->getWidgetName($widget->value) => $name,
+            default => throw new RuntimeException(
+                'Unable to serialize the provided widget to a string.'
+            ),
+        };
     }
 
     /**
@@ -406,6 +400,23 @@ class WidgetManager
     protected function callCustomCreator(string $name): Driver
     {
         return $this->customCreators[$name]($name, $this->container);
+    }
+
+    /**
+     * Attempt to retrieve the widget class.
+     * 
+     * @return class-string<Widget>|null
+     */
+    protected function getWidgetName(string $widget): ?string
+    {
+        $widgets = $this->getProvider()?->getWidgets() ?? [];
+
+        return match (true) {
+            array_key_exists($widget, $widgets) => $widget,
+            (bool) $name = array_search($widget, $widgets, true) => $name,
+            class_exists($widget) && is_subclass_of($widget, Widget::class) => $this->container->make($widget)->getName(),
+            default => null,
+        };
     }
 
     /**
