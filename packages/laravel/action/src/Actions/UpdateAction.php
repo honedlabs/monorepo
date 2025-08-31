@@ -55,13 +55,38 @@ class UpdateAction extends DatabaseAction
      */
     protected function execute(Model $model, $input): Model
     {
+        $this->before($model, $input);
+
         $prepared = $this->prepare($model, $input);
 
-        $model->update($prepared);
+        $this->act($model, $prepared);
 
         $this->after($model, $input, $prepared);
 
         return $model;
+    }
+
+    /**
+     * Perform additional logic before the action has been executed.
+     *
+     * @param  TModel  $model
+     * @param  TInput  $input
+     * @param  array<string, mixed>  $prepared
+     */
+    protected function before(Model $model, $input): void
+    {
+        //
+    }
+
+    /**
+     * Act on the model.
+     * 
+     * @param  TModel  $model
+     * @param  TInput  $input
+     */
+    protected function act(Model $model, $input): void
+    {
+        $model->update($input);
     }
 
     /**
