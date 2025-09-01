@@ -30,7 +30,7 @@ trait Hydratable
     {
         $model = $this->hydrateFrom();
 
-        $attributes = $this->except($except)->toArray();
+        $attributes = $this->except(...$except)->toArray();
 
         return (new $model())->setRawAttributes($attributes);
     }

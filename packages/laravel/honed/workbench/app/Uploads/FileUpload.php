@@ -15,7 +15,7 @@ class FileUpload extends Upload
     {
         return $this
             ->multiple()
-            ->max(1024 * 1024 * 10) // 10MB
+            ->maxSize(1024 * 1024 * 10) // 10MB
             ->mime('image/*')
             ->extensions('png', 'jpg', 'jpeg', 'gif', 'svg', 'webp');
     }
