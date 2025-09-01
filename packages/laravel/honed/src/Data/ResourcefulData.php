@@ -2,9 +2,7 @@
 
 namespace Honed\Honed\Data;
 
-use BackedEnum;
 use Spatie\LaravelData\Data;
-use Honed\Honed\Concerns\Resourceful;
 use Honed\Honed\Data\Normalizers\ResourcefulNormalizer;
 
 class ResourcefulData extends Data
@@ -21,6 +19,6 @@ class ResourcefulData extends Data
      */
     public static function normalizers(): array
     {
-        return [...parent::normalizers(), ResourcefulNormalizer::class];
+        return [ResourcefulNormalizer::class, ...parent::normalizers()];
     }
 }
