@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Data;
 
 use Honed\Honed\Data\ResourcefulData;
-use Workbench\App\Enums\Status;
 use Workbench\App\Enums\Type;
 
 beforeEach(function () {});

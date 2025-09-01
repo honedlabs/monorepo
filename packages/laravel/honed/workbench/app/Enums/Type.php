@@ -16,7 +16,7 @@ enum Type: string implements Resourceful
      */
     public function label(): string
     {
-        return $this->name . 's';
+        return $this->name.'s';
     }
 
     /**

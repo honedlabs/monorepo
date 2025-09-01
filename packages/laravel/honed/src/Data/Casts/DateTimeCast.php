@@ -13,6 +13,6 @@ class DateTimeCast extends DateTimeInterfaceCast
         ?string $setTimeZone = null,
         ?string $timezone = null,
     ) {
-        return parent::__construct('Y-m-d\TH:i:s', $type, $setTimeZone, $timezone);
+        parent::__construct('Y-m-d\TH:i:s', $type, $setTimeZone, $timezone);
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Honed\Attributes\Validation;
 
 use Attribute;
-use Spatie\LaravelData\Support\Validation\References\ExternalReference;
 use Spatie\LaravelData\Attributes\Validation\StringValidationAttribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
@@ -21,7 +22,7 @@ class HexColor extends StringValidationAttribute
 
     /**
      * Get the parameters to pass to the validation rule.
-     * 
+     *
      * @return array<int, string>
      */
     public function parameters(): array

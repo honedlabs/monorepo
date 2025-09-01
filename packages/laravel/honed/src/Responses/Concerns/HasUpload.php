@@ -9,21 +9,21 @@ use Honed\Upload\Upload;
 /**
  * @phpstan-require-extends \Honed\Honed\Responses\InertiaResponse
  */
-trait HasUpdate
+trait HasUpload
 {
     public const UPLOAD_PROP = 'upload';
 
     /**
      * The route to update the model.
      *
-     * @var class-string<\Honed\Upload\Upload>|\Honed\Upload\Upload
+     * @var class-string<Upload>|Upload
      */
     protected $upload;
 
     /**
      * Set the route to update the model.
      *
-     * @param  class-string<\Honed\Upload\Upload>|\Honed\Upload\Upload  $value
+     * @param  class-string<Upload>|Upload  $value
      * @return $this
      */
     public function upload(string|Upload $value): static
@@ -46,7 +46,7 @@ trait HasUpdate
      *
      * @return array<string, mixed>
      */
-    public function hasUpdateToProps(): array
+    public function hasUploadToProps(): array
     {
         return [
             self::UPLOAD_PROP => $this->getUpload()->toArray(),

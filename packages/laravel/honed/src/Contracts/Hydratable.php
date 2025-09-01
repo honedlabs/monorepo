@@ -11,7 +11,7 @@ interface Hydratable
 {
     /**
      * The model to hydrate the data from.
-     * 
+     *
      * @return class-string<TModel>
      */
     public function hydrateFrom(): string;
