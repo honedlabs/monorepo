@@ -7,5 +7,5 @@ return [
 
     'timestamp' => true,
 
-    'user' => false
+    'user' => false,
 ];

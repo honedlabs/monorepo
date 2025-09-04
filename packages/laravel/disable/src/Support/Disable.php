@@ -11,28 +11,28 @@ final class Disable
 {
     /**
      * Apply the disable scope to the builder.
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $builder
-     * @param \Honed\Disable\Contracts\Disableable $model
+     *
+     * @param  Builder<Model>  $builder
+     * @param  \Honed\Disable\Contracts\Disableable&Model  $model
      */
     public static function builder(Builder $builder, Model $model, bool $value): void
     {
         $query = $builder->getQuery();
 
-        if (self::boolean()) {
-            $query->where($builder->qualifyColumn($model->getDisabledColumn()), $value);
+        if (self::boolean() && $column = $model->getDisabledColumn()) {
+            $query->where($builder->qualifyColumn($column), $value);
         }
 
-        if (self::timestamp()) {
-            $value 
-                ? $query->whereNotNull($builder->qualifyColumn($model->getDisabledAtColumn()))
-                : $query->whereNull($builder->qualifyColumn($model->getDisabledAtColumn()));
-        }
-
-        if (self::user()) {
+        if (self::timestamp() && $column = $model->getDisabledAtColumn()) {
             $value
-                ? $query->whereNotNull($builder->qualifyColumn($model->getDisabledByColumn()))
-                : $query->whereNull($builder->qualifyColumn($model->getDisabledByColumn()));
+                ? $query->whereNotNull($builder->qualifyColumn($column))
+                : $query->whereNull($builder->qualifyColumn($column));
+        }
+
+        if (self::user() && $column = $model->getDisabledByColumn()) {
+            $value
+                ? $query->whereNotNull($builder->qualifyColumn($column))
+                : $query->whereNull($builder->qualifyColumn($column));
         }
     }
 

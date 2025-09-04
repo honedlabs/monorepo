@@ -19,10 +19,11 @@ trait Disableable
     {
         if (Disable::boolean()) {
             $this->mergeCasts([
-                $this->getDisabledColumn() => 'boolean'
+                $this->getDisabledColumn() => 'boolean',
             ]);
         }
     }
+
     /**
      * Check if the model is disabled.
      */
@@ -57,7 +58,7 @@ trait Disableable
 
     /**
      * Disable the model.
-     * 
+     *
      * @return $this
      */
     public function disable(bool $value = true): static
@@ -71,7 +72,7 @@ trait Disableable
 
     /**
      * Enable the model.
-     * 
+     *
      * @return $this
      */
     public function enable(bool $enabled = true): static
@@ -81,7 +82,7 @@ trait Disableable
 
     /**
      * Set the value of the "is_disabled" attribute.
-     * 
+     *
      * @return $this
      */
     public function setDisabled(bool $value): static
@@ -97,7 +98,7 @@ trait Disableable
 
     /**
      * Set the value of the "disabled_at" attribute.
-     * 
+     *
      * @return $this
      */
     public function setDisabledAt(mixed $time): static
@@ -113,7 +114,7 @@ trait Disableable
 
     /**
      * Set the value of the "disabled_by" attribute.
-     * 
+     *
      * @return $this
      */
     public function setDisabledBy(mixed $id): static

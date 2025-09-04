@@ -16,7 +16,7 @@ interface Disableable
 
     /**
      * Disable the model.
-     * 
+     *
      * @return $this
      */
     public function disable(bool $value = true);
