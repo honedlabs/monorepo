@@ -11,5 +11,13 @@ arch('it will not use debugging functions')
     ->each->not->toBeUsed();
 
 arch('strict types')
-    ->expect('Honed\Abn')
+    ->expect('Honed\Disable')
     ->toUseStrictTypes();
+
+arch('concerns')
+    ->expect('Honed\Disable\Concerns')
+    ->toBeTraits();
+
+arch('contracts')
+    ->expect('Honed\Disable\Contracts')
+    ->toBeInterfaces();
