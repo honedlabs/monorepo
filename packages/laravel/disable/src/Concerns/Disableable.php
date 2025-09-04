@@ -94,7 +94,6 @@ trait Disableable
     {
         $column = $this->getDisabledColumn();
 
-        
         if (Disable::boolean() && ! is_null($column) && ! $this->isDirty($column)) {
             $this->{$column} = $value;
         }

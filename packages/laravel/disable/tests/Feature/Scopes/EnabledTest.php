@@ -3,9 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Product;
-use App\Models\User;
 use Honed\Disable\Scopes\Enabled;
-use Illuminate\Database\Query\Builder;
 
 beforeEach(function () {
     Product::addGlobalScope(new Enabled());

@@ -20,16 +20,14 @@ final class Disable
         $query = $builder->getQuery();
 
         match (true) {
-            self::boolean() && $column = $model->getDisabledColumn() => 
-                $query->where($builder->qualifyColumn($column), $value),
-            self::timestamp() && $column = $model->getDisabledAtColumn() => 
-                $value
+            self::boolean() && $column = $model->getDisabledColumn() => $query->where($builder->qualifyColumn($column), $value),
+            self::timestamp() && $column = $model->getDisabledAtColumn() => $value
                     ? $query->whereNotNull($builder->qualifyColumn($column))
                     : $query->whereNull($builder->qualifyColumn($column)),
-            self::user() && $column = $model->getDisabledByColumn() => 
-                $value
+            self::user() && $column = $model->getDisabledByColumn() => $value
                     ? $query->whereNotNull($builder->qualifyColumn($column))
                     : $query->whereNull($builder->qualifyColumn($column)),
+            default => null,
         };
 
     }

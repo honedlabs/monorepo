@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Models\Product;
 use App\Models\User;
-use Honed\Disable\Support\Disable;
 
 beforeEach(function () {
     $this->freezeTime();
@@ -38,7 +37,7 @@ it('checks if the model is disabled from timestamp', function () {
     config([
         'disable.boolean' => false,
     ]);
-    
+
     expect($this->product)
         ->isDisabled()->toBeFalse()
         ->isNotDisabled()->toBeTrue()
@@ -59,7 +58,7 @@ it('checks if the model is disabled from user', function () {
         'disable.boolean' => false,
         'disable.timestamp' => false,
     ]);
-    
+
     expect($this->product)
         ->isDisabled()->toBeFalse()
         ->isNotDisabled()->toBeTrue()
@@ -81,7 +80,7 @@ it('is disabled by default', function () {
         'disable.timestamp' => false,
         'disable.user' => false,
     ]);
-    
+
     expect($this->product)
         ->isDisabled()->toBeFalse()
         ->isNotDisabled()->toBeTrue()
@@ -129,7 +128,7 @@ it('enables the model', function () {
     ]);
 
     $this->product->enable()->save();
-    
+
     $this->assertDatabaseHas('products', [
         'id' => $this->product->id,
         'is_disabled' => false,

@@ -13,11 +13,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Product extends Model implements DisableableContract
 {
+    use Disableable;
+
     /**
      * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ProductFactory>
      */
     use HasFactory;
-    use Disableable;
 
     /**
      * The attributes that cannot be mass assigned.
@@ -25,6 +26,17 @@ class Product extends Model implements DisableableContract
      * @var array<int, string>
      */
     protected $guarded = [];
+
+    /**
+     * Begin querying the model.
+     *
+     * @return ProductBuilder<$this>
+     */
+    public static function query()
+    {
+        /** @var ProductBuilder<$this> */
+        return parent::query();
+    }
 
     /**
      * Get the user that owns the product.
@@ -38,22 +50,11 @@ class Product extends Model implements DisableableContract
 
     /**
      * Create a new Eloquent query builder for the model.
-     * 
-     * @return \App\Builders\ProductBuilder<$this>
+     *
+     * @return ProductBuilder<$this>
      */
     public function newEloquentBuilder($query)
     {
         return new ProductBuilder($query);
-    }
-
-    /**
-     * Begin querying the model.
-     * 
-     * @return \App\Builders\ProductBuilder<$this>
-     */
-    public static function query()
-    {
-        /** @var \App\Builders\ProductBuilder<$this> */
-        return parent::query();   
     }
 }

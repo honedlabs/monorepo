@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @template TModel of \App\Models\Product
- * 
+ *
  * @extends \Illuminate\Database\Eloquent\Builder<TModel>
  */
 class ProductBuilder extends Builder
