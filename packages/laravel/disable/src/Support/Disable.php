@@ -19,21 +19,19 @@ final class Disable
     {
         $query = $builder->getQuery();
 
-        if (self::boolean() && $column = $model->getDisabledColumn()) {
-            $query->where($builder->qualifyColumn($column), $value);
-        }
+        match (true) {
+            self::boolean() && $column = $model->getDisabledColumn() => 
+                $query->where($builder->qualifyColumn($column), $value),
+            self::timestamp() && $column = $model->getDisabledAtColumn() => 
+                $value
+                    ? $query->whereNotNull($builder->qualifyColumn($column))
+                    : $query->whereNull($builder->qualifyColumn($column)),
+            self::user() && $column = $model->getDisabledByColumn() => 
+                $value
+                    ? $query->whereNotNull($builder->qualifyColumn($column))
+                    : $query->whereNull($builder->qualifyColumn($column)),
+        };
 
-        if (self::timestamp() && $column = $model->getDisabledAtColumn()) {
-            $value
-                ? $query->whereNotNull($builder->qualifyColumn($column))
-                : $query->whereNull($builder->qualifyColumn($column));
-        }
-
-        if (self::user() && $column = $model->getDisabledByColumn()) {
-            $value
-                ? $query->whereNotNull($builder->qualifyColumn($column))
-                : $query->whereNull($builder->qualifyColumn($column));
-        }
     }
 
     /**

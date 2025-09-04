@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Providers;
+namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

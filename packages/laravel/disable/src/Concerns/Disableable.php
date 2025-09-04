@@ -29,7 +29,12 @@ trait Disableable
      */
     public function isDisabled(): bool
     {
-        return true;
+        return (bool) match (true) {
+            Disable::boolean() && $column = $this->getDisabledColumn() => $this->{$column},
+            Disable::timestamp() && $column = $this->getDisabledAtColumn() => $this->{$column},
+            Disable::user() && $column = $this->getDisabledByColumn() => $this->{$column},
+            default => false,
+        };
     }
 
     /**
@@ -77,7 +82,7 @@ trait Disableable
      */
     public function enable(bool $enabled = true): static
     {
-        return $this->setEnabled($enabled);
+        return $this->disable(! $enabled);
     }
 
     /**
@@ -89,6 +94,7 @@ trait Disableable
     {
         $column = $this->getDisabledColumn();
 
+        
         if (Disable::boolean() && ! is_null($column) && ! $this->isDirty($column)) {
             $this->{$column} = $value;
         }
