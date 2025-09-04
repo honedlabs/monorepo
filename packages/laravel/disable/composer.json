@@ -36,10 +36,7 @@
     "autoload": {
         "psr-4": {
             "Honed\\Disable\\": "src/"
-        },
-        "files": [
-            "./src/helpers.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
@@ -88,10 +85,7 @@
         "laravel": {
             "providers": [
                 "Honed\\Disable\\DisableServiceProvider"
-            ],
-            "aliases": {
-                "Disable": "Honed\\Disable\\Facades\\Disable"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",

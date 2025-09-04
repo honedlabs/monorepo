@@ -24,11 +24,5 @@ class DisableServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/disable.php' => config_path('disable.php'),
         ], 'disable-config');
-
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                //
-            ]);
-        }
     }
 }
