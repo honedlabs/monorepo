@@ -23,8 +23,9 @@ jobs:
           # - command
           # - core
           # - crumb
+          - disable
           # - flash
-          - honed
+          # - honed
           # - infolist
           # - layout
           # - lock
