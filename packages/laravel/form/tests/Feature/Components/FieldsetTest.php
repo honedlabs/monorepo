@@ -7,13 +7,13 @@ namespace Tests\Feature\Components;
 use Honed\Form\Components\Fieldset;
 
 beforeEach(function () {
+    $this->file = config('form.components.fieldset');
+
     $this->component = Fieldset::make([]);
 });
 
 it('has component', function () {
-    $component = config('form.components.fieldset');
-
     expect($this->component)
-        ->component()->toBe($component)
-        ->getComponent()->toBe($component);
+        ->component()->toBe($this->file)
+        ->getComponent()->toBe($this->file);
 });

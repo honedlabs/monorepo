@@ -18,7 +18,7 @@ trait HasAction
      *
      * @return $this
      */
-    public function action(string $value): static
+    public function action(?string $value): static
     {
         $this->action = $value;
 

@@ -14,7 +14,7 @@ class Text extends Component
     /**
      * Create a new text instance.
      */
-    public static function make(string $value): static
+    public static function make(?string $value = null): static
     {
         return resolve(static::class)->text($value);
     }

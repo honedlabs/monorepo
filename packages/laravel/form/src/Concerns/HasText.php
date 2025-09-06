@@ -18,7 +18,7 @@ trait HasText
      *
      * @return $this
      */
-    public function text(string $value): static
+    public function text(?string $value): static
     {
         $this->text = $value;
 

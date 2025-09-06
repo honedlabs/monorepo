@@ -7,13 +7,13 @@ namespace Tests\Feature\Components;
 use Honed\Form\Components\FieldGroup;
 
 beforeEach(function () {
+    $this->file = config('form.components.fieldgroup');
+
     $this->component = FieldGroup::make([]);
 });
 
 it('has component', function () {
-    $component = config('form.components.fieldgroup');
-
     expect($this->component)
-        ->component()->toBe($component)
-        ->getComponent()->toBe($component);
+        ->component()->toBe($this->file)
+        ->getComponent()->toBe($this->file);
 });

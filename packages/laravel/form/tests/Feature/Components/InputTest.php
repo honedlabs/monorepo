@@ -7,13 +7,15 @@ namespace Tests\Feature\Components;
 use Honed\Form\Components\Input;
 
 beforeEach(function () {
-    $this->component = Input::make('name');
+    $this->name = 'name';
+
+    $this->file = config('form.components.input');
+
+    $this->component = Input::make($this->name);
 });
 
 it('has component', function () {
-    $component = config('form.components.input');
-
     expect($this->component)
-        ->component()->toBe($component)
-        ->getComponent()->toBe($component);
+        ->component()->toBe($this->file)
+        ->getComponent()->toBe($this->file);
 });

@@ -7,13 +7,15 @@ namespace Tests\Feature\Components;
 use Honed\Form\Components\Select;
 
 beforeEach(function () {
-    $this->component = Select::make('type');
+    $this->name = 'type';
+
+    $this->file = config('form.components.select');
+
+    $this->component = Select::make($this->name);
 });
 
 it('has component', function () {
-    $component = config('form.components.select');
-
     expect($this->component)
-        ->component()->toBe($component)
-        ->getComponent()->toBe($component);
+        ->component()->toBe($this->file)
+        ->getComponent()->toBe($this->file);
 });

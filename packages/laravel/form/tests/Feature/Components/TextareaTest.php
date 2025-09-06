@@ -7,13 +7,15 @@ namespace Tests\Feature\Components;
 use Honed\Form\Components\Textarea;
 
 beforeEach(function () {
-    $this->component = Textarea::make('description');
+    $this->name = 'description';
+
+    $this->file = config('form.components.textarea');
+
+    $this->component = Textarea::make($this->name);
 });
 
 it('has component', function () {
-    $component = config('form.components.textarea');
-
     expect($this->component)
-        ->component()->toBe($component)
-        ->getComponent()->toBe($component);
+        ->component()->toBe($this->file)
+        ->getComponent()->toBe($this->file);
 });

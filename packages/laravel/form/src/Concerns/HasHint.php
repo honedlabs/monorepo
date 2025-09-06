@@ -18,7 +18,7 @@ trait HasHint
      *
      * @return $this
      */
-    public function hint(string $value): static
+    public function hint(?string $value): static
     {
         $this->hint = $value;
 

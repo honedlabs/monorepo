@@ -7,13 +7,15 @@ namespace Tests\Feature\Components;
 use Honed\Form\Components\Password;
 
 beforeEach(function () {
-    $this->component = Password::make('password');
+    $this->name = 'password';
+
+    $this->file = config('form.components.password');
+
+    $this->component = Password::make($this->name);
 });
 
 it('has component', function () {
-    $component = config('form.components.password');
-
     expect($this->component)
-        ->component()->toBe($component)
-        ->getComponent()->toBe($component);
+        ->component()->toBe($this->file)
+        ->getComponent()->toBe($this->file);
 });

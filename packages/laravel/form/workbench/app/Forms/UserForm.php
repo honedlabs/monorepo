@@ -12,7 +12,7 @@ use Honed\Form\Components\Text;
 use Honed\Form\Form;
 
 class UserForm extends Form
-{    
+{
     /**
      * Define the form.
      *
@@ -33,7 +33,7 @@ class UserForm extends Form
                         Password::make('password')->required(),
                         Checkbox::make('remember_token', 'Remember me'),
                     ]),
-                ])
+                ]),
             ]);
     }
 }

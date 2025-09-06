@@ -7,13 +7,15 @@ namespace Tests\Feature\Components;
 use Honed\Form\Components\Radio;
 
 beforeEach(function () {
-    $this->component = Radio::make('type');
+    $this->name = 'type';
+
+    $this->file = config('form.components.radio');
+
+    $this->component = Radio::make($this->name);
 });
 
 it('has component', function () {
-    $component = config('form.components.radio');
-
     expect($this->component)
-        ->component()->toBe($component)
-        ->getComponent()->toBe($component);
+        ->component()->toBe($this->file)
+        ->getComponent()->toBe($this->file);
 });

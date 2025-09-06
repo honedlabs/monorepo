@@ -7,13 +7,15 @@ namespace Tests\Feature\Components;
 use Honed\Form\Components\Checkbox;
 
 beforeEach(function () {
-    $this->component = Checkbox::make('remember');
+    $this->name = 'remember';
+
+    $this->file = config('form.components.checkbox');
+
+    $this->component = Checkbox::make($this->name);
 });
 
 it('has component', function () {
-    $component = config('form.components.checkbox');
-
     expect($this->component)
-        ->component()->toBe($component)
-        ->getComponent()->toBe($component);
+        ->component()->toBe($this->file)
+        ->getComponent()->toBe($this->file);
 });
