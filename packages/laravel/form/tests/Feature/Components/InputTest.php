@@ -19,3 +19,8 @@ it('has component', function () {
         ->component()->toBe($this->file)
         ->getComponent()->toBe($this->file);
 });
+
+it('has string empty', function () {
+    expect($this->component)
+        ->empty()->toBe('');
+});

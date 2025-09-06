@@ -5,14 +5,22 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Forms\UserForm;
+use Honed\Form\Attributes\UseForm;
+use Honed\Form\Concerns\HasForm;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+#[UseForm(UserForm::class)]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
+    /** @use HasForm<\App\Forms\UserForm> */
+    use HasForm;
 
     /**
      * The attributes that are mass assignable.
