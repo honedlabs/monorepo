@@ -6,7 +6,6 @@ namespace Tests\Feature\Concerns;
 
 use Honed\Form\Enums\Cancel;
 use Honed\Form\Form;
-use Illuminate\Support\Str;
 
 beforeEach(function () {
     $this->form = Form::make();
@@ -28,4 +27,3 @@ it('has cancel shorthands', function () {
         ->onCancelRoute('home')->toBe($this->form)
         ->getCancel()->toBe(route('home', [], false));
 });
-

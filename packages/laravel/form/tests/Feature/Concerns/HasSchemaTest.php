@@ -6,7 +6,6 @@ namespace Tests\Feature\Concerns;
 
 use Honed\Form\Components\Input;
 use Honed\Form\Form;
-use Illuminate\Support\Str;
 
 beforeEach(function () {
     $this->input = Input::make('name');

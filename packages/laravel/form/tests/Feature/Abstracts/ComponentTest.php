@@ -19,6 +19,6 @@ it('has array representation', function () {
     expect($this->component)
         ->toArray()->toEqualCanonicalizing([
             'label' => 'test',
-            'component' => 'Legend.vue'
+            'component' => 'Legend.vue',
         ]);
 });
