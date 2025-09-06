@@ -14,9 +14,9 @@ class Legend extends Component
     /**
      * Create a new legend instance.
      */
-    public static function make(string $value): static
+    public static function make(string $label): static
     {
-        return resolve(static::class)->label($value);
+        return resolve(static::class)->label($label);
     }
 
     /**

@@ -49,7 +49,7 @@ trait Cancellable
      */
     public function onCancelRoute(string $name, mixed $parameters = []): static
     {
-        return $this->onCancelRedirect(route($name, $parameters));
+        return $this->onCancelRedirect(route($name, $parameters, false));
     }
 
     /**
