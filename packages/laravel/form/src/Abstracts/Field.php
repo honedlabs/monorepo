@@ -10,9 +10,11 @@ use Honed\Form\Concerns\CanBeAutofocused;
 use Honed\Form\Concerns\CanBeDisabled;
 use Honed\Form\Concerns\CanBeOptional;
 use Honed\Form\Concerns\CanBeRequired;
+use Honed\Form\Concerns\HasDefaultValue;
 use Honed\Form\Concerns\HasHint;
+use Honed\Form\Contracts\Defaultable;
 
-abstract class Field extends Component
+abstract class Field extends Component implements Defaultable
 {
     use CanBeAutofocused;
     use CanBeDisabled;
@@ -21,6 +23,7 @@ abstract class Field extends Component
     use HasHint;
     use HasLabel;
     use HasName;
+    use HasDefaultValue;
 
     /**
      * Create a new field instance.
@@ -43,6 +46,7 @@ abstract class Field extends Component
             'name' => $this->getName(),
             'label' => $this->getLabel(),
             'hint' => $this->getHint(),
+            'defaultValue' => $this->getDefaultValue(),
             'required' => $this->isRequired() ?: null,
             'disabled' => $this->isDisabled() ?: null,
             'optional' => $this->isOptional() ?: null,

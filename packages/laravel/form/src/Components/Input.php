@@ -16,4 +16,12 @@ class Input extends Field
         /** @var string */
         return config('form.components.input', 'Input.vue');
     }
+
+    /**
+     * Get the placeholder for when the given value is null.
+     */
+    public function empty(): mixed
+    {
+        return '';
+    }
 }

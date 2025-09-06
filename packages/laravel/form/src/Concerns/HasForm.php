@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Form\Concerns;
 
-use Closure;
 use Honed\Form\Attributes\UseForm;
 use Honed\Form\Form;
 use ReflectionClass;
@@ -24,15 +23,7 @@ trait HasForm
      */
     public static function form(?string $form = null): Form
     {
-        $class = match (true) {
-            (bool) $form => $form::make(),
-            (bool) $form = static::newForm() => $form,
-            default => Form::formForModel(static::class),
-        };
-
-        return $class;
-
-        // return $class->defaults($form);
+        return static::newForm() ?? Form::formForModel(static::class);
     }
 
     /**
@@ -56,7 +47,7 @@ trait HasForm
     /**
      * Get the form from the Form class attribute.
      *
-     * @return Form|null
+     * @return TForm|null
      */
     protected static function getUseFormAttribute(): ?Form
     {

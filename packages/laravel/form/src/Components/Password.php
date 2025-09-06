@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
-use Honed\Form\Abstracts\Field;
-
-class Password extends Field
+class Password extends Input
 {
     /**
      * The name of the component.

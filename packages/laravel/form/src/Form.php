@@ -27,6 +27,13 @@ class Form extends Primitive implements NullsAsUndefined
     use HasSchema;
 
     /**
+     * The source of the data to be used to populate the form.
+     *
+     * @var mixed
+     */
+    protected $from;
+
+    /**
      * The identifier to use for evaluation.
      *
      * @var string
@@ -58,10 +65,8 @@ class Form extends Primitive implements NullsAsUndefined
     /**
      * Get a new form instance for the given model name.
      *
-     * @template TClass of \Illuminate\Database\Eloquent\Model
-     *
-     * @param  class-string<TClass>  $modelName
-     * @return Form<TClass>
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelName
+     * @return Form
      */
     public static function formForModel(string $modelName): self
     {
@@ -117,6 +122,18 @@ class Form extends Primitive implements NullsAsUndefined
     {
         static::$namespace = 'App\\Forms\\';
         static::$formNameResolver = null;
+    }
+
+    /**
+     * Set the data to be used to populate the form.
+     * 
+     * @return $this
+     */
+    public function from(mixed $from): static
+    {
+        $this->from = $from;
+
+        return $this;
     }
 
     /**
