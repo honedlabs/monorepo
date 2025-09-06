@@ -16,7 +16,7 @@ class Checkbox extends Field
         /** @var string */
         return config('form.components.checkbox', 'Checkbox.vue');
     }
-    
+
     /**
      * Get the placeholder for when the given value is null.
      */

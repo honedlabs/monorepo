@@ -13,7 +13,7 @@ abstract class Grouping extends Component
     /**
      * Create a new grouping instance.
      *
-     * @param  array<int, \Honed\Form\Abstracts\Component>  $schema
+     * @param  array<int, Component>  $schema
      */
     public static function make(array $schema = []): static
     {

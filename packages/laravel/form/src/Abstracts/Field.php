@@ -20,10 +20,10 @@ abstract class Field extends Component implements Defaultable
     use CanBeDisabled;
     use CanBeOptional;
     use CanBeRequired;
+    use HasDefaultValue;
     use HasHint;
     use HasLabel;
     use HasName;
-    use HasDefaultValue;
 
     /**
      * Create a new field instance.

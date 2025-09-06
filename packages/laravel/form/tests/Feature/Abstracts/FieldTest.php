@@ -12,6 +12,7 @@ it('has array representation', function () {
     expect($this->component)
         ->toArray()->toEqualCanonicalizing([
             'name' => 'name',
+            'defaultValue' => '',
             'label' => 'Name',
             'component' => 'Input.vue',
         ]);

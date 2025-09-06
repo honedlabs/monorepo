@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Honed\Form;
 
 use Closure;
-use Honed\Core\Primitive;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Honed\Form\Concerns\HasLib;
 use Honed\Core\Concerns\HasMethod;
-use Honed\Form\Concerns\HasAction;
-use Honed\Form\Concerns\HasSchema;
-use Honed\Form\Concerns\Cancellable;
 use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Core\Primitive;
+use Honed\Form\Concerns\Cancellable;
+use Honed\Form\Concerns\HasAction;
+use Honed\Form\Concerns\HasLib;
+use Honed\Form\Concerns\HasSchema;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Throwable;
 
 class Form extends Primitive implements NullsAsUndefined
@@ -48,14 +48,24 @@ class Form extends Primitive implements NullsAsUndefined
     /**
      * How to resolve the form for the given model name.
      *
-     * @var (Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<\Honed\Form\Form>)|null
+     * @var (Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<Form>)|null
      */
     protected static $formNameResolver;
 
     /**
+     * Provide the instance with any necessary setup.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->method(Request::METHOD_POST);
+    }
+
+    /**
      * Create a new form instance.
      *
-     * @param  array<int, \Honed\Form\Abstracts\Component>  $schema
+     * @param  array<int, Abstracts\Component>  $schema
      */
     public static function make(array $schema = []): static
     {
@@ -66,7 +76,6 @@ class Form extends Primitive implements NullsAsUndefined
      * Get a new form instance for the given model name.
      *
      * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelName
-     * @return Form
      */
     public static function formForModel(string $modelName): self
     {
@@ -79,7 +88,7 @@ class Form extends Primitive implements NullsAsUndefined
      * Get the form name for the given model name.
      *
      * @param  class-string<\Illuminate\Database\Eloquent\Model>  $className
-     * @return class-string<\Honed\Form\Form>
+     * @return class-string<Form>
      */
     public static function resolveFormName(string $className): string
     {
@@ -108,7 +117,7 @@ class Form extends Primitive implements NullsAsUndefined
     /**
      * Specify the callback that should be invoked to guess the name of a model form.
      *
-     * @param  Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<\Honed\Form\Form>  $callback
+     * @param  Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<Form>  $callback
      */
     public static function guessFormNamesUsing(Closure $callback): void
     {
@@ -126,7 +135,7 @@ class Form extends Primitive implements NullsAsUndefined
 
     /**
      * Set the data to be used to populate the form.
-     * 
+     *
      * @return $this
      */
     public function from(mixed $from): static
@@ -148,16 +157,6 @@ class Form extends Primitive implements NullsAsUndefined
         } catch (Throwable) {
             return 'App\\';
         }
-    }
-
-    /**
-     * Provide the instance with any necessary setup.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->method(Request::METHOD_POST);
     }
 
     /**

@@ -11,14 +11,14 @@ trait HasSchema
     /**
      * The schema of the component.
      *
-     * @var array<int, \Honed\Form\Abstracts\Component>
+     * @var array<int, Component>
      */
     protected $schema = [];
 
     /**
      * Set the schema of the component.
      *
-     * @param  array<int, \Honed\Form\Abstracts\Component>  $schema
+     * @param  array<int, Component>  $schema
      * @return $this
      */
     public function schema(array $schema = []): static
@@ -31,7 +31,7 @@ trait HasSchema
     /**
      * Get the schema of the component.
      *
-     * @return array<int, \Honed\Form\Abstracts\Component>
+     * @return array<int, Component>
      */
     public function getSchema(): array
     {

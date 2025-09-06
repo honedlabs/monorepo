@@ -18,7 +18,7 @@ trait HasForm
     /**
      * Get the form instance for the model.
      *
-     * @param  class-string<\Honed\Form\Form>|null  $form
+     * @param  class-string<Form>|null  $form
      * @return TForm
      */
     public static function form(?string $form = null): Form
