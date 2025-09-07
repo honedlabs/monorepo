@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Forms\ProductForm;
 use Honed\Form\Concerns\HasForm;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,18 +22,18 @@ class Product extends Model
     use HasForm;
 
     /**
+     * The form class for the product model.
+     *
+     * @var string|null
+     */
+    public static $formClass = null;
+
+    /**
      * The attributes that cannot be mass assigned.
      *
      * @var array<int, string>
      */
     protected $guarded = [];
-
-    /**
-     * The form class for the product model.
-     * 
-     * @var string|null
-     */
-    public static $formClass = null;
 
     /**
      * Get the user that owns the product.

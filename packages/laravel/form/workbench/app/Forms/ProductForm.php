@@ -10,7 +10,6 @@ use Honed\Form\Components\FieldGroup;
 use Honed\Form\Components\Fieldset;
 use Honed\Form\Components\Input;
 use Honed\Form\Components\Legend;
-use Honed\Form\Components\Password;
 use Honed\Form\Components\Text;
 use Honed\Form\Components\Textarea;
 use Honed\Form\Form;

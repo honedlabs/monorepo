@@ -22,7 +22,7 @@ it('has schema', function () {
 
 it('converts schema to array', function () {
     expect($this->form)
-        ->schemaToArray()->toBe([])
+        ->resolveSchema()->toBe([])
         ->schema([$this->input])->toBe($this->form)
-        ->schemaToArray()->toEqual([$this->input->toArray()]);
+        ->resolveSchema()->toEqual([$this->input->toArray()]);
 });

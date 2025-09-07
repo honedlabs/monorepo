@@ -6,9 +6,12 @@ namespace Honed\Form\Abstracts;
 
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
+use Honed\Form\Concerns\BelongsToForm;
 
 abstract class Component extends Primitive implements NullsAsUndefined
 {
+    use BelongsToForm;
+
     /**
      * The name of the component.
      *
@@ -46,6 +49,18 @@ abstract class Component extends Primitive implements NullsAsUndefined
     public function getComponent(): string
     {
         return $this->component ??= $this->component();
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        $this->form($this->getForm());
+
+        return parent::toArray();
     }
 
     /**

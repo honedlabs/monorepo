@@ -167,7 +167,7 @@ class Form extends Primitive implements NullsAsUndefined
     protected function representation(): array
     {
         return [
-            'schema' => $this->schemaToArray(),
+            'schema' => $this->resolveSchema($this),
             'lib' => $this->getLib(),
             'method' => $this->getMethod(),
             'action' => $this->getAction(),

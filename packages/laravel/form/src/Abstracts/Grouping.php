@@ -28,7 +28,7 @@ abstract class Grouping extends Component
     protected function representation(): array
     {
         return [
-            'schema' => $this->schemaToArray(),
+            'schema' => $this->resolveSchema($this->getForm()),
             ...parent::representation(),
         ];
     }

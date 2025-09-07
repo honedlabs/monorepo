@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Forms\UserForm;
-use Honed\Form\Attributes\UseForm;
 use App\Models\User;
+use Honed\Form\Attributes\UseForm;
 
 it('has attribute', function () {
     $attribute = new UseForm(UserForm::class);

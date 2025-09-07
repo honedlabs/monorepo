@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Models\User;
+use App\Forms\ProductForm;
 use App\Forms\UserForm;
 use App\Models\Product;
-use App\Forms\ProductForm;
+use App\Models\User;
 
 afterEach(function () {
     Product::$formClass = null;
