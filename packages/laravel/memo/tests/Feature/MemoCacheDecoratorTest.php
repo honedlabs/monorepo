@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Stores\NoLockStore;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Exceptions;
 
 beforeEach(function () {});
 
@@ -120,13 +123,30 @@ it('dispatches events', function () {
 
 })->todo();
 
-it('resets with scoped instances', function () {
-
-})->todo();
-
 it('throws when store does not support locks', function () {
+    $this->freezeTime();
 
-})->todo();
+    $exception = [];
+
+    Exceptions::reportable(function (Throwable $e) use (&$exception) {
+        $exception = $e;
+    });
+
+    Config::set('cache.stores.no-lock', ['driver' => 'no-lock']);
+
+    app('cache')->extend('no-lock', fn () => Cache::repository(new NoLockStore()));
+
+    app('cache')->flexible('key', [10, 20], 'value-1');
+
+    defer()->invoke();
+
+    $value = app('cache')->get('key');
+
+    expect($exception)
+        ->toHaveCount(1)
+        ->{0}->toBeInstanceOf(BadMethodCallException::class);
+
+})->skip();
 
 it('supports flexible', function () {
     $this->freezeTime();
