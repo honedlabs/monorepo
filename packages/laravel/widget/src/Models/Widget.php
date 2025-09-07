@@ -10,6 +10,7 @@ use Honed\Widget\Casts\WidgetCast;
 use Honed\Widget\Concerns\InteractsWithDatabase;
 use Honed\Widget\QueryBuilder;
 use Honed\Widget\WidgetBuilder;
+use Honed\Widget\WidgetCollection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -97,8 +98,14 @@ class Widget extends Model
         return new QueryBuilder($this->getConnection());
     }
 
-    // public function newCollection(array $models = [])
-    // {
-    //     return parent::newCollection($models);
-    // }
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param  array<array-key, \Illuminate\Database\Eloquent\Model>  $models
+     * @return WidgetCollection
+     */
+    public function newCollection(array $models = []): WidgetCollection
+    {
+        return new WidgetCollection($models);
+    }
 }

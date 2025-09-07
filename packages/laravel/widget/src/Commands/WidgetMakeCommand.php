@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Honed\Widget\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
 use function trim;
 
 #[AsCommand(name: 'make:widget')]
-class WidgetMakeCommand extends GeneratorCommand
+class WidgetMakeCommand extends GeneratorCommand implements PromptsForMissingInput
 {
     /**
      * The console command name.
