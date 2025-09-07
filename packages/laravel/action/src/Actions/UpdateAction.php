@@ -10,94 +10,22 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TInput of mixed = array<string, mixed>|\Illuminate\Support\ValidatedInput|\Illuminate\Foundation\Http\FormRequest
+ * 
+ * @extends \Honed\Action\Actions\ModelAction<TModel, TInput>
  */
-class UpdateAction extends DatabaseAction
+class UpdateAction extends ModelAction
 {
-    /**
-     * @use \Honed\Action\Actions\Concerns\InteractsWithFormData<TInput>
-     */
-    use InteractsWithFormData;
-
-    /**
-     * Update the model.
-     *
-     * @param  TModel  $model
-     * @param  TInput  $input
-     * @return TModel $model
-     */
-    public function handle(Model $model, $input = []): Model
-    {
-        return $this->transaction(
-            fn () => $this->execute($model, $input)
-        );
-    }
-
-    /**
-     * Prepare the input for the update method.
-     *
-     * @param  TModel  $model
-     * @param  TInput  $input
-     * @return array<string, mixed>
-     */
-    protected function prepare(Model $model, $input): array
-    {
-        return $this->only(
-            $this->normalize($input)
-        );
-    }
-
-    /**
-     * Execute the action.
-     *
-     * @param  TModel  $model
-     * @param  TInput  $input
-     * @return TModel
-     */
-    protected function execute(Model $model, $input): Model
-    {
-        $this->before($model, $input);
-
-        $prepared = $this->prepare($model, $input);
-
-        $this->act($model, $prepared);
-
-        $this->after($model, $input, $prepared);
-
-        return $model;
-    }
-
-    /**
-     * Perform additional logic before the action has been executed.
-     *
-     * @param  TModel  $model
-     * @param  TInput  $input
-     * @param  array<string, mixed>  $prepared
-     */
-    protected function before(Model $model, $input): void
-    {
-        //
-    }
-
     /**
      * Act on the model.
      * 
      * @param  TModel  $model
      * @param  TInput  $input
+     * @return TModel
      */
-    protected function act(Model $model, $input): void
+    public function act(Model $model, $input): Model
     {
         $model->update($input);
-    }
 
-    /**
-     * Perform additional logic after the action has been executed.
-     *
-     * @param  TModel  $model
-     * @param  TInput  $input
-     * @param  array<string, mixed>  $prepared
-     */
-    protected function after(Model $model, $input, array $prepared): void
-    {
-        //
+        return $model;
     }
 }
