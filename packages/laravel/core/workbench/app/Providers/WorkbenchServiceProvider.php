@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Workbench\App\Providers;
 
-use Workbench\App\Console\Commands\ComponentListCommand;
 use Illuminate\Support\ServiceProvider;
+use Workbench\App\Console\Commands\ComponentListCommand;
 
 class WorkbenchServiceProvider extends ServiceProvider
 {
@@ -24,7 +24,7 @@ class WorkbenchServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                ComponentListCommand::class
+                ComponentListCommand::class,
             ]);
         }
     }

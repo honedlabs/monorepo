@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Workbench\App\Console\Commands;
 
-use BackedEnum;
-use Honed\Core\Primitive;
-use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Commands\ListCommand;
+use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Contracts\HooksIntoLifecycle;
+use Honed\Core\Primitive;
+use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Orchestra\Testbench\workbench_path;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'list:components')]
 class ComponentListCommand extends ListCommand

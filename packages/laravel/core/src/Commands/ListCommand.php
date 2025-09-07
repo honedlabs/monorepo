@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace Honed\Core\Commands;
 
-use SplFileInfo;
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Symfony\Component\Finder\Finder;
-use Illuminate\Support\LazyCollection;
+use Illuminate\Support\Str;
 use ReflectionClass;
+use SplFileInfo;
+use Symfony\Component\Finder\Finder;
 
 abstract class ListCommand extends Command
 {
+    /**
+     * Get the paths to search for classes.
+     *
+     * @return class-string|array<int, class-string>
+     */
+    abstract protected function paths(): string|array;
+
     /**
      * Execute the console command.
      */
@@ -25,6 +31,7 @@ abstract class ListCommand extends Command
 
         if ($classes->isEmpty()) {
             $this->components->info('No matching classes found');
+
             return;
         }
 
@@ -34,37 +41,33 @@ abstract class ListCommand extends Command
     }
 
     /**
-     * Get the paths to search for classes.
-     * 
-     * @return class-string|array<int, class-string>
-     */
-    abstract protected function paths(): string|array;
-
-    /**
      * Get the classes.
-     * 
+     *
      * @return array<int, object>
      */
     protected function classes(): array
     {
-        return (new LazyCollection($this->paths()))
+        return (new Collection(Arr::wrap($this->paths())))
             ->flatMap(function (string $path): array {
                 $directory = glob($path, GLOB_ONLYDIR);
 
-                return $directory !== false ? $directory : [];
+                return $directory ?: [];
             })
             ->reject(function (string $directory): bool {
                 return ! is_dir($directory);
             })
-            ->pipe(function (LazyCollection $collection): array {
-                return $this->within($collection->all());
+            ->pipe(function (Collection $collection): array {
+                /** @var array<int, class-string> $classes */
+                $classes = $collection->all();
+
+                return $this->within($classes);
             });
     }
 
     /**
      * Get the classes within the given paths.
-     * 
-     * @param class-string|array<int, class-string> $paths
+     *
+     * @param  class-string|array<int, class-string>  $paths
      * @return array<int, object>
      */
     protected function within(string|array $paths): array
@@ -130,8 +133,8 @@ abstract class ListCommand extends Command
 
     /**
      * Display the classes for the CLI.
-     * 
-     * @param \Illuminate\Support\Collection<int, object> $classes
+     *
+     * @param  Collection<int, object>  $classes
      */
     protected function displayForCli(Collection $classes): void
     {
@@ -142,9 +145,9 @@ abstract class ListCommand extends Command
 
     /**
      * Determine if the class does not implement the interface.
-     * 
-     * @param class-string $class
-     * @param class-string|array<int, class-string> $interface
+     *
+     * @param  class-string  $class
+     * @param  class-string|array<int, class-string>  $interface
      */
     protected function doesNotImplement(string $class, string|array $interface): bool
     {
@@ -159,9 +162,9 @@ abstract class ListCommand extends Command
 
     /**
      * Determine if the class does not use the trait.
-     * 
-     * @param class-string $class
-     * @param class-string|array<int, class-string> $trait
+     *
+     * @param  class-string  $class
+     * @param  class-string|array<int, class-string>  $trait
      */
     protected function doesNotUse(string $class, string|array $trait): bool
     {
@@ -176,9 +179,9 @@ abstract class ListCommand extends Command
 
     /**
      * Determine if the class does not extend the class.
-     * 
-     * @param class-string $class
-     * @param class-string $parent
+     *
+     * @param  class-string  $class
+     * @param  class-string  $parent
      */
     protected function doesNotExtend(string $class, string $parent): bool
     {
@@ -187,8 +190,8 @@ abstract class ListCommand extends Command
 
     /**
      * Get all traits of the class and parents.
-     * 
-     * @param class-string $class
+     *
+     * @param  class-string  $class
      * @return array<int, class-string>
      */
     protected function getTraits(string $class): array
@@ -198,8 +201,8 @@ abstract class ListCommand extends Command
 
     /**
      * Get all interfaces of the class and parents.
-     * 
-     * @param class-string $class
+     *
+     * @param  class-string  $class
      * @return array<int, class-string>
      */
     protected function getInterfaces(string $class): array
@@ -211,17 +214,21 @@ abstract class ListCommand extends Command
             $interfaces = array_merge($interfaces, class_implements($class) ?: []);
         } while ($class = get_parent_class($class));
 
+        /** @var array<int, class-string> */
         return $interfaces;
     }
 
     /**
      * Get the classes that inherit from the given class.
-     * 
-     * @param class-string $class
+     *
+     * @param  class-string  $class
      * @return array<int, class-string>
      */
     protected function getClasses(string $class): array
     {
-        return class_parents($class);
+        $classes = class_parents($class);
+
+        // @phpstan-ignore-next-line return.type
+        return $classes ?: [];
     }
 }
