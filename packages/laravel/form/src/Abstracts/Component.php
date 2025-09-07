@@ -13,6 +13,13 @@ abstract class Component extends Primitive implements NullsAsUndefined
     use BelongsToForm;
 
     /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'component';
+
+    /**
      * The name of the component.
      *
      * @var string|null

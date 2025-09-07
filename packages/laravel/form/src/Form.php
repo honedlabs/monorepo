@@ -168,10 +168,35 @@ class Form extends Primitive implements NullsAsUndefined
     {
         return [
             'schema' => $this->resolveSchema($this),
-            'lib' => $this->getLib(),
             'method' => $this->getMethod(),
             'action' => $this->getAction(),
             'cancel' => $this->getCancel(),
         ];
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by name.
+     *
+     * @return array<int, mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    {
+        return match ($parameterName) {
+            default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
+        };
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by type.
+     *
+     * @param  class-string  $parameterType
+     * @return array<int, mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
+    {
+        return match ($parameterType) {
+            self::class => [$this],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
+        };
     }
 }

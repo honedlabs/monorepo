@@ -12,6 +12,13 @@ class Text extends Component
     use HasText;
 
     /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'text';
+
+    /**
      * Create a new text instance.
      */
     public static function make(?string $value = null): static

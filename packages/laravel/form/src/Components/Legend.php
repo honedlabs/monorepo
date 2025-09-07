@@ -12,6 +12,13 @@ class Legend extends Component
     use HasLabel;
 
     /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'legend';
+
+    /**
      * Create a new legend instance.
      */
     public static function make(string $label): static

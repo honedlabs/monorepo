@@ -9,6 +9,13 @@ use Honed\Form\Abstracts\Grouping;
 class FieldGroup extends Grouping
 {
     /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'fieldGroup';
+
+    /**
      * The name of the component.
      */
     public function component(): string

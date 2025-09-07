@@ -9,6 +9,13 @@ use Honed\Form\Abstracts\Field;
 class Radio extends Field
 {
     /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'radio';
+
+    /**
      * The name of the component.
      */
     public function component(): string

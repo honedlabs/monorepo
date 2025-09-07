@@ -43,7 +43,20 @@ it('has array representation', function () {
     expect($this->form)
         ->toArray()->toEqual([
             'schema' => [],
-            'lib' => Str::finish(config('form.lib'), '/'),
             'method' => mb_strtolower(Request::METHOD_POST),
         ]);
+});
+
+describe('evaluation', function () {
+    it('has named dependencies', function ($closure, $class) {
+        expect($this->form->evaluate($closure))->toBeInstanceOf($class);
+    })->with([
+        'form' => fn () => [fn ($form) => $form, Form::class],
+    ]);
+
+    it('has typed dependencies', function ($closure, $class) {
+        expect($this->form->evaluate($closure))->toBeInstanceOf($class);
+    })->with([
+        'form' => fn () => [fn (Form $arg) => $arg, Form::class],
+    ]);
 });

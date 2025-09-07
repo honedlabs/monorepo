@@ -9,6 +9,13 @@ use Honed\Form\Abstracts\Field;
 class Checkbox extends Field
 {
     /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'checkbox';
+
+    /**
      * The name of the component.
      */
     public function component(): string
