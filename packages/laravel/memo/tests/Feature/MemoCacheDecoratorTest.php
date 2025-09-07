@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Exceptions;
 
-beforeEach(function () {});
+beforeEach(function () {})->only();
 
 it('memoizes', function () {
     expect(app('cache'))

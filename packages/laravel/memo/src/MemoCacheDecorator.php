@@ -4,26 +4,29 @@ declare(strict_types=1);
 
 namespace Honed\Memo;
 
+use BadMethodCallException;
 use Honed\Memo\Concerns\Memoizable;
 use Illuminate\Cache\Repository;
+use Illuminate\Contracts\Cache\LockProvider;
+use Illuminate\Contracts\Cache\Repository as RepositoryContract;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Arr;
 
-class MemoCacheDecorator implements Store
+class MemoCacheDecorator implements LockProvider, Store
 {
     use Memoizable;
 
     /**
      * The decorated repository.
      *
-     * @var Repository
+     * @var RepositoryContract
      */
     protected $repository;
 
     /**
      * Create a new cache decorator.
      */
-    public function __construct(Repository $repository)
+    public function __construct(RepositoryContract $repository)
     {
         $this->repository($repository);
     }
@@ -33,13 +36,14 @@ class MemoCacheDecorator implements Store
      */
     public function getRepository(): Repository
     {
+        /** @var Repository */
         return $this->repository;
     }
 
     /**
      * Set the decorated repository.
      */
-    public function repository(Repository $repository): void
+    public function repository(RepositoryContract $repository): void
     {
         $this->repository = $repository;
     }
@@ -174,6 +178,43 @@ class MemoCacheDecorator implements Store
         $this->forgetMemoized($key);
 
         return $this->getRepository()->forever($key, $value);
+    }
+
+    /**
+     * Get a lock instance.
+     *
+     * @param  string  $name
+     * @param  int  $seconds
+     * @param  string|null  $owner
+     * @return \Illuminate\Contracts\Cache\Lock
+     */
+    public function lock($name, $seconds = 0, $owner = null)
+    {
+        $store = $this->getRepository()->getStore();
+
+        if (! $store instanceof LockProvider) {
+            throw new BadMethodCallException('This cache store does not support locks.');
+        }
+
+        return $store->lock($name, $seconds, $owner);
+    }
+
+    /**
+     * Restore a lock instance using the owner identifier.
+     *
+     * @param  string  $name
+     * @param  string  $owner
+     * @return \Illuminate\Contracts\Cache\Lock
+     */
+    public function restoreLock($name, $owner)
+    {
+        $store = $this->getRepository()->getStore();
+
+        if (! $store instanceof LockProvider) {
+            throw new BadMethodCallException('This cache store does not support locks.');
+        }
+
+        return $store->restoreLock($name, $owner);
     }
 
     /**

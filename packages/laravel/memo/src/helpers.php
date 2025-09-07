@@ -7,13 +7,8 @@ use Honed\Memo\Facades\Memo;
 if (! function_exists('memo')) {
     /**
      * Memoize a value.
-     *
-     * @template TValue
-     *
-     * @param  TValue  $value
-     * @return TValue
      */
-    function memo(string $key, $value)
+    function memo(string $key, mixed $value): mixed
     {
         return Memo::put($key, $value);
     }
