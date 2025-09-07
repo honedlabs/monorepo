@@ -86,7 +86,7 @@ trait Disableable
     }
 
     /**
-     * Set the value of the "is_disabled" attribute.
+     * Set the value of the "is_disabled" column.
      *
      * @return $this
      */
@@ -102,7 +102,7 @@ trait Disableable
     }
 
     /**
-     * Set the value of the "disabled_at" attribute.
+     * Set the value of the "disabled_at" column.
      *
      * @return $this
      */
@@ -118,7 +118,7 @@ trait Disableable
     }
 
     /**
-     * Set the value of the "disabled_by" attribute.
+     * Set the value of the "disabled_by" column.
      *
      * @return $this
      */
