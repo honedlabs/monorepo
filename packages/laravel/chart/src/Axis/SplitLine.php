@@ -62,12 +62,10 @@ class SplitLine extends Primitive implements NullsAsUndefined
 
     /**
      * Get whether to show the splitline of the min tick.
-     *
-     * @return false|null
      */
-    public function isShowingMinLine(): ?bool
+    public function isShowingMinLine(): bool
     {
-        return $this->showMinLine ? null : false;
+        return $this->showMinLine;
     }
 
     /**
@@ -75,7 +73,7 @@ class SplitLine extends Primitive implements NullsAsUndefined
      */
     public function isNotShowingMinLine(): bool
     {
-        return ! $this->showMinLine;
+        return ! $this->isShowingMinLine();
     }
 
     /**

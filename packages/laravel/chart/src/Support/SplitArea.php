@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Axis;
+namespace Honed\Chart\Support;
 
 use Honed\Chart\Axis\Concerns\HasInterval;
 use Honed\Chart\Concerns\CanBeShown;
