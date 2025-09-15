@@ -21,16 +21,16 @@ jobs:
           # - bind
           # - chart
           # - command
-          - core
+          # - core
           # - crumb
-          - disable
+          # - disable
           # - flash
-          - form
-          # - honed
+          # - form
+          - honed
           # - infolist
           # - layout
           # - lock
-          - memo
+          # - memo
           # - modal
           # - nav
           # - page
