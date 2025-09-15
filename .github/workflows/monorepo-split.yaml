@@ -23,7 +23,7 @@ jobs:
           # - command
           # - core
           # - crumb
-          # - disable
+          - disable
           # - flash
           # - form
           - honed
