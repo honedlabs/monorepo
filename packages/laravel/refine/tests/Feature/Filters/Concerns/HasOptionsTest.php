@@ -233,7 +233,7 @@ it('has array representation', function () {
             ],
             [
                 'value' => Status::ComingSoon->value,
-                'label' => Status::ComingSoon->name,
+                'label' => 'Coming soon',
                 'active' => false,
             ],
         ]);
