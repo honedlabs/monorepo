@@ -23,7 +23,7 @@ jobs:
           # - command
           # - core
           # - crumb
-          - disable
+          # - disable
           # - flash
           # - form
           - honed
@@ -38,7 +38,7 @@ jobs:
           # - refine
           # - registry
           # - stats
-          # - table
+          - table
           # - upload
           # - widget
     steps:
