@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Author\Concerns;
 
-use Honed\Author\Author;
+use Honed\Author\Support\Author;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes as EloquentSoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Foundation\Auth\User
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes as EloquentSoftDeletes;
  */
 trait Deleteable
 {
-    use EloquentSoftDeletes;
+    use SoftDeletes;
 
     /**
      * Boot the deleteable trait for a model.

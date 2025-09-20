@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Author;
+namespace Honed\Author\Support;
 
 use Closure;
 use Illuminate\Foundation\Auth\User;
@@ -22,7 +22,7 @@ final class Author
      * 
      * @param (\Closure(): int|string|null)|null $callback
      */
-    public static function using(?callable $callback): void
+    public static function using(?Closure $callback): void
     {
         self::$callback = $callback;
     }

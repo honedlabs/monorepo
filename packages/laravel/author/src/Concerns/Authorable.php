@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Author\Concerns;
 
-use Honed\Author\Author;
+use Honed\Author\Support\Author;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
