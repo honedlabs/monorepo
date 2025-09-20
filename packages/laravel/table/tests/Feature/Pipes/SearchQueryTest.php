@@ -28,7 +28,7 @@ beforeEach(function () {
         ]);
 
     $this->table->define(); // @TODO
-})->only();
+});
 
 it('needs a search term', function () {
     $request = Request::create('/', 'GET', [
