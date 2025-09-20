@@ -7,6 +7,7 @@ namespace Honed\Core;
 use Honed\Core\Commands\PipeMakeCommand;
 use Honed\Core\Contracts\ScopedPrimitiveManager;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 final class CoreServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,8 @@ final class CoreServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->registerMacros();
+
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
 
@@ -46,5 +49,15 @@ final class CoreServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../stubs' => base_path('stubs'),
         ], 'core-stubs');
+    }
+
+    /**
+     * Register the macros for the package.
+     */
+    public function registerMacros(): void
+    {
+        // Str::macro('label', function (string $value): string {
+        //     return Str::ucfirst(Str::snake($value));
+        // });
     }
 }

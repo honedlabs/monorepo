@@ -196,6 +196,7 @@ abstract class ListCommand extends Command
      */
     protected function getTraits(string $class): array
     {
+        /** @var array<int, class-string> */
         return class_uses_recursive($class);
     }
 
