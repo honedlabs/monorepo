@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Table\Pipes;
 
 use Honed\Core\Pipe;
-use Honed\Table\Columns\Column;
 
 /**
  * @template TClass of \Honed\Table\Table
@@ -25,7 +24,7 @@ class SearchColumns extends Pipe
 
         foreach ($this->getColumns() as $column) {
             $search = $column->getSearch();
-        
+
             if ($search) {
                 $this->search($search);
             }

@@ -24,7 +24,7 @@ class FilterColumns extends Pipe
 
         foreach ($this->getColumns() as $column) {
             $filter = $column->getFilter();
-        
+
             if ($filter) {
                 $this->filter($filter);
             }

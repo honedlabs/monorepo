@@ -8,48 +8,48 @@ class LengthAwareData extends SimpleData
 {
     /**
      * The total number of records.
-     * 
+     *
      * @var int
      */
     protected $total;
 
     /**
      * The index of the first record.
-     * 
+     *
      * @var int
      */
     protected $from;
 
     /**
      * The index of the last record.
-     * 
+     *
      * @var int
      */
     protected $to;
 
     /**
      * The url of the first page.
-     * 
+     *
      * @var string
      */
     protected $firstLink;
 
     /**
      * The url of the last page.
-     * 
+     *
      * @var string
      */
     protected $lastLink;
 
     /**
      * The pagination links.
-     * 
+     *
      * @var array<int, array<string, mixed>>
      */
     protected $links;
 
     /**
-     * @param \array<int, array<string, mixed>> $links
+     * @param  array<int, array<string, mixed>>  $links
      */
     public function __construct(
         bool $empty,
@@ -97,24 +97,6 @@ class LengthAwareData extends SimpleData
     }
 
     /**
-     * Get the instance as an array.
-     *
-     * @return array<string, mixed>
-     */
-    protected function representation(): array
-    {
-        return [
-            ...parent::representation(),
-            'total' => $this->total,
-            'from' => $this->from,
-            'to' => $this->to,
-            'firstLink' => $this->firstLink,
-            'lastLink' => $this->lastLink,
-            'links' => $this->links,
-        ];
-    }
-
-    /**
      * Create the pagination links.
      *
      * @param \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, *> $paginator
@@ -136,5 +118,23 @@ class LengthAwareData extends SimpleData
             ],
             range($start, $end)
         );
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array<string, mixed>
+     */
+    protected function representation(): array
+    {
+        return [
+            ...parent::representation(),
+            'total' => $this->total,
+            'from' => $this->from,
+            'to' => $this->to,
+            'firstLink' => $this->firstLink,
+            'lastLink' => $this->lastLink,
+            'links' => $this->links,
+        ];
     }
 }

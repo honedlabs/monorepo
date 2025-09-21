@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pagination;
 
-use Honed\Core\Primitive;
 use Illuminate\Contracts\Support\Arrayable;
 
 /**
@@ -26,7 +25,7 @@ class PaginationData implements Arrayable
 
     /**
      * Create a new pagination data instance.
-     * 
+     *
      * @param \Illuminate\Support\Collection<int, *> $paginator
      */
     public static function make(mixed $paginator): static
@@ -58,7 +57,7 @@ class PaginationData implements Arrayable
 
     /**
      * Get the instance as an array.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toArray(): array

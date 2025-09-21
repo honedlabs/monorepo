@@ -53,24 +53,24 @@ it('applies search', function () {
 
     expect($this->table->getBuilder()->getQuery()->wheres)
         ->toBeArray()
-            ->toHaveCount(1)
-            ->{0}->scoped(fn ($where) => $where
+        ->toHaveCount(1)
+        ->{0}->scoped(fn ($where) => $where
+        ->toBeArray()
+        ->toHaveKeys(['type', 'query', 'boolean'])
+        ->{'type'}->toBe('Nested')
+        ->{'boolean'}->toBe('and')
+        ->{'query'}
+        ->scoped(fn ($query) => $query
+            ->toBeInstanceOf(Builder::class)
+            ->wheres
+            ->scoped(fn ($wheres) => $wheres
                 ->toBeArray()
-                ->toHaveKeys(['type', 'query', 'boolean'])
-                ->{'type'}->toBe('Nested')
-                ->{'boolean'}->toBe('and')
-                ->{'query'}
-                ->scoped(fn ($query) => $query
-                    ->toBeInstanceOf(Builder::class)
-                    ->wheres
-                    ->scoped(fn ($wheres) => $wheres
-                        ->toBeArray()
-                        ->toHaveCount(2)
-                        ->{0}->toBeSearch('name', 'and')
-                        ->{1}->toBeSearch('description', 'or')
-                    )
-                )
-            );
+                ->toHaveCount(2)
+                ->{0}->toBeSearch('name', 'and')
+                ->{1}->toBeSearch('description', 'or')
+            )
+        )
+        );
 
     expect($this->table->getSearchTerm())
         ->toBe($this->term);
@@ -90,20 +90,20 @@ it('applies search with matching', function () {
         ->toBeArray()
         ->toHaveCount(1)
         ->{0}->scoped(fn ($where) => $where
-            ->toBeArray()
-            ->toHaveKeys(['type', 'query', 'boolean'])
-            ->{'type'}->toBe('Nested')
-            ->{'boolean'}->toBe('and')
-            ->{'query'}
-            ->scoped(fn ($query) => $query
-                ->toBeInstanceOf(Builder::class)
-                ->wheres
-                ->scoped(fn ($wheres) => $wheres
-                    ->toBeArray()
-                    ->toHaveCount(1)
-                    ->{0}->toBeSearch('name', 'and')
-                )
+        ->toBeArray()
+        ->toHaveKeys(['type', 'query', 'boolean'])
+        ->{'type'}->toBe('Nested')
+        ->{'boolean'}->toBe('and')
+        ->{'query'}
+        ->scoped(fn ($query) => $query
+            ->toBeInstanceOf(Builder::class)
+            ->wheres
+            ->scoped(fn ($wheres) => $wheres
+                ->toBeArray()
+                ->toHaveCount(1)
+                ->{0}->toBeSearch('name', 'and')
             )
+        )
         );
 
     expect($this->table->getSearchTerm())

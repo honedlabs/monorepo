@@ -32,7 +32,7 @@ expect()->extend('toBeOnlyWhere', function (string $column, mixed $value, string
         ->{0}->toBeWhere($column, $value, $operator, $boolean);
 });
 
-expect()->extend('toBeWhereDate', function (string $column, string $operator = '=', string $value, string $boolean = 'and') {
+expect()->extend('toBeWhereDate', function (string $column, string $operator, string $value, string $boolean = 'and') {
     return $this->toBeArray()
         ->toHaveKeys(['type', 'column', 'value', 'operator', 'boolean'])
         ->{'type'}->toBe('Date')

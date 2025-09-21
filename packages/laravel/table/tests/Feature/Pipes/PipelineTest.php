@@ -45,21 +45,21 @@ it('builds class', function () {
             ->toBeArray()
             ->toHaveCount(8)
             ->{0}->scoped(fn ($where) => $where
-                ->toBeArray()
-                ->toHaveKeys(['type', 'query', 'boolean'])
-                ->{'type'}->toBe('Nested')
-                ->{'boolean'}->toBe('and')
-                ->{'query'}
-                ->scoped(fn ($query) => $query
-                    ->toBeInstanceOf(Builder::class)
-                    ->wheres
-                    ->scoped(fn ($wheres) => $wheres
-                        ->toBeArray()
-                        ->toHaveCount(2)
-                        ->{0}->toBeSearch('description', 'and')
-                        ->{1}->toBeSearch('name', 'or')
-                    )
+            ->toBeArray()
+            ->toHaveKeys(['type', 'query', 'boolean'])
+            ->{'type'}->toBe('Nested')
+            ->{'boolean'}->toBe('and')
+            ->{'query'}
+            ->scoped(fn ($query) => $query
+                ->toBeInstanceOf(Builder::class)
+                ->wheres
+                ->scoped(fn ($wheres) => $wheres
+                    ->toBeArray()
+                    ->toHaveCount(2)
+                    ->{0}->toBeSearch('description', 'and')
+                    ->{1}->toBeSearch('name', 'or')
                 )
+            )
             )
             ->{1}->toBeSearch('name')
             ->{2}->toBeWhere('price', 100, '<=')

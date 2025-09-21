@@ -8,7 +8,7 @@ class SimpleData extends CursorData
 {
     /**
      * The current page.
-     * 
+     *
      * @var int
      */
     protected $currentPage;
@@ -27,7 +27,7 @@ class SimpleData extends CursorData
 
     /**
      * Create a new simple data instance.
-     * 
+     *
      * @param \Illuminate\Contracts\Pagination\Paginator<int, *> $paginator
      */
     public static function make(mixed $paginator): static

@@ -98,7 +98,7 @@ trait Paginable
 
     /**
      * Call the paginator callback.
-     * 
+     *
      * @return mixed
      */
     public function callPaginator(Builder $builder, $value)
