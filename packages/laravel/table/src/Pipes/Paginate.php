@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Table\Pipes;
 
-use Honed\Core\Interpret;
 use Honed\Core\Pipe;
+use Honed\Core\Interpret;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Honed\Table\Pagination\CursorData;
+use Honed\Table\Pagination\LengthAwareData;
+use Illuminate\Database\Query\Builder;
 
 /**
  * @template TClass of \Honed\Table\Table
@@ -34,6 +37,8 @@ class Paginate extends Pipe
                 "The supplied paginator type [{$paginate}] is not supported."
             );
         }
+
+        // [$records, $pagination] 
 
         [$records, $pagination] = $this->{$method}(
             $instance->getBuilder(),
@@ -142,12 +147,12 @@ class Paginate extends Pipe
      * @param  int  $window
      * @return array{array<int, \Illuminate\Database\Eloquent\Model>, array<string, mixed>}
      */
-    protected function lengthAware($builder, $perPage, $key, $window)
+    protected function lengthAware(Builder $builder, int $perPage, string $key, int $window)
     {
         $paginator = $builder->paginate($perPage, pageName: $key)
             ->withQueryString();
 
-        return [$paginator->items(), $this->lengthAwarePagination($paginator, $window)];
+        return [$paginator->items(), LengthAwareData::make($paginator)];
     }
 
     /**
@@ -163,7 +168,7 @@ class Paginate extends Pipe
         $paginator = $builder->cursorPaginate($perPage, cursorName: $key)
             ->withQueryString();
 
-        return [$paginator->items(), $this->cursorPagination($paginator)];
+        return [$paginator->items(), CursorData::make($paginator)];
     }
 
     /**

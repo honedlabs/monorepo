@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
+use Closure;
+use Honed\Table\Enums\Paginate;
 use Honed\Table\PageOption;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -28,18 +30,11 @@ trait Paginable
     public const WINDOW = 2;
 
     /**
-     * The callback to use for custom pagination.
-     *
-     * @var callable(Builder,int,string,int):Builder
-     */
-    protected $paginateUsing;
-
-    /**
      * The paginator to use.
      *
-     * @var string
+     * @var string|(\Closure(mixed,int,string,int):array{0: mixed, 1: \Honed\Table\Pagination\PaginationData})
      */
-    protected $paginate = self::LENGTH_AWARE;
+    protected $paginator = 'length-aware';
 
     /**
      * The pagination options.
@@ -91,51 +86,22 @@ trait Paginable
      */
     public function paginateUsing(callable $callback): static
     {
-        $this->paginateUsing = $callback;
+        $this->paginator = $callback;
 
         return $this;
-    }
-
-    /**
-     * Call the paginator callback.
-     *
-     * @return mixed
-     */
-    public function callPaginator(Builder $builder, $value)
-    {
-        if (isset($this->paginateUsing)) {
-            return ($this->paginateUsing)($builder, $value, $this->getPageKey(), $this->getWindow());
-        }
-
-        return null;
     }
 
     /**
      * Set the paginator type.
      *
-     * @param  bool|string  $value
+     * @param  string|(\Closure(mixed,int,string,int):array{0: mixed, 1: \Honed\Table\Pagination\PaginationData})  $value
      * @return $this
      */
-    public function paginate($value = true)
+    public function paginator(string|Paginate|Closure $value = 'length-aware')
     {
-        $this->paginate = match ($value) {
-            true => self::LENGTH_AWARE,
-            false => self::COLLECTION,
-            default => $value,
-        };
+        $this->paginator = $value instanceof Paginate ? $value->value : $value;
 
         return $this;
-    }
-
-    /**
-     * Set the instance to not be paginable.
-     *
-     * @param  bool  $value
-     * @return $this
-     */
-    public function dontPaginate($value = true)
-    {
-        return $this->paginate(! $value);
     }
 
     /**
@@ -143,9 +109,9 @@ trait Paginable
      *
      * @return $this
      */
-    public function lengthAwarePaginate()
+    public function lengthAwarePaginator()
     {
-        return $this->paginate(self::LENGTH_AWARE);
+        return $this->paginator(Paginate::LengthAware);
     }
 
     /**
@@ -153,9 +119,9 @@ trait Paginable
      *
      * @return $this
      */
-    public function simplePaginate()
+    public function simplePaginator()
     {
-        return $this->paginate(self::SIMPLE);
+        return $this->paginator(Paginate::Simple);
     }
 
     /**
@@ -163,30 +129,30 @@ trait Paginable
      *
      * @return $this
      */
-    public function cursorPaginate()
+    public function cursorPaginator()
     {
-        return $this->paginate(self::CURSOR);
+        return $this->paginator(Paginate::Cursor);
     }
 
     /**
      * Get the paginator type.
      *
-     * @return string
+     * @return string|(\Closure(mixed,int,string,int):array{0: mixed, 1: \Honed\Table\Pagination\PaginationData})
      */
-    public function getPaginate()
+    public function getPaginator()
     {
-        return $this->paginate;
+        return $this->paginator;
     }
 
     /**
      * Set the pagination options.
      *
-     * @param  int|array<int,int>  $perPage
+     * @param  int|array<int,int>  $value
      * @return $this
      */
-    public function perPage($perPage)
+    public function perPage(int|array $value = 10): static
     {
-        $this->perPage = $perPage;
+        $this->perPage = $value;
 
         return $this;
     }
@@ -196,7 +162,7 @@ trait Paginable
      *
      * @return int|array<int,int>
      */
-    public function getPerPage()
+    public function getPerPage(): int|array
     {
         return $this->perPage;
     }
@@ -204,22 +170,19 @@ trait Paginable
     /**
      * Set the default pagination amount.
      *
-     * @param  int  $perPage
      * @return $this
      */
-    public function defaultPerPage($perPage)
+    public function defaultPerPage(int $value = 10): static
     {
-        $this->defaultPerPage = $perPage;
+        $this->defaultPerPage = $value;
 
         return $this;
     }
 
     /**
      * Get the default pagination amount.
-     *
-     * @return int
      */
-    public function getDefaultPerPage()
+    public function getDefaultPerPage(): int
     {
         return $this->defaultPerPage;
     }
@@ -227,10 +190,9 @@ trait Paginable
     /**
      * Set the query parameter for the page number.
      *
-     * @param  string  $pageKey
      * @return $this
      */
-    public function pageKey($pageKey)
+    public function pageKey(string $pageKey = 'page'): static
     {
         $this->pageKey = $pageKey;
 
@@ -242,7 +204,7 @@ trait Paginable
      *
      * @return string
      */
-    public function getPageKey()
+    public function getPageKey(): string
     {
         return $this->scoped($this->pageKey);
     }
@@ -250,10 +212,9 @@ trait Paginable
     /**
      * Set the query parameter for the number of records to show per page.
      *
-     * @param  string  $recordKey
      * @return $this
      */
-    public function recordKey($recordKey)
+    public function recordKey(string $recordKey = 'rows'): static
     {
         $this->recordKey = $recordKey;
 
@@ -265,7 +226,7 @@ trait Paginable
      *
      * @return string
      */
-    public function getRecordKey()
+    public function getRecordKey(): string
     {
         return $this->scoped($this->recordKey);
     }
@@ -313,7 +274,7 @@ trait Paginable
      *
      * @return array<int,PageOption>
      */
-    public function getPageOptions()
+    public function getPageOptions(): array
     {
         return $this->pageOptions;
     }
