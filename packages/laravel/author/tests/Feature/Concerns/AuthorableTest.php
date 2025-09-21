@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -13,102 +14,69 @@ beforeEach(function () {
     $this->product = Product::factory()->for($this->user)->create();
 });
 
-// it('checks if the model is disabled from boolean', function () {
-//     expect($this->product)
-//         ->isDisabled()->toBeFalse()
-//         ->isNotDisabled()->toBeTrue()
-//         ->isEnabled()->toBeTrue()
-//         ->isNotEnabled()->toBeFalse();
+it('has columns', function () {
+    expect($this->product)
+        ->getCreatedByColumn()->toBe('created_by')
+        ->getUpdatedByColumn()->toBe('updated_by')
+        ->getQualifiedCreatedByColumn()->toBe("{$this->product->getTable()}.created_by")
+        ->getQualifiedUpdatedByColumn()->toBe("{$this->product->getTable()}.updated_by");
+});
 
-//     $this->product->is_disabled = true;
+it('has relationships', function () {
+    expect($this->product->createdBy()->is($this->user))->toBeTrue();
+    
+    expect($this->product->updatedBy()->is($this->user))->toBeTrue();
+});
 
-//     expect($this->product)
-//         ->isDisabled()->toBeTrue()
-//         ->isNotDisabled()->toBeFalse()
-//         ->isEnabled()->toBeFalse()
-//         ->isNotEnabled()->toBeTrue();
-// });
+it('sets updated by and created by when creating', function () {
+    expect($this->product)
+        ->updated_by->toBe($this->user->getKey())
+        ->created_by->toBe($this->user->getKey());
 
-// it('checks if the model is disabled from timestamp', function () {
-//     config([
-//         'disable.boolean' => false,
-//     ]);
+    expect($this->product->updatedBy()->is($this->user))->toBeTrue();
 
-//     expect($this->product)
-//         ->isDisabled()->toBeFalse()
-//         ->isNotDisabled()->toBeTrue()
-//         ->isEnabled()->toBeTrue()
-//         ->isNotEnabled()->toBeFalse();
+    expect($this->product->createdBy()->is($this->user))->toBeTrue();
+});
 
-//     $this->product->disabled_at = $this->now;
+it('sets updated by when updating', function () {
+    $user = User::factory()->create();
 
-//     expect($this->product)
-//         ->isDisabled()->toBeTrue()
-//         ->isNotDisabled()->toBeFalse()
-//         ->isEnabled()->toBeFalse()
-//         ->isNotEnabled()->toBeTrue();
-// });
+    $this->actingAs($user);
 
-// it('checks if the model is disabled from user', function () {
-//     config([
-//         'disable.boolean' => false,
-//         'disable.timestamp' => false,
-//     ]);
+    $this->product->update([
+        'name' => 'Updated Product',
+    ]);
 
-//     expect($this->product)
-//         ->isDisabled()->toBeFalse()
-//         ->isNotDisabled()->toBeTrue()
-//         ->isEnabled()->toBeTrue()
-//         ->isNotEnabled()->toBeFalse();
+    expect($this->product)
+        ->updated_by->toBe($user->getKey());
 
-//     $this->product->disabled_by = $this->user->id;
+    expect($this->product->updatedBy()->is($user))->toBeTrue();
+});
 
-//     expect($this->product)
-//         ->isDisabled()->toBeTrue()
-//         ->isNotDisabled()->toBeFalse()
-//         ->isEnabled()->toBeFalse()
-//         ->isNotEnabled()->toBeTrue();
-// });
+it('sets created by', function () {
+    expect($this->product)
+        ->created_by->toBe($this->user->getKey());
 
-// it('is disabled by default', function () {
-//     config([
-//         'disable.boolean' => false,
-//         'disable.timestamp' => false,
-//         'disable.user' => false,
-//     ]);
+    $user = User::factory()->create();
 
-//     expect($this->product)
-//         ->isDisabled()->toBeFalse()
-//         ->isNotDisabled()->toBeTrue()
-//         ->isEnabled()->toBeTrue()
-//         ->isNotEnabled()->toBeFalse();
+    $this->product->setCreatedBy($user->getKey());
 
-//     $this->product->disable()->save();
+    expect($this->product)
+        ->created_by->toBe($user->getKey());
 
-//     expect($this->product)
-//         ->isDisabled()->toBeFalse()
-//         ->isNotDisabled()->toBeTrue()
-//         ->isEnabled()->toBeTrue()
-//         ->isNotEnabled()->toBeFalse();
-// });
+    expect($this->product->createdBy()->is($user))->toBeTrue();
+});
 
-// it('disables the model', function () {
-//     $this->assertDatabaseHas('products', [
-//         'id' => $this->product->id,
-//         'is_disabled' => false,
-//         'disabled_at' => null,
-//         'disabled_by' => null,
-//     ]);
+it('sets updated by', function () {
+    expect($this->product)
+        ->updated_by->toBe($this->user->getKey());
 
-//     $this->product->disable()->save();
+    $user = User::factory()->create();
 
-//     $this->assertDatabaseHas('products', [
-//         'id' => $this->product->id,
-//         'is_disabled' => true,
-//         'disabled_at' => $this->now,
-//         'disabled_by' => $this->user->id,
-//     ]);
+    $this->product->setUpdatedBy($user->getKey());
 
-//     expect($this->product)
-//         ->isDisabled()->toBeTrue();
-// });
+    expect($this->product)
+        ->updated_by->toBe($user->getKey());
+
+    expect($this->product->updatedBy()->is($user))->toBeTrue();
+});

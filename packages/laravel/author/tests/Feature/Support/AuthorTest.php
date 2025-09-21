@@ -13,6 +13,10 @@ beforeEach(function () {
     Author::using(null);
 });
 
+afterEach(function () {
+    Author::using(null);
+});
+
 it('gets model', function () {
     expect(Author::model())
         ->toBe(AuthUser::class);
