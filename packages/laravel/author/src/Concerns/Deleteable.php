@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Foundation\Auth\User
- * 
+ *
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
  */
 trait Deleteable
@@ -31,8 +31,8 @@ trait Deleteable
 
     /**
      * Get the deleting model.
-     * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TModel, $this>
+     *
+     * @return BelongsTo<TModel, $this>
      */
     public function deletedBy(): BelongsTo
     {

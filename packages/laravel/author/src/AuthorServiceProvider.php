@@ -27,6 +27,24 @@ class AuthorServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the macros for the package.
+     */
+    public function bootMacros(): void
+    {
+        Blueprint::macro('authorable', function (string $table = 'users') {
+            /** @var Blueprint $this */
+            $this->foreignId('created_by')->nullable()->constrained($table)->nullOnDelete();
+            $this->foreignId('updated_by')->nullable()->constrained($table)->nullOnDelete();
+        });
+
+        Blueprint::macro('deleteable', function (string $table = 'users') {
+            /** @var Blueprint $this */
+            $this->softDeletes();
+            $this->foreignId('deleted_by')->nullable()->constrained($table)->nullOnDelete();
+        });
+    }
+
+    /**
      * Register the publishing for the package.
      */
     protected function offerPublishing(): void
@@ -34,23 +52,5 @@ class AuthorServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/author.php' => config_path('author.php'),
         ], 'author-config');
-    }
-
-        /**
-     * Register the macros for the package.
-     */
-    public function bootMacros(): void
-    {
-        Blueprint::macro('authorable', function (string $table = 'users') {
-            /** @var \Illuminate\Database\Schema\Blueprint $this */
-            $this->foreignId('created_by')->nullable()->constrained($table)->nullOnDelete();
-            $this->foreignId('updated_by')->nullable()->constrained($table)->nullOnDelete();
-        });
-
-        Blueprint::macro('deleteable', function (string $table = 'users') {
-            /** @var \Illuminate\Database\Schema\Blueprint $this */
-            $this->softDeletes();
-            $this->foreignId('deleted_by')->nullable()->constrained($table)->nullOnDelete();
-        });
     }
 }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Honed\Author\Scopes;
 
 use Honed\Author\Support\Author;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Database\Eloquent\Builder;
 
 class DeletedByScope implements Scope
 {

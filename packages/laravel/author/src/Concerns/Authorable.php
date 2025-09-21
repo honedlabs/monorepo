@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Foundation\Auth\User
- * 
+ *
  * @phpstan-require-extends \Illuminate\Database\Eloquent\Model
  */
 trait Authorable
@@ -21,7 +21,7 @@ trait Authorable
     {
         static::creating(function (self $model) {
             $id = Author::identifier();
-            
+
             $model->setCreatedBy($id);
             $model->setUpdatedBy($id);
         });
@@ -35,8 +35,8 @@ trait Authorable
 
     /**
      * Get the authoring model.
-     * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TModel, $this>
+     *
+     * @return BelongsTo<TModel, $this>
      */
     public function createdBy(): BelongsTo
     {
@@ -45,8 +45,8 @@ trait Authorable
 
     /**
      * Get the updating model.
-     * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<TModel, $this>
+     *
+     * @return BelongsTo<TModel, $this>
      */
     public function updatedBy(): BelongsTo
     {

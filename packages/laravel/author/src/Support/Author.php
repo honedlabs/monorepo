@@ -12,15 +12,15 @@ final class Author
 {
     /**
      * The custom callback to get the authoring identifier.
-     * 
-     * @return (\Closure(): int|string|null)|null
+     *
+     * @return (Closure(): int|string|null)|null
      */
     protected static ?Closure $callback = null;
 
     /**
      * Set the custom callback to get the authoring identifier.
-     * 
-     * @param (\Closure(): int|string|null)|null $callback
+     *
+     * @param  (Closure(): int|string|null)|null  $callback
      */
     public static function using(?Closure $callback): void
     {
@@ -29,7 +29,7 @@ final class Author
 
     /**
      * Get the authoring model.
-     * 
+     *
      * @return class-string<\Illuminate\Database\Eloquent\Model>
      */
     public static function model(): string
@@ -40,14 +40,14 @@ final class Author
 
     /**
      * Get the authoring identifier.
-     * 
+     *
      * @return int|string|null
      */
     public static function identifier(): mixed
     {
-        $callback = static::$callback;
+        $callback = self::$callback;
 
-        if (! is_null($callback)) {  
+        if (! is_null($callback)) {
             return $callback();
         }
 

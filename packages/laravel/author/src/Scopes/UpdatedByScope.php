@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Honed\Author\Scopes;
 
 use Honed\Author\Support\Author;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
-use Honed\Disable\Contracts\Disableable;
-use Illuminate\Database\Eloquent\Builder;
 
 class UpdatedByScope implements Scope
 {
