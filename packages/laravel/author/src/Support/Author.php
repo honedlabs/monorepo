@@ -19,8 +19,6 @@ final class Author
 
     /**
      * Set the custom callback to get the authoring identifier.
-     *
-     * @param  (Closure(): int|string|null)|null  $callback
      */
     public static function using(?Closure $callback): void
     {

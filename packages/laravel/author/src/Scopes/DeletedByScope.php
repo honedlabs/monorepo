@@ -17,7 +17,7 @@ class DeletedByScope implements Scope
      * @template TModel of \Illuminate\Database\Eloquent\Model
      *
      * @param  Builder<TModel>  $builder
-     * @param  TModel&\Honed\Author\Concerns\Deleteable  $model
+     * @param  TModel&\Honed\Author\Contracts\Deleteable  $model
      */
     public function apply(Builder $builder, Model $model): void
     {

@@ -37,7 +37,6 @@ it('sets deleted by when deleting', function () {
     expect($this->product->deletedBy()->is($this->user))->toBeTrue();
 });
 
-
 it('sets deleted by', function () {
     expect($this->product)
         ->deleted_by->toBeNull();

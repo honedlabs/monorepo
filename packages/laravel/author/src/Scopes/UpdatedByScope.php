@@ -17,7 +17,7 @@ class UpdatedByScope implements Scope
      * @template TModel of \Illuminate\Database\Eloquent\Model
      *
      * @param  Builder<TModel>  $builder
-     * @param  TModel&\Honed\Author\Concerns\Authorable  $model
+     * @param  TModel&\Honed\Author\Contracts\Authorable  $model
      */
     public function apply(Builder $builder, Model $model): void
     {

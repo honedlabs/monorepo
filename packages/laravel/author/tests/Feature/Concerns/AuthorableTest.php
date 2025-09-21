@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -24,7 +23,7 @@ it('has columns', function () {
 
 it('has relationships', function () {
     expect($this->product->createdBy()->is($this->user))->toBeTrue();
-    
+
     expect($this->product->updatedBy()->is($this->user))->toBeTrue();
 });
 
