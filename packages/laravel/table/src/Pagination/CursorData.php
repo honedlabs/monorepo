@@ -26,4 +26,47 @@ class CursorData extends PaginationData
      * @var int
      */
     protected $perPage;
+
+    public function __construct(
+        bool $empty,
+        ?string $prevLink,
+        ?string $nextLink,
+        int $perPage
+    ) {
+        parent::__construct($empty);
+
+        $this->prevLink = $prevLink;
+        $this->nextLink = $nextLink;
+        $this->perPage = $perPage;
+    }
+
+    /**
+     * Create a new cursor data instance.
+     * 
+     * @param \Illuminate\Contracts\Pagination\CursorPaginator<int, *> $paginator
+     */
+    public static function make(mixed $paginator): static
+    {
+        return new self(
+            empty: $paginator->isEmpty(),
+            prevLink: $paginator->previousPageUrl(),
+            nextLink: $paginator->nextPageUrl(),
+            perPage: $paginator->perPage()
+        );
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array<string, mixed>
+     */
+    protected function representation(): array
+    {
+        return [
+            ...parent::representation(),
+            'prevLink' => $this->prevLink,
+            'nextLink' => $this->nextLink,
+            'perPage' => $this->perPage,
+        ];
+    }
 }

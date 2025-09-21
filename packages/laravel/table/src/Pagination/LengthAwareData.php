@@ -49,133 +49,92 @@ class LengthAwareData extends SimpleData
     protected $links;
 
     /**
+     * @param \array<int, array<string, mixed>> $links
+     */
+    public function __construct(
+        bool $empty,
+        ?string $prevLink,
+        ?string $nextLink,
+        int $perPage,
+        int $currentPage,
+        int $total,
+        ?int $from,
+        ?int $to,
+        string $firstLink,
+        string $lastLink,
+        array $links
+    ) {
+        parent::__construct($empty, $prevLink, $nextLink, $perPage, $currentPage);
+
+        $this->total = $total;
+        $this->from = $from ?? 0;
+        $this->to = $to ?? 0;
+        $this->firstLink = $firstLink;
+        $this->lastLink = $lastLink;
+        $this->links = $links;
+    }
+
+    /**
      * Create a new length aware data instance.
      *
      * @param \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, *> $paginator
      */
     public static function make(mixed $paginator): static
     {
-        return parent::make($paginator)
-            ->total($paginator->total())
-            ->from($paginator->firstItem())
-            ->to($paginator->lastItem())
-            ->firstLink($paginator->url(1))
-            ->lastLink($paginator->url($paginator->lastPage()));
-            // ->links($paginator->links());
+        return new self(
+            empty: $paginator->isEmpty(),
+            prevLink: $paginator->previousPageUrl(),
+            nextLink: $paginator->nextPageUrl(),
+            perPage: $paginator->perPage(),
+            currentPage: $paginator->currentPage(),
+            total: $paginator->total(),
+            from: $paginator->firstItem(),
+            to: $paginator->lastItem(),
+            firstLink: $paginator->url(1),
+            lastLink: $paginator->url($paginator->lastPage()),
+            links: static::links($paginator),
+        );
     }
 
     /**
-     * Set the total number of records.
+     * Get the instance as an array.
      *
-     * @param  int  $total
-     * @return $this
+     * @return array<string, mixed>
      */
-    public function total(int $total): static
+    protected function representation(): array
     {
-        $this->total = $total;
-
-        return $this;
+        return [
+            ...parent::representation(),
+            'total' => $this->total,
+            'from' => $this->from,
+            'to' => $this->to,
+            'firstLink' => $this->firstLink,
+            'lastLink' => $this->lastLink,
+            'links' => $this->links,
+        ];
     }
 
     /**
-     * Get the total number of records.
+     * Create the pagination links.
      *
-     * @return int
+     * @param \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, *> $paginator
      */
-    public function getTotal(): int
+    public static function links(mixed $paginator): array
     {
-        return $this->total;
-    }
+        $currentPage = $paginator->currentPage();
+        $lastPage = $paginator->lastPage();
+        $onEachSide = 3;
 
-    /**
-     * Set the index of the first record.
-     *
-     * @param  int  $from
-     * @return $this
-     */
-    public function from(int $from): static
-    {
-        $this->from = $from;
+        $start = max(1, min($currentPage - $onEachSide, $lastPage - ($onEachSide * 2)));
+        $end = min($lastPage, max($currentPage + $onEachSide, ($onEachSide * 2 + 1)));
 
-        return $this;
-    }
-
-    /**
-     * Get the index of the first record.
-     *
-     * @return int
-     */
-    public function getFrom(): int
-    {
-        return $this->from;
-    }
-
-    /**
-     * Set the index of the last record.
-     *
-     * @param  int  $to
-     * @return $this
-     */
-    public function to(int $to): static
-    {
-        $this->to = $to;
-
-        return $this;
-    }
-
-    /**
-     * Get the index of the last record.
-     *
-     * @return int
-     */
-    public function getTo(): int
-    {
-        return $this->to;
-    }
-
-    /**
-     * Set the url of the first page.
-     *
-     * @param  string  $firstLink
-     * @return $this
-     */
-    public function firstLink(string $firstLink): static
-    {
-        $this->firstLink = $firstLink;
-
-        return $this;
-    }
-
-    /**
-     * Get the url of the first page.
-     *
-     * @return string
-     */
-    public function getFirstLink(): string
-    {
-        return $this->firstLink;
-    }
-    
-    /**
-     * Set the url of the last page.
-     *
-     * @param  string  $lastLink
-     * @return $this
-     */
-    public function lastLink(string $lastLink): static
-    {
-        $this->lastLink = $lastLink;
-
-        return $this;
-    }
-
-    /**
-     * Get the url of the last page.
-     *
-     * @return string
-     */
-    public function getLastLink(): string
-    {
-        return $this->lastLink;
+        return array_map(
+            static fn (int $page) => [
+                'url' => $paginator->url($page),
+                'label' => (string) $page,
+                'active' => $currentPage === $page,
+            ],
+            range($start, $end)
+        );
     }
 }

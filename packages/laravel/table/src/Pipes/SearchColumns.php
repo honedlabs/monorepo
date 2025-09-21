@@ -19,26 +19,16 @@ class SearchColumns extends Pipe
      */
     public function run(): void
     {
-        if ($this->instance->isNotSearchable()) {
+        if ($this->isNotSearchable()) {
             return;
         }
 
-        $columns = $this->instance->getColumns();
-
-        foreach ($columns as $column) {
-            $this->search($column);
-        }
-    }
-
-    /**
-     * Prepare the column search state.
-     */
-    protected function search(Column $column): void
-    {
-        $search = $column->getSearch();
-
-        if ($search) {
-            $this->instance->search($search);
+        foreach ($this->getColumns() as $column) {
+            $search = $column->getSearch();
+        
+            if ($search) {
+                $this->search($search);
+            }
         }
     }
 }

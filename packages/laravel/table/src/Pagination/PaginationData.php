@@ -5,17 +5,24 @@ declare(strict_types=1);
 namespace Honed\Table\Pagination;
 
 use Honed\Core\Primitive;
+use Illuminate\Contracts\Support\Arrayable;
 
-class PaginationData//extends SimplePrimitive
+/**
+ * @implements Arrayable<string, mixed>
+ */
+class PaginationData implements Arrayable
 {
     /**
      * Whether the pagination data is empty.
      *
      * @var bool
      */
-    protected $empty;
+    protected $empty = false;
 
-    final public function __construct() {}
+    public function __construct(bool $empty)
+    {
+        $this->empty = $empty;
+    }
 
     /**
      * Create a new pagination data instance.
@@ -24,26 +31,50 @@ class PaginationData//extends SimplePrimitive
      */
     public static function make(mixed $paginator): static
     {
-        return resolve(static::class)->empty($paginator->isEmpty());
+        return new self(
+            empty: $paginator->isEmpty()
+        );
     }
 
     /**
-     * Set the empty state of the pagination data.
+     * Set whether the pagination data is empty.
      *
      * @return $this
      */
-    public function empty(bool $empty): static
+    public function empty(bool $value = true): static
     {
-        $this->empty = $empty;
+        $this->empty = $value;
 
         return $this;
     }
 
     /**
-     * Determine if the pagination data is empty.
+     * Get whether the pagination data is empty.
      */
     public function isEmpty(): bool
     {
         return $this->empty;
+    }
+
+    /**
+     * Get the instance as an array.
+     * 
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        return $this->representation();
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array<string, mixed>
+     */
+    protected function representation(): array
+    {
+        return [
+            'empty' => $this->empty,
+        ];
     }
 }
