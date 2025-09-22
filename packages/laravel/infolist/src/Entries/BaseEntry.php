@@ -56,8 +56,8 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
         [$state, $placehold] = $this->apply($state);
 
         return [
-            'type' => $this->getType(),
             'label' => $this->getLabel(),
+            'type' => $this->getType(),
             'state' => $state,
             'placehold' => $placehold ?: null,
             'badge' => $this->isBadge(),
