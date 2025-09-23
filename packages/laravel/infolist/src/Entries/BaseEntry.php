@@ -5,12 +5,20 @@ declare(strict_types=1);
 namespace Honed\Infolist\Entries;
 
 use Closure;
-use Honed\Core\Concerns\Allowable;
-use Honed\Core\Concerns\HasLabel;
-use Honed\Core\Concerns\HasType;
-use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
+use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasType;
+use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\Allowable;
+use Honed\Core\Concerns\CanHaveAlias;
+use Honed\Core\Concerns\CanHaveExtra;
 use Illuminate\Database\Eloquent\Model;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Infolist\Entries\Concerns\HasState;
+use Honed\Infolist\Entries\Concerns\CanBeBadge;
+use Honed\Infolist\Entries\Concerns\HasClasses;
+use Honed\Infolist\Entries\Concerns\HasPlaceholder;
+use Honed\Infolist\Entries\Concerns\CanFormatValues;
 
 /**
  * @extends \Honed\Core\Primitive<string, mixed>
@@ -18,28 +26,35 @@ use Illuminate\Database\Eloquent\Model;
 abstract class BaseEntry extends Primitive implements NullsAsUndefined
 {
     use Allowable;
-    use Concerns\CanBeBadge;
-    use Concerns\CanFormatValues;
-    use Concerns\HasClasses;
-    use Concerns\HasPlaceholder;
-    use Concerns\HasState;
+    use CanBeBadge;
+    use CanFormatValues;
+    use HasClasses;
+    use HasPlaceholder;
+    use HasState;
     use HasLabel;
     use HasType;
+    use HasName;
+    use CanHaveAlias;
+    use CanHaveExtra;
+    // use HasAttr;
 
     /**
      * Create a new list entry.
-     *
-     * @param  string|Closure|null  $state
-     * @param  string|null  $label
-     * @return static
      */
-    public static function make($state = null, $label = null)
+    public static function make(string $name, ?string $label = null): static
     {
-        $label ??= is_string($state) ? static::makeLabel($state) : null;
-
         return resolve(static::class)
-            ->state($state)
-            ->label($label);
+            ->name($name)
+            ->label($label ?? static::makeLabel($name));
+    }
+
+    /**
+     * Get the parameter for the column.
+     */
+    public function getParameter(): string
+    {
+        return $this->getAlias()
+            ?? str_replace('.', '_', $this->getName());
     }
 
     /**
@@ -64,6 +79,25 @@ abstract class BaseEntry extends Primitive implements NullsAsUndefined
             'variant' => $this->getVariant(),
             'class' => $this->getClasses(),
         ];
+    }
+
+    /**
+     * Get the entry for the record.
+     * 
+     * @param array<string, mixed>|Model $record
+     * @return array<string, mixed>
+     */
+    protected function entry(array|Model $record): array
+    {
+        [$value, $placeholder] = $this->value($record);
+
+        return $this->undefine([
+            'v' => $value,
+            'e' => $this->getExtra(),
+            'c' => $this->getClasses(),
+            'f' => $placeholder,
+            'a' => $this->getVariant(),
+        ]);
     }
 
     /**
