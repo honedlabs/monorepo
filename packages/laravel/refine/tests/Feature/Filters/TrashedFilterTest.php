@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filters\Filter;
 use Honed\Refine\Filters\TrashedFilter;
 use Honed\Refine\Option;
 use Workbench\App\Models\Product;

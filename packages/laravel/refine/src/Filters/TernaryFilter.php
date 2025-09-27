@@ -67,7 +67,7 @@ class TernaryFilter extends Filter
 
         $this->type('select');
 
-        $this->default('blank');
+        $this->defaultToBlank();
 
         $this->query(
             fn ($query, $value) => match ($value) {
@@ -76,6 +76,14 @@ class TernaryFilter extends Filter
                 default => $this->callBlankQuery($query),
             }
         );
+    }
+
+    /**
+     * Set the default to the blank option.
+     */
+    public function defaultToBlank(): static
+    {
+        return $this->default('blank');
     }
 
     /**
@@ -135,6 +143,14 @@ class TernaryFilter extends Filter
     }
 
     /**
+     * Set the default to the true option.
+     */
+    public function defaultToTrue(): static
+    {
+        return $this->default('true');
+    }
+
+    /**
      * Set the label for the true option.
      *
      * @return $this
@@ -188,6 +204,14 @@ class TernaryFilter extends Filter
             ?? fn ($query) => $query->where($this->getQualifiedAttribute($query), true);
 
         return $callback($builder);
+    }
+
+    /**
+     * Set the default to the false option.
+     */
+    public function defaultToFalse(): static
+    {
+        return $this->default('false');
     }
 
     /**

@@ -8,14 +8,14 @@ trait IsNullable
 {
     /**
      * Whether the instance is nullable.
-     * 
+     *
      * @var bool
      */
     protected $nullable = false;
 
     /**
      * Set whether the instance is nullable.
-     * 
+     *
      * @return $this
      */
     public function nullable(bool $value = true): static
@@ -27,7 +27,7 @@ trait IsNullable
 
     /**
      * Set whether the instance is not nullable.
-     * 
+     *
      * @return $this
      */
     public function notNullable(bool $value = true): static

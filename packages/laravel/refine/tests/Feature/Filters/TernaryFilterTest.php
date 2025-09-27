@@ -17,6 +17,17 @@ it('has set up', function () {
         ->getDefault()->toBe('blank');
 });
 
+it('has default values', function () {
+    expect($this->filter)
+        ->getDefault()->toBe('blank')
+        ->defaultToTrue()->toBe($this->filter)
+        ->getDefault()->toBe('true')
+        ->defaultToFalse()->toBe($this->filter)
+        ->getDefault()->toBe('false')
+        ->defaultToBlank()->toBe($this->filter)
+        ->getDefault()->toBe('blank');
+});
+
 it('has blank label', function () {
     expect($this->filter)
         ->getBlankLabel()->toBe('All')

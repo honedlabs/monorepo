@@ -30,9 +30,9 @@ class TrashedFilter extends TernaryFilter
         $this->blankLabel(__('refine::filters.trashed.blank'));
 
         $this->queries(
-            true: fn ($builder) => $builder->withTrashed(),
-            false: fn ($builder) => $builder->onlyTrashed(),
-            blank: fn ($builder) => $builder->withoutTrashed(),
+            true: fn ($builder) => $builder->withTrashed(), // @phpstan-ignore-line method.notFound
+            false: fn ($builder) => $builder->onlyTrashed(), // @phpstan-ignore-line method.notFound
+            blank: fn ($builder) => $builder->withoutTrashed(), // @phpstan-ignore-line method.notFound
         );
     }
 
