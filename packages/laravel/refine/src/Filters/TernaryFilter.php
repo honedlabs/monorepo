@@ -273,7 +273,7 @@ class TernaryFilter extends Filter
     public function getOptions(): array
     {
         return [
-            Option::make('blank', $this->getBlankLabel()),
+            Option::make('all', $this->getBlankLabel()),
             Option::make('true', $this->getTrueLabel()),
             Option::make('false', $this->getFalseLabel()),
         ];
