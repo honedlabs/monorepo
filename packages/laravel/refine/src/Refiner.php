@@ -15,6 +15,7 @@ use Honed\Core\Concerns\HasName;
 use Honed\Core\Primitive;
 use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 /**
@@ -116,6 +117,16 @@ abstract class Refiner extends Primitive
         return Str::of($name)
             ->afterLast('.')
             ->value();
+    }
+
+    /**
+     * Get the qualified attribute name.
+     *
+     * @param  TBuilder  $query
+     */
+    public function getQualifiedAttribute(Builder $query): string
+    {
+        return $this->qualifyColumn($this->getName(), $query);
     }
 
     /**
