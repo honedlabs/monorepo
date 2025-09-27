@@ -67,6 +67,8 @@ class TernaryFilter extends Filter
 
         $this->type('select');
 
+        $this->default('blank');
+
         $this->query(
             fn ($query, $value) => match ($value) {
                 'true' => $this->callTrueQuery($query),

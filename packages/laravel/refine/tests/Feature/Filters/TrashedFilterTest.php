@@ -14,8 +14,12 @@ beforeEach(function () {
 it('has trashed filter', function () {
     expect($this->filter)
         ->toBe($this->filter)
-        ->getType()->toBe(Filter::TRASHED)
-        ->getLabel()->toBe('Show deleted');
+        ->getName()->toBe('trashed')
+        ->getType()->toBe('select')
+        ->getLabel()->toBe(__('refine::filters.trashed.label'))
+        ->getTrueLabel()->toBe(__('refine::filters.trashed.true'))
+        ->getFalseLabel()->toBe(__('refine::filters.trashed.false'))
+        ->getBlankLabel()->toBe(__('refine::filters.trashed.blank'));
 });
 
 it('has options', function () {
@@ -26,16 +30,16 @@ it('has options', function () {
         ->sequence(
             fn ($option) => $option
                 ->toBeInstanceOf(Option::class)
-                ->getValue()->toBe('with')
-                ->getLabel()->toBe('With deleted'),
+                ->getValue()->toBe('all')
+                ->getLabel()->toBe(__('refine::filters.trashed.blank')),
             fn ($option) => $option
                 ->toBeInstanceOf(Option::class)
-                ->getValue()->toBe('only')
-                ->getLabel()->toBe('Only deleted'),
+                ->getValue()->toBe('true')
+                ->getLabel()->toBe(__('refine::filters.trashed.true')),
             fn ($option) => $option
                 ->toBeInstanceOf(Option::class)
-                ->getValue()->toBe('without')
-                ->getLabel()->toBe('Without deleted')
+                ->getValue()->toBe('false')
+                ->getLabel()->toBe(__('refine::filters.trashed.false')),
         )
         );
 });
@@ -44,7 +48,7 @@ it('applies with trashed', function () {
     $builder = Product::query();
 
     expect($this->filter)
-        ->handle($builder, 'with')->toBeTrue();
+        ->handle($builder, 'true')->toBeTrue();
 
     expect($builder->getQuery()->wheres)
         ->toBeEmpty();
@@ -54,7 +58,7 @@ it('applies only trashed', function () {
     $builder = Product::query();
 
     expect($this->filter)
-        ->handle($builder, 'only')->toBeTrue();
+        ->handle($builder, 'false')->toBeTrue();
 
     expect($builder->getQuery()->wheres)
         ->toBeArray()
@@ -70,7 +74,7 @@ it('applies without trashed', function () {
     $builder = Product::query();
 
     expect($this->filter)
-        ->handle($builder, 'without')->toBeTrue();
+        ->handle($builder, 'blank')->toBeTrue();
 
     expect($builder->getQuery()->wheres)
         ->toBeArray()

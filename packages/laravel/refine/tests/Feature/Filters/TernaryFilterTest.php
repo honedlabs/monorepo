@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 use Honed\Refine\Filters\Filter;
 use Honed\Refine\Filters\TernaryFilter;
-use Honed\Refine\Filters\TrashedFilter;
 use Honed\Refine\Option;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {
     $this->filter = TernaryFilter::make('best_seller');
-})->only();
+});
 
 it('has set up', function () {
     expect($this->filter)
-        ->getType()->toBe('select');
+        ->getType()->toBe('select')
+        ->getDefault()->toBe('blank');
 });
 
 it('has blank label', function () {
@@ -71,7 +71,6 @@ it('has queries', function () {
         ->getBlankQuery()->toBeInstanceOf(Closure::class);
 });
 
-
 it('has options', function () {
     expect($this->filter)
         ->getOptions()
@@ -101,22 +100,22 @@ it('has options with custom labels', function () {
         ->trueLabel('Best sellers')->toBe($this->filter)
         ->falseLabel('Worst sellers')->toBe($this->filter)
         ->getOptions()->scoped(fn ($options) => $options
-            ->toBeArray()
-            ->toHaveCount(3)
-            ->sequence(
-                fn ($option) => $option
-                    ->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe('all')
-                    ->getLabel()->toBe('All sellers'),
-                fn ($option) => $option
-                    ->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe('true')
-                    ->getLabel()->toBe('Best sellers'),
-                fn ($option) => $option
-                    ->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe('false')
-                    ->getLabel()->toBe('Worst sellers')
-            )
+        ->toBeArray()
+        ->toHaveCount(3)
+        ->sequence(
+            fn ($option) => $option
+                ->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('all')
+                ->getLabel()->toBe('All sellers'),
+            fn ($option) => $option
+                ->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('true')
+                ->getLabel()->toBe('Best sellers'),
+            fn ($option) => $option
+                ->toBeInstanceOf(Option::class)
+                ->getValue()->toBe('false')
+                ->getLabel()->toBe('Worst sellers')
+        )
         );
 });
 
@@ -182,7 +181,6 @@ it('applies custom false query', function () {
     expect($builder->getQuery()->wheres)
         ->toBeOnlyWhere('name', false);
 });
-
 
 // it('applies only trashed', function () {
 //     $builder = Product::query();
