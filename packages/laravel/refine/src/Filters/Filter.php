@@ -202,7 +202,7 @@ class Filter extends Refiner
     public function presence(): static
     {
         $this->asBoolean();
-        
+
         $this->presence = true;
 
         return $this;

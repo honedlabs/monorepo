@@ -72,6 +72,16 @@ abstract class Refiner extends Primitive
     }
 
     /**
+     * Get the qualified attribute name.
+     *
+     * @param  TBuilder  $query
+     */
+    public function getQualifiedAttribute(Builder $query): string
+    {
+        return $this->qualifyColumn($this->getName(), $query);
+    }
+
+    /**
      * Get the representation of the instance.
      *
      * @return array<string, mixed>
@@ -117,16 +127,6 @@ abstract class Refiner extends Primitive
         return Str::of($name)
             ->afterLast('.')
             ->value();
-    }
-
-    /**
-     * Get the qualified attribute name.
-     *
-     * @param  TBuilder  $query
-     */
-    public function getQualifiedAttribute(Builder $query): string
-    {
-        return $this->qualifyColumn($this->getName(), $query);
     }
 
     /**
