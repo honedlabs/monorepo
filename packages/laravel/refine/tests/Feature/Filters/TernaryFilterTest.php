@@ -132,6 +132,9 @@ it('has options with custom labels', function () {
 
 it('applies default blank query', function () {
     $builder = Product::query();
+    
+    // dd($builder->getQuery()->getConnection()->getConfig('driver'));
+    // 'sqlite', 'mariadb', 'mysql', 'pgsql'
 
     expect($this->filter)
         ->handle($builder, 'all')->toBeTrue();
@@ -161,6 +164,26 @@ it('applies default true query', function () {
         ->toBeOnlyWhere('best_seller', true);
 });
 
+it('applies nullable true query', function () {
+    $builder = Product::query();
+
+    expect($this->filter->nullable())
+        ->handle($builder, 'true')->toBeTrue();
+
+    expect($builder->getQuery()->wheres)
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}
+        ->scoped(fn ($wheres) => $wheres
+            ->toBeArray()
+            ->toHaveCount(3)
+            ->toHaveKeys(['type', 'column', 'boolean'])
+            ->{'type'}->toBe('Null')
+            ->{'column'}->toBe('best_seller')
+            ->{'boolean'}->toBe('and not')
+        );
+});
+
 it('applies custom true query', function () {
     $builder = Product::query();
 
@@ -182,6 +205,26 @@ it('applies default false query', function () {
         ->toBeOnlyWhere('best_seller', false);
 });
 
+it('applies nullable false query', function () {
+    $builder = Product::query();
+
+    expect($this->filter->nullable())
+        ->handle($builder, 'false')->toBeTrue();
+
+    expect($builder->getQuery()->wheres)
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->{0}
+        ->scoped(fn ($wheres) => $wheres
+            ->toBeArray()
+            ->toHaveCount(3)
+            ->toHaveKeys(['type', 'column', 'boolean'])
+            ->{'type'}->toBe('Null')
+            ->{'column'}->toBe('best_seller')
+            ->{'boolean'}->toBe('and')
+        );
+});
+
 it('applies custom false query', function () {
     $builder = Product::query();
 
@@ -192,35 +235,3 @@ it('applies custom false query', function () {
     expect($builder->getQuery()->wheres)
         ->toBeOnlyWhere('name', false);
 });
-
-// it('applies only trashed', function () {
-//     $builder = Product::query();
-
-//     expect($this->filter)
-//         ->handle($builder, 'only')->toBeTrue();
-
-//     expect($builder->getQuery()->wheres)
-//         ->toBeArray()
-//         ->toHaveCount(1)
-//         ->{0}->toEqual([
-//             'type' => 'NotNull',
-//             'column' => $builder->qualifyColumn('deleted_at'),
-//             'boolean' => true,
-//         ]);
-// });
-
-// it('applies without trashed', function () {
-//     $builder = Product::query();
-
-//     expect($this->filter)
-//         ->handle($builder, 'without')->toBeTrue();
-
-//     expect($builder->getQuery()->wheres)
-//         ->toBeArray()
-//         ->toHaveCount(1)
-//         ->{0}->toEqual([
-//             'type' => 'Null',
-//             'column' => $builder->qualifyColumn('deleted_at'),
-//             'boolean' => 'and',
-//         ]);
-// });

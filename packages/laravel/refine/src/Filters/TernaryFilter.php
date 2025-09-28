@@ -203,8 +203,11 @@ class TernaryFilter extends Filter
      */
     public function callTrueQuery(Builder $builder): mixed
     {
-        $callback = $this->getTrueQuery()
-            ?? fn ($query) => $query->where($this->getQualifiedAttribute($query), true);
+        $callback = match (true) {
+            (bool) ($q = $this->getTrueQuery()) => $q,
+            $this->isNullable() => fn (Builder $query) => $query->whereNot($this->getQualifiedAttribute($query), null),
+            default => fn ($query) => $query->where($this->getQualifiedAttribute($query), true)
+        };
 
         return $callback($builder);
     }
@@ -267,8 +270,11 @@ class TernaryFilter extends Filter
      */
     public function callFalseQuery(Builder $builder): mixed
     {
-        $callback = $this->getFalseQuery()
-            ?? fn ($query) => $query->where($this->getQualifiedAttribute($query), false);
+        $callback = match (true) {
+            (bool) ($q = $this->getFalseQuery()) => $q,
+            $this->isNullable() => fn (Builder $query) => $query->where($this->getQualifiedAttribute($query), null),
+            default => fn ($query) => $query->where($this->getQualifiedAttribute($query), false)
+        };
 
         return $callback($builder);
     }
