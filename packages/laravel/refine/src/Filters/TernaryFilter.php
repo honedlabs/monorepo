@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Refine\Filters;
 
 use Closure;
+use Honed\Refine\Concerns\CanBeNullable;
 use Honed\Refine\Option;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class TernaryFilter extends Filter
 {
+    use CanBeNullable;
+
     /**
      * The label for the default option.
      *

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
-trait IsNullable
+trait CanBeNullable
 {
     /**
      * Whether the instance is nullable.
