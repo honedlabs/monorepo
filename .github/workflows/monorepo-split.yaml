@@ -32,13 +32,13 @@ jobs:
           # - lock
           # - memo
           # - modal
-          # - nav
+          - nav
           # - page
           # - persist
-          - refine
+          # - refine
           # - registry
           # - stats
-          - table
+          # - table
           # - upload
           # - widget
     steps:
