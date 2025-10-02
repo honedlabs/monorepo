@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Lang;
 
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
+use Honed\Lang\Middleware\ShareTranslations;
 
 class LangServiceProvider extends ServiceProvider
 {
@@ -21,14 +23,29 @@ class LangServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->registerMiddleware();
+
+        if ($this->app->runningInConsole()) {
+            $this->offerPublishing();
+        }
+    }
+
+    /**
+     * Register the publishing for the package.
+     */
+    protected function offerPublishing(): void
+    {
         $this->publishes([
             __DIR__.'/../config/lang.php' => config_path('lang.php'),
         ], 'lang-config');
+    }
 
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                //
-            ]);
-        }
+    /**
+     * Register the middleware for the package.
+     */
+    protected function registerMiddleware(): void
+    {
+        $this->app->make(Kernel::class)
+            ->pushMiddleware(ShareTranslations::class);
     }
 }

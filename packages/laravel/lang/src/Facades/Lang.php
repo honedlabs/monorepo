@@ -11,8 +11,24 @@ use Illuminate\Support\Facades\Facade;
  */
 class Lang extends Facade
 {
-    protected static function getFacadeAccessor(): string
+    /**
+     * Get the root object behind the facade.
+     *
+     * @return NavManager
+     */
+    public static function getFacadeRoot()
     {
-        return \Honed\Lang\Lang::class;
+        // @phpstan-ignore-next-line
+        return parent::getFacadeRoot();
+    }
+
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return Lang::class;
     }
 }
