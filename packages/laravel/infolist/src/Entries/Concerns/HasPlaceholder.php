@@ -9,17 +9,17 @@ trait HasPlaceholder
     /**
      * The placeholder value to display if the entry is null.
      *
-     * @var mixed
+     * @var scalar|null
      */
-    protected $placeholder = null;
+    protected $placeholder;
 
     /**
      * Set the placeholder value to display.
      *
-     * @param  mixed  $placeholder
+     * @param  scalar  $placeholder
      * @return $this
      */
-    public function placeholder($placeholder)
+    public function placeholder(mixed $placeholder): static
     {
         $this->placeholder = $placeholder;
 
@@ -29,9 +29,9 @@ trait HasPlaceholder
     /**
      * Get the placeholder value to display.
      *
-     * @return mixed
+     * @return scalar|null
      */
-    public function getPlaceholder()
+    public function getPlaceholder(): mixed
     {
         return $this->placeholder;
     }

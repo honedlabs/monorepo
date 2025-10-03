@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
-class ImageEntry extends BaseEntry
-{
-    use Concerns\CanBeImage;
+use Honed\Infolist\Formatters\ImageFormatter;
 
+/**
+ * @extends Entry<string|null, string|null>
+ */
+class ImageEntry extends Entry
+{
     /**
      * Provide the instance with any necessary setup.
      */
@@ -15,17 +18,8 @@ class ImageEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type(self::IMAGE);
-    }
+        $this->type('image');
 
-    /**
-     * Format the value of the entry.
-     *
-     * @param  string|null  $value
-     * @return string|null
-     */
-    public function format($value)
-    {
-        return is_null($value) ? null : $this->formatImage($value);
+        $this->formatter(ImageFormatter::class);
     }
 }

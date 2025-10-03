@@ -9,7 +9,7 @@ use Honed\Infolist\Contracts\Formatter;
 /**
  * @implements Formatter<mixed, mixed>
  */
-class TextFormatter implements Formatter
+class NumericFormatter implements Formatter
 {
     /**
      * @param mixed $value

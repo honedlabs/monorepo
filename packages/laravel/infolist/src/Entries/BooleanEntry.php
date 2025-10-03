@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
-class BooleanEntry extends BaseEntry
-{
-    use Concerns\CanBeBoolean;
+use Honed\Infolist\Formatters\BooleanFormatter;
 
+/**
+ * @extends Entry<mixed, string|null>
+ */
+class BooleanEntry extends Entry
+{
     /**
      * Provide the instance with any necessary setup.
      */
@@ -16,16 +19,7 @@ class BooleanEntry extends BaseEntry
         parent::setUp();
 
         $this->type('boolean');
-    }
 
-    /**
-     * Format the value of the entry.
-     *
-     * @param  mixed  $value
-     * @return string|null
-     */
-    public function format($value)
-    {
-        return $this->formatBoolean($value);
+        $this->formatter(BooleanFormatter::class);
     }
 }

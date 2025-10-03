@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
-class ArrayEntry extends BaseEntry
-{
-    use Concerns\CanBeArray;
+use Honed\Infolist\Formatters\ArrayFormatter;
 
+/**
+ * @extends Entry<array<int, mixed>|Collection<int, mixed>, array<int, mixed>|string>
+ */
+class ArrayEntry extends Entry
+{
     /**
      * Provide the instance with any necessary setup.
      */
@@ -15,17 +18,8 @@ class ArrayEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type(self::ARRAY);
-    }
+        $this->type('array');
 
-    /**
-     * Format the value of the entry.
-     *
-     * @param  array<int, mixed>|\Illuminate\Support\Collection<int, mixed>|null  $value
-     * @return array<int, mixed>|string|null
-     */
-    public function format($value)
-    {
-        return is_null($value) ? null : $this->formatArray($value);
+        $this->formatter(ArrayFormatter::class);
     }
 }

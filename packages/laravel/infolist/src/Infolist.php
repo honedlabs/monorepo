@@ -7,7 +7,7 @@ namespace Honed\Infolist;
 use Closure;
 use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Primitive;
-use Honed\Infolist\Entries\BaseEntry;
+use Honed\Infolist\Entries\Entry;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +36,13 @@ class Infolist extends Primitive
      * @var (Closure(class-string<Model>):class-string<Infolist>)|null
      */
     protected static $infolistResolver;
+
+    /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'infolist';
 
     /**
      * The resource of the infolist.
@@ -158,7 +165,7 @@ class Infolist extends Primitive
         }
 
         return array_map(
-            static fn (BaseEntry $entry) => $entry
+            static fn (Entry $entry) => $entry
                 ->record($record)
                 ->toArray(),
             $this->getEntries()

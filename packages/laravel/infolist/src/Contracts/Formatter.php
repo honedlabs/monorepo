@@ -11,8 +11,10 @@ namespace Honed\Infolist\Contracts;
 interface Formatter
 {
     /**
-     * @param TValue $value
-     * @return TReturn
+     * Format the given value.
+     * 
+     * @param TValue|null $value
+     * @return TReturn|null
      */
     public function format(mixed $value): mixed;
 }

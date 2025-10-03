@@ -9,14 +9,12 @@ use Honed\Infolist\Contracts\Formatter;
 /**
  * @implements Formatter<mixed, mixed>
  */
-class TextFormatter implements Formatter
+class TimeFormatter extends CarbonFormatter
 {
     /**
-     * @param mixed $value
-     * @return mixed
+     * The format to use for formatting times.
+     *
+     * @var string
      */
-    public function format(mixed $value): mixed
-    {
-        return $value;
-    }
+    protected $using = 'H:i:s';
 }

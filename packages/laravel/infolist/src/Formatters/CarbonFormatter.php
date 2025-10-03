@@ -1,0 +1,134 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Honed\Infolist\Formatters;
+
+use Carbon\CarbonInterface;
+use Carbon\Exceptions\InvalidFormatException;
+use Honed\Infolist\Contracts\Formatter;
+use Illuminate\Support\Carbon;
+
+/**
+ * @implements Formatter<\Carbon\CarbonInterface|string|int|float, string>
+ */
+class CarbonFormatter implements Formatter
+{
+    /**
+     * The format to use for formatting a carbon instance.
+     *
+     * @var string
+     */
+    protected $using = 'Y-m-d H:i:s';
+
+    /**
+     * Whether to use Carbon's diffForHumans to format the date.
+     *
+     * @var bool
+     */
+    protected $since = false;
+
+    /**
+     * The timezone to use for formatting dates.
+     *
+     * @var string
+     */
+    protected $timezone = 'UTC';
+
+    /**
+     * Set the format to use for formatting a carbon instance.
+     *
+     * @return $this
+     */
+    public function using(string $using): static
+    {
+        $this->using = $using;
+
+        return $this;
+    }
+
+    /**
+     * Get the format to use for formatting a carbon instance.
+     */
+    public function getDateFormat(): string
+    {
+        return $this->using;
+    }
+
+    /**
+     * Set whether to use Carbon's diffForHumans to format the date.
+     *
+     * @return $this
+     */
+    public function since(bool $since = true): static
+    {
+        $this->since = $since;
+
+        return $this;
+    }
+
+    /**
+     * Get whether to use Carbon's diffForHumans to format the date.
+     */
+    public function isSince(): bool
+    {
+        return $this->since;
+    }
+
+    /**
+     * Set the timezone to use for formatting dates.
+     *
+     * @return $this
+     */
+    public function timezone(string $timezone): static
+    {
+        $this->timezone = $timezone;
+
+        return $this;
+    }
+
+    /**
+     * Get the timezone to use for formatting dates.
+     */
+    public function getTimezone(): string
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param \Carbon\CarbonInterface|string|int|float|null $value
+     * @return string|null
+     */
+    public function format(mixed $value): mixed
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if (! $value instanceof CarbonInterface) {
+            $value = $this->newCarbon($value);
+        }
+
+        if ($this->isSince()) {
+            return $value?->diffForHumans();
+        }
+
+        return $value
+            ?->shiftTimezone($this->getTimezone())
+            ->format($this->getDateFormat());
+    }
+
+    /**
+     * Attempt to parse the value as a Carbon instance.
+     *
+     * @param  string|int|float|null  $value
+     */
+    protected function newCarbon(mixed $value): ?CarbonInterface
+    {
+        try {
+            return Carbon::parse($value);
+        } catch (InvalidFormatException $e) {
+            return null;
+        }
+    }
+}
