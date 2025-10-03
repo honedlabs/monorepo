@@ -15,7 +15,7 @@ class BooleanEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type(self::BOOLEAN);
+        $this->type('boolean');
     }
 
     /**

@@ -58,11 +58,11 @@ trait HasInfolist
     protected function newInfolist(): ?Infolist
     {
         if (isset($this->list)) {
-            return $this->list::make()->for($this);
+            return $this->list::make()->record($this);
         }
 
         if ($list = static::getUseInfolistAttribute()) {
-            return $list::make()->for($this);
+            return $list::make()->record($this);
         }
 
         return null;

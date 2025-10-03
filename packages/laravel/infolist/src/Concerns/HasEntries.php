@@ -48,14 +48,14 @@ trait HasEntries
     /**
      * Get the entries of the list.
      *
-     * @return array<int, BaseEntry>
+     * @return array<int, Entry>
      */
     public function getEntries(): array
     {
         return array_values(
             array_filter(
                 $this->entries,
-                fn (BaseEntry $entry) => $entry->isAllowed()
+                static fn (Entry $entry) => $entry->isAllowed()
             )
         );
     }

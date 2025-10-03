@@ -53,7 +53,7 @@ class Infolist extends Primitive
     public static function make($resource = null)
     {
         return resolve(static::class)
-            ->when($resource, fn ($infolist, $resource) => $infolist->for($resource));
+            ->when($resource, fn ($infolist, $resource) => $infolist->record($resource));
     }
 
     /**
@@ -120,17 +120,6 @@ class Infolist extends Primitive
     {
         static::$namespace = 'App\\Infolists\\';
         static::$infolistResolver = null;
-    }
-
-    /**
-     * Set the resource of the infolist.
-     *
-     * @param  array<string, mixed>|Model  $resource
-     * @return $this
-     */
-    public function for($resource)
-    {
-        return $this->record($resource);
     }
 
     /**
