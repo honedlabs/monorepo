@@ -8,7 +8,7 @@ use Honed\Infolist\Formatters\TextFormatter;
 
 /**
  * @extends Entry<mixed, string|array<int, string>>
- * 
+ *
  * @method $this limit(int $value) Set the limit of the text to display.
  * @method int|null getLimit() Get the limit of the text to display.
  * @method $this words(int $value) Set the limit of the words to display.

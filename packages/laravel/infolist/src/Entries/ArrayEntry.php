@@ -8,7 +8,7 @@ use Honed\Infolist\Formatters\ArrayFormatter;
 
 /**
  * @extends Entry<array<int, mixed>|\Illuminate\Support\Collection<int, mixed>, array<int, mixed>|string>
- * 
+ *
  * @method $this pluck(string $value) Set the property to pluck from the array.
  * @method string|null getPluck() Get the property to pluck from the array.
  * @method $this glue(string $value = ', ') Set the separator to use when joining the array.

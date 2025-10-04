@@ -8,7 +8,7 @@ use Honed\Infolist\Formatters\BooleanFormatter;
 
 /**
  * @extends Entry<mixed, string>
- * 
+ *
  * @method $this trueText(string $value) Set the text to display when the value is true.
  * @method string|null getTrueText() Get the text to display when the value is true.
  * @method $this falseText(string $value) Set the text to display when the value is false.

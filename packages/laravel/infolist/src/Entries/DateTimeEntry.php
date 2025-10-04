@@ -8,7 +8,7 @@ use Honed\Infolist\Formatters\DateTimeFormatter;
 
 /**
  * @extends Entry<\Carbon\CarbonInterface|string|int|float, string>
- * 
+ *
  * @method $this using(string $value) Set the format to use for formatting a carbon instance.
  * @method string getDateFormat() Get the format to use for formatting a carbon instance.
  * @method $this since(bool $value = true) Set whether to use Carbon's diffForHumans to format the date.

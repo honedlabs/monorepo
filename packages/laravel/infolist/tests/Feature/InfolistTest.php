@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Str;
 use Honed\Infolist\Infolist;
-use Workbench\App\Models\User;
+use Illuminate\Support\Str;
 use Workbench\App\Infolists\UserInfolist;
+use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->user = User::factory()->create();

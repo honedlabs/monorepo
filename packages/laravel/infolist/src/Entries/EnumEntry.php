@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
-use BackedEnum;
 use Honed\Infolist\Formatters\EnumFormatter;
 
 /**
  * @extends Entry<int|string|\BackedEnum|null, \BackedEnum|null>
- * 
+ *
  * @method $this enum(string $value) Set the backing enum for the entry.
  * @method string|null getEnum() Get the backing enum for the entry.
  */

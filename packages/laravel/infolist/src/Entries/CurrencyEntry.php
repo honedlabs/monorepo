@@ -8,7 +8,7 @@ use Honed\Infolist\Formatters\CurrencyFormatter;
 
 /**
  * @extends Entry<mixed, string>
- * 
+ *
  * @method $this currency(string $value) Set the currency to use for formatting.
  * @method string|null getCurrency() Get the currency to use for formatting.
  * @method $this divide(int $value) Set the divide by amount to use for formatting.

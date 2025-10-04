@@ -50,7 +50,6 @@ it('can have closure state', function () {
         ->getState()->toBe($user->name);
 });
 
-
 it('is macroable', function () {
     Entry::macro('test', function () {
         return 'test';
