@@ -98,7 +98,7 @@ abstract class CarbonFormatter implements Formatter
     /**
      * Format the value as a formatted carbon instance.
      *
-     * @param \Carbon\CarbonInterface|string|int|float|null $value
+     * @param  CarbonInterface|string|int|float|null  $value
      * @return string|null
      */
     public function format(mixed $value): mixed

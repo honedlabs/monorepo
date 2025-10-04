@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Infolist\Entries\CurrencyEntry;
 use Honed\Infolist\Formatters\CurrencyFormatter;
 
 beforeEach(function () {

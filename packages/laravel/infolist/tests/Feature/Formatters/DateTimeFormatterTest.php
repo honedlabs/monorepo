@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Infolist\Entries\DateEntry;
-use Honed\Infolist\Entries\DateTimeEntry;
-use Honed\Infolist\Entries\TimeEntry;
 use Honed\Infolist\Formatters\DateTimeFormatter;
 
 beforeEach(function () {

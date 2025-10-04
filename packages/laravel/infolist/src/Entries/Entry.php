@@ -4,56 +4,53 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
-use Closure;
 use BackedEnum;
-use Honed\Core\Primitive;
-use Illuminate\Support\Arr;
-use Honed\Core\Concerns\HasName;
-use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\HasLabel;
+use BadMethodCallException;
+use Closure;
 use Honed\Core\Concerns\Allowable;
-use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Concerns\CanHaveAlias;
 use Honed\Core\Concerns\CanHaveExtra;
-use Honed\Infolist\Concerns\HasState;
+use Honed\Core\Concerns\HasLabel;
+use Honed\Core\Concerns\HasName;
+use Honed\Core\Concerns\HasRecord;
+use Honed\Core\Concerns\HasType;
 use Honed\Core\Concerns\Transformable;
-use Honed\Infolist\Concerns\CanBeBadge;
+use Honed\Core\Contracts\NullsAsUndefined;
+use Honed\Core\Primitive;
 use Honed\Infolist\Concerns\HasClasses;
+use Honed\Infolist\Concerns\HasFormatter;
+use Honed\Infolist\Concerns\HasPlaceholder;
 use Honed\Infolist\Contracts\Formatter;
 use Illuminate\Database\Eloquent\Model;
-use Honed\Infolist\Concerns\HasFormatter;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Infolist\Concerns\HasPlaceholder;
-use Honed\Infolist\Formatters\DefaultFormatter;
-use Honed\Infolist\Entries\Concerns\CanFormatValues;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
  * @template TValue
  * @template TReturn
- * 
+ *
  * @extends \Honed\Core\Primitive<string, mixed>
- * 
+ *
  * @implements Formatter<TValue, TReturn>
  */
-class Entry extends Primitive implements NullsAsUndefined, Formatter
+class Entry extends Primitive implements Formatter, NullsAsUndefined
 {
     use Allowable;
-    use HasClasses;
-    use HasPlaceholder;
-    use HasLabel;
-    use HasType;
-    use HasName;
     use CanHaveAlias;
     use CanHaveExtra;
-    use Transformable;
-    use HasRecord;
     use ForwardsCalls;
-
+    use HasClasses;
     /**
      * @use HasFormatter<TValue, TReturn>
      */
     use HasFormatter;
+    use HasLabel;
+    use HasName;
+    use HasPlaceholder;
+    use HasRecord;
+    use HasType;
+
+    use Transformable;
 
     /**
      * The identifier to use for evaluation.
@@ -72,14 +69,14 @@ class Entry extends Primitive implements NullsAsUndefined, Formatter
     /**
      * The variant of the badge.
      *
-     * @var string|\BackedEnum|(\Closure(mixed...):(string|\BackedEnum|null))|null
+     * @var string|BackedEnum|(Closure(mixed...):(string|BackedEnum|null))|null
      */
     protected $variant;
 
     /**
      * The retrieval method.
      *
-     * @var string|(\Closure(mixed...):mixed)|null
+     * @var string|(Closure(mixed...):mixed)|null
      */
     protected $state;
 
@@ -97,7 +94,7 @@ class Entry extends Primitive implements NullsAsUndefined, Formatter
      * @param  array<int, mixed>  $parameters
      * @return mixed
      *
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function __call($method, $parameters)
     {
@@ -152,7 +149,7 @@ class Entry extends Primitive implements NullsAsUndefined, Formatter
     /**
      * Set the variant of the badge.
      *
-     * @param   string|\BackedEnum|(\Closure(mixed...):(string|\BackedEnum|null))  $value
+     * @param  string|BackedEnum|(Closure(mixed...):(string|BackedEnum|null))  $value
      * @return $this
      */
     public function variant(mixed $value): static
@@ -177,7 +174,7 @@ class Entry extends Primitive implements NullsAsUndefined, Formatter
     /**
      * Set how the state of the entry is generated.
      *
-     * @param  string|(\Closure(mixed...):mixed)  $state
+     * @param  string|(Closure(mixed...):mixed)  $state
      * @return $this
      */
     public function state(string|Closure $state): static
@@ -190,17 +187,15 @@ class Entry extends Primitive implements NullsAsUndefined, Formatter
     /**
      * Get the state of the entry.
      *
-     * @return string|(\Closure(mixed...):mixed)|null
+     * @return string|(Closure(mixed...):mixed)|null
      */
     public function getStateResolver(): string|Closure|null
     {
-        return $this->state;
+        return $this->state ??= $this->getName();
     }
 
     /**
      * Get the resolved state of the entry.
-     *
-     * @return mixed
      */
     public function getState(): mixed
     {
@@ -225,8 +220,8 @@ class Entry extends Primitive implements NullsAsUndefined, Formatter
 
     /**
      * Populate the entry for the record.
-     * 
-     * @param array<string, mixed>|Model $record
+     *
+     * @param  array<string, mixed>|Model  $record
      * @return array<string, mixed>
      */
     public function generate(array|Model $record): array
@@ -241,10 +236,6 @@ class Entry extends Primitive implements NullsAsUndefined, Formatter
      */
     public function populate(): array
     {
-        if (! $this->getState()) {
-            $this->state($this->getName());
-        }
-
         [$value, $placeholder] = $this->apply($this->resolveState());
 
         return $this->undefine([
@@ -264,11 +255,12 @@ class Entry extends Primitive implements NullsAsUndefined, Formatter
     protected function resolveState()
     {
         $record = $this->getRecord();
+        $resolver = $this->getStateResolver();
 
         return $this->resolved = match (true) {
             is_null($record) => null,
-            is_string($this->state) => Arr::get($record, $this->state),
-            is_callable($this->state) => $this->evaluate($this->state),
+            is_string($resolver) => Arr::get($record, $resolver),
+            is_callable($resolver) => $this->evaluate($resolver),
             default => null,
         };
     }
@@ -289,7 +281,7 @@ class Entry extends Primitive implements NullsAsUndefined, Formatter
             'value' => $this->populate(),
             'badge' => $this->isBadge(),
             'class' => $this->getClasses(),
-            // 'attributes' => 
+            // 'attributes' =>
         ];
     }
 

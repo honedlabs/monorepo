@@ -68,7 +68,6 @@ class BooleanFormatter implements Formatter
     /**
      * Format the value as a boolean.
      *
-     * @param  mixed  $value
      * @return string|null
      */
     public function format(mixed $value): mixed

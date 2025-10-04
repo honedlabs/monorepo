@@ -13,9 +13,6 @@ class DefaultFormatter implements Formatter
 {
     /**
      * Format the value as is.
-     * 
-     * @param mixed $value
-     * @return mixed
      */
     public function format(mixed $value): mixed
     {

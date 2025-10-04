@@ -10,7 +10,7 @@ use Honed\Infolist\Formatters\DefaultFormatter;
 /**
  * @template TValue
  * @template TReturn
- * 
+ *
  * @phpstan-require-implements Formatter<TValue, TReturn>
  */
 trait HasFormatter
@@ -25,8 +25,7 @@ trait HasFormatter
     /**
      * Set the formatter.
      *
-     * @param class-string<Formatter<TValue, TReturn>>|Formatter<TValue, TReturn> $formatter
-     * @return static
+     * @param  class-string<Formatter<TValue, TReturn>>|Formatter<TValue, TReturn>  $formatter
      */
     public function formatter(string|Formatter $formatter): static
     {
@@ -48,7 +47,7 @@ trait HasFormatter
     /**
      * Format the value.
      *
-     * @param TValue|null $value
+     * @param  TValue|null  $value
      * @return TReturn|null
      */
     public function format(mixed $value): mixed

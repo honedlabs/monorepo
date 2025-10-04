@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
  */
 class ArrayFormatter implements Formatter
 {
-/**
+    /**
      * The property to pluck from the array.
      *
      * @var string|null
@@ -41,7 +41,6 @@ class ArrayFormatter implements Formatter
 
     /**
      * Get the property to pluck from the array.
-     *
      */
     public function getPluck(): ?string
     {
@@ -62,11 +61,34 @@ class ArrayFormatter implements Formatter
 
     /**
      * Get the separator to use when joining the array.
-     *
      */
     public function getGlue(): ?string
     {
         return $this->glue;
+    }
+
+    /**
+     * Format the value as an array.
+     *
+     * @param  array<int, mixed>|Collection<int, mixed>|null  $value
+     * @return array<int, mixed>|string|null
+     */
+    public function format(mixed $value): mixed
+    {
+        if (! Arr::accessible($value)) {
+            return null;
+        }
+
+        $pipes = [
+            'formatPluck',
+            'formatGlue',
+        ];
+
+        return array_reduce(
+            $pipes,
+            fn ($value, $pipe) => $this->{$pipe}($value),
+            $value instanceof Collection ? $value->all() : $value
+        );
     }
 
     /**
@@ -93,29 +115,5 @@ class ArrayFormatter implements Formatter
         $glue = $this->getGlue();
 
         return $glue ? implode($glue, $value) : $value;
-    }
-
-    /**
-     * Format the value as an array.
-     * 
-     * @param array<int, mixed>|Collection<int, mixed>|null $value
-     * @return array<int, mixed>|string|null
-     */
-    public function format(mixed $value): mixed
-    {
-        if (! Arr::accessible($value)) {
-            return null;
-        }
-
-        $pipes = [
-            'formatPluck',
-            'formatGlue',
-        ];
-
-        return array_reduce(
-            $pipes,
-            fn ($value, $pipe) => $this->{$pipe}($value),
-            $value instanceof Collection ? $value->all() : $value
-        );
     }
 }

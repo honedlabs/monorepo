@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
-use BackedEnum;
 use Honed\Infolist\Formatters\MappedFormatter;
 
 /**

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Infolist\Formatters;
 
 use Honed\Infolist\Concerns\HasDecimals;
-use Honed\Infolist\Contracts\Formatter;
 use Honed\Infolist\Formatters\Support\LocalisedFormatter;
 use Illuminate\Support\Number;
 
@@ -72,18 +71,17 @@ class CurrencyFormatter extends LocalisedFormatter
 
     /**
      * Set the divide by amount to use for formatting to cents.
-     * 
+     *
      * @return $this
      */
     public function cents(): static
     {
         return $this->divide(100);
     }
-    
+
     /**
      * Format the value as a currency.
      *
-     * @param mixed $value
      * @return string|null
      */
     public function format(mixed $value): mixed

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\App;
 /**
  * @template TValue
  * @template TReturn
- * 
+ *
  * @implements Formatter<TValue, TReturn>
  */
 abstract class LocalisedFormatter implements Formatter
@@ -24,7 +24,7 @@ abstract class LocalisedFormatter implements Formatter
 
     /**
      * Set the locale to use for formatting.
-     * 
+     *
      * @return $this
      */
     public function locale(string $value): static

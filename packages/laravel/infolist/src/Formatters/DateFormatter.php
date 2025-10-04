@@ -13,5 +13,5 @@ class DateFormatter extends CarbonFormatter
      *
      * @var string
      */
-   protected $using = 'Y-m-d';
+    protected $using = 'Y-m-d';
 }

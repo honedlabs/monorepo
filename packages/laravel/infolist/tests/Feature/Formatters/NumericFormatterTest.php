@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Infolist\Entries\NumericEntry;
 use Honed\Infolist\Formatters\NumericFormatter;
 
 beforeEach(function () {
@@ -38,7 +37,6 @@ it('formats decimals', function () {
         ->format(123)->toBe('123.00')
         ->format(123.455)->toBe('123.46');
 });
-
 
 it('formats files', function () {
     expect($this->entry)

@@ -15,6 +15,7 @@ trait HasDecimals
 
     /**
      * Set the number of decimal places to display.
+     *
      * @return $this
      */
     public function decimals(int $decimals): static
@@ -31,6 +32,4 @@ trait HasDecimals
     {
         return $this->decimals;
     }
-
-
 }

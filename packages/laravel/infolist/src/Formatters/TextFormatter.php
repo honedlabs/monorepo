@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Formatters;
 
-use Illuminate\Support\Str;
 use Honed\Infolist\Contracts\Formatter;
+use Illuminate\Support\Str;
 
 /**
  * @implements Formatter<mixed, string|array<int, string>>
@@ -49,7 +49,7 @@ class TextFormatter implements Formatter
 
     /**
      * Set the limit of the text to display.
-     * 
+     *
      * @return $this
      */
     public function limit(int $value): static
@@ -69,7 +69,7 @@ class TextFormatter implements Formatter
 
     /**
      * Set the limit of the words to display.
-     * 
+     *
      * @return $this
      */
     public function words(int $value): static
@@ -89,7 +89,7 @@ class TextFormatter implements Formatter
 
     /**
      * Set the prefix to display before the text.
-     * 
+     *
      * @return $this
      */
     public function prefix(string $value): static
@@ -109,6 +109,7 @@ class TextFormatter implements Formatter
 
     /**
      * Set the suffix to display after the text.
+     *
      * @return $this
      */
     public function suffix(string $value): static
@@ -128,7 +129,7 @@ class TextFormatter implements Formatter
 
     /**
      * Set the separator to be used to separate the text.
-     * 
+     *
      * @return $this
      */
     public function separator(string $value): static
@@ -147,7 +148,6 @@ class TextFormatter implements Formatter
     }
 
     /**
-     * @param mixed $value
      * @return array<int, string>|string|null
      */
     public function format(mixed $value): mixed
@@ -226,5 +226,4 @@ class TextFormatter implements Formatter
 
         return $separator ? explode($separator, $value) : $value;
     }
-
 }

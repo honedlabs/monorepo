@@ -12,8 +12,6 @@ class InfolistServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -29,8 +27,6 @@ class InfolistServiceProvider extends ServiceProvider
 
     /**
      * Register the publishing for the package.
-     *
-     * @return void
      */
     protected function offerPublishing(): void
     {

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Infolist\Entries\ArrayEntry;
 use Honed\Infolist\Formatters\ArrayFormatter;
 use Workbench\App\Models\User;
 

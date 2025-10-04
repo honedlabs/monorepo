@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Formatters;
 
-use Honed\Infolist\Contracts\Formatter;
 use Honed\Infolist\Formatters\Support\CarbonFormatter;
 
 class TimeFormatter extends CarbonFormatter

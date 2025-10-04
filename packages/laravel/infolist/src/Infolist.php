@@ -58,11 +58,8 @@ class Infolist extends Primitive
 
     /**
      * Get a new infolist instance for the given model name.
-     *
-     * @param  Model  $model
-     * @return Infolist
      */
-    public static function infolistForModel(Model $model): Infolist
+    public static function infolistForModel(Model $model): self
     {
         $infolist = static::resolveInfolistName($model::class);
 

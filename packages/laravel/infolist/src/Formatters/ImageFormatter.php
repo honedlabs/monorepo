@@ -14,21 +14,21 @@ class ImageFormatter implements Formatter
 {
     /**
      * The disk to be used to retrieve the image.
-     * 
+     *
      * @var string|null
      */
     protected $disk;
 
     /**
      * The expiry time for the image URL.
-     * 
+     *
      * @var int|null
      */
     protected $expires;
 
     /**
      * Set the disk to be used to retrieve the image.
-     * 
+     *
      * @return $this
      */
     public function disk(string $value = 's3'): static
@@ -48,7 +48,7 @@ class ImageFormatter implements Formatter
 
     /**
      * Set the expiry time for the image URL in minutes.
-     * 
+     *
      * @return $this
      */
     public function expiresIn(int $minutes): static
@@ -68,8 +68,8 @@ class ImageFormatter implements Formatter
 
     /**
      * Format the value as an image.
-     * 
-     * @param string|null $value
+     *
+     * @param  string|null  $value
      * @return string|null
      */
     public function format(mixed $value): mixed

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Infolist\Entries\ImageEntry;
 use Honed\Infolist\Formatters\ImageFormatter;
 use Illuminate\Support\Facades\Storage;
 

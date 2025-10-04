@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Formatters;
 
+use BackedEnum;
 use Honed\Infolist\Contracts\Formatter;
 
 /**
@@ -14,14 +15,14 @@ class EnumFormatter implements Formatter
     /**
      * The backing enum for the entry.
      *
-     * @var class-string<\BackedEnum>|null
+     * @var class-string<BackedEnum>|null
      */
     protected $enum;
 
     /**
      * Set the backing enum for the entry.
-     * 
-     * @param  class-string<\BackedEnum>  $value
+     *
+     * @param  class-string<BackedEnum>  $value
      * @return $this
      */
     public function enum(string $value): static
@@ -34,7 +35,7 @@ class EnumFormatter implements Formatter
     /**
      * Get the backing enum for the entry.
      *
-     * @return class-string<\BackedEnum>|null
+     * @return class-string<BackedEnum>|null
      */
     public function getEnum(): ?string
     {
@@ -43,9 +44,9 @@ class EnumFormatter implements Formatter
 
     /**
      * Format the value as an enum.
-     * 
-     * @param int|string|\BackedEnum|null $value
-     * @return \BackedEnum|null
+     *
+     * @param  int|string|BackedEnum|null  $value
+     * @return BackedEnum|null
      */
     public function format(mixed $value): mixed
     {
@@ -53,7 +54,7 @@ class EnumFormatter implements Formatter
 
         return match (true) {
             is_null($enum), is_null($value) => null,
-            $value instanceof \BackedEnum => $value,
+            $value instanceof BackedEnum => $value,
             default => $enum::tryFrom($value),
         };
     }

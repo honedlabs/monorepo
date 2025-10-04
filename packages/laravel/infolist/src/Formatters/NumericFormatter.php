@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Honed\Infolist\Formatters;
 
 use Honed\Infolist\Concerns\HasDecimals;
-use Illuminate\Support\Number;
-use Honed\Infolist\Contracts\Formatter;
 use Honed\Infolist\Formatters\Support\LocalisedFormatter;
+use Illuminate\Support\Number;
 
 /**
  * @extends LocalisedFormatter<mixed, string>
@@ -25,7 +24,7 @@ class NumericFormatter extends LocalisedFormatter
 
     /**
      * Set whether to format the number as a file size.
-     * 
+     *
      * @return $this
      */
     public function file(bool $value = true): static
@@ -45,8 +44,7 @@ class NumericFormatter extends LocalisedFormatter
 
     /**
      * Format the value as a number.
-     * 
-     * @param mixed $value
+     *
      * @return string|null
      */
     public function format(mixed $value): mixed
@@ -59,16 +57,15 @@ class NumericFormatter extends LocalisedFormatter
 
         return match (true) {
             $this->isFile() => Number::fileSize(
-                bytes: $value, 
+                bytes: $value,
                 precision: $this->getDecimals() ?? 0
             ),
             default => Number::format(
-                number: $value, 
-                precision: $this->getDecimals(), 
+                number: $value,
+                precision: $this->getDecimals(),
                 locale: $this->getLocale()
             ) ?: null,
         };
-
 
     }
 }

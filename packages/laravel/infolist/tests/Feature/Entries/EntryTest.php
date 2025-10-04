@@ -22,9 +22,13 @@ it('makes an entry', function () {
 it('has array representation', function () {
     expect($this->entry->toArray())
         ->toBeArray()
-        ->toEqual([
+        ->toEqualCanonicalizing([
+            'name' => 'name',
             'label' => 'Name',
-            'state' => $this->user->name,
+            'value' => [
+                'v' => $this->user->name,
+                'f' => false,
+            ],
         ]);
 });
 

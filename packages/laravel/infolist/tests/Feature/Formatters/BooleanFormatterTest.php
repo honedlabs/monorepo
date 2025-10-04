@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Infolist\Entries\BooleanEntry;
 use Honed\Infolist\Formatters\BooleanFormatter;
 
 beforeEach(function () {
