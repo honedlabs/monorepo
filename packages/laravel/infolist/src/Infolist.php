@@ -152,7 +152,7 @@ class Infolist extends Primitive
         }
 
         return array_map(
-            static fn (Entry $entry) => $entry->toEntry($record),
+            static fn (Entry $entry) => $entry->record($record)->toArray(),
             $this->getEntries()
         );
     }

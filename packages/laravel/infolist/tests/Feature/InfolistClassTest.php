@@ -17,16 +17,24 @@ it('has an infolist', function () {
         ->toBeInstanceOf(UserInfolist::class)
         ->toArray()->toBeArray()
         ->toHaveCount(2)
-        ->toEqual([
+        ->toEqualCanonicalizing([
             [
+                'name' => 'name',
                 'type' => 'text',
                 'label' => 'Name',
-                'state' => $this->user->name,
+                'value' => [
+                    'v' => $this->user->name,
+                    'f' => false,
+                ],
             ],
             [
+                'name' => 'created_at',
                 'type' => 'datetime',
                 'label' => 'Account made',
-                'state' => $this->user->created_at->format('Y-m-d H:i:s'),
+                'value' => [
+                    'v' => $this->user->created_at->format('Y-m-d H:i:s'),
+                    'f' => false,
+                ],
             ],
         ]);
 });

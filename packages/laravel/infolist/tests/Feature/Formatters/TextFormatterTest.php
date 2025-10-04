@@ -20,7 +20,7 @@ it('does not format by default', function () {
 
 it('does not format non-string values', function () {
     expect($this->entry)
-        ->format(123)->toBeNull();
+        ->format(123)->toBe('123');
 });
 
 it('can limit the text', function () {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Workbench\App\Infolists;
 
+use Honed\Infolist\Entries\DateTimeEntry;
 use Honed\Infolist\Entries\Entry;
 use Honed\Infolist\Entries\TextEntry;
 use Honed\Infolist\Infolist;
@@ -25,9 +26,8 @@ class UserInfolist extends Infolist
                 Entry::make('email', 'Email address')
                     ->allow(fn () => Auth::id() > 1),
 
-                Entry::make('created_at')
+                DateTimeEntry::make('created_at')
                     ->label('Account made')
-                    ->dateTime()
                     ->timezone('Australia/Brisbane'),
             ]);
     }

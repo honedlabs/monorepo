@@ -3,65 +3,53 @@
 declare(strict_types=1);
 
 use Honed\Infolist\Entries\NumericEntry;
+use Honed\Infolist\Formatters\NumericFormatter;
 
 beforeEach(function () {
-    $this->entry = NumericEntry::make('age');
+    $this->entry = new NumericFormatter();
 });
 
-it('does not format null values', function () {
+it('is file', function () {
+    expect($this->entry)
+        ->isFile()->toBeFalse()
+        ->file()->toBe($this->entry)
+        ->isFile()->toBeTrue();
+});
+
+it('handles null values', function () {
     expect($this->entry)
         ->format(null)->toBeNull();
 });
 
-it('does not format by default', function () {
-    expect($this->entry)
-        ->format(0)->toBe('0')
-        ->format(123)->toBe('123');
-});
-
-it('does not format non-numeric values', function () {
+it('handles non-numeric values', function () {
     expect($this->entry)
         ->format('misc')->toBeNull();
 });
 
-it('can divide the number', function () {
+it('formats numerics', function () {
     expect($this->entry)
-        ->divideBy(10)->toBe($this->entry)
-        ->format(100)->toBe('10');
+        ->format(123)->toBe('123')
+        ->format(123.45)->toBe('123.45');
 });
 
-it('can format the number as a file size', function () {
+it('formats decimals', function () {
     expect($this->entry)
-        ->fileSize()->toBe($this->entry)
+        ->decimals(2)->toBe($this->entry)
+        ->format(123)->toBe('123.00')
+        ->format(123.455)->toBe('123.46');
+});
+
+
+it('formats files', function () {
+    expect($this->entry)
+        ->file()->toBe($this->entry)
         ->format(1024)->toBe('1 KB');
 });
 
-it('can format the number as a currency', function () {
+it('formats locales', function () {
     expect($this->entry)
-        ->currency('USD')->toBe($this->entry)
-        ->format(100)->toBe('$100.00');
-});
-
-it('can format the number as a number', function () {
-    expect($this->entry)
-        ->format(100)->toBe('100');
-});
-
-it('can format the number with decimals', function () {
-    expect($this->entry)
-        ->decimals(2)->toBe($this->entry)
-        ->format(100)->toBe('100.00');
-});
-
-it('can format the number with a locale', function () {
-    expect($this->entry)
-        ->decimals(2)
         ->locale('fr')->toBe($this->entry)
-        ->format(100)->toBe('100,00');
-});
-
-it('can format the number as money', function () {
-    expect($this->entry)
-        ->money('aud', 'en')->toBe($this->entry)
-        ->format(100)->toBe('A$100.00');
+        ->decimals(2)->toBe($this->entry)
+        ->format(123)->toBe('123,00')
+        ->format(123.45)->toBe('123,45');
 });
