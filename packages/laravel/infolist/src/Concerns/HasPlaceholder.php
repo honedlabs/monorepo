@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Infolist\Entries\Concerns;
+namespace Honed\Infolist\Concerns;
 
 trait HasPlaceholder
 {
@@ -19,9 +19,9 @@ trait HasPlaceholder
      * @param  scalar  $placeholder
      * @return $this
      */
-    public function placeholder(mixed $placeholder): static
+    public function placeholder(mixed $value): static
     {
-        $this->placeholder = $placeholder;
+        $this->placeholder = $value;
 
         return $this;
     }

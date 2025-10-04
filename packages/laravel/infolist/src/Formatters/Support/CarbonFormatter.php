@@ -40,9 +40,9 @@ abstract class CarbonFormatter implements Formatter
      *
      * @return $this
      */
-    public function using(string $using): static
+    public function using(string $value): static
     {
-        $this->using = $using;
+        $this->using = $value;
 
         return $this;
     }
@@ -60,9 +60,9 @@ abstract class CarbonFormatter implements Formatter
      *
      * @return $this
      */
-    public function since(bool $since = true): static
+    public function since(bool $value = true): static
     {
-        $this->since = $since;
+        $this->since = $value;
 
         return $this;
     }
@@ -80,9 +80,9 @@ abstract class CarbonFormatter implements Formatter
      *
      * @return $this
      */
-    public function timezone(string $timezone): static
+    public function timezone(string $value): static
     {
-        $this->timezone = $timezone;
+        $this->timezone = $value;
 
         return $this;
     }

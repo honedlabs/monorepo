@@ -21,12 +21,12 @@ class EnumFormatter implements Formatter
     /**
      * Set the backing enum for the entry.
      * 
-     * @param  class-string<\BackedEnum>  $enum
+     * @param  class-string<\BackedEnum>  $value
      * @return $this
      */
-    public function enum(string $enum): static
+    public function enum(string $value): static
     {
-        $this->enum = $enum;
+        $this->enum = $value;
 
         return $this;
     }

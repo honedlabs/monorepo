@@ -30,9 +30,9 @@ class BooleanFormatter implements Formatter
      *
      * @return $this
      */
-    public function trueText(string $text): static
+    public function trueText(string $value): static
     {
-        $this->trueText = $text;
+        $this->trueText = $value;
 
         return $this;
     }
@@ -50,9 +50,9 @@ class BooleanFormatter implements Formatter
      *
      * @return $this
      */
-    public function falseText(string $text): static
+    public function falseText(string $value): static
     {
-        $this->falseText = $text;
+        $this->falseText = $value;
 
         return $this;
     }

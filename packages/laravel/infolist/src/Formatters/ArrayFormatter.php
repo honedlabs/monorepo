@@ -30,12 +30,11 @@ class ArrayFormatter implements Formatter
     /**
      * Set the property to pluck from the array.
      *
-     * @param  string  $pluck
      * @return $this
      */
-    public function pluck($pluck)
+    public function pluck(string $value): static
     {
-        $this->pluck = $pluck;
+        $this->pluck = $value;
 
         return $this;
     }
@@ -43,9 +42,8 @@ class ArrayFormatter implements Formatter
     /**
      * Get the property to pluck from the array.
      *
-     * @return string|null
      */
-    public function getPluck()
+    public function getPluck(): ?string
     {
         return $this->pluck;
     }
@@ -53,12 +51,11 @@ class ArrayFormatter implements Formatter
     /**
      * Set the separator to use when joining the array.
      *
-     * @param  string  $glue
      * @return $this
      */
-    public function glue($glue = ', ')
+    public function glue(string $value = ', '): static
     {
-        $this->glue = $glue;
+        $this->glue = $value;
 
         return $this;
     }
@@ -66,9 +63,8 @@ class ArrayFormatter implements Formatter
     /**
      * Get the separator to use when joining the array.
      *
-     * @return string|null
      */
-    public function getGlue()
+    public function getGlue(): ?string
     {
         return $this->glue;
     }
@@ -79,7 +75,7 @@ class ArrayFormatter implements Formatter
      * @param  array<string, mixed>  $value
      * @return array<int, mixed>
      */
-    protected function formatPluck($value)
+    protected function formatPluck(array $value): array
     {
         $pluck = $this->getPluck();
 
@@ -92,7 +88,7 @@ class ArrayFormatter implements Formatter
      * @param  array<int, mixed>  $value
      * @return array<int, mixed>|string
      */
-    protected function formatGlue($value)
+    protected function formatGlue(array $value): array|string
     {
         $glue = $this->getGlue();
 
@@ -107,7 +103,7 @@ class ArrayFormatter implements Formatter
      */
     public function format(mixed $value): mixed
     {
-        if (is_null($value)) {
+        if (! Arr::accessible($value)) {
             return null;
         }
 

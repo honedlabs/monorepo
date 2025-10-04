@@ -31,9 +31,9 @@ class ImageFormatter implements Formatter
      * 
      * @return $this
      */
-    public function disk(string $disk = 's3'): static
+    public function disk(string $value = 's3'): static
     {
-        $this->disk = $disk;
+        $this->disk = $value;
 
         return $this;
     }

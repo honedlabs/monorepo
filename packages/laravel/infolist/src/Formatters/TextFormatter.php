@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use Honed\Infolist\Contracts\Formatter;
 
 /**
- * @implements Formatter<mixed, mixed>
+ * @implements Formatter<mixed, string|array<int, string>>
  */
 class TextFormatter implements Formatter
 {
@@ -49,11 +49,12 @@ class TextFormatter implements Formatter
 
     /**
      * Set the limit of the text to display.
+     * 
      * @return $this
      */
-    public function limit(int $limit): static
+    public function limit(int $value): static
     {
-        $this->limit = $limit;
+        $this->limit = $value;
 
         return $this;
     }
@@ -71,9 +72,9 @@ class TextFormatter implements Formatter
      * 
      * @return $this
      */
-    public function words(int $words): static
+    public function words(int $value): static
     {
-        $this->words = $words;
+        $this->words = $value;
 
         return $this;
     }
@@ -91,9 +92,9 @@ class TextFormatter implements Formatter
      * 
      * @return $this
      */
-    public function prefix(string $prefix): static
+    public function prefix(string $value): static
     {
-        $this->prefix = $prefix;
+        $this->prefix = $value;
 
         return $this;
     }
@@ -110,9 +111,9 @@ class TextFormatter implements Formatter
      * Set the suffix to display after the text.
      * @return $this
      */
-    public function suffix(string $suffix): static
+    public function suffix(string $value): static
     {
-        $this->suffix = $suffix;
+        $this->suffix = $value;
 
         return $this;
     }
@@ -130,9 +131,9 @@ class TextFormatter implements Formatter
      * 
      * @return $this
      */
-    public function separator(string $separator): static
+    public function separator(string $value): static
     {
-        $this->separator = $separator;
+        $this->separator = $value;
 
         return $this;
     }

@@ -19,7 +19,7 @@ use Honed\Infolist\Entries\Concerns\HasState;
 use Honed\Infolist\Entries\Concerns\CanBeBadge;
 use Honed\Infolist\Entries\Concerns\HasClasses;
 use Honed\Infolist\Formatters\DefaultFormatter;
-use Honed\Infolist\Entries\Concerns\HasPlaceholder;
+use Honed\Infolist\Concerns\HasPlaceholder;
 use Honed\Infolist\Entries\Concerns\CanFormatValues;
 
 /**
