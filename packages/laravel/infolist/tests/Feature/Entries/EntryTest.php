@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Infolist\Entries\Entry;
+use Honed\Infolist\Entries\NumericEntry;
 use Illuminate\Database\Eloquent\Model;
 use Workbench\App\Models\User;
 
@@ -17,6 +18,54 @@ it('makes an entry', function () {
         ->getStateResolver()->toBe('name')
         ->getState()->toBeNull()
         ->getLabel()->toBe('Name');
+});
+
+it('can have record', function () {
+    $user = User::factory()->create();
+
+    expect($this->entry)
+        ->getRecord()->toBeNull()
+        ->record($user)->toBe($this->entry)
+        ->getRecord()->toBeInstanceOf(User::class)
+        ->getState()->toBeNull();
+})->skip();
+
+it('can have string state', function () {
+    $user = User::factory()->create();
+
+    expect($this->entry)
+        ->getStateResolver()->toBe('name')
+        ->state('name')->toBe($this->entry)
+        ->record($user)->toBe($this->entry)
+        ->getState()->toBe($user->name);
+});
+
+it('can have closure state', function () {
+    $user = User::factory()->create();
+
+    expect($this->entry)
+        ->getStateResolver()->toBe('name')
+        ->state(fn () => $user->name)->toBe($this->entry)
+        ->record($user)->toBe($this->entry)
+        ->getState()->toBe($user->name);
+});
+
+
+it('is macroable', function () {
+    Entry::macro('test', function () {
+        return 'test';
+    });
+
+    expect($this->entry)
+        ->test()->toBe('test');
+});
+
+it('forwards calls to the formatter', function () {
+    $entry = NumericEntry::make('amount');
+
+    expect($entry)
+        ->decimals(2)->toBe($entry)
+        ->getDecimals()->toBe(2);
 });
 
 it('has array representation', function () {

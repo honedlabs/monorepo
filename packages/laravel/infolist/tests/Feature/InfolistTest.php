@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-use Honed\Infolist\Infolist;
 use Illuminate\Support\Str;
+use Honed\Infolist\Infolist;
 use Workbench\App\Models\User;
+use Workbench\App\Infolists\UserInfolist;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -15,23 +16,31 @@ afterEach(function () {
     Infolist::flushState();
 });
 
-it('resolves infolist for model', function () {
-    expect(Infolist::resolveInfolistName(User::class))
-        ->toBe('App\\Infolists\\Models\\UserInfolist');
+it('resolves table', function () {
+    Infolist::guessInfolistsUsing(function ($class) {
+        return Str::of($class)
+            ->classBasename()
+            ->prepend('Workbench\\App\\Infolists\\')
+            ->append('Infolist')
+            ->value();
+    });
 
-    Infolist::guessInfolistsUsing(fn (string $className) => Str::of($className)
-        ->classBasename()
-        ->prepend('Workbench\\App\\Infolists\\')
-        ->append('Infolist')
-        ->toString()
-    );
+    expect(Infolist::resolveInfolistName(User::class))
+        ->toBe(UserInfolist::class);
+
+    expect(Infolist::infolistForModel(User::factory()->create()))
+        ->toBeInstanceOf(UserInfolist::class);
 });
 
-it('can use a custom namespace', function () {
-    Infolist::useNamespace('Workbench\\App\\Infolists\\');
+it('uses namespace', function () {
+    Infolist::useNamespace('');
 
     expect(Infolist::resolveInfolistName(User::class))
-        ->toBe('Workbench\\App\\Infolists\\Models\\UserInfolist');
+        ->toBe(Str::of(UserInfolist::class)
+            ->classBasename()
+            ->prepend('Models\\')
+            ->value()
+        );
 });
 
 it('has array representation', function () {
