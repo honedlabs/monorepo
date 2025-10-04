@@ -48,6 +48,8 @@ class ImageFormatter implements Formatter
 
 
     /**
+     * Format the value as an image.
+     * 
      * @param mixed $value
      * @return mixed
      */

@@ -100,8 +100,10 @@ class ArrayFormatter implements Formatter
     }
 
     /**
-     * @param mixed $value
-     * @return mixed
+     * Format the value as an array.
+     * 
+     * @param array<int, mixed>|Collection<int, mixed> $value
+     * @return array<int, mixed>|string
      */
     public function format(mixed $value): mixed
     {

@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
-class NumericEntry extends BaseEntry
-{
-    use Concerns\CanBeNumeric;
+use Honed\Infolist\Formatters\NumericFormatter;
 
+/**
+ * @extends Entry<mixed, string>
+ */
+class NumericEntry extends Entry
+{
     /**
      * Provide the instance with any necessary setup.
      */
@@ -15,17 +18,8 @@ class NumericEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type(self::NUMERIC);
-    }
+        $this->type('numeric');
 
-    /**
-     * Format the value of the entry.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    public function format($value)
-    {
-        return is_null($value) ? null : $this->formatNumeric($value);
+        $this->formatter(NumericFormatter::class);
     }
 }

@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
-class TextEntry extends BaseEntry
-{
-    use Concerns\CanBeText;
+use Honed\Infolist\Formatters\TextFormatter;
 
+/**
+ * @extends Entry<mixed, string|array<int, string>>
+ */
+class TextEntry extends Entry
+{
     /**
      * Provide the instance with any necessary setup.
      */
@@ -15,17 +18,8 @@ class TextEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->type(self::TEXT);
-    }
+        $this->type('text');
 
-    /**
-     * Format the value of the entry.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    public function format($value)
-    {
-        return is_null($value) ? null : $this->formatText($value);
+        $this->formatter(TextFormatter::class);
     }
 }

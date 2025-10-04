@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
-class DateTimeEntry extends BaseEntry
-{
-    use Concerns\CanBeDateTime;
+use Honed\Infolist\Formatters\DateTimeFormatter;
 
+/**
+ * @extends Entry<\Carbon\CarbonInterface|string|int|float, string>
+ */
+class DateTimeEntry extends Entry
+{
     /**
      * Provide the instance with any necessary setup.
      */
@@ -15,17 +18,8 @@ class DateTimeEntry extends BaseEntry
     {
         parent::setUp();
 
-        $this->dateTime();
-    }
+        $this->type('datetime');
 
-    /**
-     * Format the value of the entry.
-     *
-     * @param  \Carbon\CarbonInterface|string|int|float|null  $value
-     * @return string|null
-     */
-    public function format($value)
-    {
-        return $this->formatDateTime($value);
+        $this->formatter(DateTimeFormatter::class);
     }
 }

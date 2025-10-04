@@ -7,7 +7,7 @@ namespace Honed\Infolist\Formatters;
 use Honed\Infolist\Contracts\Formatter;
 
 /**
- * @implements Formatter<mixed, string|null>
+ * @implements Formatter<mixed, string>
  */
 class BooleanFormatter implements Formatter
 {

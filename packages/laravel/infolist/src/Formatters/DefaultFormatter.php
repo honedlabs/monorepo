@@ -12,6 +12,8 @@ use Honed\Infolist\Contracts\Formatter;
 class DefaultFormatter implements Formatter
 {
     /**
+     * Format the value as is.
+     * 
      * @param mixed $value
      * @return mixed
      */

@@ -7,7 +7,7 @@ namespace Honed\Infolist\Entries;
 use Honed\Infolist\Formatters\BooleanFormatter;
 
 /**
- * @extends Entry<mixed, string|null>
+ * @extends Entry<mixed, string>
  */
 class BooleanEntry extends Entry
 {

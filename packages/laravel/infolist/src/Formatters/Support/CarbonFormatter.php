@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Infolist\Formatters;
+namespace Honed\Infolist\Formatters\Support;
 
 use Carbon\CarbonInterface;
 use Carbon\Exceptions\InvalidFormatException;
@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
 /**
  * @implements Formatter<\Carbon\CarbonInterface|string|int|float, string>
  */
-class CarbonFormatter implements Formatter
+abstract class CarbonFormatter implements Formatter
 {
     /**
      * The format to use for formatting a carbon instance.
@@ -96,6 +96,8 @@ class CarbonFormatter implements Formatter
     }
 
     /**
+     * Format the value as a formatted carbon instance.
+     *
      * @param \Carbon\CarbonInterface|string|int|float|null $value
      * @return string|null
      */

@@ -58,7 +58,7 @@ class EnumFormatter implements Formatter
     }
 
     /**
-     * Format the given value.
+     * Format the value as an enum.
      * 
      * @param int|string|\BackedEnum|null $value
      * @return \BackedEnum|null

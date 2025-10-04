@@ -168,7 +168,7 @@ trait CanBeText
      */
     protected function formatText($value)
     {
-        if (! is_string($value)) {
+        if (! is_string($value) || ! is_numeric($value)) {
             return null;
         }
 
