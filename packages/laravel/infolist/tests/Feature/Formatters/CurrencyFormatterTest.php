@@ -35,3 +35,15 @@ it('handles non-numeric values', function () {
         ->format(new stdClass())->toBeNull()
         ->format([])->toBeNull();
 });
+
+it('formats values', function () {
+    expect($this->formatter)
+        ->currency('usd')->toBe($this->formatter)
+        ->format(100)->toBe('$100.00')
+        ->format(100.00)->toBe('$100.00')
+        ->format('100')->toBe('$100.00')
+        ->divide(10)->toBe($this->formatter)
+        ->format(100)->toBe('$10.00')
+        ->cents()->toBe($this->formatter)
+        ->format(100)->toBe('$1.00');
+});

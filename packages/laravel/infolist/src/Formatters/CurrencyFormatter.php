@@ -92,6 +92,10 @@ class CurrencyFormatter extends LocalisedFormatter
 
         $value = is_string($value) ? (float) $value : $value;
 
+        if ($this->getDivide()) {
+            $value = $value / $this->getDivide();
+        }
+
         return Number::currency(
             number: $value,
             in: $this->getCurrency() ?? '',
