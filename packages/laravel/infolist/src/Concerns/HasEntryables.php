@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Concerns;
 
-use Honed\Infolist\Entries\Entry;
+use Honed\Infolist\Contracts\Entryable;
 
-trait HasEntries
+trait HasEntryables
 {
     /**
      * The entries of the list.
      *
-     * @var array<int, Entry<*, *>>
+     * @var array<int, Entryable>
      */
     protected $entries = [];
 
     /**
      * Merge a set of entries into the list.
      *
-     * @param  Entry<*, *>|array<int, Entry<*, *>>  $entries
+     * @param  Entryable|array<int, Entryable>  $entries
      * @return $this
      */
-    public function entries(Entry|array $entries): static
+    public function entries(Entryable|array $entries): static
     {
-        /** @var array<int, Entry<*, *>> */
+        /** @var array<int, Entryable> */
         $entries = is_array($entries) ? $entries : func_get_args();
 
         $this->entries = [...$this->entries, ...$entries];
@@ -34,10 +34,9 @@ trait HasEntries
     /**
      * Add an entry to the list.
      *
-     * @param  Entry<*, *>  $entry
      * @return $this
      */
-    public function entry($entry): static
+    public function entry(Entryable $entry): static
     {
         $this->entries[] = $entry;
 
@@ -47,28 +46,15 @@ trait HasEntries
     /**
      * Get the entries of the list.
      *
-     * @return array<int, Entry<*, *>>
+     * @return array<int, Entryable>
      */
     public function getEntries(): array
     {
         return array_values(
             array_filter(
                 $this->entries,
-                static fn (Entry $entry) => $entry->isAllowed()
+                static fn (Entryable $entry) => $entry->isAllowed()
             )
-        );
-    }
-
-    /**
-     * Get the entries of the list as an array.
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    public function entriesToArray(): array
-    {
-        return array_map(
-            fn (Entry $entry) => $entry->toArray(),
-            $this->getEntries()
         );
     }
 }

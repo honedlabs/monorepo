@@ -20,6 +20,7 @@ use Honed\Core\Primitive;
 use Honed\Infolist\Concerns\HasClasses;
 use Honed\Infolist\Concerns\HasFormatter;
 use Honed\Infolist\Concerns\HasPlaceholder;
+use Honed\Infolist\Contracts\Entryable;
 use Honed\Infolist\Contracts\Formatter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -33,23 +34,24 @@ use Illuminate\Support\Traits\ForwardsCalls;
  *
  * @implements Formatter<TValue, TReturn>
  */
-class Entry extends Primitive implements Formatter, NullsAsUndefined
+class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
 {
     use Allowable;
     use CanHaveAlias;
     use CanHaveExtra;
     use ForwardsCalls;
     use HasClasses;
+
     /**
      * @use HasFormatter<TValue, TReturn>
      */
     use HasFormatter;
+
     use HasLabel;
     use HasName;
     use HasPlaceholder;
     use HasRecord;
     use HasType;
-
     use Transformable;
 
     /**
@@ -245,6 +247,16 @@ class Entry extends Primitive implements Formatter, NullsAsUndefined
             'f' => $placeholder,
             'a' => $this->getVariant(),
         ]);
+    }
+
+    /**
+     * Convert the class to an entry.
+     *
+     * @return array<string, mixed>
+     */
+    public function entry(): array
+    {
+        return $this->toArray();
     }
 
     /**

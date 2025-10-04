@@ -9,7 +9,7 @@ beforeEach(function () {
     $this->infolist = Infolist::make();
 });
 
-it('adds entries', function () {
+it('adds entryables', function () {
     expect($this->infolist)
         ->entries(Entry::make('name'))
         ->entries([Entry::make('email')])
@@ -17,24 +17,20 @@ it('adds entries', function () {
         ->toHaveCount(2);
 });
 
-it('adds entry', function () {
+it('adds entryable', function () {
     expect($this->infolist)
         ->entry(Entry::make('name'))
         ->getEntries()->toBeArray()
         ->toHaveCount(1);
 });
 
-it('has entries to array', function () {
-    expect($this->infolist)
-        ->entries(Entry::make('name'))
-        ->entriesToArray()->toBeArray()
-        ->toHaveCount(1);
-});
-
-it('authorizes entries when arrayifying', function () {
+it('authorizes entryables', function () {
     expect($this->infolist)
         ->entry(Entry::make('name')->allow(fn () => false))
         ->entry(Entry::make('email')->allow(fn () => true))
-        ->entriesToArray()->toBeArray()
-        ->toHaveCount(1);
+        ->getEntries()
+        ->scoped(fn ($array) => $array
+            ->toBeArray()
+            ->toHaveCount(1)
+        );
 });

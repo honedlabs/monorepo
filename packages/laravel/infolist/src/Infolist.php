@@ -7,7 +7,8 @@ namespace Honed\Infolist;
 use Closure;
 use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Primitive;
-use Honed\Infolist\Entries\Entry;
+use Honed\Infolist\Concerns\HasEntryables;
+use Honed\Infolist\Contracts\Entryable;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +21,7 @@ use Throwable;
  */
 class Infolist extends Primitive
 {
-    use Concerns\HasEntries;
+    use HasEntryables;
     use HasRecord;
 
     /**
@@ -149,7 +150,7 @@ class Infolist extends Primitive
         }
 
         return array_map(
-            static fn (Entry $entry) => $entry->record($record)->toArray(),
+            static fn (Entryable $primitive) => $primitive->record($record)->entry(),
             $this->getEntries()
         );
     }
