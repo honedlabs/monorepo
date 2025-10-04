@@ -92,11 +92,13 @@ class CurrencyFormatter extends LocalisedFormatter
             return null;
         }
 
+        $value = is_string($value) ? (float) $value : $value;
+
         return Number::currency(
             number: $value,
             in: $this->getCurrency() ?? '',
             locale: $this->getLocale(),
             precision: $this->getDecimals()
-        );
+        ) ?: null;
     }
 }

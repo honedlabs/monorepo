@@ -7,7 +7,7 @@ namespace Honed\Infolist\Entries;
 use Honed\Infolist\Formatters\ImageFormatter;
 
 /**
- * @extends Entry<string|null, string|null>
+ * @extends Entry<string, string>
  */
 class ImageEntry extends Entry
 {

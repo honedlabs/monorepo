@@ -9,7 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
- * @implements Formatter<array<int, mixed>|Collection<int, mixed>, array<int, mixed>|string>
+ * @implements Formatter<array<int, mixed>|\Illuminate\Support\Collection<int, mixed>, array<int, mixed>|string>
  */
 class ArrayFormatter implements Formatter
 {
@@ -98,8 +98,8 @@ class ArrayFormatter implements Formatter
     /**
      * Format the value as an array.
      * 
-     * @param array<int, mixed>|Collection<int, mixed> $value
-     * @return array<int, mixed>|string
+     * @param array<int, mixed>|Collection<int, mixed>|null $value
+     * @return array<int, mixed>|string|null
      */
     public function format(mixed $value): mixed
     {

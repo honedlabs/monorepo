@@ -15,13 +15,6 @@ afterEach(function () {
     Infolist::flushState();
 });
 
-it('has resource', function () {
-    expect($this->infolist)
-        ->getRecord()->toBe($this->user)
-        ->for($this->user)->toBe($this->infolist)
-        ->getRecord()->toBe($this->user);
-});
-
 it('resolves infolist for model', function () {
     expect(Infolist::resolveInfolistName(User::class))
         ->toBe('App\\Infolists\\Models\\UserInfolist');

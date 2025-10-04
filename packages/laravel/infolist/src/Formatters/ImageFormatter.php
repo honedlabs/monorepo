@@ -8,7 +8,7 @@ use Honed\Infolist\Contracts\Formatter;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * @implements Formatter<mixed, mixed>
+ * @implements Formatter<string, string>
  */
 class ImageFormatter implements Formatter
 {
@@ -46,12 +46,31 @@ class ImageFormatter implements Formatter
         return $this->disk;
     }
 
+    /**
+     * Set the expiry time for the image URL in minutes.
+     * 
+     * @return $this
+     */
+    public function expiresIn(int $minutes): static
+    {
+        $this->expires = $minutes;
+
+        return $this;
+    }
+
+    /**
+     * Get the expiry time for the image URL in minutes.
+     */
+    public function getExpiry(): ?int
+    {
+        return $this->expires;
+    }
 
     /**
      * Format the value as an image.
      * 
-     * @param mixed $value
-     * @return mixed
+     * @param string|null $value
+     * @return string|null
      */
     public function format(mixed $value): mixed
     {
@@ -64,13 +83,13 @@ class ImageFormatter implements Formatter
         /** @var \Illuminate\Filesystem\FilesystemAdapter */
         $disk = Storage::disk($disk);
 
-        $expires = $this->getExpires();
+        $expires = $this->getExpiry();
 
         return match (true) {
-            $this->isTemporaryUrl() => $disk->temporaryUrl(
-                $value, now()->addMinutes($this->getUrlDuration())
+            ! is_null($expires) && $expires > 0 => $disk->temporaryUrl(
+                $value, now()->addMinutes($expires)
             ),
-            default => Storage::disk($disk)->url($value),
+            default => $disk->url($value),
         };
     }
 }

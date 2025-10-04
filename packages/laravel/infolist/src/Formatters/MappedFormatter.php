@@ -82,7 +82,7 @@ class MappedFormatter implements Formatter
             return ($this->mapping)($value) ?? $this->default;
         }
 
-        if (isset($this->mapping[$value])) {
+        if (is_scalar($value) && isset($this->mapping[$value])) {
             return $this->mapping[$value];
         }
 

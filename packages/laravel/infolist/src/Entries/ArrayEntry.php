@@ -7,7 +7,7 @@ namespace Honed\Infolist\Entries;
 use Honed\Infolist\Formatters\ArrayFormatter;
 
 /**
- * @extends Entry<array<int, mixed>|Collection<int, mixed>, array<int, mixed>|string>
+ * @extends Entry<array<int, mixed>|\Illuminate\Support\Collection<int, mixed>, array<int, mixed>|string>
  */
 class ArrayEntry extends Entry
 {

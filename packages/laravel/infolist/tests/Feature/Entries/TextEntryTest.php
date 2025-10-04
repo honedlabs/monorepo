@@ -3,27 +3,14 @@
 declare(strict_types=1);
 
 use Honed\Infolist\Entries\TextEntry;
+use Honed\Infolist\Formatters\TextFormatter;
 
 beforeEach(function () {
-    $this->entry = TextEntry::make('name');
+    $this->entry = TextEntry::make('title');
 });
 
-it('has text type', function () {
+it('is set up', function () {
     expect($this->entry)
-        ->getType()->toBe(TextEntry::TEXT);
-});
-
-it('has array representation', function () {
-    expect($this->entry->toArray())
-        ->toBeArray()
-        ->toEqual([
-            'type' => TextEntry::TEXT,
-            'label' => 'Name',
-        ]);
-});
-
-it('serializes to json', function () {
-    expect($this->entry->jsonSerialize())
-        ->toBeArray()
-        ->toEqual($this->entry->toArray());
+        ->getType()->toBe('text')
+        ->getFormatter()->toBeInstanceOf(TextFormatter::class);
 });

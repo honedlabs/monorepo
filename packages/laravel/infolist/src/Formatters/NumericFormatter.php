@@ -55,6 +55,8 @@ class NumericFormatter extends LocalisedFormatter
             return null;
         }
 
+        $value = is_string($value) ? (float) $value : $value;
+
         return match (true) {
             $this->isFile() => Number::fileSize(
                 bytes: $value, 
@@ -64,7 +66,7 @@ class NumericFormatter extends LocalisedFormatter
                 number: $value, 
                 precision: $this->getDecimals(), 
                 locale: $this->getLocale()
-            ),
+            ) ?: null,
         };
 
 

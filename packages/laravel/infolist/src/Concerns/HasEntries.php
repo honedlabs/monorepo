@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Concerns;
 
-use Honed\Infolist\Entries\BaseEntry;
 use Honed\Infolist\Entries\Entry;
 
 trait HasEntries
@@ -12,19 +11,19 @@ trait HasEntries
     /**
      * The entries of the list.
      *
-     * @var array<int, BaseEntry>
+     * @var array<int, Entry<*, *>>
      */
     protected $entries = [];
 
     /**
      * Merge a set of entries into the list.
      *
-     * @param  BaseEntry|array<int, BaseEntry>  $entries
+     * @param  Entry<*, *>|array<int, Entry<*, *>>  $entries
      * @return $this
      */
-    public function entries($entries): static
+    public function entries(Entry|array $entries): static
     {
-        /** @var array<int, BaseEntry> */
+        /** @var array<int, Entry<*, *>> */
         $entries = is_array($entries) ? $entries : func_get_args();
 
         $this->entries = [...$this->entries, ...$entries];
@@ -35,7 +34,7 @@ trait HasEntries
     /**
      * Add an entry to the list.
      *
-     * @param  BaseEntry  $entry
+     * @param  Entry<*, *>  $entry
      * @return $this
      */
     public function entry($entry): static
@@ -48,7 +47,7 @@ trait HasEntries
     /**
      * Get the entries of the list.
      *
-     * @return array<int, Entry>
+     * @return array<int, Entry<*, *>>
      */
     public function getEntries(): array
     {
@@ -68,7 +67,7 @@ trait HasEntries
     public function entriesToArray(): array
     {
         return array_map(
-            fn (BaseEntry $entry) => $entry->toArray(),
+            fn (Entry $entry) => $entry->toArray(),
             $this->getEntries()
         );
     }

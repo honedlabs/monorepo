@@ -14,7 +14,7 @@ class EnumFormatter implements Formatter
     /**
      * The backing enum for the entry.
      *
-     * @var class-string<\BackedEnum>
+     * @var class-string<\BackedEnum>|null
      */
     protected $enum;
 
@@ -34,27 +34,11 @@ class EnumFormatter implements Formatter
     /**
      * Get the backing enum for the entry.
      *
-     * @return class-string<\BackedEnum>
+     * @return class-string<\BackedEnum>|null
      */
-    public function getEnum(): string
+    public function getEnum(): ?string
     {
         return $this->enum;
-    }
-
-    /**
-     * Check if the enum backing value is set.
-     */
-    public function hasEnum(): bool
-    {
-        return isset($this->enum);
-    }
-
-    /**
-     * Check if the enum backing value is missing.
-     */
-    public function missingEnum(): bool
-    {
-        return ! $this->hasEnum();
     }
 
     /**
@@ -65,11 +49,12 @@ class EnumFormatter implements Formatter
      */
     public function format(mixed $value): mixed
     {
+        $enum = $this->getEnum();
+
         return match (true) {
-            $this->missingEnum(),
-            is_null($value) => null,
+            is_null($enum), is_null($value) => null,
             $value instanceof \BackedEnum => $value,
-            default => $this->getEnum()::tryFrom($value),
+            default => $enum::tryFrom($value),
         };
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Infolist\Entries\Concerns;
+namespace Honed\Infolist\Concerns;
 
 use Closure;
 

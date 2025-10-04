@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Infolist\Contracts;
 
 /**
- * @template TValue
- * @template TReturn
+ * @template-contravariant TValue
+ * @template-covariant TReturn
  */
 interface Formatter
 {

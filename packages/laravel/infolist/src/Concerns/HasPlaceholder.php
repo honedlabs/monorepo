@@ -16,7 +16,7 @@ trait HasPlaceholder
     /**
      * Set the placeholder value to display.
      *
-     * @param  scalar  $placeholder
+     * @param  scalar  $value
      * @return $this
      */
     public function placeholder(mixed $value): static

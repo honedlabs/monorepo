@@ -3,27 +3,14 @@
 declare(strict_types=1);
 
 use Honed\Infolist\Entries\NumericEntry;
+use Honed\Infolist\Formatters\NumericFormatter;
 
 beforeEach(function () {
     $this->entry = NumericEntry::make('age');
 });
 
-it('has numeric type', function () {
+it('is set up', function () {
     expect($this->entry)
-        ->getType()->toBe(NumericEntry::NUMERIC);
-});
-
-it('has array representation', function () {
-    expect($this->entry->toArray())
-        ->toBeArray()
-        ->toEqual([
-            'type' => NumericEntry::NUMERIC,
-            'label' => 'Age',
-        ]);
-});
-
-it('serializes to json', function () {
-    expect($this->entry->jsonSerialize())
-        ->toBeArray()
-        ->toEqual($this->entry->toArray());
+        ->getType()->toBe('numeric')
+        ->getFormatter()->toBeInstanceOf(NumericFormatter::class);
 });

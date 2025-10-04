@@ -3,10 +3,11 @@
 declare(strict_types=1);
 
 use Honed\Infolist\Entries\ImageEntry;
+use Honed\Infolist\Formatters\ImageFormatter;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
-    $this->entry = ImageEntry::make('avatar');
+    $this->entry = new ImageFormatter();
 
     Storage::fake('s3');
 
@@ -19,24 +20,24 @@ it('does not format null values', function () {
 });
 
 it('does not format without a disk', function () {
+    $image = fake()->imageUrl();
+
     expect($this->entry)
-        ->format('misc')->toBe('misc');
+        ->format($image)->toBe($image);
 });
 
-it('can have a disk', function () {
+it('has disk', function () {
     expect($this->entry)
         ->getDisk()->toBeNull()
         ->disk('s3')->toBe($this->entry)
         ->getDisk()->toBe('s3');
 });
 
-it('can have a temporary url', function () {
+it('has expiry', function () {
     expect($this->entry)
-        ->isTemporaryUrl()->toBeFalse()
-        ->getUrlDuration()->toBe(0)
-        ->temporaryUrl()->toBe($this->entry)
-        ->isTemporaryUrl()->toBeTrue()
-        ->getUrlDuration()->toBe(5);
+        ->getExpiry()->toBeNull()
+        ->expiresIn(5)->toBe($this->entry)
+        ->getExpiry()->toBe(5);
 });
 
 it('formats image urls', function () {
@@ -48,6 +49,6 @@ it('formats image urls', function () {
 it('formats image urls with a temporary url', function () {
     expect($this->entry)
         ->disk('s3')->toBe($this->entry)
-        ->temporaryUrl()->toBe($this->entry)
+        ->expiresIn(5)->toBe($this->entry)
         ->format('avatar.png')->toBeString();
 });

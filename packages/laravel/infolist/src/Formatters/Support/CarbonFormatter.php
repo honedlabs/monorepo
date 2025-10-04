@@ -31,9 +31,9 @@ abstract class CarbonFormatter implements Formatter
     /**
      * The timezone to use for formatting dates.
      *
-     * @var string
+     * @var string|null
      */
-    protected $timezone = 'UTC';
+    protected $timezone;
 
     /**
      * Set the format to use for formatting a carbon instance.
@@ -90,7 +90,7 @@ abstract class CarbonFormatter implements Formatter
     /**
      * Get the timezone to use for formatting dates.
      */
-    public function getTimezone(): string
+    public function getTimezone(): ?string
     {
         return $this->timezone;
     }
@@ -115,9 +115,11 @@ abstract class CarbonFormatter implements Formatter
             return $value?->diffForHumans();
         }
 
-        return $value
-            ?->shiftTimezone($this->getTimezone())
-            ->format($this->getDateFormat());
+        if ($tz = $this->getTimezone()) {
+            $value = $value?->shiftTimezone($tz);
+        }
+
+        return $value?->format($this->getDateFormat());
     }
 
     /**
