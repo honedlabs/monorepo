@@ -14,8 +14,8 @@ interface Formatter
     /**
      * Format the given value.
      *
-     * @param  TValue|null  $value
-     * @return TReturn|null
+     * @param  TValue  $value
+     * @return TReturn
      */
     public function format(mixed $value): mixed;
 }

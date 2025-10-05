@@ -47,8 +47,8 @@ trait HasFormatter
     /**
      * Format the value.
      *
-     * @param  TValue|null  $value
-     * @return TReturn|null
+     * @param  TValue  $value
+     * @return TReturn
      */
     public function format(mixed $value): mixed
     {

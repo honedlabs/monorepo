@@ -14,7 +14,6 @@ use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Concerns\HasType;
-use Honed\Core\Concerns\Transformable;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Honed\Infolist\Concerns\HasClasses;
@@ -52,7 +51,6 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
     use HasPlaceholder;
     use HasRecord;
     use HasType;
-    use Transformable;
 
     /**
      * The identifier to use for evaluation.
@@ -66,7 +64,7 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
      *
      * @var true|null
      */
-    protected $isBadge;
+    protected $badge;
 
     /**
      * The variant of the badge.
@@ -74,6 +72,20 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
      * @var string|BackedEnum|(Closure(mixed...):(string|BackedEnum|null))|null
      */
     protected $variant;
+
+    /**
+     * The before callback.
+     *
+     * @var Closure(mixed):TValue|null
+     */
+    protected $before;
+
+    /**
+     * The after callback.
+     *
+     * @var Closure(TReturn):mixed|null
+     */
+    protected $after;
 
     /**
      * The retrieval method.
@@ -133,7 +145,7 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
      */
     public function badge(bool $value = true): static
     {
-        $this->isBadge = $value ?: null;
+        $this->badge = $value ?: null;
 
         return $this;
     }
@@ -145,7 +157,7 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
      */
     public function isBadge(): ?bool
     {
-        return $this->isBadge;
+        return $this->badge;
     }
 
     /**
@@ -205,6 +217,30 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
     }
 
     /**
+     * Register a callback to be called before the entry is applied.
+     *
+     * @param  Closure(mixed):TValue  $callback
+     */
+    public function before(Closure $callback): static
+    {
+        $this->before = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Register a callback to be called after the entry is applied.
+     *
+     * @param  Closure(TReturn):mixed  $callback
+     */
+    public function after(Closure $callback): static
+    {
+        $this->after = $callback;
+
+        return $this;
+    }
+
+    /**
      * Apply the entry to the value.
      *
      * @param  TValue  $value
@@ -212,11 +248,11 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
      */
     public function apply(mixed $value): array
     {
-        $value = $this->transform($value);
+        $before = $this->callBefore($value);
 
         return match (true) {
             is_null($value) => [$this->getPlaceholder(), true],
-            default => [$this->format($value), false],
+            default => [$this->callAfter($this->format($value)), false],
         };
     }
 
@@ -275,6 +311,36 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
             is_callable($resolver) => $this->evaluate($resolver),
             default => null,
         };
+    }
+
+    /**
+     * Call the before callback.
+     *
+     * @return TValue
+     */
+    protected function callBefore(mixed $value): mixed
+    {
+        if (! $this->before) {
+            /** @var TValue */
+            return $value;
+        }
+
+        return ($this->before)($value);
+    }
+
+    /**
+     * Call the after callback.
+     *
+     * @param  TReturn  $value
+     */
+    protected function callAfter(mixed $value): mixed
+    {
+        if (! $this->after || is_null($value)) {
+            /** @var TReturn */
+            return $value;
+        }
+
+        return ($this->after)($value);
     }
 
     /**
