@@ -13,7 +13,7 @@
     <a href="https://packagist.org/packages/honed/lang"><img src="https://img.shields.io/packagist/v/honed/lang" alt="Latest Stable Version"></a>
 </p>
 
-**Lang** Share your translations with your Inertia frontend..
+**Lang** provides a simple way to synchronise your translations with your Inertia frontend.
 
 ## Installation
 
@@ -25,6 +25,18 @@ Get started with the package by requiring it in your PHP project using [Composer
 
 ```bash
 composer require honed/lang
+```
+
+## Companion
+
+> **Requires [Vue.js 3.4+](https://vuejs.org/about/releases.html).**
+
+> **Requires [Inertia.js 1.2+](https://inertiajs.com/client-side-setup)**
+
+Get started with the [companion package](https://github.com/honedlabs/lang-vue) by installing it as a node dependency via [NPM](https://npmjs.com).
+
+```bash
+npm install @honed/lang
 ```
 
 ## Documentation
