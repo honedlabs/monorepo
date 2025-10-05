@@ -4,12 +4,13 @@ type Replaces = Record<string, string | number>
 type LangValue = string | { [key: string]: string | LangValue }
 type Lang = Record<string, LangValue>
 
-const page = usePage<{ lang: Lang }>()
+const page = usePage<{ _lang: Lang }>()
 
 export function useLang() {
 
     function trans(key: string, replaces: Replaces | string = {}): string {
         const raw = getValueFromKey(key)
+        
         if (typeof raw !== 'string') 
             return key
 
@@ -36,7 +37,7 @@ export function useLang() {
 
     function getValueFromKey(key: string): string | undefined {
         const segments = key.split('.')
-        let current: any = page.props.lang
+        let current: any = page.props._lang
 
         for (const segment of segments) {
             if (typeof current !== 'object' || current === null) return undefined
@@ -46,5 +47,5 @@ export function useLang() {
         return typeof current === 'string' ? current : undefined
     }
 
-    return { trans, __ }
+    return { __, trans }
 }
