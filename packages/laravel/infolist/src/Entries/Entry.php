@@ -74,16 +74,16 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
     protected $variant;
 
     /**
-     * The before callback.
+     * The before formatting callback.
      *
-     * @var Closure(mixed):TValue|null
+     * @var (Closure(mixed):TValue)|null
      */
     protected $before;
 
     /**
-     * The after callback.
+     * The after formatting callback.
      *
-     * @var Closure(TReturn):mixed|null
+     * @var (Closure(TReturn):mixed)|null
      */
     protected $after;
 
@@ -217,11 +217,11 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
     }
 
     /**
-     * Register a callback to be called before the entry is applied.
+     * Register a callback to be called before the entry is formatted.
      *
      * @param  Closure(mixed):TValue  $callback
      */
-    public function before(Closure $callback): static
+    public function beforeFormatting(Closure $callback): static
     {
         $this->before = $callback;
 
@@ -229,11 +229,11 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
     }
 
     /**
-     * Register a callback to be called after the entry is applied.
+     * Register a callback to be called after the entry is formatted.
      *
      * @param  Closure(TReturn):mixed  $callback
      */
-    public function after(Closure $callback): static
+    public function afterFormatting(Closure $callback): static
     {
         $this->after = $callback;
 
@@ -248,11 +248,11 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
      */
     public function apply(mixed $value): array
     {
-        $before = $this->callBefore($value);
+        $before = $this->callBeforeFormatting($value);
 
         return match (true) {
-            is_null($value) => [$this->getPlaceholder(), true],
-            default => [$this->callAfter($this->format($value)), false],
+            is_null($before) => [$this->getPlaceholder(), true],
+            default => [$this->callAfterFormatting($this->format($before)), false],
         };
     }
 
@@ -318,7 +318,7 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
      *
      * @return TValue
      */
-    protected function callBefore(mixed $value): mixed
+    protected function callBeforeFormatting(mixed $value): mixed
     {
         if (! $this->before) {
             /** @var TValue */
@@ -333,7 +333,7 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
      *
      * @param  TReturn  $value
      */
-    protected function callAfter(mixed $value): mixed
+    protected function callAfterFormatting(mixed $value): mixed
     {
         if (! $this->after || is_null($value)) {
             /** @var TReturn */
