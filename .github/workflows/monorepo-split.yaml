@@ -27,8 +27,8 @@ jobs:
           # - flash
           # - form
           # - honed
-          - infolist
-          - lang
+          # - infolist
+          # - lang
           # - layout
           # - lock
           # - memo
@@ -39,7 +39,7 @@ jobs:
           # - refine
           # - registry
           # - stats
-          # - table
+          - table
           # - upload
           # - widget
     steps:
