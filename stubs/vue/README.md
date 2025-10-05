@@ -25,6 +25,18 @@ Get started with the package by installing it in your Vue project using [npm](ht
 npm install @:vendor_slug/:package_slug
 ```
 
+## Companion
+
+> **Requires [PHP 8.2+](https://php.net/releases/)**
+
+> **Requires [Laravel 11+](https://laravel.com/docs/releases).**
+
+Ensure you have the Laravel companion package installed using [Composer](https://getcomposer.org/):
+
+```bash
+composer require :vendor_slug/:package_slug
+```
+
 ## Documentation
 
 Please refer to the [documentation](https://:vendor_slug.dev/:package_slug) for the usage of the package.

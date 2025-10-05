@@ -27,6 +27,18 @@ Get started with the package by requiring it in your PHP project using [Composer
 composer require :vendor_slug/:package_slug
 ```
 
+## Companion
+
+> **Requires [Vue.js 3.4+](https://vuejs.org/about/releases.html).**
+
+> **Requires [Inertia.js 1.2+](https://inertiajs.com/client-side-setup)**
+
+Get started with the [companion package](https://github.com/honedlabs/:package_slug-vue) by installing it as a node dependency via [NPM](https://npmjs.com).
+
+```bash
+npm install @:vendor_slug/:package_slug
+```
+
 ## Documentation
 
 Please refer to the [documentation](https://:vendor_slug.dev/:package_slug) for the usage of the package.
