@@ -16,11 +16,18 @@ class TestCase extends Orchestra
     use WithWorkbench;
 
     /**
-     * Define database migrations.
-     *
-     * @return void
+     * Setup the test environment.
      */
-    protected function defineDatabaseMigrations()
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutExceptionHandling();
+    }
+
+    /**
+     * Define database migrations.
+     */
+    protected function defineDatabaseMigrations(): void
     {
         $this->loadMigrationsFrom(
             workbench_path('database/migrations')

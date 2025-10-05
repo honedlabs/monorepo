@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Lang;
 
+use Honed\Lang\Middleware\ShareTranslations;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,6 +20,9 @@ class LangServiceProvider extends ServiceProvider
         $this->app->alias(LangManager::class, 'lang');
 
         $this->app->singleton('lang', fn (Application $app) => new LangManager($app));
+
+        /** @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible */
+        $this->app['router']->aliasMiddleware('lang', ShareTranslations::class);
     }
 
     /**

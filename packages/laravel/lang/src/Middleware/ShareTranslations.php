@@ -13,16 +13,16 @@ class ShareTranslations
 {
     /**
      * Handle the incoming request.
+     *
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next): Closure
+    public function handle(Request $request, Closure $next, string ...$files)
     {
-        $translations = Lang::getTranslations();
-
-        if (! empty($translations)) {
-            Inertia::share([
-                '_lang' => $translations,
-            ]);
+        if (! empty($files)) {
+            Lang::use(...$files);
         }
+
+        Inertia::share('_lang', fn () => Lang::getTranslations());
 
         return $next($request);
     }

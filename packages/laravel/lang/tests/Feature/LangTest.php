@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Lang\Facades\Lang;
 use Illuminate\Support\Arr;
 
 use function Orchestra\Testbench\workbench_path;

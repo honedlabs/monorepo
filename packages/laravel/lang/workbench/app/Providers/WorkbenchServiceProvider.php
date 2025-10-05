@@ -15,14 +15,8 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
-    }
+        $this->app['view']->addLocation(workbench_path('resources/views'));
 
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
         config([
             'lang' => [
                 'lang_path' => workbench_path('resources/lang'),
@@ -30,4 +24,9 @@ class WorkbenchServiceProvider extends ServiceProvider
             ],
         ]);
     }
+
+    /**
+     * Bootstrap services.
+     */
+    public function boot(): void {}
 }

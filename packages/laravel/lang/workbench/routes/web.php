@@ -2,12 +2,23 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\UserController;
+use Honed\Lang\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware('lang')->get('/', function () {
+    Lang::use('auth')->only('auth.login');
+
+    return inertia('Welcome');
 });
 
-Route::post('/user', [UserController::class, 'store'])
-    ->name('users.store');
+Route::middleware('lang:greetings')->get('/greetings', function () {
+    Lang::use('auth')->only('auth.login', 'greetings.greeting');
+
+    return inertia('Welcome');
+});
+
+Route::middleware('lang:greetings')->get('/empty', function () {
+    Lang::only('auth.login');
+
+    return inertia('Welcome');
+});

@@ -42,7 +42,13 @@ class LangManager
         $translations = [];
 
         foreach ($this->only as $key) {
-            Arr::set($translations, $key, Arr::get($this->translations, $key));
+            $value = Arr::get($this->translations, $key);
+
+            if (is_null($value)) {
+                continue;
+            }
+
+            Arr::set($translations, $key, $value);
         }
 
         return $translations;
@@ -111,12 +117,12 @@ class LangManager
     /**
      * Get the supported locales for the application.
      *
-     * @return array<int, string|\BackedEnum>
+     * @return array<int, string|BackedEnum>
      */
     public function availableLocales(): array
     {
-        /** @var array<int, string|\BackedEnum> */
-        $locales = config('lang.locales', []);
+        /** @var array<int, string|BackedEnum> */
+        $locales = (array) config('lang.locales', []);
 
         return array_map(static::normalizeLocale(...), $locales);
     }
@@ -142,6 +148,7 @@ class LangManager
      */
     protected static function normalizeLocale(string|BackedEnum $locale): string
     {
+        /** @var string */
         return is_string($locale) ? $locale : $locale->value;
     }
 }
