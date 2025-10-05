@@ -6,6 +6,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use function Orchestra\Testbench\workbench_path;
+
 class WorkbenchServiceProvider extends ServiceProvider
 {
     /**
@@ -21,6 +23,11 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        config([
+            'lang' => [
+                'lang_path' => workbench_path('resources/lang'),
+                'locales' => ['en', 'es'],
+            ],
+        ]);
     }
 }

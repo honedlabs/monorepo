@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Lang;
 
+use BackedEnum;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Arr;
 
@@ -34,7 +35,17 @@ class LangManager
      */
     public function getTranslations(): array
     {
-        return Arr::only($this->translations, $this->only);
+        if (empty($this->only)) {
+            return $this->translations;
+        }
+
+        $translations = [];
+
+        foreach ($this->only as $key) {
+            Arr::set($translations, $key, Arr::get($this->translations, $key));
+        }
+
+        return $translations;
     }
 
     /**
@@ -100,19 +111,23 @@ class LangManager
     /**
      * Get the supported locales for the application.
      *
-     * @return array<int, string>
+     * @return array<int, string|\BackedEnum>
      */
     public function availableLocales(): array
     {
-        /** @var array<int, string> */
-        return config('lang.locales', []);
+        /** @var array<int, string|\BackedEnum> */
+        $locales = config('lang.locales', []);
+
+        return array_map(static::normalizeLocale(...), $locales);
     }
 
     /**
      * Set the current locale.
      */
-    public function setLocale(string $locale): bool
+    public function locale(string|BackedEnum $locale): bool
     {
+        $locale = $this->normalizeLocale($locale);
+
         if (! in_array($locale, $this->availableLocales())) {
             return false;
         }
@@ -120,5 +135,13 @@ class LangManager
         $this->app->setLocale($locale);
 
         return true;
+    }
+
+    /**
+     * Normalize the locale to a string.
+     */
+    protected static function normalizeLocale(string|BackedEnum $locale): string
+    {
+        return is_string($locale) ? $locale : $locale->value;
     }
 }
