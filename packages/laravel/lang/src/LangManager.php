@@ -57,13 +57,44 @@ class LangManager
     /**
      * Set the lang files to use.
      *
+     * @param  string|array<int, string>  $files
      * @return $this
      */
-    public function use(string ...$files): static
+    public function use(string|array $files): static
     {
+        /** @var array<int, string> */
+        $files = is_array($files) ? $files : func_get_args();
+
         Arr::mapWithKeys($files, fn (string $file) => [$file => $this->load($file)]);
 
         return $this;
+    }
+
+    /**
+     * Set the keys to use for the translations as dot notation.
+     *
+     * @param  string|array<int, string>  $keys
+     * @return $this
+     */
+    public function only(string|array $keys): static
+    {
+        /** @var array<int, string> */
+        $keys = is_array($keys) ? $keys : func_get_args();
+
+        $this->only = $keys;
+
+        return $this;
+    }
+
+    /**
+     * Set the keys to use for the translations as dot notation.
+     *
+     * @param  string|array<int, string>  $keys
+     * @return $this
+     */
+    public function using(string $file, string|array $keys): static
+    {
+        return $this->use($file)->only($keys);
     }
 
     /**
@@ -82,17 +113,6 @@ class LangManager
         $this->translations[$file] = file_exists($path) ? require $path : [];
 
         return $this->translations[$file];
-    }
-
-    /**
-     * Set the keys to use for the translations as dot notation.
-     */
-    public function only(string ...$keys): static
-    {
-        /** @phpstan-ignore-next-line assign.propertyType */
-        $this->only = $keys;
-
-        return $this;
     }
 
     /**

@@ -8,17 +8,38 @@ use function Orchestra\Testbench\workbench_path;
 
 beforeEach(function () {
     $this->lang = app('lang');
+
+    $this->greetings = require workbench_path('resources/lang/en/greetings.php');
+    $this->auth = require workbench_path('resources/lang/en/auth.php');
 });
 
-it('sets lang files', function () {
+it('sets string lang files', function () {
     expect($this->lang)
         ->use('greetings')->toBe($this->lang)
         ->getTranslations()->toEqualCanonicalizing([
-            'greetings' => require workbench_path('resources/lang/en/greetings.php'),
+            'greetings' => $this->greetings,
         ])
         ->use('greetings')->toBe($this->lang)
         ->getTranslations()->toEqualCanonicalizing([
-            'greetings' => require workbench_path('resources/lang/en/greetings.php'),
+            'greetings' => $this->greetings,
+        ]);
+});
+
+it('sets array lang files', function () {
+    expect($this->lang)
+        ->use(['greetings', 'auth'])->toBe($this->lang)
+        ->getTranslations()->toEqualCanonicalizing([
+            'greetings' => $this->greetings,
+            'auth' => $this->auth,
+        ]);
+});
+
+it('sets variadic lang files', function () {
+    expect($this->lang)
+        ->use('greetings', 'auth')->toBe($this->lang)
+        ->getTranslations()->toEqualCanonicalizing([
+            'greetings' => $this->greetings,
+            'auth' => $this->auth,
         ]);
 });
 
@@ -63,6 +84,18 @@ it('gets only some keys with locale', function () {
             'greetings' => [
                 'greeting' => [
                     'morning' => Arr::get(require workbench_path('resources/lang/es/greetings.php'), 'greeting.morning'),
+                ],
+            ],
+        ]);
+});
+
+it('gets only some keys with using', function () {
+    expect($this->lang)
+        ->using('greetings', 'greetings.greeting.morning')->toBe($this->lang)
+        ->getTranslations()->toEqualCanonicalizing([
+            'greetings' => [
+                'greeting' => [
+                    'morning' => Arr::get($this->greetings, 'greeting.morning'),
                 ],
             ],
         ]);
