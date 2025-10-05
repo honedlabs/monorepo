@@ -20,6 +20,21 @@ it('makes an entry', function () {
         ->getLabel()->toBe('Name');
 });
 
+it('has before formatting callback', function () {
+    expect($this->entry)
+        ->apply(1)->toBe([1, false])
+        ->beforeFormatting(fn ($value) => $value * 2)->toBe($this->entry)
+        ->apply(1)->toBe([2, false]);
+});
+
+it('has after formatting callback', function () {
+    expect($this->entry)
+        ->apply(1)->toBe([1, false])
+        ->afterFormatting(fn ($value) => $value * 2)->toBe($this->entry)
+        ->apply(1)->toBe([2, false])
+        ->apply(null)->toBe([null, true]);
+});
+
 it('can have record', function () {
     $user = User::factory()->create();
 
