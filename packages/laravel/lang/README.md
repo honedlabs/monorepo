@@ -13,7 +13,7 @@
     <a href="https://packagist.org/packages/honed/lang"><img src="https://img.shields.io/packagist/v/honed/lang" alt="Latest Stable Version"></a>
 </p>
 
-**Lang** provides a simple way to synchronise your translations with your Inertia frontend.
+**Lang** provides a simple way to synchronise your translations to your Inertia frontend.
 
 ## Installation
 
