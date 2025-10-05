@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Table\Columns;
 
 use Honed\Infolist\Entries\ImageEntry;
-use Honed\Table\Contracts\Column as ColumnContract;
 use Honed\Table\Concerns\AsColumn;
+use Honed\Table\Contracts\Column as ColumnContract;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model

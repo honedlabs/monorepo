@@ -39,8 +39,6 @@ trait CanBeKey
 
     /**
      * Determine if the instance is the key.
-     *
-     * @return bool
      */
     public function isKey(): bool
     {

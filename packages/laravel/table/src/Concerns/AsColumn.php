@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Illuminate\Support\Str;
-use InvalidArgumentException;
-use Honed\Core\Concerns\CanQuery;
 use Honed\Core\Concerns\CanBeActive;
 use Honed\Core\Concerns\CanHaveIcon;
+use Honed\Core\Concerns\CanQuery;
 use Honed\Refine\Concerns\CanBeHidden;
 use Honed\Refine\Concerns\HasQualifier;
 use Honed\Table\Columns\Concerns\CanBeKey;
@@ -20,33 +18,37 @@ use Honed\Table\Columns\Concerns\HasCellClasses;
 use Honed\Table\Columns\Concerns\Searchable;
 use Honed\Table\Columns\Concerns\Sortable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
- * 
+ *
  * @phpstan-require-extends \Honed\Infolist\Entries\Entry<*, *>
  */
 trait AsColumn
 {
     use CanBeActive;
     use CanBeHidden;
+    use CanBeKey;
+
+    use CanBeToggled;
+
     use CanHaveIcon;
     /**
      * @use \Honed\Core\Concerns\CanQuery<TModel, TBuilder>
      */
     use CanQuery;
-    use HasQualifier;
-    use Selectable;
-    use CanBeKey;
     use Exportable;
     use Filterable;
     use HasAlignment;
     use HasCellClasses;
+    use HasQualifier;
     use Searchable;
     use Selectable;
+    use Selectable;
     use Sortable;
-    use CanBeToggled;
 
     public function __construct()
     {
@@ -146,7 +148,7 @@ trait AsColumn
 
     /**
      * Convert the class to an entry.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function entry(): array

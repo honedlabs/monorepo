@@ -69,7 +69,6 @@ trait HasColumns
      * Set the cached headings.
      *
      * @param  array<int,Column>  $headings
-     * @return void
      */
     public function setHeadings(array $headings): void
     {
@@ -80,7 +79,6 @@ trait HasColumns
      * Set the columns by overriding the existing columns.
      *
      * @param  array<int,Column>  $columns
-     * @return void
      */
     public function setColumns(array $columns): void
     {

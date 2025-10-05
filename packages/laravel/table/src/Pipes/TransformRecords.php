@@ -50,7 +50,7 @@ class TransformRecords extends Pipe
             ...Arr::mapWithKeys(
                 $columns,
                 fn ($column) => [
-                    $column->getParameter() => $column->generate($record)
+                    $column->getParameter() => $column->generate($record),
                 ]
             ),
             'class' => $this->getClasses(

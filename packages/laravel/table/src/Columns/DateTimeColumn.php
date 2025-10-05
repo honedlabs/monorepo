@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Table\Columns;
 
-use Honed\Table\Concerns\AsColumn;
 use Honed\Infolist\Entries\DateTimeEntry;
+use Honed\Table\Concerns\AsColumn;
 use Honed\Table\Contracts\Column as ColumnContract;
 
 /**

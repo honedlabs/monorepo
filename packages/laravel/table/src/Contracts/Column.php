@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Table\Contracts;
 
-use Honed\Refine\Sorts\Sort;
+use Honed\Infolist\Contracts\Entryable;
 use Honed\Refine\Filters\Filter;
 use Honed\Refine\Searches\Search;
-use Honed\Infolist\Contracts\Entryable;
+use Honed\Refine\Sorts\Sort;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @extends \Illuminate\Contracts\Support\Arrayable<string, mixed>
  */
-interface Column extends Entryable, Arrayable
+interface Column extends Arrayable, Entryable
 {
     public function getName(): string;
 

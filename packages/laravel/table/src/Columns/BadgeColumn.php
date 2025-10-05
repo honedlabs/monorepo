@@ -14,7 +14,7 @@ class BadgeColumn extends Column
         parent::setUp();
 
         $this->badge();
-        
+
         $this->type('badge');
     }
 }
