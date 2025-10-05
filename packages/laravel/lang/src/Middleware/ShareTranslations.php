@@ -1,22 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Lang\Middleware;
 
 use Closure;
-use Inertia\Inertia;
 use Honed\Lang\Facades\Lang;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ShareTranslations
 {
-    public const KEY = '_lang';
-    
-    public function handle($request, Closure $next)
+    /**
+     * Handle the incoming request.
+     */
+    public function handle(Request $request, Closure $next): Closure
     {
         $translations = Lang::getTranslations();
 
         if (! empty($translations)) {
             Inertia::share([
-                static::KEY => $translations,
+                '_lang' => $translations,
             ]);
         }
 

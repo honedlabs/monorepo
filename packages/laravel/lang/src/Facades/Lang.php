@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Honed\Lang\Facades;
 
+use Honed\Lang\LangManager;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Honed\Lang\Lang
+ * @see LangManager
  */
 class Lang extends Facade
 {
     /**
      * Get the root object behind the facade.
      *
-     * @return NavManager
+     * @return LangManager
      */
     public static function getFacadeRoot()
     {
@@ -29,6 +30,6 @@ class Lang extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return Lang::class;
+        return 'lang';
     }
 }

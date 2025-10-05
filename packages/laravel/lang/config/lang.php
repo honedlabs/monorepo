@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -7,7 +9,7 @@ return [
     | Language path
     |--------------------------------------------------------------------------
     |
-    | The path of base directory where your language files are stored.
+    | The path of base the directory where your language files are stored.
     | By default, it will use Laravel's built-in lang_path() helper, which
     | points to the "resources/lang" directory.
     |
@@ -18,8 +20,7 @@ return [
 
     'lang_path' => lang_path(),
 
-    'languages' => [
-        'en' => 'English'
-    ]
-
+    'locales' => [
+        'en',
+    ],
 ];
