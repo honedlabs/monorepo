@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Table\Concerns;
 
 use Honed\Table\Contracts\IsSelectable;
+use Illuminate\Contracts\Database\Query\Expression;
 
 trait Selectable
 {
@@ -21,7 +22,7 @@ trait Selectable
      * @param  bool|\Illuminate\Contracts\Database\Query\Expression|array<int, string|\Illuminate\Contracts\Database\Query\Expression>  $value
      * @return $this
      */
-    public function selectable($value = true): static
+    public function selectable(bool|Expression|array $value = true): static
     {
         $this->selectable = $value;
 

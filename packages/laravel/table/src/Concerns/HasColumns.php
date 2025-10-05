@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Table\Concerns;
 
-use Honed\Table\Columns\Column;
+use Honed\Table\Contracts\Column;
 
 trait HasColumns
 {
@@ -28,7 +28,7 @@ trait HasColumns
      * @param  Column|array<int,Column>  $columns
      * @return $this
      */
-    public function columns($columns)
+    public function columns(Column|array $columns): static
     {
         /** @var array<int,Column> */
         $columns = is_array($columns) ? $columns : func_get_args();
@@ -41,10 +41,9 @@ trait HasColumns
     /**
      * Insert a column.
      *
-     * @param  Column  $column
      * @return $this
      */
-    public function column($column)
+    public function column(Column $column): static
     {
         $this->columns[] = $column;
 
@@ -56,7 +55,7 @@ trait HasColumns
      *
      * @return array<int,Column>
      */
-    public function getColumns()
+    public function getColumns(): array
     {
         return array_values(
             array_filter(
@@ -72,7 +71,7 @@ trait HasColumns
      * @param  array<int,Column>  $headings
      * @return void
      */
-    public function setHeadings($headings)
+    public function setHeadings(array $headings): void
     {
         $this->headings = $headings;
     }
@@ -83,7 +82,7 @@ trait HasColumns
      * @param  array<int,Column>  $columns
      * @return void
      */
-    public function setColumns($columns)
+    public function setColumns(array $columns): void
     {
         $this->columns = $columns;
     }
@@ -93,7 +92,7 @@ trait HasColumns
      *
      * @return array<int,Column>
      */
-    public function getHeadings()
+    public function getHeadings(): array
     {
         return $this->headings ?? $this->getColumns();
     }
@@ -103,7 +102,7 @@ trait HasColumns
      *
      * @return array<int,Column>
      */
-    public function getActiveColumns()
+    public function getActiveColumns(): array
     {
         return array_values(
             array_filter(
@@ -118,7 +117,7 @@ trait HasColumns
      *
      * @return array<int,array<string,mixed>>
      */
-    public function columnsToArray()
+    public function columnsToArray(): array
     {
         return array_map(
             static fn (Column $column) => $column->toArray(),

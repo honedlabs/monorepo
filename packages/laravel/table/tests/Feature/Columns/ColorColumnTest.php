@@ -11,5 +11,5 @@ beforeEach(function () {
 
 it('is type color', function () {
     expect($this->column)
-        ->getType()->toBe(Column::COLOR);
+        ->getType()->toBe('color');
 });

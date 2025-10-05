@@ -11,5 +11,5 @@ beforeEach(function () {
 
 it('is type icon', function () {
     expect($this->column)
-        ->getType()->toBe(Column::ICON);
+        ->getType()->toBe('icon');
 });

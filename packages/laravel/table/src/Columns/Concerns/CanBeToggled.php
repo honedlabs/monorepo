@@ -150,7 +150,7 @@ trait CanBeToggled
      *
      * @return bool
      */
-    public function isAlways()
+    public function isAlways(): bool
     {
         return $this->always;
     }
