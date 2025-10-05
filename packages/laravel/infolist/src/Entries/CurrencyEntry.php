@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
+use Honed\Infolist\Contracts\Formatter;
 use Honed\Infolist\Formatters\CurrencyFormatter;
 
 /**
@@ -29,7 +30,15 @@ class CurrencyEntry extends Entry
         parent::setUp();
 
         $this->type('numeric');
+    }
 
-        $this->formatter(CurrencyFormatter::class);
+    /**
+     * Get the default formatter.
+     *
+     * @return Formatter<mixed, string>
+     */
+    public function defaultFormatter(): Formatter
+    {
+        return new CurrencyFormatter();
     }
 }

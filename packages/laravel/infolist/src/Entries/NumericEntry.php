@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
+use Honed\Infolist\Contracts\Formatter;
 use Honed\Infolist\Formatters\NumericFormatter;
 
 /**
@@ -26,7 +27,15 @@ class NumericEntry extends Entry
         parent::setUp();
 
         $this->type('numeric');
+    }
 
-        $this->formatter(NumericFormatter::class);
+    /**
+     * Get the default formatter.
+     *
+     * @return Formatter<mixed, string>
+     */
+    public function defaultFormatter(): Formatter
+    {
+        return new NumericFormatter();
     }
 }

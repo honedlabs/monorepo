@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
+use Honed\Infolist\Contracts\Formatter;
 use Honed\Infolist\Formatters\BooleanFormatter;
 
 /**
@@ -24,7 +25,15 @@ class BooleanEntry extends Entry
         parent::setUp();
 
         $this->type('boolean');
+    }
 
-        $this->formatter(BooleanFormatter::class);
+    /**
+     * Get the default formatter.
+     *
+     * @return Formatter<mixed, string>
+     */
+    public function defaultFormatter(): Formatter
+    {
+        return new BooleanFormatter();
     }
 }

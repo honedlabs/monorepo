@@ -12,5 +12,5 @@ beforeEach(function () {
 it('is set up', function () {
     expect($this->entry)
         ->getType()->toBe('array')
-        ->getFormatter()->toBeInstanceOf(ArrayFormatter::class);
+        ->defaultFormatter()->toBeInstanceOf(ArrayFormatter::class);
 });

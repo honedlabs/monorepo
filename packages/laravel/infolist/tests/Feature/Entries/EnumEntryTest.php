@@ -12,5 +12,5 @@ beforeEach(function () {
 it('is set up', function () {
     expect($this->entry)
         ->getType()->toBeNull()
-        ->getFormatter()->toBeInstanceOf(EnumFormatter::class);
+        ->defaultFormatter()->toBeInstanceOf(EnumFormatter::class);
 });

@@ -12,5 +12,5 @@ beforeEach(function () {
 it('is set up', function () {
     expect($this->entry)
         ->getType()->toBe('numeric')
-        ->getFormatter()->toBeInstanceOf(CurrencyFormatter::class);
+        ->defaultFormatter()->toBeInstanceOf(CurrencyFormatter::class);
 });

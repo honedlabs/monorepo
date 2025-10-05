@@ -12,5 +12,5 @@ beforeEach(function () {
 it('is set up', function () {
     expect($this->entry)
         ->getType()->toBe('text')
-        ->getFormatter()->toBeInstanceOf(TextFormatter::class);
+        ->defaultFormatter()->toBeInstanceOf(TextFormatter::class);
 });

@@ -12,5 +12,5 @@ beforeEach(function () {
 it('is set up', function () {
     expect($this->entry)
         ->getType()->toBe('boolean')
-        ->getFormatter()->toBeInstanceOf(BooleanFormatter::class);
+        ->defaultFormatter()->toBeInstanceOf(BooleanFormatter::class);
 });

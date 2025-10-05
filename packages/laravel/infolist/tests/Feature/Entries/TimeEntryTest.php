@@ -12,5 +12,5 @@ beforeEach(function () {
 it('is set up', function () {
     expect($this->entry)
         ->getType()->toBe('time')
-        ->getFormatter()->toBeInstanceOf(TimeFormatter::class);
+        ->defaultFormatter()->toBeInstanceOf(TimeFormatter::class);
 });

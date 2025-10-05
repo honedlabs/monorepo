@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
+use Honed\Infolist\Contracts\Formatter;
 use Honed\Infolist\Formatters\ArrayFormatter;
 
 /**
@@ -24,7 +25,15 @@ class ArrayEntry extends Entry
         parent::setUp();
 
         $this->type('array');
+    }
 
-        $this->formatter(ArrayFormatter::class);
+    /**
+     * Get the default formatter.
+     *
+     * @return Formatter<array<int, mixed>|\Illuminate\Support\Collection<int, mixed>, array<int, mixed>|string>
+     */
+    public function defaultFormatter(): Formatter
+    {
+        return new ArrayFormatter();
     }
 }

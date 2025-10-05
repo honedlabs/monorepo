@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
+use Honed\Infolist\Contracts\Formatter;
 use Honed\Infolist\Formatters\ImageFormatter;
 
 /**
@@ -24,7 +25,15 @@ class ImageEntry extends Entry
         parent::setUp();
 
         $this->type('image');
+    }
 
-        $this->formatter(ImageFormatter::class);
+    /**
+     * Get the default formatter.
+     *
+     * @return Formatter<string, string>
+     */
+    public function defaultFormatter(): Formatter
+    {
+        return new ImageFormatter();
     }
 }

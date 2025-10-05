@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
+use Honed\Infolist\Contracts\Formatter;
 use Honed\Infolist\Formatters\TimeFormatter;
 
 /**
@@ -26,7 +27,15 @@ class TimeEntry extends Entry
         parent::setUp();
 
         $this->type('time');
+    }
 
-        $this->formatter(TimeFormatter::class);
+    /**
+     * Get the default formatter.
+     *
+     * @return Formatter<\Carbon\CarbonInterface|string|int|float, string>
+     */
+    public function defaultFormatter(): Formatter
+    {
+        return new TimeFormatter();
     }
 }

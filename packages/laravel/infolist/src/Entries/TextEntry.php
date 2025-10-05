@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Infolist\Entries;
 
+use Honed\Infolist\Contracts\Formatter;
 use Honed\Infolist\Formatters\TextFormatter;
 
 /**
@@ -30,7 +31,15 @@ class TextEntry extends Entry
         parent::setUp();
 
         $this->type('text');
+    }
 
-        $this->formatter(TextFormatter::class);
+    /**
+     * Get the default formatter.
+     *
+     * @return Formatter<mixed, string|array<int, string>>
+     */
+    public function defaultFormatter(): Formatter
+    {
+        return new TextFormatter();
     }
 }

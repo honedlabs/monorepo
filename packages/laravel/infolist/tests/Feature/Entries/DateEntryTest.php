@@ -12,5 +12,5 @@ beforeEach(function () {
 it('is set up', function () {
     expect($this->entry)
         ->getType()->toBe('date')
-        ->getFormatter()->toBeInstanceOf(DateFormatter::class);
+        ->defaultFormatter()->toBeInstanceOf(DateFormatter::class);
 });

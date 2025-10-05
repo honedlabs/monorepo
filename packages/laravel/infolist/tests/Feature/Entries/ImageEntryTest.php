@@ -12,5 +12,5 @@ beforeEach(function () {
 it('is set up', function () {
     expect($this->entry)
         ->getType()->toBe('image')
-        ->getFormatter()->toBeInstanceOf(ImageFormatter::class);
+        ->defaultFormatter()->toBeInstanceOf(ImageFormatter::class);
 });
