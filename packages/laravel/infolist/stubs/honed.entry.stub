@@ -2,9 +2,9 @@
 
 namespace {{ namespace }};
 
-use Honed\Infolist\Entries\BaseEntry;
+use Honed\Infolist\Entries\Entry;
 
-class {{ class }} extends BaseEntry
+class {{ class }} extends Entry
 {
     /**
      * Define the entry.
@@ -13,6 +13,7 @@ class {{ class }} extends BaseEntry
      */
     protected function definition(): static
     {
-        return $this;
+        return $this
+            ->label('');
     }
 }

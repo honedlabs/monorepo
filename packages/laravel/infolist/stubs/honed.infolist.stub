@@ -13,6 +13,9 @@ class {{ class }} extends Infolist
      */
     protected function definition(): static
     {
-        return $this;
+        return $this
+            ->entries([
+
+            ]);
     }
 }
