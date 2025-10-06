@@ -32,7 +32,7 @@ beforeEach(function () {
             ],
         ],
     ];
-})->only();
+});
 
 it('creates', function () {
     $chart = Chart::make()
@@ -49,6 +49,5 @@ it('creates', function () {
         ]);
 
     expect($chart->toArray())
-        ->dd()
         ->toEqualCanonicalizing($this->option);
 });

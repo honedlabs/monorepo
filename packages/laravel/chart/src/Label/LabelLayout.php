@@ -6,13 +6,13 @@ namespace Honed\Chart\Label;
 
 use Honed\Chart\Label\Concerns\CanHideOverlap;
 use Honed\Chart\Label\Concerns\CanMoveOverlap;
-use Honed\Chart\Label\Concerns\HasDeltaX;
+use Honed\Chart\Support\Concerns\HasDeltaX;
 use Honed\Chart\Style\Concerns\CanBeRotated;
 use Honed\Chart\Style\Concerns\HasFontSize;
 use Honed\Chart\Style\Concerns\HasHeight;
 use Honed\Chart\Style\Concerns\HasWidth;
 use Honed\Chart\Support\Concerns\CanBeAligned;
-use Honed\Chart\Support\Concerns\CanBeVerticalAligned;
+use Honed\Chart\Support\Concerns\CanBeVerticallyAligned;
 use Honed\Chart\Support\Concerns\Draggable;
 use Honed\Chart\Support\Concerns\HasDeltaY;
 use Honed\Chart\Support\Concerns\HasRotation;
@@ -25,7 +25,7 @@ class LabelLayout extends Primitive implements NullsAsUndefined
 {
     use CanBeAligned;
     use HasRotation;
-    use CanBeVerticalAligned;
+    use CanBeVerticallyAligned;
     use CanHideOverlap;
     use CanMoveOverlap;
     use Draggable;

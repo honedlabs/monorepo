@@ -23,11 +23,11 @@ it('has chart', function () {
     //     ->tooltip()
     //     ->colors();
 
-    dd(
-        Chart::make($this->users)
-            ->series([
-                Line::make('Name')->pluck('name'),
-            ])
-            ->toArray()
-    );
+    // dd(
+    //     Chart::make($this->users)
+    //         ->series([
+    //             Line::make('Name')->pluck('name'),
+    //         ])
+    //         ->toArray()
+    // );
 });

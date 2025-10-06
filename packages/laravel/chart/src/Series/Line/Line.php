@@ -14,7 +14,7 @@ use Honed\Chart\Series\Concerns\HasSampling;
 use Honed\Chart\Series\Concerns\HasStack;
 use Honed\Chart\Series\Concerns\HasStackOrder;
 use Honed\Chart\Series\Concerns\HasStackStrategy;
-use Honed\Chart\Series\Line\Concerns\CanBeSmooth;
+use Honed\Chart\Series\Concerns\CanBeSmooth;
 use Honed\Chart\Series\Line\Concerns\CanConnectNulls;
 use Honed\Chart\Series\Line\Concerns\HasCoordinateSystem;
 use Honed\Chart\Series\Line\Concerns\HasSmoothMonotone;

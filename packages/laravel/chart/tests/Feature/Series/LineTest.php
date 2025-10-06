@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\Series\Line;
+use Honed\Chart\Series\Line\Line;
 
-beforeEach(function () {
-    Line::flushState();
-});
+// beforeEach(function () {
+//     Line::flushState();
+// });
 
 it('interpolates', function () {
     expect(Line::make())

@@ -12,7 +12,7 @@ use Honed\Chart\Style\Concerns\HasFontStyle;
 use Honed\Chart\Style\Concerns\HasFontWeight;
 use Honed\Chart\Style\Concerns\HasLineHeight;
 use Honed\Chart\Support\Concerns\CanBeAligned;
-use Honed\Chart\Support\Concerns\CanBeVerticalAligned;
+use Honed\Chart\Support\Concerns\CanBeVerticallyAligned;
 use Honed\Chart\Support\Concerns\HasDistance;
 use Honed\Chart\Support\Concerns\HasOffset;
 use Honed\Chart\Support\Concerns\HasRotation;
@@ -31,7 +31,7 @@ class SelectorLabel extends Primitive implements NullsAsUndefined
     use HasFontFamily;
     use HasFontSize;
     use CanBeAligned;
-    use CanBeVerticalAligned;
+    use CanBeVerticallyAligned;
     use HasLineHeight;
 
     /**

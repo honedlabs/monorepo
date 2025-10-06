@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Label\Concerns;
+namespace Honed\Chart\Support\Concerns;
 
 trait HasDeltaX
 {

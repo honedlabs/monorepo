@@ -7,5 +7,5 @@ use Honed\Chart\Axis\Axis;
 beforeEach(function () {});
 
 it('makes axis', function () {
-    dd(Axis::make()->toArray());
+    // dd(Axis::make()->toArray());
 });

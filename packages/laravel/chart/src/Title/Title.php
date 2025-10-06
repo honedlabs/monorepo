@@ -24,7 +24,7 @@ use Honed\Chart\Style\Concerns\HasTop;
 use Honed\Chart\Style\Concerns\HasZ;
 use Honed\Chart\Style\Concerns\HasZLevel;
 use Honed\Chart\Support\Concerns\CanBeAligned;
-use Honed\Chart\Support\Concerns\CanBeVerticalAligned;
+use Honed\Chart\Support\Concerns\CanBeVerticallyAligned;
 use Honed\Chart\Support\Concerns\Triggerable;
 use Honed\Chart\Title\Concerns\HasLink;
 use Honed\Chart\Title\Concerns\HasSublink;
@@ -39,7 +39,7 @@ class Title extends Primitive implements NullsAsUndefined
 {
     use CanBeAligned;
     use CanBeShown;
-    use CanBeVerticalAligned;
+    use CanBeVerticallyAligned;
     use HasBackgroundColor;
     use HasBorderColor;
     use HasBorderRadius;

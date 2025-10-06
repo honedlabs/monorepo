@@ -6,7 +6,7 @@ namespace Honed\Chart\Support\Concerns;
 
 use Honed\Chart\Enums\VerticalAlign;
 
-trait CanBeVerticalAligned
+trait CanBeVerticallyAligned
 {
     /**
      * The vertical alignment.

@@ -30,7 +30,7 @@ beforeEach(function () {
             ],
         ],
     ];
-})->only();
+});
 
 it('creates', function () {
     $chart = Chart::make()
