@@ -81,7 +81,7 @@ class LangManager
         /** @var array<int, string> */
         $keys = is_array($keys) ? $keys : func_get_args();
 
-        $this->only = $keys;
+        $this->only = [...$this->only, ...$keys];
 
         return $this;
     }
