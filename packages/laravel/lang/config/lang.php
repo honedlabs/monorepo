@@ -20,6 +20,29 @@ return [
 
     'lang_path' => lang_path(),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Session
+    |--------------------------------------------------------------------------
+    |
+    | Whether to store the locale in the session. When true, the locale will be
+    | persisted to the session when setting. To use the session driver, ensure
+    | the `localize` middleware is registered to set it to the app locale.
+    |
+    */
+
+    'session' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Locales
+    |--------------------------------------------------------------------------
+    |
+    | You must specify the locales that are supported by your application.
+    | Locales which are not specified here will be ignored when setting the
+    | locale using the Lang facade.
+    |
+    */
     'locales' => [
         'en',
     ],

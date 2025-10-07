@@ -91,7 +91,7 @@ it('gets only some keys with locale', function () {
 
 it('gets only some keys with using', function () {
     expect($this->lang)
-        ->using('greetings', 'greetings.greeting.morning')->toBe($this->lang)
+        ->using('greetings', 'greeting.morning')->toBe($this->lang)
         ->getTranslations()->toEqualCanonicalizing([
             'greetings' => [
                 'greeting' => [

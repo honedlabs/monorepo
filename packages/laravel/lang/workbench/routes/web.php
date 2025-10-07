@@ -22,3 +22,9 @@ Route::middleware('lang:greetings')->get('/empty', function () {
 
     return inertia('Welcome');
 });
+
+Route::middleware('localize')->get('/localize', function () {
+    Lang::only('auth.login');
+
+    return inertia('Welcome');
+});
