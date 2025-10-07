@@ -29,6 +29,8 @@ export function useRefine<T extends Record<string, Refine>>(
 
 	const refinements = computed(() => props[key] as Refine);
 
+	const searchTerm = computed(() => refinements.value.term);
+
 	const isSortable = computed(() => !!refinements.value._sort_key);
 
 	const isSearchable = computed(() => !!refinements.value._search_key);
@@ -202,7 +204,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	 * Whether the search is currently active, or on a given match.
 	 */
 	function isSearching(name?: Search | string): boolean {
-		if (!name) return !!refinements.value.term;
+		if (!name) return !!searchTerm.value;
 
 		if (typeof name === "string")
 			return currentSearches.value?.some((search) => search.name === name);
@@ -458,7 +460,7 @@ export function useRefine<T extends Record<string, Refine>>(
 				},
 				debounce,
 			),
-			modelValue: refinements.value.term ?? "",
+			modelValue: searchTerm.value ?? "",
 		};
 	}
 
@@ -494,6 +496,7 @@ export function useRefine<T extends Record<string, Refine>>(
 		currentFilters,
 		currentSort,
 		currentSearches,
+		searchTerm,
 		isSortable,
 		isSearchable,
 		isMatchable,

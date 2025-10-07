@@ -150,6 +150,7 @@ export declare function useRefine<T extends Record<string, Refine>>(props: T, ke
     currentFilters: ComputedRef<HonedFilter[]>;
     currentSort: ComputedRef<HonedSort | undefined>;
     currentSearches: ComputedRef<HonedSearch[]>;
+    searchTerm: ComputedRef<string | undefined>;
     isSortable: ComputedRef<boolean>;
     isSearchable: ComputedRef<boolean>;
     isMatchable: ComputedRef<boolean>;
