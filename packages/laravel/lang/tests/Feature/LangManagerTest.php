@@ -100,3 +100,11 @@ it('gets only some keys with using', function () {
             ],
         ]);
 });
+
+it('does not require keys to be specified', function () {
+    expect($this->lang)
+        ->using('greetings')->toBe($this->lang)
+        ->getTranslations()->toEqualCanonicalizing([
+            'greetings' => $this->greetings,
+        ]);
+});

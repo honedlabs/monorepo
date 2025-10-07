@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
+use Inertia\Testing\AssertableInertia as Assert;
 
 use function Orchestra\Testbench\workbench_path;
 use function Pest\Laravel\get;
-use Inertia\Testing\AssertableInertia as Assert;
-use Illuminate\Support\Arr;
-
 
 beforeEach(function () {
     $this->english = require workbench_path('resources/lang/en/auth.php');
@@ -27,7 +28,7 @@ it('routes for valid locale', function () {
     );
 });
 
-it('routes for valid locale and sets locale', function () {
+it('routes for valid locale and sets it', function () {
     get('/es/users')->assertInertia(fn (Assert $page) => $page
         ->has('_lang', fn (Assert $page) => $page
             ->has('auth', fn (Assert $page) => $page
@@ -37,6 +38,24 @@ it('routes for valid locale and sets locale', function () {
     );
 });
 
+it('does not set locale if not provided', function () {
+    get('/localize')->assertInertia(fn (Assert $page) => $page
+        ->has('_lang', fn (Assert $page) => $page
+            ->has('auth', fn (Assert $page) => $page
+                ->where('login', Arr::get($this->english, 'login'))
+            )
+        )
+    );
+});
+
 it('throws 404 for invalid locale', function () {
     get('/fr/users')->assertNotFound();
+});
+
+it('injects locale', function () {
+    get('/en/injection')->assertSee('en');
+
+    get('/es/injection')->assertSee('es');
+
+    get('/fr/injection')->assertNotFound();
 });

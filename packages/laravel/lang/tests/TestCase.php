@@ -14,7 +14,7 @@ class TestCase extends Orchestra
 {
     use RefreshDatabase;
     use WithWorkbench;
-    
+
     /**
      * Define database migrations.
      */

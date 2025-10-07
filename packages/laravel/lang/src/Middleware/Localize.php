@@ -21,9 +21,9 @@ class Localize
     {
         if ($request->route('locale')) {
             $locale = (string) $request->route('locale');
-            
+
             Lang::locale($locale);
-        } else if (Lang::usesSession() && Session::has('_lang')) {
+        } elseif (Lang::usesSession() && Session::has('_lang')) {
             /** @var string */
             $locale = Session::get('_lang');
 

@@ -8,9 +8,7 @@ use Closure;
 use Honed\Lang\Facades\Lang;
 use Honed\Lang\Middleware\Localize;
 use Honed\Lang\Middleware\ShareTranslations;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class LangServiceProvider extends ServiceProvider
@@ -29,7 +27,7 @@ class LangServiceProvider extends ServiceProvider
         $this->getRouter()->aliasMiddleware('localize', Localize::class);
 
         $this->getRouter()->macro('localize', function (Closure|array|string $callback) {
-            /** @var \Illuminate\Routing\Router $this */
+            /** @var Router $this */
             return $this->middleware(['localize', 'lang'])
                 ->prefix('{locale}')
                 ->whereIn('locale', Lang::availableLocales())

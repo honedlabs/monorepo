@@ -23,8 +23,8 @@ Route::middleware('lang:greetings')->get('/empty', function () {
     return inertia('Welcome');
 });
 
-Route::middleware('localize')->get('/localize', function () {
-    Lang::only('auth.login');
+Route::middleware(['localize', 'lang'])->get('/localize', function () {
+    Lang::using('auth', 'login');
 
     return inertia('Welcome');
 });
@@ -40,5 +40,9 @@ Route::localize(function () {
         Lang::using('auth', 'login');
 
         return inertia('Welcome');
+    });
+
+    Route::get('/injection', function (string $locale) {
+        return $locale;
     });
 });
