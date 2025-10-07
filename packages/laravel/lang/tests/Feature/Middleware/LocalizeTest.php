@@ -11,7 +11,7 @@ beforeEach(function () {
     $this->auth = require workbench_path('resources/lang/en/auth.php');
 
     $this->lang = Lang::getFacadeRoot();
-})->only();
+});
 
 it('does not set locale if not in session', function () {
     get('/localize');

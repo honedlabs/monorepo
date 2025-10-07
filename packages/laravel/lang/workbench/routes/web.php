@@ -28,3 +28,17 @@ Route::middleware('localize')->get('/localize', function () {
 
     return inertia('Welcome');
 });
+
+Route::localize(function () {
+    Route::get('/users', function () {
+        Lang::using('auth', 'login');
+
+        return inertia('Welcome');
+    });
+
+    Route::get('/users/{user}', function () {
+        Lang::using('auth', 'login');
+
+        return inertia('Welcome');
+    });
+});

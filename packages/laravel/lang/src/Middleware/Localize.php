@@ -19,7 +19,11 @@ class Localize
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Lang::usesSession() && Session::has('_lang')) {
+        if ($request->route('locale')) {
+            $locale = (string) $request->route('locale');
+            
+            Lang::locale($locale);
+        } else if (Lang::usesSession() && Session::has('_lang')) {
             /** @var string */
             $locale = Session::get('_lang');
 
