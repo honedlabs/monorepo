@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Models\User;
+use Honed\Lang\Facades\Lang;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -58,4 +60,16 @@ it('injects locale', function () {
     get('/es/injection')->assertSee('es');
 
     get('/fr/injection')->assertNotFound();
+});
+
+it('creates routes without locale', function () {
+    Lang::registerParameter();
+
+    expect(route('users.index', absolute: false))->toBe('/en/users');
+
+    expect(route('users.show', 1, absolute: false))->toBe('/en/users/1');
+
+    $user = User::factory()->create();
+
+    expect(route('users.show', $user, absolute: false))->toBe('/en/users/'.$user->getKey());
 });

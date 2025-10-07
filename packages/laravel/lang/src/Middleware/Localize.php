@@ -8,7 +8,6 @@ use Closure;
 use Honed\Lang\Facades\Lang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
 
 class Localize
 {
@@ -30,7 +29,7 @@ class Localize
             Lang::locale($locale);
         }
 
-        URL::defaults(['locale' => Lang::getLocale()]);
+        Lang::registerParameter();
 
         return $next($request);
     }

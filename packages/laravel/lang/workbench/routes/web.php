@@ -34,13 +34,13 @@ Route::localize(function () {
         Lang::using('auth', 'login');
 
         return inertia('Welcome');
-    });
+    })->name('users.index');
 
     Route::get('/users/{user}', function () {
         Lang::using('auth', 'login');
 
         return inertia('Welcome');
-    });
+    })->name('users.show');
 
     Route::get('/injection', function (string $locale) {
         return $locale;

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array<int, string|BackedEnum> availableLocales() Get the supported locales for the application.
  * @method static bool locale(string|BackedEnum $locale) Set the current locale.
  * @method static bool usesSession() Check if the session is used.
+ * @method static string registerParameter() Register the locale as a default parameter in the URL generator.
  *
  * @see LangManager
  */

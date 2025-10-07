@@ -108,3 +108,12 @@ it('does not require keys to be specified', function () {
             'greetings' => $this->greetings,
         ]);
 });
+
+it('registers the locale as a default parameter', function () {
+    expect($this->lang)
+        ->registerParameter()->toBe(app()->getLocale())
+        ->locale('es')->toBeTrue()
+        ->registerParameter()->toBe('es')
+        ->locale('fr')->toBeFalse()
+        ->registerParameter()->toBe('es');
+});

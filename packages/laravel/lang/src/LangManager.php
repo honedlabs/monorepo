@@ -6,6 +6,7 @@ namespace Honed\Lang;
 
 use BackedEnum;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
@@ -184,6 +185,18 @@ class LangManager
     }
 
     /**
+     * Register the locale as a default parameter in the URL generator.
+     */
+    public function registerParameter(): string
+    {
+        $locale = $this->getLocale();
+
+        $this->getUrlGenerator()->defaults(['locale' => $locale]);
+
+        return $locale;
+    }
+
+    /**
      * Normalize the locale to a string.
      */
     protected static function normalizeLocale(string|BackedEnum $locale): string
@@ -199,5 +212,11 @@ class LangManager
     {
         // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
         return $this->app['session'];
+    }
+
+    protected function getUrlGenerator(): UrlGenerator
+    {
+        // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible
+        return $this->app['url'];
     }
 }
