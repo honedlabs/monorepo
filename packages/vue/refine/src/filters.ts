@@ -1,6 +1,6 @@
-import type { VisitOptions } from "@inertiajs/core";
 import type { PromisifyFn } from "@vueuse/shared";
 import type { Refiner } from "./refiner";
+import type { ApplyOptions } from "./types";
 
 export interface Option {
 	label: string;
@@ -29,8 +29,8 @@ export interface Filter extends Refiner {
 }
 
 export interface HonedFilter extends Filter {
-	apply: (value: any, options?: VisitOptions) => void;
-	clear: (options?: VisitOptions) => void;
+	apply: (value: any, options?: ApplyOptions) => void;
+	clear: (options?: ApplyOptions) => void;
 	bind: () => FilterBinding | void;
 }
 

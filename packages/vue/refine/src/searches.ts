@@ -1,12 +1,12 @@
-import type { VisitOptions } from "@inertiajs/core";
 import type { PromisifyFn } from "@vueuse/shared";
 import type { Refiner } from "./refiner";
+import { ApplyOptions } from "./types";
 
 export interface Search extends Refiner {}
 
 export interface HonedSearch extends Search {
-	apply: (options?: VisitOptions) => void;
-	clear: (options?: VisitOptions) => void;
+	apply: (options?: ApplyOptions) => void;
+	clear: (options?: ApplyOptions) => void;
 	bind: () => MatchBinding | void;
 }
 

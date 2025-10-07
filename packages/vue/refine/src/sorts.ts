@@ -1,6 +1,6 @@
-import type { VisitOptions } from "@inertiajs/core";
 import type { PromisifyFn } from "@vueuse/shared";
 import type { Refiner } from "./refiner";
+import type { ApplyOptions } from "./types";
 
 export type Direction = "asc" | "desc" | null;
 
@@ -10,8 +10,8 @@ export interface Sort extends Refiner {
 }
 
 export interface HonedSort extends Sort {
-	apply: (options?: VisitOptions) => void;
-	clear: (options?: VisitOptions) => void;
+	apply: (options?: ApplyOptions) => void;
+	clear: (options?: ApplyOptions) => void;
 	bind: () => SortBinding | void;
 }
 

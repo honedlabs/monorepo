@@ -1,83 +1,83 @@
-import { toValue as q, computed as l } from "vue";
-import { router as m } from "@inertiajs/vue3";
+import { toValue as q, computed as f } from "vue";
+import { router as v } from "@inertiajs/vue3";
 typeof WorkerGlobalScope < "u" && globalThis instanceof WorkerGlobalScope;
 const z = () => {
 };
-function X(a, u) {
-  function i(...t) {
-    return new Promise((f, c) => {
-      Promise.resolve(a(() => u.apply(this, t), { fn: u, thisArg: this, args: t })).then(f).catch(c);
+function X(u, c) {
+  function o(...r) {
+    return new Promise((m, s) => {
+      Promise.resolve(u(() => c.apply(this, r), { fn: c, thisArg: this, args: r })).then(m).catch(s);
     });
   }
-  return i;
+  return o;
 }
-function Y(a, u = {}) {
-  let i, t, f = z;
-  const c = (s) => {
-    clearTimeout(s), f(), f = z;
+function Y(u, c = {}) {
+  let o, r, m = z;
+  const s = (p) => {
+    clearTimeout(p), m(), m = z;
   };
-  let h;
-  return (s) => {
-    const g = q(a), p = q(u.maxWait);
-    return i && c(i), g <= 0 || p !== void 0 && p <= 0 ? (t && (c(t), t = null), Promise.resolve(s())) : new Promise((v, b) => {
-      f = u.rejectOnCancel ? b : v, h = s, p && !t && (t = setTimeout(() => {
-        i && c(i), t = null, v(h());
-      }, p)), i = setTimeout(() => {
-        t && c(t), t = null, v(s());
-      }, g);
+  let g;
+  return (p) => {
+    const b = q(u), y = q(c.maxWait);
+    return o && s(o), b <= 0 || y !== void 0 && y <= 0 ? (r && (s(r), r = null), Promise.resolve(p())) : new Promise((h, _) => {
+      m = c.rejectOnCancel ? _ : h, g = p, y && !r && (r = setTimeout(() => {
+        o && s(o), r = null, h(g());
+      }, y)), o = setTimeout(() => {
+        r && s(r), r = null, h(p());
+      }, b);
     });
   };
 }
-function F(a, u = 200, i = {}) {
+function x(u, c = 200, o = {}) {
   return X(
-    Y(u, i),
-    a
+    Y(c, o),
+    u
   );
 }
-function ne(a, u, i = {}) {
-  if (!(a != null && a[u]))
+function ne(u, c, o = {}) {
+  if (!(u != null && u[c]))
     throw new Error("The refine must be provided with valid props and key.");
-  const t = l(() => a[u]), f = l(() => t.value.term), c = l(() => !!t.value._sort_key), h = l(() => !!t.value._search_key), _ = l(() => !!t.value._match_key), s = l(
+  const r = f(() => u[c]), m = f(() => r.value.term), s = f(() => !!r.value._sort_key), g = f(() => !!r.value._search_key), w = f(() => !!r.value._match_key), p = f(
     () => {
       var e;
-      return (e = t.value.filters) == null ? void 0 : e.map((n) => ({
+      return (e = r.value.filters) == null ? void 0 : e.map((n) => ({
         ...n,
-        apply: (r, o = {}) => k(n, r, o),
-        clear: (r = {}) => U(n, r),
+        apply: (t, i = {}) => O(n, t, i),
+        clear: (t = {}) => U(n, t),
         bind: () => D(n.name)
       }));
     }
-  ), g = l(
+  ), b = f(
     () => {
       var e;
-      return (e = t.value.sorts) == null ? void 0 : e.map((n) => ({
+      return (e = r.value.sorts) == null ? void 0 : e.map((n) => ({
         ...n,
-        apply: (r = {}) => M(n, n.direction, r),
-        clear: (r = {}) => C(r),
+        apply: (t = {}) => M(n, n.direction, t),
+        clear: (t = {}) => C(t),
         bind: () => G(n)
       }));
     }
-  ), p = l(
+  ), y = f(
     () => {
       var e;
-      return (e = t.value.searches) == null ? void 0 : e.map((n) => ({
+      return (e = r.value.searches) == null ? void 0 : e.map((n) => ({
         ...n,
-        apply: (r = {}) => x(n, r),
-        clear: (r = {}) => x(n, r),
+        apply: (t = {}) => k(n, t),
+        clear: (t = {}) => k(n, t),
         bind: () => I(n)
       }));
     }
-  ), v = l(
-    () => s.value.filter(({ active: e }) => e)
-  ), b = l(
-    () => g.value.find(({ active: e }) => e)
-  ), R = l(
+  ), h = f(
     () => p.value.filter(({ active: e }) => e)
+  ), _ = f(
+    () => b.value.find(({ active: e }) => e)
+  ), F = f(
+    () => y.value.filter(({ active: e }) => e)
   );
-  function V(e) {
-    return Array.isArray(e) ? e.join(t.value._delimiter) : e;
+  function R(e) {
+    return Array.isArray(e) ? e.join(r.value._delimiter) : e;
   }
-  function O(e) {
+  function V(e) {
     return typeof e != "string" ? e : e.trim().replace(/\s+/g, "+");
   }
   function S(e) {
@@ -85,119 +85,133 @@ function ne(a, u, i = {}) {
       return e;
   }
   function E(e) {
-    return [V, O, S].reduce(
-      (n, r) => r(n),
+    return [R, V, S].reduce(
+      (n, t) => t(n),
       e
     );
   }
   function P(e, n) {
-    return n = Array.isArray(n) ? n : [n], n.includes(e) ? n.filter((r) => r !== e) : [...n, e];
+    return n = Array.isArray(n) ? n : [n], n.includes(e) ? n.filter((t) => t !== e) : [...n, e];
   }
   function j(e) {
-    return typeof e != "string" ? e : s.value.find(({ name: n }) => n === e);
+    return typeof e != "string" ? e : p.value.find(({ name: n }) => n === e);
   }
   function T(e, n = null) {
-    return typeof e != "string" ? e : g.value.find(
-      ({ name: r, direction: o }) => r === e && o === n
+    return typeof e != "string" ? e : b.value.find(
+      ({ name: t, direction: i }) => t === e && i === n
     );
   }
   function A(e) {
-    return typeof e != "string" ? e : p.value.find(({ name: n }) => n === e);
+    return typeof e != "string" ? e : y.value.find(({ name: n }) => n === e);
   }
   function B(e) {
-    return e ? typeof e == "string" ? v.value.some((n) => n.name === e) : e.active : !!v.value.length;
+    return e ? typeof e == "string" ? h.value.some((n) => n.name === e) : e.active : !!h.value.length;
   }
   function H(e) {
     var n;
-    return e ? typeof e == "string" ? ((n = b.value) == null ? void 0 : n.name) === e : e.active : !!b.value;
+    return e ? typeof e == "string" ? ((n = _.value) == null ? void 0 : n.name) === e : e.active : !!_.value;
   }
   function W(e) {
     var n;
-    return e ? typeof e == "string" ? (n = R.value) == null ? void 0 : n.some((r) => r.name === e) : e.active : !!f.value;
+    return e ? typeof e == "string" ? (n = F.value) == null ? void 0 : n.some((t) => t.name === e) : e.active : !!m.value;
   }
   function J(e, n = {}) {
-    const r = Object.fromEntries(
-      Object.entries(e).map(([o, d]) => [o, E(d)])
+    const t = Object.fromEntries(
+      Object.entries(e).map(([i, a]) => [i, E(a)])
     );
-    m.reload({
-      ...i,
+    v.reload({
+      ...o,
       ...n,
-      data: r
+      data: t
     });
   }
-  function k(e, n, r = {}) {
-    const o = j(e);
-    if (!o) return console.warn(`Filter [${e}] does not exist.`);
-    m.reload({
-      ...i,
-      ...r,
+  function O(e, n, t = {}) {
+    const i = j(e);
+    if (!i) return console.warn(`Filter [${e}] does not exist.`);
+    const { parameters: a, ...l } = t;
+    v.reload({
+      ...o,
+      ...l,
       data: {
-        [o.name]: E(n)
+        [i.name]: E(n),
+        ...a
       }
     });
   }
-  function M(e, n = null, r = {}) {
-    if (!c.value)
+  function M(e, n = null, t = {}) {
+    if (!s.value)
       return console.warn("Refine cannot perform sorting.");
-    const o = T(e, n);
-    if (!o) return console.warn(`Sort [${e}] does not exist.`);
-    m.reload({
-      ...i,
-      ...r,
+    const i = T(e, n);
+    if (!i) return console.warn(`Sort [${e}] does not exist.`);
+    const { parameters: a, ...l } = t;
+    v.reload({
+      ...o,
+      ...l,
       data: {
-        [t.value._sort_key]: S(o.next)
+        [r.value._sort_key]: S(i.next),
+        ...a
       }
     });
   }
   function $(e, n = {}) {
-    if (!h.value)
+    if (!g.value)
       return console.warn("Refine cannot perform searching.");
-    e = [O, S].reduce(
-      (r, o) => o(r),
+    e = [V, S].reduce(
+      (a, l) => l(a),
       e
-    ), m.reload({
+    );
+    const { parameters: t, ...i } = n;
+    v.reload({
+      ...o,
       ...i,
-      ...n,
       data: {
-        [t.value._search_key]: e
+        [r.value._search_key]: e,
+        ...t
       }
     });
   }
-  function x(e, n = {}) {
-    if (!_.value || !h.value)
+  function k(e, n = {}) {
+    if (!w.value || !g.value)
       return console.warn("Refine cannot perform matching.");
-    const r = A(e);
-    if (!r) return console.warn(`Match [${e}] does not exist.`);
-    const o = P(
-      r.name,
-      R.value.map(({ name: d }) => d)
-    );
-    m.reload({
-      ...i,
-      ...n,
+    const t = A(e);
+    if (!t) return console.warn(`Match [${e}] does not exist.`);
+    const i = P(
+      t.name,
+      F.value.map(({ name: d }) => d)
+    ), { parameters: a, ...l } = n;
+    v.reload({
+      ...o,
+      ...l,
       data: {
-        [t.value._match_key]: V(o)
+        [r.value._match_key]: R(i),
+        ...a
       }
     });
   }
   function U(e, n = {}) {
-    if (e) return k(e, null, n);
-    m.reload({
+    if (e) return O(e, null, n);
+    const { parameters: t, ...i } = n;
+    v.reload({
+      ...o,
       ...i,
-      ...n,
-      data: Object.fromEntries(
-        v.value.map(({ name: r }) => [r, null])
-      )
+      data: {
+        ...Object.fromEntries(
+          h.value.map(({ name: a }) => [a, null])
+        ),
+        ...t
+      }
     });
   }
   function C(e = {}) {
-    if (!c.value)
+    if (!s.value)
       return console.warn("Refine cannot perform sorting.");
-    m.reload({
-      ...i,
-      ...e,
+    const { parameters: n, ...t } = e;
+    v.reload({
+      ...o,
+      ...t,
       data: {
-        [t.value._sort_key]: null
+        [r.value._sort_key]: null,
+        ...n
       }
     });
   }
@@ -205,101 +219,105 @@ function ne(a, u, i = {}) {
     $(null, e);
   }
   function L(e = {}) {
-    if (!_.value)
+    if (!w.value)
       return console.warn("Refine cannot perform matching.");
-    m.reload({
-      ...i,
-      ...e,
+    const { parameters: n, ...t } = e;
+    v.reload({
+      ...o,
+      ...t,
       data: {
-        [t.value._match_key]: null
+        [r.value._match_key]: null,
+        ...n
       }
     });
   }
   function N(e = {}) {
-    var n;
-    m.reload({
-      ...i,
-      ...e,
+    var i;
+    const { parameters: n, ...t } = e;
+    v.reload({
+      ...o,
+      ...t,
       data: {
-        [t.value._search_key ?? ""]: void 0,
-        [t.value._sort_key ?? ""]: void 0,
-        [t.value._match_key ?? ""]: void 0,
+        [r.value._search_key ?? ""]: void 0,
+        [r.value._sort_key ?? ""]: void 0,
+        [r.value._match_key ?? ""]: void 0,
         ...Object.fromEntries(
-          ((n = t.value.filters) == null ? void 0 : n.map((r) => [
-            r.name,
+          ((i = r.value.filters) == null ? void 0 : i.map((a) => [
+            a.name,
             void 0
           ])) ?? []
-        )
+        ),
+        ...n
       }
     });
   }
   function D(e, n = {}) {
-    const r = j(e);
-    if (!r) return console.warn(`Filter [${e}] does not exist.`);
+    const t = j(e);
+    if (!t) return console.warn(`Filter [${e}] does not exist.`);
     const {
-      debounce: o = 150,
-      transform: d = (y) => y,
-      ...w
+      debounce: i = 150,
+      transform: a = (d) => d,
+      ...l
     } = n;
     return {
-      "onUpdate:modelValue": F((y) => {
-        k(r, d(y), w);
-      }, o),
-      modelValue: r.value
+      "onUpdate:modelValue": x((d) => {
+        O(t, a(d), l);
+      }, i),
+      modelValue: t.value
     };
   }
   function G(e, n = {}) {
-    if (!c.value)
+    if (!s.value)
       return console.warn("Refine cannot perform sorting.");
-    const r = T(e);
-    if (!r) return console.warn(`Sort [${e}] does not exist.`);
-    const { debounce: o = 0, transform: d, ...w } = n;
+    const t = T(e);
+    if (!t) return console.warn(`Sort [${e}] does not exist.`);
+    const { debounce: i = 0, transform: a, ...l } = n;
     return {
-      onClick: F(() => {
-        var y;
-        M(r, (y = b.value) == null ? void 0 : y.direction, w);
-      }, o)
+      onClick: x(() => {
+        var d;
+        M(t, (d = _.value) == null ? void 0 : d.direction, l);
+      }, i)
     };
   }
   function Q(e = {}) {
-    if (!h.value)
+    if (!g.value)
       return console.warn("Refine cannot perform searching.");
-    const { debounce: n = 700, transform: r, ...o } = e;
+    const { debounce: n = 700, transform: t, ...i } = e;
     return {
-      "onUpdate:modelValue": F(
-        (d) => {
-          $(d, o);
+      "onUpdate:modelValue": x(
+        (a) => {
+          $(a, i);
         },
         n
       ),
-      modelValue: f.value ?? ""
+      modelValue: m.value ?? ""
     };
   }
   function I(e, n = {}) {
-    if (!_.value)
+    if (!w.value)
       return console.warn("Refine cannot perform matching.");
-    const r = A(e);
-    if (!r) return console.warn(`Match [${e}] does not exist.`);
-    const { debounce: o = 0, transform: d, ...w } = n;
+    const t = A(e);
+    if (!t) return console.warn(`Match [${e}] does not exist.`);
+    const { debounce: i = 0, transform: a, ...l } = n;
     return {
-      "onUpdate:modelValue": F((y) => {
-        x(y, w);
-      }, o),
-      modelValue: W(r),
-      value: r.name
+      "onUpdate:modelValue": x((d) => {
+        k(d, l);
+      }, i),
+      modelValue: W(t),
+      value: t.name
     };
   }
   return {
-    filters: s,
-    sorts: g,
-    searches: p,
-    currentFilters: v,
-    currentSort: b,
-    currentSearches: R,
-    searchTerm: f,
-    isSortable: c,
-    isSearchable: h,
-    isMatchable: _,
+    filters: p,
+    sorts: b,
+    searches: y,
+    currentFilters: h,
+    currentSort: _,
+    currentSearches: F,
+    searchTerm: m,
+    isSortable: s,
+    isSearchable: g,
+    isMatchable: w,
     isFiltering: B,
     isSorting: H,
     isSearching: W,
@@ -307,10 +325,10 @@ function ne(a, u, i = {}) {
     getSort: T,
     getSearch: A,
     apply: J,
-    applyFilter: k,
+    applyFilter: O,
     applySort: M,
     applySearch: $,
-    applyMatch: x,
+    applyMatch: k,
     clearFilter: U,
     clearSort: C,
     clearSearch: K,
@@ -320,16 +338,16 @@ function ne(a, u, i = {}) {
     bindSort: G,
     bindSearch: Q,
     bindMatch: I,
-    stringValue: O,
+    stringValue: V,
     omitValue: S,
     toggleValue: P,
-    delimitArray: V
+    delimitArray: R
   };
 }
-function re(a, u) {
-  return a ? typeof a == "object" ? (a == null ? void 0 : a.type) === u : a === u : !1;
+function te(u, c) {
+  return u ? typeof u == "object" ? (u == null ? void 0 : u.type) === c : u === c : !1;
 }
 export {
-  re as is,
+  te as is,
   ne as useRefine
 };

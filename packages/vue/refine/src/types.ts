@@ -25,7 +25,14 @@ export interface Refine {
 	searches: Search[];
 }
 
-export interface BindingOptions extends VisitOptions {
+export interface ApplyOptions extends VisitOptions {
+	/**
+	 * Additional parameters to apply.
+	 */
+	parameters?: Record<string, any>;
+}
+
+export interface BindingOptions extends ApplyOptions {
 	/**
 	 * Transform the value before it is applied.
 	 */
@@ -49,6 +56,7 @@ export interface HonedRefine {
 	isSortable: boolean;
 	isSearchable: boolean;
 	isMatchable: boolean;
+	searchTerm: string | null | undefined;
 	isFiltering: (name?: Filter | string) => boolean;
 	isSorting: (name?: Sort | string) => boolean;
 	isSearching: (name?: Search | string) => boolean;
@@ -59,23 +67,23 @@ export interface HonedRefine {
 	applyFilter: (
 		filter: Filter | string,
 		value: any,
-		options?: VisitOptions,
+		options?: ApplyOptions,
 	) => void;
 	applySort: (
 		sort: Sort | string,
 		direction?: Direction,
-		options?: VisitOptions,
+		options?: ApplyOptions,
 	) => void;
 	applySearch: (
 		value: string | null | undefined,
-		options?: VisitOptions,
+		options?: ApplyOptions,
 	) => void;
-	applyMatch: (search: Search | string, options?: VisitOptions) => void;
-	clearFilter: (filter?: Filter | string, options?: VisitOptions) => void;
-	clearSort: (options?: VisitOptions) => void;
-	clearSearch: (options?: VisitOptions) => void;
-	clearMatch: (options?: VisitOptions) => void;
-	reset: (options?: VisitOptions) => void;
+	applyMatch: (search: Search | string, options?: ApplyOptions) => void;
+	clearFilter: (filter?: Filter | string, options?: ApplyOptions) => void;
+	clearSort: (options?: ApplyOptions) => void;
+	clearSearch: (options?: ApplyOptions) => void;
+	clearMatch: (options?: ApplyOptions) => void;
+	reset: (options?: ApplyOptions) => void;
 	bindFilter: (
 		filter: Filter | string,
 		options?: BindingOptions,

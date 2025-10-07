@@ -16,6 +16,7 @@ import type {
 	SortBinding,
 	SearchBinding,
 	MatchBinding,
+	ApplyOptions,
 } from "./types";
 
 export function useRefine<T extends Record<string, Refine>>(
@@ -43,9 +44,9 @@ export function useRefine<T extends Record<string, Refine>>(
 	const filters = computed<HonedFilter[]>(() =>
 		refinements.value.filters?.map((filter) => ({
 			...filter,
-			apply: (value: T, options: VisitOptions = {}) =>
+			apply: (value: T, options: ApplyOptions = {}) =>
 				applyFilter(filter, value, options),
-			clear: (options: VisitOptions = {}) => clearFilter(filter, options),
+			clear: (options: ApplyOptions = {}) => clearFilter(filter, options),
 			bind: () => bindFilter(filter.name),
 		})),
 	);
@@ -56,9 +57,9 @@ export function useRefine<T extends Record<string, Refine>>(
 	const sorts = computed<HonedSort[]>(() =>
 		refinements.value.sorts?.map((sort) => ({
 			...sort,
-			apply: (options: VisitOptions = {}) =>
+			apply: (options: ApplyOptions = {}) =>
 				applySort(sort, sort.direction, options),
-			clear: (options: VisitOptions = {}) => clearSort(options),
+			clear: (options: ApplyOptions = {}) => clearSort(options),
 			bind: () => bindSort(sort),
 		})),
 	);
@@ -69,8 +70,8 @@ export function useRefine<T extends Record<string, Refine>>(
 	const searches = computed<HonedSearch[]>(() =>
 		refinements.value.searches?.map((search) => ({
 			...search,
-			apply: (options: VisitOptions = {}) => applyMatch(search, options),
-			clear: (options: VisitOptions = {}) => applyMatch(search, options),
+			apply: (options: ApplyOptions = {}) => applyMatch(search, options),
+			clear: (options: ApplyOptions = {}) => applyMatch(search, options),
 			bind: () => bindMatch(search),
 		})),
 	);
@@ -236,17 +237,20 @@ export function useRefine<T extends Record<string, Refine>>(
 	function applyFilter(
 		filter: Filter | string,
 		value: any,
-		options: VisitOptions = {},
+		options: ApplyOptions = {},
 	) {
 		const refiner = getFilter(filter);
 
 		if (!refiner) return console.warn(`Filter [${filter}] does not exist.`);
 
+		const { parameters, ...visitOptions } = options;
+
 		router.reload({
 			...defaults,
-			...options,
+			...visitOptions,
 			data: {
 				[refiner.name]: pipe(value),
+				...parameters,
 			},
 		});
 	}
@@ -257,7 +261,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	function applySort(
 		sort: Sort | string,
 		direction: Direction = null,
-		options: VisitOptions = {},
+		options: ApplyOptions = {},
 	) {
 		if (!isSortable.value)
 			return console.warn("Refine cannot perform sorting.");
@@ -266,11 +270,14 @@ export function useRefine<T extends Record<string, Refine>>(
 
 		if (!refiner) return console.warn(`Sort [${sort}] does not exist.`);
 
+		const { parameters, ...visitOptions } = options;
+
 		router.reload({
 			...defaults,
-			...options,
+			...visitOptions,
 			data: {
 				[refinements.value._sort_key as string]: omitValue(refiner.next),
+				...parameters,
 			},
 		});
 	}
@@ -280,7 +287,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	 */
 	function applySearch(
 		value: string | null | undefined,
-		options: VisitOptions = {},
+		options: ApplyOptions = {},
 	) {
 		if (!isSearchable.value)
 			return console.warn("Refine cannot perform searching.");
@@ -290,11 +297,14 @@ export function useRefine<T extends Record<string, Refine>>(
 			value,
 		);
 
+		const { parameters, ...visitOptions } = options;
+
 		router.reload({
 			...defaults,
-			...options,
+			...visitOptions,
 			data: {
 				[refinements.value._search_key as string]: value,
+				...parameters,
 			},
 		});
 	}
@@ -302,7 +312,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	/**
 	 * Applies the given match.
 	 */
-	function applyMatch(search: Search | string, options: VisitOptions = {}) {
+	function applyMatch(search: Search | string, options: ApplyOptions = {}) {
 		if (!isMatchable.value || !isSearchable.value)
 			return console.warn("Refine cannot perform matching.");
 
@@ -315,11 +325,14 @@ export function useRefine<T extends Record<string, Refine>>(
 			currentSearches.value.map(({ name }) => name),
 		);
 
+		const { parameters, ...visitOptions } = options;
+
 		router.reload({
 			...defaults,
-			...options,
+			...visitOptions,
 			data: {
 				[refinements.value._match_key as string]: delimitArray(matches),
+				...parameters,
 			},
 		});
 	}
@@ -327,30 +340,38 @@ export function useRefine<T extends Record<string, Refine>>(
 	/**
 	 * Clear the given filter.
 	 */
-	function clearFilter(filter?: Filter | string, options: VisitOptions = {}) {
+	function clearFilter(filter?: Filter | string, options: ApplyOptions = {}) {
 		if (filter) return applyFilter(filter, null, options);
+
+		const { parameters, ...visitOptions } = options;
 
 		router.reload({
 			...defaults,
-			...options,
-			data: Object.fromEntries(
-				currentFilters.value.map(({ name }) => [name, null]),
-			),
+			...visitOptions,
+			data: {
+				...Object.fromEntries(
+					currentFilters.value.map(({ name }) => [name, null]),
+				),
+				...parameters,
+			},
 		});
 	}
 
 	/**
 	 * Clear the sort.
 	 */
-	function clearSort(options: VisitOptions = {}) {
+	function clearSort(options: ApplyOptions = {}) {
 		if (!isSortable.value)
 			return console.warn("Refine cannot perform sorting.");
 
+		const { parameters, ...visitOptions } = options;
+
 		router.reload({
 			...defaults,
-			...options,
+			...visitOptions,
 			data: {
 				[refinements.value._sort_key as string]: null,
+				...parameters,
 			},
 		});
 	}
@@ -358,22 +379,25 @@ export function useRefine<T extends Record<string, Refine>>(
 	/**
 	 * Clear the search.
 	 */
-	function clearSearch(options: VisitOptions = {}) {
+	function clearSearch(options: ApplyOptions = {}) {
 		applySearch(null, options);
 	}
 
 	/**
 	 * Clear the matching columns.
 	 */
-	function clearMatch(options: VisitOptions = {}) {
+	function clearMatch(options: ApplyOptions = {}) {
 		if (!isMatchable.value)
 			return console.warn("Refine cannot perform matching.");
 
+		const { parameters, ...visitOptions } = options;
+
 		router.reload({
 			...defaults,
-			...options,
+			...visitOptions,
 			data: {
 				[refinements.value._match_key as string]: null,
+				...parameters,
 			},
 		});
 	}
@@ -381,10 +405,12 @@ export function useRefine<T extends Record<string, Refine>>(
 	/**
 	 * Resets all filters, sorts, matches and search.
 	 */
-	function reset(options: VisitOptions = {}) {
+	function reset(options: ApplyOptions = {}) {
+		const { parameters, ...visitOptions } = options;
+
 		router.reload({
 			...defaults,
-			...options,
+			...visitOptions,
 			data: {
 				[refinements.value._search_key ?? ""]: undefined,
 				[refinements.value._sort_key ?? ""]: undefined,
@@ -395,6 +421,7 @@ export function useRefine<T extends Record<string, Refine>>(
 						undefined,
 					]) ?? [],
 				),
+				...parameters,
 			},
 		});
 	}

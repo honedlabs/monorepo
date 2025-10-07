@@ -2,7 +2,14 @@ import { ComputedRef } from 'vue';
 import { PromisifyFn } from '@vueuse/shared';
 import { VisitOptions } from '@inertiajs/core';
 
-export declare interface BindingOptions extends VisitOptions {
+export declare interface ApplyOptions extends VisitOptions {
+    /**
+     * Additional parameters to apply.
+     */
+    parameters?: Record<string, any>;
+}
+
+export declare interface BindingOptions extends ApplyOptions {
     /**
      * Transform the value before it is applied.
      */
@@ -33,8 +40,8 @@ export declare type FilterType = "boolean" | "date" | "datetime" | "multiple" | 
 export declare type FilterValue = string | number | boolean | null;
 
 export declare interface HonedFilter extends Filter {
-    apply: (value: any, options?: VisitOptions) => void;
-    clear: (options?: VisitOptions) => void;
+    apply: (value: any, options?: ApplyOptions) => void;
+    clear: (options?: ApplyOptions) => void;
     bind: () => FilterBinding | void;
 }
 
@@ -48,6 +55,7 @@ export declare interface HonedRefine {
     isSortable: boolean;
     isSearchable: boolean;
     isMatchable: boolean;
+    searchTerm: string | null | undefined;
     isFiltering: (name?: Filter | string) => boolean;
     isSorting: (name?: Sort | string) => boolean;
     isSearching: (name?: Search | string) => boolean;
@@ -55,15 +63,15 @@ export declare interface HonedRefine {
     getSort: (sort: Sort | string, dir?: Direction) => Sort | undefined;
     getSearch: (search: Search | string) => Search | undefined;
     apply: (values: Record<string, FilterValue>, options?: VisitOptions) => void;
-    applyFilter: (filter: Filter | string, value: any, options?: VisitOptions) => void;
-    applySort: (sort: Sort | string, direction?: Direction, options?: VisitOptions) => void;
-    applySearch: (value: string | null | undefined, options?: VisitOptions) => void;
-    applyMatch: (search: Search | string, options?: VisitOptions) => void;
-    clearFilter: (filter?: Filter | string, options?: VisitOptions) => void;
-    clearSort: (options?: VisitOptions) => void;
-    clearSearch: (options?: VisitOptions) => void;
-    clearMatch: (options?: VisitOptions) => void;
-    reset: (options?: VisitOptions) => void;
+    applyFilter: (filter: Filter | string, value: any, options?: ApplyOptions) => void;
+    applySort: (sort: Sort | string, direction?: Direction, options?: ApplyOptions) => void;
+    applySearch: (value: string | null | undefined, options?: ApplyOptions) => void;
+    applyMatch: (search: Search | string, options?: ApplyOptions) => void;
+    clearFilter: (filter?: Filter | string, options?: ApplyOptions) => void;
+    clearSort: (options?: ApplyOptions) => void;
+    clearSearch: (options?: ApplyOptions) => void;
+    clearMatch: (options?: ApplyOptions) => void;
+    reset: (options?: ApplyOptions) => void;
     bindFilter: (filter: Filter | string, options?: BindingOptions) => FilterBinding | void;
     bindSort: (sort: Sort | string, options?: BindingOptions) => SortBinding | void;
     bindSearch: (options?: BindingOptions) => SearchBinding | void;
@@ -75,14 +83,14 @@ export declare interface HonedRefine {
 }
 
 export declare interface HonedSearch extends Search {
-    apply: (options?: VisitOptions) => void;
-    clear: (options?: VisitOptions) => void;
+    apply: (options?: ApplyOptions) => void;
+    clear: (options?: ApplyOptions) => void;
     bind: () => MatchBinding | void;
 }
 
 export declare interface HonedSort extends Sort {
-    apply: (options?: VisitOptions) => void;
-    clear: (options?: VisitOptions) => void;
+    apply: (options?: ApplyOptions) => void;
+    clear: (options?: ApplyOptions) => void;
     bind: () => SortBinding | void;
 }
 
@@ -161,15 +169,15 @@ export declare function useRefine<T extends Record<string, Refine>>(props: T, ke
     getSort: (sort: Sort | string, dir?: Direction) => Sort | undefined;
     getSearch: (search: Search | string) => Search | undefined;
     apply: (values: Record<string, FilterValue>, options?: VisitOptions) => void;
-    applyFilter: (filter: Filter | string, value: any, options?: VisitOptions) => void;
-    applySort: (sort: Sort | string, direction?: Direction, options?: VisitOptions) => void;
-    applySearch: (value: string | null | undefined, options?: VisitOptions) => void;
-    applyMatch: (search: Search | string, options?: VisitOptions) => void;
-    clearFilter: (filter?: Filter | string, options?: VisitOptions) => void;
-    clearSort: (options?: VisitOptions) => void;
-    clearSearch: (options?: VisitOptions) => void;
-    clearMatch: (options?: VisitOptions) => void;
-    reset: (options?: VisitOptions) => void;
+    applyFilter: (filter: Filter | string, value: any, options?: ApplyOptions) => void;
+    applySort: (sort: Sort | string, direction?: Direction, options?: ApplyOptions) => void;
+    applySearch: (value: string | null | undefined, options?: ApplyOptions) => void;
+    applyMatch: (search: Search | string, options?: ApplyOptions) => void;
+    clearFilter: (filter?: Filter | string, options?: ApplyOptions) => void;
+    clearSort: (options?: ApplyOptions) => void;
+    clearSearch: (options?: ApplyOptions) => void;
+    clearMatch: (options?: ApplyOptions) => void;
+    reset: (options?: ApplyOptions) => void;
     bindFilter: (filter: Filter | string, options?: BindingOptions) => void | {
         "onUpdate:modelValue": PromisifyFn<(value: any) => void>;
         modelValue: FilterValue;
