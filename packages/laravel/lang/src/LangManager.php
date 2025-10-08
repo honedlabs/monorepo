@@ -27,6 +27,9 @@ class LangManager
      */
     protected $only = [];
 
+    /**
+     * Create a new lang manager instance.
+     */
     public function __construct(
         protected Application $app
     ) {}
@@ -214,6 +217,9 @@ class LangManager
         return $this->app['session'];
     }
 
+    /**
+     * Get the url generator from the app.
+     */
     protected function getUrlGenerator(): UrlGenerator
     {
         // @phpstan-ignore-next-line offsetAccess.nonOffsetAccessible

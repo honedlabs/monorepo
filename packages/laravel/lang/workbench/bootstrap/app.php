@@ -15,10 +15,6 @@ return Application::configure(basePath: $APP_BASE_PATH ?? default_skeleton_path(
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->prepend(Honed\Lang\Middleware\Localize::class);
-        // $middleware->prependToPriorityList(
-        //     before: Illuminate\Routing\Middleware\SubstituteBindings::class,
-        //     prepend: Honed\Lang\Middleware\Localize::class,
-        // );
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
