@@ -12,15 +12,8 @@ use Illuminate\Contracts\Container\ContextualAttribute;
 class CurrentReseller implements ContextualAttribute
 {
     /**
-     * Create a new class instance.
-     */
-    public function __construct() { }
-
-    /**
      * Resolve the current reseller. Requires reseller feature middleware to be enabled.
      *
-     * @param  self  $attribute
-     * @param  \Illuminate\Contracts\Container\Container  $container
      * @return \Illuminate\Http\Request|null
      */
     public static function resolve(self $attribute, Container $container)

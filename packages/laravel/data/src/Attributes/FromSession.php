@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Data\Attributes;
 
-use App\Facades\AppSession;
 use Attribute;
-use Spatie\LaravelData\Attributes\FromRouteParameter;
 use Spatie\LaravelData\Attributes\InjectsPropertyValue;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
-use Spatie\LaravelData\Support\Skipped;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class FromSession implements InjectsPropertyValue
@@ -16,8 +15,7 @@ class FromSession implements InjectsPropertyValue
     public function __construct(
         public string $key,
         public bool $replaceWhenPresentInPayload = true
-    ) {
-    }
+    ) {}
 
     public function resolve(
         DataProperty $dataProperty,

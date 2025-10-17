@@ -14,7 +14,7 @@ interface QueryRule
 {
     /**
      * Get the query builder to utilise.
-     * 
+     *
      * @return TBuilder
      */
     public function query(): Builder;

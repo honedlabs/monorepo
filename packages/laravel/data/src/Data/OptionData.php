@@ -12,5 +12,5 @@ class OptionData extends Data
         public string $label,
         public string|int $value
     ) {}
-    
+
 }

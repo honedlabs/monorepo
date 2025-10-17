@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 use Honed\Data\Rules\Scalar;
 use Illuminate\Support\Facades\Validator;
-use Spatie\LaravelData\Attributes\Validation\Min;
 
 beforeEach(function () {
     $this->rule = new Scalar();
 });
 
 it('validates', function ($input, bool $expected) {
-    expect($this->rule) 
+    expect($this->rule)
         ->isValid($input)->toBe($expected);
 })->with([
     'numeric' => [1, true],

@@ -10,8 +10,6 @@ use Spatie\LaravelData\Attributes\Validation\StringValidationAttribute;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 class HexColor extends StringValidationAttribute
 {
-    public function __construct() {}
-
     /**
      * Get the keyword for the validation rule.
      */

@@ -8,9 +8,7 @@ use Spatie\LaravelData\Data;
 
 class UserData extends Data
 {
-    use Separable;
-    
-    public string $name;
+    // use Separable;
 
-    public 
+    public string $name;
 }

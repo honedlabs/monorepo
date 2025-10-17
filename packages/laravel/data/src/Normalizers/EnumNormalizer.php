@@ -12,7 +12,7 @@ class EnumNormalizer implements Normalizer
 {
     /**
      * Normalize the value to an array.
-     * 
+     *
      * @return array{label: string, value: string|int}|null
      */
     public function normalize(mixed $value): null|array|Normalized
@@ -24,6 +24,6 @@ class EnumNormalizer implements Normalizer
         return [
             'label' => $value->name,
             'value' => $value->value,
-        ];   
+        ];
     }
 }

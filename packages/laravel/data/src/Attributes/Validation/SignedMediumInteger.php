@@ -9,7 +9,7 @@ use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class UnsignedSmallInteger extends CustomValidationAttribute
+class SignedMediumInteger extends CustomValidationAttribute
 {
     /**
      * Get the validation rules for the attribute.
@@ -18,6 +18,6 @@ class UnsignedSmallInteger extends CustomValidationAttribute
      */
     public function getRules(ValidationPath $path): array|object|string
     {
-        return ['integer', 'min:0', 'max:65535'];
+        return ['integer', 'min:-8388608', 'max:8388607'];
     }
 }

@@ -11,7 +11,7 @@ it('validates', function ($input, bool $expected) {
     expect(Validator::make([
         'test' => $input,
     ], CamelcaseData::getValidationRules([
-        'test' => $input
+        'test' => $input,
     ])))->passes()->toBe($expected);
 })->with([
     ['foo', true],

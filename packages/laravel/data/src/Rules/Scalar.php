@@ -16,7 +16,7 @@ class Scalar extends AbstractRule
     {
         if (is_array($value)) {
             return Arr::every(
-                $value, 
+                $value,
                 static fn (mixed $value): bool => is_scalar($value)
             );
         }

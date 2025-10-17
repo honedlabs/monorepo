@@ -6,6 +6,7 @@ namespace Honed\Data\Concerns;
 
 /**
  * @phpstan-require-extends \Spatie\LaravelData\Data
+ *
  * @phpstan-require-implements \Honed\Data\Contracts\Separable
  */
 trait SeparatesData
@@ -24,5 +25,4 @@ trait SeparatesData
     {
         return [];
     }
-
 }

@@ -6,7 +6,4 @@ namespace Honed\Data\Data;
 
 use Spatie\LaravelData\Data;
 
-class FormData extends Data
-{
-    
-}
+class FormData extends Data {}
