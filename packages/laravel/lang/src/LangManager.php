@@ -9,7 +9,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 class LangManager
 {
@@ -148,17 +148,21 @@ class LangManager
         /** @var array<int, string|BackedEnum> */
         $locales = (array) config('lang.locales', []);
 
-        return array_map(static::normalizeLocale(...), $locales);
+        return array_values(
+            array_filter(
+                array_map(static::normalizeLocale(...), $locales),
+            )
+        );
     }
 
     /**
      * Set the current locale.
      */
-    public function locale(string|BackedEnum $locale): bool
+    public function locale(string|BackedEnum|null $locale): bool
     {
         $locale = $this->normalizeLocale($locale);
 
-        if (! in_array($locale, $this->availableLocales())) {
+        if ($locale === null || ! in_array($locale, $this->availableLocales())) {
             return false;
         }
 
@@ -202,10 +206,17 @@ class LangManager
     /**
      * Normalize the locale to a string.
      */
-    protected static function normalizeLocale(string|BackedEnum $locale): string
+    protected static function normalizeLocale(string|BackedEnum|null $locale): ?string
     {
+        if ($locale === null || $locale === 'null') {
+            return null;
+        }
+
         /** @var string */
-        return is_string($locale) ? $locale : $locale->value;
+        $parsed = is_string($locale) ? $locale : $locale->value;
+
+        // Remove the region code if it exists
+        return Str::before($parsed, '-');
     }
 
     /**

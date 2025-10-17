@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getLangPath() Get the path of the base directory where the language files are stored.
  * @method static string getLocale() Get the current locale.
  * @method static array<int, string|BackedEnum> availableLocales() Get the supported locales for the application.
- * @method static bool locale(string|BackedEnum $locale) Set the current locale.
+ * @method static bool locale(string|BackedEnum|null $locale) Set the current locale.
  * @method static bool usesSession() Check if the session is used.
  * @method static string registerParameter() Register the locale as a default parameter in the URL generator.
  *

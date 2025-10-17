@@ -14,7 +14,8 @@ class Localize
     /**
      * Handle the incoming request.
      *
-     * @return mixed
+     * @param  Closure(Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(Request $request, Closure $next)
     {

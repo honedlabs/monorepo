@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\Locale;
 use Illuminate\Support\Arr;
 
 use function Orchestra\Testbench\workbench_path;
@@ -49,7 +50,19 @@ it('sets locale', function () {
         ->locale('es')->toBeTrue()
         ->getLocale()->toBe('es')
         ->locale('fr')->toBeFalse()
-        ->getLocale()->toBe('es');
+        ->getLocale()->toBe('es')
+        ->locale('en-AU')->toBeTrue()
+        ->getLocale()->toBe('en')
+        ->locale(null)->toBeFalse()
+        ->getLocale()->toBe('en')
+        ->locale('null')->toBeFalse()
+        ->getLocale()->toBe('en')
+        ->locale(Locale::Spanish)->toBeTrue()
+        ->getLocale()->toBe('es')
+        ->locale(Locale::French)->toBeFalse()
+        ->getLocale()->toBe('es')
+        ->locale(Locale::English)->toBeTrue()
+        ->getLocale()->toBe('en');
 });
 
 it('has available locales', function () {
