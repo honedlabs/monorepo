@@ -12,8 +12,6 @@ use Spatie\LaravelData\Support\Validation\ValidationPath;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 class Snakecase extends CustomValidationAttribute
 {
-    public function __construct() {}
-
     /**
      * Get the validation rules for the attribute.
      *

@@ -11,8 +11,6 @@ use Spatie\LaravelData\Support\Validation\ValidationPath;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 class UnsignedTinyInteger extends CustomValidationAttribute
 {
-    public function __construct() {}
-
     /**
      * Get the validation rules for the attribute.
      *

@@ -18,6 +18,6 @@ class SignedInteger extends CustomValidationAttribute
      */
     public function getRules(ValidationPath $path): array|object|string
     {
-        return ['min:-2147483647', 'max:2147483647'];
+        return ['integer', 'min:-2147483647', 'max:2147483647'];
     }
 }
