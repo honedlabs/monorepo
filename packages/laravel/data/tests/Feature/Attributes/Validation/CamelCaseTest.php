@@ -2,22 +2,31 @@
 
 declare(strict_types=1);
 
-use App\Data\CamelCaseData;
+use App\Data\CamelcaseData;
 use Illuminate\Support\Facades\Validator;
 
 beforeEach(function () {});
 
 it('validates', function ($input, bool $expected) {
     expect(Validator::make([
-        'name' => $input,
-    ], CamelCaseData::getValidationRules([
-        'name' => $input
+        'test' => $input,
+    ], CamelcaseData::getValidationRules([
+        'test' => $input
     ])))->passes()->toBe($expected);
 })->with([
-    'camel' => ['testName', true],
-    'kebab' => ['test-name', false],
-    'snake' => ['test_name', false],
-    'studly' => ['TestName', true],
-    'numeric' => ['123', false],
-    'non-string' => [1, false],
+    ['foo', true],
+    ['Foo', true],
+    ['fooBar', true],
+    ['fooBarBaz', true],
+    ['fooBarBâz', true],
+    ['fOo', true],
+    ['PostScript', true],
+    ['iPhone', true],
+    ['foobaR', false],
+    ['FoobaR', false],
+    ['FOo', false],
+    ['FOO', false],
+    ['fo0bar', false],
+    ['-fooBar', false],
+    ['-fooBar-', false],
 ]);

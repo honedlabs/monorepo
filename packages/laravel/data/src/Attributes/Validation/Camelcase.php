@@ -10,7 +10,7 @@ use Spatie\LaravelData\Support\Validation\ValidationPath;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class CamelCase extends CustomValidationAttribute
+class Camelcase extends CustomValidationAttribute
 {
     public function __construct() {}
 

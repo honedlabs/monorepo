@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes\Validation;
 
 use Attribute;
-use Intervention\Validation\Rules\Longitude as LongitudeRule;
+use Intervention\Validation\Rules\Slug as SlugRule;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class Longitude extends CustomValidationAttribute
+class Slug extends CustomValidationAttribute
 {
     public function __construct() {}
 
@@ -21,6 +21,6 @@ class Longitude extends CustomValidationAttribute
      */
     public function getRules(ValidationPath $path): array|object|string
     {
-        return [new LongitudeRule()];
+        return [new SlugRule()];
     }
 }

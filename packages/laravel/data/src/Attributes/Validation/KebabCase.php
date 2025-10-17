@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes\Validation;
 
 use Attribute;
+use Intervention\Validation\Rules\Kebabcase as KebabcaseRule;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class KebabCase extends CustomValidationAttribute
+class Kebabcase extends CustomValidationAttribute
 {
     public function __construct() {}
 
@@ -20,6 +21,6 @@ class KebabCase extends CustomValidationAttribute
      */
     public function getRules(ValidationPath $path): array|object|string
     {
-        return [new Kebabcase()];
+        return [new KebabcaseRule()];
     }
 }
