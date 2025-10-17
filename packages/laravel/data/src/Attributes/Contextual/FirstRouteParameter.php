@@ -9,7 +9,7 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Container\ContextualAttribute;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
-class CurrentReseller implements ContextualAttribute
+class FirstRouteParameter implements ContextualAttribute
 {
     /**
      * Resolve the current reseller. Requires reseller feature middleware to be enabled.
@@ -18,6 +18,7 @@ class CurrentReseller implements ContextualAttribute
      */
     public static function resolve(self $attribute, Container $container)
     {
+        dd(request()->route()->parameters());
         // return $container->make(FirstRouteParameter::class);
     }
 }

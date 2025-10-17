@@ -10,6 +10,7 @@ class LuhnData extends Data
 {
     public function test()
     {
+        // static::validateAndCreate()
         $this->toArray();
     }
 }
