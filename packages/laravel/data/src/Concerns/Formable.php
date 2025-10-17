@@ -11,7 +11,6 @@ trait Formable
 {
     public function toForm(): array
     {
-        return [];
+        return $this->transform();
     }
-    
 }

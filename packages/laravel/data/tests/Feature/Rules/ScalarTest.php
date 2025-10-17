@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Honed\Data\Rules\Scalar;
 use Illuminate\Support\Facades\Validator;
+use Spatie\LaravelData\Attributes\Validation\Min;
 
 beforeEach(function () {
     $this->rule = new Scalar();

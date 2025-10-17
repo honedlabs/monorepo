@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes\Validation;
 
 use Attribute;
-use Honed\Data\Rules\Scalar;
+use Intervention\Validation\Rules\Camelcase as CamelcaseRule;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class ForeignId extends CustomValidationAttribute
+class SignedInteger extends CustomValidationAttribute
 {
     public function __construct() {}
 
@@ -21,6 +21,6 @@ class ForeignId extends CustomValidationAttribute
      */
     public function getRules(ValidationPath $path): array|object|string
     {
-        return [new Scalar()];
+        return ['min:-2147483647', 'max:2147483647'];
     }
 }
