@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Data\Data;
 
-use Spatie\LaravelData\Resource;
+use Spatie\LaravelData\Data;
 
-class EnumData extends Resource
+class OptionData extends Data
 {
     public function __construct(
         public string $label,
         public string|int $value
     ) {}
-
-    // public static function normalizers
+    
 }
