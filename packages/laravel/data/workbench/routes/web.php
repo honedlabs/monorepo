@@ -11,8 +11,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('user', UserController::class);
+Route::resource('users', UserController::class);
 
-Route::resource('locales.user', LocaleUserController::class);
+Route::resource('locales.users', LocaleUserController::class);
 
-Route::resource('products.user', ProductUserController::class);
+Route::resource('products.users', ProductUserController::class);

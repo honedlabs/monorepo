@@ -6,13 +6,14 @@ namespace App\Classes;
 
 use Honed\Data\Attributes\Contextual\SessionParameter;
 
-class SessionClass
+class GetSession
 {
     public function __construct(
-        #[SessionParameter('test')] public string $test
+        #[SessionParameter('test')]
+        public ?string $test
     ) {}
 
-    public function get(): string
+    public function get(): ?string
     {
         return $this->test;
     }

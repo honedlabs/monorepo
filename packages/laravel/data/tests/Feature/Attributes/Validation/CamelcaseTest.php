@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 beforeEach(function () {
     $this->artisan('data:cache-structures');
-})->only();
+});
 
 it('validates', function (bool $expected, mixed $input) {
     expect(Validator::make([

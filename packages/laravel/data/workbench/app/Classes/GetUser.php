@@ -9,15 +9,15 @@ use Honed\Data\Attributes\Contextual\FirstRouteParameter;
 use Honed\Data\Attributes\Contextual\SessionParameter;
 use Illuminate\Contracts\Auth\Authenticatable;
 
-class PrimitiveClass
+class GetUser
 {
     public function __construct(
-        #[FirstRouteParameter] 
-        public string $locale
+        #[FirstRouteParameter(Authenticatable::class)] 
+        public ?User $user
     ) {}
 
-    public function get(): string
+    public function get(): ?User
     {
-        return $this->locale;
+        return $this->user;
     }
 }
