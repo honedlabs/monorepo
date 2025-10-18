@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes\Validation;
 
 use Attribute;
+use Intervention\Validation\Rules\Creditcard as CreditcardRule;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
 
@@ -18,6 +19,6 @@ class CreditCard extends CustomValidationAttribute
      */
     public function getRules(ValidationPath $path): array|object|string
     {
-        return [new self()];
+        return [new CreditcardRule()];
     }
 }

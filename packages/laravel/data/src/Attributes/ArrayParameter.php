@@ -18,5 +18,4 @@ class ArrayParameter implements PreparesPropertyValue
     {
         return '';
     }
-
 }

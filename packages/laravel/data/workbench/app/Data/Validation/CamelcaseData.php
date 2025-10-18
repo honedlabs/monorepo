@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Data;
+namespace App\Data\Validation;
 
 use Honed\Data\Attributes\Validation\CamelCase;
 use Spatie\LaravelData\Data;
