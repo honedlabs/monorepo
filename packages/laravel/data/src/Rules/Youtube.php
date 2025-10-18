@@ -9,12 +9,18 @@ use Intervention\Validation\AbstractRegexRule;
 class Youtube extends AbstractRegexRule
 {
     /**
-     * {@inheritdoc}
-     *
-     * @see AbstractRegexRule::pattern()
+     * REGEX pattern of rule
      */
     protected function pattern(): string
     {
         return "/^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/i";
+    }
+
+    /**
+     * Return the shortname of the current rule.
+     */
+    protected function shortname(): string
+    {
+        return 'youtube';
     }
 }
