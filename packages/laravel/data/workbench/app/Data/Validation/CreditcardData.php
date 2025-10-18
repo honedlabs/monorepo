@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Data\Validation;
 
-use Honed\Data\Attributes\Validation\CreditCard;
+use Honed\Data\Attributes\Validation\Creditcard;
 use Spatie\LaravelData\Data;
 
-class CreditCardData extends Data
+class CreditcardData extends Data
 {
     public function __construct(
-        #[CreditCard]
+        #[Creditcard]
         public string $test
     ) {}
 }

@@ -17,7 +17,7 @@ use Spatie\LaravelData\Support\Skipped;
 class FromFirstRouteParameter implements InjectsPropertyValue
 {
     public function __construct(
-        public bool $acceptsOnlyModels = true,
+        public ?string $type = null,
         public bool $replaceWhenPresentInPayload = true
     ) {}
 
@@ -39,7 +39,7 @@ class FromFirstRouteParameter implements InjectsPropertyValue
 
         $parameter = Arr::first(
             $payload->route()->parameters(), 
-            fn ($parameter): bool => $this->acceptsOnlyModels ? $parameter instanceof Model : true,
+            fn ($parameter): bool => $this->type ? $parameter instanceof $this->type : true,
         );
 
         if ($parameter === null) {

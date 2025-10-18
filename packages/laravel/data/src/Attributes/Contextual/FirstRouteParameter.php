@@ -13,8 +13,11 @@ use Illuminate\Database\Eloquent\Model;
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class FirstRouteParameter implements ContextualAttribute
 {
+    /**
+     * @param class-string|null $type
+     */
     public function __construct(
-        public bool $acceptsOnlyModels = true
+        public ?string $type = null
     ) {}
 
     /**
@@ -25,11 +28,13 @@ class FirstRouteParameter implements ContextualAttribute
     public static function resolve(self $attribute, Container $container)
     {
         foreach ($container->make('request')->route()->parameters() as $parameter) {
-            if ($attribute->acceptsOnlyModels && ! $parameter instanceof Model) {
+            if ($attribute->type !== null && ! $parameter instanceof $attribute->type) {
                 continue;
             }
 
             return $parameter;
         }
+
+        return null;
     }
 }

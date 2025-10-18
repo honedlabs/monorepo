@@ -10,7 +10,7 @@ use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class CreditCard extends CustomValidationAttribute
+class Creditcard extends CustomValidationAttribute
 {
     /**
      * Get the validation rules for the attribute.

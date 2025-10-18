@@ -3,11 +3,16 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use Workbench\App\Http\Controllers\UserController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\LocaleUserController;
+use App\Http\Controllers\ProductUserController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/user', [UserController::class, 'store'])
-    ->name('users.store');
+Route::resource('user', UserController::class);
+
+Route::resource('locales.user', LocaleUserController::class);
+
+Route::resource('products.user', ProductUserController::class);
