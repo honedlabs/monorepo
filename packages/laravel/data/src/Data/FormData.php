@@ -12,6 +12,7 @@ class FormData extends Data
 {
     public static function pipeline(): DataPipeline
     {
-        return parent::pipeline()->firstThrough(PreparePropertiesDataPipe::class);
+        return parent::pipeline()
+            ->firstThrough(PreparePropertiesDataPipe::class);
     }
 }

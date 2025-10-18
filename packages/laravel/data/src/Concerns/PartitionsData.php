@@ -14,6 +14,13 @@ use Exception;
 trait PartitionsData
 {
     /**
+     * Define the partitions for the data.
+     * 
+     * @return array<string, list<string>>
+     */
+    abstract public function partitions(): array;
+
+    /**
      * Get a partition of the data.
      * 
      * @return $this

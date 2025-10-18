@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Data\DataPipes;
 
+use Honed\Data\Contracts\PreparesPropertyValue;
 use Illuminate\Http\Request;
 use Spatie\LaravelData\DataPipes\DataPipe;
 use Spatie\LaravelData\Support\Creation\CreationContext;
@@ -26,11 +27,20 @@ class PreparePropertiesDataPipe implements DataPipe
             return $properties;
         }
 
-        dd($class);
+        foreach ($class->properties as $dataProperty) {
+            $attribute = $dataProperty->attributes->first(PreparesPropertyValue::class);
 
-        ($class->name)::validate($properties);
+            if ($attribute === null) {
+                continue;
+            }
 
-        $creationContext->validationStrategy = ValidationStrategy::AlreadyRan;
+            $name = $dataProperty->inputMappedName ?: $dataProperty->name;
+
+            $value = $attribute->overwrite($dataProperty, $payload, $properties, $creationContext);
+
+            $properties[$name] = $value;
+        }
+
 
         return $properties;
     }
