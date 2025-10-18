@@ -10,10 +10,10 @@ class GetSession
 {
     public function __construct(
         #[SessionParameter('test')]
-        public ?string $test
+        public mixed $test
     ) {}
 
-    public function get(): ?string
+    public function get(): mixed
     {
         return $this->test;
     }

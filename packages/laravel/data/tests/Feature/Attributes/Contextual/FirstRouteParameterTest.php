@@ -14,7 +14,7 @@ use function Pest\Laravel\get;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
-})->only();
+});
 
 it('resolves interface', function (string $route) {
     get($route);
