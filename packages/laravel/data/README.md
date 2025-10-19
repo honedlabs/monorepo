@@ -27,18 +27,6 @@ Get started with the package by requiring it in your PHP project using [Composer
 composer require honed/data
 ```
 
-## Companion
-
-> **Requires [Vue.js 3.4+](https://vuejs.org/about/releases.html).**
-
-> **Requires [Inertia.js 1.2+](https://inertiajs.com/client-side-setup)**
-
-Get started with the [companion package](https://github.com/honedlabs/data-vue) by installing it as a node dependency via [NPM](https://npmjs.com).
-
-```bash
-npm install @honed/data
-```
-
 ## Documentation
 
 Please refer to the [documentation](https://honed.dev/data) for the usage of the package.

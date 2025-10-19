@@ -15,9 +15,9 @@ it('validates', function (bool $expected, mixed $input) {
     ])))->passes()->toBe($expected);
 })->with([
     [true, '4444111122223333'],
-    // [false, '9182819264532375'],
-    // [false, '12'],
-    // [false, '5555111122223333'],
-    // [false, 'xxxxxxxxxxxxxxxx'],
-    // [false, '4444111I22223333'],
+    [false, '9182819264532375'],
+    [false, '12'],
+    [false, '5555111122223333'],
+    [false, 'xxxxxxxxxxxxxxxx'],
+    [false, '4444111I22223333'],
 ]);

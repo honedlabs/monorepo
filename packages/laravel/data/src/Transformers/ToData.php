@@ -28,6 +28,7 @@ class ToData implements Transformer
         mixed $value,
         TransformationContext $context
     ): mixed {
+    
         if ($property->type->acceptsType('array')) {
             return ($this->data)::collect($value, 'array');
         }
