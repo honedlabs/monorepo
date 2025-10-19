@@ -11,22 +11,22 @@ it('provides parameter', function (mixed $value) {
 
     expect($test)->toBe($value);
 })
-->with([
-    function () {
-        session()->put('test', 'test');
+    ->with([
+        function () {
+            session()->put('test', 'test');
 
-        return 'test';
-    },
-    function () {
-        session()->put('_test', 'test');
+            return 'test';
+        },
+        function () {
+            session()->put('_test', 'test');
 
-        return null;
-    },
-    function () {
-        session()->put('test', 'test');
+            return null;
+        },
+        function () {
+            session()->put('test', 'test');
 
-        session()->forget('test');
+            session()->forget('test');
 
-        return null;
-    }
-]);
+            return null;
+        },
+    ]);

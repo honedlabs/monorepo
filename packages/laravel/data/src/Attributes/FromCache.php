@@ -5,27 +5,29 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes;
 
 use Attribute;
-use Illuminate\Database\Eloquent\Model;
+use Honed\Data\Support\HasRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Spatie\LaravelData\Attributes\InjectsPropertyValue;
-use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Creation\CreationContext;
+use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Skipped;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class FromCache implements InjectsPropertyValue
+class FromCache extends HasRepository implements InjectsPropertyValue
 {
     public function __construct(
-        public string $key,
-        public ?string $store = null,
+        public string $cacheKey,
+        ?string $driver = null,
         public bool $replaceWhenPresentInPayload = true
-    ) {}
+    ) {
+        $this->driver = $driver;
+    }
 
     /**
      * Resolve the first route parameter.
-     * 
-     * @param array<string, mixed> $properties
+     *
+     * @param  array<string, mixed>  $properties
+     * @param CreationContext<*> $creationContext
      */
     public function resolve(
         DataProperty $dataProperty,
@@ -38,7 +40,7 @@ class FromCache implements InjectsPropertyValue
             return Skipped::create();
         }
 
-        return app('cache')->store($this->store)->get($this->key);
+        return $this->getRepository()->get($this->cacheKey);
     }
 
     /**

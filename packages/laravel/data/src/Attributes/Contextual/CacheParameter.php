@@ -5,31 +5,25 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes\Contextual;
 
 use Attribute;
-use Illuminate\Container\Attributes\RouteParameter;
+use Honed\Data\Support\HasRepository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Container\ContextualAttribute;
-use Illuminate\Database\Eloquent\Model;
 
-/**
- * @template T
- */
 #[Attribute(Attribute::TARGET_PARAMETER)]
-class CacheParameter implements ContextualAttribute
+class CacheParameter extends HasRepository implements ContextualAttribute
 {
     public function __construct(
-        public string $key,
-        public ?string $store = null
-    ) {}
+        public string $cacheKey,
+        ?string $driver = null
+    ) {
+        $this->driver = $driver;
+    }
 
     /**
      * Resolve the cache parameter.
-     * 
-     * @return T
      */
     public static function resolve(self $attribute, Container $container): mixed
     {
-        return $container->make('cache')
-            ->store($attribute->store)
-            ->get($attribute->key);
+        return $attribute->getRepository()->get($attribute->cacheKey);
     }
 }

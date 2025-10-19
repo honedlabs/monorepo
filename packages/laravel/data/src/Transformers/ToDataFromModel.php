@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Data\Attributes;
+namespace Honed\Data\Transformers;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -11,15 +11,15 @@ use Spatie\LaravelData\Support\Transformation\TransformationContext;
 use Spatie\LaravelData\Transformers\Transformer;
 
 /**
- * @template TData of \Spatie\LaravelData\Contracts\BaseData
+ * @template TData of \Spatie\LaravelData\Contracts\BaseData&\Spatie\LaravelData\Contracts\TransformableData
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
 class ToDataFromModel implements Transformer
 {
     /**
-     * @param class-string<TData> $data
-     * @param class-string<TModel> $model
-     * @param list<string>|null $columns
+     * @param  class-string<TData>  $data
+     * @param  class-string<TModel>  $model
+     * @param  list<string>|null  $columns
      */
     public function __construct(
         public string $data,
@@ -40,16 +40,15 @@ class ToDataFromModel implements Transformer
         $model = $this->resolveQuery($value)->first($this->columns ?? ['*']);
 
         if ($property->type->isNullable) {
-            return ($this->data)::optional($model);
+            return ($this->data)::optional($model)?->toArray();
         }
 
-        return ($this->data)::from($model);
+        return ($this->data)::from($model)->toArray();
     }
 
     /**
      * Resolve the query to utilise.
      *
-     * @param mixed $value
      * @return \Illuminate\Database\Eloquent\Builder<TModel>
      */
     protected function resolveQuery(mixed $value): Builder
@@ -63,7 +62,7 @@ class ToDataFromModel implements Transformer
 
     /**
      * Get an instance of the model.
-     * 
+     *
      * @return TModel
      */
     protected function getModel(): Model

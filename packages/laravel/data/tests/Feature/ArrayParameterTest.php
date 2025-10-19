@@ -13,7 +13,7 @@ it('handles property', function () {
         'user_id' => [
             'id' => 1,
             'name' => 'Test User',
-        ]
+        ],
     ]);
 
     expect(ProductData::from($request)->user_id)
@@ -30,8 +30,8 @@ it('handles iterable property', function () {
             [
                 'id' => 2,
                 'name' => 'Test User 2',
-            ]
-        ]
+            ],
+        ],
     ]);
 
     expect(ProductUsersData::from($request)->user_ids)
@@ -54,7 +54,7 @@ it('handles missing property', function () {
             [
                 'name' => 'Test User',
             ],
-        ]
+        ],
     ]);
 
     expect(ProductData::from($request)->user_id)->toBeNull();
@@ -68,8 +68,8 @@ it('handles missing iterable property', function () {
             ],
             [
                 'name' => 'Test User 2',
-            ]
-        ]
+            ],
+        ],
     ]);
 
     expect(ProductUsersData::from($request)->user_ids)
@@ -85,8 +85,8 @@ it('handles malformed iterable property', function () {
             ],
             [
                 'name' => 'Test User 2',
-            ]
-        ]
+            ],
+        ],
     ]);
 
     expect(ProductUsersData::from($request)->user_ids)

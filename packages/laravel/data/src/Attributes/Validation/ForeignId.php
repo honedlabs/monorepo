@@ -18,7 +18,7 @@ use Spatie\LaravelData\Support\Validation\ValidationPath;
 class ForeignId extends CustomValidationAttribute
 {
     /**
-     * @param class-string<TModel|\Honed\Data\Contracts\QueryRule<TModel, TBuilder>> $query
+     * @param  class-string<TModel|\Honed\Data\Contracts\QueryRule<TModel, TBuilder>>  $query
      */
     public function __construct(
         protected string $query,

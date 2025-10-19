@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes\Contextual;
 
 use Attribute;
-use Illuminate\Container\Attributes\RouteParameter;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Container\ContextualAttribute;
-use Illuminate\Database\Eloquent\Model;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class FirstRouteParameter implements ContextualAttribute
 {
     /**
-     * @param class-string|null $type
+     * @param  class-string|null  $type
      */
     public function __construct(
         public ?string $type = null

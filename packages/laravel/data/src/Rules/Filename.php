@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Data\Rules;
 
-use Illuminate\Support\Arr;
 use Intervention\Validation\AbstractRule;
 
 class Filename extends AbstractRule
 {
     /**
-     * @param list<string> $extensions
+     * @param  list<string>  $extensions
      */
     public function __construct(
         protected array $extensions = [],
     ) {}
-    
+
     /**
      * Checks if the given value is valid in the scope of the current rule.
      */

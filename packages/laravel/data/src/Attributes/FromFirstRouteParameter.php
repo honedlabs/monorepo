@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes;
 
 use Attribute;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Spatie\LaravelData\Attributes\InjectsPropertyValue;
-use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Creation\CreationContext;
+use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Skipped;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
@@ -23,8 +22,9 @@ class FromFirstRouteParameter implements InjectsPropertyValue
 
     /**
      * Resolve the first route parameter.
-     * 
-     * @param array<string, mixed> $properties
+     *
+     * @param  array<string, mixed>  $properties
+     * @param CreationContext<*> $creationContext
      */
     public function resolve(
         DataProperty $dataProperty,
@@ -38,7 +38,7 @@ class FromFirstRouteParameter implements InjectsPropertyValue
         }
 
         $parameter = Arr::first(
-            $payload->route()?->parameters() ?? [], 
+            $payload->route()?->parameters() ?? [],
             fn ($parameter): bool => $this->type ? $parameter instanceof $this->type : true,
         );
 

@@ -6,16 +6,9 @@ namespace Honed\Data\Attributes;
 
 use Attribute;
 use Honed\Data\Contracts\PreparesPropertyValue;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as SupportCollection;
-use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Creation\CreationContext;
+use Spatie\LaravelData\Support\DataProperty;
 
-/**
- * @template TData of \Spatie\LaravelData\Contracts\BaseData
- * 
- * @implements PreparesPropertyValue<TData>
- */
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class ArrayParameter implements PreparesPropertyValue
 {
@@ -25,9 +18,9 @@ class ArrayParameter implements PreparesPropertyValue
 
     /**
      * Overwrite the property value before it is validated.
-     * 
-     * @param array<string, mixed> $properties
-     * @param CreationContext<TData> $creationContext
+     *
+     * @param  array<string, mixed>  $properties
+     * @param CreationContext<*> $creationContext
      */
     public function overwrite(
         DataProperty $dataProperty,
@@ -35,7 +28,7 @@ class ArrayParameter implements PreparesPropertyValue
         array $properties,
         CreationContext $creationContext
     ): mixed {
-        
+
         $name = $dataProperty->inputMappedName ?: $dataProperty->name;
         $value = $properties[$name] ?? null;
 

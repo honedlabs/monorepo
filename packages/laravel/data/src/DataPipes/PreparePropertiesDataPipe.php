@@ -15,9 +15,9 @@ class PreparePropertiesDataPipe implements DataPipe
 {
     /**
      * Handle the data pipe.
-     * 
-     * @param array<string, mixed> $properties
-     * @param CreationContext<\Spatie\LaravelData\Contracts\BaseData> $creationContext
+     *
+     * @param  array<string, mixed>  $properties
+     * @param CreationContext<*> $creationContext
      */
     public function handle(
         mixed $payload,
@@ -26,7 +26,7 @@ class PreparePropertiesDataPipe implements DataPipe
         CreationContext $creationContext
     ): array {
 
-        if (! $payload instanceof Request 
+        if (! $payload instanceof Request
             || $creationContext->validationStrategy === ValidationStrategy::Disabled
             || $creationContext->validationStrategy === ValidationStrategy::AlreadyRan
         ) {
@@ -46,7 +46,6 @@ class PreparePropertiesDataPipe implements DataPipe
 
             $properties[$name] = $value;
         }
-
 
         return $properties;
     }

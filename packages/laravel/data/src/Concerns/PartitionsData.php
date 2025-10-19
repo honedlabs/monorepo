@@ -15,17 +15,17 @@ trait PartitionsData
 {
     /**
      * Define the partitions for the data.
-     * 
+     *
      * @return array<string, list<string>>
      */
     abstract public function partitions(): array;
 
     /**
      * Get a partition of the data.
-     * 
+     *
      * @return $this
-     * 
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function partition(string|BackedEnum $key, bool $exclude = false): static
     {
@@ -33,7 +33,7 @@ trait PartitionsData
 
         if ($keys === null) {
             throw new Exception(
-                sprintf("Partition key [%s] does exist for data class [%s].", $key, static::class)
+                sprintf('Partition key [%s] does exist for data class [%s].', $key, static::class)
             );
         }
 
@@ -46,7 +46,7 @@ trait PartitionsData
 
     /**
      * Get the partition for the given key.
-     * 
+     *
      * @return list<string>|null
      */
     protected function getPartition(string $key): ?array

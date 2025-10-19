@@ -13,7 +13,7 @@ it('tests', function () {
         'user_id' => [
             'id' => 1,
             'name' => 'Test User',
-        ]
+        ],
     ]);
 
     // dd(ProductData::from($request));

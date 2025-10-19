@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\Status;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Enums\Status;
-use App\Models\Product;
-use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>

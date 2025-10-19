@@ -8,7 +8,6 @@ use App\Classes\GetUser;
 use App\Enums\Locale;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 use function Pest\Laravel\get;
 

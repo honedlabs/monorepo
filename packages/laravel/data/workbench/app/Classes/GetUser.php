@@ -6,13 +6,12 @@ namespace App\Classes;
 
 use App\Models\User;
 use Honed\Data\Attributes\Contextual\FirstRouteParameter;
-use Honed\Data\Attributes\Contextual\SessionParameter;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 class GetUser
 {
     public function __construct(
-        #[FirstRouteParameter(Authenticatable::class)] 
+        #[FirstRouteParameter(Authenticatable::class)]
         public ?User $user
     ) {}
 

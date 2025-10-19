@@ -5,32 +5,25 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes\Contextual;
 
 use Attribute;
-use Illuminate\Container\Attributes\RouteParameter;
+use Honed\Data\Support\HasSession;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Container\ContextualAttribute;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\LaravelData\Support\Validation\References\RouteParameterReference;
 
-/**
- * @template T
- */
 #[Attribute(Attribute::TARGET_PARAMETER)]
-class SessionParameter implements ContextualAttribute
+class SessionParameter extends HasSession implements ContextualAttribute
 {
     public function __construct(
         public string $sessionKey,
-        public ?string $driver = null
-    ) {}
+        ?string $driver = null
+    ) {
+        $this->driver = $driver;
+    }
 
     /**
      * Resolve the session parameter.
-     * 
-     * @return T
      */
     public static function resolve(self $attribute, Container $container): mixed
     {
-        return $container->make('session')
-            ->driver($attribute->driver)
-            ->get($attribute->sessionKey);
+        return $attribute->getSession()->get($attribute->sessionKey);
     }
 }

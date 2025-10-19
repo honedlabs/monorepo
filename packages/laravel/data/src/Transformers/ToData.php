@@ -14,7 +14,7 @@ use Spatie\LaravelData\Transformers\Transformer;
 class ToData implements Transformer
 {
     /**
-     * @param class-string<TData> $data
+     * @param  class-string<TData>  $data
      */
     public function __construct(
         public string $data
@@ -28,9 +28,9 @@ class ToData implements Transformer
         mixed $value,
         TransformationContext $context
     ): mixed {
-    
+
         if ($property->type->acceptsType('array')) {
-            return ($this->data)::collect($value, 'array');
+            return ($this->data)::collect((array) $value, 'array');
         }
 
         return ($this->data)::from($value);

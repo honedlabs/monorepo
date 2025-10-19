@@ -13,7 +13,7 @@ use Spatie\LaravelData\Support\Validation\ValidationPath;
 class Filename extends CustomValidationAttribute
 {
     /**
-     * @param list<string> $extensions
+     * @param  list<string>  $extensions
      */
     public function __construct(
         protected array $extensions = [],
