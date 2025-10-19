@@ -23,12 +23,13 @@ jobs:
           # - command
           # - core
           # - crumb
+          - data
           # - disable
           # - flash
           # - form
-          - honed
+          # - honed
           # - infolist
-          - lang
+          # - lang
           # - layout
           # - lock
           # - memo
