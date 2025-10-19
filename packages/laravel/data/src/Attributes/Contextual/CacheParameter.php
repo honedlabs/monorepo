@@ -10,6 +10,9 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Container\ContextualAttribute;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @template T
+ */
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class CacheParameter implements ContextualAttribute
 {
@@ -19,11 +22,11 @@ class CacheParameter implements ContextualAttribute
     ) {}
 
     /**
-     * Resolve the current reseller. Requires reseller feature middleware to be enabled.
-     *
-     * @return mixed
+     * Resolve the cache parameter.
+     * 
+     * @return T
      */
-    public static function resolve(self $attribute, Container $container)
+    public static function resolve(self $attribute, Container $container): mixed
     {
         return $container->make('cache')
             ->store($attribute->store)

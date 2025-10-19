@@ -5,7 +5,9 @@ declare(strict_types=1);
 use App\Classes\GetCache;
 use Illuminate\Support\Facades\Cache;
 
-beforeEach(function () {})->only();
+beforeEach(function () {
+    $this->freezeTime();
+});
 
 afterEach(function () {
     cache()->flush();
@@ -34,17 +36,15 @@ it('provides parameter', function (mixed $value) {
         return null;
     },
     function () {
-        $this->freezeTime();
-
-        cache()->remember('test', 60, function () {
+        cache()->remember('test', 10, function () {
             return 'test';
         });
+
+        $this->travel(9)->seconds();
 
         return 'test';
     },
     function () {
-        $this->freezeTime();
-
         cache()->remember('test', 10, function () {
             return 'test';
         });
