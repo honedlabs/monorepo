@@ -16,53 +16,54 @@ it('provides parameter', function (mixed $value) {
     $test = app()->make(GetCache::class)->get();
 
     expect($test)->toBe($value);
-})
-    ->with([
-        function () {
-            cache(['test' => 'test']);
+})->skip(function () {
+    return (float) app()->version() < 12.0;
+})->with([
+    function () {
+        cache(['test' => 'test']);
 
+        return 'test';
+    },
+    function () {
+        cache(['_test' => 'test']);
+
+        return null;
+    },
+    function () {
+        cache(['test' => 'test']);
+        cache()->forget('test');
+
+        return null;
+    },
+    function () {
+        cache()->remember('test', 10, function () {
             return 'test';
-        },
-        function () {
-            cache(['_test' => 'test']);
+        });
 
-            return null;
-        },
-        function () {
-            cache(['test' => 'test']);
-            cache()->forget('test');
+        $this->travel(9)->seconds();
 
-            return null;
-        },
-        function () {
-            cache()->remember('test', 10, function () {
-                return 'test';
-            });
-
-            $this->travel(9)->seconds();
-
+        return 'test';
+    },
+    function () {
+        cache()->remember('test', 10, function () {
             return 'test';
-        },
-        function () {
-            cache()->remember('test', 10, function () {
-                return 'test';
-            });
+        });
 
-            $this->travel(11)->seconds();
+        $this->travel(11)->seconds();
 
-            return null;
-        },
-        function () {
-            $this->freezeTime();
+        return null;
+    },
+    function () {
+        $this->freezeTime();
 
-            cache()->flexible('test', [10, 20], 'value-1');
+        cache()->flexible('test', [10, 20], 'value-1');
 
-            $this->travel(11)->seconds();
+        $this->travel(11)->seconds();
 
-            cache()->flexible('test', [10, 20], 'value-2');
+        cache()->flexible('test', [10, 20], 'value-2');
 
-            defer()->invoke();
+        defer()->invoke();
 
-            return 'value-2';
-        },
-    ]);
+        return 'value-2';
+    },
+]);
