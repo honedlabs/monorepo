@@ -16,6 +16,6 @@ it('tests', function () {
         ]
     ]);
 
-    dd(ProductData::from($request));
+    // dd(ProductData::from($request));
     expect(true)->toBeTrue();
 });

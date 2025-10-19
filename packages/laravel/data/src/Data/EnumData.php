@@ -12,7 +12,7 @@ class EnumData extends OptionData
     /**
      * Return a list of normalizers to use for the data.
      * 
-     * @return list<class-string<Normalizer>>
+     * @return list<class-string<\Spatie\LaravelData\Normalizers\Normalizer>>
      */
     public static function normalizers(): array
     {

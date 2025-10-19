@@ -38,7 +38,7 @@ class FromFirstRouteParameter implements InjectsPropertyValue
         }
 
         $parameter = Arr::first(
-            $payload->route()->parameters(), 
+            $payload->route()?->parameters() ?? [], 
             fn ($parameter): bool => $this->type ? $parameter instanceof $this->type : true,
         );
 

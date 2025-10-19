@@ -13,7 +13,6 @@ class DataServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/data.php', 'data');
     }
 
     /**
@@ -21,14 +20,6 @@ class DataServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->publishes([
-            __DIR__.'/../config/data.php' => config_path('data.php'),
-        ], 'data-config');
 
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                //
-            ]);
-        }
     }
 }

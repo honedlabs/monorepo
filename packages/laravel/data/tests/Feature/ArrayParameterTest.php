@@ -6,7 +6,7 @@ use App\Data\ProductData;
 use App\Data\ProductUsersData;
 use Illuminate\Http\Request;
 
-beforeEach(function () {})->only();
+beforeEach(function () {});
 
 it('handles property', function () {
     $request = Request::create('/', Request::METHOD_POST, [

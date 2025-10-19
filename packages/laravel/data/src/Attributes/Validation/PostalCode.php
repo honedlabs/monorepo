@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes\Validation;
 
 use Attribute;
-use Intervention\Validation\Rules\PostalCode as PostalCodeRule;
+use Intervention\Validation\Rules\Postalcode as PostalcodeRule;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
 
@@ -26,6 +26,6 @@ class PostalCode extends CustomValidationAttribute
      */
     public function getRules(ValidationPath $path): array|object|string
     {
-        return [new PostalCodeRule($this->countryCodes)];
+        return [new PostalcodeRule($this->countryCodes)];
     }
 }

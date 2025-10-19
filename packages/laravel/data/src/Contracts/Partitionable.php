@@ -6,9 +6,6 @@ namespace Honed\Data\Contracts;
 
 use BackedEnum;
 
-/**
- * @phpstan-require-implements \Spatie\LaravelData\Contracts\IncludeableData
- */
 interface Partitionable
 {
     /**

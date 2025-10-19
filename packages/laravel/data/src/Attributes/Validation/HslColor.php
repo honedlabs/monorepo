@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes\Validation;
 
 use Attribute;
-use Intervention\Validation\Rules\HslColor as HslColorRule;
+use Intervention\Validation\Rules\Hslcolor as HslcolorRule;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
 
@@ -19,6 +19,6 @@ class HslColor extends CustomValidationAttribute
      */
     public function getRules(ValidationPath $path): array|object|string
     {
-        return [new HslColorRule()];
+        return [new HslcolorRule()];
     }
 }

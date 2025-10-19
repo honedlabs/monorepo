@@ -13,6 +13,12 @@ use Spatie\LaravelData\Support\DataClass;
 
 class PreparePropertiesDataPipe implements DataPipe
 {
+    /**
+     * Handle the data pipe.
+     * 
+     * @param array<string, mixed> $properties
+     * @param CreationContext<\Spatie\LaravelData\Contracts\BaseData> $creationContext
+     */
     public function handle(
         mixed $payload,
         DataClass $class,

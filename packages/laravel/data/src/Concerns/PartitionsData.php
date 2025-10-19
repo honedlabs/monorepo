@@ -8,7 +8,7 @@ use BackedEnum;
 use Exception;
 
 /**
- * @phpstan-require-extends \Spatie\LaravelData\Concerns\IncludeableData
+ * @phpstan-require-implements \Spatie\LaravelData\Contracts\IncludeableData
  * @phpstan-require-implements \Honed\Data\Contracts\Partitionable
  */
 trait PartitionsData

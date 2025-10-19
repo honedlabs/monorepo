@@ -27,7 +27,7 @@ class FirstRouteParameter implements ContextualAttribute
      */
     public static function resolve(self $attribute, Container $container)
     {
-        foreach ($container->make('request')->route()->parameters() as $parameter) {
+        foreach (($container->make('request')->route()?->parameters() ?? []) as $parameter) {
             if ($attribute->type !== null && ! $parameter instanceof $attribute->type) {
                 continue;
             }
