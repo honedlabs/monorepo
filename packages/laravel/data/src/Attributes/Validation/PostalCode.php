@@ -14,11 +14,11 @@ class PostalCode extends CustomValidationAttribute
 {
     /**
      * List of country codes.
-     * 
+     *
      * @var list<string>
      */
     public array $countryCodes;
-    
+
     public function __construct(string ...$countryCodes)
     {
         // @phpstan-ignore-next-line parameter.type

@@ -11,6 +11,6 @@ class LuhnData extends Data
 {
     public function __construct(
         #[Luhn]
-        public string $test
+        public string|int $test
     ) {}
 }

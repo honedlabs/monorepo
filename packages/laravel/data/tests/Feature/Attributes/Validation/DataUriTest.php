@@ -18,7 +18,7 @@ it('validates', function (bool $expected, mixed $input) {
     [true, 'data:,foo'],
     [true, 'data:;base64,Zm9v'],
     [true, 'data:,foo%20bar'],
-    [true, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAH' .
+    [true, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAH'.
         'ElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='],
     [true, 'data:text/vnd-example+xyz;foo=bar;base64,R0lGODdh'],
     [true, 'data:text/vnd-example+xyz;foo=bar;bar-baz=false;base64,R0lGODdh'],

@@ -11,6 +11,6 @@ class LongitudeData extends Data
 {
     public function __construct(
         #[Longitude]
-        public float $test
+        public string $test
     ) {}
 }
