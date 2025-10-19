@@ -10,7 +10,7 @@ use Spatie\LaravelData\Data;
 class PostalCodeData extends Data
 {
     public function __construct(
-        #[PostalCode]
+        #[PostalCode('gb')]
         public string $test
     ) {}
 }

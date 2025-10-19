@@ -13,11 +13,17 @@ use Spatie\LaravelData\Support\Validation\ValidationPath;
 class PostalCode extends CustomValidationAttribute
 {
     /**
-     * @param  list<string>  $countryCodes
+     * List of country codes.
+     * 
+     * @var list<string>
      */
-    public function __construct(
-        protected array $countryCodes = []
-    ) {}
+    public array $countryCodes;
+    
+    public function __construct(string ...$countryCodes)
+    {
+        // @phpstan-ignore-next-line parameter.type
+        $this->countryCodes = $countryCodes;
+    }
 
     /**
      * Get the validation rules for the attribute.
