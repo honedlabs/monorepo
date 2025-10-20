@@ -7,9 +7,12 @@ namespace Honed\Data\DataPipes;
 use Honed\Data\Contracts\PreparesPropertyValue;
 use Illuminate\Http\Request;
 use Spatie\LaravelData\DataPipes\DataPipe;
+use Spatie\LaravelData\Exceptions\CannotCreateData;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\Creation\ValidationStrategy;
 use Spatie\LaravelData\Support\DataClass;
+use Spatie\LaravelData\Support\DataProperty;
+use Spatie\LaravelData\Support\Types\CombinationType;
 
 class PreparePropertiesDataPipe implements DataPipe
 {
@@ -33,18 +36,44 @@ class PreparePropertiesDataPipe implements DataPipe
             return $properties;
         }
 
-        foreach ($class->properties as $dataProperty) {
-            $attribute = $dataProperty->attributes->first(PreparesPropertyValue::class);
+        foreach ($properties as $name => $value) {
+            $dataProperty = $class->properties[$name] ?? null;
 
-            if ($attribute === null) {
+            if ($dataProperty === null) {
                 continue;
             }
 
-            $name = $dataProperty->inputMappedName ?: $dataProperty->name;
+            $attribute = $dataProperty->attributes->first(PreparesPropertyValue::class);
 
-            $value = $attribute->overwrite($dataProperty, $payload, $properties, $creationContext);
+            if ($attribute !== null) {
+                $properties[$name] = $attribute->overwrite($dataProperty, $payload, $properties, $creationContext);
+                continue;
+            }
 
-            $properties[$name] = $value;
+            if (
+                $dataProperty->type->kind->isDataObject()
+                || $dataProperty->type->kind->isDataCollectable()
+            ) {
+                try {
+                    $context = $creationContext->next($dataProperty->type->dataClass, $name);
+
+                    $data = $dataProperty->type->kind->isDataObject()
+                        ? $context->from($value)
+                        : $context->collect($value, $dataProperty->type->iterableClass);
+
+                    $creationContext->previous();
+
+                    $properties[$name] = $data;
+                } catch (CannotCreateData $exception) {
+                    $creationContext->previous();
+
+                    if ($dataProperty->type->type instanceof CombinationType) {
+                        return $value;
+                    }
+
+                    throw $exception;
+                }
+            }
         }
 
         return $properties;
