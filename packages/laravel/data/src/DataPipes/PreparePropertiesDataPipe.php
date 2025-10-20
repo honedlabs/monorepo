@@ -7,15 +7,17 @@ namespace Honed\Data\DataPipes;
 use Honed\Data\Contracts\PreparesPropertyValue;
 use Illuminate\Http\Request;
 use Spatie\LaravelData\DataPipes\DataPipe;
-use Spatie\LaravelData\Exceptions\CannotCreateData;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\Creation\ValidationStrategy;
 use Spatie\LaravelData\Support\DataClass;
-use Spatie\LaravelData\Support\DataProperty;
-use Spatie\LaravelData\Support\Types\CombinationType;
+use Spatie\LaravelData\Support\DataConfig;
 
 class PreparePropertiesDataPipe implements DataPipe
 {
+    public function __construct(
+        protected DataConfig $config
+    ) {}
+
     /**
      * Handle the data pipe.
      *
@@ -46,33 +48,25 @@ class PreparePropertiesDataPipe implements DataPipe
             $attribute = $dataProperty->attributes->first(PreparesPropertyValue::class);
 
             if ($attribute !== null) {
-                $properties[$name] = $attribute->overwrite($dataProperty, $payload, $properties, $creationContext);
+                $value = $attribute->overwrite($dataProperty, $payload, $properties, $creationContext);
+
+                $properties[$name] = $value;
+
                 continue;
             }
 
             if (
-                $dataProperty->type->kind->isDataObject()
-                || $dataProperty->type->kind->isDataCollectable()
+                (
+                    $dataProperty->type->kind->isDataObject()
+                    || $dataProperty->type->kind->isDataCollectable()
+                ) && $dataProperty->type->dataClass !== null
             ) {
-                try {
-                    $context = $creationContext->next($dataProperty->type->dataClass, $name);
+                $dataClass = $this->config->getDataClass($dataProperty->type->dataClass);
 
-                    $data = $dataProperty->type->kind->isDataObject()
-                        ? $context->from($value)
-                        : $context->collect($value, $dataProperty->type->iterableClass);
+                // @phpstan-ignore-next-line
+                $value = $this->handle($payload, $dataClass, (array) $value, $creationContext);
 
-                    $creationContext->previous();
-
-                    $properties[$name] = $data;
-                } catch (CannotCreateData $exception) {
-                    $creationContext->previous();
-
-                    if ($dataProperty->type->type instanceof CombinationType) {
-                        return $value;
-                    }
-
-                    throw $exception;
-                }
+                $properties[$name] = $value;
             }
         }
 

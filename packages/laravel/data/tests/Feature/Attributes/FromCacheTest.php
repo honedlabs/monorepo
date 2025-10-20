@@ -2,11 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Classes\GetCache;
 use App\Data\CacheData;
 use Illuminate\Http\Request;
-
-use function Pest\Laravel\get;
 
 beforeEach(function () {
     $this->freezeTime();

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Classes\GetSession;
 use App\Data\SessionData;
 use Illuminate\Http\Request;
 

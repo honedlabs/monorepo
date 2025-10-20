@@ -6,6 +6,7 @@ use App\Data\NestedData;
 use App\Data\ProductData;
 use App\Data\ProductUsersData;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 beforeEach(function () {});
 
@@ -46,12 +47,12 @@ it('handles nested property', function () {
                 'id' => 1,
                 'name' => 'Test User',
             ],
-        ]
+        ],
     ]);
 
     expect(NestedData::from($request)->product->user_id)
         ->toBe(1);
-})->only();
+});
 
 it('handles nested, iterable property', function () {
     $request = Request::create('/', Request::METHOD_POST, [
@@ -77,9 +78,8 @@ it('handles missing key', function () {
     expect(ProductData::from($request)->user_id)
         ->toBeNull();
 
-    expect(ProductUsersData::from($request)->user_ids)
-        ->toBeNull();
-});
+    ProductUsersData::from($request);
+})->throws(ValidationException::class);
 
 it('handles missing property', function () {
     $request = Request::create('/', Request::METHOD_POST, [
