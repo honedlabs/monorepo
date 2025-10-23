@@ -25,30 +25,30 @@ class FormData extends Data
             ->firstThrough(PreparePropertiesDataPipe::class);
     }
 
-    /** @return array<string, mixed> */
-    public function transform(
-        null|TransformationContextFactory|TransformationContext $transformationContext = null,
-    ): array {
-        $transformationContext = match (true) {
-            $transformationContext instanceof TransformationContext => $transformationContext,
-            $transformationContext instanceof TransformationContextFactory => $transformationContext->get($this),
-            $transformationContext === null => new TransformationContext(
-                maxDepth: config('data.max_transformation_depth'),
-                throwWhenMaxDepthReached: config('data.throw_when_max_transformation_depth_reached')
-            )
-        };
+    // /** @return array<string, mixed> */
+    // public function transform(
+    //     null|TransformationContextFactory|TransformationContext $transformationContext = null,
+    // ): array {
+    //     $transformationContext = match (true) {
+    //         $transformationContext instanceof TransformationContext => $transformationContext,
+    //         $transformationContext instanceof TransformationContextFactory => $transformationContext->get($this),
+    //         $transformationContext === null => new TransformationContext(
+    //             maxDepth: config('data.max_transformation_depth'),
+    //             throwWhenMaxDepthReached: config('data.throw_when_max_transformation_depth_reached')
+    //         )
+    //     };
 
-        $resolver = match (true) {
-            $this instanceof self => SupportDataContainer::get()->fieldDataResolver(),
-            $this instanceof BaseDataContract => DataContainer::get()->transformedDataResolver(),
-            $this instanceof BaseDataCollectableContract => DataContainer::get()->transformedDataCollectableResolver(),
-            default => throw new Exception('Cannot transform data object')
-        };
+    //     $resolver = match (true) {
+    //         $this instanceof self => SupportDataContainer::get()->fieldDataResolver(),
+    //         $this instanceof BaseDataContract => DataContainer::get()->transformedDataResolver(),
+    //         $this instanceof BaseDataCollectableContract => DataContainer::get()->transformedDataCollectableResolver(),
+    //         default => throw new Exception('Cannot transform data object')
+    //     };
 
-        if ($this instanceof IncludeableDataContract && $this instanceof ContextableDataContract) {
-            $transformationContext->mergePartialsFromDataContext($this);
-        }
+    //     if ($this instanceof IncludeableDataContract && $this instanceof ContextableDataContract) {
+    //         $transformationContext->mergePartialsFromDataContext($this);
+    //     }
 
-        return $resolver->execute($this, $transformationContext);
-    }
+    //     return $resolver->execute($this, $transformationContext);
+    // }
 }
