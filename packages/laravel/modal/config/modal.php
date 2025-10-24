@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 return [
+    
     /*
     |--------------------------------------------------------------------------
     | Fortify Routes Middleware
@@ -15,5 +16,7 @@ return [
     |
     */
 
-    'middleware' => [],
+    'middleware' => [
+        \Illuminate\Cookie\Middleware\EncryptCookies::class,
+    ],
 ];

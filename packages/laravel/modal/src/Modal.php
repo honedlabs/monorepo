@@ -71,7 +71,7 @@ class Modal implements Responsable
      */
     public static function getExcludedMiddleware()
     {
-        return static::$excludeMiddleware;
+        return array_merge(config('modal.middleware'), static::$excludeMiddleware);
     }
 
     /**

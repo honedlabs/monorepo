@@ -3,6 +3,8 @@
 namespace Honed\Modal;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Testing\TestResponse;
 use Inertia\Response;
@@ -12,68 +14,49 @@ class ModalServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services for the package.
-     * 
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/modal.php', 'modal');
     }
 
     /**
      * Bootstrap the application services for the package.
-     * 
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->registerResponseMacros();
-        $this->registerTestingMacros();
+        $this->configureMacros();
 
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
         }
-        
     }
 
     /**
      * Register macros on the Inertia response factory.
-     * 
-     * @return void
      */
-    protected function registerResponseMacros()
+    protected function configureMacros(): void
     {
-        ResponseFactory::macro('modal', function (
-            string $component,
-            array|Arrayable $props = []
-        ) {
-            return new Modal($component, $props);
-        });
+        ResponseFactory::macro(
+            'modal',
+            static fn (string $component, array|Arrayable $props = []): Modal => new Modal($component, $props)
+        );
 
-        ResponseFactory::macro('dialog', function (
-            string $component,
-            array|Arrayable $props = []
-        ) {
-            return new Modal($component, $props);
-        });
-    }
+        ResponseFactory::macro(
+            'dialog', 
+            static fn (string $component, array|Arrayable $props = []): Modal => new Modal($component, $props)
+        );
 
-    /**
-     * Register macros on the TestResponse class.
-     * 
-     * @return void
-     */
-    protected function registerTestingMacros()
-    {
-        // TestResponse::macro('inertiaModal')
+        Router::macro('setCurrentRequest', function (Request $request): void {
+            /** @var \Illuminate\Routing\Router $this */
+            $this->currentRequest = $request;
+        });
     }
 
     /**
      * Register the publishing for the package.
-     *
-     * @return void
      */
-    protected function offerPublishing()
+    protected function offerPublishing(): void
     {
         $this->publishes([
             __DIR__.'/../config/modal.php' => config_path('modal.php'),
