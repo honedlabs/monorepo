@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Data\Rules;
 
-use Honed\Data\Contracts\WithQuery;
+use Honed\Data\Contracts\QueryFrom;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Intervention\Validation\AbstractRule;
@@ -16,10 +16,10 @@ use Intervention\Validation\AbstractRule;
 class RecordsExist extends AbstractRule
 {
     /**
-     * @param  class-string<TModel|WithQuery<TModel, TBuilder>>|TBuilder|TModel|WithQuery<TModel, TBuilder>  $query
+     * @param  class-string<TModel|QueryFrom<TModel, TBuilder>>|TBuilder|TModel|QueryFrom<TModel, TBuilder>  $query
      */
     public function __construct(
-        protected string|Builder|Model|WithQuery $query,
+        protected string|Builder|Model|QueryFrom $query,
         protected ?string $column = null,
     ) {}
 
@@ -44,7 +44,7 @@ class RecordsExist extends AbstractRule
 
         /** @var TBuilder */
         return match (true) {
-            $this->query instanceof WithQuery => $this->query->query(),
+            $this->query instanceof QueryFrom => $this->query->query(),
             $this->query instanceof Model => $this->query->newQuery(),
             default => $this->query,
         };

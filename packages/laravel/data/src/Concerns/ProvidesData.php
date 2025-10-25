@@ -8,7 +8,7 @@ use Honed\Data\Exceptions\DataClassNotSetException;
 use Spatie\LaravelData\Data;
 
 /**
- * @template TData of \Spatie\LaravelData\Data
+ * @template TData of \Spatie\LaravelData\Data = \Spatie\LaravelData\Data
  */
 trait ProvidesData
 {

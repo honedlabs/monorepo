@@ -8,7 +8,7 @@ use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;
 
 /**
- * @template TData of \Spatie\LaravelData\Contracts\BaseData
+ * @template TData of \Spatie\LaravelData\Data
  */
 class ToData extends FormTransformer
 {

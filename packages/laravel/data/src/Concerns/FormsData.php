@@ -10,6 +10,7 @@ use Spatie\LaravelData\DataPipeline;
 
 /**
  * @phpstan-require-extends \Spatie\LaravelData\Data
+ * @phpstan-require-implements \Honed\Data\Contracts\Formable
  */
 trait FormsData
 {

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 beforeEach(function () {
     $this->rule = new Vimeo();
-});
+})->only();
 
 it('validates', function (bool $expected, string $input) {
     expect($this->rule)
@@ -53,7 +53,7 @@ it('passes validator', function () {
     $validator = Validator::make([
         'value' => 'https://vimeo.com/123456789',
     ], [
-        'value' => [new Vimeo()],
+        'value' => [$this->rule],
     ]);
 
     expect($validator->fails())->toBeFalse();
@@ -61,9 +61,9 @@ it('passes validator', function () {
 
 it('fails validator', function () {
     $validator = Validator::make([
-        'value' => new stdClass(),
+        'value' => 5,
     ], [
-        'value' => [new Vimeo()],
+        'value' => [$this->rule],
     ]);
 
     expect($validator)

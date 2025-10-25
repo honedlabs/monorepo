@@ -10,7 +10,7 @@ use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;
 
 /**
- * @template TData of \Spatie\LaravelData\Contracts\BaseData&\Spatie\LaravelData\Contracts\TransformableData
+ * @template TData of \Spatie\LaravelData\Data
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
 class ToDataFromModel extends FormTransformer

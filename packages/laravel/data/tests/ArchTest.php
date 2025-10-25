@@ -8,7 +8,7 @@ use Spatie\LaravelData\DataPipes\DataPipe;
 use Spatie\LaravelData\Normalizers\Normalizer;
 use Spatie\LaravelData\Transformers\Transformer;
 
-beforeEach(function () {})->only();
+beforeEach(function () {});
 
 arch()->preset()->php();
 
