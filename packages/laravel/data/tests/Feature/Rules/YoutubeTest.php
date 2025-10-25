@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 beforeEach(function () {
     $this->rule = new Youtube();
-});
+})->only();
 
 it('validates', function (bool $expected, string $input) {
     expect($this->rule)
@@ -59,7 +59,7 @@ it('passes validator', function () {
     $validator = Validator::make([
         'value' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     ], [
-        'value' => [new Youtube()],
+        'value' => [$this->rule],
     ]);
 
     expect($validator->fails())->toBeFalse();
@@ -67,9 +67,9 @@ it('passes validator', function () {
 
 it('fails validator', function () {
     $validator = Validator::make([
-        'value' => new stdClass(),
+        'value' => 5,
     ], [
-        'value' => [new Youtube()],
+        'value' => [$this->rule],
     ]);
 
     expect($validator)

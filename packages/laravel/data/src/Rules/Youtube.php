@@ -13,7 +13,7 @@ class Youtube extends AbstractRegexRule
      */
     protected function pattern(): string
     {
-        return "/^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/i";
+        return "/^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([a-zA-Z0-9_-]{11})(?:[?&].*|#.+)?$/i";
     }
 
     /**
