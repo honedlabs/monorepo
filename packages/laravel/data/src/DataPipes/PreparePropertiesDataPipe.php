@@ -14,6 +14,9 @@ use Spatie\LaravelData\Support\DataConfig;
 
 class PreparePropertiesDataPipe implements DataPipe
 {
+    /**
+     * Create a new prepare properties data pipe.
+     */
     public function __construct(
         protected DataConfig $config
     ) {}
