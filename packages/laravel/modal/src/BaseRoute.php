@@ -9,6 +9,7 @@ use Illuminate\Pipeline\Pipeline;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class BaseRoute
@@ -50,6 +51,9 @@ class BaseRoute
         return app(Pipeline::class)
             ->send($nextRequest)
             ->through($this->gatherMiddleware($route))
+            ->finally(function (Request $request) {
+                $this->bindRequest($request);
+            })
             ->then(function (Request $request) use ($route) {
                 $this->bindRequest($request);
 
@@ -60,31 +64,31 @@ class BaseRoute
                 }
 
                 return $response;
-            })
-            ->finally(function (Request $request) {
-                $this->bindRequest($request);
             });
     }
 
     /**
      * Create a new request instance at the given URI.
      */
-    protected function copyRequest(Request $request, string $uri): Request
+    protected function copyRequest(Request $current, string $uri): Request
     {
-        $new = Request::create(
+        $request = Request::create(
             $uri,
             Request::METHOD_GET,
-            $request->query->all(),
-            $request->cookies->all(),
-            $request->files->all(),
-            $request->server->all(),
+            $current->query->all(),
+            $current->cookies->all(),
+            $current->files->all(),
+            $current->server->all(),
         );
 
-        $new->headers->replace($request->headers->all());
-        $new->setRequestLocale($request->getLocale());
-        $new->setDefaultRequestLocale($request->getDefaultLocale());
+        $request->headers->replace($current->headers->all());
+        $request->setRequestLocale($current->getLocale());
+        $request->setDefaultRequestLocale($current->getDefaultLocale());
+        $request->setJson($current->json());
+        $request->setUserResolver(fn () => $current->getUserResolver());
+        $request->setLaravelSession($current->session());
 
-        return $new;
+        return $request;
     }
 
     /**

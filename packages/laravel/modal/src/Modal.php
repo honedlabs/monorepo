@@ -5,18 +5,25 @@ declare(strict_types=1);
 namespace Honed\Modal;
 
 use BackedEnum;
+use Honed\Layout\Response;
 use Honed\Modal\Support\ModalHeader;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Support\Header;
+use Illuminate\Http\Response as IlluminateResponse;
+use Illuminate\Support\Facades\Response as ResponseFactory;
+use Illuminate\View\View;
+use Tighten\Ziggy\BladeRouteGenerator;
 
 class Modal implements Responsable
 {
@@ -136,12 +143,13 @@ class Modal implements Responsable
     public function toResponse($request)
     {
         $response = $this->render();
-
-        if ($response instanceof Responsable) {
-            return $response->toResponse($request);
-        }
-
-        return $response;
+        
+        return match (true) {
+            $response instanceof Responsable => $response->toResponse($request),
+            $response instanceof JsonResponse => $this->toJsonResponse($response, Str::start(Str::after($request->fullUrl(), $request->getSchemeAndHttpHost()), '/')),
+            $response instanceof IlluminateResponse => $this->toViewResponse($request, $response, Str::start(Str::after($request->fullUrl(), $request->getSchemeAndHttpHost()), '/')),
+            default => $response,
+        };
     }
 
     /**
@@ -159,44 +167,48 @@ class Modal implements Responsable
             return Inertia::render($request->header(Header::PARTIAL_COMPONENT));
         }
 
-        $nextRequest = Request::create(
-            $this->getRedirectUrl(),
-            Request::METHOD_GET,
-            $request->query->all(),
-            $request->cookies->all(),
-            $request->files->all(),
-            $request->server->all(),
-            $request->getContent()
-        );
+        // dd('Before');
 
-        /** @var \Illuminate\Routing\Router */
-        $router = app('router');
+        $response = BaseRoute::visit($request, $this->getRedirectUrl());
 
-        $baseRoute = $router->getRoutes()->match($request);
-
-        $nextRequest->headers->replace($request->headers->all());
-
-        /** @phpstan-ignore-next-line */
-        $nextRequest->setJson($request->json())
-            ->setUserResolver(fn () => $request->getUserResolver())
-            ->setRouteResolver(fn () => $baseRoute)
-            ->setLaravelSession($request->session());
-
-        App::instance('request', $nextRequest);
-
-        return $this->handleRoute($nextRequest, $baseRoute);
+        return $response;
     }
 
-    protected function handleRoute(Request $request, Route $route): mixed
+    /**
+     * Replace the URL in the View Response with the modal's URL so the
+     * Inertia front-end library won't redirect back to the base URL.
+     */
+    protected function toViewResponse(Request $request, IlluminateResponse $response, string $url): IlluminateResponse
     {
-        $router = $this->getRouter();
+        $originalContent = $response->getOriginalContent();
 
-        $middleware = new SubstituteBindings($router);
+        if (! $originalContent instanceof View) {
+            return $response;
+        }
 
-        return $middleware->handle(
-            $request,
-            fn () => $route->run()
-        );
+        $viewData = $originalContent->getData();
+        $viewData['page']['url'] = $url;
+
+        // foreach (static::$beforeBaseRerenderCallbacks as $callback) {
+        //     $callback($request, $response);
+        // }
+        if (class_exists(BladeRouteGenerator::class)) {
+            BladeRouteGenerator::$generated = false;
+        }
+
+        return ResponseFactory::view($originalContent->getName(), $viewData);
+    }
+
+    /**
+     * Replace the URL in the JSON response with the modal's URL so the
+     * Inertia front-end library won't redirect back to the base URL.
+     */
+    protected function toJsonResponse(JsonResponse $response, string $url): JsonResponse
+    {
+        return $response->setData([
+            ...$response->getData(true),
+            'url' => $url,
+        ]);
     }
 
     /**

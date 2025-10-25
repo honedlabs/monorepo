@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Modal;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Testing\TestResponse;
-use Inertia\Response;
 use Inertia\ResponseFactory;
 
 class ModalServiceProvider extends ServiceProvider
@@ -37,15 +37,13 @@ class ModalServiceProvider extends ServiceProvider
      */
     protected function configureMacros(): void
     {
-        ResponseFactory::macro(
-            'modal',
-            static fn (string $component, array|Arrayable $props = []): Modal => new Modal($component, $props)
-        );
+        ResponseFactory::macro('modal', function (string $component, array|Arrayable $props = []): Modal {
+            return new Modal($component, $props);
+        });
 
-        ResponseFactory::macro(
-            'dialog', 
-            static fn (string $component, array|Arrayable $props = []): Modal => new Modal($component, $props)
-        );
+        ResponseFactory::macro('dialog', function (string $component, array|Arrayable $props = []): Modal {
+            return new Modal($component, $props);
+        });
 
         Router::macro('setCurrentRequest', function (Request $request): void {
             /** @var \Illuminate\Routing\Router $this */
