@@ -4,6 +4,7 @@ providers:
   - App\Providers\WorkbenchServiceProvider
   - Honed\Modal\ModalServiceProvider
   - Inertia\ServiceProvider
+  - Illuminate\Foundation\Support\Providers\RouteServiceProvider
 
 migrations:
   - workbench/database/migrations
