@@ -79,17 +79,17 @@ it('preserves background on non-inertia visits', function () {
         ->get(route('users.products.show', [$user, $product]))
         ->assertSuccessful()
         ->assertInertia(fn (AssertableInertia $page) => $page
-                ->component('Users/Show')
-                ->has('user', fn (AssertableInertia $page) => $page
-                    ->where('id', $user->id)
-                    ->etc()
-                )
-                ->has('modal', fn (AssertableInertia $page) => $page
-                    ->where('redirectURL', route('users.show', $user))
-                    ->where('baseURL', route('users.show', $user))
-                    ->etc()
-                )
-            );
+            ->component('Users/Show')
+            ->has('user', fn (AssertableInertia $page) => $page
+                ->where('id', $user->id)
+                ->etc()
+            )
+            ->has('modal', fn (AssertableInertia $page) => $page
+                ->where('redirectURL', route('users.show', $user))
+                ->where('baseURL', route('users.show', $user))
+                ->etc()
+            )
+        );
 });
 
 it('preserves query string for parent component', function () {

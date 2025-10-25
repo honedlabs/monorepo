@@ -86,7 +86,7 @@ class BaseRoute
         $request->headers->replace($current->headers->all());
         $request->setRequestLocale($current->getLocale());
         $request->setDefaultRequestLocale($current->getDefaultLocale());
-        $request->setJson($current->json()); // @phpstan-ignore-line argument.type
+        $request->setJson($current->json());
         $request->setUserResolver(fn () => $current->getUserResolver());
         $request->setLaravelSession($current->session());
 
