@@ -23,7 +23,7 @@ jobs:
           # - command
           # - core
           # - crumb
-          - data
+          # - data
           # - disable
           # - flash
           # - form
@@ -33,7 +33,7 @@ jobs:
           # - layout
           # - lock
           # - memo
-          # - modal
+          - modal
           # - nav
           # - page
           # - persist
