@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 beforeEach(function () {
     $this->rule = new Youtube();
-})->only();
+});
 
 it('validates', function (bool $expected, string $input) {
     expect($this->rule)
