@@ -11,7 +11,7 @@ use Spatie\LaravelData\Transformers\Transformer;
 /**
  * @template TData of \Spatie\LaravelData\Contracts\BaseData
  */
-class ToData implements Transformer
+class ToData extends FormTransformer
 {
     /**
      * @param  class-string<TData>  $data
@@ -21,9 +21,9 @@ class ToData implements Transformer
     ) {}
 
     /**
-     * Transform the value to a data object.
+     * Transform the value to field data.
      */
-    public function transform(
+    public function toFormData(
         DataProperty $property,
         mixed $value,
         TransformationContext $context

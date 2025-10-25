@@ -14,7 +14,7 @@ use Spatie\LaravelData\Transformers\Transformer;
  * @template TData of \Spatie\LaravelData\Contracts\BaseData&\Spatie\LaravelData\Contracts\TransformableData
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-class ToDataFromModel implements Transformer
+class ToDataFromModel extends FormTransformer
 {
     /**
      * @param  class-string<TData>  $data
@@ -31,7 +31,7 @@ class ToDataFromModel implements Transformer
     /**
      * Transform the value to a data object.
      */
-    public function transform(
+    public function toFormData(
         DataProperty $property,
         mixed $value,
         TransformationContext $context

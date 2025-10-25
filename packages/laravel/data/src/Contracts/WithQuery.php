@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @template TModel of \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel>
  */
-interface QueryRule
+interface WithQuery
 {
     /**
      * Get the query builder to utilise.
