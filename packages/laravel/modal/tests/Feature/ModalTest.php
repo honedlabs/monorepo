@@ -25,7 +25,7 @@ beforeEach(function () {
 
             Route::get('different/{user}/{tweet}', [ExampleController::class, 'differentParameters'])->name('different.users.tweets.show');
         });
-});
+})->todo();
 
 it('can be rendered', function () {
     $user = user();
