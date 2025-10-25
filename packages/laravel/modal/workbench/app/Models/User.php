@@ -2,16 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Models;
+namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    /**
+     * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\UserFactory>
+     */
+    use HasFactory;
+
+    use Notifiable;
+
+    /**
+     * The factory for the model.
+     *
+     * @return class-string<\Illuminate\Database\Eloquent\Factories\Factory>
+     */
+    protected static $factory = UserFactory::class;
 
     /**
      * The attributes that are mass assignable.
@@ -40,7 +53,17 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at' => 'immutable_datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the products the user has created.
+     *
+     * @return HasMany<Product, $this>
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
 }

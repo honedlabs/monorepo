@@ -8,13 +8,13 @@
         "modal"
     ],
     "homepage": "https://github.com/honedlabs/modal",
-    "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Joshua Wallace",
             "email": "josh@joshua-wallace.com",
-            "homepage": "https://joshua-wallace.com"
+            "homepage": "https://joshua-wallace.com",
+            "role": "Developer"
         },
         {
             "name": "Boris Lepikhin",
@@ -39,16 +39,15 @@
     },
     "autoload": {
         "psr-4": {
-            "Honed\\Modal\\": "src/",
-            "Honed\\Modal\\Tests\\": "tests/"
+            "Honed\\Modal\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Honed\\Modal\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+            "App\\": "workbench/app/",
+            "Database\\Factories\\": "workbench/database/factories/",
+            "Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "extra": {
@@ -59,18 +58,10 @@
         }
     },
     "scripts": {
-        "analyse": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage",
-        "format": "vendor/bin/pint",
-        "check": [
-            "@composer run analyse",
-            "@composer run test",
-            "@composer run format"
-        ],
         "post-autoload-dump": [
             "@clear",
-            "@prepare"
+            "@prepare",
+            "@composer run prepare"
         ],
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
@@ -80,12 +71,23 @@
             "@build",
             "@php vendor/bin/testbench serve --ansi"
         ],
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint",
+        "check": [
+            "@composer run analyse",
+            "@composer run test",
+            "@composer run format"
+        ],
         "lint": [
             "@php vendor/bin/pint --ansi",
             "@php vendor/bin/phpstan analyse --verbose --ansi"
-        ]
+        ],
+        "artisan": "vendor/bin/testbench"
     },
     "config": {
+        "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true

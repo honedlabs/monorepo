@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Workbench\Database\Seeders;
+namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use Database\Factories\UserFactory;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Workbench\Database\Factories\UserFactory;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {

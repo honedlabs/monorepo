@@ -6,6 +6,7 @@ namespace Honed\Modal\Tests;
 
 use Honed\Modal\ModalServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -14,8 +15,11 @@ use Inertia\ServiceProvider as InertiaServiceProvider;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
 
+use function Orchestra\Testbench\workbench_path;
+
 class TestCase extends TestbenchTestCase
 {
+    use RefreshDatabase;
     use WithWorkbench;
 
     protected function setUp(): void
@@ -29,8 +33,14 @@ class TestCase extends TestbenchTestCase
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
     }
 
-    public function defineDatabaseMigrations()
+    /**
+     * Define database migrations.
+     */
+    public function defineDatabaseMigrations(): void
     {
+        $this->loadMigrationsFrom(
+            workbench_path('database/migrations')
+        );
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username');
