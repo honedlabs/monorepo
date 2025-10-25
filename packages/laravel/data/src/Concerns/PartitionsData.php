@@ -47,7 +47,7 @@ trait PartitionsData
     /**
      * Get the partition for the given key.
      *
-     * @return list<string>|null
+     * @return ?list<string>
      */
     protected function getPartition(string $key): ?array
     {

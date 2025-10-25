@@ -27,6 +27,7 @@
     "require-dev": {
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.18",
+        "league/iso3166": "^3.0|^4.3",
         "nunomaduro/collision": "^8.1",
         "orchestra/testbench": "^9.0.0||^10.0.0",
         "pestphp/pest": "^3.5.1",
@@ -34,7 +35,6 @@
         "phpstan/extension-installer": "^1.4.3",
         "phpstan/phpstan-deprecation-rules": "^2.0.1",
         "phpstan/phpstan-phpunit": "^2.0.3",
-        "inertiajs/inertia-laravel": "^1.2||^2.0",
         "pestphp/pest-plugin-laravel": "^3.0"
     },
     "autoload": {
@@ -49,6 +49,9 @@
             "Database\\Factories\\": "workbench/database/factories/",
             "Database\\Seeders\\": "workbench/database/seeders/"
         }
+    },
+    "suggest": {
+        "league/iso3166": "Required to use the CountryCode and Currency rules."
     },
     "scripts": {
         "post-autoload-dump": [
@@ -90,10 +93,7 @@
         "laravel": {
             "providers": [
                 "Honed\\Data\\DataServiceProvider"
-            ],
-            "aliases": {
-                "Data": "Honed\\Data\\Facades\\Data"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",

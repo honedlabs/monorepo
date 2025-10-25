@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Data\Contracts;
 
-use Exception;
-use Spatie\LaravelData\Data;
 use Honed\Data\Exceptions\DataClassNotSetException;
+use Spatie\LaravelData\Data;
 
 /**
  * @template TData of \Spatie\LaravelData\Data
@@ -15,15 +14,15 @@ trait ProvidesData
 {
     /**
      * The data class.
-     * 
-     * @var class-string<TData>|null
+     *
+     * @var ?class-string<TData>
      */
     protected $data;
 
     /**
      * Set the data class.
-     * 
-     * @param class-string<TData> $data
+     *
+     * @param  class-string<TData>  $data
      * @return $this
      */
     public function data(string $data): static
@@ -35,8 +34,8 @@ trait ProvidesData
 
     /**
      * Get the data class.
-     * 
-     * @return class-string<TData>|null
+     *
+     * @return ?class-string<TData>
      */
     public function getDataClass(): ?string
     {
@@ -45,9 +44,9 @@ trait ProvidesData
 
     /**
      * Create the data from the given source.
-     * 
+     *
      * @return ?TData
-     * 
+     *
      * @throws DataClassNotSetException
      */
     public function getData(mixed ...$payloads): ?Data
@@ -62,18 +61,18 @@ trait ProvidesData
     }
 
     /**
-     * Provide the data from the given 
-     * 
+     * Provide the data from the given
+     *
      * @return ?array<string, mixed>
-     * 
+     *
      * @throws DataClassNotSetException
      */
-    public function provideData(mixed ...$payloads): ?array
+    public function provideData(mixed ...$payloads): array
     {
         /** @var class-string<TData> $dataClass */
         $dataClass = $this->getDataClass();
 
-        if (in_array(Translatable::class, class_implements($dataClass), true)) {
+        if ($dataClass instanceof Translatable) {
             /** @var class-string<TData>&Translatable $dataClass */
             $dataClass::translate(...$payloads);
         }
@@ -83,7 +82,7 @@ trait ProvidesData
         }
 
         if (($data = $this->getData(...$payloads)) === null) {
-            return null;
+            return [];
         }
 
         return $data instanceof Formable ? $data->toForm() : $data->toArray();

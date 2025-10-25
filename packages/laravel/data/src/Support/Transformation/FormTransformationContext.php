@@ -18,6 +18,6 @@ final class FormTransformationContext extends TransformationContext
 
         $maxDepth = (bool) config('data.throw_when_max_transformation_depth_reached');
 
-        return new static(maxDepth: $depth, throwWhenMaxDepthReached: $maxDepth);
+        return new self(maxDepth: $depth, throwWhenMaxDepthReached: $maxDepth);
     }
 }

@@ -8,7 +8,6 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;
-use Spatie\LaravelData\Transformers\Transformer;
 
 /**
  * @template TData of \Spatie\LaravelData\Contracts\BaseData&\Spatie\LaravelData\Contracts\TransformableData

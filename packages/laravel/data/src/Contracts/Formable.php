@@ -8,9 +8,8 @@ interface Formable
 {
     /**
      * Transform the data to form data.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function toForm(): array;
-
 }
