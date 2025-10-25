@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Modal;
 
 use Illuminate\Contracts\Container\Container;
@@ -9,7 +11,6 @@ use Illuminate\Pipeline\Pipeline;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Facade;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class BaseRoute
@@ -48,7 +49,7 @@ class BaseRoute
 
         $this->bindRequest($nextRequest);
 
-        /** @var \Symfony\Component\HttpFoundation\Response */
+        /** @var Response */
         return app(Pipeline::class)
             ->send($nextRequest)
             ->through($this->gatherMiddleware($route))
@@ -106,7 +107,7 @@ class BaseRoute
 
     /**
      * Gather the middleware for the given route, removed the excluded middleware.
-     * 
+     *
      * @return list<mixed>
      */
     protected function gatherMiddleware(Route $route): array

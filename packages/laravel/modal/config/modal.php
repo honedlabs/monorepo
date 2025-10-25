@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    
+
     /*
     |--------------------------------------------------------------------------
     | Exclude middleware
@@ -16,7 +16,7 @@ return [
     */
 
     'middleware' => [
-        \Illuminate\Cookie\Middleware\EncryptCookies::class,
+        Illuminate\Cookie\Middleware\EncryptCookies::class,
     ],
 
     /*
@@ -31,6 +31,6 @@ return [
     */
 
     'renders' => [
-        \Honed\Modal\Callbacks\BladeRouteGeneratorCallback::class,
+        Honed\Modal\Callbacks\BladeRouteGeneratorCallback::class,
     ],
 ];

@@ -10,13 +10,14 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Response as ResponseFactory;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Inertia\Inertia;
 use Inertia\Support\Header;
-use Illuminate\Http\Response as IlluminateResponse;
-use Illuminate\Support\Facades\Response as ResponseFactory;
-use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
 class Modal implements Responsable
@@ -40,7 +41,7 @@ class Modal implements Responsable
 
     /**
      * Get the excluded middleware to exclude when dispatching the base request.
-     * 
+     *
      * @return list<class-string>
      */
     public static function getExcludedMiddleware(): array
@@ -51,12 +52,12 @@ class Modal implements Responsable
 
     /**
      * Get the render callbacks to execute before the base route is rerendered.
-     * 
-     * @return list<callable(Request, Response): void>
+     *
+     * @return list<class-string<Contracts\RenderCallback>>
      */
     public static function getRenderCallbacks(): array
     {
-        /** @var list<callable(Request, Response): void> */
+        /** @var list<class-string<Contracts\RenderCallback>> */
         return config('modal.renders', []);
     }
 
@@ -99,7 +100,7 @@ class Modal implements Responsable
     /**
      * Add props to the view.
      *
-     * @param  array<string, mixed>|\Illuminate\Contracts\Support\Arrayable<string, mixed>  $props
+     * @param  array<string, mixed>|Arrayable<string, mixed>  $props
      * @return $this
      */
     public function props(array|Arrayable $props): static
@@ -126,16 +127,16 @@ class Modal implements Responsable
         return $this;
     }
 
-   /**
+    /**
      * Create an HTTP response that represents the modal.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param  Request  $request
+     * @return Response
      */
     public function toResponse($request)
     {
         $response = $this->render();
-        
+
         return match (true) {
             $response instanceof Responsable => $response->toResponse($request),
             $response instanceof JsonResponse => $this->toJsonResponse($response, $this->getModalUrl($request)),
@@ -147,7 +148,7 @@ class Modal implements Responsable
     /**
      * Render the modal on the base URL.
      *
-     * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Support\Responsable
+     * @return Response|Responsable
      */
     public function render()
     {
@@ -158,11 +159,12 @@ class Modal implements Responsable
         Inertia::share([
             ModalHeader::PROP => [
                 'component' => $this->component,
-                'baseUrl' => $this->baseUrl,
+                'baseURL' => $this->baseUrl,
                 'redirectURL' => $redirect,
                 'key' => $request->header(ModalHeader::KEY, Str::uuid()->toString()),
                 'nonce' => Str::uuid()->toString(),
             ],
+            ...Arr::dot($this->props, ModalHeader::PROP.'.props.'),
         ]);
 
         if ($request->header(Header::INERTIA) && $request->header(Header::PARTIAL_COMPONENT)) {
@@ -217,7 +219,7 @@ class Modal implements Responsable
         $viewData['page']['url'] = $url;
 
         foreach (static::getRenderCallbacks() as $callback) {
-            $callback($request, $response);
+            app($callback)($request, $response);
         }
 
         return ResponseFactory::view($originalContent->getName(), $viewData);
@@ -242,7 +244,7 @@ class Modal implements Responsable
      */
     protected function getRequest(): Request
     {
-        /** @var \Illuminate\Http\Request */
+        /** @var Request */
         return app('request');
     }
 
@@ -251,7 +253,7 @@ class Modal implements Responsable
      */
     protected function getRouter(): Router
     {
-        /** @var \Illuminate\Routing\Router */
+        /** @var Router */
         return app('router');
     }
 }

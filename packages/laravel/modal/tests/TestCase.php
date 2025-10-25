@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Honed\Modal\Tests;
 
 use Honed\Modal\ModalServiceProvider;
@@ -27,14 +29,6 @@ class TestCase extends TestbenchTestCase
         config()->set('inertia.testing.page_paths', [realpath(__DIR__)]);
     }
 
-    protected function getPackageProviders($app)
-    {
-        return [
-            InertiaServiceProvider::class,
-            ModalServiceProvider::class,
-        ];
-    }
-
     public function defineDatabaseMigrations()
     {
         Schema::create('users', function (Blueprint $table) {
@@ -49,6 +43,14 @@ class TestCase extends TestbenchTestCase
             $table->string('body');
             $table->timestamps();
         });
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            InertiaServiceProvider::class,
+            ModalServiceProvider::class,
+        ];
     }
 
     // protected function defineRoutes($router)

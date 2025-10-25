@@ -6,6 +6,7 @@ namespace Honed\Modal\Tests\Stubs;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use LogicException;
 use Symfony\Component\HttpFoundation\Response;
 
 class ExampleMiddleware extends Middleware
@@ -52,6 +53,6 @@ class ExampleMiddleware extends Middleware
      */
     public function onEmptyResponse(Request $request, Response $response): Response
     {
-        throw new \LogicException('An empty Inertia response was returned.');
+        throw new LogicException('An empty Inertia response was returned.');
     }
 }

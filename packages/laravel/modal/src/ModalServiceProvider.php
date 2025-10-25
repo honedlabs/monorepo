@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Modal;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -46,7 +45,7 @@ class ModalServiceProvider extends ServiceProvider
         });
 
         Router::macro('setCurrentRequest', function (Request $request): void {
-            /** @var \Illuminate\Routing\Router $this */
+            /** @var Router $this */
             $this->currentRequest = $request; // @phpstan-ignore-line property.protected
         });
     }
