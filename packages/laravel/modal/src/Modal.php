@@ -5,80 +5,59 @@ declare(strict_types=1);
 namespace Honed\Modal;
 
 use BackedEnum;
-use Honed\Layout\Response;
 use Honed\Modal\Support\ModalHeader;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Support\Header;
 use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Support\Facades\Response as ResponseFactory;
 use Illuminate\View\View;
-use Tighten\Ziggy\BladeRouteGenerator;
+use Symfony\Component\HttpFoundation\Response;
 
 class Modal implements Responsable
 {
     /**
      * The route to display underneath the modal.
      *
-     * @var ?string
+     * @var string
      */
-    protected $baseURL;
-
-    /**
-     * The middleware to exclude from the base route.
-     *
-     * @var list<class-string>
-     */
-    protected static $excludeMiddleware = [];
-
-    /**
-     * Calls to be executed before the base route is rerendered.
-     * 
-     * @var list<callable(): void>
-     */
-    protected static $callbacks = [];
+    protected $baseUrl;
 
     /**
      * Create a modal instance.
      *
-     * @param  array<string, mixed>|\Illuminate\Contracts\Support\Arrayable<string, mixed>  $props
+     * @param  array<string, mixed>  $props
      */
     public function __construct(
         protected string $component,
-        protected array|Arrayable $props = []
+        protected array $props = []
     ) {}
-
-    /**
-     * Register middleware to exclude when dispatching the base URL request.
-     *
-     * @param  class-string|iterable<int, class-string>  $middleware
-     * @return void
-     */
-    public static function excludeMiddleware(...$middleware)
-    {
-        $middleware = Arr::wrap($middleware);
-
-        static::$excludeMiddleware = \array_merge(static::$excludeMiddleware, $middleware);
-    }
 
     /**
      * Get the excluded middleware to exclude when dispatching the base request.
      * 
-     * @return array<int, class-string>
+     * @return list<class-string>
      */
-    public static function getExcludedMiddleware()
+    public static function getExcludedMiddleware(): array
     {
-        return array_merge(config('modal.middleware'), static::$excludeMiddleware);
+        /** @var list<class-string> */
+        return config('modal.middleware', []);
+    }
+
+    /**
+     * Get the render callbacks to execute before the base route is rerendered.
+     * 
+     * @return list<callable(Request, Response): void>
+     */
+    public static function getRenderCallbacks(): array
+    {
+        /** @var list<callable(Request, Response): void> */
+        return config('modal.renders', []);
     }
 
     /**
@@ -86,9 +65,9 @@ class Modal implements Responsable
      *
      * @return $this
      */
-    public function baseURL(string $url): static
+    public function baseUrl(string $url): static
     {
-        $this->baseURL = $url;
+        $this->baseUrl = $url;
 
         return $this;
     }
@@ -100,11 +79,11 @@ class Modal implements Responsable
      */
     public function baseRoute(
         string|BackedEnum $name,
-        array $parameters = [],
+        mixed $parameters = [],
         bool $absolute = true
     ): static {
 
-        $this->baseURL = route($name, $parameters, $absolute);
+        $this->baseUrl = route($name, $parameters, $absolute);
 
         return $this;
     }
@@ -114,7 +93,20 @@ class Modal implements Responsable
      */
     public function getBaseUrl(): string
     {
-        return $this->baseURL;
+        return $this->baseUrl;
+    }
+
+    /**
+     * Add props to the view.
+     *
+     * @param  array<string, mixed>|\Illuminate\Contracts\Support\Arrayable<string, mixed>  $props
+     * @return $this
+     */
+    public function props(array|Arrayable $props): static
+    {
+        $this->props = array_merge($this->props, is_array($props) ? $props : $props->toArray());
+
+        return $this;
     }
 
     /**
@@ -146,8 +138,8 @@ class Modal implements Responsable
         
         return match (true) {
             $response instanceof Responsable => $response->toResponse($request),
-            $response instanceof JsonResponse => $this->toJsonResponse($response, Str::start(Str::after($request->fullUrl(), $request->getSchemeAndHttpHost()), '/')),
-            $response instanceof IlluminateResponse => $this->toViewResponse($request, $response, Str::start(Str::after($request->fullUrl(), $request->getSchemeAndHttpHost()), '/')),
+            $response instanceof JsonResponse => $this->toJsonResponse($response, $this->getModalUrl($request)),
+            $response instanceof IlluminateResponse => $this->toViewResponse($request, $response, $this->getModalUrl($request)),
             default => $response,
         };
     }
@@ -159,82 +151,40 @@ class Modal implements Responsable
      */
     public function render()
     {
-        $this->shareModal();
-
         $request = $this->getRequest();
+
+        $redirect = $this->getRedirectUrl($request);
+
+        Inertia::share([
+            ModalHeader::PROP => [
+                'component' => $this->component,
+                'baseUrl' => $this->baseUrl,
+                'redirectURL' => $redirect,
+                'key' => $request->header(ModalHeader::KEY, Str::uuid()->toString()),
+                'nonce' => Str::uuid()->toString(),
+            ],
+        ]);
 
         if ($request->header(Header::INERTIA) && $request->header(Header::PARTIAL_COMPONENT)) {
             return Inertia::render($request->header(Header::PARTIAL_COMPONENT));
         }
 
-        // dd('Before');
-
-        $response = BaseRoute::visit($request, $this->getRedirectUrl());
-
-        return $response;
+        return BaseRoute::visit($request, $redirect);
     }
 
     /**
-     * Replace the URL in the View Response with the modal's URL so the
-     * Inertia front-end library won't redirect back to the base URL.
+     * Get the URL to display the modal at.
      */
-    protected function toViewResponse(Request $request, IlluminateResponse $response, string $url): IlluminateResponse
+    public function getModalUrl(Request $request): string
     {
-        $originalContent = $response->getOriginalContent();
-
-        if (! $originalContent instanceof View) {
-            return $response;
-        }
-
-        $viewData = $originalContent->getData();
-        $viewData['page']['url'] = $url;
-
-        // foreach (static::$beforeBaseRerenderCallbacks as $callback) {
-        //     $callback($request, $response);
-        // }
-        if (class_exists(BladeRouteGenerator::class)) {
-            BladeRouteGenerator::$generated = false;
-        }
-
-        return ResponseFactory::view($originalContent->getName(), $viewData);
-    }
-
-    /**
-     * Replace the URL in the JSON response with the modal's URL so the
-     * Inertia front-end library won't redirect back to the base URL.
-     */
-    protected function toJsonResponse(JsonResponse $response, string $url): JsonResponse
-    {
-        return $response->setData([
-            ...$response->getData(true),
-            'url' => $url,
-        ]);
-    }
-
-    /**
-     * Share the modal data via Inertia.
-     */
-    protected function shareModal(): void
-    {
-        Inertia::share([
-            ModalHeader::PROP => [
-                'component' => $this->component,
-                'baseURL' => $this->baseURL,
-                'redirectURL' => $this->getRedirectUrl(),
-                'key' => $this->getRequest()->header(ModalHeader::KEY, Str::uuid()->toString()),
-                'nonce' => Str::uuid()->toString(),
-            ],
-            ...Arr::dot($this->props, ModalHeader::PROP.'.props.'),
-        ]);
+        return Str::start(Str::after($request->fullUrl(), $request->getSchemeAndHttpHost()), '/');
     }
 
     /**
      * Get the URL to redirect to when the modal is exited.
      */
-    protected function getRedirectUrl(): string
+    public function getRedirectUrl(Request $request): string
     {
-        $request = $this->getRequest();
-
         if ($request->header(ModalHeader::REDIRECT)) {
             return $request->header(ModalHeader::REDIRECT);
         }
@@ -245,7 +195,46 @@ class Modal implements Responsable
             return $referer;
         }
 
-        return $this->baseURL;
+        return $this->baseUrl;
+    }
+
+    /**
+     * Replace the URL in the View Response with the modal's URL to ensure it won't redirect back to the base URL.
+     */
+    protected function toViewResponse(
+        Request $request,
+        IlluminateResponse $response,
+        string $url
+    ): IlluminateResponse {
+
+        $originalContent = $response->getOriginalContent();
+
+        if (! $originalContent instanceof View) {
+            return $response;
+        }
+
+        $viewData = $originalContent->getData();
+        $viewData['page']['url'] = $url;
+
+        foreach (static::getRenderCallbacks() as $callback) {
+            $callback($request, $response);
+        }
+
+        return ResponseFactory::view($originalContent->getName(), $viewData);
+    }
+
+    /**
+     * Replace the URL in the JSON response with the modal's URL to ensure it won't redirect back to the base URL.
+     */
+    protected function toJsonResponse(JsonResponse $response, string $url): JsonResponse
+    {
+        /** @var array<string, mixed> */
+        $data = $response->getData(true);
+
+        return $response->setData([
+            ...$data,
+            'url' => $url,
+        ]);
     }
 
     /**

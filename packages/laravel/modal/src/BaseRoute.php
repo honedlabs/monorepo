@@ -22,7 +22,7 @@ class BaseRoute
     /**
      * Create a new base route instance.
      */
-    public static function make()
+    public static function make(): static
     {
         return resolve(static::class);
     }
@@ -48,6 +48,7 @@ class BaseRoute
 
         $this->bindRequest($nextRequest);
 
+        /** @var \Symfony\Component\HttpFoundation\Response */
         return app(Pipeline::class)
             ->send($nextRequest)
             ->through($this->gatherMiddleware($route))
@@ -84,7 +85,7 @@ class BaseRoute
         $request->headers->replace($current->headers->all());
         $request->setRequestLocale($current->getLocale());
         $request->setDefaultRequestLocale($current->getDefaultLocale());
-        $request->setJson($current->json());
+        $request->setJson($current->json()); // @phpstan-ignore-line argument.type
         $request->setUserResolver(fn () => $current->getUserResolver());
         $request->setLaravelSession($current->session());
 
@@ -100,7 +101,6 @@ class BaseRoute
 
         $this->container->instance('request', $request);
 
-        // @phpstan-ignore-next-line
         $this->router->setCurrentRequest($request);
     }
 
@@ -116,7 +116,7 @@ class BaseRoute
         return array_values(
             array_filter(
                 $this->router->gatherRouteMiddleware($route),
-                static function (mixed $middleware) use ($excluded): bool {
+                static function (string|object $middleware) use ($excluded): bool {
                     foreach ($excluded as $exclude) {
                         if ($middleware === $exclude || is_subclass_of($middleware, $exclude)) {
                             return false;

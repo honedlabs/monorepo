@@ -6,17 +6,31 @@ return [
     
     /*
     |--------------------------------------------------------------------------
-    | Fortify Routes Middleware
+    | Exclude middleware
     |--------------------------------------------------------------------------
     |
-    | If necessary, you may add middleware to be executed whenever a modal
-    | response is needed to be returned. Typically this should be done at the
-    | routing or controller level, but you can provide modal middleware if
-    | necessary.
+    | You can specify the middleware to exclude when dispatching the base URL request.
+    | By default, the EncryptCookies middleware is excluded to prevent the cookies
+    | from being encrypted twice and rendering them unusable.
     |
     */
 
     'middleware' => [
         \Illuminate\Cookie\Middleware\EncryptCookies::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Render callbacks
+    |--------------------------------------------------------------------------
+    |
+    | You can specify callbacks to be executed before the base route is
+    | rerendered. By default, the BladeRouteGeneratorCallback is registered
+    | to reset the BladeRouteGenerator state, if the class exists.
+    |
+    */
+
+    'renders' => [
+        \Honed\Modal\Callbacks\BladeRouteGeneratorCallback::class,
     ],
 ];

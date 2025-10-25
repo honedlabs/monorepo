@@ -37,17 +37,17 @@ class ModalServiceProvider extends ServiceProvider
      */
     protected function configureMacros(): void
     {
-        ResponseFactory::macro('modal', function (string $component, array|Arrayable $props = []): Modal {
+        ResponseFactory::macro('modal', function (string $component, array $props = []): Modal {
             return new Modal($component, $props);
         });
 
-        ResponseFactory::macro('dialog', function (string $component, array|Arrayable $props = []): Modal {
+        ResponseFactory::macro('dialog', function (string $component, array $props = []): Modal {
             return new Modal($component, $props);
         });
 
         Router::macro('setCurrentRequest', function (Request $request): void {
             /** @var \Illuminate\Routing\Router $this */
-            $this->currentRequest = $request;
+            $this->currentRequest = $request; // @phpstan-ignore-line property.protected
         });
     }
 
