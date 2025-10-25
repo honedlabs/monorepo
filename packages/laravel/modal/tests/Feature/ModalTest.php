@@ -19,13 +19,24 @@ it('can be rendered', function () {
 
     get(route('users.products.show', [$user, $product]))
         ->assertSuccessful()
-        ->assertInertia(function (AssertableInertia $page) use ($user, $product) {
-            $page->component('Users/Show')
-                ->where('modal.baseURL', route('users.show', $user))
-                ->where('modal.component', 'Tweets/Show')
-                ->where('modal.props.user.username', $user->username)
-                ->where('modal.props.product.body', $product->body);
-        });
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Users/Show')
+            ->has('modal', fn (AssertableInertia $page) => $page
+                ->where('baseURL', route('users.show', $user))
+                ->where('component', 'Products/Show')
+                ->has('props', fn (AssertableInertia $page) => $page
+                    ->has('product', fn (AssertableInertia $page) => $page
+                        ->where('id', $product->id)
+                        ->etc()
+                    )
+                    ->has('user', fn (AssertableInertia $page) => $page
+                        ->where('id', $user->id)
+                        ->etc()
+                    )
+                )
+                ->etc()
+            )
+        );
 });
 
 it('passes raw data without model bindings', function () {
@@ -37,7 +48,7 @@ it('passes raw data without model bindings', function () {
         ->assertInertia(function (AssertableInertia $page) use ($user, $product) {
             $page->component('Users/Show')
                 ->where('modal.baseURL', route('raw.users.show', $user))
-                ->where('modal.component', 'Tweets/Show')
+                ->where('modal.component', 'Products/Show')
                 ->where('modal.props.user', $user)
                 ->where('modal.props.product', $product);
         });
@@ -67,12 +78,18 @@ it('preserves background on non-inertia visits', function () {
     from($from)
         ->get(route('users.products.show', [$user, $product]))
         ->assertSuccessful()
-        ->assertInertia(function (AssertableInertia $page) use ($user) {
-            $page->component('Users/Show')
-                ->where('user.username', $user->username)
-                ->where('modal.redirectURL', route('users.show', $user))
-                ->where('modal.baseURL', route('users.show', $user));
-        });
+        ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('Users/Show')
+                ->has('user', fn (AssertableInertia $page) => $page
+                    ->where('id', $user->id)
+                    ->etc()
+                )
+                ->has('modal', fn (AssertableInertia $page) => $page
+                    ->where('redirectURL', route('users.show', $user))
+                    ->where('baseURL', route('users.show', $user))
+                    ->etc()
+                )
+            );
 });
 
 it('preserves query string for parent component', function () {
