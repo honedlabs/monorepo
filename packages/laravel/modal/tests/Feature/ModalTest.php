@@ -45,13 +45,19 @@ it('passes raw data without model bindings', function () {
 
     get(route('raw.users.products.show', [$user, $product]))
         ->assertSuccessful()
-        ->assertInertia(function (AssertableInertia $page) use ($user, $product) {
-            $page->component('Users/Show')
-                ->where('modal.baseURL', route('raw.users.show', $user))
-                ->where('modal.component', 'Products/Show')
-                ->where('modal.props.user', $user)
-                ->where('modal.props.product', $product);
-        });
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Users/Show')
+            ->has('modal', fn (AssertableInertia $page) => $page
+                ->where('baseURL', route('raw.users.show', $user))
+                ->where('component', 'Products/Show')
+                ->has('props', fn (AssertableInertia $page) => $page
+                    ->where('user', $user)
+                    ->where('product', $product)
+                    ->etc()
+                )
+                ->etc()
+            )
+        );
 });
 
 it('preserves background on inertia visits', function () {
@@ -117,10 +123,16 @@ it('binds route parameters correctly', function () {
     from($from)
         ->get(route('different.users.products.show', [$user, $product]))
         ->assertSuccessful()
-        ->assertInertia(function (AssertableInertia $page) use ($otherUser) {
-            $page->component('Users/Show')
-                ->where('user.id', $otherUser->id)
-                ->where('modal.redirectURL', route('users.show', $otherUser))
-                ->where('modal.baseURL', route('users.show', $otherUser));
-        });
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Users/Show')
+            ->has('user', fn (AssertableInertia $page) => $page
+                ->where('id', $otherUser->id)
+                ->etc()
+            )
+            ->has('modal', fn (AssertableInertia $page) => $page
+                ->where('redirectURL', route('users.show', $otherUser))
+                ->where('baseURL', route('users.show', $otherUser))
+                ->etc()
+            )
+        );
 });
