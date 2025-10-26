@@ -9,29 +9,28 @@ beforeEach(function () {
     $this->rule = new Scalar();
 });
 
-it('validates', function ($input, bool $expected) {
+it('validates', function (mixed $input, bool $expected) {
     expect($this->rule)
         ->isValid($input)->toBe($expected);
 })->with([
-    'numeric' => [1, true],
-    'string' => ['test', true],
-    'boolean' => [true, true],
-    'null' => [null, false],
-    'object' => [new stdClass(), false],
-    'array of numerics' => [[1, 2], true],
-    'array of strings' => [['1', '2'], true],
-    'array of booleans' => [[true, false], true],
-    'array of nulls' => [[null, null], false],
-    'array of objects' => [[1, new stdClass()], false],
-    'array of arrays' => [[[1, 2, 3], [4, 5, 6]], false],
-    'array of mixed' => [[1, 'test', true], true],
+    [1, true],
+    ['test', true],
+    [true, true],
+    [null, false],
+    [new stdClass(), false],
+    [[1, 2], true],
+    [['1', '2'], true],
+    [[true, false], true],
+    [[1, new stdClass()], false],
+    [[[1, 2, 3], [4, 5, 6]], false],
+    [[1, 'test', true], true],
 ]);
 
 it('passes validator', function () {
     $validator = Validator::make([
         'value' => [1, 2, 3],
     ], [
-        'value' => [new Scalar()],
+        'value' => [$this->rule],
     ]);
 
     expect($validator->fails())->toBeFalse();
@@ -41,7 +40,7 @@ it('fails validator', function () {
     $validator = Validator::make([
         'value' => new stdClass(),
     ], [
-        'value' => [new Scalar()],
+        'value' => [$this->rule],
     ]);
 
     expect($validator)

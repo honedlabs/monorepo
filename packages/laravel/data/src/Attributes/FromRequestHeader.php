@@ -13,7 +13,7 @@ use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Skipped;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class FromRequestHeader extends HasRequest implements InjectsPropertyValue
+class FromRequestHeader implements InjectsPropertyValue
 {
     public function __construct(
         public string $headerKey,
@@ -37,7 +37,7 @@ class FromRequestHeader extends HasRequest implements InjectsPropertyValue
             return Skipped::create();
         }
 
-        return $this->getRequest()->header($this->headerKey);
+        return $payload->header($this->headerKey);
     }
 
     /**

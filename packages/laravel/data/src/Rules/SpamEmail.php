@@ -6,15 +6,14 @@ namespace Honed\Data\Rules;
 
 use Intervention\Validation\AbstractRule;
 
-class ValidEmail extends AbstractRule
+class SpamEmail extends AbstractRule
 {
     /**
-     * @param  array<int, string>  $unauthorizedEmailProviders
+     * @param  array<int, string>  $spamEmails
      */
     public function __construct(
-
         /** @see https://github.com/disposable-email-domains/disposable-email-domains/blob/master/disposable_email_blocklist.conf */
-        private array $unauthorizedEmailProviders = [
+        protected array $spamEmails = [
             '0-mail.com',
             '027168.com',
             '0815.ru',
@@ -3787,7 +3786,7 @@ class ValidEmail extends AbstractRule
         if (mb_strpos($value, '@') !== false) {
             [$emailAccount, $emailProvider] = explode('@', $value);
 
-            return ! in_array($emailProvider, $this->unauthorizedEmailProviders, true);
+            return ! in_array($emailProvider, $this->spamEmails, true);
         }
 
         return false;
@@ -3798,6 +3797,6 @@ class ValidEmail extends AbstractRule
      */
     protected function shortname(): string
     {
-        return 'valid_email';
+        return 'spam_email';
     }
 }

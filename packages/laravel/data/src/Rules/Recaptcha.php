@@ -51,6 +51,14 @@ class Recaptcha extends AbstractRule
     }
 
     /**
+     * Get the recaptcha secret.
+     */
+    protected function getSecret(): string
+    {
+        return config()->string('services.recaptcha.secret');
+    }
+
+    /**
      * Get the recaptcha payload.
      *
      * @return array{secret: string, response: string, remoteip: string}
@@ -58,7 +66,7 @@ class Recaptcha extends AbstractRule
     protected function getPayload(string $value): array
     {
         return [
-            'secret' => config()->string('services.recaptcha.secret'),
+            'secret' => $this->getSecret(),
             'response' => $value,
             'remoteip' => IpUtils::anonymize((string) $this->ip),
         ];

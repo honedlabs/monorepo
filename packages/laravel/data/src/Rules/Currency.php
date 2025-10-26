@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Data\Rules;
 
-use League\ISO3166\ISO3166;
 use Intervention\Validation\AbstractRule;
+use League\ISO3166\ISO3166;
 
 class Currency extends AbstractRule
 {

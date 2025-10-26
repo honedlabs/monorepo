@@ -13,7 +13,7 @@ use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Skipped;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class FromRequestIp extends HasRequest implements InjectsPropertyValue
+class FromRequestIp implements InjectsPropertyValue
 {
     public function __construct(
         public bool $replaceWhenPresentInPayload = true
@@ -37,7 +37,7 @@ class FromRequestIp extends HasRequest implements InjectsPropertyValue
             return Skipped::create();
         }
 
-        return $this->getRequest()->ip();
+        return $payload->ip();
     }
 
     /**

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Data\Validation\HexColorData;
 use Illuminate\Support\Facades\Validator;
 
-beforeEach(function () {})->skip();
+beforeEach(function () {});
 
 it('validates', function (bool $expected, mixed $input) {
     expect(Validator::make([
@@ -23,13 +23,13 @@ it('validates', function (bool $expected, mixed $input) {
     [true, '#cccccc'],
     [true, '#ffff'],
     [true, '#ffffffff'],
-    [true, 'abc'],
-    [true, 'abcabc'],
-    [true, 'abcabcab'],
-    [true, 'b33517'],
-    [true, 'b33517ff'],
-    [true, 'ccc'],
-    [true, 'ffff'],
-    [true, 'f00'],
-    [true, 'f000'],
+    [false, 'abc'],
+    [false, 'abcabc'],
+    [false, 'abcabcab'],
+    [false, 'b33517'],
+    [false, 'b33517ff'],
+    [false, 'ccc'],
+    [false, 'ffff'],
+    [false, 'f00'],
+    [false, 'f000'],
 ]);

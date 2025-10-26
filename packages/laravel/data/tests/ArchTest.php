@@ -18,9 +18,15 @@ arch('debugging functions')
     ->expect(['dd', 'dump', 'ray'])
     ->each->not->toBeUsed();
 
-arch('strict types')
+arch('strict')
     ->expect('Honed\Data')
-    ->toUseStrictTypes();
+    ->toUseStrictTypes()
+    ->toUseStrictEquality();
+
+arch('documented')
+    ->expect('Honed\Data')
+    // ->toHaveMethodsDocumented()
+    ->toHavePropertiesDocumented();
 
 arch('concerns')
     ->expect('Honed\Data\Concerns')

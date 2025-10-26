@@ -17,8 +17,8 @@ class Authorized extends AbstractRule
     public function __construct(
         protected string $ability,
         protected string $className,
-        protected ?string $guard = null,
         protected ?string $column = null,
+        protected ?string $guard = null,
     ) {}
 
     /**

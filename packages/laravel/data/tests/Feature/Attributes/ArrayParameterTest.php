@@ -70,7 +70,7 @@ it('handles nested, iterable property', function () {
 
     expect(ProductUsersData::from($request)->user_ids)
         ->toBe([1, 2]);
-})->skip();
+});
 
 it('handles missing key', function () {
     $request = Request::create('/', Request::METHOD_POST, []);
