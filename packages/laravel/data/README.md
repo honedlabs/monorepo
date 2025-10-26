@@ -13,7 +13,7 @@
     <a href="https://packagist.org/packages/honed/data"><img src="https://img.shields.io/packagist/v/honed/data" alt="Latest Stable Version"></a>
 </p>
 
-**Data** Supercharge your data with an extension of Spatie/LaravelData.
+**Data** is a package to supercharge your data validation, as an extension to [Laravel Data](https://spatie.be/docs/laravel-data/v4/introduction) by Spatie.
 
 ## Installation
 

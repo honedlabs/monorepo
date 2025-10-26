@@ -11,6 +11,6 @@ class CamelcaseData extends Data
 {
     public function __construct(
         #[CamelCase]
-        public string $test
+        public mixed $value
     ) {}
 }

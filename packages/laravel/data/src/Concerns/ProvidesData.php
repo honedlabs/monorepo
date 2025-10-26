@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Honed\Data\Contracts;
+namespace Honed\Data\Concerns;
 
-use Honed\Data\Exceptions\DataClassNotSetException;
 use Spatie\LaravelData\Data;
+use Honed\Data\Contracts\Formable;
+use Honed\Data\Contracts\Translatable;
+use Honed\Data\Exceptions\DataClassNotSetException;
 
 /**
  * @template TData of \Spatie\LaravelData\Data = \Spatie\LaravelData\Data
@@ -72,17 +74,13 @@ trait ProvidesData
         /** @var class-string<TData> $dataClass */
         $dataClass = $this->getDataClass();
 
-        if ($dataClass instanceof Translatable) {
-            /** @var class-string<TData>&Translatable $dataClass */
+        if (in_array(Translatable::class, class_implements($dataClass))) {
+            /** @var class-string<TData&Translatable> $dataClass */
             $dataClass::translate(...$payloads);
         }
 
-        if ($payloads === []) {
+        if ($payloads === [] || ($data = $this->getData(...$payloads)) === null) {
             return $dataClass::empty();
-        }
-
-        if (($data = $this->getData(...$payloads)) === null) {
-            return [];
         }
 
         return $data instanceof Formable ? $data->toForm() : $data->toArray();

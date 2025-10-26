@@ -56,7 +56,7 @@ class RecordsExist extends AbstractRule
     protected function countRecords(mixed $value): int
     {
         return tap($this->resolveQuery(), fn (Builder $query) => match (true) {
-            ! $this->column => $query->whereKey($value),
+            $this->column === null => $query->whereKey($value),
             ! is_array($value) => $query->where($query->qualifyColumn($this->column), $value),
             in_array($query->getModel()->getKeyType(), ['int', 'integer']) => $query->whereIntegerInRaw($query->qualifyColumn($this->column), $value),
             default => $query->whereIn($query->qualifyColumn($this->column), $value),

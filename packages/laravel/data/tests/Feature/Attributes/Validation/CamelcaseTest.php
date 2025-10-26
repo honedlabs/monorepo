@@ -9,14 +9,14 @@ beforeEach(function () {});
 
 it('validates', function (bool $expected, mixed $input) {
     expect(Validator::make([
-        'test' => $input,
+        'value' => $input,
     ], CamelcaseData::getValidationRules([
-        'test' => $input,
+        'value' => $input,
     ])))->passes()->toBe($expected);
 })->with([
     [true, 'foo'],
     // [true, 'Foo'],
-    // [true, 'fooBar'],
+    [true, 'fooBar'],
     // [true, 'fooBarBaz'],
     // [true, 'fooBarBâz'],
     // [true, 'fOo'],

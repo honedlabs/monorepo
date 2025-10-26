@@ -8,6 +8,8 @@ interface Translatable
 {
     /**
      * Translate the fields of the data.
+     * 
+     * @param  mixed  ...$payloads
      */
-    public static function translate(mixed ...$payloads): void;
+    public static function translate(...$payloads): void;
 }
