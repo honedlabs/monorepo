@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Data\Concerns;
 
-use Spatie\LaravelData\Data;
 use Honed\Data\Contracts\Formable;
 use Honed\Data\Contracts\Translatable;
 use Honed\Data\Exceptions\DataClassNotSetException;
+use Spatie\LaravelData\Data;
 
 /**
  * @template TData of \Spatie\LaravelData\Data = \Spatie\LaravelData\Data

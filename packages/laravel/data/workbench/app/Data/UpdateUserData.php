@@ -22,6 +22,14 @@ class UpdateUserData extends UserData implements Partitionable, Translatable
     public array $products = [];
 
     /**
+     * Increment the global counter.
+     */
+    public static function translate(...$payloads): void
+    {
+        GlobalCounter::increment();
+    }
+
+    /**
      * Define the partitions for the data.
      *
      * @return array<string, list<string>>
@@ -32,13 +40,5 @@ class UpdateUserData extends UserData implements Partitionable, Translatable
             'user' => ['name'],
             'products' => ['products'],
         ];
-    }
-
-    /**
-     * Increment the global counter.
-     */
-    public static function translate(...$payloads): void
-    {
-        GlobalCounter::increment();
     }
 }

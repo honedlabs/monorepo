@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Data\Concerns;
 
 use BackedEnum;
-use Exception;
 use Honed\Data\Exceptions\PartitionKeyNotSetException;
 
 /**

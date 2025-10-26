@@ -14,19 +14,22 @@ class AnyOf extends CustomValidationAttribute
 {
     /**
      * The rules to check against.
-     * 
-     * @var list<class-string<\Illuminate\Validation\Rule>>
+     *
+     * @var list<string|class-string<\Illuminate\Contracts\Validation\ValidationRule>>
      */
     protected array $rules = [];
 
     /**
      * Create a new rule attribute.
-     * 
-     * @param  class-string<\Illuminate\Validation\Rule>|list<class-string<\Illuminate\Validation\Rule>>  $rules
+     *
+     * @param  string|class-string<\Illuminate\Contracts\Validation\ValidationRule>|list<class-string<\Illuminate\Contracts\Validation\ValidationRule>>  $rules
      */
     public function __construct(string|array $rules)
     {
-        $this->rules = is_array($rules) ? $rules : func_get_args();
+        /** @var list<string|class-string<\Illuminate\Contracts\Validation\ValidationRule>> */
+        $rules = is_string($rules) ? [$rules] : $rules;
+
+        $this->rules = $rules;
     }
 
     /**

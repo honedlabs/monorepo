@@ -13,7 +13,7 @@ beforeEach(function () {
 
 it('fails if not authenticated', function () {
     $product = Product::factory()->for($this->user)->create();
-    
+
     expect(new Authorized('view', Product::class, 'id'))
         ->isValid($product->getKey())->toBeFalse();
 });
@@ -45,18 +45,17 @@ describe('authenticated', function () {
 
     it('passes policy for model', function () {
         $product = Product::factory()->for($this->user)->create();
-    
+
         expect(new Authorized('view', Product::class, 'id'))
             ->isValid($product->getKey())->toBeTrue();
     });
-    
+
     it('fails policy for model', function () {
         $product = Product::factory()->create();
-    
+
         expect(new Authorized('view', Product::class, 'id'))
             ->isValid($product->getKey())->toBeFalse();
     });
-
 
     it('passes validator', function () {
         $product = Product::factory()->for($this->user)->create();
@@ -66,19 +65,19 @@ describe('authenticated', function () {
         ], [
             'value' => [new Authorized('view', Product::class, 'id')],
         ]);
-    
+
         expect($validator->fails())->toBeFalse();
     });
-    
+
     it('fails validator', function () {
         $product = Product::factory()->create();
-                
+
         $validator = Validator::make([
             'value' => $product->getKey(),
         ], [
             'value' => [new Authorized('view', Product::class, 'id')],
         ]);
-    
+
         expect($validator)
             ->fails()->toBeTrue()
             ->errors()
@@ -87,5 +86,5 @@ describe('authenticated', function () {
                 ->toBe('validation::validation.authorized')
             );
     });
-    
+
 });

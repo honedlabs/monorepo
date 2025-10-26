@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes;
 
 use Attribute;
-use Honed\Data\Support\HasRequest;
 use Illuminate\Http\Request;
 use Spatie\LaravelData\Attributes\InjectsPropertyValue;
 use Spatie\LaravelData\Support\Creation\CreationContext;

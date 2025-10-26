@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Data\Rules;
 
 use Intervention\Validation\AbstractRule;
-use League\ISO3166\ISO3166;
 
 class MaxWords extends AbstractRule
 {
@@ -18,8 +17,8 @@ class MaxWords extends AbstractRule
      */
     public function isValid(mixed $value): bool
     {
-        $value = is_string($value) ? $value : (string) $value;
-        
+        $value = is_scalar($value) ? (string) $value : '';
+
         return count(explode(' ', $value)) <= $this->maxWords;
     }
 

@@ -2,11 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Data\IpData;
 use App\Data\RefererData;
 use Illuminate\Http\Request;
-
-use function Pest\Laravel\from;
 
 beforeEach(function () {});
 

@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-use App\Models\User;
-use App\Data\UserData;
 use App\Classes\GlobalCounter;
 use App\Data\ProductData;
 use App\Data\UpdateUserData;
+use App\Data\UserData;
 use App\Models\Product;
+use App\Models\User;
 use Honed\Data\Concerns\ProvidesData;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Honed\Data\Exceptions\DataClassNotSetException;
 
 beforeEach(function () {
-    $this->class = new class {
+    $this->class = new class()
+    {
         use ProvidesData;
     };
-})->only();
+});
 
 afterEach(function () {
     GlobalCounter::reset();
@@ -71,7 +71,7 @@ it('provides form data if data is formable', function () {
         ->provideData($product)->toEqual([
             'user_id' => [
                 'name' => $user->name,
-            ]
+            ],
         ]);
 
     expect(GlobalCounter::get())->toBe(0);

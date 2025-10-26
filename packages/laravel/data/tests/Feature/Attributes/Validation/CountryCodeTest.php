@@ -15,7 +15,7 @@ it('validates', function (mixed $input, bool $expected) {
     ])))->passes()->toBe($expected);
 })->with([
     ['AU', true],
-    ['US', true], 
+    ['US', true],
     ['USD', false],
     ['1', false],
     ['us', false],

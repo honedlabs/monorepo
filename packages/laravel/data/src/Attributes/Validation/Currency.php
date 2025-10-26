@@ -6,7 +6,6 @@ namespace Honed\Data\Attributes\Validation;
 
 use Attribute;
 use Honed\Data\Rules\Currency as CurrencyRule;
-use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
 

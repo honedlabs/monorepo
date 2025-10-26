@@ -14,5 +14,5 @@ it('validates', function (mixed $input, bool $expected) {
         'value' => $input,
     ])))->passes()->toBe($expected);
 })->with([
-    ['test', true],
+    ['test', false],
 ]);

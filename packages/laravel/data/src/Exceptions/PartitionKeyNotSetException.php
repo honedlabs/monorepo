@@ -10,8 +10,8 @@ class PartitionKeyNotSetException extends Exception
 {
     /**
      * Create a new exception.
-     * 
-     * @param class-string|object $class
+     *
+     * @param  class-string|object  $class
      */
     final public function __construct(string $key, string|object $class)
     {
@@ -21,10 +21,12 @@ class PartitionKeyNotSetException extends Exception
             sprintf('Partition key [%s] does not exist for data class [%s].', $key, $className)
         );
     }
+
     /**
      * Throw the exception.
      *
-     * @param class-string|object $class
+     * @param  class-string|object  $class
+     *
      * @throws self
      */
     public static function throw(string $key, string|object $class): never

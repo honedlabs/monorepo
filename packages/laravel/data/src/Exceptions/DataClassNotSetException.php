@@ -11,7 +11,7 @@ class DataClassNotSetException extends Exception
     /**
      * Create a new exception.
      *
-     * @param class-string|object $class
+     * @param  class-string|object  $class
      */
     final public function __construct(string|object $class)
     {
@@ -21,11 +21,12 @@ class DataClassNotSetException extends Exception
             sprintf('Data class has not been set for [%s].', $className)
         );
     }
+
     /**
      * Throw the exception.
      *
-     * @param class-string|object $class
-     * 
+     * @param  class-string|object  $class
+     *
      * @throws self
      */
     public static function throw(string|object $class): never
