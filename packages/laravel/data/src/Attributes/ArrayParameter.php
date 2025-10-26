@@ -32,10 +32,6 @@ class ArrayParameter implements PreparesPropertyValue
         $name = $dataProperty->inputMappedName ?: $dataProperty->name;
         $value = $properties[$name] ?? null;
 
-        if ($value === null) {
-            return null;
-        }
-
         if (! is_array($value)) {
             return $value;
         }

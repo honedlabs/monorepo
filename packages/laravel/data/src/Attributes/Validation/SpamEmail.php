@@ -6,7 +6,6 @@ namespace Honed\Data\Attributes\Validation;
 
 use Attribute;
 use Honed\Data\Rules\SpamEmail as SpamEmailRule;
-use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
 
@@ -20,6 +19,6 @@ class SpamEmail extends CustomValidationAttribute
      */
     public function getRules(ValidationPath $path): array|object|string
     {
-        return [Rule::email(), new SpamEmailRule()];
+        return ['email', new SpamEmailRule()];
     }
 }
