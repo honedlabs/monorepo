@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Data\Rules;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
-use League\ISO3166\ISO3166;
 use Intervention\Validation\AbstractRule;
 use Symfony\Component\HttpFoundation\IpUtils;
 
@@ -31,7 +29,7 @@ class Recaptcha extends AbstractRule
         /** @var array{success: bool}|null $result */
         $result = $response->json();
 
-        return $response->successful() 
+        return $response->successful()
             && $result !== null
             && $result['success'] === true;
     }
@@ -62,7 +60,7 @@ class Recaptcha extends AbstractRule
         return [
             'secret' => config()->string('services.recaptcha.secret'),
             'response' => $value,
-            'remoteip' => IpUtils::anonymize($this->ip)
+            'remoteip' => IpUtils::anonymize((string) $this->ip),
         ];
     }
 }
