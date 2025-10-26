@@ -32,6 +32,7 @@ class Currency extends AbstractRule
      */
     protected function getCurrencies(): array
     {
-        return array_unique(data_get((new ISO3166()->all()), '*.currency.*'));
+        /** @var list<string> */
+        return array_unique((array) data_get((new ISO3166()->all()), '*.currency.*'));
     }
 }

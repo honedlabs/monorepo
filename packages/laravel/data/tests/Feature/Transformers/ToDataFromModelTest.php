@@ -17,13 +17,13 @@ it('transforms an id to a data object', function () {
 
     expect($data)
         ->toArray()->toEqual([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
     expect($data)
         ->toForm()->toEqual([
             'user_id' => [
                 'name' => $user->name,
-            ]
+            ],
         ]);
 });

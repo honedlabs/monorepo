@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Data\Rules;
 
 use Illuminate\Support\Arr;
-use League\ISO3166\ISO3166;
 use Intervention\Validation\AbstractRule;
+use League\ISO3166\ISO3166;
 
 class CountryCode extends AbstractRule
 {
@@ -33,6 +33,7 @@ class CountryCode extends AbstractRule
      */
     protected function getCountryCodes(): array
     {
+        /** @var list<string> */
         return Arr::pluck((new ISO3166())->all(), ISO3166::KEY_ALPHA2);
     }
 }

@@ -16,7 +16,7 @@ class Filename extends AbstractRule
     ) {}
 
     /**
-     * Checks if the given value is valid in the scope of the current rule.
+     * Check if the given value is valid in the scope of the current rule.
      */
     public function isValid(mixed $value): bool
     {

@@ -2,43 +2,59 @@
 
 declare(strict_types=1);
 
-// declare(strict_types=1);
+namespace Honed\Data\Rules;
 
-// namespace Honed\Data\Rules;
+use Illuminate\Contracts\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Auth;
+use Intervention\Validation\AbstractRule;
 
-// use Illuminate\Support\Facades\Auth;
-// use Intervention\Validation\AbstractRule;
+class Authorized extends AbstractRule
+{
+    /**
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $className
+     */
+    public function __construct(
+        protected string $ability,
+        protected string $className,
+        protected ?string $guard = null,
+        protected ?string $column = null,
+    ) {}
 
-// class Authorized extends AbstractRule
-// {
-//     /**
-//      * @param class-string<\Illuminate\Database\Eloquent\Model> $className
-//      */
-//     public function __construct(
-//         protected string $ability,
-//         protected string $className,
-//         protected ?string $guard = null,
-//         protected ?string $column = null,
-//     ) {}
+    /**
+     * Check if the given value is valid in the scope of the current rule.
+     */
+    public function isValid(mixed $value): bool
+    {
+        if (! $user = $this->getUser()) {
+            return false;
+        }
 
-//     public function isValid(mixed $value): bool
-//     {
-//         if (! $user = Auth::guard($this->guard)->user()) {
-//             return false;
-//         }
+        $model = $this->column
+            ? resolve($this->className)->resolveRouteBinding($value, $this->column)
+            : $this->className;
 
-//         if ($this->column && ! $model = resolve($this->className)->resolveRouteBinding($value, $this->column)) {
-//             return false;
-//         }
+        if (! $model) {
+            return false;
+        }
 
-//         return $user->can($this->ability, $model);
-//     }
-//     /**
-//      * Return the shortname of the current rule.
-//      */
-//     protected function shortname(): string
-//     {
-//         return 'authorized';
-//     }
+        return $user->can($this->ability, $model);
+    }
 
-// }
+    /**
+     * Return the shortname of the current rule.
+     */
+    protected function shortname(): string
+    {
+        return 'authorized';
+    }
+
+    /**
+     * Get the currently authenticated user.
+     */
+    protected function getUser(): (Authenticatable&Authorizable)|null
+    {
+        /** @var (Authenticatable&Authorizable)|null */
+        return Auth::guard($this->guard)->user();
+    }
+}
