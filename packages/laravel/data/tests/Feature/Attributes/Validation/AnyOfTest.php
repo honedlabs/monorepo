@@ -11,18 +11,19 @@ use Spatie\LaravelData\Data;
 beforeEach(function () {
     $this->data = new class() extends Data
     {
-        public function __construct(
-            #[AnyOf(Vimeo::class, Youtube::class)]
-            public mixed $value
-        ) {}
+        #[AnyOf(new Vimeo(), new Youtube())]
+        public mixed $value;
     };
 });
 
-// it('validates', function (mixed $input, bool $expected) {
-//     expect(Validator::make([
-//         'value' => $input,
-//     ], $this->data::getValidationRules([
-//         'value' => $input,
-//     ])))->passes()->toBe($expected);
-// })->with([
-// ]);
+it('validates', function (mixed $input, bool $expected) {
+    expect(Validator::make([
+        'value' => $input,
+    ], $this->data::getValidationRules([
+        'value' => $input,
+    ])))->passes()->toBe($expected);
+})->with([
+    ['https://vimeo.com/123456789', true],
+    ['https://www.youtube.com/watch?v=dQw4w9WgXcQ', true],
+    ['not-a-url', false],
+]);

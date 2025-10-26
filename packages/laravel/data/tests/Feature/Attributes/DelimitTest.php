@@ -6,10 +6,10 @@ use Honed\Data\Attributes\Delimit;
 use Honed\Data\Data\FormData;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Spatie\LaravelData\Data;
 
 beforeEach(function () {
-    $this->data = new class extends FormData {
+    $this->data = new class() extends FormData
+    {
         #[Delimit]
         public string $value;
     };
@@ -17,7 +17,7 @@ beforeEach(function () {
 
 it('delimits value', function (mixed $value, string $expected) {
     $request = Request::create('/', Request::METHOD_POST, [
-        'value' => $value
+        'value' => $value,
     ]);
 
     expect($this->data::from($request)->value)
@@ -25,17 +25,17 @@ it('delimits value', function (mixed $value, string $expected) {
 })->with([
     [['a', 'b'], 'a,b'],
     [[1, 2], '1,2'],
-    ['a', 'a']
+    ['a', 'a'],
 ]);
 
 it('throws exceptions', function (mixed $value) {
     $request = Request::create('/', Request::METHOD_POST, [
-        'value' => $value
+        'value' => $value,
     ]);
 
     $this->data::from($request);
 
 })->with([
     fn () => [[[1], [2]]],
-    fn () => [new stdClass],
+    fn () => [new stdClass()],
 ])->throws(ValidationException::class);

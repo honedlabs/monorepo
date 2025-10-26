@@ -5,12 +5,13 @@ declare(strict_types=1);
 use App\Models\User;
 use Honed\Data\Rules\RecordExists;
 use Illuminate\Support\Facades\Validator;
+use Spatie\LaravelData\Data;
 
-// beforeEach(function () {
-//     User::factory(5)->create();
+beforeEach(function () {
+    User::factory(5)->create();
 
-//     // dd(User::all());
-// });
+    // dd(User::all());
+});
 
 // describe('model class string', function () {
 //     beforeEach(function () {

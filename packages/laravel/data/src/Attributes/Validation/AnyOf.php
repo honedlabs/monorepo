@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes\Validation;
 
 use Attribute;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
@@ -15,19 +16,19 @@ class AnyOf extends CustomValidationAttribute
     /**
      * The rules to check against.
      *
-     * @var list<string|class-string<\Illuminate\Contracts\Validation\ValidationRule>>
+     * @var list<string|ValidationRule>
      */
     protected array $rules = [];
 
     /**
      * Create a new rule attribute.
      *
-     * @param  string|class-string<\Illuminate\Contracts\Validation\ValidationRule>|list<class-string<\Illuminate\Contracts\Validation\ValidationRule>>  $rules
+     * @param  string|ValidationRule|list<string|ValidationRule>  $rules
      */
-    public function __construct(string|array $rules)
+    public function __construct(string|ValidationRule|array $rules)
     {
-        /** @var list<string|class-string<\Illuminate\Contracts\Validation\ValidationRule>> */
-        $rules = is_string($rules) ? [$rules] : $rules;
+        /** @var list<string|ValidationRule> */
+        $rules = is_array($rules) ? $rules : func_get_args();
 
         $this->rules = $rules;
     }

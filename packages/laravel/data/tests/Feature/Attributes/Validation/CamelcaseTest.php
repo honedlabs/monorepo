@@ -2,31 +2,38 @@
 
 declare(strict_types=1);
 
-use App\Data\Validation\CamelcaseData;
+use Honed\Data\Attributes\Validation\Camelcase;
 use Illuminate\Support\Facades\Validator;
+use Spatie\LaravelData\Data;
 
-beforeEach(function () {});
+beforeEach(function () {
+    $this->data = new class extends Data
+    {
+        #[Camelcase]
+        public mixed $value;
+    };
+});
 
-it('validates', function (bool $expected, mixed $input) {
+it('validates', function (mixed $input, bool $expected) {
     expect(Validator::make([
         'value' => $input,
-    ], CamelcaseData::getValidationRules([
+    ], $this->data::getValidationRules([
         'value' => $input,
     ])))->passes()->toBe($expected);
 })->with([
-    [true, 'foo'],
-    // [true, 'Foo'],
-    [true, 'fooBar'],
-    // [true, 'fooBarBaz'],
-    // [true, 'fooBarBâz'],
-    // [true, 'fOo'],
-    // [true, 'PostScript'],
-    // [true, 'iPhone'],
-    // [false, 'foobaR'],
-    // [false, 'FoobaR'],
-    // [false, 'FOo'],
-    // [false, 'FOO'],
-    // [false, 'fo0bar'],
-    // [false, '-fooBar'],
-    // [false, '-fooBar-'],
+    ['foo', true],
+    ['Foo', true],
+    ['fooBar', true],
+    ['fooBarBaz', true],
+    ['fooBarBâz', true],
+    ['fOo', true],
+    ['PostScript', true],
+    ['iPhone', true],
+    ['foobaR', false],
+    ['FoobaR', false],
+    ['FOo', false],
+    ['FOO', false],
+    ['fo0bar', false],
+    ['-fooBar', false],
+    ['-fooBar-', false],
 ]);

@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace Honed\Data\Attributes\Validation\References;
 
+use Honed\Data\Support\HasRepository;
 use Spatie\LaravelData\Support\Validation\References\ExternalReference;
 
-class SessionParameterReference implements ExternalReference
+class CacheParameterReference extends HasRepository implements ExternalReference
 {
     public function __construct(
         public ?string $cacheKey,
+        public mixed $default = null,
         public ?string $driver = null,
     ) {}
 
-    public function getValue(): ?string
+    /**
+     * Get the value from the cache.
+     */
+    public function getValue(): mixed
     {
-        return null;
+        return $this->getRepository()->get($this->cacheKey, $this->default);
     }
 }

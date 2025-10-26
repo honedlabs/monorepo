@@ -2,11 +2,18 @@
 
 declare(strict_types=1);
 
-use App\Data\CacheData;
+use Honed\Data\Attributes\FromCache;
 use Illuminate\Http\Request;
+use Spatie\LaravelData\Data;
 
 beforeEach(function () {
     $this->freezeTime();
+
+    $this->data = new class extends Data
+    {
+        #[FromCache('value')]
+        public mixed $value;
+    };
 });
 
 afterEach(function () {
@@ -14,61 +21,61 @@ afterEach(function () {
 });
 
 it('skips if not a request', function () {
-    expect(CacheData::from(new stdClass()))
-        ->test->toBeNull();
+    expect($this->data::from(new stdClass())->value)->toBeNull();
 });
 
 it('provides parameter', function (mixed $value) {
     $request = Request::create('/', Request::METHOD_POST);
 
-    expect(CacheData::from($request)->test)
-        ->toBe($value);
+    expect($this->data::from($request)->value)->toBe($value);
 })->with([
     function () {
-        cache(['test' => 'test']);
+        cache(['value' => 'value']);
 
-        return 'test';
+        return 'value';
     },
     function () {
-        cache(['_test' => 'test']);
-
-        return null;
-    },
-    function () {
-        cache(['test' => 'test']);
-        cache()->forget('test');
+        cache(['_value' => 'value']);
 
         return null;
     },
     function () {
-        cache()->remember('test', 10, function () {
-            return 'test';
+        cache(['value' => 'value']);
+        cache()->forget('value');
+
+        return null;
+    },
+    function () {
+        cache()->remember('value', 10, function () {
+            return 'value';
         });
 
         $this->travel(9)->seconds();
 
-        return 'test';
+        return 'value';
     },
     function () {
-        cache()->remember('test', 10, function () {
-            return 'test';
+        cache()->remember('value', 10, function () {
+            return 'value';
         });
 
         $this->travel(11)->seconds();
 
         return null;
-    },
-    function () {
-        $this->freezeTime();
-
-        cache()->flexible('test', [10, 20], 'value-1');
-
-        $this->travel(11)->seconds();
-
-        cache()->flexible('test', [10, 20], 'value-2');
-
-        defer()->invoke();
-
-        return 'value-2';
-    },
+    }
 ]);
+
+it('provides parameter with flexible', function () {
+    cache()->flexible('value', [10, 20], 'value-1');
+
+    $this->travel(11)->seconds();
+
+    cache()->flexible('value', [10, 20], 'value-2');
+
+    defer()->invoke();
+
+    $request = Request::create('/', Request::METHOD_POST);
+
+    expect($this->data::from($request)->value)->toBe('value-2');
+
+})->skip(fn () => ! method_exists(cache()->driver(), 'flexible'));

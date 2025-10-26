@@ -8,12 +8,12 @@ use App\Models\User;
 use Honed\Data\Attributes\FromFirstRouteParameter;
 use Honed\Data\Data\FormData;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Http\Request;
 
 use function Pest\Laravel\get;
 
 beforeEach(function () {
-    $this->data = new class extends FormData {
+    $this->data = new class() extends FormData
+    {
         #[FromFirstRouteParameter(Authenticatable::class)]
         public ?User $user;
     };
@@ -28,14 +28,13 @@ it('injects property', function () {
 })->with([
     fn () => get(route('users.show', $this->user)),
     fn () => get(route('locales.users.show', [Locale::English, $this->user])),
-    fn () => get(route('products.users.show', [Product::factory()->for($this->user)->create(), $this->user]))
+    fn () => get(route('products.users.show', [Product::factory()->for($this->user)->create(), $this->user])),
 ]);
-
 
 it('skips', function (mixed $value) {
     expect($this->data::from($value))
         ->user->toBeNull();
 })->with([
     fn () => new stdClass(),
-    fn () => get(route('users.index'))->baseRequest
+    fn () => get(route('users.index'))->baseRequest,
 ]);
