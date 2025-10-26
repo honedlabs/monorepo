@@ -8,7 +8,7 @@ beforeEach(function () {
     $this->rule = new Recaptcha('127.0.0.1');
 });
 
-it('', function () {
-    dd($this->rule->isValid('test'));
+it('calls api', function () {
+    expect($this->rule->isValid('test'))->toBeFalse();
 });
 

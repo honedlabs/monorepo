@@ -6,15 +6,30 @@ namespace Honed\Data\Exceptions;
 
 use Exception;
 
-final class DataClassNotSetException extends Exception
+class DataClassNotSetException extends Exception
 {
+    /**
+     * Create a new exception.
+     *
+     * @param class-string|object $class
+     */
+    final public function __construct(string|object $class)
+    {
+        $className = is_string($class) ? $class : get_class($class);
+
+        parent::__construct(
+            sprintf('Data class has not been set for [%s].', $className)
+        );
+    }
     /**
      * Throw the exception.
      *
+     * @param class-string|object $class
+     * 
      * @throws self
      */
-    public static function throw(): never
+    public static function throw(string|object $class): never
     {
-        throw new self('Data class has not been set.');
+        throw new self($class);
     }
 }

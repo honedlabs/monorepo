@@ -54,7 +54,7 @@ trait ProvidesData
         $data = $this->getDataClass();
 
         if ($data === null) {
-            DataClassNotSetException::throw();
+            DataClassNotSetException::throw($this);
         }
 
         return $data::optional(...$payloads);

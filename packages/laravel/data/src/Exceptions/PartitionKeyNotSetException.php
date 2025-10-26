@@ -6,14 +6,14 @@ namespace Honed\Data\Exceptions;
 
 use Exception;
 
-final class PartitionKeyNotSetException extends Exception
+class PartitionKeyNotSetException extends Exception
 {
     /**
      * Create a new exception.
      * 
      * @param class-string|object $class
      */
-    public function __construct(string $key, string|object $class)
+    final public function __construct(string $key, string|object $class)
     {
         $className = is_string($class) ? $class : get_class($class);
 
