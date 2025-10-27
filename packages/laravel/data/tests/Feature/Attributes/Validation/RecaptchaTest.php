@@ -9,7 +9,7 @@ use Spatie\LaravelData\Data;
 beforeEach(function () {
     $this->data = new class() extends Data
     {
-        #[Recaptcha]
+        #[Recaptcha('127.0.0.1')]
         public mixed $value;
     };
 });

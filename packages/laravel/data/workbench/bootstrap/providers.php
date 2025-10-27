@@ -7,4 +7,5 @@ return [
     Honed\Data\DataServiceProvider::class,
     Spatie\LaravelData\LaravelDataServiceProvider::class,
     Intervention\Validation\Laravel\ValidationServiceProvider::class,
+    Propaganistas\LaravelPhone\PhoneServiceProvider::class,
 ];

@@ -12,7 +12,7 @@ beforeEach(function () {
         #[WithTransformer(Nullify::class, 0, 2)]
         public int $value;
     };
-})->only();
+});
 
 it('nullifies value when transforming to form data', function ($value, $expected) {
     $data = $this->data::from([
