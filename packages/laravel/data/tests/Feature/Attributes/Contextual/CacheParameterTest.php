@@ -54,6 +54,10 @@ it('provides parameter', function (mixed $value) {
         return null;
     },
     function () {
+        if (! method_exists(cache()->driver(), 'flexible')) {
+            return 'test';
+        }
+
         $this->freezeTime();
 
         cache()->flexible('test', [10, 20], 'value-1');
