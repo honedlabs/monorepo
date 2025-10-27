@@ -6,6 +6,7 @@ use Honed\Data\Attributes\Validation\AnyOf;
 use Honed\Data\Rules\Vimeo;
 use Honed\Data\Rules\Youtube;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Data;
 
 beforeEach(function () {
@@ -14,7 +15,7 @@ beforeEach(function () {
         #[AnyOf(new Vimeo(), new Youtube())]
         public mixed $value;
     };
-});
+})->skip(fn () => ! method_exists(Rule::class, 'anyOf'));
 
 it('validates', function (mixed $input, bool $expected) {
     expect(Validator::make([

@@ -10,15 +10,8 @@ use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Delimit implements PreparesPropertyValue
+class OnlyFilename implements PreparesPropertyValue
 {
-    /**
-     * @param  non-empty-string  $delimiter
-     */
-    public function __construct(
-        protected string $delimiter = ','
-    ) {}
-
     /**
      * Overwrite the property value before it is validated.
      *
@@ -34,13 +27,10 @@ class Delimit implements PreparesPropertyValue
 
         $value = $properties[$dataProperty->name] ?? null;
 
-        if (! is_array($value)) {
+        if (! is_scalar($value)) {
             return $value;
         }
 
-        return implode($this->delimiter, array_map(
-            fn (mixed $value) => is_scalar($value) ? (string) $value : '',
-            $value
-        ));
+        return pathinfo((string) $value, PATHINFO_BASENAME) ?: null;
     }
 }

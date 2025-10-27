@@ -10,7 +10,7 @@ use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Delimit implements PreparesPropertyValue
+class Segment implements PreparesPropertyValue
 {
     /**
      * @param  non-empty-string  $delimiter
@@ -34,13 +34,10 @@ class Delimit implements PreparesPropertyValue
 
         $value = $properties[$dataProperty->name] ?? null;
 
-        if (! is_array($value)) {
-            return $value;
+        if (! is_scalar($value)) {
+            return null;
         }
 
-        return implode($this->delimiter, array_map(
-            fn (mixed $value) => is_scalar($value) ? (string) $value : '',
-            $value
-        ));
+        return explode($this->delimiter, (string) $value);
     }
 }
