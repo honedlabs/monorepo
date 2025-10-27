@@ -9,7 +9,7 @@ use Spatie\LaravelData\Data;
 beforeEach(function () {
     $this->freezeTime();
 
-    $this->data = new class extends Data
+    $this->data = new class() extends Data
     {
         #[FromCache('value')]
         public mixed $value;
@@ -62,7 +62,7 @@ it('provides parameter', function (mixed $value) {
         $this->travel(11)->seconds();
 
         return null;
-    }
+    },
 ]);
 
 it('provides parameter with flexible', function () {

@@ -68,6 +68,6 @@ class RecordsExist extends AbstractRule
      */
     protected function shortname(): string
     {
-        return 'record_exists';
+        return 'records_exist';
     }
 }

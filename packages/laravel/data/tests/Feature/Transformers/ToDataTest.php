@@ -6,9 +6,7 @@ use App\Data\ProductData;
 use App\Models\Product;
 use App\Models\User;
 
-beforeEach(function () {
-
-})->skip();
+beforeEach(function () {})->skip();
 
 it('transforms an id to a data object', function () {
     $user = User::factory()->create();

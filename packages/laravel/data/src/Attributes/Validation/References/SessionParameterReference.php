@@ -10,7 +10,7 @@ use Spatie\LaravelData\Support\Validation\References\ExternalReference;
 class SessionParameterReference extends HasSession implements ExternalReference
 {
     public function __construct(
-        public ?string $sessionKey,
+        public string $sessionKey,
         public mixed $default = null,
         public ?string $driver = null,
     ) {}

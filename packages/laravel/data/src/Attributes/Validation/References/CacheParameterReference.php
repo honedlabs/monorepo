@@ -10,7 +10,7 @@ use Spatie\LaravelData\Support\Validation\References\ExternalReference;
 class CacheParameterReference extends HasRepository implements ExternalReference
 {
     public function __construct(
-        public ?string $cacheKey,
+        public string $cacheKey,
         public mixed $default = null,
         public ?string $driver = null,
     ) {}

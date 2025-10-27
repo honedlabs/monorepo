@@ -3,23 +3,20 @@
 declare(strict_types=1);
 
 use Honed\Data\Attributes\Validation\References\CacheParameterReference;
-use Honed\Data\Attributes\Validation\References\SessionParameterReference;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Spatie\LaravelData\Attributes\Validation\Max;
-use Spatie\LaravelData\Attributes\Validation\RequiredIf;
 use Spatie\LaravelData\Data;
 
 beforeEach(function () {
     $this->freezeTime();
 
-    $this->data = new class extends Data
+    $this->data = new class() extends Data
     {
         #[Max(new CacheParameterReference('max', 10))]
         public int $value;
     };
-})->only();
-
+});
 
 afterEach(function () {
     cache()->flush();
@@ -82,5 +79,5 @@ it('gets parameter from cache', function (int $input, bool $expected) {
         defer()->invoke();
 
         return [6, false];
-    }
+    },
 ]);
