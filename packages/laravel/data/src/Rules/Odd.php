@@ -15,7 +15,7 @@ class Odd extends AbstractRule
     {
         $value = is_scalar($value) ? (int) $value : 0;
 
-        return $value % 2 !== 0;
+        return $value % 2 !== 0 && $value !== 0;
     }
 
     /**
