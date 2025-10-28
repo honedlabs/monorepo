@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Honed\Data\Attributes\Validation;
 
 use Attribute;
-use Honed\Data\Rules\SpamEmail as SpamEmailRule;
+use Honed\Data\Rules\DisposableEmail as DisposableEmailRule;
 use Spatie\LaravelData\Attributes\Validation\CustomValidationAttribute;
 use Spatie\LaravelData\Support\Validation\ValidationPath;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class SpamEmail extends CustomValidationAttribute
+class DisposableEmail extends CustomValidationAttribute
 {
     /**
      * Get the validation rules for the attribute.
@@ -19,6 +19,6 @@ class SpamEmail extends CustomValidationAttribute
      */
     public function getRules(ValidationPath $path): array|object|string
     {
-        return ['email', new SpamEmailRule()];
+        return ['email', new DisposableEmailRule()];
     }
 }

@@ -2,15 +2,22 @@
 
 declare(strict_types=1);
 
-use App\Data\Validation\SpamEmailData;
 use Illuminate\Support\Facades\Validator;
+use Spatie\LaravelData\Data;
+use Honed\Data\Attributes\Validation\DisposableEmail;
 
-beforeEach(function () {});
+beforeEach(function () {
+    $this->data = new class extends Data
+    {
+        #[DisposableEmail]
+        public string $test;
+    };
+});
 
 it('validates', function (mixed $input, bool $expected) {
     expect(Validator::make([
         'test' => $input,
-    ], SpamEmailData::getValidationRules([
+    ], $this->data::getValidationRules([
         'test' => $input,
     ])))->passes()->toBe($expected);
 })->with([

@@ -6,7 +6,7 @@ namespace Honed\Data\Rules;
 
 use Intervention\Validation\AbstractRule;
 
-class SpamEmail extends AbstractRule
+class DisposableEmail extends AbstractRule
 {
     /**
      * @param  array<int, string>  $spamEmails
