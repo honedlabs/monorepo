@@ -25,8 +25,13 @@ class Phone extends CustomValidationAttribute
      */
     public function __construct(string|array $countries = [])
     {
-        /** @var list<string> */
+        /** @var list<string> $countries */
         $countries = is_array($countries) ? $countries : func_get_args();
+
+        if ($countries === []) {
+            /** @var list<string> $countries */
+            $countries = config()->array('honed-data.phone_country_codes', ['INTERNATIONAL']);
+        }
 
         $this->countries = $countries;
     }

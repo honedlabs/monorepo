@@ -40,7 +40,7 @@ class DataServiceProvider extends ServiceProvider
      */
     public static function shouldExtendValidator(bool $value = true): void
     {
-        config()->set('data.extends_validator', $value);
+        config()->set('honed-data.extends_validator', $value);
     }
 
     /**
@@ -49,9 +49,9 @@ class DataServiceProvider extends ServiceProvider
     public function extendsValidator(): bool
     {
         /** @var \Illuminate\Contracts\Config\Repository $config */
-        $config = $this->app['config'];
+        $config = $this->app['config']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
 
-        return (bool) $config->get('data.extends_validator', false);
+        return (bool) $config->get('honed-data.extends_validator', false);
     }
 
     /**
@@ -61,8 +61,9 @@ class DataServiceProvider extends ServiceProvider
      */
     public function getRules(): array
     {
+        /** @var list<string> */
         return array_map(
-            static fn (SplFileInfo $file) => $file->getFilenameWithoutExtension(), 
+            static fn (SplFileInfo $file) => dd($file->getFilenameWithoutExtension()), 
             File::files(__DIR__.'/Rules')
         );
     }
@@ -74,6 +75,7 @@ class DataServiceProvider extends ServiceProvider
      */
     public function getLanguages(): array
     {
+        /** @var list<string> */
         return array_map(
             static fn (string $dir) => Str::afterLast($dir, '/'), 
             File::directories(__DIR__.'/../resources/lang')
@@ -86,7 +88,7 @@ class DataServiceProvider extends ServiceProvider
     protected function offerPublishing(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/data.php' => config_path('data.php'),
+            __DIR__ . '/../config/honed-data.php' => config_path('honed-data.php'),
         ], 'honed-data-config');
 
         $this->publishes([
@@ -106,10 +108,10 @@ class DataServiceProvider extends ServiceProvider
     protected function extendValidator(): void
     {
         /** @var \Illuminate\Contracts\Validation\Factory $validator */
-        $validator = $this->app['validator'];
+        $validator = $this->app['validator']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
 
         /** @var \Illuminate\Contracts\Translation\Translator $translator */
-        $translator = $this->app['translator'];
+        $translator = $this->app['translator']; // @phpstan-ignore-line offsetAccess.nonOffsetAccessible
 
         foreach ($this->getRules() as $rule) {
             $ruleName = Str::snake(class_basename($rule));
@@ -119,7 +121,7 @@ class DataServiceProvider extends ServiceProvider
                 function ($attribute, $value, $parameters, $validator) use ($rule) {
                     return (new $rule($parameters))->isValid($value);
                 },
-                $translator->get('data::validation.rules.'.$ruleName)
+                $translator->get('honed-data::validation.'.$ruleName)
             );
         }
     }

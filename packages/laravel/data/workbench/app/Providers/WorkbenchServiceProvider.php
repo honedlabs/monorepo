@@ -24,5 +24,6 @@ class WorkbenchServiceProvider extends ServiceProvider
         Gate::define('fail', fn (?User $user) => false);
 
         config()->set('services.recaptcha.secret', 'test');
+        // config()->set('honed-data.extends_validator', true);
     }
 }

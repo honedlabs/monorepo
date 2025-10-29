@@ -10,6 +10,7 @@ beforeEach(function () {})->only();
 
 afterEach(function () {
     File::deleteDirectory(lang_path('vendor/data'));
+    File::delete(config_path('honed-data.php'));
 });
 
 it('publishes all language files', function () {
@@ -29,4 +30,25 @@ it('publishes individual language files', function () {
         ->toHaveCount(1);
 
     assertFileExists(lang_path('vendor/data/en'));
+});
+
+it('publishes the config file', function () {
+    artisan('vendor:publish', ['--tag' => 'honed-data-config'])
+        ->assertSuccessful();
+
+    assertFileExists(config_path('honed-data.php'));
+});
+
+it('optionally extends the validator', function () {
+    $provider = $this->app->getProvider(DataServiceProvider::class);
+
+    expect($provider->extendsValidator())->toBeFalse();
+
+    DataServiceProvider::shouldExtendValidator(true);
+
+    expect($provider->extendsValidator())->toBeTrue();
+
+    DataServiceProvider::shouldExtendValidator(false);
+
+    expect($provider->extendsValidator())->toBeFalse();
 });

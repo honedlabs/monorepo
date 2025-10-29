@@ -13,8 +13,7 @@ final class FormTransformationContext extends TransformationContext
      */
     public static function make(): static
     {
-        /** @var int */
-        $depth = config('data.max_transformation_depth');
+        $depth = config()->integer('data.max_transformation_depth');
 
         $maxDepth = (bool) config('data.throw_when_max_transformation_depth_reached');
 
