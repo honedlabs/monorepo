@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 beforeEach(function () {
     $this->rule = new Hashtag();
-})->only();
+});
 
 it('validates', function (mixed $input, bool $expected) {
     expect($this->rule)

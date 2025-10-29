@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Data;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
+use SplFileInfo;
 
 class DataServiceProvider extends ServiceProvider
 {
@@ -14,7 +16,7 @@ class DataServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/data.php', 'honed-data');
+        $this->mergeConfigFrom(__DIR__ . '/../config/honed-data.php', 'honed-data');
     }
 
     /**
@@ -22,15 +24,11 @@ class DataServiceProvider extends ServiceProvider
      */
     public function boot(): void 
     {
-        $this->loadTranslationsFrom(
-            __DIR__ . '/../resources/lang',
-            'data'
-        );
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'honed-data');
 
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
         }
-            
 
         if ($this->extendsValidator()) {
             $this->extendValidator();
@@ -57,6 +55,32 @@ class DataServiceProvider extends ServiceProvider
     }
 
     /**
+     * Get the names of the rules classes.
+     * 
+     * @return list<class-string<AbstractRule>>
+     */
+    public function getRules(): array
+    {
+        return array_map(
+            static fn (SplFileInfo $file) => $file->getFilenameWithoutExtension(), 
+            File::files(__DIR__.'/Rules')
+        );
+    }
+
+    /**
+     * Get the languages for the package.
+     *
+     * @return list<string>
+     */
+    public function getLanguages(): array
+    {
+        return array_map(
+            static fn (string $dir) => Str::afterLast($dir, '/'), 
+            File::directories(__DIR__.'/../resources/lang')
+        );
+    }
+
+    /**
      * Register the publishing for the package.
      */
     protected function offerPublishing(): void
@@ -64,6 +88,16 @@ class DataServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/data.php' => config_path('data.php'),
         ], 'honed-data-config');
+
+        $this->publishes([
+            __DIR__.'/../resources/lang' => lang_path('vendor/data'),
+        ], 'honed-data-lang');
+
+        foreach ($this->getLanguages() as $language) {
+            $this->publishes([
+                __DIR__.'/../resources/lang/'.$language => lang_path('vendor/data/'.$language),
+            ], 'honed-data-lang-'.$language);
+        }
     }
 
     /**
@@ -88,14 +122,5 @@ class DataServiceProvider extends ServiceProvider
                 $translator->get('data::validation.rules.'.$ruleName)
             );
         }
-    }
-
-    /**
-     * Get the names of the rules classes.
-     * 
-     * @return list<class-string<AbstractRule>>
-     */
-    protected function getRules(): array
-    {
     }
 }
