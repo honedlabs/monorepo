@@ -77,7 +77,7 @@ class DataServiceProvider extends ServiceProvider
     {
         /** @var list<string> */
         return array_map(
-            static fn (string $dir) => Str::afterLast($dir, '/'),
+            static fn (string $dir) => basename($dir),
             File::directories(__DIR__.'/../resources/lang')
         );
     }
