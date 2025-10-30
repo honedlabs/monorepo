@@ -53,13 +53,5 @@ jobs:
         run: mkdir -p build/logs
 
       - name: Execute tests with coverage
-        run: vendor/bin/pest --coverage --min=0
-
-      - name: Generate coverage badge
-        uses: timkrase/phpunit-coverage-badge@v1.2.0
-        with:
-          report: 'build/logs/clover.xml'
-          coverage_badge_path: 'badge-coverage.svg'
-          push_badge: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: vendor/bin/pest --coverage --min=90
 
