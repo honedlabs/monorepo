@@ -5,26 +5,34 @@ declare(strict_types=1);
 namespace Honed\Data;
 
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use SplFileInfo;
 
 class DataServiceProvider extends ServiceProvider
 {
     /**
+     * Set whether the validator should be extended.
+     */
+    public static function shouldExtendValidator(bool $value = true): void
+    {
+        config()->set('honed-data.extends_validator', $value);
+    }
+
+    /**
      * Register services.
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/honed-data.php', 'honed-data');
+        $this->mergeConfigFrom(__DIR__.'/../config/honed-data.php', 'honed-data');
     }
 
     /**
      * Bootstrap services.
      */
-    public function boot(): void 
+    public function boot(): void
     {
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'honed-data');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'honed-data');
 
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
@@ -33,14 +41,6 @@ class DataServiceProvider extends ServiceProvider
         if ($this->extendsValidator()) {
             $this->extendValidator();
         }
-    }
-
-    /**
-     * Set whether the validator should be extended.
-     */
-    public static function shouldExtendValidator(bool $value = true): void
-    {
-        config()->set('honed-data.extends_validator', $value);
     }
 
     /**
@@ -56,14 +56,14 @@ class DataServiceProvider extends ServiceProvider
 
     /**
      * Get the names of the rules classes.
-     * 
+     *
      * @return list<string>
      */
     public function getRules(): array
     {
         /** @var list<string> */
         return array_map(
-            static fn (SplFileInfo $file) => $file->getFilenameWithoutExtension(), 
+            static fn (SplFileInfo $file) => $file->getFilenameWithoutExtension(),
             File::files(__DIR__.'/Rules')
         );
     }
@@ -77,7 +77,7 @@ class DataServiceProvider extends ServiceProvider
     {
         /** @var list<string> */
         return array_map(
-            static fn (string $dir) => Str::afterLast($dir, '/'), 
+            static fn (string $dir) => Str::afterLast($dir, '/'),
             File::directories(__DIR__.'/../resources/lang')
         );
     }
@@ -88,16 +88,16 @@ class DataServiceProvider extends ServiceProvider
     protected function offerPublishing(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/honed-data.php' => config_path('honed-data.php'),
+            __DIR__.'/../config/honed-data.php' => config_path('honed-data.php'),
         ], 'honed-data-config');
 
         $this->publishes([
-            __DIR__.'/../resources/lang' => lang_path('vendor/data'),
+            __DIR__.'/../resources/lang' => lang_path('vendor/honed-data'),
         ], 'honed-data-lang');
 
         foreach ($this->getLanguages() as $language) {
             $this->publishes([
-                __DIR__.'/../resources/lang/'.$language => lang_path('vendor/data/'.$language),
+                __DIR__.'/../resources/lang/'.$language => lang_path('vendor/honed-data/'.$language),
             ], 'honed-data-lang-'.$language);
         }
     }
@@ -130,12 +130,12 @@ class DataServiceProvider extends ServiceProvider
 
     /**
      * Get the class name of the rule.
-     * 
-     * @return class-string<\Honed\Data\Support\AbstractRule>
+     *
+     * @return class-string<Support\AbstractRule>
      */
     protected function getRuleClassName(string $rule): string
     {
-        /** @var class-string<\Honed\Data\Support\AbstractRule> */
+        /** @var class-string<Support\AbstractRule> */
         return __NAMESPACE__.'\\Rules\\'.$rule;
     }
 }

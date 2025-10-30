@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Spatie\LaravelData\Data;
 
 beforeEach(function () {
-    $this->data = new class extends Data
+    $this->data = new class() extends Data
     {
         #[MaxWords(2)]
         public mixed $value;

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Honed\Data\Rules;
 
 use Honed\Data\Contracts\QueryFrom;
+use Honed\Data\Support\AbstractRule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Honed\Data\Support\AbstractRule;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model

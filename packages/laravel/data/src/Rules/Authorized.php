@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Data\Rules;
 
+use Honed\Data\Support\AbstractRule;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
-use Honed\Data\Support\AbstractRule;
 
 class Authorized extends AbstractRule
 {

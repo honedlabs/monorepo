@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Data\Rules;
 
+use Honed\Data\Support\AbstractRule;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Validation\Rule;
-use Honed\Data\Support\AbstractRule;
 
 class UrlWithoutScheme extends AbstractRule
 {

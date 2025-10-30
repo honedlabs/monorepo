@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Data\Rules;
 
-use Illuminate\Support\Arr;
 use Honed\Data\Support\AbstractRule;
+use Illuminate\Support\Arr;
 use League\ISO3166\ISO3166;
 
 class Country extends AbstractRule

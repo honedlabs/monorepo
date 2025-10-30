@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
+use Honed\Data\Attributes\Validation\DisposableEmail;
 use Illuminate\Support\Facades\Validator;
 use Spatie\LaravelData\Data;
-use Honed\Data\Attributes\Validation\DisposableEmail;
 
 beforeEach(function () {
-    $this->data = new class extends Data
+    $this->data = new class() extends Data
     {
         #[DisposableEmail]
         public string $test;

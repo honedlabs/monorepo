@@ -6,7 +6,7 @@ namespace Honed\Data\Concerns;
 
 /**
  * @phpstan-require-extends \Intervention\Validation\AbstractRule
- * 
+ *
  * @internal
  */
 trait TranslatesErrorMessages
@@ -16,13 +16,13 @@ trait TranslatesErrorMessages
      */
     public function message(): string
     {
-        $key = 'validation.' . $this->shortname();
+        $key = 'validation.'.$this->shortname();
 
         if (function_exists('trans')) {
             $message = trans($key);
 
             if ($message === $key) {
-                return trans('honed-data::' . $key);
+                return trans('honed-data::'.$key);
             }
         }
 

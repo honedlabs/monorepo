@@ -16,7 +16,7 @@ return [
     | the underlying validation rule class is used for validation.
     |
     */
-    
+
     'extends_validator' => false,
 
     /*
@@ -25,12 +25,12 @@ return [
     |--------------------------------------------------------------------------
     |
     | You can specify the country codes that should be used to validate phone
-    | numbers by default, if no arguments are provided to the 
+    | numbers by default, if no arguments are provided to the
     | `Honed\Data\Attributes\Validation\Phone` validation attribute. By default,
     | the INTERNATIONAL country code is used. See `propaganistas/laravel-phone`
     | for the list of supported country codes.
     |
     */
-    
+
     'phone_country_codes' => ['INTERNATIONAL'],
 ];

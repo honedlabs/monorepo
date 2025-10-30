@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Data\Rules\DisposableEmail;
 use Honed\Data\Rules\Whitespace;
 use Illuminate\Support\Facades\Validator;
 
