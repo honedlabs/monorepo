@@ -7,7 +7,7 @@ namespace Honed\Data\Rules;
 use Honed\Data\Contracts\QueryFrom;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Intervention\Validation\AbstractRule;
+use Honed\Data\Support\AbstractRule;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model

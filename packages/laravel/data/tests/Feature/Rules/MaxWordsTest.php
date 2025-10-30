@@ -43,6 +43,6 @@ it('fails validator', function () {
         ->errors()
         ->scoped(fn ($bag) => $bag
             ->first('value')
-            ->toBe('validation::validation.max_words')
+            ->toBe(__('honed-data::validation.max_words', ['attribute' => 'value']))
         );
 });

@@ -25,6 +25,6 @@ it('fails validator', function () {
         ->errors()
         ->scoped(fn ($bag) => $bag
             ->first('value')
-            ->toBe('validation::validation.recaptcha')
+            ->toBe(__('honed-data::validation.recaptcha', ['attribute' => 'value']))
         );
 });

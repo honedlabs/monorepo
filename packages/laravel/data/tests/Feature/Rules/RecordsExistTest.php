@@ -49,7 +49,7 @@ describe('class string', function () {
             ->errors()
             ->scoped(fn ($bag) => $bag
                 ->first('value')
-                ->toBe('validation::validation.records_exist')
+                ->toBe(__('honed-data::validation.records_exist', ['attribute' => 'value']))
             );
     });
 });

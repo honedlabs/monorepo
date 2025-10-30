@@ -41,6 +41,6 @@ it('fails validator', function () {
         ->errors()
         ->scoped(fn ($bag) => $bag
             ->first('value')
-            ->toBe('validation::validation.bitcoin_address')
+            ->toBe(__('honed-data::validation.bitcoin_address', ['attribute' => 'value']))
         );
 });

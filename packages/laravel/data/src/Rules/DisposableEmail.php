@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Data\Rules;
 
-use Intervention\Validation\AbstractRule;
+use Honed\Data\Support\AbstractRule;
 
 class DisposableEmail extends AbstractRule
 {
@@ -3797,6 +3797,6 @@ class DisposableEmail extends AbstractRule
      */
     protected function shortname(): string
     {
-        return 'spam_email';
+        return 'disposable_email';
     }
 }

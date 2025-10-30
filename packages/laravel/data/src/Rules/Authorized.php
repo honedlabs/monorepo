@@ -7,7 +7,7 @@ namespace Honed\Data\Rules;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
-use Intervention\Validation\AbstractRule;
+use Honed\Data\Support\AbstractRule;
 
 class Authorized extends AbstractRule
 {

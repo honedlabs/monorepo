@@ -50,6 +50,6 @@ it('fails validator', function () {
         ->errors()
         ->scoped(fn ($bag) => $bag
             ->first('value')
-            ->toBe('validation::validation.even')
+            ->toBe(__('honed-data::validation.even', ['attribute' => 'value']))
         );
 });

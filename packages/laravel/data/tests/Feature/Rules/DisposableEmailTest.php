@@ -58,6 +58,6 @@ it('fails validator', function () {
         ->errors()
         ->scoped(fn ($bag) => $bag
             ->first('value')
-            ->toBe('validation::validation.spam_email')
+            ->toBe(__('honed-data::validation.disposable_email', ['attribute' => 'value']))
         );
 });

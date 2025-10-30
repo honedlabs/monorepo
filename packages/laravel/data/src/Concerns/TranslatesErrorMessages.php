@@ -22,7 +22,7 @@ trait TranslatesErrorMessages
             $message = trans($key);
 
             if ($message === $key) {
-                return trans('validation::' . $key);
+                return trans('honed-data::' . $key);
             }
         }
 

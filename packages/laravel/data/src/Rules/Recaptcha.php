@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Data\Rules;
 
 use Illuminate\Support\Facades\Http;
-use Intervention\Validation\AbstractRule;
+use Honed\Data\Support\AbstractRule;
 use Symfony\Component\HttpFoundation\IpUtils;
 
 class Recaptcha extends AbstractRule

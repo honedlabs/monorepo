@@ -71,6 +71,6 @@ it('fails validator', function () {
         ->errors()
         ->scoped(fn ($bag) => $bag
             ->first('value')
-            ->toBe('validation::validation.vimeo')
+            ->toBe(__('honed-data::validation.vimeo', ['attribute' => 'value']))
         );
 });

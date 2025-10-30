@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\File;
 use function Pest\Laravel\artisan;
 use function PHPUnit\Framework\assertFileExists;
 
-beforeEach(function () {})->only();
+beforeEach(function () {});
 
 afterEach(function () {
     File::deleteDirectory(lang_path('vendor/data'));

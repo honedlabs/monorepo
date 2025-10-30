@@ -44,6 +44,6 @@ it('fails validator', function () {
         ->errors()
         ->scoped(fn ($bag) => $bag
             ->first('value')
-            ->toBe('validation::validation.whitespace')
+            ->toBe(__('honed-data::validation.whitespace', ['attribute' => 'value']))
         );
 });

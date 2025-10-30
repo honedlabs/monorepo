@@ -6,7 +6,7 @@ namespace Honed\Data\Rules;
 
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Validation\Rule;
-use Intervention\Validation\AbstractRule;
+use Honed\Data\Support\AbstractRule;
 
 class UrlWithoutScheme extends AbstractRule
 {

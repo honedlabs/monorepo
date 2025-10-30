@@ -45,6 +45,6 @@ it('fails validator', function () {
         ->errors()
         ->scoped(fn ($bag) => $bag
             ->first('value')
-            ->toBe('validation::validation.currency')
+            ->toBe(__('honed-data::validation.currency', ['attribute' => 'value']))
         );
 });

@@ -46,6 +46,6 @@ it('fails validator', function () {
         ->errors()
         ->scoped(fn ($bag) => $bag
             ->first('value')
-            ->toBe('validation::validation.country')
+            ->toBe(__('honed-data::validation.country', ['attribute' => 'value']))
         );
 });

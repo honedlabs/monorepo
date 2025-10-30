@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Data\Rules;
 
-use Intervention\Validation\AbstractRegexRule;
+use Honed\Data\Support\AbstractRegexRule;
 
 class Whitespace extends AbstractRegexRule
 {

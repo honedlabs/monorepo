@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Data\Rules;
 
-use Intervention\Validation\AbstractRule;
+use Honed\Data\Support\AbstractRule;
 
 class Filename extends AbstractRule
 {

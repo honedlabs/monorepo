@@ -83,7 +83,7 @@ describe('authenticated', function () {
             ->errors()
             ->scoped(fn ($bag) => $bag
                 ->first('value')
-                ->toBe('validation::validation.authorized')
+                ->toBe(__('honed-data::validation.authorized', ['attribute' => 'value']))
             );
     });
 

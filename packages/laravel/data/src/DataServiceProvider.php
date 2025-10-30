@@ -57,13 +57,13 @@ class DataServiceProvider extends ServiceProvider
     /**
      * Get the names of the rules classes.
      * 
-     * @return list<class-string<AbstractRule>>
+     * @return list<string>
      */
     public function getRules(): array
     {
         /** @var list<string> */
         return array_map(
-            static fn (SplFileInfo $file) => dd($file->getFilenameWithoutExtension()), 
+            static fn (SplFileInfo $file) => $file->getFilenameWithoutExtension(), 
             File::files(__DIR__.'/Rules')
         );
     }
@@ -116,13 +116,26 @@ class DataServiceProvider extends ServiceProvider
         foreach ($this->getRules() as $rule) {
             $ruleName = Str::snake(class_basename($rule));
 
+            $ruleClass = $this->getRuleClassName($rule);
+
             $validator->extend(
                 $ruleName,
-                function ($attribute, $value, $parameters, $validator) use ($rule) {
-                    return (new $rule($parameters))->isValid($value);
+                function ($attribute, $value, $parameters, $validator) use ($ruleClass) {
+                    return (new $ruleClass($parameters))->isValid($value);
                 },
                 $translator->get('honed-data::validation.'.$ruleName)
             );
         }
+    }
+
+    /**
+     * Get the class name of the rule.
+     * 
+     * @return class-string<\Honed\Data\Support\AbstractRule>
+     */
+    protected function getRuleClassName(string $rule): string
+    {
+        /** @var class-string<\Honed\Data\Support\AbstractRule> */
+        return __NAMESPACE__.'\\Rules\\'.$rule;
     }
 }

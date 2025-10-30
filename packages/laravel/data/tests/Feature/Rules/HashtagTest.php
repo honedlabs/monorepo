@@ -45,6 +45,6 @@ it('fails validator', function () {
         ->errors()
         ->scoped(fn ($bag) => $bag
             ->first('value')
-            ->toBe('validation::validation.hashtag')
+            ->toBe(__('honed-data::validation.hashtag', ['attribute' => 'value']))
         );
 });

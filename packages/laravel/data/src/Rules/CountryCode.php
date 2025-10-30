@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Data\Rules;
 
 use Illuminate\Support\Arr;
-use Intervention\Validation\AbstractRule;
+use Honed\Data\Support\AbstractRule;
 use League\ISO3166\ISO3166;
 
 class CountryCode extends AbstractRule
