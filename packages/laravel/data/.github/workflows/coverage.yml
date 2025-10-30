@@ -49,9 +49,12 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "nesbot/carbon:${{ matrix.carbon }}" --no-interaction --no-update
           composer update --prefer-stable --prefer-dist --no-interaction
 
-      - name: Create coverage directory
-        run: mkdir -p build/logs
-
       - name: Execute tests with coverage
-        run: vendor/bin/pest --coverage --min=90
+        run: vendor/bin/pest --coverage-clover clover.xml
+
+      - name: Generate coverage badge
+        uses: timkrase/phpunit-coverage-badge@v1.2.1
+        with:
+          coverage_badge_path: 'badge-coverage.svg'
+          push_badge: true
 

@@ -25,8 +25,12 @@
     </testsuites>
     <logging>
         <junit outputFile="build/report.junit.xml"/>
-        <coverage-clover outputFile="build/logs/clover.xml"/>
     </logging>
+    <coverage includeUncoveredFiles="true">
+        <report>
+            <clover outputFile="clover.xml" />
+        </report>
+    </coverage>
     <source>
         <include>
             <directory suffix=".php">./src</directory>
