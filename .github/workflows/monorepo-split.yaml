@@ -21,9 +21,9 @@ jobs:
           # - bind
           # - chart
           # - command
-          # - core
+          - core
           # - crumb
-          - data
+          # - data
           # - disable
           # - flash
           # - form
