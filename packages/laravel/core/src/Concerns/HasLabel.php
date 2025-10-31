@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
+use BackedEnum;
 use Closure;
 use Honed\Core\Contracts\HasLabel as ContractsHasLabel;
 use Illuminate\Support\Str;
@@ -15,7 +16,7 @@ trait HasLabel
     /**
      * The label.
      *
-     * @var string|(Closure():string)|null
+     * @var string|(Closure(mixed...):string)|BackedEnum|null
      */
     protected $label;
 
@@ -39,10 +40,10 @@ trait HasLabel
     /**
      * Set the label.
      *
-     * @param  string|Closure():string|null|ContractsHasLabel  $label
+     * @param  string|Closure(mixed...):string|ContractsHasLabel|BackedEnum|null  $label
      * @return $this
      */
-    public function label(string|Closure|null|ContractsHasLabel $label): static
+    public function label(string|Closure|ContractsHasLabel|BackedEnum|null $label): static
     {
         $this->label = $label instanceof ContractsHasLabel ? $label->getLabel() : $label;
 
@@ -63,5 +64,13 @@ trait HasLabel
     public function hasLabel(): bool
     {
         return isset($this->label);
+    }
+
+    /**
+     * Determine if a label is not set.
+     */
+    public function missingLabel(): bool
+    {
+        return ! $this->hasLabel();
     }
 }
