@@ -18,15 +18,14 @@ abstract class ModelAction extends DatabaseAction
      */
     use InteractsWithFormData;
 
-
     /**
      * Act on the model.
      * 
      * @param  TModel  $model
-     * @param  TInput  $input
+     * @param  array<string, mixed>  $attributes
      * @return TModel
      */
-    abstract public function act(Model $model, $input): Model;
+    abstract public function act(Model $model, array $attributes): Model;
 
     /**
      * Update the model.
@@ -79,7 +78,6 @@ abstract class ModelAction extends DatabaseAction
      *
      * @param  TModel  $model
      * @param  TInput  $input
-     * @param  array<string, mixed>  $prepared
      */
     public function before(Model $model, $input): void
     {

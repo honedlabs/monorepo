@@ -86,7 +86,7 @@ class UpdatePivotAction extends DatabaseAction
      * @param  TModel  $model
      * @param  TPivot  $pivot
      * @param  TInput  $input
-     * @return TModel
+     * @return TPivot
      */
     public function act(Model $model, Model $pivot, $input): Model
     {

@@ -29,6 +29,11 @@
     <logging>
         <junit outputFile="build/report.junit.xml"/>
     </logging>
+    <coverage>
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+    </coverage>
     <source>
         <include>
             <directory suffix=".php">./src</directory>
