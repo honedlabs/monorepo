@@ -166,9 +166,12 @@ class PrimitivePipeline
 
         $primitive->define();
 
-        Pipeline::send($primitive)
-            ->through($this->getPipes())
-            ->thenReturn();
+        foreach ($this->getPipes() as $pipe) {
+            resolve($pipe)->handle(
+                $primitive,
+                static fn ($primitive) => $primitive
+            );
+        }
 
         $this->completed = true;
 

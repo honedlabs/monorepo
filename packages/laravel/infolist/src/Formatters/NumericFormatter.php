@@ -60,11 +60,11 @@ class NumericFormatter extends LocalisedFormatter
                 bytes: $value,
                 precision: $this->getDecimals() ?? 0
             ),
-            default => Number::format(
+            default => ($v = Number::format(
                 number: $value,
                 precision: $this->getDecimals(),
                 locale: $this->getLocale()
-            ) ?: null,
+            )) === false ? null : $v,
         };
 
     }

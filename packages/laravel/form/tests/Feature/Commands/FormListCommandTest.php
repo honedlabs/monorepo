@@ -14,7 +14,7 @@ afterEach(function () {
 
 it('lists forms', function () {
     $this->artisan('make:form', [
-        'name' => 'UserForm'
+        'name' => 'UserForm',
     ])->assertSuccessful();
 
     $this->assertFileExists(app_path('Forms/UserForm.php'));

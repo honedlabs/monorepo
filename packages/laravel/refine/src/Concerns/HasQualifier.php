@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Concerns;
 
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
@@ -13,8 +14,10 @@ trait HasQualifier
 {
     /**
      * Whether to qualify against the builder.
+     * 
+     * @var bool|string
      */
-    protected bool|string $qualify = false;
+    protected $qualify = false;
 
     /**
      * Set whether to qualify against the builder.
@@ -26,6 +29,16 @@ trait HasQualifier
         $this->qualify = $qualify;
 
         return $this;
+    }
+
+    /**
+     * Set whether to not qualify against the builder.
+     *
+     * @return $this
+     */
+    public function dontQualify(bool $value = true): static
+    {
+        return $this->qualify(! $value);
     }
 
     /**
@@ -49,20 +62,18 @@ trait HasQualifier
      *
      * @param  Builder<\Illuminate\Database\Eloquent\Model>|null  $builder
      */
-    public function qualifyColumn(string $column, ?Builder $builder = null): string
+    public function qualifyColumn(string|Expression $column, ?Builder $builder = null): mixed
     {
         $qualifier = $this->getQualifier();
 
-        if (! $qualifier) {
+        if (! $qualifier || $column instanceof Expression) {
             return $column;
         }
 
-        if (is_string($qualifier) && ! Str::contains($column, '.')) {
+        if (! Str::contains($column, '.')) {
             $column = Str::finish($qualifier, '.').$column;
         }
 
-        return $builder
-            ? $builder->qualifyColumn($column)
-            : $column;
+        return $builder ? $builder->qualifyColumn($column) : $column;
     }
 }

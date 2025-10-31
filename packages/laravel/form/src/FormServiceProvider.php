@@ -28,9 +28,9 @@ class FormServiceProvider extends ServiceProvider
             $this->offerPublishing();
 
             $this->commands([
-                FormMakeCommand::class,
                 FormComponentMakeCommand::class,
                 FormListCommand::class,
+                FormMakeCommand::class,
             ]);
         }
     }

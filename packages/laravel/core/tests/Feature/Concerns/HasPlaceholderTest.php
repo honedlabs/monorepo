@@ -17,7 +17,7 @@ it('sets', function () {
         ->hasPlaceholder()->toBeFalse()
         ->missingPlaceholder()->toBeTrue()
         ->placeholder('placeholder')->toBe($this->test)
+        ->getPlaceholder()->toBe('placeholder')
         ->hasPlaceholder()->toBeTrue()
-        ->missingPlaceholder()->toBeFalse()
-        ->getPlaceholder()->toBe('placeholder');
+        ->missingPlaceholder()->toBeFalse();
 });

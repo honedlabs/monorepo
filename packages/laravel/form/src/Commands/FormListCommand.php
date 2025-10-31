@@ -27,7 +27,7 @@ class FormListCommand extends ListCommand
 
     /**
      * Get the paths to search for classes.
-     * 
+     *
      * @return string|array<int, string>
      */
     protected function paths(): string|array

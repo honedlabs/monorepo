@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Exceptions;
 
-beforeEach(function () {})->only();
+beforeEach(function () {});
 
 it('memoizes', function () {
     expect(app('cache'))
@@ -107,21 +107,19 @@ it('forgets when flushing', function () {
 });
 
 it('uses store prefix', function () {
+    config()->set('cache.stores.memo.store', 'redis');
+
     expect(app('cache'))
         ->getPrefix()->toBe('laravel_cache_');
 
     app('cache')->driver('redis')->setPrefix('foo');
 
     expect(app('cache')->getPrefix())->toBe('foo');
-})->todo();
-
-it('prefixes keys', function () {
-
-})->todo();
+});
 
 it('dispatches events', function () {
 
-})->todo();
+})->skip();
 
 it('throws when store does not support locks', function () {
     $this->freezeTime();
@@ -145,7 +143,6 @@ it('throws when store does not support locks', function () {
     expect($exception)
         ->toHaveCount(1)
         ->{0}->toBeInstanceOf(BadMethodCallException::class);
-
 })->skip();
 
 it('supports flexible', function () {
@@ -160,5 +157,6 @@ it('supports flexible', function () {
     defer()->invoke();
 
     expect(app('cache'))
-        ->get('key')->toBe('value-2');
+        ->get('key')->toBe('value-2')
+        ->isMemoized('key')->toBeTrue();
 });

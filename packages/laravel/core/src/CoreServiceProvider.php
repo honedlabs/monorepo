@@ -56,7 +56,11 @@ final class CoreServiceProvider extends ServiceProvider
      */
     public function registerMacros(): void
     {
-        Str::macro('label', function (string $value): string {
+        Str::macro('label', function (?string $value): ?string {
+            if ($value === null) {
+                return null;
+            }
+            
             return Str::of($value)
                 ->afterLast('.')
                 ->headline()

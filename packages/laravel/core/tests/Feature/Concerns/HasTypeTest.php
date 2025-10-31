@@ -14,6 +14,10 @@ beforeEach(function () {
 it('sets', function () {
     expect($this->test)
         ->getType()->toBeNull()
+        ->hasType()->toBeFalse()
+        ->missingType()->toBeTrue()
         ->type('test')->toBe($this->test)
-        ->getType()->toBe('test');
+        ->getType()->toBe('test')
+        ->hasType()->toBeTrue()
+        ->missingType()->toBeFalse();
 });
