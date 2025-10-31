@@ -15,14 +15,14 @@ trait HasQuery
     /**
      * The query closure to modify the Eloquent builder.
      *
-     * @var ?Closure():mixed
+     * @var (Closure(TBuilder, mixed...): mixed)|null
      */
     protected $query;
 
     /**
      * Set a callback to modify the Eloquent builder.
      *
-     * @param  ?Closure():mixed  $callback
+     * @param  (Closure(TBuilder, mixed...): mixed)|null  $callback
      * @return $this
      */
     public function query(?Closure $callback): static
@@ -35,9 +35,7 @@ trait HasQuery
     /**
      * Get the callback to modify the Eloquent builder.
      *
-     * @return ?Closure():mixed
-     *
-     * @internal
+     * @return (Closure(TBuilder, mixed...): mixed)|null
      */
     public function queryCallback(): ?Closure
     {
