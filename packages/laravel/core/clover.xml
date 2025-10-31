@@ -1,0 +1,1066 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1761950122">
+  <project timestamp="1761950122">
+    <package name="Honed\Core\Commands">
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Commands/ListCommand.php">
+        <class name="Honed\Core\Commands\ListCommand" namespace="Honed\Core\Commands">
+          <metrics complexity="26" methods="14" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="58" coveredstatements="52" elements="72" coveredelements="61"/>
+        </class>
+        <line num="27" type="method" name="handle" visibility="public" complexity="2" crap="2.06" count="1"/>
+        <line num="29" type="stmt" count="1"/>
+        <line num="30" type="stmt" count="1"/>
+        <line num="32" type="stmt" count="1"/>
+        <line num="33" type="stmt" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="38" type="stmt" count="1"/>
+        <line num="39" type="stmt" count="1"/>
+        <line num="40" type="stmt" count="1"/>
+        <line num="48" type="method" name="classes" visibility="protected" complexity="2" crap="2" count="1"/>
+        <line num="50" type="stmt" count="1"/>
+        <line num="51" type="stmt" count="1"/>
+        <line num="52" type="stmt" count="1"/>
+        <line num="54" type="stmt" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="56" type="stmt" count="1"/>
+        <line num="57" type="stmt" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="59" type="stmt" count="1"/>
+        <line num="61" type="stmt" count="1"/>
+        <line num="63" type="stmt" count="1"/>
+        <line num="64" type="stmt" count="1"/>
+        <line num="73" type="method" name="within" visibility="protected" complexity="4" crap="4.02" count="1"/>
+        <line num="75" type="stmt" count="1"/>
+        <line num="76" type="stmt" count="0"/>
+        <line num="79" type="stmt" count="1"/>
+        <line num="81" type="stmt" count="1"/>
+        <line num="83" type="stmt" count="1"/>
+        <line num="84" type="stmt" count="1"/>
+        <line num="86" type="stmt" count="1"/>
+        <line num="87" type="stmt" count="1"/>
+        <line num="90" type="stmt" count="1"/>
+        <line num="93" type="stmt" count="1"/>
+        <line num="99" type="method" name="ignore" visibility="protected" complexity="2" crap="2" count="1"/>
+        <line num="101" type="stmt" count="1"/>
+        <line num="107" type="method" name="classFromFile" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="109" type="stmt" count="1"/>
+        <line num="111" type="stmt" count="1"/>
+        <line num="112" type="stmt" count="1"/>
+        <line num="113" type="stmt" count="1"/>
+        <line num="114" type="stmt" count="1"/>
+        <line num="115" type="stmt" count="1"/>
+        <line num="121" type="method" name="namespace" visibility="protected" complexity="1" crap="2" count="0"/>
+        <line num="123" type="stmt" count="0"/>
+        <line num="129" type="method" name="basePath" visibility="protected" complexity="1" crap="2" count="0"/>
+        <line num="131" type="stmt" count="0"/>
+        <line num="139" type="method" name="displayForCli" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="141" type="stmt" count="1"/>
+        <line num="142" type="stmt" count="1"/>
+        <line num="143" type="stmt" count="1"/>
+        <line num="152" type="method" name="doesNotImplement" visibility="protected" complexity="3" crap="3" count="1"/>
+        <line num="154" type="stmt" count="1"/>
+        <line num="155" type="stmt" count="1"/>
+        <line num="156" type="stmt" count="1"/>
+        <line num="160" type="stmt" count="1"/>
+        <line num="169" type="method" name="doesNotUse" visibility="protected" complexity="3" crap="3.14" count="1"/>
+        <line num="171" type="stmt" count="1"/>
+        <line num="172" type="stmt" count="1"/>
+        <line num="173" type="stmt" count="1"/>
+        <line num="177" type="stmt" count="0"/>
+        <line num="186" type="method" name="doesNotExtend" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="188" type="stmt" count="1"/>
+        <line num="197" type="method" name="getTraits" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="200" type="stmt" count="1"/>
+        <line num="209" type="method" name="getInterfaces" visibility="protected" complexity="2" crap="2" count="1"/>
+        <line num="212" type="stmt" count="1"/>
+        <line num="215" type="stmt" count="1"/>
+        <line num="216" type="stmt" count="1"/>
+        <line num="219" type="stmt" count="1"/>
+        <line num="228" type="method" name="getClasses" visibility="protected" complexity="2" crap="2" count="1"/>
+        <line num="230" type="stmt" count="1"/>
+        <line num="233" type="stmt" count="1"/>
+        <metrics loc="236" ncloc="159" classes="1" methods="14" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="58" coveredstatements="52" elements="72" coveredelements="61"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Commands/PipeMakeCommand.php">
+        <class name="Honed\Core\Commands\PipeMakeCommand" namespace="Honed\Core\Commands">
+          <metrics complexity="6" methods="5" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="13" elements="19" coveredelements="17"/>
+        </class>
+        <line num="42" type="method" name="getStub" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="44" type="stmt" count="2"/>
+        <line num="53" type="method" name="resolveStubPath" visibility="protected" complexity="2" crap="2.15" count="2"/>
+        <line num="55" type="stmt" count="2"/>
+        <line num="56" type="stmt" count="0"/>
+        <line num="57" type="stmt" count="2"/>
+        <line num="66" type="method" name="getDefaultNamespace" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="68" type="stmt" count="2"/>
+        <line num="76" type="method" name="getOptions" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="78" type="stmt" count="2"/>
+        <line num="79" type="stmt" count="2"/>
+        <line num="80" type="stmt" count="2"/>
+        <line num="88" type="method" name="promptForMissingArgumentsUsing" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="90" type="stmt" count="1"/>
+        <line num="91" type="stmt" count="1"/>
+        <line num="92" type="stmt" count="1"/>
+        <line num="93" type="stmt" count="1"/>
+        <line num="94" type="stmt" count="1"/>
+        <line num="95" type="stmt" count="1"/>
+        <metrics loc="98" ncloc="56" classes="1" methods="5" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="13" elements="19" coveredelements="17"/>
+      </file>
+    </package>
+    <package name="Honed\Core\Concerns">
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/Allowable.php">
+        <class name="Honed\Core\Concerns\Allowable" namespace="Honed\Core\Concerns">
+          <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+        </class>
+        <line num="24" type="method" name="allow" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="26" type="stmt" count="2"/>
+        <line num="28" type="stmt" count="2"/>
+        <line num="38" type="method" name="allowCallback" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="40" type="stmt" count="2"/>
+        <line num="49" type="method" name="isAllowed" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="51" type="stmt" count="2"/>
+        <metrics loc="54" ncloc="30" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/CanBeActive.php">
+        <class name="Honed\Core\Concerns\CanBeActive" namespace="Honed\Core\Concerns">
+          <metrics complexity="4" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="9" coveredelements="9"/>
+        </class>
+        <line num="21" type="method" name="active" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="33" type="method" name="notActive" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="41" type="method" name="isActive" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="43" type="stmt" count="1"/>
+        <line num="49" type="method" name="isNotActive" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="51" type="stmt" count="1"/>
+        <metrics loc="54" ncloc="33" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="9" coveredelements="9"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/CanBeDefault.php">
+        <class name="Honed\Core\Concerns\CanBeDefault" namespace="Honed\Core\Concerns">
+          <metrics complexity="4" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="9" coveredelements="9"/>
+        </class>
+        <line num="21" type="method" name="default" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="33" type="method" name="notDefault" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="41" type="method" name="isDefault" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="43" type="stmt" count="1"/>
+        <line num="49" type="method" name="isNotDefault" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="51" type="stmt" count="1"/>
+        <metrics loc="54" ncloc="33" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="9" coveredelements="9"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/Configurable.php">
+        <class name="Honed\Core\Concerns\Configurable" namespace="Honed\Core\Concerns">
+          <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="9" elements="12" coveredelements="12"/>
+        </class>
+        <line num="18" type="method" name="setUp" visibility="protected" complexity="1" crap="1" count="45"/>
+        <line num="21" type="stmt" count="45"/>
+        <line num="26" type="method" name="configureUsing" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="28" type="stmt" count="6"/>
+        <line num="29" type="stmt" count="6"/>
+        <line num="30" type="stmt" count="6"/>
+        <line num="31" type="stmt" count="6"/>
+        <line num="39" type="method" name="configure" visibility="protected" complexity="1" crap="1" count="45"/>
+        <line num="41" type="stmt" count="45"/>
+        <line num="42" type="stmt" count="45"/>
+        <line num="43" type="stmt" count="45"/>
+        <line num="44" type="stmt" count="45"/>
+        <metrics loc="47" ncloc="32" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="9" elements="12" coveredelements="12"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/Definable.php">
+        <class name="Honed\Core\Concerns\Definable" namespace="Honed\Core\Concerns">
+          <metrics complexity="3" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="4" elements="7" coveredelements="5"/>
+        </class>
+        <line num="21" type="method" name="define" visibility="public" complexity="2" crap="2" count="46"/>
+        <line num="23" type="stmt" count="46"/>
+        <line num="24" type="stmt" count="46"/>
+        <line num="26" type="stmt" count="46"/>
+        <line num="29" type="stmt" count="46"/>
+        <line num="37" type="method" name="definition" visibility="protected" complexity="1" crap="2" count="0"/>
+        <line num="39" type="stmt" count="0"/>
+        <metrics loc="42" ncloc="27" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="4" elements="7" coveredelements="5"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/Encodable.php">
+        <class name="Honed\Core\Concerns\Encodable" namespace="Honed\Core\Concerns">
+          <metrics complexity="7" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="9" elements="14" coveredelements="14"/>
+        </class>
+        <line num="32" type="method" name="encoder" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="34" type="stmt" count="3"/>
+        <line num="42" type="method" name="decoder" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="44" type="stmt" count="3"/>
+        <line num="50" type="method" name="encode" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="52" type="stmt" count="3"/>
+        <line num="53" type="stmt" count="1"/>
+        <line num="54" type="stmt" count="3"/>
+        <line num="60" type="method" name="decode" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="63" type="stmt" count="2"/>
+        <line num="64" type="stmt" count="1"/>
+        <line num="65" type="stmt" count="2"/>
+        <line num="71" type="method" name="getId" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="73" type="stmt" count="1"/>
+        <metrics loc="76" ncloc="46" classes="1" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="9" elements="14" coveredelements="14"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/Evaluable.php">
+        <class name="Honed\Core\Concerns\Evaluable" namespace="Honed\Core\Concerns">
+          <metrics complexity="28" methods="5" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="49" coveredstatements="41" elements="54" coveredelements="44"/>
+        </class>
+        <line num="43" type="method" name="evaluate" visibility="public" complexity="6" crap="6" count="41"/>
+        <line num="45" type="stmt" count="41"/>
+        <line num="46" type="stmt" count="21"/>
+        <line num="49" type="stmt" count="41"/>
+        <line num="51" type="stmt" count="21"/>
+        <line num="54" type="stmt" count="21"/>
+        <line num="56" type="stmt" count="21"/>
+        <line num="57" type="stmt" count="17"/>
+        <line num="60" type="stmt" count="20"/>
+        <line num="69" type="method" name="resolveClosureDependencyForEvaluation" visibility="protected" complexity="13" crap="14.35" count="17"/>
+        <line num="71" type="stmt" count="17"/>
+        <line num="73" type="stmt" count="17"/>
+        <line num="74" type="stmt" count="5"/>
+        <line num="77" type="stmt" count="12"/>
+        <line num="79" type="stmt" count="12"/>
+        <line num="80" type="stmt" count="1"/>
+        <line num="84" type="stmt" count="11"/>
+        <line num="86" type="stmt" count="11"/>
+        <line num="88" type="stmt" count="3"/>
+        <line num="91" type="stmt" count="8"/>
+        <line num="93" type="stmt" count="4"/>
+        <line num="95" type="stmt" count="3"/>
+        <line num="97" type="stmt" count="3"/>
+        <line num="103" type="stmt" count="4"/>
+        <line num="104" type="stmt" count="4"/>
+        <line num="106" type="stmt" count="4"/>
+        <line num="108" type="stmt" count="3"/>
+        <line num="111" type="stmt" count="1"/>
+        <line num="112" type="stmt" count="0"/>
+        <line num="115" type="stmt" count="1"/>
+        <line num="116" type="stmt" count="1"/>
+        <line num="119" type="stmt" count="0"/>
+        <line num="120" type="stmt" count="0"/>
+        <line num="123" type="stmt" count="0"/>
+        <line num="125" type="stmt" count="0"/>
+        <line num="131" type="method" name="getTypedReflectionParameterClassName" visibility="protected" complexity="7" crap="7.48" count="12"/>
+        <line num="133" type="stmt" count="12"/>
+        <line num="135" type="stmt" count="12"/>
+        <line num="136" type="stmt" count="4"/>
+        <line num="139" type="stmt" count="8"/>
+        <line num="140" type="stmt" count="1"/>
+        <line num="143" type="stmt" count="7"/>
+        <line num="145" type="stmt" count="7"/>
+        <line num="147" type="stmt" count="7"/>
+        <line num="148" type="stmt" count="0"/>
+        <line num="151" type="stmt" count="7"/>
+        <line num="152" type="stmt" count="0"/>
+        <line num="155" type="stmt" count="7"/>
+        <line num="156" type="stmt" count="0"/>
+        <line num="159" type="stmt" count="7"/>
+        <line num="167" type="method" name="resolveDefaultClosureDependencyForEvaluationByName" visibility="protected" complexity="1" crap="1" count="8"/>
+        <line num="169" type="stmt" count="8"/>
+        <line num="177" type="method" name="resolveDefaultClosureDependencyForEvaluationByType" visibility="protected" complexity="1" crap="1" count="3"/>
+        <line num="179" type="stmt" count="3"/>
+        <metrics loc="182" ncloc="137" classes="1" methods="5" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="49" coveredstatements="41" elements="54" coveredelements="44"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasAlias.php">
+        <class name="Honed\Core\Concerns\HasAlias" namespace="Honed\Core\Concerns">
+          <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+        </class>
+        <line num="21" type="method" name="alias" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="33" type="method" name="dontAlias" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="41" type="method" name="getAlias" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="43" type="stmt" count="1"/>
+        <metrics loc="46" ncloc="28" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasAttributes.php">
+        <class name="Honed\Core\Concerns\HasAttributes" namespace="Honed\Core\Concerns">
+          <metrics complexity="4" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="9" coveredelements="9"/>
+        </class>
+        <line num="22" type="method" name="attributes" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="24" type="stmt" count="3"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="27" type="stmt" count="2"/>
+        <line num="30" type="stmt" count="3"/>
+        <line num="38" type="method" name="attribute" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="40" type="stmt" count="1"/>
+        <line num="48" type="method" name="getAttributes" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="50" type="stmt" count="3"/>
+        <metrics loc="53" ncloc="32" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="9" coveredelements="9"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasContainer.php">
+        <class name="Honed\Core\Concerns\HasContainer" namespace="Honed\Core\Concerns">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+        </class>
+        <line num="23" type="method" name="container" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="27" type="stmt" count="1"/>
+        <line num="33" type="method" name="getContainer" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <metrics loc="38" ncloc="25" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasDefault.php">
+        <class name="Honed\Core\Concerns\HasDefault" namespace="Honed\Core\Concerns">
+          <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+        </class>
+        <line num="21" type="method" name="default" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="31" type="method" name="getDefault" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="33" type="stmt" count="1"/>
+        <line num="39" type="method" name="hasDefault" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="41" type="stmt" count="1"/>
+        <metrics loc="44" ncloc="28" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasExtra.php">
+        <class name="Honed\Core\Concerns\HasExtra" namespace="Honed\Core\Concerns">
+          <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+        </class>
+        <line num="24" type="method" name="extra" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="36" type="method" name="getExtra" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="38" type="stmt" count="1"/>
+        <line num="44" type="method" name="hasExtra" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="46" type="stmt" count="1"/>
+        <metrics loc="49" ncloc="30" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasIcon.php">
+        <class name="Honed\Core\Concerns\HasIcon" namespace="Honed\Core\Concerns">
+          <metrics complexity="4" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+        </class>
+        <line num="26" type="method" name="icon" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="28" type="stmt" count="3"/>
+        <line num="30" type="stmt" count="3"/>
+        <line num="36" type="method" name="getIcon" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="38" type="stmt" count="3"/>
+        <line num="44" type="method" name="hasIcon" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="46" type="stmt" count="3"/>
+        <metrics loc="49" ncloc="32" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasInstance.php">
+        <class name="Honed\Core\Concerns\HasInstance" namespace="Honed\Core\Concerns">
+          <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+        </class>
+        <line num="28" type="method" name="__call" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="30" type="stmt" count="2"/>
+        <line num="39" type="method" name="instance" visibility="public" complexity="1" crap="1" count="10"/>
+        <line num="41" type="stmt" count="10"/>
+        <line num="43" type="stmt" count="10"/>
+        <line num="51" type="method" name="getInstance" visibility="public" complexity="1" crap="1" count="8"/>
+        <line num="53" type="stmt" count="8"/>
+        <metrics loc="56" ncloc="30" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasLabel.php">
+        <class name="Honed\Core\Concerns\HasLabel" namespace="Honed\Core\Concerns">
+          <metrics complexity="6" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="16" coveredelements="16"/>
+        </class>
+        <line num="25" type="method" name="makeLabel" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="27" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="31" type="stmt" count="1"/>
+        <line num="32" type="stmt" count="1"/>
+        <line num="33" type="stmt" count="1"/>
+        <line num="34" type="stmt" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="36" type="stmt" count="1"/>
+        <line num="45" type="method" name="label" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="47" type="stmt" count="1"/>
+        <line num="49" type="stmt" count="1"/>
+        <line num="55" type="method" name="getLabel" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="57" type="stmt" count="1"/>
+        <line num="63" type="method" name="hasLabel" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="65" type="stmt" count="1"/>
+        <metrics loc="68" ncloc="48" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="16" coveredelements="16"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasLifecycleHooks.php">
+        <class name="Honed\Core\Concerns\HasLifecycleHooks" namespace="Honed\Core\Concerns">
+          <metrics complexity="6" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="14" coveredelements="14"/>
+        </class>
+        <line num="34" type="method" name="before" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="36" type="stmt" count="2"/>
+        <line num="38" type="stmt" count="2"/>
+        <line num="48" type="method" name="beforeCallback" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="50" type="stmt" count="4"/>
+        <line num="59" type="method" name="callBefore" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="61" type="stmt" count="4"/>
+        <line num="70" type="method" name="after" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="72" type="stmt" count="2"/>
+        <line num="74" type="stmt" count="2"/>
+        <line num="84" type="method" name="afterCallback" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="86" type="stmt" count="4"/>
+        <line num="95" type="method" name="callAfter" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="97" type="stmt" count="4"/>
+        <metrics loc="100" ncloc="49" classes="1" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="14" coveredelements="14"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasMeta.php">
+        <class name="Honed\Core\Concerns\HasMeta" namespace="Honed\Core\Concerns">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+        </class>
+        <line num="24" type="method" name="meta" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="36" type="method" name="getMeta" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="38" type="stmt" count="5"/>
+        <metrics loc="41" ncloc="25" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasMethod.php">
+        <class name="Honed\Core\Concerns\HasMethod" namespace="Honed\Core\Concerns">
+          <metrics complexity="9" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="14" elements="22" coveredelements="22"/>
+        </class>
+        <line num="30" type="method" name="method" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="32" type="stmt" count="3"/>
+        <line num="34" type="stmt" count="3"/>
+        <line num="35" type="stmt" count="2"/>
+        <line num="36" type="stmt" count="2"/>
+        <line num="37" type="stmt" count="2"/>
+        <line num="40" type="stmt" count="1"/>
+        <line num="42" type="stmt" count="1"/>
+        <line num="50" type="method" name="get" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="52" type="stmt" count="1"/>
+        <line num="60" type="method" name="post" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="62" type="stmt" count="1"/>
+        <line num="70" type="method" name="patch" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="72" type="stmt" count="1"/>
+        <line num="80" type="method" name="put" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="82" type="stmt" count="1"/>
+        <line num="90" type="method" name="delete" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="92" type="stmt" count="1"/>
+        <line num="98" type="method" name="getMethod" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="100" type="stmt" count="1"/>
+        <line num="106" type="method" name="defaultMethod" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="108" type="stmt" count="1"/>
+        <metrics loc="111" ncloc="68" classes="1" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="14" elements="22" coveredelements="22"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasName.php">
+        <class name="Honed\Core\Concerns\HasName" namespace="Honed\Core\Concerns">
+          <metrics complexity="4" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="9" coveredelements="9"/>
+        </class>
+        <line num="21" type="method" name="name" visibility="public" complexity="1" crap="1" count="46"/>
+        <line num="23" type="stmt" count="46"/>
+        <line num="25" type="stmt" count="46"/>
+        <line num="31" type="method" name="getName" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="33" type="stmt" count="12"/>
+        <line num="39" type="method" name="hasName" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="41" type="stmt" count="1"/>
+        <line num="47" type="method" name="missingName" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="49" type="stmt" count="1"/>
+        <metrics loc="52" ncloc="33" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="9" coveredelements="9"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasOrder.php">
+        <class name="Honed\Core\Concerns\HasOrder" namespace="Honed\Core\Concerns">
+          <metrics complexity="7" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="15" coveredelements="15"/>
+        </class>
+        <line num="31" type="method" name="order" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="33" type="stmt" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="43" type="method" name="orderBefore" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="45" type="stmt" count="1"/>
+        <line num="53" type="method" name="orderStart" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="63" type="method" name="orderDefault" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="65" type="stmt" count="1"/>
+        <line num="73" type="method" name="orderEnd" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="75" type="stmt" count="1"/>
+        <line num="83" type="method" name="orderAfter" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="85" type="stmt" count="1"/>
+        <line num="91" type="method" name="getOrder" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="93" type="stmt" count="1"/>
+        <metrics loc="96" ncloc="58" classes="1" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="15" coveredelements="15"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasPipeline.php">
+        <class name="Honed\Core\Concerns\HasPipeline" namespace="Honed\Core\Concerns">
+          <metrics complexity="6" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="13" elements="18" coveredelements="18"/>
+        </class>
+        <line num="35" type="method" name="build" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="37" type="stmt" count="2"/>
+        <line num="38" type="stmt" count="1"/>
+        <line num="41" type="stmt" count="2"/>
+        <line num="43" type="stmt" count="2"/>
+        <line num="44" type="stmt" count="2"/>
+        <line num="45" type="stmt" count="2"/>
+        <line num="47" type="stmt" count="2"/>
+        <line num="49" type="stmt" count="2"/>
+        <line num="57" type="method" name="complete" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="59" type="stmt" count="3"/>
+        <line num="61" type="stmt" count="3"/>
+        <line num="69" type="method" name="notComplete" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="71" type="stmt" count="1"/>
+        <line num="77" type="method" name="isCompleted" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="79" type="stmt" count="3"/>
+        <line num="85" type="method" name="isNotCompleted" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="87" type="stmt" count="1"/>
+        <metrics loc="90" ncloc="54" classes="1" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="13" elements="18" coveredelements="18"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasPlaceholder.php">
+        <class name="Honed\Core\Concerns\HasPlaceholder" namespace="Honed\Core\Concerns">
+          <metrics complexity="4" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="9" coveredelements="9"/>
+        </class>
+        <line num="21" type="method" name="placeholder" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="31" type="method" name="getPlaceholder" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="33" type="stmt" count="1"/>
+        <line num="39" type="method" name="hasPlaceholder" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="41" type="stmt" count="1"/>
+        <line num="47" type="method" name="missingPlaceholder" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="49" type="stmt" count="1"/>
+        <metrics loc="52" ncloc="33" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="9" coveredelements="9"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasQuery.php">
+        <class name="Honed\Core\Concerns\HasQuery" namespace="Honed\Core\Concerns">
+          <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+        </class>
+        <line num="28" type="method" name="query" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="30" type="stmt" count="2"/>
+        <line num="32" type="stmt" count="2"/>
+        <line num="40" type="method" name="queryCallback" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="42" type="stmt" count="2"/>
+        <line num="51" type="method" name="callQuery" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="53" type="stmt" count="1"/>
+        <metrics loc="56" ncloc="30" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasRecord.php">
+        <class name="Honed\Core\Concerns\HasRecord" namespace="Honed\Core\Concerns">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+        </class>
+        <line num="24" type="method" name="record" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="36" type="method" name="getRecord" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="38" type="stmt" count="1"/>
+        <metrics loc="41" ncloc="25" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasRequest.php">
+        <class name="Honed\Core\Concerns\HasRequest" namespace="Honed\Core\Concerns">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+        </class>
+        <line num="23" type="method" name="request" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="27" type="stmt" count="1"/>
+        <line num="33" type="method" name="getRequest" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <metrics loc="38" ncloc="25" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasResource.php">
+        <class name="Honed\Core\Concerns\HasResource" namespace="Honed\Core\Concerns">
+          <metrics complexity="15" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="19" coveredstatements="19" elements="26" coveredelements="26"/>
+        </class>
+        <line num="36" type="method" name="resource" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="38" type="stmt" count="4"/>
+        <line num="40" type="stmt" count="3"/>
+        <line num="49" type="method" name="for" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="51" type="stmt" count="1"/>
+        <line num="61" type="method" name="getBuilder" visibility="public" complexity="3" crap="3" count="3"/>
+        <line num="63" type="stmt" count="3"/>
+        <line num="64" type="stmt" count="1"/>
+        <line num="67" type="stmt" count="2"/>
+        <line num="77" type="method" name="getModel" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="79" type="stmt" count="1"/>
+        <line num="87" type="method" name="getResource" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="89" type="stmt" count="2"/>
+        <line num="102" type="method" name="resolveResource" visibility="protected" complexity="7" crap="7" count="4"/>
+        <line num="105" type="stmt" count="4"/>
+        <line num="106" type="stmt" count="4"/>
+        <line num="107" type="stmt" count="4"/>
+        <line num="108" type="stmt" count="3"/>
+        <line num="109" type="stmt" count="3"/>
+        <line num="110" type="stmt" count="4"/>
+        <line num="111" type="stmt" count="4"/>
+        <line num="112" type="stmt" count="4"/>
+        <line num="121" type="method" name="throwMissingResource" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="123" type="stmt" count="2"/>
+        <line num="124" type="stmt" count="2"/>
+        <line num="125" type="stmt" count="2"/>
+        <metrics loc="128" ncloc="71" classes="1" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="19" coveredstatements="19" elements="26" coveredelements="26"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasScope.php">
+        <class name="Honed\Core\Concerns\HasScope" namespace="Honed\Core\Concerns">
+          <metrics complexity="7" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="13" coveredelements="13"/>
+        </class>
+        <line num="25" type="method" name="scope" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="27" type="stmt" count="3"/>
+        <line num="29" type="stmt" count="3"/>
+        <line num="37" type="method" name="dontScope" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="39" type="stmt" count="1"/>
+        <line num="45" type="method" name="getScope" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="47" type="stmt" count="3"/>
+        <line num="53" type="method" name="scoped" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="57" type="stmt" count="1"/>
+        <line num="63" type="method" name="unscoped" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="65" type="stmt" count="1"/>
+        <line num="67" type="stmt" count="1"/>
+        <metrics loc="70" ncloc="46" classes="1" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="13" coveredelements="13"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasTarget.php">
+        <class name="Honed\Core\Concerns\HasTarget" namespace="Honed\Core\Concerns">
+          <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+        </class>
+        <line num="24" type="method" name="target" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="36" type="method" name="openUrlInNewTab" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="38" type="stmt" count="1"/>
+        <line num="44" type="method" name="getTarget" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="46" type="stmt" count="1"/>
+        <metrics loc="49" ncloc="30" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasType.php">
+        <class name="Honed\Core\Concerns\HasType" namespace="Honed\Core\Concerns">
+          <metrics complexity="4" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="9" coveredelements="9"/>
+        </class>
+        <line num="21" type="method" name="type" visibility="public" complexity="1" crap="1" count="10"/>
+        <line num="23" type="stmt" count="10"/>
+        <line num="25" type="stmt" count="10"/>
+        <line num="31" type="method" name="getType" visibility="public" complexity="1" crap="1" count="20"/>
+        <line num="33" type="stmt" count="20"/>
+        <line num="39" type="method" name="hasType" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="41" type="stmt" count="1"/>
+        <line num="47" type="method" name="missingType" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="49" type="stmt" count="1"/>
+        <metrics loc="52" ncloc="33" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="9" coveredelements="9"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasUrl.php">
+        <class name="Honed\Core\Concerns\HasUrl" namespace="Honed\Core\Concerns">
+          <metrics complexity="11" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="17" coveredelements="17"/>
+        </class>
+        <line num="28" type="method" name="url" visibility="public" complexity="6" crap="6" count="6"/>
+        <line num="30" type="stmt" count="6"/>
+        <line num="31" type="stmt" count="6"/>
+        <line num="32" type="stmt" count="6"/>
+        <line num="33" type="stmt" count="5"/>
+        <line num="34" type="stmt" count="4"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="36" type="stmt" count="6"/>
+        <line num="38" type="stmt" count="6"/>
+        <line num="47" type="method" name="getUrl" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="49" type="stmt" count="6"/>
+        <line num="55" type="method" name="hasUrl" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="57" type="stmt" count="1"/>
+        <line num="63" type="method" name="missingUrl" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="65" type="stmt" count="1"/>
+        <line num="73" type="method" name="implicitRoute" visibility="protected" complexity="2" crap="2" count="5"/>
+        <line num="75" type="stmt" count="5"/>
+        <metrics loc="78" ncloc="50" classes="1" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="17" coveredelements="17"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/HasValue.php">
+        <class name="Honed\Core\Concerns\HasValue" namespace="Honed\Core\Concerns">
+          <metrics complexity="7" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="11" coveredelements="11"/>
+        </class>
+        <line num="22" type="method" name="value" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="24" type="stmt" count="2"/>
+        <line num="26" type="stmt" count="2"/>
+        <line num="32" type="method" name="getValue" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="34" type="stmt" count="2"/>
+        <line num="40" type="method" name="getNormalizedValue" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="42" type="stmt" count="1"/>
+        <line num="48" type="method" name="normalizeValue" visibility="public" complexity="4" crap="4" count="2"/>
+        <line num="51" type="stmt" count="2"/>
+        <line num="52" type="stmt" count="2"/>
+        <line num="53" type="stmt" count="2"/>
+        <metrics loc="57" ncloc="40" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="11" coveredelements="11"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/InterpretsRequest.php">
+        <class name="Honed\Core\Concerns\InterpretsRequest" namespace="Honed\Core\Concerns">
+          <metrics complexity="65" methods="39" coveredmethods="36" conditionals="0" coveredconditionals="0" statements="97" coveredstatements="94" elements="136" coveredelements="130"/>
+        </class>
+        <line num="54" type="method" name="interpretArray" visibility="public" complexity="1" crap="1" count="8"/>
+        <line num="61" type="stmt" count="8"/>
+        <line num="63" type="stmt" count="8"/>
+        <line num="69" type="method" name="interpretBoolean" visibility="public" complexity="2" crap="2" count="7"/>
+        <line num="71" type="stmt" count="7"/>
+        <line num="73" type="stmt" count="7"/>
+        <line num="74" type="stmt" count="1"/>
+        <line num="77" type="stmt" count="6"/>
+        <line num="96" type="method" name="interpretCollection" visibility="public" complexity="3" crap="3.01" count="14"/>
+        <line num="103" type="stmt" count="14"/>
+        <line num="105" type="stmt" count="14"/>
+        <line num="106" type="stmt" count="2"/>
+        <line num="109" type="stmt" count="12"/>
+        <line num="110" type="stmt" count="12"/>
+        <line num="111" type="stmt" count="12"/>
+        <line num="112" type="stmt" count="12"/>
+        <line num="114" type="stmt" count="12"/>
+        <line num="115" type="stmt" count="0"/>
+        <line num="118" type="stmt" count="12"/>
+        <line num="124" type="method" name="interpretDate" visibility="public" complexity="2" crap="2" count="6"/>
+        <line num="126" type="stmt" count="6"/>
+        <line num="128" type="stmt" count="6"/>
+        <line num="129" type="stmt" count="1"/>
+        <line num="133" type="stmt" count="5"/>
+        <line num="139" type="method" name="interpretFloat" visibility="public" complexity="2" crap="2" count="7"/>
+        <line num="141" type="stmt" count="7"/>
+        <line num="143" type="stmt" count="7"/>
+        <line num="144" type="stmt" count="1"/>
+        <line num="148" type="stmt" count="6"/>
+        <line num="154" type="method" name="interpretInt" visibility="public" complexity="2" crap="2" count="6"/>
+        <line num="156" type="stmt" count="6"/>
+        <line num="158" type="stmt" count="6"/>
+        <line num="159" type="stmt" count="1"/>
+        <line num="163" type="stmt" count="5"/>
+        <line num="169" type="method" name="interpretRaw" visibility="public" complexity="3" crap="3" count="50"/>
+        <line num="171" type="stmt" count="50"/>
+        <line num="172" type="stmt" count="9"/>
+        <line num="175" type="stmt" count="41"/>
+        <line num="178" type="stmt" count="41"/>
+        <line num="179" type="stmt" count="17"/>
+        <line num="182" type="stmt" count="24"/>
+        <line num="188" type="method" name="interpretString" visibility="public" complexity="2" crap="2" count="6"/>
+        <line num="190" type="stmt" count="6"/>
+        <line num="192" type="stmt" count="6"/>
+        <line num="193" type="stmt" count="1"/>
+        <line num="197" type="stmt" count="5"/>
+        <line num="203" type="method" name="interpretStringable" visibility="public" complexity="2" crap="2" count="19"/>
+        <line num="205" type="stmt" count="19"/>
+        <line num="207" type="stmt" count="19"/>
+        <line num="208" type="stmt" count="3"/>
+        <line num="212" type="stmt" count="16"/>
+        <line num="232" type="method" name="valueOf" visibility="public" complexity="7" crap="7.10" count="12"/>
+        <line num="234" type="stmt" count="12"/>
+        <line num="235" type="stmt" count="1"/>
+        <line num="236" type="stmt" count="1"/>
+        <line num="237" type="stmt" count="1"/>
+        <line num="238" type="stmt" count="1"/>
+        <line num="239" type="stmt" count="0"/>
+        <line num="240" type="stmt" count="12"/>
+        <line num="241" type="stmt" count="12"/>
+        <line num="247" type="method" name="dateOf" visibility="public" complexity="2" crap="2" count="5"/>
+        <line num="250" type="stmt" count="5"/>
+        <line num="251" type="stmt" count="3"/>
+        <line num="252" type="stmt" count="3"/>
+        <line num="259" type="method" name="interpret" visibility="public" complexity="10" crap="10" count="1"/>
+        <line num="261" type="stmt" count="1"/>
+        <line num="262" type="stmt" count="1"/>
+        <line num="263" type="stmt" count="1"/>
+        <line num="264" type="stmt" count="1"/>
+        <line num="265" type="stmt" count="1"/>
+        <line num="266" type="stmt" count="1"/>
+        <line num="267" type="stmt" count="1"/>
+        <line num="268" type="stmt" count="1"/>
+        <line num="269" type="stmt" count="1"/>
+        <line num="270" type="stmt" count="1"/>
+        <line num="271" type="stmt" count="1"/>
+        <line num="272" type="stmt" count="1"/>
+        <line num="273" type="stmt" count="1"/>
+        <line num="282" type="method" name="as" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="284" type="stmt" count="2"/>
+        <line num="286" type="stmt" count="2"/>
+        <line num="295" type="method" name="asArray" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="297" type="stmt" count="1"/>
+        <line num="299" type="stmt" count="1"/>
+        <line num="307" type="method" name="asBoolean" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="309" type="stmt" count="1"/>
+        <line num="318" type="method" name="asCollection" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="320" type="stmt" count="1"/>
+        <line num="322" type="stmt" count="1"/>
+        <line num="330" type="method" name="asDate" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="332" type="stmt" count="1"/>
+        <line num="340" type="method" name="asDatetime" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="342" type="stmt" count="1"/>
+        <line num="350" type="method" name="asFloat" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="352" type="stmt" count="1"/>
+        <line num="360" type="method" name="asInt" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="362" type="stmt" count="1"/>
+        <line num="370" type="method" name="asString" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="372" type="stmt" count="1"/>
+        <line num="380" type="method" name="asStringable" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="382" type="stmt" count="1"/>
+        <line num="390" type="method" name="asTime" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="392" type="stmt" count="1"/>
+        <line num="398" type="method" name="interpretsArray" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="400" type="stmt" count="1"/>
+        <line num="406" type="method" name="interpretsBoolean" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="408" type="stmt" count="1"/>
+        <line num="414" type="method" name="interpretsCollection" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="416" type="stmt" count="1"/>
+        <line num="422" type="method" name="interpretsDate" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="424" type="stmt" count="1"/>
+        <line num="430" type="method" name="interpretsDatetime" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="432" type="stmt" count="1"/>
+        <line num="438" type="method" name="interpretsFloat" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="440" type="stmt" count="1"/>
+        <line num="446" type="method" name="interpretsInt" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="448" type="stmt" count="1"/>
+        <line num="454" type="method" name="interpretsRaw" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="456" type="stmt" count="1"/>
+        <line num="462" type="method" name="interpretsString" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="464" type="stmt" count="1"/>
+        <line num="470" type="method" name="interpretsStringable" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="472" type="stmt" count="1"/>
+        <line num="478" type="method" name="interpretsTime" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="480" type="stmt" count="1"/>
+        <line num="488" type="method" name="interpretsAs" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="490" type="stmt" count="1"/>
+        <line num="499" type="method" name="subtype" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="501" type="stmt" count="1"/>
+        <line num="503" type="stmt" count="1"/>
+        <line num="509" type="method" name="hasSubtype" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="511" type="stmt" count="1"/>
+        <line num="517" type="method" name="missingSubtype" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="519" type="stmt" count="0"/>
+        <line num="527" type="method" name="getSubtype" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="529" type="stmt" count="1"/>
+        <metrics loc="532" ncloc="327" classes="1" methods="39" coveredmethods="36" conditionals="0" coveredconditionals="0" statements="97" coveredstatements="94" elements="136" coveredelements="130"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/Transformable.php">
+        <class name="Honed\Core\Concerns\Transformable" namespace="Honed\Core\Concerns">
+          <metrics complexity="5" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="12" coveredelements="12"/>
+        </class>
+        <line num="25" type="method" name="transformer" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="27" type="stmt" count="2"/>
+        <line num="29" type="stmt" count="2"/>
+        <line num="37" type="method" name="getTransformer" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="39" type="stmt" count="2"/>
+        <line num="45" type="method" name="transforms" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="47" type="stmt" count="1"/>
+        <line num="53" type="method" name="transform" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="57" type="stmt" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="61" type="stmt" count="1"/>
+        <metrics loc="64" ncloc="41" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="12" coveredelements="12"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Concerns/Validatable.php">
+        <class name="Honed\Core\Concerns\Validatable" namespace="Honed\Core\Concerns">
+          <metrics complexity="6" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="12" coveredelements="12"/>
+        </class>
+        <line num="24" type="method" name="validator" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="26" type="stmt" count="2"/>
+        <line num="28" type="stmt" count="2"/>
+        <line num="38" type="method" name="getValidator" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="40" type="stmt" count="2"/>
+        <line num="46" type="method" name="validate" visibility="public" complexity="3" crap="3" count="2"/>
+        <line num="48" type="stmt" count="2"/>
+        <line num="50" type="stmt" count="2"/>
+        <line num="51" type="stmt" count="2"/>
+        <line num="54" type="stmt" count="2"/>
+        <line num="60" type="method" name="isValid" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="62" type="stmt" count="1"/>
+        <metrics loc="65" ncloc="41" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="12" coveredelements="12"/>
+      </file>
+    </package>
+    <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Contracts/HasDescription.php">
+      <metrics loc="14" ncloc="11" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Contracts/HasIcon.php">
+      <metrics loc="14" ncloc="11" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Contracts/HasLabel.php">
+      <metrics loc="14" ncloc="11" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Contracts/HooksIntoLifecycle.php">
+      <metrics loc="57" ncloc="23" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Contracts/NullsAsUndefined.php">
+      <metrics loc="11" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Contracts/ScopedPrimitiveManager.php">
+      <metrics loc="32" ncloc="18" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Contracts/Stateful.php">
+      <metrics loc="20" ncloc="11" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <package name="Honed\Core">
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/CoreServiceProvider.php">
+        <class name="Honed\Core\CoreServiceProvider" namespace="Honed\Core">
+          <metrics complexity="6" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="24" elements="28" coveredelements="28"/>
+        </class>
+        <line num="17" type="method" name="register" visibility="public" complexity="1" crap="1" count="173"/>
+        <line num="19" type="stmt" count="173"/>
+        <line num="20" type="stmt" count="173"/>
+        <line num="21" type="stmt" count="173"/>
+        <line num="22" type="stmt" count="173"/>
+        <line num="24" type="stmt" count="173"/>
+        <line num="31" type="method" name="boot" visibility="public" complexity="2" crap="2" count="173"/>
+        <line num="33" type="stmt" count="173"/>
+        <line num="35" type="stmt" count="173"/>
+        <line num="36" type="stmt" count="173"/>
+        <line num="38" type="stmt" count="173"/>
+        <line num="39" type="stmt" count="173"/>
+        <line num="40" type="stmt" count="173"/>
+        <line num="47" type="method" name="offerPublishing" visibility="public" complexity="1" crap="1" count="173"/>
+        <line num="49" type="stmt" count="173"/>
+        <line num="50" type="stmt" count="173"/>
+        <line num="51" type="stmt" count="173"/>
+        <line num="57" type="method" name="registerMacros" visibility="public" complexity="2" crap="2" count="173"/>
+        <line num="59" type="stmt" count="173"/>
+        <line num="60" type="stmt" count="1"/>
+        <line num="61" type="stmt" count="1"/>
+        <line num="64" type="stmt" count="1"/>
+        <line num="65" type="stmt" count="1"/>
+        <line num="66" type="stmt" count="1"/>
+        <line num="67" type="stmt" count="1"/>
+        <line num="68" type="stmt" count="1"/>
+        <line num="69" type="stmt" count="1"/>
+        <line num="70" type="stmt" count="173"/>
+        <metrics loc="73" ncloc="60" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="24" elements="28" coveredelements="28"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Interpret.php">
+        <class name="Honed\Core\Interpret" namespace="Honed\Core">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="23" ncloc="23" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Pipe.php">
+        <class name="Honed\Core\Pipe" namespace="Honed\Core">
+          <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+        </class>
+        <line num="27" type="method" name="__call" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="29" type="stmt" count="1"/>
+        <line num="44" type="method" name="handle" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="46" type="stmt" count="4"/>
+        <line num="48" type="stmt" count="4"/>
+        <line num="56" type="method" name="through" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="58" type="stmt" count="4"/>
+        <metrics loc="61" ncloc="35" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="7" coveredelements="7"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Primitive.php">
+        <class name="Honed\Core\Primitive" namespace="Honed\Core">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="4" coveredelements="4"/>
+        </class>
+        <line num="29" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="45"/>
+        <line num="31" type="stmt" count="45"/>
+        <line num="43" type="method" name="__call" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="45" type="stmt" count="1"/>
+        <metrics loc="48" ncloc="36" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="4" coveredelements="4"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/PrimitiveManager.php">
+        <class name="Honed\Core\PrimitiveManager" namespace="Honed\Core">
+          <metrics complexity="10" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="18" elements="24" coveredelements="24"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="173"/>
+        <line num="24" type="method" name="resolve" visibility="public" complexity="2" crap="2" count="45"/>
+        <line num="26" type="stmt" count="45"/>
+        <line num="27" type="stmt" count="45"/>
+        <line num="30" type="stmt" count="1"/>
+        <line num="31" type="stmt" count="1"/>
+        <line num="32" type="stmt" count="1"/>
+        <line num="33" type="stmt" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="41" type="method" name="resolveScoped" visibility="public" complexity="1" crap="1" count="173"/>
+        <line num="44" type="stmt" count="173"/>
+        <line num="52" type="method" name="configureUsing" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="54" type="stmt" count="6"/>
+        <line num="55" type="stmt" count="6"/>
+        <line num="61" type="method" name="configure" visibility="public" complexity="4" crap="4" count="45"/>
+        <line num="63" type="stmt" count="45"/>
+        <line num="64" type="stmt" count="5"/>
+        <line num="65" type="stmt" count="1"/>
+        <line num="68" type="stmt" count="5"/>
+        <line num="69" type="stmt" count="5"/>
+        <line num="73" type="stmt" count="45"/>
+        <line num="79" type="method" name="clone" visibility="public" complexity="1" crap="1" count="173"/>
+        <line num="81" type="stmt" count="173"/>
+        <metrics loc="84" ncloc="61" classes="1" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="18" elements="24" coveredelements="24"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/PrimitivePipeline.php">
+        <class name="Honed\Core\PrimitivePipeline" namespace="Honed\Core">
+          <metrics complexity="16" methods="11" coveredmethods="11" conditionals="0" coveredconditionals="0" statements="32" coveredstatements="32" elements="43" coveredelements="43"/>
+        </class>
+        <line num="29" type="method" name="make" visibility="public" complexity="1" crap="1" count="10"/>
+        <line num="31" type="stmt" count="10"/>
+        <line num="40" type="method" name="throughAll" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="43" type="stmt" count="3"/>
+        <line num="45" type="stmt" count="3"/>
+        <line num="53" type="method" name="getPipes" visibility="public" complexity="1" crap="1" count="8"/>
+        <line num="55" type="stmt" count="8"/>
+        <line num="63" type="method" name="through" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="65" type="stmt" count="3"/>
+        <line num="67" type="stmt" count="3"/>
+        <line num="75" type="method" name="firstThrough" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="77" type="stmt" count="1"/>
+        <line num="79" type="stmt" count="1"/>
+        <line num="91" type="method" name="throughAfter" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="93" type="stmt" count="2"/>
+        <line num="95" type="stmt" count="2"/>
+        <line num="96" type="stmt" count="1"/>
+        <line num="99" type="stmt" count="1"/>
+        <line num="101" type="stmt" count="1"/>
+        <line num="113" type="method" name="throughBefore" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="115" type="stmt" count="2"/>
+        <line num="117" type="stmt" count="2"/>
+        <line num="118" type="stmt" count="1"/>
+        <line num="121" type="stmt" count="1"/>
+        <line num="123" type="stmt" count="1"/>
+        <line num="131" type="method" name="lastThrough" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="133" type="stmt" count="1"/>
+        <line num="139" type="method" name="isCompleted" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="141" type="stmt" count="2"/>
+        <line num="149" type="method" name="reset" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="151" type="stmt" count="1"/>
+        <line num="153" type="stmt" count="1"/>
+        <line num="161" type="method" name="handle" visibility="public" complexity="3" crap="3" count="2"/>
+        <line num="163" type="stmt" count="2"/>
+        <line num="164" type="stmt" count="1"/>
+        <line num="167" type="stmt" count="2"/>
+        <line num="169" type="stmt" count="2"/>
+        <line num="170" type="stmt" count="1"/>
+        <line num="171" type="stmt" count="1"/>
+        <line num="172" type="stmt" count="1"/>
+        <line num="173" type="stmt" count="1"/>
+        <line num="176" type="stmt" count="2"/>
+        <line num="178" type="stmt" count="2"/>
+        <metrics loc="181" ncloc="110" classes="1" methods="11" coveredmethods="11" conditionals="0" coveredconditionals="0" statements="32" coveredstatements="32" elements="43" coveredelements="43"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/SimplePrimitive.php">
+        <class name="Honed\Core\SimplePrimitive" namespace="Honed\Core">
+          <metrics complexity="6" methods="4" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="10" elements="18" coveredelements="13"/>
+        </class>
+        <line num="36" type="method" name="jsonSerialize" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="38" type="stmt" count="6"/>
+        <line num="46" type="method" name="toArray" visibility="public" complexity="2" crap="2" count="8"/>
+        <line num="48" type="stmt" count="8"/>
+        <line num="49" type="stmt" count="2"/>
+        <line num="52" type="stmt" count="6"/>
+        <line num="62" type="method" name="toJson" visibility="public" complexity="2" crap="3.19" count="2"/>
+        <line num="65" type="stmt" count="2"/>
+        <line num="66" type="stmt" count="0"/>
+        <line num="67" type="stmt" count="0"/>
+        <line num="68" type="stmt" count="0"/>
+        <line num="69" type="stmt" count="0"/>
+        <line num="72" type="stmt" count="2"/>
+        <line num="81" type="method" name="undefine" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="83" type="stmt" count="2"/>
+        <line num="84" type="stmt" count="2"/>
+        <line num="85" type="stmt" count="2"/>
+        <line num="86" type="stmt" count="2"/>
+        <metrics loc="89" ncloc="55" classes="1" methods="4" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="10" elements="18" coveredelements="13"/>
+      </file>
+    </package>
+    <package name="Honed\Core\Exceptions">
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Exceptions/PipeNotFoundException.php">
+        <class name="Honed\Core\Exceptions\PipeNotFoundException" namespace="Honed\Core\Exceptions">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+        </class>
+        <line num="16" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="18" type="stmt" count="3"/>
+        <line num="19" type="stmt" count="3"/>
+        <line num="20" type="stmt" count="3"/>
+        <line num="30" type="method" name="throw" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="32" type="stmt" count="3"/>
+        <metrics loc="35" ncloc="23" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+      </file>
+    </package>
+    <package name="Honed\Core\Pipes">
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Pipes/CallsAfter.php">
+        <class name="Honed\Core\Pipes\CallsAfter" namespace="Honed\Core\Pipes">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+        </class>
+        <line num="19" type="method" name="run" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="21" type="stmt" count="3"/>
+        <metrics loc="24" ncloc="16" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Pipes/CallsBefore.php">
+        <class name="Honed\Core\Pipes\CallsBefore" namespace="Honed\Core\Pipes">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+        </class>
+        <line num="19" type="method" name="run" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="21" type="stmt" count="3"/>
+        <metrics loc="24" ncloc="16" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+      </file>
+    </package>
+    <metrics files="53" loc="3822" ncloc="2415" classes="45" methods="221" coveredmethods="208" conditionals="0" coveredconditionals="0" statements="533" coveredstatements="510" elements="754" coveredelements="718"/>
+  </project>
+</coverage>
