@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\CanHaveIcon;
 use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasIcon;
 use Workbench\App\Enums\Status;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use CanHaveIcon, Evaluable;
+        use Evaluable, HasIcon;
     };
 });
 

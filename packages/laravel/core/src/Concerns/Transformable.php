@@ -12,14 +12,14 @@ trait Transformable
      * The transformer function.
 
      *
-     * @var Closure():mixed|null
+     * @var ?Closure():mixed
      */
     protected $transformer;
 
     /**
      * Set the transformer function.
      *
-     * @param  Closure():mixed  $transformer
+     * @param  ?Closure():mixed  $transformer
      * @return $this
      */
     public function transformer(?Closure $transformer): static
@@ -32,9 +32,7 @@ trait Transformable
     /**
      * Get the transformer function.
      *
-     * @return Closure():mixed|null
-     *
-     * @internal
+     * @return ?Closure():mixed
      */
     public function getTransformer(): ?Closure
     {

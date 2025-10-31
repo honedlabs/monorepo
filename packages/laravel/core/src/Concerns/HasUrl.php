@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 use function is_string;
 
-trait CanHaveUrl
+trait HasUrl
 {
     /**
      * The route to visit.
@@ -50,11 +50,19 @@ trait CanHaveUrl
     }
 
     /**
-     * Determine if there is a URL set.
+     * Determine if a URL is set.
      */
     public function hasUrl(): bool
     {
         return isset($this->url);
+    }
+
+    /**
+     * Determine if a URL is not set.
+     */
+    public function missingUrl(): bool
+    {
+        return ! $this->hasUrl();
     }
 
     /**

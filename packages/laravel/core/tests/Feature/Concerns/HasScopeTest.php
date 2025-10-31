@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\CanScope;
+use Honed\Core\Concerns\HasScope;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use CanScope;
+        use HasScope;
     };
 });
 

@@ -21,7 +21,7 @@ trait HasPipeline
     /**
      * Get the pipes to be used.
      *
-     * @return array<int,class-string<\Honed\Core\Pipe>>
+     * @return list<class-string<\Honed\Core\Pipe>>
      */
     abstract protected function pipes(): array;
 

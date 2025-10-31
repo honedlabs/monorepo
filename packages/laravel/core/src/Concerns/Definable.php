@@ -17,8 +17,6 @@ trait Definable
      * Call the definition.
      *
      * @return $this
-     *
-     * @internal
      */
     public function define(): static
     {
@@ -33,6 +31,8 @@ trait Definable
 
     /**
      * Define the instance.
+     *
+     * @return $this
      */
     protected function definition(): static
     {

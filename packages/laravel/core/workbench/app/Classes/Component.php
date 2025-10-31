@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Workbench\App\Classes;
 
-use Honed\Core\Concerns\CanQuery;
 use Honed\Core\Concerns\Definable;
 use Honed\Core\Concerns\Encodable;
 use Honed\Core\Concerns\HasLifecycleHooks;
 use Honed\Core\Concerns\HasMeta;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasPipeline;
+use Honed\Core\Concerns\HasQuery;
 use Honed\Core\Concerns\HasType;
 use Honed\Core\Contracts\HooksIntoLifecycle;
 use Honed\Core\Pipes\CallsAfter;
@@ -21,13 +21,13 @@ use Workbench\App\Pipes\SetType;
 
 class Component extends Primitive implements HooksIntoLifecycle
 {
-    use CanQuery;
     use Definable;
     use Encodable;
     use HasLifecycleHooks;
     use HasMeta;
     use HasName;
     use HasPipeline;
+    use HasQuery;
     use HasType;
 
     /**

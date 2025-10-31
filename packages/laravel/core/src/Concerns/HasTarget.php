@@ -4,23 +4,24 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-use Illuminate\Support\Facades\URL;
+use Closure;
 
-trait CanHaveTarget
+trait HasTarget
 {
     /**
      * The target for the URL
      *
-     * @var string|null
+     * @var string|Closure():string|null
      */
     protected $target;
 
     /**
      * Set the target for the URL.
      *
+     * @param  string|Closure():string|null  $target
      * @return $this
      */
-    public function target(?string $target): static
+    public function target(string|Closure|null $target): static
     {
         $this->target = $target;
 
@@ -42,6 +43,6 @@ trait CanHaveTarget
      */
     public function getTarget(): ?string
     {
-        return $this->target;
+        return $this->evaluate($this->target);
     }
 }

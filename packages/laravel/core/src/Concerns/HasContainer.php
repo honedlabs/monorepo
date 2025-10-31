@@ -20,7 +20,7 @@ trait HasContainer
      *
      * @return $this
      */
-    public function container(Container $container)
+    public function container(Container $container): static
     {
         $this->container = $container;
 

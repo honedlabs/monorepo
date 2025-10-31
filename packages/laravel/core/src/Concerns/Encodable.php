@@ -13,21 +13,21 @@ trait Encodable
     /**
      * The encoding closure.
      *
-     * @var Closure(string):string|null
+     * @var ?Closure(string):string
      */
     protected static $encoder;
 
     /**
      * The decoding closure.
      *
-     * @var Closure(string):string|null
+     * @var ?Closure(string):string
      */
     protected static $decoder;
 
     /**
      * Set the encoder.
      *
-     * @param  (Closure(string):string)|null  $encoder
+     * @param  ?Closure(string):string  $encoder
      */
     public static function encoder(?Closure $encoder = null): void
     {
@@ -37,7 +37,7 @@ trait Encodable
     /**
      * Set the decoder.
      *
-     * @param  (Closure(string):string)|null  $decoder
+     * @param  ?Closure(string):string  $decoder
      */
     public static function decoder(?Closure $decoder = null): void
     {
@@ -46,10 +46,8 @@ trait Encodable
 
     /**
      * Encode a value using the encoder.
-     *
-     * @return string
      */
-    public static function encode(string $value)
+    public static function encode(string $value): string
     {
         return isset(static::$encoder)
             ? call_user_func(static::$encoder, $value)
@@ -58,10 +56,8 @@ trait Encodable
 
     /**
      * Decode a value using the decoder.
-     *
-     * @return string
      */
-    public static function decode(string $value)
+    public static function decode(string $value): string
     {
         // @phpstan-ignore-next-line
         return isset(static::$decoder)
@@ -71,12 +67,8 @@ trait Encodable
 
     /**
      * Get the id of the instance.
-     *
-     * @return string
-     *
-     * @internal
      */
-    public function getId()
+    public function getId(): string
     {
         return static::encode(static::class);
     }

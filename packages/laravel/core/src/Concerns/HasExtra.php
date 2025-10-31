@@ -6,7 +6,7 @@ namespace Honed\Core\Concerns;
 
 use Closure;
 
-trait CanHaveExtra
+trait HasExtra
 {
     /**
      * Extra data.
@@ -31,7 +31,7 @@ trait CanHaveExtra
     /**
      * Get the extra data.
      *
-     * @return array<string,mixed>|null
+     * @return ?array<string,mixed>
      */
     public function getExtra(): ?array
     {

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-trait CanHavePlaceholder
+trait HasPlaceholder
 {
     /**
      * The placeholder.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $placeholder;
 
@@ -31,5 +31,21 @@ trait CanHavePlaceholder
     public function getPlaceholder(): ?string
     {
         return $this->placeholder;
+    }
+
+    /**
+     * Determine if a placeholder is set.
+     */
+    public function hasPlaceholder(): bool
+    {
+        return isset($this->placeholder);
+    }
+
+    /**
+     * Determine if a placeholder is not set.
+     */
+    public function missingPlaceholder(): bool
+    {
+        return ! $this->hasPlaceholder();
     }
 }

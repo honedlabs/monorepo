@@ -56,8 +56,13 @@ final class CoreServiceProvider extends ServiceProvider
      */
     public function registerMacros(): void
     {
-        // Str::macro('label', function (string $value): string {
-        //     return Str::ucfirst(Str::snake($value));
-        // });
+        Str::macro('label', function (string $value): string {
+            return Str::of($value)
+                ->afterLast('.')
+                ->headline()
+                ->lower()
+                ->ucfirst()
+                ->toString();
+        });
     }
 }

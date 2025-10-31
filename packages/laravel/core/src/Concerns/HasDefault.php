@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-trait CanHaveDefault
+trait HasDefault
 {
     /**
      * The default value to use if one is not provided.

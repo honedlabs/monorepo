@@ -9,7 +9,7 @@ trait HasType
     /**
      * The type for the instance.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $type;
 
@@ -31,5 +31,21 @@ trait HasType
     public function getType(): ?string
     {
         return $this->type;
+    }
+
+    /**
+     * Determine if a type is set.
+     */
+    public function hasType(): bool
+    {
+        return isset($this->type);
+    }
+
+    /**
+     * Determine if a type is not set.
+     */
+    public function missingType(): bool
+    {
+        return ! $this->hasType();
     }
 }

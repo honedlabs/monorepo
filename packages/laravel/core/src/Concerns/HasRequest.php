@@ -20,7 +20,7 @@ trait HasRequest
      *
      * @return $this
      */
-    public function request(Request $request)
+    public function request(Request $request): static
     {
         $this->request = $request;
 

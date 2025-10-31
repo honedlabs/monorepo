@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-trait CanHaveAttributes
+trait HasAttributes
 {
     /**
      * The attributes.

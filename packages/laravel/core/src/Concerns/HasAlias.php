@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Core\Concerns;
 
-trait CanHaveAlias
+trait HasAlias
 {
     /**
      * The alias to use to hide the underlying value.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $alias;
 

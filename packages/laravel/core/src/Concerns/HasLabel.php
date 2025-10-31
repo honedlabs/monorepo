@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Closure;
+use Honed\Core\Contracts\HasLabel as ContractsHasLabel;
 use Illuminate\Support\Str;
 
 use function is_string;
@@ -38,12 +39,12 @@ trait HasLabel
     /**
      * Set the label.
      *
-     * @param  string|Closure():string|null  $label
+     * @param  string|Closure():string|null|ContractsHasLabel  $label
      * @return $this
      */
-    public function label(string|Closure|null $label): static
+    public function label(string|Closure|null|ContractsHasLabel $label): static
     {
-        $this->label = $label;
+        $this->label = $label instanceof ContractsHasLabel ? $label->getLabel() : $label;
 
         return $this;
     }

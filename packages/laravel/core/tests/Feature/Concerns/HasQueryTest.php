@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\CanQuery;
 use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasQuery;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use CanQuery, Evaluable;
+        use Evaluable, HasQuery;
     };
 });
 

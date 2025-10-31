@@ -5,25 +5,24 @@ declare(strict_types=1);
 namespace Honed\Core\Concerns;
 
 use Closure;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
  * @template TBuilder of \Illuminate\Database\Eloquent\Builder<TModel> = \Illuminate\Database\Eloquent\Builder<TModel>
  */
-trait CanQuery
+trait HasQuery
 {
     /**
      * The query closure to modify the Eloquent builder.
      *
-     * @var (Closure():mixed)|null
+     * @var ?Closure():mixed
      */
     protected $query;
 
     /**
      * Set a callback to modify the Eloquent builder.
      *
-     * @param  (Closure():mixed)|null  $callback
+     * @param  ?Closure():mixed  $callback
      * @return $this
      */
     public function query(?Closure $callback): static
@@ -36,7 +35,7 @@ trait CanQuery
     /**
      * Get the callback to modify the Eloquent builder.
      *
-     * @return (Closure():mixed)|null
+     * @return ?Closure():mixed
      *
      * @internal
      */

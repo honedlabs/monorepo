@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\CanHaveUrl;
 use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasUrl;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use CanHaveUrl, Evaluable;
+        use Evaluable, HasUrl;
     };
 
     $this->user = User::factory()->create();

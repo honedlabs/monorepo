@@ -24,7 +24,7 @@ trait Evaluable
     /**
      * The identifier to use for evaluation.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $evaluationIdentifier;
 

@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\CanHaveTarget;
+use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasTarget;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use CanHaveTarget;
+        use Evaluable;
+        use HasTarget;
     };
 });
 

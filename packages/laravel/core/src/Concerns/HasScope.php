@@ -6,7 +6,7 @@ namespace Honed\Core\Concerns;
 
 use Illuminate\Support\Str;
 
-trait CanScope
+trait HasScope
 {
     public const SCOPE = ':';
 

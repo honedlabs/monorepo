@@ -6,8 +6,9 @@ namespace Honed\Core\Concerns;
 
 use BackedEnum;
 use Closure;
+use Honed\Core\Contracts\HasIcon as HasIconContract;
 
-trait CanHaveIcon
+trait HasIcon
 {
     /**
      * The icon of the instance.
@@ -19,12 +20,12 @@ trait CanHaveIcon
     /**
      * Set the icon.
      *
-     * @param  string|Closure():string|BackedEnum|null  $icon
+     * @param  string|Closure():string|BackedEnum|HasIconContract|null  $icon
      * @return $this
      */
-    public function icon(string|Closure|BackedEnum|null $icon): static
+    public function icon(string|Closure|BackedEnum|HasIconContract|null $icon): static
     {
-        $this->icon = $icon;
+        $this->icon = $icon instanceof HasIconContract ? $icon->getIcon() : $icon;
 
         return $this;
     }

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\CanHaveExtra;
 use Honed\Core\Concerns\Evaluable;
+use Honed\Core\Concerns\HasExtra;
 use Workbench\App\Models\User;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use CanHaveExtra, Evaluable;
+        use Evaluable, HasExtra;
     };
 
     $this->user = User::factory()->create();

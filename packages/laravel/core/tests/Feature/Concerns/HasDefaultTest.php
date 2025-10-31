@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\CanHaveDefault;
+use Honed\Core\Concerns\HasDefault;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use CanHaveDefault;
+        use HasDefault;
     };
 });
 

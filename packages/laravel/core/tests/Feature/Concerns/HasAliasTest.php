@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Core\Concerns\CanHaveAlias;
+use Honed\Core\Concerns\HasAlias;
 
 beforeEach(function () {
     $this->test = new class()
     {
-        use CanHaveAlias;
+        use HasAlias;
     };
 });
 
