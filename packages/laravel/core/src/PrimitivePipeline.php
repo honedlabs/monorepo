@@ -37,7 +37,7 @@ class PrimitivePipeline
      * @param  class-string<Pipe>|list<class-string<Pipe>>  $pipes
      * @return $this
      */
-    public function pipes(string|array $pipes): static
+    public function throughAll(string|array $pipes): static
     {
         // @phpstan-ignore-next-line assign.propertyType
         $this->pipes = is_array($pipes) ? $pipes : func_get_args();

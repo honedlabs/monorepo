@@ -60,7 +60,7 @@ final class CoreServiceProvider extends ServiceProvider
             if ($value === null) {
                 return null;
             }
-            
+
             return Str::of($value)
                 ->afterLast('.')
                 ->headline()
