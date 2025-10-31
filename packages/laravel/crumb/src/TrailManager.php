@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Crumb;
 
+use Closure;
 use Honed\Crumb\Exceptions\DuplicateTrailException;
 use Honed\Crumb\Exceptions\TrailNotFoundException;
 use Illuminate\Support\Arr;
@@ -11,11 +12,15 @@ use Illuminate\Support\Arr;
 class TrailManager
 {
     /**
+     * The trails defined for the application.
+     * 
      * @var array<string,\Closure>
      */
     protected $trails = [];
 
     /**
+     * The trail to be added globally, before all other crumbs.
+     * 
      * @var \Closure|null
      */
     protected $before = null;
@@ -26,7 +31,7 @@ class TrailManager
      * @param  \Closure  $trail
      * @return $this
      */
-    public function before($trail)
+    public function before(Closure $trail): static
     {
         $this->before = $trail;
 
@@ -42,7 +47,7 @@ class TrailManager
      *
      * @throws \Honed\Crumb\Exceptions\DuplicateTrailException
      */
-    public function for($name, $trail)
+    public function for(string $name, Closure $trail): static
     {
         if ($this->hasTrail($name)) {
             DuplicateTrailException::throw($name);
@@ -59,7 +64,7 @@ class TrailManager
      * @param  string  $name
      * @return bool
      */
-    public function hasTrail($name)
+    public function hasTrail(string $name): bool
     {
         return \in_array($name, \array_keys($this->trails));
     }
@@ -72,7 +77,7 @@ class TrailManager
      *
      * @throws \Honed\Crumb\Exceptions\TrailNotFoundException
      */
-    public function get($name)
+    public function get(string $name): Trail
     {
         if (! $this->hasTrail($name)) {
             TrailNotFoundException::throw($name);

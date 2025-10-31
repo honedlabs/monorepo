@@ -7,7 +7,7 @@ namespace Honed\Crumb;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasRequest;
-use Honed\Core\Concerns\HasRoute;
+use Honed\Core\Concerns\HasUrl;
 use Honed\Core\Primitive;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -19,7 +19,7 @@ class Crumb extends Primitive
     use HasIcon;
     use HasLabel;
     use HasRequest;
-    use HasRoute;
+    use HasUrl;
 
     public function __construct(Request $request)
     {
@@ -42,7 +42,7 @@ class Crumb extends Primitive
             ->label($label);
 
         if ($route) {
-            return $crumb->route($route, $parameters);
+            return $crumb->url($route, $parameters);
         }
 
         return $crumb;
@@ -55,27 +55,29 @@ class Crumb extends Primitive
      */
     public function isCurrent()
     {
-        $route = $this->getRoute();
+        $url = $this->getUrl();
 
-        return (bool) ($route ? $this->getRequest()->url() === $route : false);
+        return (bool) ($url ? $this->getRequest()->url() === $url : false);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function toArray()
+    protected function representation(): array
     {
         return [
             'label' => $this->getLabel(),
-            'url' => $this->getRoute(),
+            'url' => $this->getUrl(),
             'icon' => $this->getIcon(),
         ];
     }
 
     /**
-     * {@inheritDoc}
+     * Provide a selection of default dependencies for evaluation by name.
+     *
+     * @return list<mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByName($parameterName)
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         $request = $this->getRequest();
 
@@ -97,9 +99,11 @@ class Crumb extends Primitive
     }
 
     /**
-     * {@inheritDoc}
+     * Provide a selection of default dependencies for evaluation by type.
+     *
+     * @return list<mixed>
      */
-    protected function resolveDefaultClosureDependencyForEvaluationByType($parameterType)
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
         $request = $this->getRequest();
 

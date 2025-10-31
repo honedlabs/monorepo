@@ -93,7 +93,7 @@ class Trail extends Primitive
      *
      * @throws \BadMethodCallException
      */
-    public function select(...$crumbs)
+    public function select(Crumb ...$crumbs): static
     {
         if ($this->terminated) {
             return $this;
@@ -122,7 +122,7 @@ class Trail extends Primitive
      * @param  \Honed\Crumb\Crumb  $crumb
      * @return $this
      */
-    protected function addCrumb($crumb)
+    protected function addCrumb(Crumb $crumb): static
     {
         $this->crumbs[] = $crumb;
 
@@ -132,9 +132,9 @@ class Trail extends Primitive
     /**
      * Retrieve the crumbs
      *
-     * @return array<int,\Honed\Crumb\Crumb>
+     * @return list<\Honed\Crumb\Crumb>
      */
-    public function getCrumbs()
+    public function getCrumbs(): array
     {
         return $this->crumbs;
     }
@@ -144,7 +144,7 @@ class Trail extends Primitive
      *
      * @return $this
      */
-    public function share()
+    public function share(): static
     {
         Inertia::share(Constants::PROP, $this->toArray());
 
@@ -154,12 +154,11 @@ class Trail extends Primitive
     /**
      * Set the trail to terminate when a crumb in the trail matches.
      *
-     * @param  bool  $terminating
      * @return $this
      */
-    protected function terminating($terminating = true)
+    protected function terminating(bool $value = true): static
     {
-        $this->terminating = $terminating;
+        $this->terminating = $value;
 
         return $this;
     }
@@ -169,7 +168,7 @@ class Trail extends Primitive
      *
      * @return bool
      */
-    protected function isTerminating()
+    protected function isTerminating(): bool
     {
         return $this->terminating;
     }
@@ -179,17 +178,17 @@ class Trail extends Primitive
      *
      * @return $this
      */
-    protected function terminate()
+    protected function terminate(): static
     {
         $this->terminated = true;
+
+        return $this;
     }
 
     /**
      * Determine if the trail has been terminated.
-     *
-     * @return bool
      */
-    protected function isTerminated()
+    protected function isTerminated(): bool
     {
         return $this->terminated;
     }
@@ -197,7 +196,7 @@ class Trail extends Primitive
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    protected function representation(): array
     {
         return \array_map(
             static fn (Crumb $crumb) => $crumb->toArray(),
