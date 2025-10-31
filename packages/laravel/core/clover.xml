@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1761950122">
-  <project timestamp="1761950122">
+<coverage generated="1761950873">
+  <project timestamp="1761950873">
     <package name="Honed\Core\Commands">
       <file name="/home/josh/code/honed/honed/packages/laravel/core/src/Commands/ListCommand.php">
         <class name="Honed\Core\Commands\ListCommand" namespace="Honed\Core\Commands">

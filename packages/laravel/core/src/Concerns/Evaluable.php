@@ -162,7 +162,7 @@ trait Evaluable
     /**
      * Provide a selection of default dependencies for evaluation by name.
      *
-     * @return array<int,mixed>
+     * @return list<mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
@@ -172,7 +172,7 @@ trait Evaluable
     /**
      * Provide a selection of default dependencies for evaluation by type.
      *
-     * @return array<int,mixed>
+     * @return list<mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
