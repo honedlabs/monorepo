@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1761950085">
+  <project timestamp="1761950085">
+    <file name="/home/josh/code/honed/honed/packages/laravel/flash/src/Contracts/Flashable.php">
+      <metrics loc="42" ncloc="19" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <package name="Honed\Flash\Facades">
+      <file name="/home/josh/code/honed/honed/packages/laravel/flash/src/Facades/Flash.php">
+        <class name="Honed\Flash\Facades\Flash" namespace="Honed\Flash\Facades">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="4" coveredelements="4"/>
+        </class>
+        <line num="28" type="method" name="getFacadeRoot" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="31" type="stmt" count="12"/>
+        <line num="37" type="method" name="getFacadeAccessor" visibility="protected" complexity="1" crap="1" count="12"/>
+        <line num="39" type="stmt" count="12"/>
+        <metrics loc="42" ncloc="22" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="4" coveredelements="4"/>
+      </file>
+    </package>
+    <package name="Honed\Flash">
+      <file name="/home/josh/code/honed/honed/packages/laravel/flash/src/FlashFactory.php">
+        <class name="Honed\Flash\FlashFactory" namespace="Honed\Flash">
+          <metrics complexity="9" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="20" coveredelements="20"/>
+        </class>
+        <line num="14" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="16" type="stmt" count="12"/>
+        <line num="23" type="method" name="message" visibility="public" complexity="2" crap="2" count="10"/>
+        <line num="25" type="stmt" count="10"/>
+        <line num="26" type="stmt" count="10"/>
+        <line num="29" type="stmt" count="10"/>
+        <line num="31" type="stmt" count="10"/>
+        <line num="39" type="method" name="success" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="41" type="stmt" count="2"/>
+        <line num="49" type="method" name="error" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="51" type="stmt" count="1"/>
+        <line num="59" type="method" name="info" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="61" type="stmt" count="1"/>
+        <line num="69" type="method" name="warning" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="71" type="stmt" count="1"/>
+        <line num="78" type="method" name="getProperty" visibility="public" complexity="1" crap="1" count="11"/>
+        <line num="81" type="stmt" count="11"/>
+        <line num="90" type="method" name="property" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="92" type="stmt" count="1"/>
+        <line num="94" type="stmt" count="1"/>
+        <metrics loc="97" ncloc="61" classes="1" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="20" coveredelements="20"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/flash/src/FlashServiceProvider.php">
+        <class name="Honed\Flash\FlashServiceProvider" namespace="Honed\Flash">
+          <metrics complexity="8" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="40" coveredstatements="40" elements="46" coveredelements="46"/>
+        </class>
+        <line num="20" type="method" name="register" visibility="public" complexity="1" crap="1" count="24"/>
+        <line num="22" type="stmt" count="24"/>
+        <line num="25" type="stmt" count="24"/>
+        <line num="27" type="stmt" count="24"/>
+        <line num="33" type="method" name="boot" visibility="public" complexity="2" crap="2" count="24"/>
+        <line num="35" type="stmt" count="24"/>
+        <line num="36" type="stmt" count="24"/>
+        <line num="38" type="stmt" count="24"/>
+        <line num="39" type="stmt" count="24"/>
+        <line num="40" type="stmt" count="24"/>
+        <line num="43" type="stmt" count="24"/>
+        <line num="44" type="stmt" count="24"/>
+        <line num="45" type="stmt" count="24"/>
+        <line num="51" type="method" name="offerPublishing" visibility="protected" complexity="2" crap="2" count="24"/>
+        <line num="53" type="stmt" count="24"/>
+        <line num="54" type="stmt" count="24"/>
+        <line num="55" type="stmt" count="24"/>
+        <line num="56" type="stmt" count="24"/>
+        <line num="63" type="method" name="registerMiddlewareAlias" visibility="protected" complexity="1" crap="1" count="24"/>
+        <line num="65" type="stmt" count="24"/>
+        <line num="71" type="method" name="registerRedirectResponseMacros" visibility="protected" complexity="1" crap="1" count="24"/>
+        <line num="73" type="stmt" count="24"/>
+        <line num="74" type="stmt" count="24"/>
+        <line num="75" type="stmt" count="24"/>
+        <line num="76" type="stmt" count="24"/>
+        <line num="77" type="stmt" count="24"/>
+        <line num="79" type="stmt" count="1"/>
+        <line num="81" type="stmt" count="1"/>
+        <line num="82" type="stmt" count="24"/>
+        <line num="88" type="method" name="registerInertiaMacros" visibility="protected" complexity="1" crap="1" count="24"/>
+        <line num="90" type="stmt" count="24"/>
+        <line num="91" type="stmt" count="24"/>
+        <line num="92" type="stmt" count="24"/>
+        <line num="93" type="stmt" count="24"/>
+        <line num="94" type="stmt" count="24"/>
+        <line num="96" type="stmt" count="1"/>
+        <line num="98" type="stmt" count="1"/>
+        <line num="99" type="stmt" count="24"/>
+        <line num="101" type="stmt" count="24"/>
+        <line num="102" type="stmt" count="24"/>
+        <line num="103" type="stmt" count="24"/>
+        <line num="104" type="stmt" count="24"/>
+        <line num="105" type="stmt" count="24"/>
+        <line num="107" type="stmt" count="1"/>
+        <line num="109" type="stmt" count="1"/>
+        <line num="110" type="stmt" count="24"/>
+        <metrics loc="113" ncloc="91" classes="1" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="40" coveredstatements="40" elements="46" coveredelements="46"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/flash/src/Message.php">
+        <class name="Honed\Flash\Message" namespace="Honed\Flash">
+          <metrics complexity="15" methods="15" coveredmethods="15" conditionals="0" coveredconditionals="0" statements="26" coveredstatements="26" elements="41" coveredelements="41"/>
+        </class>
+        <line num="44" type="method" name="make" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="46" type="stmt" count="15"/>
+        <line num="47" type="stmt" count="15"/>
+        <line num="48" type="stmt" count="15"/>
+        <line num="49" type="stmt" count="15"/>
+        <line num="55" type="method" name="getDefaultType" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="58" type="stmt" count="7"/>
+        <line num="64" type="method" name="getDefaultDuration" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="67" type="stmt" count="12"/>
+        <line num="75" type="method" name="message" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="77" type="stmt" count="15"/>
+        <line num="79" type="stmt" count="15"/>
+        <line num="85" type="method" name="getMessage" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="87" type="stmt" count="12"/>
+        <line num="95" type="method" name="title" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="97" type="stmt" count="1"/>
+        <line num="99" type="stmt" count="1"/>
+        <line num="105" type="method" name="getTitle" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="107" type="stmt" count="12"/>
+        <line num="113" type="method" name="getType" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="115" type="stmt" count="12"/>
+        <line num="123" type="method" name="success" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="125" type="stmt" count="1"/>
+        <line num="133" type="method" name="error" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="135" type="stmt" count="1"/>
+        <line num="143" type="method" name="info" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="145" type="stmt" count="1"/>
+        <line num="153" type="method" name="warning" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="155" type="stmt" count="1"/>
+        <line num="163" type="method" name="duration" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="165" type="stmt" count="15"/>
+        <line num="167" type="stmt" count="15"/>
+        <line num="173" type="method" name="getDuration" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="175" type="stmt" count="12"/>
+        <line num="183" type="method" name="representation" visibility="protected" complexity="1" crap="1" count="11"/>
+        <line num="185" type="stmt" count="11"/>
+        <line num="186" type="stmt" count="11"/>
+        <line num="187" type="stmt" count="11"/>
+        <line num="188" type="stmt" count="11"/>
+        <line num="189" type="stmt" count="11"/>
+        <line num="190" type="stmt" count="11"/>
+        <metrics loc="193" ncloc="112" classes="1" methods="15" coveredmethods="15" conditionals="0" coveredconditionals="0" statements="26" coveredstatements="26" elements="41" coveredelements="41"/>
+      </file>
+    </package>
+    <package name="Honed\Flash\Middleware">
+      <file name="/home/josh/code/honed/honed/packages/laravel/flash/src/Middleware/ShareFlash.php">
+        <class name="Honed\Flash\Middleware\ShareFlash" namespace="Honed\Flash\Middleware">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+        </class>
+        <line num="15" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="17" type="stmt" count="1"/>
+        <line num="24" type="method" name="handle" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="30" type="stmt" count="1"/>
+        <metrics loc="33" ncloc="28" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+      </file>
+    </package>
+    <file name="/home/josh/code/honed/honed/packages/laravel/flash/src/helpers.php">
+      <line num="19" type="stmt" count="3"/>
+      <line num="21" type="stmt" count="3"/>
+      <line num="23" type="stmt" count="2"/>
+      <line num="26" type="stmt" count="2"/>
+      <metrics loc="29" ncloc="22" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="4" coveredelements="4"/>
+    </file>
+    <metrics files="7" loc="549" ncloc="355" classes="5" methods="33" coveredmethods="33" conditionals="0" coveredconditionals="0" statements="88" coveredstatements="88" elements="121" coveredelements="121"/>
+  </project>
+</coverage>
