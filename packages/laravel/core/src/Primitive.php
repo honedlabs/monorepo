@@ -12,6 +12,12 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 
+/**
+ * @template TKey of array-key = string
+ * @template TValue of mixed = mixed
+ *
+ * @extends SimplePrimitive<TKey,TValue>
+ */
 abstract class Primitive extends SimplePrimitive
 {
     use Conditionable;
