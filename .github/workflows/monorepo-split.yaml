@@ -23,17 +23,17 @@ jobs:
           # - command
           # - core
           # - crumb
-          # - data
+          - data
           # - disable
           # - flash
           # - form
           # - honed
           - infolist
-          # - lang
+          - lang
           # - layout
           # - lock
           # - memo
-          # - modal
+          - modal
           # - nav
           # - page
           # - persist
