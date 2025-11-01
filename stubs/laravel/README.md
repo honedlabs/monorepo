@@ -9,6 +9,7 @@
 
 <p>
     <a href="https://github.com/:vendor_sluglabs/:package_slug/actions"><img src="https://github.com/:vendor_sluglabs/:package_slug/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://github.com/:vendor_sluglabs/:package_slug"><img src="https://raw.githubusercontent.com/:vendor_sluglabs/:package_slug/main/badge-coverage.svg" alt="Code Coverage"></a>
     <a href="https://packagist.org/packages/:vendor_slug/:package_slug"><img src="https://img.shields.io/packagist/dt/:vendor_slug/:package_slug" alt="Total Downloads"></a>
     <a href="https://packagist.org/packages/:vendor_slug/:package_slug"><img src="https://img.shields.io/packagist/v/:vendor_slug/:package_slug" alt="Latest Stable Version"></a>
 </p>
