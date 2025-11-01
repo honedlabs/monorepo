@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1761964985">
-  <project timestamp="1761964985">
+<coverage generated="1761969567">
+  <project timestamp="1761969567">
     <package name="Honed\Upload\Commands">
       <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Commands/UploadMakeCommand.php">
         <class name="Honed\Upload\Commands\UploadMakeCommand" namespace="Honed\Upload\Commands">
