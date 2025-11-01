@@ -157,7 +157,7 @@ it('supports flexible', function () {
     expect(app('cache'))
         ->get('key')->toBe('value-2')
         ->isMemoized('key')->toBeTrue();
-});
+})->skip(fn () => app()->version() < '12.0');
 
 it('handles putMany with memoization', function () {
     expect(app('cache'))
