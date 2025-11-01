@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1761950085">
-  <project timestamp="1761950085">
+<coverage generated="1761969505">
+  <project timestamp="1761969505">
     <file name="/home/josh/code/honed/honed/packages/laravel/flash/src/Contracts/Flashable.php">
       <metrics loc="42" ncloc="19" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
@@ -99,48 +99,48 @@
         <class name="Honed\Flash\Message" namespace="Honed\Flash">
           <metrics complexity="15" methods="15" coveredmethods="15" conditionals="0" coveredconditionals="0" statements="26" coveredstatements="26" elements="41" coveredelements="41"/>
         </class>
-        <line num="44" type="method" name="make" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="41" type="method" name="make" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="43" type="stmt" count="15"/>
+        <line num="44" type="stmt" count="15"/>
+        <line num="45" type="stmt" count="15"/>
         <line num="46" type="stmt" count="15"/>
-        <line num="47" type="stmt" count="15"/>
-        <line num="48" type="stmt" count="15"/>
-        <line num="49" type="stmt" count="15"/>
-        <line num="55" type="method" name="getDefaultType" visibility="public" complexity="1" crap="1" count="7"/>
-        <line num="58" type="stmt" count="7"/>
-        <line num="64" type="method" name="getDefaultDuration" visibility="public" complexity="1" crap="1" count="12"/>
-        <line num="67" type="stmt" count="12"/>
-        <line num="75" type="method" name="message" visibility="public" complexity="1" crap="1" count="15"/>
-        <line num="77" type="stmt" count="15"/>
-        <line num="79" type="stmt" count="15"/>
-        <line num="85" type="method" name="getMessage" visibility="public" complexity="1" crap="1" count="12"/>
-        <line num="87" type="stmt" count="12"/>
-        <line num="95" type="method" name="title" visibility="public" complexity="1" crap="1" count="1"/>
-        <line num="97" type="stmt" count="1"/>
-        <line num="99" type="stmt" count="1"/>
-        <line num="105" type="method" name="getTitle" visibility="public" complexity="1" crap="1" count="12"/>
-        <line num="107" type="stmt" count="12"/>
-        <line num="113" type="method" name="getType" visibility="public" complexity="1" crap="1" count="12"/>
-        <line num="115" type="stmt" count="12"/>
-        <line num="123" type="method" name="success" visibility="public" complexity="1" crap="1" count="1"/>
-        <line num="125" type="stmt" count="1"/>
-        <line num="133" type="method" name="error" visibility="public" complexity="1" crap="1" count="1"/>
-        <line num="135" type="stmt" count="1"/>
-        <line num="143" type="method" name="info" visibility="public" complexity="1" crap="1" count="1"/>
-        <line num="145" type="stmt" count="1"/>
-        <line num="153" type="method" name="warning" visibility="public" complexity="1" crap="1" count="1"/>
-        <line num="155" type="stmt" count="1"/>
-        <line num="163" type="method" name="duration" visibility="public" complexity="1" crap="1" count="15"/>
-        <line num="165" type="stmt" count="15"/>
-        <line num="167" type="stmt" count="15"/>
-        <line num="173" type="method" name="getDuration" visibility="public" complexity="1" crap="1" count="12"/>
-        <line num="175" type="stmt" count="12"/>
-        <line num="183" type="method" name="representation" visibility="protected" complexity="1" crap="1" count="11"/>
+        <line num="52" type="method" name="getDefaultType" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="55" type="stmt" count="7"/>
+        <line num="61" type="method" name="getDefaultDuration" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="64" type="stmt" count="12"/>
+        <line num="72" type="method" name="message" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="74" type="stmt" count="15"/>
+        <line num="76" type="stmt" count="15"/>
+        <line num="82" type="method" name="getMessage" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="84" type="stmt" count="12"/>
+        <line num="92" type="method" name="title" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="94" type="stmt" count="1"/>
+        <line num="96" type="stmt" count="1"/>
+        <line num="102" type="method" name="getTitle" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="104" type="stmt" count="12"/>
+        <line num="110" type="method" name="getType" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="112" type="stmt" count="12"/>
+        <line num="120" type="method" name="success" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="122" type="stmt" count="1"/>
+        <line num="130" type="method" name="error" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="132" type="stmt" count="1"/>
+        <line num="140" type="method" name="info" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="142" type="stmt" count="1"/>
+        <line num="150" type="method" name="warning" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="152" type="stmt" count="1"/>
+        <line num="160" type="method" name="duration" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="162" type="stmt" count="15"/>
+        <line num="164" type="stmt" count="15"/>
+        <line num="170" type="method" name="getDuration" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="172" type="stmt" count="12"/>
+        <line num="180" type="method" name="representation" visibility="protected" complexity="1" crap="1" count="11"/>
+        <line num="182" type="stmt" count="11"/>
+        <line num="183" type="stmt" count="11"/>
+        <line num="184" type="stmt" count="11"/>
         <line num="185" type="stmt" count="11"/>
         <line num="186" type="stmt" count="11"/>
         <line num="187" type="stmt" count="11"/>
-        <line num="188" type="stmt" count="11"/>
-        <line num="189" type="stmt" count="11"/>
-        <line num="190" type="stmt" count="11"/>
-        <metrics loc="193" ncloc="112" classes="1" methods="15" coveredmethods="15" conditionals="0" coveredconditionals="0" statements="26" coveredstatements="26" elements="41" coveredelements="41"/>
+        <metrics loc="190" ncloc="112" classes="1" methods="15" coveredmethods="15" conditionals="0" coveredconditionals="0" statements="26" coveredstatements="26" elements="41" coveredelements="41"/>
       </file>
     </package>
     <package name="Honed\Flash\Middleware">
@@ -164,6 +164,6 @@
       <line num="26" type="stmt" count="2"/>
       <metrics loc="29" ncloc="22" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="4" coveredelements="4"/>
     </file>
-    <metrics files="7" loc="549" ncloc="355" classes="5" methods="33" coveredmethods="33" conditionals="0" coveredconditionals="0" statements="88" coveredstatements="88" elements="121" coveredelements="121"/>
+    <metrics files="7" loc="546" ncloc="355" classes="5" methods="33" coveredmethods="33" conditionals="0" coveredconditionals="0" statements="88" coveredstatements="88" elements="121" coveredelements="121"/>
   </project>
 </coverage>

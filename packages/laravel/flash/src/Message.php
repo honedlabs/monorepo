@@ -8,9 +8,6 @@ use Honed\Core\Concerns\HasType;
 use Honed\Core\Primitive;
 use Honed\Flash\Contracts\Flashable;
 
-/**
- * @extends \Honed\Core\Primitive<string,mixed>
- */
 class Message extends Primitive implements Flashable
 {
     use HasType {
