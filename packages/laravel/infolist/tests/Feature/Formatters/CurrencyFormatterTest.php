@@ -46,4 +46,4 @@ it('formats values', function () {
         ->format(100)->toBe('$10.00')
         ->cents()->toBe($this->formatter)
         ->format(100)->toBe('$1.00');
-});
+})->skip(fn () => app()->version() < '12.0');
