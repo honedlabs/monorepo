@@ -6,12 +6,12 @@ namespace Honed\Stats;
 
 use Closure;
 use Honed\Core\Concerns\HasAttributes;
+use Honed\Core\Concerns\HasDescription;
 use Honed\Core\Concerns\HasIcon;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
-use Honed\Core\Concerns\HasDescription;
 use Honed\Stats\Concerns\HasGroup;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -24,10 +24,10 @@ class Stat extends Primitive implements NullsAsUndefined
 {
     use HasAttributes;
     use HasDescription;
+    use HasGroup;
     use HasIcon;
     use HasLabel;
     use HasName;
-    use HasGroup;
 
     /**
      * The value of the stat.
