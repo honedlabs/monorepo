@@ -6,7 +6,6 @@ namespace Honed\Infolist\Formatters\Support;
 
 use Carbon\CarbonInterface;
 use Carbon\Exceptions\InvalidFormatException;
-use Honed\Infolist\Contracts\Formatter;
 use Illuminate\Support\Carbon;
 
 /**
@@ -119,7 +118,8 @@ abstract class CarbonFormatter extends LocalisedFormatter
             $value = $value?->shiftTimezone($tz);
         }
 
-        return $value?->locale($this->getLocale())
+        return $value // @phpstan-ignore-line method.nonObject
+            ?->locale($this->getLocale())
             ->translatedFormat($this->getDateFormat());
     }
 

@@ -8,8 +8,8 @@ use BackedEnum;
 use BadMethodCallException;
 use Closure;
 use Honed\Core\Concerns\Allowable;
-use Honed\Core\Concerns\CanHaveAlias;
-use Honed\Core\Concerns\CanHaveExtra;
+use Honed\Core\Concerns\HasAlias;
+use Honed\Core\Concerns\HasExtra;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Core\Concerns\HasRecord;
@@ -29,17 +29,15 @@ use Illuminate\Support\Traits\ForwardsCalls;
  * @template TValue
  * @template TReturn
  *
- * @extends \Honed\Core\Primitive<string, mixed>
- *
  * @implements Formatter<TValue, TReturn>
  */
 class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
 {
     use Allowable;
-    use CanHaveAlias;
-    use CanHaveExtra;
     use ForwardsCalls;
+    use HasAlias;
     use HasClasses;
+    use HasExtra;
 
     /**
      * @use HasFormatter<TValue, TReturn>

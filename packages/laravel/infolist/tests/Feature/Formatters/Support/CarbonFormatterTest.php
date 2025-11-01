@@ -43,9 +43,10 @@ it('formats dates', function () {
 });
 
 it('formats dates with time zone', function () {
+    $date = '2025-01-15 12:00:00';
     expect($this->formatter)
         ->timezone('America/New_York')->toBe($this->formatter)
-        ->format(now())->toBe(now('America/New_York')->format($this->formatter->getDateFormat()));
+        ->format($date)->toBe(Carbon\Carbon::parse($date, 'America/New_York')->format($this->formatter->getDateFormat()));
 });
 
 it('formats dates with since', function () {
