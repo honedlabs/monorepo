@@ -16,7 +16,7 @@ jobs:
       matrix:
         package:
           # - abn
-          - action
+          # - action
           # - billing
           # - bind
           # - chart
@@ -32,7 +32,7 @@ jobs:
           # - lang
           # - layout
           # - lock
-          - memo
+          # - memo
           # - modal
           # - nav
           # - page
@@ -40,7 +40,7 @@ jobs:
           # - refine
           # - registry
           # - stats
-          # - table
+          - table
           # - upload
           # - widget
     steps:
