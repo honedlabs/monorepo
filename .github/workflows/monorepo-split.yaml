@@ -16,32 +16,32 @@ jobs:
       matrix:
         package:
           # - abn
-          # - action
+          - action
           # - billing
           # - bind
-          # - chart
+          - chart
           # - command
-          - core
-          # - crumb
+          # - core
+          - crumb
           # - data
           # - disable
-          # - flash
-          # - form
+          - flash
+          - form
           # - honed
-          # - infolist
+          - infolist
           # - lang
           # - layout
           # - lock
           # - memo
           # - modal
-          # - nav
+          - nav
           # - page
           # - persist
-          # - refine
+          - refine
           # - registry
-          # - stats
+          - stats
           # - table
-          # - upload
+          - upload
           # - widget
     steps:
       - name: Checkout
