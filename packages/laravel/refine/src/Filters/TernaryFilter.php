@@ -73,7 +73,7 @@ class TernaryFilter extends Filter
         $this->defaultToBlank();
 
         $this->query(
-            fn ($query, $value) => match ($value) {
+            fn ($query, $value = null) => match ($value) {
                 'true' => $this->callTrueQuery($query),
                 'false' => $this->callFalseQuery($query),
                 default => $this->callBlankQuery($query),
@@ -205,8 +205,8 @@ class TernaryFilter extends Filter
     {
         $callback = match (true) {
             (bool) ($q = $this->getTrueQuery()) => $q,
-            $this->isNullable() => fn (Builder $query) => $query->whereNot($this->getQualifiedAttribute($query), null),
-            default => fn ($query) => $query->where($this->getQualifiedAttribute($query), true)
+            $this->isNullable() => fn ($query) => $query->whereNot($this->getQualifiedName($query), null),
+            default => fn ($query) => $query->where($this->getQualifiedName($query), true)
         };
 
         return $callback($builder);
@@ -272,8 +272,8 @@ class TernaryFilter extends Filter
     {
         $callback = match (true) {
             (bool) ($q = $this->getFalseQuery()) => $q,
-            $this->isNullable() => fn (Builder $query) => $query->where($this->getQualifiedAttribute($query), null),
-            default => fn ($query) => $query->where($this->getQualifiedAttribute($query), false)
+            $this->isNullable() => fn ($query) => $query->where($this->getQualifiedName($query), null),
+            default => fn ($query) => $query->where($this->getQualifiedName($query), false)
         };
 
         return $callback($builder);

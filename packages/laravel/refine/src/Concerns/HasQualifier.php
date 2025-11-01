@@ -14,7 +14,7 @@ trait HasQualifier
 {
     /**
      * Whether to qualify against the builder.
-     * 
+     *
      * @var bool|string
      */
     protected $qualify = false;
@@ -61,8 +61,9 @@ trait HasQualifier
      * Get the qualified name.
      *
      * @param  Builder<\Illuminate\Database\Eloquent\Model>|null  $builder
+     * @return ($column is string ? string : Expression)
      */
-    public function qualifyColumn(string|Expression $column, ?Builder $builder = null): mixed
+    public function qualifyColumn(string|Expression $column, ?Builder $builder = null): string|Expression
     {
         $qualifier = $this->getQualifier();
 
@@ -70,7 +71,7 @@ trait HasQualifier
             return $column;
         }
 
-        if (! Str::contains($column, '.')) {
+        if (is_string($qualifier) && ! Str::contains($column, '.')) {
             $column = Str::finish($qualifier, '.').$column;
         }
 

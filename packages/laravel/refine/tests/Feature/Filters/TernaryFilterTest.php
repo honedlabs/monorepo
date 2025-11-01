@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Refine\Filters\Filter;
 use Honed\Refine\Filters\TernaryFilter;
 use Honed\Refine\Option;
 use Workbench\App\Models\Product;
@@ -91,7 +90,7 @@ it('has options', function () {
             ->sequence(
                 fn ($option) => $option
                     ->toBeInstanceOf(Option::class)
-                    ->getValue()->toBe('all')
+                    ->getValue()->toBe('blank')
                     ->getLabel()->toBe('All'),
                 fn ($option) => $option
                     ->toBeInstanceOf(Option::class)
@@ -116,7 +115,7 @@ it('has options with custom labels', function () {
         ->sequence(
             fn ($option) => $option
                 ->toBeInstanceOf(Option::class)
-                ->getValue()->toBe('all')
+                ->getValue()->toBe('blank')
                 ->getLabel()->toBe('All sellers'),
             fn ($option) => $option
                 ->toBeInstanceOf(Option::class)
@@ -132,12 +131,12 @@ it('has options with custom labels', function () {
 
 it('applies default blank query', function () {
     $builder = Product::query();
-    
+
     // dd($builder->getQuery()->getConnection()->getConfig('driver'));
     // 'sqlite', 'mariadb', 'mysql', 'pgsql'
 
     expect($this->filter)
-        ->handle($builder, 'all')->toBeTrue();
+        ->handle($builder, 'blank')->toBeTrue();
 
     expect($builder->getQuery()->wheres)
         ->toBeEmpty();
@@ -148,7 +147,7 @@ it('applies custom blank query', function () {
 
     expect($this->filter)
         ->blankQuery(fn ($builder) => $builder->where('best_seller', true))->toBe($this->filter)
-        ->handle($builder, 'all')->toBeTrue();
+        ->handle($builder, 'blank')->toBeTrue();
 
     expect($builder->getQuery()->wheres)
         ->toBeOnlyWhere('best_seller', true);
@@ -234,4 +233,14 @@ it('applies custom false query', function () {
 
     expect($builder->getQuery()->wheres)
         ->toBeOnlyWhere('name', false);
+});
+
+it('applies default value', function () {
+    $builder = Product::query();
+
+    expect($this->filter->default('true'))
+        ->handle($builder, null)->toBeTrue();
+
+    expect($builder->getQuery()->wheres)
+        ->toBeOnlyWhere('best_seller', true);
 });
