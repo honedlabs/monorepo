@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1761964985">
+  <project timestamp="1761964985">
+    <package name="Honed\Upload\Commands">
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Commands/UploadMakeCommand.php">
+        <class name="Honed\Upload\Commands\UploadMakeCommand" namespace="Honed\Upload\Commands">
+          <metrics complexity="6" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="14" elements="19" coveredelements="19"/>
+        </class>
+        <line num="42" type="method" name="getStub" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="44" type="stmt" count="2"/>
+        <line num="53" type="method" name="resolveStubPath" visibility="protected" complexity="2" crap="2" count="2"/>
+        <line num="55" type="stmt" count="2"/>
+        <line num="56" type="stmt" count="2"/>
+        <line num="57" type="stmt" count="2"/>
+        <line num="66" type="method" name="getDefaultNamespace" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="68" type="stmt" count="2"/>
+        <line num="76" type="method" name="getOptions" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="78" type="stmt" count="2"/>
+        <line num="79" type="stmt" count="2"/>
+        <line num="80" type="stmt" count="2"/>
+        <line num="88" type="method" name="promptForMissingArgumentsUsing" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="90" type="stmt" count="1"/>
+        <line num="91" type="stmt" count="1"/>
+        <line num="92" type="stmt" count="1"/>
+        <line num="93" type="stmt" count="1"/>
+        <line num="94" type="stmt" count="1"/>
+        <line num="95" type="stmt" count="1"/>
+        <metrics loc="98" ncloc="56" classes="1" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="14" elements="19" coveredelements="19"/>
+      </file>
+    </package>
+    <package name="Honed\Upload\Concerns">
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Concerns/BridgesSerialization.php">
+        <class name="Honed\Upload\Concerns\BridgesSerialization" namespace="Honed\Upload\Concerns">
+          <metrics complexity="15" methods="9" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="22" coveredstatements="22" elements="31" coveredelements="31"/>
+        </class>
+        <line num="24" type="method" name="multiple" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="26" type="stmt" count="2"/>
+        <line num="28" type="stmt" count="2"/>
+        <line num="36" type="method" name="isMultiple" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="38" type="stmt" count="4"/>
+        <line num="49" type="method" name="getMessage" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="51" type="stmt" count="6"/>
+        <line num="52" type="stmt" count="6"/>
+        <line num="54" type="stmt" count="6"/>
+        <line num="63" type="method" name="buildFileTypeDescription" visibility="protected" complexity="4" crap="4" count="6"/>
+        <line num="66" type="stmt" count="6"/>
+        <line num="67" type="stmt" count="4"/>
+        <line num="68" type="stmt" count="6"/>
+        <line num="78" type="method" name="shouldListExtensions" visibility="protected" complexity="2" crap="2" count="6"/>
+        <line num="80" type="stmt" count="6"/>
+        <line num="89" type="method" name="shouldListMimeTypes" visibility="protected" complexity="2" crap="2" count="4"/>
+        <line num="91" type="stmt" count="4"/>
+        <line num="100" type="method" name="formatExtensions" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="102" type="stmt" count="2"/>
+        <line num="103" type="stmt" count="2"/>
+        <line num="104" type="stmt" count="2"/>
+        <line num="105" type="stmt" count="2"/>
+        <line num="107" type="stmt" count="2"/>
+        <line num="116" type="method" name="formatMimeTypes" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="118" type="stmt" count="1"/>
+        <line num="119" type="stmt" count="1"/>
+        <line num="120" type="stmt" count="1"/>
+        <line num="121" type="stmt" count="1"/>
+        <line num="123" type="stmt" count="1"/>
+        <line num="129" type="method" name="getGenericFileDescription" visibility="protected" complexity="2" crap="2" count="3"/>
+        <line num="131" type="stmt" count="3"/>
+        <metrics loc="134" ncloc="77" classes="1" methods="9" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="22" coveredstatements="22" elements="31" coveredelements="31"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Concerns/HasFile.php">
+        <class name="Honed\Upload\Concerns\HasFile" namespace="Honed\Upload\Concerns">
+          <metrics complexity="14" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="23" coveredstatements="23" elements="31" coveredelements="31"/>
+        </class>
+        <line num="48" type="method" name="name" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="50" type="stmt" count="1"/>
+        <line num="52" type="stmt" count="1"/>
+        <line num="60" type="method" name="getName" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="62" type="stmt" count="15"/>
+        <line num="71" type="method" name="uuid" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="73" type="stmt" count="6"/>
+        <line num="75" type="stmt" count="6"/>
+        <line num="83" type="method" name="isUuid" visibility="public" complexity="2" crap="2" count="16"/>
+        <line num="85" type="stmt" count="16"/>
+        <line num="94" type="method" name="path" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="96" type="stmt" count="5"/>
+        <line num="98" type="stmt" count="5"/>
+        <line num="106" type="method" name="getPathCallback" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="108" type="stmt" count="2"/>
+        <line num="117" type="method" name="setFile" visibility="public" complexity="5" crap="5" count="14"/>
+        <line num="119" type="stmt" count="14"/>
+        <line num="122" type="stmt" count="14"/>
+        <line num="123" type="stmt" count="14"/>
+        <line num="124" type="stmt" count="14"/>
+        <line num="125" type="stmt" count="14"/>
+        <line num="126" type="stmt" count="14"/>
+        <line num="128" type="stmt" count="14"/>
+        <line num="130" type="stmt" count="14"/>
+        <line num="133" type="stmt" count="14"/>
+        <line num="135" type="stmt" count="14"/>
+        <line num="136" type="stmt" count="2"/>
+        <line num="147" type="method" name="getFile" visibility="public" complexity="2" crap="2" count="10"/>
+        <line num="149" type="stmt" count="10"/>
+        <line num="150" type="stmt" count="1"/>
+        <line num="153" type="stmt" count="9"/>
+        <metrics loc="156" ncloc="88" classes="1" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="23" coveredstatements="23" elements="31" coveredelements="31"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Concerns/HasMaxSize.php">
+        <class name="Honed\Upload\Concerns\HasMaxSize" namespace="Honed\Upload\Concerns">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+        </class>
+        <line num="24" type="method" name="maxSize" visibility="public" complexity="1" crap="1" count="9"/>
+        <line num="26" type="stmt" count="9"/>
+        <line num="28" type="stmt" count="9"/>
+        <line num="36" type="method" name="getMaxSize" visibility="public" complexity="1" crap="1" count="10"/>
+        <line num="38" type="stmt" count="10"/>
+        <metrics loc="41" ncloc="25" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Concerns/HasMinSize.php">
+        <class name="Honed\Upload\Concerns\HasMinSize" namespace="Honed\Upload\Concerns">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+        </class>
+        <line num="24" type="method" name="minSize" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="26" type="stmt" count="6"/>
+        <line num="28" type="stmt" count="6"/>
+        <line num="36" type="method" name="getMinSize" visibility="public" complexity="1" crap="1" count="9"/>
+        <line num="38" type="stmt" count="9"/>
+        <metrics loc="41" ncloc="25" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Concerns/HasRules.php">
+        <class name="Honed\Upload\Concerns\HasRules" namespace="Honed\Upload\Concerns">
+          <metrics complexity="6" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="12" coveredelements="12"/>
+        </class>
+        <line num="29" type="method" name="rules" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="32" type="stmt" count="3"/>
+        <line num="34" type="stmt" count="3"/>
+        <line num="36" type="stmt" count="3"/>
+        <line num="45" type="method" name="rule" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="47" type="stmt" count="2"/>
+        <line num="55" type="method" name="getRules" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="57" type="stmt" count="7"/>
+        <line num="66" type="method" name="setRule" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="68" type="stmt" count="13"/>
+        <line num="76" type="method" name="getRule" visibility="public" complexity="1" crap="1" count="14"/>
+        <line num="78" type="stmt" count="14"/>
+        <metrics loc="81" ncloc="42" classes="1" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="12" coveredelements="12"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Concerns/HasValidatedInput.php">
+        <class name="Honed\Upload\Concerns\HasValidatedInput" namespace="Honed\Upload\Concerns">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="4" coveredelements="4"/>
+        </class>
+        <line num="21" type="method" name="setValidated" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="23" type="stmt" count="4"/>
+        <line num="31" type="method" name="getValidated" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="33" type="stmt" count="3"/>
+        <metrics loc="36" ncloc="21" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="4" coveredelements="4"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Concerns/InteractsWithS3.php">
+        <class name="Honed\Upload\Concerns\InteractsWithS3" namespace="Honed\Upload\Concerns">
+          <metrics complexity="14" methods="13" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="29" coveredstatements="28" elements="42" coveredelements="40"/>
+        </class>
+        <line num="46" type="method" name="policy" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="48" type="stmt" count="4"/>
+        <line num="50" type="stmt" count="4"/>
+        <line num="58" type="method" name="publicRead" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="60" type="stmt" count="4"/>
+        <line num="68" type="method" name="private" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="70" type="stmt" count="1"/>
+        <line num="78" type="method" name="getPolicy" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="80" type="stmt" count="7"/>
+        <line num="89" type="method" name="disk" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="91" type="stmt" count="2"/>
+        <line num="93" type="stmt" count="2"/>
+        <line num="101" type="method" name="getDisk" visibility="public" complexity="1" crap="1" count="11"/>
+        <line num="103" type="stmt" count="11"/>
+        <line num="112" type="method" name="bucket" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="114" type="stmt" count="1"/>
+        <line num="116" type="stmt" count="1"/>
+        <line num="126" type="method" name="getBucket" visibility="public" complexity="2" crap="2.06" count="6"/>
+        <line num="129" type="stmt" count="6"/>
+        <line num="131" type="stmt" count="6"/>
+        <line num="132" type="stmt" count="0"/>
+        <line num="136" type="stmt" count="6"/>
+        <line num="145" type="method" name="getFormInputs" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="147" type="stmt" count="4"/>
+        <line num="148" type="stmt" count="4"/>
+        <line num="149" type="stmt" count="4"/>
+        <line num="150" type="stmt" count="4"/>
+        <line num="163" type="method" name="getOptions" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="165" type="stmt" count="4"/>
+        <line num="166" type="stmt" count="4"/>
+        <line num="167" type="stmt" count="4"/>
+        <line num="168" type="stmt" count="4"/>
+        <line num="169" type="stmt" count="4"/>
+        <line num="170" type="stmt" count="4"/>
+        <line num="171" type="stmt" count="4"/>
+        <line num="180" type="method" name="setPresign" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="182" type="stmt" count="4"/>
+        <line num="190" type="method" name="getPresign" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="192" type="stmt" count="4"/>
+        <line num="200" type="method" name="getClient" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="203" type="stmt" count="4"/>
+        <line num="205" type="stmt" count="4"/>
+        <metrics loc="208" ncloc="107" classes="1" methods="13" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="29" coveredstatements="28" elements="42" coveredelements="40"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Concerns/Returnable.php">
+        <class name="Honed\Upload\Concerns\Returnable" namespace="Honed\Upload\Concerns">
+          <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="8" coveredelements="8"/>
+        </class>
+        <line num="24" type="method" name="returning" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="26" type="stmt" count="4"/>
+        <line num="28" type="stmt" count="4"/>
+        <line num="36" type="method" name="getReturn" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="38" type="stmt" count="3"/>
+        <line num="40" type="stmt" count="3"/>
+        <line num="48" type="method" name="fallbackReturn" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="50" type="stmt" count="2"/>
+        <metrics loc="53" ncloc="32" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="8" coveredelements="8"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Concerns/ValidatesUpload.php">
+        <class name="Honed\Upload\Concerns\ValidatesUpload" namespace="Honed\Upload\Concerns">
+          <metrics complexity="21" methods="12" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="74" coveredstatements="74" elements="86" coveredelements="86"/>
+        </class>
+        <line num="56" type="method" name="lifetime" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="60" type="stmt" count="1"/>
+        <line num="68" type="method" name="getLifetime" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="70" type="stmt" count="4"/>
+        <line num="79" type="method" name="formatLifetime" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="81" type="stmt" count="4"/>
+        <line num="90" type="method" name="mimes" visibility="public" complexity="2" crap="2" count="11"/>
+        <line num="93" type="stmt" count="11"/>
+        <line num="95" type="stmt" count="11"/>
+        <line num="96" type="stmt" count="11"/>
+        <line num="97" type="stmt" count="11"/>
+        <line num="98" type="stmt" count="11"/>
+        <line num="100" type="stmt" count="11"/>
+        <line num="102" type="stmt" count="11"/>
+        <line num="111" type="method" name="mimeTypes" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="113" type="stmt" count="1"/>
+        <line num="122" type="method" name="mime" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="124" type="stmt" count="1"/>
+        <line num="133" type="method" name="mimeType" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="135" type="stmt" count="1"/>
+        <line num="143" type="method" name="getMimeTypes" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="145" type="stmt" count="12"/>
+        <line num="154" type="method" name="extensions" visibility="public" complexity="2" crap="2" count="12"/>
+        <line num="157" type="stmt" count="12"/>
+        <line num="159" type="stmt" count="12"/>
+        <line num="160" type="stmt" count="12"/>
+        <line num="161" type="stmt" count="12"/>
+        <line num="162" type="stmt" count="12"/>
+        <line num="164" type="stmt" count="12"/>
+        <line num="166" type="stmt" count="12"/>
+        <line num="175" type="method" name="extension" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="177" type="stmt" count="2"/>
+        <line num="185" type="method" name="getExtensions" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="187" type="stmt" count="13"/>
+        <line num="195" type="method" name="createRules" visibility="public" complexity="8" crap="8" count="8"/>
+        <line num="197" type="stmt" count="8"/>
+        <line num="198" type="stmt" count="8"/>
+        <line num="199" type="stmt" count="8"/>
+        <line num="200" type="stmt" count="8"/>
+        <line num="201" type="stmt" count="8"/>
+        <line num="202" type="stmt" count="8"/>
+        <line num="203" type="stmt" count="8"/>
+        <line num="204" type="stmt" count="8"/>
+        <line num="205" type="stmt" count="8"/>
+        <line num="206" type="stmt" count="8"/>
+        <line num="207" type="stmt" count="7"/>
+        <line num="209" type="stmt" count="7"/>
+        <line num="210" type="stmt" count="1"/>
+        <line num="213" type="stmt" count="6"/>
+        <line num="214" type="stmt" count="1"/>
+        <line num="215" type="stmt" count="1"/>
+        <line num="216" type="stmt" count="1"/>
+        <line num="218" type="stmt" count="8"/>
+        <line num="219" type="stmt" count="8"/>
+        <line num="220" type="stmt" count="8"/>
+        <line num="221" type="stmt" count="8"/>
+        <line num="222" type="stmt" count="8"/>
+        <line num="223" type="stmt" count="8"/>
+        <line num="224" type="stmt" count="7"/>
+        <line num="226" type="stmt" count="7"/>
+        <line num="227" type="stmt" count="1"/>
+        <line num="228" type="stmt" count="1"/>
+        <line num="229" type="stmt" count="1"/>
+        <line num="232" type="stmt" count="7"/>
+        <line num="234" type="stmt" count="7"/>
+        <line num="235" type="stmt" count="1"/>
+        <line num="236" type="stmt" count="1"/>
+        <line num="237" type="stmt" count="1"/>
+        <line num="239" type="stmt" count="8"/>
+        <line num="240" type="stmt" count="8"/>
+        <line num="241" type="stmt" count="8"/>
+        <line num="242" type="stmt" count="8"/>
+        <line num="243" type="stmt" count="8"/>
+        <line num="244" type="stmt" count="8"/>
+        <line num="245" type="stmt" count="7"/>
+        <line num="247" type="stmt" count="7"/>
+        <line num="248" type="stmt" count="1"/>
+        <line num="251" type="stmt" count="6"/>
+        <line num="252" type="stmt" count="6"/>
+        <line num="253" type="stmt" count="5"/>
+        <line num="257" type="stmt" count="1"/>
+        <line num="258" type="stmt" count="8"/>
+        <line num="259" type="stmt" count="8"/>
+        <line num="260" type="stmt" count="8"/>
+        <line num="261" type="stmt" count="8"/>
+        <metrics loc="264" ncloc="177" classes="1" methods="12" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="74" coveredstatements="74" elements="86" coveredelements="86"/>
+      </file>
+    </package>
+    <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Concerns/HasMimeTypes.php">
+      <metrics loc="1" ncloc="1" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Contracts/ShouldBeUuid.php">
+      <metrics loc="11" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Contracts/Uploadable.php">
+      <metrics loc="1" ncloc="1" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <package name="Honed\Upload\Events">
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Events/PresignCreated.php">
+        <class name="Honed\Upload\Events\PresignCreated" namespace="Honed\Upload\Events">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+        </class>
+        <line num="21" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="25" type="stmt" count="4"/>
+        <metrics loc="27" ncloc="19" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Events/PresignFailed.php">
+        <class name="Honed\Upload\Events\PresignFailed" namespace="Honed\Upload\Events">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+        </class>
+        <line num="20" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="23" type="stmt" count="5"/>
+        <metrics loc="25" ncloc="18" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+      </file>
+    </package>
+    <package name="Honed\Upload\Exceptions">
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Exceptions/CouldNotResolveBucketException.php">
+        <class name="Honed\Upload\Exceptions\CouldNotResolveBucketException" namespace="Honed\Upload\Exceptions">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+        </class>
+        <line num="14" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="16" type="stmt" count="2"/>
+        <line num="17" type="stmt" count="2"/>
+        <line num="18" type="stmt" count="2"/>
+        <line num="28" type="method" name="throw" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="30" type="stmt" count="1"/>
+        <metrics loc="33" ncloc="23" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Exceptions/FileNotSetException.php">
+        <class name="Honed\Upload\Exceptions\FileNotSetException" namespace="Honed\Upload\Exceptions">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+        </class>
+        <line num="14" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="16" type="stmt" count="3"/>
+        <line num="17" type="stmt" count="3"/>
+        <line num="18" type="stmt" count="3"/>
+        <line num="28" type="method" name="throw" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="30" type="stmt" count="2"/>
+        <metrics loc="33" ncloc="23" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Exceptions/PresignNotGeneratedException.php">
+        <class name="Honed\Upload\Exceptions\PresignNotGeneratedException" namespace="Honed\Upload\Exceptions">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+        </class>
+        <line num="14" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="16" type="stmt" count="2"/>
+        <line num="17" type="stmt" count="2"/>
+        <line num="18" type="stmt" count="2"/>
+        <line num="28" type="method" name="throw" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="30" type="stmt" count="1"/>
+        <metrics loc="33" ncloc="23" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+      </file>
+    </package>
+    <package name="Honed\Upload">
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/File.php">
+        <class name="Honed\Upload\File" namespace="Honed\Upload">
+          <metrics complexity="15" methods="15" coveredmethods="15" conditionals="0" coveredconditionals="0" statements="28" coveredstatements="28" elements="43" coveredelements="43"/>
+        </class>
+        <line num="59" type="method" name="from" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="61" type="stmt" count="15"/>
+        <line num="62" type="stmt" count="15"/>
+        <line num="63" type="stmt" count="15"/>
+        <line num="64" type="stmt" count="15"/>
+        <line num="65" type="stmt" count="15"/>
+        <line num="66" type="stmt" count="15"/>
+        <line num="67" type="stmt" count="15"/>
+        <line num="76" type="method" name="name" visibility="public" complexity="1" crap="1" count="22"/>
+        <line num="78" type="stmt" count="22"/>
+        <line num="80" type="stmt" count="22"/>
+        <line num="88" type="method" name="getName" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="90" type="stmt" count="15"/>
+        <line num="99" type="method" name="extension" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="101" type="stmt" count="15"/>
+        <line num="103" type="stmt" count="15"/>
+        <line num="111" type="method" name="getExtension" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="113" type="stmt" count="2"/>
+        <line num="121" type="method" name="getFilename" visibility="public" complexity="1" crap="1" count="22"/>
+        <line num="123" type="stmt" count="22"/>
+        <line num="132" type="method" name="mimeType" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="134" type="stmt" count="15"/>
+        <line num="136" type="stmt" count="15"/>
+        <line num="144" type="method" name="getMimeType" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="146" type="stmt" count="5"/>
+        <line num="155" type="method" name="size" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="157" type="stmt" count="15"/>
+        <line num="159" type="stmt" count="15"/>
+        <line num="167" type="method" name="getSize" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="169" type="stmt" count="5"/>
+        <line num="178" type="method" name="meta" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="180" type="stmt" count="15"/>
+        <line num="182" type="stmt" count="15"/>
+        <line num="190" type="method" name="getMeta" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="192" type="stmt" count="2"/>
+        <line num="200" type="method" name="setPath" visibility="public" complexity="1" crap="1" count="22"/>
+        <line num="202" type="stmt" count="22"/>
+        <line num="204" type="stmt" count="22"/>
+        <line num="213" type="method" name="path" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="215" type="stmt" count="3"/>
+        <line num="217" type="stmt" count="3"/>
+        <line num="225" type="method" name="getPath" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="227" type="stmt" count="5"/>
+        <metrics loc="230" ncloc="118" classes="1" methods="15" coveredmethods="15" conditionals="0" coveredconditionals="0" statements="28" coveredstatements="28" elements="43" coveredelements="43"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Upload.php">
+        <class name="Honed\Upload\Upload" namespace="Honed\Upload">
+          <metrics complexity="24" methods="12" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="59" coveredstatements="55" elements="71" coveredelements="64"/>
+        </class>
+        <line num="57" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="58"/>
+        <line num="59" type="stmt" count="58"/>
+        <line num="61" type="stmt" count="58"/>
+        <line num="67" type="method" name="make" visibility="public" complexity="1" crap="1" count="58"/>
+        <line num="69" type="stmt" count="58"/>
+        <line num="75" type="method" name="into" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="77" type="stmt" count="1"/>
+        <line num="85" type="method" name="getAttributes" visibility="public" complexity="1" crap="1" count="7"/>
+        <line num="87" type="stmt" count="7"/>
+        <line num="88" type="stmt" count="7"/>
+        <line num="89" type="stmt" count="7"/>
+        <line num="90" type="stmt" count="7"/>
+        <line num="91" type="stmt" count="7"/>
+        <line num="92" type="stmt" count="7"/>
+        <line num="100" type="method" name="message" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="102" type="stmt" count="1"/>
+        <line num="103" type="stmt" count="1"/>
+        <line num="104" type="stmt" count="1"/>
+        <line num="105" type="stmt" count="1"/>
+        <line num="106" type="stmt" count="1"/>
+        <line num="117" type="method" name="create" visibility="public" complexity="2" crap="2.00" count="2"/>
+        <line num="119" type="stmt" count="2"/>
+        <line num="121" type="stmt" count="2"/>
+        <line num="123" type="stmt" count="2"/>
+        <line num="125" type="stmt" count="2"/>
+        <line num="126" type="stmt" count="0"/>
+        <line num="129" type="stmt" count="2"/>
+        <line num="130" type="stmt" count="2"/>
+        <line num="131" type="stmt" count="2"/>
+        <line num="132" type="stmt" count="2"/>
+        <line num="133" type="stmt" count="2"/>
+        <line num="142" type="method" name="toResponse" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="144" type="stmt" count="2"/>
+        <line num="146" type="stmt" count="2"/>
+        <line num="152" type="method" name="resolve" visibility="protected" complexity="1" crap="2" count="0"/>
+        <line num="154" type="stmt" count="0"/>
+        <line num="162" type="method" name="representation" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="164" type="stmt" count="1"/>
+        <line num="166" type="stmt" count="1"/>
+        <line num="167" type="stmt" count="1"/>
+        <line num="168" type="stmt" count="1"/>
+        <line num="169" type="stmt" count="1"/>
+        <line num="170" type="stmt" count="1"/>
+        <line num="171" type="stmt" count="1"/>
+        <line num="172" type="stmt" count="1"/>
+        <line num="180" type="method" name="pipes" visibility="protected" complexity="1" crap="1" count="2"/>
+        <line num="183" type="stmt" count="2"/>
+        <line num="184" type="stmt" count="2"/>
+        <line num="185" type="stmt" count="2"/>
+        <line num="186" type="stmt" count="2"/>
+        <line num="187" type="stmt" count="2"/>
+        <line num="188" type="stmt" count="2"/>
+        <line num="189" type="stmt" count="2"/>
+        <line num="190" type="stmt" count="2"/>
+        <line num="198" type="method" name="resolveDefaultClosureDependencyForEvaluationByName" visibility="protected" complexity="8" crap="8.70" count="11"/>
+        <line num="200" type="stmt" count="11"/>
+        <line num="201" type="stmt" count="0"/>
+        <line num="202" type="stmt" count="5"/>
+        <line num="203" type="stmt" count="1"/>
+        <line num="204" type="stmt" count="2"/>
+        <line num="205" type="stmt" count="0"/>
+        <line num="206" type="stmt" count="1"/>
+        <line num="207" type="stmt" count="11"/>
+        <line num="208" type="stmt" count="11"/>
+        <line num="217" type="method" name="resolveDefaultClosureDependencyForEvaluationByType" visibility="protected" complexity="5" crap="5" count="3"/>
+        <line num="219" type="stmt" count="3"/>
+        <line num="220" type="stmt" count="1"/>
+        <line num="221" type="stmt" count="1"/>
+        <line num="222" type="stmt" count="1"/>
+        <line num="223" type="stmt" count="3"/>
+        <line num="224" type="stmt" count="3"/>
+        <metrics loc="227" ncloc="161" classes="1" methods="12" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="59" coveredstatements="55" elements="71" coveredelements="64"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/UploadRule.php">
+        <class name="Honed\Upload\UploadRule" namespace="Honed\Upload">
+          <metrics complexity="4" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="9" coveredelements="9"/>
+        </class>
+        <line num="23" type="method" name="make" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="25" type="stmt" count="5"/>
+        <line num="35" type="method" name="isMatching" visibility="public" complexity="3" crap="3" count="2"/>
+        <line num="37" type="stmt" count="2"/>
+        <line num="38" type="stmt" count="2"/>
+        <line num="41" type="stmt" count="1"/>
+        <line num="42" type="stmt" count="1"/>
+        <line num="43" type="stmt" count="1"/>
+        <line num="44" type="stmt" count="1"/>
+        <metrics loc="47" ncloc="35" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="9" coveredelements="9"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/UploadServiceProvider.php">
+        <class name="Honed\Upload\UploadServiceProvider" namespace="Honed\Upload">
+          <metrics complexity="3" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="14" coveredelements="14"/>
+        </class>
+        <line num="17" type="method" name="boot" visibility="public" complexity="2" crap="2" count="82"/>
+        <line num="19" type="stmt" count="82"/>
+        <line num="21" type="stmt" count="82"/>
+        <line num="22" type="stmt" count="82"/>
+        <line num="24" type="stmt" count="82"/>
+        <line num="25" type="stmt" count="82"/>
+        <line num="26" type="stmt" count="82"/>
+        <line num="35" type="method" name="offerPublishing" visibility="public" complexity="1" crap="1" count="82"/>
+        <line num="37" type="stmt" count="82"/>
+        <line num="38" type="stmt" count="82"/>
+        <line num="39" type="stmt" count="82"/>
+        <line num="41" type="stmt" count="82"/>
+        <line num="42" type="stmt" count="82"/>
+        <line num="43" type="stmt" count="82"/>
+        <metrics loc="46" ncloc="36" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="12" elements="14" coveredelements="14"/>
+      </file>
+    </package>
+    <package name="Honed\Upload\Pipes">
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Pipes/CreateRules.php">
+        <class name="Honed\Upload\Pipes\CreateRules" namespace="Honed\Upload\Pipes">
+          <metrics complexity="3" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="16" elements="18" coveredelements="18"/>
+        </class>
+        <line num="21" type="method" name="run" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="23" type="stmt" count="5"/>
+        <line num="25" type="stmt" count="5"/>
+        <line num="27" type="stmt" count="5"/>
+        <line num="29" type="stmt" count="5"/>
+        <line num="31" type="stmt" count="5"/>
+        <line num="32" type="stmt" count="5"/>
+        <line num="33" type="stmt" count="5"/>
+        <line num="34" type="stmt" count="5"/>
+        <line num="35" type="stmt" count="5"/>
+        <line num="36" type="stmt" count="5"/>
+        <line num="45" type="method" name="separate" visibility="public" complexity="2" crap="2" count="5"/>
+        <line num="47" type="stmt" count="5"/>
+        <line num="48" type="stmt" count="1"/>
+        <line num="51" type="stmt" count="4"/>
+        <line num="52" type="stmt" count="4"/>
+        <line num="53" type="stmt" count="4"/>
+        <line num="54" type="stmt" count="4"/>
+        <metrics loc="57" ncloc="43" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="16" elements="18" coveredelements="18"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Pipes/Presign.php">
+        <class name="Honed\Upload\Pipes\Presign" namespace="Honed\Upload\Pipes">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="15" elements="16" coveredelements="16"/>
+        </class>
+        <line num="21" type="method" name="run" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="23" type="stmt" count="3"/>
+        <line num="24" type="stmt" count="3"/>
+        <line num="26" type="stmt" count="3"/>
+        <line num="28" type="stmt" count="3"/>
+        <line num="29" type="stmt" count="3"/>
+        <line num="30" type="stmt" count="3"/>
+        <line num="31" type="stmt" count="3"/>
+        <line num="32" type="stmt" count="3"/>
+        <line num="33" type="stmt" count="3"/>
+        <line num="34" type="stmt" count="3"/>
+        <line num="35" type="stmt" count="3"/>
+        <line num="36" type="stmt" count="3"/>
+        <line num="38" type="stmt" count="3"/>
+        <line num="39" type="stmt" count="3"/>
+        <line num="40" type="stmt" count="3"/>
+        <metrics loc="43" ncloc="35" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="15" elements="16" coveredelements="16"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Pipes/SetFile.php">
+        <class name="Honed\Upload\Pipes\SetFile" namespace="Honed\Upload\Pipes">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+        </class>
+        <line num="20" type="method" name="run" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="22" type="stmt" count="3"/>
+        <metrics loc="25" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+      </file>
+      <file name="/home/josh/code/honed/honed/packages/laravel/upload/src/Pipes/Validate.php">
+        <class name="Honed\Upload\Pipes\Validate" namespace="Honed\Upload\Pipes">
+          <metrics complexity="2" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="13" elements="14" coveredelements="14"/>
+        </class>
+        <line num="24" type="method" name="run" visibility="public" complexity="2" crap="2" count="7"/>
+        <line num="26" type="stmt" count="7"/>
+        <line num="29" type="stmt" count="7"/>
+        <line num="30" type="stmt" count="7"/>
+        <line num="33" type="stmt" count="7"/>
+        <line num="34" type="stmt" count="7"/>
+        <line num="35" type="stmt" count="7"/>
+        <line num="36" type="stmt" count="7"/>
+        <line num="37" type="stmt" count="7"/>
+        <line num="38" type="stmt" count="7"/>
+        <line num="40" type="stmt" count="3"/>
+        <line num="41" type="stmt" count="4"/>
+        <line num="42" type="stmt" count="4"/>
+        <line num="44" type="stmt" count="4"/>
+        <metrics loc="48" ncloc="37" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="13" elements="14" coveredelements="14"/>
+      </file>
+    </package>
+    <metrics files="26" loc="1999" ncloc="1250" classes="23" methods="105" coveredmethods="101" conditionals="0" coveredconditionals="0" statements="347" coveredstatements="342" elements="452" coveredelements="443"/>
+  </project>
+</coverage>
