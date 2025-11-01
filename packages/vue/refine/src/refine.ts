@@ -1,4 +1,4 @@
-import { computed, reactive } from "vue";
+import { computed } from "vue";
 import { router } from "@inertiajs/vue3";
 import { useDebounceFn } from "@vueuse/core";
 import type { VisitOptions } from "@inertiajs/core";
@@ -23,6 +23,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	props: T,
 	key: keyof T,
 	defaults: VisitOptions = {},
+	resets: Record<string, undefined | null | string | number | boolean> = {},
 ) {
 	if (!props?.[key]) {
 		throw new Error("The refine must be provided with valid props and key.");
@@ -251,6 +252,7 @@ export function useRefine<T extends Record<string, Refine>>(
 			data: {
 				[refiner.name]: pipe(value),
 				...parameters,
+				...resets,
 			},
 		});
 	}
@@ -305,6 +307,7 @@ export function useRefine<T extends Record<string, Refine>>(
 			data: {
 				[refinements.value._search_key as string]: value,
 				...parameters,
+				...resets,
 			},
 		});
 	}
@@ -333,6 +336,7 @@ export function useRefine<T extends Record<string, Refine>>(
 			data: {
 				[refinements.value._match_key as string]: delimitArray(matches),
 				...parameters,
+				...resets,
 			},
 		});
 	}

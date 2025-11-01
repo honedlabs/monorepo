@@ -43,7 +43,9 @@ export function useTable<
 
 	const select = useBulk<Identifier>();
 
-	const refine = useRefine<T>(props, key, visitOptions);
+	const refine = useRefine<T>(props, key, visitOptions, {
+		[table.value._page_key as string]: undefined,
+	});
 
 	const meta = computed(() => table.value.meta);
 
@@ -307,6 +309,8 @@ export function useTable<
 				options.onSuccess?.(page);
 				defaults.onSuccess?.(page);
 
+				console.log("onSuccess");
+
 				if (!operation.keep) select.deselectAll();
 			},
 		});
@@ -488,6 +492,7 @@ export function useTable<
 		bindPage,
 		/** Bind select all records to the checkbox */
 		bindAll: select.bindAll,
+		/** The refine instance */
 		...refine,
 	});
 }

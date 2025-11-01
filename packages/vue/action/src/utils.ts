@@ -16,6 +16,8 @@ export function execute<T extends Operations>(
 		return false;
 	}
 
+	console.log(options);
+
 	if (operation.type === "inertia") {
 		if (operation.method === "delete") router.delete(operation.href, options);
 		else router[operation.method](operation.href, data, options);
