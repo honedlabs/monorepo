@@ -8,7 +8,7 @@ use Honed\Action\Contracts\Action;
 use Workbench\App\Models\Product;
 
 beforeEach(function () {
-    $this->class = new class implements Action
+    $this->class = new class() implements Action
     {
         use ForwardsActions;
 
@@ -26,7 +26,7 @@ beforeEach(function () {
 
 it('forwards action', function () {
     $product = Product::factory()->create();
-    
+
     $input = [
         'name' => 'Test',
     ];
