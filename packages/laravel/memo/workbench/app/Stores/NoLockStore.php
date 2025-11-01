@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Stores;
 
-use Honed\Memo\Concerns\Memoizable;
-use Illuminate\Cache\Repository;
 use Illuminate\Contracts\Cache\Store;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 
 class NoLockStore implements Store

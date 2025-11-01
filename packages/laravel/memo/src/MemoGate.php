@@ -23,7 +23,7 @@ class MemoGate extends AccessGate
     public function raw($ability, $arguments = [])
     {
         $hash = $this->getHash($ability, $arguments);
-        
+
         if ($this->isNotMemoized($hash)) {
             $result = $this->memoize($hash, parent::raw($ability, $arguments));
 

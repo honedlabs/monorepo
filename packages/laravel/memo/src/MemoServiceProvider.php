@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace Honed\Memo;
 
 use Honed\Memo\Contracts\Memoize;
-use Illuminate\Cache\CacheManager;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
-use Illuminate\Contracts\Cache\Factory;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;

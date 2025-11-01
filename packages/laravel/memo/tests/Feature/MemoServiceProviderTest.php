@@ -6,10 +6,10 @@ namespace Honed\Memo\Tests;
 
 use Honed\Memo\Contracts\Memoize;
 use Honed\Memo\Facades\Memo;
-use Illuminate\Cache\ArrayStore;
-use Illuminate\Cache\Repository;
 use Honed\Memo\MemoCacheDecorator;
 use Honed\Memo\MemoManager;
+use Illuminate\Cache\ArrayStore;
+use Illuminate\Cache\Repository;
 
 beforeEach(function () {});
 

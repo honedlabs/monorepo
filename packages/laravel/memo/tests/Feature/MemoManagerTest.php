@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-use Honed\Memo\Facades\Memo;
-use Honed\Memo\MemoManager;
-
 beforeEach(function () {
     $this->instance = app('memo');
 });

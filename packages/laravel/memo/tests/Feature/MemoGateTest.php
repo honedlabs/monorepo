@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 use App\Models\User;
 use Honed\Memo\MemoGate;
-use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Gate;
 
 beforeEach(function () {
     $this->actingAs(User::factory()->create());
