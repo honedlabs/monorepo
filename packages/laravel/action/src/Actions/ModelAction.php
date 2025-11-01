@@ -20,7 +20,7 @@ abstract class ModelAction extends DatabaseAction
 
     /**
      * Act on the model.
-     * 
+     *
      * @param  TModel  $model
      * @param  array<string, mixed>  $attributes
      * @return TModel

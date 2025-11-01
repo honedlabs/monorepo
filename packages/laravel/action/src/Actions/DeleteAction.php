@@ -36,7 +36,7 @@ class DeleteAction extends DatabaseAction
     protected function execute($model): void
     {
         $this->before($model);
-        
+
         match (true) {
             $model instanceof Collection => $model->each->delete(),
             default => $model->delete()

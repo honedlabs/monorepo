@@ -29,10 +29,10 @@
     <logging>
         <junit outputFile="build/report.junit.xml"/>
     </logging>
-    <coverage>
-        <include>
-            <directory suffix=".php">./src</directory>
-        </include>
+    <coverage includeUncoveredFiles="true">
+        <report>
+            <clover outputFile="clover.xml" />
+        </report>
     </coverage>
     <source>
         <include>

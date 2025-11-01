@@ -48,7 +48,7 @@ class UpdatePivotAction extends DatabaseAction
 
         $attributes = $this->attributes($model, $pivot, $input);
 
-        $pivot = $this->act($model, $pivot, $input);
+        $pivot = $this->act($model, $pivot, $attributes);
 
         $this->after($model, $pivot, $input, $attributes);
 
@@ -85,12 +85,12 @@ class UpdatePivotAction extends DatabaseAction
      *
      * @param  TModel  $model
      * @param  TPivot  $pivot
-     * @param  TInput  $input
+     * @param  array<string, mixed>  $attributes
      * @return TPivot
      */
-    public function act(Model $model, Model $pivot, $input): Model
+    public function act(Model $model, Model $pivot, array $attributes): Model
     {
-        $pivot->update($input);
+        $pivot->update($attributes);
 
         return $pivot;
     }
