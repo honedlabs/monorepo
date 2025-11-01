@@ -9,6 +9,7 @@
 
 <p>
     <a href="https://github.com/honedlabs/modal/actions"><img src="https://github.com/honedlabs/modal/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://github.com/honedlabs/modal"><img src="https://raw.githubusercontent.com/honedlabs/modal/main/badge-coverage.svg" alt="Code Coverage"></a>
     <a href="https://packagist.org/packages/honed/modal"><img src="https://img.shields.io/packagist/dt/honed/modal" alt="Total Downloads"></a>
     <a href="https://packagist.org/packages/honed/modal"><img src="https://img.shields.io/packagist/v/honed/modal" alt="Latest Stable Version"></a>
 </p>
