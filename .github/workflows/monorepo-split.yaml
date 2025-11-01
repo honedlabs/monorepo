@@ -16,11 +16,11 @@ jobs:
       matrix:
         package:
           # - abn
-          - action
+          # - action
           # - billing
           # - bind
           # - chart
-          - command
+          # - command
           # - core
           # - crumb
           # - data
@@ -32,15 +32,15 @@ jobs:
           # - lang
           # - layout
           # - lock
-          # - memo
+          - memo
           # - modal
           # - nav
           # - page
-          - persist
+          # - persist
           # - refine
           # - registry
           # - stats
-          # - table
+          - table
           # - upload
           # - widget
     steps:
