@@ -1,5 +1,3 @@
-> **Caution:** This package is currently under development and not ready for production use. Tag v1.0.0 will indicate a stable release.
-
 <a href="https://honed.dev/lock">
     <picture>
         <source media="(prefers-color-scheme: dark)" srcset="art/header-dark.png">
@@ -11,6 +9,7 @@
 
 <p>
     <a href="https://github.com/honedlabs/lock/actions"><img src="https://github.com/honedlabs/lock/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://github.com/honedlabs/lock"><img src="https://raw.githubusercontent.com/honedlabs/lock/main/badge-coverage.svg" alt="Code Coverage"></a>
     <a href="https://packagist.org/packages/honed/lock"><img src="https://img.shields.io/packagist/dt/honed/lock" alt="Total Downloads"></a>
     <a href="https://packagist.org/packages/honed/lock"><img src="https://img.shields.io/packagist/v/honed/lock" alt="Latest Stable Version"></a>
 </p>
