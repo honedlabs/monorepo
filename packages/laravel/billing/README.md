@@ -9,6 +9,7 @@
 
 <p>
     <a href="https://github.com/honedlabs/billing/actions"><img src="https://github.com/honedlabs/billing/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://github.com/honedlabs/billing"><img src="https://raw.githubusercontent.com/honedlabs/billing/main/badge-coverage.svg" alt="Code Coverage"></a>
     <a href="https://packagist.org/packages/honed/billing"><img src="https://img.shields.io/packagist/dt/honed/billing" alt="Total Downloads"></a>
     <a href="https://packagist.org/packages/honed/billing"><img src="https://img.shields.io/packagist/v/honed/billing" alt="Latest Stable Version"></a>
 </p>

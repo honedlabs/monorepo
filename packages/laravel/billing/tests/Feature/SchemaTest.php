@@ -1,3 +1,5 @@
 <?php
 
-it('')
+declare(strict_types=1);
+
+// it('')

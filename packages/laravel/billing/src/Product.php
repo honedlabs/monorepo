@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Billing;
 
-use JsonSerializable;
+use Honed\Billing\Drivers\Decorator;
+use Honed\Billing\Facades\Billing;
+use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Laravel\Cashier\Cashier;
-use Honed\Billing\Facades\Billing;
-use Honed\Billing\Drivers\Decorator;
 use Illuminate\Support\Traits\Macroable;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Contracts\Routing\UrlRoutable;
+use JsonSerializable;
+use Laravel\Cashier\Cashier;
 
 /**
  * @implements \Illuminate\Contracts\Support\Arrayable<string, mixed>
@@ -31,7 +31,7 @@ class Product implements Arrayable, JsonSerializable, UrlRoutable
     /**
      * The name of the product.
      *
-     * @var string
+     * @var ?string
      */
     protected $name;
 
@@ -372,8 +372,6 @@ class Product implements Arrayable, JsonSerializable, UrlRoutable
 
     /**
      * Guess the name of the product using the identifier.
-     * 
-     * @return string
      */
     protected function guessName(): string
     {

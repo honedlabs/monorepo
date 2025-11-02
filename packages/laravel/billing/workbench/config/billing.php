@@ -73,7 +73,7 @@ return [
             'name' => 'Monthly',
             'group' => 'default',
             'price' => 1000,
-            'price_id' => 'price_monthly'
+            'price_id' => 'price_monthly',
         ],
         [
             'id' => 'yearly',
@@ -89,6 +89,6 @@ return [
             'price' => 100000,
             'type' => Payment::ONCE,
             'price_id' => 'price_lifetime',
-        ]
+        ],
     ],
 ];
