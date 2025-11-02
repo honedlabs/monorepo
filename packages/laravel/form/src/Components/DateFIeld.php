@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
+use Honed\Form\Concerns\HasDateFormat;
+
 class DateField extends Field
 {
+    use HasDateFormat;
+
     /**
      * The identifier to use for evaluation.
      *

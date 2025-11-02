@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
+use Closure;
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
 use Honed\Form\Concerns\CanBeAutofocused;
 use Honed\Form\Concerns\CanBeDisabled;
 use Honed\Form\Concerns\CanBeOptional;
 use Honed\Form\Concerns\CanBeRequired;
-use Honed\Form\Concerns\HasDefaultValue;
 use Honed\Form\Concerns\HasHint;
 use Honed\Form\Contracts\Defaultable;
+use Illuminate\Support\Arr;
 
 abstract class Field extends Component implements Defaultable
 {
@@ -20,10 +21,37 @@ abstract class Field extends Component implements Defaultable
     use CanBeDisabled;
     use CanBeOptional;
     use CanBeRequired;
-    use HasDefaultValue;
     use HasHint;
     use HasLabel;
     use HasName;
+
+    /**
+     * The identifier to use for evaluation.
+     *
+     * @var string
+     */
+    protected $evaluationIdentifier = 'field';
+
+    /**
+     * The value of the component.
+     *
+     * @var mixed
+     */
+    protected $value;
+
+    /**
+     * How the value of the component is resolved.
+     *
+     * @var non-empty-string|Closure|null
+     */
+    protected $using;
+
+    /**
+     * The default value.
+     *
+     * @var mixed
+     */
+    protected $defaultValue;
 
     /**
      * Create a new field instance.
@@ -33,6 +61,66 @@ abstract class Field extends Component implements Defaultable
         return resolve(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
+    }
+
+    /**
+     * Set how to retrieve the value of the component from a record.
+     *
+     * @param  non-empty-string|Closure  $value
+     * @return $this
+     */
+    public function using(string|Closure $value): static
+    {
+        $this->using = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set the default value.
+     *
+     * @return $this
+     */
+    public function defaultValue(mixed $value): static
+    {
+        $this->defaultValue = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the placeholder for when the given value is null.
+     */
+    public function empty(): mixed
+    {
+        return null;
+    }
+
+    /**
+     * Get the default value.
+     */
+    public function getDefaultValue(): mixed
+    {
+        return $this->defaultValue ?? $this->empty();
+    }
+
+    /**
+     * Get the value of the component.
+     */
+    public function getValue(): mixed
+    {
+        $record = $this->getRecord();
+
+        if ($record === null) {
+            return $this->getDefaultValue();
+        }
+
+        $getter = $this->using ?? $this->getName();
+
+        return $this->value = match (true) {
+            is_string($getter) => Arr::get($record, $getter),
+            is_callable($getter) => $this->evaluate($getter),
+        };
     }
 
     /**
@@ -46,7 +134,7 @@ abstract class Field extends Component implements Defaultable
             'name' => $this->getName(),
             'label' => $this->getLabel(),
             'hint' => $this->getHint(),
-            'defaultValue' => $this->getDefaultValue(),
+            'value' => $this->getValue(),
             'required' => $this->isRequired() ?: null,
             'disabled' => $this->isDisabled() ?: null,
             'optional' => $this->isOptional() ?: null,

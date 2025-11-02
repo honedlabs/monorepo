@@ -88,7 +88,7 @@ abstract class Component extends Primitive implements NullsAsUndefined
     {
         return [
             'component' => $this->getComponent(),
-            'attributes' => null,
+            'attributes' => $this->getAttributes() ?: null,
         ];
     }
 

@@ -30,7 +30,7 @@ trait CanBeDisabled
      *
      * @return $this
      */
-    public function notDisabled(bool $value = true): static
+    public function dontDisable(bool $value = true): static
     {
         return $this->disabled(! $value);
     }

@@ -11,8 +11,11 @@ beforeEach(function () {
 it('can be disabled', function () {
     expect($this->component)
         ->isDisabled()->toBeFalse()
+        ->isNotDisabled()->toBeTrue()
         ->disabled()->toBe($this->component)
         ->isDisabled()->toBeTrue()
-        ->notDisabled()->toBe($this->component)
+        ->isNotDisabled()->toBeFalse()
+        ->dontDisable()->toBe($this->component)
+        ->isDisabled()->toBeFalse()
         ->isNotDisabled()->toBeTrue();
 });

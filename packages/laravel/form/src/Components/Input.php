@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
-class Input extends Field
+class Input extends TextField
 {
     /**
      * The identifier to use for evaluation.
@@ -19,13 +19,5 @@ class Input extends Field
     public function component(): string
     {
         return config()->string('honed-form.components.input', 'Input.vue');
-    }
-
-    /**
-     * Get the placeholder for when the given value is null.
-     */
-    public function empty(): mixed
-    {
-        return '';
     }
 }

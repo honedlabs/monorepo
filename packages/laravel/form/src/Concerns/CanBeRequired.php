@@ -30,7 +30,7 @@ trait CanBeRequired
      *
      * @return $this
      */
-    public function notRequired(bool $value = true): static
+    public function dontRequire(bool $value = true): static
     {
         return $this->required(! $value);
     }

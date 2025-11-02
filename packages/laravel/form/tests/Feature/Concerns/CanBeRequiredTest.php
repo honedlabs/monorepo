@@ -11,8 +11,11 @@ beforeEach(function () {
 it('can be required', function () {
     expect($this->component)
         ->isRequired()->toBeFalse()
+        ->isNotRequired()->toBeTrue()
         ->required()->toBe($this->component)
         ->isRequired()->toBeTrue()
-        ->notRequired()->toBe($this->component)
+        ->isNotRequired()->toBeFalse()
+        ->dontRequire()->toBe($this->component)
+        ->isRequired()->toBeFalse()
         ->isNotRequired()->toBeTrue();
 });

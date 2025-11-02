@@ -11,7 +11,7 @@ use ReflectionClass;
 /**
  * @template TForm of \Honed\Form\Form = \Honed\Form\Form
  *
- * @property-read string $formClass The form class for the model.
+ * @property-read class-string<Form> $formClass The form class for the model.
  */
 trait HasForm
 {
