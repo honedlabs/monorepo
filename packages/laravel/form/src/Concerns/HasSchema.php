@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Form\Concerns;
 
-use Honed\Form\Abstracts\Component;
+use Honed\Form\Components\Component;
 use Honed\Form\Form;
 
 trait HasSchema
@@ -12,14 +12,14 @@ trait HasSchema
     /**
      * The schema of the component.
      *
-     * @var array<int, Component>
+     * @var list<Component>
      */
     protected $schema = [];
 
     /**
      * Set the schema of the component.
      *
-     * @param  array<int, Component>  $schema
+     * @param  list<Component>  $schema
      * @return $this
      */
     public function schema(array $schema = []): static
@@ -32,7 +32,7 @@ trait HasSchema
     /**
      * Get the schema of the component.
      *
-     * @return array<int, Component>
+     * @return list<Component>
      */
     public function getSchema(): array
     {
@@ -42,12 +42,12 @@ trait HasSchema
     /**
      * Resolve the schema of the component.
      *
-     * @return array<int, array<string, mixed>>
+     * @return list<array<string, mixed>>
      */
     public function resolveSchema(?Form $form = null): array
     {
         return array_map(
-            static fn (Component $component) => $component->toArray(),
+            static fn (Component $component) => $component->form($form)->toArray(),
             $this->getSchema()
         );
     }

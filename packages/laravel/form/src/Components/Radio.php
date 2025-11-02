@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
-use Honed\Form\Abstracts\Field;
-
 class Radio extends Field
 {
     /**
@@ -20,7 +18,6 @@ class Radio extends Field
      */
     public function component(): string
     {
-        /** @var string */
-        return config('form.components.radio', 'Radio.vue');
+        return config()->string('honed-form.components.radio', 'Radio.vue');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use Honed\Form\Abstracts\Component;
+use Honed\Form\Components\Component;
 
 class {{ class }} extends Component
 {
@@ -11,6 +11,16 @@ class {{ class }} extends Component
      */
     public function component(): string
     {
-        //
+        return '';
+    }
+
+    /**
+     * Define the form.
+     *
+     * @return $this
+     */
+    protected function definition(): static
+    {
+        return $this;
     }
 }

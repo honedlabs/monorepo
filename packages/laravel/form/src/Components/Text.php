@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
-use Honed\Form\Abstracts\Component;
 use Honed\Form\Concerns\HasText;
 
 class Text extends Component
@@ -31,8 +30,7 @@ class Text extends Component
      */
     public function component(): string
     {
-        /** @var string */
-        return config('form.components.text', 'Text.vue');
+        return config()->string('honed-form.components.text', 'Text.vue');
     }
 
     /**

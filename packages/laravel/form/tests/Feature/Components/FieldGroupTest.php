@@ -7,7 +7,7 @@ namespace Tests\Feature\Components;
 use Honed\Form\Components\FieldGroup;
 
 beforeEach(function () {
-    $this->file = config('form.components.fieldgroup');
+    $this->file = config('honed-form.components.fieldgroup');
 
     $this->component = FieldGroup::make([]);
 });

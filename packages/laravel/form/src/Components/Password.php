@@ -18,7 +18,6 @@ class Password extends Input
      */
     public function component(): string
     {
-        /** @var string */
-        return config('form.components.password', 'Password.vue');
+        return config()->string('honed-form.components.password', 'Password.vue');
     }
 }

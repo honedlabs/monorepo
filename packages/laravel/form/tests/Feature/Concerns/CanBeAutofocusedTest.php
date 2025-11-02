@@ -11,8 +11,11 @@ beforeEach(function () {
 it('can be autofocused', function () {
     expect($this->component)
         ->isAutofocused()->toBeFalse()
+        ->isNotAutofocused()->toBeTrue()
         ->autofocus()->toBe($this->component)
         ->isAutofocused()->toBeTrue()
-        ->notAutofocused()->toBe($this->component)
+        ->isNotAutofocused()->toBeFalse()
+        ->dontAutofocus()->toBe($this->component)
+        ->isAutofocused()->toBeFalse()
         ->isNotAutofocused()->toBeTrue();
 });

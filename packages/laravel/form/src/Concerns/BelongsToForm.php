@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Honed\Form\Concerns;
 
 use Honed\Form\Form;
+use Illuminate\Database\Eloquent\Model;
 
 trait BelongsToForm
 {
     /**
      * The form instance.
      *
-     * @var Form|null
+     * @var ?Form
      */
     protected $form;
 
@@ -37,9 +38,11 @@ trait BelongsToForm
 
     /**
      * Get the record from the form.
+     *
+     * @return array<string, mixed>|Model|null
      */
-    public function getRecord(): mixed
+    public function getRecord(): array|Model|null
     {
-        return $this->getForm();
+        return $this->getForm()?->getRecord();
     }
 }

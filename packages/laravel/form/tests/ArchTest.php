@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Form\Abstracts\Component;
+use Honed\Form\Components\Component;
 use Illuminate\Console\Command;
 
 arch()->preset()->php();

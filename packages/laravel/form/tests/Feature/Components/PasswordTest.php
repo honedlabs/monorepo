@@ -9,7 +9,7 @@ use Honed\Form\Components\Password;
 beforeEach(function () {
     $this->name = 'password';
 
-    $this->file = config('form.components.password');
+    $this->file = config('honed-form.components.password');
 
     $this->component = Password::make($this->name);
 });

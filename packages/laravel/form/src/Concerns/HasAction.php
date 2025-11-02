@@ -9,7 +9,7 @@ trait HasAction
     /**
      * The action of the form.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $action;
 

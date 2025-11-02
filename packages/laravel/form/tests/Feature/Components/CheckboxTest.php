@@ -9,7 +9,7 @@ use Honed\Form\Components\Checkbox;
 beforeEach(function () {
     $this->name = 'remember';
 
-    $this->file = config('form.components.checkbox');
+    $this->file = config('honed-form.components.checkbox');
 
     $this->component = Checkbox::make($this->name);
 });

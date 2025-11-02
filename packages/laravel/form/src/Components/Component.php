@@ -2,15 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Honed\Form\Abstracts;
+namespace Honed\Form\Components;
 
+use Honed\Core\Concerns\HasAttributes;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Honed\Form\Concerns\BelongsToForm;
+use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @extends Primitive<string, mixed>
+ */
 abstract class Component extends Primitive implements NullsAsUndefined
 {
     use BelongsToForm;
+    use HasAttributes;
 
     /**
      * The identifier to use for evaluation.
@@ -22,10 +28,13 @@ abstract class Component extends Primitive implements NullsAsUndefined
     /**
      * The name of the component.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $component;
 
+    /**
+     * Create a new component instance.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -43,7 +52,7 @@ abstract class Component extends Primitive implements NullsAsUndefined
      *
      * @return $this
      */
-    public function asComponent(string $value): static
+    public function as(?string $value): static
     {
         $this->component = $value;
 
@@ -81,5 +90,38 @@ abstract class Component extends Primitive implements NullsAsUndefined
             'component' => $this->getComponent(),
             'attributes' => null,
         ];
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by name.
+     *
+     * @return list<mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    {
+        return match ($parameterName) {
+            'model', 'record', 'row' => [$this->getRecord()],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
+        };
+    }
+
+    /**
+     * Provide a selection of default dependencies for evaluation by type.
+     *
+     * @param  class-string  $parameterType
+     * @return list<mixed>
+     */
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
+    {
+        $record = $this->getRecord();
+
+        if (! $record instanceof Model) {
+            return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
+        }
+
+        return match ($parameterType) {
+            Model::class, $record::class => [$record],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
+        };
     }
 }

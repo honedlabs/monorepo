@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
-use Honed\Form\Abstracts\Field;
-
 class Checkbox extends Field
 {
     /**
@@ -20,8 +18,7 @@ class Checkbox extends Field
      */
     public function component(): string
     {
-        /** @var string */
-        return config('form.components.checkbox', 'Checkbox.vue');
+        return config()->string('honed-form.components.checkbox', 'Checkbox.vue');
     }
 
     /**

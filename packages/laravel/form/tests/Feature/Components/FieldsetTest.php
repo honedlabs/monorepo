@@ -7,7 +7,7 @@ namespace Tests\Feature\Components;
 use Honed\Form\Components\Fieldset;
 
 beforeEach(function () {
-    $this->file = config('form.components.fieldset');
+    $this->file = config('honed-form.components.fieldset');
 
     $this->component = Fieldset::make([]);
 });

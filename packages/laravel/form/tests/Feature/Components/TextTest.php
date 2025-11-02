@@ -9,7 +9,7 @@ use Honed\Form\Components\Text;
 beforeEach(function () {
     $this->text = 'Enter the details of the user.';
 
-    $this->file = config('form.components.text');
+    $this->file = config('honed-form.components.text');
 
     $this->component = Text::make($this->text);
 });

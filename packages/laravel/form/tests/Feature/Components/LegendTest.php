@@ -9,7 +9,7 @@ use Honed\Form\Components\Legend;
 beforeEach(function () {
     $this->label = 'Details';
 
-    $this->file = config('form.components.legend');
+    $this->file = config('honed-form.components.legend');
 
     $this->component = Legend::make($this->label);
 });

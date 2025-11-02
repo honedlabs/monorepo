@@ -9,7 +9,7 @@ use Honed\Form\Components\Select;
 beforeEach(function () {
     $this->name = 'type';
 
-    $this->file = config('form.components.select');
+    $this->file = config('honed-form.components.select');
 
     $this->component = Select::make($this->name);
 });

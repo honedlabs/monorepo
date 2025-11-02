@@ -9,7 +9,7 @@ trait HasText
     /**
      * The text to display.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $text;
 

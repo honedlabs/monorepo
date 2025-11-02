@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Form\Components;
 
 use Honed\Core\Concerns\HasLabel;
-use Honed\Form\Abstracts\Component;
 
 class Legend extends Component
 {
@@ -31,8 +30,7 @@ class Legend extends Component
      */
     public function component(): string
     {
-        /** @var string */
-        return config('form.components.legend', 'Legend.vue');
+        return config()->string('honed-form.components.legend', 'Legend.vue');
     }
 
     /**

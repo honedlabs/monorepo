@@ -9,7 +9,7 @@ use Honed\Form\Components\Textarea;
 beforeEach(function () {
     $this->name = 'description';
 
-    $this->file = config('form.components.textarea');
+    $this->file = config('honed-form.components.textarea');
 
     $this->component = Textarea::make($this->name);
 });

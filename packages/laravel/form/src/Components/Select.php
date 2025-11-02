@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
-use Honed\Form\Abstracts\Field;
-
 class Select extends Field
 {
     /**
@@ -20,7 +18,6 @@ class Select extends Field
      */
     public function component(): string
     {
-        /** @var string */
-        return config('form.components.select', 'Select.vue');
+        return config()->string('honed-form.components.select', 'Select.vue');
     }
 }

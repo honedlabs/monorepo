@@ -9,7 +9,7 @@ use Honed\Form\Components\Input;
 beforeEach(function () {
     $this->name = 'name';
 
-    $this->file = config('form.components.input');
+    $this->file = config('honed-form.components.input');
 
     $this->component = Input::make($this->name);
 });

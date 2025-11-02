@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
-use Honed\Form\Abstracts\Grouping;
-
 class Fieldset extends Grouping
 {
     /**
@@ -20,7 +18,6 @@ class Fieldset extends Grouping
      */
     public function component(): string
     {
-        /** @var string */
-        return config('form.components.fieldset', 'Fieldset.vue');
+        return config()->string('honed-form.components.fieldset', 'Fieldset.vue');
     }
 }

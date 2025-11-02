@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Form\Abstracts;
+namespace Honed\Form\Components;
 
 use Honed\Form\Concerns\HasSchema;
 
@@ -13,7 +13,7 @@ abstract class Grouping extends Component
     /**
      * Create a new grouping instance.
      *
-     * @param  array<int, Component>  $schema
+     * @param  list<Component>  $schema
      */
     public static function make(array $schema = []): static
     {

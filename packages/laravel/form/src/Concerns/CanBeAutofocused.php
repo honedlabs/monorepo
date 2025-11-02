@@ -30,7 +30,7 @@ trait CanBeAutofocused
      *
      * @return $this
      */
-    public function notAutofocused(bool $value = true): static
+    public function dontAutofocus(bool $value = true): static
     {
         return $this->autofocus(! $value);
     }

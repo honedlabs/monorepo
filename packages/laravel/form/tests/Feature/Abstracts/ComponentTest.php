@@ -11,7 +11,7 @@ beforeEach(function () {
 it('defines a component', function () {
     expect($this->component)
         ->getComponent()->toBe('Legend.vue')
-        ->asComponent('test')->toBe($this->component)
+        ->as('test')->toBe($this->component)
         ->getComponent()->toBe('test');
 });
 

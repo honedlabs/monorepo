@@ -6,14 +6,15 @@ namespace Honed\Form;
 
 use Closure;
 use Honed\Core\Concerns\HasMethod;
+use Honed\Core\Concerns\HasRecord;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Honed\Form\Concerns\Cancellable;
 use Honed\Form\Concerns\HasAction;
-use Honed\Form\Concerns\HasLib;
 use Honed\Form\Concerns\HasSchema;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Throwable;
@@ -22,16 +23,9 @@ class Form extends Primitive implements NullsAsUndefined
 {
     use Cancellable;
     use HasAction;
-    use HasLib;
     use HasMethod;
+    use HasRecord;
     use HasSchema;
-
-    /**
-     * The source of the data to be used to populate the form.
-     *
-     * @var mixed
-     */
-    protected $from;
 
     /**
      * The identifier to use for evaluation.
@@ -48,7 +42,7 @@ class Form extends Primitive implements NullsAsUndefined
     /**
      * How to resolve the form for the given model name.
      *
-     * @var (Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<Form>)|null
+     * @var (Closure(class-string<Model>):class-string<Form>)|null
      */
     protected static $formNameResolver;
 
@@ -65,7 +59,7 @@ class Form extends Primitive implements NullsAsUndefined
     /**
      * Create a new form instance.
      *
-     * @param  array<int, Abstracts\Component>  $schema
+     * @param  list<Components\Component>  $schema
      */
     public static function make(array $schema = []): static
     {
@@ -75,7 +69,7 @@ class Form extends Primitive implements NullsAsUndefined
     /**
      * Get a new form instance for the given model name.
      *
-     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelName
+     * @param  class-string<Model>  $modelName
      */
     public static function formForModel(string $modelName): self
     {
@@ -87,7 +81,7 @@ class Form extends Primitive implements NullsAsUndefined
     /**
      * Get the form name for the given model name.
      *
-     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $className
+     * @param  class-string<Model>  $className
      * @return class-string<Form>
      */
     public static function resolveFormName(string $className): string
@@ -117,7 +111,7 @@ class Form extends Primitive implements NullsAsUndefined
     /**
      * Specify the callback that should be invoked to guess the name of a model form.
      *
-     * @param  Closure(class-string<\Illuminate\Database\Eloquent\Model>):class-string<Form>  $callback
+     * @param  Closure(class-string<Model>):class-string<Form>  $callback
      */
     public static function guessFormNamesUsing(Closure $callback): void
     {
@@ -131,18 +125,6 @@ class Form extends Primitive implements NullsAsUndefined
     {
         static::$namespace = 'App\\Forms\\';
         static::$formNameResolver = null;
-    }
-
-    /**
-     * Set the data to be used to populate the form.
-     *
-     * @return $this
-     */
-    public function from(mixed $from): static
-    {
-        $this->from = $from;
-
-        return $this;
     }
 
     /**
@@ -177,11 +159,12 @@ class Form extends Primitive implements NullsAsUndefined
     /**
      * Provide a selection of default dependencies for evaluation by name.
      *
-     * @return array<int, mixed>
+     * @return list<mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         return match ($parameterName) {
+            'model', 'record', 'row' => [$this->getRecord()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
@@ -190,12 +173,18 @@ class Form extends Primitive implements NullsAsUndefined
      * Provide a selection of default dependencies for evaluation by type.
      *
      * @param  class-string  $parameterType
-     * @return array<int, mixed>
+     * @return list<mixed>
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
+        $record = $this->getRecord();
+
+        if (! $record instanceof Model) {
+            return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
+        }
+
         return match ($parameterType) {
-            self::class => [$this],
+            Model::class, $record::class => [$record],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }

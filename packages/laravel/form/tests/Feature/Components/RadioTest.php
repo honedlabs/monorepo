@@ -9,7 +9,7 @@ use Honed\Form\Components\Radio;
 beforeEach(function () {
     $this->name = 'type';
 
-    $this->file = config('form.components.radio');
+    $this->file = config('honed-form.components.radio');
 
     $this->component = Radio::make($this->name);
 });

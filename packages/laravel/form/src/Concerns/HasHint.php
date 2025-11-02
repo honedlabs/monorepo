@@ -9,7 +9,7 @@ trait HasHint
     /**
      * The hint to display.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $hint;
 

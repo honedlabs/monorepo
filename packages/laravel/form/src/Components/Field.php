@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Form\Abstracts;
+namespace Honed\Form\Components;
 
 use Honed\Core\Concerns\HasLabel;
 use Honed\Core\Concerns\HasName;
