@@ -16,5 +16,6 @@ class Binds
      * @return void
      */
     public function __construct(
-        public string $model) {}
+        public string $model
+    ) {}
 }
