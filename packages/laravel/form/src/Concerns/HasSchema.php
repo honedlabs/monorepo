@@ -48,7 +48,9 @@ trait HasSchema
     {
         return array_map(
             static fn (Component $component) => $component->form($form)->toArray(),
-            $this->getSchema()
+            array_values(
+                array_filter($this->getSchema(), fn (Component $component) => $component->isAllowed())
+            )
         );
     }
 }

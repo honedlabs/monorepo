@@ -124,6 +124,26 @@ abstract class Field extends Component implements Defaultable
     }
 
     /**
+     * Set a minimum attribute on the field.
+     * 
+     * @return $this
+     */
+    public function min(mixed $value): static
+    {
+        return $this->attribute('min', $value);
+    }
+
+    /**
+     * Set a maximum attribute on the field.
+     *
+     * @return $this
+     */
+    public function max(mixed $value): static
+    {
+        return $this->attribute('max', $value);
+    }
+
+    /**
      * Get the array representation of the form field.
      *
      * @return array<string, mixed>

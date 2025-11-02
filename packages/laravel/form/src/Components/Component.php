@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
+use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasAttributes;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
@@ -17,6 +18,7 @@ abstract class Component extends Primitive implements NullsAsUndefined
 {
     use BelongsToForm;
     use HasAttributes;
+    use Allowable;
 
     /**
      * The identifier to use for evaluation.
