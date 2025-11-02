@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use App\Forms\ProductForm;
 use App\Models\Product;
+use App\Models\User;
 use Honed\Form\Form;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -49,14 +51,51 @@ it('has array representation', function () {
 
 describe('evaluation', function () {
     it('has named dependencies', function ($closure, $class) {
-        expect($this->form->evaluate($closure))->toBeInstanceOf($class);
+        expect($this->form)
+            ->evaluate($closure)->toBeInstanceOf($class);
     })->with([
-        'form' => fn () => [fn ($form) => $form, Form::class],
+        fn () => [fn ($form) => $form, Form::class],
+        function () {
+            $product = Product::factory()->create();
+
+            $this->form->record($product);
+
+            return [fn ($model) => $model, Product::class];
+        },
+        function () {
+            $product = Product::factory()->create();
+
+            $this->form->record($product);
+
+            return [fn ($record) => $record, Product::class];
+        },
+        function () {
+            $product = Product::factory()->create();
+
+            $this->form->record($product);
+
+            return [fn ($row) => $row, Product::class];
+        },
     ]);
 
     it('has typed dependencies', function ($closure, $class) {
-        expect($this->form->evaluate($closure))->toBeInstanceOf($class);
+        expect($this->form)
+            ->evaluate($closure)->toBeInstanceOf($class);
     })->with([
-        'form' => fn () => [fn (Form $arg) => $arg, Form::class],
+        fn () => [fn (Form $arg) => $arg, Form::class],
+        function () {
+            $product = Product::factory()->create();
+
+            $this->form->record($product);
+
+            return [fn (Product $m) => $m, Product::class];
+        },
+        function () {
+            $product = Product::factory()->create();
+
+            $this->form->record($product);
+
+            return [fn (Model $r) => $r, Product::class];
+        },
     ]);
 });

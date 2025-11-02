@@ -4,21 +4,24 @@ declare(strict_types=1);
 
 namespace Honed\Form\Concerns;
 
+use Closure;
+
 trait HasDateFormat
 {
     /**
      * The format of the date.
      *
-     * @var ?string
+     * @var string|(Closure():string)|null
      */
     protected $format;
 
     /**
      * Set the format of the date.
      *
+     * @param  string|(Closure():string)|null  $value
      * @return $this
      */
-    public function format(?string $value): static
+    public function format(string|Closure|null $value): static
     {
         $this->format = $value;
 
@@ -30,7 +33,7 @@ trait HasDateFormat
      */
     public function getFormat(): ?string
     {
-        return $this->format;
+        return $this->evaluate($this->format);
     }
 
     /**
@@ -38,7 +41,7 @@ trait HasDateFormat
      */
     public function hasFormat(): bool
     {
-        return $this->getFormat() !== null;
+        return isset($this->format);
     }
 
     /**
