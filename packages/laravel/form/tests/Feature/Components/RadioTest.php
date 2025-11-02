@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Components;
-
 use Honed\Form\Components\Radio;
+use Honed\Form\Enums\FormComponent;
 
 beforeEach(function () {
-    $this->name = 'type';
-
-    $this->file = config('honed-form.components.radio');
-
-    $this->component = Radio::make($this->name);
+    $this->component = Radio::make('type');
 });
 
 it('has component', function () {
     expect($this->component)
-        ->component()->toBe($this->file)
-        ->getComponent()->toBe($this->file);
+        ->component()->toBe(FormComponent::Radio)
+        ->getComponent()->toBe(FormComponent::Radio->value);
 });

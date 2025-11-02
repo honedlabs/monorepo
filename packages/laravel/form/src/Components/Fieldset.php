@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
+use BackedEnum;
+use Honed\Form\Enums\FormComponent;
+
 class Fieldset extends Grouping
 {
     /**
@@ -16,8 +19,8 @@ class Fieldset extends Grouping
     /**
      * The name of the component.
      */
-    public function component(): string
+    public function component(): string|BackedEnum
     {
-        return config()->string('honed-form.components.fieldset', 'Fieldset.vue');
+        return FormComponent::Fieldset;
     }
 }

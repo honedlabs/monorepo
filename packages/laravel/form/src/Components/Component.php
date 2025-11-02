@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
+use BackedEnum;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasAttributes;
 use Honed\Core\Contracts\NullsAsUndefined;
@@ -16,9 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 abstract class Component extends Primitive implements NullsAsUndefined
 {
+    use Allowable;
     use BelongsToForm;
     use HasAttributes;
-    use Allowable;
 
     /**
      * The identifier to use for evaluation.
@@ -47,7 +48,7 @@ abstract class Component extends Primitive implements NullsAsUndefined
     /**
      * The name of the component.
      */
-    abstract public function component(): string;
+    abstract public function component(): string|BackedEnum;
 
     /**
      * Set the name of the component.
@@ -66,7 +67,13 @@ abstract class Component extends Primitive implements NullsAsUndefined
      */
     public function getComponent(): string
     {
-        return $this->component ??= $this->component();
+        if (isset($this->component)) {
+            return $this->component;
+        }
+
+        $component = $this->component();
+
+        return is_string($component) ? $component : (string) $component->value;
     }
 
     /**

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
+use BackedEnum;
 use Honed\Core\Concerns\HasLabel;
+use Honed\Form\Enums\FormComponent;
 
 class Legend extends Component
 {
@@ -28,9 +30,9 @@ class Legend extends Component
     /**
      * The name of the component.
      */
-    public function component(): string
+    public function component(): string|BackedEnum
     {
-        return config()->string('honed-form.components.legend', 'Legend.vue');
+        return FormComponent::Legend;
     }
 
     /**

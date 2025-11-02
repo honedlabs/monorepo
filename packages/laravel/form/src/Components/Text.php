@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
+use BackedEnum;
 use Honed\Form\Concerns\HasText;
+use Honed\Form\Enums\FormComponent;
 
 class Text extends Component
 {
@@ -28,9 +30,9 @@ class Text extends Component
     /**
      * The name of the component.
      */
-    public function component(): string
+    public function component(): string|BackedEnum
     {
-        return config()->string('honed-form.components.text', 'Text.vue');
+        return FormComponent::Text;
     }
 
     /**

@@ -125,7 +125,7 @@ abstract class Field extends Component implements Defaultable
 
     /**
      * Set a minimum attribute on the field.
-     * 
+     *
      * @return $this
      */
     public function min(mixed $value): static

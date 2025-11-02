@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
+use BackedEnum;
 use Carbon\Carbon;
 use Honed\Form\Concerns\HasDateFormat;
+use Honed\Form\Enums\FormComponent;
 use Honed\Form\Enums\Granularity;
 
 class DateField extends Field
@@ -22,9 +24,9 @@ class DateField extends Field
     /**
      * The name of the component.
      */
-    public function component(): string
+    public function component(): string|BackedEnum
     {
-        return config()->string('honed-form.components.date-field', 'DateField.vue');
+        return FormComponent::Date;
     }
 
     /**
@@ -38,7 +40,8 @@ class DateField extends Field
             return $value;
         }
 
-        return Carbon::parse($value)->format($this->getDateFormat());
+        // @phpstan-ignore-next-line
+        return Carbon::parse($value)->format($this->getFormat());
     }
 
     /**
@@ -48,7 +51,7 @@ class DateField extends Field
      */
     public function granularity(string|Granularity $value): static
     {
-        return $this->attribute('granularity', $value);
+        return $this->attribute('granularity', is_string($value) ? $value : $value->value);
     }
 
     /**

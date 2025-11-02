@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
+use BackedEnum;
+use Honed\Form\Enums\FormComponent;
+
 class Select extends Field
 {
+    // use HasOptions;
+
     /**
      * The identifier to use for evaluation.
      *
@@ -16,8 +21,16 @@ class Select extends Field
     /**
      * The name of the component.
      */
-    public function component(): string
+    public function component(): string|BackedEnum
     {
-        return config()->string('honed-form.components.select', 'Select.vue');
+        return FormComponent::Select;
     }
+
+    // protected function representation(): array
+    // {
+    //     return [
+    //         'options' => $this->getOptions(),
+    //         ...parent::representation(),
+    //     ];
+    // }
 }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
+use BackedEnum;
+use Honed\Form\Enums\FormComponent;
+
 class Password extends Input
 {
     /**
@@ -16,8 +19,8 @@ class Password extends Input
     /**
      * The name of the component.
      */
-    public function component(): string
+    public function component(): string|BackedEnum
     {
-        return config()->string('honed-form.components.password', 'Password.vue');
+        return FormComponent::Password;
     }
 }
