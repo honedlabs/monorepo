@@ -116,7 +116,7 @@ function ce(r, h, p = {}, d = {}) {
         ...l,
         apply: (e, t = {}) => y(l, e, t),
         clear: (e = {}) => D(l, e),
-        bind: () => I(l.name)
+        bind: (e = {}) => I(l.name, e)
       }));
     }
   ), M = v(
@@ -126,7 +126,7 @@ function ce(r, h, p = {}, d = {}) {
         ...l,
         apply: (e = {}) => F(l, l.direction, e),
         clear: (e = {}) => G(e),
-        bind: () => Q(l)
+        bind: (e = {}) => Q(l, e)
       }));
     }
   ), U = v(
@@ -136,7 +136,7 @@ function ce(r, h, p = {}, d = {}) {
         ...l,
         apply: (e = {}) => A(l, e),
         clear: (e = {}) => A(l, e),
-        bind: () => K(l)
+        bind: (e = {}) => K(l, e)
       }));
     }
   ), E = v(
@@ -384,7 +384,7 @@ function ce(r, h, p = {}, d = {}) {
   function ee(n = {}) {
     if (!g.value)
       return console.warn("Refine cannot perform searching.");
-    const { debounce: l = 700, transform: e, ...t } = n;
+    const { debounce: l = 750, transform: e, ...t } = n;
     return {
       "onUpdate:modelValue": Y(
         (a) => {
