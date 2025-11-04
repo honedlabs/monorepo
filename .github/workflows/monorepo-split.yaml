@@ -17,18 +17,18 @@ jobs:
         package:
           # - abn
           # - action
-          - billing
-          - bind
+          # - billing
+          # - bind
           # - chart
           # - command
           # - core
           # - crumb
-          - data
+          # - data
           # - disable
           # - flash
-          - form
+          # - form
           # - honed
-          # - infolist
+          - infolist
           # - lang
           # - layout
           # - lock
