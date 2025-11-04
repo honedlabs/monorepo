@@ -30,7 +30,7 @@ abstract class CarbonFormatter extends LocalisedFormatter
     /**
      * The timezone to use for formatting dates.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $timezone;
 
@@ -79,7 +79,7 @@ abstract class CarbonFormatter extends LocalisedFormatter
      *
      * @return $this
      */
-    public function timezone(string $value): static
+    public function timezone(?string $value): static
     {
         $this->timezone = $value;
 
@@ -115,7 +115,7 @@ abstract class CarbonFormatter extends LocalisedFormatter
         }
 
         if ($tz = $this->getTimezone()) {
-            $value = $value?->shiftTimezone($tz);
+            $value = $value?->setTimezone($tz);
         }
 
         return $value // @phpstan-ignore-line method.nonObject

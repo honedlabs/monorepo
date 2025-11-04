@@ -31,7 +31,7 @@ it('has an infolist', function () {
                 'type' => 'datetime',
                 'label' => 'Account made',
                 'value' => [
-                    'v' => $this->user->created_at->format('Y-m-d H:i:s'),
+                    'v' => $this->user->created_at->setTimezone('Australia/Brisbane')->format('Y-m-d H:i:s'),
                     'f' => false,
                 ],
             ],

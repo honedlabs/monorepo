@@ -18,7 +18,7 @@ abstract class LocalisedFormatter implements Formatter
     /**
      * The locale to use for formatting.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $locale;
 
@@ -27,7 +27,7 @@ abstract class LocalisedFormatter implements Formatter
      *
      * @return $this
      */
-    public function locale(string $value): static
+    public function locale(?string $value): static
     {
         $this->locale = $value;
 
