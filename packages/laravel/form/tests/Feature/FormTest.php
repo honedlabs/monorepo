@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Forms\ProductForm;
 use App\Models\Product;
-use App\Models\User;
 use Honed\Form\Form;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;

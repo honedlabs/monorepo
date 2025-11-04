@@ -1,5 +1,6 @@
 import { ComputedRef } from 'vue';
 import { PromisifyFn } from '@vueuse/shared';
+import { Ref } from 'vue';
 import { VisitOptions } from '@inertiajs/core';
 
 export declare interface ApplyOptions extends VisitOptions {
@@ -152,6 +153,7 @@ export declare interface SortBinding {
 export declare type UseRefine = typeof useRefine;
 
 export declare function useRefine<T extends Record<string, Refine>>(props: T, key: keyof T, defaults?: VisitOptions, resets?: Record<string, undefined | null | string | number | boolean>): {
+    processing: Ref<boolean, boolean>;
     filters: ComputedRef<HonedFilter[]>;
     sorts: ComputedRef<HonedSort[]>;
     searches: ComputedRef<HonedSearch[]>;

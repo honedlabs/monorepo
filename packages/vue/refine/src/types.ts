@@ -47,6 +47,7 @@ export interface BindingOptions extends ApplyOptions {
 }
 
 export interface HonedRefine {
+	processing: boolean;
 	filters: HonedFilter[];
 	sorts: HonedSort[];
 	searches: HonedSearch[];

@@ -32,7 +32,7 @@ export function useTable<
 		throw new Error("The table must be provided with valid props and key.");
 	}
 
-	const { recordOperations = {}, ...visitOptions } = {
+	const { recordOperations = {}, ...defaultOptions } = {
 		only: [...((defaults.only ?? []) as string[]), key.toString()],
 		...defaults,
 	};
@@ -43,9 +43,11 @@ export function useTable<
 
 	const select = useBulk<Identifier>();
 
-	const refine = useRefine<T>(props, key, visitOptions, {
+	const { processing, ...refine } = useRefine<T>(props, key, defaultOptions, {
 		[table.value._page_key as string]: undefined,
 	});
+
+	const { onFinish: onFinishOptions, ...visitOptions } = defaultOptions;
 
 	const meta = computed(() => table.value.meta);
 
@@ -273,11 +275,20 @@ export function useTable<
 	 * @internal
 	 */
 	function toPage(link: string, options: VisitOptions = {}) {
+		processing.value = true;
+
+		const { onFinish: onFinishRest, ...restOptions } = options;
+
 		router.visit(link, {
 			preserveScroll: true,
 			preserveState: true,
 			...visitOptions,
-			...options,
+			...restOptions,
+			onFinish: (page) => {
+				processing.value = false;
+				onFinishOptions?.(page);
+				onFinishRest?.(page);
+			},
 			method: "get",
 		});
 	}
@@ -334,9 +345,18 @@ export function useTable<
 		if (!isPageable.value)
 			return console.warn("The table does not support pagination changes.");
 
+		const { onFinish: onFinishRest, ...restOptions } = options;
+
+		processing.value = true;
+
 		router.reload({
 			...visitOptions,
-			...options,
+			...restOptions,
+			onFinish: (page) => {
+				processing.value = false;
+				onFinishOptions?.(page);
+				onFinishRest?.(page);
+			},
 			data: {
 				[table.value._record_key as string]: page.value,
 				[table.value._page_key as string]: undefined,
@@ -360,9 +380,18 @@ export function useTable<
 			headings.value.map(({ name }) => name),
 		);
 
+		const { onFinish: onFinishRest, ...restOptions } = options;
+
+		processing.value = true;
+
 		router.reload({
 			...visitOptions,
-			...options,
+			...restOptions,
+			onFinish: (page) => {
+				processing.value = false;
+				onFinishOptions?.(page);
+				onFinishRest?.(page);
+			},
 			data: {
 				[table.value._column_key as string]: refine.delimitArray(params),
 			},
@@ -492,6 +521,8 @@ export function useTable<
 		bindPage,
 		/** Bind select all records to the checkbox */
 		bindAll: select.bindAll,
+		/** The processing status */
+		processing,
 		/** The refine instance */
 		...refine,
 	});

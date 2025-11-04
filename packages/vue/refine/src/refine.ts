@@ -1,4 +1,4 @@
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { router } from "@inertiajs/vue3";
 import { useDebounceFn } from "@vueuse/core";
 import type { VisitOptions } from "@inertiajs/core";
@@ -28,6 +28,10 @@ export function useRefine<T extends Record<string, Refine>>(
 	if (!props?.[key]) {
 		throw new Error("The refine must be provided with valid props and key.");
 	}
+
+	const { onFinish: onDefaultFinish, ...rest } = defaults;
+
+	const processing = ref(false);
 
 	const refinements = computed(() => props[key] as Refine);
 
@@ -225,10 +229,19 @@ export function useRefine<T extends Record<string, Refine>>(
 			Object.entries(values).map(([key, value]) => [key, pipe(value)]),
 		);
 
+		const { onFinish: onScopedFinish, ...visitOptions } = options;
+
+		processing.value = true;
+
 		router.reload({
-			...defaults,
-			...options,
+			...rest,
+			...visitOptions,
 			data,
+			onFinish: (data) => {
+				processing.value = false;
+				onScopedFinish?.(data);
+				onDefaultFinish?.(data);
+			},
 		});
 	}
 
@@ -244,11 +257,18 @@ export function useRefine<T extends Record<string, Refine>>(
 
 		if (!refiner) return console.warn(`Filter [${filter}] does not exist.`);
 
-		const { parameters, ...visitOptions } = options;
+		const { parameters, onFinish: onScopedFinish, ...visitOptions } = options;
+
+		processing.value = true;
 
 		router.reload({
-			...defaults,
+			...rest,
 			...visitOptions,
+			onFinish: (data) => {
+				processing.value = false;
+				onScopedFinish?.(data);
+				onDefaultFinish?.(data);
+			},
 			data: {
 				[refiner.name]: pipe(value),
 				...parameters,
@@ -272,11 +292,18 @@ export function useRefine<T extends Record<string, Refine>>(
 
 		if (!refiner) return console.warn(`Sort [${sort}] does not exist.`);
 
-		const { parameters, ...visitOptions } = options;
+		const { parameters, onFinish: onScopedFinish, ...visitOptions } = options;
+
+		processing.value = true;
 
 		router.reload({
-			...defaults,
+			...rest,
 			...visitOptions,
+			onFinish: (data) => {
+				processing.value = false;
+				onScopedFinish?.(data);
+				onDefaultFinish?.(data);
+			},
 			data: {
 				[refinements.value._sort_key as string]: omitValue(refiner.next),
 				...parameters,
@@ -299,11 +326,18 @@ export function useRefine<T extends Record<string, Refine>>(
 			value,
 		);
 
-		const { parameters, ...visitOptions } = options;
+		const { parameters, onFinish: onScopedFinish, ...visitOptions } = options;
+
+		processing.value = true;
 
 		router.reload({
-			...defaults,
+			...rest,
 			...visitOptions,
+			onFinish: (data) => {
+				processing.value = false;
+				onScopedFinish?.(data);
+				onDefaultFinish?.(data);
+			},
 			data: {
 				[refinements.value._search_key as string]: value,
 				...parameters,
@@ -328,11 +362,18 @@ export function useRefine<T extends Record<string, Refine>>(
 			currentSearches.value.map(({ name }) => name),
 		);
 
-		const { parameters, ...visitOptions } = options;
+		const { parameters, onFinish: onScopedFinish, ...visitOptions } = options;
+
+		processing.value = true;
 
 		router.reload({
-			...defaults,
+			...rest,
 			...visitOptions,
+			onFinish: (data) => {
+				processing.value = false;
+				onScopedFinish?.(data);
+				onDefaultFinish?.(data);
+			},
 			data: {
 				[refinements.value._match_key as string]: delimitArray(matches),
 				...parameters,
@@ -347,11 +388,18 @@ export function useRefine<T extends Record<string, Refine>>(
 	function clearFilter(filter?: Filter | string, options: ApplyOptions = {}) {
 		if (filter) return applyFilter(filter, null, options);
 
-		const { parameters, ...visitOptions } = options;
+		const { parameters, onFinish: onScopedFinish, ...visitOptions } = options;
+
+		processing.value = true;
 
 		router.reload({
-			...defaults,
+			...rest,
 			...visitOptions,
+			onFinish: (data) => {
+				processing.value = false;
+				onScopedFinish?.(data);
+				onDefaultFinish?.(data);
+			},
 			data: {
 				...Object.fromEntries(
 					currentFilters.value.map(({ name }) => [name, null]),
@@ -368,11 +416,18 @@ export function useRefine<T extends Record<string, Refine>>(
 		if (!isSortable.value)
 			return console.warn("Refine cannot perform sorting.");
 
-		const { parameters, ...visitOptions } = options;
+		const { parameters, onFinish: onScopedFinish, ...visitOptions } = options;
+
+		processing.value = true;
 
 		router.reload({
-			...defaults,
+			...rest,
 			...visitOptions,
+			onFinish: (data) => {
+				processing.value = false;
+				onScopedFinish?.(data);
+				onDefaultFinish?.(data);
+			},
 			data: {
 				[refinements.value._sort_key as string]: null,
 				...parameters,
@@ -394,11 +449,18 @@ export function useRefine<T extends Record<string, Refine>>(
 		if (!isMatchable.value)
 			return console.warn("Refine cannot perform matching.");
 
-		const { parameters, ...visitOptions } = options;
+		const { parameters, onFinish: onScopedFinish, ...visitOptions } = options;
+
+		processing.value = true;
 
 		router.reload({
-			...defaults,
+			...rest,
 			...visitOptions,
+			onFinish: (data) => {
+				processing.value = false;
+				onScopedFinish?.(data);
+				onDefaultFinish?.(data);
+			},
 			data: {
 				[refinements.value._match_key as string]: null,
 				...parameters,
@@ -410,11 +472,18 @@ export function useRefine<T extends Record<string, Refine>>(
 	 * Resets all filters, sorts, matches and search.
 	 */
 	function reset(options: ApplyOptions = {}) {
-		const { parameters, ...visitOptions } = options;
+		const { parameters, onFinish: onScopedFinish, ...visitOptions } = options;
+
+		processing.value = true;
 
 		router.reload({
-			...defaults,
+			...rest,
 			...visitOptions,
+			onFinish: (data) => {
+				processing.value = false;
+				onScopedFinish?.(data);
+				onDefaultFinish?.(data);
+			},
 			data: {
 				[refinements.value._search_key ?? ""]: undefined,
 				[refinements.value._sort_key ?? ""]: undefined,
@@ -482,7 +551,7 @@ export function useRefine<T extends Record<string, Refine>>(
 		if (!isSearchable.value)
 			return console.warn("Refine cannot perform searching.");
 
-		const { debounce = 700, transform, ...visitOptions } = options;
+		const { debounce = 750, transform, ...visitOptions } = options;
 
 		return {
 			"onUpdate:modelValue": useDebounceFn(
@@ -521,6 +590,7 @@ export function useRefine<T extends Record<string, Refine>>(
 	}
 
 	return {
+		processing,
 		filters,
 		sorts,
 		searches,
