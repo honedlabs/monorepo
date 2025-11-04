@@ -1,6 +1,6 @@
 import type { PromisifyFn } from "@vueuse/shared";
 import type { Refiner } from "./refiner";
-import type { ApplyOptions } from "./types";
+import type { ApplyOptions, BindingOptions } from "./types";
 
 export interface Option {
 	label: string;
@@ -31,7 +31,7 @@ export interface Filter extends Refiner {
 export interface HonedFilter extends Filter {
 	apply: (value: any, options?: ApplyOptions) => void;
 	clear: (options?: ApplyOptions) => void;
-	bind: () => FilterBinding | void;
+	bind: (options?: BindingOptions) => FilterBinding | void;
 }
 
 export interface FilterBinding {

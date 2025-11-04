@@ -1,6 +1,6 @@
 import type { PromisifyFn } from "@vueuse/shared";
 import type { Refiner } from "./refiner";
-import type { ApplyOptions } from "./types";
+import type { ApplyOptions, BindingOptions } from "./types";
 
 export type Direction = "asc" | "desc" | null;
 
@@ -12,7 +12,7 @@ export interface Sort extends Refiner {
 export interface HonedSort extends Sort {
 	apply: (options?: ApplyOptions) => void;
 	clear: (options?: ApplyOptions) => void;
-	bind: () => SortBinding | void;
+	bind: (options?: BindingOptions) => SortBinding | void;
 }
 
 export interface SortBinding {

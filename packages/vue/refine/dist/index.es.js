@@ -44,7 +44,7 @@ function ue(c, v, p = {}, f = {}) {
         ...n,
         apply: (t, r = {}) => V(n, t, r),
         clear: (t = {}) => z(n, t),
-        bind: () => H(n.name)
+        bind: (t = {}) => H(n.name, t)
       }));
     }
   ), T = d(
@@ -54,7 +54,7 @@ function ue(c, v, p = {}, f = {}) {
         ...n,
         apply: (t = {}) => U(n, n.direction, t),
         clear: (t = {}) => B(t),
-        bind: () => J(n)
+        bind: (t = {}) => J(n, t)
       }));
     }
   ), A = d(
@@ -64,7 +64,7 @@ function ue(c, v, p = {}, f = {}) {
         ...n,
         apply: (t = {}) => S(n, t),
         clear: (t = {}) => S(n, t),
-        bind: () => K(n)
+        bind: (t = {}) => K(n, t)
       }));
     }
   ), k = d(
@@ -312,7 +312,7 @@ function ue(c, v, p = {}, f = {}) {
   function ne(e = {}) {
     if (!b.value)
       return console.warn("Refine cannot perform searching.");
-    const { debounce: n = 700, transform: t, ...r } = e;
+    const { debounce: n = 750, transform: t, ...r } = e;
     return {
       "onUpdate:modelValue": j(
         (a) => {

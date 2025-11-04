@@ -52,7 +52,7 @@ export function useRefine<T extends Record<string, Refine>>(
 			apply: (value: T, options: ApplyOptions = {}) =>
 				applyFilter(filter, value, options),
 			clear: (options: ApplyOptions = {}) => clearFilter(filter, options),
-			bind: () => bindFilter(filter.name),
+			bind: (options: BindingOptions = {}) => bindFilter(filter.name, options),
 		})),
 	);
 
@@ -65,7 +65,7 @@ export function useRefine<T extends Record<string, Refine>>(
 			apply: (options: ApplyOptions = {}) =>
 				applySort(sort, sort.direction, options),
 			clear: (options: ApplyOptions = {}) => clearSort(options),
-			bind: () => bindSort(sort),
+			bind: (options: BindingOptions = {}) => bindSort(sort, options),
 		})),
 	);
 
@@ -77,7 +77,7 @@ export function useRefine<T extends Record<string, Refine>>(
 			...search,
 			apply: (options: ApplyOptions = {}) => applyMatch(search, options),
 			clear: (options: ApplyOptions = {}) => applyMatch(search, options),
-			bind: () => bindMatch(search),
+			bind: (options: BindingOptions = {}) => bindMatch(search, options),
 		})),
 	);
 

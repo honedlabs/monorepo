@@ -43,10 +43,11 @@ export declare type FilterValue = string | number | boolean | null;
 export declare interface HonedFilter extends Filter {
     apply: (value: any, options?: ApplyOptions) => void;
     clear: (options?: ApplyOptions) => void;
-    bind: () => FilterBinding | void;
+    bind: (options?: BindingOptions) => FilterBinding | void;
 }
 
 export declare interface HonedRefine {
+    processing: boolean;
     filters: HonedFilter[];
     sorts: HonedSort[];
     searches: HonedSearch[];
@@ -86,13 +87,13 @@ export declare interface HonedRefine {
 export declare interface HonedSearch extends Search {
     apply: (options?: ApplyOptions) => void;
     clear: (options?: ApplyOptions) => void;
-    bind: () => MatchBinding | void;
+    bind: (options?: BindingOptions) => MatchBinding | void;
 }
 
 export declare interface HonedSort extends Sort {
     apply: (options?: ApplyOptions) => void;
     clear: (options?: ApplyOptions) => void;
-    bind: () => SortBinding | void;
+    bind: (options?: BindingOptions) => SortBinding | void;
 }
 
 /**
