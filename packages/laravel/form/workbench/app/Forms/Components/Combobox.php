@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace App\Forms\Components;
 
-use Honed\Form\Abstracts\Field;
+use BackedEnum;
+use Honed\Form\Components\Field;
 
 class Combobox extends Field
 {
     /**
      * The name of the component.
      */
-    public function component(): string
+    public function component(): string|BackedEnum
     {
-        return 'Combobox.vue';
+        return 'combobox';
     }
 }

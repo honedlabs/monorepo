@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
+use Carbon\Carbon;
 use Honed\Form\Components\DateField;
 use Honed\Form\Enums\FormComponent;
 use Honed\Form\Enums\Granularity;
+use Honed\Form\Form;
 
 beforeEach(function () {
+    $this->freezeTime();
+
     $this->component = DateField::make('start_at');
 });
 
@@ -34,9 +38,21 @@ it('has locale attribute', function () {
         ->getAttributes()->toBe(['locale' => 'second']);
 });
 
-it('gets value', function (mixed $value, ?string $format) {
-    expect($this->component->record([]))
-        ->getValue()->toBe($value);
+it('gets value', function ($value, $expected) {
+    expect($this->component)
+        ->form(Form::make()->record(['start_at' => $value]))
+        ->getValue()->toBe($expected);
 })->with([
     [null, null],
-])->skip();
+    fn () => ['2025-01-01', '2025-01-01'],
+    function () {
+        $this->component->format('Y-m-d H:i:s');
+
+        return ['2025-01-01', '2025-01-01 00:00:00'];
+    },
+    function () {
+        $this->component->format('Y-m-d');
+
+        return [Carbon::parse('2025-01-01'), '2025-01-01'];
+    },
+]);

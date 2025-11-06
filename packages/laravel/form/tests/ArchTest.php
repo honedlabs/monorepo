@@ -17,11 +17,6 @@ arch('strict types')
     ->expect('Honed\Flash')
     ->toUseStrictTypes();
 
-arch('abstracts')
-    ->expect('Honed\Form\Abstracts')
-    ->toBeClasses()
-    ->toBeAbstract();
-
 arch('commands')
     ->expect('Honed\Form\Commands')
     ->toBeClasses()

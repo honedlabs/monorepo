@@ -24,11 +24,13 @@ class FormServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
 
-            $this->commands([
-                FormComponentMakeCommand::class,
-                FormListCommand::class,
-                FormMakeCommand::class,
-            ]);
+            if (! $this->app->environment('production')) {
+                $this->commands([
+                    FormComponentMakeCommand::class,
+                    FormListCommand::class,
+                    FormMakeCommand::class,
+                ]);
+            }
         }
     }
 

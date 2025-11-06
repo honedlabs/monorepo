@@ -2,8 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Models\Product;
 use Honed\Form\Components\Legend;
 use Honed\Form\Enums\FormComponent;
+use Honed\Form\Form;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\Model;
 
 beforeEach(function () {
     $this->component = Legend::make('test');
@@ -22,4 +26,46 @@ it('has array representation', function () {
             'label' => 'test',
             'component' => FormComponent::Legend->value,
         ]);
+});
+
+describe('evaluation', function () {
+    beforeEach(function () {
+        $this->product = Product::factory()->create();
+
+        $this->form = Form::make()->record($this->product);
+    });
+    it('has named dependencies', function ($closure, $class) {
+        expect($this->component)
+            ->form($this->form)->toBe($this->component)
+            ->evaluate($closure)->toBeInstanceOf($class);
+    })->with([
+        function () {
+            return [fn ($model) => $model, Product::class];
+        },
+        function () {
+            return [fn ($record) => $record, Product::class];
+        },
+        function () {
+            return [fn ($row) => $row, Product::class];
+        },
+
+    ]);
+
+    it('has typed dependencies', function ($closure, $class) {
+        expect($this->component)
+            ->form($this->form)->toBe($this->component)
+            ->evaluate($closure)->toBeInstanceOf($class);
+    })->with([
+        fn () => [fn (Form $arg) => $arg, Form::class],
+        function () {
+            return [fn (Product $m) => $m, Product::class];
+        },
+        function () {
+            return [fn (Model $r) => $r, Product::class];
+        },
+    ]);
+
+    it('does not evaluate typed dependencies when no record is set', function () {
+        $this->component->evaluate(fn (Model $m) => $m);
+    })->throws(BindingResolutionException::class);
 });
