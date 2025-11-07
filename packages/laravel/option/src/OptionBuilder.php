@@ -88,9 +88,9 @@ class OptionBuilder
             return $value;
         }
 
-        $label = match (true) {
-            $label instanceof HasLabel => $label->getLabel(),
-            $label instanceof BackedEnum => $label->name,
+        $label ??= match (true) {
+            $label instanceof HasLabel => $label->getLabel(), // @phpstan-ignore-line
+            $label instanceof BackedEnum => $label->name, // @phpstan-ignore-line
             $value instanceof HasLabel => $value->getLabel(),
             $value instanceof BackedEnum => $value->name,
             default => (string) $value,

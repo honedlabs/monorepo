@@ -14,7 +14,6 @@ arch('strict types')
     ->expect('Honed\Option')
     ->toUseStrictTypes();
 
-
 arch('concerns')
     ->expect('Honed\Option\Concerns')
     ->toBeTraits();

@@ -6,7 +6,7 @@ use Honed\Option\Concerns\HasOptions;
 use Honed\Option\Option;
 
 beforeEach(function () {
-    $this->class = new class 
+    $this->class = new class()
     {
         use HasOptions;
     };

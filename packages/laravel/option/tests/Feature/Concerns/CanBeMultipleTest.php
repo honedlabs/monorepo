@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Honed\Option\Concerns\CanBeMultiple;
 
 beforeEach(function () {
-    $this->class = new class 
+    $this->class = new class()
     {
         use CanBeMultiple;
     };
