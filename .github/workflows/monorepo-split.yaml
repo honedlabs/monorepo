@@ -26,8 +26,8 @@ jobs:
           # - data
           # - disable
           # - flash
-          # - form
-          - honed
+          - form
+          # - honed
           # - infolist
           # - lang
           # - layout
@@ -35,12 +35,13 @@ jobs:
           # - memo
           # - modal
           # - nav
+          - option
           # - page
           # - persist
           # - refine
           # - registry
           # - stats
-          - table
+          # - table
           # - upload
           # - widget
     steps:
