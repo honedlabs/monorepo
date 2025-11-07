@@ -8,7 +8,6 @@ use BackedEnum;
 use Carbon\Carbon;
 use Honed\Form\Concerns\HasDateFormat;
 use Honed\Form\Enums\FormComponent;
-use Honed\Form\Enums\Granularity;
 
 class DateField extends Field
 {
@@ -19,7 +18,7 @@ class DateField extends Field
      *
      * @var string
      */
-    protected $evaluationIdentifier = 'dateField';
+    protected $evaluationIdentifier = 'date';
 
     /**
      * The name of the component.

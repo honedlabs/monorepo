@@ -43,8 +43,8 @@ class Legend extends Component
     protected function representation(): array
     {
         return [
-            'label' => $this->getLabel(),
             ...parent::representation(),
+            'label' => $this->getLabel(),
         ];
     }
 }

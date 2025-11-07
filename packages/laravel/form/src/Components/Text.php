@@ -43,8 +43,8 @@ class Text extends Component
     protected function representation(): array
     {
         return [
-            'text' => $this->getText(),
             ...parent::representation(),
+            'text' => $this->getText(),
         ];
     }
 }

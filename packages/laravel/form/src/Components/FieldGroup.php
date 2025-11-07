@@ -14,7 +14,7 @@ class FieldGroup extends Grouping
      *
      * @var string
      */
-    protected $evaluationIdentifier = 'fieldGroup';
+    protected $evaluationIdentifier = 'fieldgroup';
 
     /**
      * The name of the component.

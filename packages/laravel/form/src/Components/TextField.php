@@ -26,8 +26,8 @@ abstract class TextField extends Field
     protected function representation(): array
     {
         return [
-            'placeholder' => $this->getPlaceholder() ?: null,
             ...parent::representation(),
+            'placeholder' => $this->getPlaceholder() ?: null,
         ];
     }
 }

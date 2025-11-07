@@ -151,6 +151,7 @@ abstract class Field extends Component implements Defaultable
     protected function representation(): array
     {
         return [
+            ...parent::representation(),
             'name' => $this->getName(),
             'label' => $this->getLabel(),
             'hint' => $this->getHint(),
@@ -159,7 +160,6 @@ abstract class Field extends Component implements Defaultable
             'disabled' => $this->isDisabled() ?: null,
             'optional' => $this->isOptional() ?: null,
             'autofocus' => $this->isAutofocused() ?: null,
-            ...parent::representation(),
         ];
     }
 }

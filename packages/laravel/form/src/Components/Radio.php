@@ -6,10 +6,11 @@ namespace Honed\Form\Components;
 
 use BackedEnum;
 use Honed\Form\Enums\FormComponent;
+use Honed\Option\Concerns\HasOptions;
 
 class Radio extends Field
 {
-    // use HasOptions;
+    use HasOptions;
 
     /**
      * The identifier to use for evaluation.
@@ -26,11 +27,16 @@ class Radio extends Field
         return FormComponent::Radio;
     }
 
-    // protected function representation(): array
-    // {
-    //     return [
-    //         'options' => $this->getOptions(),
-    //         ...parent::representation(),
-    //     ];
-    // }
+    /**
+     * Get the array representation of the radio.
+     *
+     * @return array<string, mixed>
+     */
+    protected function representation(): array
+    {
+        return [
+            ...parent::representation(),
+            'options' => $this->getOptionsArray(),
+        ];
+    }
 }
