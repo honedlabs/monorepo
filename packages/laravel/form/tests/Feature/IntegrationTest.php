@@ -22,47 +22,47 @@ it('can be create form', function () {
                     'component' => FormComponent::Fieldset->value,
                     'schema' => [
                         [
-                            'label' => 'Product details',
                             'component' => FormComponent::Legend->value,
+                            'label' => 'Product details',
                         ],
                         [
-                            'text' => 'Enter the details of the product.',
                             'component' => FormComponent::Text->value,
+                            'text' => 'Enter the details of the product.',
                         ],
                         [
                             'component' => FormComponent::FieldGroup->value,
                             'schema' => [
                                 [
+                                    'component' => FormComponent::Input->value,
                                     'name' => 'name',
                                     'label' => 'Name',
                                     'value' => '',
                                     'required' => true,
-                                    'component' => FormComponent::Input->value,
                                 ],
                                 [
+                                    'component' => FormComponent::Textarea->value,
                                     'name' => 'description',
                                     'label' => 'Description',
                                     'value' => '',
                                     'required' => true,
-                                    'component' => FormComponent::Textarea->value,
                                 ],
                                 [
+                                    'component' => FormComponent::Input->value,
                                     'name' => 'price',
                                     'label' => 'Price',
                                     'value' => '',
                                     'required' => true,
-                                    'component' => FormComponent::Input->value,
                                 ],
                                 [
+                                    'component' => 'combobox',
                                     'name' => 'user_id',
                                     'label' => 'User',
-                                    'component' => 'combobox',
                                 ],
                                 [
+                                    'component' => FormComponent::Checkbox->value,
                                     'name' => 'best_seller',
                                     'label' => 'Best seller',
                                     'value' => false,
-                                    'component' => FormComponent::Checkbox->value,
                                 ],
                             ],
                         ],
@@ -84,48 +84,48 @@ it('can be update form', function () {
                     'component' => FormComponent::Fieldset->value,
                     'schema' => [
                         [
-                            'label' => 'Product details',
                             'component' => FormComponent::Legend->value,
+                            'label' => 'Product details',
                         ],
                         [
-                            'text' => 'Enter the details of the product.',
                             'component' => FormComponent::Text->value,
+                            'text' => 'Enter the details of the product.',
                         ],
                         [
                             'component' => FormComponent::FieldGroup->value,
                             'schema' => [
                                 [
+                                    'component' => FormComponent::Input->value,
                                     'name' => 'name',
                                     'label' => 'Name',
                                     'value' => $product->name,
                                     'required' => true,
-                                    'component' => FormComponent::Input->value,
                                 ],
                                 [
+                                    'component' => FormComponent::Textarea->value,
                                     'name' => 'description',
                                     'label' => 'Description',
                                     'value' => $product->description,
                                     'required' => true,
-                                    'component' => FormComponent::Textarea->value,
                                 ],
                                 [
+                                    'component' => FormComponent::Input->value,
                                     'name' => 'price',
                                     'label' => 'Price',
                                     'value' => $product->price,
                                     'required' => true,
-                                    'component' => FormComponent::Input->value,
                                 ],
                                 [
+                                    'component' => 'combobox',
                                     'name' => 'user_id',
                                     'label' => 'User',
                                     'value' => $product->user_id,
-                                    'component' => 'combobox',
                                 ],
                                 [
+                                    'component' => FormComponent::Checkbox->value,
                                     'name' => 'best_seller',
                                     'label' => 'Best seller',
                                     'value' => $product->best_seller,
-                                    'component' => FormComponent::Checkbox->value,
                                 ],
                             ],
                         ],

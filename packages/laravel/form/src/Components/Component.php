@@ -55,9 +55,9 @@ abstract class Component extends Primitive implements NullsAsUndefined
      *
      * @return $this
      */
-    public function as(?string $value): static
+    public function as(string|BackedEnum|null $value): static
     {
-        $this->component = $value;
+        $this->component = $value instanceof BackedEnum ? (string) $value->value : $value;
 
         return $this;
     }

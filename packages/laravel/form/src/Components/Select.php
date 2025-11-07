@@ -7,10 +7,8 @@ namespace Honed\Form\Components;
 use BackedEnum;
 use Honed\Form\Enums\FormComponent;
 
-class Select extends Field
+class Select extends Selection
 {
-    // use HasOptions;
-
     /**
      * The identifier to use for evaluation.
      *
@@ -25,12 +23,4 @@ class Select extends Field
     {
         return FormComponent::Select;
     }
-
-    // protected function representation(): array
-    // {
-    //     return [
-    //         'options' => $this->getOptions(),
-    //         ...parent::representation(),
-    //     ];
-    // }
 }
