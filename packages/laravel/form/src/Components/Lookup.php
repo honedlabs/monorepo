@@ -9,11 +9,13 @@ use Honed\Core\Concerns\HasUrl;
 use Honed\Core\Concerns\HasMethod;
 use Honed\Form\Enums\FormComponent;
 use Honed\Form\Exceptions\RouteNotSetException;
+use Honed\Form\Concerns\Asynchronous;
 
 class Lookup extends Selection
 {
     use HasUrl;
     use HasMethod;
+    use Asynchronous;
 
     /**
      * The identifier to use for evaluation.
@@ -51,6 +53,7 @@ class Lookup extends Selection
             ...parent::representation(),
             'url' => $this->getUrl() ?: RouteNotSetException::throw(),
             'method' => $this->getMethod(),
+            'pending' => $this->getPending() ?: null,
         ];
     }
 }

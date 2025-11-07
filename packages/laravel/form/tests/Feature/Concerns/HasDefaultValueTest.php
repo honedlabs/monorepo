@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Honed\Form\Components\Input;
+use Honed\Form\Components\Textarea;
 
 beforeEach(function () {
-    $this->component = Input::make('name');
+    $this->component = Textarea::make('description');
 });
 
 it('has default value', function () {

@@ -48,6 +48,9 @@ describe('evaluation', function () {
         function () {
             return [fn ($row) => $row, Product::class];
         },
+        function () {
+            return [fn (Form $f) => $f, Form::class];
+        },
 
     ]);
 
@@ -56,12 +59,17 @@ describe('evaluation', function () {
             ->form($this->form)->toBe($this->component)
             ->evaluate($closure)->toBeInstanceOf($class);
     })->with([
-        fn () => [fn (Form $arg) => $arg, Form::class],
+        function () {
+            return [fn (Form $arg) => $arg, Form::class];
+        },
         function () {
             return [fn (Product $m) => $m, Product::class];
         },
         function () {
             return [fn (Model $r) => $r, Product::class];
+        },
+        function () {
+            return [fn (Form $f) => $f, Form::class];
         },
     ]);
 

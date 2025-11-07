@@ -14,3 +14,27 @@ it('has component', function () {
         ->component()->toBe(FormComponent::Input)
         ->getComponent()->toBe(FormComponent::Input->value);
 });
+
+it('has text type', function () {
+    expect($this->component)
+        ->text()->toBe($this->component)
+        ->getAttributes()->toEqualCanonicalizing([
+            'type' => 'text',
+        ]);
+});
+
+it('has password type', function () {
+    expect($this->component)
+        ->password()->toBe($this->component)
+        ->getAttributes()->toEqualCanonicalizing([
+            'type' => 'password',
+        ]);
+});
+
+it('has file type', function () {
+    expect($this->component)
+        ->file()->toBe($this->component)
+        ->getAttributes()->toEqualCanonicalizing([
+            'type' => 'file',
+        ]);
+});

@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Tests\Feature\Components;
 
 use Honed\Form\Components\Input;
+use Honed\Form\Components\Textarea;
 use Honed\Form\Enums\FormComponent;
 
 beforeEach(function () {
-    $this->component = Input::make('name');
+    $this->component = Textarea::make('description');
 });
 
 it('has empty value', function () {
@@ -20,18 +21,18 @@ it('has empty value', function () {
 it('has placeholder', function () {
     expect($this->component)
         ->getPlaceholder()->toBeNull()
-        ->placeholder('Enter your name')->toBe($this->component)
-        ->getPlaceholder()->toBe('Enter your name');
+        ->placeholder('Enter a description')->toBe($this->component)
+        ->getPlaceholder()->toBe('Enter a description');
 });
 
 it('has array representation', function () {
     expect($this->component)
-        ->placeholder('Enter your name')->toBe($this->component)
+        ->placeholder('Enter a description')->toBe($this->component)
         ->toArray()->toEqualCanonicalizing([
-            'name' => 'name',
-            'label' => 'Name',
+            'name' => 'description',
+            'label' => 'Description',
             'value' => $this->component->empty(),
-            'placeholder' => 'Enter your name',
-            'component' => FormComponent::Input->value,
+            'placeholder' => 'Enter a description',
+            'component' => FormComponent::Textarea->value,
         ]);
 });

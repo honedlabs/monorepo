@@ -36,7 +36,6 @@ it('can be create form', function () {
                                     'component' => FormComponent::Input->value,
                                     'name' => 'name',
                                     'label' => 'Name',
-                                    'value' => '',
                                     'required' => true,
                                 ],
                                 [
@@ -50,7 +49,6 @@ it('can be create form', function () {
                                     'component' => FormComponent::Input->value,
                                     'name' => 'price',
                                     'label' => 'Price',
-                                    'value' => '',
                                     'required' => true,
                                 ],
                                 [

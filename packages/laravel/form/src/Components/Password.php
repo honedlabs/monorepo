@@ -4,23 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Form\Components;
 
-use BackedEnum;
-use Honed\Form\Enums\FormComponent;
-
 class Password extends Input
 {
     /**
-     * The identifier to use for evaluation.
-     *
-     * @var string
+     * Provide the instance with any necessary setup.
      */
-    protected $evaluationIdentifier = 'password';
-
-    /**
-     * The name of the component.
-     */
-    public function component(): string|BackedEnum
+    protected function setUp(): void
     {
-        return FormComponent::Password;
+        parent::setUp();
+
+        $this->password();
     }
 }

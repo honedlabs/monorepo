@@ -10,6 +10,7 @@ use Honed\Core\Concerns\HasAttributes;
 use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Honed\Form\Concerns\BelongsToForm;
+use Honed\Form\Form;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -77,6 +78,21 @@ abstract class Component extends Primitive implements NullsAsUndefined
     }
 
     /**
+     * Assign properties to the component.
+     * 
+     * @param  array<string, mixed>  $attributes
+     * @return $this
+     */
+    public function assign(array $attributes): static
+    {
+        foreach ($attributes as $key => $value) {
+            $this->{$key} = ($value);
+        }
+
+        return $this;
+    }
+
+    /**
      * Get the instance as an array.
      *
      * @return array<string, mixed>
@@ -110,6 +126,7 @@ abstract class Component extends Primitive implements NullsAsUndefined
     {
         return match ($parameterName) {
             'model', 'record', 'row' => [$this->getRecord()],
+            'form' => [$this->getForm()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
     }
@@ -130,6 +147,7 @@ abstract class Component extends Primitive implements NullsAsUndefined
 
         return match ($parameterType) {
             Model::class, $record::class => [$record],
+            Form::class => [$this->getForm()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
     }
