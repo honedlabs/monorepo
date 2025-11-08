@@ -12,7 +12,7 @@ use Spatie\LaravelData\Attributes\Validation\StringValidationAttribute;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
 
-class NumericAdapter extends Adapter
+class NumberAdapter extends Adapter
 {
     /**
      * Get the class string of the component to be generated.
@@ -25,10 +25,19 @@ class NumericAdapter extends Adapter
     /**
      * Determine if the property is a valid candidate for conversion.
      */
-    public function shouldConvert(DataProperty $property): bool
+    public function shouldConvertProperty(DataProperty $property): bool
     {
         return $property->type->type->acceptsType('int')
             || $property->type->type->acceptsType('float');
     }
-    
+
+
+    /**
+     * Determine if the request rules are a valid candidate for conversion.
+     * @param list<string|\Closure|\Illuminate\Validation\Rule> $rules
+     */
+    public function shouldConvertRules(string $key, array $rules): bool
+    {
+        return in_array('number', $rules);
+    }
 }

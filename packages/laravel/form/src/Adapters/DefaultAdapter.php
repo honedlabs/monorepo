@@ -28,7 +28,16 @@ class DefaultAdapter extends Adapter
     /**
      * Determine if the property is a valid candidate for conversion.
      */
-    public function shouldConvert(DataProperty $property): bool
+    public function shouldConvertProperty(DataProperty $property): bool
+    {
+        return true;
+    }
+
+    /**
+     * Determine if the request rules are a valid candidate for conversion.
+     * @param list<string|\Closure|\Illuminate\Validation\Rule> $rules
+     */
+    public function shouldConvertRules(string $key, array $rules): bool
     {
         return true;
     }

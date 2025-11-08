@@ -8,10 +8,10 @@ use Honed\Form\Components\Component;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
 
-interface DataAdapter
+interface PropertyAdapter
 {
     /**
      * Get the form component for the data property.
      */
-    public function getComponent(DataProperty $property, DataClass $dataClass): ?Component;
+    public function getPropertyComponent(DataProperty $property, DataClass $dataClass): ?Component;
 }

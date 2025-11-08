@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Data\ProductData;
 use Spatie\LaravelData\Data;
-use Honed\Form\Adapters\NumericAdapter;
+use Honed\Form\Adapters\NumberAdapter;
 use Honed\Form\Components\DateField;
 use Honed\Form\Components\NumberInput;
 use Spatie\LaravelData\Support\DataConfig;
@@ -12,7 +12,7 @@ use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Attributes\Validation\Date;
 
 beforeEach(function () {
-    $this->adapter = app(NumericAdapter::class);
+    $this->adapter = app(NumberAdapter::class);
 });
 
 it('has field', function () {

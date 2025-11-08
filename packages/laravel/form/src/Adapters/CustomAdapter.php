@@ -7,33 +7,36 @@ namespace Honed\Form\Adapters;
 use Honed\Form\Attributes\Component as ComponentAttribute;
 use Honed\Form\Components\Component;
 use Honed\Form\Components\DateField;
+use Honed\Form\Concerns\Adaptable;
+use Honed\Form\Contracts\Adapter;
 use Honed\Form\Contracts\DataAdapter;
 use Spatie\LaravelData\Attributes\Validation\Date;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
 
-/**
- * @extends Adapter<\Honed\Form\Components\DateField>
- */
-class CustomAdapter implements DataAdapter
+class CustomAdapter extends Adapter
 {
-    // use Adaptable;
-
-    public function getComponent(DataProperty $property, DataClass $dataClass): ?Component
+    use Adaptable;
+    
+    /**
+     * Get the form component for the data property.
+     */
+    public function getPropertyComponent(DataProperty $property, DataClass $dataClass): ?Component
     {
         if (! $attribute = $property->attributes->first(ComponentAttribute::class)) {
             return null;
         }
 
-        dd($attribute->getComponent());
-        
+        return null;
     }
 
     /**
-     * Determine if the property is a valid candidate for conversion.
+     * Get the form component for the request rules.
+     * 
+     * @param list<string|\Closure|\Illuminate\Validation\Rule> $rules
      */
-    public function shouldConvert(DataProperty $property): bool
+    public function getRulesComponent(string $key, array $rules): ?Component
     {
-        return $property->attributes->has(Component::class);
+        return null;
     }
 }

@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace Honed\Form\Adapters;
 
-use Honed\Form\Attributes\Hint;
-use Honed\Form\Attributes\Label;
-use Honed\Form\Attributes\Placeholder;
 use Honed\Form\Components\Component;
-use Honed\Form\Contracts\DataAdapter;
-use Spatie\LaravelData\Attributes\Validation\Max;
-use Spatie\LaravelData\Attributes\Validation\Min;
-use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
+use Honed\Form\Contracts\Adapter as AdapterContract;
+use Honed\Form\Concerns\Adaptable;
 
 /**
  * @template T of \Honed\Form\Components\Field
  */
-abstract class Adapter implements DataAdapter
+abstract class Adapter implements AdapterContract
 {
+    use Adaptable;
+
     /**
      * Get the class string of the component to be generated.
      * 
@@ -30,28 +27,66 @@ abstract class Adapter implements DataAdapter
     /**
      * Determine if the property is a valid candidate for conversion.
      */
-    abstract public function shouldConvert(DataProperty $property): bool;
+    abstract public function shouldConvertProperty(DataProperty $property): bool;
 
     /**
-     * Get the name of the property.
+     * Determine if the request rules are a valid candidate for conversion.
+     * 
+     * @param list<string|\Closure|\Illuminate\Validation\Rule> $rules
      */
-    public function getName(DataProperty $property): string
-    {
-        return $property->outputMappedName ?: $property->name;
-    }
+    abstract public function shouldConvertRules(string $key, array $rules): bool;
 
     /**
      * Get the form component for the data property.
      * 
      * @return ?T
      */
-    public function getComponent(DataProperty $property, DataClass $dataClass): ?Component
+    public function getPropertyComponent(DataProperty $property, DataClass $dataClass): ?Component
     {
-        if ($this->shouldConvert($property)) {
-            return $this->convert($property);
+        if ($this->shouldConvertProperty($property, $dataClass)) {
+            return $this->convertProperty($property, $dataClass);
         }
 
         return null;
+    }
+
+    /**
+     * Get the form component for the request rules.
+     * 
+     * @param list<string|\Closure|\Illuminate\Validation\Rule> $rules
+     * @return ?T
+     */
+    public function getRulesComponent(string $key, array $rules): ?Component
+    {
+        if ($this->shouldConvertRules($key, $rules)) {
+            return $this->convertRules($key, $rules);
+        }
+
+        return null;
+    }
+
+    /**
+     * Create a new component instance from the data property.
+     * 
+     * @return T
+     */
+    public function convertProperty(DataProperty $property, DataClass $dataClass): Component
+    {
+        $name = $this->getName($property);
+        $label = $this->getLabel($property);
+
+        return $this->newComponent($name, $label);
+    }
+
+    /**
+     * Create a new component instance from the request rules.
+     * 
+     * @param list<string|\Closure|\Illuminate\Validation\Rule> $rules
+     * @return T
+     */
+    public function convertRules(string $key, array $rules): Component
+    {
+        return $this->newComponent($key);
     }
 
     /**
@@ -59,60 +94,8 @@ abstract class Adapter implements DataAdapter
      * 
      * @return T
      */
-    public function convert(DataProperty $property): Component
+    public function newComponent(string $name, ?string $label = null): Component
     {
-        $name = $this->getName($property);
-        $label = $this->getLabel($property);
-
-        return $this->field($property)::make($name, $label);
+        return $this->field($name)::make($name, $label);
     }
-
-    /**
-     * Get the label for the property.
-     */
-    public function getLabel(DataProperty $property): ?string
-    {
-        return $property->attributes->first(Label::class)?->getLabel();
-    }
-
-    /**
-     * Get the minimum value for the property.
-     */
-    public function getMin(DataProperty $property): ?int
-    {
-        $parameter = $property->attributes->first(Min::class)?->parameters()[0];
-
-        return is_int($parameter) ? $parameter : null;
-    }
-
-    /**
-     * Get the maximum value for the property.
-     */
-    public function getMax(DataProperty $property): ?int
-    {
-        $parameter = $property->attributes->first(Max::class)?->parameters()[0];
-
-        return is_int($parameter) ? $parameter : null;
-    }
-
-    /**
-     * Get the hint for the property.\
-     */
-    public function getHint(DataProperty $property): ?string
-    {
-        return $property->attributes->first(Hint::class)?->getHint();
-    }
-
-    /**
-     * Get the placeholder for the property.
-     */
-    public function getPlaceholder(DataProperty $property): ?string
-    {
-        return $property->attributes->first(Placeholder::class)?->getPlaceholder();
-    }
-
-    // public function isRequired(DataProperty $property): bool
-    // {
-    //     return $property->attributes->first(Required::class)?->isRequired();
-    // }
 }
