@@ -11,8 +11,8 @@ uses(TestCase::class)->in(__DIR__);
 
 /**
  * Get the first property of a data class.
- * 
- * @param class-string<\Spatie\LaravelData\Data>|\Spatie\LaravelData\Data $class
+ *
+ * @param  class-string<Data>|Data  $class
  */
 function property(string|Data $class): DataProperty
 {

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Honed\Form\Generators;
 
 use Honed\Data\Contracts\Formable;
-use Honed\Form\Attributes\Component;
-use Honed\Form\Contracts\DataAdapter;
 use Honed\Form\Exceptions\CannotResolveComponent;
 use Honed\Form\Form;
 use Illuminate\Contracts\Config\Repository;
@@ -46,7 +44,7 @@ class DataGenerator extends Generator
             }
 
             foreach ($adapters as $adapter) {
-                if ($component = $adapter->getComponent($property, $dataClass)) {
+                if ($component = $adapter->getPropertyComponent($property, $dataClass)) {
                     $form->append($component);
                     break;
                 }
@@ -83,8 +81,8 @@ class DataGenerator extends Generator
 
         $data = $this->for::from(...$payloads);
 
-        return $data instanceof Formable 
-            ? $data->toForm() 
+        return $data instanceof Formable
+            ? $data->toForm()
             : $data->toArray();
     }
 }

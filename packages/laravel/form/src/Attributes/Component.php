@@ -26,12 +26,13 @@ class Component
         public string $component,
         mixed ...$arguments
     ) {
+        // @phpstan-ignore-next-line assign.propertyType
         $this->arguments = $arguments;
     }
 
     /**
      * Get the component class.
-     * 
+     *
      * @return class-string<\Honed\Form\Components\Component>
      */
     public function getComponent(): string
@@ -41,7 +42,7 @@ class Component
 
     /**
      * Get the arguments for the component.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getArguments(): array

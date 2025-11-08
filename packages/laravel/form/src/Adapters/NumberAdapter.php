@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Honed\Form\Adapters;
 
+use Closure;
 use Honed\Form\Components\Component;
-use Honed\Form\Components\Input;
 use Honed\Form\Components\NumberInput;
-use Honed\Form\Contracts\DataAdapter;
-use Spatie\LaravelData\Attributes\Validation\StringValidationAttribute;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
 
+/**
+ * @extends Adapter<\Honed\Form\Components\NumberInput>
+ */
 class NumberAdapter extends Adapter
 {
     /**
      * Get the class string of the component to be generated.
+     *
+     * @return class-string<NumberInput>
      */
     public function field(): string
     {
@@ -25,16 +28,16 @@ class NumberAdapter extends Adapter
     /**
      * Determine if the property is a valid candidate for conversion.
      */
-    public function shouldConvertProperty(DataProperty $property): bool
+    public function shouldConvertProperty(DataProperty $property, DataClass $dataClass): bool
     {
         return $property->type->type->acceptsType('int')
             || $property->type->type->acceptsType('float');
     }
 
-
     /**
      * Determine if the request rules are a valid candidate for conversion.
-     * @param list<string|\Closure|\Illuminate\Validation\Rule> $rules
+     *
+     * @param  list<string|Closure|\Illuminate\Validation\Rule>  $rules
      */
     public function shouldConvertRules(string $key, array $rules): bool
     {

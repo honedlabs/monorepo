@@ -2,14 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Data\ProductData;
-use Spatie\LaravelData\Data;
 use Honed\Form\Adapters\DefaultAdapter;
-use Honed\Form\Components\DateField;
 use Honed\Form\Components\Input;
-use Spatie\LaravelData\Support\DataConfig;
+use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\DataProperty;
-use Spatie\LaravelData\Attributes\Validation\Date;
 
 beforeEach(function () {
     $this->adapter = app(DefaultAdapter::class);
@@ -24,14 +20,14 @@ it('checks conversion', function (bool $expected, DataProperty $property) {
     expect($this->adapter)
         ->shouldConvert($property)->toBe($expected);
 })->with([
-    fn () => [true, property(new class extends Data
-        {
-            public ?string $name;
-        }
+    fn () => [true, property(new class() extends Data
+    {
+        public ?string $name;
+    }
     )],
-    fn () => [true, property(new class extends Data
-        {
-            public int $stock;
-        }
+    fn () => [true, property(new class() extends Data
+    {
+        public int $stock;
+    }
     )],
 ]);

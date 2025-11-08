@@ -50,7 +50,7 @@ trait Adaptable
     }
 
     /**
-     * Get the hint for the property.\
+     * Get the hint for the property.
      */
     public function getHint(DataProperty $property): ?string
     {

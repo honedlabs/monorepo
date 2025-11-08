@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Data\ProductData;
-use Honed\Form\Adapters\DefaultAdapter;
 use Honed\Form\Adapters\TextAdapter;
 use Honed\Form\Attributes\Autofocus;
 use Honed\Form\Attributes\Hint;
@@ -16,12 +14,11 @@ use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\DataConfig;
-use Spatie\LaravelData\Support\DataProperty;
 
 beforeEach(function () {
     $this->adapter = app(TextAdapter::class);
 
-    $this->class = new class extends Data
+    $this->class = new class() extends Data
     {
         #[Autofocus]
         #[Label('Username')]
@@ -47,10 +44,10 @@ it('converts to component', function (bool $expected, Data $data) {
     }
 })->with([
     fn () => [true, $this->class],
-    fn () => [false, new class extends Data
-        {
-            public bool $best_seller;
-        }
+    fn () => [false, new class() extends Data
+    {
+        public bool $best_seller;
+    },
     ],
 ]);
 

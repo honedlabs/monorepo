@@ -10,8 +10,8 @@ use Honed\Form\Attributes\Component;
 use Honed\Form\Components\Checkbox;
 use Honed\Form\Components\Lookup;
 use Honed\Form\Concerns\GeneratesForm;
-use Honed\Form\Support\Trans;
 use Honed\Form\Support\Route;
+use Honed\Form\Support\Trans;
 use Spatie\LaravelData\Attributes\Computed;
 use Spatie\LaravelData\Attributes\FromAuthenticatedUserProperty;
 use Spatie\LaravelData\Attributes\LoadRelation;
@@ -22,8 +22,6 @@ use Spatie\LaravelData\Data;
 class ProductData extends Data
 {
     use GeneratesForm;
-
-    protected $hidden;
 
     #[Computed]
     public $computed;
@@ -54,4 +52,6 @@ class ProductData extends Data
 
     #[FromAuthenticatedUserProperty(property: 'id')]
     public ?int $created_by;
+
+    protected $hidden;
 }

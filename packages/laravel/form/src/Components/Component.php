@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Form\Components;
 
 use BackedEnum;
+use Closure;
 use Honed\Core\Concerns\Allowable;
 use Honed\Core\Concerns\HasAttributes;
 use Honed\Core\Contracts\NullsAsUndefined;
@@ -76,6 +77,32 @@ abstract class Component extends Primitive implements NullsAsUndefined
         $component = $this->component();
 
         return is_string($component) ? $component : (string) $component->value;
+    }
+
+    /**
+     * Execute a simple callback based on the truthiness of the given value.
+     *
+     * @param  Closure($this):mixed  $callback
+     * @return $this
+     */
+    public function if(mixed $value, Closure $callback): static
+    {
+        if ((bool) $value) {
+            $callback($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Execute a simple callback based on the falsiness of the given value.
+     *
+     * @param  Closure($this):mixed  $callback
+     * @return $this
+     */
+    public function ifNot(mixed $value, Closure $callback): static
+    {
+        return $this->if(! $value, $callback);
     }
 
     /**

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Form\Adapters;
 
+use Closure;
 use Honed\Form\Components\Component;
+use Honed\Form\Concerns\Adaptable;
+use Honed\Form\Contracts\Adapter as AdapterContract;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
-use Honed\Form\Contracts\Adapter as AdapterContract;
-use Honed\Form\Concerns\Adaptable;
 
 /**
  * @template T of \Honed\Form\Components\Field
@@ -19,7 +20,7 @@ abstract class Adapter implements AdapterContract
 
     /**
      * Get the class string of the component to be generated.
-     * 
+     *
      * @return class-string<T>
      */
     abstract public function field(): string;
@@ -27,18 +28,18 @@ abstract class Adapter implements AdapterContract
     /**
      * Determine if the property is a valid candidate for conversion.
      */
-    abstract public function shouldConvertProperty(DataProperty $property): bool;
+    abstract public function shouldConvertProperty(DataProperty $property, DataClass $dataClass): bool;
 
     /**
      * Determine if the request rules are a valid candidate for conversion.
-     * 
-     * @param list<string|\Closure|\Illuminate\Validation\Rule> $rules
+     *
+     * @param  list<string|Closure|\Illuminate\Validation\Rule>  $rules
      */
     abstract public function shouldConvertRules(string $key, array $rules): bool;
 
     /**
      * Get the form component for the data property.
-     * 
+     *
      * @return ?T
      */
     public function getPropertyComponent(DataProperty $property, DataClass $dataClass): ?Component
@@ -52,8 +53,8 @@ abstract class Adapter implements AdapterContract
 
     /**
      * Get the form component for the request rules.
-     * 
-     * @param list<string|\Closure|\Illuminate\Validation\Rule> $rules
+     *
+     * @param  list<string|Closure|\Illuminate\Validation\Rule>  $rules
      * @return ?T
      */
     public function getRulesComponent(string $key, array $rules): ?Component
@@ -67,7 +68,7 @@ abstract class Adapter implements AdapterContract
 
     /**
      * Create a new component instance from the data property.
-     * 
+     *
      * @return T
      */
     public function convertProperty(DataProperty $property, DataClass $dataClass): Component
@@ -80,8 +81,8 @@ abstract class Adapter implements AdapterContract
 
     /**
      * Create a new component instance from the request rules.
-     * 
-     * @param list<string|\Closure|\Illuminate\Validation\Rule> $rules
+     *
+     * @param  list<string|Closure|\Illuminate\Validation\Rule>  $rules
      * @return T
      */
     public function convertRules(string $key, array $rules): Component
@@ -91,11 +92,11 @@ abstract class Adapter implements AdapterContract
 
     /**
      * Create a new component instance.
-     * 
+     *
      * @return T
      */
     public function newComponent(string $name, ?string $label = null): Component
     {
-        return $this->field($name)::make($name, $label);
+        return $this->field()::make($name, $label);
     }
 }
