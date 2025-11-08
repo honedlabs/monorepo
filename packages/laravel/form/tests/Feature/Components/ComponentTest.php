@@ -34,6 +34,7 @@ describe('evaluation', function () {
 
         $this->form = Form::make()->record($this->product);
     });
+    
     it('has named dependencies', function ($closure, $class) {
         expect($this->component)
             ->form($this->form)->toBe($this->component)
@@ -49,7 +50,7 @@ describe('evaluation', function () {
             return [fn ($row) => $row, Product::class];
         },
         function () {
-            return [fn (Form $f) => $f, Form::class];
+            return [fn ($form) => $form, Form::class];
         },
 
     ]);

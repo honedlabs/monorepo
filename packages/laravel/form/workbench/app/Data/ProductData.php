@@ -4,20 +4,26 @@ declare(strict_types=1);
 
 namespace App\Data;
 
+use Honed\Data\Attributes\ArrayParameter;
 use Spatie\LaravelData\Data;
 use Honed\Form\Components\Lookup;
 use Honed\Form\Components\Checkbox;
 use Honed\Form\Attributes\Component;
-use Honed\Form\Form;
-use Spatie\LaravelData\Support\DataConfig;
+use Honed\Form\Concerns\GeneratesForm;
+use Honed\Form\Support\Trans;
+use Honed\Form\Support\Url;
+use Spatie\LaravelData\Attributes\LoadRelation;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
-use Spatie\LaravelData\Support\DataAttributesCollection;
 
 class ProductData extends Data
 {
-    #[Component(Lookup::class)]
-    public int $user_id;
+    use GeneratesForm;
+
+    #[ArrayParameter('id')]
+    #[LoadRelation]
+    #[Component(Lookup::class, label: new Trans('User'), url: new Url('users.index'))]
+    public UserData $user;
 
     #[Min(2), Max(255)]
     public string $name;
@@ -28,25 +34,11 @@ class ProductData extends Data
     #[Min(0), Max(999)]
     public int $price;
 
-    #[Component(Checkbox::class)]
+    #[Component(Checkbox::class, default: true)]
     public bool $best_seller;
 
-    public static function form()
-    {
-        // return static::newForm()
-        dd(
-            app(DataConfig::class)
-            ->getDataClass(static::class)
-        );
-
-        DataAttributesCollection::class;
-    }
-
     /**
-     * Create a new form instance.
+     * @var list<int, UserData>
      */
-    protected static function getComponents()
-    {
-        return Service::transform(static::class);
-    }
+    public array $users;
 }

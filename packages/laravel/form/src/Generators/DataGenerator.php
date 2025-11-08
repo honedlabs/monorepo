@@ -11,9 +11,12 @@ use Honed\Form\Contracts\Generator;
 use Spatie\LaravelData\Support\DataConfig;
 use Illuminate\Contracts\Config\Repository;
 use Honed\Form\Exceptions\CannotResolveComponent;
+use Illuminate\Support\Traits\Conditionable;
 
 class DataGenerator implements Generator
 {
+    use Conditionable;
+    
     /**
      * The local adapters for this generator.
      * 

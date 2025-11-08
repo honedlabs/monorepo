@@ -13,7 +13,7 @@ afterEach(function () {
 });
 
 it('lists forms', function () {
-    $this->artisan('make:form', [
+    $this->artisan('honed:form', [
         'name' => 'UserForm',
     ])->assertSuccessful();
 

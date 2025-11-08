@@ -11,15 +11,15 @@ use Symfony\Component\Console\Input\InputOption;
 use function strtolower;
 use function trim;
 
-#[AsCommand(name: 'make:form-component')]
-class FormComponentMakeCommand extends GeneratorCommand
+#[AsCommand(name: 'honed:component')]
+class ComponentMakeCommand extends GeneratorCommand
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:form-component';
+    protected $name = 'honed:component';
 
     /**
      * The type of class being generated.

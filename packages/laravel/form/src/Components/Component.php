@@ -11,6 +11,7 @@ use Honed\Core\Contracts\NullsAsUndefined;
 use Honed\Core\Primitive;
 use Honed\Form\Concerns\BelongsToForm;
 use Honed\Form\Form;
+use Honed\Form\Support\FunctionalArgument;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -82,11 +83,13 @@ abstract class Component extends Primitive implements NullsAsUndefined
      * 
      * @param  array<string, mixed>  $attributes
      * @return $this
+     * 
+     * @internal
      */
     public function assign(array $attributes): static
     {
         foreach ($attributes as $key => $value) {
-            $this->{$key} = ($value);
+            $this->{$key} = $value instanceof FunctionalArgument ? $value->getValue() : $value;
         }
 
         return $this;

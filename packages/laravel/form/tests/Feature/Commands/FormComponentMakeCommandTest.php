@@ -13,7 +13,7 @@ afterEach(function () {
 });
 
 it('makes form components', function () {
-    $this->artisan('make:form-component', [
+    $this->artisan('honed:component', [
         'name' => 'Combobox',
     ])->assertSuccessful();
 
@@ -21,7 +21,7 @@ it('makes form components', function () {
 });
 
 it('prompts for a form component name', function () {
-    $this->artisan('make:form-component')
+    $this->artisan('honed:component')
         ->expectsQuestion('What should the form component be named?', 'Combobox')
         ->assertSuccessful();
 

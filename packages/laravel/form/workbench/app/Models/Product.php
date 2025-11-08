@@ -8,6 +8,7 @@ use Honed\Form\Concerns\HasForm;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
@@ -38,10 +39,20 @@ class Product extends Model
     /**
      * Get the user that owns the product.
      *
-     * @return BelongsTo<User, $this>
+     * @return BelongsTo<User, static>
      */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the users that have the product.
+     *
+     * @return BelongsToMany<User, static>
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, ProductUser::class);
     }
 }

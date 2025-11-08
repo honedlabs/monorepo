@@ -13,7 +13,7 @@ afterEach(function () {
 });
 
 it('makes forms', function () {
-    $this->artisan('make:form', [
+    $this->artisan('honed:form', [
         'name' => 'UserForm',
     ])->assertSuccessful();
 
@@ -21,7 +21,7 @@ it('makes forms', function () {
 });
 
 it('prompts for a form name', function () {
-    $this->artisan('make:form')
+    $this->artisan('honed:form')
         ->expectsQuestion('What should the form be named?', 'UserForm')
         ->assertSuccessful();
 

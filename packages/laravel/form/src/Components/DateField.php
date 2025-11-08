@@ -48,9 +48,9 @@ class DateField extends Field
      *
      * @return $this
      */
-    public function granularity(string|BackedEnum $value): static
+    public function granularity(string|BackedEnum|null $value): static
     {
-        return $this->attribute('granularity', is_string($value) ? $value : (string) $value->value);
+        return $this->attribute('granularity', $value instanceof BackedEnum ? (string) $value->value : $value);
     }
 
     /**
@@ -58,8 +58,8 @@ class DateField extends Field
      *
      * @return $this
      */
-    public function locale(string|BackedEnum $value): static
+    public function locale(string|BackedEnum|null $value): static
     {
-        return $this->attribute('locale', is_string($value) ? $value : (string) $value->value);
+        return $this->attribute('locale', $value instanceof BackedEnum ? (string) $value->value : $value);
     }
 }

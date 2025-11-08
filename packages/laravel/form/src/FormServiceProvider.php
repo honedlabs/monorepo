@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Form;
 
-use Honed\Form\Commands\FormComponentMakeCommand;
+use Illuminate\Support\ServiceProvider;
 use Honed\Form\Commands\FormListCommand;
 use Honed\Form\Commands\FormMakeCommand;
-use Illuminate\Support\ServiceProvider;
+use Honed\Form\Commands\AdapterMakeCommand;
+use Honed\Form\Commands\ComponentMakeCommand;
 
 class FormServiceProvider extends ServiceProvider
 {
@@ -29,7 +30,8 @@ class FormServiceProvider extends ServiceProvider
 
             if (! $this->app->environment('production')) {
                 $this->commands([
-                    FormComponentMakeCommand::class,
+                    AdapterMakeCommand::class,
+                    ComponentMakeCommand::class,
                     FormListCommand::class,
                     FormMakeCommand::class,
                 ]);
