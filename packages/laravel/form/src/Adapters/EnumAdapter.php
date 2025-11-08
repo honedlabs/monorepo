@@ -10,7 +10,6 @@ use Honed\Form\Components\Component;
 use Honed\Form\Components\Select;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
-use UnitEnum;
 
 /**
  * @extends Adapter<\Honed\Form\Components\Select>
@@ -32,8 +31,7 @@ class EnumAdapter extends Adapter
      */
     public function shouldConvertProperty(DataProperty $property, DataClass $dataClass): bool
     {
-        return (bool) $property->type->type->findAcceptedTypeForBaseType(BackedEnum::class)
-            || (bool) $property->type->type->findAcceptedTypeForBaseType(UnitEnum::class);
+        return (bool) $property->type->type->findAcceptedTypeForBaseType(BackedEnum::class);
     }
 
     /**
@@ -56,8 +54,8 @@ class EnumAdapter extends Adapter
         /** @var \Spatie\LaravelData\Support\Types\NamedType $type */
         $type = $property->type->type;
 
-        /** @var class-string<BackedEnum|UnitEnum> $enum */
-        $enum = $type->name::class;
+        /** @var class-string<BackedEnum> $enum */
+        $enum = $type->name;
 
         return parent::convertProperty($property, $dataClass)
             ->options($enum);

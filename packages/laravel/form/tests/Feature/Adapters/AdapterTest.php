@@ -30,17 +30,17 @@ beforeEach(function () {
     };
 });
 
-it('converts to component', function (bool $expected, Data $data) {
+it('converts property to component', function (bool $expected, Data $data) {
     $property = property($data);
 
     $dataClass = app(DataConfig::class)->getDataClass($data::class);
 
     if ($expected) {
         expect($this->adapter)
-            ->getComponent($property, $dataClass)->toBeInstanceOf(Input::class);
+            ->getPropertyComponent($property, $dataClass)->toBeInstanceOf(Input::class);
     } else {
         expect($this->adapter)
-            ->getComponent($property, $dataClass)->toBeNull();
+            ->getPropertyComponent($property, $dataClass)->toBeNull();
     }
 })->with([
     fn () => [true, $this->class],
@@ -50,6 +50,11 @@ it('converts to component', function (bool $expected, Data $data) {
     },
     ],
 ]);
+
+it('gets name', function () {
+    expect($this->adapter)
+        ->getName(property($this->class))->toBe('username');
+});
 
 it('gets label', function () {
     expect($this->adapter)
@@ -68,17 +73,12 @@ it('gets placeholder', function () {
 
 it('gets min value', function () {
     expect($this->adapter)
-        ->getMin(property($this->class))->toBe(2);
+        ->getPropertyMin(property($this->class))->toBe(2);
 });
 
 it('gets max value', function () {
     expect($this->adapter)
-        ->getMax(property($this->class))->toBe(255);
-});
-
-it('gets name', function () {
-    expect($this->adapter)
-        ->getName(property($this->class))->toBe('username');
+        ->getPropertyMax(property($this->class))->toBe(255);
 });
 
 // it('checks if required', function () {

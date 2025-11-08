@@ -2,4 +2,11 @@
 
 declare(strict_types=1);
 
-beforeEach(function () {});
+use App\Data\ProductData;
+
+beforeEach(function () {
+    dd(ProductData::form());
+})->only();
+
+it('generates store form', function () {
+});

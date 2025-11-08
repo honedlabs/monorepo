@@ -10,5 +10,6 @@ it('has attribute', function () {
 
     expect($attribute)
         ->toBeInstanceOf(Component::class)
-        ->component->toBe(Input::class);
+        ->getComponent()->toBe(Input::class)
+        ->getArguments()->toBe([]);
 });
