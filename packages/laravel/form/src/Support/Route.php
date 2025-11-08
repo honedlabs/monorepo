@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\URL as UrlGenerator;
 /**
  * @extends FunctionalArgument<string>
  */
-final class Url extends FunctionalArgument
+final class Route extends FunctionalArgument
 {
     public function __construct(
         public readonly string $name,

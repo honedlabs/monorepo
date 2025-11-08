@@ -53,7 +53,7 @@ class Form extends Primitive implements NullsAsUndefined
     {
         parent::setUp();
 
-        $this->method(Request::METHOD_POST);
+        $this->post();
     }
 
     /**

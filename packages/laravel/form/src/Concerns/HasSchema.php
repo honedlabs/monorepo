@@ -30,6 +30,30 @@ trait HasSchema
     }
 
     /**
+     * Prepend a component to the schema.
+     *
+     * @return $this
+     */
+    public function append(Component $component): static
+    {
+        $this->schema[] = $component;
+
+        return $this;
+    }
+
+    /**
+     * Prepend a component to the schema.
+     *
+     * @return $this
+     */
+    public function prepend(Component $component): static
+    {
+        array_unshift($this->schema, $component);
+
+        return $this;
+    }
+
+    /**
      * Get the schema of the component.
      *
      * @return list<Component>

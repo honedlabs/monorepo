@@ -6,6 +6,7 @@ use App\Models\Product;
 use Honed\Form\Components\Legend;
 use Honed\Form\Enums\FormComponent;
 use Honed\Form\Form;
+use Honed\Form\Support\Trans;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,6 +27,14 @@ it('has array representation', function () {
             'label' => 'test',
             'component' => FormComponent::Legend->value,
         ]);
+});
+
+it('assigns properties', function () {
+    expect($this->component)
+        ->assign(['label' => 'assign'])->toBe($this->component)
+        ->getLabel()->toBe('assign')
+        ->assign(['label' => new Trans('assign')])->toBe($this->component)
+        ->getLabel()->toBe(__('assign'));
 });
 
 describe('evaluation', function () {

@@ -4,16 +4,30 @@ declare(strict_types=1);
 
 namespace Honed\Form\Adapters;
 
-use Honed\Form\Components\Component;
-use Honed\Form\Contracts\DataAdapter;
-use Spatie\LaravelData\Support\DataClass;
+use Honed\Form\Components\DateField;
+use Spatie\LaravelData\Attributes\Validation\Date;
 use Spatie\LaravelData\Support\DataProperty;
 
-class DateAdapter implements DataAdapter
+/**
+ * @extends Adapter<\Honed\Form\Components\DateField>
+ */
+class DateAdapter extends Adapter
 {
-    public function getComponent(DataProperty $property, DataClass $dataClass): ?Component
+    /**
+     * Get the class string of the component to be generated.
+     *
+     * @return class-string<\Honed\Form\Components\DateField>
+     */
+    public function field(): string
     {
-        // if ($property->attributes->has())
-        return null;
+        return DateField::class;
+    }
+
+    /**
+     * Determine if the property is a valid candidate for conversion.
+     */
+    public function shouldConvert(DataProperty $property): bool
+    {
+        return $property->attributes->has(Date::class);
     }
 }

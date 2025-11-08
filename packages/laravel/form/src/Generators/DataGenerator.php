@@ -72,8 +72,6 @@ class DataGenerator implements Generator
      */
     public function generate(mixed ...$payloads): Form
     {
-        $data = $this->getData($payloads);
-
         $dataClass = $this->dataConfig->getDataClass($this->for);
 
         $adapters = $this->getAdapters();
@@ -83,13 +81,15 @@ class DataGenerator implements Generator
         foreach ($dataClass->properties as $property) {
             foreach ($adapters as $adapter) {
                 if ($component = $adapter->getComponent($property, $dataClass)) {
-                    // $form->schema($component);
+                    $form->append($component);
                     break;
                 }
             }
 
             CannotResolveComponent::throw($property->name);
         }
+
+        $form->record($this->getData($payloads));
 
         return $form;
     }
