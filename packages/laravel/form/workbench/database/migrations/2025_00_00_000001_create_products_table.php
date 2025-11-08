@@ -19,6 +19,7 @@ return new class() extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->unsignedInteger('price')->default(0);
+            $table->unsignedTinyInteger('status')->default(0);
             $table->boolean('best_seller')->default(false);
             $table->timestamps();
         });

@@ -8,20 +8,20 @@ use Attribute;
 use Honed\Form\Support\Trans;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class Label
+class Placeholder
 {
     /**
      * Create a new attribute instance.
      */
     public function __construct(
-        public string|Trans $label
+        public string|Trans $placeholder
     ) {}
 
     /**
-     * Get the label.
+     * Get the placeholder.
      */
-    public function getLabel(): string
+    public function getPlaceholder(): string
     {
-        return is_string($this->label) ? $this->label : $this->label->getValue();
+        return is_string($this->placeholder) ? $this->placeholder : $this->placeholder->getValue();
     }
 }

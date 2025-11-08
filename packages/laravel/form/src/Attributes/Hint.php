@@ -7,7 +7,7 @@ namespace Honed\Form\Attributes;
 use Attribute;
 use Honed\Form\Support\Trans;
 
-#[Attribute(Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 class Hint
 {
     /**

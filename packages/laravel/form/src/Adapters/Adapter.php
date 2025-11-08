@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Form\Adapters;
 
+use Honed\Form\Attributes\Hint;
 use Honed\Form\Attributes\Label;
+use Honed\Form\Attributes\Placeholder;
 use Honed\Form\Components\Component;
 use Honed\Form\Contracts\DataAdapter;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
+use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
 
@@ -28,6 +31,14 @@ abstract class Adapter implements DataAdapter
      * Determine if the property is a valid candidate for conversion.
      */
     abstract public function shouldConvert(DataProperty $property): bool;
+
+    /**
+     * Get the name of the property.
+     */
+    public function getName(DataProperty $property): string
+    {
+        return $property->outputMappedName ?: $property->name;
+    }
 
     /**
      * Get the form component for the data property.
@@ -61,9 +72,7 @@ abstract class Adapter implements DataAdapter
      */
     public function getLabel(DataProperty $property): ?string
     {
-        return $property->attributes
-            ->first(Label::class)
-            ?->getLabel();
+        return $property->attributes->first(Label::class)?->getLabel();
     }
 
     /**
@@ -71,9 +80,7 @@ abstract class Adapter implements DataAdapter
      */
     public function getMin(DataProperty $property): ?int
     {
-        $parameter = $property->attributes
-            ->first(Min::class)
-            ?->parameters()[0];
+        $parameter = $property->attributes->first(Min::class)?->parameters()[0];
 
         return is_int($parameter) ? $parameter : null;
     }
@@ -83,18 +90,29 @@ abstract class Adapter implements DataAdapter
      */
     public function getMax(DataProperty $property): ?int
     {
-        $parameter = $property->attributes
-            ->first(Max::class)
-            ?->parameters()[0];
+        $parameter = $property->attributes->first(Max::class)?->parameters()[0];
 
         return is_int($parameter) ? $parameter : null;
     }
 
     /**
-     * Get the name of the property.
+     * Get the hint for the property.\
      */
-    public function getName(DataProperty $property): string
+    public function getHint(DataProperty $property): ?string
     {
-        return $property->outputMappedName ?: $property->name;
+        return $property->attributes->first(Hint::class)?->getHint();
     }
+
+    /**
+     * Get the placeholder for the property.
+     */
+    public function getPlaceholder(DataProperty $property): ?string
+    {
+        return $property->attributes->first(Placeholder::class)?->getPlaceholder();
+    }
+
+    // public function isRequired(DataProperty $property): bool
+    // {
+    //     return $property->attributes->first(Required::class)?->isRequired();
+    // }
 }

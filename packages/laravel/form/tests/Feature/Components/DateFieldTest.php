@@ -35,7 +35,9 @@ it('has locale attribute', function () {
         ->locale('en')->toBe($this->component)
         ->getAttributes()->toBe(['locale' => 'en'])
         ->locale(Granularity::Second)->toBe($this->component)
-        ->getAttributes()->toBe(['locale' => 'second']);
+        ->getAttributes()->toBe(['locale' => 'second'])
+        ->appLocale()->toBe($this->component)
+        ->getAttributes()->toBe(['locale' => app()->getLocale()]);
 });
 
 it('gets value', function ($value, $expected) {

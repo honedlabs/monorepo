@@ -5,25 +5,21 @@ declare(strict_types=1);
 namespace Honed\Form\Adapters;
 
 use Honed\Form\Components\Component;
-use Honed\Form\Components\Checkbox;
+use Honed\Form\Components\Input;
+use Honed\Form\Components\NumberInput;
 use Honed\Form\Contracts\DataAdapter;
+use Spatie\LaravelData\Attributes\Validation\StringValidationAttribute;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
-use Spatie\LaravelData\Support\DataType;
 
-/**
- * @extends Adapter<\Honed\Form\Components\Checkbox>
- */
-class BooleanAdapter extends Adapter
+class NumericAdapter extends Adapter
 {
     /**
      * Get the class string of the component to be generated.
-     *
-     * @return class-string<\Honed\Form\Components\Checkbox>
      */
     public function field(): string
     {
-        return Checkbox::class;
+        return NumberInput::class;
     }
 
     /**
@@ -31,6 +27,8 @@ class BooleanAdapter extends Adapter
      */
     public function shouldConvert(DataProperty $property): bool
     {
-        return $property->type->type->acceptsType('bool');
+        return $property->type->type->acceptsType('int')
+            || $property->type->type->acceptsType('float');
     }
+    
 }

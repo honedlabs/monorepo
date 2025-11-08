@@ -12,11 +12,9 @@ use Spatie\LaravelData\Attributes\Validation\Date;
 
 beforeEach(function () {
     $this->adapter = app(DateAdapter::class);
+});
 
-    dd(app(DataConfig::class)->getDataClass(ProductData::class)->properties);
-})->only();
-
-it('has date field', function () {
+it('has field', function () {
     expect($this->adapter)
         ->field()->toBe(DateField::class);
 });

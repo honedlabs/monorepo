@@ -12,7 +12,7 @@ class Component
     /**
      * The arguments for the component.
      *
-     * @var array<int|string, mixed>
+     * @var array<string, mixed>
      */
     public $arguments;
 
@@ -20,17 +20,32 @@ class Component
      * Create a new attribute instance.
      *
      * @param  class-string<\Honed\Form\Components\Component>  $component
+     * @param  array<string, mixed>  $arguments
      */
     public function __construct(
         public string $component,
         mixed ...$arguments
     ) {
-        // if (! is_a($this->component, Component::class, true)) {
-        //     C
-        // }
-
         $this->arguments = $arguments;
     }
 
-    // public function get
+    /**
+     * Get the component class.
+     * 
+     * @return class-string<\Honed\Form\Components\Component>
+     */
+    public function getComponent(): string
+    {
+        return $this->component;
+    }
+
+    /**
+     * Get the arguments for the component.
+     * 
+     * @return array<string, mixed>
+     */
+    public function getArguments(): array
+    {
+        return $this->arguments;
+    }
 }

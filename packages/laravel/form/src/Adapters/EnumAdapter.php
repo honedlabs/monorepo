@@ -29,7 +29,7 @@ class EnumAdapter extends Adapter
      */
     public function shouldConvert(DataProperty $property): bool
     {
-        return $property->type->type->acceptsType(BackedEnum::class)
-            || $property->type->type->acceptsType(UnitEnum::class);
+        return (bool) $property->type->type->findAcceptedTypeForBaseType(BackedEnum::class)
+            || (bool) $property->type->type->findAcceptedTypeForBaseType(UnitEnum::class);
     }
 }
