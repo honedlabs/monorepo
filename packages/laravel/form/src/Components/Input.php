@@ -26,7 +26,7 @@ class Input extends Field
 
     /**
      * Set the type of the input to text.
-     * 
+     *
      * @return $this
      */
     public function text(): static
@@ -36,7 +36,7 @@ class Input extends Field
 
     /**
      * Set the type of the input to password.
-     * 
+     *
      * @return $this
      */
     public function password(): static
@@ -46,7 +46,7 @@ class Input extends Field
 
     /**
      * Set the type of the input to file.
-     * 
+     *
      * @return $this
      */
     public function file(): static

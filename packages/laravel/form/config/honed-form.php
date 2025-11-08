@@ -8,5 +8,5 @@ return [
         // Honed\Form\Adapters\EnumAdapter::class,
         Honed\Form\Adapters\TextAdapter::class,
         Honed\Form\Adapters\DefaultAdapter::class,
-    ]
+    ],
 ];

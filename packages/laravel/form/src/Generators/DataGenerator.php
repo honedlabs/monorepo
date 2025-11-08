@@ -4,37 +4,37 @@ declare(strict_types=1);
 
 namespace Honed\Form\Generators;
 
-use Honed\Form\Form;
 use Honed\Data\Contracts\Formable;
 use Honed\Form\Contracts\DataAdapter;
 use Honed\Form\Contracts\Generator;
-use Spatie\LaravelData\Support\DataConfig;
-use Illuminate\Contracts\Config\Repository;
 use Honed\Form\Exceptions\CannotResolveComponent;
+use Honed\Form\Form;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Traits\Conditionable;
+use Spatie\LaravelData\Support\DataConfig;
 
 class DataGenerator implements Generator
 {
     use Conditionable;
-    
+
     /**
      * The local adapters for this generator.
-     * 
-     * @var list<class-string<\Honed\Form\Contracts\DataAdapter>>
+     *
+     * @var list<class-string<DataAdapter>>
      */
     protected $adapters = [];
 
     /**
      * The data class to generate a form for.
-     * 
+     *
      * @var class-string<\Spatie\LaravelData\Data>
      */
     protected $for;
 
     /**
      * The form instance.
-     * 
-     * @var \Honed\Form\Form|null
+     *
+     * @var Form|null
      */
     protected $form;
 
@@ -44,7 +44,7 @@ class DataGenerator implements Generator
     public function __construct(
         protected DataConfig $dataConfig,
         protected Repository $config
-    ) { }
+    ) {}
 
     /**
      * Create a new form builder instance.
@@ -56,8 +56,8 @@ class DataGenerator implements Generator
 
     /**
      * Set the data class to generate a form for.
-     * 
-     * @param class-string<\Spatie\LaravelData\Data> $className
+     *
+     * @param  class-string<\Spatie\LaravelData\Data>  $className
      * @return $this
      */
     public function for(string $className): static
@@ -96,7 +96,7 @@ class DataGenerator implements Generator
 
     /**
      * Set the form instance to be used.
-     * 
+     *
      * @return $this
      */
     public function form(?Form $form): static
@@ -124,7 +124,7 @@ class DataGenerator implements Generator
 
     /**
      * Get the data from a payload.
-     * 
+     *
      * @return array<array-key, mixed>
      */
     public function getData(mixed ...$payloads): array
@@ -140,8 +140,8 @@ class DataGenerator implements Generator
 
     /**
      * Set local adapters to be used, appends to the current list.
-     * 
-     * @param class-string<DataAdapter>|list<class-string<DataAdapter>> $adapters
+     *
+     * @param  class-string<DataAdapter>|list<class-string<DataAdapter>>  $adapters
      */
     public function adapters(string|array $adapters): static
     {
@@ -155,7 +155,7 @@ class DataGenerator implements Generator
 
     /**
      * Get the adapters to be used.
-     * 
+     *
      * @return list<DataAdapter>
      */
     public function getAdapters(): array
@@ -170,7 +170,7 @@ class DataGenerator implements Generator
 
     /**
      * Get the global adapters.
-     * 
+     *
      * @return list<class-string<DataAdapter>>
      */
     protected function getGlobalAdapters()

@@ -80,10 +80,10 @@ abstract class Component extends Primitive implements NullsAsUndefined
 
     /**
      * Assign properties to the component.
-     * 
+     *
      * @param  array<string, mixed>  $attributes
      * @return $this
-     * 
+     *
      * @internal
      */
     public function assign(array $attributes): static

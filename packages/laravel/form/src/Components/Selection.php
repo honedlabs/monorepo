@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Honed\Form\Components;
 
 use Honed\Core\Concerns\HasPlaceholder;
-use Honed\Option\Concerns\HasOptions;
 use Honed\Option\Concerns\CanBeMultiple;
+use Honed\Option\Concerns\HasOptions;
 
 abstract class Selection extends Field
 {

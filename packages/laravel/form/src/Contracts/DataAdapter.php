@@ -6,7 +6,6 @@ namespace Honed\Form\Contracts;
 
 use Honed\Form\Components\Component;
 use Spatie\LaravelData\Support\DataClass;
-use Spatie\LaravelData\Support\DataConfig;
 use Spatie\LaravelData\Support\DataProperty;
 
 interface DataAdapter

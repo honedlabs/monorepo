@@ -26,7 +26,7 @@ class NumberInput extends Input
 
     /**
      * Get the placeholder for when the given value is null.
-     * 
+     *
      * @return int
      */
     public function empty(): mixed

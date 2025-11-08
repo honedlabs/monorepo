@@ -20,7 +20,7 @@ class RouteNotSetException extends Exception
 
     /**
      * Throw the exception.
-     * 
+     *
      * @throws self
      */
     public static function throw(): never

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Honed\Option\Option;
 use Honed\Form\Components\Select;
 use Honed\Form\Enums\FormComponent;
+use Honed\Option\Option;
 
 beforeEach(function () {
     $this->component = Select::make('type');

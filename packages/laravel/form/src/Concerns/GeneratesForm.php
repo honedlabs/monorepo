@@ -17,5 +17,4 @@ trait GeneratesForm
         return DataGenerator::make(static::class)
             ->generate(...$payloads);
     }
-
 }

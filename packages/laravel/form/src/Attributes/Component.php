@@ -11,7 +11,7 @@ class Component
 {
     /**
      * The arguments for the component.
-     * 
+     *
      * @var array<int|string, mixed>
      */
     public $arguments;

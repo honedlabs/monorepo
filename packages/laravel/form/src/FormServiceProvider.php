@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Form;
 
-use Illuminate\Support\ServiceProvider;
-use Honed\Form\Commands\FormListCommand;
-use Honed\Form\Commands\FormMakeCommand;
 use Honed\Form\Commands\AdapterMakeCommand;
 use Honed\Form\Commands\ComponentMakeCommand;
+use Honed\Form\Commands\FormListCommand;
+use Honed\Form\Commands\FormMakeCommand;
+use Illuminate\Support\ServiceProvider;
 
 class FormServiceProvider extends ServiceProvider
 {

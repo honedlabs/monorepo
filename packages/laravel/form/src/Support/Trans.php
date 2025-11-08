@@ -13,7 +13,7 @@ final class Trans extends FunctionalArgument
 {
     public function __construct(
         public readonly string $key,
-    ) { }
+    ) {}
 
     /**
      * Get the value of the translation.

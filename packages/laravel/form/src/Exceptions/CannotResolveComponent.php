@@ -14,13 +14,13 @@ class CannotResolveComponent extends Exception
     final public function __construct(string $property)
     {
         parent::__construct(
-            "Could not resolve a valid form component for [${$property}]."
+            "Could not resolve a valid form component for [{$property}]."
         );
     }
 
     /**
      * Throw the exception.
-     * 
+     *
      * @throws self
      */
     public static function throw(string $property): never

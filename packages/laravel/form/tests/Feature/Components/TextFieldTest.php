@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Components;
 
-use Honed\Form\Components\Input;
 use Honed\Form\Components\Textarea;
 use Honed\Form\Enums\FormComponent;
 

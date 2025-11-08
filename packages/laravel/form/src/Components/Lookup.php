@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Honed\Form\Components;
 
 use BackedEnum;
-use Honed\Core\Concerns\HasUrl;
 use Honed\Core\Concerns\HasMethod;
+use Honed\Core\Concerns\HasUrl;
+use Honed\Form\Concerns\Asynchronous;
 use Honed\Form\Enums\FormComponent;
 use Honed\Form\Exceptions\RouteNotSetException;
-use Honed\Form\Concerns\Asynchronous;
 
 class Lookup extends Selection
 {
-    use HasUrl;
-    use HasMethod;
     use Asynchronous;
+    use HasMethod;
+    use HasUrl;
 
     /**
      * The identifier to use for evaluation.
@@ -25,14 +25,6 @@ class Lookup extends Selection
     protected $evaluationIdentifier = 'lookup';
 
     /**
-     * The name of the component.
-     */
-    public function component(): string|BackedEnum
-    {
-        return FormComponent::Lookup;
-    }
-
-    /**
      * Provide the instance with any necessary setup.
      */
     protected function setUp(): void
@@ -40,6 +32,14 @@ class Lookup extends Selection
         parent::setUp();
 
         $this->get();
+    }
+
+    /**
+     * The name of the component.
+     */
+    public function component(): string|BackedEnum
+    {
+        return FormComponent::Lookup;
     }
 
     /**
