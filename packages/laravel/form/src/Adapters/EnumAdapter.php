@@ -10,6 +10,7 @@ use Honed\Form\Components\Select;
 use Honed\Form\Contracts\DataAdapter;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
+use UnitEnum;
 
 class EnumAdapter extends Adapter
 {
@@ -28,6 +29,7 @@ class EnumAdapter extends Adapter
      */
     public function shouldConvert(DataProperty $property): bool
     {
-        return $property->type instanceof BackedEnum;
+        return $property->type->type->acceptsType(BackedEnum::class)
+            || $property->type->type->acceptsType(UnitEnum::class);
     }
 }

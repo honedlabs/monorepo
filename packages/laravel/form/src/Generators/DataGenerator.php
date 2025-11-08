@@ -11,7 +11,9 @@ use Honed\Form\Exceptions\CannotResolveComponent;
 use Honed\Form\Form;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Traits\Conditionable;
+use Spatie\LaravelData\Attributes\InjectsPropertyValue;
 use Spatie\LaravelData\Support\DataConfig;
+use Spatie\LaravelData\Support\DataProperty;
 
 class DataGenerator implements Generator
 {
@@ -68,33 +70,6 @@ class DataGenerator implements Generator
     }
 
     /**
-     * Generate a form.
-     */
-    public function generate(mixed ...$payloads): Form
-    {
-        $dataClass = $this->dataConfig->getDataClass($this->for);
-
-        $adapters = $this->getAdapters();
-
-        $form = $this->getForm();
-
-        foreach ($dataClass->properties as $property) {
-            foreach ($adapters as $adapter) {
-                if ($component = $adapter->getComponent($property, $dataClass)) {
-                    $form->append($component);
-                    break;
-                }
-            }
-
-            CannotResolveComponent::throw($property->name);
-        }
-
-        $form->record($this->getData($payloads));
-
-        return $form;
-    }
-
-    /**
      * Set the form instance to be used.
      *
      * @return $this
@@ -120,6 +95,47 @@ class DataGenerator implements Generator
     public function newForm(): Form
     {
         return Form::make();
+    }
+
+    /**
+     * Generate a form.
+     */
+    public function generate(mixed ...$payloads): Form
+    {
+        $dataClass = $this->dataConfig->getDataClass($this->for);
+
+        $adapters = $this->getAdapters();
+
+        $form = $this->getForm();
+
+        foreach ($dataClass->properties as $property) {
+            if ($this->shouldSkip($property)) {
+                continue;
+            }
+
+            foreach ($adapters as $adapter) {
+                if ($component = $adapter->getComponent($property, $dataClass)) {
+                    $form->append($component);
+                    break;
+                }
+            }
+
+            CannotResolveComponent::throw($property->name);
+        }
+
+        $form->record($this->getData($payloads));
+
+        return $form;
+    }
+
+    /**
+     * Determine if the property should be skipped when generating a form.
+     */
+    public function shouldSkip(DataProperty $property): bool
+    {
+        return $property->computed
+            || $property->hidden
+            || $property->attributes->has(InjectsPropertyValue::class);
     }
 
     /**

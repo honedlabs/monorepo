@@ -7,6 +7,7 @@ namespace Database\Factories;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Enums\Status;
 
 /**
  * @template TModel of \App\Models\Product
@@ -33,6 +34,7 @@ class ProductFactory extends Factory
             'name' => fake()->name(),
             'user_id' => User::factory(),
             'description' => fake()->sentence(),
+            'status' => fake()->randomElement(Status::cases()),
             'price' => fake()->numberBetween(100, 1000),
             'best_seller' => fake()->boolean(),
         ];

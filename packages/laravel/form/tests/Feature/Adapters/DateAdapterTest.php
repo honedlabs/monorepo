@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Data\ProductData;
+use Spatie\LaravelData\Data;
+use Honed\Form\Adapters\DateAdapter;
+use Honed\Form\Components\DateField;
+use Spatie\LaravelData\Support\DataConfig;
+use Spatie\LaravelData\Support\DataProperty;
+use Spatie\LaravelData\Attributes\Validation\Date;
+
+beforeEach(function () {
+    $this->adapter = app(DateAdapter::class);
+
+    dd(app(DataConfig::class)->getDataClass(ProductData::class)->properties);
+})->only();
+
+it('has date field', function () {
+    expect($this->adapter)
+        ->field()->toBe(DateField::class);
+});
+
+it('checks conversion', function (bool $expected, DataProperty $property) {
+    expect($this->adapter)
+        ->shouldConvert($property)->toBe($expected);
+})->with([
+    fn () => [false, property(new class extends Data
+        {
+            public ?string $name;
+        }
+    )],
+    fn () => [true, property(new class extends Data
+        {
+            #[Date]
+            public ?string $created_at;
+        }
+    )],
+]);

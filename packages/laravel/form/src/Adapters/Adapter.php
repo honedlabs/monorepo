@@ -53,7 +53,7 @@ abstract class Adapter implements DataAdapter
         $name = $this->getName($property);
         $label = $this->getLabel($property);
 
-        return $this->field()::make($name, $label);
+        return $this->field($property)::make($name, $label);
     }
 
     /**

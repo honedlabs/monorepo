@@ -62,4 +62,14 @@ class DateField extends Field
     {
         return $this->attribute('locale', $value instanceof BackedEnum ? (string) $value->value : $value);
     }
+
+    /**
+     * Set the locale of the date to the application locale.
+     *
+     * @return $this
+     */
+    public function appLocale(): static
+    {
+        return $this->locale(app()->getLocale());
+    }
 }
