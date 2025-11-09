@@ -74,7 +74,7 @@ abstract class Generator implements GeneratorContract
      *
      * @return $this
      */
-    public function form(?Form $form): static
+    public function form(?Form $form = null): static
     {
         $this->form = $form;
 

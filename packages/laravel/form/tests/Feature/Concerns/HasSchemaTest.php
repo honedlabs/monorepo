@@ -26,3 +26,17 @@ it('converts schema to array', function () {
         ->schema([$this->input])->toBe($this->form)
         ->resolveSchema()->toEqual([$this->input->toArray()]);
 });
+
+it('appends component to schema', function () {
+    expect($this->form)
+        ->getSchema()->toBe([])
+        ->append($this->input)->toBe($this->form)
+        ->getSchema()->toEqual([$this->input]);
+});
+
+it('prepends component to schema', function () {
+    expect($this->form)
+        ->getSchema()->toBe([])
+        ->prepend($this->input)->toBe($this->form)
+        ->getSchema()->toEqual([$this->input]);
+});

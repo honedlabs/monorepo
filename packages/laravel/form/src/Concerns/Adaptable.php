@@ -71,6 +71,7 @@ trait Adaptable
      */
     public function isRequired(DataProperty $property): bool
     {
-        return $property->attributes->has(Required::class);
+        return ! $property->type->isNullable
+            || $property->attributes->has(Required::class);
     }
 }

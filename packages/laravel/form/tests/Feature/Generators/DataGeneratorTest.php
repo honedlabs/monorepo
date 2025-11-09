@@ -88,6 +88,7 @@ it('generates form without payload', function () {
                         'component' => FormComponent::Input->value,
                         'name' => 'name',
                         'label' => 'Name',
+                        'required' => true,
                     ],
                     [
                         'component' => FormComponent::Textarea->value,
@@ -98,17 +99,20 @@ it('generates form without payload', function () {
                         'component' => FormComponent::Number->value,
                         'name' => 'price',
                         'label' => 'Price',
+                        'required' => true,
                     ],
                     [
                         'component' => FormComponent::Checkbox->value,
                         'name' => 'best_seller',
                         'label' => 'Best seller',
+                        'required' => true,
                     ],
                     [
                         'component' => FormComponent::Select->value,
                         'name' => 'status',
                         'label' => 'Status',
                         'defaultValue' => Status::Available,
+                        'required' => true,
                         'options' => [
                             [
                                 'value' => Status::Available->value,
@@ -129,6 +133,7 @@ it('generates form without payload', function () {
                         'name' => 'users',
                         'label' => 'Users',
                         'defaultValue' => [],
+                        'required' => true,
                     ],
                 ],
             ])
