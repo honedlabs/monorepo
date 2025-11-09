@@ -7,7 +7,6 @@ namespace App\Data;
 use App\Enums\Status;
 use Honed\Data\Attributes\ArrayParameter;
 use Honed\Form\Attributes\Component;
-use Honed\Form\Components\Checkbox;
 use Honed\Form\Components\Lookup;
 use Honed\Form\Concerns\GeneratesForm;
 use Honed\Form\Support\Route;
@@ -39,7 +38,6 @@ class ProductData extends Data
     #[Min(0), Max(999)]
     public int $price;
 
-    #[Component(Checkbox::class, default: true)]
     public bool $best_seller;
 
     public Status $status = Status::Available;

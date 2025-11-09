@@ -11,7 +11,7 @@ use Illuminate\Support\Traits\Conditionable;
 
 /**
  * @template T of \Spatie\LaravelData\Data|\Illuminate\Http\Request
- * 
+ *
  * @implements GeneratorContract<T>
  */
 abstract class Generator implements GeneratorContract

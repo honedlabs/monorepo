@@ -29,7 +29,7 @@ class DataGenerator extends Generator
 
     /**
      * Generate a form.
-     * 
+     *
      * @throws CannotResolveComponent
      */
     public function generate(mixed ...$payloads): Form

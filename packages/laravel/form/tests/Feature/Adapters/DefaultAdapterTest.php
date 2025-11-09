@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-use Spatie\LaravelData\Data;
-use Honed\Form\Components\Input;
 use Honed\Form\Adapters\DefaultAdapter;
+use Honed\Form\Components\Input;
+use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\DataConfig;
-use Spatie\LaravelData\Support\DataProperty;
 
 beforeEach(function () {
     $this->adapter = app(DefaultAdapter::class);
@@ -28,12 +27,12 @@ it('checks property conversion', function (bool $expected, Data $data) {
     fn () => [true, new class() extends Data
     {
         public ?string $name;
-    }
+    },
     ],
     fn () => [true, new class() extends Data
     {
         public int $stock;
-    }
+    },
     ],
 ]);
 
@@ -44,4 +43,3 @@ it('checks rules conversion', function (array $rules) {
     fn () => [['nullable', 'date']],
     fn () => [['required', 'string']],
 ]);
-

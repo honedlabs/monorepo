@@ -7,7 +7,6 @@ use Honed\Form\Components\DateField;
 use Spatie\LaravelData\Attributes\Validation\Date;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\DataConfig;
-use Spatie\LaravelData\Support\DataProperty;
 
 beforeEach(function () {
     $this->adapter = app(DateAdapter::class);
@@ -29,13 +28,13 @@ it('checks property conversion', function (bool $expected, Data $data) {
     fn () => [false, new class() extends Data
     {
         public ?string $name;
-    }
+    },
     ],
     fn () => [true, new class() extends Data
     {
         #[Date]
         public ?string $created_at;
-    }
+    },
     ],
 ]);
 

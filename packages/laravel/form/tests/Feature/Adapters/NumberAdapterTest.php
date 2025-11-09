@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Honed\Form\Adapters\NumberAdapter;
 use Honed\Form\Components\NumberInput;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\DataConfig;
 
 beforeEach(function () {
@@ -17,7 +16,7 @@ it('has field', function () {
         ->field()->toBe(NumberInput::class);
 });
 
-it('checks conversion', function (bool $expected, Data $data) {
+it('checks property conversion', function (bool $expected, Data $data) {
     $property = property($data);
 
     $dataClass = app(DataConfig::class)->getDataClass($data::class);
@@ -28,16 +27,24 @@ it('checks conversion', function (bool $expected, Data $data) {
     fn () => [false, new class() extends Data
     {
         public string $name;
-    }
+    },
     ],
     fn () => [true, new class() extends Data
     {
         public int $stock;
-    }
+    },
     ],
     fn () => [true, new class() extends Data
     {
         public float $price;
-    }
+    },
     ],
+]);
+
+it('checks rules conversion', function (bool $expected, array $rules) {
+    expect($this->adapter)
+        ->shouldConvertRules('value', $rules)->toBe($expected);
+})->with([
+    fn () => [true, ['nullable', 'number']],
+    fn () => [false, ['required', 'string']],
 ]);

@@ -13,14 +13,14 @@ interface Generator
 {
     /**
      * Create a new generator instance.
-     * 
+     *
      * @param  class-string<T>  $className
      */
     public static function make(string $className): static;
-    
+
     /**
      * Generate a form.
-     * 
+     *
      * @throws \Honed\Form\Exceptions\CannotResolveComponent
      */
     public function generate(mixed ...$payloads): Form;

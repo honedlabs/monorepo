@@ -9,6 +9,7 @@ use Spatie\LaravelData\Data;
 use Honed\Form\Contracts\Generator;
 use Honed\Form\Generators\DataGenerator;
 use Honed\Form\Exceptions\CannotResolveGenerator;
+use Honed\Form\Generators\RequestGenerator;
 
 class Delegate
 {
@@ -19,15 +20,22 @@ class Delegate
      * 
      * @param  class-string<T>  $className
      * @return Generator<T>
+     * @phpstan-return Generator<\Spatie\LaravelData\Data>|Generator<\Illuminate\Http\Request>
      * 
      * @throws CannotResolveGenerator
      */
     public static function to(string $className): Generator
     {
-        return match (true) {
-            is_a($className, Data::class) => DataGenerator::make($className),
-            // is_a($className, Request::class) => RequestGenerator::make($className),
-            default => CannotResolveGenerator::throw($className),
-        };
+        if (is_a($className, Data::class, true)) {
+            /** @phpstan-assert class-string<\Spatie\LaravelData\Data> $className */
+            return DataGenerator::make($className);
+        }
+
+        if (is_a($className, Request::class, true)) {
+            /** @phpstan-assert class-string<\Illuminate\Http\Request> $className */
+            return RequestGenerator::make($className);
+        }
+
+        CannotResolveGenerator::throw($className);
     }
 }

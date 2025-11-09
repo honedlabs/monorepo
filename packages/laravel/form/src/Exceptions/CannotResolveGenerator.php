@@ -10,7 +10,7 @@ class CannotResolveGenerator extends Exception
 {
     /**
      * Create a new exception.
-     * 
+     *
      * @param  class-string<\Spatie\LaravelData\Data|\Illuminate\Http\Request>  $className
      */
     final public function __construct(string $className)
@@ -24,7 +24,7 @@ class CannotResolveGenerator extends Exception
      * Throw the exception.
      *
      * @param  class-string<\Spatie\LaravelData\Data|\Illuminate\Http\Request>  $className
-     * 
+     *
      * @throws self
      */
     public static function throw(string $className): never
