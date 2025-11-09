@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\Status;
+use Honed\Form\Concerns\GeneratesForm;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class ProductRequest extends FormRequest
 {
+    use GeneratesForm;
+    
     /**
      * Determine if the user is authorized to make this request.
      */
