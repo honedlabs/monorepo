@@ -74,4 +74,12 @@ trait Adaptable
         return ! $property->type->isNullable
             || $property->attributes->has(Required::class);
     }
+
+    /**
+     * Determine if the property is optional.
+     */
+    public function isOptionalProperty(DataProperty $property): bool
+    {
+        return $property->type->isOptional;
+    }
 }

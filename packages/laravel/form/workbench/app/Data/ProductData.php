@@ -9,6 +9,7 @@ use Honed\Data\Attributes\ArrayParameter;
 use Honed\Form\Attributes\Component;
 use Honed\Form\Components\Lookup;
 use Honed\Form\Concerns\GeneratesForm;
+use Honed\Form\Contracts\Generative;
 use Honed\Form\Support\Route;
 use Honed\Form\Support\Trans;
 use Spatie\LaravelData\Attributes\Computed;
@@ -18,7 +19,7 @@ use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Data;
 
-class ProductData extends Data
+class ProductData extends Data implements Generative
 {
     use GeneratesForm;
 

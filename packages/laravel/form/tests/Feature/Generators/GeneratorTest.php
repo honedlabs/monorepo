@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Honed\Form\Adapters\TextAdapter;
 use Honed\Form\Form;
 use Honed\Form\Generators\DataGenerator;
 
@@ -20,4 +21,13 @@ it('has form', function () {
             ->not->toBe($form)
         )
         ->newForm()->not->toBe($form);
+});
+
+it('has adapters', function () {
+    $count = count(config('honed-form.adapters'));
+
+    expect($this->generator)
+        ->adapters(TextAdapter::class)->toBe($this->generator)
+        ->getAdapters()->toHaveCount($count + 1)
+        ->getGlobalAdapters()->toHaveCount($count);
 });

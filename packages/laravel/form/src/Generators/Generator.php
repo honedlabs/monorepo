@@ -132,7 +132,7 @@ abstract class Generator implements GeneratorContract
      *
      * @return list<class-string<(T is \Spatie\LaravelData\Data ? \Honed\Form\Contracts\DataAdapter : \Honed\Form\Contracts\RulesAdapter)>>
      */
-    protected function getGlobalAdapters(): array
+    public function getGlobalAdapters(): array
     {
         /** @var list<class-string<(T is \Spatie\LaravelData\Data ? \Honed\Form\Contracts\DataAdapter : \Honed\Form\Contracts\RulesAdapter)>> */
         return $this->config->get('honed-form.adapters', []);
