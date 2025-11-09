@@ -60,7 +60,7 @@ class DataGenerator extends Generator
             $form->append($component);
         }
 
-        $form->record($this->getData($payloads));
+        $form->record($this->getData(...$payloads));
 
         return $form;
     }

@@ -35,9 +35,10 @@ it('has array representation', function () {
     expect($this->component)
         ->url('https://example.com')->toBe($this->component)
         ->toArray()->toEqualCanonicalizing([
+            'component' => FormComponent::Lookup->value,
             'name' => 'user',
             'label' => 'User',
-            'component' => FormComponent::Lookup->value,
+            'options' => [],
             'url' => 'https://example.com',
             'method' => mb_strtolower(Request::METHOD_GET),
         ]);

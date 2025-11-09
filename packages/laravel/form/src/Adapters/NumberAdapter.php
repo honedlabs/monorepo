@@ -43,4 +43,13 @@ class NumberAdapter extends Adapter
     {
         return in_array('number', $rules);
     }
+
+    protected function assignFromProperty(DataProperty $property): array
+    {
+        return [
+            ...parent::assignFromProperty($property),
+            'min' => $this->getPropertyMin($property),
+            'max' => $this->getPropertyMax($property),
+        ];
+    }
 }

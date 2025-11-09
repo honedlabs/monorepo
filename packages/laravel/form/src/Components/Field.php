@@ -155,7 +155,7 @@ abstract class Field extends Component implements Defaultable
             'name' => $this->getName(),
             'label' => $this->getLabel(),
             'hint' => $this->getHint(),
-            'value' => $this->getValue(),
+            'defaultValue' => $this->getValue(),
             'required' => $this->isRequired() ?: null,
             'disabled' => $this->isDisabled() ?: null,
             'optional' => $this->isOptional() ?: null,

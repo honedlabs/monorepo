@@ -9,6 +9,7 @@ use Honed\Form\Attributes\Label;
 use Honed\Form\Attributes\Placeholder;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
+use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Support\DataProperty;
 
 trait Adaptable
@@ -65,8 +66,11 @@ trait Adaptable
         return $property->attributes->first(Placeholder::class)?->getPlaceholder();
     }
 
-    // public function isRequired(DataProperty $property): bool
-    // {
-    //     return $property->attributes->first(Required::class)?->isRequired();
-    // }
+    /**
+     * Determine if the property is required.
+     */
+    public function isRequired(DataProperty $property): bool
+    {
+        return $property->attributes->has(Required::class);
+    }
 }

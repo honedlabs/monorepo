@@ -38,7 +38,7 @@ it('generates form from request', function () {
                         'component' => FormComponent::Checkbox->value,
                         'name' => 'best_seller',
                         'label' => 'Best seller',
-                        'value' => false,
+                        'defaultValue' => false,
                     ],
                     [
                         'component' => FormComponent::Input->value,

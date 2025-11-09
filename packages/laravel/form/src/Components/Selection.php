@@ -23,9 +23,9 @@ abstract class Selection extends Field
     {
         return [
             ...parent::representation(),
-            'placeholder' => $this->getPlaceholder() ?: null,
+            'placeholder' => $this->getPlaceholder(),
             'multiple' => $this->isMultiple() ?: null,
-            'options' => $this->getOptionsArray() ?: null,
+            'options' => $this->getOptionsArray(),
         ];
     }
 }

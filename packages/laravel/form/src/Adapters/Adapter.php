@@ -76,7 +76,8 @@ abstract class Adapter implements AdapterContract
         $name = $this->getName($property);
         $label = $this->getLabel($property);
 
-        return $this->newComponent($name, $label);
+        return $this->newComponent($name, $label)
+            ->assign($this->assignFromProperty($property));
     }
 
     /**
@@ -87,7 +88,8 @@ abstract class Adapter implements AdapterContract
      */
     public function convertRules(string $key, array $rules): Component
     {
-        return $this->newComponent($key);
+        return $this->newComponent($key)
+            ->assign($this->assignFromRules($key, $rules));
     }
 
     /**
@@ -98,5 +100,29 @@ abstract class Adapter implements AdapterContract
     public function newComponent(string $name, ?string $label = null): Component
     {
         return $this->field()::make($name, $label);
+    }
+
+    /**
+     * Define the attributes which should be assigned to the component from the data property.
+     *
+     * @return array<string, mixed>
+     */
+    protected function assignFromProperty(DataProperty $property): array
+    {
+        return [
+            'required' => $this->isRequired($property),
+            'hint' => $this->getHint($property),
+        ];
+    }
+
+    /**
+     * Define the attributes which should be assigned to the component from the request rules.
+     *
+     * @param  list<string|Closure|\Illuminate\Validation\Rule>  $rules
+     * @return array<string, mixed>
+     */
+    protected function assignFromRules(string $key, array $rules): array
+    {
+        return [];
     }
 }

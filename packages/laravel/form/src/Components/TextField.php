@@ -27,7 +27,7 @@ abstract class TextField extends Field
     {
         return [
             ...parent::representation(),
-            'placeholder' => $this->getPlaceholder() ?: null,
+            'placeholder' => $this->getPlaceholder(),
         ];
     }
 }

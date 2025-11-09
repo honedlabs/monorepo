@@ -1,6 +1,6 @@
 {
     "name": "honed/form",
-    "description": "Supercharge your Laravel form requests with InertiaJS.",
+    "description": "Supercharge your forms with DTOs and InertiaJS.",
     "keywords": [
         "honed",
         "laravel",

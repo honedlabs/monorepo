@@ -42,4 +42,19 @@ class DefaultAdapter extends Adapter
     {
         return true;
     }
+
+    /**
+     * Define the attributes which should be assigned to the component from the data property.
+     *
+     * @return array<string, mixed>
+     */
+    protected function assignFromProperty(DataProperty $property): array
+    {
+        return [
+            ...parent::assignFromProperty($property),
+            'min' => $this->getPropertyMin($property),
+            'max' => $this->getPropertyMax($property),
+            'placeholder' => $this->getPlaceholder($property),
+        ];
+    }
 }
