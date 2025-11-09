@@ -1,9 +1,11 @@
 <?php
 
-use Honed\Form\Delegate;
+declare(strict_types=1);
+
 use App\Data\ProductData;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
+use Honed\Form\Delegate;
 use Honed\Form\Exceptions\CannotResolveGenerator;
 use Honed\Form\Generators\DataGenerator;
 use Honed\Form\Generators\RequestGenerator;
@@ -18,7 +20,7 @@ it('delegates to data generator', function () {
 
 it('delegates to request generator', function () {
     $generator = Delegate::to(ProductRequest::class);
-    
+
     expect($generator)->toBeInstanceOf(RequestGenerator::class);
 });
 

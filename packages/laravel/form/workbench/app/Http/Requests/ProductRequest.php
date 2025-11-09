@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 class ProductRequest extends FormRequest
 {
     use GeneratesForm;
-    
+
     /**
      * Determine if the user is authorized to make this request.
      */

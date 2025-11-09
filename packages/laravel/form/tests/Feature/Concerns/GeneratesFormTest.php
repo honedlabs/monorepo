@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Honed\Form\Form;
 use App\Data\ProductData;
 use App\Http\Requests\ProductRequest;
+use Honed\Form\Form;
 
 beforeEach(function () {
     // dd(ProductData::form());
