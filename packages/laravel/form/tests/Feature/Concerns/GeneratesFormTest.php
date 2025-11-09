@@ -6,7 +6,7 @@ use App\Data\ProductData;
 
 beforeEach(function () {
     dd(ProductData::form());
-})->only();
+});
 
 it('generates store form', function () {
 });

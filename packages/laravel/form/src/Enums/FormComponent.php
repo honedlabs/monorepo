@@ -7,6 +7,7 @@ namespace Honed\Form\Enums;
 enum FormComponent: string
 {
     case Checkbox = 'checkbox';
+    case Color = 'color';
     case Date = 'date';
     case FieldGroup = 'fieldgroup';
     case Fieldset = 'fieldset';

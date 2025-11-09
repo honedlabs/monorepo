@@ -14,7 +14,7 @@ class RouteNotSetException extends Exception
     final public function __construct()
     {
         parent::__construct(
-            'The lookup component requires a route to be set.'
+            'The form component requires a route to be set.'
         );
     }
 
