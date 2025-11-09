@@ -25,7 +25,7 @@ class CustomAdapter implements Adapter
             return null;
         }
 
-        $component = resolve($attribute->getComponent());
+        $component = app($attribute->getComponent());
 
         return $component->assign([
             'name' => $this->getName($property),

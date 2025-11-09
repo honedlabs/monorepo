@@ -17,7 +17,7 @@ abstract class Grouping extends Component
      */
     public static function make(array $schema = []): static
     {
-        return resolve(static::class)->schema($schema);
+        return app(static::class)->schema($schema);
     }
 
     /**

@@ -53,7 +53,7 @@ abstract class Generator implements GeneratorContract
      */
     public static function make(string $className): static
     {
-        return resolve(static::class)->for($className);
+        return app(static::class)->for($className);
     }
 
     /**
@@ -122,7 +122,7 @@ abstract class Generator implements GeneratorContract
         $adapters = [...$this->adapters, ...$this->getGlobalAdapters()];
 
         return array_map(
-            static fn (string $adapter) => resolve($adapter),
+            static fn (string $adapter) => app($adapter),
             $adapters
         );
     }

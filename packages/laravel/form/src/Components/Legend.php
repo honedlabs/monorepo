@@ -24,7 +24,7 @@ class Legend extends Component
      */
     public static function make(string $label): static
     {
-        return resolve(static::class)->label($label);
+        return app(static::class)->label($label);
     }
 
     /**

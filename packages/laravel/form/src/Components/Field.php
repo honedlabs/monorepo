@@ -58,7 +58,7 @@ abstract class Field extends Component implements Defaultable
      */
     public static function make(string $name, ?string $label = null): static
     {
-        return resolve(static::class)
+        return app(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
     }

@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Honed\Form\Adapters\CustomAdapter;
+use Honed\Form\Attributes\Component;
+use Honed\Form\Components\Input;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\DataConfig;
 
@@ -11,10 +13,32 @@ beforeEach(function () {
 });
 
 it('gets property component', function () {
-    $dataClass = app(DataConfig::class)->getDataClass(Data::class);
+    $data = new class() extends Data
+    {
+        #[Component(Input::class)]
+        public string $name;
+    };
 
-    // expect($this->adapter)
-    //     ->getPropertyComponent($property, $dataClass)->toBe(Input::class);
+    $dataClass = app(DataConfig::class)->getDataClass($data::class);
+
+    $property = $dataClass->properties->first();
+
+    expect($this->adapter)
+        ->getPropertyComponent($property, $dataClass)->toBeInstanceOf(Input::class);
+});
+
+it('does not get property component', function () {
+    $data = new class() extends Data
+    {
+        public string $name;
+    };
+
+    $dataClass = app(DataConfig::class)->getDataClass($data::class);
+
+    $property = $dataClass->properties->first();
+
+    expect($this->adapter)
+        ->getPropertyComponent($property, $dataClass)->toBeNull();
 });
 
 it('does not get rules component', function () {
