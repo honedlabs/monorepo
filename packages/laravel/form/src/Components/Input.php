@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Honed\Form\Components;
 
 use BackedEnum;
+use Honed\Core\Concerns\HasPlaceholder;
 use Honed\Form\Enums\FormComponent;
 
 class Input extends Field
 {
+    use HasPlaceholder;
+
     /**
      * The identifier to use for evaluation.
      *
@@ -52,5 +55,18 @@ class Input extends Field
     public function file(): static
     {
         return $this->attribute('type', 'file');
+    }
+
+    /**
+     * Get the array representation of the input.
+     *
+     * @return array<string, mixed>
+     */
+    protected function representation(): array
+    {
+        return [
+            ...parent::representation(),
+            'placeholder' => $this->getPlaceholder(),
+        ];
     }
 }
