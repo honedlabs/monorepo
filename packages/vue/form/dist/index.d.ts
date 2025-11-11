@@ -3,6 +3,7 @@ import { ComponentOptionsMixin } from 'vue';
 import { ComponentProvideOptions } from 'vue';
 import { DefineComponent } from 'vue';
 import { ExtractPropTypes } from 'vue';
+import { HTMLAttributes } from 'vue';
 import { Method } from '@inertiajs/core';
 import { PropType } from 'vue';
 import { PublicProps } from 'vue';
@@ -19,7 +20,7 @@ export declare interface Color extends Field<string> {
 }
 
 export declare interface Component {
-    component: FormComponent;
+    component: string;
     attributes?: Record<string, any>;
 }
 
@@ -40,6 +41,7 @@ export declare interface Field<T extends any = any> extends Component {
     min?: number;
     max?: number;
     error?: string;
+    class?: HTMLAttributes["class"];
 }
 
 export declare interface FieldGroup extends Grouping {
@@ -57,7 +59,21 @@ export declare interface Form {
     schema: Component[];
 }
 
-export declare type FormComponent = "checkbox" | "color" | "date" | "fieldgroup" | "fieldset" | "input" | "legend" | "lookup" | "number" | "radio" | "select" | "text" | "textarea" | string;
+export declare enum FormComponent {
+    CHECKBOX = "checkbox",
+    COLOR = "color",
+    DATE = "date",
+    FIELDGROUP = "fieldgroup",
+    FIELDSET = "fieldset",
+    INPUT = "input",
+    LEGEND = "legend",
+    NUMBER = "number",
+    RADIO = "radio",
+    SEARCH = "search",
+    SELECT = "select",
+    TEXT = "text",
+    TEXTAREA = "textarea"
+}
 
 export declare function getComponent(formComponent: Component, errors?: Record<string, string>): VNode;
 
@@ -65,6 +81,7 @@ export declare function getComponents(schema?: Component[], errors?: Record<stri
 
 export declare interface Grouping extends Component {
     schema?: Component[];
+    class?: HTMLAttributes["class"];
 }
 
 export declare interface Input extends Field {
@@ -78,14 +95,7 @@ export declare interface Legend extends Component {
     label?: string;
 }
 
-export declare function load(name: FormComponent): Promise<VNode>;
-
-export declare interface Lookup extends Selection_2 {
-    component: "lookup";
-    url: string;
-    method: Method;
-    pending?: string;
-}
+export declare function load(name: string): Promise<VNode>;
 
 export declare interface NumberInput extends Field<number> {
     component: "number";
@@ -98,7 +108,7 @@ declare interface Option_2 {
 export { Option_2 as Option }
 
 export declare const plugin: {
-    install(app: App, options: Record<FormComponent, string>): void;
+    install(app: App, options: ResolveKey): void;
 };
 
 export declare interface Radio extends Field {
@@ -128,9 +138,22 @@ required: true;
 };
 }>> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, any>;
 
-export declare function resolve(name: FormComponent): Promise<VNode>;
+export declare function resolve(name: string): Promise<VNode>;
 
-export declare function resolveUsing(newMappings: Record<FormComponent, string>): void;
+export declare type ResolveKey = {
+    [key: string]: string;
+} & {
+    [K in FormComponent]?: string;
+};
+
+export declare function resolveUsing(newMappings: ResolveKey): void;
+
+export declare interface Search extends Selection_2 {
+    component: "search";
+    url: string;
+    method: Method;
+    pending?: string;
+}
 
 export declare interface Select extends Selection_2 {
     component: "select";

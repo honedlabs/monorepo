@@ -1,22 +1,15 @@
 import R from "./component";
 import { resolve } from "./resolver";
-import { router, type InertiaForm } from "@inertiajs/vue3";
+import { router } from "@inertiajs/vue3";
 import { getComponent, getComponents } from "./utils";
 import { defineComponent, h, type PropType } from "vue";
 import type { Form } from "./types";
 
-export function useComponents<TForm extends Record<string, string> = Record<string, string>>(form: Form, helper?: InertiaForm<TForm>) {
+export function useComponents(form: Form) {
 	function onCancel(reset?: () => void) {
-		if (form.cancel === "reset") {
-			reset?.()
-			helper?.reset();
-		}
-		else if (form.cancel !== undefined) 
-			router.visit(form.cancel);
-		else {
-			helper?.cancel();
-			reset?.();
-		}
+		if (form.cancel === "reset") reset?.();
+		else if (form.cancel !== undefined) router.visit(form.cancel);
+		else reset?.();
 	}
 
 	const Render = defineComponent({

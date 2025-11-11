@@ -8,4 +8,6 @@ export { resolve, load, resolveUsing } from "./resolver";
 
 export { getComponent, getComponents } from "./utils";
 
+export { FormComponent } from "./enum";
+
 export type * from "./types";

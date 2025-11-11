@@ -1,0 +1,15 @@
+export enum FormComponent {
+	CHECKBOX = "checkbox",
+	COLOR = "color",
+	DATE = "date",
+	FIELDGROUP = "fieldgroup",
+	FIELDSET = "fieldset",
+	INPUT = "input",
+	LEGEND = "legend",
+	NUMBER = "number",
+	RADIO = "radio",
+	SEARCH = "search",
+	SELECT = "select",
+	TEXT = "text",
+	TEXTAREA = "textarea",
+}

@@ -1,6 +1,7 @@
 import { computed, h, type VNode } from "vue";
 import { resolve } from "./resolver";
 import type { Component, Field, Grouping } from "./types";
+import type { InertiaForm } from "@inertiajs/vue3";
 
 export function getComponent(
 	formComponent: Component,

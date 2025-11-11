@@ -1,20 +1,6 @@
 import type { Method } from "@inertiajs/core";
-
-export type FormComponent =
-	| "checkbox"
-	| "color"
-	| "date"
-	| "fieldgroup"
-	| "fieldset"
-	| "input"
-	| "legend"
-	| "lookup"
-	| "number"
-	| "radio"
-	| "select"
-	| "text"
-	| "textarea"
-	| string;
+import type { HTMLAttributes } from "vue";
+import { FormComponent } from "./enum";
 
 export interface Form {
 	method: Method;
@@ -23,13 +9,19 @@ export interface Form {
 	schema: Component[];
 }
 
+export type ResolveKey = {
+	[key: string]: string;
+} & {
+	[K in FormComponent]?: string;
+};
+
 export interface Option {
 	label: string;
 	value: number | string | boolean | null;
 }
 
 export interface Component {
-	component: FormComponent;
+	component: string;
 	attributes?: Record<string, any>;
 }
 
@@ -57,6 +49,7 @@ export interface Field<T extends any = any> extends Component {
 	min?: number;
 	max?: number;
 	error?: string;
+	class?: HTMLAttributes["class"];
 }
 
 export interface FieldGroup extends Grouping {
@@ -69,6 +62,7 @@ export interface Fieldset extends Grouping {
 
 export interface Grouping extends Component {
 	schema?: Component[];
+	class?: HTMLAttributes["class"];
 }
 
 export interface Input extends Field {
@@ -82,8 +76,8 @@ export interface Legend extends Component {
 	label?: string;
 }
 
-export interface Lookup extends Selection {
-	component: "lookup";
+export interface Search extends Selection {
+	component: "search";
 	url: string;
 	method: Method;
 	pending?: string;

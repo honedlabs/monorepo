@@ -1,17 +1,17 @@
 import { defineAsyncComponent, ref, VNode } from "vue";
-import type { FormComponent } from "./types";
+import type { ResolveKey } from "./types";
 
-const cache = new Map<FormComponent, Promise<VNode>>();
+const cache = new Map<string, Promise<VNode>>();
 
-const mappings = ref<Record<FormComponent, string>>({});
+const mappings = ref<ResolveKey>({});
 
-export function load(name: FormComponent): Promise<VNode> {
+export function load(name: string): Promise<VNode> {
 	return defineAsyncComponent({
 		loader: () => import(mappings.value[name]),
 	});
 }
 
-export function resolve(name: FormComponent): Promise<VNode> {
+export function resolve(name: string): Promise<VNode> {
 	if (!cache.has(name)) {
 		const promise = load(name);
 		cache.set(name, promise);
@@ -21,7 +21,7 @@ export function resolve(name: FormComponent): Promise<VNode> {
 	return cache.get(name)!;
 }
 
-export function resolveUsing(newMappings: Record<FormComponent, string>) {
+export function resolveUsing(newMappings: ResolveKey) {
 	mappings.value = {
 		...mappings.value,
 		...newMappings,

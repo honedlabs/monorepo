@@ -1,49 +1,49 @@
-import { ref as v, defineAsyncComponent as g, computed as C, h as c, defineComponent as p } from "vue";
-import { router as b } from "@inertiajs/vue3";
-const o = /* @__PURE__ */ new Map(), u = v({});
-function h(e) {
-  return g({
-    loader: () => import(u.value[e])
+import { ref as g, defineAsyncComponent as v, computed as R, h as i, defineComponent as a } from "vue";
+import { router as O } from "@inertiajs/vue3";
+const u = /* @__PURE__ */ new Map(), c = g({});
+function T(e) {
+  return v({
+    loader: () => import(c.value[e])
   });
 }
-function s(e) {
-  if (!o.has(e)) {
-    const n = h(e);
-    return o.set(e, n), n;
+function l(e) {
+  if (!u.has(e)) {
+    const r = T(e);
+    return u.set(e, r), r;
   }
-  return o.get(e);
+  return u.get(e);
 }
-function y(e) {
-  u.value = {
-    ...u.value,
+function b(e) {
+  c.value = {
+    ...c.value,
     ...e
   };
 }
-function f(e, n = {}) {
-  const { component: t, attributes: r = {}, ...d } = e, { schema: l, ...a } = d, m = C(() => n[a.name]);
-  return c(
-    s(t),
+function p(e, r = {}) {
+  const { component: n, attributes: t = {}, ...d } = e, { schema: o, ...f } = d, E = R(() => r[f.name]);
+  return i(
+    l(n),
     {
-      ...r,
-      ...a,
-      error: m
+      ...t,
+      ...f,
+      error: E
     },
     {
-      default: i(l, n)
+      default: s(o, r)
     }
   );
 }
-function i(e, n) {
-  return e === void 0 ? () => [] : () => e.map((t) => f(t, n));
+function s(e, r) {
+  return e === void 0 ? () => [] : () => e.map((n) => p(n, r));
 }
-const j = p({
-  setup(e, { slots: n }) {
+const h = a({
+  setup(e, { slots: r }) {
     return () => {
-      var t;
-      return (t = n.default) == null ? void 0 : t.call(n);
+      var n;
+      return (n = r.default) == null ? void 0 : n.call(r);
     };
   }
-}), O = p({
+}), A = a({
   props: {
     form: {
       type: Object,
@@ -55,50 +55,52 @@ const j = p({
     }
   },
   setup(e) {
-    return () => c(
-      j,
+    return () => i(
+      h,
       {},
       {
-        default: i(e.form.schema, e.errors)
+        default: s(e.form.schema, e.errors)
       }
     );
   }
 });
-function w(e) {
-  function n(r) {
-    e.cancel === "reset" ? r == null || r() : e.cancel !== void 0 && b.visit(e.cancel), r == null || r();
+function y(e) {
+  function r(t) {
+    e.cancel === "reset" ? t == null || t() : e.cancel !== void 0 ? O.visit(e.cancel) : t == null || t();
   }
-  const t = p({
+  const n = a({
     props: {
       errors: {
         type: Object,
         default: () => ({})
       }
     },
-    setup(r) {
-      return () => c(O, { form: e, errors: r.errors });
+    setup(t) {
+      return () => i(A, { form: e, errors: t.errors });
     }
   });
   return {
-    resolve: s,
-    getComponent: f,
-    getComponents: i,
-    onCancel: n,
-    Render: t
+    resolve: l,
+    getComponent: p,
+    getComponents: s,
+    onCancel: r,
+    Render: n
   };
 }
-const x = {
-  install(e, n) {
-    y(n);
+const I = {
+  install(e, r) {
+    b(r);
   }
 };
+var D = /* @__PURE__ */ ((e) => (e.CHECKBOX = "checkbox", e.COLOR = "color", e.DATE = "date", e.FIELDGROUP = "fieldgroup", e.FIELDSET = "fieldset", e.INPUT = "input", e.LEGEND = "legend", e.NUMBER = "number", e.RADIO = "radio", e.SEARCH = "search", e.SELECT = "select", e.TEXT = "text", e.TEXTAREA = "textarea", e))(D || {});
 export {
-  O as Render,
-  f as getComponent,
-  i as getComponents,
-  h as load,
-  x as plugin,
-  s as resolve,
-  y as resolveUsing,
-  w as useComponents
+  D as FormComponent,
+  A as Render,
+  p as getComponent,
+  s as getComponents,
+  T as load,
+  I as plugin,
+  l as resolve,
+  b as resolveUsing,
+  y as useComponents
 };

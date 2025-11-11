@@ -1,6 +1,6 @@
-import { h, defineComponent, type PropType, type VNode } from "vue";
-import { Form } from "./types";
+import { h, defineComponent, type PropType } from "vue";
 import { getComponents } from "./utils";
+import type { Form } from "./types";
 
 const FragmentWrapper = defineComponent({
 	setup(_, { slots }) {
