@@ -1,10 +1,5 @@
 import type { Method } from "@inertiajs/core";
 
-export interface RenderProps {
-	form: Form;
-	errors?: Record<string, any>;
-}
-
 export type FormComponent =
 	| "checkbox"
 	| "color"
@@ -59,6 +54,8 @@ export interface Field<T extends any = any> extends Component {
 	disabled?: boolean;
 	optional?: boolean;
 	autofocus?: boolean;
+	min?: number;
+	max?: number;
 	error?: string;
 }
 
@@ -76,6 +73,8 @@ export interface Grouping extends Component {
 
 export interface Input extends Field {
 	component: "input";
+	placeholder?: string;
+	type?: string;
 }
 
 export interface Legend extends Component {

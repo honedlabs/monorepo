@@ -1,7 +1,7 @@
 {
 	"name": "@honed/form",
 	"private": false,
-	"version": "0.2.0",
+	"version": "0.3.2",
 	"license": "MIT",
 	"description": "Supercharge your forms with DTOs and InertiaJS.",
 	"keywords": [

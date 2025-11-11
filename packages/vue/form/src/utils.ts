@@ -20,15 +20,18 @@ export function getComponent(
 			...rest,
 			...additional,
 		},
-		[...getComponents(schema, errors)],
+		{
+			default: getComponents(schema, errors),
+		},
 	);
 }
 
 export function getComponents(
 	schema?: Component[],
 	errors?: Record<string, string>,
-): VNode[] {
-	if (schema === undefined) return [];
+): () => VNode[] {
+	if (schema === undefined) return () => [];
 
-	return schema.map((component: Component) => getComponent(component, errors));
+	return () =>
+		schema.map((component: Component) => getComponent(component, errors));
 }

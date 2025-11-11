@@ -1,9 +1,32 @@
-import { VNode } from "vue";
-import { Form, RenderProps } from "./types";
+import { h, defineComponent, type PropType, type VNode } from "vue";
+import { Form } from "./types";
 import { getComponents } from "./utils";
 
-export function Render(props: RenderProps): VNode[] {
-	const { form, errors } = props;
+const FragmentWrapper = defineComponent({
+	setup(_, { slots }) {
+		return () => slots.default?.();
+	},
+});
 
-	return getComponents(form.schema, errors);
-}
+export default defineComponent({
+	props: {
+		form: {
+			type: Object as PropType<Form>,
+			required: true,
+		},
+		errors: {
+			type: Object as PropType<Record<string, string>>,
+			required: true,
+		},
+	},
+	setup(props) {
+		return () =>
+			h(
+				FragmentWrapper,
+				{},
+				{
+					default: getComponents(props.form.schema, props.errors),
+				},
+			);
+	},
+});

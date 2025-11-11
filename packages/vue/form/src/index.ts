@@ -1,6 +1,6 @@
 export { useComponents } from "./composable";
 
-export { Render } from "./component";
+export { default as Render } from "./component";
 
 export { plugin } from "./plugin";
 

@@ -1,7 +1,8 @@
+import Render from "./component";
 import { resolve } from "./resolver";
-import { Render } from "./component";
 import { router } from "@inertiajs/vue3";
 import { getComponent, getComponents } from "./utils";
+import { h, type VNode } from "vue";
 import type { Form } from "./types";
 
 export function useComponents(form: Form) {
@@ -15,6 +16,7 @@ export function useComponents(form: Form) {
 		getComponent,
 		getComponents,
 		onCancel,
-		Render: (errors?: Record<string, string>) => Render({ form, errors }),
+		Render: (errors: Record<string, string> = {}): VNode =>
+			h(Render, { form, errors }),
 	};
 }

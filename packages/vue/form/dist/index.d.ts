@@ -1,5 +1,11 @@
 import { App } from 'vue';
+import { ComponentOptionsMixin } from 'vue';
+import { ComponentProvideOptions } from 'vue';
+import { DefineComponent } from 'vue';
+import { ExtractPropTypes } from 'vue';
 import { Method } from '@inertiajs/core';
+import { PropType } from 'vue';
+import { PublicProps } from 'vue';
 import { RendererElement } from 'vue';
 import { RendererNode } from 'vue';
 import { VNode } from 'vue';
@@ -31,6 +37,8 @@ export declare interface Field<T extends any = any> extends Component {
     disabled?: boolean;
     optional?: boolean;
     autofocus?: boolean;
+    min?: number;
+    max?: number;
     error?: string;
 }
 
@@ -53,7 +61,7 @@ export declare type FormComponent = "checkbox" | "color" | "date" | "fieldgroup"
 
 export declare function getComponent(formComponent: Component, errors?: Record<string, string>): VNode;
 
-export declare function getComponents(schema?: Component[], errors?: Record<string, string>): VNode[];
+export declare function getComponents(schema?: Component[], errors?: Record<string, string>): () => VNode[];
 
 export declare interface Grouping extends Component {
     schema?: Component[];
@@ -61,6 +69,8 @@ export declare interface Grouping extends Component {
 
 export declare interface Input extends Field {
     component: "input";
+    placeholder?: string;
+    type?: string;
 }
 
 export declare interface Legend extends Component {
@@ -96,12 +106,27 @@ export declare interface Radio extends Field {
     options?: Option_2[];
 }
 
-export declare function Render(props: RenderProps): VNode[];
-
-export declare interface RenderProps {
-    form: Form;
-    errors?: Record<string, any>;
-}
+export declare const Render: DefineComponent<ExtractPropTypes<    {
+form: {
+type: PropType<Form>;
+required: true;
+};
+errors: {
+type: PropType<Record<string, string>>;
+required: true;
+};
+}>, () => VNode<RendererNode, RendererElement, {
+[key: string]: any;
+}>, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<ExtractPropTypes<    {
+form: {
+type: PropType<Form>;
+required: true;
+};
+errors: {
+type: PropType<Record<string, string>>;
+required: true;
+};
+}>> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, any>;
 
 export declare function resolve(name: FormComponent): Promise<VNode>;
 
@@ -137,9 +162,7 @@ export declare function useComponents(form: Form): {
     getComponent: typeof getComponent;
     getComponents: typeof getComponents;
     onCancel: (reset?: () => void) => void;
-    Render: (errors?: Record<string, string>) => VNode<RendererNode, RendererElement, {
-    [key: string]: any;
-    }>[];
+    Render: (errors?: Record<string, string>) => VNode;
 };
 
 export { }
