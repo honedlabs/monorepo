@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Honed\Form\Attributes\Components\AsColorPicker;
 use Honed\Form\Attributes\Components\Component;
 use Honed\Form\Components\ColorPicker;
-use Honed\Form\Components\Input;
 
 it('has color picker component', function () {
     $attribute = new AsColorPicker(test: true);

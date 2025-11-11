@@ -13,8 +13,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Product extends Model implements HasLabel, CanBeSearchedContract
+class Product extends Model implements CanBeSearchedContract, HasLabel
 {
+    use CanBeSearched;
+
     /**
      * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ProductFactory>
      */
@@ -24,8 +26,6 @@ class Product extends Model implements HasLabel, CanBeSearchedContract
      * @use \Honed\Form\Concerns\HasForm<\App\Forms\ProductForm>
      */
     use HasForm;
-
-    use CanBeSearched;
 
     /**
      * The form class for the product model.

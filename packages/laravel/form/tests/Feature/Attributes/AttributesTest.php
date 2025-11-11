@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Honed\Form\Attributes\Attributes;
-use Honed\Form\Support\Trans;
 
 beforeEach(function () {});
 

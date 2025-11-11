@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Honed\Form\Attributes\Components\AsCheckbox;
 use Honed\Form\Attributes\Components\Component;
 use Honed\Form\Components\Checkbox;
-use Honed\Form\Components\Input;
 
 it('has checkbox component', function () {
     $attribute = new AsCheckbox(test: true);
