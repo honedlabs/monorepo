@@ -12,26 +12,16 @@ use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
 
 /**
- * @extends Adapter<\Honed\Form\Components\Input|\Honed\Form\Components\Textarea>
+ * @extends DefaultAdapter<\Honed\Form\Components\Input|\Honed\Form\Components\Textarea>
  */
-class TextAdapter extends Adapter
+class TextAdapter extends DefaultAdapter
 {
-    /**
-     * Get the class string of the component to be generated.
-     *
-     * @return class-string<Input>
-     */
-    public function field(): string
-    {
-        return Input::class;
-    }
-
     /**
      * Determine if the property is a valid candidate for conversion.
      */
     public function shouldConvertProperty(DataProperty $property, DataClass $dataClass): bool
     {
-        return $property->type->type->acceptsType('string');
+        return true;
     }
 
     /**
@@ -41,35 +31,20 @@ class TextAdapter extends Adapter
      */
     public function shouldConvertRules(string $key, array $rules): bool
     {
-        return in_array('string', $rules);
+        return true;
     }
 
     /**
      * Create a new component instance from the data property.
      *
-     * @return \Honed\Form\Components\Field|Textarea
+     * @return \Honed\Form\Components\Input|\Honed\Form\Components\Textarea
      */
     public function convertProperty(DataProperty $property, DataClass $dataClass): Component
     {
-        if (((int) $this->getPropertyMax($property)) > 255) {
-            return Textarea::make($this->getName($property), $this->getLabel($property));
+        if (((int) $this->getMaxFromProperty($property)) > 255) {
+            return Textarea::make($this->getNameFromProperty($property), $this->getLabelFromProperty    ($property));
         }
 
         return parent::convertProperty($property, $dataClass);
-    }
-
-    /**
-     * Define the attributes which should be assigned to the component from the data property.
-     *
-     * @return array<string, mixed>
-     */
-    protected function assignFromProperty(DataProperty $property): array
-    {
-        return [
-            ...parent::assignFromProperty($property),
-            'min' => $this->getPropertyMin($property),
-            'max' => $this->getPropertyMax($property),
-            'placeholder' => $this->getPlaceholder($property),
-        ];
     }
 }

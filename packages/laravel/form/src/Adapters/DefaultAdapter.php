@@ -11,7 +11,9 @@ use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
 
 /**
- * @extends Adapter<\Honed\Form\Components\Input>
+ * @template T of \Honed\Form\Components\Field = \Honed\Form\Components\Input
+ * 
+ * @extends Adapter<T>
  */
 class DefaultAdapter extends Adapter
 {
@@ -52,9 +54,9 @@ class DefaultAdapter extends Adapter
     {
         return [
             ...parent::assignFromProperty($property),
-            'min' => $this->getPropertyMin($property),
-            'max' => $this->getPropertyMax($property),
-            'placeholder' => $this->getPlaceholder($property),
+            'min' => $this->getMinFromProperty($property),
+            'max' => $this->getMaxFromProperty($property),
+            'placeholder' => $this->getPlaceholderFromProperty($property),
         ];
     }
 }

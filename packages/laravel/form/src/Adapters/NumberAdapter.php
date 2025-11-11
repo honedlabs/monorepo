@@ -44,12 +44,17 @@ class NumberAdapter extends Adapter
         return in_array('number', $rules);
     }
 
+    /**
+     * Define the attributes which should be assigned to the component from the data property.
+     *
+     * @return array<string, mixed>
+     */
     protected function assignFromProperty(DataProperty $property): array
     {
         return [
             ...parent::assignFromProperty($property),
-            'min' => $this->getPropertyMin($property),
-            'max' => $this->getPropertyMax($property),
+            'min' => $this->getMinFromProperty($property),
+            'max' => $this->getMaxFromProperty($property),
         ];
     }
 }
