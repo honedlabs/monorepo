@@ -1,4 +1,4 @@
-import { h, type VNode } from "vue";
+import { computed, h, type VNode } from "vue";
 import { resolve } from "./resolver";
 import type { Component, Field, Grouping } from "./types";
 
@@ -10,15 +10,14 @@ export function getComponent(
 
 	const { schema, ...rest } = props as Grouping;
 
-	const additional =
-		"name" in rest ? { error: errors[(rest as Field).name] } : {};
+	const error = computed(() => errors[(rest as Field).name]);
 
 	return h(
 		resolve(component),
 		{
 			...attributes,
 			...rest,
-			...additional,
+			error,
 		},
 		{
 			default: getComponents(schema, errors),

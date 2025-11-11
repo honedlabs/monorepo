@@ -1,49 +1,49 @@
-import { ref as v, defineAsyncComponent as g, h as i, defineComponent as p } from "vue";
-import { router as C } from "@inertiajs/vue3";
+import { ref as v, defineAsyncComponent as g, computed as C, h as c, defineComponent as p } from "vue";
+import { router as b } from "@inertiajs/vue3";
 const o = /* @__PURE__ */ new Map(), u = v({});
 function h(e) {
   return g({
     loader: () => import(u.value[e])
   });
 }
-function a(e) {
+function s(e) {
   if (!o.has(e)) {
     const n = h(e);
     return o.set(e, n), n;
   }
   return o.get(e);
 }
-function b(e) {
+function y(e) {
   u.value = {
     ...u.value,
     ...e
   };
 }
-function s(e, n = {}) {
-  const { component: t, attributes: f = {}, ...d } = e, { schema: l, ...r } = d, m = "name" in r ? { error: n[r.name] } : {};
-  return i(
-    a(t),
+function f(e, n = {}) {
+  const { component: t, attributes: r = {}, ...d } = e, { schema: l, ...a } = d, m = C(() => n[a.name]);
+  return c(
+    s(t),
     {
-      ...f,
       ...r,
-      ...m
+      ...a,
+      error: m
     },
     {
-      default: c(l, n)
+      default: i(l, n)
     }
   );
 }
-function c(e, n) {
-  return e === void 0 ? () => [] : () => e.map((t) => s(t, n));
+function i(e, n) {
+  return e === void 0 ? () => [] : () => e.map((t) => f(t, n));
 }
-const y = p({
+const j = p({
   setup(e, { slots: n }) {
     return () => {
       var t;
       return (t = n.default) == null ? void 0 : t.call(n);
     };
   }
-}), j = p({
+}), O = p({
   props: {
     form: {
       type: Object,
@@ -55,39 +55,50 @@ const y = p({
     }
   },
   setup(e) {
-    return () => i(
-      y,
+    return () => c(
+      j,
       {},
       {
-        default: c(e.form.schema, e.errors)
+        default: i(e.form.schema, e.errors)
       }
     );
   }
 });
-function R(e) {
-  function n(t) {
-    e.cancel === "reset" ? t == null || t() : e.cancel !== void 0 && C.visit(e.cancel);
+function w(e) {
+  function n(r) {
+    e.cancel === "reset" ? r == null || r() : e.cancel !== void 0 && b.visit(e.cancel), r == null || r();
   }
+  const t = p({
+    props: {
+      errors: {
+        type: Object,
+        default: () => ({})
+      }
+    },
+    setup(r) {
+      return () => c(O, { form: e, errors: r.errors });
+    }
+  });
   return {
-    resolve: a,
-    getComponent: s,
-    getComponents: c,
+    resolve: s,
+    getComponent: f,
+    getComponents: i,
     onCancel: n,
-    Render: (t = {}) => i(j, { form: e, errors: t })
+    Render: t
   };
 }
-const w = {
+const x = {
   install(e, n) {
-    b(n);
+    y(n);
   }
 };
 export {
-  j as Render,
-  s as getComponent,
-  c as getComponents,
+  O as Render,
+  f as getComponent,
+  i as getComponents,
   h as load,
-  w as plugin,
-  a as resolve,
-  b as resolveUsing,
-  R as useComponents
+  x as plugin,
+  s as resolve,
+  y as resolveUsing,
+  w as useComponents
 };

@@ -162,7 +162,21 @@ export declare function useComponents(form: Form): {
     getComponent: typeof getComponent;
     getComponents: typeof getComponents;
     onCancel: (reset?: () => void) => void;
-    Render: (errors?: Record<string, string>) => VNode;
+    Render: DefineComponent<ExtractPropTypes<    {
+    errors: {
+    type: PropType<Record<string, string>>;
+    default: () => {};
+    };
+    }>, () => VNode<RendererNode, RendererElement, {
+    [key: string]: any;
+    }>, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<ExtractPropTypes<    {
+    errors: {
+    type: PropType<Record<string, string>>;
+    default: () => {};
+    };
+    }>> & Readonly<{}>, {
+    errors: Record<string, string>;
+    }, {}, {}, {}, string, ComponentProvideOptions, true, {}, any>;
 };
 
 export { }
