@@ -29,6 +29,8 @@ declare interface Date_2 extends Field {
 }
 export { Date_2 as Date }
 
+export declare function defaultResolver(name: string): Promise<VNode>;
+
 export declare interface Field<T extends any = any> extends Component {
     name: string;
     label: string;
@@ -95,8 +97,6 @@ export declare interface Legend extends Component {
     label?: string;
 }
 
-export declare function load(name: string): Promise<VNode>;
-
 export declare interface NumberInput extends Field<number> {
     component: "number";
 }
@@ -108,7 +108,7 @@ declare interface Option_2 {
 export { Option_2 as Option }
 
 export declare const plugin: {
-    install(app: App, options: ResolveKey): void;
+    install(app: App, resolver: Resolver | ResolveKey): void;
 };
 
 export declare interface Radio extends Field {
@@ -138,15 +138,19 @@ required: true;
 };
 }>> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, any>;
 
-export declare function resolve(name: string): Promise<VNode>;
+export declare function resolve(name: string): VNode | Promise<VNode>;
 
 export declare type ResolveKey = {
-    [key: string]: string;
+    [key: string]: string | VNode;
 } & {
-    [K in FormComponent]?: string;
+    [K in FormComponent]?: string | VNode;
 };
 
-export declare function resolveUsing(newMappings: ResolveKey): void;
+export declare interface Resolver {
+    (name: string): VNode | Promise<VNode>;
+}
+
+export declare function resolveUsing(r: Resolver | ResolveKey): void;
 
 export declare interface Search extends Selection_2 {
     component: "search";

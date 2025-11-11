@@ -1,5 +1,5 @@
 import type { Method } from "@inertiajs/core";
-import type { HTMLAttributes } from "vue";
+import type { HTMLAttributes, VNode } from "vue";
 import { FormComponent } from "./enum";
 
 export interface Form {
@@ -9,10 +9,14 @@ export interface Form {
 	schema: Component[];
 }
 
+export interface Resolver {
+	(name: string): VNode | Promise<VNode>;
+}
+
 export type ResolveKey = {
-	[key: string]: string;
+	[key: string]: string | VNode;
 } & {
-	[K in FormComponent]?: string;
+	[K in FormComponent]?: string | VNode;
 };
 
 export interface Option {

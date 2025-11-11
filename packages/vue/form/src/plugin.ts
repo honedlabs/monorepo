@@ -1,9 +1,9 @@
 import { resolveUsing } from "./resolver";
 import type { App } from "vue";
-import type { ResolveKey } from "./types";
+import type { Resolver, ResolveKey } from "./types";
 
 export const plugin = {
-	install(app: App, options: ResolveKey) {
-		resolveUsing(options);
+	install(app: App, resolver: Resolver | ResolveKey) {
+		resolveUsing(resolver);
 	},
 };
