@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Form\Concerns;
 
+use Honed\Form\Attributes\Attributes;
 use Honed\Form\Attributes\Hint;
 use Honed\Form\Attributes\Label;
 use Honed\Form\Attributes\Placeholder;
@@ -81,5 +82,23 @@ trait Adaptable
     public function isOptionalProperty(DataProperty $property): bool
     {
         return $property->type->isOptional;
+    }
+
+    /**
+     * Get the default value from the property.
+     */
+    public function getDefaultValueFromProperty(DataProperty $property): mixed
+    {
+        return $property->defaultValue;
+    }
+
+    /**
+     * Get the attributes from the property.
+     * 
+     * @return array<string, mixed>
+     */
+    public function getAttributesFromProperty(DataProperty $property): array
+    {
+        return $property->attributes->first(Attributes::class)?->getAttributes() ?? [];
     }
 }

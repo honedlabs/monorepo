@@ -11,7 +11,7 @@ trait Cancellable
     /**
      * The action to take when the form is cancelled.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $cancel;
 
@@ -50,6 +50,16 @@ trait Cancellable
     public function onCancelRoute(string $name, mixed $parameters = []): static
     {
         return $this->onCancelRedirect(route($name, $parameters, false));
+    }
+
+    /**
+     * Set the action to take when the form is cancelled to be a back redirect.
+     *
+     * @return $this
+     */
+    public function onCancelBack(): static
+    {
+        return $this->onCancelRedirect(url()->previous());
     }
 
     /**
