@@ -17,16 +17,16 @@ class SearchData extends Resource
 
     /**
      * Create a new search data instance from a model.
-     * 
+     *
      * If the `HasLabel` is not implemented, the `title` attribute will be
      * assumed to be the name of the model.
      */
-    public static function fromModel(Model $model): static
+    public static function fromModel(Model $model): self
     {
         return new self(
             value: $model->getKey(),
+            // @phpstan-ignore-next-line property.notFound
             label: $model instanceof HasLabel ? $model->getLabel() : $model->name
         );
     }
 }
-

@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace Honed\Form\Adapters;
 
 use Closure;
-use Honed\Form\Components\DateField;
+use Honed\Form\Components\DatePicker;
 use Spatie\LaravelData\Attributes\Validation\Date;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
 
 /**
- * @extends Adapter<\Honed\Form\Components\DateField>
+ * @extends Adapter<\Honed\Form\Components\DatePicker>
  */
 class DateAdapter extends Adapter
 {
     /**
      * Get the class string of the component to be generated.
      *
-     * @return class-string<DateField>
+     * @return class-string<DatePicker>
      */
     public function field(): string
     {
-        return DateField::class;
+        return DatePicker::class;
     }
 
     /**

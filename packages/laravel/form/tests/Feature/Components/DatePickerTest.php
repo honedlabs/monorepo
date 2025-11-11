@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Carbon\Carbon;
-use Honed\Form\Components\DateField;
+use Honed\Form\Components\DatePicker;
 use Honed\Form\Enums\FormComponent;
 use Honed\Form\Enums\Granularity;
 use Honed\Form\Form;
@@ -11,7 +11,7 @@ use Honed\Form\Form;
 beforeEach(function () {
     $this->freezeTime();
 
-    $this->component = DateField::make('start_at');
+    $this->component = DatePicker::make('start_at');
 });
 
 it('has component', function () {

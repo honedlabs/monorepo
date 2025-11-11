@@ -12,7 +12,7 @@ use Spatie\LaravelData\Support\DataProperty;
 
 /**
  * @template T of \Honed\Form\Components\Field = \Honed\Form\Components\Input
- * 
+ *
  * @extends Adapter<T>
  */
 class DefaultAdapter extends Adapter

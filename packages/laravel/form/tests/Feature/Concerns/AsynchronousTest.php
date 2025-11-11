@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Honed\Form\Components\Lookup;
+use Honed\Form\Components\Search;
 
 beforeEach(function () {
-    $this->component = Lookup::make('name');
+    $this->component = Search::make('name');
 });
 
 it('can be pending', function () {

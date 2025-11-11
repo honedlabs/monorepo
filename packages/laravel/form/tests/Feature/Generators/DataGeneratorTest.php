@@ -73,7 +73,7 @@ it('generates form without payload', function () {
                 'method' => mb_strtolower(Request::METHOD_POST),
                 'schema' => [
                     [
-                        'component' => FormComponent::Lookup->value,
+                        'component' => FormComponent::Search->value,
                         'name' => 'user',
                         'label' => 'User',
                         'defaultValue' => [

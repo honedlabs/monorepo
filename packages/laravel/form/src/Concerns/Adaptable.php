@@ -94,7 +94,7 @@ trait Adaptable
 
     /**
      * Get the attributes from the property.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getAttributesFromProperty(DataProperty $property): array

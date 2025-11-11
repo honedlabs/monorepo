@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Honed\Form\Components\DateField;
+use Honed\Form\Components\DatePicker;
 use Honed\Form\Enums\FormComponent;
 use Honed\Form\Form;
 
 beforeEach(function () {
-    $this->component = DateField::make('start_at'); // use date field to test as it does not modify the 'empty()' method
+    $this->component = DatePicker::make('start_at'); // use date field to test as it does not modify the 'empty()' method
 });
 
 it('has array representation', function () {

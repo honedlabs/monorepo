@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Honed\Form\Concerns\HasDateFormat;
 use Honed\Form\Enums\FormComponent;
 
-class DateField extends Field
+class DatePicker extends Field
 {
     use HasDateFormat;
 

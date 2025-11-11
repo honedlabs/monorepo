@@ -15,6 +15,7 @@ abstract class FromPropertyAdapter implements DataAdapter
     /**
      * Reject null values from the array.
      *
+     * @param  array<array-key, mixed>  $value
      * @return array<array-key, mixed>
      */
     protected function rejectNulls(array $value): array

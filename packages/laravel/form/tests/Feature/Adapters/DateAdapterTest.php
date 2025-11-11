@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Honed\Form\Adapters\DateAdapter;
-use Honed\Form\Components\DateField;
+use Honed\Form\Components\DatePicker;
 use Spatie\LaravelData\Attributes\Validation\Date;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\DataConfig;
@@ -14,7 +14,7 @@ beforeEach(function () {
 
 it('has field', function () {
     expect($this->adapter)
-        ->field()->toBe(DateField::class);
+        ->field()->toBe(DatePicker::class);
 });
 
 it('checks property conversion', function (bool $expected, Data $data) {

@@ -7,7 +7,7 @@ namespace App\Data;
 use App\Enums\Status;
 use Honed\Data\Attributes\ArrayParameter;
 use Honed\Form\Attributes\Component;
-use Honed\Form\Components\Lookup;
+use Honed\Form\Components\Search;
 use Honed\Form\Concerns\GeneratesForm;
 use Honed\Form\Contracts\Generative;
 use Honed\Form\Support\Route;
@@ -27,7 +27,7 @@ class ProductData extends Data implements Generative
     public $computed;
 
     #[ArrayParameter('id')]
-    #[Component(Lookup::class, label: new Trans('User'), url: new Route('users.index'))]
+    #[Component(Search::class, label: new Trans('User'), url: new Route('users.index'))]
     public ?UserData $user;
 
     #[Min(2), Max(255)]

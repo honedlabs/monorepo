@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-use Honed\Form\Components\Lookup;
+use Honed\Form\Components\Search;
 use Honed\Form\Enums\FormComponent;
 use Honed\Form\Exceptions\RouteNotSetException;
 use Illuminate\Http\Request;
 
 beforeEach(function () {
-    $this->component = Lookup::make('user');
+    $this->component = Search::make('user');
 });
 
 it('has component', function () {
     expect($this->component)
-        ->component()->toBe(FormComponent::Lookup)
-        ->getComponent()->toBe(FormComponent::Lookup->value);
+        ->component()->toBe(FormComponent::Search)
+        ->getComponent()->toBe(FormComponent::Search->value);
 });
 
 it('has method', function () {
@@ -35,7 +35,7 @@ it('has array representation', function () {
     expect($this->component)
         ->url('https://example.com')->toBe($this->component)
         ->toArray()->toEqualCanonicalizing([
-            'component' => FormComponent::Lookup->value,
+            'component' => FormComponent::Search->value,
             'name' => 'user',
             'label' => 'User',
             'options' => [],

@@ -11,7 +11,7 @@ use Honed\Form\Concerns\Asynchronous;
 use Honed\Form\Enums\FormComponent;
 use Honed\Form\Exceptions\RouteNotSetException;
 
-class Lookup extends Selection
+class Search extends Selection
 {
     use Asynchronous;
     use HasMethod;
@@ -22,7 +22,7 @@ class Lookup extends Selection
      *
      * @var string
      */
-    protected $evaluationIdentifier = 'lookup';
+    protected $evaluationIdentifier = 'search';
 
     /**
      * Provide the instance with any necessary setup.
@@ -39,11 +39,11 @@ class Lookup extends Selection
      */
     public function component(): string|BackedEnum
     {
-        return FormComponent::Lookup;
+        return FormComponent::Search;
     }
 
     /**
-     * Get the array representation of the lookup.
+     * Get the array representation of the search.
      *
      * @return array<string, mixed>
      */

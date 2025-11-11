@@ -13,7 +13,7 @@ enum FormComponent: string
     case Fieldset = 'fieldset';
     case Input = 'input';
     case Legend = 'legend';
-    case Lookup = 'lookup';
+    case Search = 'search';
     case Number = 'number';
     case Radio = 'radio';
     case Select = 'select';

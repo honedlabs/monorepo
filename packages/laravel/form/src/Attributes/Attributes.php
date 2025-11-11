@@ -20,7 +20,7 @@ class Attributes
 
     /**
      * Get the attributes.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getAttributes(): array

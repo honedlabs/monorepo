@@ -7,7 +7,6 @@ namespace Honed\Form\Adapters;
 use Closure;
 use Honed\Data\Attributes\Validation\HexColor;
 use Honed\Form\Components\ColorPicker;
-use Spatie\LaravelData\Attributes\Validation\Date;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataProperty;
 

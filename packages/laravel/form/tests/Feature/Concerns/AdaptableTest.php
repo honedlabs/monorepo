@@ -23,7 +23,7 @@ beforeEach(function () {
 
 it('gets name from property', function (Data $data, ?string $expected) {
     expect($this->class)
-        ->getName(property($data))->toBe($expected);
+        ->getNameFromProperty(property($data))->toBe($expected);
 })->with([
     fn () => [new class() extends Data
     {
@@ -38,7 +38,7 @@ it('gets name from property', function (Data $data, ?string $expected) {
 
 it('gets label from property', function (Data $data, ?string $expected) {
     expect($this->class)
-        ->getLabel(property($data))->toBe($expected);
+        ->getLabelFromProperty(property($data))->toBe($expected);
 })->with([
     fn () => [new class() extends Data
     {
@@ -58,7 +58,7 @@ it('gets label from property', function (Data $data, ?string $expected) {
 
 it('gets minimum value from property', function (Data $data, ?int $expected) {
     expect($this->class)
-        ->getPropertyMin(property($data))->toBe($expected);
+        ->getMinFromProperty(property($data))->toBe($expected);
 })->with([
     fn () => [new class() extends Data
     {
@@ -78,7 +78,7 @@ it('gets minimum value from property', function (Data $data, ?int $expected) {
 
 it('gets maximum value from property', function (Data $data, ?int $expected) {
     expect($this->class)
-        ->getPropertyMax(property($data))->toBe($expected);
+        ->getMaxFromProperty(property($data))->toBe($expected);
 })->with([
     fn () => [new class() extends Data
     {
@@ -98,7 +98,7 @@ it('gets maximum value from property', function (Data $data, ?int $expected) {
 
 it('gets hint from property', function (Data $data, ?string $expected) {
     expect($this->class)
-        ->getHint(property($data))->toBe($expected);
+        ->getHintFromProperty(property($data))->toBe($expected);
 })->with([
     fn () => [new class() extends Data
     {
@@ -118,7 +118,7 @@ it('gets hint from property', function (Data $data, ?string $expected) {
 
 it('gets placeholder from property', function (Data $data, ?string $expected) {
     expect($this->class)
-        ->getPlaceholder(property($data))->toBe($expected);
+        ->getPlaceholderFromProperty(property($data))->toBe($expected);
 })->with([
     fn () => [new class() extends Data
     {
@@ -138,7 +138,7 @@ it('gets placeholder from property', function (Data $data, ?string $expected) {
 
 it('checks if property is required', function (Data $data, bool $expected) {
     expect($this->class)
-        ->isRequired(property($data))->toBe($expected);
+        ->isRequiredProperty(property($data))->toBe($expected);
 })->with([
     fn () => [new class() extends Data
     {

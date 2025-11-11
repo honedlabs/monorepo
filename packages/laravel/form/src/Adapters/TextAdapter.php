@@ -21,7 +21,7 @@ class TextAdapter extends DefaultAdapter
      */
     public function shouldConvertProperty(DataProperty $property, DataClass $dataClass): bool
     {
-        return true;
+        return $property->type->type->acceptsType('string');
     }
 
     /**
@@ -31,18 +31,18 @@ class TextAdapter extends DefaultAdapter
      */
     public function shouldConvertRules(string $key, array $rules): bool
     {
-        return true;
+        return in_array('string', $rules);
     }
 
     /**
      * Create a new component instance from the data property.
      *
-     * @return \Honed\Form\Components\Input|\Honed\Form\Components\Textarea
+     * @return Input|Textarea
      */
     public function convertProperty(DataProperty $property, DataClass $dataClass): Component
     {
         if (((int) $this->getMaxFromProperty($property)) > 255) {
-            return Textarea::make($this->getNameFromProperty($property), $this->getLabelFromProperty    ($property));
+            return Textarea::make($this->getNameFromProperty($property), $this->getLabelFromProperty($property));
         }
 
         return parent::convertProperty($property, $dataClass);
