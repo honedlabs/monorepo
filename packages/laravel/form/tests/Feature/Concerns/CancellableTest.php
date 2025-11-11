@@ -25,5 +25,7 @@ it('has cancel shorthands', function () {
         ->onCancelReset()->toBe($this->form)
         ->getCancel()->toBe(Cancel::Reset->value)
         ->onCancelRoute('home')->toBe($this->form)
-        ->getCancel()->toBe(route('home', [], false));
+        ->getCancel()->toBe(route('home', [], false))
+        ->onCancelBack()->toBe($this->form)
+        ->getCancel()->toBe(url()->previous());
 });

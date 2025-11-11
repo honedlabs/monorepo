@@ -6,7 +6,7 @@ namespace App\Data;
 
 use App\Enums\Status;
 use Honed\Data\Attributes\ArrayParameter;
-use Honed\Form\Attributes\Component;
+use Honed\Form\Attributes\Components\Component;
 use Honed\Form\Components\Search;
 use Honed\Form\Concerns\GeneratesForm;
 use Honed\Form\Contracts\Generative;

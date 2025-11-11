@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Form\Adapters;
 
 use Closure;
-use Honed\Form\Attributes\Component as ComponentAttribute;
+use Honed\Form\Attributes\Components\Component as ComponentAttribute;
 use Honed\Form\Components\Component;
 use Honed\Form\Contracts\Adapter;
 use Spatie\LaravelData\Support\DataClass;
@@ -25,8 +25,8 @@ class CustomAdapter extends FromPropertyAdapter implements Adapter
         $component = app($attribute->getComponent());
 
         return $component->assign([
-            ...$attribute->getArguments(),
             ...$this->rejectNulls($this->assignFromProperty($property)),
+            ...$attribute->getArguments(),
         ]);
     }
 

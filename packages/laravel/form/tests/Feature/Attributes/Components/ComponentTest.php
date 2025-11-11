@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Form\Attributes\Component;
+use Honed\Form\Attributes\Components\Component;
 use Honed\Form\Components\Input;
 
 it('has attribute', function () {

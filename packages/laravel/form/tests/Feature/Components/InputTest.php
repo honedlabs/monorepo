@@ -46,7 +46,7 @@ it('has array representation', function () {
             'component' => FormComponent::Input->value,
             'name' => 'name',
             'label' => 'Name',
-            'value' => $this->component->empty(),
+            // defaultValue is removed as it is `null`
             'placeholder' => 'Enter a name',
         ]);
 });

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Form\Attributes;
+namespace Honed\Form\Attributes\Components;
 
 use Attribute;
 
