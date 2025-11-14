@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold;
 
+use Honed\Scaffold\Commands\ScaffoldCommand;
 use Illuminate\Support\ServiceProvider;
 
 class ScaffoldServiceProvider extends ServiceProvider
@@ -27,7 +28,7 @@ class ScaffoldServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                //
+                ScaffoldCommand::class
             ]);
         }
     }
