@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Commands;
 
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Console\GeneratorCommand;
-use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Honed\Scaffold\Support\ScaffoldContext;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Support\Collection;
 
 #[AsCommand(name: 'honed:scaffold')]
 class ScaffoldCommand extends Command implements PromptsForMissingInput
@@ -132,11 +135,7 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
 
         $context = $this->createContext($name);
 
-        foreach ($this->getScaffolders() as $className) {
-            $scaffolder = $this->laravel->make($className, [
-                'context' => $context
-            ]);
-
+        foreach ($context->getScaffolders() as $scaffolder) {
             if (! $scaffolder->isApplicable()) {
                 continue;
             }
@@ -150,6 +149,33 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
     }
 
     /**
+     * Get the desired class name from the input.
+     */
+    protected function getNameInput(): string
+    {
+        $name = trim($this->argument('name'));
+
+        if (Str::endsWith($name, '.php')) {
+            return Str::substr($name, 0, -4);
+        }
+
+        return $name;
+    }
+
+    /**
+     * Checks whether the given name is reserved.
+     */
+    protected function isReservedName(string $name): bool
+    {
+        return in_array(
+            strtolower($name),
+            (new Collection($this->reservedNames))
+                ->transform(fn ($name) => strtolower($name))
+                ->all()
+        );
+    }
+
+    /**
      * Get the console command arguments.
      *
      * @return list<list<mixed>>
@@ -158,6 +184,18 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
     {
         return [
             ['name', InputArgument::REQUIRED, 'The name of the model'],
+        ];
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return list<list<mixed>>
+     */
+    protected function getOptions()
+    {
+        return [
+            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the model already exists'],
         ];
     }
 
@@ -174,5 +212,13 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
                 'E.g. Flight',
             ],
         ];
+    }
+
+    /**
+     * Create a new scaffold context instance.
+     */
+    protected function createContext(string $name): ScaffoldContext
+    {
+        return ScaffoldContext::make($name);
     }
 }

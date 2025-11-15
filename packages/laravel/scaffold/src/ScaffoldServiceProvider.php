@@ -27,9 +27,25 @@ class ScaffoldServiceProvider extends ServiceProvider
         ], 'scaffold-config');
 
         if ($this->app->runningInConsole()) {
+            $this->offerPublishing();
+
             $this->commands([
                 ScaffoldCommand::class
             ]);
         }
+    }
+
+    /**
+     * Register the publishing for the package.
+     */
+    protected function offerPublishing(): void
+    {
+        $this->publishes([
+            __DIR__.'/../config/scaffold.php' => config_path('scaffold.php'),
+        ], 'scaffold-config');
+
+        $this->publishes([
+            __DIR__.'/../stubs' => base_path('stubs'),
+        ], 'scaffold-stubs');
     }
 }
