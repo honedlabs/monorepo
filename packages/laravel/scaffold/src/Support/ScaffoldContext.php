@@ -251,7 +251,7 @@ class ScaffoldContext
     public function getScaffolders(): array
     {
         /** @var list<\Honed\Scaffold\Contracts\Scaffolder> */
-        return (new ScaffolderCollection($this->getScaffolderClassNames()))
+        return (new ScaffolderCollection($this->config->get('scaffold.scaffolders', [])))
             ->build($this)
             ->toArray();
     }

@@ -1,9 +1,12 @@
 <?php
 
 return [
+    'context' => \Honed\Scaffold\Support\ScaffoldContext::class,
+
     'scaffolders' => [
         \Honed\Scaffold\Scaffolders\PropertyScaffolder::class,
-        \Honed\Scaffold\Scaffolders\ContractScaffolder::class,
+        \Honed\Scaffold\Scaffolders\InterfaceScaffolder::class,
+        \Honed\Scaffold\Scaffolders\TraitScaffolder::class,
         // \Honed\Scaffold\Scaffolders\MigrationScaffolder::class,
         // \Honed\Scaffold\Scaffolders\FactoryScaffolder::class,
         // \Honed\Scaffold\Scaffolders\SeederScaffolder::class,

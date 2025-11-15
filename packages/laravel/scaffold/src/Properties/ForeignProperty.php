@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Properties;
 
+use Honed\Scaffold\Contracts\IsNullable;
 use Illuminate\Support\Stringable;
 
 use function Laravel\Prompts\select;
 
-class ForeignProperty extends Property
+class ForeignProperty extends Property implements IsNullable
 {
     /**
      * The type of the schema column.

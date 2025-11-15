@@ -6,6 +6,7 @@ namespace Honed\Scaffold\Properties;
 
 use Honed\Scaffold\Contracts\HasLength;
 use Honed\Scaffold\Contracts\HasUniqueness;
+use Honed\Scaffold\Contracts\IsNullable;
 use Illuminate\Support\Str;
 use function Laravel\Prompts\text;
 use Illuminate\Support\Stringable;
@@ -190,7 +191,9 @@ abstract class Property implements PropertyContract
      */
     public function promptForNullable(): void
     {
-        $this->nullable = confirm('Is this property nullable?');
+        if ($this instanceof IsNullable) {
+            $this->nullable = confirm('Is this property nullable?');
+        }
     }
 
     /**
