@@ -4,17 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Properties;
 
-class DateProperty
+class DateProperty extends DateTimeProperty
 {
     /**
-     * Whether the property is unsigned.
+     * The type of the schema column.
      * 
-     * @var bool
+     * @var string
      */
-    protected $unsigned = false;
-
-    /**
-     * The number of bytes.
-     */
-    protected $size;
+    protected $column = 'date';  
 }

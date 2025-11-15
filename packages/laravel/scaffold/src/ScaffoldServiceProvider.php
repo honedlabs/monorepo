@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold;
 
-use Honed\Scaffold\Commands\ScaffoldCommand;
+use Honed\Scaffold\Console\Commands\ScaffoldCommand;
 use Illuminate\Support\ServiceProvider;
 
 class ScaffoldServiceProvider extends ServiceProvider

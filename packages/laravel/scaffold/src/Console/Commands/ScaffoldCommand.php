@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Scaffold\Commands;
+namespace Honed\Scaffold\Console\Commands;
 
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
@@ -133,6 +133,8 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
             return false;
         }
 
+        $this->components->info('Scaffolding model...');
+
         $context = $this->createContext($name);
 
         foreach ($context->getScaffolders() as $scaffolder) {
@@ -142,6 +144,8 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
 
             $scaffolder->suggest();
         }
+
+        // $this->components->success()
 
         $context->generate();
 

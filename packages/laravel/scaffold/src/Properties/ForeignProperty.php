@@ -4,17 +4,24 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Properties;
 
-class ForeignProperty
+class ForeignProperty extends Property
 {
     /**
-     * Whether the property is unsigned.
+     * The type of the schema column.
      * 
-     * @var bool
+     * @var string
      */
-    protected $unsigned = false;
+    protected $column = 'foreignId';
 
     /**
-     * The number of bytes.
+     * The strategy for when the foreign record is deleted.
+     * 
+     * @var ?string
      */
-    protected $size;
+    protected $onDelete;
+
+    public function suggest(): void
+    {
+        parent::suggest();
+    }
 }

@@ -4,30 +4,25 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Properties;
 
-use Honed\Scaffold\Contracts\HasLength;
-
-class StringProperty extends Property implements HasLength
+class JsonProperty extends Property
 {
     /**
      * The type of the schema column.
      * 
      * @var string
      */
-    protected $column = 'string';
-    
+    protected $column = 'json';
+
     /**
      * The suggested names for the property.
      * 
      * @var list<string>
      */
     protected $suggestedNames = [
-        'name',
-        'title',
-        'description',
-        'code',
-        'image',
-        'slug',
-        'type',
-        'url',
+        'data',
+        'settings',
+        'json',
+        'config',
+        'meta',
     ];
 }
