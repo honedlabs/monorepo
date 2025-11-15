@@ -10,20 +10,12 @@ class ActionScaffolder extends MultipleScaffolder
 {
     /**
      * The command to be run.
-     * 
+     *
      * @return class-string<\Illuminate\Console\Command>
      */
     public function commandName(): string
     {
         return ActionMakeCommand::class;
-    }
-
-    /**
-     * Get the label for the prompt.
-     */
-    public function label(): string
-    {
-        return 'Select which actions to scaffold for the model.';
     }
 
     /**
@@ -42,7 +34,7 @@ class ActionScaffolder extends MultipleScaffolder
 
     /**
      * Get the arguments for the command.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function getArguments(string $input): array

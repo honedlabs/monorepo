@@ -6,7 +6,6 @@ namespace Honed\Scaffold\Scaffolders;
 
 use Honed\Scaffold\Support\PendingCommand;
 use Honed\Scaffold\Support\Utility\Writer;
-use Illuminate\Support\Stringable;
 
 use function Laravel\Prompts\confirm;
 
@@ -44,15 +43,18 @@ abstract class SingleScaffolder extends CommandScaffolder
 
     /**
      * Get the arguments for the command.
+     *
+     * @return array<string, mixed>
      */
     protected function getArguments(): array
     {
         return [
             'name' => $this->suffixName($this->getBaseName()->toString()),
+            '--model' => $this->getName(),
             // '--body' => $this->getBody()->toString()
         ];
     }
-    
+
     /**
      * Get the body of the class.
      */

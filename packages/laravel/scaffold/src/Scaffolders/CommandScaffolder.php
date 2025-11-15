@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
-use Honed\Scaffold\Support\PendingCommand;
-use Honed\Scaffold\Support\Utility\Writer;
 use Illuminate\Support\Stringable;
-
-use function Laravel\Prompts\confirm;
 
 abstract class CommandScaffolder extends Scaffolder
 {

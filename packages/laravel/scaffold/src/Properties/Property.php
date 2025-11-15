@@ -193,7 +193,7 @@ abstract class Property implements PropertyContract
     {
         $this->name = Str::snake(suggest(
             label: 'Provide a name for this property',
-            options: $this->getSuggestedNames()
+            options: $this->getSuggestedNames(),
         ));
     }
 

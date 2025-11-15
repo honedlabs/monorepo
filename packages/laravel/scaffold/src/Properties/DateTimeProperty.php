@@ -22,6 +22,8 @@ class DateTimeProperty extends Property implements IsNullable
      */
     protected $suggestedNames = [
         'disabled_at',
+        'enabled_at',
+        'verified_at',
         'expired_at',
         'created_at',
         'updated_at',

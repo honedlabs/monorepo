@@ -22,7 +22,7 @@ trait Annotatable
      */
     public function annotate(string $annotation = ''): static
     {
-        $this->doc[] = $annotation;
+        $this->annotations[] = $annotation;
 
         return $this;
     }

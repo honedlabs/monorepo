@@ -8,6 +8,8 @@ use Honed\Scaffold\Contracts\HasLength;
 use Illuminate\Support\Str;
 
 use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\suggest;
 
 class NumberProperty extends Property implements HasLength
 {
@@ -24,6 +26,13 @@ class NumberProperty extends Property implements HasLength
      * @var string
      */
     protected $column = 'integer';
+
+    /**
+     * The size of the integer.
+     *
+     * @var string
+     */
+    protected $size = 'integer';
 
     /**
      * The suggested names for the property.
@@ -46,6 +55,37 @@ class NumberProperty extends Property implements HasLength
         parent::prompt();
 
         $this->promptForUnsigned();
+
+        $this->promptForSize();
+    }
+
+    /**
+     * Prompt the user for the unsigned status of the property.
+     */
+    public function promptForUnsigned(): void
+    {
+        $this->unsigned = confirm(
+            label: 'Is this property an unsigned integer?',
+            default: true
+        );
+    }
+
+    /**
+     * Prompt the user for the length of the property.
+     */
+    public function promptForSize(): void
+    {
+        $this->size = select(
+            label: 'Provide a size for this integer',
+            options: [
+                'tiny' => 'Tiny integer',
+                'small' => 'Small integer',
+                'medium' => 'Medium integer',
+                'integer' => 'Integer',
+                'big' => 'Big integer',
+            ],
+            default: 'integer'
+        );
     }
 
     /**
@@ -65,7 +105,6 @@ class NumberProperty extends Property implements HasLength
             'tiny' => 'tinyInteger',
             'small' => 'smallInteger',
             'medium' => 'mediumInteger',
-            'integer' => 'integer',
             'big' => 'bigInteger',
             default => 'integer',
         };
@@ -78,14 +117,11 @@ class NumberProperty extends Property implements HasLength
     }
 
     /**
-     * Prompt the user for the unsigned status of the property.
+     * Get the integer size.
      */
-    protected function promptForUnsigned(): void
+    public function getSize(): string
     {
-        $this->unsigned = confirm(
-            label: 'Is this property an unsigned integer?',
-            default: true
-        );
+        return $this->size;
     }
 
     /**

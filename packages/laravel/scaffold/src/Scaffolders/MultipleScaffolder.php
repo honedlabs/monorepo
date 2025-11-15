@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Stringable;
-use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\multiselect;
-
 use Honed\Scaffold\Contracts\Suggestible;
 use Honed\Scaffold\Support\PendingCommand;
-use Honed\Scaffold\Support\Utility\Writer;
+use Illuminate\Support\Str;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\multiselect;
 
 /**
  * @implements Suggestible<string>
@@ -71,7 +69,7 @@ abstract class MultipleScaffolder extends CommandScaffolder implements Suggestib
 
     /**
      * Get the arguments for the command.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function getArguments(string $input): array

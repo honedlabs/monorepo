@@ -280,7 +280,7 @@ class ScaffoldContext implements ScaffoldContextContract
      */
     public function getScaffolders(Command $command): array
     {
-        /** @var list<Scaffolder> */
+        // @phpstan-ignore-next-line
         return (new ScaffolderCollection(config()->array('scaffold.scaffolders', [])))
             ->build($this, $command)
             ->toArray();

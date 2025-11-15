@@ -10,6 +10,8 @@ class InfolistScaffolder extends SingleScaffolder
 {
     /**
      * The command to be run.
+     * 
+     * @return class-string<\Illuminate\Console\Command>
      */
     public function commandName(): string
     {
