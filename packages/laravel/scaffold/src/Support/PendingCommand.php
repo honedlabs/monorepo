@@ -9,12 +9,5 @@ use Illuminate\Support\Facades\Artisan;
 
 class PendingCommand
 {
-    public function __construct(
-        protected Kernel $kernel
-    ) { }
-
-    public function call(ScaffoldContext $context): void
-    {
-        // $this->kernel->call();
-    }
+    
 }

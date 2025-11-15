@@ -12,13 +12,6 @@ use Illuminate\Console\Command;
 class ScaffoldContext
 {
     /**
-     * The commands to be executed.
-     * 
-     * @var array<class-string<\Honed\Scaffold\Scaffolders\Scaffolder>, \Honed\Scaffold\Support\PendingCommand>
-     */
-    protected $commands = [];
-
-    /**
      * The properties to be added.
      * 
      * @var list<\Honed\Scaffold\Contracts\Property>
@@ -33,23 +26,30 @@ class ScaffoldContext
     protected $imports = [];
 
     /**
+     * The commands to be executed.
+     * 
+     * @var list<string|\Honed\Scaffold\Support\PendingCommand>
+     */
+    protected $commands = [];
+
+    /**
      * The interfaces to be implemented.
      * 
-     * @var list<string>
+     * @var list<string|\Honed\Scaffold\Support\PendingInterface>
      */
     protected $interfaces = [];
 
     /**
      * The methods to be added.
      * 
-     * @var list<string>
+     * @var list<string|\Honed\Scaffold\Support\PendingMethod>
      */
     protected $methods = [];
 
     /**
      * The traits to be used.
      * 
-     * @var list<string>
+     * @var list<string|\Honed\Scaffold\Support\PendingTrait>
      */
     protected $traits = [];
 
@@ -64,44 +64,6 @@ class ScaffoldContext
     public static function make(string $name): static
     {
         return app(static::class, ['name' => $name]);
-    }
-
-    /**
-     * Determine if the context uses the given scaffolder.
-     * 
-     * @param class-string<\Honed\Scaffold\Scaffolders\Scaffolder> $className
-     */
-    public function isUsing(string $className): bool
-    {
-        return isset($this->commands[$className]);
-    }
-
-    /**
-     * Add a command to the context.
-     */
-    public function addCommand(string $className, PendingCommand $command): void
-    {
-        $this->commands[$className] = $command;
-    }
-
-    /**
-     * Add multiple commands to the context.
-     * 
-     * @param list<\Honed\Scaffold\Support\PendingCommand> $commands
-     */
-    public function addCommands(string $className, array $commands): void
-    {
-        $this->commands[$className] = array_merge($this->commands[$className], $commands);
-    }
-
-    /**
-     * Get the commands for the context.
-     * 
-     * @return array<class-string<\Honed\Scaffold\Scaffolders\Scaffolder>, \Honed\Scaffold\Support\PendingCommand>
-     */
-    public function getCommands(): array
-    {
-        return $this->commands;
     }
 
     /**
@@ -161,6 +123,43 @@ class ScaffoldContext
     }
 
     /**
+     * Add a command to the context.
+     */
+    public function addCommand(string|PendingCommand $command): void
+    {
+        $this->commands[] = $command;
+    }
+
+    /**
+     * Add multiple commands to the context.
+     * 
+     * @param class-string<\Honed\Scaffold\Scaffolders\Scaffolder> $className
+     * @param list<\Honed\Scaffold\Support\PendingCommand> $commands
+     */
+    public function addCommands(string $className, array $commands): void
+    {
+        $this->commands[$className] = array_merge($this->commands[$className], $commands);
+    }
+
+    /**
+     * Get the commands for the context.
+     * 
+     * @return array<class-string<\Honed\Scaffold\Scaffolders\Scaffolder>, \Honed\Scaffold\Support\PendingCommand>
+     */
+    public function getCommands(): array
+    {
+        return $this->commands;
+    }
+
+    /**
+     * Create a new pending command instance.
+     */
+    public function newCommand(): PendingCommand
+    {
+        return new PendingCommand();
+    }
+
+    /**
      * Add an interface to the context.
      */
     public function addInterface(string $interface): void
@@ -186,6 +185,11 @@ class ScaffoldContext
     public function getInterfaces(): array
     {
         return $this->interfaces;
+    }
+
+    public function newInterface(): PendingInterface
+    {
+        return new PendingInterface();
     }
 
     /**
@@ -216,6 +220,11 @@ class ScaffoldContext
         return $this->methods;
     }
 
+    public function newMethod(): PendingMethod
+    {
+        return new PendingMethod();
+    }
+
     /**
      * Add a trait to the context.
      */
@@ -244,6 +253,11 @@ class ScaffoldContext
         return $this->traits;
     }
 
+    public function newTrait(): PendingTrait
+    {
+        return new PendingTrait();
+    }
+
     /**
      * Get the scaffolders to be used.
      * 
@@ -262,9 +276,7 @@ class ScaffoldContext
      */
     public function generate(): void
     {
-        foreach ($this->commands as $className => $command) {
-            $command->call($this);
-        }
+        
     }
 
     /**

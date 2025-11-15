@@ -1,0 +1,86 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Honed\Scaffold\Scaffolders;
+
+use SplFileInfo;
+use ReflectionClass;
+use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
+
+use function Laravel\Prompts\select;
+use Illuminate\Support\Facades\File;
+use function Laravel\Prompts\confirm;
+
+use function Laravel\Prompts\suggest;
+use Honed\Action\ActionServiceProvider;
+use function Laravel\Prompts\multiselect;
+use Honed\Command\CommandServiceProvider;
+use Honed\Scaffold\Scaffolders\Scaffolder;
+use Honed\Scaffold\Support\PendingCommand;
+use Honed\Scaffold\Properties\DateProperty;
+use Honed\Command\Commands\BuilderMakeCommand;
+
+class BuilderScaffolder extends Scaffolder
+{
+    /**
+     * Determine if the scaffolder is applicable to the context and should be executed.
+     */
+    public function isApplicable(): bool
+    {
+        return class_exists(BuilderMakeCommand::class);
+    }
+
+    /**
+     * Prompt the user for input.
+     */
+    public function suggest(): void
+    {
+        if (confirm('Would you like to scaffold a builder for the model?')) {
+            $name = $this->getSuffixedName('Builder');
+
+            $qualifiedName = $this->getQualifiedName($name);
+
+            $this->addCommand(
+                $this->newCommand()
+                    ->command(BuilderMakeCommand::class)
+                    ->arguments([
+                        'name' => $name,
+                    ])
+            );
+
+            $this->addImport(
+                $this->newImport()
+                    // ->generator(BuilderMakeCommand::class)
+                    ->name($qualifiedName) 
+            );
+
+            $this->addMethod(
+                $this->newMethod()
+                    ->when($this->isPhp(8.3),
+                        fn (PendingMethod $method) => $method
+                            ->attributes('\Override')
+                    )
+                    ->doc('Create a new query builder for the model.')
+                    ->doc()
+                    ->doc("@return \\{$qualifiedName}}")
+                    ->signature('newEloquentBuilder($query)')
+                    ->line('return new Builder($query);')
+            );
+
+            $this->addMethod(
+                $this->newMethod()
+                    ->override()
+                    ->doc('Begin querying the model.')
+                    ->doc()
+                    ->doc("@return \\{$qualifiedName}")
+                    ->static()
+                    ->signature('query()')
+                    ->line("@var \\{$qualifiedName}")
+                    ->line('return parent::query();')
+            );
+        }
+        
+    }
+}
