@@ -6,6 +6,8 @@ namespace Honed\Scaffold;
 
 use Honed\Scaffold\Commands\ScaffoldCommand;
 use Honed\Scaffold\Commands\ScaffolderMakeCommand;
+use Honed\Scaffold\Contracts\ScaffoldContext as ScaffoldContextContract;
+use Honed\Scaffold\Support\ScaffoldContext;
 use Illuminate\Support\ServiceProvider;
 
 class ScaffoldServiceProvider extends ServiceProvider
@@ -16,6 +18,11 @@ class ScaffoldServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/scaffold.php', 'scaffold');
+
+        /** @var class-string<\Honed\Scaffold\Contracts\ScaffoldContext> */
+        $context = config('scaffold.context', ScaffoldContext::class);
+
+        $this->app->bind(ScaffoldContextContract::class, $context);
     }
 
     /**

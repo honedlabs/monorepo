@@ -8,9 +8,7 @@ use Illuminate\Console\Command;
 use Honed\Core\Concerns\HasName;
 use Illuminate\Support\Collection;
 use Honed\Scaffold\Concerns\HasTraits;
-use Honed\Scaffold\Contracts\Property;
 use Honed\Scaffold\Concerns\HasImports;
-use Illuminate\Support\Facades\Artisan;
 use Honed\Scaffold\Concerns\HasCommands;
 use Honed\Scaffold\Contracts\Scaffolder;
 use Honed\Scaffold\Concerns\HasInterfaces;
@@ -28,20 +26,6 @@ class ScaffoldContext implements ScaffoldContextContract
     use HasInterfaces;
     use HasMethods;
     use HasTraits;
-
-    /**
-     * The imports to be added.
-     *
-     * @var Collection<int, string>
-     */
-    protected $imports;
-
-    /**
-     * The commands to be executed.
-     *
-     * @var Collection<int, PendingCommand>
-     */
-    protected $commands;
 
     /**
      * The traits to be used.
