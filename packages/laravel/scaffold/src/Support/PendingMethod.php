@@ -15,28 +15,28 @@ class PendingMethod extends PendingHelper
 
     /**
      * The signature of the method.
-     * 
+     *
      * @var string
      */
     protected $signature;
 
     /**
      * The visibility of the method.
-     * 
+     *
      * @var 'public'|'protected'|'private'
      */
     protected $visibility = 'public';
 
     /**
      * Whether the method is static.
-     * 
+     *
      * @var bool
      */
     protected $static = false;
 
     /**
      * Set the signature of the method.
-     * 
+     *
      * @return $this
      */
     public function signature(string $signature): static
@@ -46,10 +46,9 @@ class PendingMethod extends PendingHelper
         return $this;
     }
 
-
     /**
      * Set the visibility of the method.
-     * 
+     *
      * @var 'public'|'protected'|'private'
      */
     public function visibility(string $visibility): static
@@ -95,7 +94,7 @@ class PendingMethod extends PendingHelper
 
     /**
      * Add an override attribute to the method if supported.
-     * 
+     *
      * @return $this
      */
     public function override(): static

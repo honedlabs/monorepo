@@ -13,24 +13,24 @@ class ForeignProperty extends Property implements IsNullable
 {
     /**
      * The type of the schema column.
-     * 
+     *
      * @var string
      */
     protected $column = 'foreignId';
 
     /**
      * The suggested names for the property.
-     * 
+     *
      * @var list<string>
      */
     protected $suggestedNames = [
         'user_id',
-        'parent_id'
+        'parent_id',
     ];
 
     /**
      * The strategy for when the foreign record is deleted.
-     * 
+     *
      * @var string
      */
     protected $strategy;
@@ -38,9 +38,9 @@ class ForeignProperty extends Property implements IsNullable
     /**
      * Prompt the user for input.
      */
-    public function suggest(): void
+    public function prompt(): void
     {
-        parent::suggest();
+        parent::prompt();
 
         $this->promptForOnDelete();
     }

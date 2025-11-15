@@ -8,16 +8,16 @@ trait Attributable
 {
     /**
      * The attributes to be added.
-     * 
+     *
      * @var array<class-string, array<array-key, mixed>>
      */
     protected $attributes = [];
 
     /**
      * Add a new attribute.
-     * 
-     * @param class-string $attribute
-     * @param array<array-key, mixed> $arguments
+     *
+     * @param  class-string  $attribute
+     * @param  array<array-key, mixed>  $arguments
      * @return $this
      */
     public function attribute(string $attribute, array $arguments = []): static
@@ -29,7 +29,7 @@ trait Attributable
 
     /**
      * Get the attributes to be added.
-     * 
+     *
      * @return array<class-string, array<array-key, mixed>>
      */
     public function getAttributes(): array

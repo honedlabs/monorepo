@@ -8,7 +8,7 @@ class TimestampProperty extends DateTimeProperty
 {
     /**
      * The type of the schema column.
-     * 
+     *
      * @var string
      */
     protected $column = 'timestamp';

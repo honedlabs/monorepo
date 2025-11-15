@@ -22,7 +22,7 @@ class ScaffolderCollection extends Collection
         return $this->map(
             fn (string $className): Scaffolder => app($className, [
                 'context' => $context,
-                'components' => $command->outputComponents()
+                'components' => $command->outputComponents(),
             ])
         );
     }

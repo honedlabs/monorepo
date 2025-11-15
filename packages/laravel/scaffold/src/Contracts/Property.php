@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Contracts;
 
-interface Property extends Suggestible
+interface Property extends Promptable
 {
     /**
      * Create a new property instance.

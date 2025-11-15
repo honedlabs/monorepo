@@ -6,7 +6,7 @@ namespace Honed\Scaffold\Contracts;
 
 use Honed\Scaffold\Support\ScaffoldContext;
 
-interface Scaffolder extends Suggestible
+interface Scaffolder extends Promptable
 {
     /**
      * Determine if the scaffolder is applicable to the context and should be executed.

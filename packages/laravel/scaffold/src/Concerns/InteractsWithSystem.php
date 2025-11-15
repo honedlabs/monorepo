@@ -8,8 +8,8 @@ trait InteractsWithSystem
 {
     /**
      * Determine if the current PHP version is the same as the given version, or greater.
-     * 
-     * @param scalar $version
+     *
+     * @param  scalar  $version
      */
     public function isPhp(mixed $version): bool
     {
@@ -18,8 +18,8 @@ trait InteractsWithSystem
 
     /**
      * Determine if the current Laravel version is the same as the given version, or greater.
-     * 
-     * @param scalar $version
+     *
+     * @param  scalar  $version
      */
     public function isLaravel(mixed $version): bool
     {

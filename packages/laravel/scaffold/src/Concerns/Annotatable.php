@@ -10,14 +10,14 @@ trait Annotatable
 {
     /**
      * The annotations to be added to the doc block.
-     * 
+     *
      * @var list<string>
      */
     protected $annotations = [];
 
     /**
      * Annotate the method with the given comment.
-     * 
+     *
      * @return $this
      */
     public function annotate(string $annotation = ''): static
@@ -26,10 +26,10 @@ trait Annotatable
 
         return $this;
     }
-    
+
     /**
      * Annotate the return type of the method.
-     * 
+     *
      * @return $this
      */
     public function annotateReturn(string $return): static
@@ -39,7 +39,7 @@ trait Annotatable
 
     /**
      * Annotate a parameter with the given type and description.
-     * 
+     *
      * @return $this
      */
     public function annotateParam(string $param): static
@@ -49,7 +49,7 @@ trait Annotatable
 
     /**
      * Annotate a thrown exception with the given type and description.
-     * 
+     *
      * @return $this
      */
     public function annotateThrows(string $throws): static
@@ -59,7 +59,7 @@ trait Annotatable
 
     /**
      * Annotate the template of the method.
-     * 
+     *
      * @return $this
      */
     public function annotateTemplate(string $template): static
@@ -84,7 +84,7 @@ trait Annotatable
      */
     protected function startAnnotation(int $indentations = 4): string
     {
-        return str_repeat(' ', $indentations) . '/**'.PHP_EOL;
+        return str_repeat(' ', $indentations).'/**'.PHP_EOL;
     }
 
     /**
@@ -103,7 +103,7 @@ trait Annotatable
      */
     protected function endAnnotation(int $indentations = 4): string
     {
-        return str_repeat(' ', $indentations) . ' */'.PHP_EOL;
+        return str_repeat(' ', $indentations).' */'.PHP_EOL;
     }
 
     /**

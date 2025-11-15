@@ -10,14 +10,14 @@ class TextProperty extends Property implements IsNullable
 {
     /**
      * The type of the schema column.
-     * 
+     *
      * @var string
      */
     protected $column = 'text';
 
     /**
      * The suggested names for the property.
-     * 
+     *
      * @var list<string>
      */
     protected $suggestedNames = [

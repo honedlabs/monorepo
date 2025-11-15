@@ -10,7 +10,7 @@ class BooleanProperty extends Property
 {
     /**
      * The type of the schema column.
-     * 
+     *
      * @var string
      */
     protected $column = 'boolean';
@@ -28,8 +28,8 @@ class BooleanProperty extends Property
 
     /**
      * Cast the given value to the appropriate type.
-     * 
-     * @param scalar $value
+     *
+     * @param  scalar  $value
      * @return bool
      */
     protected function cast(mixed $value): mixed

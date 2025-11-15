@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Commands;
 
-use Illuminate\Support\Str;
-use Illuminate\Console\Command;
-use Illuminate\Console\GeneratorCommand;
 use Honed\Scaffold\Support\ScaffoldContext;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Input\InputArgument;
+use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 #[AsCommand(name: 'honed:scaffold')]
 class ScaffoldCommand extends Command implements PromptsForMissingInput
@@ -124,7 +123,7 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
 
     /**
      * Execute the console command
-     * 
+     *
      * @return bool|null
      */
     public function handle()
@@ -144,7 +143,7 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
                 continue;
             }
 
-            $scaffolder->suggest();
+            $scaffolder->prompt();
         }
 
         $this->components->success('Scaffolding complete.');

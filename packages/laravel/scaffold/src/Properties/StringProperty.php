@@ -11,14 +11,14 @@ class StringProperty extends Property implements HasLength, IsNullable
 {
     /**
      * The type of the schema column.
-     * 
+     *
      * @var string
      */
     protected $column = 'string';
-    
+
     /**
      * The suggested names for the property.
-     * 
+     *
      * @var list<string>
      */
     protected $suggestedNames = [

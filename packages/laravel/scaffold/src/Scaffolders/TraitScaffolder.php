@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
-use Spatie\LaravelData\WithData;
-use Honed\Core\Contracts\HasIcon;
-
-use Honed\Core\Contracts\HasLabel;
 use Illuminate\Support\Collection;
-use Honed\Form\Contracts\CanBeSearched;
+use Spatie\LaravelData\WithData;
+
 use function Laravel\Prompts\multiselect;
-use Honed\Scaffold\Scaffolders\Scaffolder;
 
 class TraitScaffolder extends Scaffolder
 {
     /**
      * The concerns to be suggested.
-     * 
+     *
      * @var list<string>
      */
     protected $traits = [
@@ -35,7 +31,7 @@ class TraitScaffolder extends Scaffolder
     /**
      * Prompt the user for input.
      */
-    public function suggest(): void
+    public function prompt(): void
     {
         $traits = $this->getTraits();
 
@@ -54,7 +50,7 @@ class TraitScaffolder extends Scaffolder
 
     /**
      * Get the contracts for the context.
-     * 
+     *
      * @return list<string>
      */
     protected function getTraits(): array
@@ -63,5 +59,4 @@ class TraitScaffolder extends Scaffolder
             ->reject(fn (string $trait) => ! trait_exists($trait))
             ->toArray();
     }
-
 }

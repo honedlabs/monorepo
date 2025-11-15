@@ -7,62 +7,61 @@ namespace Honed\Scaffold\Properties;
 use Honed\Scaffold\Contracts\HasLength;
 use Honed\Scaffold\Contracts\HasUniqueness;
 use Honed\Scaffold\Contracts\IsNullable;
+use Honed\Scaffold\Contracts\Property as PropertyContract;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
-use function Laravel\Prompts\text;
 use Illuminate\Support\Stringable;
 
 use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\suggest;
-use Illuminate\Database\Schema\Blueprint;
-use Honed\Scaffold\Contracts\Property as PropertyContract;
+use function Laravel\Prompts\text;
 
 abstract class Property implements PropertyContract
 {
     /**
      * The name of the property.
-     * 
+     *
      * @var string
      */
     protected $name;
 
     /**
      * The type of the schema column.
-     * 
+     *
      * @var string
      */
     protected $column;
 
     /**
      * Whether the property is nullable.
-     * 
+     *
      * @var bool
      */
     protected $nullable = false;
 
     /**
      * The default value of the property.
-     * 
+     *
      * @var scalar|null
      */
     protected $default;
 
     /**
      * The length of the property.
-     * 
+     *
      * @var int
      */
     protected $length;
 
     /**
      * Whether the property is unique.
-     * 
+     *
      * @var bool
      */
     protected $unique = false;
 
     /**
      * The suggested names for the property.
-     * 
+     *
      * @var list<string>
      */
     protected $suggestedNames = [];
@@ -78,7 +77,7 @@ abstract class Property implements PropertyContract
     /**
      * Prompt the user for input.
      */
-    public function suggest(): void
+    public function prompt(): void
     {
         $this->promptForName();
 
@@ -191,7 +190,7 @@ abstract class Property implements PropertyContract
      */
     public function promptForName(): void
     {
-        $this->name = Str::snake(suggest(
+        $this->name = Str::snake(prompt(
             label: 'Provide a name for this property',
             options: $this->getSuggestedNames()
         ));
@@ -227,7 +226,7 @@ abstract class Property implements PropertyContract
     public function promptForLength(): void
     {
         if ($this instanceof HasLength && $this->confirms('length')) {
-            $this->length = $this->cast(suggest(
+            $this->length = $this->cast(prompt(
                 label: 'Provide a length for this property',
                 options: [
                     '63',
@@ -267,8 +266,8 @@ abstract class Property implements PropertyContract
 
     /**
      * Cast the given value to the appropriate type.
-     * 
-     * @param scalar $value
+     *
+     * @param  scalar  $value
      * @return scalar
      */
     protected function cast(mixed $value): mixed
@@ -278,7 +277,7 @@ abstract class Property implements PropertyContract
 
     /**
      * Get the suggested names for the property.
-     * 
+     *
      * @return list<string>
      */
     protected function getSuggestedNames(): array

@@ -4,60 +4,60 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Support;
 
-use Illuminate\Contracts\Config\Repository;
 use Honed\Scaffold\Collections\ScaffolderCollection;
 use Honed\Scaffold\Contracts\Property;
 use Honed\Scaffold\Contracts\ScaffoldContext as ScaffoldContextContract;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Config\Repository;
 
 class ScaffoldContext implements ScaffoldContextContract
 {
     /**
      * The imports to be added.
-     * 
+     *
      * @var list<string>
      */
     protected $imports = [];
 
     /**
      * The properties to be added.
-     * 
-     * @var list<\Honed\Scaffold\Contracts\Property>
+     *
+     * @var list<Property>
      */
     protected $properties = [];
 
     /**
      * The commands to be executed.
-     * 
-     * @var list<\Honed\Scaffold\Support\PendingCommand>
+     *
+     * @var list<PendingCommand>
      */
     protected $commands = [];
 
     /**
      * The interfaces to be implemented.
-     * 
-     * @var list<\Honed\Scaffold\Support\PendingInterface>
+     *
+     * @var list<PendingInterface>
      */
     protected $interfaces = [];
 
     /**
      * The methods to be added.
-     * 
-     * @var list<\Honed\Scaffold\Support\PendingMethod>
+     *
+     * @var list<PendingMethod>
      */
     protected $methods = [];
 
     /**
      * The traits to be used.
-     * 
-     * @var list<\Honed\Scaffold\Support\PendingTrait>
+     *
+     * @var list<PendingTrait>
      */
     protected $traits = [];
 
     public function __construct(
         protected string $name,
         protected Repository $config,
-    ) { }
+    ) {}
 
     /**
      * Create a new scaffold context instance.
@@ -85,8 +85,8 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Add multiple imports to the context.
-     * 
-     * @param list<string> $imports
+     *
+     * @param  list<string>  $imports
      */
     public function addImports(array $imports): void
     {
@@ -95,7 +95,7 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Get the imports for the context.
-     * 
+     *
      * @return list<string>
      */
     public function getImports(): array
@@ -113,8 +113,8 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Add multiple properties to the context.
-     * 
-     * @param list<\Honed\Scaffold\Contracts\Property> $properties
+     *
+     * @param  list<Property>  $properties
      */
     public function addProperties(array $properties): void
     {
@@ -123,8 +123,8 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Get the properties for the context.
-     * 
-     * @return list<\Honed\Scaffold\Contracts\Property>
+     *
+     * @return list<Property>
      */
     public function getProperties(): array
     {
@@ -141,8 +141,8 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Add multiple commands to the context.
-     * 
-     * @param list<\Honed\Scaffold\Support\PendingCommand> $commands
+     *
+     * @param  list<PendingCommand>  $commands
      */
     public function addCommands(array $commands): void
     {
@@ -151,8 +151,8 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Get the commands for the context.
-     * 
-     * @return list<\Honed\Scaffold\Support\PendingCommand>
+     *
+     * @return list<PendingCommand>
      */
     public function getCommands(): array
     {
@@ -177,8 +177,8 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Add multiple interfaces to the context.
-     * 
-     * @param list<\Honed\Scaffold\Support\PendingInterface> $interfaces
+     *
+     * @param  list<PendingInterface>  $interfaces
      */
     public function addInterfaces(array $interfaces): void
     {
@@ -187,8 +187,8 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Get the interfaces for the context.
-     * 
-     * @return list<\Honed\Scaffold\Support\PendingInterface>
+     *
+     * @return list<PendingInterface>
      */
     public function getInterfaces(): array
     {
@@ -213,8 +213,8 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Add multiple methods to the context.
-     * 
-     * @param list<\Honed\Scaffold\Support\PendingMethod> $methods
+     *
+     * @param  list<PendingMethod>  $methods
      */
     public function addMethods(array $methods): void
     {
@@ -223,8 +223,8 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Get the methods for the context.
-     * 
-     * @return list<\Honed\Scaffold\Support\PendingMethod>
+     *
+     * @return list<PendingMethod>
      */
     public function getMethods(): array
     {
@@ -249,8 +249,8 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Add multiple traits to the context.
-     * 
-     * @param list<string|\Honed\Scaffold\Support\PendingTrait> $traits
+     *
+     * @param  list<string|PendingTrait>  $traits
      */
     public function addTraits(array $traits): void
     {
@@ -259,8 +259,8 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Get the traits for the context.
-     * 
-     * @return list<string|\Honed\Scaffold\Support\PendingTrait>
+     *
+     * @return list<string|PendingTrait>
      */
     public function getTraits(): array
     {
@@ -277,7 +277,7 @@ class ScaffoldContext implements ScaffoldContextContract
 
     /**
      * Get the scaffolders to be used.
-     * 
+     *
      * @return list<\Honed\Scaffold\Contracts\Scaffolder>
      */
     public function getScaffolders(Command $command): array
@@ -291,8 +291,5 @@ class ScaffoldContext implements ScaffoldContextContract
     /**
      * Scaffold the context.
      */
-    public function generate(): void
-    {
-        
-    }
+    public function generate(): void {}
 }

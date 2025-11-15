@@ -70,7 +70,7 @@ class ScaffolderMakeCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the '. mb_strtolower($this->type).' already exists'],
+            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the '.mb_strtolower($this->type).' already exists'],
         ];
     }
 

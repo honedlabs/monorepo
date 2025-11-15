@@ -4,23 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
-use SplFileInfo;
-use ReflectionClass;
-use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
-
-use function Laravel\Prompts\select;
-use Illuminate\Support\Facades\File;
-use function Laravel\Prompts\confirm;
-
-use function Laravel\Prompts\suggest;
-use Honed\Action\ActionServiceProvider;
-use function Laravel\Prompts\multiselect;
-use Honed\Command\CommandServiceProvider;
-use Honed\Scaffold\Scaffolders\Scaffolder;
-use Honed\Scaffold\Support\PendingCommand;
-use Honed\Scaffold\Properties\DateProperty;
 use Honed\Command\Commands\BuilderMakeCommand;
+use Honed\Scaffold\Support\PendingCommand;
+use Honed\Scaffold\Support\PendingMethod;
+
+use function Laravel\Prompts\confirm;
 
 class BuilderScaffolder extends Scaffolder
 {
@@ -35,7 +23,7 @@ class BuilderScaffolder extends Scaffolder
     /**
      * Prompt the user for input.
      */
-    public function suggest(): void
+    public function prompt(): void
     {
         if (confirm('Would you like to scaffold a builder for the model?')) {
 
@@ -45,36 +33,49 @@ class BuilderScaffolder extends Scaffolder
 
             $this->addImport($qualifiedName);
 
-            $this->addCommand(
-                $this->newCommand()
-                    ->command(BuilderMakeCommand::class)
-                    ->arguments([
-                        'name' => $name,
-                    ])
-            );
+            $this->addCommand($this->withMakeCommand($name));
 
-            $this->addMethod(
-                $this->newMethod()
-                    ->override()
-                    ->annotate('Create a new query builder for the model.')
-                    ->annotate()
-                    ->annotateReturn("\\{$qualifiedName}}")
-                    ->signature('newEloquentBuilder($query)')
-                    // ->line('return new Builder($query);')
-                    // ->return('new Builder($query);')
-            );
+            $this->addMethod($this->withNewEloquentBuilderMethod($qualifiedName));
 
-            $this->addMethod(
-                $this->newMethod()
-                    ->override()
-                    ->annotate('Begin querying the model.')
-                    ->annotate()
-                    ->annotate("@return \\{$qualifiedName}")
-                    ->static()
-                    ->signature('query()')
-                    // ->line("@var \\{$qualifiedName}")
-                    // ->line('return parent::query();')
-            );
+            $this->addMethod($this->withQueryMethod($qualifiedName));
         }
+    }
+
+    /**
+     * Use the `make:builder` command to scaffold the builder.
+     */
+    protected function withMakeCommand(string $name): PendingCommand
+    {
+        return $this->newCommand()
+            ->command(BuilderMakeCommand::class)
+            ->arguments([
+                'name' => $name,
+            ]);
+    }
+
+    /**
+     * Use the `newEloquentBuilder` method to provide type-hinting for the query builder.
+     */
+    protected function withNewEloquentBuilderMethod(string $name): PendingMethod
+    {
+        return $this->newMethod()
+            ->override()
+            ->annotate('Create a new query builder for the model.')
+            ->annotate()
+            ->annotateReturn("\\{$name}}")
+            ->signature('newEloquentBuilder($query)');
+    }
+
+    /**
+     * Use the `query` method to provide type-hinting for the query builder.
+     */
+    protected function withQueryMethod(string $name): PendingMethod
+    {
+        return $this->newMethod()
+            ->override()
+            ->annotate('Begin querying the model.')
+            ->annotate()
+            ->annotateReturn("\\{$name}}")
+            ->signature('query()');
     }
 }

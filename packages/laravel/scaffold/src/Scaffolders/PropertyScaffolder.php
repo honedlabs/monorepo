@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
-use Honed\Scaffold\Properties\DateProperty;
-use SplFileInfo;
-use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
-use function Laravel\Prompts\select;
-
 use Illuminate\Support\Facades\File;
-use function Laravel\Prompts\suggest;
-use Honed\Scaffold\Scaffolders\Scaffolder;
+use Illuminate\Support\Str;
 use ReflectionClass;
+use SplFileInfo;
+
+use function Laravel\Prompts\select;
 
 class PropertyScaffolder extends Scaffolder
 {
@@ -28,7 +25,7 @@ class PropertyScaffolder extends Scaffolder
     /**
      * Prompt the user for input.
      */
-    public function suggest(): void
+    public function prompt(): void
     {
         $properties = $this->getPropertyOptions();
 
@@ -45,7 +42,7 @@ class PropertyScaffolder extends Scaffolder
 
             $property = $selected::make();
 
-            $property->suggest();
+            $property->prompt();
 
             $this->components->success("A new \"{$property->getColumn()}\" property \"{$property->getName()}\" has been added to the model.");
 
@@ -55,13 +52,13 @@ class PropertyScaffolder extends Scaffolder
 
     /**
      * Get the property options.
-     * 
+     *
      * @return array<class-string<\Honed\Scaffold\Contracts\Property>, string>
      */
     protected function getPropertyOptions(): array
     {
-        return (new Collection(File::allFiles(__DIR__ . '/../Properties')))
-            ->map(fn (SplFileInfo $file) => new \ReflectionClass(Str::of($file->getBasename())
+        return (new Collection(File::allFiles(__DIR__.'/../Properties')))
+            ->map(fn (SplFileInfo $file) => new ReflectionClass(Str::of($file->getBasename())
                 ->beforeLast('.php')
                 ->prepend(Str::beforeLast(__NAMESPACE__, 'Scaffolder').'Properties\\')
                 ->toString()
@@ -82,8 +79,6 @@ class PropertyScaffolder extends Scaffolder
                 ];
             })
             ->toArray();
-
-
 
     }
 }

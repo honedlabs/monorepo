@@ -5,7 +5,8 @@ declare(strict_types=1);
 use Honed\Scaffold\Concerns\InteractsWithSystem;
 
 beforeEach(function () {
-    $this->class = new class {
+    $this->class = new class()
+    {
         use InteractsWithSystem;
     };
 

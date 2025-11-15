@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use Honed\Abn\AbnValidator;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Models\User;
 
 /**
  * @template TModel of \App\Models\User

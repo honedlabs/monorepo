@@ -6,15 +6,15 @@ namespace Honed\Scaffold\Scaffolders;
 
 use Honed\Scaffold\Concerns\InteractsWithSystem;
 use Honed\Scaffold\Contracts\Property;
-use Illuminate\Support\Str;
-use Honed\Scaffold\Support\PendingTrait;
-use Honed\Scaffold\Support\PendingMethod;
-use Honed\Scaffold\Support\PendingCommand;
-use Honed\Scaffold\Support\ScaffoldContext;
-use Honed\Scaffold\Support\PendingInterface;
-use Illuminate\Console\View\Components\Factory;
 use Honed\Scaffold\Contracts\Scaffolder as ScaffolderContract;
+use Honed\Scaffold\Support\PendingCommand;
+use Honed\Scaffold\Support\PendingInterface;
+use Honed\Scaffold\Support\PendingMethod;
+use Honed\Scaffold\Support\PendingTrait;
+use Honed\Scaffold\Support\ScaffoldContext;
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Console\View\Components\Factory;
+use Illuminate\Support\Str;
 use ReflectionMethod;
 
 abstract class Scaffolder implements ScaffolderContract
@@ -24,7 +24,7 @@ abstract class Scaffolder implements ScaffolderContract
     public function __construct(
         protected ScaffoldContext $context,
         protected Factory $components,
-    ) { }
+    ) {}
 
     /**
      * Get the context for scaffolding.
@@ -43,7 +43,7 @@ abstract class Scaffolder implements ScaffolderContract
             return $this->getContext()->getName();
         }
 
-        return $this->getContext()->getName() . $suffix;
+        return $this->getContext()->getName().$suffix;
     }
 
     /**
@@ -55,13 +55,14 @@ abstract class Scaffolder implements ScaffolderContract
             return $this->getContext()->getName();
         }
 
-        return $prefix . $this->getContext()->getName();
+        return $prefix.$this->getContext()->getName();
     }
 
     /**
      * Qualify the name against a generator.
-     * 
-     * @param class-string<\Illuminate\Console\GeneratorCommand>|GeneratorCommand $generator
+     *
+     * @param  class-string<GeneratorCommand>|GeneratorCommand  $generator
+     * @return class-string
      */
     public function qualifyGenerator(string $name, string|GeneratorCommand $generator): string
     {

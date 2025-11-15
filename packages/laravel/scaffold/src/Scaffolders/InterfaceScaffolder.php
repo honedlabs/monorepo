@@ -6,17 +6,16 @@ namespace Honed\Scaffold\Scaffolders;
 
 use Honed\Core\Contracts\HasIcon;
 use Honed\Core\Contracts\HasLabel;
-
-use Illuminate\Support\Collection;
 use Honed\Form\Contracts\CanBeSearched;
+use Illuminate\Support\Collection;
+
 use function Laravel\Prompts\multiselect;
-use Honed\Scaffold\Scaffolders\Scaffolder;
 
 class InterfaceScaffolder extends Scaffolder
 {
     /**
      * The interfaces to be suggested.
-     * 
+     *
      * @var list<string>
      */
     protected $interfaces = [
@@ -36,7 +35,7 @@ class InterfaceScaffolder extends Scaffolder
     /**
      * Prompt the user for input.
      */
-    public function suggest(): void
+    public function prompt(): void
     {
         $interfaces = $this->getInterfaces();
 
@@ -55,7 +54,7 @@ class InterfaceScaffolder extends Scaffolder
 
     /**
      * Get the contracts for the context.
-     * 
+     *
      * @return list<string>
      */
     protected function getInterfaces(): array
@@ -64,5 +63,4 @@ class InterfaceScaffolder extends Scaffolder
             ->reject(fn (string $interface) => ! interface_exists($interface))
             ->toArray();
     }
-
 }
