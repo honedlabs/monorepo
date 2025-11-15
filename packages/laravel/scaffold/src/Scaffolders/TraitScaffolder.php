@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Scaffold\Scaffolders;
 
 use Honed\Scaffold\Contracts\Suggestible;
+use Honed\Scaffold\Support\PendingTrait;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\WithData;
 
@@ -41,7 +42,14 @@ class TraitScaffolder extends Scaffolder implements Suggestible
         );
 
         $this->getContext()->addImports($selected);
-        $this->getContext()->addTraits($selected);
+
+        $this->getContext()
+            ->addTraits(
+                array_map(
+                    fn (string $trait) => $this->newTrait()->name($trait),
+                    $selected
+                )
+            );
     }
 
     /**

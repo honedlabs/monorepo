@@ -32,9 +32,12 @@ return [
         Honed\Core\Contracts\HasIcon::class,
         Honed\Core\Contracts\HasLabel::class,
         Honed\Form\Contracts\CanBeSearched::class,
+        // Honed\Memo\Contracts\Cacheable::class,
     ],
 
     'traits' => [
         Spatie\LaravelData\WithData::class,
+        Honed\Form\Concerns\CanBeSearched::class,
+        // Honed\Memo\Concerns\Cacheable::class,
     ],
 ];

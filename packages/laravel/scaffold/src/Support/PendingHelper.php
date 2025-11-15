@@ -6,7 +6,7 @@ namespace Honed\Scaffold\Support;
 
 use Honed\Scaffold\Concerns\InteractsWithSystem;
 
-class PendingHelper
+abstract class PendingHelper
 {
     use InteractsWithSystem;
 }

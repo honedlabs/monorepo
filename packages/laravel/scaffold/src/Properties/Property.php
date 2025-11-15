@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 
 use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\suggest;
 use function Laravel\Prompts\text;
 
 abstract class Property implements PropertyContract
@@ -190,7 +191,7 @@ abstract class Property implements PropertyContract
      */
     public function promptForName(): void
     {
-        $this->name = Str::snake(prompt(
+        $this->name = Str::snake(suggest(
             label: 'Provide a name for this property',
             options: $this->getSuggestedNames()
         ));
@@ -226,7 +227,7 @@ abstract class Property implements PropertyContract
     public function promptForLength(): void
     {
         if ($this instanceof HasLength && $this->confirms('length')) {
-            $this->length = $this->cast(prompt(
+            $this->length = $this->cast(suggest(
                 label: 'Provide a length for this property',
                 options: [
                     '63',

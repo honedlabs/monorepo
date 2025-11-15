@@ -43,7 +43,13 @@ class InterfaceScaffolder extends Scaffolder implements Suggestible
         );
 
         $this->getContext()->addImports($selected);
-        $this->getContext()->addInterfaces($selected);
+        
+        $this->getContext()->addInterfaces(
+            array_map(
+                fn (string $interface) => $this->newInterface()->name($interface),
+                $selected
+            )
+        );
     }
 
     /**

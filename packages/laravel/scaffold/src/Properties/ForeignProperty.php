@@ -81,12 +81,19 @@ class ForeignProperty extends Property implements IsNullable
      */
     public function promptForOnDelete(): void
     {
-        if ($this->confirms('delete strategy')) {
-            $this->strategy = select('Select a strategy for when the foreign record is deleted', [
-                'cascade' => 'Cascade',
-                'restrict' => 'Restrict',
-                'null' => 'Null',
-            ]);
+        if (! $this->confirms('delete strategy')) {
+            return;
+        }
+
+        $strategy = select('Select a strategy for when the foreign record is deleted', [
+            'none' => 'None',
+            'cascade' => 'Cascade',
+            'restrict' => 'Restrict',
+            'null' => 'Null',
+        ]);
+
+        if ($strategy !== 'none') {
+            $this->strategy = $strategy;
         }
     }
 }

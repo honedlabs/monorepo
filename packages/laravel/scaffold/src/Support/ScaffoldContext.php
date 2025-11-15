@@ -10,63 +10,62 @@ use Honed\Scaffold\Contracts\ScaffoldContext as ScaffoldContextContract;
 use Honed\Scaffold\Contracts\Scaffolder;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Artisan;
 
 class ScaffoldContext implements ScaffoldContextContract
 {
     /**
-     * The scaffolders that have been used.
-     *
-     * @var list<class-string<\Honed\Scaffold\Contracts\Scaffolder>>
-     */
-    protected $used = [];
-
-    /**
      * The imports to be added.
      *
-     * @var list<string>
+     * @var \Illuminate\Support\Collection<int, string>
      */
-    protected $imports = [];
+    protected $imports;
 
     /**
      * The properties to be added.
      *
-     * @var list<Property>
+     * @var \Illuminate\Support\Collection<int, Property>
      */
-    protected $properties = [];
+    protected $properties;
 
     /**
      * The commands to be executed.
      *
-     * @var list<PendingCommand>
+     * @var \Illuminate\Support\Collection<int, PendingCommand>
      */
-    protected $commands = [];
+    protected $commands;
 
     /**
      * The interfaces to be implemented.
      *
-     * @var list<PendingInterface>
+     * @var \Illuminate\Support\Collection<int, PendingInterface>
      */
-    protected $interfaces = [];
+    protected $interfaces;
 
     /**
      * The methods to be added.
      *
-     * @var list<PendingMethod>
+     * @var \Illuminate\Support\Collection<int, PendingMethod>
      */
-    protected $methods = [];
+    protected $methods;
 
     /**
      * The traits to be used.
      *
-     * @var list<PendingTrait>
+     * @var \Illuminate\Support\Collection<int, PendingTrait>
      */
-    protected $traits = [];
+    protected $traits;
 
     public function __construct(
         protected string $name,
-        protected Repository $config,
     ) {
-        
+        $this->imports = new Collection();
+        $this->properties = new Collection();
+        $this->commands = new Collection();
+        $this->interfaces = new Collection();
+        $this->methods = new Collection();
+        $this->traits = new Collection();
     }
 
     /**
@@ -86,19 +85,11 @@ class ScaffoldContext implements ScaffoldContextContract
     }
 
     /**
-     * Mark a scaffolder as used.
-     */
-    public function used(Scaffolder $scaffolder): void
-    {
-        $this->used[] = get_class($scaffolder);
-    }
-
-    /**
      * Add an import to the context.
      */
     public function addImport(string $import): void
     {
-        $this->imports[] = $import;
+        $this->imports->push($import);
     }
 
     /**
@@ -108,15 +99,15 @@ class ScaffoldContext implements ScaffoldContextContract
      */
     public function addImports(array $imports): void
     {
-        $this->imports = array_merge($this->imports, $imports);
+        $this->imports->push(...$imports);
     }
 
     /**
      * Get the imports for the context.
      *
-     * @return list<string>
+     * @return \Illuminate\Support\Collection<int, string>
      */
-    public function getImports(): array
+    public function getImports(): Collection
     {
         return $this->imports;
     }
@@ -126,7 +117,7 @@ class ScaffoldContext implements ScaffoldContextContract
      */
     public function addProperty(Property $property): void
     {
-        $this->properties[] = $property;
+        $this->properties->push($property);
     }
 
     /**
@@ -136,15 +127,15 @@ class ScaffoldContext implements ScaffoldContextContract
      */
     public function addProperties(array $properties): void
     {
-        $this->properties = array_merge($this->properties, $properties);
+        $this->properties->push(...$properties);
     }
 
     /**
      * Get the properties for the context.
      *
-     * @return list<Property>
+     * @return \Illuminate\Support\Collection<int, Property>
      */
-    public function getProperties(): array
+    public function getProperties(): Collection
     {
         return $this->properties;
     }
@@ -154,7 +145,7 @@ class ScaffoldContext implements ScaffoldContextContract
      */
     public function addCommand(PendingCommand $command): void
     {
-        $this->commands[] = $command;
+        $this->commands->push($command);
     }
 
     /**
@@ -164,15 +155,15 @@ class ScaffoldContext implements ScaffoldContextContract
      */
     public function addCommands(array $commands): void
     {
-        $this->commands = array_merge($this->commands, $commands);
+        $this->commands->push(...$commands);
     }
 
     /**
      * Get the commands for the context.
      *
-     * @return list<PendingCommand>
+     * @return \Illuminate\Support\Collection<int, PendingCommand>
      */
-    public function getCommands(): array
+    public function getCommands(): Collection
     {
         return $this->commands;
     }
@@ -190,7 +181,7 @@ class ScaffoldContext implements ScaffoldContextContract
      */
     public function addInterface(PendingInterface $interface): void
     {
-        $this->interfaces[] = $interface;
+        $this->interfaces->push($interface);
     }
 
     /**
@@ -200,15 +191,15 @@ class ScaffoldContext implements ScaffoldContextContract
      */
     public function addInterfaces(array $interfaces): void
     {
-        $this->interfaces = array_merge($this->interfaces, $interfaces);
+        $this->interfaces->push(...$interfaces);
     }
 
     /**
      * Get the interfaces for the context.
      *
-     * @return list<PendingInterface>
+     * @return \Illuminate\Support\Collection<int, PendingInterface>
      */
-    public function getInterfaces(): array
+    public function getInterfaces(): Collection
     {
         return $this->interfaces;
     }
@@ -226,25 +217,15 @@ class ScaffoldContext implements ScaffoldContextContract
      */
     public function addMethod(PendingMethod $method): void
     {
-        $this->methods[] = $method;
-    }
-
-    /**
-     * Add multiple methods to the context.
-     *
-     * @param  list<PendingMethod>  $methods
-     */
-    public function addMethods(array $methods): void
-    {
-        $this->methods = array_merge($this->methods, $methods);
+        $this->methods->push($method);
     }
 
     /**
      * Get the methods for the context.
      *
-     * @return list<PendingMethod>
+     * @return \Illuminate\Support\Collection<int, PendingMethod>
      */
-    public function getMethods(): array
+    public function getMethods(): Collection
     {
         return $this->methods;
     }
@@ -260,27 +241,27 @@ class ScaffoldContext implements ScaffoldContextContract
     /**
      * Add a trait to the context.
      */
-    public function addTrait(string|PendingTrait $trait): void
+    public function addTrait(PendingTrait $trait): void
     {
-        $this->traits[] = $trait;
+        $this->traits->push($trait);
     }
 
     /**
      * Add multiple traits to the context.
      *
-     * @param  list<string|PendingTrait>  $traits
+     * @param  list<PendingTrait>  $traits
      */
     public function addTraits(array $traits): void
     {
-        $this->traits = array_merge($this->traits, $traits);
+        $this->traits->push(...$traits);
     }
 
     /**
      * Get the traits for the context.
      *
-     * @return list<string|PendingTrait>
+     * @return \Illuminate\Support\Collection<int, PendingTrait>
      */
-    public function getTraits(): array
+    public function getTraits(): Collection
     {
         return $this->traits;
     }
@@ -301,7 +282,7 @@ class ScaffoldContext implements ScaffoldContextContract
     public function getScaffolders(Command $command): array
     {
         /** @var list<\Honed\Scaffold\Contracts\Scaffolder> */
-        return (new ScaffolderCollection($this->config->get('scaffold.scaffolders', [])))
+        return (new ScaffolderCollection(config()->array('scaffold.scaffolders', [])))
             ->build($this, $command)
             ->toArray();
     }
@@ -309,5 +290,48 @@ class ScaffoldContext implements ScaffoldContextContract
     /**
      * Scaffold the context.
      */
-    public function generate(): void {}
+    public function generate(): void
+    {
+        $this->callCommands();
+
+        $this->implementInterfaces();
+
+        // $this->getMethods()->each->handle($this);
+
+        // $this->getTraits()->each->handle($this);
+    }
+
+    /**
+     * Call the commands.
+     */
+    protected function callCommands(): void
+    {
+        // $this->getCommands()->each(function (PendingCommand $command) {
+        //     Artisan::call($command->getName(), $command->getArguments());
+        // });
+    }
+
+    /**
+     * Implement the interfaces.
+     */
+    protected function implementInterfaces(): void
+    {
+        //
+    }
+
+    /**
+     * Use the traits.
+     */
+    protected function useTraits(): void
+    {
+        //
+    }
+
+    /**
+     * Add the methods.
+     */
+    protected function addMethods(): void
+    {
+        //
+    }
 }

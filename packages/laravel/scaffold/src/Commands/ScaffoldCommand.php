@@ -144,13 +144,11 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
             }
 
             $scaffolder->prompt();
-
-            $context->used($scaffolder);
         }
 
-        $this->components->success('Scaffolding complete.');
-
         $context->generate();
+        
+        $this->components->success('Scaffolding complete.');
     }
 
     /**

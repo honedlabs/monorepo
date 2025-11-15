@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use function Laravel\Prompts\multiselect;
 use Honed\Scaffold\Contracts\Suggestible;
 use Honed\Command\Commands\ResponseMakeCommand;
+use Honed\Scaffold\Concerns\Multiselectable;
 use Honed\Scaffold\Support\PendingCommand;
 
 /**
@@ -16,40 +17,14 @@ use Honed\Scaffold\Support\PendingCommand;
  */
 class ResponseScaffolder extends Scaffolder implements Suggestible
 {
+    use Multiselectable;
+
     /**
      * Determine if the scaffolder is applicable to the context and should be executed.
      */
     public function isApplicable(): bool
     {
         return class_exists(ResponseMakeCommand::class);
-    }
-
-    /**
-     * Prompt the user for input.
-     */
-    public function prompt(): void
-    {
-        $suggestions = $this->suggestions();
-
-        if (empty($suggestions)) {
-            return;
-        }
-
-        /** @var list<string> */
-        $responses = multiselect(
-            label: 'Select which responses to scaffold for the model.',
-            options: $suggestions,
-        );
-
-        foreach ($responses as $response) {
-            $this->addCommand(
-                $this->newCommand()
-                    ->command(ResponseMakeCommand::class)
-                    ->arguments([
-                        'name' => $this->suffixName($this->prefixName(Str::ucfirst($response), 'Response')),
-                    ])
-            );
-        }
     }
 
     /**
@@ -78,6 +53,7 @@ class ResponseScaffolder extends Scaffolder implements Suggestible
             ->arguments([
                 'name' => $this->suffixName($this->prefixName(Str::ucfirst($response), 'Response')),
                 // "--{$response}" => true,
+                // '--body' => $this->getBody(),
             ]);
     }
 }
