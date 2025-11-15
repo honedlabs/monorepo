@@ -10,23 +10,8 @@ use Illuminate\Support\Stringable;
 
 use function Laravel\Prompts\confirm;
 
-abstract class SingleScaffolder extends Scaffolder
+abstract class SingleScaffolder extends CommandScaffolder
 {
-    /**
-     * The command to be run.
-     *
-     * @return class-string<\Illuminate\Console\Command>
-     */
-    abstract public function commandName(): string;
-
-    /**
-     * Determine if the scaffolder is applicable to the context and should be executed.
-     */
-    public function isApplicable(): bool
-    {
-        return class_exists($this->commandName());
-    }
-
     /**
      * Prompt the user for input.
      */
@@ -67,19 +52,7 @@ abstract class SingleScaffolder extends Scaffolder
             // '--body' => $this->getBody()->toString()
         ];
     }
-
-    /**
-     * Get the class base name.
-     */
-    protected function getBaseName(): Stringable
-    {
-        return (new Stringable($this->commandName()))
-            ->classBasename()
-            ->replace('Command', '')
-            ->replace('Make', '')
-            ->studly();
-    }
-
+    
     /**
      * Get the body of the class.
      */

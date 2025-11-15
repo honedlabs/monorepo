@@ -12,27 +12,16 @@ use Honed\Scaffold\Contracts\Suggestible;
 use Honed\Scaffold\Support\PendingCommand;
 use Illuminate\Support\Str;
 
-/**
- * @implements \Honed\Scaffold\Contracts\Suggestible<string>
- */
-class ResponseScaffolder extends Scaffolder implements FromCommand, HasLabel, Suggestible
+class ResponseScaffolder extends MultipleScaffolder
 {
-    use ScaffoldsMany;
-
     /**
-     * Determine if the scaffolder is applicable to the context and should be executed.
+     * The command to be run.
+     * 
+     * @return class-string<\Illuminate\Console\Command>
      */
-    public function isApplicable(): bool
+    public function commandName(): string
     {
-        return class_exists(ResponseMakeCommand::class);
-    }
-
-    /**
-     * Get the label.
-     */
-    public function getLabel(): string
-    {
-        return 'Select which responses to scaffold for the model.';
+        return ResponseMakeCommand::class;
     }
 
     /**
@@ -49,19 +38,5 @@ class ResponseScaffolder extends Scaffolder implements FromCommand, HasLabel, Su
             'edit' => 'Edit',
             'delete' => 'Delete',
         ];
-    }
-
-    /**
-     * Use the `honed:response` command to scaffold the response.
-     */
-    public function withMakeCommand(string $input = ''): PendingCommand
-    {
-        return $this->newCommand()
-            ->command(ResponseMakeCommand::class)
-            ->arguments([
-                'name' => $this->suffixName('Response', $this->prefixName(Str::ucfirst($input))),
-                // "--{$response}" => true,
-                // '--body' => $this->getBody(),
-            ]);
     }
 }

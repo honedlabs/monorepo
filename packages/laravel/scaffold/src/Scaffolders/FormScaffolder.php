@@ -12,27 +12,16 @@ use Honed\Scaffold\Contracts\Suggestible;
 use Honed\Scaffold\Support\PendingCommand;
 use Honed\Scaffold\Support\Utility\Writer;
 
-/**
- * @implements Suggestible<string>
- */
-class FormScaffolder extends Scaffolder implements FromCommand, HasLabel, Suggestible
+class FormScaffolder extends MultipleScaffolder
 {
-    use ScaffoldsMany;
-
     /**
-     * Determine if the scaffolder is applicable to the context and should be executed.
+     * The command to be run.
+     * 
+     * @return class-string<\Illuminate\Console\Command>
      */
-    public function isApplicable(): bool
+    public function commandName(): string
     {
-        return class_exists(FormMakeCommand::class);
-    }
-
-    /**
-     * Get the label.
-     */
-    public function getLabel(): string
-    {
-        return 'Select which forms to scaffold for the model.';
+        return FormMakeCommand::class;
     }
 
     /**
@@ -46,26 +35,5 @@ class FormScaffolder extends Scaffolder implements FromCommand, HasLabel, Sugges
             'store' => 'Store',
             'update' => 'Update',
         ];
-    }
-
-    /**
-     * Use the `honed:form` command to scaffold the form.
-     */
-    public function withMakeCommand(string $input = ''): PendingCommand
-    {
-        return $this->newCommand()
-            ->command(FormMakeCommand::class)
-            ->arguments([
-                'name' => $this->suffixName('Form', $this->prefixName($input)),
-                // '--body' => $this->getBody()
-            ]);
-    }
-
-    /**
-     * Get the body of the table.
-     */
-    protected function getBody(): Writer
-    {
-        return Writer::make();
     }
 }

@@ -6,7 +6,7 @@ namespace Honed\Scaffold\Scaffolders;
 
 use Honed\Infolist\Commands\InfolistMakeCommand;
 
-class TableScaffolder extends SingleScaffolder
+class InfolistScaffolder extends SingleScaffolder
 {
     /**
      * The command to be run.

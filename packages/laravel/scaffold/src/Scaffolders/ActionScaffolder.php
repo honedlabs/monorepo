@@ -5,32 +5,23 @@ declare(strict_types=1);
 namespace Honed\Scaffold\Scaffolders;
 
 use Honed\Action\Commands\ActionMakeCommand;
-use Honed\Core\Contracts\HasLabel;
-use Honed\Scaffold\Concerns\ScaffoldsMany;
-use Honed\Scaffold\Contracts\FromCommand;
-use Honed\Scaffold\Contracts\Suggestible;
-use Honed\Scaffold\Support\PendingCommand;
-use Illuminate\Support\Str;
 
-/**
- * @implements Suggestible<string>
- */
-class ActionScaffolder extends Scaffolder implements FromCommand, HasLabel, Suggestible
+class ActionScaffolder extends MultipleScaffolder
 {
-    use ScaffoldsMany;
-
     /**
-     * Determine if the scaffolder is applicable to the context and should be executed.
+     * The command to be run.
+     * 
+     * @return class-string<\Illuminate\Console\Command>
      */
-    public function isApplicable(): bool
+    public function commandName(): string
     {
-        return class_exists(ActionMakeCommand::class);
+        return ActionMakeCommand::class;
     }
 
     /**
-     * Get the label.
+     * Get the label for the prompt.
      */
-    public function getLabel(): string
+    public function label(): string
     {
         return 'Select which actions to scaffold for the model.';
     }
@@ -50,17 +41,17 @@ class ActionScaffolder extends Scaffolder implements FromCommand, HasLabel, Sugg
     }
 
     /**
-     * Use the `honed:action` command to scaffold the action.
+     * Get the arguments for the command.
+     * 
+     * @return array<string, mixed>
      */
-    public function withMakeCommand(string $input = ''): PendingCommand
+    protected function getArguments(string $input): array
     {
-        return $this->newCommand()
-            ->command(ActionMakeCommand::class)
-            ->arguments([
-                'name' => $this->prefixName(Str::ucfirst($input)),
-                '--action' => $input,
-                '--model' => $this->getName(),
-                // '--body' => $this->getBody(),
-            ]);
+        return [
+            'name' => $this->getResolvedName($input),
+            '--action' => $input,
+            '--model' => $this->getName(),
+            // '--body' => $this->getBody(),
+        ];
     }
 }

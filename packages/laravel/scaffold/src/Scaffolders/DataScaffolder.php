@@ -15,24 +15,16 @@ use Spatie\LaravelData\Commands\DataMakeCommand;
 /**
  * @implements Suggestible<string>
  */
-class DataScaffolder extends Scaffolder implements FromCommand, HasLabel, Suggestible
+class DataScaffolder extends MultipleScaffolder
 {
-    use ScaffoldsMany;
-
     /**
-     * Determine if the scaffolder is applicable to the context and should be executed.
+     * The command to be run.
+     * 
+     * @return class-string<\Illuminate\Console\Command>
      */
-    public function isApplicable(): bool
+    public function commandName(): string
     {
-        return class_exists(DataMakeCommand::class);
-    }
-
-    /**
-     * Get the label.
-     */
-    public function getLabel(): string
-    {
-        return 'Select which data classes to scaffold for the model.';
+        return DataMakeCommand::class;
     }
 
     /**
@@ -48,26 +40,5 @@ class DataScaffolder extends Scaffolder implements FromCommand, HasLabel, Sugges
             'show' => 'Show',
             'search' => 'Search',
         ];
-    }
-
-    /**
-     * Use the `honed:form` command to scaffold the form.
-     */
-    public function withMakeCommand(string $input = ''): PendingCommand
-    {
-        return $this->newCommand()
-            ->command(DataMakeCommand::class)
-            ->arguments([
-                'name' => $this->suffixName('Data', $this->prefixName($input)),
-                // '--body' => $this->getBody()
-            ]);
-    }
-
-    /**
-     * Get the body of the table.
-     */
-    protected function getBody(): Writer
-    {
-        return Writer::make();
     }
 }
