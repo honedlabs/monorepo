@@ -46,15 +46,9 @@ class NumberProperty extends Property implements HasLength
      */
     public function suggest(): void
     {
-        $this->promptForName();
-
-        $this->promptForDefault();
-
-        $this->promptForLength();
+        parent::suggest();
 
         $this->promptForUnsigned();
-
-        $this->success();
     }
 
     /**
@@ -91,7 +85,10 @@ class NumberProperty extends Property implements HasLength
      */
     protected function promptForUnsigned(): void
     {
-        $this->unsigned = confirm('Is this property an unsigned integer?');
+        $this->unsigned = confirm(
+            label: 'Is this property an unsigned integer?',
+            default: true
+        );
     }
 
     /**

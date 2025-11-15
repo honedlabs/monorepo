@@ -22,6 +22,7 @@ class UuidProperty extends Property implements HasUniqueness, IsNullable
      * @var list<string>
      */
     protected $suggestedNames = [
-        'uuid'
+        'uuid',
+        'public_id',
     ];
 }

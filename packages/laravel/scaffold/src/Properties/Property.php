@@ -123,6 +123,30 @@ abstract class Property implements PropertyContract
     }
 
     /**
+     * Get the name of the property.
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get the column type of the property.
+     */
+    public function getColumn(): string
+    {
+        return $this->column;
+    }
+
+    /**
+     * Get the column type of the property for the blueprint.
+     */
+    public function getBlueprintColumn(): string
+    {
+        return $this->getColumn();
+    }
+
+    /**
      * Determine whether the property is nullable.
      */
     public function isNullable(): bool
@@ -163,27 +187,14 @@ abstract class Property implements PropertyContract
     }
 
     /**
-     * Get the column type of the property.
-     */
-    public function getColumn(): string
-    {
-        return $this->column;
-    }
-
-    /**
-     * Get the column type of the property for the blueprint.
-     */
-    public function getBlueprintColumn(): string
-    {
-        return $this->getColumn();
-    }
-
-    /**
      * Prompt the user for the name of the property.
      */
     public function promptForName(): void
     {
-        $this->name = suggest('Provide a name for this property', $this->getSuggestedNames());
+        $this->name = Str::snake(suggest(
+            label: 'Provide a name for this property',
+            options: $this->getSuggestedNames()
+        ));
     }
 
     /**
@@ -192,7 +203,9 @@ abstract class Property implements PropertyContract
     public function promptForNullable(): void
     {
         if ($this instanceof IsNullable) {
-            $this->nullable = confirm('Is this property nullable?');
+            $this->nullable = confirm(
+                label: 'Is this property nullable?'
+            );
         }
     }
 
@@ -202,7 +215,9 @@ abstract class Property implements PropertyContract
     public function promptForDefault(): void
     {
         if (! $this->isNullable() && $this->confirms('default value')) {
-            $this->default = $this->cast(text('Provide a default value for this property'));
+            $this->default = $this->cast(text(
+                label: 'Provide a default value for this property'
+            ));
         }
     }
 
@@ -212,16 +227,19 @@ abstract class Property implements PropertyContract
     public function promptForLength(): void
     {
         if ($this instanceof HasLength && $this->confirms('length')) {
-            $this->length = $this->cast(suggest('Provide a length for this property', [
-                '63',
-                '127',
-                '255',
-                '511',
-                '1023',
-                '2047',
-                '4095',
-                '65535',
-            ]));
+            $this->length = $this->cast(suggest(
+                label: 'Provide a length for this property',
+                options: [
+                    '63',
+                    '127',
+                    '255',
+                    '511',
+                    '1023',
+                    '2047',
+                    '4095',
+                    '65535',
+                ]
+            ));
         }
     }
 
@@ -231,16 +249,10 @@ abstract class Property implements PropertyContract
     public function promptForUniqueness(): void
     {
         if ($this instanceof HasUniqueness) {
-            $this->unique = confirm('Is this property unique?');
+            $this->unique = confirm(
+                label: 'Is this property unique?'
+            );
         }
-    }
-
-    /**
-     * Display a success message.
-     */
-    public function success(): void
-    {
-        // info()
     }
 
     /**
@@ -248,7 +260,9 @@ abstract class Property implements PropertyContract
      */
     protected function confirms(string $question): bool
     {
-        return confirm("Does this property have a {$question}?");
+        return confirm(
+            label: "Does this property have a {$question}?",
+        );
     }
 
     /**

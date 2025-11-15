@@ -6,11 +6,13 @@ namespace Honed\Scaffold\Scaffolders;
 
 use Honed\Scaffold\Support\ScaffoldContext;
 use Honed\Scaffold\Contracts\Scaffolder as ScaffolderContract;
+use Illuminate\Console\View\Components\Factory;
 
 abstract class Scaffolder implements ScaffolderContract
 {
     public function __construct(
         protected ScaffoldContext $context,
+        protected Factory $components,
     ) { }
 
     /**

@@ -7,6 +7,7 @@ namespace Honed\Scaffold\Support;
 use Illuminate\Contracts\Config\Repository;
 use Honed\Scaffold\Collections\ScaffolderCollection;
 use Honed\Scaffold\Contracts\Property;
+use Illuminate\Console\Command;
 
 class ScaffoldContext
 {
@@ -248,11 +249,11 @@ class ScaffoldContext
      * 
      * @return list<\Honed\Scaffold\Contracts\Scaffolder>
      */
-    public function getScaffolders(): array
+    public function getScaffolders(Command $command): array
     {
         /** @var list<\Honed\Scaffold\Contracts\Scaffolder> */
         return (new ScaffolderCollection($this->config->get('scaffold.scaffolders', [])))
-            ->build($this)
+            ->build($this, $command)
             ->toArray();
     }
 

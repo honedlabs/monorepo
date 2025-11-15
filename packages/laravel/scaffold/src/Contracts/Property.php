@@ -12,7 +12,12 @@ interface Property extends Suggestible
     public static function make(): static;
 
     /**
-     * Display a success message.
+     * Get the name of the property.
      */
-    public function success(): void;
+    public function getName(): string;
+
+    /**
+     * Get the column type of the property.
+     */
+    public function getColumn(): string;
 }

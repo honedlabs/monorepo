@@ -19,6 +19,16 @@ class ForeignProperty extends Property implements IsNullable
     protected $column = 'foreignId';
 
     /**
+     * The suggested names for the property.
+     * 
+     * @var list<string>
+     */
+    protected $suggestedNames = [
+        'user_id',
+        'parent_id'
+    ];
+
+    /**
      * The strategy for when the foreign record is deleted.
      * 
      * @var string

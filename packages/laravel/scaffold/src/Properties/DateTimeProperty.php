@@ -14,4 +14,17 @@ class DateTimeProperty extends Property implements IsNullable
      * @var string
      */
     protected $column = 'dateTime';
+
+    /**
+     * The suggested names for the property.
+     * 
+     * @var list<string>
+     */
+    protected $suggestedNames = [
+        'disabled_at',
+        'expired_at',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 }

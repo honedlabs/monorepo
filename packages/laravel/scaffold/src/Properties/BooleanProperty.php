@@ -20,7 +20,10 @@ class BooleanProperty extends Property
      */
     public function promptForDefault(): void
     {
-        $this->default = confirm('Should the property be defaulted to true?');
+        $this->default = confirm(
+            label: 'Should the property be defaulted to true?',
+            default: false
+        );
     }
 
     /**

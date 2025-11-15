@@ -35,7 +35,7 @@ class PropertyScaffolder extends Scaffolder
         while (true) {
             /** @var class-string<\Honed\Scaffold\Contracts\Property>|'none' */
             $selected = select('Select a property type', [
-                'none' => 'Skip',
+                'none' => 'None',
                 ...$properties,
             ]);
 
@@ -47,7 +47,7 @@ class PropertyScaffolder extends Scaffolder
 
             $property->suggest();
 
-            $property->success();
+            $this->components->success("A new \"{$property->getColumn()}\" property \"{$property->getName()}\" has been added to the model.");
 
             $this->context->addProperty($property);
         }

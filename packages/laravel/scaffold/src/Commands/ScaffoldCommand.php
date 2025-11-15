@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Scaffold\Console\Commands;
+namespace Honed\Scaffold\Commands;
 
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
@@ -139,7 +139,7 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
 
         $context = $this->createContext($name);
 
-        foreach ($context->getScaffolders() as $scaffolder) {
+        foreach ($context->getScaffolders($this) as $scaffolder) {
             if (! $scaffolder->isApplicable()) {
                 continue;
             }
