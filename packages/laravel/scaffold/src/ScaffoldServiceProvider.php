@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold;
 
+use Honed\Scaffold\Commands\ScaffolderMakeCommand;
 use Honed\Scaffold\Console\Commands\ScaffoldCommand;
 use Illuminate\Support\ServiceProvider;
 
@@ -30,7 +31,8 @@ class ScaffoldServiceProvider extends ServiceProvider
             $this->offerPublishing();
 
             $this->commands([
-                ScaffoldCommand::class
+                ScaffoldCommand::class,
+                ScaffolderMakeCommand::class,
             ]);
         }
     }
