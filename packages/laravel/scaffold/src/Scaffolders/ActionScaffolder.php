@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
+use Illuminate\Support\Str;
 use Honed\Action\ActionServiceProvider;
-use Honed\Scaffold\Contracts\Suggestible;
 
 use function Laravel\Prompts\multiselect;
+use Honed\Scaffold\Contracts\Suggestible;
+use Honed\Action\Commands\ActionMakeCommand;
 
+/**
+ * @implements Suggestible<string>
+ */
 class ActionScaffolder extends Scaffolder implements Suggestible
 {
     /**
@@ -16,7 +21,7 @@ class ActionScaffolder extends Scaffolder implements Suggestible
      */
     public function isApplicable(): bool
     {
-        return class_exists(ActionServiceProvider::class);
+        return class_exists(ActionMakeCommand::class);
     }
 
     /**
@@ -24,10 +29,29 @@ class ActionScaffolder extends Scaffolder implements Suggestible
      */
     public function prompt(): void
     {
+        $suggestions = $this->suggestions();
+
+        if (empty($suggestions)) {
+            return;
+        }
+
+        /** @var list<string> */
         $actions = multiselect(
             label: 'Select which actions to scaffold for the model.',
-            options: $this->suggestions()
+            options: $suggestions,
         );
+
+        foreach ($actions as $action) {
+            $this->addCommand(
+                $this->newCommand()
+                    ->command(ActionMakeCommand::class)
+                    ->arguments([
+                        'name' => $this->suffixName(Str::ucfirst($action)),
+                        'action' => $action,
+                        'model' => $this->getName()
+                    ])
+            );
+        }
     }
 
     /**
@@ -38,9 +62,9 @@ class ActionScaffolder extends Scaffolder implements Suggestible
     public function suggestions(): array
     {
         return [
-            'Create',
-            'Update',
-            'Delete',
+            'store' => 'Store',
+            'update' => 'Update',
+            'delete' => 'Delete',
         ];
     }
 }

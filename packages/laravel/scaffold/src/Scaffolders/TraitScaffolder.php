@@ -4,22 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
+use Honed\Scaffold\Contracts\Suggestible;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\WithData;
 
 use function Laravel\Prompts\multiselect;
 
-class TraitScaffolder extends Scaffolder
+/**
+ * @implements \Honed\Scaffold\Contracts\Suggestible<int>
+ */
+class TraitScaffolder extends Scaffolder implements Suggestible
 {
-    /**
-     * The concerns to be suggested.
-     *
-     * @var list<string>
-     */
-    protected $traits = [
-        WithData::class,
-    ];
-
     /**
      * Determine if the scaffolder is applicable to the context and should be executed.
      */
@@ -33,15 +28,16 @@ class TraitScaffolder extends Scaffolder
      */
     public function prompt(): void
     {
-        $traits = $this->getTraits();
+        $suggestions = $this->suggestions();
 
-        if (empty($traits)) {
+        if (empty($suggestions)) {
             return;
         }
 
+        /** @var list<string> */
         $selected = multiselect(
             label: 'What traits do you want to add to the model to use?',
-            options: $traits,
+            options: $suggestions,
         );
 
         $this->getContext()->addImports($selected);
@@ -49,13 +45,14 @@ class TraitScaffolder extends Scaffolder
     }
 
     /**
-     * Get the contracts for the context.
+     * Get the suggestions.
      *
      * @return list<string>
      */
-    protected function getTraits(): array
+    public function suggestions(): array
     {
-        return (new Collection($this->traits))
+        /** @var list<string> */
+        return (new Collection(config()->array('scaffold.traits', [])))
             ->reject(fn (string $trait) => ! trait_exists($trait))
             ->toArray();
     }

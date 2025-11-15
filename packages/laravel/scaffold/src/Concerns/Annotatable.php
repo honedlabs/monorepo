@@ -16,7 +16,7 @@ trait Annotatable
     protected $annotations = [];
 
     /**
-     * Annotate the method with the given comment.
+     * Add an annotation.
      *
      * @return $this
      */
@@ -28,7 +28,7 @@ trait Annotatable
     }
 
     /**
-     * Annotate the return type of the method.
+     * Annotate the return type.
      *
      * @return $this
      */
@@ -38,7 +38,7 @@ trait Annotatable
     }
 
     /**
-     * Annotate a parameter with the given type and description.
+     * Annotate a parameter.
      *
      * @return $this
      */
@@ -48,7 +48,7 @@ trait Annotatable
     }
 
     /**
-     * Annotate a thrown exception with the given type and description.
+     * Annotate a thrown exception.
      *
      * @return $this
      */
@@ -58,13 +58,31 @@ trait Annotatable
     }
 
     /**
-     * Annotate the template of the method.
+     * Annotate a template.
      *
      * @return $this
      */
     public function annotateTemplate(string $template): static
     {
         return $this->annotate("@template  {$template}");
+    }
+
+    /**
+     * Annotate an implementation.
+     *
+     * @return $this
+     */
+    public function annotateImplements(string $implements): static
+    {
+        return $this->annotate("@implements  {$implements}");
+    }
+
+    /**
+     * Annotate a uses clause.
+     */
+    public function annotateUses(string $uses): static
+    {
+        return $this->annotate("@uses  {$uses}");
     }
 
     /**

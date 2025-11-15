@@ -7,23 +7,16 @@ namespace Honed\Scaffold\Scaffolders;
 use Honed\Core\Contracts\HasIcon;
 use Honed\Core\Contracts\HasLabel;
 use Honed\Form\Contracts\CanBeSearched;
+use Honed\Scaffold\Contracts\Suggestible;
 use Illuminate\Support\Collection;
 
 use function Laravel\Prompts\multiselect;
 
-class InterfaceScaffolder extends Scaffolder
+/**
+ * @implements \Honed\Scaffold\Contracts\Suggestible<int>
+ */
+class InterfaceScaffolder extends Scaffolder implements Suggestible
 {
-    /**
-     * The interfaces to be suggested.
-     *
-     * @var list<string>
-     */
-    protected $interfaces = [
-        HasLabel::class,
-        HasIcon::class,
-        CanBeSearched::class,
-    ];
-
     /**
      * Determine if the scaffolder is applicable to the context and should be executed.
      */
@@ -37,15 +30,16 @@ class InterfaceScaffolder extends Scaffolder
      */
     public function prompt(): void
     {
-        $interfaces = $this->getInterfaces();
+        $suggestions = $this->suggestions();
 
-        if (empty($interfaces)) {
+        if (empty($suggestions)) {
             return;
         }
 
+        /** @var list<string> */
         $selected = multiselect(
             label: 'What interfaces do you want to add the model to implement?',
-            options: $interfaces,
+            options: $suggestions,
         );
 
         $this->getContext()->addImports($selected);
@@ -53,13 +47,14 @@ class InterfaceScaffolder extends Scaffolder
     }
 
     /**
-     * Get the contracts for the context.
+     * Get the suggestions.
      *
      * @return list<string>
      */
-    protected function getInterfaces(): array
+    public function suggestions(): array
     {
-        return (new Collection($this->interfaces))
+        /** @var list<string> */
+        return (new Collection(config()->array('scaffold.interfaces', [])))
             ->reject(fn (string $interface) => ! interface_exists($interface))
             ->toArray();
     }

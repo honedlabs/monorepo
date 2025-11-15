@@ -15,4 +15,9 @@ interface ScaffoldContext
      * Get the name of the model being scaffolded.
      */
     public function getName(): string;
+
+    /**
+     * Mark a scaffolder as used.
+     */
+    public function used(Scaffolder $scaffolder): void;
 }

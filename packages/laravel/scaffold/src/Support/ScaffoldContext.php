@@ -7,11 +7,19 @@ namespace Honed\Scaffold\Support;
 use Honed\Scaffold\Collections\ScaffolderCollection;
 use Honed\Scaffold\Contracts\Property;
 use Honed\Scaffold\Contracts\ScaffoldContext as ScaffoldContextContract;
+use Honed\Scaffold\Contracts\Scaffolder;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository;
 
 class ScaffoldContext implements ScaffoldContextContract
 {
+    /**
+     * The scaffolders that have been used.
+     *
+     * @var list<class-string<\Honed\Scaffold\Contracts\Scaffolder>>
+     */
+    protected $used = [];
+
     /**
      * The imports to be added.
      *
@@ -57,7 +65,9 @@ class ScaffoldContext implements ScaffoldContextContract
     public function __construct(
         protected string $name,
         protected Repository $config,
-    ) {}
+    ) {
+        
+    }
 
     /**
      * Create a new scaffold context instance.
@@ -73,6 +83,14 @@ class ScaffoldContext implements ScaffoldContextContract
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * Mark a scaffolder as used.
+     */
+    public function used(Scaffolder $scaffolder): void
+    {
+        $this->used[] = get_class($scaffolder);
     }
 
     /**

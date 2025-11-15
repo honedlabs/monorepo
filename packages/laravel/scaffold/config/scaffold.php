@@ -8,7 +8,7 @@ return [
     'indentations' => 4,
 
     'scaffolders' => [
-        // \Honed\Scaffold\Scaffolders\PropertyScaffolder::class,
+        \Honed\Scaffold\Scaffolders\PropertyScaffolder::class,
         Honed\Scaffold\Scaffolders\InterfaceScaffolder::class,
         Honed\Scaffold\Scaffolders\TraitScaffolder::class,
         // \Honed\Scaffold\Scaffolders\MigrationScaffolder::class,
@@ -22,17 +22,19 @@ return [
         // \Honed\Scaffold\Scaffolders\FormScaffolder::class,
         // \Honed\Scaffold\Scaffolders\DataScaffolder::class,
         Honed\Scaffold\Scaffolders\ActionScaffolder::class,
-        // \Honed\Scaffold\Scaffolders\ResponseScaffolder::class,
+        \Honed\Scaffold\Scaffolders\ResponseScaffolder::class,
         // \Honed\Scaffold\Scaffolders\ControllerScaffolder::class,
         // \Honed\Scaffold\Scaffolders\PageScaffolder::class,
         // \Honed\Scaffold\Scaffolders\ModalScaffolder::class
     ],
 
-    'contracts' => [
-
+    'interfaces' => [
+        Honed\Core\Contracts\HasIcon::class,
+        Honed\Core\Contracts\HasLabel::class,
+        Honed\Form\Contracts\CanBeSearched::class,
     ],
 
-    'concerns' => [
-
+    'traits' => [
+        Spatie\LaravelData\WithData::class,
     ],
 ];

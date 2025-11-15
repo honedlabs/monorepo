@@ -29,22 +29,22 @@ class BuilderScaffolder extends Scaffolder
 
             $name = $this->suffixName('Builder');
 
-            $qualifiedName = $this->qualifyGenerator($name, BuilderMakeCommand::class);
+            $namespace = $this->qualifyGenerator($name, BuilderMakeCommand::class);
 
-            $this->addImport($qualifiedName);
+            $this->addImport($namespace);
 
-            $this->addCommand($this->withMakeCommand($name));
+            $this->addCommand($this->withMakeCommand($name, $namespace));
 
-            $this->addMethod($this->withNewEloquentBuilderMethod($qualifiedName));
+            $this->addMethod($this->withNewEloquentBuilderMethod($name, $namespace));
 
-            $this->addMethod($this->withQueryMethod($qualifiedName));
+            $this->addMethod($this->withQueryMethod($name, $namespace));
         }
     }
 
     /**
-     * Use the `make:builder` command to scaffold the builder.
+     * Use the `honed:builder` command to scaffold the builder.
      */
-    protected function withMakeCommand(string $name): PendingCommand
+    protected function withMakeCommand(string $name, string $namespace): PendingCommand
     {
         return $this->newCommand()
             ->command(BuilderMakeCommand::class)
@@ -56,26 +56,29 @@ class BuilderScaffolder extends Scaffolder
     /**
      * Use the `newEloquentBuilder` method to provide type-hinting for the query builder.
      */
-    protected function withNewEloquentBuilderMethod(string $name): PendingMethod
+    protected function withNewEloquentBuilderMethod(string $name, string $namespace): PendingMethod
     {
         return $this->newMethod()
             ->override()
             ->annotate('Create a new query builder for the model.')
             ->annotate()
-            ->annotateReturn("\\{$name}}")
-            ->signature('newEloquentBuilder($query)');
+            ->annotateReturn("\\{$namespace}")
+            ->signature('newEloquentBuilder($query)')
+            ->return("new {$name}(\$query);");
     }
 
     /**
      * Use the `query` method to provide type-hinting for the query builder.
      */
-    protected function withQueryMethod(string $name): PendingMethod
+    protected function withQueryMethod(string $name, string $namespace): PendingMethod
     {
         return $this->newMethod()
             ->override()
             ->annotate('Begin querying the model.')
             ->annotate()
-            ->annotateReturn("\\{$name}}")
-            ->signature('query()');
+            ->annotateReturn("\\{$namespace}}")
+            ->signature('query()')
+            ->line("@var \\{$namespace}")
+            ->return('parent::query();');
     }
 }

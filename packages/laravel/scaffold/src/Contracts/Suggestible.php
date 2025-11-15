@@ -10,7 +10,7 @@ namespace Honed\Scaffold\Contracts;
 interface Suggestible
 {
     /**
-     * Get the suggestions for the user.
+     * Get the suggestions.
      *
      * @return array<T, string>
      */

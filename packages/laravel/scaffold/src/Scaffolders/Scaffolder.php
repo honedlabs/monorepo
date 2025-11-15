@@ -35,6 +35,14 @@ abstract class Scaffolder implements ScaffolderContract
     }
 
     /**
+     * Get the name of the model being scaffolded.
+     */
+    public function getName(): string
+    {
+        return $this->getContext()->getName();
+    }
+
+    /**
      * Suffix the name of the model being scaffolded.
      */
     public function suffixName(string $suffix): string
