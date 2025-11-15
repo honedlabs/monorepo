@@ -6,16 +6,20 @@ namespace Honed\Scaffold\Scaffolders;
 
 use Illuminate\Support\Str;
 
-use function Laravel\Prompts\multiselect;
 use Honed\Scaffold\Contracts\Suggestible;
 use Honed\Command\Commands\ResponseMakeCommand;
+use Honed\Core\Contracts\HasLabel;
+use Honed\Scaffold\Concerns\ScaffoldsMany;
+use Honed\Scaffold\Contracts\FromCommand;
 use Honed\Scaffold\Support\PendingCommand;
 
 /**
  * @implements \Honed\Scaffold\Contracts\Suggestible<string>
  */
-class ResponseScaffolder extends Scaffolder implements Suggestible
+class ResponseScaffolder extends Scaffolder implements Suggestible, FromCommand, HasLabel
 {
+    use ScaffoldsMany;
+
     /**
      * Determine if the scaffolder is applicable to the context and should be executed.
      */
@@ -25,29 +29,11 @@ class ResponseScaffolder extends Scaffolder implements Suggestible
     }
 
     /**
-     * Prompt the user for input.
+     * Get the label.
      */
-    public function prompt(): void
+    public function getLabel(): string
     {
-        $suggestions = $this->suggestions();
-
-        if (empty($suggestions)) {
-            return;
-        }
-
-        /** @var list<string> */
-        $responses = multiselect(
-            label: 'Select which responses to scaffold for the model.',
-            options: ['all' => 'All', ...$suggestions],
-        );
-
-        if (in_array('all', $responses)) {
-            $responses = $suggestions;
-        }
-
-        foreach ($responses as $response) {
-            $this->addCommand($this->withMakeCommand($response));
-        }
+        return 'Select which responses to scaffold for the model.';
     }
 
     /**
@@ -69,12 +55,12 @@ class ResponseScaffolder extends Scaffolder implements Suggestible
     /**
      * Use the `honed:response` command to scaffold the response.
      */
-    protected function withMakeCommand(string $response): PendingCommand
+    public function withMakeCommand(string $input = ''): PendingCommand
     {
         return $this->newCommand()
             ->command(ResponseMakeCommand::class)
             ->arguments([
-                'name' => $this->suffixName($this->prefixName(Str::ucfirst($response), 'Response')),
+                'name' => $this->suffixName('Response', $this->prefixName(Str::ucfirst($input))),
                 // "--{$response}" => true,
                 // '--body' => $this->getBody(),
             ]);

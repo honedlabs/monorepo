@@ -11,47 +11,19 @@ use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\multiselect;
 use Honed\Scaffold\Contracts\Suggestible;
 use Honed\Table\Commands\TableMakeCommand;
-use Honed\Action\Commands\ActionMakeCommand;
-use Honed\Scaffold\Contracts\FromCommand;
 use Honed\Scaffold\Contracts\Property;
 use Honed\Scaffold\Support\PendingCommand;
 use Honed\Scaffold\Support\Utility\Writer;
 use Illuminate\Support\Collection;
 
-/**
- * @implements Suggestible<string>
- */
-class TableScaffolder extends Scaffolder implements FromCommand
+class TableScaffolder extends SingleScaffolder
 {
     /**
-     * Determine if the scaffolder is applicable to the context and should be executed.
+     * The command to be run.
      */
-    public function isApplicable(): bool
+    public function commandName(): string
     {
-        return class_exists(TableMakeCommand::class);
-    }
-
-    /**
-     * Prompt the user for input.
-     */
-    public function prompt(): void
-    {
-        if (confirm('Do you want to scaffold a table for the model?')) {
-            $this->addCommand($this->withMakeCommand());
-        }
-    }
-
-    /**
-     * Use the `honed:table` command to scaffold the table.
-     */
-    public function withMakeCommand(string $input = ''): PendingCommand
-    {
-        return $this->newCommand()
-            ->command(TableMakeCommand::class)
-            ->arguments([
-                'name' => $this->getName(),
-                '--body' => $this->getBody()
-            ]);
+        return TableMakeCommand::class;
     }
 
     /**

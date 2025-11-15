@@ -10,13 +10,18 @@ use Honed\Action\ActionServiceProvider;
 use function Laravel\Prompts\multiselect;
 use Honed\Scaffold\Contracts\Suggestible;
 use Honed\Action\Commands\ActionMakeCommand;
+use Honed\Core\Contracts\HasLabel;
+use Honed\Scaffold\Concerns\ScaffoldsMany;
+use Honed\Scaffold\Contracts\FromCommand;
 use Honed\Scaffold\Support\PendingCommand;
 
 /**
  * @implements Suggestible<string>
  */
-class ActionScaffolder extends Scaffolder implements Suggestible
+class ActionScaffolder extends Scaffolder implements Suggestible, FromCommand, HasLabel
 {
+    use ScaffoldsMany;
+
     /**
      * Determine if the scaffolder is applicable to the context and should be executed.
      */
@@ -26,25 +31,11 @@ class ActionScaffolder extends Scaffolder implements Suggestible
     }
 
     /**
-     * Prompt the user for input.
+     * Get the label.
      */
-    public function prompt(): void
+    public function getLabel(): string
     {
-        $suggestions = $this->suggestions();
-
-        if (empty($suggestions)) {
-            return;
-        }
-
-        /** @var list<string> */
-        $actions = multiselect(
-            label: 'Select which actions to scaffold for the model.',
-            options: ['all' => 'All', ...$suggestions],
-        );
-
-        foreach ($actions as $action) {
-            $this->addCommand($this->withMakeCommand($action));
-        }
+        return 'Select which actions to scaffold for the model.';
     }
 
     /**
@@ -64,13 +55,13 @@ class ActionScaffolder extends Scaffolder implements Suggestible
     /**
      * Use the `honed:action` command to scaffold the action.
      */
-    protected function withMakeCommand(string $action): PendingCommand
+    public function withMakeCommand(string $input = ''): PendingCommand
     {
         return $this->newCommand()
             ->command(ActionMakeCommand::class)
             ->arguments([
-                'name' => $this->suffixName(Str::ucfirst($action)),
-                '--action' => $action,
+                'name' => $this->prefixName(Str::ucfirst($input)),
+                '--action' => $input,
                 '--model' => $this->getName()
                 // '--body' => $this->getBody(),
             ]);
