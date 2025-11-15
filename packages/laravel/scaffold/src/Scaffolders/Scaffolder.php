@@ -14,11 +14,13 @@ use Honed\Scaffold\Support\ScaffoldContext;
 use Honed\Scaffold\Support\PendingInterface;
 use Illuminate\Console\View\Components\Factory;
 use Honed\Scaffold\Contracts\Scaffolder as ScaffolderContract;
+use Illuminate\Console\GeneratorCommand;
+use ReflectionMethod;
 
 abstract class Scaffolder implements ScaffolderContract
 {
     use InteractsWithSystem;
-    
+
     public function __construct(
         protected ScaffoldContext $context,
         protected Factory $components,
@@ -54,6 +56,24 @@ abstract class Scaffolder implements ScaffolderContract
         }
 
         return $prefix . $this->getContext()->getName();
+    }
+
+    /**
+     * Qualify the name against a generator.
+     * 
+     * @param class-string<\Illuminate\Console\GeneratorCommand>|GeneratorCommand $generator
+     */
+    public function qualifyGenerator(string $name, string|GeneratorCommand $generator): string
+    {
+        $generator = is_string($generator) ? app($generator) : $generator;
+
+        $generator->setLaravel(app());
+
+        $method = new ReflectionMethod($generator, 'qualifyClass');
+
+        $method->setAccessible(true);
+
+        return $method->invoke($generator, $name);
     }
 
     /**

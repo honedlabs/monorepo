@@ -41,6 +41,8 @@ class BuilderScaffolder extends Scaffolder
 
             $name = $this->suffixName('Builder');
 
+            $qualifiedName = $this->qualifyGenerator($name, BuilderMakeCommand::class);
+
             $this->addImport($qualifiedName);
 
             $this->addCommand(
@@ -51,30 +53,28 @@ class BuilderScaffolder extends Scaffolder
                     ])
             );
 
-
             $this->addMethod(
                 $this->newMethod()
                     ->override()
-                    ->doc('Create a new query builder for the model.')
-                    ->doc()
-                    ->docReturn("\\{$qualifiedName}}")
+                    ->annotate('Create a new query builder for the model.')
+                    ->annotate()
+                    ->annotateReturn("\\{$qualifiedName}}")
                     ->signature('newEloquentBuilder($query)')
-                    ->line('return new Builder($query);')
-                    ->return('new Builder($query);')
+                    // ->line('return new Builder($query);')
+                    // ->return('new Builder($query);')
             );
 
             $this->addMethod(
                 $this->newMethod()
                     ->override()
-                    ->doc('Begin querying the model.')
-                    ->doc()
-                    ->doc("@return \\{$qualifiedName}")
+                    ->annotate('Begin querying the model.')
+                    ->annotate()
+                    ->annotate("@return \\{$qualifiedName}")
                     ->static()
                     ->signature('query()')
-                    ->line("@var \\{$qualifiedName}")
-                    ->line('return parent::query();')
+                    // ->line("@var \\{$qualifiedName}")
+                    // ->line('return parent::query();')
             );
         }
-        
     }
 }
