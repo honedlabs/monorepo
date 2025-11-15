@@ -124,8 +124,10 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
 
     /**
      * Execute the console command
+     * 
+     * @return bool|null
      */
-    public function handle(): bool
+    public function handle()
     {
         if ($this->isReservedName($name = $this->getNameInput())) {
             $this->components->error("The name \"{$name}\" is reserved by PHP.");
@@ -145,11 +147,9 @@ class ScaffoldCommand extends Command implements PromptsForMissingInput
             $scaffolder->suggest();
         }
 
-        // $this->components->success()
+        $this->components->success('Scaffolding complete.');
 
         $context->generate();
-
-        return true;
     }
 
     /**

@@ -87,20 +87,21 @@ class NumberProperty extends Property implements HasLength
     }
 
     /**
-     * Prompt the user for the default value of the property.
-     */
-    public function promptForDefault(): void
-    {
-        if (confirm('Does this property have a default value?')) {
-            $this->default = (int) text('Provide a default value for this property');
-        }
-    }
-
-    /**
      * Prompt the user for the unsigned status of the property.
      */
     protected function promptForUnsigned(): void
     {
         $this->unsigned = confirm('Is this property an unsigned integer?');
+    }
+
+    /**
+     * Cast the given value to the appropriate type.
+     * 
+     * @param scalar $value
+     * @return int
+     */
+    protected function cast(mixed $value): mixed
+    {
+        return (int) $value;
     }
 }

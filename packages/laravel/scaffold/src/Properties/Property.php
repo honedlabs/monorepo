@@ -199,7 +199,7 @@ abstract class Property implements PropertyContract
     public function promptForDefault(): void
     {
         if (! $this->isNullable() && $this->confirms('default value')) {
-            $this->default = text('Provide a default value for this property');
+            $this->default = $this->cast(text('Provide a default value for this property'));
         }
     }
 
@@ -209,7 +209,7 @@ abstract class Property implements PropertyContract
     public function promptForLength(): void
     {
         if ($this instanceof HasLength && $this->confirms('length')) {
-            $this->length = (int) suggest('Provide a length for this property', [
+            $this->length = $this->cast(suggest('Provide a length for this property', [
                 '63',
                 '127',
                 '255',
@@ -218,7 +218,7 @@ abstract class Property implements PropertyContract
                 '2047',
                 '4095',
                 '65535',
-            ]);
+            ]));
         }
     }
 
@@ -235,7 +235,7 @@ abstract class Property implements PropertyContract
     /**
      * Display a success message.
      */
-    protected function success(): void
+    public function success(): void
     {
         // info()
     }
@@ -246,6 +246,17 @@ abstract class Property implements PropertyContract
     protected function confirms(string $question): bool
     {
         return confirm("Does this property have a {$question}?");
+    }
+
+    /**
+     * Cast the given value to the appropriate type.
+     * 
+     * @param scalar $value
+     * @return scalar
+     */
+    protected function cast(mixed $value): mixed
+    {
+        return $value;
     }
 
     /**

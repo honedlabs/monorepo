@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Properties;
 
+use Illuminate\Support\Stringable;
+
+use function Laravel\Prompts\select;
+
 class ForeignProperty extends Property
 {
     /**
@@ -16,12 +20,62 @@ class ForeignProperty extends Property
     /**
      * The strategy for when the foreign record is deleted.
      * 
-     * @var ?string
+     * @var string
      */
-    protected $onDelete;
+    protected $strategy;
 
+    /**
+     * Prompt the user for input.
+     */
     public function suggest(): void
     {
         parent::suggest();
+
+        $this->promptForOnDelete();
+    }
+
+    /**
+     * Get the blueprint for the property, without the trailing semicolon.
+     */
+    public function getBlueprint(): Stringable
+    {
+        $constrained = (new Stringable($this->name))
+            ->replace('_id', '')
+            ->plural()
+            ->toString();
+
+        return parent::getBlueprint()
+            ->append('->constrained(\'', $constrained, '\')')
+            ->when($$this->getStrategy(),
+                fn (Stringable $string, string $strategy) => $string
+                    ->append('->', $strategy, '()'),
+            );
+    }
+
+    /**
+     * Get the strategy for the property.
+     */
+    public function getStrategy(): ?string
+    {
+        return match ($this->strategy) {
+            'cascade' => 'cascadeOnDelete',
+            'restrict' => 'restrictOnDelete',
+            'null' => 'nullOnDelete',
+            default => null,
+        };
+    }
+
+    /**
+     * Prompt the user for the on delete strategy.
+     */
+    public function promptForOnDelete(): void
+    {
+        if ($this->confirms('delete strategy')) {
+            $this->strategy = select('Select a strategy for when the foreign record is deleted', [
+                'cascade' => 'Cascade',
+                'restrict' => 'Restrict',
+                'null' => 'Null',
+            ]);
+        }
     }
 }

@@ -47,6 +47,8 @@ class PropertyScaffolder extends Scaffolder
 
             $property->suggest();
 
+            $property->success();
+
             $this->context->addProperty($property);
         }
     }

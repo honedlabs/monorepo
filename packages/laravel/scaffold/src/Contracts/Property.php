@@ -10,4 +10,9 @@ interface Property extends Suggestible
      * Create a new property instance.
      */
     public static function make(): static;
+
+    /**
+     * Display a success message.
+     */
+    public function success(): void;
 }
