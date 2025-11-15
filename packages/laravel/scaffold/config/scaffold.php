@@ -3,7 +3,7 @@
 return [
     'scaffolders' => [
         \Honed\Scaffold\Scaffolders\PropertyScaffolder::class,
-        // \Honed\Scaffold\Scaffolders\ContractScaffolder::class,
+        \Honed\Scaffold\Scaffolders\ContractScaffolder::class,
         // \Honed\Scaffold\Scaffolders\MigrationScaffolder::class,
         // \Honed\Scaffold\Scaffolders\FactoryScaffolder::class,
         // \Honed\Scaffold\Scaffolders\SeederScaffolder::class,

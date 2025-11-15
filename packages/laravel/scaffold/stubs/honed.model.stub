@@ -1,0 +1,13 @@
+<?php
+
+namespace {{ namespace }};
+
+{{ imports }}
+use Illuminate\Database\Eloquent\Model;
+
+class {{ class }} extends Model {{ implements }}
+{
+    {{ concerns }}
+
+    {{ methods }}
+}

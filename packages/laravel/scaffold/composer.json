@@ -23,16 +23,26 @@
         "illuminate/support": "^11.0||^12.0"
     },
     "require-dev": {
+        "honed/action": "^0.32.0",
+        "honed/chart": "^0.2.0",
+        "honed/core": "^0.53.1",
+        "honed/data": "^0.6.0",
+        "honed/form": "^0.5.0",
+        "honed/refine": "^0.32.0",
+        "honed/stats": "^0.4.0",
+        "honed/table": "^0.32.2",
+        "honed/upload": "^0.15.1",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.18",
         "nunomaduro/collision": "^8.1",
         "orchestra/testbench": "^9.0.0||^10.0.0",
         "pestphp/pest": "^3.5.1",
         "pestphp/pest-plugin-arch": "^3.0.0",
+        "pestphp/pest-plugin-laravel": "^3.0",
         "phpstan/extension-installer": "^1.4.3",
         "phpstan/phpstan-deprecation-rules": "^2.0.1",
         "phpstan/phpstan-phpunit": "^2.0.3",
-        "pestphp/pest-plugin-laravel": "^3.0"
+        "spatie/laravel-data": "^4.18"
     },
     "autoload": {
         "psr-4": {

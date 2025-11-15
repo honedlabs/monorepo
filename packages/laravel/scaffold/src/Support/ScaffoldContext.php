@@ -24,6 +24,34 @@ class ScaffoldContext
      */
     protected $properties = [];
 
+    /**
+     * The imports to be added.
+     * 
+     * @var list<string>
+     */
+    protected $imports = [];
+
+    /**
+     * The interfaces to be implemented.
+     * 
+     * @var list<string>
+     */
+    protected $interfaces = [];
+
+    /**
+     * The methods to be added.
+     * 
+     * @var list<string>
+     */
+    protected $methods = [];
+
+    /**
+     * The traits to be used.
+     * 
+     * @var list<string>
+     */
+    protected $traits = [];
+
     public function __construct(
         protected string $name,
         protected Repository $config,
@@ -56,6 +84,16 @@ class ScaffoldContext
     }
 
     /**
+     * Add multiple commands to the context.
+     * 
+     * @param list<\Honed\Scaffold\Support\PendingCommand> $commands
+     */
+    public function addCommands(string $className, array $commands): void
+    {
+        $this->commands[$className] = array_merge($this->commands[$className], $commands);
+    }
+
+    /**
      * Get the commands for the context.
      * 
      * @return array<class-string<\Honed\Scaffold\Scaffolders\Scaffolder>, \Honed\Scaffold\Support\PendingCommand>
@@ -74,6 +112,16 @@ class ScaffoldContext
     }
 
     /**
+     * Add multiple properties to the context.
+     * 
+     * @param list<\Honed\Scaffold\Contracts\Property> $properties
+     */
+    public function addProperties(array $properties): void
+    {
+        $this->properties = array_merge($this->properties, $properties);
+    }
+
+    /**
      * Get the properties for the context.
      * 
      * @return list<\Honed\Scaffold\Contracts\Property>
@@ -81,6 +129,118 @@ class ScaffoldContext
     public function getProperties(): array
     {
         return $this->properties;
+    }
+
+    /**
+     * Add an import to the context.
+     */
+    public function addImport(string $import): void
+    {
+        $this->imports[] = $import;
+    }
+
+    /**
+     * Add multiple imports to the context.
+     * 
+     * @param list<string> $imports
+     */
+    public function addImports(array $imports): void
+    {
+        $this->imports = array_merge($this->imports, $imports);
+    }
+
+    /**
+     * Get the imports for the context.
+     * 
+     * @return list<string>
+     */
+    public function getImports(): array
+    {
+        return $this->imports;
+    }
+
+    /**
+     * Add an interface to the context.
+     */
+    public function addInterface(string $interface): void
+    {
+        $this->interfaces[] = $interface;
+    }
+
+    /**
+     * Add multiple interfaces to the context.
+     * 
+     * @param list<string> $interfaces
+     */
+    public function addInterfaces(array $interfaces): void
+    {
+        $this->interfaces = array_merge($this->interfaces, $interfaces);
+    }
+
+    /**
+     * Get the interfaces for the context.
+     * 
+     * @return list<string>
+     */
+    public function getInterfaces(): array
+    {
+        return $this->interfaces;
+    }
+
+    /**
+     * Add a method to the context.
+     */
+    public function addMethod(string $method): void
+    {
+        $this->methods[] = $method;
+    }
+
+    /**
+     * Add multiple methods to the context.
+     * 
+     * @param list<string> $methods
+     */
+    public function addMethods(array $methods): void
+    {
+        $this->methods = array_merge($this->methods, $methods);
+    }
+
+    /**
+     * Get the methods for the context.
+     * 
+     * @return list<string>
+     */
+    public function getMethods(): array
+    {
+        return $this->methods;
+    }
+
+    /**
+     * Add a trait to the context.
+     */
+    public function addTrait(string $trait): void
+    {
+        $this->traits[] = $trait;
+    }
+
+    /**
+     * Add multiple traits to the context.
+     * 
+     * @param list<string> $traits
+     */
+    public function addTraits(array $traits): void
+    {
+        $this->traits = array_merge($this->traits, $traits);
+    }
+
+    /**
+     * Get the traits for the context.
+     * 
+     * @return list<string>
+     */
+    public function getTraits(): array
+    {
+        return $this->traits;
     }
 
     /**

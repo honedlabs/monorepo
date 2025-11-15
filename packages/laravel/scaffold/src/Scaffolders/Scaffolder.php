@@ -12,4 +12,12 @@ abstract class Scaffolder implements ScaffolderContract
     public function __construct(
         protected ScaffoldContext $context,
     ) { }
+
+    /**
+     * Get the context for scaffolding.
+     */
+    public function getContext(): ScaffoldContext
+    {
+        return $this->context;
+    }
 }
