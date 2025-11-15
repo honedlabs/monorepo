@@ -90,7 +90,7 @@ trait Annotatable
      */
     public function annotations(int $indentations = 4): string
     {
-        return \implode('', [
+        return \implode(PHP_EOL, [
             $this->startAnnotation($indentations),
             $this->annotationBody($indentations),
             $this->endAnnotation($indentations),

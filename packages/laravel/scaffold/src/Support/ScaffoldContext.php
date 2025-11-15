@@ -4,29 +4,37 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Support;
 
-use Honed\Scaffold\Collections\ScaffolderCollection;
-use Honed\Scaffold\Contracts\Property;
-use Honed\Scaffold\Contracts\ScaffoldContext as ScaffoldContextContract;
-use Honed\Scaffold\Contracts\Scaffolder;
 use Illuminate\Console\Command;
+use Honed\Core\Concerns\HasName;
 use Illuminate\Support\Collection;
+use Honed\Scaffold\Concerns\HasTraits;
+use Honed\Scaffold\Contracts\Property;
+use Honed\Scaffold\Concerns\HasImports;
 use Illuminate\Support\Facades\Artisan;
+use Honed\Scaffold\Concerns\HasCommands;
+use Honed\Scaffold\Contracts\Scaffolder;
+use Honed\Scaffold\Concerns\HasInterfaces;
+use Honed\Scaffold\Concerns\HasProperties;
+use Honed\Scaffold\Collections\ScaffolderCollection;
+use Honed\Scaffold\Concerns\HasMethods;
+use Honed\Scaffold\Contracts\ScaffoldContext as ScaffoldContextContract;
 
 class ScaffoldContext implements ScaffoldContextContract
 {
+    use HasName;
+    use HasImports;
+    use HasProperties;
+    use HasCommands;
+    use HasInterfaces;
+    use HasMethods;
+    use HasTraits;
+
     /**
      * The imports to be added.
      *
      * @var Collection<int, string>
      */
     protected $imports;
-
-    /**
-     * The properties to be added.
-     *
-     * @var Collection<int, Property>
-     */
-    protected $properties;
 
     /**
      * The commands to be executed.
@@ -36,35 +44,22 @@ class ScaffoldContext implements ScaffoldContextContract
     protected $commands;
 
     /**
-     * The interfaces to be implemented.
-     *
-     * @var Collection<int, PendingInterface>
-     */
-    protected $interfaces;
-
-    /**
-     * The methods to be added.
-     *
-     * @var Collection<int, PendingMethod>
-     */
-    protected $methods;
-
-    /**
      * The traits to be used.
      *
      * @var Collection<int, PendingTrait>
      */
     protected $traits;
 
-    public function __construct(
-        protected string $name,
-    ) {
-        $this->imports = new Collection();
-        $this->properties = new Collection();
-        $this->commands = new Collection();
-        $this->interfaces = new Collection();
-        $this->methods = new Collection();
-        $this->traits = new Collection();
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+
+        $this->initializeImports();
+        $this->initializeProperties();
+        $this->initializeCommands();
+        $this->initializeInterfaces();
+        $this->initializeTraits();
+        $this->initializeMethods();
     }
 
     /**
@@ -73,204 +68,6 @@ class ScaffoldContext implements ScaffoldContextContract
     public static function make(string $name): static
     {
         return app(static::class, ['name' => $name]);
-    }
-
-    /**
-     * Get the name of the model being scaffolded.
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Add an import to the context.
-     */
-    public function addImport(string $import): void
-    {
-        $this->imports->push($import);
-    }
-
-    /**
-     * Add multiple imports to the context.
-     *
-     * @param  list<string>  $imports
-     */
-    public function addImports(array $imports): void
-    {
-        $this->imports->push(...$imports);
-    }
-
-    /**
-     * Get the imports for the context.
-     *
-     * @return Collection<int, string>
-     */
-    public function getImports(): Collection
-    {
-        return $this->imports;
-    }
-
-    /**
-     * Add a property to the context.
-     */
-    public function addProperty(Property $property): void
-    {
-        $this->properties->push($property);
-    }
-
-    /**
-     * Add multiple properties to the context.
-     *
-     * @param  list<Property>  $properties
-     */
-    public function addProperties(array $properties): void
-    {
-        $this->properties->push(...$properties);
-    }
-
-    /**
-     * Get the properties for the context.
-     *
-     * @return Collection<int, Property>
-     */
-    public function getProperties(): Collection
-    {
-        return $this->properties;
-    }
-
-    /**
-     * Add a command to the context.
-     */
-    public function addCommand(PendingCommand $command): void
-    {
-        $this->commands->push($command);
-    }
-
-    /**
-     * Add multiple commands to the context.
-     *
-     * @param  list<PendingCommand>  $commands
-     */
-    public function addCommands(array $commands): void
-    {
-        $this->commands->push(...$commands);
-    }
-
-    /**
-     * Get the commands for the context.
-     *
-     * @return Collection<int, PendingCommand>
-     */
-    public function getCommands(): Collection
-    {
-        return $this->commands;
-    }
-
-    /**
-     * Create a new pending command instance.
-     */
-    public function newCommand(): PendingCommand
-    {
-        return new PendingCommand();
-    }
-
-    /**
-     * Add an interface to the context.
-     */
-    public function addInterface(PendingInterface $interface): void
-    {
-        $this->interfaces->push($interface);
-    }
-
-    /**
-     * Add multiple interfaces to the context.
-     *
-     * @param  list<PendingInterface>  $interfaces
-     */
-    public function addInterfaces(array $interfaces): void
-    {
-        $this->interfaces->push(...$interfaces);
-    }
-
-    /**
-     * Get the interfaces for the context.
-     *
-     * @return Collection<int, PendingInterface>
-     */
-    public function getInterfaces(): Collection
-    {
-        return $this->interfaces;
-    }
-
-    /**
-     * Create a new pending interface instance.
-     */
-    public function newInterface(): PendingInterface
-    {
-        return new PendingInterface();
-    }
-
-    /**
-     * Add a method to the context.
-     */
-    public function addMethod(PendingMethod $method): void
-    {
-        $this->methods->push($method);
-    }
-
-    /**
-     * Get the methods for the context.
-     *
-     * @return Collection<int, PendingMethod>
-     */
-    public function getMethods(): Collection
-    {
-        return $this->methods;
-    }
-
-    /**
-     * Create a new pending method instance.
-     */
-    public function newMethod(): PendingMethod
-    {
-        return new PendingMethod();
-    }
-
-    /**
-     * Add a trait to the context.
-     */
-    public function addTrait(PendingTrait $trait): void
-    {
-        $this->traits->push($trait);
-    }
-
-    /**
-     * Add multiple traits to the context.
-     *
-     * @param  list<PendingTrait>  $traits
-     */
-    public function addTraits(array $traits): void
-    {
-        $this->traits->push(...$traits);
-    }
-
-    /**
-     * Get the traits for the context.
-     *
-     * @return Collection<int, PendingTrait>
-     */
-    public function getTraits(): Collection
-    {
-        return $this->traits;
-    }
-
-    /**
-     * Create a new pending trait instance.
-     */
-    public function newTrait(): PendingTrait
-    {
-        return new PendingTrait();
     }
 
     /**
@@ -291,9 +88,11 @@ class ScaffoldContext implements ScaffoldContextContract
      */
     public function generate(): void
     {
-        $this->callCommands();
+        // $this->callCommands();
 
-        $this->implementInterfaces();
+        // $this->implementInterfaces();
+
+        dd($this);
 
         // $this->getMethods()->each->handle($this);
 
