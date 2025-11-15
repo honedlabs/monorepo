@@ -10,7 +10,6 @@ use Honed\Action\ActionServiceProvider;
 use function Laravel\Prompts\multiselect;
 use Honed\Scaffold\Contracts\Suggestible;
 use Honed\Action\Commands\ActionMakeCommand;
-use Honed\Scaffold\Concerns\Multiselectable;
 use Honed\Scaffold\Support\PendingCommand;
 
 /**
@@ -18,8 +17,6 @@ use Honed\Scaffold\Support\PendingCommand;
  */
 class ActionScaffolder extends Scaffolder implements Suggestible
 {
-    use Multiselectable;
-
     /**
      * Determine if the scaffolder is applicable to the context and should be executed.
      */
@@ -27,7 +24,29 @@ class ActionScaffolder extends Scaffolder implements Suggestible
     {
         return class_exists(ActionMakeCommand::class);
     }
-    
+
+    /**
+     * Prompt the user for input.
+     */
+    public function prompt(): void
+    {
+        $suggestions = $this->suggestions();
+
+        if (empty($suggestions)) {
+            return;
+        }
+
+        /** @var list<string> */
+        $actions = multiselect(
+            label: 'Select which actions to scaffold for the model.',
+            options: ['all' => 'All', ...$suggestions],
+        );
+
+        foreach ($actions as $action) {
+            $this->addCommand($this->withMakeCommand($action));
+        }
+    }
+
     /**
      * Get the suggestions for the user.
      *

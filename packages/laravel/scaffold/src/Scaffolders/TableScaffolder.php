@@ -12,6 +12,7 @@ use function Laravel\Prompts\multiselect;
 use Honed\Scaffold\Contracts\Suggestible;
 use Honed\Table\Commands\TableMakeCommand;
 use Honed\Action\Commands\ActionMakeCommand;
+use Honed\Scaffold\Contracts\FromCommand;
 use Honed\Scaffold\Contracts\Property;
 use Honed\Scaffold\Support\PendingCommand;
 use Honed\Scaffold\Support\Utility\Writer;
@@ -20,7 +21,7 @@ use Illuminate\Support\Collection;
 /**
  * @implements Suggestible<string>
  */
-class TableScaffolder extends Scaffolder
+class TableScaffolder extends Scaffolder implements FromCommand
 {
     /**
      * Determine if the scaffolder is applicable to the context and should be executed.
@@ -43,7 +44,7 @@ class TableScaffolder extends Scaffolder
     /**
      * Use the `honed:table` command to scaffold the table.
      */
-    protected function withMakeCommand(): PendingCommand
+    public function withMakeCommand(string $input = ''): PendingCommand
     {
         return $this->newCommand()
             ->command(TableMakeCommand::class)
