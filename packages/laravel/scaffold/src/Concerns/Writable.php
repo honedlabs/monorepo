@@ -11,14 +11,14 @@ trait Writable
 {
     /**
      * The lines of the file to be written.
-     * 
+     *
      * @var list<string>
      */
     protected $lines = [];
 
     /**
      * Add a line.
-     * 
+     *
      * @return $this
      */
     public function line(string $line = ''): static
@@ -30,8 +30,8 @@ trait Writable
 
     /**
      * Add multiple lines.
-     * 
-     * @param list<string> $lines
+     *
+     * @param  list<string>  $lines
      * @return $this
      */
     public function lines(array $lines): static
@@ -43,11 +43,11 @@ trait Writable
 
     /**
      * Add a line for each item.
-     * 
+     *
      * @template T
-     * 
-     * @param list<T>|Arrayable<T> $items
-     * @param Closure($this, T): void $callback
+     *
+     * @param  list<T>|Arrayable<T>  $items
+     * @param  Closure($this, T): void  $callback
      * @return $this
      */
     public function lineFor(array|Arrayable $items, Closure $callback): static
@@ -63,7 +63,7 @@ trait Writable
 
     /**
      * Add a return statement, adding the semicolon.
-     * 
+     *
      * @return $this
      */
     public function return(string $return = ''): static
@@ -73,7 +73,7 @@ trait Writable
 
     /**
      * Append a semicolon to the last line.
-     * 
+     *
      * @return $this
      */
     public function finish(): static

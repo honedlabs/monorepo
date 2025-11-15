@@ -9,7 +9,6 @@ use Honed\Scaffold\Contracts\Property;
 use Honed\Scaffold\Contracts\ScaffoldContext as ScaffoldContextContract;
 use Honed\Scaffold\Contracts\Scaffolder;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 
@@ -18,42 +17,42 @@ class ScaffoldContext implements ScaffoldContextContract
     /**
      * The imports to be added.
      *
-     * @var \Illuminate\Support\Collection<int, string>
+     * @var Collection<int, string>
      */
     protected $imports;
 
     /**
      * The properties to be added.
      *
-     * @var \Illuminate\Support\Collection<int, Property>
+     * @var Collection<int, Property>
      */
     protected $properties;
 
     /**
      * The commands to be executed.
      *
-     * @var \Illuminate\Support\Collection<int, PendingCommand>
+     * @var Collection<int, PendingCommand>
      */
     protected $commands;
 
     /**
      * The interfaces to be implemented.
      *
-     * @var \Illuminate\Support\Collection<int, PendingInterface>
+     * @var Collection<int, PendingInterface>
      */
     protected $interfaces;
 
     /**
      * The methods to be added.
      *
-     * @var \Illuminate\Support\Collection<int, PendingMethod>
+     * @var Collection<int, PendingMethod>
      */
     protected $methods;
 
     /**
      * The traits to be used.
      *
-     * @var \Illuminate\Support\Collection<int, PendingTrait>
+     * @var Collection<int, PendingTrait>
      */
     protected $traits;
 
@@ -105,7 +104,7 @@ class ScaffoldContext implements ScaffoldContextContract
     /**
      * Get the imports for the context.
      *
-     * @return \Illuminate\Support\Collection<int, string>
+     * @return Collection<int, string>
      */
     public function getImports(): Collection
     {
@@ -133,7 +132,7 @@ class ScaffoldContext implements ScaffoldContextContract
     /**
      * Get the properties for the context.
      *
-     * @return \Illuminate\Support\Collection<int, Property>
+     * @return Collection<int, Property>
      */
     public function getProperties(): Collection
     {
@@ -161,7 +160,7 @@ class ScaffoldContext implements ScaffoldContextContract
     /**
      * Get the commands for the context.
      *
-     * @return \Illuminate\Support\Collection<int, PendingCommand>
+     * @return Collection<int, PendingCommand>
      */
     public function getCommands(): Collection
     {
@@ -197,7 +196,7 @@ class ScaffoldContext implements ScaffoldContextContract
     /**
      * Get the interfaces for the context.
      *
-     * @return \Illuminate\Support\Collection<int, PendingInterface>
+     * @return Collection<int, PendingInterface>
      */
     public function getInterfaces(): Collection
     {
@@ -223,7 +222,7 @@ class ScaffoldContext implements ScaffoldContextContract
     /**
      * Get the methods for the context.
      *
-     * @return \Illuminate\Support\Collection<int, PendingMethod>
+     * @return Collection<int, PendingMethod>
      */
     public function getMethods(): Collection
     {
@@ -259,7 +258,7 @@ class ScaffoldContext implements ScaffoldContextContract
     /**
      * Get the traits for the context.
      *
-     * @return \Illuminate\Support\Collection<int, PendingTrait>
+     * @return Collection<int, PendingTrait>
      */
     public function getTraits(): Collection
     {
@@ -277,11 +276,11 @@ class ScaffoldContext implements ScaffoldContextContract
     /**
      * Get the scaffolders to be used.
      *
-     * @return list<\Honed\Scaffold\Contracts\Scaffolder>
+     * @return list<Scaffolder>
      */
     public function getScaffolders(Command $command): array
     {
-        /** @var list<\Honed\Scaffold\Contracts\Scaffolder> */
+        /** @var list<Scaffolder> */
         return (new ScaffolderCollection(config()->array('scaffold.scaffolders', [])))
             ->build($this, $command)
             ->toArray();

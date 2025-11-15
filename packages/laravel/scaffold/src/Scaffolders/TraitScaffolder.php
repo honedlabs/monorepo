@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Honed\Scaffold\Scaffolders;
 
 use Honed\Scaffold\Contracts\Suggestible;
-use Honed\Scaffold\Support\PendingTrait;
 use Illuminate\Support\Collection;
-use Spatie\LaravelData\WithData;
 
 use function Laravel\Prompts\multiselect;
 

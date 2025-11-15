@@ -6,7 +6,6 @@ namespace Honed\Scaffold\Support;
 
 use Honed\Core\Concerns\HasName;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 
 class PendingCommand extends PendingHelper
 {

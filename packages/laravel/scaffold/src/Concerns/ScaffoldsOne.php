@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Honed\Scaffold\Concerns;
 
 use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\multiselect;
 
 /**
  * @phpstan-require-implements \Honed\Scaffold\Contracts\FromCommand

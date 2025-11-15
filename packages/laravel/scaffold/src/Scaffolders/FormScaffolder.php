@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
-use function Laravel\Prompts\confirm;
-
 use Honed\Core\Contracts\HasLabel;
 use Honed\Form\Commands\FormMakeCommand;
 use Honed\Scaffold\Concerns\ScaffoldsMany;
@@ -13,12 +11,11 @@ use Honed\Scaffold\Contracts\FromCommand;
 use Honed\Scaffold\Contracts\Suggestible;
 use Honed\Scaffold\Support\PendingCommand;
 use Honed\Scaffold\Support\Utility\Writer;
-use Honed\Table\Commands\TableMakeCommand;
 
 /**
  * @implements Suggestible<string>
  */
-class FormScaffolder extends Scaffolder implements Suggestible, FromCommand, HasLabel
+class FormScaffolder extends Scaffolder implements FromCommand, HasLabel, Suggestible
 {
     use ScaffoldsMany;
 
@@ -40,7 +37,7 @@ class FormScaffolder extends Scaffolder implements Suggestible, FromCommand, Has
 
     /**
      * Get the suggestions for the user.
-     * 
+     *
      * @return array<string, string>
      */
     public function suggestions(): array

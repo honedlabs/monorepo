@@ -4,15 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
-use Illuminate\Support\Str;
-
-use Honed\Core\Contracts\HasLabel;
-use Honed\Scaffold\Contracts\FromCommand;
-use Honed\Scaffold\Contracts\Suggestible;
-use Honed\Scaffold\Concerns\ScaffoldsMany;
 use Honed\Scaffold\Support\PendingCommand;
 use Honed\Scaffold\Support\Utility\Writer;
-use Spatie\LaravelData\Commands\DataMakeCommand;
 use Illuminate\Support\Stringable;
 
 use function Laravel\Prompts\confirm;
@@ -21,7 +14,7 @@ abstract class SingleScaffolder extends Scaffolder
 {
     /**
      * The command to be run.
-     * 
+     *
      * @return class-string<\Illuminate\Console\Command>
      */
     abstract public function commandName(): string;

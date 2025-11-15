@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
-use Honed\Core\Contracts\HasIcon;
-use Honed\Core\Contracts\HasLabel;
-use Honed\Form\Contracts\CanBeSearched;
 use Honed\Scaffold\Contracts\Suggestible;
 use Illuminate\Support\Collection;
 
@@ -43,7 +40,7 @@ class InterfaceScaffolder extends Scaffolder implements Suggestible
         );
 
         $this->getContext()->addImports($selected);
-        
+
         $this->getContext()->addInterfaces(
             array_map(
                 fn (string $interface) => $this->newInterface()->name($interface),

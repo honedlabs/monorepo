@@ -4,17 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
-use Illuminate\Support\Str;
-use Honed\Action\ActionServiceProvider;
-
-use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\multiselect;
-use Honed\Scaffold\Contracts\Suggestible;
-use Honed\Table\Commands\TableMakeCommand;
 use Honed\Scaffold\Contracts\Property;
-use Honed\Scaffold\Support\PendingCommand;
 use Honed\Scaffold\Support\Utility\Writer;
-use Illuminate\Support\Collection;
+use Honed\Table\Commands\TableMakeCommand;
 
 class TableScaffolder extends SingleScaffolder
 {
