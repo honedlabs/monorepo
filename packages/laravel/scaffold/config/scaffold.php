@@ -3,6 +3,8 @@
 return [
     'context' => \Honed\Scaffold\Support\ScaffoldContext::class,
 
+    'indentations' => 4,
+
     'scaffolders' => [
         // \Honed\Scaffold\Scaffolders\PropertyScaffolder::class,
         // \Honed\Scaffold\Scaffolders\InterfaceScaffolder::class,
@@ -22,5 +24,13 @@ return [
         // \Honed\Scaffold\Scaffolders\ControllerScaffolder::class,
         // \Honed\Scaffold\Scaffolders\PageScaffolder::class,
         // \Honed\Scaffold\Scaffolders\ModalScaffolder::class
+    ],
+
+    'contracts' => [
+
+    ],
+
+    'concerns' => [
+
     ],
 ];

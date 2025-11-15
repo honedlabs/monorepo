@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Support;
 
-class PendingTrait
+class PendingTrait extends PendingHelper
 {
     
 }

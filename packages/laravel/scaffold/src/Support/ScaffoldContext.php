@@ -7,17 +7,11 @@ namespace Honed\Scaffold\Support;
 use Illuminate\Contracts\Config\Repository;
 use Honed\Scaffold\Collections\ScaffolderCollection;
 use Honed\Scaffold\Contracts\Property;
+use Honed\Scaffold\Contracts\ScaffoldContext as ScaffoldContextContract;
 use Illuminate\Console\Command;
 
-class ScaffoldContext
+class ScaffoldContext implements ScaffoldContextContract
 {
-    /**
-     * The properties to be added.
-     * 
-     * @var list<\Honed\Scaffold\Contracts\Property>
-     */
-    protected $properties = [];
-
     /**
      * The imports to be added.
      * 
@@ -26,30 +20,37 @@ class ScaffoldContext
     protected $imports = [];
 
     /**
+     * The properties to be added.
+     * 
+     * @var list<\Honed\Scaffold\Contracts\Property>
+     */
+    protected $properties = [];
+
+    /**
      * The commands to be executed.
      * 
-     * @var list<string|\Honed\Scaffold\Support\PendingCommand>
+     * @var list<\Honed\Scaffold\Support\PendingCommand>
      */
     protected $commands = [];
 
     /**
      * The interfaces to be implemented.
      * 
-     * @var list<string|\Honed\Scaffold\Support\PendingInterface>
+     * @var list<\Honed\Scaffold\Support\PendingInterface>
      */
     protected $interfaces = [];
 
     /**
      * The methods to be added.
      * 
-     * @var list<string|\Honed\Scaffold\Support\PendingMethod>
+     * @var list<\Honed\Scaffold\Support\PendingMethod>
      */
     protected $methods = [];
 
     /**
      * The traits to be used.
      * 
-     * @var list<string|\Honed\Scaffold\Support\PendingTrait>
+     * @var list<\Honed\Scaffold\Support\PendingTrait>
      */
     protected $traits = [];
 
@@ -67,31 +68,11 @@ class ScaffoldContext
     }
 
     /**
-     * Add a property to the context.
+     * Get the name of the model being scaffolded.
      */
-    public function addProperty(Property $property): void
+    public function getName(): string
     {
-        $this->properties[] = $property;
-    }
-
-    /**
-     * Add multiple properties to the context.
-     * 
-     * @param list<\Honed\Scaffold\Contracts\Property> $properties
-     */
-    public function addProperties(array $properties): void
-    {
-        $this->properties = array_merge($this->properties, $properties);
-    }
-
-    /**
-     * Get the properties for the context.
-     * 
-     * @return list<\Honed\Scaffold\Contracts\Property>
-     */
-    public function getProperties(): array
-    {
-        return $this->properties;
+        return $this->name;
     }
 
     /**
@@ -123,9 +104,37 @@ class ScaffoldContext
     }
 
     /**
+     * Add a property to the context.
+     */
+    public function addProperty(Property $property): void
+    {
+        $this->properties[] = $property;
+    }
+
+    /**
+     * Add multiple properties to the context.
+     * 
+     * @param list<\Honed\Scaffold\Contracts\Property> $properties
+     */
+    public function addProperties(array $properties): void
+    {
+        $this->properties = array_merge($this->properties, $properties);
+    }
+
+    /**
+     * Get the properties for the context.
+     * 
+     * @return list<\Honed\Scaffold\Contracts\Property>
+     */
+    public function getProperties(): array
+    {
+        return $this->properties;
+    }
+
+    /**
      * Add a command to the context.
      */
-    public function addCommand(string|PendingCommand $command): void
+    public function addCommand(PendingCommand $command): void
     {
         $this->commands[] = $command;
     }
@@ -133,18 +142,17 @@ class ScaffoldContext
     /**
      * Add multiple commands to the context.
      * 
-     * @param class-string<\Honed\Scaffold\Scaffolders\Scaffolder> $className
      * @param list<\Honed\Scaffold\Support\PendingCommand> $commands
      */
-    public function addCommands(string $className, array $commands): void
+    public function addCommands(array $commands): void
     {
-        $this->commands[$className] = array_merge($this->commands[$className], $commands);
+        $this->commands = array_merge($this->commands, $commands);
     }
 
     /**
      * Get the commands for the context.
      * 
-     * @return array<class-string<\Honed\Scaffold\Scaffolders\Scaffolder>, \Honed\Scaffold\Support\PendingCommand>
+     * @return list<\Honed\Scaffold\Support\PendingCommand>
      */
     public function getCommands(): array
     {
@@ -162,7 +170,7 @@ class ScaffoldContext
     /**
      * Add an interface to the context.
      */
-    public function addInterface(string $interface): void
+    public function addInterface(PendingInterface $interface): void
     {
         $this->interfaces[] = $interface;
     }
@@ -170,7 +178,7 @@ class ScaffoldContext
     /**
      * Add multiple interfaces to the context.
      * 
-     * @param list<string> $interfaces
+     * @param list<\Honed\Scaffold\Support\PendingInterface> $interfaces
      */
     public function addInterfaces(array $interfaces): void
     {
@@ -180,13 +188,16 @@ class ScaffoldContext
     /**
      * Get the interfaces for the context.
      * 
-     * @return list<string>
+     * @return list<\Honed\Scaffold\Support\PendingInterface>
      */
     public function getInterfaces(): array
     {
         return $this->interfaces;
     }
 
+    /**
+     * Create a new pending interface instance.
+     */
     public function newInterface(): PendingInterface
     {
         return new PendingInterface();
@@ -195,7 +206,7 @@ class ScaffoldContext
     /**
      * Add a method to the context.
      */
-    public function addMethod(string $method): void
+    public function addMethod(PendingMethod $method): void
     {
         $this->methods[] = $method;
     }
@@ -203,7 +214,7 @@ class ScaffoldContext
     /**
      * Add multiple methods to the context.
      * 
-     * @param list<string> $methods
+     * @param list<\Honed\Scaffold\Support\PendingMethod> $methods
      */
     public function addMethods(array $methods): void
     {
@@ -213,13 +224,16 @@ class ScaffoldContext
     /**
      * Get the methods for the context.
      * 
-     * @return list<string>
+     * @return list<\Honed\Scaffold\Support\PendingMethod>
      */
     public function getMethods(): array
     {
         return $this->methods;
     }
 
+    /**
+     * Create a new pending method instance.
+     */
     public function newMethod(): PendingMethod
     {
         return new PendingMethod();
@@ -228,7 +242,7 @@ class ScaffoldContext
     /**
      * Add a trait to the context.
      */
-    public function addTrait(string $trait): void
+    public function addTrait(string|PendingTrait $trait): void
     {
         $this->traits[] = $trait;
     }
@@ -236,7 +250,7 @@ class ScaffoldContext
     /**
      * Add multiple traits to the context.
      * 
-     * @param list<string> $traits
+     * @param list<string|\Honed\Scaffold\Support\PendingTrait> $traits
      */
     public function addTraits(array $traits): void
     {
@@ -246,13 +260,16 @@ class ScaffoldContext
     /**
      * Get the traits for the context.
      * 
-     * @return list<string>
+     * @return list<string|\Honed\Scaffold\Support\PendingTrait>
      */
     public function getTraits(): array
     {
         return $this->traits;
     }
 
+    /**
+     * Create a new pending trait instance.
+     */
     public function newTrait(): PendingTrait
     {
         return new PendingTrait();
@@ -277,16 +294,5 @@ class ScaffoldContext
     public function generate(): void
     {
         
-    }
-
-    /**
-     * Get the scaffolders to be used.
-     * 
-     * @return list<class-string<\Honed\Scaffold\Contracts\Scaffolder>>
-     */
-    protected function getScaffolderClassNames(): array
-    {
-        /** @var list<class-string<\Honed\Scaffold\Contracts\Scaffolder>> */
-        return $this->config->get('scaffold.scaffolders', []);
     }
 }

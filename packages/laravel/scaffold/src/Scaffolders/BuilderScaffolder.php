@@ -38,9 +38,10 @@ class BuilderScaffolder extends Scaffolder
     public function suggest(): void
     {
         if (confirm('Would you like to scaffold a builder for the model?')) {
-            $name = $this->getSuffixedName('Builder');
 
-            $qualifiedName = $this->getQualifiedName($name);
+            $name = $this->suffixName('Builder');
+
+            $this->addImport($qualifiedName);
 
             $this->addCommand(
                 $this->newCommand()
@@ -50,23 +51,16 @@ class BuilderScaffolder extends Scaffolder
                     ])
             );
 
-            $this->addImport(
-                $this->newImport()
-                    // ->generator(BuilderMakeCommand::class)
-                    ->name($qualifiedName) 
-            );
 
             $this->addMethod(
                 $this->newMethod()
-                    ->when($this->isPhp(8.3),
-                        fn (PendingMethod $method) => $method
-                            ->attributes('\Override')
-                    )
+                    ->override()
                     ->doc('Create a new query builder for the model.')
                     ->doc()
-                    ->doc("@return \\{$qualifiedName}}")
+                    ->docReturn("\\{$qualifiedName}}")
                     ->signature('newEloquentBuilder($query)')
                     ->line('return new Builder($query);')
+                    ->return('new Builder($query);')
             );
 
             $this->addMethod(

@@ -17,5 +17,4 @@ interface Scaffolder extends Suggestible
      * Get the context for scaffolding.
      */
     public function getContext(): ScaffoldContext;
-    
 }

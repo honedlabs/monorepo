@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
+use Honed\Scaffold\Concerns\InteractsWithSystem;
+use Honed\Scaffold\Contracts\Property;
+use Illuminate\Support\Str;
 use Honed\Scaffold\Support\PendingTrait;
 use Honed\Scaffold\Support\PendingMethod;
 use Honed\Scaffold\Support\PendingCommand;
@@ -14,6 +17,8 @@ use Honed\Scaffold\Contracts\Scaffolder as ScaffolderContract;
 
 abstract class Scaffolder implements ScaffolderContract
 {
+    use InteractsWithSystem;
+    
     public function __construct(
         protected ScaffoldContext $context,
         protected Factory $components,
@@ -25,6 +30,54 @@ abstract class Scaffolder implements ScaffolderContract
     public function getContext(): ScaffoldContext
     {
         return $this->context;
+    }
+
+    /**
+     * Suffix the name of the model being scaffolded.
+     */
+    public function suffixName(string $suffix): string
+    {
+        if (Str::endsWith($this->getContext()->getName(), $suffix)) {
+            return $this->getContext()->getName();
+        }
+
+        return $this->getContext()->getName() . $suffix;
+    }
+
+    /**
+     * Prefix the name of the model being scaffolded.
+     */
+    public function prefixName(string $prefix): string
+    {
+        if (Str::startsWith($this->getContext()->getName(), $prefix)) {
+            return $this->getContext()->getName();
+        }
+
+        return $prefix . $this->getContext()->getName();
+    }
+
+    /**
+     * Add an import to the context.
+     */
+    public function addImport(string $import): void
+    {
+        $this->getContext()->addImport($import);
+    }
+
+    /**
+     * Add a property to the context.
+     */
+    public function addProperty(Property $property): void
+    {
+        $this->getContext()->addProperty($property);
+    }
+
+    /**
+     * Add a command to the context.
+     */
+    public function addCommand(PendingCommand $command): void
+    {
+        $this->getContext()->addCommand($command);
     }
 
     /**
@@ -44,6 +97,14 @@ abstract class Scaffolder implements ScaffolderContract
     }
 
     /**
+     * Add a method to the context.
+     */
+    public function addMethod(PendingMethod $method): void
+    {
+        $this->getContext()->addMethod($method);
+    }
+
+    /**
      * Create a new pending interface instance.
      */
     public function newInterface(): PendingInterface
@@ -52,10 +113,26 @@ abstract class Scaffolder implements ScaffolderContract
     }
 
     /**
+     * Add an interface to the context.
+     */
+    public function addInterface(PendingInterface $interface): void
+    {
+        $this->getContext()->addInterface($interface);
+    }
+
+    /**
      * Create a new pending trait instance.
      */
     public function newTrait(): PendingTrait
     {
         return $this->getContext()->newTrait();
+    }
+
+    /**
+     * Add a trait to the context.
+     */
+    public function addTrait(PendingTrait $trait): void
+    {
+        $this->getContext()->addTrait($trait);
     }
 }

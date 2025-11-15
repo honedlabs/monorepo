@@ -49,7 +49,7 @@ class PropertyScaffolder extends Scaffolder
 
             $this->components->success("A new \"{$property->getColumn()}\" property \"{$property->getName()}\" has been added to the model.");
 
-            $this->context->addProperty($property);
+            $this->addProperty($property);
         }
     }
 
