@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Concerns;
 
-use Illuminate\Support\Collection;
 use Honed\Scaffold\Contracts\Property;
+use Illuminate\Support\Collection;
 
 trait HasProperties
 {
@@ -15,14 +15,6 @@ trait HasProperties
      * @var Collection<int, Property>
      */
     protected $properties;
-
-    /**
-     * Initialize the properties.
-     */
-    protected function initializeProperties(): void
-    {
-        $this->properties = new Collection();
-    }
 
     /**
      * Add a property to the context.
@@ -50,5 +42,13 @@ trait HasProperties
     public function getProperties(): Collection
     {
         return $this->properties;
+    }
+
+    /**
+     * Initialize the properties.
+     */
+    protected function initializeProperties(): void
+    {
+        $this->properties = new Collection();
     }
 }

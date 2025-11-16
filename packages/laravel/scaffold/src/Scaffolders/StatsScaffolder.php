@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
-use Illuminate\Routing\Console\ControllerMakeCommand;
+use Honed\Stats\Commands\OverviewMakeCommand;
 
-class ControllerScaffolder extends SingleScaffolder
+class StatsScaffolder extends SingleScaffolder
 {
     /**
      * The command to be run.
@@ -15,6 +15,6 @@ class ControllerScaffolder extends SingleScaffolder
      */
     public function commandName(): string
     {
-        return ControllerMakeCommand::class;
+        return OverviewMakeCommand::class;
     }
 }

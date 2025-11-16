@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Scaffolders;
 
-use Honed\Scaffold\Contracts\Suggestible;
 use Spatie\LaravelData\Commands\DataMakeCommand;
 
 class DataScaffolder extends MultipleScaffolder

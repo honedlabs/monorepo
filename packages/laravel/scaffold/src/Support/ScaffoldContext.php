@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Support;
 
-use Illuminate\Console\Command;
 use Honed\Core\Concerns\HasName;
-use Illuminate\Support\Collection;
-use Honed\Scaffold\Concerns\HasTraits;
-use Honed\Scaffold\Concerns\HasImports;
-use Honed\Scaffold\Concerns\HasCommands;
-use Honed\Scaffold\Contracts\Scaffolder;
-use Honed\Scaffold\Concerns\HasInterfaces;
-use Honed\Scaffold\Concerns\HasProperties;
 use Honed\Scaffold\Collections\ScaffolderCollection;
+use Honed\Scaffold\Concerns\HasCommands;
+use Honed\Scaffold\Concerns\HasImports;
+use Honed\Scaffold\Concerns\HasInterfaces;
 use Honed\Scaffold\Concerns\HasMethods;
+use Honed\Scaffold\Concerns\HasProperties;
+use Honed\Scaffold\Concerns\HasTraits;
 use Honed\Scaffold\Contracts\ScaffoldContext as ScaffoldContextContract;
+use Honed\Scaffold\Contracts\Scaffolder;
+use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class ScaffoldContext implements ScaffoldContextContract
 {
-    use HasName;
-    use HasImports;
-    use HasProperties;
     use HasCommands;
+    use HasImports;
     use HasInterfaces;
     use HasMethods;
+    use HasName;
+    use HasProperties;
     use HasTraits;
 
     /**

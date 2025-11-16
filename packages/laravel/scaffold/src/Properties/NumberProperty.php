@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
-use function Laravel\Prompts\suggest;
 
 class NumberProperty extends Property implements HasLength
 {
@@ -101,7 +100,7 @@ class NumberProperty extends Property implements HasLength
      */
     public function getBlueprintColumn(): string
     {
-        $integerSize = match ($this->getLength()) {
+        $integerSize = match ($this->getSize()) {
             'tiny' => 'tinyInteger',
             'small' => 'smallInteger',
             'medium' => 'mediumInteger',

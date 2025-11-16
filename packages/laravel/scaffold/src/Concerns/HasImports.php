@@ -16,14 +16,6 @@ trait HasImports
     protected $imports;
 
     /**
-     * Initialize the imports.
-     */
-    protected function initializeImports(): void
-    {
-        $this->imports = new Collection();
-    }
-
-    /**
      * Add an import to the context.
      */
     public function addImport(string $import): void
@@ -49,5 +41,13 @@ trait HasImports
     public function getImports(): Collection
     {
         return $this->imports;
+    }
+
+    /**
+     * Initialize the imports.
+     */
+    protected function initializeImports(): void
+    {
+        $this->imports = new Collection();
     }
 }

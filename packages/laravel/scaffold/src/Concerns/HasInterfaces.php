@@ -17,14 +17,6 @@ trait HasInterfaces
     protected $interfaces;
 
     /**
-     * Initialize the interfaces.
-     */
-    protected function initializeInterfaces(): void
-    {
-        $this->interfaces = new Collection();
-    }
-
-    /**
      * Add an interface to the context.
      */
     public function addInterface(PendingInterface $interface): void
@@ -58,5 +50,13 @@ trait HasInterfaces
     public function newInterface(): PendingInterface
     {
         return new PendingInterface();
+    }
+
+    /**
+     * Initialize the interfaces.
+     */
+    protected function initializeInterfaces(): void
+    {
+        $this->interfaces = new Collection();
     }
 }

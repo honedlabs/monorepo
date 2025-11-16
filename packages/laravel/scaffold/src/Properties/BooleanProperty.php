@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Properties;
 
-use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\select;
 
 class BooleanProperty extends Property
 {
@@ -33,10 +33,18 @@ class BooleanProperty extends Property
      */
     public function promptForDefault(): void
     {
-        $this->default = confirm(
-            label: 'Should the property be defaulted to?',
-            default: false
+        /** @var 'true' | 'false' */
+        $default = select(
+            label: 'What should the property be defaulted to?',
+            options: [
+                'true' => 'True',
+                'false' => 'False',
+            ],
+            default: 'false',
         );
+
+        $this->default = $default === 'true';
+
     }
 
     /**

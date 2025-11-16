@@ -19,7 +19,7 @@ class ScaffoldServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/scaffold.php', 'scaffold');
 
-        /** @var class-string<\Honed\Scaffold\Contracts\ScaffoldContext> */
+        /** @var class-string<ScaffoldContextContract> */
         $context = config('scaffold.context', ScaffoldContext::class);
 
         $this->app->bind(ScaffoldContextContract::class, $context);

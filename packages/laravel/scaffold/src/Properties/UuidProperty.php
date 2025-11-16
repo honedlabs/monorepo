@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Properties;
 
-use Illuminate\Support\Str;
-use Honed\Scaffold\Contracts\IsNullable;
 use Honed\Scaffold\Contracts\HasUniqueness;
+use Honed\Scaffold\Contracts\IsNullable;
+use Illuminate\Support\Str;
 
 use function Laravel\Prompts\suggest;
 

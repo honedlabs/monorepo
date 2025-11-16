@@ -50,7 +50,7 @@ class PendingMethod extends PendingHelper
     /**
      * Set the visibility of the method.
      *
-     * @param 'public'|'protected'|'private' $visibility
+     * @param  'public'|'protected'|'private'  $visibility
      */
     public function visibility(string $visibility): static
     {

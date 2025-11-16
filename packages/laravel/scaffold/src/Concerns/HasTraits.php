@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Concerns;
 
-use Illuminate\Support\Collection;
 use Honed\Scaffold\Support\PendingTrait;
+use Illuminate\Support\Collection;
 
 trait HasTraits
 {
@@ -15,14 +15,6 @@ trait HasTraits
      * @var Collection<int, PendingTrait>
      */
     protected $traits;
-
-    /**
-     * Initialize the traits.
-     */
-    protected function initializeTraits(): void
-    {
-        $this->traits = new Collection();
-    }
 
     /**
      * Add a trait to the context.
@@ -58,5 +50,13 @@ trait HasTraits
     public function newTrait(): PendingTrait
     {
         return new PendingTrait();
+    }
+
+    /**
+     * Initialize the traits.
+     */
+    protected function initializeTraits(): void
+    {
+        $this->traits = new Collection();
     }
 }

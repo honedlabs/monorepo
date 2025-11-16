@@ -85,7 +85,7 @@ abstract class Scaffolder implements ScaffolderContract
         $method = new ReflectionMethod($generator, 'qualifyClass');
 
         $method->setAccessible(true);
-        
+
         /** @var class-string */
         return $method->invoke($generator, $name);
     }

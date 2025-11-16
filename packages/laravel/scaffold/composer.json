@@ -30,6 +30,7 @@
         "honed/command": "^0.6.0",
         "honed/data": "^0.6.0",
         "honed/form": "^0.5.0",
+        "honed/infolist": "^0.16.1",
         "honed/refine": "^0.32.0",
         "honed/stats": "^0.4.0",
         "honed/table": "^0.32.2",

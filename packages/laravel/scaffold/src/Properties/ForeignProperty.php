@@ -85,6 +85,7 @@ class ForeignProperty extends Property implements IsNullable
             return;
         }
 
+        /** @var string */
         $strategy = select('Select a strategy for when the foreign record is deleted', [
             'none' => 'None',
             'cascade' => 'Cascade',

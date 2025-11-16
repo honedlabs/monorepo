@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Concerns;
 
-use Illuminate\Support\Collection;
 use Honed\Scaffold\Support\PendingMethod;
+use Illuminate\Support\Collection;
 
 trait HasMethods
 {
@@ -15,14 +15,6 @@ trait HasMethods
      * @var Collection<int, PendingMethod>
      */
     protected $methods;
-
-    /**
-     * Initialize the methods.
-     */
-    protected function initializeMethods(): void
-    {
-        $this->methods = new Collection();
-    }
 
     /**
      * Add a method to the context.
@@ -50,5 +42,11 @@ trait HasMethods
         return new PendingMethod();
     }
 
-    
+    /**
+     * Initialize the methods.
+     */
+    protected function initializeMethods(): void
+    {
+        $this->methods = new Collection();
+    }
 }

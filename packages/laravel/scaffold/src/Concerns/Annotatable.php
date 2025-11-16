@@ -102,7 +102,7 @@ trait Annotatable
      */
     protected function startAnnotation(int $indentations = 4): string
     {
-        return str_repeat(' ', $indentations).'/**'.PHP_EOL;
+        return str_repeat(' ', $indentations).'/**';
     }
 
     /**
@@ -121,7 +121,7 @@ trait Annotatable
      */
     protected function endAnnotation(int $indentations = 4): string
     {
-        return str_repeat(' ', $indentations).' */'.PHP_EOL;
+        return str_repeat(' ', $indentations).' */';
     }
 
     /**

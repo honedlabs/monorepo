@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Concerns;
 
-use Illuminate\Support\Collection;
 use Honed\Scaffold\Support\PendingCommand;
+use Illuminate\Support\Collection;
 
 trait HasCommands
 {
@@ -15,14 +15,6 @@ trait HasCommands
      * @var Collection<int, PendingCommand>
      */
     protected $commands;
-
-    /**
-     * Initialize the commands.
-     */
-    protected function initializeCommands(): void
-    {
-        $this->commands = new Collection();
-    }
 
     /**
      * Add a command to the context.
@@ -58,5 +50,13 @@ trait HasCommands
     public function newCommand(): PendingCommand
     {
         return new PendingCommand();
+    }
+
+    /**
+     * Initialize the commands.
+     */
+    protected function initializeCommands(): void
+    {
+        $this->commands = new Collection();
     }
 }
