@@ -35,11 +35,12 @@ jobs:
           # - memo
           # - modal
           # - nav
-          - option
+          # - option
           # - page
           # - persist
           # - refine
           # - registry
+          - scaffold
           # - stats
           # - table
           # - upload
