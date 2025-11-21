@@ -37,6 +37,12 @@ it('assigns properties', function () {
         ->getLabel()->toBe(__('assign'));
 });
 
+it('sets class name', function () {
+    expect($this->component)
+        ->className('bg-red-500 text-white')->toBe($this->component)
+        ->getAttributes()->toBe(['class' => 'bg-red-500 text-white']);
+});
+
 describe('evaluation', function () {
     beforeEach(function () {
         $this->product = Product::factory()->create();

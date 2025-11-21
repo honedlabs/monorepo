@@ -99,6 +99,16 @@ abstract class Component extends Primitive implements NullsAsUndefined
     }
 
     /**
+     * Set the class name of the component.
+     *
+     * @return $this
+     */
+    public function className(?string $value): static
+    {
+        return $this->attribute('class', $value);
+    }
+
+    /**
      * Get the instance as an array.
      *
      * @return array<string, mixed>

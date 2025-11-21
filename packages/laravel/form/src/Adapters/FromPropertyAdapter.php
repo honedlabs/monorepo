@@ -34,7 +34,7 @@ abstract class FromPropertyAdapter implements DataAdapter
     protected function assignFromProperty(DataProperty $property): array
     {
         return [
-            'class' => $this->getClassNameFromProperty($property),
+            'className' => $this->getClassNameFromProperty($property),
             'required' => $this->isRequiredProperty($property),
             'optional' => $this->isOptionalProperty($property),
             'hint' => $this->getHintFromProperty($property),
