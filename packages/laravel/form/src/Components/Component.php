@@ -89,7 +89,10 @@ abstract class Component extends Primitive implements NullsAsUndefined
     public function assign(array $attributes): static
     {
         foreach ($attributes as $key => $value) {
-            $this->{$key} = $value instanceof FunctionalArgument ? $value->getValue() : $value;
+            $this->{$key}($value instanceof FunctionalArgument
+                ? $value->getValue()
+                : $value
+            );
         }
 
         return $this;

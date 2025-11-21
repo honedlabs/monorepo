@@ -25,8 +25,8 @@ class CustomAdapter extends FromPropertyAdapter implements Adapter
         $component = app($attribute->getComponent());
 
         return $component->assign([
-            ...$this->rejectNulls($this->assignFromProperty($property)),
             ...$attribute->getArguments(),
+            ...$this->rejectNulls($this->assignFromProperty($property)),
         ]);
     }
 
@@ -49,6 +49,7 @@ class CustomAdapter extends FromPropertyAdapter implements Adapter
     {
         return [
             ...parent::assignFromProperty($property),
+            'multiple' => $this->isMultipleProperty($property),
             'name' => $this->getNameFromProperty($property),
             'label' => $this->getLabelFromProperty($property),
             'min' => $this->getMinFromProperty($property),
