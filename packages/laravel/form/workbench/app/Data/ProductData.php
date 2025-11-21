@@ -11,7 +11,6 @@ use Honed\Form\Components\Search;
 use Honed\Form\Concerns\GeneratesForm;
 use Honed\Form\Contracts\Generative;
 use Honed\Form\Support\Route;
-use Honed\Form\Support\Trans;
 use Spatie\LaravelData\Attributes\Computed;
 use Spatie\LaravelData\Attributes\FromAuthenticatedUserProperty;
 use Spatie\LaravelData\Attributes\LoadRelation;
@@ -27,7 +26,7 @@ class ProductData extends Data implements Generative
     public $computed;
 
     #[ArrayParameter('id')]
-    #[Component(Search::class, label: new Trans('User'), url: new Route('users.index'))]
+    #[Component(Search::class, label: 'User', url: new Route('users.index'))]
     public ?UserData $user;
 
     #[Min(2), Max(255)]

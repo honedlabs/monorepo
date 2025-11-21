@@ -86,6 +86,10 @@ it('generates form without payload', function () {
                     ],
                     [
                         'component' => FormComponent::Input->value,
+                        'attributes' => [
+                            'min' => 2,
+                            'max' => 255,
+                        ],
                         'name' => 'name',
                         'label' => 'Name',
                         'required' => true,
@@ -97,6 +101,10 @@ it('generates form without payload', function () {
                     ],
                     [
                         'component' => FormComponent::Number->value,
+                        'attributes' => [
+                            'min' => 0,
+                            'max' => 999,
+                        ],
                         'name' => 'price',
                         'label' => 'Price',
                         'required' => true,
@@ -129,11 +137,13 @@ it('generates form without payload', function () {
                         ],
                     ],
                     [
-                        'component' => FormComponent::Input->value,
+                        'component' => FormComponent::Select->value,
                         'name' => 'users',
                         'label' => 'Users',
                         'defaultValue' => [],
                         'required' => true,
+                        'multiple' => true,
+                        'options' => [],
                     ],
                 ],
             ])

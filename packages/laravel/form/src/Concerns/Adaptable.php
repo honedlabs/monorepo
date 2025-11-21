@@ -109,7 +109,12 @@ trait Adaptable
             return (fn (): array => $this->values)->call($attribute);
         }
 
-        if ($property->type->iterableItemType && is_a($property->type->iterableItemType, BackedEnum::class, true)) {
+        if (
+            $property->type->iterableItemType
+            && str_contains($property->type->iterableItemType, '\\')
+            && is_a($property->type->iterableItemType, BackedEnum::class, true)
+        ) {
+            /** @var class-string<BackedEnum> */
             return $property->type->iterableItemType;
         }
 
@@ -135,9 +140,11 @@ trait Adaptable
 
     /**
      * Determine if the property is multiple.
+     *
+     * @return true|null
      */
-    public function isMultipleProperty(DataProperty $property): bool
+    public function isMultipleProperty(DataProperty $property): ?bool
     {
-        return $property->attributes->has(Multiple::class);
+        return $property->attributes->has(Multiple::class) ?: null;
     }
 }

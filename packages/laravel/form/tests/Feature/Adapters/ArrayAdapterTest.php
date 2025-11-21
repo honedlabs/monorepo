@@ -30,15 +30,20 @@ it('checks property conversion', function (bool $expected, Data $data) {
         /** @var list<Status> */
         public array $tags;
     }],
-    // fn () => [false, new class() extends Data
-    // {
-    //     public string $locale;
-    // }],
-    // fn () => [false, new class() extends Data
-    // {
-    //     public Status $status;
-    // }],
-])->only();
+    fn () => [true, new class() extends Data
+    {
+        /** @var array<int, string> */
+        public array $tags;
+    }],
+    fn () => [false, new class() extends Data
+    {
+        public string $locale;
+    }],
+    fn () => [false, new class() extends Data
+    {
+        public Status $status;
+    }],
+]);
 
 it('checks rules conversion', function (bool $expected, array $rules) {
     expect($this->adapter)
@@ -47,4 +52,20 @@ it('checks rules conversion', function (bool $expected, array $rules) {
     fn () => [false, ['required', 'numeric']],
     fn () => [true, ['required', 'array']],
     fn () => [true, ['required', 'list']],
+]);
+
+it('sets property to multiple', function (Data $data) {
+    $property = property($data);
+
+    $dataClass = app(DataConfig::class)->getDataClass($data::class);
+
+    expect($this->adapter->convertProperty($property, $dataClass))
+        ->toBeInstanceOf(Select::class)
+        ->isMultiple()->toBeTrue();
+})->with([
+    fn () => new class() extends Data
+    {
+        /** @var list<Status> */
+        public array $tags;
+    },
 ]);

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use Honed\Form\Attributes\Attributes;
+use Honed\Form\Attributes\ClassName;
 
 beforeEach(function () {});
 
 it('has attribute', function (mixed $hint, mixed $expected) {
-    $attribute = new Attributes($hint);
+    $attribute = new ClassName($hint);
 
     expect($attribute)
-        ->toBeInstanceOf(Attributes::class)
+        ->toBeInstanceOf(ClassName::class)
         ->getValue()->toBe($expected);
 })->with([
-    fn () => [['test' => 'test'], ['test' => 'test']],
+    fn () => ['bg-red-500 text-white', 'bg-red-500 text-white'],
 ]);

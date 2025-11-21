@@ -51,9 +51,10 @@ it('generates form from request', function () {
                         'label' => 'User id',
                     ],
                     [
-                        'component' => FormComponent::Input->value,
+                        'component' => FormComponent::Select->value,
                         'name' => 'users',
                         'label' => 'Users',
+                        'options' => [],
                     ],
                     [
                         'component' => FormComponent::Input->value,
