@@ -44,6 +44,7 @@ export declare interface Field<T extends any = any> extends Component {
     max?: number;
     error?: string;
     class?: HTMLAttributes["class"];
+    defaultValue?: T;
 }
 
 export declare interface FieldGroup extends Grouping {
@@ -108,7 +109,12 @@ declare interface Option_2 {
 export { Option_2 as Option }
 
 export declare const plugin: {
-    install(app: App, resolver: Resolver | ResolveKey): void;
+    install(app: App, options: PluginOptions): void;
+};
+
+export declare type PluginOptions = {
+    resolver?: Resolver;
+    components?: ResolveKey;
 };
 
 export declare interface Radio extends Field {
@@ -150,7 +156,7 @@ export declare interface Resolver {
     (name: string): VNode | Promise<VNode>;
 }
 
-export declare function resolveUsing(r: Resolver | ResolveKey): void;
+export declare function resolveUsing(r: Resolver | ResolveKey, components?: ResolveKey): void;
 
 export declare interface Search extends Selection_2 {
     component: "search";

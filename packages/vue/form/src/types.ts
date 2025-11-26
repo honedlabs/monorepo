@@ -2,13 +2,6 @@ import type { Method } from "@inertiajs/core";
 import type { HTMLAttributes, VNode } from "vue";
 import { FormComponent } from "./enum";
 
-export interface Form {
-	method: Method;
-	action?: string;
-	cancel?: "reset" | string;
-	schema: Component[];
-}
-
 export interface Resolver {
 	(name: string): VNode | Promise<VNode>;
 }
@@ -18,6 +11,18 @@ export type ResolveKey = {
 } & {
 	[K in FormComponent]?: string | VNode;
 };
+
+export type PluginOptions = {
+	resolver?: Resolver;
+	components?: ResolveKey;
+};
+
+export interface Form {
+	method: Method;
+	action?: string;
+	cancel?: "reset" | string;
+	schema: Component[];
+}
 
 export interface Option {
 	label: string;
@@ -54,6 +59,7 @@ export interface Field<T extends any = any> extends Component {
 	max?: number;
 	error?: string;
 	class?: HTMLAttributes["class"];
+	defaultValue?: T;
 }
 
 export interface FieldGroup extends Grouping {

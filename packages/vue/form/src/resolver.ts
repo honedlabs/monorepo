@@ -25,9 +25,17 @@ export function defaultResolver(name: string): Promise<VNode> {
 	return cache.get(name)! as Promise<VNode>;
 }
 
-export function resolveUsing(r: Resolver | ResolveKey) {
-	if (typeof r === "function") resolver.value = r;
-	else
+export function resolveUsing(
+	r: Resolver | ResolveKey,
+	components: ResolveKey = {},
+) {
+	if (typeof r === "function") {
+		resolver.value = r;
+		mappings.value = {
+			...mappings.value,
+			...components,
+		};
+	} else
 		mappings.value = {
 			...mappings.value,
 			...r,

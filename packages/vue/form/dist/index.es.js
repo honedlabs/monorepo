@@ -1,49 +1,52 @@
-import { ref as p, defineAsyncComponent as g, computed as O, h as a, defineComponent as s } from "vue";
-import { router as T } from "@inertiajs/vue3";
-const c = /* @__PURE__ */ new Map(), i = p({}), n = p();
-function d(e) {
-  return n.value || (n.value = b), n.value(e);
+import { ref as o, defineAsyncComponent as g, h as s, defineComponent as l } from "vue";
+import { router as O } from "@inertiajs/vue3";
+const i = /* @__PURE__ */ new Map(), u = o({}), c = o();
+function p(e) {
+  return c.value || (c.value = T), c.value(e);
 }
-function b(e) {
-  if (!c.has(e)) {
+function T(e) {
+  if (!i.has(e)) {
     const t = g({
-      loader: () => import(i.value[e])
+      loader: () => import(u.value[e])
     });
-    return c.set(e, t), t;
+    return i.set(e, t), t;
   }
-  return c.get(e);
+  return i.get(e);
 }
-function h(e) {
-  typeof e == "function" ? n.value = e : i.value = {
-    ...i.value,
+function b(e, t = {}) {
+  typeof e == "function" ? (c.value = e, u.value = {
+    ...u.value,
+    ...t
+  }) : u.value = {
+    ...u.value,
     ...e
   };
 }
-function o(e, t = {}) {
-  const { component: u, attributes: r = {}, ...v } = e, { schema: E, ...f } = v, R = O(() => t[f.name]);
-  return a(
-    d(u),
+function d(e, t = {}) {
+  const { component: r, attributes: n = {}, ...v } = e, { schema: E, ...a } = v, R = a.name ? t[a.name] : void 0;
+  return s(
+    p(r),
     {
-      ...r,
-      ...f,
+      ...n,
+      ...a,
       error: R
     },
     {
-      default: l(E, t)
+      default: f(E, t)
     }
   );
 }
-function l(e, t) {
-  return e === void 0 ? () => [] : () => e.map((u) => o(u, t));
+function f(e, t) {
+  return e === void 0 ? () => [] : () => e.map((r) => d(r, t));
 }
-const A = s({
+const h = l({
   setup(e, { slots: t }) {
     return () => {
-      var u;
-      return (u = t.default) == null ? void 0 : u.call(t);
+      var r;
+      return (r = t.default) == null ? void 0 : r.call(t);
     };
   }
-}), y = s({
+}), A = l({
   props: {
     form: {
       type: Object,
@@ -55,52 +58,53 @@ const A = s({
     }
   },
   setup(e) {
-    return () => a(
-      A,
+    return () => s(
+      h,
       {},
       {
-        default: l(e.form.schema, e.errors)
+        default: f(e.form.schema, e.errors)
       }
     );
   }
 });
-function I(e) {
-  function t(r) {
-    e.cancel === "reset" ? r == null || r() : e.cancel !== void 0 ? T.visit(e.cancel) : r == null || r();
+function x(e) {
+  function t(n) {
+    e.cancel === "reset" ? n == null || n() : e.cancel !== void 0 ? O.visit(e.cancel) : n == null || n();
   }
-  const u = s({
+  const r = l({
     props: {
       errors: {
         type: Object,
         default: () => ({})
       }
     },
-    setup(r) {
-      return () => a(y, { form: e, errors: r.errors });
+    setup(n) {
+      return () => s(A, { form: e, errors: n.errors });
     }
   });
   return {
-    resolve: d,
-    getComponent: o,
-    getComponents: l,
+    resolve: p,
+    getComponent: d,
+    getComponents: f,
     onCancel: t,
-    Render: u
+    Render: r
   };
 }
-const U = {
+const I = {
   install(e, t) {
-    h(t);
+    const r = t.components || {};
+    b(t.resolver || r, r);
   }
 };
-var D = /* @__PURE__ */ ((e) => (e.CHECKBOX = "checkbox", e.COLOR = "color", e.DATE = "date", e.FIELDGROUP = "fieldgroup", e.FIELDSET = "fieldset", e.INPUT = "input", e.LEGEND = "legend", e.NUMBER = "number", e.RADIO = "radio", e.SEARCH = "search", e.SELECT = "select", e.TEXT = "text", e.TEXTAREA = "textarea", e))(D || {});
+var y = /* @__PURE__ */ ((e) => (e.CHECKBOX = "checkbox", e.COLOR = "color", e.DATE = "date", e.FIELDGROUP = "fieldgroup", e.FIELDSET = "fieldset", e.INPUT = "input", e.LEGEND = "legend", e.NUMBER = "number", e.RADIO = "radio", e.SEARCH = "search", e.SELECT = "select", e.TEXT = "text", e.TEXTAREA = "textarea", e))(y || {});
 export {
-  D as FormComponent,
-  y as Render,
-  b as defaultResolver,
-  o as getComponent,
-  l as getComponents,
-  U as plugin,
-  d as resolve,
-  h as resolveUsing,
-  I as useComponents
+  y as FormComponent,
+  A as Render,
+  T as defaultResolver,
+  d as getComponent,
+  f as getComponents,
+  I as plugin,
+  p as resolve,
+  b as resolveUsing,
+  x as useComponents
 };

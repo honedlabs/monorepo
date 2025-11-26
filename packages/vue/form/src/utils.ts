@@ -1,7 +1,6 @@
-import { computed, h, type VNode } from "vue";
+import { h, type VNode } from "vue";
 import { resolve } from "./resolver";
 import type { Component, Field, Grouping } from "./types";
-import type { InertiaForm } from "@inertiajs/vue3";
 
 export function getComponent(
 	formComponent: Component,
@@ -11,7 +10,7 @@ export function getComponent(
 
 	const { schema, ...rest } = props as Grouping;
 
-	const error = computed(() => errors[(rest as Field).name]);
+	const error = (rest as Field).name ? errors[(rest as Field).name] : undefined;
 
 	return h(
 		resolve(component),
