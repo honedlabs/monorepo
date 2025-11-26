@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Concerns;
 
-use Honed\Scaffold\Support\PendingInterface;
+use Honed\Scaffold\Support\InterfaceStatement;
 use Illuminate\Support\Collection;
 
 trait HasInterfaces
@@ -12,14 +12,14 @@ trait HasInterfaces
     /**
      * The interfaces to be implemented.
      *
-     * @var Collection<int, PendingInterface>
+     * @var Collection<int, InterfaceStatement>
      */
     protected $interfaces;
 
     /**
      * Add an interface to the context.
      */
-    public function addInterface(PendingInterface $interface): void
+    public function addInterface(InterfaceStatement $interface): void
     {
         $this->interfaces->push($interface);
     }
@@ -27,7 +27,7 @@ trait HasInterfaces
     /**
      * Add multiple interfaces to the context.
      *
-     * @param  list<PendingInterface>  $interfaces
+     * @param  list<InterfaceStatement>  $interfaces
      */
     public function addInterfaces(array $interfaces): void
     {
@@ -37,7 +37,7 @@ trait HasInterfaces
     /**
      * Get the interfaces for the context.
      *
-     * @return Collection<int, PendingInterface>
+     * @return Collection<int, InterfaceStatement>
      */
     public function getInterfaces(): Collection
     {
@@ -47,9 +47,9 @@ trait HasInterfaces
     /**
      * Create a new pending interface instance.
      */
-    public function newInterface(): PendingInterface
+    public function newInterface(): InterfaceStatement
     {
-        return new PendingInterface();
+        return new InterfaceStatement();
     }
 
     /**

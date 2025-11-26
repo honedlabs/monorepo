@@ -6,13 +6,15 @@ namespace Honed\Scaffold\Support;
 
 use Honed\Scaffold\Concerns\Annotatable;
 use Honed\Scaffold\Concerns\Attributable;
+use Honed\Scaffold\Concerns\InteractsWithSystem;
 use Honed\Scaffold\Concerns\Writable;
 
-class PendingMethod extends PendingHelper
+class PendingMethod
 {
     use Annotatable;
     use Attributable;
     use Writable;
+    use InteractsWithSystem;
 
     /**
      * The signature of the method.

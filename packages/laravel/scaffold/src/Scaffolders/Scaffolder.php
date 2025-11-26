@@ -8,7 +8,7 @@ use Honed\Scaffold\Concerns\InteractsWithSystem;
 use Honed\Scaffold\Contracts\Property;
 use Honed\Scaffold\Contracts\Scaffolder as ScaffolderContract;
 use Honed\Scaffold\Support\PendingCommand;
-use Honed\Scaffold\Support\PendingInterface;
+use Honed\Scaffold\Support\InterfaceStatement;
 use Honed\Scaffold\Support\PendingMethod;
 use Honed\Scaffold\Support\PendingTrait;
 use Honed\Scaffold\Support\ScaffoldContext;
@@ -115,14 +115,6 @@ abstract class Scaffolder implements ScaffolderContract
     }
 
     /**
-     * Create a new pending command instance.
-     */
-    public function newCommand(): PendingCommand
-    {
-        return $this->getContext()->newCommand();
-    }
-
-    /**
      * Create a new pending method instance.
      */
     public function newMethod(): PendingMethod
@@ -141,7 +133,7 @@ abstract class Scaffolder implements ScaffolderContract
     /**
      * Create a new pending interface instance.
      */
-    public function newInterface(): PendingInterface
+    public function newInterface(): InterfaceStatement
     {
         return $this->getContext()->newInterface();
     }
@@ -149,7 +141,7 @@ abstract class Scaffolder implements ScaffolderContract
     /**
      * Add an interface to the context.
      */
-    public function addInterface(PendingInterface $interface): void
+    public function addInterface(InterfaceStatement $interface): void
     {
         $this->getContext()->addInterface($interface);
     }

@@ -98,7 +98,7 @@ class ScaffoldContext implements ScaffoldContextContract
      */
     protected function implementInterfaces(): void
     {
-        //
+        
     }
 
     /**

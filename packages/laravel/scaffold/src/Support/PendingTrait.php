@@ -7,8 +7,15 @@ namespace Honed\Scaffold\Support;
 use Honed\Core\Concerns\HasName;
 use Honed\Scaffold\Concerns\Annotatable;
 
-class PendingTrait extends PendingHelper
+class PendingTrait
 {
     use Annotatable;
     use HasName;
+
+    public function write(Writer $writer)
+    {
+        return $writer
+            // ->import($this->getName())
+            ->line("use {$this->getName()};");
+    }
 }

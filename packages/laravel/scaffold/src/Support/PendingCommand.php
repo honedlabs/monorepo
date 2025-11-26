@@ -5,11 +5,22 @@ declare(strict_types=1);
 namespace Honed\Scaffold\Support;
 
 use Honed\Core\Concerns\HasName;
+use Honed\Scaffold\Support\Utility\Writer;
 use Illuminate\Console\Command;
+use Illuminate\Console\GeneratorCommand;
+use ReflectionClass;
+use ReflectionMethod;
 
-class PendingCommand extends PendingHelper
+class PendingCommand
 {
     use HasName;
+
+    /**
+     * The command to be run.
+     * 
+     * @var \Illuminate\Console\Command
+     */
+    protected $command;
 
     /**
      * The arguments to be passed to the command.
@@ -19,7 +30,17 @@ class PendingCommand extends PendingHelper
     protected $arguments = [];
 
     /**
-     * Get the command to be run from the class.
+     * Create a new pending command instance.
+     */
+    public static function make(string|Command $command, string $name): static
+    {
+        return app(static::class)
+            ->command($command)
+            ->name($name);
+    }
+
+    /**
+     * Set the command to be run.
      *
      * @param  class-string<Command>|Command  $command
      * @return $this
@@ -28,7 +49,19 @@ class PendingCommand extends PendingHelper
     {
         $command = is_string($command) ? app($command) : $command;
 
-        return $this->name($command->getName());
+        $command->setLaravel(app());
+
+        $this->command = $command;
+
+        return $this;
+    }
+
+    /**
+     * Get the command to be run.
+     */
+    public function getCommand(): Command
+    {
+        return $this->command;
     }
 
     /**
@@ -64,5 +97,22 @@ class PendingCommand extends PendingHelper
     public function getArguments(): array
     {
         return $this->arguments;
+    }
+
+    /**
+     * Get the path of the generated class if applicable.
+     */
+    public function getPath(): ?string
+    {
+        if (! $this->command instanceof GeneratorCommand) {
+            return null;
+        }
+
+        $method = new ReflectionMethod($this->command, 'getPath');
+
+        $method->setAccessible(true);
+
+        /** @var string */
+        return $method->invoke($this->command, $this->name);
     }
 }

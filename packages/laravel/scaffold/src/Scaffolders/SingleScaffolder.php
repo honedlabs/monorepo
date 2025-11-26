@@ -36,9 +36,10 @@ abstract class SingleScaffolder extends CommandScaffolder
      */
     public function withMakeCommand(): PendingCommand
     {
-        return $this->newCommand()
-            ->command($this->commandName())
-            ->arguments($this->getArguments());
+        return PendingCommand::make(
+            command: $this->commandName(),
+            name: $this->suffixName($this->getBaseName()->toString())
+        )->arguments($this->getArguments());
     }
 
     /**
@@ -49,7 +50,6 @@ abstract class SingleScaffolder extends CommandScaffolder
     protected function getArguments(): array
     {
         return [
-            'name' => $this->suffixName($this->getBaseName()->toString()),
             '--model' => $this->getName(),
             // '--body' => $this->getBody()->toString()
         ];

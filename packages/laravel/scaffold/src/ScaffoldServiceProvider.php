@@ -18,11 +18,9 @@ class ScaffoldServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/scaffold.php', 'scaffold');
-
-        /** @var class-string<ScaffoldContextContract> */
-        $context = config('scaffold.context', ScaffoldContext::class);
-
-        $this->app->bind(ScaffoldContextContract::class, $context);
+        
+        // @phpstan-ignore-next-line
+        $this->app->bind(ScaffoldContextContract::class, config('scaffold.context', ScaffoldContext::class));
     }
 
     /**

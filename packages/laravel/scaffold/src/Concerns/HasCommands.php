@@ -45,14 +45,6 @@ trait HasCommands
     }
 
     /**
-     * Create a new pending command instance.
-     */
-    public function newCommand(): PendingCommand
-    {
-        return new PendingCommand();
-    }
-
-    /**
      * Initialize the commands.
      */
     protected function initializeCommands(): void

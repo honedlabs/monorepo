@@ -24,6 +24,8 @@ class DateTimeProperty extends Property implements IsNullable
         'disabled_at',
         'enabled_at',
         'verified_at',
+        'notified_at',
+        'read_at',
         'expired_at',
         'created_at',
         'updated_at',

@@ -6,9 +6,15 @@ namespace Honed\Scaffold\Support;
 
 use Honed\Core\Concerns\HasName;
 use Honed\Scaffold\Concerns\Annotatable;
+use Honed\Scaffold\Support\Utility\Writer;
 
-class PendingInterface extends PendingHelper
+class InterfaceStatement
 {
     use Annotatable;
     use HasName;
+
+    public function write(Writer $writer)
+    {
+        return $writer;
+    }
 }

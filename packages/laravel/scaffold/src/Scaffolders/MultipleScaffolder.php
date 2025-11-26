@@ -8,7 +8,6 @@ use Honed\Scaffold\Contracts\Suggestible;
 use Honed\Scaffold\Support\PendingCommand;
 use Illuminate\Support\Str;
 
-use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\multiselect;
 
 /**
@@ -31,7 +30,7 @@ abstract class MultipleScaffolder extends CommandScaffolder implements Suggestib
         $inputs = multiselect(
             label: $this->label(),
             options: ['all' => 'All', ...$suggestions],
-            scroll: 8
+            scroll: 8,
         );
 
         foreach ($inputs as $input) {
@@ -54,9 +53,10 @@ abstract class MultipleScaffolder extends CommandScaffolder implements Suggestib
      */
     public function withMakeCommand(string $input): PendingCommand
     {
-        return $this->newCommand()
-            ->command($this->commandName())
-            ->arguments($this->getArguments($input));
+        return PendingCommand::make(
+            command: $this->commandName(),
+            name: $this->getResolvedName($input)
+        )->arguments($this->getArguments($input));
     }
 
     /**
@@ -74,9 +74,6 @@ abstract class MultipleScaffolder extends CommandScaffolder implements Suggestib
      */
     protected function getArguments(string $input): array
     {
-        return [
-            'name' => $this->getResolvedName($input),
-            // '--body' => $this->getBody(),
-        ];
+        return [];
     }
 }

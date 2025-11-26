@@ -46,11 +46,10 @@ class BuilderScaffolder extends Scaffolder
      */
     protected function withMakeCommand(string $name, string $namespace): PendingCommand
     {
-        return $this->newCommand()
-            ->command(BuilderMakeCommand::class)
-            ->arguments([
-                'name' => $name,
-            ]);
+        return PendingCommand::make(
+            command: BuilderMakeCommand::class,
+            name: $name
+        );
     }
 
     /**

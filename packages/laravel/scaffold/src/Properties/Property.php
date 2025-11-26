@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Honed\Scaffold\Properties;
 
+use Honed\Core\Concerns\HasName;
 use Honed\Scaffold\Contracts\HasLength;
 use Honed\Scaffold\Contracts\HasUniqueness;
 use Honed\Scaffold\Contracts\IsNullable;
 use Honed\Scaffold\Contracts\Property as PropertyContract;
+use Honed\Scaffold\Contracts\Suggestible;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
@@ -16,14 +18,12 @@ use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\suggest;
 use function Laravel\Prompts\text;
 
-abstract class Property implements PropertyContract
+/**
+ * @implements Suggestible<int>
+ */
+abstract class Property implements PropertyContract, Suggestible
 {
-    /**
-     * The name of the property.
-     *
-     * @var string
-     */
-    protected $name;
+    use HasName;
 
     /**
      * The type of the schema column.
@@ -123,14 +123,6 @@ abstract class Property implements PropertyContract
     }
 
     /**
-     * Get the name of the property.
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
      * Get the column type of the property.
      */
     public function getColumn(): string
@@ -193,7 +185,7 @@ abstract class Property implements PropertyContract
     {
         $this->name = Str::snake(suggest(
             label: 'Provide a name for this property',
-            options: $this->getSuggestedNames(),
+            options: $this->suggestions(),
         ));
     }
 
@@ -227,10 +219,9 @@ abstract class Property implements PropertyContract
     public function promptForLength(): void
     {
         if ($this instanceof HasLength && $this->confirms('length')) {
-            $this->length = $this->cast(suggest(
+            $this->length = (int) suggest(
                 label: 'Provide a length for this property',
                 options: [
-                    '63',
                     '127',
                     '255',
                     '511',
@@ -239,7 +230,7 @@ abstract class Property implements PropertyContract
                     '4095',
                     '65535',
                 ]
-            ));
+            );
         }
     }
 
@@ -277,11 +268,11 @@ abstract class Property implements PropertyContract
     }
 
     /**
-     * Get the suggested names for the property.
+     * Get the suggestions for the property.
      *
      * @return list<string>
      */
-    protected function getSuggestedNames(): array
+    public function suggestions(): array
     {
         return $this->suggestedNames;
     }
