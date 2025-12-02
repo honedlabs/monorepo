@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Infolist\Concerns;
 
 use Honed\Infolist\Contracts\Formatter;
+use Honed\Infolist\Contracts\ScopedFormatter;
 use Honed\Infolist\Formatters\DefaultFormatter;
 
 /**
@@ -25,11 +26,13 @@ trait HasFormatter
     /**
      * Set the formatter.
      *
-     * @param  class-string<Formatter<TValue, TReturn>>|Formatter<TValue, TReturn>  $formatter
+     * @param  class-string<Formatter<TValue, TReturn>>|Formatter<TValue, TReturn>|null  $formatter
      */
-    public function formatter(string|Formatter $formatter): static
+    public function formatter(string|Formatter|null $formatter): static
     {
-        $this->formatter = is_string($formatter) ? resolve($formatter) : $formatter;
+        $this->formatter = $formatter instanceof Formatter
+            ? $formatter
+            : app($formatter);
 
         return $this;
     }
@@ -45,6 +48,16 @@ trait HasFormatter
     }
 
     /**
+     * Get a cloned copy of the formatter.
+     *
+     * @return Formatter<TValue, TReturn>
+     */
+    public function cloneFormatter(): Formatter
+    {
+        return clone $this->getFormatter();
+    }
+
+    /**
      * Format the value.
      *
      * @param  TValue  $value
@@ -52,7 +65,22 @@ trait HasFormatter
      */
     public function format(mixed $value): mixed
     {
-        return $this->getFormatter()->format($value);
+        $formatter = $this instanceof ScopedFormatter
+            ? $this->getScopedFormatter()
+            : $this->getFormatter();
+
+        return $formatter->format($value);
+    }
+
+    /**
+     * Get a scoped formatter.
+     *
+     * @return Formatter<TValue, TReturn>
+     */
+    public function getScopedFormatter(): Formatter
+    {
+        // @phpstan-ignore-next-line method.notFound
+        return $this->scopeFormatter($this->cloneFormatter());
     }
 
     /**

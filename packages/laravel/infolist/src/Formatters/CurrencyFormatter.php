@@ -34,9 +34,9 @@ class CurrencyFormatter extends LocalisedFormatter
      *
      * @return $this
      */
-    public function currency(string $value): static
+    public function currency(?string $value): static
     {
-        $this->currency = mb_strtoupper($value);
+        $this->currency = $value ? mb_strtoupper($value) : null;
 
         return $this;
     }
@@ -54,7 +54,7 @@ class CurrencyFormatter extends LocalisedFormatter
      *
      * @return $this
      */
-    public function divide(int $value): static
+    public function divide(?int $value): static
     {
         $this->divide = $value;
 

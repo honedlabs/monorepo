@@ -35,16 +35,6 @@ it('has after formatting callback', function () {
         ->apply(null)->toBe([null, true]);
 });
 
-it('can have record', function () {
-    $user = User::factory()->create();
-
-    expect($this->entry)
-        ->getRecord()->toBeNull()
-        ->record($user)->toBe($this->entry)
-        ->getRecord()->toBeInstanceOf(User::class)
-        ->getState()->toBeNull();
-})->skip();
-
 it('can have string state', function () {
     $user = User::factory()->create();
 

@@ -14,3 +14,10 @@ it('is set up', function () {
         ->getType()->toBe('numeric')
         ->defaultFormatter()->toBeInstanceOf(CurrencyFormatter::class);
 });
+
+it('has currency', function () {
+    expect($this->entry)
+        ->getCurrency()->toBeNull()
+        ->currency('usd')->toBe($this->entry)
+        ->getCurrency()->toBe('USD');
+});

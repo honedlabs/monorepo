@@ -48,3 +48,7 @@ it('has array representation', function () {
         ->toBeArray()
         ->toBeEmpty();
 });
+
+it('throws exception when no record is set', function () {
+    Infolist::make()->toArray();
+})->throws(RuntimeException::class);

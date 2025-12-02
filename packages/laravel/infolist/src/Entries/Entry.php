@@ -122,7 +122,7 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
      */
     public static function make(string $name, ?string $label = null): static
     {
-        return resolve(static::class)
+        return app(static::class)
             ->name($name)
             ->label($label ?? static::makeLabel($name));
     }
@@ -199,9 +199,9 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
     /**
      * Get the state of the entry.
      *
-     * @return string|(Closure(mixed...):mixed)|null
+     * @return string|(Closure(mixed...):mixed)
      */
-    public function getStateResolver(): string|Closure|null
+    public function getStateResolver(): string|Closure
     {
         return $this->state ??= $this->getName();
     }
@@ -295,15 +295,26 @@ class Entry extends Primitive implements Entryable, Formatter, NullsAsUndefined
 
     /**
      * Resolve the state of the entry.
-     *
-     * @return mixed
      */
-    protected function resolveState()
+    protected function resolveState(): mixed
     {
-        $record = $this->getRecord();
-        $resolver = $this->getStateResolver();
+        $this->resolved = $this->resolveValue(
+            $this->getRecord(),
+            $this->getStateResolver()
+        );
 
-        return $this->resolved = match (true) {
+        return $this->resolved;
+    }
+
+    /**
+     * Resolve the value of the entry.
+     *
+     * @param  array<string, mixed>|Model|null  $record
+     * @param  string|(Closure(mixed...):mixed)|null  $resolver
+     */
+    protected function resolveValue(array|Model|null $record, string|Closure|null $resolver): mixed
+    {
+        return match (true) {
             is_null($record) => null,
             is_string($resolver) => Arr::get($record, $resolver),
             is_callable($resolver) => $this->evaluate($resolver),

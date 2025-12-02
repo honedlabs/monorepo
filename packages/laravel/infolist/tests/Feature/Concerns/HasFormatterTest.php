@@ -20,5 +20,6 @@ it('has formatter', function () {
         ->format(5)->toBe('5')
         ->formatter(new TextFormatter())->toBe($this->entry)
         ->getFormatter()->toBeInstanceOf(TextFormatter::class)
-        ->format(5)->toBe('5');
+        ->format(5)->toBe('5')
+        ->cloneFormatter()->toBeInstanceOf(TextFormatter::class);
 });

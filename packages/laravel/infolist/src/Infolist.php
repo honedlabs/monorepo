@@ -53,7 +53,7 @@ class Infolist extends Primitive
      */
     public static function make(array|Model|null $resource = null)
     {
-        return resolve(static::class)
+        return app(static::class)
             ->when($resource, fn (self $infolist, array|Model $resource) => $infolist->record($resource));
     }
 
