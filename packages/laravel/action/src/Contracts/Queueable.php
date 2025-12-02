@@ -9,7 +9,7 @@ use Honed\Action\Jobs\QueuedAction;
 /**
  * @template T of \Honed\Action\Jobs\QueuedAction = \Honed\Action\Jobs\QueuedAction
  */
-interface Asynchronous
+interface Queueable
 {
     /**
      * Create a new queued action instance.

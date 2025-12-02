@@ -11,9 +11,9 @@ use Illuminate\Foundation\Bus\PendingDispatch;
  * @template T of \Honed\Action\Jobs\QueuedAction = \Honed\Action\Jobs\QueuedAction
  *
  * @phpstan-require-implements \Honed\Action\Contracts\Action
- * @phpstan-require-implements \Honed\Action\Contracts\Asynchronous
+ * @phpstan-require-implements \Honed\Action\Contracts\Queueable
  */
-trait Asynchronous
+trait Queueable
 {
     /**
      * Create a new queued action instance.
@@ -41,7 +41,7 @@ trait Asynchronous
      *
      * @return T
      */
-    public function toJob(mixed ...$arguments): QueuedAction
+    public function queue(mixed ...$arguments): QueuedAction
     {
         return $this->configureJob($this->asJob(...$arguments));
     }
@@ -51,6 +51,6 @@ trait Asynchronous
      */
     public function dispatch(mixed ...$arguments): PendingDispatch
     {
-        return $this->toJob(...$arguments)->dispatch();
+        return $this->queue(...$arguments)->dispatch();
     }
 }
