@@ -16,7 +16,7 @@ jobs:
       matrix:
         package:
           # - abn
-          # - action
+          - action
           # - billing
           # - bind
           # - chart
@@ -26,9 +26,9 @@ jobs:
           # - data
           # - disable
           # - flash
-          - form
-          # - honed
-          # - infolist
+          # - form
+          - honed
+          - infolist
           # - lang
           # - layout
           # - lock
@@ -40,9 +40,9 @@ jobs:
           # - persist
           # - refine
           # - registry
-          - scaffold
+          # - scaffold
           # - stats
-          # - table
+          - table
           # - upload
           # - widget
     steps:
