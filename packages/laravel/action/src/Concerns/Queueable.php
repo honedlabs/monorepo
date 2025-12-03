@@ -20,7 +20,7 @@ trait Queueable
      *
      * @return T
      */
-    public function asJob(mixed ...$arguments): QueuedAction
+    public function toJob(mixed ...$arguments): QueuedAction
     {
         return new QueuedAction($this, ...$arguments);
     }
@@ -43,7 +43,7 @@ trait Queueable
      */
     public function queue(mixed ...$arguments): QueuedAction
     {
-        return $this->configureJob($this->asJob(...$arguments));
+        return $this->configureJob($this->toJob(...$arguments));
     }
 
     /**
@@ -51,6 +51,6 @@ trait Queueable
      */
     public function dispatch(mixed ...$arguments): PendingDispatch
     {
-        return $this->queue(...$arguments)->dispatch();
+        return new PendingDispatch($this->queue(...$arguments));
     }
 }

@@ -16,7 +16,7 @@ interface Queueable
      *
      * @return T
      */
-    public function asJob(mixed ...$arguments): QueuedAction;
+    public function toJob(mixed ...$arguments): QueuedAction;
 
     /**
      * Configure the queued job for this action.
@@ -31,5 +31,5 @@ interface Queueable
      *
      * @return T
      */
-    public function toJob(mixed ...$arguments): QueuedAction;
+    public function queue(mixed ...$arguments): QueuedAction;
 }

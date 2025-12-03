@@ -9,13 +9,13 @@ beforeEach(function () {
     {
         use Transactable;
     };
-});
+})->only();
 
 afterEach(function () {
-    $this->test->outsideTransaction();
+    config()->set('action.transact', false);
 });
 
-it('can be a transaction', function () {
+it('can transact', function () {
     expect($this->test)
         ->isNotTransaction()->toBeTrue()
         ->isTransaction()->toBeFalse()
@@ -25,7 +25,7 @@ it('can be a transaction', function () {
         ->isNotTransaction()->toBeTrue();
 });
 
-it('configures to be a transaction', function () {
+it('can transact ', function () {
     $this->test->withinTransaction();
 
     expect($this->test)

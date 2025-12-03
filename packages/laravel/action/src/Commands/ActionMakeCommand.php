@@ -20,10 +20,8 @@ use function Laravel\Prompts\suggest;
 use function trim;
 
 #[AsCommand(name: 'make:action')]
-class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInput
+class ActionMakeCommand extends GeneratorCommand
 {
-    use Concerns\SuggestsModels;
-
     /**
      * The console command name.
      *
@@ -36,7 +34,7 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
      *
      * @var string
      */
-    protected $description = 'Create a new actionable class.';
+    protected $description = 'Create a new action class.';
 
     /**
      * The type of class being generated.
@@ -95,28 +93,23 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
 
     /**
      * Get the stub file for the generator.
-     *
-     * @return string
      */
-    protected function getStub()
+    protected function getStub(): string
     {
-        /** @var string|null */
-        $action = $this->option('action');
-
-        if (! $action) {
-            return $this->resolveStubPath('/stubs/honed.action.stub');
-        }
-
-        return $this->resolveStubPath("/stubs/honed.action.{$action}.stub");
+        return match (true) {
+            $this->option('delete') => $this->resolveStubPath('/stubs/honed.action.delete.stub'),
+            $this->option('store') => $this->resolveStubPath('/stubs/honed.action.store.stub'),
+            $this->option('update') => $this->resolveStubPath('/stubs/honed.action.update.stub'),
+            default => $this->resolveStubPath('/stubs/honed.action.stub'),
+        };
     }
 
     /**
      * Resolve the fully-qualified path to the stub.
      *
      * @param  string  $stub
-     * @return string
      */
-    protected function resolveStubPath($stub)
+    protected function resolveStubPath($stub): string
     {
         return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
@@ -143,68 +136,41 @@ class ActionMakeCommand extends GeneratorCommand implements PromptsForMissingInp
     {
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the action already exists.'],
-            ['action', 'a', InputOption::VALUE_REQUIRED, 'The action to be used.'],
             ['model', 'm', InputOption::VALUE_REQUIRED, 'The model that the action is for.'],
+            ['delete', 'd', InputOption::VALUE_NONE, 'Create a delete action.'],
+            ['store', 's', InputOption::VALUE_NONE, 'Create a store action.'],
+            ['update', 'u', InputOption::VALUE_NONE, 'Create an update action.'],
         ];
     }
 
     /**
      * Interact further with the user if they were prompted for missing arguments.
-     *
-     * @return void
      */
-    protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output)
+    protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
     {
         if ($this->isReservedName($this->getNameInput()) || $this->didReceiveOptions($input)) {
             return;
         }
 
-        $actions = [...$this->getActions(), null => 'None'];
+        $action = select('What action should be used?', [
+            'none' => 'None',
+            'store' => 'Store',
+            'update' => 'Update',
+            'delete' => 'Delete'
+        ], required: false);
 
-        $input->setOption('action', select(
-            'What action should be used? (Optional)',
-            $actions,
-            scroll: count($actions),
-            hint: 'If no action is provided, the default action stub will be used.',
-        ));
+        if ($action === 'none') {
+            return;
+        }
 
-        $input->setOption('model', suggest(
+        $input->setOption($action, true);
+        
+        $model = suggest(
             'What model should this action be for? (Optional)',
             $this->possibleModels(),
             required: 'This field is required when an action is selected',
-        ));
-    }
+        );
 
-    /**
-     * Get the action to be used.
-     *
-     * @return array<string,string>
-     */
-    protected function getActions()
-    {
-        $actions = config('action.actions');
-
-        if (is_array($actions) && Arr::isAssoc($actions)) {
-            /** @var array<string,string> */
-            return $actions;
-        }
-
-        return [
-            'associate' => 'Associate',
-            'attach' => 'Attach',
-            'detach' => 'Detach',
-            'destroy' => 'Destroy',
-            'dispatch' => 'Dispatch',
-            'dissociate' => 'Dissociate',
-            'force-destroy' => 'Force Destroy',
-            'replicate' => 'Replicate',
-            'restore' => 'Restore',
-            'store' => 'Store',
-            'sync' => 'Sync',
-            'toggle' => 'Toggle',
-            'touch' => 'Touch',
-            'update' => 'Update',
-            'upsert' => 'Upsert',
-        ];
+        $input->setOption('model', $model);
     }
 }
