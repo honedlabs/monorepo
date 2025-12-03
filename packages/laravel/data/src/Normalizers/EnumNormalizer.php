@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Honed\Data\Normalizers;
 
 use BackedEnum;
-use Illuminate\Support\Str;
 use Honed\Core\Contracts\HasLabel;
 use Honed\Data\Contracts\Disableable;
 use Illuminate\Support\Facades\Lang;
-use Spatie\LaravelData\Normalizers\Normalizer;
+use Illuminate\Support\Str;
 use Spatie\LaravelData\Normalizers\Normalized\Normalized;
+use Spatie\LaravelData\Normalizers\Normalizer;
 
 class EnumNormalizer implements Normalizer
 {
@@ -40,7 +40,7 @@ class EnumNormalizer implements Normalizer
         /** @var string */
         return match (true) {
             $value instanceof HasLabel => $value->getLabel(),
-            Lang::has($key = $this->getTranslationKey($value)) => Lang::get($key), 
+            Lang::has($key = $this->getTranslationKey($value)) => Lang::get($key),
             default => $value->name,
         };
     }

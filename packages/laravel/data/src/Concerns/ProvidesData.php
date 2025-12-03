@@ -36,7 +36,7 @@ trait ProvidesData
 
     /**
      * Get the defaults for an empty instance of the data.
-     * 
+     *
      * @return array<string, mixed>
      */
     public function getDefaults(): array

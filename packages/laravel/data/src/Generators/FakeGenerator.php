@@ -26,9 +26,9 @@ class FakeGenerator
 
     /**
      * Create a new fake generator instance.
-     * 
-     * @param class-string<\Spatie\LaravelData\Data> $class
-     * @param array<string, mixed> $attributes
+     *
+     * @param  class-string<\Spatie\LaravelData\Data>  $class
+     * @param  array<string, mixed>  $attributes
      */
     public static function make(string $class, array $attributes = []): static
     {
