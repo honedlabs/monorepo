@@ -28,7 +28,7 @@ class EnumNormalizer implements Normalizer
         return [
             'label' => $this->getLabel($value),
             'value' => $value->value,
-            'disabled' => $value instanceof Disableable ? $value->isDisabled() : false,
+            ...($value instanceof Disableable ? ['disabled' => $value->isDisabled()] : []),
         ];
     }
 
