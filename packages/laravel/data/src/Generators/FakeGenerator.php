@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Generators;
 
 use Faker\Factory;
-use Illuminate\Support\Testing\Fakes\Fake;
 
 class FakeGenerator
 {
