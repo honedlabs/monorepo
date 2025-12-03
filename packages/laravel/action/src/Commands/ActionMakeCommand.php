@@ -6,8 +6,10 @@ namespace Honed\Action\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Database\Console\Factories\FactoryMakeCommand;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -44,64 +46,18 @@ class ActionMakeCommand extends GeneratorCommand
     protected $type = 'Action';
 
     /**
-     * Build the class with the given name.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    protected function buildClass($name)
-    {
-        $replace = $this->buildModelReplacements();
-
-        $action = $this->option('action');
-
-        if ($action && ! in_array($action, array_keys($this->getActions()))) {
-            throw new InvalidArgumentException('You have supplied an invalid action.');
-        }
-
-        return str_replace(
-            array_keys($replace), array_values($replace), parent::buildClass($name)
-        );
-    }
-
-    /**
-     * Build the model replacement values.
-     *
-     * @return array<string, string>
-     */
-    protected function buildModelReplacements()
-    {
-        /** @var string|null $model */
-        $model = $this->option('model');
-
-        $modelClass = $model ? $this->parseModel($model) : Model::class;
-
-        $this->promptForModelCreation($modelClass);
-
-        return [
-            'DummyFullModelClass' => $modelClass,
-            '{{ namespacedModel }}' => $modelClass,
-            '{{namespacedModel}}' => $modelClass,
-            'DummyModelClass' => class_basename($modelClass),
-            '{{ model }}' => class_basename($modelClass),
-            '{{model}}' => class_basename($modelClass),
-            'DummyModelVariable' => lcfirst(class_basename($modelClass)),
-            '{{ modelVariable }}' => lcfirst(class_basename($modelClass)),
-            '{{modelVariable}}' => lcfirst(class_basename($modelClass)),
-        ];
-    }
-
-    /**
      * Get the stub file for the generator.
      */
     protected function getStub(): string
     {
-        return match (true) {
-            $this->option('delete') => $this->resolveStubPath('/stubs/honed.action.delete.stub'),
-            $this->option('store') => $this->resolveStubPath('/stubs/honed.action.store.stub'),
-            $this->option('update') => $this->resolveStubPath('/stubs/honed.action.update.stub'),
-            default => $this->resolveStubPath('/stubs/honed.action.stub'),
+        $path = match (true) {
+            (bool) $this->option('delete') => '/stubs/honed.action.delete.stub',
+            (bool) $this->option('store') => '/stubs/honed.action.store.stub',
+            (bool) $this->option('update') => '/stubs/honed.action.update.stub',
+            default => '/stubs/honed.action.stub',
         };
+
+        return $this->resolveStubPath($path);
     }
 
     /**
@@ -115,6 +71,72 @@ class ActionMakeCommand extends GeneratorCommand
             ? $customPath
             : __DIR__.'/../..'.$stub;
     }
+
+    /**
+     * Build the class with the given name.
+     *
+     * @param  string  $name
+     */
+    protected function buildClass($name): string
+    {
+        $factory = class_basename(Str::ucfirst(str_replace('Factory', '', $name)));
+
+        $namespaceModel = $this->option('model')
+            ? $this->qualifyModel($this->option('model'))
+            : $this->qualifyModel($this->guessModelName($name));
+
+        $model = class_basename($namespaceModel);
+
+        $namespace = $this->getNamespace(
+            Str::replaceFirst($this->rootNamespace(), 'Database\\Factories\\', $this->qualifyClass($this->getNameInput()))
+        );
+
+        $replace = [
+            '{{ factoryNamespace }}' => $namespace,
+            'NamespacedDummyModel' => $namespaceModel,
+            '{{ namespacedModel }}' => $namespaceModel,
+            '{{namespacedModel}}' => $namespaceModel,
+            'DummyModel' => $model,
+            '{{ model }}' => $model,
+            '{{model}}' => $model,
+            '{{ factory }}' => $factory,
+            '{{factory}}' => $factory,
+        ];
+
+        return str_replace(
+            array_keys($replace), array_values($replace), parent::buildClass($name)
+        );
+    }
+
+    /**
+     * Guess the model name from the Factory name or return a default model name.
+     */
+    protected function guessModelName(string $name): string
+    {
+        if (str_ends_with($name, 'Action')) {
+            $name = substr($name, 0, -6);
+        }
+
+        $name = match (true) {
+            str_starts_with($name, 'Delete') => substr($name, 6),
+            str_starts_with($name, 'Store') => substr($name, 5),
+            str_starts_with($name, 'Update') => substr($name, 5),
+            default => $name,
+        };
+
+        $modelName = $this->qualifyModel(Str::after($name, $this->rootNamespace()));
+
+        if (class_exists($modelName)) {
+            return $modelName;
+        }
+
+        if (is_dir(app_path('Models/'))) {
+            return $this->rootNamespace().'Models\Model';
+        }
+
+        return $this->rootNamespace().'Model';
+    }
+
 
     /**
      * Get the default namespace for the class.
@@ -143,34 +165,18 @@ class ActionMakeCommand extends GeneratorCommand
         ];
     }
 
-    /**
-     * Interact further with the user if they were prompted for missing arguments.
+        /**
+     * Prompt for missing input arguments using the returned questions.
+     *
+     * @return array<string,mixed>
      */
-    protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
+    protected function promptForMissingArgumentsUsing(): array
     {
-        if ($this->isReservedName($this->getNameInput()) || $this->didReceiveOptions($input)) {
-            return;
-        }
-
-        $action = select('What action should be used?', [
-            'none' => 'None',
-            'store' => 'Store',
-            'update' => 'Update',
-            'delete' => 'Delete'
-        ], required: false);
-
-        if ($action === 'none') {
-            return;
-        }
-
-        $input->setOption($action, true);
-        
-        $model = suggest(
-            'What model should this action be for? (Optional)',
-            $this->possibleModels(),
-            required: 'This field is required when an action is selected',
-        );
-
-        $input->setOption('model', $model);
+        return [
+            'name' => [
+                'What should the '.strtolower($this->type).' be named?',
+                'E.g. StoreUserAction',
+            ],
+        ];
     }
 }

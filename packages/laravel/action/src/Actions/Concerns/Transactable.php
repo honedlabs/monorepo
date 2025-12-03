@@ -43,7 +43,7 @@ trait Transactable
     /**
      * Determine whether to wrap the operation in a database transaction.
      */
-    public function withinTransaction(): bool
+    public function isTransaction(): bool
     {
         return $this->transact 
             ??= static::hasTransactionAttribute() ?: static::defaultTransact();
@@ -52,9 +52,9 @@ trait Transactable
     /**
      * Determine whether to not wrap the operation in a database transaction.
      */
-    public function outsideTransaction(): bool
+    public function isNotTransaction(): bool
     {
-        return ! $this->withinTransaction();
+        return ! $this->isTransaction();
     }
 
     /**
@@ -67,7 +67,7 @@ trait Transactable
      */
     public function transaction(Closure $callback): mixed
     {
-        if ($this->withinTransaction()) {
+        if ($this->isTransaction()) {
             return DB::transaction($callback);
         }
 

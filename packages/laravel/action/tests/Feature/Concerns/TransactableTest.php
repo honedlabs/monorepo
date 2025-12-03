@@ -9,7 +9,7 @@ beforeEach(function () {
     {
         use Transactable;
     };
-})->only();
+});
 
 afterEach(function () {
     config()->set('action.transact', false);
@@ -25,16 +25,11 @@ it('can transact', function () {
         ->isNotTransaction()->toBeTrue();
 });
 
-it('can transact ', function () {
-    $this->test->withinTransaction();
-
-    expect($this->test)
-        ->isTransaction()->toBeTrue();
-
-    $this->test->outsideTransaction();
-
+it('calls transaction', function () {
     expect($this->test)
         ->isTransaction()->toBeFalse()
+        ->transaction(fn () => 'test')->toBe('test')
         ->transact()->toBe($this->test)
-        ->isTransaction()->toBeTrue();
+        ->isTransaction()->toBeTrue()
+        ->transaction(fn () => 'test')->toBe('test');
 });
