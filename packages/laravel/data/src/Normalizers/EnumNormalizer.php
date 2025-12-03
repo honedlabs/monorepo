@@ -17,7 +17,7 @@ class EnumNormalizer implements Normalizer
     /**
      * Normalize the value to an array.
      *
-     * @return array{label: string, value: string|int}|null
+     * @return array{label: string, value: string|int, disabled?: bool}|null
      */
     public function normalize(mixed $value): null|array|Normalized
     {
@@ -25,11 +25,16 @@ class EnumNormalizer implements Normalizer
             return null;
         }
 
-        return [
+        $result = [
             'label' => $this->getLabel($value),
             'value' => $value->value,
-            ...($value instanceof Disableable ? ['disabled' => $value->isDisabled()] : []),
         ];
+
+        if ($value instanceof Disableable) {
+            $result['disabled'] = $value->isDisabled();
+        }
+
+        return $result;
     }
 
     /**
