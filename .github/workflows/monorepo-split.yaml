@@ -16,19 +16,19 @@ jobs:
       matrix:
         package:
           # - abn
-          - action
+          # - action
           # - billing
           # - bind
           # - chart
           # - command
           # - core
           # - crumb
-          # - data
+          - data
           # - disable
           # - flash
           # - form
           - honed
-          - infolist
+          # - infolist
           # - lang
           # - layout
           # - lock
