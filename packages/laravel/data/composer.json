@@ -19,12 +19,14 @@
     ],
     "require": {
         "php": "^8.2",
+        "honed/core": "^0.53.1",
         "illuminate/contracts": "^11.0||^12.0",
         "illuminate/support": "^11.0||^12.0",
         "intervention/validation": "^4.6",
         "spatie/laravel-data": "^4.17"
     },
     "require-dev": {
+        "fakerphp/faker": "^1.24",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.18",
         "league/iso3166": "^3.0|^4.3",

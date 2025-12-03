@@ -10,6 +10,7 @@ class OptionData extends Resource
 {
     public function __construct(
         public string $label,
-        public string|int|bool|null $value
+        public mixed $value,
+        public bool $disabled = false,
     ) {}
 }

@@ -35,6 +35,16 @@ trait ProvidesData
     }
 
     /**
+     * Get the defaults for an empty instance of the data.
+     * 
+     * @return array<string, mixed>
+     */
+    public function getDefaults(): array
+    {
+        return [];
+    }
+
+    /**
      * Get the data class.
      *
      * @return ?class-string<TData>
@@ -80,7 +90,7 @@ trait ProvidesData
         }
 
         if ($payloads === [] || ($data = $this->getData(...$payloads)) === null) {
-            return $dataClass::empty();
+            return [...$dataClass::empty(), ...$this->getDefaults()];
         }
 
         return $data instanceof Formable ? $data->toForm() : $data->toArray();
