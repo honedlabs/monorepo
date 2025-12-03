@@ -45,7 +45,7 @@ trait Transactable
      */
     public function isTransaction(): bool
     {
-        return $this->transact 
+        return $this->transact
             ??= static::hasTransactionAttribute() ?: static::defaultTransact();
     }
 
@@ -84,8 +84,6 @@ trait Transactable
 
     /**
      * Get the form from the Form class attribute.
-     *
-     * @return TForm|null
      */
     protected static function hasTransactionAttribute(): bool
     {
