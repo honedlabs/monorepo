@@ -1,28 +1,35 @@
-import { defineAsyncComponent, ref, VNode } from "vue";
+import { defineAsyncComponent, ref } from "vue";
+import type { Component as VueComponent, VNode } from "vue";
 import type { Resolver, ResolveKey } from "./types";
 
-const cache = new Map<string, VNode | Promise<VNode>>();
+const cache = new Map<string, VueComponent | VNode>();
 
 const mappings = ref<ResolveKey>({});
 
 const resolver = ref<Resolver | null>();
 
-export function resolve(name: string): VNode | Promise<VNode> {
+export function resolve(name: string): VueComponent | VNode {
 	if (!resolver.value) resolver.value = defaultResolver;
 
 	return resolver.value(name);
 }
 
-export function defaultResolver(name: string): Promise<VNode> {
-	if (!cache.has(name)) {
-		const promise = defineAsyncComponent({
-			loader: () => import(mappings.value[name] as string),
-		});
-		cache.set(name, promise);
-		return promise;
+export function defaultResolver(name: string): VueComponent | VNode {
+	if (cache.has(name)) {
+		return cache.get(name)!;
 	}
 
-	return cache.get(name)! as Promise<VNode>;
+	const loader = mappings.value[name];
+
+	if (!loader) {
+		throw new Error(`A mapping has not been provided for [${name}]`);
+	}
+
+	const component = defineAsyncComponent({ loader });
+
+	cache.set(name, component);
+
+	return component;
 }
 
 export function resolveUsing(

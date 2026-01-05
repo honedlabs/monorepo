@@ -1,4 +1,5 @@
 import { App } from 'vue';
+import { Component as Component_2 } from 'vue';
 import { ComponentOptionsMixin } from 'vue';
 import { ComponentProvideOptions } from 'vue';
 import { DefineComponent } from 'vue';
@@ -29,7 +30,7 @@ declare interface Date_2 extends Field {
 }
 export { Date_2 as Date }
 
-export declare function defaultResolver(name: string): Promise<VNode>;
+export declare function defaultResolver(name: string): Component_2 | VNode;
 
 export declare interface Field<T extends any = any> extends Component {
     name: string;
@@ -144,16 +145,16 @@ required: true;
 };
 }>> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, any>;
 
-export declare function resolve(name: string): VNode | Promise<VNode>;
+export declare function resolve(name: string): Component_2 | VNode;
 
 export declare type ResolveKey = {
-    [key: string]: string | VNode;
+    [key: string]: () => Promise<Component_2>;
 } & {
-    [K in FormComponent]?: string | VNode;
+    [K in FormComponent]?: () => Promise<Component_2>;
 };
 
 export declare interface Resolver {
-    (name: string): VNode | Promise<VNode>;
+    (name: string): Component_2 | VNode;
 }
 
 export declare function resolveUsing(r: Resolver | ResolveKey, components?: ResolveKey): void;

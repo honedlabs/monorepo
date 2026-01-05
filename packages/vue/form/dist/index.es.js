@@ -1,49 +1,49 @@
-import { ref as o, defineAsyncComponent as g, h as s, defineComponent as l } from "vue";
-import { router as O } from "@inertiajs/vue3";
-const i = /* @__PURE__ */ new Map(), u = o({}), c = o();
+import { ref as f, defineAsyncComponent as R, h as s, defineComponent as l } from "vue";
+import { router as h } from "@inertiajs/vue3";
+const i = /* @__PURE__ */ new Map(), u = f({}), c = f();
 function p(e) {
-  return c.value || (c.value = T), c.value(e);
+  return c.value || (c.value = O), c.value(e);
 }
-function T(e) {
-  if (!i.has(e)) {
-    const t = g({
-      loader: () => import(u.value[e])
-    });
-    return i.set(e, t), t;
-  }
-  return i.get(e);
+function O(e) {
+  if (i.has(e))
+    return i.get(e);
+  const r = u.value[e];
+  if (!r)
+    throw new Error(`A mapping has not been provided for [${e}]`);
+  const t = R({ loader: r });
+  return i.set(e, t), t;
 }
-function b(e, t = {}) {
+function T(e, r = {}) {
   typeof e == "function" ? (c.value = e, u.value = {
     ...u.value,
-    ...t
+    ...r
   }) : u.value = {
     ...u.value,
     ...e
   };
 }
-function d(e, t = {}) {
-  const { component: r, attributes: n = {}, ...v } = e, { schema: E, ...a } = v, R = a.name ? t[a.name] : void 0;
+function d(e, r = {}) {
+  const { component: t, attributes: n = {}, ...v } = e, { schema: E, ...a } = v, g = a.name ? r[a.name] : void 0;
   return s(
-    p(r),
+    p(t),
     {
       ...n,
       ...a,
-      error: R
+      error: g
     },
     {
-      default: f(E, t)
+      default: o(E, r)
     }
   );
 }
-function f(e, t) {
-  return e === void 0 ? () => [] : () => e.map((r) => d(r, t));
+function o(e, r) {
+  return e === void 0 ? () => [] : () => e.map((t) => d(t, r));
 }
-const h = l({
-  setup(e, { slots: t }) {
+const b = l({
+  setup(e, { slots: r }) {
     return () => {
-      var r;
-      return (r = t.default) == null ? void 0 : r.call(t);
+      var t;
+      return (t = r.default) == null ? void 0 : t.call(r);
     };
   }
 }), A = l({
@@ -59,19 +59,19 @@ const h = l({
   },
   setup(e) {
     return () => s(
-      h,
+      b,
       {},
       {
-        default: f(e.form.schema, e.errors)
+        default: o(e.form.schema, e.errors)
       }
     );
   }
 });
 function x(e) {
-  function t(n) {
-    e.cancel === "reset" ? n == null || n() : e.cancel !== void 0 ? O.visit(e.cancel) : n == null || n();
+  function r(n) {
+    e.cancel === "reset" ? n == null || n() : e.cancel !== void 0 ? h.visit(e.cancel) : n == null || n();
   }
-  const r = l({
+  const t = l({
     props: {
       errors: {
         type: Object,
@@ -85,26 +85,26 @@ function x(e) {
   return {
     resolve: p,
     getComponent: d,
-    getComponents: f,
-    onCancel: t,
-    Render: r
+    getComponents: o,
+    onCancel: r,
+    Render: t
   };
 }
 const I = {
-  install(e, t) {
-    const r = t.components || {};
-    b(t.resolver || r, r);
+  install(e, r) {
+    const t = r.components || {};
+    T(r.resolver || t, t);
   }
 };
 var y = /* @__PURE__ */ ((e) => (e.CHECKBOX = "checkbox", e.COLOR = "color", e.DATE = "date", e.FIELDGROUP = "fieldgroup", e.FIELDSET = "fieldset", e.INPUT = "input", e.LEGEND = "legend", e.NUMBER = "number", e.RADIO = "radio", e.SEARCH = "search", e.SELECT = "select", e.TEXT = "text", e.TEXTAREA = "textarea", e))(y || {});
 export {
   y as FormComponent,
   A as Render,
-  T as defaultResolver,
+  O as defaultResolver,
   d as getComponent,
-  f as getComponents,
+  o as getComponents,
   I as plugin,
   p as resolve,
-  b as resolveUsing,
+  T as resolveUsing,
   x as useComponents
 };
