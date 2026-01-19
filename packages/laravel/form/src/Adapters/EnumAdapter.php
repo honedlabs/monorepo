@@ -60,4 +60,17 @@ class EnumAdapter extends Adapter
         return parent::convertProperty($property, $dataClass)
             ->options($enum);
     }
+
+    /**
+     * Define the attributes which should be assigned to the component from the data property.
+     *
+     * @return array<string, mixed>
+     */
+    protected function assignFromProperty(DataProperty $property): array
+    {
+        return [
+            ...parent::assignFromProperty($property),
+            'placeholder' => $this->getPlaceholderFromProperty($property),
+        ];
+    }
 }

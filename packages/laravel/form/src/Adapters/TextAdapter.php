@@ -42,7 +42,11 @@ class TextAdapter extends DefaultAdapter
     public function convertProperty(DataProperty $property, DataClass $dataClass): Component
     {
         if (((int) $this->getMaxFromProperty($property)) > 255) {
-            return Textarea::make($this->getNameFromProperty($property), $this->getLabelFromProperty($property));
+            $name = $this->getNameFromProperty($property);
+            $label = $this->getLabelFromProperty($property);
+
+            return Textarea::make($name, $label)
+                ->assign($this->rejectNulls($this->assignFromProperty($property)));
         }
 
         return parent::convertProperty($property, $dataClass);

@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Honed\Form\Concerns;
 
 use Honed\Form\Components\Component;
+use Honed\Form\Components\Field;
+use Honed\Form\Components\Grouping;
 use Honed\Form\Form;
+use Illuminate\Contracts\Support\Arrayable;
 
 trait HasSchema
 {
@@ -64,6 +67,43 @@ trait HasSchema
     }
 
     /**
+     * Set the initial values of the component.
+     * 
+     * @param array<string, mixed>|Arrayable<string, mixed> $data
+     * @return $this
+     */
+    public function withInitialValues(array|Arrayable $data): static
+    {
+        if ($data instanceof Arrayable) {
+            $data = $data->toArray();
+        }
+
+        foreach ($data as $key => $value) {
+            $this->getField($key)?->defaultValue($value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Find and return a field component by the given key.
+     */
+    public function getField(string $key): ?Field
+    {
+        foreach ($this->getSchema() as $component) {
+            if ($this->equals($key, $component)) {
+                return $component;
+            } else if ($component instanceof Grouping) {
+                if ($child = $component->getField($key)) {
+                    return $child;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Resolve the schema of the component.
      *
      * @return list<array<string, mixed>>
@@ -76,5 +116,15 @@ trait HasSchema
                 array_filter($this->getSchema(), fn (Component $component) => $component->isAllowed())
             )
         );
+    }
+
+    /**
+     * Determine if the component is equal to the given key.
+     */
+    protected function equals(string $key, string|Field $component): bool
+    {
+        return is_string($component) 
+            ? $component === $key 
+            : $component->getName() === $key;
     }
 }

@@ -111,6 +111,10 @@ abstract class Field extends Component implements Defaultable
     {
         $record = $this->getRecord();
 
+        if ($record === [] && ! is_null($defaultValue = $this->getDefaultValue())) {
+            return $defaultValue;
+        }
+
         if ($record === null) {
             return $this->getDefaultValue();
         }
