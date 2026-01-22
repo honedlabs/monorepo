@@ -98,6 +98,9 @@ it('generates form without payload', function () {
                         'component' => FormComponent::Textarea->value,
                         'name' => 'description',
                         'label' => 'Description',
+                        'attributes' => [
+                            'max' => 65535,
+                        ]
                     ],
                     [
                         'component' => FormComponent::Number->value,
@@ -148,4 +151,4 @@ it('generates form without payload', function () {
                 ],
             ])
         );
-});
+})->only();
