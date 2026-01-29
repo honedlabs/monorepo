@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Honed\Flash;
 
 use Honed\Flash\Contracts\Flashable;
+use Honed\Flash\Enums\FlashType;
 use Honed\Flash\Facades\Flash;
+use Honed\Toast\Commands\ToastMakeCommand;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -22,7 +24,7 @@ class FlashServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/flash.php', 'flash');
 
         /** @var class-string<Flashable> */
-        $implementation = config('flash.implementation', Message::class);
+        $implementation = config('flash.implementation', Toast::class);
 
         $this->app->bind(Flashable::class, $implementation);
     }
@@ -35,9 +37,9 @@ class FlashServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->offerPublishing();
 
-            $this->publishes([
-                __DIR__.'/../config/flash.php' => config_path('flash.php'),
-            ], 'config');
+            $this->commands([
+                ToastMakeCommand::class,
+            ]);
         }
 
         $this->registerMiddlewareAlias();
@@ -50,11 +52,13 @@ class FlashServiceProvider extends ServiceProvider
      */
     protected function offerPublishing(): void
     {
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/../config/flash.php' => config_path('flash.php'),
-            ], 'config');
-        }
+        $this->publishes([
+            __DIR__.'/../stubs/toast.stub' => base_path('stubs/toast.stub'),
+        ], 'flash-stubs');
+
+        $this->publishes([
+            __DIR__.'/../config/flash.php' => config_path('flash.php'),
+        ], 'flash-config');
     }
 
     /**
@@ -72,7 +76,7 @@ class FlashServiceProvider extends ServiceProvider
     {
         RedirectResponse::macro('flash', function (
             string|Flashable $message,
-            ?string $type = null,
+            string|FlashType|null $type = null,
             ?int $duration = null,
         ) {
             /** @var RedirectResponse $this */
@@ -89,7 +93,7 @@ class FlashServiceProvider extends ServiceProvider
     {
         ResponseFactory::macro('flash', function (
             string|Flashable $message,
-            ?string $type = null,
+            string|FlashType|null $type = null,
             ?int $duration = null,
         ) {
             /** @var ResponseFactory $this */
@@ -100,7 +104,7 @@ class FlashServiceProvider extends ServiceProvider
 
         Response::macro('flash', function (
             string|Flashable $message,
-            ?string $type = null,
+            string|FlashType|null $type = null,
             ?int $duration = null,
         ) {
             /** @var ResponseFactory $this */

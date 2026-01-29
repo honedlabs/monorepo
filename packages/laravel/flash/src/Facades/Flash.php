@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see FlashFactory
  *
- * @method static \Honed\Flash\FlashFactory message(string|\Honed\Flash\Contracts\Flashable $message, string|null $type = null, int|null $duration = null) Flash a new message to the session.
+ * @method static \Honed\Flash\FlashFactory message(string|\Honed\Flash\Contracts\Flashable $message, string|\Honed\Flash\Enums\FlashType|null $type = null, int|null $duration = null) Flash a new message to the session.
  * @method static \Honed\Flash\FlashFactory success(string $message, int|null $duration = null) Flash a new success message to the session.
  * @method static \Honed\Flash\FlashFactory error(string $message, int|null $duration = null) Flash a new error message to the session.
  * @method static \Honed\Flash\FlashFactory info(string $message, int|null $duration = null) Flash a new info message to the session.

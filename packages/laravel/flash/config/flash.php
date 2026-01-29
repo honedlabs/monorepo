@@ -55,5 +55,5 @@ return [
     | `Honed\Flash\Contracts\Flashable` contract.
     */
 
-    'implementation' => Honed\Flash\Message::class,
+    'implementation' => Honed\Flash\Toast::class,
 ];

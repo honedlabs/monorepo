@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use Honed\Flash\Message;
+use Honed\Flash\Toast;
 
 beforeEach(function () {
-    $this->message = Message::make('Hello World');
+    $this->message = Toast::make();
 });
 
 it('has message', function () {
     expect($this->message)
-        ->toBe($this->message)
-        ->getMessage()->toBe('Hello World')
+        ->toBeInstanceOf(Toast::class)
+        ->getMessage()->toBeNull()
         ->message('Test')->toBe($this->message)
         ->getMessage()->toBe('Test');
 });
@@ -47,7 +47,7 @@ it('has duration', function () {
 
 it('has array representation', function () {
     expect($this->message->toArray())->toBe([
-        'message' => 'Hello World',
+        'message' => null,
         'type' => config('flash.type'),
         'title' => null,
         'duration' => config('flash.duration'),

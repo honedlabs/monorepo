@@ -4,46 +4,46 @@ declare(strict_types=1);
 
 namespace Honed\Flash;
 
-use Honed\Core\Concerns\HasType;
 use Honed\Core\Primitive;
 use Honed\Flash\Contracts\Flashable;
+use Honed\Flash\Enums\FlashType;
 
-class Message extends Primitive implements Flashable
+class Toast extends Primitive implements Flashable
 {
-    use HasType {
-        getType as protected getBaseType;
-    }
-
     /**
      * The message for the flash.
      *
-     * @var string
+     * @var ?string
      */
     protected $message;
 
     /**
+     * The type of the toast.
+     *
+     * @var string|FlashType|null
+     */
+    protected $type;
+
+    /**
      * The title for the flash.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $title;
 
     /**
      * The duration for the flash.
      *
-     * @var int|null
+     * @var ?int
      */
     protected $duration;
 
     /**
      * Create a new message instance.
      */
-    public static function make(string $message, ?string $type = null, ?int $duration = null): static
+    public static function make(): static
     {
-        return resolve(static::class)
-            ->message($message)
-            ->type($type)
-            ->duration($duration);
+        return app(static::class);
     }
 
     /**
@@ -51,7 +51,7 @@ class Message extends Primitive implements Flashable
      */
     public static function getDefaultType(): ?string
     {
-        /** @var string|null */
+        /** @var ?string */
         return config('flash.type', null);
     }
 
@@ -60,8 +60,7 @@ class Message extends Primitive implements Flashable
      */
     public static function getDefaultDuration(): ?int
     {
-        /** @var int|null */
-        return config('flash.duration', 3000);
+        return config()->integer('flash.duration', 3000);
     }
 
     /**
@@ -69,7 +68,7 @@ class Message extends Primitive implements Flashable
      *
      * @return $this
      */
-    public function message(string $message): static
+    public function message(?string $message): static
     {
         $this->message = $message;
 
@@ -79,7 +78,7 @@ class Message extends Primitive implements Flashable
     /**
      * Get the message.
      */
-    public function getMessage(): string
+    public function getMessage(): ?string
     {
         return $this->message;
     }
@@ -105,11 +104,25 @@ class Message extends Primitive implements Flashable
     }
 
     /**
+     * Set the type.
+     *
+     * @return $this
+     */
+    public function type(string|FlashType|null $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
      * Get the type.
      */
     public function getType(): ?string
     {
-        return $this->getBaseType() ?? $this->getDefaultType();
+        $type = $this->type ?? $this->getDefaultType();
+
+        return $type instanceof FlashType ? $type->value : $type;
     }
 
     /**
@@ -119,7 +132,7 @@ class Message extends Primitive implements Flashable
      */
     public function success(): static
     {
-        return $this->type('success');
+        return $this->type(FlashType::Success);
     }
 
     /**
@@ -129,7 +142,7 @@ class Message extends Primitive implements Flashable
      */
     public function error(): static
     {
-        return $this->type('error');
+        return $this->type(FlashType::Error);
     }
 
     /**
@@ -139,7 +152,7 @@ class Message extends Primitive implements Flashable
      */
     public function info(): static
     {
-        return $this->type('info');
+        return $this->type(FlashType::Info);
     }
 
     /**
@@ -149,7 +162,7 @@ class Message extends Primitive implements Flashable
      */
     public function warning(): static
     {
-        return $this->type('warning');
+        return $this->type(FlashType::Warning);
     }
 
     /**

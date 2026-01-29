@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Honed\Flash;
 
 use Honed\Flash\Contracts\Flashable;
+use Honed\Flash\Enums\FlashType;
 use Illuminate\Session\Store;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
 
 class FlashFactory
 {
@@ -20,10 +20,17 @@ class FlashFactory
      *
      * @return $this
      */
-    public function message(string|Flashable $message, ?string $type = null, ?int $duration = null): static
-    {
+    public function message(
+        string|Flashable $message,
+        string|FlashType|null $type = null,
+        ?int $duration = null
+    ): static {
+
         if (! $message instanceof Flashable) {
-            $message = App::make(Flashable::class)->make($message, $type, $duration);
+            $message = App::make(Flashable::class)
+                ->message($message)
+                ->type($type)
+                ->duration($duration);
         }
 
         $this->session->flash($this->getProperty(), $message->toArray());
@@ -38,7 +45,7 @@ class FlashFactory
      */
     public function success(string $message, ?int $duration = null): static
     {
-        return $this->message($message, 'success', $duration);
+        return $this->message($message, FlashType::Success, $duration);
     }
 
     /**
@@ -48,7 +55,7 @@ class FlashFactory
      */
     public function error(string $message, ?int $duration = null): static
     {
-        return $this->message($message, 'error', $duration);
+        return $this->message($message, FlashType::Error, $duration);
     }
 
     /**
@@ -58,7 +65,7 @@ class FlashFactory
      */
     public function info(string $message, ?int $duration = null): static
     {
-        return $this->message($message, 'info', $duration);
+        return $this->message($message, FlashType::Info, $duration);
     }
 
     /**
@@ -68,7 +75,7 @@ class FlashFactory
      */
     public function warning(string $message, ?int $duration = null): static
     {
-        return $this->message($message, 'warning', $duration);
+        return $this->message($message, FlashType::Warning, $duration);
     }
 
     /**
@@ -77,8 +84,7 @@ class FlashFactory
      */
     public function getProperty(): string
     {
-        /** @var string */
-        return Config::get('flash.property', 'flash');
+        return config()->string('flash.property', 'flash');
     }
 
     /**
@@ -89,7 +95,7 @@ class FlashFactory
      */
     public function property(string $property): static
     {
-        Config::set('flash.property', $property);
+        config()->set('flash.property', $property);
 
         return $this;
     }
