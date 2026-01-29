@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Flash;
 
+use Honed\Flash\Commands\ToastMakeCommand;
 use Honed\Flash\Contracts\Flashable;
 use Honed\Flash\Enums\FlashType;
 use Honed\Flash\Facades\Flash;
-use Honed\Toast\Commands\ToastMakeCommand;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;

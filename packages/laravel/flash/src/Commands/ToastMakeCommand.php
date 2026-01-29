@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Toast\Commands;
+namespace Honed\Flash\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;

@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ namespace }};
+
+use Honed\Flash\Toast;
+
+class {{ class }} extends Toast
+{
+    /**
+     * Define the toast.
+     * 
+     * @return $this
+     */
+    protected function definition(): static
+    {
+        return $this;
+    }
+}

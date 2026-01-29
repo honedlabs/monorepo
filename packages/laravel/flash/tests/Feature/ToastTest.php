@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Honed\Flash\Enums\FlashType;
 use Honed\Flash\Toast;
+use Workbench\App\Toasts\SuccessToast;
 
 beforeEach(function () {
     $this->message = Toast::make();
@@ -52,4 +54,17 @@ it('has array representation', function () {
         'title' => null,
         'duration' => config('flash.duration'),
     ]);
+});
+
+it('has class array representation', function () {
+    expect(SuccessToast::make())
+        ->getMessage()->toBe('This was a successful operation.')
+        ->getType()->toBe(FlashType::Success->value)
+        ->getDuration()->toBe(5000)
+        ->toArray()->toBe([
+            'message' => 'This was a successful operation.',
+            'type' => 'success',
+            'title' => null,
+            'duration' => 5000,
+        ]);
 });

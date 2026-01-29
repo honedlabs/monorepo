@@ -38,6 +38,11 @@ class Toast extends Primitive implements Flashable
      */
     protected $duration;
 
+    public function __construct()
+    {
+        $this->define();
+    }
+
     /**
      * Create a new message instance.
      */
