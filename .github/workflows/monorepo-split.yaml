@@ -25,12 +25,12 @@ jobs:
           # - crumb
           # - data
           # - disable
-          - flash
+          # - flash
           # - form
-          - honed
+          # - honed
           # - infolist
           # - lang
-          # - layout
+          - layout
           # - lock
           # - memo
           # - modal
