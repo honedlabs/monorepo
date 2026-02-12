@@ -37,7 +37,7 @@ class AssertableInertia extends InertiaAssert
     public static function fromTestResponse(TestResponse $response): self
     {
         /** @var AssertableInertia */
-        $instance = parent::fromTestResponse($response);
+        $instance = parent::fromTestResponse($response); // @phpstan-ignore-line
 
         // @phpstan-ignore-next-line
         $page = json_decode(json_encode($response->viewData('page')), true);

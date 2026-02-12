@@ -11,8 +11,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Testing\TestResponse;
 use Inertia\ResponseFactory as InertiaResponseFactory;
 
-use function is_null;
-
 class LayoutServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
@@ -30,9 +28,9 @@ class LayoutServiceProvider extends ServiceProvider implements DeferrableProvide
     /**
      * Get the services provided by the provider.
      *
-     * @return array<int, class-string>
+     * @return list<class-string>
      */
-    public function provides()
+    public function provides(): array
     {
         return [
             ResponseFactory::class,

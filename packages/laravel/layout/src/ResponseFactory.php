@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Honed\Layout;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Inertia\ProvidesInertiaProperties;
 use Inertia\ResponseFactory as InertiaResponseFactory;
 
 class ResponseFactory extends InertiaResponseFactory
@@ -12,12 +13,18 @@ class ResponseFactory extends InertiaResponseFactory
     /**
      * Render the response.
      *
-     * @param  array<string,mixed>|Arrayable<string,mixed>  $props
+     * @param  array<array-key, mixed>|Arrayable<array-key, mixed>|ProvidesInertiaProperties  $props
      */
     public function render(string $component, $props = []): Response
     {
+        if (config('inertia.ensure_pages_exist', false)) {
+            $this->findComponentOrFail($component);
+        }
+
         if ($props instanceof Arrayable) {
             $props = $props->toArray();
+        } elseif ($props instanceof ProvidesInertiaProperties) {
+            $props = [$props];
         }
 
         return new Response(
@@ -25,7 +32,8 @@ class ResponseFactory extends InertiaResponseFactory
             array_merge($this->sharedProps, $props),
             $this->rootView,
             $this->getVersion(),
-            $this->encryptHistory ?? config('inertia.history.encrypt', false),
+            (bool) ($this->encryptHistory ?? config('inertia.history.encrypt', false)),
+            $this->urlResolver,
         );
     }
 }

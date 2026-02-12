@@ -8,13 +8,9 @@ use BackedEnum;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response as ResponseFactory;
-use Illuminate\Support\Str;
 use Inertia\Response as InertiaResponse;
 use Inertia\Support\Header;
 use UnitEnum;
-
-use function array_merge;
-use function explode;
 
 class Response extends InertiaResponse
 {
@@ -30,10 +26,9 @@ class Response extends InertiaResponse
     /**
      * Get the component and the layout from an input.
      *
-     * @param  string  $component
      * @return array{string, string|null}
      */
-    public static function parseComponent($component)
+    public static function parseComponent(string $component): array
     {
         $parts = explode(self::FORMATTER, $component, 2);
 
@@ -43,29 +38,23 @@ class Response extends InertiaResponse
     /**
      * Set the persistent layout(s) for the response.
      *
-     * @param  string|BackedEnum<string>|UnitEnum  $layout
      * @return $this
      */
-    public function layout($layout)
+    public function layout(string|BackedEnum|UnitEnum|null $layout): static
     {
-        /** @var string */
-        $layout = match (true) {
-            $layout instanceof BackedEnum => $layout->value,
+        $this->layout = match (true) {
+            $layout instanceof BackedEnum => (string) $layout->value,
             $layout instanceof UnitEnum => $layout->name,
             default => $layout,
         };
-
-        $this->layout = $layout;
 
         return $this;
     }
 
     /**
      * Get the persistent layout(s) for the response.
-     *
-     * @return string|null
      */
-    public function getLayout()
+    public function getLayout(): ?string
     {
         return $this->layout;
     }
@@ -80,17 +69,20 @@ class Response extends InertiaResponse
     {
         $props = $this->resolveProperties($request, $this->props);
 
-        $page = array_merge([
+        $page = [
             'component' => $this->getLayoutedComponent(),
             'props' => $props,
-            'url' => Str::start(Str::after($request->fullUrl(), $request->getSchemeAndHttpHost()), '/'),
+            'url' => $this->getUrl($request),
             'version' => $this->version,
             'clearHistory' => $this->clearHistory,
             'encryptHistory' => $this->encryptHistory,
-        ], $this->resolveMergeProps($request),
-            $this->resolveDeferredProps($request),
-            $this->resolveCacheDirections($request),
-        );
+            ...$this->resolveMergeProps($request),
+            ...$this->resolveDeferredProps($request),
+            ...$this->resolveCacheDirections($request),
+            ...$this->resolveScrollProps($request),
+            ...$this->resolveOnceProps($request),
+            ...$this->resolveFlashData($request),
+        ];
 
         if ($request->header(Header::INERTIA)) {
             return new JsonResponse($page, 200, [Header::INERTIA => 'true']);
@@ -101,20 +93,19 @@ class Response extends InertiaResponse
 
     /**
      * Get the component with the layout applied.
-     *
-     * @return string
      */
-    public function getLayoutedComponent()
+    public function getLayoutedComponent(): string
     {
         if ($layout = $this->getLayout()) {
             return $this->component.self::FORMATTER.$layout;
         }
 
+        /** @var string */
         return $this->component;
     }
 
     /**
-     * {@inheritdoc}
+     * Determine if the response is a partial response.
      */
     public function isPartial(Request $request): bool
     {
