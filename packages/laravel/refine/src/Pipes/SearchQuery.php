@@ -7,7 +7,9 @@ namespace Honed\Refine\Pipes;
 use Honed\Core\Interpret;
 use Honed\Core\Pipe;
 use Honed\Persist\Exceptions\DriverDataIntegrityException;
+use Honed\Refine\Contracts\SearchesUnions;
 use Honed\Refine\Data\SearchData;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @template TClass of \Honed\Refine\Refine
@@ -33,6 +35,7 @@ class SearchQuery extends Pipe
 
         match (true) {
             $this->instance->isScout() => $this->scout($builder),
+            $this->instance instanceof SearchesUnions => $this->union($builder),
             default => $this->search($builder, $columns)
         };
 
@@ -105,6 +108,45 @@ class SearchQuery extends Pipe
             // @phpstan-ignore-next-line method.notFound
             $model->search($term)->keys()
         );
+    }
+
+    /**
+     * Perform the search using subquery searches on individual columns.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     */
+    protected function union(Builder $builder, ?array $columns): void
+    {
+        $term = $this->instance->getSearchTerm();
+
+        /** @var list<\Illuminate\Database\Query\Builder> $unions */
+        $unions = [];
+
+        $applied = false;
+
+        foreach ($this->instance->getSearches() as $search) {
+            $query = $builder->getModel()
+                ->newQuery();
+
+            if ($search->handle($query, $term, $columns, $applied)) {
+                $applied = true;
+
+                $unions[] = $query;
+            }
+        }
+
+        if (empty($unions)) {
+            return;
+        }
+
+        $builder->getQuery()
+            ->fromSub($union, '__honed_union')
+            ->join($builder->getModel()->getTable(), $builder->getModel()->getKeyName(), '=', '__honed_union.id');
+
+        
+
+
+
     }
 
     /**

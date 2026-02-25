@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Searches;
 
+use Honed\Refine\Enums\SearchMode;
 use Honed\Refine\Refiner;
-use Honed\Refine\Searches\Concerns\CanBeFullText;
+use Honed\Refine\Searches\Concerns\HasSearchMode;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model = \Illuminate\Database\Eloquent\Model
@@ -15,7 +17,7 @@ use Honed\Refine\Searches\Concerns\CanBeFullText;
  */
 class Search extends Refiner
 {
-    use CanBeFullText;
+    use HasSearchMode;
 
     /**
      * The identifier to use for evaluation.
@@ -32,24 +34,30 @@ class Search extends Refiner
      * @param  string  $column
      * @param  string  $boolean
      * @param  string  $operator
-     * @return void
      */
     public static function searchWildcard(
-        $query,
-        $term,
-        $column,
-        $boolean = 'and',
-        $operator = 'LIKE'
-    ) {
-        $sql = sprintf(
-            'LOWER(%s) %s ?',
-            $column,
-            $operator
-        );
+        Builder $query,
+        string $term,
+        string $column,
+        string $boolean = 'and',
+        string $operator = 'LIKE'
+    ): void {
 
-        $binding = ['%'.mb_strtolower($term, 'UTF8').'%'];
+        $sql = "{$column} {$operator} ?";
+        $binding = static::binding($term);
 
-        $query->whereRaw($sql, $binding, $boolean);
+        $query->getQuery()
+            ->whereRaw($sql, $binding, $boolean);
+    }
+
+    /**
+     * Get the bindings for the search wildcard.
+     *
+     * @return list<string>
+     */
+    public static function binding(string $term): array
+    {
+        return ["%{$term}%"];
     }
 
     /**
@@ -61,7 +69,7 @@ class Search extends Refiner
      * @param  bool  $or
      * @return bool
      */
-    public function handle($query, $term, $columns, $or = false)
+    public function handle($query, ?string $term, ?array $columns, bool $or = false): bool
     {
         $this->checkIfActive($columns);
 
@@ -81,17 +89,72 @@ class Search extends Refiner
      * Add a search scope to the query.
      *
      * @param  TBuilder  $query
-     * @param  string  $term
-     * @param  string  $column
-     * @param  string  $boolean
-     * @return void
      */
-    public function apply($query, $term, $column, $boolean)
+    public function apply(Builder $query, string $term, string $column, string $boolean = 'and'): void
     {
-        match (true) {
-            $this->isFullText() => $query->whereFullText($column, $term, boolean: $boolean),
-            default => static::searchWildcard($query, $term, $column, $boolean),
+        $mode = $this->getSearchMode();
+
+        match ($mode) {
+            SearchMode::NaturalLanguage,
+            SearchMode::Boolean => $this->asFullText(
+                $query, $mode, $term, $column, $boolean
+            ),
+            default => $this->asWildcard(
+                $query, $mode, $term, $column, $boolean
+            ),
         };
+    }
+
+    /**
+     * Apply a wildcard search to the query.
+     */
+    protected function asWildcard(Builder $query, SearchMode $mode, string $term, string $column, string $boolean): void
+    {
+        $query->getQuery()
+            ->where($column, 'LIKE', $this->bind($term, $mode), $boolean);
+    }
+
+    /**
+     * Apply a full text index search to the query.
+     */
+    protected function asFullText(Builder $query, SearchMode $mode, string $term, string $column, string $boolean): void
+    {
+        $options = $mode === SearchMode::Boolean ? ['mode' => 'boolean'] : [];
+
+        $query->getQuery()
+            ->whereFullText($column, $this->bind($term, $mode), $options, $boolean);
+    }
+
+    /**
+     * Bind the term for searching.
+     */
+    protected function bind(string $term, SearchMode $mode): string
+    {
+        return match ($mode) {
+            SearchMode::Wildcard => "%{$term}%",
+            SearchMode::StartsWith => "{$term}%",
+            SearchMode::EndsWith => "%{$term}",
+            SearchMode::Boolean => $this->bindBoolean($term),
+            default => $term,
+        };
+    }
+
+    /**
+     * Bind the term for boolean searching.
+     */
+    protected function bindBoolean(string $term): string
+    {
+        $words = preg_split('/\s+/', trim($term));
+        
+        return implode(' ', array_map(
+            static fn (string $word) => "+{$word}*",
+            array_filter(
+                array_map(
+                    static fn (string $word) => preg_replace('/[^\p{L}\p{N}]/u', '', $word), $words
+                ),
+                static fn (string $word) => filled($word)
+            )
+        ));
     }
 
     /**
