@@ -27,10 +27,10 @@ jobs:
           # - disable
           # - flash
           # - form
-          # - honed
+          - honed
           # - infolist
           # - lang
-          - layout
+          # - layout
           # - lock
           # - memo
           # - modal
@@ -38,11 +38,11 @@ jobs:
           # - option
           # - page
           # - persist
-          # - refine
+          - refine
           # - registry
           # - scaffold
           # - stats
-          # - table
+          - table
           # - upload
           # - widget
     steps:
