@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Honed\Refine\Contracts;
 
-interface SearchesUnions
+/**
+ * @phpstan-require-extends \Honed\Refine\Refine
+ */
+interface UnionSearch
 {
     //
 }

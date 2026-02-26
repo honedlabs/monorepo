@@ -27,6 +27,13 @@ class Search extends Refiner
     protected $evaluationIdentifier = 'search';
 
     /**
+     * The key column to select when using unions.
+     * 
+     * @var ?string
+     */
+    protected $unionKey = null;
+
+    /**
      * Perform a wildcard search on the query.
      *
      * @param  TBuilder  $query
@@ -61,6 +68,50 @@ class Search extends Refiner
     }
 
     /**
+     * Set the key column to select when using unions.
+     *
+     * @return $this
+     */
+    public function unionOn(string $column): static
+    {
+        $this->unionKey = $column;
+
+        return $this;
+    }
+
+    /**
+     * Get the key column to select when using unions.
+     */
+    public function getUnionKey(): ?string
+    {
+        return $this->unionKey;
+    }
+
+    /**
+     * Union the search as a subquery.
+     *
+     * @param  TBuilder  $builder
+     * @return TBuilder
+     */
+    public function unionAs(Builder $builder): Builder
+    {
+        $query = $builder->getModel()->newQuery();
+
+        $column = $this->qualifyColumn(
+            $this->getUnionKey() ?? $builder->getModel()->getKeyName(),
+            $query
+        );
+
+        $query->getQuery()->select($column);
+
+        if (is_string($table = $this->getQualifier())) {
+            $query->getQuery()->from($table);
+        }
+
+        return $query;
+    }
+
+    /**
      * Handle the searching of the query.
      *
      * @param  TBuilder  $query
@@ -69,7 +120,7 @@ class Search extends Refiner
      * @param  bool  $or
      * @return bool
      */
-    public function handle($query, ?string $term, ?array $columns, bool $or = false): bool
+    public function handle(Builder $query, ?string $term, ?array $columns, bool $or = false): bool
     {
         $this->checkIfActive($columns);
 
@@ -111,7 +162,7 @@ class Search extends Refiner
     protected function asWildcard(Builder $query, SearchMode $mode, string $term, string $column, string $boolean): void
     {
         $query->getQuery()
-            ->where($column, 'LIKE', $this->bind($term, $mode), $boolean);
+            ->whereRaw("{$column} LIKE ?", [$this->bind($term, $mode)], $boolean);
     }
 
     /**
@@ -160,10 +211,9 @@ class Search extends Refiner
     /**
      * Determine if the search is active.
      *
-     * @param  array<int, string>|null  $columns
-     * @return void
+     * @param  list<string>|null  $columns
      */
-    protected function checkIfActive($columns)
+    protected function checkIfActive(?array $columns): void
     {
         $this->active(
             (! $columns) ?: in_array($this->getParameter(), $columns, true),

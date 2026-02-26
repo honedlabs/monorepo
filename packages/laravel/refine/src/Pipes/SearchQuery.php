@@ -7,7 +7,7 @@ namespace Honed\Refine\Pipes;
 use Honed\Core\Interpret;
 use Honed\Core\Pipe;
 use Honed\Persist\Exceptions\DriverDataIntegrityException;
-use Honed\Refine\Contracts\SearchesUnions;
+use Honed\Refine\Contracts\UnionSearch;
 use Honed\Refine\Data\SearchData;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -35,7 +35,7 @@ class SearchQuery extends Pipe
 
         match (true) {
             $this->instance->isScout() => $this->scout($builder),
-            $this->instance instanceof SearchesUnions => $this->union($builder),
+            $this->instance instanceof UnionSearch => $this->union($builder, $columns),
             default => $this->search($builder, $columns)
         };
 
@@ -119,14 +119,13 @@ class SearchQuery extends Pipe
     {
         $term = $this->instance->getSearchTerm();
 
-        /** @var list<\Illuminate\Database\Query\Builder> $unions */
+        /** @var list<\Illuminate\Database\Eloquent\Builder> $unions */
         $unions = [];
 
         $applied = false;
 
         foreach ($this->instance->getSearches() as $search) {
-            $query = $builder->getModel()
-                ->newQuery();
+            $query = $search->unionAs($builder);
 
             if ($search->handle($query, $term, $columns, $applied)) {
                 $applied = true;
@@ -138,15 +137,27 @@ class SearchQuery extends Pipe
         if (empty($unions)) {
             return;
         }
-
-        $builder->getQuery()
-            ->fromSub($union, '__honed_union')
-            ->join($builder->getModel()->getTable(), $builder->getModel()->getKeyName(), '=', '__honed_union.id');
-
         
+        $unionQuery = array_shift($unions)->getQuery();
 
+        foreach ($unions as $union) {
+            $unionQuery->unionAll($union);
+        }
 
+        $query = $builder->getQuery();
+        $model = $builder->getModel();
+        $table = $model->getTable();
+        $keyName = $model->getKeyName();
 
+        $existingJoins = $query->joins ?? [];
+        $query->joins = [];
+
+        $query->fromSub($unionQuery, '__honed_union')
+            ->join($table, $model->qualifyColumn($keyName), '=', "__honed_union.{$keyName}");
+
+        foreach ($existingJoins as $join) {
+            $query->joins[] = $join;
+        }
     }
 
     /**

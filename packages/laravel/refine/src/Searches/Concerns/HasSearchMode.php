@@ -9,9 +9,9 @@ use Honed\Refine\Enums\SearchMode;
 trait HasSearchMode
 {
     /**
-     * Whether to use a full-text, recall search.
+     * The search mode to use.
      */
-    protected SearchMode $fullText = SearchMode::Wildcard;
+    protected SearchMode $searchMode = SearchMode::Wildcard;
 
     /**
      * Set the search mode to use.
