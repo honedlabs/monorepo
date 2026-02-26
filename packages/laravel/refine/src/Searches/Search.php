@@ -28,7 +28,7 @@ class Search extends Refiner
 
     /**
      * The key column to select when using unions.
-     * 
+     *
      * @var ?string
      */
     protected $unionKey = null;
@@ -37,10 +37,6 @@ class Search extends Refiner
      * Perform a wildcard search on the query.
      *
      * @param  TBuilder  $query
-     * @param  string  $term
-     * @param  string  $column
-     * @param  string  $boolean
-     * @param  string  $operator
      */
     public static function searchWildcard(
         Builder $query,
@@ -91,7 +87,7 @@ class Search extends Refiner
      * Union the search as a subquery.
      *
      * @param  TBuilder  $builder
-     * @return TBuilder
+     * @return Builder<\Illuminate\Database\Eloquent\Model>
      */
     public function unionAs(Builder $builder): Builder
     {
@@ -115,10 +111,7 @@ class Search extends Refiner
      * Handle the searching of the query.
      *
      * @param  TBuilder  $query
-     * @param  string|null  $term
      * @param  array<int, string>|null  $columns
-     * @param  bool  $or
-     * @return bool
      */
     public function handle(Builder $query, ?string $term, ?array $columns, bool $or = false): bool
     {
@@ -158,6 +151,8 @@ class Search extends Refiner
 
     /**
      * Apply a wildcard search to the query.
+     *
+     * @param  Builder<\Illuminate\Database\Eloquent\Model>  $query
      */
     protected function asWildcard(Builder $query, SearchMode $mode, string $term, string $column, string $boolean): void
     {
@@ -167,6 +162,8 @@ class Search extends Refiner
 
     /**
      * Apply a full text index search to the query.
+     *
+     * @param  Builder<\Illuminate\Database\Eloquent\Model>  $query
      */
     protected function asFullText(Builder $query, SearchMode $mode, string $term, string $column, string $boolean): void
     {
@@ -195,15 +192,16 @@ class Search extends Refiner
      */
     protected function bindBoolean(string $term): string
     {
-        $words = preg_split('/\s+/', trim($term));
-        
+        $words = preg_split('/\s+/', trim($term)) ?: [];
+
         return implode(' ', array_map(
             static fn (string $word) => "+{$word}*",
             array_filter(
                 array_map(
-                    static fn (string $word) => preg_replace('/[^\p{L}\p{N}]/u', '', $word), $words
+                    static fn (string $word) => (string) preg_replace('/[^\p{L}\p{N}]/u', '', $word),
+                    $words
                 ),
-                static fn (string $word) => filled($word)
+                static fn ($word) => filled($word)
             )
         ));
     }
@@ -211,7 +209,7 @@ class Search extends Refiner
     /**
      * Determine if the search is active.
      *
-     * @param  list<string>|null  $columns
+     * @param  array<int,string>|null  $columns
      */
     protected function checkIfActive(?array $columns): void
     {

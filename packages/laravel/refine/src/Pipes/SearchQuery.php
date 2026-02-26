@@ -90,7 +90,7 @@ class SearchQuery extends Pipe
     /**
      * Perform the search using Scout.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @return void
      */
     protected function scout($builder)
@@ -112,14 +112,15 @@ class SearchQuery extends Pipe
 
     /**
      * Perform the search using subquery searches on individual columns.
-     * 
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     *
+     * @param  Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  array<int,string>|null  $columns
      */
     protected function union(Builder $builder, ?array $columns): void
     {
         $term = $this->instance->getSearchTerm();
 
-        /** @var list<\Illuminate\Database\Eloquent\Builder> $unions */
+        /** @var list<Builder<\Illuminate\Database\Eloquent\Model>> $unions */
         $unions = [];
 
         $applied = false;
@@ -137,7 +138,7 @@ class SearchQuery extends Pipe
         if (empty($unions)) {
             return;
         }
-        
+
         $unionQuery = array_shift($unions)->getQuery();
 
         foreach ($unions as $union) {
@@ -163,7 +164,7 @@ class SearchQuery extends Pipe
     /**
      * Perform the search using the default search logic.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $builder
+     * @param  Builder<\Illuminate\Database\Eloquent\Model>  $builder
      * @param  array<int,string>|null  $columns
      * @return bool
      */

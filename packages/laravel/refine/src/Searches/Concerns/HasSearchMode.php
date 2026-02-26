@@ -74,7 +74,7 @@ trait HasSearchMode
     {
         return $this->searchMode(SearchMode::NaturalLanguage);
     }
-    
+
     /**
      * Set the search mode to be a boolean search.
      *
