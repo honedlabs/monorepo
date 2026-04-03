@@ -4,27 +4,17 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Toolbox;
 
+use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\HasOrientation;
-use Honed\Chart\Concerns\HasZAxis;
 use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
 
-class Toolbox extends Primitive implements NullsAsUndefined
+class Toolbox extends Chartable
 {
     use CanBeShown;
     use HasId;
     use HasOrientation;
-    use HasZAxis;
-
-    /**
-     * Create a new tooltip instance.
-     */
-    public static function make(): static
-    {
-        return resolve(static::class);
-    }
 
     /**
      * Get the representation of the tooltip.
@@ -43,8 +33,8 @@ class Toolbox extends Primitive implements NullsAsUndefined
             // 'feature'
             // 'iconStyle' => $this->getIconStyle()?->toArray(),
             // 'emphasis' => $this->getEmphasis()?->toArray(),
-            'zLevel' => $this->getZLevel(),
-            'z' => $this->getZ(),
+            // 'zLevel' => $this->getZLevel(),
+            // 'z' => $this->getZ(),
             // 'left' => $this->getLeft(),
             // 'top' => $this->getTop(),
             // 'right' => $this->getRight(),

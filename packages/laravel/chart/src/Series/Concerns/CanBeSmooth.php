@@ -7,10 +7,15 @@ namespace Honed\Chart\Series\Concerns;
 trait CanBeSmooth
 {
     /**
-     * @var bool|null
+     * @var ?bool
      */
     protected $smooth;
 
+    /**
+     * Set the line to be smooth.
+     *
+     * @return $this
+     */
     public function smooth(bool $value = true): static
     {
         $this->smooth = $value;
@@ -18,9 +23,14 @@ trait CanBeSmooth
         return $this;
     }
 
-    public function notSmooth(bool $value = true): static
+    /**
+     * Set the line to not be smooth.
+     * 
+     * @return $this
+     */
+    public function dontSmooth(): static
     {
-        return $this->smooth(! $value);
+        return $this->smooth(false);
     }
 
     /**
@@ -31,10 +41,5 @@ trait CanBeSmooth
     public function isSmooth(): ?bool
     {
         return $this->smooth ?: null;
-    }
-
-    public function isNotSmooth(): bool
-    {
-        return ! $this->isSmooth();
     }
 }

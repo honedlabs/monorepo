@@ -41,7 +41,7 @@ class Chart extends Primitive implements NullsAsUndefined
      */
     public static function make(mixed $data = null): static
     {
-        return resolve(static::class)->data($data);
+        return app(static::class)->data($data);
     }
 
     /**

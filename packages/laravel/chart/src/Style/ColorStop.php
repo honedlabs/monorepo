@@ -21,7 +21,7 @@ class ColorStop implements Arrayable
      */
     public static function make(string|Rgb|Rgba $color, int $offset = 0): static
     {
-        return resolve(static::class)
+        return app(static::class)
             ->color($color)
             ->offset($offset);
     }

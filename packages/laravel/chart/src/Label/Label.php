@@ -58,7 +58,7 @@ class Label extends Primitive implements NullsAsUndefined
      */
     public static function make(): static
     {
-        return resolve(static::class);
+        return app(static::class);
     }
 
     /**

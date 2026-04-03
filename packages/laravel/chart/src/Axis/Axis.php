@@ -4,70 +4,132 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Axis;
 
-use Honed\Chart\Axis\Concerns\CanAlignTicks;
-use Honed\Chart\Axis\Concerns\CanBeInverted;
-use Honed\Chart\Axis\Concerns\CanBeScaled;
-use Honed\Chart\Axis\Concerns\HasAxisType;
-use Honed\Chart\Axis\Concerns\HasBoundaryGap;
-use Honed\Chart\Axis\Concerns\HasDimension;
-use Honed\Chart\Axis\Concerns\HasGridIndex;
-use Honed\Chart\Axis\Concerns\HasInterval;
-use Honed\Chart\Axis\Concerns\HasLogBase;
-use Honed\Chart\Axis\Concerns\HasMax;
-use Honed\Chart\Axis\Concerns\HasMaxInterval;
-use Honed\Chart\Axis\Concerns\HasMin;
-use Honed\Chart\Axis\Concerns\HasMinInterval;
-use Honed\Chart\Axis\Concerns\HasSplitNumber;
-use Honed\Chart\Axis\Concerns\HasStartValue;
-use Honed\Chart\Concerns\Animatable;
+use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;
-use Honed\Chart\Concerns\CanBeSilent;
-use Honed\Chart\Concerns\Extractable;
-use Honed\Chart\Concerns\HasAxisPointer;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\HasTooltip;
-use Honed\Chart\Concerns\HasZAxis;
 use Honed\Chart\Contracts\Resolvable;
-use Honed\Chart\Support\Concerns\HasOffset;
-use Honed\Chart\Support\Concerns\HasPosition;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
+use Honed\Chart\Enums\AxisType;
+use Honed\Chart\Enums\Dimension;
 
-class Axis extends Primitive implements NullsAsUndefined, Resolvable
+class Axis extends Chartable implements Resolvable
 {
-    use Animatable;
-    use CanAlignTicks;
-    use CanBeInverted;
-    use CanBeScaled;
     use CanBeShown;
-    use CanBeSilent;
-    use Extractable;
-    use HasAxisPointer;
-    use HasAxisType;
-    use HasBoundaryGap;
-    use HasBoundaryGap;
-    use HasDimension;
-    use HasGridIndex;
     use HasId;
-    use HasInterval;
-    use HasLogBase;
-    use HasMax;
-    use HasMaxInterval;
-    use HasMin;
-    use HasMinInterval;
-    use HasOffset;
-    use HasPosition;
-    use HasSplitNumber;
-    use HasStartValue;
     use HasTooltip;
-    use HasZAxis;
 
     /**
-     * Create a new axis instance.
+     * The type of the axis.
+     * 
+     * @var ?\Honed\Chart\Enums\AxisType
      */
-    public static function make(): static
+    protected $type;
+
+    /**
+     * Set the dimension of the axis.
+     * 
+     * @var \Honed\Chart\Enums\Dimension
+     */
+    protected $dimension;
+
+    /**
+     * Set the type of the axis.
+     *
+     * @return $this
+     */
+    public function type(AxisType|string $value): static
     {
-        return resolve(static::class);
+        $this->type = is_string($value) ? AxisType::from($value) : $value;
+
+        return $this;
+    }
+    
+    /**
+     * Set the type of the axis to be value.
+     *
+     * @return $this
+     */
+    public function value(): static
+    {
+        return $this->type(AxisType::Value);
+    }
+
+    /**
+     * Set the type of the axis to be category.
+     *
+     * @return $this
+     */
+    public function category(): static
+    {
+        return $this->type(AxisType::Category);
+    }
+
+    /**
+     * Set the type of the axis to be time.
+     *
+     * @return $this
+     */
+    public function time(): static
+    {
+        return $this->type(AxisType::Time);
+    }
+
+    /**
+     * Set the type of the axis to be log.
+     *
+     * @return $this
+     */
+    public function log(): static
+    {
+        return $this->type(AxisType::Log);
+    }
+
+    /**
+     * Get the type of the axis.
+     */
+    public function getType(): ?AxisType
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set the dimension of the axis.
+     *
+     * @return $this
+     */
+    public function dimension(Dimension|string $value): static
+    {
+        $this->dimension = is_string($value) ? Dimension::from($value) : $value;
+
+        return $this;
+    }
+
+    /**
+     * Set the dimension of the axis to be x.
+     *
+     * @return $this
+     */
+    public function x(): static
+    {
+        return $this->dimension(Dimension::X);
+    }
+
+    /**
+     * Set the dimension of the axis to be y.
+     *
+     * @return $this
+     */
+    public function y(): static
+    {
+        return $this->dimension(Dimension::Y);
+    }
+
+    /**
+     * Get the dimension of the axis.
+     */
+    public function getDimension(): Dimension
+    {
+        return $this->dimension;
     }
 
     /**
@@ -91,11 +153,11 @@ class Axis extends Primitive implements NullsAsUndefined, Resolvable
 
         return [
             'id' => $this->getId(),
-            'show' => $this->isShown(),
-            'gridIndex' => $this->getGridIndex(),
-            'alignTicks' => $this->hasAlignedTicks(),
-            'position' => $this->getPosition(),
-            'offset' => $this->getOffset(),
+            // 'show' => $this->isShown(),
+            // 'gridIndex' => $this->getGridIndex(),
+            // 'alignTicks' => $this->hasAlignedTicks(),
+            // 'position' => $this->getPosition(),
+            // 'offset' => $this->getOffset(),
             'type' => $this->getType(),
             // 'name' => null,
             // 'nameLocation' => null,
@@ -103,18 +165,18 @@ class Axis extends Primitive implements NullsAsUndefined, Resolvable
             // 'nameGap' => $this->getNameGap(),
             // 'nameRotate' => $this->getNameRotate(),
             // 'nameTruncate' => $this->getTruncate()?->toArray(),
-            'inverse' => $this->isInverted(),
-            'boundaryGap' => $this->getBoundaryGap(),
-            'min' => $this->getMin(),
-            'max' => $this->getMax(),
-            'scale' => $this->isScaled() ?: null,
-            'splitNumber' => $this->getSplitNumber(),
-            'minInterval' => $this->getMinInterval(),
-            'maxInterval' => $this->getMaxInterval(),
-            'interval' => $this->getInterval(),
-            'logBase' => $this->getLogBase(),
-            'startValue' => $this->getStartValue(),
-            'silent' => $this->isSilent() ?: null,
+            // 'inverse' => $this->isInverted(),
+            // 'boundaryGap' => $this->getBoundaryGap(),
+            // 'min' => $this->getMin(),
+            // 'max' => $this->getMax(),
+            // 'scale' => $this->isScaled() ?: null,
+            // 'splitNumber' => $this->getSplitNumber(),
+            // 'minInterval' => $this->getMinInterval(),
+            // 'maxInterval' => $this->getMaxInterval(),
+            // 'interval' => $this->getInterval(),
+            // 'logBase' => $this->getLogBase(),
+            // 'startValue' => $this->getStartValue(),
+            // 'silent' => $this->isSilent() ?: null,
             // 'triggerEvent' => $this->isTriggerable(),
             // 'axisLine',
             // 'axisTick',
@@ -124,11 +186,8 @@ class Axis extends Primitive implements NullsAsUndefined, Resolvable
             // 'minorSplitLine'
             // 'splitArea'
             'data' => $this->getData(),
-            'axisPointer' => $this->getAxisPointer()?->toArray(),
+            // 'axisPointer' => $this->getAxisPointer()?->toArray(),
             'tooltip' => $this->getTooltip()?->toArray(),
-            ...$this->getAnimationParameters(),
-            'zLevel' => $this->getZLevel(),
-            'z' => $this->getZ(),
         ];
     }
 }

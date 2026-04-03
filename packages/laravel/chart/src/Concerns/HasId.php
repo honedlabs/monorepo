@@ -9,7 +9,7 @@ trait HasId
     /**
      * The id of the component.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $id;
 

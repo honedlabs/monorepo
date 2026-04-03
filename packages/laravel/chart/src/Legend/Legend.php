@@ -15,8 +15,8 @@ use Honed\Chart\Concerns\HasOrientation;
 use Honed\Chart\Concerns\HasTextStyle;
 use Honed\Chart\Concerns\HasTooltip;
 use Honed\Chart\Concerns\HasZAxis;
-use Honed\Chart\Legend\Concerns\HasLegendType;
-use Honed\Chart\Style\Concerns\CanBeRotated;
+use Honed\Chart\Chartable;
+use Honed\Chart\Enums\LegendType;
 use Honed\Chart\Style\Concerns\HasBackgroundColor;
 use Honed\Chart\Style\Concerns\HasBorderColor;
 use Honed\Chart\Style\Concerns\HasBorderRadius;
@@ -36,9 +36,8 @@ use Honed\Chart\Style\Concerns\HasTop;
 use Honed\Chart\Style\Concerns\HasWidth;
 use Honed\Chart\Support\Concerns\HasRotation;
 use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
 
-class Legend extends Primitive implements NullsAsUndefined
+class Legend extends Chartable implements NullsAsUndefined
 {
     use HasRotation;
     use CanBeShown;
@@ -57,7 +56,6 @@ class Legend extends Primitive implements NullsAsUndefined
     use HasItemStyle;
     use HasItemWidth;
     use HasLeft;
-    use HasLegendType;
     use HasLineStyle;
     use HasOrientation;
     use HasPadding;
@@ -72,11 +70,61 @@ class Legend extends Primitive implements NullsAsUndefined
     use HasZAxis;
 
     /**
-     * Create a new legend instance.
+     * The type of legend.
+     * 
+     * @var ?\Honed\Chart\Enums\LegendType
      */
-    public static function make(): static
+    protected $type;
+
+    /**
+     * Set the type of legend.
+     *
+     * @return $this
+     * 
+     * @throws \ValueError
+     * @throws \TypeError
+     */
+    public function type(string|LegendType $value): static
     {
-        return resolve(static::class);
+        $this->type = is_string($value) ? LegendType::from($value) : $value;
+
+        return $this;
+    }
+
+    /**
+     * Set the type of legend to be plain.
+     *
+     * @return $this
+     * 
+     * @throws \ValueError
+     * @throws \TypeError
+     */
+    public function plain(): static
+    {
+        return $this->type(LegendType::Plain);
+    }
+    
+    /**
+     * Set the type of legend to be scroll.
+     *
+     * @return $this
+     * 
+     * @throws \ValueError
+     * @throws \TypeError
+     */
+    public function scroll(): static
+    {
+        return $this->type(LegendType::Scroll);
+    }
+
+    /**
+     * Get the type of legend.
+     *
+     * @return ?\Honed\Chart\Enums\LegendType
+     */
+    public function getType(): ?LegendType
+    {
+        return $this->type;
     }
 
     /**

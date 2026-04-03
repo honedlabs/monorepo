@@ -9,7 +9,7 @@ trait CanBeShown
     /**
      * Whether to show the axis.
      *
-     * @var bool|null
+     * @var ?bool
      */
     protected $show;
 

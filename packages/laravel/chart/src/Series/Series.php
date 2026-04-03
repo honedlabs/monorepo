@@ -4,37 +4,53 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Series;
 
-use Honed\Chart\Concerns\Animatable;
-use Honed\Chart\Concerns\Extractable;
+use Honed\Chart\Chart;
 use Honed\Chart\Concerns\HasId;
-use Honed\Chart\Concerns\HasZAxis;
+use Honed\Chart\Chartable;
 use Honed\Chart\Contracts\Resolvable;
-use Honed\Chart\Series\Concerns\CanBeClipped;
-use Honed\Chart\Series\Concerns\HasChartType;
-use Honed\Chart\Series\Concerns\RefersToAxis;
+use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Style\Concerns\HasCursor;
 use Honed\Core\Concerns\HasName;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
 
-abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
+abstract class Series extends Chartable implements Resolvable
 {
-    use Animatable;
-    use CanBeClipped;
-    use Extractable;
-    use HasChartType;
     use HasCursor;
     use HasId;
     use HasName;
-    use HasZAxis;
 
     /**
-     * Create a new series instance.
+     * The type of the series.
+     * 
+     * @var \Honed\Chart\Enums\ChartType
      */
-    public static function make(?string $name = null): static
+    public $type;
+
+    /**
+     * Set the type of the series.
+     *
+     * @return $this
+     */
+    protected function type(ChartType $value): static
     {
-        return resolve(static::class)
-            ->when($name, fn (self $series, string $name) => $series->name($name));
+        $this->type = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the type of the series.
+     */
+    public function getType(): ChartType
+    {
+        return $this->type;
+    }
+
+    /**
+     * Convert the series directly to a chart.
+     */
+    public function toChart(): Chart
+    {
+        return Chart::make()->series($this);
     }
 
     /**
@@ -43,6 +59,10 @@ abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
     public function resolve(mixed $data): void
     {
         $this->define();
+
+        // if (! $this->hasData()) {
+        //     $this->data($data);
+        // }
 
         $this->data($this->extract($data));
     }
@@ -62,7 +82,7 @@ abstract class Series extends Primitive implements NullsAsUndefined, Resolvable
             'name' => $this->name,
             'data' => $this->getData(),
             'cursor' => $this->getCursor(),
-            'clip' => $this->isClipped() ? null : false,
+            // 'clip' => $this->isClipped() ? null : false,
             // ...$this->getZAxisParameters(),
             ...$this->getAnimationParameters(),
         ];

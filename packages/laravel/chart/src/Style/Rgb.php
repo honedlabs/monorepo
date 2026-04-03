@@ -24,7 +24,7 @@ class Rgb implements Stringable
      */
     public static function make(int $red = 0, int $green = 0, int $blue = 0): static
     {
-        return resolve(static::class)
+        return app(static::class)
             ->red($red)
             ->green($green)
             ->blue($blue);

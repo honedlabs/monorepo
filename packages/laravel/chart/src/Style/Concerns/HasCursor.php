@@ -11,7 +11,7 @@ trait HasCursor
     /**
      * The mouse style.
      *
-     * @var string|null
+     * @var ?string
      */
     protected $cursor;
 
