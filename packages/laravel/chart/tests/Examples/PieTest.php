@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Honed\Chart\Chart;
 use Honed\Chart\Legend\Legend;
+use Honed\Chart\Series\Pie;
 use Honed\Chart\Title\Title;
 use Honed\Chart\Tooltip\Tooltip;
 
@@ -99,31 +100,16 @@ beforeEach(function () {
 })->skip();
 
 it('creates', function () {
-    $chart = Chart::make()
-        ->title(Title::make()
-            ->text('Referer of a Website')
-            ->subtext('Fake Data')
-            ->left('center')
-        )
-        ->tooltip(Tooltip::make()
-            ->triggerByItem()
-        )
-        ->legend(Legend::make()
-            ->orient('vertical')
-            ->left('left')
-        )
-        ->series(Pie::make()
-            ->pluck('value')
-            ->label('name')
-            ->radius('50%')
-            ->emphasis(Emphasis::make()
-                ->itemStyle(ItemStyle::make()
-                    ->shadowBlur(10)
-                    ->shadowOffsetX(0)
-                    ->shadowColor(Rgba::make(0, 0, 0, 0.5))
-                )
-            )
-        );
+    $chart = Pie::make()
+        ->from($this->data)
+        ->on('value')
+        ->showing('name')
+        ->radius('50%', percentage: true)
+        ->toChart()
+        ->title->text('Referer of a Website')
+        ->tooltip->triggerByItem()
+        ->legend->vertical()
+        ->legend->left('left');
 
     expect($chart->toArray())
         ->toEqualCanonicalizing($this->option);

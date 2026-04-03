@@ -4,31 +4,28 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Concerns\Animatable;
-use Honed\Chart\Concerns\CanBePolar;
-use Honed\Chart\Concerns\HasAxes;
-use Honed\Chart\Concerns\HasAxisPointer;
+use Honed\Chart\Concerns\Components\HasAxes;
 use Honed\Chart\Concerns\HasData;
-use Honed\Chart\Concerns\HasGrid;
-use Honed\Chart\Concerns\HasLegend;
-use Honed\Chart\Concerns\HasSeries;
-use Honed\Chart\Concerns\HasTextStyle;
-use Honed\Chart\Concerns\HasTitle;
-use Honed\Chart\Concerns\HasToolbox;
-use Honed\Chart\Concerns\HasTooltip;
-use Honed\Chart\Style\Concerns\HasBackgroundColor;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
+use Honed\Chart\Concerns\Components\HasLegend;
+use Honed\Chart\Concerns\Components\HasSeries;
+use Honed\Chart\Concerns\Components\HasTextStyle;
+use Honed\Chart\Concerns\Components\HasTitle;
+use Honed\Chart\Concerns\Components\HasToolbox;
+use Honed\Chart\Concerns\Components\HasTooltip;
+use Illuminate\Support\Traits\ForwardsCalls;
 
-class Chart extends Primitive implements NullsAsUndefined
+/**
+ * @property-read \Honed\Chart\Legend $legend
+ * @property-read \Honed\Chart\Title $title
+ * @property-read \Honed\Chart\Tooltip $tooltip
+ * @property-read \Honed\Chart\Toolbox $toolbox
+ * @property-read \Honed\Chart\TextStyle $textStyle
+ */
+class Chart extends Chartable
 {
-    use Animatable;
-    use CanBePolar;
+    use ForwardsCalls;
     use HasAxes;
-    use HasAxisPointer;
-    use HasBackgroundColor;
     use HasData;
-    use HasGrid;
     use HasLegend;
     use HasSeries;
     use HasTextStyle;
@@ -37,11 +34,24 @@ class Chart extends Primitive implements NullsAsUndefined
     use HasTooltip;
 
     /**
-     * Create a new chart instance.
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array<int,mixed>  $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
      */
-    public static function make(mixed $data = null): static
+    public function __call($method, $parameters)
     {
-        return app(static::class)->data($data);
+        return match ($method) {
+            'legend' => $this->forwardCallTo($this->withLegend(), $method, $parameters),
+            'title' => $this->forwardCallTo($this->withTitle(), $method, $parameters),
+            'tooltip' => $this->forwardCallTo($this->withTooltip(), $method, $parameters),
+            'toolbox' => $this->forwardCallTo($this->withToolbox(), $method, $parameters),
+            'textStyle' => $this->forwardCallTo($this->withTextStyle(), $method, $parameters),
+            default => parent::__call($method, $parameters),
+        };
     }
 
     /**
@@ -70,25 +80,23 @@ class Chart extends Primitive implements NullsAsUndefined
         return [
             'title' => $this->getTitle()?->toArray(),
             'legend' => $this->getLegend()?->toArray(),
-            'grid' => $this->getGrid()?->toArray(),
+            // 'grid' => $this->getGrid()?->toArray(),
             'xAxis' => $this->getXAxesToArray(),
             'yAxis' => $this->getYAxesToArray(),
-            'polar' => $this->getPolar()?->toArray(),
             // 'radiusAxis' => $this->getRadiusAxis()?->toArray(),
             // 'angleAxis' => $this->getAngleAxis()?->toArray(),
             // 'radar' => $this->getRadar()?->toArray(),
             // 'dataZoom' => $this->getDataZoom()?->toArray(),
             // 'visualMap' => $this->getVisualMap()?->toArray(),
             'tooltip' => $this->getTooltip()?->toArray(),
-            'axisPointer' => $this->getAxisPointer()?->toArray(),
+            // 'axisPointer' => $this->getAxisPointer()?->toArray(),
             'toolbox' => $this->getToolbox()?->toArray(),
             // 'timeline' => $this->getTimeline()?->toArray(),
             // 'calendar' => $this->getCalendar()?->toArray(),
             'series' => $this->seriesToArray(),
             // 'color' => $this->getColor(),
-            'backgroundColor' => $this->getBackgroundColor(),
+            // 'backgroundColor' => $this->getBackgroundColor(),
             'textStyle' => $this->getTextStyle()?->toArray(),
-            ...$this->getAnimationParameters(),
         ];
     }
 }

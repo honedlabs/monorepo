@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style;
 
+use Honed\Chart\Chartable;
 use Honed\Chart\Style\Concerns\HasBorderColor;
 use Honed\Chart\Style\Concerns\HasBorderRadius;
 use Honed\Chart\Style\Concerns\HasBorderType;
@@ -16,10 +17,8 @@ use Honed\Chart\Style\Concerns\HasOpacity;
 use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowColor;
 use Honed\Chart\Style\Concerns\HasShadowOffset;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
 
-class ItemStyle extends Primitive implements NullsAsUndefined
+class ItemStyle extends Chartable
 {
     use HasBorderColor;
     use HasBorderRadius;
@@ -33,14 +32,6 @@ class ItemStyle extends Primitive implements NullsAsUndefined
     use HasShadowBlur;
     use HasShadowColor;
     use HasShadowOffset;
-
-    /**
-     * Create a new item style instance.
-     */
-    public static function make(): static
-    {
-        return app(static::class);
-    }
 
     /**
      * Get the representation of the item style.

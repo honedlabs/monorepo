@@ -7,6 +7,7 @@ namespace Honed\Chart\Series;
 use Honed\Chart\Chart;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Chartable;
+use Honed\Chart\Concerns\Components\HasTitle;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Style\Concerns\HasCursor;
@@ -14,9 +15,10 @@ use Honed\Core\Concerns\HasName;
 
 abstract class Series extends Chartable implements Resolvable
 {
+    use HasName;
+    use HasTitle;
     use HasCursor;
     use HasId;
-    use HasName;
 
     /**
      * The type of the series.
@@ -84,7 +86,6 @@ abstract class Series extends Chartable implements Resolvable
             'cursor' => $this->getCursor(),
             // 'clip' => $this->isClipped() ? null : false,
             // ...$this->getZAxisParameters(),
-            ...$this->getAnimationParameters(),
         ];
     }
 }

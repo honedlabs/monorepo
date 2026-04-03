@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\Series;
+use Honed\Chart\Series\Series;
 use Illuminate\Console\Command;
 
 arch()->preset()->php();

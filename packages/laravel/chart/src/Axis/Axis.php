@@ -7,13 +7,15 @@ namespace Honed\Chart\Axis;
 use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;
-use Honed\Chart\Concerns\HasTooltip;
+use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\AxisType;
 use Honed\Chart\Enums\Dimension;
+use Illuminate\Support\Traits\ForwardsCalls;
 
 class Axis extends Chartable implements Resolvable
 {
+    use ForwardsCalls;
     use CanBeShown;
     use HasId;
     use HasTooltip;
@@ -28,9 +30,26 @@ class Axis extends Chartable implements Resolvable
     /**
      * Set the dimension of the axis.
      * 
-     * @var \Honed\Chart\Enums\Dimension
+     * @var ?\Honed\Chart\Enums\Dimension
      */
     protected $dimension;
+
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array<int,mixed>  $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        return match ($method) {
+            'tooltip' => $this->forwardCallTo($this->getTooltip(), $method, $parameters),
+            default => parent::__call($method, $parameters),
+        };
+    }
 
     /**
      * Set the type of the axis.
@@ -127,7 +146,7 @@ class Axis extends Chartable implements Resolvable
     /**
      * Get the dimension of the axis.
      */
-    public function getDimension(): Dimension
+    public function getDimension(): ?Dimension
     {
         return $this->dimension;
     }

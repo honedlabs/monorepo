@@ -12,7 +12,7 @@ trait HasLegend
     /**
      * The legend.
      *
-     * @var Legend|null
+     * @var ?Legend
      */
     protected $legend;
 

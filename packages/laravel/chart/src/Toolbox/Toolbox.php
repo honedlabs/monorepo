@@ -6,15 +6,33 @@ namespace Honed\Chart\Toolbox;
 
 use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;
+use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\HasId;
-use Honed\Chart\Concerns\HasOrientation;
-use Honed\Core\Contracts\NullsAsUndefined;
+use Illuminate\Support\Traits\ForwardsCalls;
 
 class Toolbox extends Chartable
 {
+    use ForwardsCalls;
     use CanBeShown;
+    use HasTooltip;
     use HasId;
-    use HasOrientation;
+
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array<int,mixed>  $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        return match ($method) {
+            'tooltip' => $this->forwardCallTo($this->getTooltip(), $method, $parameters),
+            default => parent::__call($method, $parameters),
+        };
+    }
 
     /**
      * Get the representation of the tooltip.
@@ -26,7 +44,7 @@ class Toolbox extends Chartable
         return [
             'id' => $this->getId(),
             'show' => $this->isShown(),
-            'orient' => $this->getOrientation(),
+            // 'orient' => $this->getOrientation(),
             // 'itemSize' => $this->getItemSize(),
             // 'itemGap' => $this->getItemGap(),
             // 'showTitle' => $this->isShowTitle(),

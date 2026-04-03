@@ -7,41 +7,58 @@ namespace Honed\Chart\Title;
 use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;
-use Honed\Chart\Concerns\HasItemGap;
-use Honed\Chart\Concerns\HasSubtextStyle;
-use Honed\Chart\Concerns\HasTextStyle;
-use Honed\Chart\Style\Concerns\HasBackgroundColor;
-use Honed\Chart\Style\Concerns\HasBorderColor;
-use Honed\Chart\Style\Concerns\HasBorderRadius;
-use Honed\Chart\Style\Concerns\HasBorderWidth;
-use Honed\Chart\Style\Concerns\HasBottom;
-use Honed\Chart\Style\Concerns\HasLeft;
-use Honed\Chart\Style\Concerns\HasPadding;
-use Honed\Chart\Style\Concerns\HasRight;
-use Honed\Chart\Style\Concerns\HasShadowBlur;
-use Honed\Chart\Style\Concerns\HasShadowColor;
-use Honed\Chart\Style\Concerns\HasShadowOffset;
-use Honed\Chart\Style\Concerns\HasTop;
-use Honed\Chart\Style\Concerns\HasZ;
-use Honed\Chart\Style\Concerns\HasZLevel;
-use Honed\Chart\Support\Concerns\CanBeAligned;
-use Honed\Chart\Support\Concerns\CanBeVerticallyAligned;
-use Honed\Chart\Support\Concerns\Triggerable;
-use Honed\Chart\Title\Concerns\HasLink;
-use Honed\Chart\Title\Concerns\HasSublink;
-use Honed\Chart\Title\Concerns\HasSubtarget;
-use Honed\Chart\Title\Concerns\HasSubtext;
-use Honed\Chart\Title\Concerns\HasTarget;
+use Honed\Chart\Concerns\Components\HasTextStyle;
 use Honed\Chart\Title\Concerns\HasText;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
 
 class Title extends Chartable
 {
     use CanBeShown;
-    use HasText;
     use HasTextStyle;
     use HasId;
+
+    /**
+     * The main title text.
+     *
+     * @var ?string
+     */
+    protected $text;
+
+    /**
+     * Set the main title text.
+     *
+     * @return $this
+     */
+    public function text(?string $value): static
+    {
+        $this->text = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the main title text.
+     */
+    public function getText(): ?string
+    {
+        return $this->text;
+    }
+
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array<int,mixed>  $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        return match ($method) {
+            'textStyle' => $this->forwardCallTo($this->getTextStyle(), $method, $parameters),
+            default => parent::__call($method, $parameters),
+        };
+    }
 
     /**
      * Get the representation of the title.
@@ -56,7 +73,7 @@ class Title extends Chartable
             'text' => $this->getText(),
             // 'link' => $this->getLink(),
             // 'target' => $this->getTarget(),
-            // 'textStyle' => $this->getTextStyle()?->toArray(),
+            'textStyle' => $this->getTextStyle()?->toArray(),
             // 'subtext' => $this->getSubtext(),
             // 'sublink' => $this->getSublink(),
             // 'subtarget' => $this->getSubtarget(),

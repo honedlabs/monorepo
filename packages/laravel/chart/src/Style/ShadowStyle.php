@@ -4,27 +4,18 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style;
 
+use Honed\Chart\Chartable;
 use Honed\Chart\Style\Concerns\HasColor;
 use Honed\Chart\Style\Concerns\HasOpacity;
 use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowOffset;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
 
-class ShadowStyle extends Primitive implements NullsAsUndefined
+class ShadowStyle extends Chartable
 {
     use HasColor;
     use HasOpacity;
     use HasShadowBlur;
     use HasShadowOffset;
-
-    /**
-     * Create a new shadow style instance.
-     */
-    public static function make(): static
-    {
-        return app(static::class);
-    }
 
     /**
      * Get the array representation of the shadow style.

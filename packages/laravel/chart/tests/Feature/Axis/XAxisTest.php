@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-use Honed\Chart\Axis\Axis;
 use Honed\Chart\Axis\XAxis;
+use Honed\Chart\Enums\Dimension;
+
+beforeEach(function () {
+    $this->axis = XAxis::make();
+});
 
 it('has x dimension', function () {
-    expect(XAxis::make())
-        ->getDimension()->toBe(Axis::X);
+    expect($this->axis)
+        ->getDimension()->toBe(Dimension::X);
 });

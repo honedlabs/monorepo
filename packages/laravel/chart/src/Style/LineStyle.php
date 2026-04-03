@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style;
 
+use Honed\Chart\Chartable;
 use Honed\Chart\Style\Concerns\HasBorderType;
 use Honed\Chart\Style\Concerns\HasCap;
 use Honed\Chart\Style\Concerns\HasColor;
@@ -14,10 +15,8 @@ use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowColor;
 use Honed\Chart\Style\Concerns\HasShadowOffset;
 use Honed\Chart\Style\Concerns\HasWidth;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
 
-class LineStyle extends Primitive implements NullsAsUndefined
+class LineStyle extends Chartable
 {
     use HasBorderType;
     use HasCap;
@@ -29,14 +28,6 @@ class LineStyle extends Primitive implements NullsAsUndefined
     use HasShadowColor;
     use HasShadowOffset;
     use HasWidth;
-
-    /**
-     * Create a new line style instance.
-     */
-    public static function make(): static
-    {
-        return app(static::class);
-    }
 
     /**
      * Get the representation of the line style.

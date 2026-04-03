@@ -11,7 +11,7 @@ trait HasCursor
     /**
      * The mouse style.
      *
-     * @var ?string
+     * @var ?\Honed\Chart\Enums\Cursor
      */
     protected $cursor;
 
@@ -22,7 +22,7 @@ trait HasCursor
      */
     public function cursor(string|Cursor $value): static
     {
-        $this->cursor = is_string($value) ? $value : $value->value;
+        $this->cursor = is_string($value) ? Cursor::from($value) : $value;
 
         return $this;
     }
@@ -50,7 +50,7 @@ trait HasCursor
     /**
      * Get the mouse style.
      */
-    public function getCursor(): ?string
+    public function getCursor(): ?Cursor
     {
         return $this->cursor;
     }

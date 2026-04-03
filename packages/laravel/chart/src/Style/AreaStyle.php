@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style;
 
+use Honed\Chart\Chartable;
 use Honed\Chart\Style\Concerns\HasColor;
 use Honed\Chart\Style\Concerns\HasOpacity;
 use Honed\Chart\Style\Concerns\HasOrigin;
 use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowColor;
 use Honed\Chart\Style\Concerns\HasShadowOffset;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
 
-class AreaStyle extends Primitive implements NullsAsUndefined
+class AreaStyle extends Chartable
 {
     use HasColor;
     use HasOpacity;
@@ -21,14 +20,6 @@ class AreaStyle extends Primitive implements NullsAsUndefined
     use HasShadowBlur;
     use HasShadowColor;
     use HasShadowOffset;
-
-    /**
-     * Create a new area style instance.
-     */
-    public static function make(): static
-    {
-        return app(static::class);
-    }
 
     /**
      * Get the representation of the area style.

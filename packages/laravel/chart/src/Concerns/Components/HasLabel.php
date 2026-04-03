@@ -7,9 +7,6 @@ namespace Honed\Chart\Concerns;
 use Closure;
 use Honed\Chart\Label\Label;
 
-/**
- * @phpstan-require-implements \Honed\Chart\Contracts\Chartable
- */
 trait HasLabel
 {
     /**

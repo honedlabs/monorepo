@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart\Style;
 
+use Honed\Chart\Chartable;
 use Honed\Chart\Style\Concerns\HasBorderColor;
 use Honed\Chart\Style\Concerns\HasBorderType;
 use Honed\Chart\Style\Concerns\HasBorderWidth;
@@ -19,10 +20,8 @@ use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowColor;
 use Honed\Chart\Style\Concerns\HasShadowOffset;
 use Honed\Chart\Style\Concerns\HasWidth;
-use Honed\Core\Contracts\NullsAsUndefined;
-use Honed\Core\Primitive;
 
-class TextStyle extends Primitive implements NullsAsUndefined
+class TextStyle extends Chartable
 {
     use HasBorderColor;
     use HasBorderType;
@@ -40,14 +39,6 @@ class TextStyle extends Primitive implements NullsAsUndefined
     use HasShadowColor;
     use HasShadowOffset;
     use HasWidth;
-
-    /**
-     * Create a new text style instance.
-     */
-    public static function make(): static
-    {
-        return app(static::class);
-    }
 
     /**
      * Get the representation of the text style.

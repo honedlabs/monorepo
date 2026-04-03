@@ -6,31 +6,32 @@ namespace Honed\Chart\Tooltip;
 
 use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;
-use Honed\Chart\Concerns\HasTextStyle;
-use Honed\Chart\Style\Concerns\HasBackgroundColor;
-use Honed\Chart\Style\Concerns\HasBorderColor;
-use Honed\Chart\Style\Concerns\HasBorderWidth;
-use Honed\Chart\Style\Concerns\HasPadding;
+use Honed\Chart\Concerns\Components\HasTextStyle;
 use Honed\Chart\Tooltip\Concerns\HasTrigger;
-use Honed\Core\Contracts\NullsAsUndefined;
+use Illuminate\Support\Traits\ForwardsCalls;
 
-class Tooltip extends Chartable implements NullsAsUndefined
+class Tooltip extends Chartable
 {
-    use CanBeShown;
-    use HasBackgroundColor;
-    use HasBorderColor;
-    use HasBorderWidth;
-    use HasPadding;
-    use HasTextStyle;
+    use ForwardsCalls;
     use HasTrigger;
-    // use HasOrder;
+    use CanBeShown;
+    use HasTextStyle;
 
     /**
-     * Create a new tooltip instance.
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array<int,mixed>  $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
      */
-    public static function make(): static
+    public function __call($method, $parameters)
     {
-        return app(static::class);
+        return match ($method) {
+            'textStyle' => $this->forwardCallTo($this->getTextStyle(), $method, $parameters),
+            default => parent::__call($method, $parameters),
+        };
     }
 
     /**
@@ -54,10 +55,10 @@ class Tooltip extends Chartable implements NullsAsUndefined
             // 'className' => $this->getClass(),
             // 'transitionDuration' => $this->getTransitionDuration(),
             // 'position',
-            'backgroundColor' => $this->getBackgroundColor(),
-            'borderColor' => $this->getBorderColor(),
-            'borderWidth' => $this->getBorderWidth(),
-            'padding' => $this->getPadding(),
+            // 'backgroundColor' => $this->getBackgroundColor(),
+            // 'borderColor' => $this->getBorderColor(),
+            // 'borderWidth' => $this->getBorderWidth(),
+            // 'padding' => $this->getPadding(),
             'textStyle' => $this->getTextStyle()?->toArray(),
             // 'order' => $this->getOrder(),
         ];

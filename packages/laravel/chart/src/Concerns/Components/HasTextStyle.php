@@ -12,7 +12,7 @@ trait HasTextStyle
     /**
      * The text style.
      *
-     * @var ?TextStyle|null
+     * @var ?TextStyle
      */
     protected $textStyle;
 
