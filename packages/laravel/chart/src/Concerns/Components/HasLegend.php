@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Chart\Concerns\Components;
 
 use Closure;
-use Honed\Chart\Legend\Legend;
+use Honed\Chart\Legend;
 
 trait HasLegend
 {

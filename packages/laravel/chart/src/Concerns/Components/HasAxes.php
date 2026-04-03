@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Honed\Chart\Concerns\Components;
 
 use Closure;
-use Honed\Chart\Axis\Axis;
-use Honed\Chart\Axis\XAxis;
-use Honed\Chart\Axis\YAxis;
+use Honed\Chart\Axis;
+use Honed\Chart\XAxis;
+use Honed\Chart\YAxis;
 use Honed\Chart\Enums\Dimension;
 use Illuminate\Support\Enumerable;
 
@@ -25,9 +25,11 @@ trait HasAxes
      *
      * @return $this
      */
-    public function axis(Axis $axis): static
+    public function axis(?Axis $axis): static
     {
-        $this->axes[] = $axis;
+        if ($axis) {
+            $this->axes[] = $axis;
+        }
 
         return $this;
     }
@@ -45,6 +47,7 @@ trait HasAxes
         }
 
         if ($axes instanceof Enumerable) {
+            /** @var list<Axis> */
             $axes = $axes->all();
         }
 
@@ -89,12 +92,12 @@ trait HasAxes
      * @param  Axis|(Closure(Axis):Axis)|bool|null  $value
      * @return $this
      */
-    public function yAxis(YAxis|Closure|bool|null $value = true): static
+    public function yAxis(Axis|Closure|bool|null $value = true): static
     {
         $axis = match (true) {
-            $value => $this->withYAxis(),
+            $value => $this->newYAxis(),
             ! $value => null,
-            $value instanceof Closure => $value($this->withYAxis()),
+            $value instanceof Closure => $value($this->newYAxis()),
             default => $value,
         };
 
@@ -110,9 +113,9 @@ trait HasAxes
     public function xAxis(Axis|Closure|bool|null $value = true): static
     {
         $axis = match (true) {
-            $value => $this->withXAxis(),
+            $value => $this->newXAxis(),
             ! $value => null,
-            $value instanceof Closure => $value($this->withXAxis()),
+            $value instanceof Closure => $value($this->newXAxis()),
             default => $value,
         };
 
@@ -133,7 +136,7 @@ trait HasAxes
         }
 
         return array_map(
-            static fn (XAxis $axis) => $axis->toArray(),
+            static fn (Axis $axis) => $axis->toArray(),
             $axes
         );
     }
@@ -152,7 +155,7 @@ trait HasAxes
         }
 
         return array_map(
-            static fn (YAxis $axis) => $axis->toArray(),
+            static fn (Axis $axis) => $axis->toArray(),
             $axes
         );
     }

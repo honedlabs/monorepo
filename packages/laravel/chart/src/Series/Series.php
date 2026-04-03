@@ -12,9 +12,11 @@ use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Style\Concerns\HasCursor;
 use Honed\Core\Concerns\HasName;
+use Illuminate\Support\Traits\ForwardsCalls;
 
 abstract class Series extends Chartable implements Resolvable
 {
+    use ForwardsCalls;
     use HasName;
     use HasTitle;
     use HasCursor;

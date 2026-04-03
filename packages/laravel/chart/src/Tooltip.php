@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Tooltip;
+namespace Honed\Chart;
 
 use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;

@@ -10,14 +10,28 @@ use Illuminate\Support\Str;
 
 class Pie extends Series
 {
-    // use HasRadius;
-
     /**
      * The radius of the pie chart.
      *
      * @var array{0: int|string, 1: int|string}
      */
     protected $radius = [0, '75%'];
+
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array<int,mixed>  $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        return match ($method) {
+            default => parent::__call($method, $parameters),
+        };
+    }
 
     /**
      * Set the radius of the pie chart.

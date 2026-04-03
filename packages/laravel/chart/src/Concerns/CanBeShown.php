@@ -30,9 +30,9 @@ trait CanBeShown
      *
      * @return $this
      */
-    public function dontShow(bool $value = true): static
+    public function dontShow(): static
     {
-        return $this->show(! $value);
+        return $this->show(false);
     }
 
     /**
@@ -41,13 +41,5 @@ trait CanBeShown
     public function isShown(): ?bool
     {
         return $this->show;
-    }
-
-    /**
-     * Get whether to not show the axis.
-     */
-    public function isNotShown(): bool
-    {
-        return ! $this->isShown();
     }
 }

@@ -2,13 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Style;
+namespace Honed\Chart;
 
 use Honed\Chart\Chartable;
-use Honed\Chart\Style\Concerns\HasBorderColor;
-use Honed\Chart\Style\Concerns\HasBorderRadius;
 use Honed\Chart\Style\Concerns\HasBorderType;
-use Honed\Chart\Style\Concerns\HasBorderWidth;
 use Honed\Chart\Style\Concerns\HasCap;
 use Honed\Chart\Style\Concerns\HasColor;
 use Honed\Chart\Style\Concerns\HasDashOffset;
@@ -17,13 +14,11 @@ use Honed\Chart\Style\Concerns\HasOpacity;
 use Honed\Chart\Style\Concerns\HasShadowBlur;
 use Honed\Chart\Style\Concerns\HasShadowColor;
 use Honed\Chart\Style\Concerns\HasShadowOffset;
+use Honed\Chart\Style\Concerns\HasWidth;
 
-class ItemStyle extends Chartable
+class LineStyle extends Chartable
 {
-    use HasBorderColor;
-    use HasBorderRadius;
     use HasBorderType;
-    use HasBorderWidth;
     use HasCap;
     use HasColor;
     use HasDashOffset;
@@ -32,9 +27,10 @@ class ItemStyle extends Chartable
     use HasShadowBlur;
     use HasShadowColor;
     use HasShadowOffset;
+    use HasWidth;
 
     /**
-     * Get the representation of the item style.
+     * Get the representation of the line style.
      *
      * @return array<string, mixed>
      */
@@ -42,20 +38,19 @@ class ItemStyle extends Chartable
     {
         return [
             'color' => $this->getColor(),
-            'borderColor' => $this->getBorderColor(),
-            'borderWidth' => $this->getBorderWidth(),
-            'borderType' => $this->getBorderType(),
-            'borderDashOffset' => $this->getDashOffset(),
-            'borderCap' => $this->getCap(),
-            'borderJoin' => $this->getJoin(),
-            'borderMiterLimit' => $this->getMiterLimit(),
+            'width' => $this->getWidth(),
+            'type' => $this->getBorderType(),
+            'dashOffset' => $this->getDashOffset(),
+            'cap' => $this->getCap(),
+            'join' => $this->getJoin(),
+            'miterLimit' => $this->getMiterLimit(),
             'shadowBlur' => $this->getShadowBlur(),
             'shadowColor' => $this->getShadowColor(),
             'shadowOffsetX' => $this->getShadowOffsetX(),
             'shadowOffsetY' => $this->getShadowOffsetY(),
             'opacity' => $this->getOpacity(),
-            'borderRadius' => $this->getBorderRadius(),
-            // 'decal' => $this->getDecal(),
+            // 'inactiveColor' => $this->getInactiveColor(),
+            // 'inactiveWidth' => $this->getInactiveWidth(),
         ];
     }
 }

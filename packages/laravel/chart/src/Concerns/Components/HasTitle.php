@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Chart\Concerns\Components;
 
 use Closure;
-use Honed\Chart\Title\Title;
+use Honed\Chart\Title;
 
 trait HasTitle
 {

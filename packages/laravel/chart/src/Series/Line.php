@@ -7,14 +7,14 @@ namespace Honed\Chart\Series;
 use Honed\Chart\Concerns\Components\HasAreaStyle;
 use Honed\Chart\Concerns\Components\HasItemStyle;
 use Honed\Chart\Enums\ChartType;
-use Honed\Chart\Series\Concerns\CanBeSmooth;
+use Honed\Chart\Concerns\Series\CanBeSmooth;
 use Honed\Chart\Series\Series;
 
 class Line extends Series
 {
     use CanBeSmooth;
     use HasAreaStyle;
-    // use HasItemStyle;
+    use HasItemStyle;
 
     /**
      * Handle dynamic method calls into the method.
@@ -28,8 +28,8 @@ class Line extends Series
     public function __call($method, $parameters)
     {
         return match ($method) {
-            'areaStyle' => $this->forwardCallTo($this->getAreaStyle(), $method, $parameters),
-            // 'itemStyle' => $this->forwardCallTo($this->getItemStyle(), $method, $parameters),
+            'areaStyle' => $this->forwardCallTo($this->withAreaStyle(), $method, $parameters),
+            'itemStyle' => $this->forwardCallTo($this->withItemStyle(), $method, $parameters),
             default => parent::__call($method, $parameters),
         };
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Honed\Chart\Legend;
+namespace Honed\Chart;
 
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;

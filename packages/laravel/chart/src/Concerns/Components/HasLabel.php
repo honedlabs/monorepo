@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Honed\Chart\Concerns;
 
 use Closure;
-use Honed\Chart\Label\Label;
+use Honed\Chart\Label;
 
 trait HasLabel
 {
