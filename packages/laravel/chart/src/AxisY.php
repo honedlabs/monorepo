@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-class XAxis extends Axis
+class AxisY extends Axis
 {
     /**
      * Provide the axis with the default type.
@@ -13,6 +13,6 @@ class XAxis extends Axis
     {
         parent::setUp();
 
-        $this->x();
+        $this->y();
     }
 }

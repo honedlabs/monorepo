@@ -20,6 +20,33 @@ class Rgba implements Stringable
     protected $alpha = 1;
 
     /**
+     * Create a new RGBA instance.
+     */
+    final public function __construct(
+        int $red = 0,
+        int $green = 0,
+        int $blue = 0,
+        int $alpha = 1
+    ) {
+        $this->red($red);
+        $this->green($green);
+        $this->blue($blue);
+        $this->alpha($alpha);
+    }
+
+    /**
+     * Create a new RGBA instance.
+     */
+    public static function make(
+        int $red = 0,
+        int $green = 0,
+        int $blue = 0,
+        int $alpha = 1
+    ): static {
+        return new static($red, $green, $blue, $alpha);
+    }
+
+    /**
      * Set the alpha component of the color.
      *
      * @return $this
@@ -49,23 +76,6 @@ class Rgba implements Stringable
     public function __toString(): string
     {
         return "rgba({$this->getRed()}, {$this->getGreen()}, {$this->getBlue()}, {$this->getAlpha()})";
-    }
-
-    /**
-     * Create a new RGBA instance.
-     */
-    public static function make(
-        int $red = 0,
-        int $green = 0,
-        int $blue = 0,
-        int $alpha = 1
-    ): static {
-
-        return app(static::class)
-            ->red($red)
-            ->green($green)
-            ->blue($blue)
-            ->alpha($alpha);
     }
 
     /**

@@ -19,11 +19,18 @@ class ColorStop implements Arrayable
     /**
      * Create a new color stop.
      */
+    final public function __construct(string|Rgb|Rgba $color, int $offset = 0)
+    {
+        $this->color($color);
+        $this->offset($offset);
+    }
+
+    /**
+     * Create a new color stop.
+     */
     public static function make(string|Rgb|Rgba $color, int $offset = 0): static
     {
-        return app(static::class)
-            ->color($color)
-            ->offset($offset);
+        return new static($color, $offset);
     }
 
     /**

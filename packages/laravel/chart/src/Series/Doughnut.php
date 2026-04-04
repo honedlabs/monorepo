@@ -13,6 +13,6 @@ class Doughnut extends Pie
     {
         parent::setUp();
 
-        $this->radius(40, 70);
+        $this->radius('40%', '70%');
     }
 }

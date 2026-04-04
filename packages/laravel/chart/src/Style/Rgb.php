@@ -12,11 +12,13 @@ class Rgb implements Stringable
     use HasRGB;
 
     /**
-     * Get the string representation of the RGB color.
+     * Create a new RGB instance.
      */
-    public function __toString(): string
+    final public function __construct(int $red = 0, int $green = 0, int $blue = 0)
     {
-        return "rgb({$this->getRed()}, {$this->getGreen()}, {$this->getBlue()})";
+        $this->red($red);
+        $this->green($green);
+        $this->blue($blue);
     }
 
     /**
@@ -24,10 +26,15 @@ class Rgb implements Stringable
      */
     public static function make(int $red = 0, int $green = 0, int $blue = 0): static
     {
-        return app(static::class)
-            ->red($red)
-            ->green($green)
-            ->blue($blue);
+        return new static($red, $green, $blue);
+    }
+
+    /**
+     * Get the string representation of the RGB color.
+     */
+    public function __toString(): string
+    {
+        return "rgb({$this->getRed()}, {$this->getGreen()}, {$this->getBlue()})";
     }
 
     /**

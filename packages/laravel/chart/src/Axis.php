@@ -8,6 +8,7 @@ use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\Components\HasTooltip;
+use Honed\Chart\Concerns\InteractsWithData;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\AxisType;
 use Honed\Chart\Enums\Dimension;
@@ -19,6 +20,7 @@ class Axis extends Chartable implements Resolvable
     use CanBeShown;
     use HasId;
     use HasTooltip;
+    use InteractsWithData;
 
     /**
      * The type of the axis.
@@ -172,7 +174,7 @@ class Axis extends Chartable implements Resolvable
 
         return [
             'id' => $this->getId(),
-            // 'show' => $this->isShown(),
+            'show' => $this->isShown(),
             // 'gridIndex' => $this->getGridIndex(),
             // 'alignTicks' => $this->hasAlignedTicks(),
             // 'position' => $this->getPosition(),

@@ -12,6 +12,7 @@ use Honed\Chart\Concerns\Components\HasTextStyle;
 use Honed\Chart\Concerns\Components\HasTitle;
 use Honed\Chart\Concerns\Components\HasToolbox;
 use Honed\Chart\Concerns\Components\HasTooltip;
+use Honed\Chart\Concerns\InteractsWithData;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
@@ -32,6 +33,7 @@ class Chart extends Chartable
     use HasTitle;
     use HasToolbox;
     use HasTooltip;
+    use InteractsWithData;
 
     /**
      * Handle dynamic method calls into the method.

@@ -6,8 +6,8 @@ namespace Honed\Chart\Concerns\Components;
 
 use Closure;
 use Honed\Chart\Axis;
-use Honed\Chart\XAxis;
-use Honed\Chart\YAxis;
+use Honed\Chart\AxisX;
+use Honed\Chart\AxisY;
 use Honed\Chart\Enums\Dimension;
 use Illuminate\Support\Enumerable;
 
@@ -95,9 +95,9 @@ trait HasAxes
     public function yAxis(Axis|Closure|bool|null $value = true): static
     {
         $axis = match (true) {
-            $value => $this->newYAxis(),
+            $value => $this->newAxisY(),
             ! $value => null,
-            $value instanceof Closure => $value($this->newYAxis()),
+            $value instanceof Closure => $value($this->newAxisY()),
             default => $value,
         };
 
@@ -113,9 +113,9 @@ trait HasAxes
     public function xAxis(Axis|Closure|bool|null $value = true): static
     {
         $axis = match (true) {
-            $value => $this->newXAxis(),
+            $value => $this->newAxisX(),
             ! $value => null,
-            $value instanceof Closure => $value($this->newXAxis()),
+            $value instanceof Closure => $value($this->newAxisX()),
             default => $value,
         };
 
@@ -132,7 +132,7 @@ trait HasAxes
         $axes = $this->getXAxes();
 
         if (empty($axes)) {
-            $axes = [$this->newXAxis()];
+            $axes = [$this->newAxisX()];
         }
 
         return array_map(
@@ -151,7 +151,7 @@ trait HasAxes
         $axes = $this->getYAxes();
 
         if (empty($axes)) {
-            $axes = [$this->newYAxis()];
+            $axes = [$this->newAxisY()];
         }
 
         return array_map(
@@ -178,16 +178,16 @@ trait HasAxes
     /**
      * Create a new x-axis, or use the existing one.
      */
-    protected function newXAxis(): XAxis
+    protected function newAxisX(): AxisX
     {
-        return XAxis::make();
+        return AxisX::make();
     }
 
     /**
      * Create a new y-axis, or use the existing one.
      */
-    protected function newYAxis(): YAxis
+    protected function newAxisY(): AxisY
     {
-        return YAxis::make();
+        return AxisY::make();
     }
 }

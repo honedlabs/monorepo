@@ -8,6 +8,7 @@ use Honed\Chart\Chart;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\Components\HasTitle;
+use Honed\Chart\Concerns\InteractsWithData;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Style\Concerns\HasCursor;
@@ -18,9 +19,9 @@ abstract class Series extends Chartable implements Resolvable
 {
     use ForwardsCalls;
     use HasName;
-    use HasTitle;
     use HasCursor;
     use HasId;
+    use InteractsWithData;
 
     /**
      * The type of the series.
