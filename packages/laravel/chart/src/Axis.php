@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
+use Carbon\Carbon;
+use DateTime;
 use Honed\Chart\Chartable;
+use Honed\Chart\Concerns\Axis\HasAxisType;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\InteractsWithData;
+use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\AxisType;
 use Honed\Chart\Enums\Dimension;
@@ -21,13 +25,8 @@ class Axis extends Chartable implements Resolvable
     use HasId;
     use HasTooltip;
     use InteractsWithData;
-
-    /**
-     * The type of the axis.
-     * 
-     * @var ?\Honed\Chart\Enums\AxisType
-     */
-    protected $type;
+    use Inferrable;
+    use HasAxisType;
 
     /**
      * Set the dimension of the axis.
@@ -35,66 +34,6 @@ class Axis extends Chartable implements Resolvable
      * @var ?\Honed\Chart\Enums\Dimension
      */
     protected $dimension;
-
-    /**
-     * Set the type of the axis.
-     *
-     * @return $this
-     */
-    public function type(AxisType|string $value): static
-    {
-        $this->type = is_string($value) ? AxisType::from($value) : $value;
-
-        return $this;
-    }
-    
-    /**
-     * Set the type of the axis to be value.
-     *
-     * @return $this
-     */
-    public function value(): static
-    {
-        return $this->type(AxisType::Value);
-    }
-
-    /**
-     * Set the type of the axis to be category.
-     *
-     * @return $this
-     */
-    public function category(): static
-    {
-        return $this->type(AxisType::Category);
-    }
-
-    /**
-     * Set the type of the axis to be time.
-     *
-     * @return $this
-     */
-    public function time(): static
-    {
-        return $this->type(AxisType::Time);
-    }
-
-    /**
-     * Set the type of the axis to be log.
-     *
-     * @return $this
-     */
-    public function log(): static
-    {
-        return $this->type(AxisType::Log);
-    }
-
-    /**
-     * Get the type of the axis.
-     */
-    public function getType(): ?AxisType
-    {
-        return $this->type;
-    }
 
     /**
      * Set the dimension of the axis.
@@ -147,9 +86,35 @@ class Axis extends Chartable implements Resolvable
             return;
         }
 
-        $data = $this->retrieve($data, $this->getValue());
+        $data = $this->retrieve($data, $this->getCategory());
+
+        if ($this->infers()) {
+            $this->inferType($data);
+        }
+
+        if (is_null($data)) {
+            return;
+        }
 
         $this->data($data);
+    }
+
+    /**
+     * Infer the type of the axis based on the data.
+     * 
+     * @param list<mixed> $data
+     */
+    protected function inferType(mixed $data): void
+    {
+        match (true) {
+            $this->hasType() => null,
+            empty($data) => $this->type(AxisType::Value),
+            is_numeric($data[0]) => $this->type(AxisType::Value),
+            is_string($data[0]) => $this->type(AxisType::Category),
+            $data[0] instanceof DateTime,
+            $data[0] instanceof Carbon => $this->type(AxisType::Time),
+            default => $this->type(AxisType::Value),
+        };
     }
 
     /**
@@ -168,7 +133,7 @@ class Axis extends Chartable implements Resolvable
             // 'alignTicks' => $this->hasAlignedTicks(),
             // 'position' => $this->getPosition(),
             // 'offset' => $this->getOffset(),
-            'type' => $this->getType(),
+            'type' => $this->getType()?->value,
             // 'name' => null,
             // 'nameLocation' => null,
             // 'nameTextStyle' => null,

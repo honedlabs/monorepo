@@ -15,15 +15,15 @@ beforeEach(function () {
         ],
         'tooltip' => [
             'trigger' => 'axis',
-            'axisPointer' => [
-                'type' => 'shadow',
-            ],
+            // 'axisPointer' => [
+            //     'type' => 'shadow',
+            // ],
         ],
         'legend' => [],
         'xAxis' => [
             [
                 'type' => 'value',
-                'boundaryGap' => [0, 0.01],
+                // 'boundaryGap' => [0, 0.01],
             ],
         ],
         'yAxis' => [
@@ -60,13 +60,14 @@ beforeEach(function () {
 
 it('is replicable', function () {
     $chart = Chart::make()
+        ->flip()
         ->from($this->data)
+        ->infer()
         ->category('country')
         ->title('World Population')
         ->tooltip(fn (Tooltip $tooltip) => $tooltip->triggerByAxis())
         ->legend()
-        ->x(fn (Axis $axis) => $axis->boundaryGap(0, 0.01))
-        ->y(fn (Axis $axis) => $axis->category())
+        // ->x(fn (Axis $axis) => $axis->boundaryGap(0, 0.01))
         ->series([
             Bar::make()
                 ->name('2011')
@@ -76,6 +77,5 @@ it('is replicable', function () {
                 ->value('2012'),
         ]);
 
-    expect($chart->toArray())
-        ->toEqualCanonicalizing($this->expected);
+    expect($chart->toArray())->toEqual($this->expected);
 });

@@ -12,6 +12,7 @@ use Honed\Chart\Concerns\Components\HasTitle;
 use Honed\Chart\Concerns\Components\HasToolbox;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\InteractsWithData;
+use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\Dimension;
 use Honed\Chart\Support\HigherOrderComponentProxy;
@@ -28,6 +29,7 @@ class Chart extends Chartable implements Resolvable
     use HasToolbox;
     use HasTooltip;
     use InteractsWithData;
+    use Inferrable;
 
     /**
      * Whether to flip the x and y axes, only applicable to bar charts.
@@ -92,11 +94,17 @@ class Chart extends Chartable implements Resolvable
         }
 
         $this->withMissingAxis(Dimension::X);
-        
+
         $this->withMissingAxis(Dimension::Y);
 
         foreach ($this->getAxes() as $axis) {
-            $axis->resolve($data);
+            $dependent = $this->isFlipped() ? Dimension::Y : Dimension::X;
+
+            if ($axis->getDimension() === $dependent && is_null($axis->getCategory())) {
+                $axis->category($this->getCategory());
+            }
+
+            $axis->infer($this->infers())->resolve($data);
         }
     }
 

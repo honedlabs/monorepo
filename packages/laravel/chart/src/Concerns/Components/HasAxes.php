@@ -98,7 +98,7 @@ trait HasAxes
 
             return $axes->filter(
                 static fn (Axis $axis) => $axis->getDimension() === $value
-            );
+            )->values();
         }
         
         return $this->axes ??= new Collection();
@@ -151,9 +151,13 @@ trait HasAxes
      */
     public function listAxes(Dimension $value): array
     {
-        return array_map(
-            static fn (Axis $axis) => $axis->toArray(),
-            $this->getAxes($value)->all()
+        return array_values(
+            array_filter(
+                array_map(
+                    static fn (Axis $axis) => $axis->toArray() ?: null,
+                    $this->getAxes($value)->all()
+                )
+            )
         );
     }
 }

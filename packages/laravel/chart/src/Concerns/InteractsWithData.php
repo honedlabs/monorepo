@@ -11,11 +11,6 @@ use Illuminate\Support\Arr;
 trait InteractsWithData
 {
     /**
-     * @var bool
-     */
-    protected $infer = true;
-
-    /**
      * @var list<mixed>|null
      */
     protected $source;
@@ -29,7 +24,7 @@ trait InteractsWithData
      * How the category (independent variable) should be determined. A string key
      * indicates a property on the source object to be plucked.
      * 
-     * @var string|Closure():mixed
+     * @var string|(Closure():mixed)|null
      */
     protected $category;
 
@@ -37,7 +32,7 @@ trait InteractsWithData
      * How the value (dependent variable) should be determined. A string key
      * indicates a property on the source object to be plucked.
      * 
-     * @var string|Closure():mixed
+     * @var string|(Closure():mixed)|null
      */
     protected $value;
 
@@ -84,10 +79,10 @@ trait InteractsWithData
     /**
      * Set how the category should be determined.
      * 
-     * @param string|Closure():mixed $value
+     * @param string|(Closure():mixed)|null $value
      * @return static
      */
-    public function category(string|Closure $value): static
+    public function category(string|Closure|null $value): static
     {
         $this->category = $value;
 
@@ -97,9 +92,9 @@ trait InteractsWithData
     /**
      * Get how the category should be determined.
      * 
-     * @return string|Closure():mixed
+     * @return string|(Closure():mixed)|null
      */
-    public function getCategory(): string|Closure
+    public function getCategory(): string|Closure|null
     {
         return $this->category;
     }
@@ -107,10 +102,10 @@ trait InteractsWithData
     /**
      * Set how the value should be determined.
      * 
-     * @param string|Closure():mixed $value
+     * @param string|(Closure():mixed)|null $value
      * @return static
      */
-    public function value(string|Closure $value): static
+    public function value(string|Closure|null $value): static
     {
         $this->value = $value;
 
@@ -120,9 +115,9 @@ trait InteractsWithData
     /**
      * Get how the value should be determined.
      * 
-     * @return string|Closure():mixed
+     * @return string|(Closure():mixed)|null
      */
-    public function getValue(): string|Closure
+    public function getValue(): string|Closure|null
     {
         return $this->value;
     }
@@ -165,8 +160,12 @@ trait InteractsWithData
      * @param string|Closure $value
      * @return array
      */
-    public function retrieve(array $source, string|Closure $value): array
+    public function retrieve(array $source, string|Closure|null $value): ?array
     {
+        if (is_null($value)) {
+            return null;
+        }
+
         if (is_string($value)) {
             return Arr::pluck($source, $value);
         }

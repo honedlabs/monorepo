@@ -42,19 +42,16 @@ beforeEach(function () {
         Arr::get($this->expected, 'xAxis.0.data'),
         Arr::get($this->expected, 'series.0.data')
     );
-})->only();
+});
 
 it('is replicable', function () {
     $chart = Bar::make()
         ->from($this->data)
-        // ->infer()
+        ->infer()
         ->category('day')
         ->value('value')
-        // ->width('60%')
         ->toChart()
         ->tooltip(fn (Tooltip $tooltip) => $tooltip->trigger(Trigger::Axis));
 
-    expect($chart->toArray())
-        ->dd()
-        ->toEqualCanonicalizing($this->expected);
+    expect($chart->toArray())->toEqual($this->expected);
 });

@@ -10,6 +10,7 @@ use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\Components\HasTitle;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\InteractsWithData;
+use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Style\Concerns\HasCursor;
@@ -25,6 +26,7 @@ abstract class Series extends Chartable implements Resolvable
     use HasCursor;
     use HasTooltip;
     use HasId;
+    use Inferrable;
     use InteractsWithData;
     
     /**
@@ -71,6 +73,9 @@ abstract class Series extends Chartable implements Resolvable
     {
         return Chart::make()
             ->source($this->getSource())
+            ->category($this->getCategory())
+            ->value($this->getValue())
+            ->infer($this->infers())
             ->series($this);
     }
 
@@ -86,6 +91,10 @@ abstract class Series extends Chartable implements Resolvable
         }
 
         $data = $this->retrieve($data, $this->getValue());
+
+        if (is_null($data)) {
+            return;
+        }
 
         $this->data($data);
     }
