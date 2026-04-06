@@ -25,7 +25,7 @@ trait CanBeSmooth
 
     /**
      * Set the line to not be smooth.
-     * 
+     *
      * @return $this
      */
     public function dontSmooth(): static

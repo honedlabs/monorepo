@@ -22,19 +22,19 @@ class Rgb implements Stringable
     }
 
     /**
-     * Create a new RGB instance.
-     */
-    public static function make(int $red = 0, int $green = 0, int $blue = 0): static
-    {
-        return new static($red, $green, $blue);
-    }
-
-    /**
      * Get the string representation of the RGB color.
      */
     public function __toString(): string
     {
         return "rgb({$this->getRed()}, {$this->getGreen()}, {$this->getBlue()})";
+    }
+
+    /**
+     * Create a new RGB instance.
+     */
+    public static function make(int $red = 0, int $green = 0, int $blue = 0): static
+    {
+        return new static($red, $green, $blue);
     }
 
     /**

@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Honed\Chart\Series;
 
 use Honed\Chart\Chart;
-use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Chartable;
-use Honed\Chart\Concerns\Components\HasTitle;
 use Honed\Chart\Concerns\Components\HasTooltip;
+use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\InteractsWithData;
 use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
@@ -17,21 +16,19 @@ use Honed\Chart\Style\Concerns\HasCursor;
 use Honed\Core\Concerns\HasName;
 use Illuminate\Support\Traits\ForwardsCalls;
 
-use function Illuminate\Support\enum_value;
-
 abstract class Series extends Chartable implements Resolvable
 {
     use ForwardsCalls;
-    use HasName;
     use HasCursor;
-    use HasTooltip;
     use HasId;
+    use HasName;
+    use HasTooltip;
     use Inferrable;
     use InteractsWithData;
-    
+
     /**
      * The type of the series.
-     * 
+     *
      * @var string
      */
     public $type;
@@ -81,6 +78,8 @@ abstract class Series extends Chartable implements Resolvable
 
     /**
      * Resolve the series with the given data.
+     *
+     * @param  list<mixed>  $data
      */
     public function resolve(mixed $data): void
     {

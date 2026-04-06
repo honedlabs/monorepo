@@ -11,7 +11,7 @@ trait HasCursor
     /**
      * The mouse style.
      *
-     * @var ?\Honed\Chart\Enums\Cursor
+     * @var ?Cursor
      */
     protected $cursor;
 

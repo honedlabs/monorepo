@@ -13,8 +13,8 @@ trait HasAxisType
 {
     /**
      * The type of the axis.
-     * 
-     * @var ?\Honed\Chart\Enums\AxisType
+     *
+     * @var ?AxisType
      */
     protected $type;
 

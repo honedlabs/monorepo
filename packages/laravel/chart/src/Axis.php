@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Carbon\Carbon;
-use DateTime;
-use Honed\Chart\Chartable;
+use DateTimeImmutable;
 use Honed\Chart\Concerns\Axis\HasAxisType;
 use Honed\Chart\Concerns\CanBeShown;
-use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\Components\HasTooltip;
+use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\InteractsWithData;
 use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
@@ -20,18 +18,18 @@ use Illuminate\Support\Traits\ForwardsCalls;
 
 class Axis extends Chartable implements Resolvable
 {
-    use ForwardsCalls;
     use CanBeShown;
+    use ForwardsCalls;
+    use HasAxisType;
     use HasId;
     use HasTooltip;
-    use InteractsWithData;
     use Inferrable;
-    use HasAxisType;
+    use InteractsWithData;
 
     /**
      * Set the dimension of the axis.
-     * 
-     * @var ?\Honed\Chart\Enums\Dimension
+     *
+     * @var ?Dimension
      */
     protected $dimension;
 
@@ -77,6 +75,8 @@ class Axis extends Chartable implements Resolvable
 
     /**
      * Resolve the axis with the given data.
+     *
+     * @param  list<mixed>  $data
      */
     public function resolve(mixed $data): void
     {
@@ -88,12 +88,12 @@ class Axis extends Chartable implements Resolvable
 
         $data = $this->retrieve($data, $this->getCategory());
 
-        if ($this->infers()) {
-            $this->inferType($data);
+        if (is_null($data)) {
+            $data = [];
         }
 
-        if (is_null($data)) {
-            return;
+        if ($this->infers()) {
+            $this->inferType($data);
         }
 
         $this->data($data);
@@ -101,8 +101,8 @@ class Axis extends Chartable implements Resolvable
 
     /**
      * Infer the type of the axis based on the data.
-     * 
-     * @param list<mixed> $data
+     *
+     * @param  list<mixed>  $data
      */
     protected function inferType(mixed $data): void
     {
@@ -111,8 +111,7 @@ class Axis extends Chartable implements Resolvable
             empty($data) => $this->type(AxisType::Value),
             is_numeric($data[0]) => $this->type(AxisType::Value),
             is_string($data[0]) => $this->type(AxisType::Category),
-            $data[0] instanceof DateTime,
-            $data[0] instanceof Carbon => $this->type(AxisType::Time),
+            $data[0] instanceof DateTimeImmutable => $this->type(AxisType::Time),
             default => $this->type(AxisType::Value),
         };
     }

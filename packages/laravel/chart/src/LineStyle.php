@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Chartable;
 use Honed\Chart\Style\Concerns\HasBorderType;
 use Honed\Chart\Style\Concerns\HasCap;
 use Honed\Chart\Style\Concerns\HasColor;

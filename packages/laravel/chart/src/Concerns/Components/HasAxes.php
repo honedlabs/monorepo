@@ -6,8 +6,6 @@ namespace Honed\Chart\Concerns\Components;
 
 use Closure;
 use Honed\Chart\Axis;
-use Honed\Chart\AxisX;
-use Honed\Chart\AxisY;
 use Honed\Chart\Enums\Dimension;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
@@ -17,7 +15,7 @@ trait HasAxes
     /**
      * The axes.
      *
-     * @var \Illuminate\Support\Collection<int, Axis>
+     * @var Collection<int, Axis>|null
      */
     protected $axes;
 
@@ -48,6 +46,10 @@ trait HasAxes
             default => $value,
         };
 
+        if (is_null($axis)) {
+            return $this;
+        }
+
         return $this->axis($axis);
     }
 
@@ -66,13 +68,17 @@ trait HasAxes
             default => $value,
         };
 
+        if (is_null($axis)) {
+            return $this;
+        }
+
         return $this->axis($axis);
     }
 
     /**
      * Add axes to the chart.
      *
-     * @param  Axis|\Illuminate\Support\Enumerable<int, Axis>|list<Axis>  $axes
+     * @param  Axis|Enumerable<int, Axis>|list<Axis>  $axes
      * @return $this
      */
     public function axes(Axis|Enumerable|array $axes): static
@@ -81,7 +87,7 @@ trait HasAxes
             return $this->axis($axes);
         }
 
-        $this->axes = $this->getAxes()->merge($axes);
+        $this->axes = $this->withAxes()->merge($axes);
 
         return $this;
     }
@@ -89,19 +95,18 @@ trait HasAxes
     /**
      * Get the axes.
      *
-     * @return \Illuminate\Support\Collection<int, Axis>
+     * @return Collection<int, Axis>
      */
     public function getAxes(?Dimension $value = null): Collection
     {
         if ($value) {
-            $axes = $this->axes ??= new Collection();
-
-            return $axes->filter(
-                static fn (Axis $axis) => $axis->getDimension() === $value
-            )->values();
+            return $this->withAxes()
+                ->filter(
+                    static fn (Axis $axis) => $axis->getDimension() === $value
+                )->values();
         }
-        
-        return $this->axes ??= new Collection();
+
+        return $this->withAxes();
     }
 
     /**
@@ -132,7 +137,7 @@ trait HasAxes
 
     /**
      * Add a new axis to the chart if it does not exist.
-     * 
+     *
      * @return $this
      */
     public function withMissingAxis(Dimension $value): static
@@ -159,5 +164,15 @@ trait HasAxes
                 )
             )
         );
+    }
+
+    /**
+     * Create a new collection of axes if one is not present.
+     *
+     * @return Collection<int, Axis>
+     */
+    protected function withAxes(): Collection
+    {
+        return $this->axes ??= new Collection();
     }
 }

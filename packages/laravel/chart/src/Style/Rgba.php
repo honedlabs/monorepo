@@ -35,6 +35,14 @@ class Rgba implements Stringable
     }
 
     /**
+     * Get the string representation of the RGBA color.
+     */
+    public function __toString(): string
+    {
+        return "rgba({$this->getRed()}, {$this->getGreen()}, {$this->getBlue()}, {$this->getAlpha()})";
+    }
+
+    /**
      * Create a new RGBA instance.
      */
     public static function make(
@@ -68,14 +76,6 @@ class Rgba implements Stringable
     public function getAlpha(): int
     {
         return $this->alpha;
-    }
-
-    /**
-     * Get the string representation of the RGBA color.
-     */
-    public function __toString(): string
-    {
-        return "rgba({$this->getRed()}, {$this->getGreen()}, {$this->getBlue()}, {$this->getAlpha()})";
     }
 
     /**

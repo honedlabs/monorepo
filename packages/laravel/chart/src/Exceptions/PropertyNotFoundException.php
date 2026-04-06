@@ -14,7 +14,7 @@ class PropertyNotFoundException extends Exception
     public static function throw(object $object, string $name): never
     {
         $class = get_class($object);
-        
+
         throw new self(
             "Property {$class}::{$name} not found or not accessible."
         );

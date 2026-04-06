@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Label\Concerns\HasDistance;
-use Honed\Chart\Style\Concerns\CanBeRotated;
 use Honed\Chart\Style\Concerns\HasBackgroundColor;
 use Honed\Chart\Style\Concerns\HasBorderColor;
 use Honed\Chart\Style\Concerns\HasBorderRadius;

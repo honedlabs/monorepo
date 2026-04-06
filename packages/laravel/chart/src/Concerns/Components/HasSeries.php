@@ -15,7 +15,7 @@ trait HasSeries
     /**
      * List of the series.
      *
-     * @var \Illuminate\Support\Collection<int, Series>
+     * @var Collection<int, Series>|null
      */
     protected $series;
 
@@ -38,7 +38,7 @@ trait HasSeries
     /**
      * Get the series.
      *
-     * @return \Illuminate\Support\Collection<int, Series>
+     * @return Collection<int, Series>
      */
     public function getSeries(): Collection
     {
@@ -63,6 +63,7 @@ trait HasSeries
      */
     public function listSeries(): array
     {
+        /** @var list<array<string, mixed>> */
         return array_map(
             static fn (Series $series) => $series->toArray(),
             $this->getSeries()->all()
@@ -72,7 +73,7 @@ trait HasSeries
     /**
      * Resolve the series with the given data.
      *
-     * @param list<mixed> $data
+     * @param  list<mixed>  $data
      */
     protected function resolveSeries(mixed $data): void
     {

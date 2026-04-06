@@ -30,6 +30,7 @@ trait HasAreaStyle
             $value instanceof Closure => $value($this->withAreaStyle()),
             default => $value,
         };
+
         return $this;
     }
 

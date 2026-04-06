@@ -6,13 +6,15 @@ namespace Honed\Chart;
 
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\HasId;
-use Honed\Chart\Chartable;
 use Honed\Chart\Enums\LegendType;
+use TypeError;
+use ValueError;
 
 class Legend extends Chartable
 {
     // use HasRotation;
     use CanBeShown;
+
     // use HasBackgroundColor;
     // use HasBorderColor;
     // use HasBorderRadius;
@@ -43,8 +45,8 @@ class Legend extends Chartable
 
     /**
      * The type of legend.
-     * 
-     * @var ?\Honed\Chart\Enums\LegendType
+     *
+     * @var ?LegendType
      */
     protected $type;
 
@@ -52,9 +54,9 @@ class Legend extends Chartable
      * Set the type of legend.
      *
      * @return $this
-     * 
-     * @throws \ValueError
-     * @throws \TypeError
+     *
+     * @throws ValueError
+     * @throws TypeError
      */
     public function type(string|LegendType $value): static
     {
@@ -67,22 +69,22 @@ class Legend extends Chartable
      * Set the type of legend to be plain.
      *
      * @return $this
-     * 
-     * @throws \ValueError
-     * @throws \TypeError
+     *
+     * @throws ValueError
+     * @throws TypeError
      */
     public function plain(): static
     {
         return $this->type(LegendType::Plain);
     }
-    
+
     /**
      * Set the type of legend to be scroll.
      *
      * @return $this
-     * 
-     * @throws \ValueError
-     * @throws \TypeError
+     *
+     * @throws ValueError
+     * @throws TypeError
      */
     public function scroll(): static
     {
@@ -91,8 +93,6 @@ class Legend extends Chartable
 
     /**
      * Get the type of legend.
-     *
-     * @return ?\Honed\Chart\Enums\LegendType
      */
     public function getType(): ?LegendType
     {

@@ -8,14 +8,14 @@ trait Inferrable
 {
     /**
      * Whether to implement inferring logic for the component.
-     * 
+     *
      * @var bool
      */
     protected $infer = false;
 
     /**
      * Set the component to infer.
-     * 
+     *
      * @return $this
      */
     public function infer(bool $value = true): static
@@ -27,8 +27,6 @@ trait Inferrable
 
     /**
      * Set the component to not infer.
-     * 
-     * @return static
      */
     public function dontinfer(): static
     {

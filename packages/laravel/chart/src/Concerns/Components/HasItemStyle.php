@@ -30,6 +30,7 @@ trait HasItemStyle
             $value instanceof Closure => $value($this->withItemStyle()),
             default => $value,
         };
+
         return $this;
     }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\Components\HasTextStyle;
 use Honed\Chart\Tooltip\Concerns\HasTrigger;
@@ -12,11 +11,10 @@ use Illuminate\Support\Traits\ForwardsCalls;
 
 class Tooltip extends Chartable
 {
-    use ForwardsCalls;
-    use HasTrigger;
     use CanBeShown;
+    use ForwardsCalls;
     use HasTextStyle;
-
+    use HasTrigger;
 
     /**
      * Get the representation of the tooltip.

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;
 use Honed\Chart\Concerns\Components\HasTooltip;
 use Honed\Chart\Concerns\HasId;
@@ -12,10 +11,10 @@ use Illuminate\Support\Traits\ForwardsCalls;
 
 class Toolbox extends Chartable
 {
-    use ForwardsCalls;
     use CanBeShown;
-    use HasTooltip;
+    use ForwardsCalls;
     use HasId;
+    use HasTooltip;
 
     /**
      * Get the representation of the tooltip.

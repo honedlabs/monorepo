@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Honed\Chart;
 
-use Honed\Chart\Chartable;
 use Honed\Chart\Concerns\CanBeShown;
-use Honed\Chart\Concerns\HasId;
 use Honed\Chart\Concerns\Components\HasTextStyle;
-use Honed\Chart\Title\Concerns\HasText;
+use Honed\Chart\Concerns\HasId;
 
 class Title extends Chartable
 {
     use CanBeShown;
-    use HasTextStyle;
     use HasId;
+    use HasTextStyle;
 
     /**
      * The main title text.

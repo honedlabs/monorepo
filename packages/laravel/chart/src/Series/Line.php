@@ -6,9 +6,8 @@ namespace Honed\Chart\Series;
 
 use Honed\Chart\Concerns\Components\HasAreaStyle;
 use Honed\Chart\Concerns\Components\HasItemStyle;
-use Honed\Chart\Enums\ChartType;
 use Honed\Chart\Concerns\Series\CanBeSmooth;
-use Honed\Chart\Series\Series;
+use Honed\Chart\Enums\ChartType;
 
 class Line extends Series
 {

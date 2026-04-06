@@ -15,7 +15,6 @@ use Honed\Chart\Concerns\InteractsWithData;
 use Honed\Chart\Concerns\Support\Inferrable;
 use Honed\Chart\Contracts\Resolvable;
 use Honed\Chart\Enums\Dimension;
-use Honed\Chart\Support\HigherOrderComponentProxy;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 class Chart extends Chartable implements Resolvable
@@ -28,8 +27,8 @@ class Chart extends Chartable implements Resolvable
     use HasTitle;
     use HasToolbox;
     use HasTooltip;
-    use InteractsWithData;
     use Inferrable;
+    use InteractsWithData;
 
     /**
      * Whether to flip the x and y axes, only applicable to bar charts.
@@ -62,8 +61,6 @@ class Chart extends Chartable implements Resolvable
 
     /**
      * Determine if the x and y axes are flipped.
-     *
-     * @return bool
      */
     public function isFlipped(): bool
     {
@@ -72,8 +69,8 @@ class Chart extends Chartable implements Resolvable
 
     /**
      * Resolve the data into the components.
-     * 
-     * @param list<mixed> $data
+     *
+     * @param  list<mixed>  $data
      */
     public function resolve(mixed $data): void
     {
@@ -84,8 +81,8 @@ class Chart extends Chartable implements Resolvable
 
     /**
      * Resolve the axes with the given data.
-     * 
-     * @param list<mixed> $data
+     *
+     * @param  list<mixed>  $data
      */
     protected function resolveAxes(mixed $data): void
     {
@@ -110,21 +107,21 @@ class Chart extends Chartable implements Resolvable
 
     /**
      * Get the representation of the chart.
-     * 
+     *
      * @return array<string, mixed>
      */
     protected function representation(): array
     {
         $this->define();
 
-        $this->resolve($this->getSource());
+        $this->resolve($this->getSource() ?? []);
 
         return [
             'title' => $this->getTitle()?->toArray(),
             'legend' => $this->getLegend()?->toArray(),
             // 'grid' => $this->getGrid()?->toArray(),
-            'xAxis' => $this->listAxes(Dimension::X),
-            'yAxis' => $this->listAxes(Dimension::Y),
+            'xAxis' => $this->listAxes(Dimension::X) ?: null,
+            'yAxis' => $this->listAxes(Dimension::Y) ?: null,
             // 'radiusAxis' => $this->getRadiusAxis()?->toArray(),
             // 'angleAxis' => $this->getAngleAxis()?->toArray(),
             // 'radar' => $this->getRadar()?->toArray(),

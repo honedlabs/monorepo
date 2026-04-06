@@ -23,7 +23,7 @@ trait InteractsWithData
     /**
      * How the category (independent variable) should be determined. A string key
      * indicates a property on the source object to be plucked.
-     * 
+     *
      * @var string|(Closure():mixed)|null
      */
     protected $category;
@@ -31,7 +31,7 @@ trait InteractsWithData
     /**
      * How the value (dependent variable) should be determined. A string key
      * indicates a property on the source object to be plucked.
-     * 
+     *
      * @var string|(Closure():mixed)|null
      */
     protected $value;
@@ -39,8 +39,7 @@ trait InteractsWithData
     /**
      * Set the source of the data.
      *
-     * @param list<mixed>|Arrayable<int, mixed> $source
-     * @return static
+     * @param  list<mixed>|Arrayable<int, mixed>  $source
      */
     public function from(array|Arrayable $source): static
     {
@@ -50,8 +49,7 @@ trait InteractsWithData
     /**
      * Set the source of the data.
      *
-     * @param list<mixed>|Arrayable<int, mixed>|null $source
-     * @return static
+     * @param  list<mixed>|Arrayable<int, mixed>|null  $source
      */
     public function source(array|Arrayable|null $source): static
     {
@@ -78,9 +76,8 @@ trait InteractsWithData
 
     /**
      * Set how the category should be determined.
-     * 
-     * @param string|(Closure():mixed)|null $value
-     * @return static
+     *
+     * @param  string|(Closure():mixed)|null  $value
      */
     public function category(string|Closure|null $value): static
     {
@@ -91,7 +88,7 @@ trait InteractsWithData
 
     /**
      * Get how the category should be determined.
-     * 
+     *
      * @return string|(Closure():mixed)|null
      */
     public function getCategory(): string|Closure|null
@@ -101,9 +98,8 @@ trait InteractsWithData
 
     /**
      * Set how the value should be determined.
-     * 
-     * @param string|(Closure():mixed)|null $value
-     * @return static
+     *
+     * @param  string|(Closure():mixed)|null  $value
      */
     public function value(string|Closure|null $value): static
     {
@@ -114,7 +110,7 @@ trait InteractsWithData
 
     /**
      * Get how the value should be determined.
-     * 
+     *
      * @return string|(Closure():mixed)|null
      */
     public function getValue(): string|Closure|null
@@ -124,9 +120,9 @@ trait InteractsWithData
 
     /**
      * Set the data.
-     * 
-     * @param list<mixed>|Arrayable<int, mixed> $value
-     * @return static
+     *
+     * @param  list<mixed>|Arrayable<int, mixed>  $value
+     * @return $this
      */
     public function data(array|Arrayable $value): static
     {
@@ -145,7 +141,7 @@ trait InteractsWithData
 
     /**
      * Get the data.
-     * 
+     *
      * @return list<mixed>|null
      */
     public function getData(): ?array
@@ -156,9 +152,9 @@ trait InteractsWithData
     /**
      * Retrieve a set of values from a given source.
      *
-     * @param list<int, mixed> $source
-     * @param string|Closure $value
-     * @return array
+     * @param  list<mixed>  $source
+     * @param  string|(Closure():mixed)|null  $value
+     * @return list<mixed>|null
      */
     public function retrieve(array $source, string|Closure|null $value): ?array
     {
@@ -167,9 +163,11 @@ trait InteractsWithData
         }
 
         if (is_string($value)) {
+            /** @var list<mixed> */
             return Arr::pluck($source, $value);
         }
 
+        /** @var list<mixed> */
         return Arr::map($source, $value);
     }
 }
